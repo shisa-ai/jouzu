@@ -1,0 +1,43 @@
+{
+	"name": "jouzu",
+	"version": "0.0.1",
+	"description": "Japanese-first distribution of the Pi coding agent harness (preview stub)",
+	"type": "module",
+	"bin": {
+		"jouzu": "./dist/cli.js",
+		"jz": "./dist/cli.js"
+	},
+	"files": [
+		"dist",
+		"README.md",
+		"LICENSE"
+	],
+	"scripts": {
+		"build": "tsc -p tsconfig.json",
+		"check": "tsc -p tsconfig.json --noEmit",
+		"test": "node --test test/*.test.mjs"
+	},
+	"engines": {
+		"node": ">=22.19.0"
+	},
+	"keywords": [
+		"coding-agent",
+		"pi",
+		"japanese",
+		"jouzu"
+	],
+	"author": "Shisa AI",
+	"license": "Apache-2.0",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/shisa-ai/jouzu.git",
+		"directory": "packages/cli"
+	},
+	"homepage": "https://github.com/shisa-ai/jouzu#readme",
+	"bugs": {
+		"url": "https://github.com/shisa-ai/jouzu/issues"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

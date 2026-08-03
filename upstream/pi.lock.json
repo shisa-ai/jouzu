@@ -1,0 +1,15 @@
+{
+	"schemaVersion": 1,
+	"repository": "https://github.com/earendil-works/pi",
+	"tag": "v0.83.0",
+	"commit": "845d6ff1f6643aba440341cce877ce1c43ebbc39",
+	"packages": {
+		"@earendil-works/pi-coding-agent": {
+			"version": "0.83.0",
+			"integrity": "sha512-uYhF+FsZxogoSX/AxBcUdiY+ZklubwaXyAoEGA2eQwsHcyEAhUYIKh/WLXe/a8+k8eTCmxb+ZN2Zo9mzQtzbWw=="
+		}
+	},
+	"reviewedAt": "2026-08-03",
+	"compatibilityStatus": "scaffold-only",
+	"deviations": []
+}

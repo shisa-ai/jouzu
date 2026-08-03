@@ -1,0 +1,41 @@
+[project]
+name = "jouzu"
+version = "0.0.1"
+description = "Python launcher reservation for Jouzu"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+authors = [
+  { name = "Shisa AI" },
+]
+keywords = ["coding-agent", "pi", "japanese", "jouzu"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Environment :: Console",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+]
+
+[project.urls]
+Homepage = "https://github.com/shisa-ai/jouzu"
+Repository = "https://github.com/shisa-ai/jouzu"
+Issues = "https://github.com/shisa-ai/jouzu/issues"
+
+[project.scripts]
+jouzu = "jouzu.__main__:main"
+jz = "jouzu.__main__:main"
+
+[build-system]
+requires = ["hatchling==1.29.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/jouzu"]
+
+[tool.hatch.build]
+include = [
+  "src/jouzu/**",
+  "README.md",
+  "LICENSE",
+]

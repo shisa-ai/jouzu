@@ -1,0 +1,49 @@
+{
+	"name": "@shisa/jouzu-provider",
+	"version": "0.0.1",
+	"description": "Jouzu model catalog and provider integration (preview stub)",
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md",
+		"LICENSE"
+	],
+	"scripts": {
+		"build": "tsc -p tsconfig.json",
+		"check": "tsc -p tsconfig.json --noEmit",
+		"test": "node --test test/*.test.mjs"
+	},
+	"keywords": [
+		"pi-package",
+		"model-provider",
+		"model-catalog",
+		"jouzu",
+		"shisa-ai"
+	],
+	"author": "Shisa AI",
+	"license": "Apache-2.0",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/shisa-ai/jouzu.git",
+		"directory": "packages/provider"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"peerDependencies": {
+		"@earendil-works/pi-coding-agent": "*"
+	},
+	"pi": {
+		"extensions": [
+			"./dist/index.js"
+		]
+	}
+}
