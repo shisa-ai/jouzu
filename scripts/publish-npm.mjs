@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const packageDirectories = ["cli", "core", "ja", "provider", "manifest"].map((name) => join("packages", name));
+const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 const dryRun = process.argv.includes("--dry-run");
 const unknown = process.argv.slice(2).filter((argument) => argument !== "--dry-run");
 if (unknown.length > 0) {
@@ -17,19 +18,21 @@ function run(command, args, cwd, capture = false) {
 		encoding: "utf8",
 		stdio: capture ? ["ignore", "pipe", "pipe"] : "inherit",
 	});
+	if (result.error) throw result.error;
 	return result;
 }
 
 for (const directory of packageDirectories) {
 	const packageJson = JSON.parse(readFileSync(join(directory, "package.json"), "utf8"));
 	const packageId = `${packageJson.name}@${packageJson.version}`;
-	const lookup = run("npm", ["view", packageId, "version", "--json"], undefined, true);
-	if (lookup.status === 0 && lookup.stdout.trim()) {
+	const lookup = run(npmCommand, ["view", packageId, "version", "--json"], undefined, true);
+	if (lookup.status === 0 && lookup.stdout?.trim()) {
 		console.log(`Skipping ${packageId}: already published`);
 		continue;
 	}
-	if (!lookup.stderr.includes("E404") && !lookup.stderr.includes("404 Not Found")) {
-		process.stderr.write(lookup.stderr);
+	const lookupError = lookup.stderr ?? "";
+	if (!lookupError.includes("E404") && !lookupError.includes("404 Not Found")) {
+		process.stderr.write(lookupError || "npm view failed without diagnostic output\n");
 		process.exit(lookup.status ?? 1);
 	}
 
@@ -37,6 +40,6 @@ for (const directory of packageDirectories) {
 		? ["pack", "--dry-run", "--ignore-scripts"]
 		: ["publish", "--access", "public", "--provenance", "--ignore-scripts"];
 	console.log(`${dryRun ? "Validating" : "Publishing"} ${packageId}`);
-	const publish = run("npm", args, directory);
+	const publish = run(npmCommand, args, directory);
 	if (publish.status !== 0) process.exit(publish.status ?? 1);
 }

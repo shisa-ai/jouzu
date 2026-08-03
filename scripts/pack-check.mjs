@@ -5,15 +5,17 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const packageDirectories = ["cli", "core", "ja", "provider", "manifest"].map((name) => join("packages", name));
+const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 
 for (const directory of packageDirectories) {
 	const packageJson = JSON.parse(readFileSync(join(directory, "package.json"), "utf8"));
-	const result = spawnSync("npm", ["pack", "--dry-run", "--ignore-scripts", "--json"], {
+	const result = spawnSync(npmCommand, ["pack", "--dry-run", "--ignore-scripts", "--json"], {
 		cwd: directory,
 		encoding: "utf8",
 	});
+	if (result.error) throw result.error;
 	if (result.status !== 0) {
-		process.stderr.write(result.stderr);
+		process.stderr.write(result.stderr ?? "npm pack failed without diagnostic output\n");
 		process.exit(result.status ?? 1);
 	}
 	const [packed] = JSON.parse(result.stdout);
