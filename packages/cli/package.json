@@ -4,8 +4,8 @@
 	"description": "Japanese-first distribution of the Pi coding agent harness (preview stub)",
 	"type": "module",
 	"bin": {
-		"jouzu": "./dist/cli.js",
-		"jz": "./dist/cli.js"
+		"jouzu": "dist/cli.js",
+		"jz": "dist/cli.js"
 	},
 	"files": [
 		"dist",

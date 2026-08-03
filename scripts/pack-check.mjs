@@ -20,5 +20,13 @@ for (const directory of packageDirectories) {
 	if (!packed?.files?.length) {
 		throw new Error(`${packageJson.name} would publish no files`);
 	}
+	for (const [command, target] of Object.entries(packageJson.bin ?? {})) {
+		if (target.startsWith("./")) {
+			throw new Error(`${packageJson.name} bin ${command} must omit the leading ./ for npm compatibility`);
+		}
+		if (!packed.files.some((file) => file.path === target)) {
+			throw new Error(`${packageJson.name} bin ${command} targets missing file ${target}`);
+		}
+	}
 	console.log(`${packageJson.name}@${packageJson.version}: ${packed.files.length} files, ${packed.size} bytes`);
 }
