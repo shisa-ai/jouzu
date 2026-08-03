@@ -5,7 +5,8 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const packageDirectories = ["cli", "core", "ja", "provider", "manifest"].map((name) => join("packages", name));
-const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
+const npmCommand = process.platform === "win32" ? (process.env.ComSpec ?? "cmd.exe") : "npm";
+const npmPrefixArguments = process.platform === "win32" ? ["/d", "/s", "/c", "npm"] : [];
 const dryRun = process.argv.includes("--dry-run");
 const unknown = process.argv.slice(2).filter((argument) => argument !== "--dry-run");
 if (unknown.length > 0) {
@@ -25,7 +26,7 @@ function run(command, args, cwd, capture = false) {
 for (const directory of packageDirectories) {
 	const packageJson = JSON.parse(readFileSync(join(directory, "package.json"), "utf8"));
 	const packageId = `${packageJson.name}@${packageJson.version}`;
-	const lookup = run(npmCommand, ["view", packageId, "version", "--json"], undefined, true);
+	const lookup = run(npmCommand, [...npmPrefixArguments, "view", packageId, "version", "--json"], undefined, true);
 	if (lookup.status === 0 && lookup.stdout?.trim()) {
 		console.log(`Skipping ${packageId}: already published`);
 		continue;
@@ -40,6 +41,6 @@ for (const directory of packageDirectories) {
 		? ["pack", "--dry-run", "--ignore-scripts"]
 		: ["publish", "--access", "public", "--provenance", "--ignore-scripts"];
 	console.log(`${dryRun ? "Validating" : "Publishing"} ${packageId}`);
-	const publish = run(npmCommand, args, directory);
+	const publish = run(npmCommand, [...npmPrefixArguments, ...args], directory);
 	if (publish.status !== 0) process.exit(publish.status ?? 1);
 }
