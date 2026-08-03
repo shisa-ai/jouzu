@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-const packageDirectories = ["cli", "core", "ja", "provider", "manifest"].map((name) => join("packages", name));
+const packageDirectories = [join("packages", "cli")];
 const npmCommand = process.platform === "win32" ? (process.env.ComSpec ?? "cmd.exe") : "npm";
 const npmPrefixArguments = process.platform === "win32" ? ["/d", "/s", "/c", "npm"] : [];
 const dryRun = process.argv.includes("--dry-run");

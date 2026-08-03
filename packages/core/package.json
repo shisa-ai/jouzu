@@ -1,6 +1,7 @@
 {
 	"name": "@shisa/jouzu-core",
 	"version": "0.0.1",
+	"private": true,
 	"description": "Core Jouzu Pi package (preview stub)",
 	"type": "module",
 	"main": "./dist/index.js",
@@ -33,9 +34,6 @@
 		"type": "git",
 		"url": "git+https://github.com/shisa-ai/jouzu.git",
 		"directory": "packages/core"
-	},
-	"publishConfig": {
-		"access": "public"
 	},
 	"peerDependencies": {
 		"@earendil-works/pi-coding-agent": "*"

@@ -1,6 +1,7 @@
 {
 	"name": "@shisa/jouzu-ja",
 	"version": "0.0.1",
+	"private": true,
 	"description": "Japanese language and CJK support for Jouzu and Pi (preview stub)",
 	"type": "module",
 	"main": "./dist/index.js",
@@ -34,9 +35,6 @@
 		"type": "git",
 		"url": "git+https://github.com/shisa-ai/jouzu.git",
 		"directory": "packages/ja"
-	},
-	"publishConfig": {
-		"access": "public"
 	},
 	"peerDependencies": {
 		"@earendil-works/pi-coding-agent": "*"

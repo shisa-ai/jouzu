@@ -1,6 +1,7 @@
 {
 	"name": "@shisa/jouzu-manifest",
 	"version": "0.0.1",
+	"private": true,
 	"description": "Declarative Jouzu profile reconciliation (preview stub)",
 	"type": "module",
 	"main": "./dist/index.js",
@@ -34,9 +35,6 @@
 		"type": "git",
 		"url": "git+https://github.com/shisa-ai/jouzu.git",
 		"directory": "packages/manifest"
-	},
-	"publishConfig": {
-		"access": "public"
 	},
 	"peerDependencies": {
 		"@earendil-works/pi-coding-agent": "*"

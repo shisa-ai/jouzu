@@ -1,6 +1,7 @@
 {
 	"name": "@shisa/jouzu-provider",
 	"version": "0.0.1",
+	"private": true,
 	"description": "Jouzu model catalog and provider integration (preview stub)",
 	"type": "module",
 	"main": "./dist/index.js",
@@ -34,9 +35,6 @@
 		"type": "git",
 		"url": "git+https://github.com/shisa-ai/jouzu.git",
 		"directory": "packages/provider"
-	},
-	"publishConfig": {
-		"access": "public"
 	},
 	"peerDependencies": {
 		"@earendil-works/pi-coding-agent": "*"
