@@ -38,6 +38,21 @@ test("forwards explicit Pi version requests through the pinned runtime", () => {
 	}
 });
 
+test("a non-interactive first run uses Core without recording Japanese consent", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-core-first-run-"));
+	try {
+		const jouzuHome = join(temp, "home");
+		const result = run(["--jouzu-home", jouzuHome, "pi", "--version"]);
+		assert.equal(result.status, 0, result.stderr);
+		assert.equal(result.stdout.trim(), "0.84.2");
+		const state = JSON.parse(readFileSync(join(jouzuHome, "state", "profile-state.json"), "utf8"));
+		assert.equal(state.activeProfile, "core");
+		assert.equal(existsSync(join(jouzuHome, "state", "profile-choice.json")), false);
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
+
 test("jouzu and jz package bins are exact aliases", () => {
 	assert.equal(packageJson.bin.jouzu, packageJson.bin.jz);
 	assert.equal(packageJson.dependencies["@earendil-works/pi-coding-agent"], "0.84.2");
@@ -59,7 +74,7 @@ test("preserves a pinned Pi CLI failure status", () => {
 test("shows Jouzu help and leaves Pi help behind the explicit escape", () => {
 	const jouzuHelp = run(["--help"]);
 	assert.equal(jouzuHelp.status, 0, jouzuHelp.stderr);
-	assert.match(jouzuHelp.stdout, /Jouzu Japanese-first Pi launcher/);
+	assert.match(jouzuHelp.stdout, /Jouzu agentic AI environment/);
 	assert.match(jouzuHelp.stdout, /Ctrl\+L/);
 
 	const piHelp = run(["pi", "--help"]);
@@ -81,6 +96,7 @@ test("profile plan is non-mutating and profile apply converges", () => {
 		const applied = run(["--jouzu-home", jouzuHome, "profile", "apply", "--profile", "ja"]);
 		assert.equal(applied.status, 0, applied.stderr);
 		assert.match(applied.stdout, /Applied transaction:/);
+		assert.equal(JSON.parse(readFileSync(join(jouzuHome, "state", "profile-choice.json"), "utf8")).profile, "ja");
 		const secondPlan = run(["--jouzu-home", jouzuHome, "profile", "plan", "--profile", "ja", "--json"]);
 		assert.equal(secondPlan.status, 0, secondPlan.stderr);
 		assert.deepEqual(JSON.parse(secondPlan.stdout).actions, []);
@@ -100,13 +116,13 @@ test("profile conflicts stop with the reserved status before Pi launch", () => {
 		const jouzuHome = join(temp, "home");
 		mkdirSync(join(jouzuHome, "agent"), { recursive: true });
 		writeFileSync(join(jouzuHome, "agent", "APPEND_SYSTEM.md"), "user-owned\n");
-		const planned = run(["--jouzu-home", jouzuHome, "profile", "plan", "--json"]);
+		const planned = run(["--jouzu-home", jouzuHome, "profile", "plan", "--profile", "ja", "--json"]);
 		assert.equal(planned.status, 3);
 		assert.equal(
 			JSON.parse(planned.stdout).actions.find((action) => action.target === "APPEND_SYSTEM.md").reason,
 			"unmanaged-different",
 		);
-		const result = run(["--jouzu-home", jouzuHome, "pi", "--version"]);
+		const result = run(["--jouzu-home", jouzuHome, "--jouzu-profile", "ja", "pi", "--version"]);
 		assert.equal(result.status, 3);
 		assert.match(result.stderr, /CONFLICT APPEND_SYSTEM\.md/);
 		assert.doesNotMatch(result.stdout, /0\.84\.2/);

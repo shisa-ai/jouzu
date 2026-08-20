@@ -36,11 +36,11 @@ function envFlagIsTrue(value: string | undefined): boolean {
 	return value !== undefined && ["1", "true", "yes", "on"].includes(value.toLowerCase());
 }
 
-export function shouldClearInteractiveStartup(args: string[], context: InteractiveStartupContext = {}): boolean {
+export function isInteractivePiStartup(args: string[], context: InteractiveStartupContext = {}): boolean {
 	const env = context.env ?? process.env;
 	const stdinIsTTY = context.stdinIsTTY ?? process.stdin.isTTY === true;
 	const stdoutIsTTY = context.stdoutIsTTY ?? process.stdout.isTTY === true;
-	if (!stdinIsTTY || !stdoutIsTTY || env.TERM === "dumb" || envFlagIsTrue(env.JOUZU_NO_CLEAR)) return false;
+	if (!stdinIsTTY || !stdoutIsTTY || env.TERM === "dumb") return false;
 	if (args.length > 0 && NON_INTERACTIVE_COMMANDS.has(args[0])) return false;
 
 	for (let index = 0; index < args.length; index += 1) {
@@ -54,6 +54,11 @@ export function shouldClearInteractiveStartup(args: string[], context: Interacti
 		if (arg.startsWith("--mode=") && NON_INTERACTIVE_MODES.has(arg.slice("--mode=".length))) return false;
 	}
 	return true;
+}
+
+export function shouldClearInteractiveStartup(args: string[], context: InteractiveStartupContext = {}): boolean {
+	const env = context.env ?? process.env;
+	return isInteractivePiStartup(args, context) && !envFlagIsTrue(env.JOUZU_NO_CLEAR);
 }
 
 export function clearInteractiveStartup(args: string[], context: InteractiveStartupContext = {}): boolean {
@@ -121,7 +126,7 @@ export function renderBannerLines(
 	width: number,
 	colorMode: BannerColorMode,
 ): string[] {
-	const subtitle = fit("Japanese-first Pi environment", width);
+	const subtitle = fit(metadata.productLabel, width);
 	const versions = fit(`jouzu ${metadata.jouzuVersion}  ·  pi ${metadata.piVersion}`, width);
 	const hints = fit("/model choose  ·  /hotkeys shortcuts  ·  /jouzu status", width);
 	const details =

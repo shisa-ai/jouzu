@@ -1,6 +1,6 @@
 # Jouzu
 
-Jouzu is a Japanese-first distribution of the Pi coding agent. `jouzu` and `jz` run exact Pi `0.84.2` with isolated Jouzu state, built-in Core/JA profiles, and non-mutating diagnostics.
+Jouzu is an agentic AI environment built on the Pi coding agent. `jouzu` and `jz` run exact Pi `0.84.2` with isolated Jouzu state, built-in Core/JA profiles, and non-mutating diagnostics. Japanese support is optional and first-class.
 
 ## Install and start
 
@@ -11,15 +11,14 @@ npm install --global jouzu@0.1.0
 
 jz --version
 jz doctor
-jz profile plan
-jz profile apply
 jz
 ```
 
-The fresh-install profile is `ja`. Use the provider-neutral Core profile with:
+The first interactive launch asks whether to enable Japanese support. An affirmative answer selects `ja`; declining or pressing Enter selects the provider-neutral `core` profile. Non-interactive first runs safely use Core without recording consent. Preview either profile with:
 
 ```bash
-jz profile apply --profile core
+jz profile plan --profile core
+jz profile plan --profile ja
 ```
 
 Profile planning does not write. Application detects user-file conflicts, retains backups for managed updates/deletions, and never prunes unknown files. Existing unsupported CP932/Shift-JIS profile targets are left unchanged.

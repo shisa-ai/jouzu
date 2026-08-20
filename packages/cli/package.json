@@ -1,7 +1,7 @@
 {
 	"name": "jouzu",
 	"version": "0.1.0",
-	"description": "Japanese-first distribution of the Pi coding agent harness",
+	"description": "Agentic AI environment built on the Pi coding agent harness",
 	"type": "module",
 	"bin": {
 		"jouzu": "dist/cli.js",

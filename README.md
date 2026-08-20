@@ -1,6 +1,6 @@
 # Jouzu
 
-Jouzu is a Japanese-first distribution of the [Pi coding agent](https://pi.dev/). The `jouzu` and `jz` commands run an exact reviewed Pi runtime with isolated Jouzu state, safe built-in Core/JA profiles, and human-readable diagnostics.
+Jouzu is an agentic AI environment built on the [Pi coding agent](https://pi.dev/). The `jouzu` and `jz` commands run an exact reviewed Pi runtime with isolated Jouzu state, safe built-in Core/JA profiles, and human-readable diagnostics. Japanese support is a first-class option, not the product's only identity.
 
 Jouzu v0.1 is an npm developer preview. It expects an existing development environment; it is not a native installer or hosted model service.
 
@@ -32,15 +32,22 @@ PyPI `jouzu==0.0.1` remains a non-functional package-name reservation and is not
 
 ## Quick start
 
-Inspect and apply the default Japanese profile before launching:
+Start Jouzu:
 
 ```bash
-jz profile plan
-jz profile apply
 jz
 ```
 
-A normal launch also performs the same safe reconciliation automatically. It stops before Pi if a managed target conflicts with a user-owned or modified file.
+On the first interactive launch, Jouzu asks whether to enable the optional Japanese-support profile. Only an affirmative answer selects `ja`; declining or pressing Enter selects the provider-neutral `core` profile. Jouzu saves that choice for later launches. Non-interactive first runs use `core` and do not manufacture consent.
+
+Before choosing, you can inspect either profile without writing:
+
+```bash
+jz profile plan --profile core
+jz profile plan --profile ja
+```
+
+A normal launch safely reconciles the selected profile. It stops before Pi if a managed target conflicts with a user-owned or modified file.
 
 Inside Pi:
 
@@ -52,19 +59,19 @@ Jouzu does not include model service, billing, routing, privacy, retention, regi
 
 ## Profiles
 
-The fresh-install default is `ja`, which combines provider-neutral Core assets with a concise Japanese-first response policy. It preserves exact code, commands, identifiers, paths, URLs, logs, and source error messages instead of translating or normalizing them.
+`core` is the safe fallback and provider-neutral base. The optional `ja` profile extends Core with a concise Japanese-first response policy. It preserves exact code, commands, identifiers, paths, URLs, logs, and source error messages instead of translating or normalizing them.
 
-Select the provider-neutral Core profile when Japanese defaults are not wanted:
+Enable Japanese support explicitly at any time:
 
 ```bash
-jz profile plan --profile core
-jz profile apply --profile core
+jz profile plan --profile ja
+jz profile apply --profile ja
 ```
 
-You can also select a profile for an ordinary launch:
+You can also select and reconcile a profile as part of an ordinary launch:
 
 ```bash
-jz --jouzu-profile core
+jz --jouzu-profile ja
 ```
 
 Profile schema v1 permits only bundled UTF-8 text at `APPEND_SYSTEM.md`, `skills/jouzu-*/**`, and `prompts/jouzu-*`. Planning performs no writes. Application uses an exclusive lock, conflict checks, backups, atomic per-file replacement, and an atomic state record. Unknown files and user-owned `AGENTS.md` are never pruned.

@@ -9,7 +9,7 @@ interface ProfileState {
 
 export interface ProfileSelection {
 	id: ProfileId;
-	source: "command line" | "environment" | "profile state" | "default";
+	source: "command line" | "environment" | "profile state" | "saved choice" | "first-run choice" | "default";
 	appliedManifestSha256?: string;
 }
 
@@ -30,6 +30,7 @@ export function resolveProfileSelection(
 	paths: JouzuPaths,
 	explicitProfile: ProfileId | undefined,
 	env: NodeJS.ProcessEnv = process.env,
+	savedChoice?: ProfileId,
 ): ProfileSelection {
 	const state = readProfileState(paths.profileStatePath);
 	if (explicitProfile) {
@@ -59,7 +60,8 @@ export function resolveProfileSelection(
 			appliedManifestSha256: typeof state.manifestSha256 === "string" ? state.manifestSha256 : undefined,
 		};
 	}
-	return { id: "ja", source: "default" };
+	if (savedChoice) return { id: savedChoice, source: "saved choice" };
+	return { id: "core", source: "default" };
 }
 
 export function configurePiProcess(paths: JouzuPaths, profile: ProfileSelection): void {

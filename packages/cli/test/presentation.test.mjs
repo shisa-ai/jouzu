@@ -3,6 +3,7 @@ import { test } from "node:test";
 import {
 	createJouzuPresentationExtension,
 	detectBannerColorMode,
+	isInteractivePiStartup,
 	renderBannerLines,
 	shouldClearInteractiveStartup,
 } from "../dist/presentation.js";
@@ -11,9 +12,10 @@ const metadata = {
 	jouzuVersion: "0.1.0",
 	piVersion: "0.84.2",
 	profileSchemaVersion: 1,
+	productLabel: "Agentic AI environment",
 	lock: { tag: "v0.84.2", commit: "commit", compatibilityStatus: "qualified", deviations: [] },
 };
-const profile = { id: "ja", source: "default" };
+const profile = { id: "core", source: "default" };
 const identityTheme = {
 	bold: (text) => text,
 	fg: (_color, text) => text,
@@ -69,6 +71,7 @@ test("clears only real interactive TTY launches", () => {
 	assert.equal(shouldClearInteractiveStartup([], { ...tty, stdoutIsTTY: false }), false);
 	assert.equal(shouldClearInteractiveStartup([], { ...tty, env: { TERM: "dumb" } }), false);
 	assert.equal(shouldClearInteractiveStartup([], { ...tty, env: { TERM: "xterm", JOUZU_NO_CLEAR: "1" } }), false);
+	assert.equal(isInteractivePiStartup([], { ...tty, env: { TERM: "xterm", JOUZU_NO_CLEAR: "1" } }), true);
 });
 
 test("installs a compact width-safe Jouzu header and working indicator", async () => {
@@ -85,7 +88,7 @@ test("installs a compact width-safe Jouzu header and working indicator", async (
 	assert.deepEqual(wide, [
 		"⠈⢹ ⡎⢱ ⡇⢸ ⢉⠝ ⡇⢸",
 		"⠣⠜ ⠣⠜ ⠣⠜ ⠮⠤ ⠣⠜",
-		"Japanese-first Pi environment",
+		"Agentic AI environment",
 		"jouzu 0.1.0  ·  pi 0.84.2",
 		"/model choose  ·  /hotkeys shortcuts  ·  /jouzu status",
 	]);
@@ -126,7 +129,7 @@ test("registers a Jouzu status command without exposing paths", async () => {
 	await commands.get("jouzu").handler("", ctx);
 	assert.equal(calls.notifications.length, 1);
 	assert.match(calls.notifications[0][0], /Jouzu 0\.1\.0 · Pi 0\.84\.2/);
-	assert.match(calls.notifications[0][0], /profile ja \(not applied\)/);
+	assert.match(calls.notifications[0][0], /profile core \(not applied\)/);
 	assert.match(calls.notifications[0][0], /anthropic\/claude-test/);
 	assert.doesNotMatch(calls.notifications[0][0], /\/work\//);
 });

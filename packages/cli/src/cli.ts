@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 
+import { join } from "node:path";
 import { formatHelp, isBlockedPiSelfUpdate, parseJouzuArgs, UsageError } from "./args.js";
 import { createDoctorReport } from "./doctor.js";
 import { loadMetadata } from "./metadata.js";
 import { resolveJouzuPaths } from "./paths.js";
-import { clearInteractiveStartup, createJouzuPresentationExtension } from "./presentation.js";
+import { clearInteractiveStartup, createJouzuPresentationExtension, isInteractivePiStartup } from "./presentation.js";
+import { promptForJapaneseSupport, readProfileChoice, writeProfileChoice } from "./profile-choice.js";
 import { applyProfile, formatProfilePlan, ProfileConflictError, planProfile } from "./profile-manager.js";
 import { loadBundledProfile } from "./profiles.js";
-import { configurePiProcess, resolveProfileSelection } from "./runtime.js";
+import { configurePiProcess, type ProfileSelection, resolveProfileSelection } from "./runtime.js";
 
 async function loadPiRuntime(): Promise<typeof import("@earendil-works/pi-coding-agent")> {
 	return import("@earendil-works/pi-coding-agent");
@@ -28,7 +30,28 @@ async function runCli(args: string[]): Promise<void> {
 	const inheritedPiAgentDir = process.env.PI_CODING_AGENT_DIR;
 	const inheritedPiSessionDir = process.env.PI_CODING_AGENT_SESSION_DIR;
 	const paths = resolveJouzuPaths({ homeOverride: parsed.options.home });
-	const profile = resolveProfileSelection(paths, parsed.options.profile);
+	const profileChoicePath = join(paths.stateDir, "profile-choice.json");
+	let profile: ProfileSelection = resolveProfileSelection(paths, parsed.options.profile);
+	const shouldReadSavedChoice =
+		parsed.kind !== "version" &&
+		(profile.source === "default" ||
+			(parsed.kind === "pi" && profile.source === "profile state" && profile.id === "core"));
+	const savedChoice = shouldReadSavedChoice ? readProfileChoice(profileChoicePath) : undefined;
+	if (profile.source === "default" && savedChoice) {
+		profile = resolveProfileSelection(paths, parsed.options.profile, process.env, savedChoice.profile);
+	}
+	let firstRunChoice = false;
+	if (
+		parsed.kind === "pi" &&
+		profile.id === "core" &&
+		profile.source !== "command line" &&
+		profile.source !== "environment" &&
+		savedChoice === undefined &&
+		isInteractivePiStartup(parsed.args)
+	) {
+		profile = { id: await promptForJapaneseSupport(), source: "first-run choice" };
+		firstRunChoice = true;
+	}
 	const metadata = loadMetadata();
 
 	if (parsed.kind === "profile") {
@@ -41,6 +64,7 @@ async function runCli(args: string[]): Promise<void> {
 			return;
 		}
 		const result = applyProfile(bundled, paths, metadata.jouzuVersion);
+		writeProfileChoice(profileChoicePath, selected);
 		console.log(formatProfilePlan(result.plan));
 		console.log(result.changed ? `Applied transaction: ${result.transactionId}` : "Profile already converged");
 		if (result.backupDir) console.log(`Backups: ${result.backupDir}`);
@@ -78,7 +102,12 @@ async function runCli(args: string[]): Promise<void> {
 
 	const bundled = loadBundledProfile(profile.id);
 	applyProfile(bundled, paths, metadata.jouzuVersion);
-	clearInteractiveStartup(parsed.args);
+	if (firstRunChoice) {
+		writeProfileChoice(profileChoicePath, profile.id);
+		console.log(profile.id === "ja" ? "Japanese support enabled." : "Continuing with the Core profile.");
+	} else {
+		clearInteractiveStartup(parsed.args);
+	}
 	await pi.main(parsed.args, {
 		extensionFactories: [createJouzuPresentationExtension(metadata, profile)],
 	});

@@ -16,11 +16,12 @@ Run the following after installation:
 ```powershell
 jouzu --version
 jouzu doctor
-jouzu profile plan
-jouzu profile apply
+jouzu profile plan --profile core
+jouzu profile plan --profile ja
+jouzu
 ```
 
-`jouzu doctor` reports missing Git or Bash as an actionable problem. Jouzu does not install, update, or silently select a shell for the user.
+The first interactive launch asks before enabling the optional Japanese-support profile; declining or pressing Enter uses Core. `jouzu doctor` reports missing Git or Bash as an actionable problem. Jouzu does not install, update, or silently select a shell for the user.
 
 ## Paths and text
 
