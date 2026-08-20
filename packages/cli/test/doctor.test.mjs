@@ -50,6 +50,17 @@ test("doctor reports an injected healthy Linux runtime without mutating roots", 
 		nodeVersion: "v22.19.0",
 		locale: "ja-JP",
 		commandPaths: { git: "/usr/bin/git", bash: "/usr/bin/bash", npm: "/usr/bin/npm" },
+		keybindingPlan: {
+			schemaVersion: 1,
+			defaultsVersion: 1,
+			configPath: "/home/利用者/.config/jouzu/agent/keybindings.json",
+			statePath: "/home/利用者/.local/state/jouzu/keybindings-state.json",
+			configExists: true,
+			policy: "applied",
+			status: "converged",
+			portabilityWarnings: [],
+			actions: [],
+		},
 		updateStatus: {
 			policy: "auto-restart",
 			installChannel: "global-npm",
@@ -77,6 +88,9 @@ test("doctor reports an injected healthy Linux runtime without mutating roots", 
 	assert.match(report.text, /Proxy configured: yes/);
 	assert.match(report.text, /Self-update policy: auto-restart/);
 	assert.match(report.text, /Automatic startup update: eligible/);
+	assert.match(report.text, /Keybinding defaults: converged/);
+	assert.match(report.text, /Jouzu default follow-up key: tab/);
+	assert.match(report.text, /Jouzu default dequeue key: ctrl\+up/);
 	assert.doesNotMatch(report.text, /must-not-appear/);
 	assert.equal(rmSync(root, { recursive: true, force: true }), undefined);
 });

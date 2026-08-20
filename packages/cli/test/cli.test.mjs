@@ -78,6 +78,64 @@ test("self-update status and policy are explicit and source-safe", () => {
 	}
 });
 
+test("keybinding commands plan without mutation, merge explicitly, and reset owned defaults", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-keybindings-cli-"));
+	try {
+		const jouzuHome = join(temp, "Jouzu 上手");
+		const planned = run(["--jouzu-home", jouzuHome, "keybindings", "plan", "--json"]);
+		assert.equal(planned.status, 0, planned.stderr);
+		const plan = JSON.parse(planned.stdout);
+		assert.equal(plan.status, "uninitialized");
+		assert.deepEqual(
+			plan.actions.map((action) => [action.action, action.binding]),
+			[
+				["app.message.followUp", "tab"],
+				["app.message.dequeue", "ctrl+up"],
+			],
+		);
+		assert.equal(existsSync(jouzuHome), false, "keybindings plan mutated the Jouzu home");
+
+		const applied = run(["--jouzu-home", jouzuHome, "keybindings", "apply"]);
+		assert.equal(applied.status, 0, applied.stderr);
+		assert.match(applied.stdout, /Applied keybinding transaction/);
+		assert.deepEqual(JSON.parse(readFileSync(join(jouzuHome, "agent", "keybindings.json"), "utf8")), {
+			"app.message.followUp": "tab",
+			"app.message.dequeue": "ctrl+up",
+		});
+		const status = JSON.parse(run(["--jouzu-home", jouzuHome, "keybindings", "status", "--json"]).stdout);
+		assert.equal(status.status, "converged");
+		assert.deepEqual(status.actions, []);
+
+		const reset = run(["--jouzu-home", jouzuHome, "keybindings", "reset"]);
+		assert.equal(reset.status, 0, reset.stderr);
+		assert.match(reset.stdout, /Reset keybinding transaction/);
+		assert.equal(existsSync(join(jouzuHome, "agent", "keybindings.json")), false);
+		assert.equal(
+			JSON.parse(readFileSync(join(jouzuHome, "state", "keybindings-state.json"), "utf8")).policy,
+			"disabled",
+		);
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
+
+test("keybinding conflicts use a dedicated status and preserve user bytes", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-keybindings-conflict-cli-"));
+	try {
+		const jouzuHome = join(temp, "home");
+		const path = join(jouzuHome, "agent", "keybindings.json");
+		mkdirSync(join(jouzuHome, "agent"), { recursive: true });
+		writeFileSync(path, '{"app.message.followUp":"alt+enter"}\n');
+		const before = readFileSync(path);
+		const result = run(["--jouzu-home", jouzuHome, "keybindings", "apply"]);
+		assert.equal(result.status, 5);
+		assert.match(result.stderr, /user-binding-differs/);
+		assert.deepEqual(readFileSync(path), before);
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
+
 test("jouzu and jz package bins are exact aliases", () => {
 	assert.equal(packageJson.bin.jouzu, packageJson.bin.jz);
 	assert.equal(packageJson.dependencies["@earendil-works/pi-coding-agent"], "0.84.2");

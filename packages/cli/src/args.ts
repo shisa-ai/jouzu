@@ -28,6 +28,12 @@ export type ParsedCommand =
 			policy?: "auto-restart" | "notify" | "off";
 	  }
 	| {
+			kind: "keybindings";
+			options: JouzuOptions;
+			operation: "status" | "plan" | "apply" | "reset";
+			json: boolean;
+	  }
+	| {
 			kind: "profile";
 			options: JouzuOptions;
 			operation: "plan" | "apply";
@@ -70,6 +76,21 @@ function parseSelfUpdateCommand(options: JouzuOptions, args: string[]): ParsedCo
 		json = true;
 	}
 	return { kind: "self-update", options, operation, json };
+}
+
+function parseKeybindingsCommand(options: JouzuOptions, args: string[]): ParsedCommand {
+	const [operation = "status", ...remaining] = args;
+	if (operation !== "status" && operation !== "plan" && operation !== "apply" && operation !== "reset") {
+		throw new UsageError('keybindings requires "status", "plan", "apply", or "reset"');
+	}
+	let json = false;
+	for (const token of remaining) {
+		if (token !== "--json" || json || operation === "apply" || operation === "reset") {
+			throw new UsageError(`unknown keybindings ${operation} option: ${token}`);
+		}
+		json = true;
+	}
+	return { kind: "keybindings", options, operation, json };
 }
 
 function parseProfileCommand(options: JouzuOptions, args: string[]): ParsedCommand {
@@ -139,6 +160,7 @@ export function parseJouzuArgs(args: string[]): ParsedCommand {
 		return { kind: "doctor", options };
 	}
 	if (command === "profile") return parseProfileCommand(options, rest);
+	if (command === "keybindings") return parseKeybindingsCommand(options, rest);
 	if (command === "self-update") return parseSelfUpdateCommand(options, rest);
 	if (command === "--version" || command === "-v") {
 		if (rest.length > 0) throw new UsageError(`${command} does not accept arguments; use "jouzu pi ${command}" for Pi`);
@@ -195,6 +217,10 @@ Usage:
   jouzu [Jouzu options] doctor
   jouzu profile plan [--profile <core|ja>] [--json]
   jouzu profile apply [--profile <core|ja>]
+  jouzu keybindings status [--json]
+  jouzu keybindings plan [--json]
+  jouzu keybindings apply
+  jouzu keybindings reset
   jouzu self-update status [--json]
   jouzu self-update check [--json]
   jouzu self-update apply
@@ -205,6 +231,7 @@ Commands:
   doctor        Show non-mutating runtime and isolation diagnostics
   profile plan  Preview safe Core/JA profile changes without writing
   profile apply Apply the selected profile with conflicts and backups
+  keybindings   Inspect, apply, or reset Jouzu's Pi-compatible key defaults
   self-update   Inspect, check, apply, or configure Jouzu npm updates
   pi, --        Explicitly pass all remaining arguments to pinned Pi
 

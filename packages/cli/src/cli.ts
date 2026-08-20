@@ -4,6 +4,15 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { formatHelp, isBlockedPiSelfUpdate, parseJouzuArgs, UsageError } from "./args.js";
 import { createDoctorReport } from "./doctor.js";
+import {
+	applyKeybindings,
+	ensureDefaultKeybindings,
+	formatKeybindingPlan,
+	KeybindingConfigError,
+	KeybindingConflictError,
+	planKeybindings,
+	resetKeybindings,
+} from "./keybindings.js";
 import { loadMetadata } from "./metadata.js";
 import { resolveJouzuPaths } from "./paths.js";
 import { clearInteractiveStartup, createJouzuPresentationExtension, isInteractivePiStartup } from "./presentation.js";
@@ -38,6 +47,24 @@ async function runCli(args: string[]): Promise<void> {
 		executable,
 		report: (message) => console.log(message),
 	});
+
+	if (parsed.kind === "keybindings") {
+		if (parsed.operation === "status" || parsed.operation === "plan") {
+			const plan = planKeybindings(paths);
+			console.log(parsed.json ? JSON.stringify(plan, null, 2) : formatKeybindingPlan(plan));
+			if (plan.actions.some((action) => action.type === "conflict")) process.exitCode = 5;
+			return;
+		}
+		const result = parsed.operation === "apply" ? applyKeybindings(paths) : resetKeybindings(paths);
+		console.log(formatKeybindingPlan(result.plan));
+		console.log(
+			result.changed
+				? `${parsed.operation === "apply" ? "Applied" : "Reset"} keybinding transaction: ${result.transactionId}`
+				: `Keybinding defaults already ${parsed.operation === "apply" ? "converged" : "disabled"}.`,
+		);
+		if (result.backupDir) console.log(`Backup: ${result.backupDir}`);
+		return;
+	}
 
 	if (parsed.kind === "self-update") {
 		if (parsed.operation === "policy") {
@@ -123,6 +150,11 @@ async function runCli(args: string[]): Promise<void> {
 		return;
 	}
 
+	if (parsed.kind === "pi" && isInteractivePiStartup(parsed.args)) {
+		const bootstrap = ensureDefaultKeybindings(paths);
+		if (bootstrap.message) console.error(bootstrap.message);
+	}
+
 	configurePiProcess(paths, profile);
 	const pi = await loadPiRuntime();
 	if (pi.VERSION !== metadata.piVersion) {
@@ -139,10 +171,17 @@ async function runCli(args: string[]): Promise<void> {
 		const desiredProfile = loadBundledProfile(profile.id);
 		let updateStatus: ReturnType<JouzuUpdater["status"]> | undefined;
 		let updateDiagnostic: string | undefined;
+		let keybindingPlan: ReturnType<typeof planKeybindings> | undefined;
+		let keybindingDiagnostic: string | undefined;
 		try {
 			updateStatus = updater.status();
 		} catch (error) {
 			updateDiagnostic = error instanceof Error ? error.message : String(error);
+		}
+		try {
+			keybindingPlan = planKeybindings(paths);
+		} catch (error) {
+			keybindingDiagnostic = error instanceof Error ? error.message : String(error);
 		}
 		const result = createDoctorReport({
 			metadata,
@@ -155,6 +194,8 @@ async function runCli(args: string[]): Promise<void> {
 			desiredProfileManifestSha256: desiredProfile.manifestSha256,
 			...(updateStatus ? { updateStatus } : {}),
 			...(updateDiagnostic ? { updateDiagnostic } : {}),
+			...(keybindingPlan ? { keybindingPlan } : {}),
+			...(keybindingDiagnostic ? { keybindingDiagnostic } : {}),
 		});
 		console.log(result.text);
 		if (!result.healthy) process.exitCode = 1;
@@ -174,6 +215,17 @@ async function runCli(args: string[]): Promise<void> {
 }
 
 runCli(process.argv.slice(2)).catch((error: unknown) => {
+	if (error instanceof KeybindingConflictError) {
+		console.error(formatKeybindingPlan(error.plan));
+		console.error('Resolve the conflicts above, then run "jouzu keybindings apply" again.');
+		process.exitCode = error.exitCode;
+		return;
+	}
+	if (error instanceof KeybindingConfigError) {
+		console.error(`Jouzu keybindings failed: ${error.message}`);
+		process.exitCode = error.exitCode;
+		return;
+	}
 	if (error instanceof UpdateError) {
 		console.error(`Jouzu update failed: ${error.message}`);
 		process.exitCode = error.exitCode;

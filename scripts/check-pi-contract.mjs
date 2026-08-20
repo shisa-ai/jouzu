@@ -10,8 +10,20 @@ const root = resolve(import.meta.dirname, "..");
 const packageName = "@earendil-works/pi-coding-agent";
 const lock = JSON.parse(readFileSync(resolve(root, "upstream", "pi.lock.json"), "utf8"));
 const expectedVersion = lock.packages[packageName].version;
-const cli = resolve(root, "node_modules", packageName, "dist", "cli.js");
-const systemPromptSource = resolve(root, "node_modules", packageName, "dist", "core", "system-prompt.js");
+const piPackageRoot = resolve(root, "node_modules", packageName);
+const cli = resolve(piPackageRoot, "dist", "cli.js");
+const systemPromptSource = resolve(piPackageRoot, "dist", "core", "system-prompt.js");
+const keybindingsSource = resolve(piPackageRoot, "dist", "core", "keybindings.js");
+const customEditorSource = resolve(piPackageRoot, "dist", "modes", "interactive", "components", "custom-editor.js");
+const interactiveModeSource = resolve(piPackageRoot, "dist", "modes", "interactive", "interactive-mode.js");
+const tuiKeybindingsSource = resolve(
+	piPackageRoot,
+	"node_modules",
+	"@earendil-works",
+	"pi-tui",
+	"dist",
+	"keybindings.js",
+);
 const expectedDefaultIdentity =
 	"You are an expert coding assistant operating inside pi, a coding agent harness. You help users by reading files, executing commands, editing code, and writing new files.";
 
@@ -30,10 +42,25 @@ function runNode(args, options = {}) {
 
 assert.ok(existsSync(cli), `Pi CLI is missing: ${cli}`);
 assert.ok(existsSync(systemPromptSource), `Pi system prompt source is missing: ${systemPromptSource}`);
+for (const path of [keybindingsSource, customEditorSource, interactiveModeSource, tuiKeybindingsSource]) {
+	assert.ok(existsSync(path), `Pi keybinding contract source is missing: ${path}`);
+}
 assert.ok(
 	readFileSync(systemPromptSource, "utf8").includes(expectedDefaultIdentity),
 	"Pi default identity changed; review Jouzu's exact-prefix branding before qualifying this Pi version",
 );
+const keybindingsText = readFileSync(keybindingsSource, "utf8");
+assert.match(keybindingsText, /"app\.message\.followUp": \{\s*defaultKeys: "alt\+enter"/);
+assert.match(keybindingsText, /"app\.message\.dequeue": \{\s*defaultKeys: "alt\+up"/);
+assert.match(readFileSync(tuiKeybindingsSource, "utf8"), /"tui\.input\.tab": \{ defaultKeys: "tab"/);
+const editorText = readFileSync(customEditorSource, "utf8");
+assert.ok(
+	editorText.indexOf("// Check all other app actions") < editorText.indexOf("// Pass to parent for editor handling"),
+	"Pi editor no longer gives application actions priority over ordinary Tab/editor handling",
+);
+const interactiveText = readFileSync(interactiveModeSource, "utf8");
+assert.ok(interactiveText.includes('onAction("app.message.followUp"'), "Pi editor lost the follow-up semantic action");
+assert.ok(interactiveText.includes('onAction("app.message.dequeue"'), "Pi editor lost the dequeue semantic action");
 
 const version = runNode([cli, "--version"], { env: { ...process.env, PI_OFFLINE: "1" } }).stdout.trim();
 assert.equal(version, expectedVersion, "Pi CLI version differs from the exact lock");
@@ -113,6 +140,7 @@ process.stdout.write(JSON.stringify({ exports: required, agentDir: pi.getAgentDi
 				cli: ["version", "help"],
 				rpc: ["startup", "get_state", "no-session", "isolated-agent-dir"],
 				prompt: ["default-identity"],
+				keybindings: ["semantic-message-actions", "app-before-editor-routing", "tab-editor-default"],
 			},
 			null,
 			2,

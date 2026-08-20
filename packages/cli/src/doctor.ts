@@ -1,6 +1,7 @@
 import { constants, existsSync, readFileSync, statSync } from "node:fs";
 import { homedir } from "node:os";
 import { posix, win32 } from "node:path";
+import type { KeybindingPlan } from "./keybindings.js";
 import type { JouzuMetadata } from "./metadata.js";
 import type { JouzuPaths } from "./paths.js";
 import type { ProfileSelection } from "./runtime.js";
@@ -42,6 +43,8 @@ export interface DoctorContext {
 	desiredProfileManifestSha256?: string;
 	updateStatus?: UpdateStatus;
 	updateDiagnostic?: string;
+	keybindingPlan?: KeybindingPlan;
+	keybindingDiagnostic?: string;
 }
 
 export interface DoctorResult {
@@ -156,6 +159,10 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 		warnings.push(`The last Jouzu update operation failed (${context.updateStatus.state.lastErrorCode ?? "unknown"})`);
 	}
 	if (context.updateDiagnostic) warnings.push(`Self-update status is unavailable: ${context.updateDiagnostic}`);
+	if (context.keybindingPlan?.actions.some((action) => action.type === "conflict")) {
+		warnings.push('Jouzu keybinding defaults conflict with user bindings; run "jouzu keybindings plan"');
+	}
+	if (context.keybindingDiagnostic) warnings.push(`Keybinding status is unavailable: ${context.keybindingDiagnostic}`);
 
 	lines.push("Jouzu doctor");
 	lines.push("");
@@ -175,6 +182,11 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	);
 	lines.push(`Last update check: ${context.updateStatus?.state.lastCheckedAt ?? "never"}`);
 	lines.push(`Latest observed Jouzu: ${context.updateStatus?.state.latestVersion ?? "not checked"}`);
+	lines.push(`Keybinding defaults: ${context.keybindingPlan?.status ?? "unavailable"}`);
+	lines.push(`Keybinding policy: ${context.keybindingPlan?.policy ?? "unavailable"}`);
+	lines.push(`Jouzu default follow-up key: tab`);
+	lines.push(`Jouzu default dequeue key: ctrl+up`);
+	lines.push(`Keybinding config: ${context.keybindingPlan?.configPath ?? "unavailable"}`);
 	lines.push("");
 	lines.push(`Platform: ${platform} ${architecture}`);
 	lines.push(`Node: ${nodeVersion} (${nodeSupported ? "supported" : "unsupported"})`);

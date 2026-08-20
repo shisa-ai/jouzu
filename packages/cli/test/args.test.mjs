@@ -46,6 +46,33 @@ test("parses profile planning and application without mixing launch selection", 
 	});
 });
 
+test("parses Jouzu keybinding planning, application, and reset", () => {
+	assert.deepEqual(parseJouzuArgs(["keybindings"]), {
+		kind: "keybindings",
+		options: {},
+		operation: "status",
+		json: false,
+	});
+	assert.deepEqual(parseJouzuArgs(["--jouzu-home=/tmp/keys", "keybindings", "plan", "--json"]), {
+		kind: "keybindings",
+		options: { home: "/tmp/keys" },
+		operation: "plan",
+		json: true,
+	});
+	assert.deepEqual(parseJouzuArgs(["keybindings", "apply"]), {
+		kind: "keybindings",
+		options: {},
+		operation: "apply",
+		json: false,
+	});
+	assert.deepEqual(parseJouzuArgs(["keybindings", "reset"]), {
+		kind: "keybindings",
+		options: {},
+		operation: "reset",
+		json: false,
+	});
+});
+
 test("parses Jouzu self-update operations without taking Pi package updates", () => {
 	assert.deepEqual(parseJouzuArgs(["self-update"]), {
 		kind: "self-update",
@@ -89,6 +116,9 @@ test("rejects invalid Jouzu options", () => {
 	assert.throws(() => parseJouzuArgs(["self-update", "other"]), UsageError);
 	assert.throws(() => parseJouzuArgs(["self-update", "apply", "--json"]), UsageError);
 	assert.throws(() => parseJouzuArgs(["self-update", "policy", "later"]), UsageError);
+	assert.throws(() => parseJouzuArgs(["keybindings", "other"]), UsageError);
+	assert.throws(() => parseJouzuArgs(["keybindings", "apply", "--json"]), UsageError);
+	assert.throws(() => parseJouzuArgs(["keybindings", "plan", "--json", "--json"]), UsageError);
 });
 
 test("blocks only Pi runtime self-update forms", () => {

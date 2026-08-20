@@ -58,6 +58,16 @@ try {
 	assert.equal(firstPlan.profile, "core");
 	assert.ok(firstPlan.actions.some((action) => action.type === "create"));
 	assert.equal(existsSync(consumer), false, "packed profile plan mutated the consumer home");
+	const keyPlan = JSON.parse(
+		run(process.execPath, [installedCli, "keybindings", "plan", "--json"], { cwd: temp, env }).stdout,
+	);
+	assert.equal(keyPlan.status, "uninitialized");
+	assert.equal(keyPlan.actions.length, 2);
+	run(process.execPath, [installedCli, "keybindings", "apply"], { cwd: temp, env });
+	assert.deepEqual(JSON.parse(readFileSync(resolve(consumer, "agent", "keybindings.json"), "utf8")), {
+		"app.message.followUp": "tab",
+		"app.message.dequeue": "ctrl+up",
+	});
 	run(process.execPath, [installedCli, "profile", "apply"], { cwd: temp, env });
 	const secondPlan = JSON.parse(
 		run(process.execPath, [installedCli, "profile", "plan", "--json"], { cwd: temp, env }).stdout,
