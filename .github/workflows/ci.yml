@@ -34,6 +34,7 @@ jobs:
       - run: npm test --workspaces --if-present
       - run: npm run pack:check
       - run: npm run test:packed
+      - run: npm run test:auto-update
 
   python:
     runs-on: ${{ matrix.os }}

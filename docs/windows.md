@@ -23,6 +23,8 @@ jouzu
 
 The first interactive launch asks before enabling the optional Japanese-support profile; declining or pressing Enter uses Core. `jouzu doctor` reports missing Git or Bash as an actionable problem. Jouzu does not install, update, or silently select a shell for the user.
 
+For real global npm installations, the first eligible interactive launch checks for a newer Jouzu package before entering Pi. Jouzu uses the npm client on `PATH`, verifies the exact tarball SHA-512 and installed runtime, restores the previous locally packed version on a failed verification, and relaunches the original command after success. Project-local, source, and ephemeral `npx` invocations are not rewritten. Use `jouzu self-update status` for classification or `JOUZU_NO_UPDATE=1` for a one-run opt-out.
+
 ## Paths and text
 
 Jouzu uses `%APPDATA%\Jouzu\agent` for configuration and `%LOCALAPPDATA%\Jouzu` for state and cache by default. `--jouzu-home <path>` or `JOUZU_HOME` can select one portable root. The compatibility suite covers spaces, Japanese characters, full-width spaces, UTF-8, UTF-8 BOM, CRLF, and normalization-sensitive names without rewriting user files.

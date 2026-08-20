@@ -4,6 +4,7 @@ import { posix, win32 } from "node:path";
 import type { JouzuMetadata } from "./metadata.js";
 import type { JouzuPaths } from "./paths.js";
 import type { ProfileSelection } from "./runtime.js";
+import type { UpdateStatus } from "./updater.js";
 
 const PROVIDER_ENVIRONMENT_KEYS = [
 	"ANTHROPIC_API_KEY",
@@ -37,8 +38,10 @@ export interface DoctorContext {
 	architecture?: string;
 	nodeVersion?: string;
 	locale?: string;
-	commandPaths?: { git: string | null; bash: string | null };
+	commandPaths?: { git: string | null; bash: string | null; npm: string | null };
 	desiredProfileManifestSha256?: string;
+	updateStatus?: UpdateStatus;
+	updateDiagnostic?: string;
 }
 
 export interface DoctorResult {
@@ -121,12 +124,14 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	const bashPath = context.commandPaths
 		? (context.commandPaths.bash ?? undefined)
 		: findExecutable("bash", env, platform);
+	const npmPath = context.commandPaths ? (context.commandPaths.npm ?? undefined) : findExecutable("npm", env, platform);
 	const providerEnvironment = PROVIDER_ENVIRONMENT_KEYS.some((key) => Boolean(env[key]));
 	const nodeSupported = nodeIsSupported(nodeVersion);
 
 	if (!nodeSupported) problems.push(`Node ${nodeVersion} is unsupported; Jouzu requires >=22.19.0`);
 	if (!gitPath) problems.push("Git was not found on PATH");
 	if (!bashPath) problems.push("Bash was not found; install Bash or Git Bash");
+	if (!npmPath) problems.push("npm was not found on PATH; npm is required for Jouzu updates");
 	if (context.metadata.piVersion !== context.piRuntimeVersion) {
 		problems.push(`Pinned Pi ${context.metadata.piVersion} does not match loaded runtime ${context.piRuntimeVersion}`);
 	}
@@ -147,6 +152,10 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 		warnings.push('The applied profile differs from the bundled manifest; run "jouzu profile plan"');
 	}
 	if (packageState.warning) warnings.push(packageState.warning);
+	if (context.updateStatus?.state.lastResult === "failed") {
+		warnings.push(`The last Jouzu update operation failed (${context.updateStatus.state.lastErrorCode ?? "unknown"})`);
+	}
+	if (context.updateDiagnostic) warnings.push(`Self-update status is unavailable: ${context.updateDiagnostic}`);
 
 	lines.push("Jouzu doctor");
 	lines.push("");
@@ -159,12 +168,20 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	lines.push(`Profile schema: ${context.metadata.profileSchemaVersion}`);
 	lines.push(`Install channel: ${installChannel(context.executable)}`);
 	lines.push(`Executable: ${context.executable}`);
+	lines.push(`Self-update policy: ${context.updateStatus?.policy ?? "unavailable"}`);
+	lines.push(`Self-update channel: ${context.updateStatus?.installChannel ?? "unavailable"}`);
+	lines.push(
+		`Automatic startup update: ${context.updateStatus ? (context.updateStatus.startupEligible ? "eligible" : "not eligible") : "unavailable"}`,
+	);
+	lines.push(`Last update check: ${context.updateStatus?.state.lastCheckedAt ?? "never"}`);
+	lines.push(`Latest observed Jouzu: ${context.updateStatus?.state.latestVersion ?? "not checked"}`);
 	lines.push("");
 	lines.push(`Platform: ${platform} ${architecture}`);
 	lines.push(`Node: ${nodeVersion} (${nodeSupported ? "supported" : "unsupported"})`);
 	lines.push(`Locale: ${locale}`);
 	lines.push(`Git: ${gitPath ?? "not found"}`);
 	lines.push(`Bash: ${bashPath ?? "not found"}`);
+	lines.push(`npm: ${npmPath ?? "not found"}`);
 	lines.push(`Proxy configured: ${env.HTTP_PROXY || env.HTTPS_PROXY ? "yes" : "no"}`);
 	lines.push(`Additional CA configured: ${env.NODE_EXTRA_CA_CERTS ? "yes" : "no"}`);
 	lines.push("");

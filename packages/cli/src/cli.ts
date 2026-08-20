@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { formatHelp, isBlockedPiSelfUpdate, parseJouzuArgs, UsageError } from "./args.js";
 import { createDoctorReport } from "./doctor.js";
 import { loadMetadata } from "./metadata.js";
@@ -10,6 +11,7 @@ import { promptForJapaneseSupport, readProfileChoice, writeProfileChoice } from 
 import { applyProfile, formatProfilePlan, ProfileConflictError, planProfile } from "./profile-manager.js";
 import { loadBundledProfile } from "./profiles.js";
 import { configurePiProcess, type ProfileSelection, resolveProfileSelection } from "./runtime.js";
+import { formatUpdateStatus, JouzuUpdater, relaunchUpdatedJouzu, UpdateError } from "./updater.js";
 
 async function loadPiRuntime(): Promise<typeof import("@earendil-works/pi-coding-agent")> {
 	return import("@earendil-works/pi-coding-agent");
@@ -27,9 +29,60 @@ async function runCli(args: string[]): Promise<void> {
 		);
 	}
 
+	const paths = resolveJouzuPaths({ homeOverride: parsed.options.home });
+	const metadata = loadMetadata();
+	const executable = process.argv[1] ?? fileURLToPath(import.meta.url);
+	const updater = new JouzuUpdater({
+		paths,
+		currentVersion: metadata.jouzuVersion,
+		executable,
+		report: (message) => console.log(message),
+	});
+
+	if (parsed.kind === "self-update") {
+		if (parsed.operation === "policy") {
+			if (!parsed.policy) throw new UsageError("self-update policy requires a value");
+			const state = updater.setPolicy(parsed.policy);
+			console.log(`Jouzu self-update policy: ${state.policy}`);
+			return;
+		}
+		if (parsed.operation === "check") {
+			const result = updater.check();
+			if (parsed.json) console.log(JSON.stringify(result, null, 2));
+			else if (result.status === "available") {
+				console.log(`Jouzu ${result.version} is available (installed ${result.installedVersion})`);
+			} else {
+				console.log(`Jouzu ${result.installedVersion} is current (latest ${result.version})`);
+			}
+			return;
+		}
+		if (parsed.operation === "apply") {
+			const result = updater.apply();
+			console.log(
+				result.changed
+					? `Updated Jouzu to ${result.version}. Restart Jouzu to use the new version.`
+					: `Jouzu ${result.version} is already current.`,
+			);
+			return;
+		}
+		const status = updater.status();
+		console.log(parsed.json ? JSON.stringify(status, null, 2) : formatUpdateStatus(status));
+		return;
+	}
+
+	if (parsed.kind === "pi" && isInteractivePiStartup(parsed.args)) {
+		const startupUpdate = updater.startup();
+		delete process.env.JOUZU_INTERNAL_UPDATE_RESTARTED;
+		if (startupUpdate.message) console.error(startupUpdate.message);
+		if (startupUpdate.action === "restart") {
+			console.log(`Updated Jouzu ${metadata.jouzuVersion} → ${startupUpdate.version}; restarting…`);
+			process.exitCode = relaunchUpdatedJouzu({ executable, args, env: process.env });
+			return;
+		}
+	}
+
 	const inheritedPiAgentDir = process.env.PI_CODING_AGENT_DIR;
 	const inheritedPiSessionDir = process.env.PI_CODING_AGENT_SESSION_DIR;
-	const paths = resolveJouzuPaths({ homeOverride: parsed.options.home });
 	const profileChoicePath = join(paths.stateDir, "profile-choice.json");
 	let profile: ProfileSelection = resolveProfileSelection(paths, parsed.options.profile);
 	const shouldReadSavedChoice =
@@ -52,7 +105,6 @@ async function runCli(args: string[]): Promise<void> {
 		profile = { id: await promptForJapaneseSupport(), source: "first-run choice" };
 		firstRunChoice = true;
 	}
-	const metadata = loadMetadata();
 
 	if (parsed.kind === "profile") {
 		const selected = parsed.profile ?? profile.id;
@@ -85,15 +137,24 @@ async function runCli(args: string[]): Promise<void> {
 	}
 	if (parsed.kind === "doctor") {
 		const desiredProfile = loadBundledProfile(profile.id);
+		let updateStatus: ReturnType<JouzuUpdater["status"]> | undefined;
+		let updateDiagnostic: string | undefined;
+		try {
+			updateStatus = updater.status();
+		} catch (error) {
+			updateDiagnostic = error instanceof Error ? error.message : String(error);
+		}
 		const result = createDoctorReport({
 			metadata,
 			paths,
 			profile,
 			piRuntimeVersion: pi.VERSION,
-			executable: process.argv[1] ?? "unknown",
+			executable,
 			inheritedPiAgentDir,
 			inheritedPiSessionDir,
 			desiredProfileManifestSha256: desiredProfile.manifestSha256,
+			...(updateStatus ? { updateStatus } : {}),
+			...(updateDiagnostic ? { updateDiagnostic } : {}),
 		});
 		console.log(result.text);
 		if (!result.healthy) process.exitCode = 1;
@@ -114,6 +175,11 @@ async function runCli(args: string[]): Promise<void> {
 }
 
 runCli(process.argv.slice(2)).catch((error: unknown) => {
+	if (error instanceof UpdateError) {
+		console.error(`Jouzu update failed: ${error.message}`);
+		process.exitCode = error.exitCode;
+		return;
+	}
 	if (error instanceof ProfileConflictError) {
 		console.error(formatProfilePlan(error.plan));
 		console.error('Resolve the conflicts above, then run "jouzu profile apply" again.');

@@ -113,9 +113,38 @@ jz pi --help
 jz -- --version
 ```
 
-`doctor` is non-mutating and reports the install channel, exact Pi tag/commit, platform/runtime prerequisites, resolved roots, profile hashes, package count, authentication presence, proxy/CA status, shared skill surface, warnings, and actionable problems. It reports presence only and does not print credential values.
+`doctor` is non-mutating and reports the install/update channel and policy, exact Pi tag/commit, platform/runtime prerequisites, resolved roots, profile hashes, package count, authentication presence, proxy/CA status, shared skill surface, warnings, and actionable problems. It reports presence only and does not print credential values.
 
-Most arguments are forwarded unchanged to Pi. Use `pi` or `--` when a Pi argument collides with a Jouzu command. Pi runtime self-update is blocked because Jouzu owns the exact Pi dependency; upgrade Jouzu instead. Pi package/model operations such as `jz update --extensions` and `jz update --models` remain available inside Jouzu state.
+Most arguments are forwarded unchanged to Pi. Use `pi` or `--` when a Pi argument collides with a Jouzu command. Pi runtime self-update is blocked because Jouzu owns the exact Pi dependency. Pi package/model operations such as `jz update --extensions` and `jz update --models` remain available inside Jouzu state.
+
+## Automatic Jouzu updates
+
+A real global npm installation checks the configured npm `latest` channel before the first eligible interactive launch. Each successful check suppresses another registry check for 24 hours; a failed/offline check retries no sooner than one hour later. The default policy is `auto-restart`: when a newer semantic version exists, Jouzu:
+
+1. reads version and SHA-512 integrity through the installed npm client's configured registry/proxy/CA behavior;
+2. packs the currently installed Jouzu as a local rollback artifact;
+3. downloads the exact new version without lifecycle scripts and verifies its SHA-512 integrity;
+4. installs the verified tarball globally with lifecycle scripts, audit, and funding calls disabled;
+5. verifies package/Pi-lock metadata, CLI bytes, and `--version` behavior;
+6. restores the packed previous version if installation verification fails; and
+7. relaunches the original command once under the new Jouzu version.
+
+Source checkouts, project-local installs, and ephemeral `npx` runs are never rewritten automatically; update them through their owning checkout/package invocation. A failed/offline check leaves the current verified installation usable and retries later. Concurrent installs are blocked by a Jouzu state lock. Automatic installation also requires write access to the active global npm prefix; permission failures leave the current installation running and are reported by `self-update status` and `doctor`.
+
+Inspect or control the updater explicitly:
+
+```bash
+jz self-update status
+jz self-update check
+jz self-update apply
+jz self-update policy auto-restart  # default
+jz self-update policy notify
+jz self-update policy off
+```
+
+`JOUZU_NO_UPDATE=1` disables startup checks for one invocation. `JOUZU_UPDATE_POLICY=auto-restart|notify|off` overrides the persisted policy for one process (an invalid value fails safe as `off`), and `JOUZU_UPDATE_INTERVAL_HOURS` changes the successful-check cadence. `self-update check --json` and `self-update status --json` provide machine-readable results.
+
+Startup checks contact the configured npm registry but send no Jouzu telemetry. A later release may check in the background and offer restart behavior in a TUI modal; v0.1 performs the update before entering Pi so old launcher code never loads newly replaced runtime modules.
 
 Interactive launches clear the current viewport and show a compact adaptive Jouzu header. Set `JOUZU_NO_CLEAR=1` to preserve existing terminal output. `NO_COLOR` disables banner color.
 

@@ -21,6 +21,13 @@ export type ParsedCommand =
 	| { kind: "version"; options: JouzuOptions }
 	| { kind: "help"; options: JouzuOptions }
 	| {
+			kind: "self-update";
+			options: JouzuOptions;
+			operation: "status" | "check" | "apply" | "policy";
+			json: boolean;
+			policy?: "auto-restart" | "notify" | "off";
+	  }
+	| {
 			kind: "profile";
 			options: JouzuOptions;
 			operation: "plan" | "apply";
@@ -40,6 +47,29 @@ function readOptionValue(args: string[], index: number, option: string): { value
 	const value = args[index + 1];
 	if (value === undefined || value.length === 0) throw new UsageError(`${option} requires a value`);
 	return { value, next: index + 2 };
+}
+
+function parseSelfUpdateCommand(options: JouzuOptions, args: string[]): ParsedCommand {
+	const [operation = "status", ...remaining] = args;
+	if (operation !== "status" && operation !== "check" && operation !== "apply" && operation !== "policy") {
+		throw new UsageError('self-update requires "status", "check", "apply", or "policy"');
+	}
+	if (operation === "policy") {
+		const [policy, ...extra] = remaining;
+		if (policy !== "auto-restart" && policy !== "notify" && policy !== "off") {
+			throw new UsageError("self-update policy must be one of: auto-restart, notify, off");
+		}
+		if (extra.length > 0) throw new UsageError("self-update policy accepts exactly one value");
+		return { kind: "self-update", options, operation, json: false, policy };
+	}
+	let json = false;
+	for (const token of remaining) {
+		if (token !== "--json" || json || operation === "apply") {
+			throw new UsageError(`unknown self-update ${operation} option: ${token}`);
+		}
+		json = true;
+	}
+	return { kind: "self-update", options, operation, json };
 }
 
 function parseProfileCommand(options: JouzuOptions, args: string[]): ParsedCommand {
@@ -109,6 +139,7 @@ export function parseJouzuArgs(args: string[]): ParsedCommand {
 		return { kind: "doctor", options };
 	}
 	if (command === "profile") return parseProfileCommand(options, rest);
+	if (command === "self-update") return parseSelfUpdateCommand(options, rest);
 	if (command === "--version" || command === "-v") {
 		if (rest.length > 0) throw new UsageError(`${command} does not accept arguments; use "jouzu pi ${command}" for Pi`);
 		return { kind: "version", options };
@@ -164,12 +195,17 @@ Usage:
   jouzu [Jouzu options] doctor
   jouzu profile plan [--profile <core|ja>] [--json]
   jouzu profile apply [--profile <core|ja>]
+  jouzu self-update status [--json]
+  jouzu self-update check [--json]
+  jouzu self-update apply
+  jouzu self-update policy <auto-restart|notify|off>
   jouzu [Jouzu options] --version
 
 Commands:
   doctor        Show non-mutating runtime and isolation diagnostics
   profile plan  Preview safe Core/JA profile changes without writing
   profile apply Apply the selected profile with conflicts and backups
+  self-update   Inspect, check, apply, or configure Jouzu npm updates
   pi, --        Explicitly pass all remaining arguments to pinned Pi
 
 The jz command is an exact alias. First interactive launch asks before enabling

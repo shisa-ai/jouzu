@@ -46,6 +46,39 @@ test("parses profile planning and application without mixing launch selection", 
 	});
 });
 
+test("parses Jouzu self-update operations without taking Pi package updates", () => {
+	assert.deepEqual(parseJouzuArgs(["self-update"]), {
+		kind: "self-update",
+		options: {},
+		operation: "status",
+		json: false,
+	});
+	assert.deepEqual(parseJouzuArgs(["self-update", "check", "--json"]), {
+		kind: "self-update",
+		options: {},
+		operation: "check",
+		json: true,
+	});
+	assert.deepEqual(parseJouzuArgs(["--jouzu-home", "/tmp/update", "self-update", "apply"]), {
+		kind: "self-update",
+		options: { home: "/tmp/update" },
+		operation: "apply",
+		json: false,
+	});
+	assert.deepEqual(parseJouzuArgs(["self-update", "policy", "notify"]), {
+		kind: "self-update",
+		options: {},
+		operation: "policy",
+		policy: "notify",
+		json: false,
+	});
+	assert.deepEqual(parseJouzuArgs(["update", "--extensions"]), {
+		kind: "pi",
+		options: {},
+		args: ["update", "--extensions"],
+	});
+});
+
 test("rejects invalid Jouzu options", () => {
 	assert.throws(() => parseJouzuArgs(["--jouzu-profile", "other"]), UsageError);
 	assert.throws(() => parseJouzuArgs(["--jouzu-home"]), UsageError);
@@ -53,6 +86,9 @@ test("rejects invalid Jouzu options", () => {
 	assert.throws(() => parseJouzuArgs(["profile", "plan", "--profile", "other"]), UsageError);
 	assert.throws(() => parseJouzuArgs(["profile", "apply", "--json"]), UsageError);
 	assert.throws(() => parseJouzuArgs(["--jouzu-profile", "ja", "profile", "plan"]), UsageError);
+	assert.throws(() => parseJouzuArgs(["self-update", "other"]), UsageError);
+	assert.throws(() => parseJouzuArgs(["self-update", "apply", "--json"]), UsageError);
+	assert.throws(() => parseJouzuArgs(["self-update", "policy", "later"]), UsageError);
 });
 
 test("blocks only Pi runtime self-update forms", () => {

@@ -97,11 +97,20 @@ try {
 	runNpm(["install", "--global", "--prefix", globalPrefix, "--ignore-scripts", tarball]);
 	const globalBin =
 		process.platform === "win32" ? resolve(globalPrefix, "jouzu.cmd") : resolve(globalPrefix, "bin", "jouzu");
-	const globalVersion =
+	const globalEnv = { ...env, npm_config_prefix: globalPrefix };
+	const runGlobal = (args) =>
 		process.platform === "win32"
-			? run(process.env.ComSpec ?? "cmd.exe", ["/d", "/s", "/c", globalBin, "--version"], { cwd: temp, env })
-			: run(globalBin, ["--version"], { cwd: temp, env });
+			? run(process.env.ComSpec ?? "cmd.exe", ["/d", "/s", "/c", globalBin, ...args], {
+					cwd: temp,
+					env: globalEnv,
+				})
+			: run(globalBin, args, { cwd: temp, env: globalEnv });
+	const globalVersion = runGlobal(["--version"]);
 	assert.match(globalVersion.stdout, new RegExp(`^jouzu ${packageJson.version}`, "m"));
+	const globalUpdate = JSON.parse(runGlobal(["self-update", "status", "--json"]).stdout);
+	assert.equal(globalUpdate.installChannel, "global-npm");
+	assert.equal(globalUpdate.policy, "auto-restart");
+	assert.equal(globalUpdate.startupEligible, true);
 
 	console.log(`packed jouzu@${packageJson.version} passed local, npm-exec, and global smokes with Pi ${piVersion}`);
 } finally {

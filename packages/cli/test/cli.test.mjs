@@ -53,6 +53,31 @@ test("a non-interactive first run uses Core without recording Japanese consent",
 	}
 });
 
+test("self-update status and policy are explicit and source-safe", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-self-update-cli-"));
+	try {
+		const jouzuHome = join(temp, "home");
+		const status = run(["--jouzu-home", jouzuHome, "self-update", "status", "--json"]);
+		assert.equal(status.status, 0, status.stderr);
+		const parsed = JSON.parse(status.stdout);
+		assert.equal(parsed.policy, "auto-restart");
+		assert.equal(parsed.installChannel, "source");
+		assert.equal(parsed.startupEligible, false);
+		assert.equal(existsSync(jouzuHome), false, "self-update status mutated the Jouzu home");
+
+		const policy = run(["--jouzu-home", jouzuHome, "self-update", "policy", "notify"]);
+		assert.equal(policy.status, 0, policy.stderr);
+		assert.match(policy.stdout, /policy: notify/);
+		assert.equal(JSON.parse(readFileSync(join(jouzuHome, "state", "self-update.json"), "utf8")).policy, "notify");
+
+		const apply = run(["--jouzu-home", jouzuHome, "self-update", "apply"]);
+		assert.equal(apply.status, 4);
+		assert.match(apply.stderr, /real global npm install/);
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
+
 test("jouzu and jz package bins are exact aliases", () => {
 	assert.equal(packageJson.bin.jouzu, packageJson.bin.jz);
 	assert.equal(packageJson.dependencies["@earendil-works/pi-coding-agent"], "0.84.2");

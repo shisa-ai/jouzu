@@ -49,13 +49,34 @@ test("doctor reports an injected healthy Linux runtime without mutating roots", 
 		architecture: "x64",
 		nodeVersion: "v22.19.0",
 		locale: "ja-JP",
-		commandPaths: { git: "/usr/bin/git", bash: "/usr/bin/bash" },
+		commandPaths: { git: "/usr/bin/git", bash: "/usr/bin/bash", npm: "/usr/bin/npm" },
+		updateStatus: {
+			policy: "auto-restart",
+			installChannel: "global-npm",
+			startupEligible: true,
+			state: {
+				schemaVersion: 1,
+				policy: "auto-restart",
+				channel: "latest",
+				lastCheckedAt: null,
+				nextCheckAt: null,
+				lastResult: "never",
+				installedVersion: "0.1.0",
+				latestVersion: null,
+				latestIntegrity: null,
+				previousVersion: null,
+				lastUpdatedAt: null,
+				lastErrorCode: null,
+			},
+		},
 	});
 	assert.equal(report.healthy, true);
 	assert.match(report.text, /Platform: linux x64/);
 	assert.match(report.text, /Locale: ja-JP/);
 	assert.match(report.text, /Provider environment: present/);
 	assert.match(report.text, /Proxy configured: yes/);
+	assert.match(report.text, /Self-update policy: auto-restart/);
+	assert.match(report.text, /Automatic startup update: eligible/);
 	assert.doesNotMatch(report.text, /must-not-appear/);
 	assert.equal(rmSync(root, { recursive: true, force: true }), undefined);
 });
@@ -80,12 +101,13 @@ test("doctor fails closed for unsupported Windows prerequisites and Pi drift", (
 		architecture: "x64",
 		nodeVersion: "v20.18.0",
 		locale: "ja-JP",
-		commandPaths: { git: null, bash: null },
+		commandPaths: { git: null, bash: null, npm: null },
 	});
 	assert.equal(report.healthy, false);
 	assert.match(report.text, /Node v20\.18\.0 is unsupported/);
 	assert.match(report.text, /Git was not found/);
 	assert.match(report.text, /Bash was not found; install Bash or Git Bash/);
+	assert.match(report.text, /npm was not found on PATH/);
 	assert.match(report.text, /Pinned Pi 0\.84\.2 does not match loaded runtime 0\.85\.0/);
 	assert.match(report.text, /Pi lock status is pending/);
 	assert.match(report.text, /Result: action required/);

@@ -15,6 +15,7 @@
 		"test": "npm run test --workspaces --if-present && npm run test:python",
 		"test:python": "uv run --project python/jouzu python -m unittest discover -s python/jouzu/tests -v",
 		"test:packed": "node scripts/test-packed-cli.mjs",
+		"test:auto-update": "node scripts/test-auto-update.mjs",
 		"test:live:ja": "node scripts/live-ja-smoke.mjs",
 		"pack:check": "node scripts/pack-check.mjs",
 		"dev:link": "npm run build && npm link --workspace packages/cli",
@@ -26,7 +27,7 @@
 		"pi:latest": "node scripts/pi-upstream.mjs latest",
 		"pi:update": "node scripts/pi-upstream.mjs update",
 		"pi:qualify": "npm run pi:check:online && npm run release:check && node scripts/pi-upstream.mjs promote",
-		"release:check": "npm run release:metadata && npm run build && npm run check && npm test && npm run pack:check && npm run test:packed && npm run build:python && npm run check:python",
+		"release:check": "npm run release:metadata && npm run build && npm run check && npm test && npm run pack:check && npm run test:packed && npm run test:auto-update && npm run build:python && npm run check:python",
 		"changeset": "changeset",
 		"version-packages": "changeset version"
 	},

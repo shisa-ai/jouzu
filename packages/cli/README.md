@@ -29,7 +29,18 @@ Use `/login` to authenticate within Jouzu's agent root. Pi's `/model` or `Ctrl+L
 
 Jouzu does not import stock Pi state. Override all roots with `--jouzu-home <path>` or `JOUZU_HOME`. Trusted project `.pi` resources and Pi's cross-harness `~/.agents/skills` read surface still follow Pi behavior.
 
-Use `jz pi ...` or `jz -- ...` for Pi command collisions. Pi runtime self-update is blocked; upgrade the `jouzu` npm package instead. Package/model updates inside Jouzu state remain available.
+Use `jz pi ...` or `jz -- ...` for Pi command collisions. Pi runtime self-update is blocked; package/model updates inside Jouzu state remain available.
+
+Real global npm installs default to a pre-TUI automatic Jouzu update check/restart on the first eligible launch. Successful checks are cached for 24 hours; failed checks retry no sooner than one hour later. Candidate tarball SHA-512 integrity and the installed Jouzu/Pi tuple are verified; failure restores the locally packed previous version. Source, project-local, and ephemeral `npx` invocations are not rewritten.
+
+```bash
+jz self-update status
+jz self-update check
+jz self-update apply
+jz self-update policy auto-restart  # or notify/off
+```
+
+Set `JOUZU_NO_UPDATE=1` for a one-run opt-out. Checks use npm's configured registry, proxy, and CA behavior and send no Jouzu telemetry. Updating requires write access to the active global npm prefix; permission or network failures leave the current version running.
 
 Interactive launches show an adaptive Jouzu header and clear the viewport. Set `JOUZU_NO_CLEAR=1` to retain it; set `NO_COLOR=1` to disable color.
 
