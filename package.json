@@ -11,12 +11,17 @@
 	},
 	"scripts": {
 		"build": "npm run build --workspaces --if-present",
-		"check": "npm run check --workspaces --if-present && biome check .",
+		"check": "npm run check --workspaces --if-present && biome check . && npm run pi:check",
 		"test": "npm run test --workspaces --if-present && npm run test:python",
 		"test:python": "uv run --project python/jouzu python -m unittest discover -s python/jouzu/tests -v",
 		"pack:check": "node scripts/pack-check.mjs",
 		"build:python": "uv build --project python/jouzu --out-dir dist/python",
 		"check:python": "uvx --from twine twine check dist/python/*",
+		"pi:check": "node scripts/pi-upstream.mjs check && node scripts/check-pi-contract.mjs",
+		"pi:check:online": "node scripts/pi-upstream.mjs check --online && node scripts/pi-upstream.mjs latest --require-latest",
+		"pi:latest": "node scripts/pi-upstream.mjs latest",
+		"pi:update": "node scripts/pi-upstream.mjs update",
+		"pi:qualify": "npm run pi:check:online && npm run release:check && node scripts/pi-upstream.mjs promote",
 		"release:check": "npm run build && npm run check && npm test && npm run pack:check && npm run build:python && npm run check:python",
 		"changeset": "changeset",
 		"version-packages": "changeset version"
@@ -24,7 +29,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "2.3.5",
 		"@changesets/cli": "2.31.1",
-		"@earendil-works/pi-coding-agent": "0.83.0",
+		"@earendil-works/pi-coding-agent": "0.84.2",
 		"@types/node": "24.12.4",
 		"typescript": "5.9.3"
 	}

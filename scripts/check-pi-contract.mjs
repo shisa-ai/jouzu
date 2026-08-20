@@ -1,0 +1,114 @@
+#!/usr/bin/env node
+
+import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+
+const root = resolve(import.meta.dirname, "..");
+const packageName = "@earendil-works/pi-coding-agent";
+const lock = JSON.parse(readFileSync(resolve(root, "upstream", "pi.lock.json"), "utf8"));
+const expectedVersion = lock.packages[packageName].version;
+const cli = resolve(root, "node_modules", packageName, "dist", "cli.js");
+
+function runNode(args, options = {}) {
+	const result = spawnSync(process.execPath, args, {
+		cwd: root,
+		encoding: "utf8",
+		timeout: 30_000,
+		...options,
+	});
+	if (result.error) throw result.error;
+	assert.equal(result.signal, null, `child terminated by ${result.signal}: ${result.stderr}`);
+	assert.equal(result.status, 0, `child exited ${result.status}: ${result.stderr || result.stdout}`);
+	return result;
+}
+
+assert.ok(existsSync(cli), `Pi CLI is missing: ${cli}`);
+
+const version = runNode([cli, "--version"], { env: { ...process.env, PI_OFFLINE: "1" } }).stdout.trim();
+assert.equal(version, expectedVersion, "Pi CLI version differs from the exact lock");
+
+const help = runNode([cli, "--help"], { env: { ...process.env, PI_OFFLINE: "1" } }).stdout;
+for (const required of ["--mode <mode>", "--provider <name>", "--session-dir <dir>", "--no-context-files"]) {
+	assert.match(help, new RegExp(required.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `Pi help lost ${required}`);
+}
+
+const temp = mkdtempSync(join(tmpdir(), "jouzu-pi-contract-"));
+try {
+	const agentDir = resolve(temp, "agent");
+	const sessionDir = resolve(temp, "sessions");
+	const apiProbe = `
+process.env.PI_CODING_AGENT_DIR = ${JSON.stringify(agentDir)};
+const pi = await import(${JSON.stringify(packageName)});
+const required = ["main", "getAgentDir", "SessionManager", "ModelRuntime", "DefaultResourceLoader"];
+for (const name of required) {
+  if (pi[name] === undefined) throw new Error("missing top-level export " + name);
+}
+if (typeof pi.main !== "function") throw new Error("main is not a function");
+if (pi.getAgentDir() !== ${JSON.stringify(agentDir)}) {
+  throw new Error("PI_CODING_AGENT_DIR was not honored: " + pi.getAgentDir());
+}
+process.stdout.write(JSON.stringify({ exports: required, agentDir: pi.getAgentDir() }));
+`;
+	const api = JSON.parse(
+		runNode(["--input-type=module", "--eval", apiProbe], {
+			env: { ...process.env, PI_OFFLINE: "1" },
+		}).stdout,
+	);
+	assert.equal(api.agentDir, agentDir);
+
+	const rpcInput = `${JSON.stringify({ id: "state", type: "get_state" })}\n`;
+	const rpc = runNode(
+		[
+			cli,
+			"--mode",
+			"rpc",
+			"--no-session",
+			"--no-context-files",
+			"--no-extensions",
+			"--no-skills",
+			"--no-prompt-templates",
+			"--no-themes",
+			"--no-tools",
+			"--no-approve",
+		],
+		{
+			input: rpcInput,
+			env: {
+				...process.env,
+				PI_CODING_AGENT_DIR: agentDir,
+				PI_CODING_AGENT_SESSION_DIR: sessionDir,
+				PI_OFFLINE: "1",
+				PI_SKIP_VERSION_CHECK: "1",
+				PI_TELEMETRY: "0",
+			},
+		},
+	);
+	const records = rpc.stdout
+		.split("\n")
+		.filter(Boolean)
+		.map((line) => JSON.parse(line));
+	const state = records.find((record) => record.id === "state" && record.command === "get_state");
+	assert.ok(state, `RPC get_state response missing: ${rpc.stdout}`);
+	assert.equal(state.success, true);
+	assert.equal(state.data.isStreaming, false);
+	assert.equal(state.data.sessionFile, undefined, "--no-session unexpectedly persisted a session");
+	assert.equal(existsSync(sessionDir), false, "--no-session unexpectedly created the session override directory");
+
+	console.log(
+		JSON.stringify(
+			{
+				version: expectedVersion,
+				apiExports: api.exports,
+				cli: ["version", "help"],
+				rpc: ["startup", "get_state", "no-session", "isolated-agent-dir"],
+			},
+			null,
+			2,
+		),
+	);
+} finally {
+	rmSync(temp, { recursive: true, force: true });
+}
