@@ -1,14 +1,19 @@
 # Jouzu
 
-Jouzu is an upcoming Japanese-first distribution of the Pi coding agent. The current repository is a preview and architecture workspace.
+Jouzu is an upcoming Japanese-first distribution of the [Pi coding agent](https://pi.dev/).
 
-## Architecture and research
+The current `0.0.1` packages reserve the `jouzu` and `jz` commands while the functional developer preview is being built. They do not launch Pi yet.
 
-- [Agent Control Plane](docs/CONTROL-PLANE.md)
-- [Delegation and Adversarial Review](docs/DELEGATION-AND-REVIEW.md)
-- [Model Catalog](docs/MODEL-CATALOG.md)
-- [Usage Tracking and Cost Accounting](docs/USAGE-TRACKING.md)
-- [Recomposition and Controlled Evolution](docs/COMPOSITION.md)
-- [Harness Engineering](docs/HARNESS-ENGINEERING.md)
-- [Repository Knowledge and Code Graphs](docs/REPOSITORY-KNOWLEDGE.md)
-- [DeepSeek Harness](docs/DEEPSEEK-HARNESS.md)
+Jouzu is intended to provide:
+
+- an exact, tested Pi runtime;
+- isolated Jouzu configuration and sessions that can coexist with stock Pi;
+- Japanese-first coding defaults and CJK compatibility testing;
+- transparent provider and model selection; and
+- straightforward Windows installation.
+
+Product behavior, installation instructions, and supported-platform documentation will be added as those surfaces become functional and tested.
+
+## License
+
+Apache-2.0. See [`LICENSE`](LICENSE).
