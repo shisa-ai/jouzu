@@ -186,13 +186,23 @@ function unsafeParent(agentDir: string, target: string): string | undefined {
 	return undefined;
 }
 
-function observedFile(agentDir: string, target: string): { kind: "missing" | "unsafe" | "file"; sha256?: string } {
+function observedFile(
+	agentDir: string,
+	target: string,
+): { kind: "missing" | "unsafe" | "file"; sha256?: string; unsupportedEncoding?: boolean } {
 	if (unsafeParent(agentDir, target)) return { kind: "unsafe" };
 	const path = targetPath(agentDir, target);
 	if (!existsSync(path)) return { kind: "missing" };
 	const metadata = lstatSync(path);
 	if (!metadata.isFile() || metadata.isSymbolicLink()) return { kind: "unsafe" };
-	return { kind: "file", sha256: sha256(readFileSync(path)) };
+	const bytes = readFileSync(path);
+	let unsupportedEncoding = false;
+	try {
+		new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+	} catch {
+		unsupportedEncoding = true;
+	}
+	return { kind: "file", sha256: sha256(bytes), unsupportedEncoding };
 }
 
 function stateMatches(state: ProfileState | undefined, profile: ResolvedProfile, jouzuVersion: string): boolean {
@@ -250,7 +260,7 @@ export function planProfile(profile: ResolvedProfile, paths: JouzuPaths, jouzuVe
 					: {
 							type: "conflict",
 							target: asset.target,
-							reason: "unmanaged-different",
+							reason: observed.unsupportedEncoding ? "unsupported-encoding" : "unmanaged-different",
 							desiredSha256: asset.sha256,
 							observedSha256: observed.sha256,
 						},
@@ -262,7 +272,7 @@ export function planProfile(profile: ResolvedProfile, paths: JouzuPaths, jouzuVe
 			actions.push({
 				type: "conflict",
 				target: asset.target,
-				reason: "managed-modified",
+				reason: observed.unsupportedEncoding ? "unsupported-encoding" : "managed-modified",
 				desiredSha256: asset.sha256,
 				observedSha256: observed.sha256,
 			});
@@ -285,7 +295,12 @@ export function planProfile(profile: ResolvedProfile, paths: JouzuPaths, jouzuVe
 			actions.push({
 				type: "conflict",
 				target,
-				reason: observed.kind === "unsafe" ? "unsafe-target" : "managed-modified",
+				reason:
+					observed.kind === "unsafe"
+						? "unsafe-target"
+						: observed.unsupportedEncoding
+							? "unsupported-encoding"
+							: "managed-modified",
 				observedSha256: observed.sha256,
 			});
 			continue;

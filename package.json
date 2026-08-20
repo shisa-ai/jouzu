@@ -15,6 +15,7 @@
 		"test": "npm run test --workspaces --if-present && npm run test:python",
 		"test:python": "uv run --project python/jouzu python -m unittest discover -s python/jouzu/tests -v",
 		"test:packed": "node scripts/test-packed-cli.mjs",
+		"test:live:ja": "node scripts/live-ja-smoke.mjs",
 		"pack:check": "node scripts/pack-check.mjs",
 		"dev:link": "npm run build && npm link --workspace packages/cli",
 		"build:python": "uv build --project python/jouzu --out-dir dist/python",

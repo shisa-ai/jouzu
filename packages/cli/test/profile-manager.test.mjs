@@ -115,6 +115,22 @@ test("unmanaged and modified managed files conflict before any write", () => {
 	}
 });
 
+test("unsupported CP932 content is reported and left byte-identical", () => {
+	const fixture = temporary();
+	try {
+		const bytes = Buffer.from([0x82, 0xa0, 0x82, 0xa2, 0x0d, 0x0a]);
+		mkdirSync(fixture.paths.agentDir, { recursive: true });
+		const target = join(fixture.paths.agentDir, "APPEND_SYSTEM.md");
+		writeFileSync(target, bytes);
+		const plan = planProfile(loadBundledProfile("ja"), fixture.paths, "0.1.0");
+		assert.equal(plan.actions.find((action) => action.target === "APPEND_SYSTEM.md")?.reason, "unsupported-encoding");
+		assert.throws(() => applyProfile(loadBundledProfile("ja"), fixture.paths, "0.1.0"), ProfileConflictError);
+		assert.deepEqual(readFileSync(target), bytes);
+	} finally {
+		cleanup(fixture.root);
+	}
+});
+
 test("matching unmanaged files are adopted without rewriting", () => {
 	const fixture = temporary();
 	try {
