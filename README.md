@@ -8,8 +8,9 @@ Current development behavior:
 
 - launches exact Pi `0.84.2` through its public top-level API;
 - keeps Jouzu configuration, packages, credentials, and sessions separate from stock Pi;
-- preserves Pi arguments, terminal behavior, provider support, and `/model` or Ctrl+L model selection;
-- reports the Jouzu/Pi tuple and isolation paths through `jouzu --version` and `jouzu doctor`; and
+- preserves Pi arguments, provider support, and `/model` or Ctrl+L model selection;
+- gives interactive TTY launches a compact Jouzu header, terminal title, and working indicator while leaving print/JSON/RPC output untouched;
+- reports the Jouzu/Pi tuple and isolation paths through `jouzu --version`, `/jouzu`, and `jouzu doctor`; and
 - blocks Pi self-update while allowing extension and model updates inside Jouzu state.
 
 Core/JA profile reconciliation, the resolved maintainer dogfood stack, CJK release fixtures, and external release proof are still under development. A Jouzu-owned catalog picker is planned after the basic v0.1 launcher.
@@ -42,7 +43,7 @@ JOUZU_HOME="$PWD/.jouzu-dev" jz
 
 By default Jouzu uses platform-native roots. `doctor` prints their exact locations without creating them. Jouzu does not import an existing Pi installation; authenticate separately with `/login` or use provider environment variables.
 
-Use `jz pi --help` for Pi's full CLI and `jz --help` for Jouzu options. Pi's existing model picker is available with `/model` or Ctrl+L.
+Use `jz pi --help` for Pi's full CLI and `jz --help` for Jouzu options. Pi's existing model picker is available with `/model` or Ctrl+L. Interactive launches clear the current terminal viewport by default; set `JOUZU_NO_CLEAR=1` when you want to retain it.
 
 ## License
 

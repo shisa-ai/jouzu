@@ -130,7 +130,8 @@ Commands:
   doctor        Show non-mutating runtime and isolation diagnostics
   pi, --        Explicitly pass all remaining arguments to pinned Pi
 
-The jz command is an exact alias. Pi's model picker remains available through
-/model or Ctrl+L. Profile plan/apply will be added before v0.1.
-Use "jouzu pi --help" for the pinned Pi CLI help.`;
+The jz command is an exact alias. Interactive launches clear the viewport and
+show the Jouzu header; set JOUZU_NO_CLEAR=1 to preserve the existing screen.
+Pi's model picker remains available through /model or Ctrl+L. Profile plan/apply
+will be added before v0.1. Use "jouzu pi --help" for the pinned Pi CLI help.`;
 }

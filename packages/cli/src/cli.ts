@@ -4,6 +4,7 @@ import { formatHelp, isBlockedPiSelfUpdate, parseJouzuArgs, UsageError } from ".
 import { createDoctorReport } from "./doctor.js";
 import { loadMetadata } from "./metadata.js";
 import { resolveJouzuPaths } from "./paths.js";
+import { clearInteractiveStartup, createJouzuPresentationExtension } from "./presentation.js";
 import { configurePiProcess, resolveProfileSelection } from "./runtime.js";
 
 async function loadPiRuntime(): Promise<typeof import("@earendil-works/pi-coding-agent")> {
@@ -59,7 +60,10 @@ async function runCli(args: string[]): Promise<void> {
 		return;
 	}
 
-	await pi.main(parsed.args);
+	clearInteractiveStartup(parsed.args);
+	await pi.main(parsed.args, {
+		extensionFactories: [createJouzuPresentationExtension(metadata, profile)],
+	});
 }
 
 runCli(process.argv.slice(2)).catch((error: unknown) => {
