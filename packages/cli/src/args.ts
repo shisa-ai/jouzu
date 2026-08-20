@@ -155,7 +155,7 @@ export function isBlockedPiSelfUpdate(args: string[]): boolean {
 }
 
 export function formatHelp(): string {
-	return `Jouzu Japanese-first Pi launcher
+	return `Jouzu CJK-safe Pi launcher
 
 Usage:
   jouzu [--jouzu-home <path>] [--jouzu-profile <core|ja>] [Pi arguments...]
@@ -172,8 +172,8 @@ Commands:
   profile apply Apply the selected profile with conflicts and backups
   pi, --        Explicitly pass all remaining arguments to pinned Pi
 
-The jz command is an exact alias. The fresh-install profile is ja; core remains
-selectable. Interactive launches clear the viewport and show the Jouzu header;
+The jz command is an exact alias. The fresh-install profile is language-neutral
+core; ja is loaded only after explicit selection. Interactive launches clear the viewport and show the Jouzu header;
 set JOUZU_NO_CLEAR=1 to preserve the existing screen. Pi's model picker remains
 available through /model or Ctrl+L. Use "jouzu pi --help" for Pi CLI help.`;
 }

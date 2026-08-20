@@ -1,6 +1,6 @@
 # Jouzu
 
-Jouzu is a Japanese-first distribution of the Pi coding agent. `jouzu` and `jz` run exact Pi `0.84.2` with isolated Jouzu state, built-in Core/JA profiles, and non-mutating diagnostics.
+Jouzu is a CJK-safe distribution of the Pi coding agent. `jouzu` and `jz` run exact Pi `0.84.2` with isolated Jouzu state, a language-neutral Core default, an explicit JA preview, and non-mutating diagnostics.
 
 ## Install and start
 
@@ -16,11 +16,13 @@ jz profile apply
 jz
 ```
 
-The fresh-install profile is `ja`. Use the provider-neutral Core profile with:
+The fresh-install profile is the provider- and language-neutral `core`. Enable the JA response-policy preview only through explicit selection:
 
 ```bash
-jz profile apply --profile core
+jz profile apply --profile ja
 ```
+
+Locale, terminal settings, repository text, and branding never select JA automatically.
 
 Profile planning does not write. Application detects user-file conflicts, retains backups for managed updates/deletions, and never prunes unknown files. Existing unsupported CP932/Shift-JIS profile targets are left unchanged.
 

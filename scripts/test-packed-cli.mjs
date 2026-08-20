@@ -53,18 +53,27 @@ try {
 	const version = run(process.execPath, [installedCli, "--version"], { cwd: temp, env }).stdout.trim();
 	assert.equal(version, `jouzu ${packageJson.version}\npi ${piVersion}\nprofile schema 1`);
 	const firstPlan = JSON.parse(
-		run(process.execPath, [installedCli, "profile", "plan", "--profile", "ja", "--json"], { cwd: temp, env }).stdout,
+		run(process.execPath, [installedCli, "profile", "plan", "--json"], { cwd: temp, env }).stdout,
 	);
+	assert.equal(firstPlan.profile, "core");
 	assert.ok(firstPlan.actions.some((action) => action.type === "create"));
 	assert.equal(existsSync(consumer), false, "packed profile plan mutated the consumer home");
-	run(process.execPath, [installedCli, "profile", "apply", "--profile", "ja"], { cwd: temp, env });
+	run(process.execPath, [installedCli, "profile", "apply"], { cwd: temp, env });
 	const secondPlan = JSON.parse(
+		run(process.execPath, [installedCli, "profile", "plan", "--json"], { cwd: temp, env }).stdout,
+	);
+	assert.equal(secondPlan.profile, "core");
+	assert.deepEqual(secondPlan.actions, []);
+	const jaPlan = JSON.parse(
 		run(process.execPath, [installedCli, "profile", "plan", "--profile", "ja", "--json"], { cwd: temp, env }).stdout,
 	);
-	assert.deepEqual(secondPlan.actions, []);
+	assert.ok(jaPlan.actions.some((action) => action.target === "APPEND_SYSTEM.md"));
+	run(process.execPath, [installedCli, "profile", "apply", "--profile", "ja"], { cwd: temp, env });
+	run(process.execPath, [installedCli, "profile", "apply", "--profile", "core"], { cwd: temp, env });
+	assert.equal(existsSync(resolve(consumer, "agent", "APPEND_SYSTEM.md")), false);
 	const doctor = run(process.execPath, [installedCli, "doctor"], { cwd: temp, env }).stdout;
 	assert.match(doctor, /Install channel: npm-compatible install/);
-	assert.match(doctor, /Selected profile: ja/);
+	assert.match(doctor, /Selected profile: core/);
 	assert.match(doctor, /Result: ready for Jouzu v0\.1 preview/);
 	const pi = run(process.execPath, [installedCli, "pi", "--version"], { cwd: temp, env }).stdout.trim();
 	assert.equal(pi, piVersion);

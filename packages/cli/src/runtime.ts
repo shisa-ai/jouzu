@@ -59,7 +59,7 @@ export function resolveProfileSelection(
 			appliedManifestSha256: typeof state.manifestSha256 === "string" ? state.manifestSha256 : undefined,
 		};
 	}
-	return { id: "ja", source: "default" };
+	return { id: "core", source: "default" };
 }
 
 export function configurePiProcess(paths: JouzuPaths, profile: ProfileSelection): void {

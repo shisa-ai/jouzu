@@ -59,7 +59,7 @@ test("preserves a pinned Pi CLI failure status", () => {
 test("shows Jouzu help and leaves Pi help behind the explicit escape", () => {
 	const jouzuHelp = run(["--help"]);
 	assert.equal(jouzuHelp.status, 0, jouzuHelp.stderr);
-	assert.match(jouzuHelp.stdout, /Jouzu Japanese-first Pi launcher/);
+	assert.match(jouzuHelp.stdout, /Jouzu CJK-safe Pi launcher/);
 	assert.match(jouzuHelp.stdout, /Ctrl\+L/);
 
 	const piHelp = run(["pi", "--help"]);
@@ -100,13 +100,13 @@ test("profile conflicts stop with the reserved status before Pi launch", () => {
 		const jouzuHome = join(temp, "home");
 		mkdirSync(join(jouzuHome, "agent"), { recursive: true });
 		writeFileSync(join(jouzuHome, "agent", "APPEND_SYSTEM.md"), "user-owned\n");
-		const planned = run(["--jouzu-home", jouzuHome, "profile", "plan", "--json"]);
+		const planned = run(["--jouzu-home", jouzuHome, "profile", "plan", "--profile", "ja", "--json"]);
 		assert.equal(planned.status, 3);
 		assert.equal(
 			JSON.parse(planned.stdout).actions.find((action) => action.target === "APPEND_SYSTEM.md").reason,
 			"unmanaged-different",
 		);
-		const result = run(["--jouzu-home", jouzuHome, "pi", "--version"]);
+		const result = run(["--jouzu-home", jouzuHome, "--jouzu-profile", "ja", "pi", "--version"]);
 		assert.equal(result.status, 3);
 		assert.match(result.stderr, /CONFLICT APPEND_SYSTEM\.md/);
 		assert.doesNotMatch(result.stdout, /0\.84\.2/);
