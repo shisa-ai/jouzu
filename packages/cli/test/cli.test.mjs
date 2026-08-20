@@ -3,18 +3,20 @@ import { spawn, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { test } from "node:test";
+import { after, test } from "node:test";
 import { fileURLToPath } from "node:url";
 
 const packageRoot = fileURLToPath(new URL("..", import.meta.url));
 const cli = join(packageRoot, "dist", "cli.js");
 const packageJson = JSON.parse(readFileSync(join(packageRoot, "package.json"), "utf8"));
+const defaultHome = mkdtempSync(join(tmpdir(), "jouzu-cli-suite-"));
+after(() => rmSync(defaultHome, { recursive: true, force: true }));
 
 function run(args, options = {}) {
 	return spawnSync(process.execPath, [cli, ...args], {
 		encoding: "utf8",
 		timeout: 30_000,
-		env: { ...process.env, PI_OFFLINE: "1", ...options.env },
+		env: { ...process.env, JOUZU_HOME: defaultHome, PI_OFFLINE: "1", ...options.env },
 		input: options.input,
 	});
 }
@@ -63,6 +65,55 @@ test("shows Jouzu help and leaves Pi help behind the explicit escape", () => {
 	const piHelp = run(["pi", "--help"]);
 	assert.equal(piHelp.status, 0, piHelp.stderr);
 	assert.match(piHelp.stdout, /--mode <mode>/);
+});
+
+test("profile plan is non-mutating and profile apply converges", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-profile-cli-"));
+	try {
+		const jouzuHome = join(temp, "Jouzu 上手");
+		const firstPlan = run(["--jouzu-home", jouzuHome, "profile", "plan", "--profile", "ja", "--json"]);
+		assert.equal(firstPlan.status, 0, firstPlan.stderr);
+		const parsed = JSON.parse(firstPlan.stdout);
+		assert.equal(parsed.profile, "ja");
+		assert.ok(parsed.actions.some((action) => action.type === "create"));
+		assert.equal(existsSync(jouzuHome), false, "profile plan created the Jouzu home");
+
+		const applied = run(["--jouzu-home", jouzuHome, "profile", "apply", "--profile", "ja"]);
+		assert.equal(applied.status, 0, applied.stderr);
+		assert.match(applied.stdout, /Applied transaction:/);
+		const secondPlan = run(["--jouzu-home", jouzuHome, "profile", "plan", "--profile", "ja", "--json"]);
+		assert.equal(secondPlan.status, 0, secondPlan.stderr);
+		assert.deepEqual(JSON.parse(secondPlan.stdout).actions, []);
+		const doctor = run(["--jouzu-home", jouzuHome, "doctor"]);
+		assert.equal(doctor.status, 0, doctor.stderr);
+		const manifests = [...doctor.stdout.matchAll(/(?:Bundled|Applied) profile manifest: ([0-9a-f]{64})/g)];
+		assert.equal(manifests.length, 2);
+		assert.equal(manifests[0][1], manifests[1][1]);
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
+
+test("profile conflicts stop with the reserved status before Pi launch", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-profile-conflict-"));
+	try {
+		const jouzuHome = join(temp, "home");
+		mkdirSync(join(jouzuHome, "agent"), { recursive: true });
+		writeFileSync(join(jouzuHome, "agent", "APPEND_SYSTEM.md"), "user-owned\n");
+		const planned = run(["--jouzu-home", jouzuHome, "profile", "plan", "--json"]);
+		assert.equal(planned.status, 3);
+		assert.equal(
+			JSON.parse(planned.stdout).actions.find((action) => action.target === "APPEND_SYSTEM.md").reason,
+			"unmanaged-different",
+		);
+		const result = run(["--jouzu-home", jouzuHome, "pi", "--version"]);
+		assert.equal(result.status, 3);
+		assert.match(result.stderr, /CONFLICT APPEND_SYSTEM\.md/);
+		assert.doesNotMatch(result.stdout, /0\.84\.2/);
+		assert.equal(readFileSync(join(jouzuHome, "agent", "APPEND_SYSTEM.md"), "utf8"), "user-owned\n");
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
 });
 
 test("Pi package operations write only to the isolated Jouzu agent root", () => {

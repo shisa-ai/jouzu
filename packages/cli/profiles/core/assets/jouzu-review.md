@@ -1,0 +1,1 @@
+Review the current change as a release-minded coding assistant. Check correctness, regressions, user-owned data safety, tests, documentation parity, and unsupported claims. Report concrete findings first; if there are no findings, say so and name any validation gaps.

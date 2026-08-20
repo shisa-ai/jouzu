@@ -1,0 +1,146 @@
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { test } from "node:test";
+import { loadBundledProfile, loadProfileFromRoot, ProfileManifestError } from "../dist/profiles.js";
+
+function digest(bytes) {
+	return createHash("sha256").update(bytes).digest("hex");
+}
+
+function fixtureRoot() {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-profiles-"));
+	for (const id of ["core", "ja"]) mkdirSync(join(root, id, "assets"), { recursive: true });
+	return root;
+}
+
+function writeManifest(root, id, value) {
+	writeFileSync(join(root, id, "manifest.json"), `${JSON.stringify(value, null, 2)}\n`);
+}
+
+function baseManifests(root) {
+	const coreBytes = Buffer.from("core\n");
+	const jaBytes = Buffer.from("日本語\n");
+	writeFileSync(join(root, "core", "assets", "core.md"), coreBytes);
+	writeFileSync(join(root, "ja", "assets", "ja.md"), jaBytes);
+	writeManifest(root, "core", {
+		schemaVersion: 1,
+		id: "core",
+		version: 1,
+		assets: [{ source: "assets/core.md", target: "prompts/jouzu-core.md", sha256: digest(coreBytes) }],
+	});
+	writeManifest(root, "ja", {
+		schemaVersion: 1,
+		id: "ja",
+		version: 1,
+		extends: "core",
+		assets: [{ source: "assets/ja.md", target: "APPEND_SYSTEM.md", sha256: digest(jaBytes) }],
+	});
+}
+
+test("bundled Core and JA profiles resolve exact ordered assets", () => {
+	const core = loadBundledProfile("core");
+	const ja = loadBundledProfile("ja");
+	assert.deepEqual(
+		core.assets.map((asset) => asset.target),
+		["prompts/jouzu-review.md", "skills/jouzu-core/SKILL.md"],
+	);
+	assert.deepEqual(
+		ja.assets.map((asset) => asset.target),
+		["APPEND_SYSTEM.md", "prompts/jouzu-review.md", "skills/jouzu-core/SKILL.md"],
+	);
+	assert.equal(core.manifestSha256, "5643e3dd20f22c586ea812f2038e5d1684301a27fee4ac3572bd6a0dff49a6a2");
+	assert.equal(ja.manifestSha256, "f671a61bed5c3ed0e2ab58dcc6dc4a0d365af6b12576d4863853add509ec210b");
+});
+
+test("manifest validation fails closed for schema, path, inheritance, and digest errors", () => {
+	const mutations = [
+		(manifest) => {
+			manifest.schemaVersion = 2;
+		},
+		(manifest) => {
+			manifest.unknown = true;
+		},
+		(manifest) => {
+			manifest.assets[0].source = "../escape.md";
+		},
+		(manifest) => {
+			manifest.assets[0].target = "../escape.md";
+		},
+		(manifest) => {
+			manifest.assets[0].target = "AGENTS.md";
+		},
+		(manifest) => {
+			manifest.assets[0].sha256 = "0".repeat(64);
+		},
+	];
+	for (const mutate of mutations) {
+		const root = fixtureRoot();
+		try {
+			baseManifests(root);
+			const manifest = JSON.parse(readFileSync(join(root, "core", "manifest.json"), "utf8"));
+			mutate(manifest);
+			writeManifest(root, "core", manifest);
+			assert.throws(() => loadProfileFromRoot(root, "core"), ProfileManifestError);
+		} finally {
+			rmSync(root, { recursive: true, force: true });
+		}
+	}
+
+	const inheritanceRoot = fixtureRoot();
+	try {
+		baseManifests(inheritanceRoot);
+		const manifest = JSON.parse(readFileSync(join(inheritanceRoot, "ja", "manifest.json"), "utf8"));
+		delete manifest.extends;
+		writeManifest(inheritanceRoot, "ja", manifest);
+		assert.throws(() => loadProfileFromRoot(inheritanceRoot, "ja"), /invalid inheritance/);
+	} finally {
+		rmSync(inheritanceRoot, { recursive: true, force: true });
+	}
+});
+
+test("manifest validation rejects duplicate targets, invalid UTF-8, and symlink assets", () => {
+	const duplicateRoot = fixtureRoot();
+	try {
+		baseManifests(duplicateRoot);
+		const jaBytes = Buffer.from("override\n");
+		writeFileSync(join(duplicateRoot, "ja", "assets", "ja.md"), jaBytes);
+		writeManifest(duplicateRoot, "ja", {
+			schemaVersion: 1,
+			id: "ja",
+			version: 1,
+			extends: "core",
+			assets: [{ source: "assets/ja.md", target: "prompts/jouzu-core.md", sha256: digest(jaBytes) }],
+		});
+		assert.throws(() => loadProfileFromRoot(duplicateRoot, "ja"), /duplicate resolved profile target/);
+	} finally {
+		rmSync(duplicateRoot, { recursive: true, force: true });
+	}
+
+	const encodingRoot = fixtureRoot();
+	try {
+		baseManifests(encodingRoot);
+		const bytes = Buffer.from([0x82, 0xa0]);
+		writeFileSync(join(encodingRoot, "core", "assets", "core.md"), bytes);
+		const manifest = JSON.parse(readFileSync(join(encodingRoot, "core", "manifest.json"), "utf8"));
+		manifest.assets[0].sha256 = digest(bytes);
+		writeManifest(encodingRoot, "core", manifest);
+		assert.throws(() => loadProfileFromRoot(encodingRoot, "core"), /not valid UTF-8/);
+	} finally {
+		rmSync(encodingRoot, { recursive: true, force: true });
+	}
+
+	if (process.platform !== "win32") {
+		const symlinkRoot = fixtureRoot();
+		try {
+			baseManifests(symlinkRoot);
+			rmSync(join(symlinkRoot, "core", "assets", "core.md"));
+			symlinkSync(join(symlinkRoot, "ja", "assets", "ja.md"), join(symlinkRoot, "core", "assets", "core.md"));
+			assert.throws(() => loadProfileFromRoot(symlinkRoot, "core"), /regular file/);
+		} finally {
+			rmSync(symlinkRoot, { recursive: true, force: true });
+		}
+	}
+});

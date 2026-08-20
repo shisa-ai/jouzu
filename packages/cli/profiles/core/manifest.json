@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "core",
+  "version": 1,
+  "assets": [
+    {
+      "source": "assets/jouzu-core-skill.md",
+      "target": "skills/jouzu-core/SKILL.md",
+      "sha256": "fb9b2835a3f5d908c45a9767552256b0fa4124b20dc8cbaac758d997e7bca2fa"
+    },
+    {
+      "source": "assets/jouzu-review.md",
+      "target": "prompts/jouzu-review.md",
+      "sha256": "80c2f09bdb7f6fc10c1c3987e2307aa6c391b393ffdb0c1dbad0ed9db0d05ad6"
+    }
+  ]
+}

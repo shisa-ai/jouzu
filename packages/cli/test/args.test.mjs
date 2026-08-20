@@ -30,10 +30,29 @@ test("reserves Jouzu diagnostics while allowing escaped Pi collisions", () => {
 	assert.deepEqual(parseJouzuArgs(["--version"]), { kind: "version", options: {} });
 });
 
+test("parses profile planning and application without mixing launch selection", () => {
+	assert.deepEqual(parseJouzuArgs(["profile", "plan", "--profile", "core", "--json"]), {
+		kind: "profile",
+		options: {},
+		operation: "plan",
+		profile: "core",
+		json: true,
+	});
+	assert.deepEqual(parseJouzuArgs(["--jouzu-home=/tmp/上手", "profile", "apply"]), {
+		kind: "profile",
+		options: { home: "/tmp/上手" },
+		operation: "apply",
+		json: false,
+	});
+});
+
 test("rejects invalid Jouzu options", () => {
 	assert.throws(() => parseJouzuArgs(["--jouzu-profile", "other"]), UsageError);
 	assert.throws(() => parseJouzuArgs(["--jouzu-home"]), UsageError);
 	assert.throws(() => parseJouzuArgs(["--jouzu-unknown"]), UsageError);
+	assert.throws(() => parseJouzuArgs(["profile", "plan", "--profile", "other"]), UsageError);
+	assert.throws(() => parseJouzuArgs(["profile", "apply", "--json"]), UsageError);
+	assert.throws(() => parseJouzuArgs(["--jouzu-profile", "ja", "profile", "plan"]), UsageError);
 });
 
 test("blocks only Pi runtime self-update forms", () => {

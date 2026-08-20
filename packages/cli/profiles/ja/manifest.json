@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "ja",
+  "version": 1,
+  "extends": "core",
+  "assets": [
+    {
+      "source": "assets/APPEND_SYSTEM.md",
+      "target": "APPEND_SYSTEM.md",
+      "sha256": "31a4e6380e2d56b637f0626f592e833fe38321feef9ada6a0b225f8173d0b8e6"
+    }
+  ]
+}

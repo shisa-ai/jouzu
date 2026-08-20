@@ -38,6 +38,7 @@ export interface DoctorContext {
 	nodeVersion?: string;
 	locale?: string;
 	commandPaths?: { git: string | null; bash: string | null };
+	desiredProfileManifestSha256?: string;
 }
 
 export interface DoctorResult {
@@ -138,9 +139,12 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 		);
 	}
 	if (!context.profile.appliedManifestSha256) {
-		warnings.push(
-			"The selected Core/JA profile has not been applied; profile reconciliation is still under development",
-		);
+		warnings.push('The selected profile has not been applied; run "jouzu profile apply"');
+	} else if (
+		context.desiredProfileManifestSha256 &&
+		context.profile.appliedManifestSha256 !== context.desiredProfileManifestSha256
+	) {
+		warnings.push('The applied profile differs from the bundled manifest; run "jouzu profile plan"');
 	}
 	if (packageState.warning) warnings.push(packageState.warning);
 
@@ -175,6 +179,7 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	);
 	lines.push("");
 	lines.push(`Selected profile: ${context.profile.id} (${context.profile.source})`);
+	lines.push(`Bundled profile manifest: ${context.desiredProfileManifestSha256 ?? "unavailable"}`);
 	lines.push(`Applied profile manifest: ${context.profile.appliedManifestSha256 ?? "not applied"}`);
 	lines.push(`Configured Pi packages: ${packageState.count}`);
 	lines.push(`Provider auth file: ${existsSync(authPath) ? "present" : "absent"}`);

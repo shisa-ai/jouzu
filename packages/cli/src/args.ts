@@ -20,7 +20,13 @@ export type ParsedCommand =
 	| { kind: "doctor"; options: JouzuOptions }
 	| { kind: "version"; options: JouzuOptions }
 	| { kind: "help"; options: JouzuOptions }
-	| { kind: "profile"; options: JouzuOptions; args: string[] };
+	| {
+			kind: "profile";
+			options: JouzuOptions;
+			operation: "plan" | "apply";
+			profile?: ProfileId;
+			json: boolean;
+	  };
 
 function readOptionValue(args: string[], index: number, option: string): { value: string; next: number } {
 	const token = args[index];
@@ -34,6 +40,38 @@ function readOptionValue(args: string[], index: number, option: string): { value
 	const value = args[index + 1];
 	if (value === undefined || value.length === 0) throw new UsageError(`${option} requires a value`);
 	return { value, next: index + 2 };
+}
+
+function parseProfileCommand(options: JouzuOptions, args: string[]): ParsedCommand {
+	if (options.profile !== undefined) {
+		throw new UsageError("use profile --profile <core|ja>; do not mix it with --jouzu-profile");
+	}
+	const [operation, ...remaining] = args;
+	if (operation !== "plan" && operation !== "apply") {
+		throw new UsageError('profile requires "plan" or "apply"');
+	}
+	let profile: ProfileId | undefined;
+	let json = false;
+	for (let index = 0; index < remaining.length; index += 1) {
+		const token = remaining[index];
+		if (token === "--profile" || token.startsWith("--profile=")) {
+			if (profile !== undefined) throw new UsageError("--profile may be specified only once");
+			const parsed = readOptionValue(remaining, index, "--profile");
+			if (!PROFILE_IDS.includes(parsed.value as ProfileId)) {
+				throw new UsageError(`--profile must be one of: ${PROFILE_IDS.join(", ")}`);
+			}
+			profile = parsed.value as ProfileId;
+			index = parsed.next - 1;
+			continue;
+		}
+		if (token === "--json" && operation === "plan") {
+			if (json) throw new UsageError("--json may be specified only once");
+			json = true;
+			continue;
+		}
+		throw new UsageError(`unknown profile ${operation} option: ${token}`);
+	}
+	return { kind: "profile", options, operation, ...(profile ? { profile } : {}), json };
 }
 
 export function parseJouzuArgs(args: string[]): ParsedCommand {
@@ -70,7 +108,7 @@ export function parseJouzuArgs(args: string[]): ParsedCommand {
 		if (rest.length > 0) throw new UsageError("doctor does not accept arguments in this development build");
 		return { kind: "doctor", options };
 	}
-	if (command === "profile") return { kind: "profile", options, args: rest };
+	if (command === "profile") return parseProfileCommand(options, rest);
 	if (command === "--version" || command === "-v") {
 		if (rest.length > 0) throw new UsageError(`${command} does not accept arguments; use "jouzu pi ${command}" for Pi`);
 		return { kind: "version", options };
@@ -124,14 +162,18 @@ Usage:
   jouzu [Jouzu options] pi [Pi arguments...]
   jouzu [Jouzu options] -- [Pi arguments...]
   jouzu [Jouzu options] doctor
+  jouzu profile plan [--profile <core|ja>] [--json]
+  jouzu profile apply [--profile <core|ja>]
   jouzu [Jouzu options] --version
 
 Commands:
   doctor        Show non-mutating runtime and isolation diagnostics
+  profile plan  Preview safe Core/JA profile changes without writing
+  profile apply Apply the selected profile with conflicts and backups
   pi, --        Explicitly pass all remaining arguments to pinned Pi
 
-The jz command is an exact alias. Interactive launches clear the viewport and
-show the Jouzu header; set JOUZU_NO_CLEAR=1 to preserve the existing screen.
-Pi's model picker remains available through /model or Ctrl+L. Profile plan/apply
-will be added before v0.1. Use "jouzu pi --help" for the pinned Pi CLI help.`;
+The jz command is an exact alias. The fresh-install profile is ja; core remains
+selectable. Interactive launches clear the viewport and show the Jouzu header;
+set JOUZU_NO_CLEAR=1 to preserve the existing screen. Pi's model picker remains
+available through /model or Ctrl+L. Use "jouzu pi --help" for Pi CLI help.`;
 }

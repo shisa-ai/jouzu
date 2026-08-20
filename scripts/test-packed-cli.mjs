@@ -2,7 +2,7 @@
 
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
@@ -48,6 +48,16 @@ try {
 	const env = { ...process.env, JOUZU_HOME: consumer, PI_OFFLINE: "1" };
 	const version = run(process.execPath, [installedCli, "--version"], { cwd: temp, env }).stdout.trim();
 	assert.equal(version, `jouzu ${packageJson.version}\npi ${piVersion}\nprofile schema 1`);
+	const firstPlan = JSON.parse(
+		run(process.execPath, [installedCli, "profile", "plan", "--profile", "ja", "--json"], { cwd: temp, env }).stdout,
+	);
+	assert.ok(firstPlan.actions.some((action) => action.type === "create"));
+	assert.equal(existsSync(consumer), false, "packed profile plan mutated the consumer home");
+	run(process.execPath, [installedCli, "profile", "apply", "--profile", "ja"], { cwd: temp, env });
+	const secondPlan = JSON.parse(
+		run(process.execPath, [installedCli, "profile", "plan", "--profile", "ja", "--json"], { cwd: temp, env }).stdout,
+	);
+	assert.deepEqual(secondPlan.actions, []);
 	const pi = run(process.execPath, [installedCli, "pi", "--version"], { cwd: temp, env }).stdout.trim();
 	assert.equal(pi, piVersion);
 

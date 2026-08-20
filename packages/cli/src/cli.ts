@@ -5,6 +5,8 @@ import { createDoctorReport } from "./doctor.js";
 import { loadMetadata } from "./metadata.js";
 import { resolveJouzuPaths } from "./paths.js";
 import { clearInteractiveStartup, createJouzuPresentationExtension } from "./presentation.js";
+import { applyProfile, formatProfilePlan, ProfileConflictError, planProfile } from "./profile-manager.js";
+import { loadBundledProfile } from "./profiles.js";
 import { configurePiProcess, resolveProfileSelection } from "./runtime.js";
 
 async function loadPiRuntime(): Promise<typeof import("@earendil-works/pi-coding-agent")> {
@@ -17,11 +19,6 @@ async function runCli(args: string[]): Promise<void> {
 		console.log(formatHelp());
 		return;
 	}
-	if (parsed.kind === "profile") {
-		throw new UsageError(
-			`profile ${parsed.args.join(" ") || "command"} is not available in this development build; the isolated devstack bootstrap can be used now`,
-		);
-	}
 	if (parsed.kind === "pi" && isBlockedPiSelfUpdate(parsed.args)) {
 		throw new UsageError(
 			"Jouzu pins its Pi runtime and cannot run Pi self-update. Upgrade Jouzu instead; package-only updates such as `jz update --extensions` remain available.",
@@ -32,8 +29,25 @@ async function runCli(args: string[]): Promise<void> {
 	const inheritedPiSessionDir = process.env.PI_CODING_AGENT_SESSION_DIR;
 	const paths = resolveJouzuPaths({ homeOverride: parsed.options.home });
 	const profile = resolveProfileSelection(paths, parsed.options.profile);
-	configurePiProcess(paths, profile);
 	const metadata = loadMetadata();
+
+	if (parsed.kind === "profile") {
+		const selected = parsed.profile ?? profile.id;
+		const bundled = loadBundledProfile(selected);
+		if (parsed.operation === "plan") {
+			const plan = planProfile(bundled, paths, metadata.jouzuVersion);
+			console.log(parsed.json ? JSON.stringify(plan, null, 2) : formatProfilePlan(plan));
+			if (plan.actions.some((action) => action.type === "conflict")) process.exitCode = 3;
+			return;
+		}
+		const result = applyProfile(bundled, paths, metadata.jouzuVersion);
+		console.log(formatProfilePlan(result.plan));
+		console.log(result.changed ? `Applied transaction: ${result.transactionId}` : "Profile already converged");
+		if (result.backupDir) console.log(`Backups: ${result.backupDir}`);
+		return;
+	}
+
+	configurePiProcess(paths, profile);
 	const pi = await loadPiRuntime();
 	if (pi.VERSION !== metadata.piVersion) {
 		throw new Error(`loaded Pi ${pi.VERSION} does not match Jouzu's exact pin ${metadata.piVersion}`);
@@ -46,6 +60,7 @@ async function runCli(args: string[]): Promise<void> {
 		return;
 	}
 	if (parsed.kind === "doctor") {
+		const desiredProfile = loadBundledProfile(profile.id);
 		const result = createDoctorReport({
 			metadata,
 			paths,
@@ -54,12 +69,15 @@ async function runCli(args: string[]): Promise<void> {
 			executable: process.argv[1] ?? "unknown",
 			inheritedPiAgentDir,
 			inheritedPiSessionDir,
+			desiredProfileManifestSha256: desiredProfile.manifestSha256,
 		});
 		console.log(result.text);
 		if (!result.healthy) process.exitCode = 1;
 		return;
 	}
 
+	const bundled = loadBundledProfile(profile.id);
+	applyProfile(bundled, paths, metadata.jouzuVersion);
 	clearInteractiveStartup(parsed.args);
 	await pi.main(parsed.args, {
 		extensionFactories: [createJouzuPresentationExtension(metadata, profile)],
@@ -67,6 +85,12 @@ async function runCli(args: string[]): Promise<void> {
 }
 
 runCli(process.argv.slice(2)).catch((error: unknown) => {
+	if (error instanceof ProfileConflictError) {
+		console.error(formatProfilePlan(error.plan));
+		console.error('Resolve the conflicts above, then run "jouzu profile apply" again.');
+		process.exitCode = error.exitCode;
+		return;
+	}
 	if (error instanceof UsageError) {
 		console.error(`Error: ${error.message}`);
 		console.error('Run "jouzu --help" for Jouzu usage or "jouzu pi --help" for Pi usage.');

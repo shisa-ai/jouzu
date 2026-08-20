@@ -34,6 +34,17 @@ for (const directory of packageDirectories) {
 		if (!packed.files.some((file) => file.path === "dist/pi.lock.json")) {
 			throw new Error("jouzu tarball is missing dist/pi.lock.json");
 		}
+		for (const profileFile of [
+			"dist/profiles/core/manifest.json",
+			"dist/profiles/core/assets/jouzu-core-skill.md",
+			"dist/profiles/core/assets/jouzu-review.md",
+			"dist/profiles/ja/manifest.json",
+			"dist/profiles/ja/assets/APPEND_SYSTEM.md",
+		]) {
+			if (!packed.files.some((file) => file.path === profileFile)) {
+				throw new Error(`jouzu tarball is missing bundled profile file ${profileFile}`);
+			}
+		}
 	}
 	for (const [command, target] of Object.entries(packageJson.bin ?? {})) {
 		if (target.startsWith("./")) {
