@@ -42,7 +42,11 @@ try {
 		resolve(temp, "package.json"),
 		`${JSON.stringify({ name: "jouzu-packed-smoke", version: "1.0.0", private: true }, null, 2)}\n`,
 	);
-	runNpm(["install", "--ignore-scripts", "--no-package-lock", tarball], { cwd: temp });
+	runNpm(["install", "--ignore-scripts", tarball], { cwd: temp });
+	const consumerLock = JSON.parse(readFileSync(resolve(temp, "package-lock.json"), "utf8"));
+	const installedPi = consumerLock.packages["node_modules/@earendil-works/pi-coding-agent"];
+	assert.equal(installedPi.version, piVersion);
+	assert.equal(installedPi.integrity, piLock.packages["@earendil-works/pi-coding-agent"].integrity);
 
 	const installedCli = resolve(temp, "node_modules", "jouzu", "dist", "cli.js");
 	const env = { ...process.env, JOUZU_HOME: consumer, PI_OFFLINE: "1" };
@@ -58,6 +62,10 @@ try {
 		run(process.execPath, [installedCli, "profile", "plan", "--profile", "ja", "--json"], { cwd: temp, env }).stdout,
 	);
 	assert.deepEqual(secondPlan.actions, []);
+	const doctor = run(process.execPath, [installedCli, "doctor"], { cwd: temp, env }).stdout;
+	assert.match(doctor, /Install channel: npm-compatible install/);
+	assert.match(doctor, /Selected profile: ja/);
+	assert.match(doctor, /Result: ready for development dogfood/);
 	const pi = run(process.execPath, [installedCli, "pi", "--version"], { cwd: temp, env }).stdout.trim();
 	assert.equal(pi, piVersion);
 
@@ -70,7 +78,23 @@ try {
 		assert.match(result.stdout, new RegExp(`^jouzu ${packageJson.version}`, "m"));
 	}
 
-	console.log(`packed jouzu@${packageJson.version} launched Pi ${piVersion} through jouzu and jz`);
+	const npmExec = runNpm(["exec", "--yes", "--package", tarball, "--", "jouzu", "--version"], {
+		cwd: resolve(temp, "consumer"),
+		env,
+	});
+	assert.match(npmExec.stdout, new RegExp(`^jouzu ${packageJson.version}`, "m"));
+
+	const globalPrefix = resolve(temp, "global");
+	runNpm(["install", "--global", "--prefix", globalPrefix, "--ignore-scripts", tarball]);
+	const globalBin =
+		process.platform === "win32" ? resolve(globalPrefix, "jouzu.cmd") : resolve(globalPrefix, "bin", "jouzu");
+	const globalVersion =
+		process.platform === "win32"
+			? run(process.env.ComSpec ?? "cmd.exe", ["/d", "/s", "/c", globalBin, "--version"], { cwd: temp, env })
+			: run(globalBin, ["--version"], { cwd: temp, env });
+	assert.match(globalVersion.stdout, new RegExp(`^jouzu ${packageJson.version}`, "m"));
+
+	console.log(`packed jouzu@${packageJson.version} passed local, npm-exec, and global smokes with Pi ${piVersion}`);
 } finally {
 	rmSync(temp, { recursive: true, force: true });
 }

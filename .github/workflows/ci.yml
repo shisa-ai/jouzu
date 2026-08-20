@@ -33,6 +33,7 @@ jobs:
       - run: npm run check
       - run: npm test --workspaces --if-present
       - run: npm run pack:check
+      - run: npm run test:packed
 
   python:
     runs-on: ${{ matrix.os }}

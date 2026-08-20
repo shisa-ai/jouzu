@@ -34,6 +34,18 @@ for (const directory of packageDirectories) {
 		if (!packed.files.some((file) => file.path === "dist/pi.lock.json")) {
 			throw new Error("jouzu tarball is missing dist/pi.lock.json");
 		}
+		const allowedTopLevel = new Set(["LICENSE", "README.md", "package.json"]);
+		for (const file of packed.files) {
+			if (!allowedTopLevel.has(file.path) && !file.path.startsWith("dist/")) {
+				throw new Error(`jouzu tarball contains unexpected public file ${file.path}`);
+			}
+		}
+		if (!packed.files.some((file) => file.path === "LICENSE")) throw new Error("jouzu tarball is missing LICENSE");
+		const cliEntry = packed.files.find((file) => file.path === "dist/cli.js");
+		if (!cliEntry || (cliEntry.mode & 0o111) === 0) throw new Error("jouzu dist/cli.js is not executable");
+		if (!readFileSync(join(directory, "dist", "cli.js"), "utf8").startsWith("#!/usr/bin/env node\n")) {
+			throw new Error("jouzu dist/cli.js is missing its Node shebang");
+		}
 		for (const profileFile of [
 			"dist/profiles/core/manifest.json",
 			"dist/profiles/core/assets/jouzu-core-skill.md",
@@ -43,6 +55,21 @@ for (const directory of packageDirectories) {
 		]) {
 			if (!packed.files.some((file) => file.path === profileFile)) {
 				throw new Error(`jouzu tarball is missing bundled profile file ${profileFile}`);
+			}
+		}
+		const forbiddenPublicContent = [
+			"jouzu-dev",
+			"worklog/entries",
+			"planning/v0.1",
+			"/home/lhl/",
+			"BEGIN PRIVATE KEY",
+			"AWS_SECRET_ACCESS_KEY",
+		];
+		for (const file of packed.files) {
+			if (!/\.(?:js|json|md|txt)$/.test(file.path) && file.path !== "LICENSE") continue;
+			const text = readFileSync(join(directory, file.path), "utf8");
+			for (const forbidden of forbiddenPublicContent) {
+				if (text.includes(forbidden)) throw new Error(`jouzu tarball ${file.path} contains forbidden public content`);
 			}
 		}
 	}
