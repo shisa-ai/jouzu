@@ -5,6 +5,10 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const packageDirectories = [join("packages", "cli")];
+const piPackageName = "@earendil-works/pi-coding-agent";
+const piLock = JSON.parse(readFileSync(join("upstream", "pi.lock.json"), "utf8"));
+const pinnedPiVersion = piLock.packages?.[piPackageName]?.version;
+if (!pinnedPiVersion) throw new Error(`upstream/pi.lock.json is missing ${piPackageName}`);
 const npmCommand = process.platform === "win32" ? (process.env.ComSpec ?? "cmd.exe") : "npm";
 const npmPrefixArguments = process.platform === "win32" ? ["/d", "/s", "/c", "npm"] : [];
 
@@ -22,6 +26,14 @@ for (const directory of packageDirectories) {
 	const [packed] = JSON.parse(result.stdout);
 	if (!packed?.files?.length) {
 		throw new Error(`${packageJson.name} would publish no files`);
+	}
+	if (packageJson.name === "jouzu") {
+		if (packageJson.dependencies?.[piPackageName] !== pinnedPiVersion) {
+			throw new Error(`jouzu must ship exact Pi ${pinnedPiVersion}`);
+		}
+		if (!packed.files.some((file) => file.path === "dist/pi.lock.json")) {
+			throw new Error("jouzu tarball is missing dist/pi.lock.json");
+		}
 	}
 	for (const [command, target] of Object.entries(packageJson.bin ?? {})) {
 		if (target.startsWith("./")) {

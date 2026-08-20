@@ -1,7 +1,7 @@
 {
 	"name": "jouzu",
 	"version": "0.0.1",
-	"description": "Japanese-first distribution of the Pi coding agent harness (preview stub)",
+	"description": "Japanese-first distribution of the Pi coding agent harness",
 	"type": "module",
 	"bin": {
 		"jouzu": "dist/cli.js",
@@ -13,7 +13,7 @@
 		"LICENSE"
 	],
 	"scripts": {
-		"build": "tsc -p tsconfig.json",
+		"build": "tsc -p tsconfig.json && node ../../scripts/copy-pi-lock.mjs dist/pi.lock.json",
 		"check": "tsc -p tsconfig.json --noEmit",
 		"test": "node --test test/*.test.mjs"
 	},
@@ -39,5 +39,8 @@
 	},
 	"publishConfig": {
 		"access": "public"
+	},
+	"dependencies": {
+		"@earendil-works/pi-coding-agent": "0.84.2"
 	}
 }

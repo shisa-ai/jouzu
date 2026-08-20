@@ -7,6 +7,7 @@ import { resolve } from "node:path";
 const root = resolve(import.meta.dirname, "..");
 const lockPath = resolve(root, "upstream", "pi.lock.json");
 const packagePath = resolve(root, "package.json");
+const cliPackagePath = resolve(root, "packages", "cli", "package.json");
 const packageLockPath = resolve(root, "package-lock.json");
 const packageName = "@earendil-works/pi-coding-agent";
 
@@ -60,27 +61,38 @@ function upstreamTagCommit(tag) {
 	return rows[0].split(/\s+/)[0];
 }
 
-function packageLockNode() {
+function packageLockRecords() {
 	const packageLock = readJson(packageLockPath);
 	const node = packageLock.packages?.[`node_modules/${packageName}`];
+	const cli = packageLock.packages?.["packages/cli"];
 	if (!node) fail(`${packageName} is missing from package-lock.json`);
-	return node;
+	if (!cli) fail("packages/cli is missing from package-lock.json");
+	return { node, cli };
 }
 
 function validateLock({ online }) {
 	const lock = readJson(lockPath);
 	const packageJson = readJson(packagePath);
-	const packageLockNodeValue = packageLockNode();
+	const cliPackageJson = readJson(cliPackagePath);
+	const packageLock = packageLockRecords();
 	const packageRecord = lock.packages?.[packageName];
 	if (!packageRecord) fail(`${lockPath} is missing ${packageName}`);
 	if (lock.tag !== `v${packageRecord.version}`) fail(`tag ${lock.tag} does not match package ${packageRecord.version}`);
 	if (packageJson.devDependencies?.[packageName] !== packageRecord.version) {
-		fail(`package.json pin ${packageJson.devDependencies?.[packageName]} does not match ${packageRecord.version}`);
+		fail(
+			`package.json development pin ${packageJson.devDependencies?.[packageName]} does not match ${packageRecord.version}`,
+		);
 	}
-	if (packageLockNodeValue.version !== packageRecord.version) {
-		fail(`package-lock version ${packageLockNodeValue.version} does not match ${packageRecord.version}`);
+	if (cliPackageJson.dependencies?.[packageName] !== packageRecord.version) {
+		fail(`jouzu runtime pin ${cliPackageJson.dependencies?.[packageName]} does not match ${packageRecord.version}`);
 	}
-	if (packageLockNodeValue.integrity !== packageRecord.integrity) {
+	if (packageLock.cli.dependencies?.[packageName] !== packageRecord.version) {
+		fail(`package-lock CLI pin ${packageLock.cli.dependencies?.[packageName]} does not match ${packageRecord.version}`);
+	}
+	if (packageLock.node.version !== packageRecord.version) {
+		fail(`package-lock version ${packageLock.node.version} does not match ${packageRecord.version}`);
+	}
+	if (packageLock.node.integrity !== packageRecord.integrity) {
 		fail("package-lock integrity does not match upstream/pi.lock.json");
 	}
 	if (!Array.isArray(lock.deviations)) fail("deviations must be an array");
@@ -142,6 +154,17 @@ function update(version) {
 	runNpm(["install", "--save-dev", "--save-exact", `${packageName}@${metadata.version}`, "--ignore-scripts"], {
 		stdio: "inherit",
 	});
+	runNpm(
+		[
+			"install",
+			"--workspace",
+			"packages/cli",
+			"--save-exact",
+			`${packageName}@${metadata.version}`,
+			"--ignore-scripts",
+		],
+		{ stdio: "inherit" },
+	);
 	writeLock(metadata);
 	console.log(`updated Pi candidate to ${metadata.version}; run npm run pi:qualify before promotion`);
 }
