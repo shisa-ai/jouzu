@@ -1,6 +1,6 @@
 # Jouzu
 
-Jouzu is an agentic AI environment built on the Pi coding agent. `jouzu` and `jz` run exact Pi `0.84.2` with isolated Jouzu state, built-in Core/JA profiles, and non-mutating diagnostics. Japanese support is optional and first-class.
+Jouzu is an agentic AI environment built on the Pi coding agent, with CJK-safe text and path handling. `jouzu` and `jz` run exact Pi `0.84.2` with isolated Jouzu state, a language-neutral Core fallback, an optional JA preview, and non-mutating diagnostics. Japanese support is optional and first-class.
 
 ## Install and start
 
@@ -21,9 +21,11 @@ jz profile plan --profile core
 jz profile plan --profile ja
 ```
 
+Locale, terminal settings, repository text, and branding never select JA automatically.
+
 Profile planning does not write. Application detects user-file conflicts, retains backups for managed updates/deletions, and never prunes unknown files. Existing unsupported CP932/Shift-JIS profile targets are left unchanged.
 
-Use `/login` to authenticate within Jouzu's agent root. Pi's `/model` or `Ctrl+L` picker remains available. `/jouzu` reports the active Jouzu/Pi/profile/model tuple.
+Use `/login` to authenticate within Jouzu's agent root. Pi's `/model` or `Ctrl+L` picker remains available. `/status` reports provider-neutral session, model, context, profile, and runtime facts.
 
 Jouzu does not import stock Pi state. Override all roots with `--jouzu-home <path>` or `JOUZU_HOME`. Trusted project `.pi` resources and Pi's cross-harness `~/.agents/skills` read surface still follow Pi behavior.
 

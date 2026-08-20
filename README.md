@@ -1,6 +1,6 @@
 # Jouzu
 
-Jouzu is an agentic AI environment built on the [Pi coding agent](https://pi.dev/). The `jouzu` and `jz` commands run an exact reviewed Pi runtime with isolated Jouzu state, safe built-in Core/JA profiles, and human-readable diagnostics. Japanese support is a first-class option, not the product's only identity.
+Jouzu is an agentic AI environment built on the [Pi coding agent](https://pi.dev/), with CJK-safe text and path handling. The `jouzu` and `jz` commands run an exact reviewed Pi runtime with isolated Jouzu state, a language-neutral Core fallback, an optional JA preview, and human-readable diagnostics. Japanese support is a first-class option, not the product's only identity.
 
 Jouzu v0.1 is an npm developer preview. It expects an existing development environment; it is not a native installer or hosted model service.
 
@@ -53,26 +53,28 @@ Inside Pi:
 
 - `/login` configures provider authentication in Jouzu's isolated agent root.
 - `/model` or `Ctrl+L` selects from available provider/models.
-- `/jouzu` reports the active Jouzu, Pi, profile, and model tuple.
+- `/status` reports provider-neutral session, workspace, model, thinking, context, scoped-model, profile, and runtime facts.
 
 Jouzu does not include model service, billing, routing, privacy, retention, region, or certification guarantees. Those properties belong to the provider and configuration you select.
 
 ## Profiles
 
-`core` is the safe fallback and provider-neutral base. The optional `ja` profile extends Core with a concise Japanese-first response policy. It preserves exact code, commands, identifiers, paths, URLs, logs, and source error messages instead of translating or normalizing them.
+`core` is the safe fallback and provider- and language-neutral base. Product branding, locale, terminal settings, repository text, and path contents never opt a user into a response language.
 
-Enable Japanese support explicitly at any time:
+The optional `ja` preview extends Core with a concise Japanese response policy while preserving exact code, commands, identifiers, paths, URLs, logs, and source error messages. Enable it through first-run consent or explicit selection at any time:
 
 ```bash
 jz profile plan --profile ja
 jz profile apply --profile ja
 ```
 
-You can also select and reconcile a profile as part of an ordinary launch:
+You can also select it for an ordinary launch; the reconciled profile is then persisted:
 
 ```bash
 jz --jouzu-profile ja
 ```
+
+Switch back safely with `jz profile apply --profile core`.
 
 Profile schema v1 permits only bundled UTF-8 text at `APPEND_SYSTEM.md`, `skills/jouzu-*/**`, and `prompts/jouzu-*`. Planning performs no writes. Application uses an exclusive lock, conflict checks, backups, atomic per-file replacement, and an atomic state record. Unknown files and user-owned `AGENTS.md` are never pruned.
 
@@ -119,7 +121,7 @@ Interactive launches clear the current viewport and show a compact adaptive Jouz
 
 ## Text and encoding behavior
 
-The compatibility suite covers Japanese paths, full-width spaces, hiragana, katakana, half-width kana, kanji, combining marks, emoji, UTF-8 BOM, and CRLF without normalizing or transcoding user files.
+The compatibility suite covers Japanese paths, full-width spaces, hiragana, katakana, half-width kana, kanji, combining marks, emoji, UTF-8 BOM, and CRLF without normalizing or transcoding user files. These data-safety checks do not infer a language preference.
 
 Managed profile assets are UTF-8. Existing CP932/Shift-JIS profile targets produce an `unsupported-encoding` conflict and remain byte-identical; Jouzu does not guess or convert their encoding.
 

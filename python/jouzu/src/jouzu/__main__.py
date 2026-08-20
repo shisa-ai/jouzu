@@ -10,7 +10,7 @@ from collections.abc import Sequence
 from jouzu import __version__
 
 _PREVIEW_MESSAGE = (
-    "Jouzu is reserved for an upcoming Japanese-first Pi distribution. "
+    "Jouzu is reserved for an upcoming CJK-safe Pi distribution. "
     "This preview package is not functional yet."
 )
 

@@ -5,46 +5,51 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { resolveProfileSelection } from "../dist/runtime.js";
 
-function fixture() {
-	const root = mkdtempSync(join(tmpdir(), "jouzu-runtime-"));
+function paths(root) {
 	return {
-		root,
-		paths: {
-			agentDir: join(root, "agent"),
-			stateDir: join(root, "state"),
-			cacheDir: join(root, "cache"),
-			sessionDir: join(root, "sessions"),
-			profileStatePath: join(root, "state", "profile-state.json"),
-			backupDir: join(root, "backups"),
-		},
+		agentDir: join(root, "agent"),
+		stateDir: join(root, "state"),
+		cacheDir: join(root, "cache"),
+		sessionDir: join(root, "state", "sessions"),
+		profileStatePath: join(root, "state", "profile-state.json"),
+		backupDir: join(root, "state", "backups"),
 	};
 }
 
-test("fresh profile selection defaults to Core instead of silently enabling JA", () => {
-	const { root, paths } = fixture();
+test("fresh installs default to Core and honor a saved explicit choice", () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-runtime-profile-"));
 	try {
-		assert.deepEqual(resolveProfileSelection(paths, undefined, {}), { id: "core", source: "default" });
-		assert.deepEqual(resolveProfileSelection(paths, undefined, {}, "ja"), { id: "ja", source: "saved choice" });
+		const resolved = paths(root);
+		assert.deepEqual(resolveProfileSelection(resolved, undefined, {}), { id: "core", source: "default" });
+		assert.deepEqual(resolveProfileSelection(resolved, undefined, {}, "ja"), {
+			id: "ja",
+			source: "saved choice",
+		});
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
 });
 
-test("explicit, environment, and applied profile selections outrank a saved choice", () => {
-	const { root, paths } = fixture();
+test("command, environment, and applied selections outrank a saved choice", () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-runtime-profile-"));
 	try {
-		mkdirSync(paths.stateDir, { recursive: true });
-		writeFileSync(paths.profileStatePath, '{"activeProfile":"ja","manifestSha256":"applied-sha"}\n');
-		assert.equal(resolveProfileSelection(paths, "core", {}, "ja").source, "command line");
-		assert.deepEqual(resolveProfileSelection(paths, undefined, { JOUZU_PROFILE: "core" }, "ja"), {
+		const resolved = paths(root);
+		mkdirSync(resolved.stateDir, { recursive: true });
+		writeFileSync(resolved.profileStatePath, JSON.stringify({ activeProfile: "ja", manifestSha256: "a".repeat(64) }));
+		assert.deepEqual(resolveProfileSelection(resolved, "core", {}, "ja"), {
+			id: "core",
+			source: "command line",
+			appliedManifestSha256: undefined,
+		});
+		assert.deepEqual(resolveProfileSelection(resolved, undefined, { JOUZU_PROFILE: "core" }, "ja"), {
 			id: "core",
 			source: "environment",
 			appliedManifestSha256: undefined,
 		});
-		assert.deepEqual(resolveProfileSelection(paths, undefined, {}, "core"), {
+		assert.deepEqual(resolveProfileSelection(resolved, undefined, {}, "core"), {
 			id: "ja",
 			source: "profile state",
-			appliedManifestSha256: "applied-sha",
+			appliedManifestSha256: "a".repeat(64),
 		});
 	} finally {
 		rmSync(root, { recursive: true, force: true });

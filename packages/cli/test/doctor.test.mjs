@@ -10,7 +10,6 @@ function metadata(overrides = {}) {
 		jouzuVersion: "0.1.0",
 		piVersion: "0.84.2",
 		profileSchemaVersion: 1,
-		productLabel: "Agentic AI environment",
 		lock: {
 			schemaVersion: 1,
 			repository: "https://github.com/earendil-works/pi-mono",

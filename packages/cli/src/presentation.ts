@@ -26,10 +26,29 @@ export interface InteractiveStartupContext {
 
 export type BannerColorMode = "truecolor" | "256" | "16" | "none";
 
+export interface BannerPalette {
+	markTruecolor: { start: readonly [number, number, number]; end: readonly [number, number, number] };
+	mark256: readonly number[];
+	mark16: readonly number[];
+	versionTruecolor: { jouzu: readonly [number, number, number]; pi: readonly [number, number, number] };
+	version256: { jouzu: number; pi: number };
+	version16: { jouzu: number; pi: number };
+}
+
+export const DEFAULT_BANNER_PALETTE: BannerPalette = {
+	markTruecolor: { start: [34, 211, 238], end: [244, 114, 182] },
+	mark256: [45, 81, 117, 141, 177, 213],
+	mark16: [96, 94, 95],
+	versionTruecolor: { jouzu: [103, 232, 249], pi: [249, 168, 212] },
+	version256: { jouzu: 117, pi: 218 },
+	version16: { jouzu: 96, pi: 95 },
+};
+
 export interface BannerRenderOptions {
 	colorMode?: BannerColorMode;
 	colorDepth?: number;
 	env?: NodeJS.ProcessEnv;
+	palette?: BannerPalette;
 }
 
 function envFlagIsTrue(value: string | undefined): boolean {
@@ -92,7 +111,7 @@ export function detectBannerColorMode(options: BannerRenderOptions = {}): Banner
 	return "none";
 }
 
-function colorizeMark(line: string, mode: BannerColorMode): string {
+function colorizeMark(line: string, mode: BannerColorMode, palette: BannerPalette): string {
 	if (mode === "none") return line;
 	const characters = Array.from(line);
 	const glyphCount = characters.filter((character) => character !== " ").length;
@@ -103,21 +122,53 @@ function colorizeMark(line: string, mode: BannerColorMode): string {
 			const ratio = glyphCount <= 1 ? 0 : glyphIndex / (glyphCount - 1);
 			glyphIndex += 1;
 			if (mode === "truecolor") {
-				const start = [34, 211, 238] as const;
-				const end = [244, 114, 182] as const;
+				const { start, end } = palette.markTruecolor;
 				const [red, green, blue] = start.map((value, index) => Math.round(value + (end[index] - value) * ratio));
 				return `\u001b[38;2;${red};${green};${blue}m${character}${ANSI_RESET}`;
 			}
 			if (mode === "256") {
-				const palette = [45, 81, 117, 141, 177, 213];
-				const color = palette[Math.min(palette.length - 1, Math.round(ratio * (palette.length - 1)))];
+				const colors = palette.mark256;
+				const color = colors[Math.min(colors.length - 1, Math.round(ratio * (colors.length - 1)))];
 				return `\u001b[38;5;${color}m${character}${ANSI_RESET}`;
 			}
-			const palette = [96, 94, 95];
-			const color = palette[Math.min(palette.length - 1, Math.round(ratio * (palette.length - 1)))];
+			const colors = palette.mark16;
+			const color = colors[Math.min(colors.length - 1, Math.round(ratio * (colors.length - 1)))];
 			return `\u001b[${color}m${character}${ANSI_RESET}`;
 		})
 		.join("");
+}
+
+function colorizeVersion(
+	value: string,
+	mode: BannerColorMode,
+	rgb: readonly [number, number, number],
+	indexed: number,
+	basic: number,
+): string {
+	if (mode === "truecolor") return `\u001b[38;2;${rgb.join(";")}m${value}${ANSI_RESET}`;
+	if (mode === "256") return `\u001b[38;5;${indexed}m${value}${ANSI_RESET}`;
+	if (mode === "16") return `\u001b[${basic}m${value}${ANSI_RESET}`;
+	return value;
+}
+
+function versionLine(metadata: JouzuMetadata, width: number, mode: BannerColorMode, palette: BannerPalette): string {
+	const plain = `jouzu ${metadata.jouzuVersion}  ·  pi ${metadata.piVersion}`;
+	if (fit(plain, width) !== plain || mode === "none") return fit(plain, width);
+	const jouzu = colorizeVersion(
+		metadata.jouzuVersion,
+		mode,
+		palette.versionTruecolor.jouzu,
+		palette.version256.jouzu,
+		palette.version16.jouzu,
+	);
+	const pi = colorizeVersion(
+		metadata.piVersion,
+		mode,
+		palette.versionTruecolor.pi,
+		palette.version256.pi,
+		palette.version16.pi,
+	);
+	return `jouzu ${jouzu}  ·  pi ${pi}`;
 }
 
 export function renderBannerLines(
@@ -125,16 +176,13 @@ export function renderBannerLines(
 	metadata: JouzuMetadata,
 	width: number,
 	colorMode: BannerColorMode,
+	palette: BannerPalette = DEFAULT_BANNER_PALETTE,
 ): string[] {
-	const subtitle = fit(metadata.productLabel, width);
-	const versions = fit(`jouzu ${metadata.jouzuVersion}  ·  pi ${metadata.piVersion}`, width);
-	const hints = fit("/model choose  ·  /hotkeys shortcuts  ·  /jouzu status", width);
-	const details =
-		colorMode === "none"
-			? [subtitle, versions, hints]
-			: [theme.fg("muted", subtitle), theme.fg("dim", versions), theme.fg("dim", hints)];
+	const versions = versionLine(metadata, width, colorMode, palette);
+	const hints = fit("/model choose  ·  /hotkeys shortcuts  ·  /status session", width);
+	const details = colorMode === "none" ? [versions, hints] : [versions, theme.fg("dim", hints)];
 	if (width < BRAILLE_MIN_WIDTH) return [fit("J O U Z U", width), ...details];
-	return [...BRAILLE_MARK.map((line) => colorizeMark(line, colorMode)), ...details];
+	return [...BRAILLE_MARK.map((line) => colorizeMark(line, colorMode, palette)), ...details];
 }
 
 export function createJouzuPresentationExtension(
@@ -159,18 +207,33 @@ export function createJouzuPresentationExtension(
 					intervalMs: 120,
 				});
 				ctx.ui.setHeader((_tui, theme) => ({
-					render: (width) => renderBannerLines(theme, metadata, width, colorMode),
+					render: (width) => renderBannerLines(theme, metadata, width, colorMode, options.palette),
 					invalidate() {},
 				}));
 			});
 
-			pi.registerCommand("jouzu", {
-				description: "Show the active Jouzu, Pi, profile, and model tuple",
+			pi.registerCommand("status", {
+				description: "Show the current Jouzu session, model, context, and profile status",
 				handler: async (_args, ctx) => {
 					const model = ctx.model ? `${ctx.model.provider}/${ctx.model.id}` : "not selected";
+					const usage = ctx.getContextUsage();
+					const context = usage
+						? `${usage.tokens ?? "unknown"}/${usage.contextWindow} tokens (${usage.percent ?? "unknown"}%)`
+						: "unknown";
+					const scopedModels = ctx.scopedModels.length === 0 ? "all available" : String(ctx.scopedModels.length);
 					const applied = profile.appliedManifestSha256 ? "applied" : "not applied";
 					ctx.ui.notify(
-						`Jouzu ${metadata.jouzuVersion} · Pi ${metadata.piVersion} · profile ${profile.id} (${applied}) · model ${model}`,
+						[
+							"Jouzu session status",
+							`session: ${ctx.sessionManager.getSessionId()}`,
+							`workspace: ${basename(ctx.cwd) || "workspace"}`,
+							`model: ${model}`,
+							`thinking: ${ctx.thinkingLevel ?? "off"}`,
+							`context: ${context}`,
+							`scoped models: ${scopedModels}`,
+							`profile: ${profile.id} (${applied})`,
+							`runtime: Jouzu ${metadata.jouzuVersion} · Pi ${metadata.piVersion}`,
+						].join("\n"),
 						"info",
 					);
 				},

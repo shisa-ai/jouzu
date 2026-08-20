@@ -23,7 +23,6 @@ export interface JouzuMetadata {
 	jouzuVersion: string;
 	piVersion: string;
 	profileSchemaVersion: number;
-	productLabel: string;
 	lock: PiLock;
 }
 
@@ -45,7 +44,6 @@ export function loadMetadata(): JouzuMetadata {
 		jouzuVersion: packageMetadata.version,
 		piVersion: piRecord.version,
 		profileSchemaVersion: 1,
-		productLabel: "Agentic AI environment",
 		lock,
 	};
 }
