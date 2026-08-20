@@ -166,9 +166,8 @@ async function runCli(args: string[]): Promise<void> {
 	if (firstRunChoice) {
 		writeProfileChoice(profileChoicePath, profile.id);
 		console.log(profile.id === "ja" ? "Japanese support enabled." : "Continuing with the Core profile.");
-	} else {
-		clearInteractiveStartup(parsed.args);
 	}
+	clearInteractiveStartup(parsed.args);
 	await pi.main(parsed.args, {
 		extensionFactories: [createJouzuPresentationExtension(metadata, profile)],
 	});
