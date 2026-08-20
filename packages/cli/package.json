@@ -13,7 +13,7 @@
 		"LICENSE"
 	],
 	"scripts": {
-		"build": "tsc -p tsconfig.json && node ../../scripts/copy-pi-lock.mjs dist/pi.lock.json && node ../../scripts/copy-profiles.mjs",
+		"build": "tsc -p tsconfig.json && node ../../scripts/prepare-cli.mjs && node ../../scripts/copy-pi-lock.mjs dist/pi.lock.json && node ../../scripts/copy-profiles.mjs",
 		"check": "tsc -p tsconfig.json --noEmit",
 		"test": "node --test test/*.test.mjs"
 	},
