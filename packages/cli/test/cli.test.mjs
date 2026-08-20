@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -48,6 +48,12 @@ test("rejects Pi self-update without entering Pi", () => {
 	assert.match(result.stderr, /Upgrade Jouzu instead/);
 });
 
+test("preserves a pinned Pi CLI failure status", () => {
+	const result = run(["pi", "--session"]);
+	assert.equal(result.status, 1);
+	assert.match(result.stderr, /Unknown option: --session/);
+});
+
 test("shows Jouzu help and leaves Pi help behind the explicit escape", () => {
 	const jouzuHelp = run(["--help"]);
 	assert.equal(jouzuHelp.status, 0, jouzuHelp.stderr);
@@ -87,6 +93,57 @@ test("Pi package operations write only to the isolated Jouzu agent root", () => 
 		rmSync(temp, { recursive: true, force: true });
 	}
 });
+
+test(
+	"preserves interactive runtime termination handling",
+	{ skip: process.platform === "win32" ? "POSIX signal assertion" : false, timeout: 30_000 },
+	async () => {
+		const temp = mkdtempSync(join(tmpdir(), "jouzu-signal-"));
+		try {
+			const child = spawn(process.execPath, [cli, "pi", "--mode", "rpc", "--no-session", "--no-context-files"], {
+				env: { ...process.env, JOUZU_HOME: temp, PI_OFFLINE: "1" },
+				stdio: ["pipe", "pipe", "pipe"],
+			});
+			let stdout = "";
+			let stderr = "";
+			child.stdout.setEncoding("utf8");
+			child.stderr.setEncoding("utf8");
+			child.stdout.on("data", (chunk) => {
+				stdout += chunk;
+			});
+			child.stderr.on("data", (chunk) => {
+				stderr += chunk;
+			});
+			child.stdin.write(`${JSON.stringify({ id: "state", type: "get_state" })}\n`);
+			await new Promise((resolveReady, rejectReady) => {
+				const timeout = setTimeout(() => rejectReady(new Error(`RPC startup timed out: ${stderr}`)), 15_000);
+				const poll = setInterval(() => {
+					if (stdout.includes('"id":"state"')) {
+						clearInterval(poll);
+						clearTimeout(timeout);
+						resolveReady();
+					}
+				}, 20);
+				child.once("exit", (code, signal) => {
+					clearInterval(poll);
+					clearTimeout(timeout);
+					rejectReady(new Error(`RPC exited before signal test: code=${code} signal=${signal} ${stderr}`));
+				});
+			});
+			const exitPromise = new Promise((resolveExit) => {
+				child.once("exit", (code, signal) => resolveExit({ code, signal }));
+			});
+			child.kill("SIGTERM");
+			const result = await exitPromise;
+			assert.ok(
+				result.signal === "SIGTERM" || result.code === 143,
+				`expected SIGTERM semantics, got ${JSON.stringify(result)}`,
+			);
+		} finally {
+			rmSync(temp, { recursive: true, force: true });
+		}
+	},
+);
 
 test("doctor is non-mutating and reports replacement of inherited Pi roots", () => {
 	const temp = mkdtempSync(join(tmpdir(), "jouzu-doctor-"));

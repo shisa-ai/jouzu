@@ -1,6 +1,6 @@
 import { constants, existsSync, readFileSync, statSync } from "node:fs";
 import { homedir } from "node:os";
-import { delimiter, join, resolve } from "node:path";
+import { posix, win32 } from "node:path";
 import type { JouzuMetadata } from "./metadata.js";
 import type { JouzuPaths } from "./paths.js";
 import type { ProfileSelection } from "./runtime.js";
@@ -33,6 +33,11 @@ export interface DoctorContext {
 	env?: NodeJS.ProcessEnv;
 	inheritedPiAgentDir?: string;
 	inheritedPiSessionDir?: string;
+	platform?: NodeJS.Platform;
+	architecture?: string;
+	nodeVersion?: string;
+	locale?: string;
+	commandPaths?: { git: string | null; bash: string | null };
 }
 
 export interface DoctorResult {
@@ -50,26 +55,27 @@ function nodeIsSupported(version: string): boolean {
 	return major > 22 || (major === 22 && (minor > 19 || (minor === 19 && patch >= 0)));
 }
 
-function executableExists(path: string): boolean {
+function executableExists(path: string, platform: NodeJS.Platform): boolean {
 	try {
-		return statSync(path).isFile() && (process.platform === "win32" || (statSync(path).mode & constants.S_IXUSR) !== 0);
+		return statSync(path).isFile() && (platform === "win32" || (statSync(path).mode & constants.S_IXUSR) !== 0);
 	} catch {
 		return false;
 	}
 }
 
-function findExecutable(name: string, env: NodeJS.ProcessEnv): string | undefined {
-	const extensions = process.platform === "win32" ? (env.PATHEXT ?? ".EXE;.CMD;.BAT").split(";").filter(Boolean) : [""];
+function findExecutable(name: string, env: NodeJS.ProcessEnv, platform: NodeJS.Platform): string | undefined {
+	const pathApi = platform === "win32" ? win32 : posix;
+	const extensions = platform === "win32" ? (env.PATHEXT ?? ".EXE;.CMD;.BAT").split(";").filter(Boolean) : [""];
 	const candidates = (env.PATH ?? "")
-		.split(delimiter)
+		.split(pathApi.delimiter)
 		.filter(Boolean)
-		.flatMap((directory) => extensions.map((extension) => join(directory, `${name}${extension}`)));
-	if (process.platform === "win32" && name === "bash") {
+		.flatMap((directory) => extensions.map((extension) => pathApi.join(directory, `${name}${extension}`)));
+	if (platform === "win32" && name === "bash") {
 		for (const root of [env.ProgramFiles, env["ProgramFiles(x86)"]]) {
-			if (root) candidates.push(join(root, "Git", "bin", "bash.exe"));
+			if (root) candidates.push(pathApi.join(root, "Git", "bin", "bash.exe"));
 		}
 	}
-	return candidates.find(executableExists);
+	return candidates.find((candidate) => executableExists(candidate, platform));
 }
 
 function readPackageCount(settingsPath: string): { count: number; warning?: string } {
@@ -97,20 +103,27 @@ function userHome(env: NodeJS.ProcessEnv): string {
 
 export function createDoctorReport(context: DoctorContext): DoctorResult {
 	const env = context.env ?? process.env;
+	const platform = context.platform ?? process.platform;
+	const architecture = context.architecture ?? process.arch;
+	const nodeVersion = context.nodeVersion ?? process.version;
+	const locale = context.locale ?? Intl.DateTimeFormat().resolvedOptions().locale;
+	const pathApi = platform === "win32" ? win32 : posix;
 	const lines: string[] = [];
 	const problems: string[] = [];
 	const warnings: string[] = [];
-	const settingsPath = join(context.paths.agentDir, "settings.json");
-	const authPath = join(context.paths.agentDir, "auth.json");
-	const modelsPath = join(context.paths.agentDir, "models.json");
-	const sharedSkillsPath = resolve(userHome(env), ".agents", "skills");
+	const settingsPath = pathApi.join(context.paths.agentDir, "settings.json");
+	const authPath = pathApi.join(context.paths.agentDir, "auth.json");
+	const modelsPath = pathApi.join(context.paths.agentDir, "models.json");
+	const sharedSkillsPath = pathApi.resolve(userHome(env), ".agents", "skills");
 	const packageState = readPackageCount(settingsPath);
-	const gitPath = findExecutable("git", env);
-	const bashPath = findExecutable("bash", env);
+	const gitPath = context.commandPaths ? (context.commandPaths.git ?? undefined) : findExecutable("git", env, platform);
+	const bashPath = context.commandPaths
+		? (context.commandPaths.bash ?? undefined)
+		: findExecutable("bash", env, platform);
 	const providerEnvironment = PROVIDER_ENVIRONMENT_KEYS.some((key) => Boolean(env[key]));
-	const nodeSupported = nodeIsSupported(process.version);
+	const nodeSupported = nodeIsSupported(nodeVersion);
 
-	if (!nodeSupported) problems.push(`Node ${process.version} is unsupported; Jouzu requires >=22.19.0`);
+	if (!nodeSupported) problems.push(`Node ${nodeVersion} is unsupported; Jouzu requires >=22.19.0`);
 	if (!gitPath) problems.push("Git was not found on PATH");
 	if (!bashPath) problems.push("Bash was not found; install Bash or Git Bash");
 	if (context.metadata.piVersion !== context.piRuntimeVersion) {
@@ -143,9 +156,9 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	lines.push(`Install channel: ${installChannel(context.executable)}`);
 	lines.push(`Executable: ${context.executable}`);
 	lines.push("");
-	lines.push(`Platform: ${process.platform} ${process.arch}`);
-	lines.push(`Node: ${process.version} (${nodeSupported ? "supported" : "unsupported"})`);
-	lines.push(`Locale: ${Intl.DateTimeFormat().resolvedOptions().locale}`);
+	lines.push(`Platform: ${platform} ${architecture}`);
+	lines.push(`Node: ${nodeVersion} (${nodeSupported ? "supported" : "unsupported"})`);
+	lines.push(`Locale: ${locale}`);
 	lines.push(`Git: ${gitPath ?? "not found"}`);
 	lines.push(`Bash: ${bashPath ?? "not found"}`);
 	lines.push(`Proxy configured: ${env.HTTP_PROXY || env.HTTPS_PROXY ? "yes" : "no"}`);
