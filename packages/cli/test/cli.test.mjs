@@ -141,6 +141,37 @@ test("jouzu and jz package bins are exact aliases", () => {
 	assert.equal(packageJson.dependencies["@earendil-works/pi-coding-agent"], "0.84.2");
 });
 
+test("jz --session resolves an ID inside Jouzu's isolated session root", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-resume-"));
+	try {
+		const jouzuHome = join(temp, "Jouzu 上手");
+		const sessionDir = join(jouzuHome, "state", "sessions");
+		const sessionId = "11111111-2222-3333-4444-555555555555";
+		const sessionFile = join(sessionDir, `2026-08-20T00-00-00-000Z_${sessionId}.jsonl`);
+		mkdirSync(sessionDir, { recursive: true });
+		writeFileSync(
+			sessionFile,
+			`${JSON.stringify({
+				type: "session",
+				version: 3,
+				id: sessionId,
+				timestamp: "2026-08-20T00:00:00.000Z",
+				cwd: process.cwd(),
+			})}\n`,
+		);
+		const result = run(["--jouzu-home", jouzuHome, "--session", sessionId, "--mode", "rpc", "--no-context-files"], {
+			input: `${JSON.stringify({ id: "state", type: "get_state" })}\n`,
+		});
+		assert.equal(result.status, 0, result.stderr);
+		const response = JSON.parse(result.stdout.trim());
+		assert.equal(response.data.sessionId, sessionId);
+		assert.equal(response.data.sessionFile, sessionFile);
+		assert.doesNotMatch(result.stderr, /Session found in different project/);
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
+
 test("rejects Pi self-update without entering Pi", () => {
 	const result = run(["update", "--self"]);
 	assert.equal(result.status, 2);

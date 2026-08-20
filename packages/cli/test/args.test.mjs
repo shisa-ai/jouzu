@@ -9,6 +9,12 @@ test("forwards Pi arguments without reconstructing them", () => {
 		options: {},
 		args: unicodeArgs,
 	});
+	const sessionArgs = ["--session", "01a02007-8a6e-753c-b232-babb4ba4f3d5"];
+	assert.deepEqual(parseJouzuArgs(sessionArgs), {
+		kind: "pi",
+		options: {},
+		args: sessionArgs,
+	});
 });
 
 test("supports explicit Pi escape forms and leading Jouzu options", () => {

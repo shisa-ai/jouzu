@@ -27,7 +27,7 @@ Profile planning does not write. Application detects user-file conflicts, retain
 
 Use `/login` to authenticate within Jouzu's agent root. Pi's `/model` or `Ctrl+L` picker remains available. `/status` reports provider-neutral session, model, context, profile, and runtime facts.
 
-Jouzu does not import stock Pi state. Override all roots with `--jouzu-home <path>` or `JOUZU_HOME`. Trusted project `.pi` resources and Pi's cross-harness `~/.agents/skills` read surface still follow Pi behavior.
+Jouzu does not import stock Pi state. Override all roots with `--jouzu-home <path>` or `JOUZU_HOME`. Trusted project `.pi` resources and Pi's cross-harness `~/.agents/skills` read surface still follow Pi behavior. On exit, resume the isolated session with the printed `jz --session SESSION_ID` command; Jouzu resolves its own session root.
 
 Use `jz pi ...` or `jz -- ...` for Pi command collisions. Pi runtime self-update is blocked; package/model updates inside Jouzu state remain available.
 

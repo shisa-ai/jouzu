@@ -19,6 +19,7 @@ import { clearInteractiveStartup, createJouzuPresentationExtension, isInteractiv
 import { promptForJapaneseSupport, readProfileChoice, writeProfileChoice } from "./profile-choice.js";
 import { applyProfile, formatProfilePlan, ProfileConflictError, planProfile } from "./profile-manager.js";
 import { loadBundledProfile } from "./profiles.js";
+import { withJouzuResumeHint } from "./resume.js";
 import { configurePiProcess, type ProfileSelection, resolveProfileSelection } from "./runtime.js";
 import { formatUpdateStatus, JouzuUpdater, relaunchUpdatedJouzu, UpdateError } from "./updater.js";
 
@@ -209,9 +210,11 @@ async function runCli(args: string[]): Promise<void> {
 		console.log(profile.id === "ja" ? "Japanese support enabled." : "Continuing with the Core profile.");
 	}
 	clearInteractiveStartup(parsed.args);
-	await pi.main(parsed.args, {
-		extensionFactories: [createJouzuPresentationExtension(metadata, profile)],
-	});
+	await withJouzuResumeHint(() =>
+		pi.main(parsed.args, {
+			extensionFactories: [createJouzuPresentationExtension(metadata, profile)],
+		}),
+	);
 }
 
 runCli(process.argv.slice(2)).catch((error: unknown) => {

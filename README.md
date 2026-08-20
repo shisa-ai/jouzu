@@ -104,6 +104,8 @@ JOUZU_HOME="$PWD/.jouzu" jz doctor
 
 Jouzu does not import normal Pi settings, credentials, packages, or sessions. It preserves Pi's project trust behavior, so trusted project `.pi` resources still apply. Pi's documented cross-harness `~/.agents/skills` directory is also a shared read surface. Jouzu is isolated from global Pi state, not from explicitly trusted project resources or provider credentials in the current environment.
 
+On exit, Jouzu prints `jz --session SESSION_ID`. The command resolves the ID inside Jouzu's platform-specific session root; it does not require or expose an internal `--session-dir` path.
+
 ## Diagnostics and Pi passthrough
 
 ```bash
