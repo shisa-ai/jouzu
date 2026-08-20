@@ -26,7 +26,7 @@ Locale, terminal settings, repository text, and branding never select JA automat
 
 Profile planning does not write. Application detects user-file conflicts, retains backups for managed updates/deletions, and never prunes unknown files. Existing unsupported CP932/Shift-JIS profile targets are left unchanged.
 
-Use `/login` to authenticate within Jouzu's agent root. Pi's `/model` or `Ctrl+L` picker remains available. `/jouzu` reports the active Jouzu/Pi/profile/model tuple.
+Use `/login` to authenticate within Jouzu's agent root. Pi's `/model` or `Ctrl+L` picker remains available. `/status` reports provider-neutral session, model, context, profile, and runtime facts.
 
 Jouzu does not import stock Pi state. Override all roots with `--jouzu-home <path>` or `JOUZU_HOME`. Trusted project `.pi` resources and Pi's cross-harness `~/.agents/skills` read surface still follow Pi behavior.
 

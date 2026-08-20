@@ -25,6 +25,10 @@ function interactiveContext() {
 		mode: "tui",
 		cwd: "/work/日本語 project",
 		model: { provider: "anthropic", id: "claude-test" },
+		thinkingLevel: "high",
+		scopedModels: [{}, {}],
+		sessionManager: { getSessionId: () => "session-test-123" },
+		getContextUsage: () => ({ tokens: 12_345, contextWindow: 200_000, percent: 6.2 }),
 		ui: {
 			theme: identityTheme,
 			setTitle: (value) => calls.title.push(value),
@@ -86,7 +90,7 @@ test("installs a compact width-safe Jouzu header and working indicator", async (
 		"⠈⢹ ⡎⢱ ⡇⢸ ⢉⠝ ⡇⢸",
 		"⠣⠜ ⠣⠜ ⠣⠜ ⠮⠤ ⠣⠜",
 		"jouzu 0.1.0  ·  pi 0.84.2",
-		"/model choose  ·  /hotkeys shortcuts  ·  /jouzu status",
+		"/model choose  ·  /hotkeys shortcuts  ·  /status session",
 	]);
 	assert.equal(component.render(12)[0], "J O U Z U");
 	for (const line of component.render(12)) assert.ok(line.length <= 12, line);
@@ -123,13 +127,35 @@ test("does not install TUI presentation in RPC mode", async () => {
 	assert.deepEqual(calls.title, []);
 });
 
-test("registers a Jouzu status command without exposing paths", async () => {
+test("registers a provider-neutral session status command without exposing paths", async () => {
 	const { commands } = installExtension();
 	const { calls, ctx } = interactiveContext();
-	await commands.get("jouzu").handler("", ctx);
+	assert.equal(commands.has("jouzu"), false);
+	await commands.get("status").handler("", ctx);
 	assert.equal(calls.notifications.length, 1);
-	assert.match(calls.notifications[0][0], /Jouzu 0\.1\.0 · Pi 0\.84\.2/);
-	assert.match(calls.notifications[0][0], /profile core \(not applied\)/);
-	assert.match(calls.notifications[0][0], /anthropic\/claude-test/);
-	assert.doesNotMatch(calls.notifications[0][0], /\/work\//);
+	const message = calls.notifications[0][0];
+	assert.match(message, /session: session-test-123/);
+	assert.match(message, /workspace: 日本語 project/);
+	assert.match(message, /model: anthropic\/claude-test/);
+	assert.match(message, /thinking: high/);
+	assert.match(message, /context: 12345\/200000 tokens \(6\.2%\)/);
+	assert.match(message, /scoped models: 2/);
+	assert.match(message, /profile: core \(not applied\)/);
+	assert.match(message, /runtime: Jouzu 0\.1\.0 · Pi 0\.84\.2/);
+	assert.doesNotMatch(message, /\/work\//);
+});
+
+test("session status labels unavailable model and context facts honestly", async () => {
+	const { commands } = installExtension();
+	const { calls, ctx } = interactiveContext();
+	ctx.model = undefined;
+	ctx.thinkingLevel = undefined;
+	ctx.scopedModels = [];
+	ctx.getContextUsage = () => ({ tokens: null, contextWindow: 128_000, percent: null });
+	await commands.get("status").handler("", ctx);
+	const message = calls.notifications[0][0];
+	assert.match(message, /model: not selected/);
+	assert.match(message, /thinking: off/);
+	assert.match(message, /context: unknown\/128000 tokens \(unknown%\)/);
+	assert.match(message, /scoped models: all available/);
 });

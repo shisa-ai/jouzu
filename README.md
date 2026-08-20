@@ -46,7 +46,7 @@ Inside Pi:
 
 - `/login` configures provider authentication in Jouzu's isolated agent root.
 - `/model` or `Ctrl+L` selects from available provider/models.
-- `/jouzu` reports the active Jouzu, Pi, profile, and model tuple.
+- `/status` reports provider-neutral session, workspace, model, thinking, context, scoped-model, profile, and runtime facts.
 
 Jouzu does not include model service, billing, routing, privacy, retention, region, or certification guarantees. Those properties belong to the provider and configuration you select.
 

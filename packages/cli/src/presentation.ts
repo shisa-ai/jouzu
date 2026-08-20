@@ -174,7 +174,7 @@ export function renderBannerLines(
 	palette: BannerPalette = DEFAULT_BANNER_PALETTE,
 ): string[] {
 	const versions = versionLine(metadata, width, colorMode, palette);
-	const hints = fit("/model choose  ·  /hotkeys shortcuts  ·  /jouzu status", width);
+	const hints = fit("/model choose  ·  /hotkeys shortcuts  ·  /status session", width);
 	const details = colorMode === "none" ? [versions, hints] : [versions, theme.fg("dim", hints)];
 	if (width < BRAILLE_MIN_WIDTH) return [fit("J O U Z U", width), ...details];
 	return [...BRAILLE_MARK.map((line) => colorizeMark(line, colorMode, palette)), ...details];
@@ -207,13 +207,28 @@ export function createJouzuPresentationExtension(
 				}));
 			});
 
-			pi.registerCommand("jouzu", {
-				description: "Show the active Jouzu, Pi, profile, and model tuple",
+			pi.registerCommand("status", {
+				description: "Show the current Jouzu session, model, context, and profile status",
 				handler: async (_args, ctx) => {
 					const model = ctx.model ? `${ctx.model.provider}/${ctx.model.id}` : "not selected";
+					const usage = ctx.getContextUsage();
+					const context = usage
+						? `${usage.tokens ?? "unknown"}/${usage.contextWindow} tokens (${usage.percent ?? "unknown"}%)`
+						: "unknown";
+					const scopedModels = ctx.scopedModels.length === 0 ? "all available" : String(ctx.scopedModels.length);
 					const applied = profile.appliedManifestSha256 ? "applied" : "not applied";
 					ctx.ui.notify(
-						`Jouzu ${metadata.jouzuVersion} · Pi ${metadata.piVersion} · profile ${profile.id} (${applied}) · model ${model}`,
+						[
+							"Jouzu session status",
+							`session: ${ctx.sessionManager.getSessionId()}`,
+							`workspace: ${basename(ctx.cwd) || "workspace"}`,
+							`model: ${model}`,
+							`thinking: ${ctx.thinkingLevel ?? "off"}`,
+							`context: ${context}`,
+							`scoped models: ${scopedModels}`,
+							`profile: ${profile.id} (${applied})`,
+							`runtime: Jouzu ${metadata.jouzuVersion} · Pi ${metadata.piVersion}`,
+						].join("\n"),
 						"info",
 					);
 				},
