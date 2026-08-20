@@ -28,8 +28,7 @@ for (const directory of packageDirectories) {
 	const packageId = `${packageJson.name}@${packageJson.version}`;
 	const lookup = run(npmCommand, [...npmPrefixArguments, "view", packageId, "version", "--json"], undefined, true);
 	if (lookup.status === 0 && lookup.stdout?.trim()) {
-		console.log(`Skipping ${packageId}: already published`);
-		continue;
+		throw new Error(`${packageId} is already published; verify registry state and release a new version`);
 	}
 	const lookupError = lookup.stderr ?? "";
 	if (!lookupError.includes("E404") && !lookupError.includes("404 Not Found")) {

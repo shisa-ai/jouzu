@@ -12,6 +12,8 @@ const piLock = readJson("upstream/pi.lock.json");
 const pythonProject = readFileSync(resolve(root, "python/jouzu/pyproject.toml"), "utf8");
 const pythonModule = readFileSync(resolve(root, "python/jouzu/src/jouzu/__init__.py"), "utf8");
 const changelog = readFileSync(resolve(root, "CHANGELOG.md"), "utf8");
+const npmWorkflow = readFileSync(resolve(root, ".github/workflows/publish-npm.yml"), "utf8");
+const npmPublisher = readFileSync(resolve(root, "scripts/publish-npm.mjs"), "utf8");
 
 if (rootPackage.version !== cliPackage.version) throw new Error("root and npm Jouzu versions differ");
 if (lock.version !== cliPackage.version || lock.packages?.[""]?.version !== cliPackage.version) {
@@ -30,5 +32,20 @@ if (!pythonProject.includes('version = "0.0.1"') || !pythonModule.includes('__ve
 }
 if (rootPackage.workspaces?.length !== 1 || rootPackage.workspaces[0] !== "packages/*") {
 	throw new Error("unexpected npm workspace configuration");
+}
+for (const required of [
+	"environment: npm-publish",
+	"id-token: write",
+	"fetch-depth: 0",
+	"git cat-file -t",
+	"git merge-base --is-ancestor",
+]) {
+	if (!npmWorkflow.includes(required)) throw new Error(`npm publish workflow is missing ${required}`);
+}
+if (npmWorkflow.includes("NODE_AUTH_TOKEN") || npmWorkflow.includes("NPM_TOKEN")) {
+	throw new Error("npm publish workflow must use OIDC without a registry token");
+}
+if (!npmPublisher.includes('"--provenance"') || !npmPublisher.includes("is already published")) {
+	throw new Error("npm publisher must request provenance and fail closed for an existing version");
 }
 console.log(`release metadata: jouzu@${cliPackage.version}, Pi ${piVersion}, PyPI reservation 0.0.1`);
