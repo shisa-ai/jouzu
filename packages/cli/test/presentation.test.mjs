@@ -13,7 +13,7 @@ const metadata = {
 	profileSchemaVersion: 1,
 	lock: { tag: "v0.84.2", commit: "commit", compatibilityStatus: "qualified", deviations: [] },
 };
-const profile = { id: "ja", source: "default" };
+const profile = { id: "core", source: "default" };
 const identityTheme = {
 	bold: (text) => text,
 	fg: (_color, text) => text,
@@ -85,7 +85,6 @@ test("installs a compact width-safe Jouzu header and working indicator", async (
 	assert.deepEqual(wide, [
 		"⠈⢹ ⡎⢱ ⡇⢸ ⢉⠝ ⡇⢸",
 		"⠣⠜ ⠣⠜ ⠣⠜ ⠮⠤ ⠣⠜",
-		"Japanese-first Pi environment",
 		"jouzu 0.1.0  ·  pi 0.84.2",
 		"/model choose  ·  /hotkeys shortcuts  ·  /jouzu status",
 	]);
@@ -100,13 +99,17 @@ test("selects truecolor, indexed, basic, and NO_COLOR banner modes deterministic
 	assert.equal(detectBannerColorMode({ colorDepth: 24, env: { TERM: "xterm", NO_COLOR: "1" } }), "none");
 	assert.equal(detectBannerColorMode({ colorDepth: 24, env: { TERM: "dumb" } }), "none");
 
-	const truecolor = renderBannerLines(identityTheme, metadata, 80, "truecolor")[0];
-	const indexed = renderBannerLines(identityTheme, metadata, 80, "256")[0];
-	const basic = renderBannerLines(identityTheme, metadata, 80, "16")[0];
+	const truecolorLines = renderBannerLines(identityTheme, metadata, 80, "truecolor");
+	const indexedLines = renderBannerLines(identityTheme, metadata, 80, "256");
+	const basicLines = renderBannerLines(identityTheme, metadata, 80, "16");
 	const plain = renderBannerLines(identityTheme, metadata, 80, "none")[0];
-	assert.ok(truecolor.includes("\u001b[38;2;34;211;238m"));
-	assert.ok(indexed.includes("\u001b[38;5;45m"));
-	assert.ok(basic.includes("\u001b[96m"));
+	assert.ok(truecolorLines[0].includes("\u001b[38;2;34;211;238m"));
+	assert.ok(truecolorLines[2].includes("\u001b[38;2;103;232;249m0.1.0"));
+	assert.ok(truecolorLines[2].includes("\u001b[38;2;249;168;212m0.84.2"));
+	assert.ok(indexedLines[0].includes("\u001b[38;5;45m"));
+	assert.ok(indexedLines[2].includes("\u001b[38;5;117m0.1.0"));
+	assert.ok(basicLines[0].includes("\u001b[96m"));
+	assert.ok(basicLines[2].includes("\u001b[96m0.1.0"));
 	assert.equal(plain, "⠈⢹ ⡎⢱ ⡇⢸ ⢉⠝ ⡇⢸");
 	assert.equal(renderBannerLines(identityTheme, metadata, 15, "truecolor")[0], "J O U Z U");
 });
@@ -126,7 +129,7 @@ test("registers a Jouzu status command without exposing paths", async () => {
 	await commands.get("jouzu").handler("", ctx);
 	assert.equal(calls.notifications.length, 1);
 	assert.match(calls.notifications[0][0], /Jouzu 0\.1\.0 · Pi 0\.84\.2/);
-	assert.match(calls.notifications[0][0], /profile ja \(not applied\)/);
+	assert.match(calls.notifications[0][0], /profile core \(not applied\)/);
 	assert.match(calls.notifications[0][0], /anthropic\/claude-test/);
 	assert.doesNotMatch(calls.notifications[0][0], /\/work\//);
 });
