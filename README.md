@@ -9,7 +9,7 @@ Current development behavior:
 - launches exact Pi `0.84.2` through its public top-level API;
 - keeps Jouzu configuration, packages, credentials, and sessions separate from stock Pi;
 - preserves Pi arguments, provider support, and `/model` or Ctrl+L model selection;
-- gives interactive TTY launches a compact Jouzu header, terminal title, and working indicator while leaving print/JSON/RPC output untouched;
+- gives interactive TTY launches an adaptive Unicode Jouzu header with truecolor, indexed-color, basic-color, `NO_COLOR`, and narrow-terminal fallbacks while leaving print/JSON/RPC output untouched;
 - reports the Jouzu/Pi tuple and isolation paths through `jouzu --version`, `/jouzu`, and `jouzu doctor`; and
 - blocks Pi self-update while allowing extension and model updates inside Jouzu state.
 

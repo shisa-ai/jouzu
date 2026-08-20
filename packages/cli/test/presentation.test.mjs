@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { createJouzuPresentationExtension, shouldClearInteractiveStartup } from "../dist/presentation.js";
+import {
+	createJouzuPresentationExtension,
+	detectBannerColorMode,
+	renderBannerLines,
+	shouldClearInteractiveStartup,
+} from "../dist/presentation.js";
 
 const metadata = {
 	jouzuVersion: "0.0.1",
@@ -38,7 +43,7 @@ function installExtension() {
 		on: (event, handler) => handlers.set(event, handler),
 		registerCommand: (name, command) => commands.set(name, command),
 	};
-	createJouzuPresentationExtension(metadata, profile).factory(pi);
+	createJouzuPresentationExtension(metadata, profile, { colorMode: "none" }).factory(pi);
 	return { handlers, commands };
 }
 
@@ -78,12 +83,32 @@ test("installs a compact width-safe Jouzu header and working indicator", async (
 	const component = calls.header[0](undefined, identityTheme);
 	const wide = component.render(80);
 	assert.deepEqual(wide, [
-		"J O U Z U",
+		"⠈⢹ ⡎⢱ ⡇⢸ ⢉⠝ ⡇⢸",
+		"⠣⠜ ⠣⠜ ⠣⠜ ⠮⠤ ⠣⠜",
 		"Japanese-first Pi environment",
 		"jouzu 0.0.1  ·  pi 0.84.2",
 		"/model choose  ·  /hotkeys shortcuts  ·  /jouzu status",
 	]);
+	assert.equal(component.render(12)[0], "J O U Z U");
 	for (const line of component.render(12)) assert.ok(line.length <= 12, line);
+});
+
+test("selects truecolor, indexed, basic, and NO_COLOR banner modes deterministically", () => {
+	assert.equal(detectBannerColorMode({ colorDepth: 24, env: { TERM: "xterm" } }), "truecolor");
+	assert.equal(detectBannerColorMode({ colorDepth: 8, env: { TERM: "xterm-256color" } }), "256");
+	assert.equal(detectBannerColorMode({ colorDepth: 4, env: { TERM: "xterm" } }), "16");
+	assert.equal(detectBannerColorMode({ colorDepth: 24, env: { TERM: "xterm", NO_COLOR: "1" } }), "none");
+	assert.equal(detectBannerColorMode({ colorDepth: 24, env: { TERM: "dumb" } }), "none");
+
+	const truecolor = renderBannerLines(identityTheme, metadata, 80, "truecolor")[0];
+	const indexed = renderBannerLines(identityTheme, metadata, 80, "256")[0];
+	const basic = renderBannerLines(identityTheme, metadata, 80, "16")[0];
+	const plain = renderBannerLines(identityTheme, metadata, 80, "none")[0];
+	assert.ok(truecolor.includes("\u001b[38;2;34;211;238m"));
+	assert.ok(indexed.includes("\u001b[38;5;45m"));
+	assert.ok(basic.includes("\u001b[96m"));
+	assert.equal(plain, "⠈⢹ ⡎⢱ ⡇⢸ ⢉⠝ ⡇⢸");
+	assert.equal(renderBannerLines(identityTheme, metadata, 15, "truecolor")[0], "J O U Z U");
 });
 
 test("does not install TUI presentation in RPC mode", async () => {

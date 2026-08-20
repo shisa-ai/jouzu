@@ -24,6 +24,14 @@ export interface InteractiveStartupContext {
 	env?: NodeJS.ProcessEnv;
 }
 
+export type BannerColorMode = "truecolor" | "256" | "16" | "none";
+
+export interface BannerRenderOptions {
+	colorMode?: BannerColorMode;
+	colorDepth?: number;
+	env?: NodeJS.ProcessEnv;
+}
+
 function envFlagIsTrue(value: string | undefined): boolean {
 	return value !== undefined && ["1", "true", "yes", "on"].includes(value.toLowerCase());
 }
@@ -54,6 +62,10 @@ export function clearInteractiveStartup(args: string[], context: InteractiveStar
 	return true;
 }
 
+const BRAILLE_MARK = ["⠈⢹ ⡎⢱ ⡇⢸ ⢉⠝ ⡇⢸", "⠣⠜ ⠣⠜ ⠣⠜ ⠮⠤ ⠣⠜"] as const;
+const BRAILLE_MIN_WIDTH = 16;
+const ANSI_RESET = "\u001b[0m";
+
 function fit(text: string, width: number): string {
 	if (width <= 0) return "";
 	if (text.length <= width) return text;
@@ -61,25 +73,76 @@ function fit(text: string, width: number): string {
 	return `${text.slice(0, width - 1)}…`;
 }
 
-function bannerLines(theme: Theme, metadata: JouzuMetadata, width: number): string[] {
-	const title = fit("J O U Z U", width);
+export function detectBannerColorMode(options: BannerRenderOptions = {}): BannerColorMode {
+	const env = options.env ?? process.env;
+	if (env.NO_COLOR !== undefined || env.TERM === "dumb") return "none";
+	const colorDepth =
+		options.colorDepth ??
+		(process.stdout.isTTY && typeof process.stdout.getColorDepth === "function"
+			? process.stdout.getColorDepth(env)
+			: undefined);
+	if ((colorDepth ?? 0) >= 24 || /^(truecolor|24bit)$/i.test(env.COLORTERM ?? "")) return "truecolor";
+	if ((colorDepth ?? 0) >= 8 || /256color/i.test(env.TERM ?? "")) return "256";
+	if ((colorDepth ?? 0) >= 4 || (env.TERM !== undefined && env.TERM !== "")) return "16";
+	return "none";
+}
+
+function colorizeMark(line: string, mode: BannerColorMode): string {
+	if (mode === "none") return line;
+	const characters = Array.from(line);
+	const glyphCount = characters.filter((character) => character !== " ").length;
+	let glyphIndex = 0;
+	return characters
+		.map((character) => {
+			if (character === " ") return character;
+			const ratio = glyphCount <= 1 ? 0 : glyphIndex / (glyphCount - 1);
+			glyphIndex += 1;
+			if (mode === "truecolor") {
+				const start = [34, 211, 238] as const;
+				const end = [244, 114, 182] as const;
+				const [red, green, blue] = start.map((value, index) => Math.round(value + (end[index] - value) * ratio));
+				return `\u001b[38;2;${red};${green};${blue}m${character}${ANSI_RESET}`;
+			}
+			if (mode === "256") {
+				const palette = [45, 81, 117, 141, 177, 213];
+				const color = palette[Math.min(palette.length - 1, Math.round(ratio * (palette.length - 1)))];
+				return `\u001b[38;5;${color}m${character}${ANSI_RESET}`;
+			}
+			const palette = [96, 94, 95];
+			const color = palette[Math.min(palette.length - 1, Math.round(ratio * (palette.length - 1)))];
+			return `\u001b[${color}m${character}${ANSI_RESET}`;
+		})
+		.join("");
+}
+
+export function renderBannerLines(
+	theme: Theme,
+	metadata: JouzuMetadata,
+	width: number,
+	colorMode: BannerColorMode,
+): string[] {
 	const subtitle = fit("Japanese-first Pi environment", width);
 	const versions = fit(`jouzu ${metadata.jouzuVersion}  ·  pi ${metadata.piVersion}`, width);
 	const hints = fit("/model choose  ·  /hotkeys shortcuts  ·  /jouzu status", width);
-	return [
-		theme.bold(theme.fg("accent", title)),
-		theme.fg("muted", subtitle),
-		theme.fg("dim", versions),
-		theme.fg("dim", hints),
-	];
+	const details =
+		colorMode === "none"
+			? [subtitle, versions, hints]
+			: [theme.fg("muted", subtitle), theme.fg("dim", versions), theme.fg("dim", hints)];
+	if (width < BRAILLE_MIN_WIDTH) return [fit("J O U Z U", width), ...details];
+	return [...BRAILLE_MARK.map((line) => colorizeMark(line, colorMode)), ...details];
 }
 
-export function createJouzuPresentationExtension(metadata: JouzuMetadata, profile: ProfileSelection): InlineExtension {
+export function createJouzuPresentationExtension(
+	metadata: JouzuMetadata,
+	profile: ProfileSelection,
+	options: BannerRenderOptions = {},
+): InlineExtension {
 	return {
 		name: "jouzu",
 		factory: (pi) => {
 			pi.on("session_start", (_event, ctx) => {
 				if (ctx.mode !== "tui") return;
+				const colorMode = options.colorMode ?? detectBannerColorMode(options);
 				ctx.ui.setTitle(`Jouzu - ${basename(ctx.cwd) || "workspace"}`);
 				ctx.ui.setWorkingIndicator({
 					frames: [
@@ -91,7 +154,7 @@ export function createJouzuPresentationExtension(metadata: JouzuMetadata, profil
 					intervalMs: 120,
 				});
 				ctx.ui.setHeader((_tui, theme) => ({
-					render: (width) => bannerLines(theme, metadata, width),
+					render: (width) => renderBannerLines(theme, metadata, width, colorMode),
 					invalidate() {},
 				}));
 			});
