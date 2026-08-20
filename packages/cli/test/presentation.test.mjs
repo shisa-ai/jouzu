@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
+	brandDefaultSystemPrompt,
 	createJouzuPresentationExtension,
 	detectBannerColorMode,
 	isInteractivePiStartup,
@@ -51,6 +52,32 @@ function installExtension() {
 	createJouzuPresentationExtension(metadata, profile, { colorMode: "none" }).factory(pi);
 	return { handlers, commands };
 }
+
+test("brands only Pi's default identity and preserves its dynamic tool bullets", async () => {
+	const upstream = `You are an expert coding assistant operating inside pi, a coding agent harness. You help users by reading files, executing commands, editing code, and writing new files.
+
+Available tools:
+- read: Read file contents
+- bg_task: Spawn, inspect, and stop non-blocking shell tasks
+
+Guidelines:
+- Be concise in your responses`;
+	const expected = upstream.replace(
+		"operating inside pi, a coding agent harness",
+		"operating inside Jouzu, a coding-agent environment built on the Pi harness",
+	);
+	assert.equal(brandDefaultSystemPrompt(upstream), expected);
+	assert.equal(brandDefaultSystemPrompt(upstream, "user-owned prompt"), upstream);
+	assert.equal(brandDefaultSystemPrompt("You are a reviewer."), "You are a reviewer.");
+	assert.match(expected, /Available tools:\n- read: Read file contents\n- bg_task:/);
+
+	const { handlers } = installExtension();
+	const result = await handlers.get("before_agent_start")({
+		systemPrompt: upstream,
+		systemPromptOptions: { customPrompt: undefined },
+	});
+	assert.deepEqual(result, { systemPrompt: expected });
+});
 
 test("clears only real interactive TTY launches", () => {
 	const tty = { stdinIsTTY: true, stdoutIsTTY: true, env: { TERM: "xterm-256color" } };

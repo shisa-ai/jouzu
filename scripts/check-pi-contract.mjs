@@ -11,6 +11,9 @@ const packageName = "@earendil-works/pi-coding-agent";
 const lock = JSON.parse(readFileSync(resolve(root, "upstream", "pi.lock.json"), "utf8"));
 const expectedVersion = lock.packages[packageName].version;
 const cli = resolve(root, "node_modules", packageName, "dist", "cli.js");
+const systemPromptSource = resolve(root, "node_modules", packageName, "dist", "core", "system-prompt.js");
+const expectedDefaultIdentity =
+	"You are an expert coding assistant operating inside pi, a coding agent harness. You help users by reading files, executing commands, editing code, and writing new files.";
 
 function runNode(args, options = {}) {
 	const result = spawnSync(process.execPath, args, {
@@ -26,6 +29,11 @@ function runNode(args, options = {}) {
 }
 
 assert.ok(existsSync(cli), `Pi CLI is missing: ${cli}`);
+assert.ok(existsSync(systemPromptSource), `Pi system prompt source is missing: ${systemPromptSource}`);
+assert.ok(
+	readFileSync(systemPromptSource, "utf8").includes(expectedDefaultIdentity),
+	"Pi default identity changed; review Jouzu's exact-prefix branding before qualifying this Pi version",
+);
 
 const version = runNode([cli, "--version"], { env: { ...process.env, PI_OFFLINE: "1" } }).stdout.trim();
 assert.equal(version, expectedVersion, "Pi CLI version differs from the exact lock");
@@ -104,6 +112,7 @@ process.stdout.write(JSON.stringify({ exports: required, agentDir: pi.getAgentDi
 				apiExports: api.exports,
 				cli: ["version", "help"],
 				rpc: ["startup", "get_state", "no-session", "isolated-agent-dir"],
+				prompt: ["default-identity"],
 			},
 			null,
 			2,

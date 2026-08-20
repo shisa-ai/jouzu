@@ -89,6 +89,15 @@ export function clearInteractiveStartup(args: string[], context: InteractiveStar
 const BRAILLE_MARK = ["⠈⢹ ⡎⢱ ⡇⢸ ⢉⠝ ⡇⢸", "⠣⠜ ⠣⠜ ⠣⠜ ⠮⠤ ⠣⠜"] as const;
 const BRAILLE_MIN_WIDTH = 16;
 const ANSI_RESET = "\u001b[0m";
+const PI_DEFAULT_IDENTITY =
+	"You are an expert coding assistant operating inside pi, a coding agent harness. You help users by reading files, executing commands, editing code, and writing new files.";
+const JOUZU_DEFAULT_IDENTITY =
+	"You are an expert coding assistant operating inside Jouzu, a coding-agent environment built on the Pi harness. You help users by reading files, executing commands, editing code, and writing new files.";
+
+export function brandDefaultSystemPrompt(systemPrompt: string, customPrompt?: string): string {
+	if (customPrompt || !systemPrompt.startsWith(PI_DEFAULT_IDENTITY)) return systemPrompt;
+	return `${JOUZU_DEFAULT_IDENTITY}${systemPrompt.slice(PI_DEFAULT_IDENTITY.length)}`;
+}
 
 function fit(text: string, width: number): string {
 	if (width <= 0) return "";
@@ -193,6 +202,12 @@ export function createJouzuPresentationExtension(
 	return {
 		name: "jouzu",
 		factory: (pi) => {
+			pi.on("before_agent_start", (event) => {
+				const systemPrompt = brandDefaultSystemPrompt(event.systemPrompt, event.systemPromptOptions.customPrompt);
+				if (systemPrompt === event.systemPrompt) return;
+				return { systemPrompt };
+			});
+
 			pi.on("session_start", (_event, ctx) => {
 				if (ctx.mode !== "tui") return;
 				const colorMode = options.colorMode ?? detectBannerColorMode(options);
