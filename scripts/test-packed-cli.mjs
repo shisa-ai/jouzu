@@ -65,7 +65,7 @@ try {
 	const doctor = run(process.execPath, [installedCli, "doctor"], { cwd: temp, env }).stdout;
 	assert.match(doctor, /Install channel: npm-compatible install/);
 	assert.match(doctor, /Selected profile: ja/);
-	assert.match(doctor, /Result: ready for development dogfood/);
+	assert.match(doctor, /Result: ready for Jouzu v0\.1 preview/);
 	const pi = run(process.execPath, [installedCli, "pi", "--version"], { cwd: temp, env }).stdout.trim();
 	assert.equal(pi, piVersion);
 

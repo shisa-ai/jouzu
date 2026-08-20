@@ -155,7 +155,7 @@ export function isBlockedPiSelfUpdate(args: string[]): boolean {
 }
 
 export function formatHelp(): string {
-	return `Jouzu development launcher
+	return `Jouzu Japanese-first Pi launcher
 
 Usage:
   jouzu [--jouzu-home <path>] [--jouzu-profile <core|ja>] [Pi arguments...]

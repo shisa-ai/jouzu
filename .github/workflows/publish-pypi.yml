@@ -21,6 +21,15 @@ jobs:
           ref: ${{ inputs.ref }}
           persist-credentials: false
       - uses: astral-sh/setup-uv@38f3f104447c67c051c4a08e39b64a148898af3a # v4.2.0
+      - name: Reject the non-functional PyPI reservation
+        run: |
+          python - <<'PY'
+          import pathlib, re
+          text = pathlib.Path("python/jouzu/pyproject.toml").read_text()
+          version = re.search(r'^version = "([^"]+)"$', text, re.MULTILINE).group(1)
+          if version == "0.0.1":
+              raise SystemExit("PyPI 0.0.1 is a reservation and must not be republished for the npm-only v0.1 release")
+          PY
       - run: uv build --project python/jouzu --out-dir dist/python
       - run: uvx --from twine twine check dist/python/*
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

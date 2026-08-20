@@ -8,7 +8,7 @@ import {
 } from "../dist/presentation.js";
 
 const metadata = {
-	jouzuVersion: "0.0.1",
+	jouzuVersion: "0.1.0",
 	piVersion: "0.84.2",
 	profileSchemaVersion: 1,
 	lock: { tag: "v0.84.2", commit: "commit", compatibilityStatus: "qualified", deviations: [] },
@@ -86,7 +86,7 @@ test("installs a compact width-safe Jouzu header and working indicator", async (
 		"⠈⢹ ⡎⢱ ⡇⢸ ⢉⠝ ⡇⢸",
 		"⠣⠜ ⠣⠜ ⠣⠜ ⠮⠤ ⠣⠜",
 		"Japanese-first Pi environment",
-		"jouzu 0.0.1  ·  pi 0.84.2",
+		"jouzu 0.1.0  ·  pi 0.84.2",
 		"/model choose  ·  /hotkeys shortcuts  ·  /jouzu status",
 	]);
 	assert.equal(component.render(12)[0], "J O U Z U");
@@ -125,7 +125,7 @@ test("registers a Jouzu status command without exposing paths", async () => {
 	const { calls, ctx } = interactiveContext();
 	await commands.get("jouzu").handler("", ctx);
 	assert.equal(calls.notifications.length, 1);
-	assert.match(calls.notifications[0][0], /Jouzu 0\.0\.1 · Pi 0\.84\.2/);
+	assert.match(calls.notifications[0][0], /Jouzu 0\.1\.0 · Pi 0\.84\.2/);
 	assert.match(calls.notifications[0][0], /profile ja \(not applied\)/);
 	assert.match(calls.notifications[0][0], /anthropic\/claude-test/);
 	assert.doesNotMatch(calls.notifications[0][0], /\/work\//);

@@ -1,6 +1,6 @@
 {
 	"name": "jouzu-monorepo",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"private": true,
 	"type": "module",
 	"workspaces": [
@@ -20,12 +20,13 @@
 		"dev:link": "npm run build && npm link --workspace packages/cli",
 		"build:python": "uv build --project python/jouzu --out-dir dist/python",
 		"check:python": "uvx --from twine twine check dist/python/*",
+		"release:metadata": "node scripts/check-release-metadata.mjs",
 		"pi:check": "node scripts/pi-upstream.mjs check && node scripts/check-pi-contract.mjs",
 		"pi:check:online": "node scripts/pi-upstream.mjs check --online && node scripts/pi-upstream.mjs latest --require-latest",
 		"pi:latest": "node scripts/pi-upstream.mjs latest",
 		"pi:update": "node scripts/pi-upstream.mjs update",
 		"pi:qualify": "npm run pi:check:online && npm run release:check && node scripts/pi-upstream.mjs promote",
-		"release:check": "npm run build && npm run check && npm test && npm run pack:check && npm run test:packed && npm run build:python && npm run check:python",
+		"release:check": "npm run release:metadata && npm run build && npm run check && npm test && npm run pack:check && npm run test:packed && npm run build:python && npm run check:python",
 		"changeset": "changeset",
 		"version-packages": "changeset version"
 	},

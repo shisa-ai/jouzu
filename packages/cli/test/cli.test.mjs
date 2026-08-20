@@ -24,7 +24,7 @@ function run(args, options = {}) {
 test("prints the Jouzu, Pi, and profile schema version tuple", () => {
 	const result = run(["--version"]);
 	assert.equal(result.status, 0, result.stderr);
-	assert.equal(result.stdout.trim(), "jouzu 0.0.1\npi 0.84.2\nprofile schema 1");
+	assert.equal(result.stdout.trim(), "jouzu 0.1.0\npi 0.84.2\nprofile schema 1");
 });
 
 test("forwards explicit Pi version requests through the pinned runtime", () => {
@@ -59,7 +59,7 @@ test("preserves a pinned Pi CLI failure status", () => {
 test("shows Jouzu help and leaves Pi help behind the explicit escape", () => {
 	const jouzuHelp = run(["--help"]);
 	assert.equal(jouzuHelp.status, 0, jouzuHelp.stderr);
-	assert.match(jouzuHelp.stdout, /Jouzu development launcher/);
+	assert.match(jouzuHelp.stdout, /Jouzu Japanese-first Pi launcher/);
 	assert.match(jouzuHelp.stdout, /Ctrl\+L/);
 
 	const piHelp = run(["pi", "--help"]);
@@ -213,7 +213,7 @@ test("doctor is non-mutating and reports replacement of inherited Pi roots", () 
 		assert.equal(result.status, 0, result.stderr || result.stdout);
 		assert.match(result.stdout, new RegExp(`Agent/config root: ${jouzuHome.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
 		assert.match(result.stdout, /Inherited Pi agent root replaced: yes/);
-		assert.match(result.stdout, /Result: ready for development dogfood/);
+		assert.match(result.stdout, /Result: ready for Jouzu v0\.1 preview/);
 		assert.equal(existsSync(jouzuHome), false, "doctor created the Jouzu home");
 		assert.equal(readFileSync(sentinel, "utf8"), "unchanged\n");
 	} finally {

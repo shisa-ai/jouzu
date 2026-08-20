@@ -27,10 +27,14 @@ jobs:
           node-version: 22
           registry-url: https://registry.npmjs.org
           cache: npm
+      - uses: astral-sh/setup-uv@38f3f104447c67c051c4a08e39b64a148898af3a # v4.2.0
+      - name: Verify immutable release tag
+        env:
+          RELEASE_REF: ${{ inputs.ref }}
+        run: |
+          [[ "$RELEASE_REF" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          node -e 'const p=require("./packages/cli/package.json"); if (`v${p.version}` !== process.env.RELEASE_REF) process.exit(1)'
       - run: npm ci --ignore-scripts
-      - run: npm run build
-      - run: npm run check
-      - run: npm test --workspaces --if-present
-      - run: npm run pack:check
+      - run: npm run release:check
       - run: npm install --global npm@11.16.0 --ignore-scripts
       - run: node scripts/publish-npm.mjs

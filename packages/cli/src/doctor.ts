@@ -201,7 +201,7 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 		for (const problem of problems) lines.push(`- ${problem}`);
 	}
 	lines.push("");
-	lines.push(problems.length === 0 ? "Result: ready for development dogfood" : "Result: action required");
+	lines.push(problems.length === 0 ? "Result: ready for Jouzu v0.1 preview" : "Result: action required");
 
 	return { text: lines.join("\n"), healthy: problems.length === 0 };
 }

@@ -7,7 +7,7 @@ import { createDoctorReport } from "../dist/doctor.js";
 
 function metadata(overrides = {}) {
 	return {
-		jouzuVersion: "0.0.1",
+		jouzuVersion: "0.1.0",
 		piVersion: "0.84.2",
 		profileSchemaVersion: 1,
 		lock: {
