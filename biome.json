@@ -6,7 +6,6 @@
 			"packages/*/test/**/*.mjs",
 			"scripts/**/*.mjs",
 			"*.json",
-			".changeset/*.json",
 			"packages/*/*.json",
 			"upstream/*.json",
 			"!package-lock.json",
