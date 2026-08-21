@@ -1,8 +1,8 @@
 # Jouzu
 
-Jouzu is an agentic AI environment built on the [Pi coding agent](https://pi.dev/), with CJK-safe text and path handling. The `jouzu` and `jz` commands run an exact reviewed Pi runtime with isolated Jouzu state, a language-neutral Core fallback, an optional JA preview, and human-readable diagnostics. Japanese support is a first-class option, not the product's only identity.
+Jouzu is an agentic AI environment built on the [Pi coding agent](https://pi.dev/), with CJK-safe text and path handling. The `jouzu` and `jz` commands run an exact reviewed Pi runtime with isolated Jouzu state, a language-neutral Core fallback, an optional JA preview, and human-readable diagnostics.
 
-Jouzu v0.1 is an npm developer preview. It expects an existing development environment; it is not a native installer or hosted model service.
+Jouzu v0.1 is an npm developer preview. It expects an existing development environment.
 
 ## Requirements
 
@@ -27,8 +27,6 @@ jz doctor
 ```bash
 npx --yes jouzu@0.1.0 --version
 ```
-
-PyPI `jouzu==0.0.1` remains a non-functional package-name reservation and is not a v0.1 installation channel.
 
 ## Quick start
 
@@ -103,8 +101,6 @@ JOUZU_HOME="$PWD/.jouzu" jz doctor
 ```
 
 Jouzu does not import normal Pi settings, credentials, packages, or sessions. It preserves Pi's project trust behavior, so trusted project `.pi` resources still apply. Pi's documented cross-harness `~/.agents/skills` directory is also a shared read surface. Jouzu is isolated from global Pi state, not from explicitly trusted project resources or provider credentials in the current environment.
-
-On exit, Jouzu prints `jz --session SESSION_ID`. The command resolves the ID inside Jouzu's platform-specific session root; it does not require or expose an internal `--session-dir` path.
 
 ## Diagnostics and Pi passthrough
 
