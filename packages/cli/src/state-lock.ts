@@ -4,13 +4,13 @@ import {
 	existsSync,
 	fsyncSync,
 	lstatSync,
-	mkdirSync,
 	openSync,
 	readFileSync,
 	unlinkSync,
 	writeFileSync,
 } from "node:fs";
 import { dirname } from "node:path";
+import { ensurePrivateDirectory, validatePrivateDirectory } from "./private-fs.js";
 
 /** Stale threshold after which a dead or owner-unknown lock may be recovered. */
 export const STATE_LOCK_STALE_MS = 30 * 60 * 1000;
@@ -53,6 +53,11 @@ function pidIsAlive(pid: number): boolean {
  * modification time because no started-at record exists.
  */
 export function inspectStateLock(path: string, now: Date): StateLockInspection {
+	try {
+		validatePrivateDirectory(dirname(path));
+	} catch {
+		return { exists: true, status: "invalid", ageMs: null };
+	}
 	if (!existsSync(path)) return { exists: false, status: "free", ageMs: null };
 	try {
 		const metadata = lstatSync(path);
@@ -109,7 +114,7 @@ function releaseToken(path: string, token: string): void {
 export function acquireStateLock(options: AcquireStateLockOptions): () => void {
 	const now = options.now ?? new Date();
 	const staleMs = options.staleMs ?? STATE_LOCK_STALE_MS;
-	mkdirSync(dirname(options.path), { recursive: true, mode: 0o700 });
+	ensurePrivateDirectory(dirname(options.path));
 	const token = randomUUID();
 	const record: StateLockRecord = { pid: process.pid, startedAt: now.toISOString(), token };
 	const writeNew = (): void => {

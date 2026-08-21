@@ -1,11 +1,9 @@
 import { createHash, randomUUID } from "node:crypto";
 import {
 	closeSync,
-	copyFileSync,
 	existsSync,
 	fsyncSync,
 	lstatSync,
-	mkdirSync,
 	openSync,
 	readFileSync,
 	renameSync,
@@ -15,6 +13,7 @@ import {
 } from "node:fs";
 import { dirname, join, resolve, sep } from "node:path";
 import type { JouzuPaths } from "./paths.js";
+import { copyPrivateFile, ensurePrivateDirectory, validatePrivateDirectory } from "./private-fs.js";
 import type { ResolvedProfile } from "./profiles.js";
 import { acquireStateLock, STATE_LOCK_STALE_MS } from "./state-lock.js";
 
@@ -110,6 +109,11 @@ function exactFields(value: Record<string, unknown>, fields: Set<string>): boole
 }
 
 export function readProfileState(path: string): ProfileState | undefined {
+	try {
+		validatePrivateDirectory(dirname(path));
+	} catch (error) {
+		throw new ProfileStateError(error instanceof Error ? error.message : String(error));
+	}
 	if (!existsSync(path)) return undefined;
 	const metadata = lstatSync(path);
 	if (!metadata.isFile() || metadata.isSymbolicLink())
@@ -229,6 +233,11 @@ function sortedActions(actions: ProfileAction[]): ProfileAction[] {
 }
 
 export function planProfile(profile: ResolvedProfile, paths: JouzuPaths, jouzuVersion: string): ProfilePlan {
+	try {
+		validatePrivateDirectory(paths.agentDir);
+	} catch (error) {
+		throw new ProfileStateError(error instanceof Error ? error.message : String(error));
+	}
 	const state = readProfileState(paths.profileStatePath);
 	const previous = new Map(state?.managedTargets.map((item) => [item.target, item.sha256]) ?? []);
 	const desired = new Map(profile.assets.map((asset) => [asset.target, asset]));
@@ -333,8 +342,8 @@ export function planProfile(profile: ResolvedProfile, paths: JouzuPaths, jouzuVe
 	};
 }
 
-function atomicWrite(path: string, bytes: Uint8Array): void {
-	mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
+function atomicWrite(path: string, bytes: Uint8Array, privateRoot: string): void {
+	ensurePrivateDirectory(privateRoot, dirname(path));
 	const temporary = join(dirname(path), `.${randomUUID()}.tmp`);
 	let descriptor: number | undefined;
 	try {
@@ -369,7 +378,7 @@ export function applyProfile(profile: ResolvedProfile, paths: JouzuPaths, jouzuV
 	if (initialPlan.actions.some((action) => action.type === "conflict")) throw new ProfileConflictError(initialPlan);
 	if (initialPlan.actions.length === 0) return { changed: false, plan: initialPlan };
 
-	mkdirSync(paths.stateDir, { recursive: true, mode: 0o700 });
+	ensurePrivateDirectory(paths.stateDir);
 	const releaseLock = acquireStateLock({
 		path: join(paths.stateDir, "profile.lock"),
 		staleMs: STATE_LOCK_STALE_MS,
@@ -394,8 +403,7 @@ export function applyProfile(profile: ResolvedProfile, paths: JouzuPaths, jouzuV
 			const path = targetPath(paths.agentDir, action.target);
 			if (action.type === "update" || action.type === "delete") {
 				const backup = targetPath(transactionBackupDir, action.target);
-				mkdirSync(dirname(backup), { recursive: true, mode: 0o700 });
-				copyFileSync(path, backup);
+				copyPrivateFile(path, backup, paths.stateDir);
 			}
 			if (action.type === "delete") {
 				unlinkSync(path);
@@ -405,9 +413,9 @@ export function applyProfile(profile: ResolvedProfile, paths: JouzuPaths, jouzuV
 			if (!asset) throw new ProfileStateError(`missing desired profile asset: ${action.target}`);
 			if (unsafeParent(paths.agentDir, action.target))
 				throw new ProfileStateError(`unsafe profile parent: ${action.target}`);
-			atomicWrite(path, asset.bytes);
+			atomicWrite(path, asset.bytes, paths.agentDir);
 		}
-		atomicWrite(paths.profileStatePath, stateBytes(profile, jouzuVersion, transactionId));
+		atomicWrite(paths.profileStatePath, stateBytes(profile, jouzuVersion, transactionId), paths.stateDir);
 		return {
 			changed: true,
 			plan,

@@ -1,11 +1,9 @@
 import { randomUUID } from "node:crypto";
 import {
 	closeSync,
-	copyFileSync,
 	existsSync,
 	fsyncSync,
 	lstatSync,
-	mkdirSync,
 	openSync,
 	readFileSync,
 	renameSync,
@@ -15,6 +13,7 @@ import {
 } from "node:fs";
 import { dirname, join } from "node:path";
 import type { JouzuPaths } from "./paths.js";
+import { copyPrivateFile, ensurePrivateDirectory, validatePrivateDirectory } from "./private-fs.js";
 import { acquireStateLock, STATE_LOCK_STALE_MS } from "./state-lock.js";
 
 export type KeyBindingValue = string | string[];
@@ -268,6 +267,12 @@ export function planKeybindings(
 	paths: JouzuPaths,
 	options: { platform?: NodeJS.Platform; env?: NodeJS.ProcessEnv } = {},
 ): KeybindingPlan {
+	try {
+		validatePrivateDirectory(paths.agentDir);
+		validatePrivateDirectory(paths.stateDir);
+	} catch (error) {
+		throw new KeybindingConfigError(error instanceof Error ? error.message : String(error));
+	}
 	const path = configPath(paths);
 	const statePath = keybindingStatePath(paths);
 	const config = readKeybindingConfig(path);
@@ -306,8 +311,8 @@ export function planKeybindings(
 	};
 }
 
-function atomicWrite(path: string, bytes: string | Uint8Array): void {
-	mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
+function atomicWrite(path: string, bytes: string | Uint8Array, privateRoot: string): void {
+	ensurePrivateDirectory(privateRoot, dirname(path));
 	const temporary = join(dirname(path), `.${randomUUID()}.tmp`);
 	let descriptor: number | undefined;
 	try {
@@ -323,8 +328,8 @@ function atomicWrite(path: string, bytes: string | Uint8Array): void {
 	}
 }
 
-function writeJson(path: string, value: unknown): void {
-	atomicWrite(path, `${JSON.stringify(value, null, 2)}\n`);
+function writeJson(path: string, value: unknown, privateRoot: string): void {
+	atomicWrite(path, `${JSON.stringify(value, null, 2)}\n`, privateRoot);
 }
 
 function withLock<T>(paths: JouzuPaths, operation: () => T): T {
@@ -348,8 +353,7 @@ function withLock<T>(paths: JouzuPaths, operation: () => T): T {
 
 function backupConfig(paths: JouzuPaths, transactionId: string, source: string): string {
 	const directory = join(paths.backupDir, "keybindings", transactionId);
-	mkdirSync(directory, { recursive: true, mode: 0o700 });
-	copyFileSync(source, join(directory, "keybindings.json"));
+	copyPrivateFile(source, join(directory, "keybindings.json"), paths.stateDir);
 	return directory;
 }
 
@@ -401,11 +405,11 @@ export function applyKeybindings(paths: JouzuPaths, now = new Date()): ApplyKeyb
 			now,
 		});
 		try {
-			if (setActions.length > 0) writeJson(plan.configPath, config);
-			writeJson(plan.statePath, state);
+			if (setActions.length > 0) writeJson(plan.configPath, config, paths.agentDir);
+			writeJson(plan.statePath, state, paths.stateDir);
 		} catch (error) {
 			if (setActions.length > 0) {
-				if (previousBytes) atomicWrite(plan.configPath, previousBytes);
+				if (previousBytes) atomicWrite(plan.configPath, previousBytes, paths.agentDir);
 				else rmSync(plan.configPath, { force: true });
 			}
 			throw error;
@@ -470,11 +474,11 @@ export function resetKeybindings(paths: JouzuPaths, now = new Date()): ApplyKeyb
 		try {
 			if (actions.length > 0) {
 				if (Object.keys(nextConfig).length === 0 && state?.createdConfig) unlinkSync(path);
-				else writeJson(path, nextConfig);
+				else writeJson(path, nextConfig, paths.agentDir);
 			}
-			writeJson(statePath, disabledState);
+			writeJson(statePath, disabledState, paths.stateDir);
 		} catch (error) {
-			if (previousBytes) atomicWrite(path, previousBytes);
+			if (previousBytes) atomicWrite(path, previousBytes, paths.agentDir);
 			throw error;
 		}
 		return {

@@ -25,7 +25,8 @@ cli.ts  (entry: argument routing, profile resolution, launch)
   ├─ doctor.ts           diagnostics (read-only)
   ├─ presentation.ts     startup presentation extension
   ├─ resume.ts           session-resume guidance
-  └─ state-lock.ts       shared state-lock primitive
+  ├─ state-lock.ts       shared state-lock primitive
+  └─ private-fs.ts       private directory/file boundary
 ```
 
 Dependency direction is downward: `cli.ts` composes, leaf modules
@@ -49,9 +50,11 @@ updater, profile, and keybinding operations. It records a PID, a started-at
 timestamp, and a release token, refuses locks held by a live process, and
 recovers a dead owner's or owner-unknown lock after the stale threshold.
 
-Each owner module keeps its own small `atomicWrite`/validated-JSON helpers.
-These overlap; consolidating them into one shared store is deferred (see the
-private follow-up work) and will preserve existing schemas.
+`private-fs.ts` creates Jouzu-owned roots and descendants with POSIX mode
+`0700`, creates copied backup files with mode `0600`, rejects symlinks inside
+those owned boundaries, and leaves caller-owned parent directories unchanged.
+Each owner module keeps its own `atomicWrite` and validated-JSON helpers.
+Consolidating those helpers is deferred and must preserve existing schemas.
 
 ## Update lanes
 

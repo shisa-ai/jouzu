@@ -1,6 +1,17 @@
 import assert from "node:assert/strict";
 import { spawn, spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, utimesSync, writeFileSync } from "node:fs";
+import {
+	existsSync,
+	mkdirSync,
+	mkdtempSync,
+	readdirSync,
+	readFileSync,
+	rmSync,
+	statSync,
+	symlinkSync,
+	utimesSync,
+	writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { after, test } from "node:test";
@@ -17,7 +28,7 @@ function scrubbedEnv() {
 	for (const [key, value] of Object.entries(process.env)) {
 		// Scrub ambient Jouzu and inherited Pi-agent variables so the CLI suite is
 		// hermetic; a case that needs them re-adds them explicitly via options.env.
-		if (/^JOUZU_/.test(key) || /^PI_CODING_AGENT_/.test(key)) continue;
+		if (key === "AI_AGENT" || /^JOUZU_/.test(key) || /^PI_CODING_AGENT(?:_|$)/.test(key)) continue;
 		scrubbed[key] = value;
 	}
 	return scrubbed;
@@ -296,7 +307,7 @@ test(
 				env: (() => {
 					const env = {};
 					for (const [key, value] of Object.entries(process.env)) {
-						if (/^JOUZU_/.test(key) || /^PI_CODING_AGENT_/.test(key)) continue;
+						if (key === "AI_AGENT" || /^JOUZU_/.test(key) || /^PI_CODING_AGENT(?:_|$)/.test(key)) continue;
 						env[key] = value;
 					}
 					return { ...env, JOUZU_HOME: temp, PI_OFFLINE: "1" };
@@ -408,6 +419,32 @@ test("an ordinary launch recovers a stale empty profile lock", () => {
 	}
 });
 
+test(
+	"profile operations reject symlinked Jouzu-owned state and agent roots",
+	{ skip: process.platform === "win32" ? "symlink fixture requires privileges" : false },
+	() => {
+		const temp = mkdtempSync(join(tmpdir(), "jouzu-owned-root-link-"));
+		try {
+			for (const [rootName, profile] of [
+				["state", "core"],
+				["agent", "ja"],
+			]) {
+				const jouzuHome = join(temp, `home-${rootName}`);
+				const outside = join(temp, `outside-${rootName}`);
+				mkdirSync(jouzuHome, { recursive: true });
+				mkdirSync(outside);
+				symlinkSync(outside, join(jouzuHome, rootName));
+				const result = run(["--jouzu-home", jouzuHome, "profile", "apply", "--profile", profile]);
+				assert.equal(result.status, 1, `${rootName} symlink was accepted: ${result.stdout}`);
+				assert.match(result.stderr, /must be a real directory/);
+				assert.deepEqual(readdirSync(outside), [], `${rootName} symlink destination was modified`);
+			}
+		} finally {
+			rmSync(temp, { recursive: true, force: true });
+		}
+	},
+);
+
 test("corrupt profile state fails with exit 1 and a recovery action, not the conflict status", () => {
 	const temp = mkdtempSync(join(tmpdir(), "jouzu-corrupt-state-"));
 	try {
@@ -464,6 +501,7 @@ test(
 					["profile", ["profile", "apply", "--profile", "core"]],
 					["keybinding", ["keybindings", "apply"]],
 					["updater", ["self-update", "policy", "notify"]],
+					["noninteractive", ["pi", "--version"]],
 				]) {
 					const jouzuHome = join(temp, `home-${umask}-${label}`);
 					mkdirSync(jouzuHome, { recursive: true });

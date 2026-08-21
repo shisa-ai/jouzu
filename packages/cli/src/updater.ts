@@ -5,7 +5,6 @@ import {
 	existsSync,
 	fsyncSync,
 	lstatSync,
-	mkdirSync,
 	openSync,
 	readFileSync,
 	renameSync,
@@ -17,6 +16,7 @@ import {
 import { dirname, join, posix, resolve, win32 } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { JouzuPaths } from "./paths.js";
+import { ensurePrivateDirectory, validatePrivateDirectory } from "./private-fs.js";
 import { acquireStateLock, STATE_LOCK_STALE_MS } from "./state-lock.js";
 
 const PI_PACKAGE = "@earendil-works/pi-coding-agent";
@@ -217,6 +217,11 @@ function updateLockPath(paths: JouzuPaths): string {
 }
 
 export function readUpdateState(path: string, currentVersion: string): UpdateState {
+	try {
+		validatePrivateDirectory(dirname(path));
+	} catch (error) {
+		throw new UpdateError(error instanceof Error ? error.message : String(error), "invalid-state");
+	}
 	if (!existsSync(path)) return defaultState(currentVersion);
 	const metadata = lstatSync(path);
 	if (!metadata.isFile() || metadata.isSymbolicLink()) {
@@ -268,7 +273,7 @@ export function readUpdateState(path: string, currentVersion: string): UpdateSta
 }
 
 function atomicWrite(path: string, content: string): void {
-	mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
+	ensurePrivateDirectory(dirname(path));
 	const temporary = join(dirname(path), `.${randomUUID()}.tmp`);
 	let descriptor: number | undefined;
 	try {
@@ -610,9 +615,8 @@ export class JouzuUpdater {
 	}
 
 	private createDownloadDirectory(): string {
-		mkdirSync(this.paths.cacheDir, { recursive: true, mode: 0o700 });
 		const directory = join(this.paths.cacheDir, `self-update-${randomUUID()}`);
-		mkdirSync(directory, { mode: 0o700 });
+		ensurePrivateDirectory(this.paths.cacheDir, directory);
 		return directory;
 	}
 

@@ -4,7 +4,6 @@ import {
 	existsSync,
 	fsyncSync,
 	lstatSync,
-	mkdirSync,
 	openSync,
 	readFileSync,
 	renameSync,
@@ -14,6 +13,7 @@ import {
 import { dirname, join } from "node:path";
 import { createInterface } from "node:readline/promises";
 import type { ProfileId } from "./args.js";
+import { ensurePrivateDirectory, validatePrivateDirectory } from "./private-fs.js";
 
 const PROFILE_CHOICE_FIELDS = new Set(["schemaVersion", "profile", "chosenAt"]);
 
@@ -31,6 +31,11 @@ export class ProfileChoiceError extends Error {
 }
 
 export function readProfileChoice(path: string): ProfileChoice | undefined {
+	try {
+		validatePrivateDirectory(dirname(path));
+	} catch (error) {
+		throw new ProfileChoiceError(error instanceof Error ? error.message : String(error));
+	}
 	if (!existsSync(path)) return undefined;
 	const metadata = lstatSync(path);
 	if (!metadata.isFile() || metadata.isSymbolicLink()) {
@@ -62,7 +67,7 @@ export function readProfileChoice(path: string): ProfileChoice | undefined {
 
 export function writeProfileChoice(path: string, profile: ProfileId, now = new Date()): ProfileChoice {
 	const choice: ProfileChoice = { schemaVersion: 1, profile, chosenAt: now.toISOString() };
-	mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
+	ensurePrivateDirectory(dirname(path));
 	const temporary = join(dirname(path), `.${randomUUID()}.tmp`);
 	let descriptor: number | undefined;
 	try {
