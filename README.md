@@ -198,6 +198,9 @@ npm run release:check
 npm run dev:link
 ```
 
+See [docs/architecture.md](docs/architecture.md) for the module map, state-file
+ownership, update lanes, and bundled profile boundaries.
+
 The opt-in live Japanese tool-flow smoke requires an explicitly selected provider/model and cost budget; it is not part of default tests:
 
 ```bash
