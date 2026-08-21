@@ -31,6 +31,32 @@ test("a pending-qualification Pi lock fails release metadata validation", () => 
 	assert.match(result.stderr, /must be qualified for publication/);
 });
 
+test("malformed qualified Pi locks fail release metadata validation", () => {
+	const fixtures = [
+		["non-ISO reviewedAt", { ...realLock, reviewedAt: "1" }],
+		["unknown top-level field", { ...realLock, unexpected: true }],
+		[
+			"unknown package record field",
+			{
+				...realLock,
+				packages: {
+					...realLock.packages,
+					"@earendil-works/pi-coding-agent": {
+						...realLock.packages["@earendil-works/pi-coding-agent"],
+						unexpected: true,
+					},
+				},
+			},
+		],
+		["malformed deviation", { ...realLock, deviations: [{}] }],
+		["unsafe deviation path", { ...realLock, deviations: [{ path: "../pi.patch", sha256: "a".repeat(64) }] }],
+	];
+	for (const [label, fixture] of fixtures) {
+		const result = runWithLock(fixture);
+		assert.notEqual(result.status, 0, `${label} must fail release metadata`);
+	}
+});
+
 test("a qualified Pi lock passes release metadata validation", () => {
 	const result = runWithLock(realLock);
 	assert.equal(result.status, 0, result.stderr || result.stdout);

@@ -30,6 +30,15 @@ function runNpm(args, options = {}) {
 	return run(npmCommand, [...npmPrefix, ...args], options);
 }
 
+function scrubbedHarnessEnv() {
+	const env = {};
+	for (const [key, value] of Object.entries(process.env)) {
+		if (key === "AI_AGENT" || /^JOUZU_/.test(key) || /^PI_CODING_AGENT(?:_|$)/.test(key)) continue;
+		env[key] = value;
+	}
+	return env;
+}
+
 const temp = mkdtempSync(join(tmpdir(), "jouzu-packed-cli-"));
 try {
 	const packResult = runNpm(["pack", "--ignore-scripts", "--json", "--pack-destination", temp], {
@@ -49,7 +58,7 @@ try {
 	assert.equal(installedPi.integrity, piLock.packages["@earendil-works/pi-coding-agent"].integrity);
 
 	const installedCli = resolve(temp, "node_modules", "jouzu", "dist", "cli.js");
-	const env = { ...process.env, JOUZU_HOME: consumer, PI_OFFLINE: "1" };
+	const env = { ...scrubbedHarnessEnv(), JOUZU_HOME: consumer, PI_OFFLINE: "1" };
 	const version = run(process.execPath, [installedCli, "--version"], { cwd: temp, env }).stdout.trim();
 	assert.equal(version, `jouzu ${packageJson.version}\npi ${piVersion}\nprofile schema 1`);
 	const firstPlan = JSON.parse(
@@ -82,7 +91,7 @@ try {
 	run(process.execPath, [installedCli, "profile", "apply", "--profile", "core"], { cwd: temp, env });
 	assert.equal(existsSync(resolve(consumer, "agent", "APPEND_SYSTEM.md")), false);
 	const doctor = run(process.execPath, [installedCli, "doctor"], { cwd: temp, env }).stdout;
-	assert.match(doctor, /Install channel: npm-compatible install/);
+	assert.match(doctor, /Install channel: local npm install/);
 	assert.match(doctor, /Selected profile: core/);
 	assert.match(doctor, /Result: ready for Jouzu v0\.1 preview/);
 	const pi = run(process.execPath, [installedCli, "pi", "--version"], { cwd: temp, env }).stdout.trim();

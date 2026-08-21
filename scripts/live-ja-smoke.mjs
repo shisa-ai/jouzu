@@ -37,6 +37,15 @@ function run(command, args, options = {}) {
 	return result;
 }
 
+function scrubbedHarnessEnv() {
+	const env = {};
+	for (const [key, value] of Object.entries(process.env)) {
+		if (key === "AI_AGENT" || /^JOUZU_/.test(key) || /^PI_CODING_AGENT(?:_|$)/.test(key)) continue;
+		env[key] = value;
+	}
+	return env;
+}
+
 try {
 	mkdirSync(project, { recursive: true });
 	run("npm", ["run", "build"]);
@@ -45,6 +54,7 @@ try {
 	)[0];
 	run("npm", ["install", "--prefix", resolve(temp, "consumer"), "--ignore-scripts", resolve(temp, packed.filename)]);
 	const cli = resolve(temp, "consumer", "node_modules", "jouzu", "dist", "cli.js");
+	const jouzuHome = resolve(temp, "jouzu-home");
 	const prompt = [
 		"write ツールを使い、作業ディレクトリに「確認-結果.txt」を作成してください。",
 		"内容は次の2行だけにしてください。",
@@ -54,10 +64,26 @@ try {
 	].join("\n");
 	const result = run(
 		process.execPath,
-		[cli, "--mode", "json", "--no-session", "--provider", provider, "--model", model, "--tools", "read,write", prompt],
+		[
+			cli,
+			"--jouzu-home",
+			jouzuHome,
+			"--jouzu-profile",
+			"ja",
+			"--mode",
+			"json",
+			"--no-session",
+			"--provider",
+			provider,
+			"--model",
+			model,
+			"--tools",
+			"read,write",
+			prompt,
+		],
 		{
 			cwd: project,
-			env: { ...process.env, PI_OFFLINE: "1" },
+			env: { ...scrubbedHarnessEnv(), JOUZU_NO_UPDATE: "1", PI_OFFLINE: "1" },
 		},
 	);
 	const events = result.stdout
@@ -72,6 +98,8 @@ try {
 	const cost = Number(assistant.usage?.cost?.total ?? 0);
 	if (!Number.isFinite(cost) || cost > budget) throw new Error(`live smoke cost ${cost} exceeded budget ${budget}`);
 	assert.deepEqual(readFileSync(output), expected, "live tool flow changed the requested Japanese bytes");
+	const profileState = JSON.parse(readFileSync(resolve(jouzuHome, "state", "profile-state.json"), "utf8"));
+	assert.equal(profileState.activeProfile, "ja", "live JA smoke did not apply the explicit JA profile");
 	const usedWrite = events.some(
 		(event) => event.type === "tool_execution_end" && event.toolName === "write" && !event.isError,
 	);
