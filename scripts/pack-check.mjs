@@ -1,10 +1,74 @@
 #!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
+import { homedir } from "node:os";
 import { join } from "node:path";
 
 const packageDirectories = [join("packages", "cli")];
+
+/**
+ * Derive the bundled profile files that must ship in the tarball from the
+ * profile manifests, instead of maintaining a second hand-written file list.
+ *
+ * Returns dist-relative paths (e.g. "dist/profiles/core/manifest.json" and
+ * each manifest asset's source path) so callers can assert their presence in
+ * the packed file listing.
+ */
+export function deriveRequiredProfileFiles(profilesSourceDir) {
+	const required = [];
+	for (const id of readdirSync(profilesSourceDir, { withFileTypes: true })) {
+		if (!id.isDirectory()) continue;
+		const manifestPath = join(profilesSourceDir, id.name, "manifest.json");
+		let manifest;
+		try {
+			manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+		} catch (error) {
+			throw new Error(`profile manifest is missing or invalid at ${manifestPath}: ${error.message}`);
+		}
+		required.push(`dist/profiles/${id.name}/manifest.json`);
+		for (const asset of manifest.assets ?? []) {
+			if (!asset?.source) throw new Error(`profile ${id.name} manifest has an asset without a source`);
+			required.push(`dist/profiles/${id.name}/${asset.source}`);
+		}
+	}
+	return required;
+}
+
+/**
+ * Assert that every required profile file appears in a packed-file listing.
+ * Throws with the first missing path so a manifest asset omitted from the
+ * tarball fails the pack gate with a precise message.
+ */
+export function assertProfileFilesPresent(packedFiles, required) {
+	for (const profileFile of required) {
+		if (!packedFiles.some((file) => file.path === profileFile)) {
+			throw new Error(`jouzu tarball is missing bundled profile file ${profileFile}`);
+		}
+	}
+}
+
+/**
+ * Build the deny-list of content that must never appear in a published
+ * tarball. Private repository markers are fixed; maintainer home paths are
+ * generated at runtime from the building machine's home directory and from
+ * optional release-runbook input rather than embedded in this public file.
+ */
+export function forbiddenPublicContent() {
+	const entries = [
+		"jouzu-dev",
+		"worklog/entries",
+		"planning/v0.1",
+		homedir(),
+		"BEGIN PRIVATE KEY",
+		"AWS_SECRET_ACCESS_KEY",
+	];
+	const runbookInput =
+		process.env.JOUZU_PRIVATE_HOME?.split(",")
+			.map((value) => value.trim())
+			.filter(Boolean) ?? [];
+	return [...entries, ...runbookInput];
+}
 const piPackageName = "@earendil-works/pi-coding-agent";
 const piLock = JSON.parse(readFileSync(join("upstream", "pi.lock.json"), "utf8"));
 const pinnedPiVersion = piLock.packages?.[piPackageName]?.version;
@@ -46,30 +110,13 @@ for (const directory of packageDirectories) {
 		if (!readFileSync(join(directory, "dist", "cli.js"), "utf8").startsWith("#!/usr/bin/env node\n")) {
 			throw new Error("jouzu dist/cli.js is missing its Node shebang");
 		}
-		for (const profileFile of [
-			"dist/profiles/core/manifest.json",
-			"dist/profiles/core/assets/jouzu-core-skill.md",
-			"dist/profiles/core/assets/jouzu-review.md",
-			"dist/profiles/ja/manifest.json",
-			"dist/profiles/ja/assets/APPEND_SYSTEM.md",
-		]) {
-			if (!packed.files.some((file) => file.path === profileFile)) {
-				throw new Error(`jouzu tarball is missing bundled profile file ${profileFile}`);
-			}
-		}
-		const forbiddenPublicContent = [
-			"jouzu-dev",
-			"worklog/entries",
-			"planning/v0.1",
-			"/home/lhl/",
-			"BEGIN PRIVATE KEY",
-			"AWS_SECRET_ACCESS_KEY",
-		];
+		assertProfileFilesPresent(packed.files, deriveRequiredProfileFiles(join(directory, "profiles")));
+		const forbidden = forbiddenPublicContent();
 		for (const file of packed.files) {
 			if (!/\.(?:js|json|md|txt)$/.test(file.path) && file.path !== "LICENSE") continue;
 			const text = readFileSync(join(directory, file.path), "utf8");
-			for (const forbidden of forbiddenPublicContent) {
-				if (text.includes(forbidden)) throw new Error(`jouzu tarball ${file.path} contains forbidden public content`);
+			for (const entry of forbidden) {
+				if (text.includes(entry)) throw new Error(`jouzu tarball ${file.path} contains forbidden public content`);
 			}
 		}
 	}
