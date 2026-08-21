@@ -8,7 +8,8 @@ const readJson = (path) => JSON.parse(readFileSync(resolve(root, path), "utf8"))
 const rootPackage = readJson("package.json");
 const cliPackage = readJson("packages/cli/package.json");
 const lock = readJson("package-lock.json");
-const piLock = readJson("upstream/pi.lock.json");
+const piLockPath = process.env.JOUZU_PI_LOCK ?? "upstream/pi.lock.json";
+const piLock = readJson(piLockPath);
 const pythonProject = readFileSync(resolve(root, "python/jouzu/pyproject.toml"), "utf8");
 const pythonModule = readFileSync(resolve(root, "python/jouzu/src/jouzu/__init__.py"), "utf8");
 const changelog = readFileSync(resolve(root, "CHANGELOG.md"), "utf8");
@@ -27,6 +28,23 @@ const piName = "@earendil-works/pi-coding-agent";
 const piVersion = piLock.packages?.[piName]?.version;
 if (!piVersion || cliPackage.dependencies?.[piName] !== piVersion)
 	throw new Error("npm Jouzu does not use the exact Pi lock version");
+if (piLock.schemaVersion !== 1) throw new Error("Pi lock schemaVersion must be 1");
+if (piLock.compatibilityStatus !== "qualified") {
+	throw new Error(`Pi lock must be qualified for publication (got ${piLock.compatibilityStatus})`);
+}
+if (typeof piLock.reviewedAt !== "string" || !Number.isFinite(Date.parse(piLock.reviewedAt))) {
+	throw new Error("Pi lock reviewedAt is missing or invalid");
+}
+if (!Array.isArray(piLock.deviations)) throw new Error("Pi lock deviations must be an array");
+const piRecord = piLock.packages?.[piName];
+if (
+	!piRecord ||
+	typeof piRecord.version !== "string" ||
+	typeof piRecord.integrity !== "string" ||
+	!piRecord.integrity.startsWith("sha512-")
+) {
+	throw new Error("Pi lock package record is incomplete");
+}
 if (!pythonProject.includes('version = "0.0.1"') || !pythonModule.includes('__version__ = "0.0.1"')) {
 	throw new Error("PyPI must remain at the non-functional 0.0.1 reservation for the npm-only v0.1 release");
 }
