@@ -6,7 +6,7 @@ import type { JouzuMetadata } from "./metadata.js";
 import type { JouzuPaths } from "./paths.js";
 import type { ProfileSelection } from "./runtime.js";
 import { describeStateLock, inspectStateLock, STATE_LOCK_STALE_MS } from "./state-lock.js";
-import type { UpdateStatus } from "./updater.js";
+import type { UpdateInstallChannel, UpdateStatus } from "./updater.js";
 
 const PROVIDER_ENVIRONMENT_KEYS = [
 	"ANTHROPIC_API_KEY",
@@ -99,11 +99,21 @@ function readPackageCount(settingsPath: string): { count: number; warning?: stri
 	}
 }
 
-function installChannel(executable: string): string {
-	const normalized = executable.replaceAll("\\", "/");
-	if (normalized.includes("/packages/cli/dist/")) return "source development build";
-	if (normalized.includes("/node_modules/jouzu/")) return "npm-compatible install";
-	return "local executable";
+function describeInstallChannel(channel: UpdateInstallChannel | undefined): string {
+	switch (channel) {
+		case "global-npm":
+			return "global npm install";
+		case "local-npm":
+			return "local npm install";
+		case "ephemeral-npx":
+			return "npx install";
+		case "source":
+			return "source checkout";
+		case "other":
+			return "other";
+		default:
+			return "unavailable";
+	}
 }
 
 function userHome(env: NodeJS.ProcessEnv): string {
@@ -178,7 +188,7 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 		`Pi qualification: ${context.metadata.lock.compatibilityStatus}; deviations=${context.metadata.lock.deviations.length}`,
 	);
 	lines.push(`Profile schema: ${context.metadata.profileSchemaVersion}`);
-	lines.push(`Install channel: ${installChannel(context.executable)}`);
+	lines.push(`Install channel: ${describeInstallChannel(context.updateStatus?.installChannel)}`);
 	lines.push(`Executable: ${context.executable}`);
 	lines.push(`Self-update policy: ${context.updateStatus?.policy ?? "unavailable"}`);
 	lines.push(`Self-update channel: ${context.updateStatus?.installChannel ?? "unavailable"}`);

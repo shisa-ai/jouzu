@@ -193,3 +193,48 @@ test("doctor reports a leftover profile lock as action required", () => {
 		rmSync(root, { recursive: true, force: true });
 	}
 });
+
+test("doctor maps every updater install channel to user-facing text", () => {
+	const cases = [
+		["global-npm", /Install channel: global npm install/],
+		["local-npm", /Install channel: local npm install/],
+		["ephemeral-npx", /Install channel: npx install/],
+		["source", /Install channel: source checkout/],
+		["other", /Install channel: other/],
+	];
+	const root = mkdtempSync(join(tmpdir(), "jouzu-doctor-channel-"));
+	rmSync(root, { recursive: true, force: true });
+	for (const [channel, pattern] of cases) {
+		const report = createDoctorReport({
+			metadata: metadata(),
+			paths: paths(root),
+			profile: { id: "core", source: "default" },
+			piRuntimeVersion: "0.84.2",
+			executable: "/any/executable",
+			env: { HOME: "/home/user" },
+			platform: "linux",
+			commandPaths: { git: "/usr/bin/git", bash: "/usr/bin/bash", npm: "/usr/bin/npm" },
+			updateStatus: {
+				policy: "off",
+				installChannel: channel,
+				startupEligible: false,
+				state: {
+					schemaVersion: 1,
+					policy: "off",
+					channel: "latest",
+					lastCheckedAt: null,
+					nextCheckAt: null,
+					lastResult: "never",
+					installedVersion: "0.1.0",
+					latestVersion: null,
+					latestIntegrity: null,
+					previousVersion: null,
+					lastUpdatedAt: null,
+					lastErrorCode: null,
+				},
+			},
+		});
+		assert.match(report.text, pattern, `channel ${channel}`);
+	}
+	assert.equal(rmSync(root, { recursive: true, force: true }), undefined);
+});
