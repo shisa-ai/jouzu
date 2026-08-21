@@ -113,12 +113,14 @@ export function readProfileState(path: string): ProfileState | undefined {
 	if (!existsSync(path)) return undefined;
 	const metadata = lstatSync(path);
 	if (!metadata.isFile() || metadata.isSymbolicLink())
-		throw new ProfileStateError("profile state must be a regular file");
+		throw new ProfileStateError(`profile state must be a regular file: ${path}`);
 	let parsed: unknown;
 	try {
 		parsed = JSON.parse(readFileSync(path, "utf8"));
 	} catch (error) {
-		throw new ProfileStateError(`profile state is invalid JSON: ${error instanceof Error ? error.message : error}`);
+		throw new ProfileStateError(
+			`profile state is invalid JSON at ${path}: ${error instanceof Error ? error.message : error}`,
+		);
 	}
 	if (!parsed || typeof parsed !== "object" || Array.isArray(parsed))
 		throw new ProfileStateError("profile state must be an object");
@@ -136,7 +138,7 @@ export function readProfileState(path: string): ProfileState | undefined {
 		typeof state.appliedAt !== "string" ||
 		!Array.isArray(state.managedTargets)
 	) {
-		throw new ProfileStateError("profile state fields are invalid");
+		throw new ProfileStateError(`profile state fields are invalid at ${path}`);
 	}
 	const targets = new Set<string>();
 	const managedTargets = state.managedTargets.map((entry) => {

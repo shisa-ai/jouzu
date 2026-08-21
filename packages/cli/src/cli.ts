@@ -17,7 +17,13 @@ import { loadMetadata } from "./metadata.js";
 import { resolveJouzuPaths } from "./paths.js";
 import { clearInteractiveStartup, createJouzuPresentationExtension, isInteractivePiStartup } from "./presentation.js";
 import { promptForJapaneseSupport, readProfileChoice, writeProfileChoice } from "./profile-choice.js";
-import { applyProfile, formatProfilePlan, ProfileConflictError, planProfile } from "./profile-manager.js";
+import {
+	applyProfile,
+	formatProfilePlan,
+	ProfileConflictError,
+	ProfileStateError,
+	planProfile,
+} from "./profile-manager.js";
 import { loadBundledProfile } from "./profiles.js";
 import { withJouzuResumeHint } from "./resume.js";
 import { configurePiProcess, type ProfileSelection, resolveProfileSelection } from "./runtime.js";
@@ -41,6 +47,7 @@ async function runCli(args: string[]): Promise<void> {
 
 	const paths = resolveJouzuPaths({ homeOverride: parsed.options.home });
 	const metadata = loadMetadata();
+	const interactiveStartup = parsed.kind === "pi" && isInteractivePiStartup(parsed.args);
 	const executable = process.argv[1] ?? fileURLToPath(import.meta.url);
 	const updater = new JouzuUpdater({
 		paths,
@@ -98,7 +105,7 @@ async function runCli(args: string[]): Promise<void> {
 		return;
 	}
 
-	if (parsed.kind === "pi" && isInteractivePiStartup(parsed.args)) {
+	if (interactiveStartup) {
 		const startupUpdate = updater.startup();
 		delete process.env.JOUZU_INTERNAL_UPDATE_RESTARTED;
 		if (startupUpdate.message) console.error(startupUpdate.message);
@@ -128,7 +135,7 @@ async function runCli(args: string[]): Promise<void> {
 		profile.source !== "command line" &&
 		profile.source !== "environment" &&
 		savedChoice === undefined &&
-		isInteractivePiStartup(parsed.args)
+		interactiveStartup
 	) {
 		profile = { id: await promptForJapaneseSupport(), source: "first-run choice" };
 		firstRunChoice = true;
@@ -151,7 +158,7 @@ async function runCli(args: string[]): Promise<void> {
 		return;
 	}
 
-	if (parsed.kind === "pi" && isInteractivePiStartup(parsed.args)) {
+	if (interactiveStartup) {
 		const bootstrap = ensureDefaultKeybindings(paths);
 		if (bootstrap.message) console.error(bootstrap.message);
 	}
@@ -232,6 +239,14 @@ runCli(process.argv.slice(2)).catch((error: unknown) => {
 	if (error instanceof UpdateError) {
 		console.error(`Jouzu update failed: ${error.message}`);
 		process.exitCode = error.exitCode;
+		return;
+	}
+	if (error instanceof ProfileStateError) {
+		console.error(`Jouzu profile state is unreadable: ${error.message}`);
+		console.error(
+			'Recovery: repair or remove the profile state file, then run "jouzu profile plan" and "jouzu profile apply" again.',
+		);
+		process.exitCode = 1;
 		return;
 	}
 	if (error instanceof ProfileConflictError) {

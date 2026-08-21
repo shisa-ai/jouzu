@@ -1,29 +1,17 @@
-import { readFileSync } from "node:fs";
 import type { ProfileId } from "./args.js";
 import type { JouzuPaths } from "./paths.js";
+import { readProfileState } from "./profile-manager.js";
 
-interface ProfileState {
-	activeProfile?: unknown;
-	manifestSha256?: unknown;
-}
-
-export interface ProfileSelection {
+interface ProfileSelection {
 	id: ProfileId;
 	source: "command line" | "environment" | "profile state" | "saved choice" | "first-run choice" | "default";
 	appliedManifestSha256?: string;
 }
 
+export type { ProfileSelection };
+
 function isProfileId(value: unknown): value is ProfileId {
 	return value === "core" || value === "ja";
-}
-
-function readProfileState(path: string): ProfileState | undefined {
-	try {
-		return JSON.parse(readFileSync(path, "utf8")) as ProfileState;
-	} catch (error) {
-		if (error instanceof Error && "code" in error && error.code === "ENOENT") return undefined;
-		return undefined;
-	}
 }
 
 export function resolveProfileSelection(

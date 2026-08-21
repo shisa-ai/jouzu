@@ -404,6 +404,22 @@ test("an ordinary launch recovers a stale empty profile lock", () => {
 	}
 });
 
+test("corrupt profile state fails with exit 1 and a recovery action, not the conflict status", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-corrupt-state-"));
+	try {
+		const jouzuHome = join(temp, "home");
+		mkdirSync(join(jouzuHome, "state"), { recursive: true });
+		writeFileSync(join(jouzuHome, "state", "profile-state.json"), "{ not valid json");
+		const result = run(["--jouzu-home", jouzuHome, "pi", "--version"]);
+		assert.equal(result.status, 1, result.stderr);
+		assert.match(result.stderr, /Jouzu profile state is unreadable/);
+		assert.match(result.stderr, /Recovery:/);
+		assert.doesNotMatch(result.stderr, /CONFLICT/);
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
+
 test("doctor is non-mutating and reports replacement of inherited Pi roots", () => {
 	const temp = mkdtempSync(join(tmpdir(), "jouzu-doctor-"));
 	try {
