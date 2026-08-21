@@ -156,7 +156,7 @@ export function parseJouzuArgs(args: string[]): ParsedCommand {
 	const [command, ...rest] = remaining;
 	if (command === "pi" || command === "--") return { kind: "pi", options, args: rest };
 	if (command === "doctor") {
-		if (rest.length > 0) throw new UsageError("doctor does not accept arguments in this development build");
+		if (rest.length > 0) throw new UsageError("doctor does not accept arguments");
 		return { kind: "doctor", options };
 	}
 	if (command === "profile") return parseProfileCommand(options, rest);

@@ -202,8 +202,8 @@ The opt-in live Japanese tool-flow smoke requires an explicitly selected provide
 
 ```bash
 JOUZU_LIVE_SMOKE=1 \
-JOUZU_LIVE_PROVIDER=<provider> \
-JOUZU_LIVE_MODEL=<model> \
+JOUZU_LIVE_PROVIDER="$PROVIDER" \
+JOUZU_LIVE_MODEL="$MODEL" \
 JOUZU_LIVE_MAX_USD=0.02 \
 npm run test:live:ja
 ```
