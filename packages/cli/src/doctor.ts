@@ -32,6 +32,7 @@ export interface DoctorContext {
 	paths: JouzuPaths;
 	profile: ProfileSelection;
 	piRuntimeVersion: string;
+	piRuntimeDiagnostic?: string;
 	executable: string;
 	env?: NodeJS.ProcessEnv;
 	inheritedPiAgentDir?: string;
@@ -138,6 +139,9 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	if (!npmPath) problems.push("npm was not found on PATH; npm is required for Jouzu updates");
 	if (context.metadata.piVersion !== context.piRuntimeVersion) {
 		problems.push(`Pinned Pi ${context.metadata.piVersion} does not match loaded runtime ${context.piRuntimeVersion}`);
+	}
+	if (context.piRuntimeDiagnostic) {
+		problems.push(`Pi runtime could not be loaded: ${context.piRuntimeDiagnostic}`);
 	}
 	if (context.metadata.lock.compatibilityStatus !== "qualified") {
 		problems.push(`Pi lock status is ${context.metadata.lock.compatibilityStatus}, not qualified`);

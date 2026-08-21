@@ -127,6 +127,45 @@ test("doctor fails closed for unsupported Windows prerequisites and Pi drift", (
 	assert.match(report.text, /Result: action required/);
 });
 
+test("doctor reports a Pi runtime load failure as action required", () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-doctor-pi-fail-"));
+	rmSync(root, { recursive: true, force: true });
+	const report = createDoctorReport({
+		metadata: metadata(),
+		paths: paths(root),
+		profile: { id: "core", source: "default" },
+		piRuntimeVersion: "unavailable",
+		piRuntimeDiagnostic: "Cannot find module '@earendil-works/pi-coding-agent'",
+		executable: "/opt/jouzu/node_modules/jouzu/dist/cli.js",
+		env: { HOME: "/home/user" },
+		platform: "linux",
+		commandPaths: { git: "/usr/bin/git", bash: "/usr/bin/bash", npm: "/usr/bin/npm" },
+	});
+	assert.equal(report.healthy, false);
+	assert.match(report.text, /Pi runtime could not be loaded: Cannot find module/);
+	assert.match(report.text, /Result: action required/);
+	assert.equal(rmSync(root, { recursive: true, force: true }), undefined);
+});
+
+test("doctor reports a Pi version mismatch as action required", () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-doctor-pi-version-"));
+	rmSync(root, { recursive: true, force: true });
+	const report = createDoctorReport({
+		metadata: metadata(),
+		paths: paths(root),
+		profile: { id: "core", source: "default" },
+		piRuntimeVersion: "0.85.0",
+		executable: "/opt/jouzu/node_modules/jouzu/dist/cli.js",
+		env: { HOME: "/home/user" },
+		platform: "linux",
+		commandPaths: { git: "/usr/bin/git", bash: "/usr/bin/bash", npm: "/usr/bin/npm" },
+	});
+	assert.equal(report.healthy, false);
+	assert.match(report.text, /Pinned Pi 0\.84\.2 does not match loaded runtime 0\.85\.0/);
+	assert.match(report.text, /Result: action required/);
+	assert.equal(rmSync(root, { recursive: true, force: true }), undefined);
+});
+
 test("doctor reports a leftover profile lock as action required", () => {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-doctor-lock-"));
 	try {

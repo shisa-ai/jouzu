@@ -164,14 +164,25 @@ async function runCli(args: string[]): Promise<void> {
 	}
 
 	configurePiProcess(paths);
-	const pi = await loadPiRuntime();
-	if (pi.VERSION !== metadata.piVersion) {
-		throw new Error(`loaded Pi ${pi.VERSION} does not match Jouzu's exact pin ${metadata.piVersion}`);
+	let pi: typeof import("@earendil-works/pi-coding-agent") | undefined;
+	let piRuntimeVersion: string | undefined;
+	let piImportDiagnostic: string | undefined;
+	try {
+		pi = await loadPiRuntime();
+		piRuntimeVersion = pi.VERSION;
+	} catch (error) {
+		piImportDiagnostic = error instanceof Error ? error.message : String(error);
 	}
 
 	if (parsed.kind === "version") {
+		if (piImportDiagnostic || !piRuntimeVersion) {
+			throw new Error(`Jouzu could not load its pinned Pi runtime: ${piImportDiagnostic ?? "unavailable"}`);
+		}
+		if (piRuntimeVersion !== metadata.piVersion) {
+			throw new Error(`loaded Pi ${piRuntimeVersion} does not match Jouzu's exact pin ${metadata.piVersion}`);
+		}
 		console.log(`jouzu ${metadata.jouzuVersion}`);
-		console.log(`pi ${pi.VERSION}`);
+		console.log(`pi ${piRuntimeVersion}`);
 		console.log(`profile schema ${metadata.profileSchemaVersion}`);
 		return;
 	}
@@ -195,7 +206,8 @@ async function runCli(args: string[]): Promise<void> {
 			metadata,
 			paths,
 			profile,
-			piRuntimeVersion: pi.VERSION,
+			piRuntimeVersion: piRuntimeVersion ?? "unavailable",
+			piRuntimeDiagnostic: piImportDiagnostic,
 			executable,
 			inheritedPiAgentDir,
 			inheritedPiSessionDir,
@@ -217,6 +229,12 @@ async function runCli(args: string[]): Promise<void> {
 		console.log(profile.id === "ja" ? "Japanese support enabled." : "Continuing with the Core profile.");
 	}
 	clearInteractiveStartup(parsed.args);
+	if (piImportDiagnostic || !pi || !piRuntimeVersion) {
+		throw new Error(`Jouzu could not load its pinned Pi runtime: ${piImportDiagnostic ?? "unavailable"}`);
+	}
+	if (piRuntimeVersion !== metadata.piVersion) {
+		throw new Error(`loaded Pi ${piRuntimeVersion} does not match Jouzu's exact pin ${metadata.piVersion}`);
+	}
 	await withJouzuResumeHint(() =>
 		pi.main(parsed.args, {
 			extensionFactories: [createJouzuPresentationExtension(metadata, profile)],
