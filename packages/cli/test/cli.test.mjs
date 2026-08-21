@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawn, spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { after, test } from "node:test";
@@ -376,6 +376,29 @@ test("a caller-provided JOUZU_PROFILE keeps input precedence over isolated state
 		// Explicit caller input is honored for the resolved profile even though no
 		// ja assets exist; the default Core assets are still materialized safely.
 		assert.equal(JSON.parse(readFileSync(join(jouzuHome, "state", "profile-state.json"), "utf8")).activeProfile, "ja");
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
+
+test("an ordinary launch recovers a stale empty profile lock", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-recover-lock-"));
+	try {
+		const jouzuHome = join(temp, "home");
+		const lock = join(jouzuHome, "state", "profile.lock");
+		mkdirSync(join(jouzuHome, "state"), { recursive: true });
+		writeFileSync(lock, "");
+		const past = new Date(Date.now() - 31 * 60 * 1000);
+		utimesSync(lock, past, past);
+
+		const result = run(["--jouzu-home", jouzuHome, "pi", "--version"]);
+		assert.equal(result.status, 0, result.stderr);
+		assert.equal(result.stdout.trim(), "0.84.2");
+		assert.equal(existsSync(lock), false, "recovered lock must be released");
+		assert.equal(
+			JSON.parse(readFileSync(join(jouzuHome, "state", "profile-state.json"), "utf8")).activeProfile,
+			"core",
+		);
 	} finally {
 		rmSync(temp, { recursive: true, force: true });
 	}

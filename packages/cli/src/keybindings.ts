@@ -15,6 +15,7 @@ import {
 } from "node:fs";
 import { dirname, join } from "node:path";
 import type { JouzuPaths } from "./paths.js";
+import { acquireStateLock, STATE_LOCK_STALE_MS } from "./state-lock.js";
 
 export type KeyBindingValue = string | string[];
 export type KeybindingPolicy = "applied" | "disabled";
@@ -327,22 +328,21 @@ function writeJson(path: string, value: unknown): void {
 }
 
 function withLock<T>(paths: JouzuPaths, operation: () => T): T {
-	mkdirSync(paths.stateDir, { recursive: true, mode: 0o700 });
-	const path = lockPath(paths);
-	let descriptor: number | undefined;
+	const releaseLock = acquireStateLock({
+		path: lockPath(paths),
+		staleMs: STATE_LOCK_STALE_MS,
+		describe: "keybinding",
+		onBusy: (inspection) =>
+			new KeybindingConfigError(
+				inspection.status === "invalid"
+					? "keybindings.lock is not a regular lock file"
+					: "another keybinding operation is in progress",
+			),
+	});
 	try {
-		descriptor = openSync(path, "wx", 0o600);
 		return operation();
-	} catch (error) {
-		if (error instanceof Error && "code" in error && error.code === "EEXIST") {
-			throw new KeybindingConfigError("another keybinding operation is in progress");
-		}
-		throw error;
 	} finally {
-		if (descriptor !== undefined) {
-			closeSync(descriptor);
-			rmSync(path, { force: true });
-		}
+		releaseLock();
 	}
 }
 

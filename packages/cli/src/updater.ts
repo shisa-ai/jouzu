@@ -17,6 +17,7 @@ import {
 import { dirname, join, posix, resolve, win32 } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { JouzuPaths } from "./paths.js";
+import { acquireStateLock, STATE_LOCK_STALE_MS } from "./state-lock.js";
 
 const PI_PACKAGE = "@earendil-works/pi-coding-agent";
 const UPDATE_STATE_FIELDS = new Set([
@@ -37,7 +38,6 @@ const UPDATE_POLICIES = ["auto-restart", "notify", "off"] as const;
 const UPDATE_RESULTS = ["never", "current", "available", "updated", "failed"] as const;
 const DEFAULT_CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000;
 const FAILED_CHECK_INTERVAL_MS = 60 * 60 * 1000;
-const UPDATE_LOCK_STALE_MS = 30 * 60 * 1000;
 const SRI_SHA512_RE = /^sha512-[A-Za-z0-9+/]+={0,2}$/;
 const SEMVER_RE =
 	/^(?:v)?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/;
@@ -417,56 +417,18 @@ function verifyFileIntegrity(path: string, integrity: string): void {
 		throw new UpdateError("downloaded update failed SHA-512 verification", "integrity-mismatch");
 }
 
-function processIsAlive(pid: number): boolean {
-	try {
-		process.kill(pid, 0);
-		return true;
-	} catch (error) {
-		return error instanceof Error && "code" in error && error.code === "EPERM";
-	}
-}
-
 function acquireUpdateLock(path: string, now: Date): () => void {
-	mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
-	const token = randomUUID();
-	const create = (): number => {
-		const descriptor = openSync(path, "wx", 0o600);
-		writeFileSync(descriptor, `${JSON.stringify({ pid: process.pid, startedAt: now.toISOString(), token })}\n`);
-		fsyncSync(descriptor);
-		return descriptor;
-	};
-	let descriptor: number;
-	try {
-		descriptor = create();
-	} catch (error) {
-		if (!(error instanceof Error && "code" in error && error.code === "EEXIST")) throw error;
-		let stale = false;
-		try {
-			const metadata = lstatSync(path);
-			if (!metadata.isFile() || metadata.isSymbolicLink()) {
-				throw new UpdateError("self-update lock is not a regular file", "update-busy");
-			}
-			const parsed = JSON.parse(readFileSync(path, "utf8")) as { pid?: unknown; startedAt?: unknown };
-			if (typeof parsed.pid === "number" && typeof parsed.startedAt === "string") {
-				stale = now.getTime() - Date.parse(parsed.startedAt) > UPDATE_LOCK_STALE_MS && !processIsAlive(parsed.pid);
-			}
-		} catch (lockError) {
-			if (lockError instanceof UpdateError) throw lockError;
-			throw new UpdateError("another Jouzu update is running", "update-busy");
-		}
-		if (!stale) throw new UpdateError("another Jouzu update is running", "update-busy");
-		unlinkSync(path);
-		descriptor = create();
-	}
-	closeSync(descriptor);
-	return () => {
-		try {
-			const metadata = lstatSync(path);
-			if (!metadata.isFile() || metadata.isSymbolicLink()) return;
-			const parsed = JSON.parse(readFileSync(path, "utf8")) as { token?: unknown };
-			if (parsed.token === token) unlinkSync(path);
-		} catch {}
-	};
+	return acquireStateLock({
+		path,
+		now,
+		staleMs: STATE_LOCK_STALE_MS,
+		describe: "self-update",
+		onBusy: (inspection) =>
+			new UpdateError(
+				inspection.status === "invalid" ? "self-update lock is not a regular file" : "another Jouzu update is running",
+				"update-busy",
+			),
+	});
 }
 
 function defaultVerifyInstalled(

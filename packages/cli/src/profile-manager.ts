@@ -16,6 +16,7 @@ import {
 import { dirname, join, resolve, sep } from "node:path";
 import type { JouzuPaths } from "./paths.js";
 import type { ResolvedProfile } from "./profiles.js";
+import { acquireStateLock, STATE_LOCK_STALE_MS } from "./state-lock.js";
 
 const STATE_FIELDS = new Set([
 	"schemaVersion",
@@ -367,10 +368,18 @@ export function applyProfile(profile: ResolvedProfile, paths: JouzuPaths, jouzuV
 	if (initialPlan.actions.length === 0) return { changed: false, plan: initialPlan };
 
 	mkdirSync(paths.stateDir, { recursive: true });
-	const lockPath = join(paths.stateDir, "profile.lock");
-	let lockDescriptor: number | undefined;
+	const releaseLock = acquireStateLock({
+		path: join(paths.stateDir, "profile.lock"),
+		staleMs: STATE_LOCK_STALE_MS,
+		describe: "profile",
+		onBusy: (inspection) =>
+			new ProfileStateError(
+				inspection.status === "invalid"
+					? "profile.lock is not a regular lock file"
+					: "another profile operation is in progress",
+			),
+	});
 	try {
-		lockDescriptor = openSync(lockPath, "wx", 0o600);
 		const plan = planProfile(profile, paths, jouzuVersion);
 		if (plan.actions.some((action) => action.type === "conflict")) throw new ProfileConflictError(plan);
 		if (plan.actions.length === 0) return { changed: false, plan };
@@ -403,15 +412,7 @@ export function applyProfile(profile: ResolvedProfile, paths: JouzuPaths, jouzuV
 			transactionId,
 			...(existsSync(transactionBackupDir) ? { backupDir: transactionBackupDir } : {}),
 		};
-	} catch (error) {
-		if (error instanceof Error && "code" in error && error.code === "EEXIST") {
-			throw new ProfileStateError("another profile operation is in progress");
-		}
-		throw error;
 	} finally {
-		if (lockDescriptor !== undefined) {
-			closeSync(lockDescriptor);
-			rmSync(join(paths.stateDir, "profile.lock"), { force: true });
-		}
+		releaseLock();
 	}
 }

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -125,4 +125,32 @@ test("doctor fails closed for unsupported Windows prerequisites and Pi drift", (
 	assert.match(report.text, /Pinned Pi 0\.84\.2 does not match loaded runtime 0\.85\.0/);
 	assert.match(report.text, /Pi lock status is pending/);
 	assert.match(report.text, /Result: action required/);
+});
+
+test("doctor reports a leftover profile lock as action required", () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-doctor-lock-"));
+	try {
+		const stateDir = join(root, "state");
+		mkdirSync(stateDir, { recursive: true });
+		const lock = join(stateDir, "profile.lock");
+		writeFileSync(lock, "");
+		const past = new Date(Date.now() - 31 * 60 * 1000);
+		utimesSync(lock, past, past);
+		const report = createDoctorReport({
+			metadata: metadata(),
+			paths: paths(root),
+			profile: { id: "core", source: "default" },
+			piRuntimeVersion: "0.84.2",
+			executable: "/opt/jouzu/node_modules/jouzu/dist/cli.js",
+			env: { HOME: "/home/user" },
+			platform: "linux",
+			commandPaths: { git: "/usr/bin/git", bash: "/usr/bin/bash", npm: "/usr/bin/npm" },
+		});
+		assert.equal(report.healthy, false);
+		assert.match(report.text, /Profile lock: owner unknown/);
+		assert.match(report.text, /leftover state lock blocks Jouzu operations/);
+		assert.match(report.text, /Result: action required/);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
 });

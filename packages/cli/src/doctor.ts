@@ -5,6 +5,7 @@ import type { KeybindingPlan } from "./keybindings.js";
 import type { JouzuMetadata } from "./metadata.js";
 import type { JouzuPaths } from "./paths.js";
 import type { ProfileSelection } from "./runtime.js";
+import { describeStateLock, inspectStateLock, STATE_LOCK_STALE_MS } from "./state-lock.js";
 import type { UpdateStatus } from "./updater.js";
 
 const PROVIDER_ENVIRONMENT_KEYS = [
@@ -203,6 +204,19 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	lines.push(`Cache root: ${context.paths.cacheDir}`);
 	lines.push(`Inherited Pi agent root replaced: ${context.inheritedPiAgentDir ? "yes" : "not set"}`);
 	lines.push(`Inherited Pi session root replaced: ${context.inheritedPiSessionDir ? "yes" : "not set"}`);
+	const now = new Date();
+	const stateLocks = [
+		{ label: "Profile lock", path: pathApi.join(context.paths.stateDir, "profile.lock") },
+		{ label: "Keybinding lock", path: pathApi.join(context.paths.stateDir, "keybindings.lock") },
+		{ label: "Update lock", path: pathApi.join(context.paths.stateDir, "self-update.lock") },
+	];
+	for (const { label, path } of stateLocks) {
+		lines.push(`${label}: ${describeStateLock(path, STATE_LOCK_STALE_MS, now)}`);
+		const status = inspectStateLock(path, now).status;
+		if (status === "held-dead" || status === "owner-unknown" || status === "invalid") {
+			problems.push(`A leftover state lock blocks Jouzu operations: ${path} (${status})`);
+		}
+	}
 	lines.push(
 		`Shared cross-harness skills: ${sharedSkillsPath} (${existsSync(sharedSkillsPath) ? "present" : "absent"})`,
 	);
