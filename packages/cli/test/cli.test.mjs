@@ -13,10 +13,17 @@ const defaultHome = mkdtempSync(join(tmpdir(), "jouzu-cli-suite-"));
 after(() => rmSync(defaultHome, { recursive: true, force: true }));
 
 function run(args, options = {}) {
+	const scrubbed = {};
+	for (const [key, value] of Object.entries(process.env)) {
+		// Scrub ambient Jouzu and inherited Pi-agent variables so the CLI suite is
+		// hermetic; a case that needs them re-adds them explicitly via options.env.
+		if (/^JOUZU_/.test(key) || /^PI_CODING_AGENT_/.test(key)) continue;
+		scrubbed[key] = value;
+	}
 	return spawnSync(process.execPath, [cli, ...args], {
 		encoding: "utf8",
 		timeout: 30_000,
-		env: { ...process.env, JOUZU_HOME: defaultHome, PI_OFFLINE: "1", ...options.env },
+		env: { ...scrubbed, JOUZU_HOME: defaultHome, PI_OFFLINE: "1", ...options.env },
 		input: options.input,
 	});
 }
@@ -282,7 +289,14 @@ test(
 		const temp = mkdtempSync(join(tmpdir(), "jouzu-signal-"));
 		try {
 			const child = spawn(process.execPath, [cli, "pi", "--mode", "rpc", "--no-session", "--no-context-files"], {
-				env: { ...process.env, JOUZU_HOME: temp, PI_OFFLINE: "1" },
+				env: (() => {
+					const env = {};
+					for (const [key, value] of Object.entries(process.env)) {
+						if (/^JOUZU_/.test(key) || /^PI_CODING_AGENT_/.test(key)) continue;
+						env[key] = value;
+					}
+					return { ...env, JOUZU_HOME: temp, PI_OFFLINE: "1" };
+				})(),
 				stdio: ["pipe", "pipe", "pipe"],
 			});
 			let stdout = "";
@@ -325,6 +339,47 @@ test(
 		}
 	},
 );
+
+test("an inherited Jouzu environment does not leak a selected profile into another home", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-profile-leak-"));
+	try {
+		const homeA = join(temp, "home-a");
+		const homeB = join(temp, "home-b");
+		// Apply the ja profile to home A so its state and agent assets diverge.
+		const applied = run(["--jouzu-home", homeA, "profile", "apply", "--profile", "ja"]);
+		assert.equal(applied.status, 0, applied.stderr);
+		assert.equal(JSON.parse(readFileSync(join(homeA, "state", "profile-state.json"), "utf8")).activeProfile, "ja");
+
+		// Launch home B under the inherited Jouzu agent roots from a session in A,
+		// with no JOUZU_PROFILE in the environment (Jouzu no longer writes it).
+		const launched = run(["--jouzu-home", homeB, "pi", "--version"], {
+			env: {
+				PI_CODING_AGENT_DIR: join(homeA, "agent"),
+				PI_CODING_AGENT_SESSION_DIR: join(homeA, "state", "sessions"),
+			},
+		});
+		assert.equal(launched.status, 0, launched.stderr);
+		// Home B falls back to its own state/default (Core), not A's ja selection.
+		assert.equal(JSON.parse(readFileSync(join(homeB, "state", "profile-state.json"), "utf8")).activeProfile, "core");
+		assert.equal(existsSync(join(homeB, "agent", "APPEND_SYSTEM.md")), false, "ja asset leaked into home B");
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
+
+test("a caller-provided JOUZU_PROFILE keeps input precedence over isolated state", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-profile-input-"));
+	try {
+		const jouzuHome = join(temp, "home");
+		const result = run(["--jouzu-home", jouzuHome, "pi", "--version"], { env: { JOUZU_PROFILE: "ja" } });
+		assert.equal(result.status, 0, result.stderr);
+		// Explicit caller input is honored for the resolved profile even though no
+		// ja assets exist; the default Core assets are still materialized safely.
+		assert.equal(JSON.parse(readFileSync(join(jouzuHome, "state", "profile-state.json"), "utf8")).activeProfile, "ja");
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
 
 test("doctor is non-mutating and reports replacement of inherited Pi roots", () => {
 	const temp = mkdtempSync(join(tmpdir(), "jouzu-doctor-"));

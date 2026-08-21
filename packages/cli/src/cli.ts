@@ -156,7 +156,7 @@ async function runCli(args: string[]): Promise<void> {
 		if (bootstrap.message) console.error(bootstrap.message);
 	}
 
-	configurePiProcess(paths, profile);
+	configurePiProcess(paths);
 	const pi = await loadPiRuntime();
 	if (pi.VERSION !== metadata.piVersion) {
 		throw new Error(`loaded Pi ${pi.VERSION} does not match Jouzu's exact pin ${metadata.piVersion}`);

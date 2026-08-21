@@ -64,12 +64,11 @@ export function resolveProfileSelection(
 	return { id: "core", source: "default" };
 }
 
-export function configurePiProcess(paths: JouzuPaths, profile: ProfileSelection): void {
+export function configurePiProcess(paths: JouzuPaths): void {
 	process.title = "jouzu";
 	process.env.AI_AGENT = "jouzu";
 	process.env.PI_CODING_AGENT = "true";
 	process.env.PI_CODING_AGENT_DIR = paths.agentDir;
 	process.env.PI_CODING_AGENT_SESSION_DIR = paths.sessionDir;
 	process.env.PI_SKIP_VERSION_CHECK = "1";
-	process.env.JOUZU_PROFILE = profile.id;
 }
