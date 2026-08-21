@@ -334,7 +334,7 @@ export function planProfile(profile: ResolvedProfile, paths: JouzuPaths, jouzuVe
 }
 
 function atomicWrite(path: string, bytes: Uint8Array): void {
-	mkdirSync(dirname(path), { recursive: true });
+	mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
 	const temporary = join(dirname(path), `.${randomUUID()}.tmp`);
 	let descriptor: number | undefined;
 	try {
@@ -369,7 +369,7 @@ export function applyProfile(profile: ResolvedProfile, paths: JouzuPaths, jouzuV
 	if (initialPlan.actions.some((action) => action.type === "conflict")) throw new ProfileConflictError(initialPlan);
 	if (initialPlan.actions.length === 0) return { changed: false, plan: initialPlan };
 
-	mkdirSync(paths.stateDir, { recursive: true });
+	mkdirSync(paths.stateDir, { recursive: true, mode: 0o700 });
 	const releaseLock = acquireStateLock({
 		path: join(paths.stateDir, "profile.lock"),
 		staleMs: STATE_LOCK_STALE_MS,
@@ -394,7 +394,7 @@ export function applyProfile(profile: ResolvedProfile, paths: JouzuPaths, jouzuV
 			const path = targetPath(paths.agentDir, action.target);
 			if (action.type === "update" || action.type === "delete") {
 				const backup = targetPath(transactionBackupDir, action.target);
-				mkdirSync(dirname(backup), { recursive: true });
+				mkdirSync(dirname(backup), { recursive: true, mode: 0o700 });
 				copyFileSync(path, backup);
 			}
 			if (action.type === "delete") {

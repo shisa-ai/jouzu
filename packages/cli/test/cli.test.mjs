@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawn, spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { after, test } from "node:test";
@@ -12,7 +12,7 @@ const packageJson = JSON.parse(readFileSync(join(packageRoot, "package.json"), "
 const defaultHome = mkdtempSync(join(tmpdir(), "jouzu-cli-suite-"));
 after(() => rmSync(defaultHome, { recursive: true, force: true }));
 
-function run(args, options = {}) {
+function scrubbedEnv() {
 	const scrubbed = {};
 	for (const [key, value] of Object.entries(process.env)) {
 		// Scrub ambient Jouzu and inherited Pi-agent variables so the CLI suite is
@@ -20,10 +20,14 @@ function run(args, options = {}) {
 		if (/^JOUZU_/.test(key) || /^PI_CODING_AGENT_/.test(key)) continue;
 		scrubbed[key] = value;
 	}
+	return scrubbed;
+}
+
+function run(args, options = {}) {
 	return spawnSync(process.execPath, [cli, ...args], {
 		encoding: "utf8",
 		timeout: 30_000,
-		env: { ...scrubbed, JOUZU_HOME: defaultHome, PI_OFFLINE: "1", ...options.env },
+		env: { ...scrubbedEnv(), JOUZU_HOME: defaultHome, PI_OFFLINE: "1", ...options.env },
 		input: options.input,
 	});
 }
@@ -444,3 +448,53 @@ test("doctor is non-mutating and reports replacement of inherited Pi roots", () 
 		rmSync(temp, { recursive: true, force: true });
 	}
 });
+
+function modeOf(path) {
+	return statSync(path).mode & 0o777;
+}
+
+test(
+	"Jouzu-owned directories get deterministic private modes regardless of umask or order",
+	{ skip: process.platform === "win32" ? "POSIX permission assertion" : false },
+	() => {
+		const temp = mkdtempSync(join(tmpdir(), "jouzu-perms-"));
+		try {
+			for (const umask of ["022", "077"]) {
+				for (const [label, args] of [
+					["profile", ["profile", "apply", "--profile", "core"]],
+					["keybinding", ["keybindings", "apply"]],
+					["updater", ["self-update", "policy", "notify"]],
+				]) {
+					const jouzuHome = join(temp, `home-${umask}-${label}`);
+					mkdirSync(jouzuHome, { recursive: true });
+					// Simulate a caller-owned home root that Jouzu must not chmod.
+					const wrapped = spawnSync(
+						"sh",
+						["-c", `umask ${umask}; exec "$@"`, "sh", process.execPath, cli, "--jouzu-home", jouzuHome, ...args],
+						{
+							encoding: "utf8",
+							timeout: 30_000,
+							env: { ...scrubbedEnv(), JOUZU_HOME: defaultHome, PI_OFFLINE: "1" },
+						},
+					);
+					assert.equal(wrapped.status, 0, `${label} apply failed: ${wrapped.stderr}`);
+					assert.equal(modeOf(jouzuHome), 0o755, `${label} must not chmod the caller-owned home root`);
+					assert.equal(modeOf(join(jouzuHome, "state")), 0o700, `${label} state dir mode`);
+					if (label !== "updater") {
+						assert.equal(modeOf(join(jouzuHome, "agent")), 0o700, `${label} agent dir mode`);
+					}
+					// The persistent state file is always private.
+					const stateFile =
+						label === "updater"
+							? "self-update.json"
+							: label === "keybinding"
+								? "keybindings-state.json"
+								: "profile-state.json";
+					assert.equal(modeOf(join(jouzuHome, "state", stateFile)), 0o600, `${label} state file mode`);
+				}
+			}
+		} finally {
+			rmSync(temp, { recursive: true, force: true });
+		}
+	},
+);
