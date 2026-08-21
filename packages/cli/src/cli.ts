@@ -16,7 +16,7 @@ import {
 import { loadMetadata } from "./metadata.js";
 import { resolveJouzuPaths } from "./paths.js";
 import { clearInteractiveStartup, createJouzuPresentationExtension, isInteractivePiStartup } from "./presentation.js";
-import { promptForJapaneseSupport, readProfileChoice, writeProfileChoice } from "./profile-choice.js";
+import { promptForJapaneseSupport, writeProfileChoice } from "./profile-choice.js";
 import {
 	applyProfile,
 	formatProfilePlan,
@@ -119,25 +119,18 @@ async function runCli(args: string[]): Promise<void> {
 	const inheritedPiAgentDir = process.env.PI_CODING_AGENT_DIR;
 	const inheritedPiSessionDir = process.env.PI_CODING_AGENT_SESSION_DIR;
 	const profileChoicePath = join(paths.stateDir, "profile-choice.json");
-	let profile: ProfileSelection = resolveProfileSelection(paths, parsed.options.profile);
-	const shouldReadSavedChoice =
-		parsed.kind !== "version" &&
-		(profile.source === "default" ||
-			(parsed.kind === "pi" && profile.source === "profile state" && profile.id === "core"));
-	const savedChoice = shouldReadSavedChoice ? readProfileChoice(profileChoicePath) : undefined;
-	if (profile.source === "default" && savedChoice) {
-		profile = resolveProfileSelection(paths, parsed.options.profile, process.env, savedChoice.profile);
-	}
+	let profile: ProfileSelection = resolveProfileSelection(paths, {
+		explicitProfile: parsed.options.profile,
+		allowSavedChoice: parsed.kind !== "version",
+		interactiveStartup,
+	});
 	let firstRunChoice = false;
-	if (
-		parsed.kind === "pi" &&
-		profile.id === "core" &&
-		profile.source !== "command line" &&
-		profile.source !== "environment" &&
-		savedChoice === undefined &&
-		interactiveStartup
-	) {
-		profile = { id: await promptForJapaneseSupport(), source: "first-run choice" };
+	if (profile.needsFirstRunInput) {
+		profile = {
+			id: await promptForJapaneseSupport(),
+			source: "first-run choice",
+			needsFirstRunInput: false,
+		};
 		firstRunChoice = true;
 	}
 

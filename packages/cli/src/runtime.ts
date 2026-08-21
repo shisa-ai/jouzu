@@ -1,11 +1,21 @@
+import { join } from "node:path";
 import type { ProfileId } from "./args.js";
 import type { JouzuPaths } from "./paths.js";
+import { readProfileChoice } from "./profile-choice.js";
 import { readProfileState } from "./profile-manager.js";
 
 interface ProfileSelection {
 	id: ProfileId;
 	source: "command line" | "environment" | "profile state" | "saved choice" | "first-run choice" | "default";
 	appliedManifestSha256?: string;
+	needsFirstRunInput: boolean;
+}
+
+export interface ProfileResolutionOptions {
+	explicitProfile?: ProfileId;
+	env?: NodeJS.ProcessEnv;
+	allowSavedChoice?: boolean;
+	interactiveStartup?: boolean;
 }
 
 export type { ProfileSelection };
@@ -14,13 +24,10 @@ function isProfileId(value: unknown): value is ProfileId {
 	return value === "core" || value === "ja";
 }
 
-export function resolveProfileSelection(
-	paths: JouzuPaths,
-	explicitProfile: ProfileId | undefined,
-	env: NodeJS.ProcessEnv = process.env,
-	savedChoice?: ProfileId,
-): ProfileSelection {
+export function resolveProfileSelection(paths: JouzuPaths, options: ProfileResolutionOptions = {}): ProfileSelection {
 	const state = readProfileState(paths.profileStatePath);
+	const explicitProfile = options.explicitProfile;
+	const env = options.env ?? process.env;
 	if (explicitProfile) {
 		return {
 			id: explicitProfile,
@@ -29,6 +36,7 @@ export function resolveProfileSelection(
 				state?.activeProfile === explicitProfile && typeof state.manifestSha256 === "string"
 					? state.manifestSha256
 					: undefined,
+			needsFirstRunInput: false,
 		};
 	}
 	if (isProfileId(env.JOUZU_PROFILE)) {
@@ -39,17 +47,31 @@ export function resolveProfileSelection(
 				state?.activeProfile === env.JOUZU_PROFILE && typeof state.manifestSha256 === "string"
 					? state.manifestSha256
 					: undefined,
+			needsFirstRunInput: false,
 		};
 	}
+
+	const interactiveStartup = options.interactiveStartup === true;
 	if (isProfileId(state?.activeProfile)) {
+		const savedChoice =
+			interactiveStartup && state.activeProfile === "core"
+				? readProfileChoice(join(paths.stateDir, "profile-choice.json"))
+				: undefined;
 		return {
 			id: state.activeProfile,
 			source: "profile state",
 			appliedManifestSha256: typeof state.manifestSha256 === "string" ? state.manifestSha256 : undefined,
+			needsFirstRunInput: interactiveStartup && state.activeProfile === "core" && savedChoice === undefined,
 		};
 	}
-	if (savedChoice) return { id: savedChoice, source: "saved choice" };
-	return { id: "core", source: "default" };
+
+	if (options.allowSavedChoice !== false) {
+		const savedChoice = readProfileChoice(join(paths.stateDir, "profile-choice.json"));
+		if (savedChoice) {
+			return { id: savedChoice.profile, source: "saved choice", needsFirstRunInput: false };
+		}
+	}
+	return { id: "core", source: "default", needsFirstRunInput: interactiveStartup };
 }
 
 export function configurePiProcess(paths: JouzuPaths): void {
