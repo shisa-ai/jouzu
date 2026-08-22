@@ -27,7 +27,7 @@ function run(command, args, options = {}) {
 }
 
 function runNpm(args, options = {}) {
-	return run(npmCommand, [...npmPrefix, ...args], options);
+	return run(npmCommand, [...npmPrefix, ...args], { timeout: 300_000, ...options });
 }
 
 function scrubbedHarnessEnv() {
