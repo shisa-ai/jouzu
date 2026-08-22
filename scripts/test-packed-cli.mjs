@@ -133,5 +133,5 @@ try {
 
 	console.log(`packed jouzu@${packageJson.version} passed local, npm-exec, and global smokes with Pi ${piVersion}`);
 } finally {
-	rmSync(temp, { recursive: true, force: true });
+	rmSync(temp, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
 }
