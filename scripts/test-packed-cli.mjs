@@ -39,6 +39,16 @@ function scrubbedHarnessEnv() {
 	return env;
 }
 
+function cleanupTemp(path) {
+	try {
+		rmSync(path, { recursive: true, force: true });
+	} catch (error) {
+		const code = error instanceof Error && "code" in error ? error.code : undefined;
+		if (process.platform !== "win32" || !["EBUSY", "EPERM", "ENOTEMPTY"].includes(String(code))) throw error;
+		console.warn(`packed smoke left a Windows temp directory for runner cleanup: ${path} (${code})`);
+	}
+}
+
 const temp = mkdtempSync(join(tmpdir(), "jouzu-packed-cli-"));
 try {
 	const packResult = runNpm(["pack", "--ignore-scripts", "--json", "--pack-destination", temp], {
@@ -133,5 +143,5 @@ try {
 
 	console.log(`packed jouzu@${packageJson.version} passed local, npm-exec, and global smokes with Pi ${piVersion}`);
 } finally {
-	rmSync(temp, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
+	cleanupTemp(temp);
 }
