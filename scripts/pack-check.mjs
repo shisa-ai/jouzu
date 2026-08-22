@@ -106,7 +106,10 @@ for (const directory of packageDirectories) {
 		}
 		if (!packed.files.some((file) => file.path === "LICENSE")) throw new Error("jouzu tarball is missing LICENSE");
 		const cliEntry = packed.files.find((file) => file.path === "dist/cli.js");
-		if (!cliEntry || (cliEntry.mode & 0o111) === 0) throw new Error("jouzu dist/cli.js is not executable");
+		if (!cliEntry) throw new Error("jouzu tarball is missing dist/cli.js");
+		if (process.platform !== "win32" && (cliEntry.mode & 0o111) === 0) {
+			throw new Error("jouzu dist/cli.js is not executable");
+		}
 		if (!readFileSync(join(directory, "dist", "cli.js"), "utf8").startsWith("#!/usr/bin/env node\n")) {
 			throw new Error("jouzu dist/cli.js is missing its Node shebang");
 		}
