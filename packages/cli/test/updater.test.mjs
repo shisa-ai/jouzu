@@ -116,6 +116,34 @@ test("install-channel classification distinguishes global, local, npx, and sourc
 	);
 });
 
+test(
+	"install-channel classification resolves existing npm-root symlink aliases",
+	{ skip: process.platform === "win32" ? "symlink fixture requires privileges" : false },
+	() => {
+		const context = fixture();
+		try {
+			const realGlobalRoot = join(context.root, "real-global", "node_modules");
+			const packageRoot = join(realGlobalRoot, "jouzu");
+			mkdirSync(packageRoot, { recursive: true });
+			const aliasGlobalRoot = join(context.root, "alias-node-modules");
+			symlinkSync(realGlobalRoot, aliasGlobalRoot, "dir");
+			const latest = release("0.1.1");
+			const npm = fakeNpm({ currentVersion: "0.1.0", latest, globalRoot: aliasGlobalRoot });
+			const updater = new JouzuUpdater({
+				paths: context.paths,
+				currentVersion: "0.1.0",
+				executable: join(packageRoot, "dist", "cli.js"),
+				packageRoot,
+				runNpm: npm.run,
+				verifyInstalled: () => {},
+			});
+			assert.equal(updater.installChannel(), "global-npm");
+		} finally {
+			rmSync(context.root, { recursive: true, force: true });
+		}
+	},
+);
+
 test("update state is absent by default and rejects unknown fields and symlinks", () => {
 	const { root, paths } = fixture();
 	try {

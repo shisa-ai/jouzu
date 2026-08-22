@@ -7,6 +7,7 @@ import {
 	lstatSync,
 	openSync,
 	readFileSync,
+	realpathSync,
 	renameSync,
 	rmdirSync,
 	rmSync,
@@ -332,6 +333,14 @@ export function classifyInstallChannel(options: {
 	return "other";
 }
 
+function canonicalExistingPath(path: string): string {
+	try {
+		return realpathSync(path);
+	} catch {
+		return path;
+	}
+}
+
 function defaultPackageRoot(): string {
 	return dirname(fileURLToPath(new URL("../package.json", import.meta.url)));
 }
@@ -503,7 +512,7 @@ export class JouzuUpdater {
 		this.paths = options.paths;
 		this.currentVersion = options.currentVersion;
 		this.executable = resolve(options.executable);
-		this.packageRoot = options.packageRoot ?? defaultPackageRoot();
+		this.packageRoot = canonicalExistingPath(options.packageRoot ?? defaultPackageRoot());
 		this.env = options.env ?? process.env;
 		this.platform = options.platform ?? process.platform;
 		this.now = options.now ?? (() => new Date());
@@ -538,7 +547,8 @@ export class JouzuUpdater {
 
 	private globalNpmRoot(): string | undefined {
 		try {
-			return requireCommandSuccess(this.runNpm(["root", "--global", "--loglevel=error"], 15_000), "root").trim();
+			const root = requireCommandSuccess(this.runNpm(["root", "--global", "--loglevel=error"], 15_000), "root").trim();
+			return canonicalExistingPath(root);
 		} catch {
 			return undefined;
 		}
