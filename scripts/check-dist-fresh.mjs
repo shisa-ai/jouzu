@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { existsSync, readdirSync, statSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { join, relative, resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const cli = resolve(root, "packages", "cli");
@@ -35,9 +35,15 @@ function assertFresh(source, output, label) {
 	}
 }
 
+function assertTreeFresh(sourceRoot, outputRoot, label) {
+	for (const source of walk(sourceRoot)) {
+		const relativePath = relative(sourceRoot, source);
+		assertFresh([source], join(outputRoot, relativePath), `${label} ${relativePath}`);
+	}
+}
+
 const src = walk(join(cli, "src")).filter((path) => path.endsWith(".ts"));
 assertFresh(src, join(cli, "dist", "cli.js"), "compiled CLI");
 assertFresh([join(root, "upstream", "pi.lock.json")], join(cli, "dist", "pi.lock.json"), "Pi lock");
-const profiles = walk(join(cli, "profiles"));
-assertFresh(profiles, join(cli, "dist", "profiles", "core", "manifest.json"), "bundled profiles");
+assertTreeFresh(join(cli, "profiles"), join(cli, "dist", "profiles"), "bundled profile");
 console.log("dist is fresh");
