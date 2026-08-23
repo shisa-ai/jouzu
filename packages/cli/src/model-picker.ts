@@ -26,6 +26,7 @@ import {
 	type PaletteRoute,
 } from "./palette.js";
 import type { JouzuPaths } from "./paths.js";
+import { detectBannerColorMode, renderBrandGradient } from "./presentation.js";
 
 type PiModel = NonNullable<ExtensionContext["model"]>;
 
@@ -261,7 +262,9 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	}
 
 	render(width: number): string[] {
-		if (width < 12) return [truncateToWidth("Jouzu Models", Math.max(1, width), "")];
+		const wordmark = renderBrandGradient("JOUZU", detectBannerColorMode());
+		const title = `${wordmark} ${this.theme.bold(this.theme.fg("accent", "· Models"))}`;
+		if (width < 12) return [truncateToWidth(title, Math.max(1, width), "")];
 		const innerWidth = Math.max(1, width - 4);
 		const terminalRows = Number(this.tui.terminal?.rows ?? 24);
 		const rowCapacity = Math.max(3, Math.min(12, terminalRows - 12));
@@ -273,8 +276,12 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		const selected = this.rows[this.selectedIndex];
 		const border = (value: string) => this.theme.fg("borderAccent", value);
 		const line = (value = "") => `${border("│")} ${padLine(value, innerWidth)} ${border("│")}`;
+		const titleStart = `${border("╭─")} `;
+		const titleMaxWidth = Math.max(0, width - visibleWidth(titleStart) - 2);
+		const fittedTitle = truncateToWidth(title, titleMaxWidth, "");
+		const titleFillWidth = Math.max(0, width - visibleWidth(titleStart) - visibleWidth(fittedTitle) - 2);
 		const lines = [
-			`${border("╭─")} ${this.theme.bold(this.theme.fg("accent", "Jouzu · Models"))} ${border("─".repeat(Math.max(0, width - 20)))}${border("╮")}`,
+			`${titleStart}${fittedTitle} ${border("─".repeat(titleFillWidth))}${border("╮")}`,
 			line(this.searchInput.render(innerWidth)[0] ?? ""),
 			line(),
 		];
@@ -284,7 +291,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			const row = visibleRows[offset];
 			lines.push(
 				line(
-					`${this.theme.fg("muted", SECTION_LABELS[row.section].padEnd(8))}${this.rowText(row, index === this.selectedIndex)}`,
+					`${this.theme.fg("muted", padLine(SECTION_LABELS[row.section], 8))}${this.rowText(row, index === this.selectedIndex)}`,
 				),
 			);
 		}

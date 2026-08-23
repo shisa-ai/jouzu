@@ -120,7 +120,11 @@ export function detectBannerColorMode(options: BannerRenderOptions = {}): Banner
 	return "none";
 }
 
-function colorizeMark(line: string, mode: BannerColorMode, palette: BannerPalette): string {
+export function renderBrandGradient(
+	line: string,
+	mode: BannerColorMode,
+	palette: BannerPalette = DEFAULT_BANNER_PALETTE,
+): string {
 	if (mode === "none") return line;
 	const characters = Array.from(line);
 	const glyphCount = characters.filter((character) => character !== " ").length;
@@ -191,7 +195,7 @@ export function renderBannerLines(
 	const hints = fit("/model choose  ·  /hotkeys shortcuts  ·  /status session", width);
 	const details = colorMode === "none" ? [versions, hints] : [versions, theme.fg("dim", hints)];
 	if (width < BRAILLE_MIN_WIDTH) return [fit("J O U Z U", width), ...details];
-	return [...BRAILLE_MARK.map((line) => colorizeMark(line, colorMode, palette)), ...details];
+	return [...BRAILLE_MARK.map((line) => renderBrandGradient(line, colorMode, palette)), ...details];
 }
 
 export function createJouzuPresentationExtension(

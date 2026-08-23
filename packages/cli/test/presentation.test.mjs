@@ -6,6 +6,7 @@ import {
 	detectBannerColorMode,
 	isInteractivePiStartup,
 	renderBannerLines,
+	renderBrandGradient,
 	shouldClearInteractiveStartup,
 } from "../dist/presentation.js";
 
@@ -123,6 +124,26 @@ test("installs a compact width-safe Jouzu header and working indicator", async (
 	]);
 	assert.equal(component.render(12)[0], "J O U Z U");
 	for (const line of component.render(12)) assert.ok(line.length <= 12, line);
+});
+
+test("shares the teal-purple-pink banner gradient with compact wordmarks", () => {
+	assert.equal(renderBrandGradient("JOUZU", "none"), "JOUZU");
+	assert.equal(
+		renderBrandGradient("JOUZU", "truecolor"),
+		"\u001b[38;2;34;211;238mJ\u001b[0m" +
+			"\u001b[38;2;87;187;224mO\u001b[0m" +
+			"\u001b[38;2;139;163;210mU\u001b[0m" +
+			"\u001b[38;2;192;138;196mZ\u001b[0m" +
+			"\u001b[38;2;244;114;182mU\u001b[0m",
+	);
+	assert.equal(
+		renderBrandGradient("JOUZU", "256"),
+		"\u001b[38;5;45mJ\u001b[0m" +
+			"\u001b[38;5;81mO\u001b[0m" +
+			"\u001b[38;5;141mU\u001b[0m" +
+			"\u001b[38;5;177mZ\u001b[0m" +
+			"\u001b[38;5;213mU\u001b[0m",
+	);
 });
 
 test("selects truecolor, indexed, basic, and NO_COLOR banner modes deterministically", () => {

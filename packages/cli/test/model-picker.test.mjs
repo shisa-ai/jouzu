@@ -14,6 +14,13 @@ const identityTheme = {
 	bold: (value) => value,
 };
 
+function stripSgr(value) {
+	return value
+		.split("\u001b")
+		.map((segment, index) => (index === 0 ? segment : segment.replace(/^\[[0-9;]*m/, "")))
+		.join("");
+}
+
 function fakeKeybindings() {
 	return {
 		matches(data, action) {
@@ -86,7 +93,8 @@ test("Models view renders within width and blocks a context that cannot fit", as
 	const { component, calls } = createComponent();
 	const rendered = component.render(72);
 	assert.ok(rendered.length > 8);
-	assert.ok(rendered.every((line) => visibleWidth(line) <= 72));
+	assert.ok(rendered.every((line) => visibleWidth(line) === 72));
+	assert.match(stripSgr(rendered[0]), /JOUZU · Models/);
 	assert.match(rendered.join("\n"), /small\/tiny/);
 	assert.match(rendered.join("\n"), /large\/fit/);
 
@@ -95,6 +103,38 @@ test("Models view renders within width and blocks a context that cannot fit", as
 	assert.deepEqual(calls.selected, []);
 	assert.equal(calls.close, 0);
 	assert.match(component.render(72).join("\n"), /does not fit/);
+});
+
+test("Models view keeps ANSI and CJK content inside aligned display-width borders", () => {
+	const originalColorTerm = process.env.COLORTERM;
+	process.env.COLORTERM = "truecolor";
+	try {
+		const { component } = createComponent({
+			getRows: () => [
+				{
+					section: "all",
+					model: {
+						provider: "日本語プロバイダー",
+						modelId: "モデル・長い識別子",
+						name: "日本語モデル",
+						contextWindow: 200_000,
+						maxTokens: 10_000,
+						available: true,
+					},
+					contextFit: "fits",
+					favoriteScopes: [],
+					rank: 0,
+				},
+			],
+		});
+		const rendered = component.render(48);
+		assert.ok(rendered.every((line) => visibleWidth(line) === 48));
+		assert.ok(rendered[0].includes("\u001b[38;2;34;211;238mJ"));
+		assert.match(rendered.join("\n"), /日本語/);
+	} finally {
+		if (originalColorTerm === undefined) delete process.env.COLORTERM;
+		else process.env.COLORTERM = originalColorTerm;
+	}
 });
 
 test("Models view selects for the session, supports global selection, favorites, and cancel", async () => {
@@ -184,7 +224,7 @@ test("host handler opens the Jouzu Models component through the Palette surface"
 		};
 		await handlers.get("session_start")({}, ctx);
 		assert.equal(await integration.handle({ source: "action" }, { setModel: async () => {} }), true);
-		assert.match(rendered, /Jouzu · Models/);
+		assert.match(stripSgr(rendered), /JOUZU · Models/);
 		assert.equal(customOptions.overlay, true);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
