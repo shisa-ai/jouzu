@@ -57,6 +57,16 @@ The Models view searches exact provider/model identity and display names. An emp
 
 A switch is blocked when the estimated active context cannot fit the target model's advertised input budget. Jouzu does not infer cache compatibility, model equivalence, cost, routing, privacy, retention, region, or certification guarantees. Those properties belong to the provider and configuration you select unless Jouzu reports verified facts explicitly.
 
+## Interactive session UI
+
+Jouzu provides its prompt and status surfaces directly:
+
+- The **Prompt Frame** keeps Pi's editor, application actions, history, paste handling, autocomplete, cursor positioning, and IME behavior while adding the Jouzu rail and borders.
+- The **Session Line** keeps provider/model/thinking identity on the right. A warning, active workflow, or context hint may use the left side; lower-priority hints disappear before the model identity overlaps.
+- The **Status Bar** shows local workspace, Git, detected project runtime, context, and active-branch token facts. Fields compact and then disappear by semantic priority on narrow terminals.
+
+These surfaces use terminal display columns rather than JavaScript string length and are tested with CJK, full-width spaces, combining marks, emoji, ANSI color, and no-color output. The compact bar does not report provider quota or session cost until Jouzu has an authoritative source for those facts.
+
 ## Profiles
 
 `core` is the safe fallback and provider- and language-neutral base. Product branding, locale, terminal settings, repository text, and path contents never opt a user into a response language.

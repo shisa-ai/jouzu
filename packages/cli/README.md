@@ -27,6 +27,8 @@ Profile planning does not write. Application detects user-file conflicts, retain
 
 Use `/login` to authenticate within Jouzu's agent root. `/model` or `Ctrl+L` opens the Jouzu Palette Models view without clearing the prompt draft. Search exact provider/model identity or display names; `Enter` selects for the session, `Alt+Enter` also saves the global default, and `Ctrl+F`/`Alt+F` toggle global/project favorites. Recents update on first request dispatch and remain local. `/status` reports provider-neutral session, model, context, profile, and runtime facts.
 
+Jouzu's built-in interactive session UI adds a width-safe Prompt Frame, a Session Line with protected model identity and a left hint slot, and a responsive Status Bar for workspace, Git, project runtime, context, and active-branch token facts. It keeps Pi's editor/autocomplete/IME behavior and does not claim provider quota or session cost.
+
 Jouzu does not import stock Pi state. Override all roots with `--jouzu-home <path>` or `JOUZU_HOME`. Trusted project `.pi` resources and Pi's cross-harness `~/.agents/skills` read surface still follow Pi behavior. On exit, resume the isolated session with the printed `jz --session SESSION_ID` command; Jouzu resolves its own session root.
 
 Use `jz pi ...` or `jz -- ...` for Pi command collisions. Pi runtime self-update is blocked; package/model updates inside Jouzu state remain available.

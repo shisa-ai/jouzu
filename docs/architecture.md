@@ -6,9 +6,7 @@ remain authoritative.
 
 ## Module map and dependency direction
 
-Jouzu is a single npm package (`jouzu`) with one TypeScript workspace
-(`packages/cli`). The CLI entry point is `dist/cli.js`, compiled from
-`packages/cli/src/cli.ts`.
+Jouzu publishes one npm package (`jouzu`) from `packages/cli` and keeps its persistent interactive surfaces in the private `packages/session-ui` workspace. The CLI build compiles that workspace first and copies its JavaScript plus third-party notice under `dist/session-ui`; users do not install a second package. The CLI entry point remains `dist/cli.js`, compiled from `packages/cli/src/cli.ts`.
 
 ```text
 cli.ts  (entry: argument routing, profile resolution, launch)
@@ -24,9 +22,23 @@ cli.ts  (entry: argument routing, profile resolution, launch)
   ├─ updater.ts          Jouzu self-update (verify/install/rollback)
   ├─ doctor.ts           diagnostics (read-only)
   ├─ presentation.ts     startup presentation extension
+  ├─ palette.ts          floating/replacement Palette surface host
+  ├─ model-picker*.ts    Models view, ranking, and private picker state
+  ├─ terminal-layout.ts  stable CLI re-export of shared display-width helpers
+  ├─ session-ui/         build-time adapter to the standalone workspace
   ├─ resume.ts           session-resume guidance
   ├─ state-lock.ts       shared state-lock primitive
   └─ private-fs.ts       private directory/file boundary
+
+packages/session-ui
+  ├─ extension.ts        lifecycle wiring and single surface ownership
+  ├─ snapshot.ts         provider-neutral typed session facts
+  ├─ controller.ts       event-driven/coalesced local refresh
+  ├─ prompt-frame.ts     custom Pi editor framing and rail
+  ├─ session-line.ts     hint plus protected model/thinking identity
+  ├─ status-bar.ts       responsive semantic status segments
+  ├─ layout.ts           ANSI/Unicode terminal-column primitives
+  └─ sources/            bounded Git and optional runtime probes
 ```
 
 Dependency direction is downward: `cli.ts` composes, leaf modules
@@ -43,6 +55,7 @@ There are no circular module imports.
 | Profile consent | `profile-choice.ts` | `state/profile-choice.json` |
 | Keybinding state | `keybindings.ts` | `state/keybindings-state.json` |
 | Self-update state | `updater.ts` | `state/self-update.json` |
+| Model-picker favorites/recents | `model-picker-state.ts` | `state/model-picker.json` |
 
 Locks (`profile.lock`, `keybindings.lock`, `self-update.lock`) are created and
 released by `state-lock.ts`, the shared state-lock primitive used by the
@@ -78,9 +91,8 @@ assets into the isolated agent root. v0.1 ships no extension or prompt
 catalogs beyond these bundled profiles; the `catalog/`, `profiles/`, and
 `packaging/` top-level directories are placeholders for future releases.
 
-## Package split trigger
+## Workspace boundary
 
-Jouzu is deliberately a single package at v0.1. Splitting `updater.ts`,
-`keybindings.ts`, `presentation.ts`, `doctor.ts`, or profile/Pi-host code into
-separate packages is deferred until a second consumer needs a stable boundary
-or a stable test seam exists. File length alone is not an interface.
+`packages/session-ui` is a rename-friendly internal workspace, not a separately published product or stable extension API. Runtime IDs are centralized and it writes no feature-named state or configuration. Pure snapshots, sources, renderers, and layout helpers remain independently testable; `extension.ts` is the only Pi lifecycle adapter. `scripts/copy-session-ui.mjs` is the only packaging bridge.
+
+Other CLI modules remain in `packages/cli` until a second consumer needs a stable boundary. File length alone is not an interface.

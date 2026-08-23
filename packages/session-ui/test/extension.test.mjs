@@ -61,10 +61,15 @@ test("installs one editor, Session Line, and Status Bar owner and cleans up", as
 		assert.deepEqual(execCalls.map(({ command }) => command).sort(), ["git", "node"]);
 
 		const tui = { requestRender() {} };
-		const line = calls.widgets[0][1](tui, theme).render(60)[0];
+		const lineComponent = calls.widgets[0][1](tui, theme);
+		const line = lineComponent.render(60)[0];
 		assert.equal(terminalTextWidth(line), 60);
 		assert.match(line, /\/model choose/);
 		assert.match(line, /Codex gpt-test \(high\)/);
+		ctx.model = { provider: "anthropic", id: "claude-new", name: "Claude New", contextWindow: 200_000 };
+		ctx.thinkingLevel = "low";
+		await handlers.get("model_select")({}, ctx);
+		assert.match(lineComponent.render(60)[0], /Anthropic claude-new \(low\)/);
 		let branchChanged;
 		let branchUnsubscribed = false;
 		const footer = calls.footers[0](tui, theme, {
