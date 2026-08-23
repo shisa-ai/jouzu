@@ -5,6 +5,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 const root = resolve(import.meta.dirname, "..");
 const packageName = "@earendil-works/pi-coding-agent";
@@ -14,7 +15,6 @@ const piPackageRoot = resolve(root, "node_modules", packageName);
 const cli = resolve(piPackageRoot, "dist", "cli.js");
 const systemPromptSource = resolve(piPackageRoot, "dist", "core", "system-prompt.js");
 const keybindingsSource = resolve(piPackageRoot, "dist", "core", "keybindings.js");
-const customEditorSource = resolve(piPackageRoot, "dist", "modes", "interactive", "components", "custom-editor.js");
 const interactiveModeSource = resolve(piPackageRoot, "dist", "modes", "interactive", "interactive-mode.js");
 const tuiKeybindingsSource = resolve(
 	piPackageRoot,
@@ -42,7 +42,7 @@ function runNode(args, options = {}) {
 
 assert.ok(existsSync(cli), `Pi CLI is missing: ${cli}`);
 assert.ok(existsSync(systemPromptSource), `Pi system prompt source is missing: ${systemPromptSource}`);
-for (const path of [keybindingsSource, customEditorSource, interactiveModeSource, tuiKeybindingsSource]) {
+for (const path of [keybindingsSource, interactiveModeSource, tuiKeybindingsSource]) {
 	assert.ok(existsSync(path), `Pi keybinding contract source is missing: ${path}`);
 }
 assert.ok(
@@ -53,11 +53,12 @@ const keybindingsText = readFileSync(keybindingsSource, "utf8");
 assert.match(keybindingsText, /"app\.message\.followUp": \{\s*defaultKeys: "alt\+enter"/);
 assert.match(keybindingsText, /"app\.message\.dequeue": \{\s*defaultKeys: "alt\+up"/);
 assert.match(readFileSync(tuiKeybindingsSource, "utf8"), /"tui\.input\.tab": \{ defaultKeys: "tab"/);
-const editorText = readFileSync(customEditorSource, "utf8");
-assert.ok(
-	editorText.indexOf("// Check all other app actions") < editorText.indexOf("// Pass to parent for editor handling"),
-	"Pi editor no longer gives application actions priority over ordinary Tab/editor handling",
-);
+const { KeybindingsManager } = await import(pathToFileURL(keybindingsSource));
+const jouzuBindings = new KeybindingsManager({ "app.message.followUp": "ctrl+enter" });
+assert.equal(jouzuBindings.matches("\u001b[13;5u", "app.message.followUp"), true);
+assert.equal(jouzuBindings.matches("\u001b[27;5;13~", "app.message.followUp"), true);
+assert.equal(jouzuBindings.matches("\t", "app.message.followUp"), false);
+assert.equal(jouzuBindings.matches("\t", "tui.input.tab"), true);
 const interactiveText = readFileSync(interactiveModeSource, "utf8");
 assert.ok(interactiveText.includes('onAction("app.message.followUp"'), "Pi editor lost the follow-up semantic action");
 assert.ok(interactiveText.includes('onAction("app.message.dequeue"'), "Pi editor lost the dequeue semantic action");
@@ -140,7 +141,7 @@ process.stdout.write(JSON.stringify({ exports: required, agentDir: pi.getAgentDi
 				cli: ["version", "help"],
 				rpc: ["startup", "get_state", "no-session", "isolated-agent-dir"],
 				prompt: ["default-identity"],
-				keybindings: ["semantic-message-actions", "app-before-editor-routing", "tab-editor-default"],
+				keybindings: ["semantic-message-actions", "ctrl-enter-follow-up", "tab-editor-default"],
 			},
 			null,
 			2,

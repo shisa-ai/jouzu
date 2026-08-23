@@ -1,5 +1,14 @@
 import assert from "node:assert/strict";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import {
+	existsSync,
+	mkdirSync,
+	mkdtempSync,
+	readdirSync,
+	readFileSync,
+	rmSync,
+	symlinkSync,
+	writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -32,11 +41,46 @@ function writeConfig(context, value) {
 	writeFileSync(context.configPath, `${JSON.stringify(value, null, 2)}\n`);
 }
 
+function writeV1OwnedDefaults(context, config = {}) {
+	writeConfig(context, {
+		"app.message.followUp": "tab",
+		"app.message.dequeue": "ctrl+up",
+		...config,
+	});
+	mkdirSync(context.paths.stateDir, { recursive: true });
+	writeFileSync(
+		keybindingStatePath(context.paths),
+		`${JSON.stringify(
+			{
+				schemaVersion: 1,
+				defaultsVersion: 1,
+				policy: "applied",
+				transactionId: "v0.1.0-seed",
+				updatedAt: "2026-08-20T12:00:00.000Z",
+				createdConfig: true,
+				insertedBindings: [
+					{ action: "app.message.dequeue", binding: "ctrl+up" },
+					{ action: "app.message.followUp", binding: "tab" },
+				],
+			},
+			null,
+			2,
+		)}\n`,
+	);
+}
+
 test("keybinding plans report modified-arrow and platform portability without changing defaults", () => {
 	const context = fixture();
 	try {
 		const linux = planKeybindings(context.paths, { platform: "linux", env: {} });
-		assert.match(linux.portabilityWarnings[0], /tmux.*csi-u/);
+		assert.equal(
+			linux.portabilityWarnings.some((warning) => /ctrl\+enter.*Kitty.*modifyOtherKeys/.test(warning)),
+			true,
+		);
+		assert.equal(
+			linux.portabilityWarnings.some((warning) => /tmux.*csi-u/.test(warning)),
+			true,
+		);
 		const mac = planKeybindings(context.paths, { platform: "darwin", env: {} });
 		assert.equal(
 			mac.portabilityWarnings.some((warning) => /Mission Control/.test(warning)),
@@ -60,7 +104,7 @@ test("a first interactive bootstrap seeds Jouzu defaults once and converges", ()
 		assert.deepEqual(
 			initial.actions.map((action) => [action.type, action.action, action.binding]),
 			[
-				["set", "app.message.followUp", "tab"],
+				["set", "app.message.followUp", "ctrl+enter"],
 				["set", "app.message.dequeue", "ctrl+up"],
 			],
 		);
@@ -75,6 +119,82 @@ test("a first interactive bootstrap seeds Jouzu defaults once and converges", ()
 		);
 		assert.equal(planKeybindings(context.paths).status, "converged");
 		assert.deepEqual(ensureDefaultKeybindings(context.paths, {}), { changed: false });
+	} finally {
+		rmSync(context.root, { recursive: true, force: true });
+	}
+});
+
+test("v0.1.0-owned Tab defaults migrate to Ctrl+Enter with a backup", () => {
+	const context = fixture();
+	try {
+		const previous = {
+			"app.message.followUp": "tab",
+			"app.message.dequeue": "ctrl+up",
+			"tui.editor.cursorWordLeft": "alt+b",
+		};
+		writeV1OwnedDefaults(context, { "tui.editor.cursorWordLeft": "alt+b" });
+		assert.deepEqual(
+			planKeybindings(context.paths).actions.map((action) => [
+				action.type,
+				action.action,
+				action.binding,
+				action.observed,
+				action.reason,
+			]),
+			[["set", "app.message.followUp", "ctrl+enter", "tab", "owned-default-upgrade"]],
+		);
+		assert.deepEqual(ensureDefaultKeybindings(context.paths, {}), { changed: true });
+		assert.deepEqual(readKeybindingConfig(context.configPath), {
+			"app.message.followUp": "ctrl+enter",
+			"app.message.dequeue": "ctrl+up",
+			"tui.editor.cursorWordLeft": "alt+b",
+		});
+		const state = JSON.parse(readFileSync(keybindingStatePath(context.paths), "utf8"));
+		assert.equal(state.defaultsVersion, 2);
+		assert.deepEqual(state.insertedBindings, [
+			{ action: "app.message.dequeue", binding: "ctrl+up" },
+			{ action: "app.message.followUp", binding: "ctrl+enter" },
+		]);
+		const [transaction] = readdirSync(join(context.paths.backupDir, "keybindings"));
+		assert.deepEqual(
+			JSON.parse(readFileSync(join(context.paths.backupDir, "keybindings", transaction, "keybindings.json"), "utf8")),
+			previous,
+		);
+		assert.deepEqual(ensureDefaultKeybindings(context.paths, {}), { changed: false });
+	} finally {
+		rmSync(context.root, { recursive: true, force: true });
+	}
+});
+
+test("the v0.1.0 upgrade drops stale ownership without changing user-modified bindings", () => {
+	const context = fixture();
+	try {
+		writeV1OwnedDefaults(context, { "app.message.followUp": "ctrl+f" });
+		const before = readFileSync(context.configPath);
+		assert.deepEqual(ensureDefaultKeybindings(context.paths, {}), { changed: true });
+		assert.deepEqual(readFileSync(context.configPath), before);
+		const state = JSON.parse(readFileSync(keybindingStatePath(context.paths), "utf8"));
+		assert.equal(state.defaultsVersion, 2);
+		assert.deepEqual(state.insertedBindings, [{ action: "app.message.dequeue", binding: "ctrl+up" }]);
+	} finally {
+		rmSync(context.root, { recursive: true, force: true });
+	}
+});
+
+test("the v0.1.0 upgrade restores Tab when Ctrl+Enter is already claimed", () => {
+	const context = fixture();
+	try {
+		writeV1OwnedDefaults(context, { "app.model.select": "ctrl+enter" });
+		const result = ensureDefaultKeybindings(context.paths, {});
+		assert.equal(result.changed, true);
+		assert.match(result.message, /removed its previous tab binding.*assigned to app\.model\.select/);
+		assert.deepEqual(readKeybindingConfig(context.configPath), {
+			"app.message.dequeue": "ctrl+up",
+			"app.model.select": "ctrl+enter",
+		});
+		const state = JSON.parse(readFileSync(keybindingStatePath(context.paths), "utf8"));
+		assert.equal(state.defaultsVersion, 2);
+		assert.deepEqual(state.insertedBindings, [{ action: "app.message.dequeue", binding: "ctrl+up" }]);
 	} finally {
 		rmSync(context.root, { recursive: true, force: true });
 	}
@@ -97,7 +217,7 @@ test("an existing exact personal map is adopted without a Jouzu write or ownersh
 test("Pi legacy message action names are recognized without rewriting before Pi migrates them", () => {
 	const context = fixture();
 	try {
-		writeConfig(context, { followUp: "tab", dequeue: "ctrl+up" });
+		writeConfig(context, { followUp: "ctrl+enter", dequeue: "ctrl+up" });
 		const before = readFileSync(context.configPath);
 		const plan = planKeybindings(context.paths);
 		assert.equal(plan.status, "converged");
@@ -123,7 +243,7 @@ test("startup preserves an existing user file while explicit apply merges missin
 		assert.equal(existsSync(join(result.backupDir, "keybindings.json")), true);
 		assert.deepEqual(readKeybindingConfig(context.configPath), {
 			"tui.editor.historyPrevious": "ctrl+p",
-			"app.message.followUp": "tab",
+			"app.message.followUp": "ctrl+enter",
 			"app.message.dequeue": "ctrl+up",
 		});
 		const state = JSON.parse(readFileSync(keybindingStatePath(context.paths), "utf8"));
@@ -137,7 +257,7 @@ test("startup preserves an existing user file while explicit apply merges missin
 test("user overrides and competing editor actions conflict before any write", () => {
 	for (const config of [
 		{ "app.message.followUp": "alt+enter" },
-		{ "app.model.select": "tab" },
+		{ "app.model.select": "ctrl+enter" },
 		{ "tui.editor.historyPrevious": "ctrl+up" },
 	]) {
 		const context = fixture();

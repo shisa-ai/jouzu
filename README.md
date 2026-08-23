@@ -16,7 +16,7 @@ Windows users should read [Windows prerequisites](docs/windows.md). Signed insta
 ## Install
 
 ```bash
-npm install --global jouzu@0.1.0
+npm install --global jouzu@0.1.1
 
 jouzu --version
 jz doctor
@@ -25,7 +25,7 @@ jz doctor
 `jz` is an exact alias for `jouzu`. To try the CLI without a global installation:
 
 ```bash
-npx --yes jouzu@0.1.0 --version
+npx --yes jouzu@0.1.1 --version
 ```
 
 ## Quick start
@@ -121,10 +121,10 @@ On the first interactive launch with no Jouzu `keybindings.json`, Jouzu seeds tw
 
 | Key | Pi action | Behavior |
 | --- | --- | --- |
-| `Tab` | `app.message.followUp` | Queue the editor text as a follow-up while the agent is working |
+| `Ctrl+Enter` | `app.message.followUp` | Queue the editor text as a follow-up while the agent is working |
 | `Ctrl+Up` | `app.message.dequeue` | Restore queued messages to the editor |
 
-Pi routes these application actions before ordinary main-editor handling, so Tab remains available to selectors and other scoped components. Jouzu does not add raw key checks or alter stock Pi. A pre-existing Jouzu keybinding file is never changed automatically, including an exact personal version of these bindings.
+`Tab` retains Pi's editor autocomplete behavior. Jouzu does not add raw key checks or alter stock Pi. On upgrade from v0.1.0, Jouzu replaces an exact `Tab` follow-up entry only when its ownership receipt proves that Jouzu inserted it, and backs up the file first. User-owned or modified bindings remain unchanged. If another editor action already claims `Ctrl+Enter`, Jouzu removes its owned `Tab` entry and reports the conflict.
 
 Inspect and control the defaults explicitly:
 
@@ -137,7 +137,7 @@ jz keybindings reset
 
 `plan` is non-mutating. `apply` merges only missing Jouzu defaults, backs up the existing file, and refuses differing user values or competing editor actions. `reset` removes only entries recorded as Jouzu-inserted and leaves a durable opt-out; modified/user-owned entries are preserved as conflicts. `JOUZU_NO_KEYBINDING_DEFAULTS=1` disables first-run seeding for one invocation. `/hotkeys` displays the effective Pi map.
 
-`Ctrl+Up` requires modified-arrow reporting. In tmux, enable `extended-keys` with `extended-keys-format csi-u`; macOS may reserve Control+Up for Mission Control. `jz keybindings plan` reports these portability notes so users can keep or explicitly customize the semantic action.
+`Ctrl+Enter` requires modified-Enter reporting through the Kitty keyboard protocol or `modifyOtherKeys`. `Ctrl+Up` requires modified-arrow reporting. In tmux, enable `extended-keys` with `extended-keys-format csi-u`; macOS may reserve Control+Up for Mission Control. `jz keybindings plan` reports these portability notes so users can keep or explicitly customize the semantic actions.
 
 ## Automatic Jouzu updates
 
@@ -183,7 +183,7 @@ Managed profile assets are UTF-8. Existing CP932/Shift-JIS profile targets produ
 - No automatic import from an existing Pi installation.
 - No native installer, standalone archive, background service, hosted gateway, or Jouzu-owned model catalog.
 - Third-party Pi packages execute trusted code with the user's permissions and have their own platform support.
-- `Ctrl+Up` delivery depends on terminal/OS key reporting; the semantic binding remains user-customizable.
+- `Ctrl+Enter` and `Ctrl+Up` delivery depends on terminal/OS key reporting; both semantic bindings remain user-customizable.
 - Cross-platform support claims require the release commit's Linux, macOS, and Windows CI matrix to pass.
 
 ## Development

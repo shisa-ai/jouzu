@@ -60,5 +60,5 @@ test("malformed qualified Pi locks fail release metadata validation", () => {
 test("a qualified Pi lock passes release metadata validation", () => {
 	const result = runWithLock(realLock);
 	assert.equal(result.status, 0, result.stderr || result.stdout);
-	assert.match(result.stdout, /release metadata: jouzu@0\.1\.0/);
+	assert.match(result.stdout, /release metadata: jouzu@0\.1\.1/);
 });
