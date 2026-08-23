@@ -10,9 +10,9 @@
 		"node": ">=22.19.0"
 	},
 	"scripts": {
-		"build": "npm run build --workspaces --if-present",
-		"check": "npm run check --workspaces --if-present && biome check . && npm run pi:check",
-		"test": "npm run test --workspaces --if-present && npm run test:python && npm run test:pack-check && npm run test:release-metadata",
+		"build": "npm run build --workspace packages/session-ui && npm run build --workspace packages/cli",
+		"check": "npm run check --workspace packages/session-ui && npm run check --workspace packages/cli && biome check . && npm run pi:check",
+		"test": "npm run test --workspace packages/session-ui && npm run test --workspace packages/cli && npm run test:python && npm run test:pack-check && npm run test:release-metadata",
 		"test:python": "uv run --project python/jouzu python -m unittest discover -s python/jouzu/tests -v",
 		"test:pack-check": "node --test scripts/pack-check.test.mjs",
 		"test:release-metadata": "node --test scripts/check-release-metadata.test.mjs",
