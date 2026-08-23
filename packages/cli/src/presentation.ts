@@ -2,6 +2,7 @@ import { basename } from "node:path";
 import type { InlineExtension, Theme } from "@earendil-works/pi-coding-agent";
 import type { JouzuMetadata } from "./metadata.js";
 import type { ProfileSelection } from "./runtime.js";
+import { fitTerminalText } from "./terminal-layout.js";
 
 export const CLEAR_SCREEN_SEQUENCE = "\u001b[2J\u001b[H";
 
@@ -99,11 +100,8 @@ export function brandDefaultSystemPrompt(systemPrompt: string, customPrompt?: st
 	return `${JOUZU_DEFAULT_IDENTITY}${systemPrompt.slice(PI_DEFAULT_IDENTITY.length)}`;
 }
 
-function fit(text: string, width: number): string {
-	if (width <= 0) return "";
-	if (text.length <= width) return text;
-	if (width === 1) return "…";
-	return `${text.slice(0, width - 1)}…`;
+function fitPresentationText(text: string, width: number): string {
+	return fitTerminalText(text, width, "…");
 }
 
 export function detectBannerColorMode(options: BannerRenderOptions = {}): BannerColorMode {
@@ -166,7 +164,7 @@ function colorizeVersion(
 
 function versionLine(metadata: JouzuMetadata, width: number, mode: BannerColorMode, palette: BannerPalette): string {
 	const plain = `jouzu ${metadata.jouzuVersion}  ·  pi ${metadata.piVersion}`;
-	if (fit(plain, width) !== plain || mode === "none") return fit(plain, width);
+	if (fitPresentationText(plain, width) !== plain || mode === "none") return fitPresentationText(plain, width);
 	const jouzu = colorizeVersion(
 		metadata.jouzuVersion,
 		mode,
@@ -192,9 +190,9 @@ export function renderBannerLines(
 	palette: BannerPalette = DEFAULT_BANNER_PALETTE,
 ): string[] {
 	const versions = versionLine(metadata, width, colorMode, palette);
-	const hints = fit("/model choose  ·  /hotkeys shortcuts  ·  /status session", width);
+	const hints = fitPresentationText("/model choose  ·  /hotkeys shortcuts  ·  /status session", width);
 	const details = colorMode === "none" ? [versions, hints] : [versions, theme.fg("dim", hints)];
-	if (width < BRAILLE_MIN_WIDTH) return [fit("J O U Z U", width), ...details];
+	if (width < BRAILLE_MIN_WIDTH) return [fitPresentationText("J O U Z U", width), ...details];
 	return [...BRAILLE_MARK.map((line) => renderBrandGradient(line, colorMode, palette)), ...details];
 }
 

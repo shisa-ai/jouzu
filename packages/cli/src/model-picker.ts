@@ -1,13 +1,5 @@
 import type { ExtensionContext, InlineExtension, KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
-import {
-	type Focusable,
-	Input,
-	matchesKey,
-	type TUI,
-	truncateToWidth,
-	visibleWidth,
-	wrapTextWithAnsi,
-} from "@earendil-works/pi-tui";
+import { type Focusable, Input, matchesKey, type TUI, wrapTextWithAnsi } from "@earendil-works/pi-tui";
 import { buildPickerRows, type PickerModel, type PickerRow } from "./model-picker-ranking.js";
 import {
 	deriveProjectKey,
@@ -27,6 +19,13 @@ import {
 } from "./palette.js";
 import type { JouzuPaths } from "./paths.js";
 import { detectBannerColorMode, renderBrandGradient } from "./presentation.js";
+import {
+	fitTerminalText,
+	padTerminalText,
+	renderTerminalFrameBorder,
+	renderTerminalFrameRow,
+	renderTerminalFrameTitle,
+} from "./terminal-layout.js";
 
 type PiModel = NonNullable<ExtensionContext["model"]>;
 
@@ -61,11 +60,6 @@ const SECTION_LABELS: Record<PickerRow["section"], string> = {
 	global_recent: "Recent",
 	all: "All",
 };
-
-function padLine(value: string, width: number): string {
-	const truncated = truncateToWidth(value, Math.max(0, width), "");
-	return `${truncated}${" ".repeat(Math.max(0, width - visibleWidth(truncated)))}`;
-}
 
 function compactNumber(value: number | undefined): string {
 	if (value === undefined) return "unknown";
@@ -264,7 +258,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	render(width: number): string[] {
 		const wordmark = renderBrandGradient("JOUZU", detectBannerColorMode());
 		const title = `${wordmark} ${this.theme.bold(this.theme.fg("accent", "· Models"))}`;
-		if (width < 12) return [truncateToWidth(title, Math.max(1, width), "")];
+		if (width < 12) return [fitTerminalText(title, Math.max(1, width))];
 		const innerWidth = Math.max(1, width - 4);
 		const terminalRows = Number(this.tui.terminal?.rows ?? 24);
 		const rowCapacity = Math.max(3, Math.min(12, terminalRows - 12));
@@ -275,13 +269,10 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		const visibleRows = this.rows.slice(start, start + rowCapacity);
 		const selected = this.rows[this.selectedIndex];
 		const border = (value: string) => this.theme.fg("borderAccent", value);
-		const line = (value = "") => `${border("│")} ${padLine(value, innerWidth)} ${border("│")}`;
-		const titleStart = `${border("╭─")} `;
-		const titleMaxWidth = Math.max(0, width - visibleWidth(titleStart) - 2);
-		const fittedTitle = truncateToWidth(title, titleMaxWidth, "");
-		const titleFillWidth = Math.max(0, width - visibleWidth(titleStart) - visibleWidth(fittedTitle) - 2);
+		const frameOptions = { border };
+		const line = (value = "") => renderTerminalFrameRow(value, width, frameOptions);
 		const lines = [
-			`${titleStart}${fittedTitle} ${border("─".repeat(titleFillWidth))}${border("╮")}`,
+			renderTerminalFrameTitle(title, width, frameOptions),
 			line(this.searchInput.render(innerWidth)[0] ?? ""),
 			line(),
 		];
@@ -291,7 +282,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			const row = visibleRows[offset];
 			lines.push(
 				line(
-					`${this.theme.fg("muted", padLine(SECTION_LABELS[row.section], 8))}${this.rowText(row, index === this.selectedIndex)}`,
+					`${this.theme.fg("muted", padTerminalText(SECTION_LABELS[row.section], 8))}${this.rowText(row, index === this.selectedIndex)}`,
 				),
 			);
 		}
@@ -308,8 +299,8 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			lines.push(line(this.theme.fg("dim", "Enter session · Alt+Enter global · Ctrl+F/Alt+F favorite")));
 		}
 		lines.push(line(this.theme.fg("dim", "↑↓ move · type search · Esc close")));
-		lines.push(`${border("╰")}${border("─".repeat(Math.max(0, width - 2)))}${border("╯")}`);
-		return lines.map((value) => truncateToWidth(value, width, ""));
+		lines.push(renderTerminalFrameBorder(width, { ...frameOptions, left: "╰", right: "╯" }));
+		return lines.map((value) => fitTerminalText(value, width));
 	}
 
 	invalidate(): void {

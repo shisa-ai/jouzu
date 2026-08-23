@@ -32,7 +32,9 @@ function normalizeColumns(columns: number): number {
  * terminal-width implementation.
  */
 export function fitTerminalText(value: string, columns: number, indicator = ""): string {
-	return truncateToWidth(value, normalizeColumns(columns), indicator);
+	const fitted = truncateToWidth(value, normalizeColumns(columns), indicator);
+	if (value.includes("\u001b") || indicator.includes("\u001b")) return fitted;
+	return fitted.split("\u001b[0m").join("");
 }
 
 /** Fit and pad text to exactly the requested terminal display width. */
