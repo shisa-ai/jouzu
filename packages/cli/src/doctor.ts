@@ -211,7 +211,7 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	lines.push(`Latest observed Jouzu: ${context.updateStatus?.state.latestVersion ?? "not checked"}`);
 	lines.push(`Keybinding defaults: ${context.keybindingPlan?.status ?? "unavailable"}`);
 	lines.push(`Keybinding policy: ${context.keybindingPlan?.policy ?? "unavailable"}`);
-	lines.push(`Jouzu default follow-up key: tab`);
+	lines.push(`Jouzu default follow-up key: ctrl+enter`);
 	lines.push(`Jouzu default dequeue key: ctrl+up`);
 	lines.push(`Keybinding config: ${context.keybindingPlan?.configPath ?? "unavailable"}`);
 	lines.push("");

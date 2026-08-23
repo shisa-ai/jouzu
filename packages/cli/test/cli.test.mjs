@@ -46,7 +46,7 @@ function run(args, options = {}) {
 test("prints the Jouzu, Pi, and profile schema version tuple", () => {
 	const result = run(["--version"]);
 	assert.equal(result.status, 0, result.stderr);
-	assert.equal(result.stdout.trim(), "jouzu 0.1.0\npi 0.84.2\nprofile schema 1");
+	assert.equal(result.stdout.trim(), "jouzu 0.1.1\npi 0.84.2\nprofile schema 1");
 });
 
 test("forwards explicit Pi version requests through the pinned runtime", () => {
@@ -111,7 +111,7 @@ test("keybinding commands plan without mutation, merge explicitly, and reset own
 		assert.deepEqual(
 			plan.actions.map((action) => [action.action, action.binding]),
 			[
-				["app.message.followUp", "tab"],
+				["app.message.followUp", "ctrl+enter"],
 				["app.message.dequeue", "ctrl+up"],
 			],
 		);
@@ -121,7 +121,7 @@ test("keybinding commands plan without mutation, merge explicitly, and reset own
 		assert.equal(applied.status, 0, applied.stderr);
 		assert.match(applied.stdout, /Applied keybinding transaction/);
 		assert.deepEqual(JSON.parse(readFileSync(join(jouzuHome, "agent", "keybindings.json"), "utf8")), {
-			"app.message.followUp": "tab",
+			"app.message.followUp": "ctrl+enter",
 			"app.message.dequeue": "ctrl+up",
 		});
 		const status = JSON.parse(run(["--jouzu-home", jouzuHome, "keybindings", "status", "--json"]).stdout);

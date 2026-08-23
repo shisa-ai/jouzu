@@ -20,9 +20,9 @@ export type KeyBindingValue = string | string[];
 export type KeybindingPolicy = "applied" | "disabled";
 export type KeybindingStatusKind = "uninitialized" | "converged" | "customized";
 
-export const JOUZU_KEYBINDING_DEFAULTS_VERSION = 1;
+export const JOUZU_KEYBINDING_DEFAULTS_VERSION = 2;
 export const JOUZU_KEYBINDING_DEFAULTS: Readonly<Record<string, KeyBindingValue>> = Object.freeze({
-	"app.message.followUp": "tab",
+	"app.message.followUp": "ctrl+enter",
 	"app.message.dequeue": "ctrl+up",
 });
 
@@ -240,6 +240,23 @@ function observedBinding(config: Record<string, KeyBindingValue>, action: string
 	return config[action] ?? (LEGACY_ACTIONS[action] ? config[LEGACY_ACTIONS[action]] : undefined);
 }
 
+function ownedOutdatedBinding(
+	state: KeybindingState | undefined,
+	action: string,
+	observed: KeyBindingValue | undefined,
+): InsertedBinding | undefined {
+	if (
+		observed === undefined ||
+		state?.policy !== "applied" ||
+		state.defaultsVersion >= JOUZU_KEYBINDING_DEFAULTS_VERSION
+	) {
+		return undefined;
+	}
+	return state.insertedBindings.find(
+		(inserted) => inserted.action === action && bindingEquals(inserted.binding, observed),
+	);
+}
+
 function statusFor(config: Record<string, KeyBindingValue> | undefined): KeybindingStatusKind {
 	if (!config) return "uninitialized";
 	return Object.entries(JOUZU_KEYBINDING_DEFAULTS).every(([action, binding]) => {
@@ -254,6 +271,7 @@ function getPortabilityWarnings(options: { platform?: NodeJS.Platform; env?: Nod
 	const platform = options.platform ?? process.platform;
 	const env = options.env ?? process.env;
 	const warnings = [
+		"ctrl+enter requires the terminal to report modified Enter keys through the Kitty keyboard protocol or modifyOtherKeys",
 		"ctrl+up requires the terminal to report modified arrow keys; tmux users should enable extended-keys with extended-keys-format csi-u",
 	];
 	if (platform === "darwin") {
@@ -280,7 +298,11 @@ export function planKeybindings(
 	const actions: KeybindingPlanAction[] = [];
 	for (const [action, binding] of Object.entries(JOUZU_KEYBINDING_DEFAULTS)) {
 		const observed = config ? observedBinding(config, action) : undefined;
-		if (observed !== undefined && !bindingEquals(observed, binding)) {
+		const ownedOutdated =
+			observed !== undefined && !bindingEquals(observed, binding)
+				? ownedOutdatedBinding(state, action, observed)
+				: undefined;
+		if (observed !== undefined && !bindingEquals(observed, binding) && !ownedOutdated) {
 			actions.push({ type: "conflict", action, binding, observed, reason: "user-binding-differs" });
 			continue;
 		}
@@ -295,8 +317,11 @@ export function planKeybindings(
 			});
 			continue;
 		}
-		if (observed === undefined)
+		if (ownedOutdated) {
+			actions.push({ type: "set", action, binding, observed, reason: "owned-default-upgrade" });
+		} else if (observed === undefined) {
 			actions.push({ type: "set", action, binding, reason: config ? "missing" : "new-config" });
+		}
 	}
 	return {
 		schemaVersion: 1,
@@ -490,6 +515,87 @@ export function resetKeybindings(paths: JouzuPaths, now = new Date()): ApplyKeyb
 	});
 }
 
+function upgradeOwnedKeybindings(paths: JouzuPaths, now = new Date()): BootstrapKeybindingsResult {
+	validatePrivateDirectory(paths.agentDir);
+	validatePrivateDirectory(paths.stateDir);
+	return withLock(paths, () => {
+		const path = configPath(paths);
+		const statePath = keybindingStatePath(paths);
+		const state = readKeybindingState(statePath);
+		if (!state || state.policy !== "applied" || state.defaultsVersion >= JOUZU_KEYBINDING_DEFAULTS_VERSION) {
+			return { changed: false };
+		}
+
+		const config = readKeybindingConfig(path);
+		const nextConfig = { ...(config ?? {}) };
+		const nextInserted: InsertedBinding[] = [];
+		const blockedUpgrades: Array<{ action: string; conflictingAction: string }> = [];
+		let configChanged = false;
+		for (const inserted of state.insertedBindings) {
+			const observed = config?.[inserted.action];
+			if (observed === undefined || !bindingEquals(observed, inserted.binding)) continue;
+			const desired = JOUZU_KEYBINDING_DEFAULTS[inserted.action];
+			if (desired === undefined) {
+				delete nextConfig[inserted.action];
+				configChanged = true;
+				continue;
+			}
+			if (bindingEquals(observed, desired)) {
+				nextInserted.push({ action: inserted.action, binding: desired });
+				continue;
+			}
+			const conflictingAction = findConflict(nextConfig, inserted.action, desired);
+			if (conflictingAction) {
+				delete nextConfig[inserted.action];
+				configChanged = true;
+				blockedUpgrades.push({ action: inserted.action, conflictingAction });
+				continue;
+			}
+			nextConfig[inserted.action] = desired;
+			nextInserted.push({ action: inserted.action, binding: desired });
+			configChanged = true;
+		}
+
+		const transactionId = randomUUID();
+		const previousConfig = config ? readFileSync(path) : undefined;
+		if (configChanged && previousConfig) backupConfig(paths, transactionId, path);
+		const nextState = makeState({
+			policy: "applied",
+			transactionId,
+			createdConfig: state.createdConfig,
+			insertedBindings: nextInserted,
+			now,
+		});
+		try {
+			if (configChanged) {
+				if (Object.keys(nextConfig).length === 0 && state.createdConfig) unlinkSync(path);
+				else writeJson(path, nextConfig, paths.agentDir);
+			}
+			writeJson(statePath, nextState, paths.stateDir);
+		} catch (error) {
+			if (configChanged) {
+				if (previousConfig) atomicWrite(path, previousConfig, paths.agentDir);
+				else rmSync(path, { force: true });
+			}
+			throw error;
+		}
+
+		const blocked = blockedUpgrades[0];
+		return {
+			changed: true,
+			...(blocked
+				? {
+						message: `Jouzu removed its previous ${formatBinding(
+							state.insertedBindings.find((inserted) => inserted.action === blocked.action)?.binding,
+						)} binding for ${blocked.action} because ${formatBinding(
+							JOUZU_KEYBINDING_DEFAULTS[blocked.action],
+						)} is assigned to ${blocked.conflictingAction}; run \`jz keybindings plan\`.`,
+					}
+				: {}),
+		};
+	});
+}
+
 export function ensureDefaultKeybindings(
 	paths: JouzuPaths,
 	env: NodeJS.ProcessEnv = process.env,
@@ -501,6 +607,9 @@ export function ensureDefaultKeybindings(
 		const state = readKeybindingState(keybindingStatePath(paths));
 		const configExists = existsSync(configPath(paths));
 		if (configExists) readKeybindingConfig(configPath(paths));
+		if (state?.policy === "applied" && state.defaultsVersion < JOUZU_KEYBINDING_DEFAULTS_VERSION) {
+			return upgradeOwnedKeybindings(paths);
+		}
 		if (state || configExists) return { changed: false };
 		const result = applyKeybindings(paths);
 		return { changed: result.changed };

@@ -84,7 +84,7 @@ try {
 	assert.equal(keyPlan.actions.length, 2);
 	run(process.execPath, [installedCli, "keybindings", "apply"], { cwd: temp, env });
 	assert.deepEqual(JSON.parse(readFileSync(resolve(consumer, "agent", "keybindings.json"), "utf8")), {
-		"app.message.followUp": "tab",
+		"app.message.followUp": "ctrl+enter",
 		"app.message.dequeue": "ctrl+up",
 	});
 	run(process.execPath, [installedCli, "profile", "apply"], { cwd: temp, env });

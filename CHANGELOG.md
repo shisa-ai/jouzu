@@ -3,7 +3,12 @@
 ## Unreleased
 
 - Add the Jouzu Palette Models view on `/model` and `Ctrl+L`, with exact provider/model search, current and previous choices, project/global favorites and recents, session-only selection, explicit global-default selection, context-fit blocking, and floating/replacement presentations.
-- Preserve open editor autocomplete behavior when the Jouzu Tab follow-up binding is active.
+- Preserve open editor autocomplete behavior before application-level key handling.
+
+## 0.1.1 - 2026-08-23
+
+- Change the queued follow-up shortcut from `Tab` to `Ctrl+Enter`, leaving `Tab` available for Pi editor autocomplete.
+- Back up and migrate only the exact v0.1.0 `Tab` binding recorded as Jouzu-owned; preserve user-owned and modified bindings.
 
 ## 0.1.0 - 2026-08-20
 

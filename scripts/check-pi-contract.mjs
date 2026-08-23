@@ -5,6 +5,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 const root = resolve(import.meta.dirname, "..");
 const packageName = "@earendil-works/pi-coding-agent";
@@ -68,6 +69,12 @@ assert.ok(
 			editorText.indexOf("// Check all other app actions"),
 	"Pi editor no longer preserves open autocomplete selection before app-level Tab actions",
 );
+const { KeybindingsManager } = await import(pathToFileURL(keybindingsSource));
+const jouzuBindings = new KeybindingsManager({ "app.message.followUp": "ctrl+enter" });
+assert.equal(jouzuBindings.matches("\u001b[13;5u", "app.message.followUp"), true);
+assert.equal(jouzuBindings.matches("\u001b[27;5;13~", "app.message.followUp"), true);
+assert.equal(jouzuBindings.matches("\t", "app.message.followUp"), false);
+assert.equal(jouzuBindings.matches("\t", "tui.input.tab"), true);
 const interactiveText = readFileSync(interactiveModeSource, "utf8");
 assert.ok(interactiveText.includes('onAction("app.message.followUp"'), "Pi editor lost the follow-up semantic action");
 assert.ok(interactiveText.includes('onAction("app.message.dequeue"'), "Pi editor lost the dequeue semantic action");
@@ -161,6 +168,7 @@ process.stdout.write(JSON.stringify({ exports: required, agentDir: pi.getAgentDi
 				prompt: ["default-identity"],
 				keybindings: [
 					"semantic-message-actions",
+					"ctrl-enter-follow-up",
 					"app-before-editor-routing",
 					"autocomplete-before-app-tab",
 					"tab-editor-default",

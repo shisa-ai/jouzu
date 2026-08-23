@@ -91,7 +91,7 @@ test("doctor reports an injected healthy Linux runtime without mutating roots", 
 	assert.match(report.text, /Automatic startup update: eligible/);
 	assert.match(report.text, /Keybinding defaults: converged/);
 	assert.match(report.text, /Model picker state: absent/);
-	assert.match(report.text, /Jouzu default follow-up key: tab/);
+	assert.match(report.text, /Jouzu default follow-up key: ctrl\+enter/);
 	assert.match(report.text, /Jouzu default dequeue key: ctrl\+up/);
 	assert.doesNotMatch(report.text, /must-not-appear/);
 	assert.equal(rmSync(root, { recursive: true, force: true }), undefined);
