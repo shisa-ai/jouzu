@@ -14,6 +14,7 @@ import {
 	resetKeybindings,
 } from "./keybindings.js";
 import { loadMetadata } from "./metadata.js";
+import { createJouzuModelPicker } from "./model-picker.js";
 import { resolveJouzuPaths } from "./paths.js";
 import { clearInteractiveStartup, createJouzuPresentationExtension, isInteractivePiStartup } from "./presentation.js";
 import { promptForJapaneseSupport, writeProfileChoice } from "./profile-choice.js";
@@ -228,9 +229,18 @@ async function runCli(args: string[]): Promise<void> {
 	if (piRuntimeVersion !== metadata.piVersion) {
 		throw new Error(`loaded Pi ${piRuntimeVersion} does not match Jouzu's exact pin ${metadata.piVersion}`);
 	}
+	const modelPicker = createJouzuModelPicker(paths);
+	const runPi = pi.main as (
+		args: string[],
+		options: {
+			extensionFactories: [ReturnType<typeof createJouzuPresentationExtension>, typeof modelPicker.extension];
+			modelPicker: typeof modelPicker.handle;
+		},
+	) => Promise<void>;
 	await withJouzuResumeHint(() =>
-		pi.main(parsed.args, {
-			extensionFactories: [createJouzuPresentationExtension(metadata, profile)],
+		runPi(parsed.args, {
+			extensionFactories: [createJouzuPresentationExtension(metadata, profile), modelPicker.extension],
+			modelPicker: modelPicker.handle,
 		}),
 	);
 }
