@@ -26,6 +26,11 @@ function normalizeColumns(columns: number): number {
 	return Number.isFinite(columns) ? Math.max(0, Math.floor(columns)) : 0;
 }
 
+/** Measure rendered terminal columns, ignoring ANSI and respecting wide glyphs. */
+export function terminalTextWidth(value: string): number {
+	return visibleWidth(value);
+}
+
 /**
  * Fit text to terminal columns without measuring JavaScript code units.
  * ANSI escapes, combining marks, and wide glyphs are delegated to Pi TUI's
@@ -45,7 +50,7 @@ export function padTerminalText(
 ): string {
 	const target = normalizeColumns(columns);
 	const fitted = fitTerminalText(value, target, options.indicator ?? "");
-	const padding = Math.max(0, target - visibleWidth(fitted));
+	const padding = Math.max(0, target - terminalTextWidth(fitted));
 	const alignment = options.alignment ?? "left";
 	if (alignment === "right") return `${" ".repeat(padding)}${fitted}`;
 	if (alignment === "center") {
@@ -59,16 +64,19 @@ export function padTerminalText(
 export function fillTerminalColumns(token: string, columns: number): string {
 	const target = normalizeColumns(columns);
 	if (target === 0) return "";
-	const tokenWidth = visibleWidth(token);
+	const tokenWidth = terminalTextWidth(token);
 	if (tokenWidth <= 0) return " ".repeat(target);
 	const repetitions = Math.floor(target / tokenWidth);
 	const value = token.repeat(repetitions);
-	return `${value}${" ".repeat(Math.max(0, target - visibleWidth(value)))}`;
+	return `${value}${" ".repeat(Math.max(0, target - terminalTextWidth(value)))}`;
 }
 
 /** Return the unoccupied terminal columns after measuring all supplied segments. */
 export function remainingTerminalColumns(columns: number, ...segments: string[]): number {
-	return Math.max(0, normalizeColumns(columns) - segments.reduce((total, value) => total + visibleWidth(value), 0));
+	return Math.max(
+		0,
+		normalizeColumns(columns) - segments.reduce((total, value) => total + terminalTextWidth(value), 0),
+	);
 }
 
 /** Render a titled top border whose right edge always lands on the requested column. */
@@ -84,7 +92,7 @@ export function renderTerminalFrameTitle(
 	const gap = options.gap ?? " ";
 	const left = border(options.left ?? "╭─");
 	const right = border(options.right ?? "╮");
-	const fixedWidth = visibleWidth(left) + visibleWidth(gap) * 2 + visibleWidth(right);
+	const fixedWidth = terminalTextWidth(left) + terminalTextWidth(gap) * 2 + terminalTextWidth(right);
 	if (target < fixedWidth) return padTerminalText(fitTerminalText(`${left}${right}`, target), target);
 	const fittedTitle = fitTerminalText(title, target - fixedWidth);
 	const fillWidth = remainingTerminalColumns(target, left, gap, fittedTitle, gap, right);
@@ -99,7 +107,7 @@ export function renderTerminalFrameRow(value: string, columns: number, options: 
 	const vertical = options.vertical ?? "│";
 	const left = border(vertical);
 	const right = border(vertical);
-	const fixedWidth = visibleWidth(left) + visibleWidth(right) + 2;
+	const fixedWidth = terminalTextWidth(left) + terminalTextWidth(right) + 2;
 	if (target < fixedWidth) return padTerminalText(fitTerminalText(`${left}${right}`, target), target);
 	return `${left} ${padTerminalText(value, target - fixedWidth)} ${right}`;
 }
@@ -111,7 +119,7 @@ export function renderTerminalFrameBorder(columns: number, options: TerminalFram
 	const border = options.border ?? IDENTITY_STYLE;
 	const left = border(options.left);
 	const right = border(options.right);
-	const fixedWidth = visibleWidth(left) + visibleWidth(right);
+	const fixedWidth = terminalTextWidth(left) + terminalTextWidth(right);
 	if (target < fixedWidth) return padTerminalText(fitTerminalText(`${left}${right}`, target), target);
 	const fillWidth = remainingTerminalColumns(target, left, right);
 	return `${left}${border(fillTerminalColumns(options.horizontal ?? "─", fillWidth))}${right}`;
