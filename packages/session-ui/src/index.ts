@@ -1,5 +1,6 @@
 export * from "./contracts.js";
 export * from "./controller.js";
+export * from "./extension.js";
 export * from "./identity.js";
 export * from "./layout.js";
 export * from "./prompt-frame.js";

@@ -28,6 +28,7 @@ import {
 import { loadBundledProfile } from "./profiles.js";
 import { withJouzuResumeHint } from "./resume.js";
 import { configurePiProcess, type ProfileSelection, resolveProfileSelection } from "./runtime.js";
+import { createSessionUiExtension } from "./session-ui/index.js";
 import { formatUpdateStatus, JouzuUpdater, relaunchUpdatedJouzu, UpdateError } from "./updater.js";
 
 async function loadPiRuntime(): Promise<typeof import("@earendil-works/pi-coding-agent")> {
@@ -236,16 +237,23 @@ async function runCli(args: string[]): Promise<void> {
 		);
 	}
 	const modelPicker = createJouzuModelPicker(paths);
+	const sessionUi = createSessionUiExtension({
+		getHints: () => [{ id: "palette.models", text: "/model choose", priority: 10, role: "muted" }],
+	});
 	const runPi = pi.main as (
 		args: string[],
 		options: {
-			extensionFactories: [ReturnType<typeof createJouzuPresentationExtension>, typeof modelPicker.extension];
+			extensionFactories: [
+				ReturnType<typeof createJouzuPresentationExtension>,
+				typeof sessionUi,
+				typeof modelPicker.extension,
+			];
 			modelPicker: typeof modelPicker.handle;
 		},
 	) => Promise<void>;
 	await withJouzuResumeHint(() =>
 		runPi(parsed.args, {
-			extensionFactories: [createJouzuPresentationExtension(metadata, profile), modelPicker.extension],
+			extensionFactories: [createJouzuPresentationExtension(metadata, profile), sessionUi, modelPicker.extension],
 			modelPicker: modelPicker.handle,
 		}),
 	);

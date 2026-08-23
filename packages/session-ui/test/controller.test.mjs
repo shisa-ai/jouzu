@@ -76,6 +76,9 @@ test("coalesces project refreshes and publishes only typed source outcomes", asy
 	assert.equal(controller.getSnapshot().workspace.label, "second");
 	assert.equal(controller.getSnapshot().git.value.branch, "second");
 	assert.equal(controller.getSnapshot().runtime.value.id, "node");
+	await controller.refreshGit(context("/third"));
+	assert.deepEqual(gitCalls, ["/first", "/second", "/third"]);
+	assert.deepEqual(runtimeCalls, ["/first", "/second"]);
 });
 
 test("aborts source work and suppresses updates after disposal", async () => {

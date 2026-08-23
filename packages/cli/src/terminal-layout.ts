@@ -13,4 +13,4 @@ export {
 	type TerminalTextAlignment,
 	type TerminalTextStyle,
 	terminalTextWidth,
-} from "@shisa-ai/jouzu-session-ui";
+} from "./session-ui/index.js";

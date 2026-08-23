@@ -17,6 +17,12 @@ export interface SessionStatusControllerOptions {
 	readRuntime?: typeof readRuntimeSnapshot;
 }
 
+interface PendingProjectRefresh {
+	ctx: SessionSnapshotContext;
+	git: boolean;
+	runtime: boolean;
+}
+
 export class SessionStatusController {
 	private readonly run: SessionUiCommandRunner;
 	private readonly clock: SessionUiClock;
@@ -28,7 +34,7 @@ export class SessionStatusController {
 	private git?: SessionUiFact<GitStatusSnapshot>;
 	private runtime?: SessionUiFact<RuntimeSnapshot>;
 	private idleSince?: number;
-	private pendingContext?: SessionSnapshotContext;
+	private pendingRefresh?: PendingProjectRefresh;
 	private refreshPromise?: Promise<void>;
 	private disposed = false;
 
@@ -66,8 +72,22 @@ export class SessionStatusController {
 	}
 
 	refreshProject(ctx: SessionSnapshotContext): Promise<void> {
+		return this.queueRefresh(ctx, true, true);
+	}
+
+	refreshGit(ctx: SessionSnapshotContext): Promise<void> {
+		return this.queueRefresh(ctx, true, false);
+	}
+
+	private queueRefresh(ctx: SessionSnapshotContext, git: boolean, runtime: boolean): Promise<void> {
 		if (this.disposed) return Promise.resolve();
-		this.pendingContext = ctx;
+		this.pendingRefresh = this.pendingRefresh
+			? {
+					ctx,
+					git: this.pendingRefresh.git || git,
+					runtime: this.pendingRefresh.runtime || runtime,
+				}
+			: { ctx, git, runtime };
 		if (!this.refreshPromise) {
 			this.refreshPromise = this.runRefreshLoop().finally(() => {
 				this.refreshPromise = undefined;
@@ -77,35 +97,41 @@ export class SessionStatusController {
 	}
 
 	private async runRefreshLoop(): Promise<void> {
-		while (!this.disposed && this.pendingContext) {
-			const ctx = this.pendingContext;
-			this.pendingContext = undefined;
+		while (!this.disposed && this.pendingRefresh) {
+			const request = this.pendingRefresh;
+			this.pendingRefresh = undefined;
 			const [git, runtime] = await Promise.allSettled([
-				this.readGit(ctx.cwd, this.run, this.abortController.signal),
-				this.readRuntime(ctx.cwd, this.run, this.abortController.signal),
+				request.git ? this.readGit(request.ctx.cwd, this.run, this.abortController.signal) : Promise.resolve(undefined),
+				request.runtime
+					? this.readRuntime(request.ctx.cwd, this.run, this.abortController.signal)
+					: Promise.resolve(undefined),
 			]);
 			if (this.disposed) return;
 			const observedAt = this.clock.now();
-			this.git =
-				git.status === "fulfilled"
-					? { status: git.value ? "known" : "unknown", observedAt, ...(git.value ? { value: git.value } : {}) }
-					: { status: "error", observedAt };
-			this.runtime =
-				runtime.status === "fulfilled"
-					? {
-							status: runtime.value ? "known" : "unknown",
-							observedAt,
-							...(runtime.value ? { value: runtime.value } : {}),
-						}
-					: { status: "error", observedAt };
-			this.sync(ctx);
+			if (request.git) {
+				this.git =
+					git.status === "fulfilled"
+						? { status: git.value ? "known" : "unknown", observedAt, ...(git.value ? { value: git.value } : {}) }
+						: { status: "error", observedAt };
+			}
+			if (request.runtime) {
+				this.runtime =
+					runtime.status === "fulfilled"
+						? {
+								status: runtime.value ? "known" : "unknown",
+								observedAt,
+								...(runtime.value ? { value: runtime.value } : {}),
+							}
+						: { status: "error", observedAt };
+			}
+			this.sync(request.ctx);
 		}
 	}
 
 	dispose(): void {
 		if (this.disposed) return;
 		this.disposed = true;
-		this.pendingContext = undefined;
+		this.pendingRefresh = undefined;
 		this.abortController.abort();
 		this.listeners.clear();
 	}
