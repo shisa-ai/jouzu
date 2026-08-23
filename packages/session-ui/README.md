@@ -15,6 +15,7 @@ This private workspace owns the persistent interactive surfaces around a Jouzu s
 - `sources/` contains local Git and optional runtime detection only.
 - Renderers use `layout.ts` for ANSI-, grapheme-, and CJK-aware terminal columns.
 - `extension.ts` is the only Pi lifecycle adapter.
+- `styles.ts` maps Jouzu semantic roles to the default Session UI colors. Renderers contain no raw color choices or legacy style names, and a future global theme can replace the complete mapping.
 - Runtime IDs live in `identity.ts`; no state or configuration uses the feature/package name, so naming can change without migration.
 
 The workspace deliberately excludes provider quota caches, cost claims, legacy zentui configuration, global message-renderer patches, and the obsolete editor recreation workaround. Submitted-message styling remains outside the package until Pi provides a supported composition seam.

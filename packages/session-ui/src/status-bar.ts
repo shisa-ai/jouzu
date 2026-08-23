@@ -1,24 +1,32 @@
-import type { Theme } from "@earendil-works/pi-coding-agent";
 import type { Component } from "@earendil-works/pi-tui";
-import type { SessionUiSemanticRole } from "./contracts.js";
 import type { SessionStatusController } from "./controller.js";
 import { fitTerminalText, padTerminalText, sanitizeTerminalText, terminalTextWidth } from "./layout.js";
 import type { SessionStatusSnapshot } from "./snapshot.js";
+import type { SessionUiStyleRole, SessionUiStyles } from "./styles.js";
+
+export interface StatusBarFragment {
+	value: string;
+	style: SessionUiStyleRole;
+}
 
 export interface StatusBarSegment {
 	id: string;
 	side: "left" | "right";
 	order: number;
 	priority: number;
-	role: SessionUiSemanticRole;
+	style: SessionUiStyleRole;
 	value: string;
+	fragments?: readonly StatusBarFragment[];
 	compactValue?: string;
+	compactFragments?: readonly StatusBarFragment[];
 	required?: boolean;
 }
 
 type PreparedSegment = StatusBarSegment & {
 	value: string;
+	fragments?: readonly StatusBarFragment[];
 	compactValue?: string;
+	compactFragments?: readonly StatusBarFragment[];
 	compact: boolean;
 	removed: boolean;
 };
@@ -47,6 +55,33 @@ function gitFlags(snapshot: SessionStatusSnapshot): string {
 	return `${states}${relation}`;
 }
 
+function runtimeStyle(id: string): SessionUiStyleRole {
+	switch (id) {
+		case "node":
+			return "status.runtime.node";
+		case "deno":
+			return "status.runtime.deno";
+		case "bun":
+			return "status.runtime.bun";
+		case "python":
+			return "status.runtime.python";
+		case "java":
+			return "status.runtime.java";
+		case "rust":
+			return "status.runtime.rust";
+		case "ruby":
+			return "status.runtime.ruby";
+		case "go":
+			return "status.runtime.go";
+		case "lua":
+			return "status.runtime.lua";
+		case "php":
+			return "status.runtime.php";
+		default:
+			return "status.runtime.default";
+	}
+}
+
 export function buildStatusBarSegments(snapshot: SessionStatusSnapshot): StatusBarSegment[] {
 	const segments: StatusBarSegment[] = [];
 	if (snapshot.git.status === "error" || snapshot.runtime.status === "error") {
@@ -55,7 +90,7 @@ export function buildStatusBarSegments(snapshot: SessionStatusSnapshot): StatusB
 			side: "left",
 			order: 0,
 			priority: 1000,
-			role: "error",
+			style: "status.health",
 			value: "! status",
 			compactValue: "!",
 			required: true,
@@ -66,31 +101,40 @@ export function buildStatusBarSegments(snapshot: SessionStatusSnapshot): StatusB
 		side: "left",
 		order: 10,
 		priority: 700,
-		role: "text",
+		style: "status.workspace",
 		value: snapshot.workspace.label,
 	});
 	if (snapshot.git.value) {
 		const flags = gitFlags(snapshot);
 		const branch = sanitizeTerminalText(snapshot.git.value.branch ?? "detached");
+		const changes = flags ? ` [${flags}]` : "";
 		segments.push({
 			id: "git",
 			side: "left",
 			order: 20,
 			priority: 650,
-			role: snapshot.git.value.dirty ? "warning" : "muted",
-			value: `${branch}${flags ? ` [${flags}]` : ""}`,
+			style: "status.git.branch",
+			value: `${branch}${changes}`,
+			fragments: [
+				{ value: branch, style: "status.git.branch" },
+				...(changes ? [{ value: changes, style: "status.git.changes" } as const] : []),
+			],
 			compactValue: flags ? `[${flags}]` : branch,
+			compactFragments: flags
+				? [{ value: `[${flags}]`, style: "status.git.changes" }]
+				: [{ value: branch, style: "status.git.branch" }],
 		});
 	}
 	if (snapshot.runtime.value) {
+		const runtime = snapshot.runtime.value;
 		segments.push({
 			id: "runtime",
 			side: "left",
 			order: 30,
 			priority: 300,
-			role: "muted",
-			value: `${snapshot.runtime.value.id}${snapshot.runtime.value.version ? ` ${snapshot.runtime.value.version}` : ""}`,
-			compactValue: snapshot.runtime.value.id,
+			style: runtimeStyle(runtime.id),
+			value: `${runtime.id}${runtime.version ? ` ${runtime.version}` : ""}`,
+			compactValue: runtime.id,
 		});
 	}
 	const context = snapshot.context.value;
@@ -100,23 +144,37 @@ export function buildStatusBarSegments(snapshot: SessionStatusSnapshot): StatusB
 		side: "right",
 		order: 10,
 		priority: 900,
-		role:
-			percent !== undefined && percent >= 90 ? "error" : percent !== undefined && percent >= 70 ? "warning" : "muted",
+		style:
+			percent !== undefined && percent >= 90
+				? "status.context.error"
+				: percent !== undefined && percent >= 70
+					? "status.context.warning"
+					: "status.context.normal",
 		value: context ? `${percent === undefined ? "?" : Math.round(percent)}%/${compactCount(context.window)}` : "ctx ?",
 		compactValue: context ? `${percent === undefined ? "?" : Math.round(percent)}%` : "?",
 		required: true,
 	});
 	if (snapshot.usage.value) {
 		const usage = snapshot.usage.value;
+		const tokenValue = `↑${compactCount(usage.inputTokens)} ↓${compactCount(usage.outputTokens)}`;
+		const compactTokenValue = `↑${compactCount(usage.inputTokens)}`;
 		const unknown = usage.unknownMessageCount > 0 ? " ?" : "";
 		segments.push({
 			id: "tokens",
 			side: "right",
 			order: 20,
 			priority: 500,
-			role: snapshot.usage.status === "partial" ? "warning" : "muted",
-			value: `↑${compactCount(usage.inputTokens)} ↓${compactCount(usage.outputTokens)}${unknown}`,
-			compactValue: `↑${compactCount(usage.inputTokens)}${unknown}`,
+			style: "status.tokens",
+			value: `${tokenValue}${unknown}`,
+			fragments: [
+				{ value: tokenValue, style: "status.tokens" },
+				...(unknown ? [{ value: unknown, style: "status.unknown" } as const] : []),
+			],
+			compactValue: `${compactTokenValue}${unknown}`,
+			compactFragments: [
+				{ value: compactTokenValue, style: "status.tokens" },
+				...(unknown ? [{ value: unknown, style: "status.unknown" } as const] : []),
+			],
 		});
 	}
 	return segments;
@@ -130,19 +188,51 @@ function preparedWidth(segments: readonly PreparedSegment[], separator: string):
 	}, 0);
 }
 
+function sanitizeFragments(
+	fragments: readonly StatusBarFragment[] | undefined,
+	value: string,
+): readonly StatusBarFragment[] | undefined {
+	if (!fragments) return undefined;
+	const safe = fragments.map((fragment) => ({ ...fragment, value: sanitizeTerminalText(fragment.value) }));
+	return safe.map((fragment) => fragment.value).join("") === value ? safe : undefined;
+}
+
+function renderPreparedSegment(segment: PreparedSegment, styles: SessionUiStyles): string {
+	const value = segment.compact ? (segment.compactValue ?? segment.value) : segment.value;
+	const fragments = segment.compact ? segment.compactFragments : segment.fragments;
+	if (!fragments) return styles.apply(segment.style, value);
+	return fragments.map((fragment) => styles.apply(fragment.style, fragment.value)).join("");
+}
+
 export function renderStatusBarSegments(
 	segments: readonly StatusBarSegment[],
 	width: number,
-	theme: Pick<Theme, "fg">,
+	styles: SessionUiStyles,
 ): string {
 	if (width <= 0) return "";
-	const prepared: PreparedSegment[] = segments.map((segment) => ({
-		...segment,
-		value: sanitizeTerminalText(segment.value),
-		...(segment.compactValue ? { compactValue: sanitizeTerminalText(segment.compactValue) } : {}),
-		compact: false,
-		removed: false,
-	}));
+	const prepared: PreparedSegment[] = segments.map((segment) => {
+		const {
+			value: rawValue,
+			compactValue: rawCompactValue,
+			fragments: rawFragments,
+			compactFragments: rawCompactFragments,
+			...rest
+		} = segment;
+		const value = sanitizeTerminalText(rawValue);
+		const compactValue = rawCompactValue === undefined ? undefined : sanitizeTerminalText(rawCompactValue);
+		const fragments = sanitizeFragments(rawFragments, value);
+		const compactFragments =
+			compactValue === undefined ? undefined : sanitizeFragments(rawCompactFragments, compactValue);
+		return {
+			...rest,
+			value,
+			...(compactValue !== undefined ? { compactValue } : {}),
+			...(fragments ? { fragments } : {}),
+			...(compactFragments ? { compactFragments } : {}),
+			compact: false,
+			removed: false,
+		};
+	});
 	const leftSeparator = " · ";
 	const rightSeparator = " | ";
 	const totalWidth = () => {
@@ -184,21 +274,18 @@ export function renderStatusBarSegments(
 			.filter((segment) => !segment.removed && segment.required)
 			.sort((left, right) => right.priority - left.priority)[0];
 		if (!protectedSegment) return " ".repeat(width);
-		const value = protectedSegment.compact
-			? (protectedSegment.compactValue ?? protectedSegment.value)
-			: protectedSegment.value;
-		const styled = theme.fg(protectedSegment.role, fitTerminalText(value, width));
-		return padTerminalText(styled, width, { alignment: protectedSegment.side === "right" ? "right" : "left" });
+		const rendered = fitTerminalText(renderPreparedSegment(protectedSegment, styles), width);
+		return padTerminalText(rendered, width, {
+			alignment: protectedSegment.side === "right" ? "right" : "left",
+		});
 	}
 	const renderSide = (side: StatusBarSegment["side"], separator: string): string => {
 		const active = prepared
 			.filter((segment) => segment.side === side && !segment.removed)
 			.sort((left, right) => left.order - right.order);
 		return active
-			.map((segment) =>
-				theme.fg(segment.role, segment.compact ? (segment.compactValue ?? segment.value) : segment.value),
-			)
-			.join(theme.fg("dim", separator));
+			.map((segment) => renderPreparedSegment(segment, styles))
+			.join(styles.apply("status.separator", separator));
 	};
 	const left = renderSide("left", leftSeparator);
 	const right = renderSide("right", rightSeparator);
@@ -207,8 +294,8 @@ export function renderStatusBarSegments(
 	return `${left}${" ".repeat(width - terminalTextWidth(left) - terminalTextWidth(right))}${right}`;
 }
 
-export function renderStatusBar(snapshot: SessionStatusSnapshot, width: number, theme: Pick<Theme, "fg">): string {
-	return renderStatusBarSegments(buildStatusBarSegments(snapshot), width, theme);
+export function renderStatusBar(snapshot: SessionStatusSnapshot, width: number, styles: SessionUiStyles): string {
+	return renderStatusBarSegments(buildStatusBarSegments(snapshot), width, styles);
 }
 
 export class StatusBarComponent implements Component {
@@ -217,7 +304,7 @@ export class StatusBarComponent implements Component {
 
 	constructor(
 		controller: SessionStatusController,
-		private readonly theme: Pick<Theme, "fg">,
+		private readonly styles: SessionUiStyles,
 		requestRender: () => void,
 	) {
 		this.unsubscribe = controller.subscribe((snapshot) => {
@@ -227,7 +314,7 @@ export class StatusBarComponent implements Component {
 	}
 
 	render(width: number): string[] {
-		return [this.snapshot ? renderStatusBar(this.snapshot, width, this.theme) : ""];
+		return [this.snapshot ? renderStatusBar(this.snapshot, width, this.styles) : ""];
 	}
 
 	invalidate(): void {}

@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { renderSessionLine, selectSessionUiHint, terminalTextWidth } from "../dist/index.js";
+import { createSessionUiStyles, renderSessionLine, selectSessionUiHint, terminalTextWidth } from "../dist/index.js";
 
-const theme = { fg: (_role, value) => value };
+const styles = createSessionUiStyles({ fg: (_role, value) => value }, { colorEnabled: false });
 
 function snapshot(overrides = {}) {
 	return {
@@ -46,12 +46,28 @@ test("selects one deterministic priority hint", () => {
 	);
 });
 
+test("applies separate semantic styles to the hint, provider, and model identity", () => {
+	const applied = [];
+	const tracingStyles = {
+		scheme: styles.scheme,
+		apply(role, value) {
+			applied.push({ role, value });
+			return value;
+		},
+	};
+	renderSessionLine(snapshot(), hints, 64, tracingStyles);
+	assert.deepEqual(
+		applied.map(({ role }) => role),
+		["session.provider", "session.model", "session.hint.warning"],
+	);
+});
+
 test("protects model identity and drops the left hint before overlap", () => {
-	const wide = renderSessionLine(snapshot(), hints, 64, theme);
+	const wide = renderSessionLine(snapshot(), hints, 64, styles);
 	assert.equal(terminalTextWidth(wide), 64);
 	assert.match(wide, /^! recovery needed/);
 	assert.match(wide, /Codex gpt-5\.6-sol \(xhigh\)$/);
-	const narrow = renderSessionLine(snapshot(), hints, 27, theme);
+	const narrow = renderSessionLine(snapshot(), hints, 27, styles);
 	assert.equal(terminalTextWidth(narrow), 27);
 	assert.doesNotMatch(narrow, /recovery/);
 	assert.match(narrow, /Codex gpt-5\.6-sol/);
@@ -69,7 +85,7 @@ test("keeps CJK labels width-safe and strips terminal controls", () => {
 		}),
 		[{ id: "hint", text: "モデルを選択", priority: 1, role: "accent" }],
 		48,
-		theme,
+		styles,
 	);
 	assert.equal(terminalTextWidth(rendered), 48);
 	assert.match(rendered, /モデルを選択/);

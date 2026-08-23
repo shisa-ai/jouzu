@@ -6,9 +6,13 @@ import { SessionPromptEditor } from "./prompt-frame.js";
 import { SessionLineComponent } from "./session-line.js";
 import type { SessionStatusSnapshot } from "./snapshot.js";
 import { StatusBarComponent } from "./status-bar.js";
+import { createSessionUiStyles, type SessionUiStyleOptions, type SessionUiStyleScheme } from "./styles.js";
 
 export interface SessionUiExtensionOptions {
 	getHints?: (snapshot: SessionStatusSnapshot | undefined) => readonly SessionUiHint[];
+	styleScheme?: SessionUiStyleScheme;
+	colorEnabled?: boolean;
+	env?: NodeJS.ProcessEnv;
 }
 
 export function createSessionUiExtension(options: SessionUiExtensionOptions = {}): InlineExtension {
@@ -16,6 +20,13 @@ export function createSessionUiExtension(options: SessionUiExtensionOptions = {}
 		name: SESSION_UI_RUNTIME_IDS.extension,
 		factory: (pi) => {
 			let controller: SessionStatusController | undefined;
+			const styleOptions: SessionUiStyleOptions = {
+				...(options.styleScheme ? { scheme: options.styleScheme } : {}),
+				...(options.colorEnabled !== undefined ? { colorEnabled: options.colorEnabled } : {}),
+				...(options.env ? { env: options.env } : {}),
+			};
+			const stylesFor = (theme: Parameters<typeof createSessionUiStyles>[0]) =>
+				createSessionUiStyles(theme, styleOptions);
 
 			const sync = (ctx: Parameters<SessionStatusController["sync"]>[0]) => {
 				controller?.sync(ctx);
@@ -39,14 +50,14 @@ export function createSessionUiExtension(options: SessionUiExtensionOptions = {}
 					(tui, theme) =>
 						new SessionLineComponent(
 							activeController,
-							theme,
+							stylesFor(theme),
 							() => options.getHints?.(activeController.getSnapshot()) ?? [],
 							() => tui.requestRender(),
 						),
 					{ placement: "aboveEditor" },
 				);
 				ctx.ui.setFooter((tui, theme, footerData) => {
-					const statusBar = new StatusBarComponent(activeController, theme, () => tui.requestRender());
+					const statusBar = new StatusBarComponent(activeController, stylesFor(theme), () => tui.requestRender());
 					const unsubscribeBranch = footerData.onBranchChange(() => {
 						void activeController.refreshGit(ctx);
 					});
@@ -60,7 +71,7 @@ export function createSessionUiExtension(options: SessionUiExtensionOptions = {}
 					};
 				});
 				ctx.ui.setEditorComponent(
-					(tui, theme, keybindings) => new SessionPromptEditor(tui, theme, keybindings, ctx.ui.theme),
+					(tui, theme, keybindings) => new SessionPromptEditor(tui, theme, keybindings, stylesFor(ctx.ui.theme)),
 				);
 				void activeController.refreshProject(ctx);
 			});

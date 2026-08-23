@@ -10,3 +10,4 @@ export * from "./sources/command.js";
 export * from "./sources/git.js";
 export * from "./sources/runtime.js";
 export * from "./status-bar.js";
+export * from "./styles.js";

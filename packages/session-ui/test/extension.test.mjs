@@ -36,6 +36,7 @@ test("installs one editor, Session Line, and Status Bar owner and cleans up", as
 		const handlers = new Map();
 		const execCalls = [];
 		const extension = createSessionUiExtension({
+			colorEnabled: false,
 			getHints: () => [{ id: "palette", text: "/model choose", priority: 10, role: "muted" }],
 		});
 		extension.factory({
@@ -97,7 +98,7 @@ test("installs one editor, Session Line, and Status Bar owner and cleans up", as
 
 test("does not install terminal surfaces outside TUI mode", async () => {
 	const handlers = new Map();
-	createSessionUiExtension().factory({
+	createSessionUiExtension({ colorEnabled: false }).factory({
 		on(name, handler) {
 			handlers.set(name, handler);
 		},

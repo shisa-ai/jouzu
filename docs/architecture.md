@@ -37,6 +37,7 @@ packages/session-ui
   ├─ prompt-frame.ts     custom Pi editor framing and rail
   ├─ session-line.ts     hint plus protected model/thinking identity
   ├─ status-bar.ts       responsive semantic status segments
+  ├─ styles.ts           semantic roles and replaceable color mapping
   ├─ layout.ts           ANSI/Unicode terminal-column primitives
   └─ sources/            bounded Git and optional runtime probes
 ```
@@ -93,6 +94,6 @@ catalogs beyond these bundled profiles; the `catalog/`, `profiles/`, and
 
 ## Workspace boundary
 
-`packages/session-ui` is a rename-friendly internal workspace, not a separately published product or stable extension API. Runtime IDs are centralized and it writes no feature-named state or configuration. Pure snapshots, sources, renderers, and layout helpers remain independently testable; `extension.ts` is the only Pi lifecycle adapter. `scripts/copy-session-ui.mjs` is the only packaging bridge.
+`packages/session-ui` is a rename-friendly internal workspace, not a separately published product or stable extension API. Runtime IDs are centralized and it writes no feature-named state or configuration. Pure snapshots, sources, renderers, styles, and layout helpers remain independently testable; `extension.ts` is the only Pi lifecycle adapter. `styles.ts` owns the replaceable semantic color mapping, so renderers do not depend on raw colors or legacy names. `scripts/copy-session-ui.mjs` is the only packaging bridge.
 
 Other CLI modules remain in `packages/cli` until a second consumer needs a stable boundary. File length alone is not an interface.

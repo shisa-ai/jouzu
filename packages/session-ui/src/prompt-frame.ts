@@ -1,6 +1,7 @@
-import { CustomEditor, type KeybindingsManager, type Theme } from "@earendil-works/pi-coding-agent";
+import { CustomEditor, type KeybindingsManager } from "@earendil-works/pi-coding-agent";
 import type { Component, EditorTheme, TUI } from "@earendil-works/pi-tui";
 import { fillTerminalColumns, fitTerminalText, padTerminalText } from "./layout.js";
+import type { SessionUiStyles } from "./styles.js";
 
 export interface PromptFrameStyle {
 	border(value: string): string;
@@ -21,7 +22,8 @@ export function renderPromptFrameLines(
 	const autocomplete = baseLines.slice(frameEnd);
 	if (frame.length < 2) return baseLines.map((line) => fitTerminalText(line, width));
 	const innerWidth = width - 2;
-	const rail = `${style.rail("┃")}\u001b[0m `;
+	const styledRail = style.rail("┃");
+	const rail = `${styledRail}${styledRail === "┃" ? "" : "\u001b[0m"} `;
 	const border = style.border(fillTerminalColumns("─", width));
 	return [
 		border,
@@ -43,12 +45,14 @@ function autocompleteLineCount(editor: CustomEditor, width: number): number {
 }
 
 export class SessionPromptEditor extends CustomEditor {
-	private readonly uiTheme: Pick<Theme, "fg">;
-
-	constructor(tui: TUI, theme: EditorTheme, keybindings: KeybindingsManager, uiTheme: Pick<Theme, "fg">) {
+	constructor(
+		tui: TUI,
+		theme: EditorTheme,
+		keybindings: KeybindingsManager,
+		private readonly styles: SessionUiStyles,
+	) {
 		super(tui, theme, keybindings, { paddingX: 0 });
-		this.uiTheme = uiTheme;
-		this.borderColor = (value: string) => uiTheme.fg("borderMuted", value);
+		this.borderColor = (value: string) => styles.apply("prompt.border", value);
 	}
 
 	render(width: number): string[] {
@@ -56,8 +60,8 @@ export class SessionPromptEditor extends CustomEditor {
 		const innerWidth = width - 2;
 		const rendered = super.render(innerWidth);
 		return renderPromptFrameLines(rendered, width, autocompleteLineCount(this, innerWidth), {
-			border: (value) => this.uiTheme.fg("borderMuted", value),
-			rail: (value) => this.uiTheme.fg("accent", value),
+			border: (value) => this.styles.apply("prompt.border", value),
+			rail: (value) => this.styles.apply("prompt.rail", value),
 		});
 	}
 }

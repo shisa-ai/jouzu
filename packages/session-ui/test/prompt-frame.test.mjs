@@ -25,6 +25,15 @@ test("keeps autocomplete rows outside the prompt rail", () => {
 	assert.ok(lines.slice(3).every((line) => terminalTextWidth(line) <= 24));
 });
 
+test("keeps the no-color frame free of terminal styling", () => {
+	const plainStyle = { border: (value) => value, rail: (value) => value };
+	const lines = renderPromptFrameLines(["─".repeat(18), "draft", "─".repeat(18)], 20, 0, plainStyle);
+	assert.equal(
+		lines.some((line) => line.includes("\u001b")),
+		false,
+	);
+});
+
 test("degrades without a frame below the structural minimum", () => {
 	const lines = renderPromptFrameLines(["abcdef", "日本語"], 3, 0, style);
 	assert.ok(lines.every((line) => terminalTextWidth(line) <= 3));

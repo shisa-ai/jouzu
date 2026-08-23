@@ -1,10 +1,13 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { renderSessionLine, renderStatusBar, terminalTextWidth } from "../dist/index.js";
+import { createSessionUiStyles, renderSessionLine, renderStatusBar, terminalTextWidth } from "../dist/index.js";
 
-const plainTheme = { fg: (_role, value) => value };
-const ansiTheme = { fg: (role, value) => `\u001b[3${role.length % 8}m${value}\u001b[0m` };
+const plainStyles = createSessionUiStyles({ fg: (_role, value) => value }, { colorEnabled: false });
+const ansiStyles = createSessionUiStyles(
+	{ fg: (role, value) => `\u001b[3${role.length % 8}m${value}\u001b[0m` },
+	{ colorEnabled: true },
+);
 
 function stripSgr(value) {
 	return value
@@ -48,20 +51,20 @@ const snapshot = {
 const hints = [{ id: "palette", text: "/model choose", priority: 10, role: "muted" }];
 
 test("keeps wide and compact Session UI lines stable", () => {
-	assert.equal(renderSessionLine(snapshot, hints, 48, plainTheme), "/model choose          Codex gpt-5.6-sol (xhigh)");
-	assert.equal(renderStatusBar(snapshot, 48, plainTheme), "日本語 project · [!?↑] · node   19%/200k | ↑124k");
+	assert.equal(renderSessionLine(snapshot, hints, 48, plainStyles), "/model choose          Codex gpt-5.6-sol (xhigh)");
+	assert.equal(renderStatusBar(snapshot, 48, plainStyles), "日本語 project · [!?↑] · node   19%/200k | ↑124k");
 	assert.equal(
-		renderStatusBar(snapshot, 80, plainTheme),
+		renderStatusBar(snapshot, 80, plainStyles),
 		"日本語 project · feat/v0.1.2 [!?↑] · node v24.16.0          19%/200k | ↑124k ↓9k",
 	);
 });
 
 test("color and no-color lanes carry identical text and display width", () => {
 	for (const width of [24, 48, 80, 120]) {
-		const plainLine = renderSessionLine(snapshot, hints, width, plainTheme);
-		const colorLine = renderSessionLine(snapshot, hints, width, ansiTheme);
-		const plainBar = renderStatusBar(snapshot, width, plainTheme);
-		const colorBar = renderStatusBar(snapshot, width, ansiTheme);
+		const plainLine = renderSessionLine(snapshot, hints, width, plainStyles);
+		const colorLine = renderSessionLine(snapshot, hints, width, ansiStyles);
+		const plainBar = renderStatusBar(snapshot, width, plainStyles);
+		const colorBar = renderStatusBar(snapshot, width, ansiStyles);
 		assert.equal(stripSgr(colorLine), plainLine);
 		assert.equal(stripSgr(colorBar), plainBar);
 		assert.equal(terminalTextWidth(colorLine), width);
