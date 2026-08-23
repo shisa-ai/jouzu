@@ -16,7 +16,8 @@ const systemPromptSource = resolve(piPackageRoot, "dist", "core", "system-prompt
 const keybindingsSource = resolve(piPackageRoot, "dist", "core", "keybindings.js");
 const customEditorSource = resolve(piPackageRoot, "dist", "modes", "interactive", "components", "custom-editor.js");
 const interactiveModeSource = resolve(piPackageRoot, "dist", "modes", "interactive", "interactive-mode.js");
-const tuiKeybindingsSource = resolve(
+const mainSource = resolve(piPackageRoot, "dist", "main.js");
+const nestedTuiKeybindingsSource = resolve(
 	piPackageRoot,
 	"node_modules",
 	"@earendil-works",
@@ -24,6 +25,9 @@ const tuiKeybindingsSource = resolve(
 	"dist",
 	"keybindings.js",
 );
+const tuiKeybindingsSource = existsSync(nestedTuiKeybindingsSource)
+	? nestedTuiKeybindingsSource
+	: resolve(root, "node_modules", "@earendil-works", "pi-tui", "dist", "keybindings.js");
 const expectedDefaultIdentity =
 	"You are an expert coding assistant operating inside pi, a coding agent harness. You help users by reading files, executing commands, editing code, and writing new files.";
 
@@ -42,7 +46,7 @@ function runNode(args, options = {}) {
 
 assert.ok(existsSync(cli), `Pi CLI is missing: ${cli}`);
 assert.ok(existsSync(systemPromptSource), `Pi system prompt source is missing: ${systemPromptSource}`);
-for (const path of [keybindingsSource, customEditorSource, interactiveModeSource, tuiKeybindingsSource]) {
+for (const path of [keybindingsSource, customEditorSource, interactiveModeSource, mainSource, tuiKeybindingsSource]) {
 	assert.ok(existsSync(path), `Pi keybinding contract source is missing: ${path}`);
 }
 assert.ok(
@@ -58,9 +62,23 @@ assert.ok(
 	editorText.indexOf("// Check all other app actions") < editorText.indexOf("// Pass to parent for editor handling"),
 	"Pi editor no longer gives application actions priority over ordinary Tab/editor handling",
 );
+assert.ok(
+	editorText.includes("this.isShowingAutocomplete()") &&
+		editorText.indexOf('this.keybindings.matches(data, "tui.input.tab")') <
+			editorText.indexOf("// Check all other app actions"),
+	"Pi editor no longer preserves open autocomplete selection before app-level Tab actions",
+);
 const interactiveText = readFileSync(interactiveModeSource, "utf8");
 assert.ok(interactiveText.includes('onAction("app.message.followUp"'), "Pi editor lost the follow-up semantic action");
 assert.ok(interactiveText.includes('onAction("app.message.dequeue"'), "Pi editor lost the dequeue semantic action");
+assert.ok(
+	interactiveText.includes("tryHostModelPicker"),
+	"Pi interactive mode lost the embedding-host model picker hook",
+);
+assert.ok(
+	readFileSync(mainSource, "utf8").includes("HOST_MODEL_PICKER_API_VERSION = 1"),
+	"Pi main entry lost host model-picker API version 1",
+);
 
 const version = runNode([cli, "--version"], { env: { ...process.env, PI_OFFLINE: "1" } }).stdout.trim();
 assert.equal(version, expectedVersion, "Pi CLI version differs from the exact lock");
@@ -77,11 +95,12 @@ try {
 	const apiProbe = `
 process.env.PI_CODING_AGENT_DIR = ${JSON.stringify(agentDir)};
 const pi = await import(${JSON.stringify(packageName)});
-const required = ["main", "getAgentDir", "SessionManager", "ModelRuntime", "DefaultResourceLoader"];
+const required = ["main", "getAgentDir", "SessionManager", "ModelRuntime", "DefaultResourceLoader", "HOST_MODEL_PICKER_API_VERSION"];
 for (const name of required) {
   if (pi[name] === undefined) throw new Error("missing top-level export " + name);
 }
 if (typeof pi.main !== "function") throw new Error("main is not a function");
+if (pi.HOST_MODEL_PICKER_API_VERSION !== 1) throw new Error("host model picker API version is not 1");
 if (pi.getAgentDir() !== ${JSON.stringify(agentDir)}) {
   throw new Error("PI_CODING_AGENT_DIR was not honored: " + pi.getAgentDir());
 }
@@ -140,7 +159,13 @@ process.stdout.write(JSON.stringify({ exports: required, agentDir: pi.getAgentDi
 				cli: ["version", "help"],
 				rpc: ["startup", "get_state", "no-session", "isolated-agent-dir"],
 				prompt: ["default-identity"],
-				keybindings: ["semantic-message-actions", "app-before-editor-routing", "tab-editor-default"],
+				keybindings: [
+					"semantic-message-actions",
+					"app-before-editor-routing",
+					"autocomplete-before-app-tab",
+					"tab-editor-default",
+				],
+				host: ["model-picker-api-v1", "session-only-model-selection"],
 			},
 			null,
 			2,

@@ -229,6 +229,12 @@ async function runCli(args: string[]): Promise<void> {
 	if (piRuntimeVersion !== metadata.piVersion) {
 		throw new Error(`loaded Pi ${piRuntimeVersion} does not match Jouzu's exact pin ${metadata.piVersion}`);
 	}
+	const hostModelPickerApiVersion = (pi as { HOST_MODEL_PICKER_API_VERSION?: unknown }).HOST_MODEL_PICKER_API_VERSION;
+	if (interactiveStartup && hostModelPickerApiVersion !== 1) {
+		throw new Error(
+			`Pi ${piRuntimeVersion} does not expose Jouzu's required host model-picker API version 1; qualify the exact Pi dependency before launching interactively`,
+		);
+	}
 	const modelPicker = createJouzuModelPicker(paths);
 	const runPi = pi.main as (
 		args: string[],
