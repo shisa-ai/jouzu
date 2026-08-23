@@ -50,10 +50,12 @@ A normal launch safely reconciles the selected profile. It stops before Pi if a 
 Inside Pi:
 
 - `/login` configures provider authentication in Jouzu's isolated agent root.
-- `/model` or `Ctrl+L` selects from available provider/models.
+- `/model` or `Ctrl+L` opens the Jouzu Palette Models view without clearing the prompt draft.
 - `/status` reports provider-neutral session, workspace, model, thinking, context, scoped-model, profile, and runtime facts.
 
-Jouzu does not include model service, billing, routing, privacy, retention, region, or certification guarantees. Those properties belong to the provider and configuration you select.
+The Models view searches exact provider/model identity and display names. An empty query lists the current model, previous choices, favorites, project recents, global recents, then the usable inventory. `Enter` selects for the session, while `Alt+Enter` also saves the global default. `Ctrl+F` toggles a global favorite and `Alt+F` toggles a project favorite. Recency changes only after the selected model dispatches its first request. Favorites and recents remain in local Jouzu state and contain no prompts, tool results, credentials, or raw project paths.
+
+A switch is blocked when the estimated active context cannot fit the target model's advertised input budget. Jouzu does not infer cache compatibility, model equivalence, cost, routing, privacy, retention, region, or certification guarantees. Those properties belong to the provider and configuration you select unless Jouzu reports verified facts explicitly.
 
 ## Profiles
 
@@ -124,7 +126,7 @@ On the first interactive launch with no Jouzu `keybindings.json`, Jouzu seeds tw
 | `Tab` | `app.message.followUp` | Queue the editor text as a follow-up while the agent is working |
 | `Ctrl+Up` | `app.message.dequeue` | Restore queued messages to the editor |
 
-Pi routes these application actions before ordinary main-editor handling, so Tab remains available to selectors and other scoped components. Jouzu does not add raw key checks or alter stock Pi. A pre-existing Jouzu keybinding file is never changed automatically, including an exact personal version of these bindings.
+Pi routes these application actions before ordinary main-editor handling. An open autocomplete menu keeps Tab and selector navigation, while the follow-up action receives Tab when no completion menu is open. Selectors and Palette components retain their scoped Tab behavior. Jouzu does not alter stock Pi. A pre-existing Jouzu keybinding file is never changed automatically, including an exact personal version of these bindings.
 
 Inspect and control the defaults explicitly:
 
@@ -182,6 +184,7 @@ Managed profile assets are UTF-8. Existing CP932/Shift-JIS profile targets produ
 - Node, npm, Git, Bash, and provider credentials are not bundled.
 - No automatic import from an existing Pi installation.
 - No native installer, standalone archive, background service, hosted gateway, or Jouzu-owned model catalog.
+- The Models view uses Pi's local usable-model inventory; catalog additions, one-turn trials, target-budget compaction, and cost/quota/route preflight are deferred.
 - Third-party Pi packages execute trusted code with the user's permissions and have their own platform support.
 - `Ctrl+Up` delivery depends on terminal/OS key reporting; the semantic binding remains user-customizable.
 - Cross-platform support claims require the release commit's Linux, macOS, and Windows CI matrix to pass.

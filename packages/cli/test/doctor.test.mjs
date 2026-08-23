@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, rmSync, utimesSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { createDoctorReport } from "../dist/doctor.js";
+import { ModelPickerStore } from "../dist/model-picker-state.js";
 
 function metadata(overrides = {}) {
 	return {
@@ -89,10 +90,51 @@ test("doctor reports an injected healthy Linux runtime without mutating roots", 
 	assert.match(report.text, /Self-update policy: auto-restart/);
 	assert.match(report.text, /Automatic startup update: eligible/);
 	assert.match(report.text, /Keybinding defaults: converged/);
+	assert.match(report.text, /Model picker state: absent/);
 	assert.match(report.text, /Jouzu default follow-up key: tab/);
 	assert.match(report.text, /Jouzu default dequeue key: ctrl\+up/);
 	assert.doesNotMatch(report.text, /must-not-appear/);
 	assert.equal(rmSync(root, { recursive: true, force: true }), undefined);
+});
+
+test("doctor reports model picker counts and unreadable state without rewriting it", () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-doctor-model-picker-"));
+	try {
+		const resolvedPaths = paths(root);
+		const store = new ModelPickerStore(resolvedPaths);
+		store.toggleFavorite(
+			{ provider: "anthropic", modelId: "claude-test" },
+			"global",
+			undefined,
+			new Date("2026-08-23T00:00:00.000Z"),
+		);
+		store.recordDispatch(
+			{ provider: "anthropic", modelId: "claude-test" },
+			"a".repeat(64),
+			new Date("2026-08-23T00:00:01.000Z"),
+		);
+		const reportFor = () =>
+			createDoctorReport({
+				metadata: metadata(),
+				paths: resolvedPaths,
+				profile: { id: "core", source: "default" },
+				piRuntimeVersion: "0.84.2",
+				executable: "/opt/jouzu/node_modules/jouzu/dist/cli.js",
+				env: { HOME: "/home/user", ANTHROPIC_API_KEY: "redacted" },
+				platform: "linux",
+				commandPaths: { git: "/usr/bin/git", bash: "/usr/bin/bash", npm: "/usr/bin/npm" },
+			});
+		assert.match(reportFor().text, /Model picker state: 1 favorites; 1 global recents; 1 project scopes/);
+
+		const statePath = join(root, "state", "model-picker.json");
+		writeFileSync(statePath, "{ broken");
+		const unreadable = reportFor();
+		assert.match(unreadable.text, /Model picker state: unreadable/);
+		assert.match(unreadable.text, /- Model picker state is unreadable:/);
+		assert.equal(readFileSync(statePath, "utf8"), "{ broken");
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
 });
 
 test("doctor fails closed for unsupported Windows prerequisites and Pi drift", () => {

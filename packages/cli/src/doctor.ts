@@ -3,6 +3,7 @@ import { homedir } from "node:os";
 import { posix, win32 } from "node:path";
 import type { KeybindingPlan } from "./keybindings.js";
 import type { JouzuMetadata } from "./metadata.js";
+import { loadModelPickerState } from "./model-picker-state.js";
 import type { JouzuPaths } from "./paths.js";
 import type { ProfileSelection } from "./runtime.js";
 import { describeStateLock, inspectStateLock, STATE_LOCK_STALE_MS } from "./state-lock.js";
@@ -133,6 +134,7 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	const settingsPath = pathApi.join(context.paths.agentDir, "settings.json");
 	const authPath = pathApi.join(context.paths.agentDir, "auth.json");
 	const modelsPath = pathApi.join(context.paths.agentDir, "models.json");
+	const modelPickerStatePath = pathApi.join(context.paths.stateDir, "model-picker.json");
 	const sharedSkillsPath = pathApi.resolve(userHome(env), ".agents", "skills");
 	const packageState = readPackageCount(settingsPath);
 	const gitPath = context.commandPaths ? (context.commandPaths.git ?? undefined) : findExecutable("git", env, platform);
@@ -178,6 +180,16 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 		warnings.push('Jouzu keybinding defaults conflict with user bindings; run "jouzu keybindings plan"');
 	}
 	if (context.keybindingDiagnostic) warnings.push(`Keybinding status is unavailable: ${context.keybindingDiagnostic}`);
+	let modelPickerState = "absent";
+	if (existsSync(modelPickerStatePath)) {
+		try {
+			const state = loadModelPickerState(context.paths, { recover: false }).state;
+			modelPickerState = `${state.favorites.length} favorites; ${state.recents.global.length} global recents; ${Object.keys(state.recents.projects).length} project scopes`;
+		} catch (error) {
+			modelPickerState = "unreadable";
+			warnings.push(`Model picker state is unreadable: ${error instanceof Error ? error.message : String(error)}`);
+		}
+	}
 
 	lines.push("Jouzu doctor");
 	lines.push("");
@@ -216,12 +228,14 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	lines.push(`State root: ${context.paths.stateDir}`);
 	lines.push(`Session root: ${context.paths.sessionDir}`);
 	lines.push(`Cache root: ${context.paths.cacheDir}`);
+	lines.push(`Model picker state: ${modelPickerState}`);
 	lines.push(`Inherited Pi agent root replaced: ${context.inheritedPiAgentDir ? "yes" : "not set"}`);
 	lines.push(`Inherited Pi session root replaced: ${context.inheritedPiSessionDir ? "yes" : "not set"}`);
 	const now = new Date();
 	const stateLocks = [
 		{ label: "Profile lock", path: pathApi.join(context.paths.stateDir, "profile.lock") },
 		{ label: "Keybinding lock", path: pathApi.join(context.paths.stateDir, "keybindings.lock") },
+		{ label: "Model picker lock", path: pathApi.join(context.paths.stateDir, "model-picker.lock") },
 		{ label: "Update lock", path: pathApi.join(context.paths.stateDir, "self-update.lock") },
 	];
 	for (const { label, path } of stateLocks) {

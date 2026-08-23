@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add the Jouzu Palette Models view on `/model` and `Ctrl+L`, with exact provider/model search, current and previous choices, project/global favorites and recents, session-only selection, explicit global-default selection, context-fit blocking, and floating/replacement presentations.
+- Preserve open editor autocomplete behavior when the Jouzu Tab follow-up binding is active.
+
 ## 0.1.0 - 2026-08-20
 
 - Launch exact, qualified Pi 0.84.2 through the `jouzu` and `jz` commands while preserving Pi CLI modes and blocking independent Pi runtime self-update drift.
