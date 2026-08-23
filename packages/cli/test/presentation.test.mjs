@@ -12,6 +12,8 @@ import {
 
 const metadata = {
 	jouzuVersion: "0.1.0",
+	displayVersion: "0.1.0",
+	build: undefined,
 	piVersion: "0.84.2",
 	profileSchemaVersion: 1,
 	lock: { tag: "v0.84.2", commit: "commit", compatibilityStatus: "qualified", deviations: [] },

@@ -9,6 +9,8 @@ import { ModelPickerStore } from "../dist/model-picker-state.js";
 function metadata(overrides = {}) {
 	return {
 		jouzuVersion: "0.1.0",
+		displayVersion: "0.1.0",
+		build: undefined,
 		piVersion: "0.84.2",
 		profileSchemaVersion: 1,
 		lock: {

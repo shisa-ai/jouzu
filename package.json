@@ -11,6 +11,7 @@
 	},
 	"scripts": {
 		"build": "npm run build --workspace packages/session-ui && npm run build --workspace packages/cli",
+		"build:dev": "npm run build && node scripts/write-dev-build-info.mjs",
 		"check": "npm run check --workspace packages/session-ui && npm run check --workspace packages/cli && biome check . && npm run pi:check",
 		"test": "npm run test --workspace packages/session-ui && npm run test --workspace packages/cli && npm run test:python && npm run test:pack-check && npm run test:release-metadata",
 		"test:python": "uv run --project python/jouzu python -m unittest discover -s python/jouzu/tests -v",
@@ -20,7 +21,7 @@
 		"test:auto-update": "node scripts/test-auto-update.mjs",
 		"test:live:ja": "node scripts/live-ja-smoke.mjs",
 		"pack:check": "node scripts/pack-check.mjs",
-		"dev:link": "npm run build && npm link --workspace packages/cli",
+		"dev:link": "npm run build:dev && npm link --workspace packages/cli",
 		"build:python": "uv build --project python/jouzu --out-dir dist/python",
 		"check:python": "uvx --from twine twine check dist/python/*",
 		"release:metadata": "node scripts/check-release-metadata.mjs",

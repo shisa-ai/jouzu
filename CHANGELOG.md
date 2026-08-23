@@ -5,6 +5,7 @@
 - Add the Jouzu Palette Models view on `/model` and `Ctrl+L`, with exact provider/model search, current and previous choices, project/global favorites and recents, session-only selection, explicit global-default selection, context-fit blocking, and floating/replacement presentations.
 - Preserve open editor autocomplete behavior before application-level key handling.
 - Add the built-in Jouzu Prompt Frame, Session Line, and responsive Status Bar with provider-neutral local facts and CJK/ANSI-safe width degradation.
+- Identify linked development builds by UTC build time, source commit, and dirty-worktree state without changing the published package version.
 
 ## 0.1.1 - 2026-08-23
 

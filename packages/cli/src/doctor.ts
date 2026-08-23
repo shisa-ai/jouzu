@@ -193,7 +193,7 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 
 	lines.push("Jouzu doctor");
 	lines.push("");
-	lines.push(`Jouzu version: ${context.metadata.jouzuVersion}`);
+	lines.push(`Jouzu version: ${context.metadata.displayVersion}`);
 	lines.push(`Pi runtime: ${context.piRuntimeVersion}`);
 	lines.push(`Pi upstream: ${context.metadata.lock.tag} (${context.metadata.lock.commit})`);
 	lines.push(

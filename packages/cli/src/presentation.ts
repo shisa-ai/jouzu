@@ -163,10 +163,10 @@ function colorizeVersion(
 }
 
 function versionLine(metadata: JouzuMetadata, width: number, mode: BannerColorMode, palette: BannerPalette): string {
-	const plain = `jouzu ${metadata.jouzuVersion}  ·  pi ${metadata.piVersion}`;
+	const plain = `jouzu ${metadata.displayVersion}  ·  pi ${metadata.piVersion}`;
 	if (fitPresentationText(plain, width) !== plain || mode === "none") return fitPresentationText(plain, width);
 	const jouzu = colorizeVersion(
-		metadata.jouzuVersion,
+		metadata.displayVersion,
 		mode,
 		palette.versionTruecolor.jouzu,
 		palette.version256.jouzu,
@@ -249,7 +249,7 @@ export function createJouzuPresentationExtension(
 							`context: ${context}`,
 							`scoped models: ${scopedModels}`,
 							`profile: ${profile.id} (${applied})`,
-							`runtime: Jouzu ${metadata.jouzuVersion} · Pi ${metadata.piVersion}`,
+							`runtime: Jouzu ${metadata.displayVersion} · Pi ${metadata.piVersion}`,
 						].join("\n"),
 						"info",
 					);

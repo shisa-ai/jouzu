@@ -98,6 +98,9 @@ for (const directory of packageDirectories) {
 		if (!packed.files.some((file) => file.path === "dist/pi.lock.json")) {
 			throw new Error("jouzu tarball is missing dist/pi.lock.json");
 		}
+		if (packed.files.some((file) => file.path === "dist/build-info.json")) {
+			throw new Error("jouzu tarball contains development build metadata");
+		}
 		const allowedTopLevel = new Set(["LICENSE", "README.md", "package.json"]);
 		for (const file of packed.files) {
 			if (!allowedTopLevel.has(file.path) && !file.path.startsWith("dist/")) {

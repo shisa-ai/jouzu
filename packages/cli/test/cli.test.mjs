@@ -16,10 +16,16 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { after, test } from "node:test";
 import { fileURLToPath } from "node:url";
+import { formatDisplayVersion, parseBuildInfo } from "../dist/metadata.js";
 
 const packageRoot = fileURLToPath(new URL("..", import.meta.url));
 const cli = join(packageRoot, "dist", "cli.js");
 const packageJson = JSON.parse(readFileSync(join(packageRoot, "package.json"), "utf8"));
+const buildInfoPath = join(packageRoot, "dist", "build-info.json");
+const buildInfo = existsSync(buildInfoPath)
+	? parseBuildInfo(JSON.parse(readFileSync(buildInfoPath, "utf8")))
+	: undefined;
+const displayVersion = formatDisplayVersion(packageJson.version, buildInfo);
 const defaultHome = mkdtempSync(join(tmpdir(), "jouzu-cli-suite-"));
 after(() => rmSync(defaultHome, { recursive: true, force: true }));
 
@@ -46,7 +52,7 @@ function run(args, options = {}) {
 test("prints the Jouzu, Pi, and profile schema version tuple", () => {
 	const result = run(["--version"]);
 	assert.equal(result.status, 0, result.stderr);
-	assert.equal(result.stdout.trim(), "jouzu 0.1.1\npi 0.84.2\nprofile schema 1");
+	assert.equal(result.stdout.trim(), `jouzu ${displayVersion}\npi 0.84.2\nprofile schema 1`);
 });
 
 test("forwards explicit Pi version requests through the pinned runtime", () => {

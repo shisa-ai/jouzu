@@ -176,7 +176,7 @@ async function runCli(args: string[]): Promise<void> {
 		if (piRuntimeVersion !== metadata.piVersion) {
 			throw new Error(`loaded Pi ${piRuntimeVersion} does not match Jouzu's exact pin ${metadata.piVersion}`);
 		}
-		console.log(`jouzu ${metadata.jouzuVersion}`);
+		console.log(`jouzu ${metadata.displayVersion}`);
 		console.log(`pi ${piRuntimeVersion}`);
 		console.log(`profile schema ${metadata.profileSchemaVersion}`);
 		return;

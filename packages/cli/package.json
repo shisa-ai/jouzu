@@ -9,6 +9,7 @@
 	},
 	"files": [
 		"dist",
+		"!dist/build-info.json",
 		"README.md",
 		"LICENSE"
 	],
