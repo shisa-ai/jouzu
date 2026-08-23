@@ -26,14 +26,44 @@ function normalizeColumns(columns: number): number {
 	return Number.isFinite(columns) ? Math.max(0, Math.floor(columns)) : 0;
 }
 
-/** Remove terminal control bytes from untrusted labels before adding product-owned styling. */
+/** Remove terminal controls and escape sequences before adding product-owned styling. */
 export function sanitizeTerminalText(value: string): string {
-	return Array.from(value)
-		.filter((character) => {
-			const codePoint = character.codePointAt(0) ?? 0;
-			return codePoint >= 0x20 && codePoint !== 0x7f && !(codePoint >= 0x80 && codePoint <= 0x9f);
-		})
-		.join("");
+	let result = "";
+	for (let index = 0; index < value.length; index += 1) {
+		const code = value.charCodeAt(index);
+		if (code === 0x1b) {
+			const kind = value[index + 1];
+			if (kind === "[") {
+				index += 2;
+				while (index < value.length && (value.charCodeAt(index) < 0x40 || value.charCodeAt(index) > 0x7e)) index += 1;
+				continue;
+			}
+			if (kind === "]" || kind === "_" || kind === "P" || kind === "^") {
+				index += 2;
+				while (index < value.length) {
+					if (value.charCodeAt(index) === 0x07) break;
+					if (value.charCodeAt(index) === 0x1b && value[index + 1] === "\\") {
+						index += 1;
+						break;
+					}
+					index += 1;
+				}
+				continue;
+			}
+			index += 1;
+			continue;
+		}
+		if (code === 0x9b) {
+			while (index + 1 < value.length && (value.charCodeAt(index + 1) < 0x40 || value.charCodeAt(index + 1) > 0x7e)) {
+				index += 1;
+			}
+			index += 1;
+			continue;
+		}
+		if (code < 0x20 || code === 0x7f || (code >= 0x80 && code <= 0x9f)) continue;
+		result += value[index];
+	}
+	return result;
 }
 
 /** Measure rendered terminal columns, ignoring ANSI and respecting wide glyphs. */
