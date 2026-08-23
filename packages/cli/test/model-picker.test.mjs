@@ -138,6 +138,59 @@ test("Palette routing replaces the query and keeps the component reusable", () =
 	assert.deepEqual(queries, ["", "sonnet"]);
 });
 
+test("host handler opens the Jouzu Models component through the Palette surface", async () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-host-"));
+	try {
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+		const integration = createJouzuModelPicker(paths);
+		const handlers = new Map();
+		integration.extension.factory({
+			on(name, handler) {
+				handlers.set(name, handler);
+			},
+		});
+		const model = { provider: "p", id: "model", name: "Model", contextWindow: 100_000, maxTokens: 10_000 };
+		let rendered = "";
+		let customOptions;
+		const ctx = {
+			mode: "tui",
+			cwd: root,
+			model,
+			scopedModels: [],
+			sessionManager: { getBranch: () => [] },
+			modelRegistry: {
+				getAvailable: () => [model],
+				refresh: async () => ({ errors: new Map() }),
+				find: () => model,
+			},
+			getContextUsage: () => ({ tokens: 100, contextWindow: 100_000, percent: 1 }),
+			isIdle: () => true,
+			ui: {
+				notify() {},
+				custom(factory, options) {
+					customOptions = options;
+					return new Promise((resolve) => {
+						const component = factory(
+							{ terminal: { rows: 30 }, requestRender() {} },
+							identityTheme,
+							fakeKeybindings(),
+							resolve,
+						);
+						rendered = component.render(72).join("\n");
+						queueMicrotask(() => component.handleInput("escape"));
+					});
+				},
+			},
+		};
+		await handlers.get("session_start")({}, ctx);
+		assert.equal(await integration.handle({ source: "action" }, { setModel: async () => {} }), true);
+		assert.match(rendered, /Jouzu · Models/);
+		assert.equal(customOptions.overlay, true);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
 test("integration records recency only on the first physical dispatch after each selection", async () => {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-integration-"));
 	try {
