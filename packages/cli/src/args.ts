@@ -17,7 +17,7 @@ export interface JouzuOptions {
 
 export type ParsedCommand =
 	| { kind: "pi"; options: JouzuOptions; args: string[] }
-	| { kind: "doctor"; options: JouzuOptions }
+	| { kind: "doctor"; options: JouzuOptions; json: boolean }
 	| { kind: "version"; options: JouzuOptions }
 	| { kind: "help"; options: JouzuOptions }
 	| {
@@ -156,8 +156,12 @@ export function parseJouzuArgs(args: string[]): ParsedCommand {
 	const [command, ...rest] = remaining;
 	if (command === "pi" || command === "--") return { kind: "pi", options, args: rest };
 	if (command === "doctor") {
-		if (rest.length > 0) throw new UsageError("doctor does not accept arguments");
-		return { kind: "doctor", options };
+		let json = false;
+		for (const token of rest) {
+			if (token !== "--json" || json) throw new UsageError(`doctor does not accept ${token}`);
+			json = true;
+		}
+		return { kind: "doctor", options, json };
 	}
 	if (command === "profile") return parseProfileCommand(options, rest);
 	if (command === "keybindings") return parseKeybindingsCommand(options, rest);
@@ -215,7 +219,7 @@ Usage:
   jouzu --session <id> [Pi arguments...]
   jouzu [Jouzu options] pi [Pi arguments...]
   jouzu [Jouzu options] -- [Pi arguments...]
-  jouzu [Jouzu options] doctor
+  jouzu [Jouzu options] doctor [--json]
   jouzu profile plan [--profile <core|ja>] [--json]
   jouzu profile apply [--profile <core|ja>]
   jouzu keybindings status [--json]

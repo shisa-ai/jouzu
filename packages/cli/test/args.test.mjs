@@ -31,9 +31,12 @@ test("supports explicit Pi escape forms and leading Jouzu options", () => {
 });
 
 test("reserves Jouzu diagnostics while allowing escaped Pi collisions", () => {
-	assert.deepEqual(parseJouzuArgs(["doctor"]), { kind: "doctor", options: {} });
+	assert.deepEqual(parseJouzuArgs(["doctor"]), { kind: "doctor", options: {}, json: false });
+	assert.deepEqual(parseJouzuArgs(["doctor", "--json"]), { kind: "doctor", options: {}, json: true });
 	assert.deepEqual(parseJouzuArgs(["pi", "doctor"]), { kind: "pi", options: {}, args: ["doctor"] });
 	assert.deepEqual(parseJouzuArgs(["--version"]), { kind: "version", options: {} });
+	assert.throws(() => parseJouzuArgs(["doctor", "--json", "--json"]), /doctor does not accept/);
+	assert.throws(() => parseJouzuArgs(["doctor", "extra"]), /doctor does not accept/);
 });
 
 test("parses profile planning and application without mixing launch selection", () => {

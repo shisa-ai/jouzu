@@ -214,7 +214,7 @@ async function runCli(args: string[]): Promise<void> {
 			...(keybindingPlan ? { keybindingPlan } : {}),
 			...(keybindingDiagnostic ? { keybindingDiagnostic } : {}),
 		});
-		console.log(result.text);
+		console.log(parsed.json ? JSON.stringify(result.report, null, 2) : result.text);
 		if (!result.healthy) process.exitCode = 1;
 		return;
 	}
@@ -241,19 +241,8 @@ async function runCli(args: string[]): Promise<void> {
 		onModelPicker: (query) =>
 			modelPicker.open({ source: query ? "command" : "action", ...(query ? { initialSearchInput: query } : {}) }),
 	});
-	const runPi = pi.main as (
-		args: string[],
-		options: {
-			extensionFactories: [
-				ReturnType<typeof createJouzuPresentationExtension>,
-				typeof sessionUi,
-				typeof modelPicker.extension,
-				typeof help,
-			];
-		},
-	) => Promise<void>;
 	await withJouzuResumeHint(() =>
-		runPi(parsed.args, {
+		pi.main(parsed.args, {
 			extensionFactories: [createJouzuPresentationExtension(metadata, profile), sessionUi, modelPicker.extension, help],
 		}),
 	);

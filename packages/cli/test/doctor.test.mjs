@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { createDoctorReport } from "../dist/doctor.js";
+import { createDoctorReport, formatDoctorReport } from "../dist/doctor.js";
 import { ModelPickerStore } from "../dist/model-picker-state.js";
 
 function metadata(overrides = {}) {
@@ -285,4 +285,102 @@ test("doctor maps every updater install channel to user-facing text", () => {
 		assert.match(report.text, pattern, `channel ${channel}`);
 	}
 	assert.equal(rmSync(root, { recursive: true, force: true }), undefined);
+});
+
+function healthyContext(root) {
+	return {
+		metadata: metadata(),
+		paths: paths(root),
+		profile: { id: "core", source: "default" },
+		piRuntimeVersion: "0.84.2",
+		executable: "/opt/jouzu/dist/cli.js",
+		env: { HOME: root },
+		platform: "linux",
+		architecture: "x64",
+		nodeVersion: "v22.19.0",
+		locale: "en-US",
+		commandPaths: { git: "/usr/bin/git", bash: "/usr/bin/bash", npm: "/usr/bin/npm" },
+	};
+}
+
+test("doctor exposes a structured report whose text rendering matches it", () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-doctor-report-"));
+	try {
+		const result = createDoctorReport(healthyContext(root));
+		const report = result.report;
+
+		assert.equal(report.schemaVersion, 1);
+		assert.equal(report.healthy, result.healthy);
+		assert.ok(report.fields.length > 30, "the report carries every observed field");
+
+		// Identifiers are the machine contract and must be unique and stable.
+		const ids = report.fields.map((field) => field.id);
+		assert.equal(new Set(ids).size, ids.length, "field identifiers are unique");
+		for (const required of ["jouzu.version", "pi.runtime", "node", "git", "paths.stateDir", "packages.count"]) {
+			assert.ok(ids.includes(required), `expected a ${required} field`);
+		}
+		const issueIds = report.issues.map((issue) => issue.id);
+		assert.equal(new Set(issueIds).size, issueIds.length, "issue identifiers are unique");
+
+		// The text output is a pure rendering of the report, not a second source of truth.
+		assert.equal(formatDoctorReport(report), result.text);
+
+		// Every field appears in the text exactly as label and value.
+		for (const field of report.fields) {
+			assert.ok(result.text.includes(`${field.label}: ${field.value}`), `${field.id} must appear in the text report`);
+		}
+		assert.match(result.text, /^Jouzu doctor\n/);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("doctor issues drive health and the rendered warning and problem blocks", () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-doctor-issues-"));
+	try {
+		const result = createDoctorReport({
+			...healthyContext(root),
+			piRuntimeVersion: "0.84.1",
+			commandPaths: { git: null, bash: "/usr/bin/bash", npm: "/usr/bin/npm" },
+		});
+
+		const problems = result.report.issues.filter((issue) => issue.severity === "problem");
+		assert.ok(
+			problems.some((issue) => issue.id === "git.missing"),
+			"a missing Git is reported as a problem",
+		);
+		assert.ok(
+			problems.some((issue) => issue.id === "pi.versionMismatch"),
+			"a Pi pin mismatch is reported as a problem",
+		);
+		assert.equal(result.healthy, false, "any problem makes the report unhealthy");
+		assert.match(result.text, /\nProblems:\n/);
+		assert.match(result.text, /Result: action required$/);
+		for (const issue of problems) {
+			assert.ok(result.text.includes(`- ${issue.message}`), `${issue.id} must be listed`);
+		}
+
+		const warnings = result.report.issues.filter((issue) => issue.severity === "warning");
+		assert.ok(
+			warnings.some((issue) => issue.id === "profile.notApplied"),
+			"an unapplied profile is a warning, not a problem",
+		);
+		assert.match(result.text, /\nWarnings:\n/);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("a report without issues omits the warning and problem blocks", () => {
+	const report = {
+		schemaVersion: 1,
+		healthy: true,
+		fields: [{ id: "a", section: "runtime", label: "A", value: "1" }],
+		issues: [],
+		notes: ["Note text."],
+	};
+	assert.equal(
+		formatDoctorReport(report),
+		"Jouzu doctor\n\nA: 1\n\nNote text.\n\nResult: ready for Jouzu v0.1 preview",
+	);
 });

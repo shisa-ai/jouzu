@@ -119,12 +119,15 @@ Jouzu does not import normal Pi settings, credentials, packages, or sessions. It
 
 ```bash
 jz doctor
+jz doctor --json
 jz --version
 jz pi --help
 jz -- --version
 ```
 
 `doctor` is non-mutating and reports the install/update channel and policy, keybinding-default state, exact Pi tag/commit, platform/runtime prerequisites, resolved roots, profile hashes, package count, authentication presence, proxy/CA status, shared skill surface, warnings, and actionable problems. It reports presence only and does not print credential values.
+
+`--json` prints the same diagnostics as a structured report with stable field and issue identifiers, so scripts can read individual values without parsing the human layout. Exit status is unchanged: `1` when a problem is reported.
 
 Most arguments are forwarded unchanged to Pi. Use `pi` or `--` when a Pi argument collides with a Jouzu command. Pi runtime self-update is blocked because Jouzu owns the exact Pi dependency. Pi package/model operations such as `jz update --extensions` and `jz update --models` remain available inside Jouzu state.
 

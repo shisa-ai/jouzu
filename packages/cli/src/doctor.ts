@@ -50,9 +50,70 @@ export interface DoctorContext {
 	keybindingDiagnostic?: string;
 }
 
+export type DoctorSeverity = "warning" | "problem";
+
+export type DoctorSectionId = "runtime" | "platform" | "roots" | "profile";
+
+/** One observed fact. `id` is stable for machine consumers; `label`/`value` are display text. */
+export interface DoctorField {
+	id: string;
+	section: DoctorSectionId;
+	label: string;
+	value: string;
+}
+
+/** One diagnosis. Several issues may attach to the same observed field. */
+export interface DoctorIssue {
+	id: string;
+	severity: DoctorSeverity;
+	message: string;
+}
+
+export interface DoctorReport {
+	schemaVersion: 1;
+	healthy: boolean;
+	fields: DoctorField[];
+	issues: DoctorIssue[];
+	notes: string[];
+}
+
 export interface DoctorResult {
 	text: string;
 	healthy: boolean;
+	report: DoctorReport;
+}
+
+const DOCTOR_SECTION_ORDER: readonly DoctorSectionId[] = ["runtime", "platform", "roots", "profile"];
+
+/**
+ * Render the human report. Sections are emitted in a fixed order and separated
+ * by one blank line, so adding a field never changes unrelated output.
+ */
+export function formatDoctorReport(report: DoctorReport): string {
+	const lines: string[] = ["Jouzu doctor"];
+	for (const section of DOCTOR_SECTION_ORDER) {
+		const fields = report.fields.filter((field) => field.section === section);
+		if (fields.length === 0) continue;
+		lines.push("");
+		for (const field of fields) lines.push(`${field.label}: ${field.value}`);
+	}
+	for (const note of report.notes) {
+		lines.push("");
+		lines.push(note);
+	}
+	for (const [heading, severity] of [
+		["Warnings", "warning"],
+		["Problems", "problem"],
+	] as const) {
+		const matching = report.issues.filter((issue) => issue.severity === severity);
+		if (matching.length === 0) continue;
+		lines.push("");
+		lines.push(`${heading}:`);
+		for (const issue of matching) lines.push(`- ${issue.message}`);
+	}
+	lines.push("");
+	lines.push(report.healthy ? "Result: ready for Jouzu v0.1 preview" : "Result: action required");
+	return lines.join("\n");
 }
 
 function parseNodeVersion(version: string): [number, number, number] {
@@ -128,9 +189,20 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	const nodeVersion = context.nodeVersion ?? process.version;
 	const locale = context.locale ?? Intl.DateTimeFormat().resolvedOptions().locale;
 	const pathApi = platform === "win32" ? win32 : posix;
-	const lines: string[] = [];
-	const problems: string[] = [];
-	const warnings: string[] = [];
+
+	const fields: DoctorField[] = [];
+	const issues: DoctorIssue[] = [];
+	const notes: string[] = [];
+	const field = (section: DoctorSectionId, id: string, label: string, value: string): void => {
+		fields.push({ id, section, label, value });
+	};
+	const problem = (id: string, message: string): void => {
+		issues.push({ id, severity: "problem", message });
+	};
+	const warning = (id: string, message: string): void => {
+		issues.push({ id, severity: "warning", message });
+	};
+
 	const settingsPath = pathApi.join(context.paths.agentDir, "settings.json");
 	const authPath = pathApi.join(context.paths.agentDir, "auth.json");
 	const modelsPath = pathApi.join(context.paths.agentDir, "models.json");
@@ -145,41 +217,55 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	const providerEnvironment = PROVIDER_ENVIRONMENT_KEYS.some((key) => Boolean(env[key]));
 	const nodeSupported = nodeIsSupported(nodeVersion);
 
-	if (!nodeSupported) problems.push(`Node ${nodeVersion} is unsupported; Jouzu requires >=22.19.0`);
-	if (!gitPath) problems.push("Git was not found on PATH");
-	if (!bashPath) problems.push("Bash was not found; install Bash or Git Bash");
-	if (!npmPath) problems.push("npm was not found on PATH; npm is required for Jouzu updates");
+	if (!nodeSupported) problem("node.unsupported", `Node ${nodeVersion} is unsupported; Jouzu requires >=22.19.0`);
+	if (!gitPath) problem("git.missing", "Git was not found on PATH");
+	if (!bashPath) problem("bash.missing", "Bash was not found; install Bash or Git Bash");
+	if (!npmPath) problem("npm.missing", "npm was not found on PATH; npm is required for Jouzu updates");
 	if (context.metadata.piVersion !== context.piRuntimeVersion) {
-		problems.push(`Pinned Pi ${context.metadata.piVersion} does not match loaded runtime ${context.piRuntimeVersion}`);
+		problem(
+			"pi.versionMismatch",
+			`Pinned Pi ${context.metadata.piVersion} does not match loaded runtime ${context.piRuntimeVersion}`,
+		);
 	}
 	if (context.piRuntimeDiagnostic) {
-		problems.push(`Pi runtime could not be loaded: ${context.piRuntimeDiagnostic}`);
+		problem("pi.runtimeUnavailable", `Pi runtime could not be loaded: ${context.piRuntimeDiagnostic}`);
 	}
 	if (context.metadata.lock.compatibilityStatus !== "qualified") {
-		problems.push(`Pi lock status is ${context.metadata.lock.compatibilityStatus}, not qualified`);
+		problem("pi.lockUnqualified", `Pi lock status is ${context.metadata.lock.compatibilityStatus}, not qualified`);
 	}
 	if (!existsSync(authPath) && !providerEnvironment && !existsSync(modelsPath)) {
-		warnings.push(
+		warning(
+			"provider.unconfigured",
 			"No obvious provider credential or custom model configuration was found; use /login or provider environment variables",
 		);
 	}
 	if (!context.profile.appliedManifestSha256) {
-		warnings.push('The selected profile has not been applied; run "jouzu profile apply"');
+		warning("profile.notApplied", 'The selected profile has not been applied; run "jouzu profile apply"');
 	} else if (
 		context.desiredProfileManifestSha256 &&
 		context.profile.appliedManifestSha256 !== context.desiredProfileManifestSha256
 	) {
-		warnings.push('The applied profile differs from the bundled manifest; run "jouzu profile plan"');
+		warning("profile.drift", 'The applied profile differs from the bundled manifest; run "jouzu profile plan"');
 	}
-	if (packageState.warning) warnings.push(packageState.warning);
+	if (packageState.warning) warning("packages.invalid", packageState.warning);
 	if (context.updateStatus?.state.lastResult === "failed") {
-		warnings.push(`The last Jouzu update operation failed (${context.updateStatus.state.lastErrorCode ?? "unknown"})`);
+		warning(
+			"update.lastFailed",
+			`The last Jouzu update operation failed (${context.updateStatus.state.lastErrorCode ?? "unknown"})`,
+		);
 	}
-	if (context.updateDiagnostic) warnings.push(`Self-update status is unavailable: ${context.updateDiagnostic}`);
+	if (context.updateDiagnostic) {
+		warning("update.statusUnavailable", `Self-update status is unavailable: ${context.updateDiagnostic}`);
+	}
 	if (context.keybindingPlan?.actions.some((action) => action.type === "conflict")) {
-		warnings.push('Jouzu keybinding defaults conflict with user bindings; run "jouzu keybindings plan"');
+		warning(
+			"keybindings.conflict",
+			'Jouzu keybinding defaults conflict with user bindings; run "jouzu keybindings plan"',
+		);
 	}
-	if (context.keybindingDiagnostic) warnings.push(`Keybinding status is unavailable: ${context.keybindingDiagnostic}`);
+	if (context.keybindingDiagnostic) {
+		warning("keybindings.statusUnavailable", `Keybinding status is unavailable: ${context.keybindingDiagnostic}`);
+	}
 	let modelPickerState = "absent";
 	if (existsSync(modelPickerStatePath)) {
 		try {
@@ -187,95 +273,130 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 			modelPickerState = `${Object.keys(state.defaults.projects).length} project defaults; ${state.favorites.length} favorites; ${state.recents.global.length} global recents; ${Object.keys(state.recents.projects).length} project scopes`;
 		} catch (error) {
 			modelPickerState = "unreadable";
-			warnings.push(`Model picker state is unreadable: ${error instanceof Error ? error.message : String(error)}`);
+			warning(
+				"modelPicker.unreadable",
+				`Model picker state is unreadable: ${error instanceof Error ? error.message : String(error)}`,
+			);
 		}
 	}
 
-	lines.push("Jouzu doctor");
-	lines.push("");
-	lines.push(`Jouzu version: ${context.metadata.displayVersion}`);
-	lines.push(`Pi runtime: ${context.piRuntimeVersion}`);
-	lines.push(`Pi upstream: ${context.metadata.lock.tag} (${context.metadata.lock.tagCommit})`);
+	field("runtime", "jouzu.version", "Jouzu version", context.metadata.displayVersion);
+	field("runtime", "pi.runtime", "Pi runtime", context.piRuntimeVersion);
+	field("runtime", "pi.upstream", "Pi upstream", `${context.metadata.lock.tag} (${context.metadata.lock.tagCommit})`);
 	if (context.metadata.lock.commit !== context.metadata.lock.tagCommit) {
-		lines.push(`Pi package source: ${context.metadata.lock.commit}`);
+		field("runtime", "pi.packageSource", "Pi package source", context.metadata.lock.commit);
 	}
-	lines.push(
-		`Pi qualification: ${context.metadata.lock.compatibilityStatus}; deviations=${context.metadata.lock.deviations.length}`,
+	field(
+		"runtime",
+		"pi.qualification",
+		"Pi qualification",
+		`${context.metadata.lock.compatibilityStatus}; deviations=${context.metadata.lock.deviations.length}`,
 	);
-	lines.push(`Profile schema: ${context.metadata.profileSchemaVersion}`);
-	lines.push(`Install channel: ${describeInstallChannel(context.updateStatus?.installChannel)}`);
-	lines.push(`Executable: ${context.executable}`);
-	lines.push(`Self-update policy: ${context.updateStatus?.policy ?? "unavailable"}`);
-	lines.push(`Self-update channel: ${context.updateStatus?.installChannel ?? "unavailable"}`);
-	lines.push(
-		`Automatic startup update: ${context.updateStatus ? (context.updateStatus.startupEligible ? "eligible" : "not eligible") : "unavailable"}`,
+	field("runtime", "profile.schema", "Profile schema", String(context.metadata.profileSchemaVersion));
+	field(
+		"runtime",
+		"update.installChannel",
+		"Install channel",
+		describeInstallChannel(context.updateStatus?.installChannel),
 	);
-	lines.push(`Last update check: ${context.updateStatus?.state.lastCheckedAt ?? "never"}`);
-	lines.push(`Latest observed Jouzu: ${context.updateStatus?.state.latestVersion ?? "not checked"}`);
-	lines.push(`Keybinding defaults: ${context.keybindingPlan?.status ?? "unavailable"}`);
-	lines.push(`Keybinding policy: ${context.keybindingPlan?.policy ?? "unavailable"}`);
-	lines.push(`Jouzu default follow-up key: ctrl+enter`);
-	lines.push(`Jouzu default dequeue key: ctrl+up`);
-	lines.push(`Keybinding config: ${context.keybindingPlan?.configPath ?? "unavailable"}`);
-	lines.push("");
-	lines.push(`Platform: ${platform} ${architecture}`);
-	lines.push(`Node: ${nodeVersion} (${nodeSupported ? "supported" : "unsupported"})`);
-	lines.push(`Locale: ${locale}`);
-	lines.push(`Git: ${gitPath ?? "not found"}`);
-	lines.push(`Bash: ${bashPath ?? "not found"}`);
-	lines.push(`npm: ${npmPath ?? "not found"}`);
-	lines.push(`Proxy configured: ${env.HTTP_PROXY || env.HTTPS_PROXY ? "yes" : "no"}`);
-	lines.push(`Additional CA configured: ${env.NODE_EXTRA_CA_CERTS ? "yes" : "no"}`);
-	lines.push("");
-	lines.push(`Agent/config root: ${context.paths.agentDir}`);
-	lines.push(`State root: ${context.paths.stateDir}`);
-	lines.push(`Session root: ${context.paths.sessionDir}`);
-	lines.push(`Cache root: ${context.paths.cacheDir}`);
-	lines.push(`Model picker state: ${modelPickerState}`);
-	lines.push(`Inherited Pi agent root replaced: ${context.inheritedPiAgentDir ? "yes" : "not set"}`);
-	lines.push(`Inherited Pi session root replaced: ${context.inheritedPiSessionDir ? "yes" : "not set"}`);
+	field("runtime", "executable", "Executable", context.executable);
+	field("runtime", "update.policy", "Self-update policy", context.updateStatus?.policy ?? "unavailable");
+	field("runtime", "update.channel", "Self-update channel", context.updateStatus?.installChannel ?? "unavailable");
+	field(
+		"runtime",
+		"update.startupEligible",
+		"Automatic startup update",
+		context.updateStatus ? (context.updateStatus.startupEligible ? "eligible" : "not eligible") : "unavailable",
+	);
+	field("runtime", "update.lastCheckedAt", "Last update check", context.updateStatus?.state.lastCheckedAt ?? "never");
+	field(
+		"runtime",
+		"update.latestVersion",
+		"Latest observed Jouzu",
+		context.updateStatus?.state.latestVersion ?? "not checked",
+	);
+	field("runtime", "keybindings.status", "Keybinding defaults", context.keybindingPlan?.status ?? "unavailable");
+	field("runtime", "keybindings.policy", "Keybinding policy", context.keybindingPlan?.policy ?? "unavailable");
+	field("runtime", "keybindings.followUpKey", "Jouzu default follow-up key", "ctrl+enter");
+	field("runtime", "keybindings.dequeueKey", "Jouzu default dequeue key", "ctrl+up");
+	field("runtime", "keybindings.configPath", "Keybinding config", context.keybindingPlan?.configPath ?? "unavailable");
+
+	field("platform", "platform", "Platform", `${platform} ${architecture}`);
+	field("platform", "node", "Node", `${nodeVersion} (${nodeSupported ? "supported" : "unsupported"})`);
+	field("platform", "locale", "Locale", locale);
+	field("platform", "git", "Git", gitPath ?? "not found");
+	field("platform", "bash", "Bash", bashPath ?? "not found");
+	field("platform", "npm", "npm", npmPath ?? "not found");
+	field("platform", "proxy", "Proxy configured", env.HTTP_PROXY || env.HTTPS_PROXY ? "yes" : "no");
+	field("platform", "extraCaCerts", "Additional CA configured", env.NODE_EXTRA_CA_CERTS ? "yes" : "no");
+
+	field("roots", "paths.agentDir", "Agent/config root", context.paths.agentDir);
+	field("roots", "paths.stateDir", "State root", context.paths.stateDir);
+	field("roots", "paths.sessionDir", "Session root", context.paths.sessionDir);
+	field("roots", "paths.cacheDir", "Cache root", context.paths.cacheDir);
+	field("roots", "modelPicker.state", "Model picker state", modelPickerState);
+	field(
+		"roots",
+		"isolation.piAgentDir",
+		"Inherited Pi agent root replaced",
+		context.inheritedPiAgentDir ? "yes" : "not set",
+	);
+	field(
+		"roots",
+		"isolation.piSessionDir",
+		"Inherited Pi session root replaced",
+		context.inheritedPiSessionDir ? "yes" : "not set",
+	);
 	const now = new Date();
 	const stateLocks = [
-		{ label: "Profile lock", path: pathApi.join(context.paths.stateDir, "profile.lock") },
-		{ label: "Keybinding lock", path: pathApi.join(context.paths.stateDir, "keybindings.lock") },
-		{ label: "Model picker lock", path: pathApi.join(context.paths.stateDir, "model-picker.lock") },
-		{ label: "Update lock", path: pathApi.join(context.paths.stateDir, "self-update.lock") },
+		{ id: "lock.profile", label: "Profile lock", file: "profile.lock" },
+		{ id: "lock.keybindings", label: "Keybinding lock", file: "keybindings.lock" },
+		{ id: "lock.modelPicker", label: "Model picker lock", file: "model-picker.lock" },
+		{ id: "lock.update", label: "Update lock", file: "self-update.lock" },
 	];
-	for (const { label, path } of stateLocks) {
-		lines.push(`${label}: ${describeStateLock(path, STATE_LOCK_STALE_MS, now)}`);
+	for (const { id, label, file } of stateLocks) {
+		const path = pathApi.join(context.paths.stateDir, file);
+		field("roots", id, label, describeStateLock(path, STATE_LOCK_STALE_MS, now));
 		const status = inspectStateLock(path, now).status;
 		if (status === "held-dead" || status === "owner-unknown" || status === "invalid") {
-			problems.push(`A leftover state lock blocks Jouzu operations: ${path} (${status})`);
+			problem(`${id}.stale`, `A leftover state lock blocks Jouzu operations: ${path} (${status})`);
 		}
 	}
-	lines.push(
-		`Shared cross-harness skills: ${sharedSkillsPath} (${existsSync(sharedSkillsPath) ? "present" : "absent"})`,
+	field(
+		"roots",
+		"skills.shared",
+		"Shared cross-harness skills",
+		`${sharedSkillsPath} (${existsSync(sharedSkillsPath) ? "present" : "absent"})`,
 	);
-	lines.push("");
-	lines.push(`Selected profile: ${context.profile.id} (${context.profile.source})`);
-	lines.push(`Bundled profile manifest: ${context.desiredProfileManifestSha256 ?? "unavailable"}`);
-	lines.push(`Applied profile manifest: ${context.profile.appliedManifestSha256 ?? "not applied"}`);
-	lines.push(`Configured Pi packages: ${packageState.count}`);
-	lines.push(`Provider auth file: ${existsSync(authPath) ? "present" : "absent"}`);
-	lines.push(`Custom models file: ${existsSync(modelsPath) ? "present" : "absent"}`);
-	lines.push(`Provider environment: ${providerEnvironment ? "present" : "not detected"}`);
-	lines.push("");
-	lines.push(
+
+	field("profile", "profile.selected", "Selected profile", `${context.profile.id} (${context.profile.source})`);
+	field(
+		"profile",
+		"profile.bundledManifest",
+		"Bundled profile manifest",
+		context.desiredProfileManifestSha256 ?? "unavailable",
+	);
+	field(
+		"profile",
+		"profile.appliedManifest",
+		"Applied profile manifest",
+		context.profile.appliedManifestSha256 ?? "not applied",
+	);
+	field("profile", "packages.count", "Configured Pi packages", String(packageState.count));
+	field("profile", "provider.authFile", "Provider auth file", existsSync(authPath) ? "present" : "absent");
+	field("profile", "provider.modelsFile", "Custom models file", existsSync(modelsPath) ? "present" : "absent");
+	field("profile", "provider.environment", "Provider environment", providerEnvironment ? "present" : "not detected");
+
+	notes.push(
 		"Isolation: stock Pi global config, auth, packages, and sessions are not imported. Project resources and ~/.agents/skills remain shared Pi compatibility surfaces.",
 	);
 
-	if (warnings.length > 0) {
-		lines.push("");
-		lines.push("Warnings:");
-		for (const warning of warnings) lines.push(`- ${warning}`);
-	}
-	if (problems.length > 0) {
-		lines.push("");
-		lines.push("Problems:");
-		for (const problem of problems) lines.push(`- ${problem}`);
-	}
-	lines.push("");
-	lines.push(problems.length === 0 ? "Result: ready for Jouzu v0.1 preview" : "Result: action required");
-
-	return { text: lines.join("\n"), healthy: problems.length === 0 };
+	const report: DoctorReport = {
+		schemaVersion: 1,
+		healthy: !issues.some((issue) => issue.severity === "problem"),
+		fields,
+		issues,
+		notes,
+	};
+	return { text: formatDoctorReport(report), healthy: report.healthy, report };
 }
