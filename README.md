@@ -211,7 +211,8 @@ npm run dev:link
 `dev:link` records the UTC build time, Git commit, and dirty-worktree state. `jz --version` displays an identifier such as `0.1.1-dev.20260823-140409+gb3e714f2`. A `.dirty` suffix marks a build that included uncommitted files. The standard `npm run build` removes development metadata before packing a release artifact.
 
 See [docs/architecture.md](docs/architecture.md) for the module map, state-file
-ownership, update lanes, and bundled profile boundaries.
+ownership, update lanes, and bundled profile boundaries. [Pi update review](docs/PI-UPDATES.md)
+records the candidate checklist, compatibility findings, and reverse-chronological update log.
 
 The opt-in live Japanese tool-flow smoke requires an explicitly selected provider/model and cost budget; it is not part of default tests:
 
