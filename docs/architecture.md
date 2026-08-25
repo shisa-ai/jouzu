@@ -32,6 +32,7 @@ cli.ts  (entry: argument routing, profile resolution, launch)
 
 packages/session-ui
   ├─ extension.ts        lifecycle wiring and single surface ownership
+  ├─ color.ts            truecolor/256/16/plain detection and RGB mapping
   ├─ snapshot.ts         provider-neutral typed session facts
   ├─ controller.ts       event-driven/coalesced local refresh
   ├─ prompt-frame.ts     custom Pi editor framing and rail
