@@ -8,6 +8,7 @@ import { visibleWidth } from "@earendil-works/pi-tui";
 import { createJouzuModelPicker, ModelPickerComponent } from "../dist/model-picker.js";
 import { deriveProjectKey, ModelPickerStore } from "../dist/model-picker-state.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
+import { createSessionUiStyles } from "../dist/session-ui/index.js";
 
 const identityTheme = {
 	fg: (_role, value) => value,
@@ -74,6 +75,7 @@ function createComponent(overrides = {}) {
 				},
 			},
 			theme: identityTheme,
+			styles: createSessionUiStyles(identityTheme),
 			keybindings: fakeKeybindings(),
 			close() {
 				calls.close += 1;
@@ -437,4 +439,57 @@ test("integration records recency only on the first physical dispatch after each
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
+});
+
+test("typing reuses cached filter counts instead of re-ranking the inventory", () => {
+	const queries = [];
+	const { component } = createComponent({
+		getRows: (query) => {
+			queries.push(query);
+			return rows();
+		},
+	});
+
+	// Construction ranks the active query once and the three filter counts once each.
+	assert.equal(queries.length, 4);
+	assert.deepEqual(queries.slice(1).sort(), ["", "", ""], "filter counts are computed with an empty query");
+
+	queries.length = 0;
+	component.handleInput("a");
+	assert.equal(queries.length, 1, "a keystroke must rank once, not once per filter");
+	assert.equal(queries[0], "a");
+
+	queries.length = 0;
+	component.handleInput("b");
+	component.handleInput("c");
+	assert.equal(queries.length, 2);
+
+	// Cycling filters re-ranks the active list but does not disturb the counts.
+	queries.length = 0;
+	component.handleInput("\t");
+	assert.equal(queries.length, 1);
+});
+
+test("toggling a favorite refreshes the cached filter counts", () => {
+	const queries = [];
+	const { component } = createComponent({
+		getRows: (query) => {
+			queries.push(query);
+			return rows();
+		},
+	});
+
+	// Type first so the active query is distinguishable from the count queries.
+	component.handleInput("z");
+	queries.length = 0;
+
+	component.handleInput("\x06");
+	// A favorite changes the inventory partition, so the three counts are
+	// recomputed and the active query is ranked once more.
+	assert.equal(queries.filter((query) => query === "").length, 3, "all three filter counts refresh");
+	assert.deepEqual(
+		queries.filter((query) => query !== ""),
+		["z"],
+		"the active query is re-ranked exactly once",
+	);
 });

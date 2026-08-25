@@ -38,7 +38,25 @@ export type SessionUiStyleRole =
 	| "status.tokens"
 	| "status.separator"
 	| "status.health"
-	| "status.unknown";
+	| "status.unknown"
+	| "palette.border"
+	| "palette.title"
+	| "palette.count"
+	| "palette.marker"
+	| "palette.identity"
+	| "palette.identity.selected"
+	| "palette.favorite"
+	| "palette.default"
+	| "palette.unavailable"
+	| "palette.context.small"
+	| "palette.section"
+	| "palette.section.current"
+	| "palette.detail"
+	| "palette.tab.active"
+	| "palette.empty"
+	| "palette.message.error"
+	| "palette.message.info"
+	| "palette.hint";
 
 type ThemeColor = Parameters<Theme["fg"]>[0];
 
@@ -52,10 +70,14 @@ const theme = (value: ThemeColor): SessionUiColor => Object.freeze({ source: "th
 const rgb = (red: number, green: number, blue: number): SessionUiColor =>
 	Object.freeze({ source: "rgb", red, green, blue });
 
+/** Jouzu brand accents, shared by the prompt rail and the Palette so one capability policy covers both. */
+const BRAND_BLUE = rgb(103, 232, 249);
+const BRAND_PINK = rgb(244, 114, 182);
+
 /** Jouzu-owned semantic roles with defaults matched to the retained Session UI baseline. */
 export const DEFAULT_SESSION_UI_STYLE_SCHEME: SessionUiStyleScheme = Object.freeze({
 	"prompt.border": theme("borderMuted"),
-	"prompt.rail": rgb(103, 232, 249),
+	"prompt.rail": BRAND_BLUE,
 	"session.hint.text": theme("text"),
 	"session.hint.muted": theme("muted"),
 	"session.hint.accent": theme("accent"),
@@ -91,6 +113,24 @@ export const DEFAULT_SESSION_UI_STYLE_SCHEME: SessionUiStyleScheme = Object.free
 	"status.separator": theme("borderMuted"),
 	"status.health": theme("error"),
 	"status.unknown": theme("warning"),
+	"palette.border": theme("borderAccent"),
+	"palette.title": theme("accent"),
+	"palette.count": theme("muted"),
+	"palette.marker": BRAND_BLUE,
+	"palette.identity": theme("text"),
+	"palette.identity.selected": BRAND_BLUE,
+	"palette.favorite": theme("warning"),
+	"palette.default": theme("success"),
+	"palette.unavailable": theme("error"),
+	"palette.context.small": theme("warning"),
+	"palette.section": theme("muted"),
+	"palette.section.current": BRAND_PINK,
+	"palette.detail": BRAND_BLUE,
+	"palette.tab.active": theme("accent"),
+	"palette.empty": theme("muted"),
+	"palette.message.error": theme("error"),
+	"palette.message.info": theme("muted"),
+	"palette.hint": theme("dim"),
 });
 
 export interface SessionUiStyles {

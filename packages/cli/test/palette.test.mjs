@@ -7,6 +7,12 @@ import {
 	selectPalettePresentation,
 } from "../dist/palette.js";
 
+const identityTheme = {
+	fg: (_role, value) => value,
+	bg: (_role, value) => value,
+	bold: (value) => value,
+};
+
 function deferred() {
 	let resolve;
 	const promise = new Promise((done) => {
@@ -34,7 +40,7 @@ function fakeContext(mode = "tui") {
 				};
 				handles.push(handle);
 				options?.onHandle?.(handle);
-				component = factory({ requestRender() {}, terminal: { columns: 100, rows: 30 } }, {}, {}, () =>
+				component = factory({ requestRender() {}, terminal: { columns: 100, rows: 30 } }, identityTheme, {}, () =>
 					completion.resolve(),
 				);
 				calls.push({ factory, options });
@@ -115,4 +121,20 @@ test("replacement backend omits overlay options and non-TUI modes decline", asyn
 	const rpc = fakeContext("rpc");
 	assert.equal(await rpcHost.open(rpc.ctx, { view: "models" }, componentFactory([])), false);
 	assert.equal(rpc.calls.length, 0);
+});
+
+test("the Palette host supplies Jouzu semantic styles to every view", () => {
+	const { ctx } = fakeContext();
+	const host = new JouzuPaletteSurfaceHost();
+	let received;
+	void host.open(ctx, { view: "models" }, (componentContext) => {
+		received = componentContext;
+		return { render: () => [], invalidate() {}, route() {} };
+	});
+
+	assert.ok(received, "the view factory receives a component context");
+	assert.equal(typeof received.styles?.apply, "function", "views are given a styles object, not a raw theme");
+	// The identity theme reports no color support, so roles pass their value through.
+	assert.equal(received.styles.apply("palette.border", "─"), "─");
+	assert.ok(received.styles.scheme["palette.marker"], "the Palette roles are present in the supplied scheme");
 });

@@ -1,5 +1,6 @@
 import type { ExtensionContext, KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
 import type { Component, OverlayHandle, OverlayOptions, TUI } from "@earendil-works/pi-tui";
+import { createSessionUiStyles, type SessionUiStyles } from "./session-ui/index.js";
 
 export type PaletteViewId = "models" | "usage" | "keys" | "help";
 export type PalettePresentation = "floating" | "replace";
@@ -18,6 +19,8 @@ export interface PaletteComponentContext {
 	tui: TUI;
 	theme: Theme;
 	keybindings: KeybindingsManager;
+	/** Jouzu-owned semantic colors. Views style through these roles rather than emitting escapes. */
+	styles: SessionUiStyles;
 	close(): void;
 }
 
@@ -98,7 +101,10 @@ export class JouzuPaletteSurfaceHost {
 				: undefined;
 
 		const promise = ctx.ui.custom<void>((tui, theme, keybindings, done) => {
-			component = factory({ tui, theme, keybindings, close: () => done(undefined) }, route);
+			component = factory(
+				{ tui, theme, keybindings, styles: createSessionUiStyles(theme), close: () => done(undefined) },
+				route,
+			);
 			if (this.active?.token === token) this.active.component = component;
 			return component;
 		}, customOptions);
