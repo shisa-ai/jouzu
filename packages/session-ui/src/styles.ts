@@ -54,7 +54,7 @@ const rgb = (red: number, green: number, blue: number): SessionUiColor =>
 /** Jouzu-owned semantic roles with defaults matched to the retained Session UI baseline. */
 export const DEFAULT_SESSION_UI_STYLE_SCHEME: SessionUiStyleScheme = Object.freeze({
 	"prompt.border": theme("borderMuted"),
-	"prompt.rail": rgb(255, 255, 175),
+	"prompt.rail": rgb(103, 232, 249),
 	"session.hint.text": theme("text"),
 	"session.hint.muted": theme("muted"),
 	"session.hint.accent": theme("accent"),

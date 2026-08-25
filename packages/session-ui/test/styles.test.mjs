@@ -10,7 +10,7 @@ const taggedTheme = {
 test("maps Jouzu semantic roles to the retained Session UI color baseline", () => {
 	const styles = createSessionUiStyles(taggedTheme, { colorEnabled: true });
 	assert.equal(styles.apply("prompt.border", "border"), "<borderMuted>border</borderMuted>");
-	assert.equal(styles.apply("prompt.rail", "┃"), "\u001b[38;2;255;255;175m┃\u001b[39m");
+	assert.equal(styles.apply("prompt.rail", "┃"), "\u001b[38;2;103;232;249m┃\u001b[39m");
 	assert.equal(styles.apply("session.provider", "Codex"), "<dim>Codex</dim>");
 	assert.equal(styles.apply("session.model", "gpt"), "<mdCode>gpt</mdCode>");
 	assert.equal(styles.apply("status.workspace", "work"), "\u001b[38;2;215;215;255mwork\u001b[39m");

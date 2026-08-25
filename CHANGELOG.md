@@ -6,7 +6,8 @@
 - Add `Ctrl+/` and `Ctrl+?` Jouzu help shortcuts and show the model/help shortcuts in the Session Line.
 - Preserve open editor autocomplete behavior before application-level key handling.
 - Add the built-in Jouzu Prompt Frame, Session Line, and responsive Status Bar with provider-neutral local facts and CJK/ANSI-safe width degradation.
-- Match the retained Session UI color baseline through Jouzu-owned semantic style roles that can be replaced by a future global theme.
+- Match the retained Session UI color baseline through Jouzu-owned semantic style roles, with a bright Jouzu-cyan Prompt Frame rail that can be replaced by a future global theme.
+- Add a public Pi candidate checklist and reverse-chronological update log, including fail-closed v0.84.3 provenance and host-seam findings.
 - Identify linked development builds by UTC build time, source commit, and dirty-worktree state without changing the published package version.
 
 ## 0.1.1 - 2026-08-23
