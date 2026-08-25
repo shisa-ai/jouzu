@@ -41,6 +41,13 @@ test("preserves runtime-specific baseline mappings behind semantic roles", () =>
 	}
 });
 
+test("maps custom RGB roles to the selected terminal color mode", () => {
+	const indexed = createSessionUiStyles(taggedTheme, { colorEnabled: true, colorMode: "256" });
+	assert.equal(indexed.apply("status.workspace", "work"), "\u001b[38;5;189mwork\u001b[39m");
+	const basic = createSessionUiStyles(taggedTheme, { colorEnabled: true, colorMode: "16" });
+	assert.equal(basic.apply("prompt.rail", "┃"), "\u001b[96m┃\u001b[39m");
+});
+
 test("supports no-color output and replacement schemes without renderer changes", () => {
 	const plain = createSessionUiStyles(taggedTheme, { colorEnabled: false });
 	assert.equal(plain.apply("prompt.rail", "┃"), "┃");

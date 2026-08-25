@@ -2,7 +2,7 @@ import { basename } from "node:path";
 import type { InlineExtension, Theme } from "@earendil-works/pi-coding-agent";
 import type { JouzuMetadata } from "./metadata.js";
 import type { ProfileSelection } from "./runtime.js";
-import { fitTerminalText } from "./terminal-layout.js";
+import { detectTerminalColorMode, fitTerminalText, type TerminalColorMode } from "./terminal-layout.js";
 
 export const CLEAR_SCREEN_SEQUENCE = "\u001b[2J\u001b[H";
 
@@ -25,7 +25,7 @@ export interface InteractiveStartupContext {
 	env?: NodeJS.ProcessEnv;
 }
 
-export type BannerColorMode = "truecolor" | "256" | "16" | "none";
+export type BannerColorMode = TerminalColorMode;
 
 export interface BannerPalette {
 	markTruecolor: { start: readonly [number, number, number]; end: readonly [number, number, number] };
@@ -105,17 +105,10 @@ function fitPresentationText(text: string, width: number): string {
 }
 
 export function detectBannerColorMode(options: BannerRenderOptions = {}): BannerColorMode {
-	const env = options.env ?? process.env;
-	if (env.NO_COLOR !== undefined || env.TERM === "dumb") return "none";
-	const colorDepth =
-		options.colorDepth ??
-		(process.stdout.isTTY && typeof process.stdout.getColorDepth === "function"
-			? process.stdout.getColorDepth(env)
-			: undefined);
-	if ((colorDepth ?? 0) >= 24 || /^(truecolor|24bit)$/i.test(env.COLORTERM ?? "")) return "truecolor";
-	if ((colorDepth ?? 0) >= 8 || /256color/i.test(env.TERM ?? "")) return "256";
-	if ((colorDepth ?? 0) >= 4 || (env.TERM !== undefined && env.TERM !== "")) return "16";
-	return "none";
+	return detectTerminalColorMode({
+		...(options.env ? { env: options.env } : {}),
+		...(options.colorDepth !== undefined ? { colorDepth: options.colorDepth } : {}),
+	});
 }
 
 export function renderBrandAccent(

@@ -1,3 +1,4 @@
+export * from "./color.js";
 export * from "./contracts.js";
 export * from "./controller.js";
 export * from "./extension.js";

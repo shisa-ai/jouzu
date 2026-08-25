@@ -1,4 +1,5 @@
 import type { Theme } from "@earendil-works/pi-coding-agent";
+import { detectTerminalColorMode, renderTerminalRgb, type TerminalColorMode } from "./color.js";
 
 export type SessionUiStyleRole =
 	| "prompt.border"
@@ -100,6 +101,9 @@ export interface SessionUiStyles {
 export interface SessionUiStyleOptions {
 	scheme?: SessionUiStyleScheme;
 	colorEnabled?: boolean;
+	colorMode?: TerminalColorMode;
+	colorDepth?: number;
+	stdoutIsTTY?: boolean;
 	env?: NodeJS.ProcessEnv;
 }
 
@@ -115,6 +119,13 @@ export function createSessionUiStyles(
 	const env = options.env ?? process.env;
 	const colorEnabled =
 		options.colorEnabled ?? (env.NO_COLOR === undefined && env.TERM !== "dumb" && themeSupportsColor(themeValue));
+	const detectedMode = detectTerminalColorMode({
+		env,
+		...(options.colorDepth !== undefined ? { colorDepth: options.colorDepth } : {}),
+		...(options.stdoutIsTTY !== undefined ? { stdoutIsTTY: options.stdoutIsTTY } : {}),
+	});
+	const colorMode =
+		options.colorMode ?? (options.colorEnabled === true && detectedMode === "none" ? "truecolor" : detectedMode);
 	const scheme = options.scheme ?? DEFAULT_SESSION_UI_STYLE_SCHEME;
 	return Object.freeze({
 		scheme,
@@ -122,7 +133,7 @@ export function createSessionUiStyles(
 			if (!colorEnabled || value.length === 0) return value;
 			const color = scheme[role];
 			if (color.source === "theme") return themeValue.fg(color.value, value);
-			return `\u001b[38;2;${color.red};${color.green};${color.blue}m${value}\u001b[39m`;
+			return renderTerminalRgb(value, color, colorMode);
 		},
 	});
 }

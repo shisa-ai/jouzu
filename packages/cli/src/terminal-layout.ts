@@ -1,4 +1,5 @@
 export {
+	detectTerminalColorMode,
 	fillTerminalColumns,
 	fitTerminalText,
 	padTerminalText,
@@ -6,7 +7,11 @@ export {
 	renderTerminalFrameBorder,
 	renderTerminalFrameRow,
 	renderTerminalFrameTitle,
+	renderTerminalRgb,
+	rgbToAnsi16,
+	rgbToAnsi256,
 	sanitizeTerminalText,
+	type TerminalColorMode,
 	type TerminalFrameBorderOptions,
 	type TerminalFrameOptions,
 	type TerminalFrameTitleOptions,
