@@ -310,10 +310,11 @@ test("doctor exposes a structured report whose text rendering matches it", () =>
 		const report = result.report;
 
 		assert.equal(report.schemaVersion, 1);
+		assert.equal(report.experimental, true);
 		assert.equal(report.healthy, result.healthy);
 		assert.ok(report.fields.length > 30, "the report carries every observed field");
 
-		// Identifiers are the machine contract and must be unique and stable.
+		// Experimental schema 1 still requires unique machine keys within one report.
 		const ids = report.fields.map((field) => field.id);
 		assert.equal(new Set(ids).size, ids.length, "field identifiers are unique");
 		for (const required of ["jouzu.version", "pi.runtime", "node", "git", "paths.stateDir", "packages.count"]) {
@@ -374,6 +375,7 @@ test("doctor issues drive health and the rendered warning and problem blocks", (
 test("a report without issues omits the warning and problem blocks", () => {
 	const report = {
 		schemaVersion: 1,
+		experimental: true,
 		healthy: true,
 		fields: [{ id: "a", section: "runtime", label: "A", value: "1" }],
 		issues: [],

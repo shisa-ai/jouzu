@@ -10,7 +10,7 @@
 - Add a public Pi candidate checklist and reverse-chronological update log, including fail-closed v0.84.3 provenance and host-seam findings.
 - Preserve project-default activation, failed-selection persistence boundaries, and replacement-editor cursor/paste state; sanitize model labels and render Jouzu RGB roles through the terminal's truecolor, 256-color, 16-color, or no-color mode.
 - Identify linked development builds by UTC build time, source commit, and dirty-worktree state without changing the published package version.
-- Add `jouzu doctor --json`, printing the same diagnostics as a structured report with stable field and issue identifiers.
+- Add experimental `jouzu doctor --json` schema 1 with machine-readable fields and issues; its structure and identifiers may change before v0.3/v0.4.
 - Style the Palette through the same Jouzu semantic color roles as the Session UI, so one terminal capability policy covers every Jouzu-owned surface.
 
 ## 0.1.1 - 2026-08-23

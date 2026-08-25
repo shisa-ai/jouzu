@@ -54,7 +54,7 @@ export type DoctorSeverity = "warning" | "problem";
 
 export type DoctorSectionId = "runtime" | "platform" | "roots" | "profile";
 
-/** One observed fact. `id` is stable for machine consumers; `label`/`value` are display text. */
+/** One observed fact. Schema 1 IDs are machine keys, but remain experimental through v0.1.x. */
 export interface DoctorField {
 	id: string;
 	section: DoctorSectionId;
@@ -71,6 +71,7 @@ export interface DoctorIssue {
 
 export interface DoctorReport {
 	schemaVersion: 1;
+	experimental: true;
 	healthy: boolean;
 	fields: DoctorField[];
 	issues: DoctorIssue[];
@@ -393,6 +394,7 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 
 	const report: DoctorReport = {
 		schemaVersion: 1,
+		experimental: true,
 		healthy: !issues.some((issue) => issue.severity === "problem"),
 		fields,
 		issues,

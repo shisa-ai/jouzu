@@ -469,7 +469,7 @@ test("corrupt profile state fails with exit 1 and a recovery action, not the con
 	}
 });
 
-test("doctor is non-mutating and reports replacement of inherited Pi roots", () => {
+test("doctor text and experimental JSON preserve diagnostics, exit status, and roots", () => {
 	const temp = mkdtempSync(join(tmpdir(), "jouzu-doctor-"));
 	try {
 		const jouzuHome = join(temp, "上手 home");
@@ -477,17 +477,36 @@ test("doctor is non-mutating and reports replacement of inherited Pi roots", () 
 		mkdirSync(stockPi);
 		const sentinel = join(stockPi, "sentinel.txt");
 		writeFileSync(sentinel, "unchanged\n");
-		const result = run(["--jouzu-home", jouzuHome, "doctor"], {
-			env: {
-				PI_CODING_AGENT_DIR: stockPi,
-				PI_CODING_AGENT_SESSION_DIR: join(stockPi, "sessions"),
-			},
-		});
+		const inheritedRoots = {
+			PI_CODING_AGENT_DIR: stockPi,
+			PI_CODING_AGENT_SESSION_DIR: join(stockPi, "sessions"),
+		};
+		const result = run(["--jouzu-home", jouzuHome, "doctor"], { env: inheritedRoots });
 		const qualified = piLock.compatibilityStatus === "qualified";
 		assert.equal(result.status, qualified ? 0 : 1, result.stderr || result.stdout);
 		assert.match(result.stdout, new RegExp(`Agent/config root: ${jouzuHome.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
 		assert.match(result.stdout, /Inherited Pi agent root replaced: yes/);
 		assert.match(result.stdout, qualified ? /Result: ready for Jouzu v0\.1 preview/ : /Result: action required/);
+
+		const jsonResult = run(["--jouzu-home", jouzuHome, "doctor", "--json"], { env: inheritedRoots });
+		assert.equal(jsonResult.status, qualified ? 0 : 1, jsonResult.stderr || jsonResult.stdout);
+		assert.equal(jsonResult.stderr, "");
+		const report = JSON.parse(jsonResult.stdout);
+		assert.equal(report.schemaVersion, 1);
+		assert.equal(report.experimental, true);
+		assert.equal(report.healthy, qualified);
+		assert.equal(report.fields.find((field) => field.id === "paths.agentDir")?.value, join(jouzuHome, "agent"));
+		assert.equal(report.fields.find((field) => field.id === "isolation.piAgentDir")?.value, "yes");
+
+		const unhealthyResult = run(["--jouzu-home", jouzuHome, "doctor", "--json"], {
+			env: { ...inheritedRoots, PATH: "" },
+		});
+		assert.equal(unhealthyResult.status, 1, unhealthyResult.stderr || unhealthyResult.stdout);
+		assert.equal(unhealthyResult.stderr, "");
+		const unhealthyReport = JSON.parse(unhealthyResult.stdout);
+		assert.equal(unhealthyReport.healthy, false);
+		assert.ok(unhealthyReport.issues.some((issue) => issue.severity === "problem"));
+
 		assert.equal(existsSync(jouzuHome), false, "doctor created the Jouzu home");
 		assert.equal(readFileSync(sentinel, "utf8"), "unchanged\n");
 	} finally {
