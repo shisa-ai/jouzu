@@ -68,11 +68,13 @@ recovers a dead owner's or owner-unknown lock after the stale threshold.
 `private-fs.ts` creates Jouzu-owned roots and descendants with POSIX mode
 `0700`, creates copied backup files with mode `0600`, rejects symlinks inside
 those owned boundaries, and leaves caller-owned parent directories unchanged.
-It also owns `writeFilePrivateAtomic`, the single durable write used by every
-state owner: the payload goes to a uniquely named `0600` temporary file inside
-the owned directory, is flushed, and is renamed over the destination, so a
-concurrent reader never observes a partial write. Each owner module keeps its
-own schema validation and parsing.
+It also owns `writeFilePrivateAtomic`, the atomic replacement helper used by
+every state owner. The payload goes to a uniquely named `0600` temporary file
+inside the owned directory, is flushed, and is renamed over the destination, so
+a concurrent reader never observes a partial write. The helper does not flush
+the parent directory after rename and makes no power-loss durability claim for
+the directory entry. Each owner module keeps its own schema validation and
+parsing.
 
 ## Update lanes
 

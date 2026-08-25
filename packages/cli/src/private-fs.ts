@@ -79,11 +79,13 @@ export function copyPrivateFile(source: string, destination: string, root: strin
 }
 
 /**
- * Durably replace a file inside a Jouzu-owned directory. The payload is written
- * to a uniquely named private temporary file, flushed, and renamed over the
- * destination, so a concurrent reader observes either the previous content or
- * the complete new content and never a partial write. The temporary file is
- * removed on every failure path.
+ * Atomically replace a file inside a Jouzu-owned directory. The payload is
+ * written to a uniquely named private temporary file, flushed, and renamed over
+ * the destination, so a concurrent reader observes either the previous content
+ * or the complete new content and never a partial write. A `finally` block
+ * removes the temporary path. The helper does not flush the parent directory
+ * after the rename and therefore makes no power-loss durability claim for that
+ * directory entry.
  *
  * `root` is the Jouzu-owned boundary the destination must stay inside; it
  * defaults to the destination's own directory for callers that own that
