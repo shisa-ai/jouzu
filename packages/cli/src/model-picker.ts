@@ -3,6 +3,7 @@ import { type Focusable, Input, matchesKey, type TUI } from "@earendil-works/pi-
 import { buildPickerRows, type PickerFilter, type PickerModel, type PickerRow } from "./model-picker-ranking.js";
 import {
 	deriveProjectKey,
+	emptyModelPickerState,
 	MODEL_PICKER_HISTORY_LIMIT,
 	type ModelPickerState,
 	ModelPickerStore,
@@ -355,6 +356,10 @@ function modelReference(model: PiModel | undefined): ModelReference | undefined 
 	return model ? { provider: model.provider, modelId: model.id } : undefined;
 }
 
+function hasConversationEntries(entries: readonly { type: string }[]): boolean {
+	return entries.some((entry) => ["message", "compaction", "branch_summary", "custom_message"].includes(entry.type));
+}
+
 function pickerModels(ctx: ExtensionContext): PickerModel[] {
 	const models =
 		ctx.scopedModels.length > 0 ? ctx.scopedModels.map(({ model }) => model) : ctx.modelRegistry.getAvailable();
@@ -375,7 +380,7 @@ export function createJouzuModelPicker(
 	const store = new ModelPickerStore(paths);
 	const surface = new JouzuPaletteSurfaceHost();
 	let activeCtx: ExtensionContext | undefined;
-	let state: ModelPickerState = store.load().state;
+	let state: ModelPickerState = emptyModelPickerState();
 	let projectKey = "";
 	let previous: ModelReference[] = [];
 	let pendingDispatch: ModelReference | undefined;
@@ -407,8 +412,13 @@ export function createJouzuModelPicker(
 			pi.on("session_start", async (event, ctx) => {
 				syncSession(ctx);
 				const applyProjectDefault =
-					event.reason === "new" || (event.reason === "startup" && options.applyProjectDefaultAtStartup === true);
-				if (!applyProjectDefault || ctx.sessionManager.getBranch().length > 0 || ctx.scopedModels.length > 0) return;
+					options.applyProjectDefaultAtStartup === true && (event.reason === "startup" || event.reason === "new");
+				if (
+					!applyProjectDefault ||
+					hasConversationEntries(ctx.sessionManager.getBranch()) ||
+					ctx.scopedModels.length > 0
+				)
+					return;
 				const reference = state.defaults.projects[projectKey];
 				if (!reference || modelReferencesEqual(reference, modelReference(ctx.model))) return;
 				const model = ctx.modelRegistry.find(reference.provider, reference.modelId);
@@ -489,9 +499,9 @@ export function createJouzuModelPicker(
 						if (!ctx.isIdle()) throw new Error("Wait for the active model call to finish before switching models.");
 						const model = ctx.modelRegistry.find(row.model.provider, row.model.modelId);
 						if (!model) throw new Error(`Model is unavailable: ${row.model.provider}/${row.model.modelId}`);
-						if (scope === "project") state = store.setProjectDefault(row.model, projectKey);
 						if (!(await activateModel(model)))
 							throw new Error(`No authentication for ${row.model.provider}/${row.model.modelId}`);
+						if (scope === "project") state = store.setProjectDefault(row.model, projectKey);
 					},
 					onToggleFavorite: (row, scope) => {
 						state = store.toggleFavorite(row.model, scope, scope === "project" ? projectKey : undefined);

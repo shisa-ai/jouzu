@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -259,17 +259,132 @@ test("new sessions apply an available project default through session-only exten
 		});
 		const current = { provider: "p", id: "a", name: "A", contextWindow: 100_000, maxTokens: 10_000 };
 		const target = { provider: "p", id: "b", name: "B", contextWindow: 100_000, maxTokens: 10_000 };
+		let branch = [
+			{ type: "model_change", provider: "p", modelId: "a" },
+			{ type: "thinking_level_change", thinkingLevel: "off" },
+		];
 		const ctx = {
 			mode: "tui",
 			cwd: root,
 			model: current,
 			scopedModels: [],
-			sessionManager: { getBranch: () => [] },
+			sessionManager: { getBranch: () => branch },
 			modelRegistry: { find: () => target },
 			ui: { notify() {} },
 		};
 		await handlers.get("session_start")({ reason: "startup" }, ctx);
 		assert.deepEqual(selected, ["b"]);
+
+		branch = [...branch, { type: "message", message: { role: "user", content: "existing" } }];
+		await handlers.get("session_start")({ reason: "new" }, ctx);
+		assert.deepEqual(selected, ["b"], "a session with conversation messages must keep its restored model");
+
+		branch = branch.filter((entry) => entry.type !== "message");
+		ctx.scopedModels = [{ model: target }];
+		await handlers.get("session_start")({ reason: "new" }, ctx);
+		assert.deepEqual(selected, ["b"], "a scoped model set must retain precedence");
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("failed project activation does not persist a project default", async (testContext) => {
+	for (const [name, setModel] of [
+		["missing authentication", async () => false],
+		["activation error", async () => Promise.reject(new Error("activation failed"))],
+	]) {
+		await testContext.test(name, async () => {
+			const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-failed-default-"));
+			try {
+				const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+				const integration = createJouzuModelPicker(paths);
+				const handlers = new Map();
+				integration.extension.factory({
+					on(event, handler) {
+						handlers.set(event, handler);
+					},
+					setModel,
+				});
+				const model = { provider: "p", id: "m", name: "M", contextWindow: 100_000, maxTokens: 10_000 };
+				let component;
+				const ctx = {
+					mode: "tui",
+					cwd: root,
+					model,
+					scopedModels: [],
+					sessionManager: { getBranch: () => [] },
+					modelRegistry: {
+						getAvailable: () => [model],
+						refresh: async () => ({ errors: new Map() }),
+						find: () => model,
+					},
+					getContextUsage: () => ({ tokens: 100, contextWindow: 100_000, percent: 1 }),
+					isIdle: () => true,
+					ui: {
+						notify() {},
+						custom(factory) {
+							return new Promise((resolve) => {
+								component = factory(
+									{ terminal: { rows: 30 }, requestRender() {} },
+									identityTheme,
+									fakeKeybindings(),
+									resolve,
+								);
+							});
+						},
+					},
+				};
+				await handlers.get("session_start")({ reason: "startup" }, ctx);
+				const opened = integration.open({ source: "action" });
+				await Promise.resolve();
+				component.handleInput("\x1b[13;2u");
+				await new Promise((resolve) => setTimeout(resolve, 5));
+				component.handleInput("escape");
+				await opened;
+				assert.deepEqual(new ModelPickerStore(paths).load().state.defaults.projects, {});
+			} finally {
+				rmSync(root, { recursive: true, force: true });
+			}
+		});
+	}
+});
+
+test("corrupt picker state is quarantined and reported after a UI context exists", async () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-corrupt-launch-"));
+	try {
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+		mkdirSync(paths.stateDir, { recursive: true });
+		const statePath = join(paths.stateDir, "model-picker.json");
+		writeFileSync(statePath, "{ broken");
+		const integration = createJouzuModelPicker(paths);
+		assert.equal(readFileSync(statePath, "utf8"), "{ broken", "construction must not recover without a UI");
+		const handlers = new Map();
+		integration.extension.factory({
+			on(event, handler) {
+				handlers.set(event, handler);
+			},
+			setModel: async () => true,
+		});
+		const notifications = [];
+		await handlers.get("session_start")(
+			{ reason: "startup" },
+			{
+				mode: "tui",
+				cwd: root,
+				model: undefined,
+				scopedModels: [],
+				sessionManager: { getBranch: () => [] },
+				ui: { notify: (...values) => notifications.push(values) },
+			},
+		);
+		assert.equal(existsSync(statePath), false);
+		assert.equal(
+			readdirSync(paths.stateDir).some((name) => name.startsWith("model-picker.corrupt-")),
+			true,
+		);
+		assert.equal(notifications.length, 1);
+		assert.match(notifications[0][0], /Unreadable model picker state was preserved/);
+		assert.equal(notifications[0][1], "warning");
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
