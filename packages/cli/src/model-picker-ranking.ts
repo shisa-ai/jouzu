@@ -1,5 +1,6 @@
 import type { ModelPickerState, ModelReference } from "./model-picker-state.js";
 import { modelReferenceKey, modelReferencesEqual } from "./model-picker-state.js";
+import { sanitizeTerminalText } from "./terminal-layout.js";
 
 export type PickerFilter = "recent" | "favorite" | "all";
 export type PickerSection = "current" | "previous" | "favorite" | "project_recent" | "global_recent" | "all";
@@ -10,6 +11,11 @@ export interface PickerModel extends ModelReference {
 	contextWindow?: number;
 	maxTokens?: number;
 	available: boolean;
+	display?: {
+		provider: string;
+		modelId: string;
+		name: string;
+	};
 }
 
 export interface PickerRow {
@@ -35,25 +41,16 @@ export interface BuildPickerRowsOptions {
 }
 
 function normalized(value: string): string {
-	return value.normalize("NFKC").toLocaleLowerCase();
-}
-
-function safeDisplay(value: string): string {
-	return Array.from(value)
-		.map((character) => {
-			const codePoint = character.codePointAt(0) ?? 0;
-			return codePoint <= 0x1f || codePoint === 0x7f ? "�" : character;
-		})
-		.join("");
+	return value.normalize("NFKC").toLowerCase();
 }
 
 function searchScore(model: PickerModel, query: string): number | undefined {
 	const needle = normalized(query.trim());
 	if (!needle) return 0;
-	const provider = normalized(model.provider);
-	const modelId = normalized(model.modelId);
+	const provider = normalized(model.display?.provider ?? sanitizeTerminalText(model.provider));
+	const modelId = normalized(model.display?.modelId ?? sanitizeTerminalText(model.modelId));
 	const exact = `${provider}/${modelId}`;
-	const name = normalized(model.name);
+	const name = normalized(model.display?.name ?? sanitizeTerminalText(model.name));
 	if (exact === needle) return 0;
 	if (modelId === needle) return 1;
 	if (name === needle) return 2;
@@ -100,19 +97,26 @@ function resolvedModels(options: BuildPickerRowsOptions): Map<string, PickerMode
 	for (const model of options.models) {
 		models.set(modelReferenceKey(model), {
 			...model,
-			provider: safeDisplay(model.provider),
-			modelId: safeDisplay(model.modelId),
-			name: safeDisplay(model.name),
+			display: {
+				provider: sanitizeTerminalText(model.provider),
+				modelId: sanitizeTerminalText(model.modelId),
+				name: sanitizeTerminalText(model.name),
+			},
 		});
 	}
 	for (const favorite of options.state.favorites) {
 		const key = modelReferenceKey(favorite);
 		if (!models.has(key)) {
 			models.set(key, {
-				provider: safeDisplay(favorite.provider),
-				modelId: safeDisplay(favorite.modelId),
-				name: safeDisplay(favorite.modelId),
+				provider: favorite.provider,
+				modelId: favorite.modelId,
+				name: favorite.modelId,
 				available: false,
+				display: {
+					provider: sanitizeTerminalText(favorite.provider),
+					modelId: sanitizeTerminalText(favorite.modelId),
+					name: sanitizeTerminalText(favorite.modelId),
+				},
 			});
 		}
 	}
@@ -173,6 +177,11 @@ export function buildPickerRows(options: BuildPickerRowsOptions): PickerRow[] {
 	}
 
 	if (!query) return rows.slice(0, options.maxRows ?? Number.MAX_SAFE_INTEGER);
+	const compareIdentity = (left: PickerRow, right: PickerRow): number => {
+		const leftKey = modelReferenceKey(left.model);
+		const rightKey = modelReferenceKey(right.model);
+		return leftKey < rightKey ? -1 : leftKey > rightKey ? 1 : 0;
+	};
 	return rows
 		.map((row) => ({ row, score: searchScore(row.model, query) }))
 		.filter((value): value is { row: PickerRow; score: number } => value.score !== undefined)
@@ -180,8 +189,8 @@ export function buildPickerRows(options: BuildPickerRowsOptions): PickerRow[] {
 			(left, right) =>
 				left.score - right.score ||
 				Number(right.row.model.available) - Number(left.row.model.available) ||
-				left.row.rank - right.row.rank ||
-				modelReferenceKey(left.row.model).localeCompare(modelReferenceKey(right.row.model)),
+				(filter === "all" ? 0 : left.row.rank - right.row.rank) ||
+				compareIdentity(left.row, right.row),
 		)
 		.slice(0, options.maxRows ?? 200)
 		.map(({ row, score }) => ({ ...row, rank: score }));

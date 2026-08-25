@@ -26,6 +26,7 @@ import {
 	renderTerminalFrameBorder,
 	renderTerminalFrameRow,
 	renderTerminalFrameTitle,
+	sanitizeTerminalText,
 } from "./terminal-layout.js";
 
 type PiModel = NonNullable<ExtensionContext["model"]>;
@@ -45,7 +46,6 @@ export interface ModelPickerComponentOptions {
 	getRows(query: string, filter: PickerFilter): PickerRow[];
 	onSelect(row: PickerRow, scope: "session" | "project"): Promise<void>;
 	onToggleFavorite(row: PickerRow, scope: "project" | "global"): void;
-	onRefresh(): Promise<void>;
 }
 
 const FILTERS: PickerFilter[] = ["recent", "favorite", "all"];
@@ -67,6 +67,16 @@ function compactNumber(value: number | undefined): string {
 	return String(value);
 }
 
+function modelDisplay(model: PickerModel): { provider: string; modelId: string; name: string } {
+	return (
+		model.display ?? {
+			provider: sanitizeTerminalText(model.provider),
+			modelId: sanitizeTerminalText(model.modelId),
+			name: sanitizeTerminalText(model.name),
+		}
+	);
+}
+
 export class ModelPickerComponent implements PaletteComponent, Focusable {
 	private readonly tui: TUI;
 	private readonly theme: Theme;
@@ -75,7 +85,6 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	private readonly getRows: (query: string, filter: PickerFilter) => PickerRow[];
 	private readonly onSelect: (row: PickerRow, scope: "session" | "project") => Promise<void>;
 	private readonly onToggleFavorite: (row: PickerRow, scope: "project" | "global") => void;
-	private readonly onRefresh: () => Promise<void>;
 	private readonly searchInput = new Input();
 	private rows: PickerRow[] = [];
 	private filter: PickerFilter = "recent";
@@ -94,10 +103,8 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		this.getRows = options.getRows;
 		this.onSelect = options.onSelect;
 		this.onToggleFavorite = options.onToggleFavorite;
-		this.onRefresh = options.onRefresh;
 		this.searchInput.setValue(options.initialRoute.query ?? "");
 		this.recomputeRows();
-		void this.refresh();
 	}
 
 	get focused(): boolean {
@@ -132,22 +139,6 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			retainedIndex >= 0 ? retainedIndex : Math.min(this.selectedIndex, Math.max(0, this.rows.length - 1));
 	}
 
-	private async refresh(): Promise<void> {
-		try {
-			await this.onRefresh();
-			if (this.disposed) return;
-			this.recomputeRows();
-			this.tui.requestRender();
-		} catch (error) {
-			if (this.disposed) return;
-			this.message = {
-				level: "error",
-				text: `Model refresh failed; showing cached models: ${error instanceof Error ? error.message : String(error)}`,
-			};
-			this.tui.requestRender();
-		}
-	}
-
 	private moveSelection(delta: number): void {
 		if (this.rows.length === 0) return;
 		this.selectedIndex = Math.max(0, Math.min(this.rows.length - 1, this.selectedIndex + delta));
@@ -180,14 +171,18 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			return;
 		}
 		this.busy = true;
-		this.message = { level: "info", text: `Selecting ${row.model.provider}/${row.model.modelId}…` };
+		const display = modelDisplay(row.model);
+		this.message = { level: "info", text: `Selecting ${display.provider}/${display.modelId}…` };
 		this.tui.requestRender();
 		void this.onSelect(row, scope)
 			.then(() => this.close())
 			.catch((error) => {
 				if (this.disposed) return;
 				this.busy = false;
-				this.message = { level: "error", text: error instanceof Error ? error.message : String(error) };
+				this.message = {
+					level: "error",
+					text: sanitizeTerminalText(error instanceof Error ? error.message : String(error)),
+				};
 				this.tui.requestRender();
 			});
 	}
@@ -204,7 +199,10 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			this.recomputeRows();
 			this.tui.requestRender();
 		} catch (error) {
-			this.message = { level: "error", text: error instanceof Error ? error.message : String(error) };
+			this.message = {
+				level: "error",
+				text: sanitizeTerminalText(error instanceof Error ? error.message : String(error)),
+			};
 			this.tui.requestRender();
 		}
 	}
@@ -274,7 +272,8 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		const marker = selected ? renderBrandAccent("→", "blue", colorMode) : " ";
 		const favorite = row.favoriteScopes.length > 0 ? this.theme.fg("warning", "★") : " ";
 		const projectDefault = row.projectDefault ? this.theme.fg("success", "◆") : " ";
-		const identity = `${row.model.provider}/${row.model.modelId}`;
+		const display = modelDisplay(row.model);
+		const identity = `${display.provider}/${display.modelId}`;
 		const availability = row.model.available ? "" : this.theme.fg("error", " unavailable");
 		const fit = row.contextFit === "too-small" ? this.theme.fg("warning", " context-small") : "";
 		const styledIdentity = selected ? renderBrandAccent(identity, "blue", colorMode) : this.theme.fg("text", identity);
@@ -309,7 +308,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		];
 		if (selected) {
 			const defaultLabel = selected.projectDefault ? " · project default" : "";
-			const name = renderBrandAccent(selected.model.name, "blue", detectBannerColorMode());
+			const name = renderBrandAccent(modelDisplay(selected.model).name, "blue", detectBannerColorMode());
 			const detail = ` ${name} · context ${compactNumber(selected.model.contextWindow)} · max ${compactNumber(selected.model.maxTokens)}${defaultLabel}`;
 			lines.push(line(this.theme.bg("selectedBg", padTerminalText(fitTerminalText(detail, innerWidth), innerWidth))));
 		} else {
@@ -505,12 +504,6 @@ export function createJouzuModelPicker(
 					},
 					onToggleFavorite: (row, scope) => {
 						state = store.toggleFavorite(row.model, scope, scope === "project" ? projectKey : undefined);
-					},
-					onRefresh: async () => {
-						const result = await ctx.modelRegistry.refresh({ signal: AbortSignal.timeout(15_000) });
-						if (result.errors.size > 0) {
-							throw new Error(`could not refresh ${[...result.errors.keys()].join(", ")}`);
-						}
 					},
 				}),
 		);

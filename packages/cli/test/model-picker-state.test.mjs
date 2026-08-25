@@ -65,6 +65,21 @@ test("project defaults persist separately from favorites", () => {
 	}
 });
 
+test("state mutations reject model references with terminal controls", () => {
+	const { root, paths } = context();
+	try {
+		const store = new ModelPickerStore(paths);
+		const unsafe = { provider: "provider\u009b31m", modelId: "model" };
+		const projectKey = "e".repeat(64);
+		assert.throws(() => store.setProjectDefault(unsafe, projectKey), ModelPickerStateError);
+		assert.throws(() => store.recordDispatch(unsafe, projectKey), ModelPickerStateError);
+		assert.throws(() => store.toggleFavorite(unsafe, "global"), ModelPickerStateError);
+		assert.equal(existsSync(join(paths.stateDir, "model-picker.json")), false);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
 test("favorites toggle independently for project and global scope", () => {
 	const { root, paths } = context();
 	try {

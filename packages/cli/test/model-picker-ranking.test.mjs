@@ -109,20 +109,37 @@ test("typed query ranks exact provider identity before proxy-provider IDs and re
 	);
 });
 
-test("typed search is deterministic, Unicode-normalized, and strips terminal controls", () => {
+test("typed search normalizes Unicode while display text strips terminal controls", () => {
 	const dirtyModels = [
 		...models,
 		{
-			provider: "local\u001b[31m",
+			provider: "local\u001b[31m\u009bunsafe",
 			modelId: "Ｑｗｅｎ-test",
-			name: "Qwen\u0007 Test",
+			name: "Qwen\u0007\u009d Test",
 			available: true,
 		},
 	];
 	const first = buildPickerRows({ models: dirtyModels, state: state(), projectKey, query: "qwen", filter: "all" });
 	const second = buildPickerRows({ models: dirtyModels, state: state(), projectKey, query: "ｑｗｅｎ", filter: "all" });
 	assert.equal(first[0].model.modelId, "Ｑｗｅｎ-test");
-	assert.equal(first[0].model.provider.includes("\u001b"), false);
-	assert.equal(first[0].model.name.includes("\u0007"), false);
+	assert.equal(first[0].model.provider.includes("\u001b[31m\u009b"), true, "semantic identity must remain byte-exact");
+	assert.equal(first[0].model.name.includes("\u0007\u009d"), true, "the source label must remain available");
+	assert.equal(first[0].model.display.provider.includes("\u001b"), false);
+	assert.equal(first[0].model.display.provider.includes("\u009b"), false);
+	assert.equal(first[0].model.display.name.includes("\u0007"), false);
+	assert.equal(first[0].model.display.name.includes("\u009d"), false);
 	assert.deepEqual(first, second);
+});
+
+test("All-filter query ties use exact identity instead of inventory order", () => {
+	const candidates = [
+		{ provider: "b", modelId: "x1", name: "Same", available: true },
+		{ provider: "a", modelId: "x2", name: "Same", available: true },
+	];
+	const rank = (inventory) =>
+		buildPickerRows({ models: inventory, state: state(), projectKey, query: "x", filter: "all" }).map(
+			(row) => `${row.model.provider}/${row.model.modelId}`,
+		);
+	assert.deepEqual(rank(candidates), ["a/x2", "b/x1"]);
+	assert.deepEqual(rank([...candidates].reverse()), ["a/x2", "b/x1"]);
 });

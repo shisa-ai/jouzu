@@ -87,7 +87,6 @@ function createComponent(overrides = {}) {
 		onToggleFavorite: (row, scope) => {
 			calls.favorites.push([row.model.modelId, scope]);
 		},
-		onRefresh: async () => {},
 	});
 	return { component, calls };
 }
@@ -200,6 +199,7 @@ test("Jouzu editor wrapper opens the Models component through the Palette surfac
 		const model = { provider: "p", id: "model", name: "Model", contextWindow: 100_000, maxTokens: 10_000 };
 		let rendered = "";
 		let customOptions;
+		let refreshCalls = 0;
 		const ctx = {
 			mode: "tui",
 			cwd: root,
@@ -208,7 +208,10 @@ test("Jouzu editor wrapper opens the Models component through the Palette surfac
 			sessionManager: { getBranch: () => [] },
 			modelRegistry: {
 				getAvailable: () => [model],
-				refresh: async () => ({ errors: new Map() }),
+				refresh: async () => {
+					refreshCalls += 1;
+					return { errors: new Map() };
+				},
 				find: () => model,
 			},
 			getContextUsage: () => ({ tokens: 100, contextWindow: 100_000, percent: 1 }),
@@ -234,6 +237,7 @@ test("Jouzu editor wrapper opens the Models component through the Palette surfac
 		assert.equal(await integration.open({ source: "action" }), true);
 		assert.match(stripSgr(rendered), /JOUZU · Models/);
 		assert.equal(customOptions.overlay, true);
+		assert.equal(refreshCalls, 0, "opening the Palette must use the cached local inventory");
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}

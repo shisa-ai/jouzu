@@ -86,7 +86,7 @@ export function emptyModelPickerState(): ModelPickerState {
 function containsControlCharacter(value: string): boolean {
 	return Array.from(value).some((character) => {
 		const codePoint = character.codePointAt(0) ?? 0;
-		return codePoint <= 0x1f || codePoint === 0x7f;
+		return codePoint <= 0x1f || (codePoint >= 0x7f && codePoint <= 0x9f);
 	});
 }
 
@@ -96,6 +96,12 @@ function validIdentifier(value: unknown): value is string {
 
 function validTimestamp(value: unknown): value is string {
 	return typeof value === "string" && Number.isFinite(Date.parse(value));
+}
+
+function assertValidReference(reference: ModelReference): void {
+	if (!validIdentifier(reference.provider) || !validIdentifier(reference.modelId)) {
+		throw new ModelPickerStateError("model reference requires bounded provider and modelId strings");
+	}
 }
 
 function parseReference(value: unknown): ModelReference {
@@ -290,6 +296,7 @@ export class ModelPickerStore {
 	}
 
 	setProjectDefault(reference: ModelReference, projectKey: string, now: Date = new Date()): ModelPickerState {
+		assertValidReference(reference);
 		if (!validIdentifier(projectKey)) throw new ModelPickerStateError("project key is invalid");
 		return this.mutate((state) => {
 			state.defaults.projects[projectKey] = { ...reference };
@@ -297,6 +304,7 @@ export class ModelPickerStore {
 	}
 
 	recordDispatch(reference: ModelReference, projectKey: string, now: Date = new Date()): ModelPickerState {
+		assertValidReference(reference);
 		if (!validIdentifier(projectKey)) throw new ModelPickerStateError("project key is invalid");
 		return this.mutate((state) => {
 			state.recents.global = updateRecent(state.recents.global, reference, now);
@@ -310,6 +318,7 @@ export class ModelPickerStore {
 		projectKey?: string,
 		now: Date = new Date(),
 	): ModelPickerState {
+		assertValidReference(reference);
 		if (scope === "project" && !validIdentifier(projectKey)) {
 			throw new ModelPickerStateError("project favorite requires a project key");
 		}
