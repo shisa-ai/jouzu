@@ -19,6 +19,7 @@ const brokenVersion = `${versionMatch[1]}.${versionMatch[2]}.${Number(versionMat
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const npmCommand = process.platform === "win32" ? (process.env.ComSpec ?? "cmd.exe") : "npm";
 const npmPrefix = process.platform === "win32" ? ["/d", "/s", "/c", "npm"] : [];
+const updateApplyTimeout = 10 * 60_000;
 
 function commandResult(command, args, options = {}) {
 	return new Promise((resolvePromise, reject) => {
@@ -30,10 +31,11 @@ function commandResult(command, args, options = {}) {
 		});
 		let stdout = "";
 		let stderr = "";
+		const timeout = options.timeout ?? 180_000;
 		const timer = setTimeout(() => {
 			child.kill();
-			reject(new Error(`${command} timed out`));
-		}, options.timeout ?? 180_000);
+			reject(new Error(`${command} ${args.join(" ")} timed out after ${timeout} ms`));
+		}, timeout);
 		child.stdout.setEncoding("utf8").on("data", (chunk) => {
 			stdout += chunk;
 		});
@@ -205,7 +207,11 @@ try {
 	await installCurrent(current, successPrefix);
 	await withRegistry(next, async (registry, requests) => {
 		const env = updateEnvironment(temp, successPrefix, successHome, registry);
-		const update = await runGlobal(successPrefix, ["self-update", "apply"], { cwd: temp, env });
+		const update = await runGlobal(successPrefix, ["self-update", "apply"], {
+			cwd: temp,
+			env,
+			timeout: updateApplyTimeout,
+		});
 		assert.match(update.stdout, new RegExp(`Updated Jouzu to ${escapeRegex(nextVersion)}`));
 		assert.ok(requests.some((request) => request === "/jouzu" || request.startsWith("/jouzu?")));
 		assert.ok(requests.includes(`/jouzu/-/${basename(next.path)}`));
@@ -227,7 +233,8 @@ try {
 		const env = updateEnvironment(temp, rollbackPrefix, rollbackHome, registry);
 		const update = await globalResult(rollbackPrefix, ["self-update", "apply"], {
 			cwd: temp,
-			env: env,
+			env,
+			timeout: updateApplyTimeout,
 		});
 		assert.equal(update.signal, null);
 		assert.equal(update.status, 4, update.stderr || update.stdout);
