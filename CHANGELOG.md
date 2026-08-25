@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.2 - 2026-08-25
 
 - Add the Jouzu Palette Models view on `/model` and `Ctrl+L`, with Recent/Favorite/All filters, result counts, exact provider/model search, current and previous choices, project/global favorites and recents, session-only selection, user-local project defaults, documented startup precedence, context-fit blocking, and floating/replacement presentations.
 - Add `Ctrl+/` and `Ctrl+?` Jouzu help shortcuts and show the model/help shortcuts in the Session Line.
@@ -11,7 +11,7 @@
 - Preserve project-default activation, failed-selection persistence boundaries, and replacement-editor cursor/paste state; sanitize model labels and render Jouzu RGB roles through the terminal's truecolor, 256-color, 16-color, or no-color mode.
 - Identify linked development builds by UTC build time, source commit, and dirty-worktree state without changing the published package version.
 - Add experimental `jouzu doctor --json` schema 1 with machine-readable fields and issues; its structure and identifiers may change before v0.3/v0.4.
-- Style the Palette through the same Jouzu semantic color roles as the Session UI, so one terminal capability policy covers every Jouzu-owned surface.
+- Style the Palette through the same Jouzu semantic color roles as the Session UI, so one terminal color policy covers every Jouzu-owned surface.
 
 ## 0.1.1 - 2026-08-23
 

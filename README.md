@@ -16,7 +16,7 @@ Windows users should read [Windows prerequisites](docs/windows.md). Signed insta
 ## Install
 
 ```bash
-npm install --global jouzu@0.1.1
+npm install --global jouzu@0.1.2
 
 jouzu --version
 jz doctor
@@ -25,7 +25,7 @@ jz doctor
 `jz` is an exact alias for `jouzu`. To try the CLI without a global installation:
 
 ```bash
-npx --yes jouzu@0.1.1 --version
+npx --yes jouzu@0.1.2 --version
 ```
 
 ## Quick start
@@ -45,7 +45,7 @@ jz profile plan --profile core
 jz profile plan --profile ja
 ```
 
-A normal launch safely reconciles the selected profile. It stops before Pi if a managed target conflicts with a user-owned or modified file.
+A normal launch reconciles the selected profile. It stops before Pi if a managed target conflicts with a user-owned or modified file.
 
 Inside Pi:
 
@@ -85,7 +85,7 @@ You can also select it for an ordinary launch; the reconciled profile is then pe
 jz --jouzu-profile ja
 ```
 
-Switch back safely with `jz profile apply --profile core`.
+Switch back with `jz profile apply --profile core`.
 
 Profile schema v1 permits only bundled UTF-8 text at `APPEND_SYSTEM.md`, `skills/jouzu-*/**`, and `prompts/jouzu-*`. Planning performs no writes. Application uses an exclusive lock, conflict checks, backups, atomic per-file replacement, and an atomic state record. Unknown files and user-owned `AGENTS.md` are never pruned.
 
@@ -157,7 +157,7 @@ jz keybindings reset
 
 ## Automatic Jouzu updates
 
-A real global npm installation checks the configured npm `latest` channel before the first eligible interactive launch. Each successful check suppresses another registry check for 24 hours; a failed/offline check retries no sooner than one hour later. The default policy is `auto-restart`: when a newer semantic version exists, Jouzu:
+An eligible global npm installation checks the configured npm `latest` channel before the first eligible interactive launch. Each successful check suppresses another registry check for 24 hours; a failed/offline check retries no sooner than one hour later. The default policy is `auto-restart`: when a newer semantic version exists, Jouzu:
 
 1. reads version and SHA-512 integrity through the installed npm client's configured registry/proxy/CA behavior;
 2. packs the currently installed Jouzu as a local rollback artifact;
@@ -211,7 +211,7 @@ npm run release:check
 npm run dev:link
 ```
 
-`dev:link` records the UTC build time, Git commit, and dirty-worktree state. `jz --version` displays an identifier such as `0.1.1-dev.20260823-140409+gb3e714f2`. A `.dirty` suffix marks a build that included uncommitted files. The standard `npm run build` removes development metadata before packing a release artifact.
+`dev:link` records the UTC build time, Git commit, and dirty-worktree state. `jz --version` displays an identifier such as `0.1.2-dev.20260825-165041+g215b2188`. A `.dirty` suffix marks a build that included uncommitted files. The standard `npm run build` removes development metadata before packing a release artifact.
 
 See [docs/architecture.md](docs/architecture.md) for the module map, state-file
 ownership, update lanes, and bundled profile boundaries. [Pi update review](docs/PI-UPDATES.md)

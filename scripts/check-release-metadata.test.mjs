@@ -120,5 +120,5 @@ test("a qualified Pi lock passes release metadata validation", () => {
 		piLock: { ...realLock, compatibilityStatus: "qualified", reviewedAt: "2026-08-25" },
 	});
 	assert.equal(result.status, 0, result.stderr || result.stdout);
-	assert.match(result.stdout, /release metadata: jouzu@0\.1\.1/);
+	assert.ok(result.stdout.includes(`release metadata: jouzu@${realCliPackage.version}, Pi `));
 });

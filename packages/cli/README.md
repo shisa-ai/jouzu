@@ -1,20 +1,20 @@
 # Jouzu
 
-Jouzu is an agentic AI environment built on the Pi coding agent, with CJK-safe text and path handling. `jouzu` and `jz` run exact Pi `0.84.2` with isolated Jouzu state, a language-neutral Core fallback, an optional JA preview, and non-mutating diagnostics. Japanese support is optional and first-class.
+Jouzu is an agentic AI environment built on the Pi coding agent, with CJK-safe text and path handling. `jouzu` and `jz` run exact Pi `0.84.3` with isolated Jouzu state, a language-neutral Core fallback, an optional JA preview, and non-mutating diagnostics. The optional JA profile requires explicit selection.
 
 ## Install and start
 
 Requires Node.js 22.19+, npm, Git, and Bash. Windows requires Git Bash.
 
 ```bash
-npm install --global jouzu@0.1.1
+npm install --global jouzu@0.1.2
 
 jz --version
 jz doctor
 jz
 ```
 
-The first interactive launch asks whether to enable Japanese support. An affirmative answer selects `ja`; declining or pressing Enter selects the provider-neutral `core` profile. Non-interactive first runs safely use Core without recording consent. Preview either profile with:
+The first interactive launch asks whether to enable Japanese support. An affirmative answer selects `ja`; declining or pressing Enter selects the provider-neutral `core` profile. Non-interactive first runs use Core without recording consent. Preview either profile with:
 
 ```bash
 jz profile plan --profile core
@@ -35,7 +35,7 @@ Use `jz pi ...` or `jz -- ...` for Pi command collisions. Pi runtime self-update
 
 When the isolated Jouzu agent root has no `keybindings.json`, the first interactive launch seeds `Ctrl+Enter` for Pi's `app.message.followUp` action and `Ctrl+Up` for `app.message.dequeue`; `Tab` retains Pi autocomplete and selector behavior. On upgrade from v0.1.0, Jouzu backs up and replaces only an exact Jouzu-owned `Tab` follow-up entry. User-owned or modified bindings remain unchanged. Use `jz keybindings status|plan|apply|reset`; explicit apply merges only missing defaults with conflict checks/backups, while reset removes only Jouzu-recorded entries and disables reseeding. `JOUZU_NO_KEYBINDING_DEFAULTS=1` is a one-run opt-out. Modified-key reporting is terminal-dependent; tmux should use `extended-keys-format csi-u`.
 
-Real global npm installs default to a pre-TUI automatic Jouzu update check/restart on the first eligible launch. Successful checks are cached for 24 hours; failed checks retry no sooner than one hour later. Candidate tarball SHA-512 integrity and the installed Jouzu/Pi tuple are verified; failure restores the locally packed previous version. Source, project-local, and ephemeral `npx` invocations are not rewritten.
+Eligible global npm installs default to a pre-TUI automatic Jouzu update check/restart on the first eligible launch. Successful checks are cached for 24 hours; failed checks retry no sooner than one hour later. Candidate tarball SHA-512 integrity and the installed Jouzu/Pi tuple are verified; failure restores the locally packed previous version. Source, project-local, and ephemeral `npx` invocations are not rewritten.
 
 ```bash
 jz self-update status
