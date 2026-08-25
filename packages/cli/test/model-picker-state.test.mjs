@@ -5,7 +5,6 @@ import { join } from "node:path";
 import { test } from "node:test";
 
 import {
-	applyProjectDefaultToArgs,
 	deriveProjectKey,
 	emptyModelPickerState,
 	loadModelPickerState,
@@ -13,6 +12,7 @@ import {
 	ModelPickerStateError,
 	ModelPickerStore,
 	previousModelStack,
+	projectDefaultAppliesAtStartup,
 } from "../dist/model-picker-state.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
 
@@ -143,21 +143,21 @@ test("project keys share a git common directory and contain no raw path", () => 
 	assert.equal(one.includes("work"), false);
 });
 
-test("project default startup args yield to explicit, resumed, and scoped model choices", () => {
-	const reference = { provider: "anthropic", modelId: "claude-test" };
-	assert.deepEqual(applyProjectDefaultToArgs([], reference), ["--model", "anthropic/claude-test"]);
-	assert.deepEqual(applyProjectDefaultToArgs(["hello"], reference), ["--model", "anthropic/claude-test", "hello"]);
-	assert.deepEqual(applyProjectDefaultToArgs([], reference, { modelScopeConfigured: true }), []);
+test("project default startup yields to explicit, resumed, and scoped model choices", () => {
+	assert.equal(projectDefaultAppliesAtStartup([]), true);
+	assert.equal(projectDefaultAppliesAtStartup(["hello"]), true);
 	for (const args of [
 		["--model", "openai/gpt-test"],
 		["--model=openai/gpt-test"],
 		["--models", "anthropic/*"],
+		["--provider", "anthropic"],
+		["--provider=anthropic"],
 		["--resume"],
 		["--continue"],
 		["--session", "abc"],
 		["--session-id=abc"],
 	]) {
-		assert.deepEqual(applyProjectDefaultToArgs(args, reference), args);
+		assert.equal(projectDefaultAppliesAtStartup(args), false);
 	}
 });
 

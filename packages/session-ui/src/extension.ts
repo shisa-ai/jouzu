@@ -10,6 +10,7 @@ import { createSessionUiStyles, type SessionUiStyleOptions, type SessionUiStyleS
 
 export interface SessionUiExtensionOptions {
 	getHints?: (snapshot: SessionStatusSnapshot | undefined) => readonly SessionUiHint[];
+	onModelPicker?: (query?: string) => void;
 	styleScheme?: SessionUiStyleScheme;
 	colorEnabled?: boolean;
 	env?: NodeJS.ProcessEnv;
@@ -71,7 +72,8 @@ export function createSessionUiExtension(options: SessionUiExtensionOptions = {}
 					};
 				});
 				ctx.ui.setEditorComponent(
-					(tui, theme, keybindings) => new SessionPromptEditor(tui, theme, keybindings, stylesFor(ctx.ui.theme)),
+					(tui, theme, keybindings) =>
+						new SessionPromptEditor(tui, theme, keybindings, stylesFor(ctx.ui.theme), options.onModelPicker),
 				);
 				void activeController.refreshProject(ctx);
 			});

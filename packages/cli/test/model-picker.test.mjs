@@ -6,6 +6,7 @@ import { test } from "node:test";
 import { visibleWidth } from "@earendil-works/pi-tui";
 
 import { createJouzuModelPicker, ModelPickerComponent } from "../dist/model-picker.js";
+import { deriveProjectKey, ModelPickerStore } from "../dist/model-picker-state.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
 
 const identityTheme = {
@@ -184,7 +185,7 @@ test("Palette routing replaces the query and keeps the component reusable", () =
 	assert.equal(queries.includes("ignored"), false);
 });
 
-test("host handler opens the Jouzu Models component through the Palette surface", async () => {
+test("Jouzu editor wrapper opens the Models component through the Palette surface", async () => {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-host-"));
 	try {
 		const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
@@ -194,6 +195,7 @@ test("host handler opens the Jouzu Models component through the Palette surface"
 			on(name, handler) {
 				handlers.set(name, handler);
 			},
+			setModel: async () => true,
 		});
 		const model = { provider: "p", id: "model", name: "Model", contextWindow: 100_000, maxTokens: 10_000 };
 		let rendered = "";
@@ -229,9 +231,45 @@ test("host handler opens the Jouzu Models component through the Palette surface"
 			},
 		};
 		await handlers.get("session_start")({}, ctx);
-		assert.equal(await integration.handle({ source: "action" }, { setModel: async () => {} }), true);
+		assert.equal(await integration.open({ source: "action" }), true);
 		assert.match(stripSgr(rendered), /JOUZU · Models/);
 		assert.equal(customOptions.overlay, true);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("new sessions apply an available project default through session-only extension activation", async () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-default-"));
+	try {
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+		const projectKey = deriveProjectKey(root);
+		new ModelPickerStore(paths).setProjectDefault({ provider: "p", modelId: "b" }, projectKey);
+		const integration = createJouzuModelPicker(paths, { applyProjectDefaultAtStartup: true });
+		const handlers = new Map();
+		const selected = [];
+		integration.extension.factory({
+			on(name, handler) {
+				handlers.set(name, handler);
+			},
+			async setModel(model) {
+				selected.push(model.id);
+				return true;
+			},
+		});
+		const current = { provider: "p", id: "a", name: "A", contextWindow: 100_000, maxTokens: 10_000 };
+		const target = { provider: "p", id: "b", name: "B", contextWindow: 100_000, maxTokens: 10_000 };
+		const ctx = {
+			mode: "tui",
+			cwd: root,
+			model: current,
+			scopedModels: [],
+			sessionManager: { getBranch: () => [] },
+			modelRegistry: { find: () => target },
+			ui: { notify() {} },
+		};
+		await handlers.get("session_start")({ reason: "startup" }, ctx);
+		assert.deepEqual(selected, ["b"]);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
@@ -247,6 +285,7 @@ test("integration records recency only on the first physical dispatch after each
 			on(name, handler) {
 				handlers.set(name, handler);
 			},
+			setModel: async () => true,
 		});
 		let model = { provider: "p", id: "a", name: "A", contextWindow: 100_000, maxTokens: 10_000 };
 		const ctx = {

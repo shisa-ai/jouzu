@@ -1,15 +1,16 @@
 {
-	"schemaVersion": 1,
+	"schemaVersion": 2,
 	"repository": "https://github.com/earendil-works/pi",
-	"tag": "v0.84.2",
-	"commit": "914cf1472e715297caa30db4b9535d534a9eb718",
+	"tag": "v0.84.3",
+	"tagCommit": "4e58f324fae8ebfa98a3d45181fb248072a2afac",
+	"commit": "bfb004d4418ff05c6f909eaaab856cbe75c1fde0",
 	"packages": {
 		"@earendil-works/pi-coding-agent": {
-			"version": "0.84.2",
-			"integrity": "sha512-l4E+B7hgXKWddRo8bC/eSue2aWZjEgJ9xIpf5p0Og+lq8a2TArCwJ0HCoCPCgaBP/tN4zbYH/wOwvx9pJpeLCA=="
+			"version": "0.84.3",
+			"integrity": "sha512-Yr2p9PubrbFZmYEPYI+C8KmZP9xlFuLDnAG64RtU0ZDgrdiXYWa+y7WGyJO5OlqPliOkVCMd9IzVszO3/t0D0w=="
 		}
 	},
-	"reviewedAt": "2026-08-20",
+	"reviewedAt": "2026-08-25",
 	"compatibilityStatus": "qualified",
 	"deviations": []
 }

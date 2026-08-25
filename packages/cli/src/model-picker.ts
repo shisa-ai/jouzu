@@ -29,19 +29,14 @@ import {
 
 type PiModel = NonNullable<ExtensionContext["model"]>;
 
-export interface JouzuHostModelPickerRequest {
+export interface JouzuModelPickerRequest {
 	source: "action" | "command";
 	initialSearchInput?: string;
 }
 
-export interface JouzuHostModelPickerActions {
-	setModel(model: PiModel, options?: { persistDefault?: boolean }): Promise<void>;
+export interface JouzuModelPickerOptions {
+	applyProjectDefaultAtStartup?: boolean;
 }
-
-export type JouzuHostModelPickerHandler = (
-	request: JouzuHostModelPickerRequest,
-	actions: JouzuHostModelPickerActions,
-) => boolean | Promise<boolean>;
 
 export interface ModelPickerComponentOptions {
 	context: PaletteComponentContext;
@@ -353,7 +348,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 
 export interface JouzuModelPickerIntegration {
 	extension: InlineExtension;
-	handle: JouzuHostModelPickerHandler;
+	open(request: JouzuModelPickerRequest): Promise<boolean>;
 }
 
 function modelReference(model: PiModel | undefined): ModelReference | undefined {
@@ -373,7 +368,10 @@ function pickerModels(ctx: ExtensionContext): PickerModel[] {
 	}));
 }
 
-export function createJouzuModelPicker(paths: JouzuPaths): JouzuModelPickerIntegration {
+export function createJouzuModelPicker(
+	paths: JouzuPaths,
+	options: JouzuModelPickerOptions = {},
+): JouzuModelPickerIntegration {
 	const store = new ModelPickerStore(paths);
 	const surface = new JouzuPaletteSurfaceHost();
 	let activeCtx: ExtensionContext | undefined;
@@ -382,6 +380,7 @@ export function createJouzuModelPicker(paths: JouzuPaths): JouzuModelPickerInteg
 	let previous: ModelReference[] = [];
 	let pendingDispatch: ModelReference | undefined;
 	let stateWarningShown = false;
+	let setModel: ((model: PiModel) => Promise<boolean>) | undefined;
 
 	const syncSession = (ctx: ExtensionContext): void => {
 		activeCtx = ctx;
@@ -404,7 +403,33 @@ export function createJouzuModelPicker(paths: JouzuPaths): JouzuModelPickerInteg
 	const extension: InlineExtension = {
 		name: "jouzu-model-picker",
 		factory: (pi) => {
-			pi.on("session_start", (_event, ctx) => syncSession(ctx));
+			setModel = (model) => pi.setModel(model);
+			pi.on("session_start", async (event, ctx) => {
+				syncSession(ctx);
+				const applyProjectDefault =
+					event.reason === "new" || (event.reason === "startup" && options.applyProjectDefaultAtStartup === true);
+				if (!applyProjectDefault || ctx.sessionManager.getBranch().length > 0 || ctx.scopedModels.length > 0) return;
+				const reference = state.defaults.projects[projectKey];
+				if (!reference || modelReferencesEqual(reference, modelReference(ctx.model))) return;
+				const model = ctx.modelRegistry.find(reference.provider, reference.modelId);
+				if (!model) {
+					ctx.ui.notify(`Project default is unavailable: ${reference.provider}/${reference.modelId}`, "warning");
+					return;
+				}
+				try {
+					if (!(await pi.setModel(model))) {
+						ctx.ui.notify(
+							`Project default is not authenticated: ${reference.provider}/${reference.modelId}`,
+							"warning",
+						);
+					}
+				} catch (error) {
+					ctx.ui.notify(
+						`Project default was not applied: ${error instanceof Error ? error.message : String(error)}`,
+						"warning",
+					);
+				}
+			});
 			pi.on("model_select", (event, ctx) => {
 				activeCtx = ctx;
 				const old = modelReference(event.previousModel);
@@ -433,13 +458,15 @@ export function createJouzuModelPicker(paths: JouzuPaths): JouzuModelPickerInteg
 			pi.on("session_shutdown", () => {
 				activeCtx = undefined;
 				pendingDispatch = undefined;
+				setModel = undefined;
 			});
 		},
 	};
 
-	const handle: JouzuHostModelPickerHandler = async (request, actions) => {
+	const open = async (request: JouzuModelPickerRequest): Promise<boolean> => {
 		const ctx = activeCtx;
-		if (!ctx || ctx.mode !== "tui") return false;
+		const activateModel = setModel;
+		if (!ctx || ctx.mode !== "tui" || !activateModel) return false;
 		return surface.open(
 			ctx,
 			{ view: "models", ...(request.initialSearchInput ? { query: request.initialSearchInput } : {}) },
@@ -463,7 +490,8 @@ export function createJouzuModelPicker(paths: JouzuPaths): JouzuModelPickerInteg
 						const model = ctx.modelRegistry.find(row.model.provider, row.model.modelId);
 						if (!model) throw new Error(`Model is unavailable: ${row.model.provider}/${row.model.modelId}`);
 						if (scope === "project") state = store.setProjectDefault(row.model, projectKey);
-						await actions.setModel(model, { persistDefault: false });
+						if (!(await activateModel(model)))
+							throw new Error(`No authentication for ${row.model.provider}/${row.model.modelId}`);
 					},
 					onToggleFavorite: (row, scope) => {
 						state = store.toggleFavorite(row.model, scope, scope === "project" ? projectKey : undefined);
@@ -478,5 +506,5 @@ export function createJouzuModelPicker(paths: JouzuPaths): JouzuModelPickerInteg
 		);
 	};
 
-	return { extension, handle };
+	return { extension, open };
 }

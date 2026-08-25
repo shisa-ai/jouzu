@@ -14,9 +14,10 @@ function metadata(overrides = {}) {
 		piVersion: "0.84.2",
 		profileSchemaVersion: 1,
 		lock: {
-			schemaVersion: 1,
+			schemaVersion: 2,
 			repository: "https://github.com/earendil-works/pi-mono",
 			tag: "v0.84.2",
+			tagCommit: "914cf1472e715297caa30db4b9535d534a9eb718",
 			commit: "914cf1472e715297caa30db4b9535d534a9eb718",
 			packages: {},
 			reviewedAt: "2026-08-20",

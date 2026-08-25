@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 import { execFileSync } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const lockPath = resolve(root, "upstream", "pi.lock.json");
@@ -61,6 +62,38 @@ function upstreamTagCommit(tag) {
 	return rows[0].split(/\s+/)[0];
 }
 
+function verifyTagContainsPackageSource(tag, tagCommit, sourceCommit) {
+	if (tagCommit === sourceCommit) return;
+	const directory = mkdtempSync(join(tmpdir(), "jouzu-pi-provenance-"));
+	try {
+		execFileSync("git", ["init", "--quiet", directory], { cwd: root, stdio: "inherit" });
+		execFileSync(
+			"git",
+			[
+				"-C",
+				directory,
+				"fetch",
+				"--quiet",
+				"--filter=blob:none",
+				"--no-tags",
+				"https://github.com/earendil-works/pi.git",
+				sourceCommit,
+				`refs/tags/${tag}:refs/tags/${tag}`,
+			],
+			{ cwd: root, stdio: "inherit" },
+		);
+		const result = execFileSync("git", ["-C", directory, "merge-base", "--is-ancestor", tagCommit, sourceCommit], {
+			cwd: root,
+			stdio: "ignore",
+		});
+		void result;
+	} catch {
+		fail(`npm source ${sourceCommit} is not ${tagCommit} or a descendant of ${tag}`);
+	} finally {
+		rmSync(directory, { recursive: true, force: true });
+	}
+}
+
 function packageLockRecords() {
 	const packageLock = readJson(packageLockPath);
 	const node = packageLock.packages?.[`node_modules/${packageName}`];
@@ -77,7 +110,11 @@ function validateLock({ online }) {
 	const packageLock = packageLockRecords();
 	const packageRecord = lock.packages?.[packageName];
 	if (!packageRecord) fail(`${lockPath} is missing ${packageName}`);
+	if (lock.schemaVersion !== 2) fail(`unsupported Pi lock schema ${lock.schemaVersion}`);
 	if (lock.tag !== `v${packageRecord.version}`) fail(`tag ${lock.tag} does not match package ${packageRecord.version}`);
+	if (!/^[0-9a-f]{40}$/.test(lock.tagCommit) || !/^[0-9a-f]{40}$/.test(lock.commit)) {
+		fail("Pi tag or package source commit is invalid");
+	}
 	if (packageJson.devDependencies?.[packageName] !== packageRecord.version) {
 		fail(
 			`package.json development pin ${packageJson.devDependencies?.[packageName]} does not match ${packageRecord.version}`,
@@ -104,7 +141,8 @@ function validateLock({ online }) {
 		if (metadata.gitHead !== lock.commit) fail(`npm gitHead ${metadata.gitHead} does not match ${lock.commit}`);
 		if (metadata.integrity !== packageRecord.integrity) fail("npm integrity does not match lock");
 		const tagCommit = upstreamTagCommit(lock.tag);
-		if (tagCommit !== lock.commit) fail(`upstream ${lock.tag} is ${tagCommit}, expected ${lock.commit}`);
+		if (tagCommit !== lock.tagCommit) fail(`upstream ${lock.tag} is ${tagCommit}, expected ${lock.tagCommit}`);
+		verifyTagContainsPackageSource(lock.tag, tagCommit, lock.commit);
 	}
 
 	console.log(
@@ -112,6 +150,7 @@ function validateLock({ online }) {
 			{
 				version: packageRecord.version,
 				tag: lock.tag,
+				tagCommit: lock.tagCommit,
 				commit: lock.commit,
 				integrity: packageRecord.integrity,
 				compatibilityStatus: lock.compatibilityStatus,
@@ -127,9 +166,10 @@ function validateLock({ online }) {
 function writeLock(metadata) {
 	const current = readJson(lockPath);
 	const next = {
-		schemaVersion: current.schemaVersion ?? 1,
+		schemaVersion: 2,
 		repository: current.repository ?? "https://github.com/earendil-works/pi",
 		tag: `v${metadata.version}`,
+		tagCommit: metadata.tagCommit,
 		commit: metadata.gitHead,
 		packages: {
 			[packageName]: {
@@ -147,9 +187,10 @@ function writeLock(metadata) {
 function update(version) {
 	const spec = version ? `${packageName}@${version}` : `${packageName}@latest`;
 	const metadata = registryMetadata(spec);
-	const tagCommit = upstreamTagCommit(`v${metadata.version}`);
-	if (tagCommit !== metadata.gitHead)
-		fail(`npm gitHead ${metadata.gitHead} differs from v${metadata.version} ${tagCommit}`);
+	const tag = `v${metadata.version}`;
+	const tagCommit = upstreamTagCommit(tag);
+	verifyTagContainsPackageSource(tag, tagCommit, metadata.gitHead);
+	metadata.tagCommit = tagCommit;
 
 	runNpm(["install", "--save-dev", "--save-exact", `${packageName}@${metadata.version}`, "--ignore-scripts"], {
 		stdio: "inherit",

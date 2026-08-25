@@ -373,26 +373,23 @@ export function deriveProjectKey(
 
 const PROJECT_DEFAULT_BYPASS_FLAGS = new Set(["--continue", "-c", "--resume", "-r", "--session", "--session-id"]);
 
-export function applyProjectDefaultToArgs(
-	args: readonly string[],
-	reference: ModelReference | undefined,
-	options: { modelScopeConfigured?: boolean } = {},
-): string[] {
-	if (!reference || options.modelScopeConfigured) return [...args];
+export function projectDefaultAppliesAtStartup(args: readonly string[]): boolean {
 	for (const argument of args) {
 		if (
 			argument === "--model" ||
 			argument.startsWith("--model=") ||
 			argument === "--models" ||
 			argument.startsWith("--models=") ||
+			argument === "--provider" ||
+			argument.startsWith("--provider=") ||
 			PROJECT_DEFAULT_BYPASS_FLAGS.has(argument) ||
 			argument.startsWith("--session=") ||
 			argument.startsWith("--session-id=")
 		) {
-			return [...args];
+			return false;
 		}
 	}
-	return ["--model", `${reference.provider}/${reference.modelId}`, ...args];
+	return true;
 }
 
 export function previousModelStack(

@@ -16,7 +16,7 @@ const metadata = {
 	build: undefined,
 	piVersion: "0.84.2",
 	profileSchemaVersion: 1,
-	lock: { tag: "v0.84.2", commit: "commit", compatibilityStatus: "qualified", deviations: [] },
+	lock: { tag: "v0.84.2", tagCommit: "commit", commit: "commit", compatibilityStatus: "qualified", deviations: [] },
 };
 const profile = { id: "core", source: "default" };
 const identityTheme = {

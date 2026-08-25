@@ -15,6 +15,7 @@ const piPackageRoot = resolve(root, "node_modules", packageName);
 const cli = resolve(piPackageRoot, "dist", "cli.js");
 const systemPromptSource = resolve(piPackageRoot, "dist", "core", "system-prompt.js");
 const keybindingsSource = resolve(piPackageRoot, "dist", "core", "keybindings.js");
+const agentSessionSource = resolve(piPackageRoot, "dist", "core", "agent-session.js");
 const customEditorSource = resolve(piPackageRoot, "dist", "modes", "interactive", "components", "custom-editor.js");
 const interactiveModeSource = resolve(piPackageRoot, "dist", "modes", "interactive", "interactive-mode.js");
 const mainSource = resolve(piPackageRoot, "dist", "main.js");
@@ -47,7 +48,14 @@ function runNode(args, options = {}) {
 
 assert.ok(existsSync(cli), `Pi CLI is missing: ${cli}`);
 assert.ok(existsSync(systemPromptSource), `Pi system prompt source is missing: ${systemPromptSource}`);
-for (const path of [keybindingsSource, customEditorSource, interactiveModeSource, mainSource, tuiKeybindingsSource]) {
+for (const path of [
+	agentSessionSource,
+	keybindingsSource,
+	customEditorSource,
+	interactiveModeSource,
+	mainSource,
+	tuiKeybindingsSource,
+]) {
 	assert.ok(existsSync(path), `Pi keybinding contract source is missing: ${path}`);
 }
 assert.ok(
@@ -55,19 +63,16 @@ assert.ok(
 	"Pi default identity changed; review Jouzu's exact-prefix branding before qualifying this Pi version",
 );
 const keybindingsText = readFileSync(keybindingsSource, "utf8");
-assert.match(keybindingsText, /"app\.message\.followUp": \{\s*defaultKeys: "alt\+enter"/);
-assert.match(keybindingsText, /"app\.message\.dequeue": \{\s*defaultKeys: "alt\+up"/);
+assert.match(
+	keybindingsText,
+	/"app\.message\.followUp": \{\s*defaultKeys: windowsKeybindings \? "ctrl\+q" : "alt\+enter"/,
+);
+assert.match(keybindingsText, /"app\.message\.dequeue": \{\s*defaultKeys: windowsKeybindings \? "alt\+q" : "alt\+up"/);
 assert.match(readFileSync(tuiKeybindingsSource, "utf8"), /"tui\.input\.tab": \{ defaultKeys: "tab"/);
 const editorText = readFileSync(customEditorSource, "utf8");
 assert.ok(
 	editorText.indexOf("// Check all other app actions") < editorText.indexOf("// Pass to parent for editor handling"),
 	"Pi editor no longer gives application actions priority over ordinary Tab/editor handling",
-);
-assert.ok(
-	editorText.includes("this.isShowingAutocomplete()") &&
-		editorText.indexOf('this.keybindings.matches(data, "tui.input.tab")') <
-			editorText.indexOf("// Check all other app actions"),
-	"Pi editor no longer preserves open autocomplete selection before app-level Tab actions",
 );
 const { KeybindingsManager } = await import(pathToFileURL(keybindingsSource));
 const jouzuBindings = new KeybindingsManager({ "app.message.followUp": "ctrl+enter" });
@@ -78,13 +83,10 @@ assert.equal(jouzuBindings.matches("\t", "tui.input.tab"), true);
 const interactiveText = readFileSync(interactiveModeSource, "utf8");
 assert.ok(interactiveText.includes('onAction("app.message.followUp"'), "Pi editor lost the follow-up semantic action");
 assert.ok(interactiveText.includes('onAction("app.message.dequeue"'), "Pi editor lost the dequeue semantic action");
+const agentSessionText = readFileSync(agentSessionSource, "utf8");
 assert.ok(
-	interactiveText.includes("tryHostModelPicker"),
-	"Pi interactive mode lost the embedding-host model picker hook",
-);
-assert.ok(
-	readFileSync(mainSource, "utf8").includes("HOST_MODEL_PICKER_API_VERSION = 1"),
-	"Pi main entry lost host model-picker API version 1",
+	agentSessionText.includes("if (options.persist)") && !agentSessionText.includes("options.persistDefault"),
+	"Pi model activation no longer defaults to session-only persistence",
 );
 
 const version = runNode([cli, "--version"], { env: { ...process.env, PI_OFFLINE: "1" } }).stdout.trim();
@@ -102,12 +104,11 @@ try {
 	const apiProbe = `
 process.env.PI_CODING_AGENT_DIR = ${JSON.stringify(agentDir)};
 const pi = await import(${JSON.stringify(packageName)});
-const required = ["main", "getAgentDir", "SessionManager", "ModelRuntime", "DefaultResourceLoader", "HOST_MODEL_PICKER_API_VERSION"];
+const required = ["main", "getAgentDir", "SessionManager", "ModelRuntime", "DefaultResourceLoader"];
 for (const name of required) {
   if (pi[name] === undefined) throw new Error("missing top-level export " + name);
 }
 if (typeof pi.main !== "function") throw new Error("main is not a function");
-if (pi.HOST_MODEL_PICKER_API_VERSION !== 1) throw new Error("host model picker API version is not 1");
 if (pi.getAgentDir() !== ${JSON.stringify(agentDir)}) {
   throw new Error("PI_CODING_AGENT_DIR was not honored: " + pi.getAgentDir());
 }
@@ -168,12 +169,12 @@ process.stdout.write(JSON.stringify({ exports: required, agentDir: pi.getAgentDi
 				prompt: ["default-identity"],
 				keybindings: [
 					"semantic-message-actions",
+					"platform-message-defaults",
 					"ctrl-enter-follow-up",
 					"app-before-editor-routing",
-					"autocomplete-before-app-tab",
 					"tab-editor-default",
 				],
-				host: ["model-picker-api-v1", "session-only-model-selection"],
+				modelActivation: ["extension-api", "session-only-persistence"],
 			},
 			null,
 			2,

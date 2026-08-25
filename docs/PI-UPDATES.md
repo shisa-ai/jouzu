@@ -10,9 +10,9 @@ A Pi release is not adopted because its version is newer. Its npm artifact, upst
 
 - Run `npm run pi:latest` and record the candidate version.
 - Verify the npm SHA-512 integrity and signatures or provenance metadata.
-- Verify that npm `gitHead` equals the commit referenced by the immutable upstream tag.
+- Record the immutable version-tag commit and npm package-source commit separately. Require registry `gitHead` and SLSA provenance to agree on the package source, which must equal or descend from the tag.
 - Compare the published changelog with the tag diff.
-- Do not bypass configured package minimum-release-age policy.
+- Keep the configured package minimum-release-age policy for ordinary updates and publication. A qualification-only override requires explicit maintainer authorization and does not change the checked-in default.
 - Stop when registry metadata, artifact bytes, and Git provenance disagree.
 
 ### Dependency graph
@@ -57,13 +57,14 @@ Review all generated manifest and lock changes before qualification. Run focused
 
 ## Update log
 
-### Pi 0.84.3 — blocked candidate
+### Pi 0.84.3 — qualified
 
 - **Release:** 2026-08-24
 - **Tag:** `v0.84.3` at `4e58f324fae8ebfa98a3d45181fb248072a2afac`
 - **npm package:** `@earendil-works/pi-coding-agent@0.84.3`
 - **npm integrity:** `sha512-Yr2p9PubrbFZmYEPYI+C8KmZP9xlFuLDnAG64RtU0ZDgrdiXYWa+y7WGyJO5OlqPliOkVCMd9IzVszO3/t0D0w==`
-- **Disposition:** Not adopted. Jouzu remains pinned to qualified Pi 0.84.2.
+- **Package source:** `bfb004d4418ff05c6f909eaaab856cbe75c1fde0`, recorded by npm `gitHead` and the SLSA provenance attestation
+- **Disposition:** Adopted and qualified on 2026-08-25 with no Pi source deviations.
 
 #### Relevant upstream changes
 
@@ -78,17 +79,17 @@ Review all generated manifest and lock changes before qualification. Run focused
 #### Jouzu interaction review
 
 - Session-scoped upstream selection aligns with Jouzu's `Enter` behavior and removal of the Palette global-default shortcut.
-- Jouzu's host model-picker option is absent from the pristine 0.84.3 npm artifact. The Palette cannot replace `/model` or `Ctrl+L` through that seam.
-- The autocomplete-priority prototype change is also absent. Jouzu's default follow-up binding no longer uses `Tab`, and the Palette handles its own `Tab`, so this change can be retired unless a separate regression proves it is still required.
-- The changed `setModel` persistence option requires the host adapter to use 0.84.3's session-scoped semantics if the host seam is restored upstream or carried as an approved deviation.
-- Jouzu's Pi contract check must continue covering top-level exports, host model-picker routing, session-only activation, editor behavior, and packed runtime startup.
+- Jouzu's prototype host model-picker option is absent from the pristine 0.84.3 npm artifact. Jouzu no longer requires it: the built-in Prompt Frame wrapper takes ownership of Pi's semantic `app.model.select` action and `/model` submission, then opens the Palette through Jouzu's extension.
+- Palette activation calls public extension API `pi.setModel()`, which is session-scoped in 0.84.3. `Shift+Enter` stores Jouzu's separate project default before activating the session model.
+- Project defaults are applied from `session_start` through the same public session-scoped API. Explicit models, resumed sessions, and scoped-model sets retain precedence without injecting a process-wide CLI model override.
+- The autocomplete-priority prototype change is retired. Jouzu's default follow-up binding no longer uses `Tab`, Palette `Tab` is handled inside its component, and the Prompt Frame preserves ordinary autocomplete behavior.
+- Jouzu's Pi contract check now covers official session-only model persistence, semantic editor actions, wrapper-owned Palette routing, and packed runtime startup without requiring modified Pi files.
 
-#### Blockers
+#### Provenance disposition
 
-1. npm `gitHead` is `bfb004d4418ff05c6f909eaaab856cbe75c1fde0`, which does not equal the `v0.84.3` tag commit `4e58f324fae8ebfa98a3d45181fb248072a2afac`. `npm run pi:update -- 0.84.3` fails closed on this mismatch.
-2. The Palette prototype was tested against locally modified generated Pi runtime files that are not present in the npm tarball or declared as source deviations. Those bytes are not releasable evidence.
+The `v0.84.3` tag commit is `4e58f324fae8ebfa98a3d45181fb248072a2afac`. The official npm package was built from descendant commit `bfb004d4418ff05c6f909eaaab856cbe75c1fde0`, two commits after the tag, and its SLSA provenance names that source commit and the upstream build workflow. Pi lock schema 2 records both tag and package-source commits. Online checks require the registry `gitHead` to equal the package-source commit and require that source to equal or descend from the immutable version tag.
 
-Adoption requires corrected upstream provenance plus a public, reproducible host-model-picker seam. If upstream does not provide that seam, Jouzu must approve and track a temporary deviation before qualification.
+The first installation attempt stopped at npm's configured minimum-release-age policy. A maintainer then authorized a qualification-only `min-release-age=0` override so the exact verified package could be installed and tested immediately; the checked-in npm policy was not changed. `npm run pi:qualify` passed the full candidate gate, packed local/npm-exec/global smoke tests, auto-update smoke, Pi contract checks, online registry checks, and promotion with zero source deviations.
 
 ### Pi 0.84.2 — qualified baseline
 
@@ -97,4 +98,4 @@ Adoption requires corrected upstream provenance plus a public, reproducible host
 - **npm integrity:** `sha512-l4E+B7hgXKWddRo8bC/eSue2aWZjEgJ9xIpf5p0Og+lq8a2TArCwJ0HCoCPCgaBP/tN4zbYH/wOwvx9pJpeLCA==`
 - **Disposition:** Qualified for Jouzu v0.1.1 with zero declared deviations.
 
-The v0.1.2 Palette campaign subsequently exposed undeclared local generated-runtime changes used for host picker routing, session-only model activation, and autocomplete priority. Pi 0.84.2 remains the package provenance baseline, but those local changes cannot be included in a release until they are upstream or represented by the deviation process.
+The v0.1.2 Palette campaign subsequently exposed undeclared local generated-runtime changes used for host picker routing, session-only model activation, and autocomplete priority. Those changes are retired by the 0.84.3 public API and Jouzu Prompt Frame wrapper; no modified Pi file is part of the release design.

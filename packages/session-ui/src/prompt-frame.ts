@@ -1,4 +1,4 @@
-import { CustomEditor, type KeybindingsManager } from "@earendil-works/pi-coding-agent";
+import { type AppKeybinding, CustomEditor, type KeybindingsManager } from "@earendil-works/pi-coding-agent";
 import type { Component, EditorTheme, TUI } from "@earendil-works/pi-tui";
 import { fillTerminalColumns, fitTerminalText, padTerminalText } from "./layout.js";
 import type { SessionUiStyles } from "./styles.js";
@@ -48,11 +48,36 @@ export class SessionPromptEditor extends CustomEditor {
 	constructor(
 		tui: TUI,
 		theme: EditorTheme,
-		keybindings: KeybindingsManager,
+		private readonly keybindingsManager: KeybindingsManager,
 		private readonly styles: SessionUiStyles,
+		private readonly onModelPicker?: (query?: string) => void,
 	) {
-		super(tui, theme, keybindings, { paddingX: 0 });
+		super(tui, theme, keybindingsManager, { paddingX: 0 });
 		this.borderColor = (value: string) => styles.apply("prompt.border", value);
+	}
+
+	override onAction(action: AppKeybinding, handler: () => void): void {
+		if (action === "app.model.select" && this.onModelPicker) {
+			super.onAction(action, () => this.onModelPicker?.());
+			return;
+		}
+		super.onAction(action, handler);
+	}
+
+	override handleInput(data: string): void {
+		if (
+			this.onModelPicker &&
+			!this.isShowingAutocomplete() &&
+			this.keybindingsManager.matches(data, "tui.input.submit")
+		) {
+			const match = /^\/model(?:\s+(.*))?$/.exec(this.getText().trim());
+			if (match) {
+				this.setText("");
+				this.onModelPicker(match[1]?.trim() || undefined);
+				return;
+			}
+		}
+		super.handleInput(data);
 	}
 
 	render(width: number): string[] {

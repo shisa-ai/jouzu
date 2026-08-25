@@ -35,9 +35,11 @@ test("installs one editor, Session Line, and Status Bar owner and cleans up", as
 		writeFileSync(join(root, "package.json"), "{}");
 		const handlers = new Map();
 		const execCalls = [];
+		const modelQueries = [];
 		const extension = createSessionUiExtension({
 			colorEnabled: false,
 			getHints: () => [{ id: "palette", text: "/model choose", priority: 10, role: "muted" }],
+			onModelPicker: (query) => modelQueries.push(query),
 		});
 		extension.factory({
 			on(name, handler) {
@@ -62,6 +64,24 @@ test("installs one editor, Session Line, and Status Bar owner and cleans up", as
 		assert.deepEqual(execCalls.map(({ command }) => command).sort(), ["git", "node"]);
 
 		const tui = { requestRender() {} };
+		const keybindings = {
+			matches(data, action) {
+				return (
+					(data === "model-key" && action === "app.model.select") || (data === "enter" && action === "tui.input.submit")
+				);
+			},
+		};
+		const editor = calls.editors[0](tui, theme, keybindings);
+		let builtInModelPickerCalls = 0;
+		editor.onAction("app.model.select", () => {
+			builtInModelPickerCalls += 1;
+		});
+		editor.handleInput("model-key");
+		editor.setText("/model codex/gpt-test");
+		editor.handleInput("enter");
+		assert.deepEqual(modelQueries, [undefined, "codex/gpt-test"]);
+		assert.equal(builtInModelPickerCalls, 0);
+
 		const lineComponent = calls.widgets[0][1](tui, theme);
 		const line = lineComponent.render(60)[0];
 		assert.equal(terminalTextWidth(line), 60);

@@ -21,6 +21,8 @@ import { formatDisplayVersion, parseBuildInfo } from "../dist/metadata.js";
 const packageRoot = fileURLToPath(new URL("..", import.meta.url));
 const cli = join(packageRoot, "dist", "cli.js");
 const packageJson = JSON.parse(readFileSync(join(packageRoot, "package.json"), "utf8"));
+const piVersion = packageJson.dependencies["@earendil-works/pi-coding-agent"];
+const piLock = JSON.parse(readFileSync(join(packageRoot, "dist", "pi.lock.json"), "utf8"));
 const buildInfoPath = join(packageRoot, "dist", "build-info.json");
 const buildInfo = existsSync(buildInfoPath)
 	? parseBuildInfo(JSON.parse(readFileSync(buildInfoPath, "utf8")))
@@ -52,7 +54,7 @@ function run(args, options = {}) {
 test("prints the Jouzu, Pi, and profile schema version tuple", () => {
 	const result = run(["--version"]);
 	assert.equal(result.status, 0, result.stderr);
-	assert.equal(result.stdout.trim(), `jouzu ${displayVersion}\npi 0.84.2\nprofile schema 1`);
+	assert.equal(result.stdout.trim(), `jouzu ${displayVersion}\npi ${piVersion}\nprofile schema 1`);
 });
 
 test("forwards explicit Pi version requests through the pinned runtime", () => {
@@ -62,7 +64,7 @@ test("forwards explicit Pi version requests through the pinned runtime", () => {
 	]) {
 		const result = run(args);
 		assert.equal(result.status, 0, result.stderr);
-		assert.equal(result.stdout.trim(), "0.84.2");
+		assert.equal(result.stdout.trim(), piVersion);
 	}
 });
 
@@ -72,7 +74,7 @@ test("a non-interactive first run uses Core without recording Japanese consent",
 		const jouzuHome = join(temp, "home");
 		const result = run(["--jouzu-home", jouzuHome, "pi", "--version"]);
 		assert.equal(result.status, 0, result.stderr);
-		assert.equal(result.stdout.trim(), "0.84.2");
+		assert.equal(result.stdout.trim(), piVersion);
 		const state = JSON.parse(readFileSync(join(jouzuHome, "state", "profile-state.json"), "utf8"));
 		assert.equal(state.activeProfile, "core");
 		assert.equal(existsSync(join(jouzuHome, "state", "profile-choice.json")), false);
@@ -166,7 +168,7 @@ test("keybinding conflicts use a dedicated status and preserve user bytes", () =
 
 test("jouzu and jz package bins are exact aliases", () => {
 	assert.equal(packageJson.bin.jouzu, packageJson.bin.jz);
-	assert.equal(packageJson.dependencies["@earendil-works/pi-coding-agent"], "0.84.2");
+	assert.equal(packageJson.dependencies["@earendil-works/pi-coding-agent"], piVersion);
 });
 
 test("jz --session resolves an ID inside Jouzu's isolated session root", () => {
@@ -243,7 +245,7 @@ test("profile plan is non-mutating and profile apply converges", () => {
 		assert.equal(secondPlan.status, 0, secondPlan.stderr);
 		assert.deepEqual(JSON.parse(secondPlan.stdout).actions, []);
 		const doctor = run(["--jouzu-home", jouzuHome, "doctor"]);
-		assert.equal(doctor.status, 0, doctor.stderr);
+		assert.equal(doctor.status, piLock.compatibilityStatus === "qualified" ? 0 : 1, doctor.stderr || doctor.stdout);
 		const manifests = [...doctor.stdout.matchAll(/(?:Bundled|Applied) profile manifest: ([0-9a-f]{64})/g)];
 		assert.equal(manifests.length, 2);
 		assert.equal(manifests[0][1], manifests[1][1]);
@@ -414,7 +416,7 @@ test("an ordinary launch recovers a stale empty profile lock", () => {
 
 		const result = run(["--jouzu-home", jouzuHome, "pi", "--version"]);
 		assert.equal(result.status, 0, result.stderr);
-		assert.equal(result.stdout.trim(), "0.84.2");
+		assert.equal(result.stdout.trim(), piVersion);
 		assert.equal(existsSync(lock), false, "recovered lock must be released");
 		assert.equal(
 			JSON.parse(readFileSync(join(jouzuHome, "state", "profile-state.json"), "utf8")).activeProfile,
@@ -481,10 +483,11 @@ test("doctor is non-mutating and reports replacement of inherited Pi roots", () 
 				PI_CODING_AGENT_SESSION_DIR: join(stockPi, "sessions"),
 			},
 		});
-		assert.equal(result.status, 0, result.stderr || result.stdout);
+		const qualified = piLock.compatibilityStatus === "qualified";
+		assert.equal(result.status, qualified ? 0 : 1, result.stderr || result.stdout);
 		assert.match(result.stdout, new RegExp(`Agent/config root: ${jouzuHome.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
 		assert.match(result.stdout, /Inherited Pi agent root replaced: yes/);
-		assert.match(result.stdout, /Result: ready for Jouzu v0\.1 preview/);
+		assert.match(result.stdout, qualified ? /Result: ready for Jouzu v0\.1 preview/ : /Result: action required/);
 		assert.equal(existsSync(jouzuHome), false, "doctor created the Jouzu home");
 		assert.equal(readFileSync(sentinel, "utf8"), "unchanged\n");
 	} finally {

@@ -45,14 +45,15 @@ const lockFields = [
 	"schemaVersion",
 	"repository",
 	"tag",
+	"tagCommit",
 	"commit",
 	"packages",
 	"reviewedAt",
 	"compatibilityStatus",
 	"deviations",
 ];
-if (!hasExactFields(piLock, lockFields)) throw new Error("Pi lock fields differ from schema 1");
-if (piLock.schemaVersion !== 1) throw new Error("Pi lock schemaVersion must be 1");
+if (!hasExactFields(piLock, lockFields)) throw new Error("Pi lock fields differ from schema 2");
+if (piLock.schemaVersion !== 2) throw new Error("Pi lock schemaVersion must be 2");
 if (piLock.repository !== "https://github.com/earendil-works/pi") throw new Error("Pi lock repository is invalid");
 if (!hasExactFields(piLock.packages, [piName])) throw new Error("Pi lock must contain only the exact Pi package");
 const piRecord = piLock.packages[piName];
@@ -68,8 +69,12 @@ if (
 const piVersion = piRecord.version;
 if (cliPackage.dependencies?.[piName] !== piVersion)
 	throw new Error("npm Jouzu does not use the exact Pi lock version");
-if (piLock.tag !== `v${piVersion}` || !/^[0-9a-f]{40}$/.test(piLock.commit)) {
-	throw new Error("Pi lock tag or commit is invalid");
+if (
+	piLock.tag !== `v${piVersion}` ||
+	!/^[0-9a-f]{40}$/.test(piLock.tagCommit) ||
+	!/^[0-9a-f]{40}$/.test(piLock.commit)
+) {
+	throw new Error("Pi lock tag or source commit is invalid");
 }
 if (piLock.compatibilityStatus !== "qualified") {
 	throw new Error(`Pi lock must be qualified for publication (got ${piLock.compatibilityStatus})`);

@@ -15,14 +15,15 @@ const npmCommand = process.platform === "win32" ? (process.env.ComSpec ?? "cmd.e
 const npmPrefix = process.platform === "win32" ? ["/d", "/s", "/c", "npm"] : [];
 
 function run(command, args, options = {}) {
+	const { expectedStatus = 0, ...spawnOptions } = options;
 	const result = spawnSync(command, args, {
 		encoding: "utf8",
 		timeout: 120_000,
-		...options,
+		...spawnOptions,
 	});
 	if (result.error) throw result.error;
 	assert.equal(result.signal, null, `${command} terminated by ${result.signal}: ${result.stderr}`);
-	assert.equal(result.status, 0, `${command} exited ${result.status}: ${result.stderr || result.stdout}`);
+	assert.equal(result.status, expectedStatus, `${command} exited ${result.status}: ${result.stderr || result.stdout}`);
 	return result;
 }
 
@@ -100,10 +101,15 @@ try {
 	run(process.execPath, [installedCli, "profile", "apply", "--profile", "ja"], { cwd: temp, env });
 	run(process.execPath, [installedCli, "profile", "apply", "--profile", "core"], { cwd: temp, env });
 	assert.equal(existsSync(resolve(consumer, "agent", "APPEND_SYSTEM.md")), false);
-	const doctor = run(process.execPath, [installedCli, "doctor"], { cwd: temp, env }).stdout;
+	const qualified = piLock.compatibilityStatus === "qualified";
+	const doctor = run(process.execPath, [installedCli, "doctor"], {
+		cwd: temp,
+		env,
+		expectedStatus: qualified ? 0 : 1,
+	}).stdout;
 	assert.match(doctor, /Install channel: local npm install/);
 	assert.match(doctor, /Selected profile: core/);
-	assert.match(doctor, /Result: ready for Jouzu v0\.1 preview/);
+	assert.match(doctor, qualified ? /Result: ready for Jouzu v0\.1 preview/ : /Result: action required/);
 	const pi = run(process.execPath, [installedCli, "pi", "--version"], { cwd: temp, env }).stdout.trim();
 	assert.equal(pi, piVersion);
 

@@ -195,7 +195,10 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	lines.push("");
 	lines.push(`Jouzu version: ${context.metadata.displayVersion}`);
 	lines.push(`Pi runtime: ${context.piRuntimeVersion}`);
-	lines.push(`Pi upstream: ${context.metadata.lock.tag} (${context.metadata.lock.commit})`);
+	lines.push(`Pi upstream: ${context.metadata.lock.tag} (${context.metadata.lock.tagCommit})`);
+	if (context.metadata.lock.commit !== context.metadata.lock.tagCommit) {
+		lines.push(`Pi package source: ${context.metadata.lock.commit}`);
+	}
 	lines.push(
 		`Pi qualification: ${context.metadata.lock.compatibilityStatus}; deviations=${context.metadata.lock.deviations.length}`,
 	);

@@ -12,6 +12,7 @@ export interface PiLock {
 	schemaVersion: number;
 	repository: string;
 	tag: string;
+	tagCommit: string;
 	commit: string;
 	packages: Record<string, { version: string; integrity: string }>;
 	reviewedAt: string | null;
