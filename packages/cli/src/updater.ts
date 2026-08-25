@@ -1,23 +1,10 @@
 import { spawnSync } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
-import {
-	closeSync,
-	existsSync,
-	fsyncSync,
-	lstatSync,
-	openSync,
-	readFileSync,
-	realpathSync,
-	renameSync,
-	rmdirSync,
-	rmSync,
-	unlinkSync,
-	writeFileSync,
-} from "node:fs";
+import { existsSync, lstatSync, readFileSync, realpathSync, rmdirSync, unlinkSync } from "node:fs";
 import { dirname, join, posix, resolve, win32 } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { JouzuPaths } from "./paths.js";
-import { ensurePrivateDirectory, validatePrivateDirectory } from "./private-fs.js";
+import { ensurePrivateDirectory, validatePrivateDirectory, writeFilePrivateAtomic } from "./private-fs.js";
 import { acquireStateLock, STATE_LOCK_STALE_MS } from "./state-lock.js";
 
 const PI_PACKAGE = "@earendil-works/pi-coding-agent";
@@ -273,25 +260,8 @@ export function readUpdateState(path: string, currentVersion: string): UpdateSta
 	return value as unknown as UpdateState;
 }
 
-function atomicWrite(path: string, content: string): void {
-	ensurePrivateDirectory(dirname(path));
-	const temporary = join(dirname(path), `.${randomUUID()}.tmp`);
-	let descriptor: number | undefined;
-	try {
-		descriptor = openSync(temporary, "wx", 0o600);
-		writeFileSync(descriptor, content);
-		fsyncSync(descriptor);
-		closeSync(descriptor);
-		descriptor = undefined;
-		renameSync(temporary, path);
-	} finally {
-		if (descriptor !== undefined) closeSync(descriptor);
-		rmSync(temporary, { force: true });
-	}
-}
-
 function writeUpdateState(path: string, state: UpdateState): void {
-	atomicWrite(path, `${JSON.stringify(state, null, 2)}\n`);
+	writeFilePrivateAtomic(path, `${JSON.stringify(state, null, 2)}\n`);
 }
 
 function envFlagIsTrue(value: string | undefined): boolean {

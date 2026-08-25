@@ -20,7 +20,7 @@ cli.ts  (entry: argument routing, profile resolution, launch)
   ├─ profile-manager.ts  profile planning/application (see above)
   ├─ keybindings.ts      durable keybinding defaults
   ├─ updater.ts          Jouzu self-update (verify/install/rollback)
-  ├─ doctor.ts           diagnostics (read-only)
+  ├─ doctor.ts           diagnostics (read-only), typed report plus text renderer
   ├─ presentation.ts     startup presentation extension
   ├─ palette.ts          floating/replacement Palette surface host
   ├─ model-picker*.ts    Models view, ranking, and private picker state
@@ -28,7 +28,7 @@ cli.ts  (entry: argument routing, profile resolution, launch)
   ├─ session-ui/         build-time adapter to the standalone workspace
   ├─ resume.ts           session-resume guidance
   ├─ state-lock.ts       shared state-lock primitive
-  └─ private-fs.ts       private directory/file boundary
+  └─ private-fs.ts       private directory/file boundary and atomic writes
 
 packages/session-ui
   ├─ extension.ts        lifecycle wiring and single surface ownership
@@ -68,8 +68,11 @@ recovers a dead owner's or owner-unknown lock after the stale threshold.
 `private-fs.ts` creates Jouzu-owned roots and descendants with POSIX mode
 `0700`, creates copied backup files with mode `0600`, rejects symlinks inside
 those owned boundaries, and leaves caller-owned parent directories unchanged.
-Each owner module keeps its own `atomicWrite` and validated-JSON helpers.
-Consolidating those helpers is deferred and must preserve existing schemas.
+It also owns `writeFilePrivateAtomic`, the single durable write used by every
+state owner: the payload goes to a uniquely named `0600` temporary file inside
+the owned directory, is flushed, and is renamed over the destination, so a
+concurrent reader never observes a partial write. Each owner module keeps its
+own schema validation and parsing.
 
 ## Update lanes
 

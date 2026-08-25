@@ -1,19 +1,8 @@
-import { randomUUID } from "node:crypto";
-import {
-	closeSync,
-	existsSync,
-	fsyncSync,
-	lstatSync,
-	openSync,
-	readFileSync,
-	renameSync,
-	rmSync,
-	writeFileSync,
-} from "node:fs";
-import { dirname, join } from "node:path";
+import { existsSync, lstatSync, readFileSync } from "node:fs";
+import { dirname } from "node:path";
 import { createInterface } from "node:readline/promises";
 import type { ProfileId } from "./args.js";
-import { ensurePrivateDirectory, validatePrivateDirectory } from "./private-fs.js";
+import { validatePrivateDirectory, writeFilePrivateAtomic } from "./private-fs.js";
 
 const PROFILE_CHOICE_FIELDS = new Set(["schemaVersion", "profile", "chosenAt"]);
 
@@ -67,20 +56,7 @@ export function readProfileChoice(path: string): ProfileChoice | undefined {
 
 export function writeProfileChoice(path: string, profile: ProfileId, now = new Date()): ProfileChoice {
 	const choice: ProfileChoice = { schemaVersion: 1, profile, chosenAt: now.toISOString() };
-	ensurePrivateDirectory(dirname(path));
-	const temporary = join(dirname(path), `.${randomUUID()}.tmp`);
-	let descriptor: number | undefined;
-	try {
-		descriptor = openSync(temporary, "wx", 0o600);
-		writeFileSync(descriptor, `${JSON.stringify(choice, null, 2)}\n`);
-		fsyncSync(descriptor);
-		closeSync(descriptor);
-		descriptor = undefined;
-		renameSync(temporary, path);
-	} finally {
-		if (descriptor !== undefined) closeSync(descriptor);
-		rmSync(temporary, { force: true });
-	}
+	writeFilePrivateAtomic(path, `${JSON.stringify(choice, null, 2)}\n`);
 	return choice;
 }
 

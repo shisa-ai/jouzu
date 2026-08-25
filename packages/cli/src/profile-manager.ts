@@ -1,19 +1,13 @@
 import { createHash, randomUUID } from "node:crypto";
-import {
-	closeSync,
-	existsSync,
-	fsyncSync,
-	lstatSync,
-	openSync,
-	readFileSync,
-	renameSync,
-	rmSync,
-	unlinkSync,
-	writeFileSync,
-} from "node:fs";
+import { existsSync, lstatSync, readFileSync, unlinkSync } from "node:fs";
 import { dirname, join, resolve, sep } from "node:path";
 import type { JouzuPaths } from "./paths.js";
-import { copyPrivateFile, ensurePrivateDirectory, validatePrivateDirectory } from "./private-fs.js";
+import {
+	copyPrivateFile,
+	ensurePrivateDirectory,
+	validatePrivateDirectory,
+	writeFilePrivateAtomic,
+} from "./private-fs.js";
 import type { ResolvedProfile } from "./profiles.js";
 import { acquireStateLock, STATE_LOCK_STALE_MS } from "./state-lock.js";
 
@@ -342,23 +336,6 @@ export function planProfile(profile: ResolvedProfile, paths: JouzuPaths, jouzuVe
 	};
 }
 
-function atomicWrite(path: string, bytes: Uint8Array, privateRoot: string): void {
-	ensurePrivateDirectory(privateRoot, dirname(path));
-	const temporary = join(dirname(path), `.${randomUUID()}.tmp`);
-	let descriptor: number | undefined;
-	try {
-		descriptor = openSync(temporary, "wx", 0o600);
-		writeFileSync(descriptor, bytes);
-		fsyncSync(descriptor);
-		closeSync(descriptor);
-		descriptor = undefined;
-		renameSync(temporary, path);
-	} finally {
-		if (descriptor !== undefined) closeSync(descriptor);
-		rmSync(temporary, { force: true });
-	}
-}
-
 function stateBytes(profile: ResolvedProfile, jouzuVersion: string, transactionId: string): Buffer {
 	const state: ProfileState = {
 		schemaVersion: 1,
@@ -413,9 +390,9 @@ export function applyProfile(profile: ResolvedProfile, paths: JouzuPaths, jouzuV
 			if (!asset) throw new ProfileStateError(`missing desired profile asset: ${action.target}`);
 			if (unsafeParent(paths.agentDir, action.target))
 				throw new ProfileStateError(`unsafe profile parent: ${action.target}`);
-			atomicWrite(path, asset.bytes, paths.agentDir);
+			writeFilePrivateAtomic(path, asset.bytes, paths.agentDir);
 		}
-		atomicWrite(paths.profileStatePath, stateBytes(profile, jouzuVersion, transactionId), paths.stateDir);
+		writeFilePrivateAtomic(paths.profileStatePath, stateBytes(profile, jouzuVersion, transactionId), paths.stateDir);
 		return {
 			changed: true,
 			plan,

@@ -1,20 +1,9 @@
 import { spawnSync } from "node:child_process";
-import { createHash, randomUUID } from "node:crypto";
-import {
-	closeSync,
-	existsSync,
-	fsyncSync,
-	lstatSync,
-	openSync,
-	readFileSync,
-	realpathSync,
-	renameSync,
-	rmSync,
-	writeFileSync,
-} from "node:fs";
-import { dirname, isAbsolute, join, resolve } from "node:path";
+import { createHash } from "node:crypto";
+import { existsSync, lstatSync, readFileSync, realpathSync, renameSync } from "node:fs";
+import { isAbsolute, join, resolve } from "node:path";
 import type { JouzuPaths } from "./paths.js";
-import { ensurePrivateDirectory } from "./private-fs.js";
+import { ensurePrivateDirectory, writeFilePrivateAtomic } from "./private-fs.js";
 import { acquireStateLock, type StateLockInspection } from "./state-lock.js";
 
 export const MODEL_PICKER_SCHEMA_VERSION = 2;
@@ -207,23 +196,6 @@ function lockPath(paths: JouzuPaths): string {
 	return join(paths.stateDir, "model-picker.lock");
 }
 
-function atomicWrite(path: string, state: ModelPickerState, privateRoot: string): void {
-	ensurePrivateDirectory(privateRoot, dirname(path));
-	const temporary = join(dirname(path), `.${randomUUID()}.tmp`);
-	let descriptor: number | undefined;
-	try {
-		descriptor = openSync(temporary, "wx", 0o600);
-		writeFileSync(descriptor, `${JSON.stringify(state, null, 2)}\n`);
-		fsyncSync(descriptor);
-		closeSync(descriptor);
-		descriptor = undefined;
-		renameSync(temporary, path);
-	} finally {
-		if (descriptor !== undefined) closeSync(descriptor);
-		rmSync(temporary, { force: true });
-	}
-}
-
 function quarantineSuffix(now: Date): string {
 	return now.toISOString().replace(/[^0-9]/g, "");
 }
@@ -288,7 +260,7 @@ export class ModelPickerStore {
 		try {
 			const state = this.load({ now }).state;
 			mutator(state);
-			atomicWrite(statePath(this.paths), state, this.paths.stateDir);
+			writeFilePrivateAtomic(statePath(this.paths), `${JSON.stringify(state, null, 2)}\n`, this.paths.stateDir);
 			return state;
 		} finally {
 			release();

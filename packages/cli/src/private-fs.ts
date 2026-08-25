@@ -1,5 +1,18 @@
-import { chmodSync, constants, copyFileSync, lstatSync, mkdirSync } from "node:fs";
-import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
+import { randomUUID } from "node:crypto";
+import {
+	chmodSync,
+	closeSync,
+	constants,
+	copyFileSync,
+	fsyncSync,
+	lstatSync,
+	mkdirSync,
+	openSync,
+	renameSync,
+	rmSync,
+	writeFileSync,
+} from "node:fs";
+import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 
 const PRIVATE_DIRECTORY_MODE = 0o700;
 const PRIVATE_FILE_MODE = 0o600;
@@ -63,4 +76,37 @@ export function copyPrivateFile(source: string, destination: string, root: strin
 	ensurePrivateDirectory(root, dirname(destination));
 	copyFileSync(source, destination, constants.COPYFILE_EXCL);
 	if (process.platform !== "win32") chmodSync(destination, PRIVATE_FILE_MODE);
+}
+
+/**
+ * Durably replace a file inside a Jouzu-owned directory. The payload is written
+ * to a uniquely named private temporary file, flushed, and renamed over the
+ * destination, so a concurrent reader observes either the previous content or
+ * the complete new content and never a partial write. The temporary file is
+ * removed on every failure path.
+ *
+ * `root` is the Jouzu-owned boundary the destination must stay inside; it
+ * defaults to the destination's own directory for callers that own that
+ * directory directly.
+ */
+export function writeFilePrivateAtomic(
+	path: string,
+	contents: string | Uint8Array,
+	root: string = dirname(path),
+): void {
+	const directory = dirname(path);
+	ensurePrivateDirectory(root, directory);
+	const temporary = join(directory, `.${randomUUID()}.tmp`);
+	let descriptor: number | undefined;
+	try {
+		descriptor = openSync(temporary, "wx", PRIVATE_FILE_MODE);
+		writeFileSync(descriptor, contents);
+		fsyncSync(descriptor);
+		closeSync(descriptor);
+		descriptor = undefined;
+		renameSync(temporary, path);
+	} finally {
+		if (descriptor !== undefined) closeSync(descriptor);
+		rmSync(temporary, { force: true });
+	}
 }
