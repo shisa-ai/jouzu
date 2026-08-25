@@ -16,6 +16,7 @@ export function createJouzuHelpExtension(): InlineExtension {
 								theme.bold(theme.fg("accent", "Jouzu Help")),
 								"",
 								`${theme.fg("accent", "Ctrl+L")}  Models`,
+								`${theme.fg("accent", "Ctrl+P")}  Cycle favorites`,
 								`${theme.fg("accent", "Ctrl+/")}  Help`,
 								`${theme.fg("accent", "/hotkeys")}  All shortcuts`,
 								`${theme.fg("accent", "/status")}  Session details`,

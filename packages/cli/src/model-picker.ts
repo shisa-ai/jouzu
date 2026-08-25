@@ -46,7 +46,8 @@ export interface ModelPickerComponentOptions {
 	initialRoute: PaletteRoute;
 	getRows(query: string, filter: PickerFilter): PickerRow[];
 	onSelect(row: PickerRow, scope: "session" | "project"): Promise<void>;
-	onToggleFavorite(row: PickerRow, scope: "project" | "global"): void;
+	onToggleFavorite(row: PickerRow): void;
+	onRefresh?(signal: AbortSignal): Promise<void>;
 }
 
 const FILTERS: PickerFilter[] = ["recent", "favorite", "all"];
@@ -87,7 +88,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	private readonly close: () => void;
 	private readonly getRows: (query: string, filter: PickerFilter) => PickerRow[];
 	private readonly onSelect: (row: PickerRow, scope: "session" | "project") => Promise<void>;
-	private readonly onToggleFavorite: (row: PickerRow, scope: "project" | "global") => void;
+	private readonly onToggleFavorite: (row: PickerRow) => void;
 	private readonly searchInput = new Input();
 	private rows: PickerRow[] = [];
 	private filter: PickerFilter = "recent";
@@ -95,6 +96,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	private selectedIndex = 0;
 	private busy = false;
 	private message?: { level: "error" | "info"; text: string };
+	private refreshController?: AbortController;
 	private disposed = false;
 	private _focused = false;
 
@@ -113,6 +115,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		this.searchInput.setValue(options.initialRoute.query ?? "");
 		this.recomputeFilterCounts();
 		this.recomputeRows();
+		if (options.onRefresh) void this.refresh(options.onRefresh);
 	}
 
 	get focused(): boolean {
@@ -153,6 +156,36 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		const retainedIndex = selectedKey ? this.rows.findIndex((row) => modelReferenceKey(row.model) === selectedKey) : -1;
 		this.selectedIndex =
 			retainedIndex >= 0 ? retainedIndex : Math.min(this.selectedIndex, Math.max(0, this.rows.length - 1));
+	}
+
+	private async refresh(onRefresh: (signal: AbortSignal) => Promise<void>): Promise<void> {
+		this.refreshController?.abort();
+		const controller = new AbortController();
+		this.refreshController = controller;
+		let timedOut = false;
+		const timeout = setTimeout(() => {
+			timedOut = true;
+			controller.abort();
+		}, 15_000);
+		try {
+			await onRefresh(controller.signal);
+			if (this.disposed || controller.signal.aborted) return;
+			this.recomputeFilterCounts();
+			this.recomputeRows();
+			this.tui.requestRender();
+		} catch (error) {
+			if (this.disposed || (controller.signal.aborted && !timedOut)) return;
+			this.message = {
+				level: "error",
+				text: timedOut
+					? "Model refresh timed out; showing cached models."
+					: `Model refresh failed; showing cached models: ${sanitizeTerminalText(error instanceof Error ? error.message : String(error))}`,
+			};
+			this.tui.requestRender();
+		} finally {
+			clearTimeout(timeout);
+			if (this.refreshController === controller) this.refreshController = undefined;
+		}
 	}
 
 	private moveSelection(delta: number): void {
@@ -203,15 +236,12 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			});
 	}
 
-	private toggleFavorite(scope: "project" | "global"): void {
+	private toggleFavorite(): void {
 		const row = this.rows[this.selectedIndex];
 		if (!row || this.busy) return;
 		try {
-			this.onToggleFavorite(row, scope);
-			this.message = {
-				level: "info",
-				text: `${scope === "project" ? "Project" : "Global"} favorite updated.`,
-			};
+			this.onToggleFavorite(row);
+			this.message = { level: "info", text: "Favorite updated." };
 			this.recomputeFilterCounts();
 			this.recomputeRows();
 			this.tui.requestRender();
@@ -267,11 +297,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			return;
 		}
 		if (matchesKey(data, "ctrl+f")) {
-			this.toggleFavorite("global");
-			return;
-		}
-		if (matchesKey(data, "alt+f")) {
-			this.toggleFavorite("project");
+			this.toggleFavorite();
 			return;
 		}
 		if (this.keybindings.matches(data, "tui.select.confirm")) {
@@ -286,7 +312,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 
 	private rowText(row: PickerRow, selected: boolean): string {
 		const marker = selected ? this.styles.apply("palette.marker", "→") : " ";
-		const favorite = row.favoriteScopes.length > 0 ? this.styles.apply("palette.favorite", "★") : " ";
+		const favorite = row.favorite ? this.styles.apply("palette.favorite", "★") : " ";
 		const projectDefault = row.projectDefault ? this.styles.apply("palette.default", "◆") : " ";
 		const display = modelDisplay(row.model);
 		const identity = `${display.provider}/${display.modelId}`;
@@ -356,7 +382,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		} else {
 			lines.push(line(this.styles.apply("palette.hint", "Enter session · Shift+Enter project default · Tab filter")));
 		}
-		lines.push(line(this.styles.apply("palette.hint", "Ctrl+F/Alt+F favorite · ↑↓ move · type search · Esc close")));
+		lines.push(line(this.styles.apply("palette.hint", "Ctrl+F favorite · ↑↓ move · type search · Esc close")));
 		lines.push(renderTerminalFrameBorder(width, { ...frameOptions, left: "╰", right: "╯" }));
 		return lines.map((value) => fitTerminalText(value, width));
 	}
@@ -367,12 +393,18 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 
 	dispose(): void {
 		this.disposed = true;
+		this.refreshController?.abort();
+		this.refreshController = undefined;
 	}
 }
+
+export type FavoriteCycleDirection = "forward" | "backward";
 
 export interface JouzuModelPickerIntegration {
 	extension: InlineExtension;
 	open(request: JouzuModelPickerRequest): Promise<boolean>;
+	cycleFavorite(direction: FavoriteCycleDirection): Promise<boolean>;
+	handleScopedModelsCommand(): Promise<boolean>;
 }
 
 function modelReference(model: PiModel | undefined): ModelReference | undefined {
@@ -408,6 +440,7 @@ export function createJouzuModelPicker(
 	let previous: ModelReference[] = [];
 	let pendingDispatch: ModelReference | undefined;
 	let stateWarningShown = false;
+	let cycleBusy = false;
 	let setModel: ((model: PiModel) => Promise<boolean>) | undefined;
 
 	const syncSession = (ctx: ExtensionContext): void => {
@@ -491,6 +524,7 @@ export function createJouzuModelPicker(
 			pi.on("session_shutdown", () => {
 				activeCtx = undefined;
 				pendingDispatch = undefined;
+				cycleBusy = false;
 				setModel = undefined;
 			});
 		},
@@ -526,12 +560,108 @@ export function createJouzuModelPicker(
 							throw new Error(`No authentication for ${row.model.provider}/${row.model.modelId}`);
 						if (scope === "project") state = store.setProjectDefault(row.model, projectKey);
 					},
-					onToggleFavorite: (row, scope) => {
-						state = store.toggleFavorite(row.model, scope, scope === "project" ? projectKey : undefined);
+					onToggleFavorite: (row) => {
+						state = store.toggleFavorite(row.model);
+					},
+					onRefresh: async (signal) => {
+						const result = await ctx.modelRegistry.refresh({ signal });
+						if (result.errors.size > 0) {
+							throw new Error(`could not refresh ${[...result.errors.keys()].join(", ")}`);
+						}
+						if (result.aborted) throw new Error("model refresh was aborted");
 					},
 				}),
 		);
 	};
 
-	return { extension, open };
+	const cycleFavorite = async (direction: FavoriteCycleDirection): Promise<boolean> => {
+		const ctx = activeCtx;
+		const activateModel = setModel;
+		if (!ctx || ctx.mode !== "tui" || !activateModel) return false;
+		if (cycleBusy) {
+			ctx.ui.notify("A favorite model switch is already in progress.", "info");
+			return true;
+		}
+		if (!ctx.isIdle()) {
+			ctx.ui.notify("Wait for the active model call to finish before switching models.", "warning");
+			return true;
+		}
+		const favoriteRows = buildPickerRows({
+			models: pickerModels(ctx),
+			state,
+			projectKey,
+			current: modelReference(ctx.model),
+			filter: "favorite",
+			activeContextTokens: ctx.getContextUsage()?.tokens,
+		});
+		if (favoriteRows.length === 0) {
+			ctx.ui.notify("No favorite models. Open Models with Ctrl+L and press Ctrl+F to add one.", "info");
+			return true;
+		}
+		const availableRows = favoriteRows.filter((row) => row.model.available);
+		const candidates = availableRows.filter((row) => row.contextFit !== "too-small");
+		if (candidates.length === 0) {
+			ctx.ui.notify(
+				availableRows.length === 0
+					? "No favorite models are available in the current model scope."
+					: "No favorite model can fit the active context. Open Models with Ctrl+L for details.",
+				"warning",
+			);
+			return true;
+		}
+		const current = modelReference(ctx.model);
+		const currentIndex = candidates.findIndex((row) => modelReferencesEqual(row.model, current));
+		if (candidates.length === 1 && currentIndex === 0) {
+			ctx.ui.notify("Only one favorite model is available.", "info");
+			return true;
+		}
+		const targetIndex =
+			currentIndex < 0
+				? direction === "forward"
+					? 0
+					: candidates.length - 1
+				: direction === "forward"
+					? (currentIndex + 1) % candidates.length
+					: (currentIndex - 1 + candidates.length) % candidates.length;
+		const target = candidates[targetIndex].model;
+		const model = ctx.modelRegistry.find(target.provider, target.modelId);
+		if (!model) {
+			ctx.ui.notify(
+				`Favorite model is unavailable: ${modelDisplay(target).provider}/${modelDisplay(target).modelId}`,
+				"warning",
+			);
+			return true;
+		}
+		cycleBusy = true;
+		try {
+			if (!(await activateModel(model))) {
+				ctx.ui.notify(
+					`No authentication for ${modelDisplay(target).provider}/${modelDisplay(target).modelId}`,
+					"warning",
+				);
+				return true;
+			}
+			ctx.ui.notify(`Switched to ${modelDisplay(target).provider}/${modelDisplay(target).modelId}.`, "info");
+		} catch (error) {
+			ctx.ui.notify(
+				`Favorite model switch failed: ${sanitizeTerminalText(error instanceof Error ? error.message : String(error))}`,
+				"warning",
+			);
+		} finally {
+			cycleBusy = false;
+		}
+		return true;
+	};
+
+	const handleScopedModelsCommand = async (): Promise<boolean> => {
+		const ctx = activeCtx;
+		if (!ctx || ctx.mode !== "tui") return false;
+		ctx.ui.notify(
+			"Jouzu uses Favorites for quick switching. Open Models with Ctrl+L and press Ctrl+F to edit them.",
+			"info",
+		);
+		return true;
+	};
+
+	return { extension, open, cycleFavorite, handleScopedModelsCommand };
 }

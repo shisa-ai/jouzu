@@ -67,6 +67,12 @@ assert.match(
 	keybindingsText,
 	/"app\.message\.followUp": \{\s*defaultKeys: windowsKeybindings \? "ctrl\+q" : "alt\+enter"/,
 );
+assert.match(keybindingsText, /"app\.model\.select": \{ defaultKeys: "ctrl\+l"/);
+assert.match(keybindingsText, /"app\.model\.cycleForward": \{\s*defaultKeys: "ctrl\+p"/);
+assert.match(
+	keybindingsText,
+	/"app\.model\.cycleBackward": \{\s*defaultKeys: windowsKeybindings \? "alt\+p" : "shift\+ctrl\+p"/,
+);
 assert.match(keybindingsText, /"app\.message\.dequeue": \{\s*defaultKeys: windowsKeybindings \? "alt\+q" : "alt\+up"/);
 assert.match(readFileSync(tuiKeybindingsSource, "utf8"), /"tui\.input\.tab": \{ defaultKeys: "tab"/);
 const editorText = readFileSync(customEditorSource, "utf8");
@@ -83,6 +89,14 @@ assert.equal(jouzuBindings.matches("\t", "tui.input.tab"), true);
 const interactiveText = readFileSync(interactiveModeSource, "utf8");
 assert.ok(interactiveText.includes('onAction("app.message.followUp"'), "Pi editor lost the follow-up semantic action");
 assert.ok(interactiveText.includes('onAction("app.message.dequeue"'), "Pi editor lost the dequeue semantic action");
+assert.ok(interactiveText.includes('onAction("app.model.cycleForward"'), "Pi editor lost forward model cycling");
+assert.ok(interactiveText.includes('onAction("app.model.cycleBackward"'), "Pi editor lost backward model cycling");
+assert.ok(interactiveText.includes('text === "/scoped-models"'), "Pi lost the scoped-model command Jouzu intercepts");
+assert.ok(
+	interactiveText.includes("for (const [action, handler] of this.defaultEditor.actionHandlers)") &&
+		interactiveText.includes("customEditor.actionHandlers.set(action, handler)"),
+	"Pi no longer copies default action handlers directly into a custom editor; requalify Jouzu's model-picker routing",
+);
 const agentSessionText = readFileSync(agentSessionSource, "utf8");
 assert.ok(
 	agentSessionText.includes("if (options.persist)") && !agentSessionText.includes("options.persistDefault"),
@@ -171,7 +185,10 @@ process.stdout.write(JSON.stringify({ exports: required, agentDir: pi.getAgentDi
 					"semantic-message-actions",
 					"platform-message-defaults",
 					"ctrl-enter-follow-up",
+					"favorite-cycle-actions",
+					"scoped-model-command-intercept",
 					"app-before-editor-routing",
+					"custom-editor-action-handler-copy",
 					"tab-editor-default",
 				],
 				modelActivation: ["extension-api", "session-only-persistence"],

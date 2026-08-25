@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { CustomEditor } from "@earendil-works/pi-coding-agent";
+import { KeybindingsManager } from "@earendil-works/pi-tui";
 
 import { renderPromptFrameLines, SessionPromptEditor, terminalTextWidth } from "../dist/index.js";
 
@@ -25,6 +27,8 @@ const tui = { terminal: { columns: 80, rows: 30 }, requestRender() {} };
 function editorKeybindings(data, action) {
 	return (
 		(data === "model-key" && action === "app.model.select") ||
+		(data === "cycle-forward-key" && action === "app.model.cycleForward") ||
+		(data === "cycle-backward-key" && action === "app.model.cycleBackward") ||
 		(data === "\r" && action === "tui.input.submit") ||
 		(data === "\t" && action === "tui.input.tab")
 	);
@@ -61,18 +65,98 @@ test("degrades without a frame below the structural minimum", () => {
 	assert.ok(lines.every((line) => terminalTextWidth(line) <= 3));
 });
 
+test("Pi's directly copied model actions route to Jouzu instead of stock handlers", async () => {
+	const keybindings = new KeybindingsManager({
+		"app.model.select": { defaultKeys: "ctrl+l", description: "Open model selector" },
+		"app.model.cycleForward": { defaultKeys: "ctrl+p", description: "Cycle forward" },
+		"app.model.cycleBackward": { defaultKeys: "alt+p", description: "Cycle backward" },
+	});
+	const defaultEditor = new CustomEditor(tui, editorTheme, keybindings);
+	const stockCalls = [];
+	for (const action of ["app.model.select", "app.model.cycleForward", "app.model.cycleBackward"]) {
+		defaultEditor.onAction(action, () => stockCalls.push(action));
+	}
+
+	let jouzuPickerCalls = 0;
+	const cycleDirections = [];
+	const editor = new SessionPromptEditor(tui, editorTheme, keybindings, plainStyles, {
+		onModelPicker: async () => {
+			jouzuPickerCalls += 1;
+			return true;
+		},
+		onModelCycle: async (direction) => {
+			cycleDirections.push(direction);
+			return true;
+		},
+	});
+	for (const [action, handler] of defaultEditor.actionHandlers) {
+		editor.actionHandlers.set(action, handler);
+	}
+
+	editor.setText("favorite-cycle draft");
+	editor.handleInput("\x1b[D");
+	const cursorBeforeCycle = editor.getCursor();
+	editor.handleInput("\x0c");
+	editor.handleInput("\x10");
+	editor.handleInput("\x1bp");
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(editor.getText(), "favorite-cycle draft");
+	assert.deepEqual(editor.getCursor(), cursorBeforeCycle);
+	assert.equal(jouzuPickerCalls, 1);
+	assert.deepEqual(cycleDirections, ["forward", "backward"]);
+	assert.deepEqual(stockCalls, []);
+});
+
+test("extension shortcuts retain precedence over favorite cycling", async () => {
+	let cycleCalls = 0;
+	let extensionCalls = 0;
+	const editor = new SessionPromptEditor(tui, editorTheme, { matches: editorKeybindings }, plainStyles, {
+		onModelCycle: async () => {
+			cycleCalls += 1;
+			return true;
+		},
+	});
+	editor.onExtensionShortcut = (data) => {
+		if (data !== "cycle-forward-key") return false;
+		extensionCalls += 1;
+		return true;
+	};
+	editor.handleInput("cycle-forward-key");
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(extensionCalls, 1);
+	assert.equal(cycleCalls, 0);
+});
+
+test("an explicit editor-history binding retains precedence over favorite cycling", async () => {
+	const keybindings = new KeybindingsManager({
+		"app.model.cycleForward": { defaultKeys: "ctrl+p", description: "Cycle forward" },
+		"tui.editor.historyPrevious": { defaultKeys: "ctrl+p", description: "Previous history" },
+	});
+	let cycleCalls = 0;
+	let stockCycleCalls = 0;
+	const editor = new SessionPromptEditor(tui, editorTheme, keybindings, plainStyles, {
+		onModelCycle: async () => {
+			cycleCalls += 1;
+			return true;
+		},
+	});
+	editor.onAction("app.model.cycleForward", () => {
+		stockCycleCalls += 1;
+	});
+	editor.handleInput("\x10");
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(cycleCalls, 0);
+	assert.equal(stockCycleCalls, 0);
+});
+
 test("replacement restoration preserves cursor and collapsed-paste state", async () => {
 	let finishPicker;
-	const editor = new SessionPromptEditor(
-		tui,
-		editorTheme,
-		{ matches: editorKeybindings },
-		plainStyles,
-		() =>
+	const editor = new SessionPromptEditor(tui, editorTheme, { matches: editorKeybindings }, plainStyles, {
+		onModelPicker: () =>
 			new Promise((resolve) => {
 				finishPicker = resolve;
 			}),
-	);
+	});
 	editor.onAction("app.model.select", () => assert.fail("the built-in selector should not run"));
 
 	editor.setText("abc");
@@ -98,21 +182,23 @@ test("replacement restoration preserves cursor and collapsed-paste state", async
 });
 
 test("model routing falls back when the Jouzu Palette cannot open", async () => {
-	const editor = new SessionPromptEditor(
-		tui,
-		editorTheme,
-		{ matches: editorKeybindings },
-		plainStyles,
-		async () => false,
-	);
+	const editor = new SessionPromptEditor(tui, editorTheme, { matches: editorKeybindings }, plainStyles, {
+		onModelPicker: async () => false,
+		onModelCycle: async () => false,
+		onScopedModelsCommand: async () => false,
+	});
 	let builtInCalls = 0;
 	editor.onAction("app.model.select", () => {
 		builtInCalls += 1;
 	});
+	editor.onAction("app.model.cycleForward", () => {
+		builtInCalls += 1;
+	});
 	editor.handleInput("model-key");
+	editor.handleInput("cycle-forward-key");
 	await Promise.resolve();
 	await Promise.resolve();
-	assert.equal(builtInCalls, 1);
+	assert.equal(builtInCalls, 2);
 
 	let submitted;
 	editor.onSubmit = (value) => {
@@ -123,6 +209,80 @@ test("model routing falls back when the Jouzu Palette cannot open", async () => 
 	await Promise.resolve();
 	await Promise.resolve();
 	assert.equal(submitted, "/model fallback");
+
+	editor.setText("/scoped-models");
+	editor.handleInput("\r");
+	await Promise.resolve();
+	await Promise.resolve();
+	assert.equal(submitted, "/scoped-models");
+});
+
+test("exact /model submission opens the Jouzu picker while slash autocomplete is visible", async () => {
+	const pickerQueries = [];
+	let submitted;
+	const editor = new SessionPromptEditor(tui, editorTheme, { matches: editorKeybindings }, plainStyles, {
+		onModelPicker: async (query) => {
+			pickerQueries.push(query);
+			return true;
+		},
+	});
+	editor.onSubmit = (value) => {
+		submitted = value;
+	};
+	editor.setAutocompleteProvider({
+		triggerCharacters: ["/"],
+		async getSuggestions() {
+			return { prefix: "/model", items: [{ value: "/model", label: "Model command" }] };
+		},
+		applyCompletion(lines, cursorLine, cursorCol) {
+			return { lines, cursorLine, cursorCol };
+		},
+	});
+	editor.setText("/model");
+	editor.handleInput("\t");
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(editor.isShowingAutocomplete(), true);
+
+	editor.handleInput("\r");
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.deepEqual(pickerQueries, [undefined]);
+	assert.equal(submitted, undefined);
+	assert.equal(editor.getText(), "");
+});
+
+test("removes /scoped-models from autocomplete and intercepts exact manual submission", async () => {
+	let commandCalls = 0;
+	let submitted;
+	const editor = new SessionPromptEditor(tui, editorTheme, { matches: editorKeybindings }, plainStyles, {
+		onScopedModelsCommand: async () => {
+			commandCalls += 1;
+			return true;
+		},
+	});
+	editor.onSubmit = (value) => {
+		submitted = value;
+	};
+	editor.setAutocompleteProvider({
+		triggerCharacters: ["/"],
+		async getSuggestions() {
+			return { prefix: "/sc", items: [{ value: "scoped-models", label: "scoped-models" }] };
+		},
+		applyCompletion(lines, cursorLine, cursorCol) {
+			return { lines, cursorLine, cursorCol };
+		},
+	});
+	editor.setText("/sc");
+	editor.handleInput("\t");
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(editor.isShowingAutocomplete(), false);
+	assert.doesNotMatch(editor.render(40).join("\n"), /scoped-models/);
+
+	editor.setText("/scoped-models");
+	editor.handleInput("\r");
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(commandCalls, 1);
+	assert.equal(submitted, undefined);
+	assert.equal(editor.getText(), "");
 });
 
 test("exact Pi autocomplete rows stay outside the prompt rail", async () => {

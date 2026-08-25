@@ -42,7 +42,7 @@ function rows() {
 			section: "current",
 			model: { provider: "small", modelId: "tiny", name: "Tiny", contextWindow: 1000, maxTokens: 100, available: true },
 			contextFit: "too-small",
-			favoriteScopes: [],
+			favorite: false,
 			projectDefault: false,
 			rank: 0,
 		},
@@ -57,7 +57,7 @@ function rows() {
 				available: true,
 			},
 			contextFit: "fits",
-			favoriteScopes: [],
+			favorite: false,
 			projectDefault: false,
 			rank: 1,
 		},
@@ -86,11 +86,81 @@ function createComponent(overrides = {}) {
 		onSelect: async (row, scope) => {
 			calls.selected.push([row.model.modelId, scope]);
 		},
-		onToggleFavorite: (row, scope) => {
-			calls.favorites.push([row.model.modelId, scope]);
+		onToggleFavorite: (row) => {
+			calls.favorites.push(row.model.modelId);
 		},
+		...(overrides.onRefresh ? { onRefresh: overrides.onRefresh } : {}),
 	});
 	return { component, calls };
+}
+
+async function createFavoriteCycleHarness(options = {}) {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-favorite-cycle-"));
+	const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+	const models =
+		options.models ??
+		["a", "b", "c"].map((id) => ({
+			provider: "p",
+			id,
+			name: id.toUpperCase(),
+			contextWindow: 100_000,
+			maxTokens: 10_000,
+		}));
+	const byId = new Map(models.map((model) => [model.id, model]));
+	const store = new ModelPickerStore(paths);
+	for (const favorite of options.favorites ?? []) {
+		store.toggleFavorite(
+			typeof favorite === "string" ? { provider: "p", modelId: favorite } : favorite,
+			new Date(`2026-08-23T00:00:0${store.load().state.favorites.length}.000Z`),
+		);
+	}
+	const integration = createJouzuModelPicker(paths);
+	const handlers = new Map();
+	const selected = [];
+	const notifications = [];
+	let ctx;
+	integration.extension.factory({
+		on(name, handler) {
+			handlers.set(name, handler);
+		},
+		async setModel(model) {
+			selected.push(model.id);
+			const result = options.setModel ? await options.setModel(model) : true;
+			if (result) ctx.model = model;
+			return result;
+		},
+	});
+	const current = byId.get(options.currentId ?? models[0].id);
+	ctx = {
+		mode: "tui",
+		cwd: root,
+		model: current,
+		scopedModels: (options.scopedIds ?? []).map((id) => ({ model: byId.get(id) })),
+		sessionManager: { getBranch: () => [] },
+		modelRegistry: {
+			getAvailable: () => models,
+			find: (provider, id) => (provider === "p" ? byId.get(id) : undefined),
+			refresh: async () => ({ errors: new Map() }),
+		},
+		getContextUsage: () => ({ tokens: options.contextTokens ?? 100, contextWindow: 100_000, percent: 1 }),
+		isIdle: () => options.isIdle ?? true,
+		ui: {
+			notify(message, level) {
+				notifications.push([message, level]);
+			},
+		},
+	};
+	await handlers.get("session_start")({ reason: "startup" }, ctx);
+	return {
+		ctx,
+		integration,
+		selected,
+		notifications,
+		async dispose() {
+			await handlers.get("session_shutdown")({}, ctx);
+			rmSync(root, { recursive: true, force: true });
+		},
+	};
 }
 
 test("Models view renders within width and blocks a context that cannot fit", async () => {
@@ -126,7 +196,7 @@ test("Models view keeps ANSI and CJK content inside aligned display-width border
 						available: true,
 					},
 					contextFit: "fits",
-					favoriteScopes: [],
+					favorite: false,
 					projectDefault: false,
 					rank: 0,
 				},
@@ -164,10 +234,8 @@ test("Models view selects for the session or project, toggles filters and favori
 	third.component.handleInput("down");
 	third.component.handleInput("\x06");
 	third.component.handleInput("\x1bf");
-	assert.deepEqual(third.calls.favorites, [
-		["fit", "global"],
-		["fit", "project"],
-	]);
+	assert.deepEqual(third.calls.favorites, ["fit"]);
+	assert.doesNotMatch(third.component.render(72).join("\n"), /Alt\+F/);
 	third.component.handleInput("escape");
 	assert.equal(third.calls.close, 1);
 });
@@ -186,40 +254,226 @@ test("Palette routing replaces the query and keeps the component reusable", () =
 	assert.equal(queries.includes("ignored"), false);
 });
 
+test("Models view silently reranks the inventory after refresh", async () => {
+	let resolveRefresh;
+	let refreshed = false;
+	const { component, calls } = createComponent({
+		getRows: () => [
+			{
+				section: "all",
+				model: {
+					provider: "p",
+					modelId: refreshed ? "fresh" : "cached",
+					name: refreshed ? "Fresh" : "Cached",
+					contextWindow: 100_000,
+					maxTokens: 10_000,
+					available: true,
+				},
+				contextFit: "fits",
+				favorite: false,
+				projectDefault: false,
+				rank: 0,
+			},
+		],
+		onRefresh: () =>
+			new Promise((resolve) => {
+				resolveRefresh = resolve;
+			}),
+	});
+	assert.match(component.render(72).join("\n"), /p\/cached/);
+	refreshed = true;
+	resolveRefresh();
+	await new Promise((resolve) => setImmediate(resolve));
+	const rendered = component.render(72).join("\n");
+	assert.match(rendered, /p\/fresh/);
+	assert.doesNotMatch(rendered, /catalogs refreshed/i);
+	assert.ok(calls.renders > 0);
+	component.dispose();
+});
+
+test("Models view keeps cached inventory and sanitizes refresh failures", async () => {
+	const { component } = createComponent({
+		onRefresh: async () => {
+			throw new Error("broken\u001b]0;hidden\u0007\nprovider");
+		},
+	});
+	await new Promise((resolve) => setImmediate(resolve));
+	const rendered = component.render(72).join("\n");
+	assert.match(rendered, /small\/tiny/);
+	assert.match(rendered, /Model refresh failed; showing cached models:/);
+	assert.doesNotMatch(rendered, /hidden/);
+	component.dispose();
+});
+
+test("Models view aborts an in-flight refresh when disposed", async () => {
+	let refreshSignal;
+	const { component } = createComponent({
+		onRefresh: (signal) => {
+			refreshSignal = signal;
+			return new Promise((_resolve, reject) => {
+				signal.addEventListener("abort", () => reject(new Error("aborted")), { once: true });
+			});
+		},
+	});
+	assert.equal(refreshSignal.aborted, false);
+	component.dispose();
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(refreshSignal.aborted, true);
+});
+
+test("Ctrl+P cycles global favorites deterministically in both directions", async () => {
+	const harness = await createFavoriteCycleHarness({ favorites: ["a", "b", "c"], currentId: "a" });
+	try {
+		assert.equal(await harness.integration.cycleFavorite("forward"), true);
+		assert.equal(await harness.integration.cycleFavorite("forward"), true);
+		assert.equal(await harness.integration.cycleFavorite("forward"), true);
+		assert.equal(await harness.integration.cycleFavorite("backward"), true);
+		assert.deepEqual(harness.selected, ["b", "c", "a", "c"]);
+		assert.ok(harness.notifications.every(([message]) => message.startsWith("Switched to p/")));
+	} finally {
+		await harness.dispose();
+	}
+});
+
+test("favorite cycling honors the effective scope and skips unsafe targets", async () => {
+	const harness = await createFavoriteCycleHarness({
+		models: [
+			{ provider: "p", id: "a", name: "A", contextWindow: 100_000, maxTokens: 10_000 },
+			{ provider: "p", id: "b", name: "B", contextWindow: 100_000, maxTokens: 10_000 },
+			{ provider: "p", id: "small", name: "Small", contextWindow: 5_000, maxTokens: 1_000 },
+			{ provider: "p", id: "c", name: "C", contextWindow: 100_000, maxTokens: 10_000 },
+		],
+		favorites: ["b", "small", "c", "missing"],
+		currentId: "a",
+		scopedIds: ["a", "small", "c"],
+		contextTokens: 10_000,
+	});
+	try {
+		assert.equal(await harness.integration.cycleFavorite("forward"), true);
+		assert.deepEqual(harness.selected, ["c"], "out-of-scope, missing, and context-small favorites must be skipped");
+		assert.equal(await harness.integration.cycleFavorite("forward"), true);
+		assert.deepEqual(harness.selected, ["c"]);
+		assert.match(harness.notifications.at(-1)[0], /Only one favorite model is available/);
+	} finally {
+		await harness.dispose();
+	}
+});
+
+test("favorite cycling handles empty, active, unauthenticated, and failed switches without stock fallback", async (t) => {
+	await t.test("empty favorite list", async () => {
+		const harness = await createFavoriteCycleHarness();
+		try {
+			assert.equal(await harness.integration.cycleFavorite("forward"), true);
+			assert.deepEqual(harness.selected, []);
+			assert.match(harness.notifications[0][0], /No favorite models/);
+		} finally {
+			await harness.dispose();
+		}
+	});
+	await t.test("active model call", async () => {
+		const harness = await createFavoriteCycleHarness({ favorites: ["a", "b"], isIdle: false });
+		try {
+			assert.equal(await harness.integration.cycleFavorite("forward"), true);
+			assert.deepEqual(harness.selected, []);
+			assert.match(harness.notifications[0][0], /Wait for the active model call/);
+		} finally {
+			await harness.dispose();
+		}
+	});
+	await t.test("missing authentication", async () => {
+		const harness = await createFavoriteCycleHarness({ favorites: ["a", "b"], setModel: async () => false });
+		try {
+			assert.equal(await harness.integration.cycleFavorite("forward"), true);
+			assert.deepEqual(harness.selected, ["b"]);
+			assert.match(harness.notifications[0][0], /No authentication for p\/b/);
+		} finally {
+			await harness.dispose();
+		}
+	});
+	await t.test("activation error", async () => {
+		const harness = await createFavoriteCycleHarness({
+			favorites: ["a", "b"],
+			setModel: async () => {
+				throw new Error("broken\u001b]0;hidden\u0007 provider");
+			},
+		});
+		try {
+			assert.equal(await harness.integration.cycleFavorite("forward"), true);
+			assert.match(harness.notifications[0][0], /Favorite model switch failed: broken provider/);
+			assert.doesNotMatch(harness.notifications[0][0], /hidden/);
+		} finally {
+			await harness.dispose();
+		}
+	});
+});
+
+test("favorite cycling serializes repeated keypresses", async () => {
+	let finishSwitch;
+	const harness = await createFavoriteCycleHarness({
+		favorites: ["a", "b", "c"],
+		setModel: () =>
+			new Promise((resolve) => {
+				finishSwitch = resolve;
+			}),
+	});
+	try {
+		const first = harness.integration.cycleFavorite("forward");
+		assert.equal(await harness.integration.cycleFavorite("forward"), true);
+		assert.deepEqual(harness.selected, ["b"]);
+		assert.match(harness.notifications[0][0], /already in progress/);
+		finishSwitch(true);
+		assert.equal(await first, true);
+	} finally {
+		await harness.dispose();
+	}
+});
+
 test("Jouzu editor wrapper opens the Models component through the Palette surface", async () => {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-host-"));
 	try {
 		const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
 		const integration = createJouzuModelPicker(paths);
 		const handlers = new Map();
+		const selected = [];
+		let ctx;
 		integration.extension.factory({
 			on(name, handler) {
 				handlers.set(name, handler);
 			},
-			setModel: async () => true,
+			setModel: async (target) => {
+				selected.push(target.id);
+				ctx.model = target;
+				return true;
+			},
 		});
 		const model = { provider: "p", id: "model", name: "Model", contextWindow: 100_000, maxTokens: 10_000 };
+		const fresh = { provider: "p", id: "fresh", name: "Fresh", contextWindow: 100_000, maxTokens: 10_000 };
+		let availableModels = [model];
 		let rendered = "";
 		let customOptions;
 		let refreshCalls = 0;
-		const ctx = {
+		const notifications = [];
+		ctx = {
 			mode: "tui",
 			cwd: root,
 			model,
 			scopedModels: [],
 			sessionManager: { getBranch: () => [] },
 			modelRegistry: {
-				getAvailable: () => [model],
+				getAvailable: () => availableModels,
 				refresh: async () => {
 					refreshCalls += 1;
+					availableModels = [model, fresh];
 					return { errors: new Map() };
 				},
-				find: () => model,
+				find: (_provider, id) => availableModels.find((candidate) => candidate.id === id),
 			},
 			getContextUsage: () => ({ tokens: 100, contextWindow: 100_000, percent: 1 }),
 			isIdle: () => true,
 			ui: {
-				notify() {},
+				notify(message, level) {
+					notifications.push([message, level]);
+				},
 				custom(factory, options) {
 					customOptions = options;
 					return new Promise((resolve) => {
@@ -229,8 +483,14 @@ test("Jouzu editor wrapper opens the Models component through the Palette surfac
 							fakeKeybindings(),
 							resolve,
 						);
-						rendered = component.render(72).join("\n");
-						queueMicrotask(() => component.handleInput("escape"));
+						setImmediate(() => {
+							component.handleInput("\t");
+							component.handleInput("\t");
+							component.handleInput("down");
+							component.handleInput("\x06");
+							rendered = component.render(72).join("\n");
+							component.handleInput("escape");
+						});
 					});
 				},
 			},
@@ -238,8 +498,14 @@ test("Jouzu editor wrapper opens the Models component through the Palette surfac
 		await handlers.get("session_start")({}, ctx);
 		assert.equal(await integration.open({ source: "action" }), true);
 		assert.match(stripSgr(rendered), /JOUZU · Models/);
+		assert.match(rendered, /p\/fresh/, "the Palette must render models discovered by the refresh");
+		assert.doesNotMatch(rendered, /Model catalogs refreshed\./);
 		assert.equal(customOptions.overlay, true);
-		assert.equal(refreshCalls, 0, "opening the Palette must use the cached local inventory");
+		assert.equal(refreshCalls, 1, "opening the Palette must refresh Pi's effective model inventory");
+		assert.equal(await integration.cycleFavorite("forward"), true);
+		assert.deepEqual(selected, ["fresh"], "Ctrl+P must immediately use a favorite added in the open picker");
+		assert.equal(await integration.handleScopedModelsCommand(), true);
+		assert.match(notifications.at(-1)[0], /Jouzu uses Favorites/);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}

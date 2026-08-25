@@ -237,9 +237,13 @@ async function runCli(args: string[]): Promise<void> {
 	});
 	const help = createJouzuHelpExtension();
 	const sessionUi = createSessionUiExtension({
-		getHints: () => [{ id: "palette.shortcuts", text: "Ctrl+L models · Ctrl+/ help", priority: 10, role: "muted" }],
+		getHints: () => [
+			{ id: "palette.shortcuts", text: "Ctrl+L models · Ctrl+P favorites · Ctrl+/ help", priority: 10, role: "muted" },
+		],
 		onModelPicker: (query) =>
 			modelPicker.open({ source: query ? "command" : "action", ...(query ? { initialSearchInput: query } : {}) }),
+		onModelCycle: (direction) => modelPicker.cycleFavorite(direction),
+		onScopedModelsCommand: () => modelPicker.handleScopedModelsCommand(),
 	});
 	await withJouzuResumeHint(() =>
 		pi.main(parsed.args, {

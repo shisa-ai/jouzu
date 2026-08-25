@@ -105,12 +105,7 @@ test("doctor reports model picker counts and unreadable state without rewriting 
 	try {
 		const resolvedPaths = paths(root);
 		const store = new ModelPickerStore(resolvedPaths);
-		store.toggleFavorite(
-			{ provider: "anthropic", modelId: "claude-test" },
-			"global",
-			undefined,
-			new Date("2026-08-23T00:00:00.000Z"),
-		);
+		store.toggleFavorite({ provider: "anthropic", modelId: "claude-test" }, new Date("2026-08-23T00:00:00.000Z"));
 		store.recordDispatch(
 			{ provider: "anthropic", modelId: "claude-test" },
 			"a".repeat(64),

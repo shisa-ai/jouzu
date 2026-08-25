@@ -2,7 +2,7 @@ import type { InlineExtension } from "@earendil-works/pi-coding-agent";
 import type { SessionUiHint } from "./contracts.js";
 import { SessionStatusController } from "./controller.js";
 import { SESSION_UI_RUNTIME_IDS } from "./identity.js";
-import { SessionPromptEditor } from "./prompt-frame.js";
+import { type ModelCycleDirection, SessionPromptEditor } from "./prompt-frame.js";
 import { SessionLineComponent } from "./session-line.js";
 import type { SessionStatusSnapshot } from "./snapshot.js";
 import { StatusBarComponent } from "./status-bar.js";
@@ -11,6 +11,8 @@ import { createSessionUiStyles, type SessionUiStyleOptions, type SessionUiStyleS
 export interface SessionUiExtensionOptions {
 	getHints?: (snapshot: SessionStatusSnapshot | undefined) => readonly SessionUiHint[];
 	onModelPicker?: (query?: string) => Promise<boolean>;
+	onModelCycle?: (direction: ModelCycleDirection) => Promise<boolean>;
+	onScopedModelsCommand?: () => Promise<boolean>;
 	styleScheme?: SessionUiStyleScheme;
 	colorEnabled?: boolean;
 	env?: NodeJS.ProcessEnv;
@@ -73,7 +75,11 @@ export function createSessionUiExtension(options: SessionUiExtensionOptions = {}
 				});
 				ctx.ui.setEditorComponent(
 					(tui, theme, keybindings) =>
-						new SessionPromptEditor(tui, theme, keybindings, stylesFor(ctx.ui.theme), options.onModelPicker),
+						new SessionPromptEditor(tui, theme, keybindings, stylesFor(ctx.ui.theme), {
+							...(options.onModelPicker ? { onModelPicker: options.onModelPicker } : {}),
+							...(options.onModelCycle ? { onModelCycle: options.onModelCycle } : {}),
+							...(options.onScopedModelsCommand ? { onScopedModelsCommand: options.onScopedModelsCommand } : {}),
+						}),
 				);
 				void activeController.refreshProject(ctx);
 			});

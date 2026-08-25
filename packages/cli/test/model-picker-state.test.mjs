@@ -73,33 +73,24 @@ test("state mutations reject model references with terminal controls", () => {
 		const projectKey = "e".repeat(64);
 		assert.throws(() => store.setProjectDefault(unsafe, projectKey), ModelPickerStateError);
 		assert.throws(() => store.recordDispatch(unsafe, projectKey), ModelPickerStateError);
-		assert.throws(() => store.toggleFavorite(unsafe, "global"), ModelPickerStateError);
+		assert.throws(() => store.toggleFavorite(unsafe), ModelPickerStateError);
 		assert.equal(existsSync(join(paths.stateDir, "model-picker.json")), false);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
 });
 
-test("favorites toggle independently for project and global scope", () => {
+test("favorites are one global list with no project scope", () => {
 	const { root, paths } = context();
 	try {
 		const store = new ModelPickerStore(paths);
 		const reference = { provider: "anthropic", modelId: "claude-test" };
-		const projectKey = "b".repeat(64);
-		store.toggleFavorite(reference, "global", undefined, new Date("2026-08-23T00:00:00.000Z"));
-		store.toggleFavorite(reference, "project", projectKey, new Date("2026-08-23T00:00:01.000Z"));
-		assert.deepEqual(
-			store.load().state.favorites.map(({ scope, projectKey: key }) => [scope, key]),
-			[
-				["global", undefined],
-				["project", projectKey],
-			],
-		);
-		store.toggleFavorite(reference, "global");
-		assert.deepEqual(
-			store.load().state.favorites.map(({ scope }) => scope),
-			["project"],
-		);
+		store.toggleFavorite(reference, new Date("2026-08-23T00:00:00.000Z"));
+		assert.deepEqual(store.load().state.favorites, [{ ...reference, addedAt: "2026-08-23T00:00:00.000Z" }]);
+		const serialized = readFileSync(join(paths.stateDir, "model-picker.json"), "utf8");
+		assert.doesNotMatch(serialized, /favoriteScope|projectKey|"scope"/);
+		store.toggleFavorite(reference);
+		assert.deepEqual(store.load().state.favorites, []);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}

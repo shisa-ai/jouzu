@@ -22,7 +22,7 @@ export interface PickerRow {
 	section: PickerSection;
 	model: PickerModel;
 	contextFit: ContextFit;
-	favoriteScopes: Array<"project" | "global">;
+	favorite: boolean;
 	recentScope?: "project" | "global";
 	projectDefault: boolean;
 	rank: number;
@@ -123,16 +123,6 @@ function resolvedModels(options: BuildPickerRowsOptions): Map<string, PickerMode
 	return models;
 }
 
-function favoriteScopes(options: BuildPickerRowsOptions, reference: ModelReference): Array<"project" | "global"> {
-	const scopes = new Set<"project" | "global">();
-	for (const favorite of options.state.favorites) {
-		if (!modelReferencesEqual(favorite, reference)) continue;
-		if (favorite.scope === "global") scopes.add("global");
-		if (favorite.scope === "project" && favorite.projectKey === options.projectKey) scopes.add("project");
-	}
-	return [...scopes].sort((left) => (left === "project" ? -1 : 1));
-}
-
 export function buildPickerRows(options: BuildPickerRowsOptions): PickerRow[] {
 	const models = resolvedModels(options);
 	const filter = options.filter ?? "recent";
@@ -151,7 +141,7 @@ export function buildPickerRows(options: BuildPickerRowsOptions): PickerRow[] {
 			section,
 			model,
 			contextFit: contextFit(model, options.activeContextTokens),
-			favoriteScopes: favoriteScopes(options, model),
+			favorite: options.state.favorites.some((favorite) => modelReferencesEqual(favorite, model)),
 			...(recentScope ? { recentScope } : {}),
 			projectDefault: modelReferencesEqual(projectDefault, model),
 			rank: rows.length,
@@ -166,12 +156,7 @@ export function buildPickerRows(options: BuildPickerRowsOptions): PickerRow[] {
 		}
 		for (const recent of options.state.recents.global) add(recent, "global_recent", "global");
 	} else if (filter === "favorite") {
-		for (const favorite of options.state.favorites) {
-			if (favorite.scope === "project" && favorite.projectKey === options.projectKey) add(favorite, "favorite");
-		}
-		for (const favorite of options.state.favorites) {
-			if (favorite.scope === "global") add(favorite, "favorite");
-		}
+		for (const favorite of options.state.favorites) add(favorite, "favorite");
 	} else {
 		for (const model of options.models) add(model, "all");
 	}

@@ -219,6 +219,7 @@ test("shows Jouzu help and leaves Pi help behind the explicit escape", () => {
 	const jouzuHelp = run(["--help"]);
 	assert.equal(jouzuHelp.status, 0, jouzuHelp.stderr);
 	assert.match(jouzuHelp.stdout, /Jouzu agentic AI environment/);
+	assert.match(jouzuHelp.stdout, /Jouzu Models view opens/);
 	assert.match(jouzuHelp.stdout, /Ctrl\+L/);
 
 	const piHelp = run(["pi", "--help"]);

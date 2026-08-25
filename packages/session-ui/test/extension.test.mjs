@@ -36,11 +36,21 @@ test("installs one editor, Session Line, and Status Bar owner and cleans up", as
 		const handlers = new Map();
 		const execCalls = [];
 		const modelQueries = [];
+		const modelCycles = [];
+		let scopedCommandCalls = 0;
 		const extension = createSessionUiExtension({
 			colorEnabled: false,
 			getHints: () => [{ id: "palette", text: "/model choose", priority: 10, role: "muted" }],
 			onModelPicker: async (query) => {
 				modelQueries.push(query);
+				return true;
+			},
+			onModelCycle: async (direction) => {
+				modelCycles.push(direction);
+				return true;
+			},
+			onScopedModelsCommand: async () => {
+				scopedCommandCalls += 1;
 				return true;
 			},
 		});
@@ -70,7 +80,9 @@ test("installs one editor, Session Line, and Status Bar owner and cleans up", as
 		const keybindings = {
 			matches(data, action) {
 				return (
-					(data === "model-key" && action === "app.model.select") || (data === "enter" && action === "tui.input.submit")
+					(data === "model-key" && action === "app.model.select") ||
+					(data === "cycle-key" && action === "app.model.cycleForward") ||
+					(data === "enter" && action === "tui.input.submit")
 				);
 			},
 		};
@@ -80,9 +92,15 @@ test("installs one editor, Session Line, and Status Bar owner and cleans up", as
 			builtInModelPickerCalls += 1;
 		});
 		editor.handleInput("model-key");
+		editor.handleInput("cycle-key");
 		editor.setText("/model codex/gpt-test");
 		editor.handleInput("enter");
+		editor.setText("/scoped-models");
+		editor.handleInput("enter");
+		await new Promise((resolve) => setImmediate(resolve));
 		assert.deepEqual(modelQueries, [undefined, "codex/gpt-test"]);
+		assert.deepEqual(modelCycles, ["forward"]);
+		assert.equal(scopedCommandCalls, 1);
 		assert.equal(builtInModelPickerCalls, 0);
 
 		const lineComponent = calls.widgets[0][1](tui, theme);

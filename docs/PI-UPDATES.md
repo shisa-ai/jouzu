@@ -80,11 +80,12 @@ Review all generated manifest and lock changes before qualification. Run focused
 #### Jouzu interaction review
 
 - Session-scoped upstream selection aligns with Jouzu's `Enter` behavior and removal of the Palette global-default shortcut.
-- Jouzu's prototype host model-picker option is absent from the pristine 0.84.3 npm artifact. Jouzu no longer requires it: the built-in Prompt Frame wrapper takes ownership of Pi's semantic `app.model.select` action and `/model` submission, then opens the Palette through Jouzu's extension.
+- Jouzu's prototype host model-picker option is absent from the pristine 0.84.3 npm artifact. Jouzu no longer requires it: the built-in Prompt Frame intercepts Pi's copied `app.model.select` handler and `/model` submission before stock dispatch, then opens the Palette through Jouzu's extension.
+- The Prompt Frame also intercepts Pi's forward/backward model-cycle actions so they cycle Jouzu's global favorites. It removes `/scoped-models` from autocomplete and handles exact manual submission with guidance; explicit and configured Pi model scopes remain inventory constraints.
 - Palette activation calls public extension API `pi.setModel()`, which is session-scoped in 0.84.3. `Shift+Enter` stores Jouzu's separate project default before activating the session model.
 - Project defaults are applied from `session_start` through the same public session-scoped API. Explicit models, resumed sessions, and scoped-model sets retain precedence without injecting a process-wide CLI model override.
 - The autocomplete-priority prototype change is retired. Jouzu's default follow-up binding no longer uses `Tab`, Palette `Tab` is handled inside its component, and the Prompt Frame preserves ordinary autocomplete behavior.
-- Jouzu's Pi contract check now covers official session-only model persistence, semantic editor actions, wrapper-owned Palette routing, and packed runtime startup without requiring modified Pi files.
+- Jouzu's Pi contract check now covers official session-only model persistence, semantic editor actions, direct custom-editor handler copying, favorite-cycle routing, scoped-command interception, and packed runtime startup without requiring modified Pi files.
 
 #### Provenance disposition
 

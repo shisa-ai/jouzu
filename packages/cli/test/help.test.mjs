@@ -43,5 +43,6 @@ test("registers slash and question-mark help shortcuts and closes the overlay", 
 	assert.equal(customOptions.overlay, true);
 	assert.match(rendered, /Jouzu Help/);
 	assert.match(rendered, /Ctrl\+L/);
+	assert.match(rendered, /Ctrl\+P.*Cycle favorites/);
 	assert.match(rendered, /\/hotkeys/);
 });

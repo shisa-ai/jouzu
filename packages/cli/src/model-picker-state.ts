@@ -15,11 +15,7 @@ export interface ModelReference {
 	modelId: string;
 }
 
-export type FavoriteScope = "global" | "project";
-
 export interface FavoriteRecord extends ModelReference {
-	scope: FavoriteScope;
-	projectKey?: string;
 	addedAt: string;
 }
 
@@ -136,20 +132,9 @@ function parseState(value: unknown): ModelPickerState {
 
 	const favorites = record.favorites.map((value): FavoriteRecord => {
 		const reference = parseReference(value);
-		const favorite = value as { scope?: unknown; projectKey?: unknown; addedAt?: unknown };
-		if (favorite.scope !== "global" && favorite.scope !== "project") {
-			throw new ModelPickerStateError("favorite scope must be global or project");
-		}
+		const favorite = value as { addedAt?: unknown };
 		if (!validTimestamp(favorite.addedAt)) throw new ModelPickerStateError("favorite timestamp is invalid");
-		if (favorite.scope === "project" && !validIdentifier(favorite.projectKey)) {
-			throw new ModelPickerStateError("project favorite requires a project key");
-		}
-		return {
-			...reference,
-			scope: favorite.scope,
-			...(favorite.scope === "project" ? { projectKey: favorite.projectKey as string } : {}),
-			addedAt: favorite.addedAt,
-		};
+		return { ...reference, addedAt: favorite.addedAt };
 	});
 
 	const defaults: Record<string, ModelReference> = {};
@@ -284,32 +269,15 @@ export class ModelPickerStore {
 		}, now);
 	}
 
-	toggleFavorite(
-		reference: ModelReference,
-		scope: FavoriteScope,
-		projectKey?: string,
-		now: Date = new Date(),
-	): ModelPickerState {
+	toggleFavorite(reference: ModelReference, now: Date = new Date()): ModelPickerState {
 		assertValidReference(reference);
-		if (scope === "project" && !validIdentifier(projectKey)) {
-			throw new ModelPickerStateError("project favorite requires a project key");
-		}
 		return this.mutate((state) => {
-			const matchesScope = (favorite: FavoriteRecord): boolean =>
-				favorite.scope === scope && (scope === "global" || favorite.projectKey === projectKey);
-			const existing = state.favorites.find(
-				(favorite) => matchesScope(favorite) && modelReferencesEqual(favorite, reference),
-			);
+			const existing = state.favorites.find((favorite) => modelReferencesEqual(favorite, reference));
 			if (existing) {
 				state.favorites = state.favorites.filter((favorite) => favorite !== existing);
 				return;
 			}
-			state.favorites.push({
-				...reference,
-				scope,
-				...(scope === "project" ? { projectKey } : {}),
-				addedAt: now.toISOString(),
-			});
+			state.favorites.push({ ...reference, addedAt: now.toISOString() });
 		}, now);
 	}
 

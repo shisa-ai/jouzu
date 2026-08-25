@@ -38,14 +38,11 @@ function state() {
 		{
 			provider: "missing-provider",
 			modelId: "retired-model",
-			scope: "global",
 			addedAt: "2026-08-23T00:00:00.000Z",
 		},
 		{
 			provider: "openai",
 			modelId: "gpt-test",
-			scope: "project",
-			projectKey,
 			addedAt: "2026-08-23T00:00:01.000Z",
 		},
 	];
@@ -63,7 +60,7 @@ function state() {
 	return value;
 }
 
-test("Recent and Favorite filters preserve scope order and unavailable favorites", () => {
+test("Recent and Favorite filters preserve global favorite order and unavailable entries", () => {
 	const rows = buildPickerRows({
 		models,
 		state: state(),
@@ -82,17 +79,17 @@ test("Recent and Favorite filters preserve scope order and unavailable favorites
 		],
 	);
 	assert.equal(rows[1].contextFit, "too-small");
-	assert.deepEqual(rows[1].favoriteScopes, ["project"]);
+	assert.equal(rows[1].favorite, true);
 
 	const favorites = buildPickerRows({ models, state: state(), projectKey, filter: "favorite" });
 	assert.deepEqual(
 		favorites.map((row) => [row.model.provider, row.model.modelId]),
 		[
-			["openai", "gpt-test"],
 			["missing-provider", "retired-model"],
+			["openai", "gpt-test"],
 		],
 	);
-	assert.equal(favorites[1].model.available, false);
+	assert.equal(favorites[0].model.available, false);
 });
 
 test("typed query ranks exact provider identity before proxy-provider IDs and recency", () => {

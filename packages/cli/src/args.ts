@@ -244,6 +244,6 @@ The jz command is an exact alias. Resume with the jz --session command printed
 on exit; Jouzu resolves its isolated session root. First interactive launch asks before enabling
 the optional JA profile; Core is the safe fallback. Interactive launches clear
 the viewport and show the Jouzu header;
-set JOUZU_NO_CLEAR=1 to preserve the existing screen. Pi's model picker remains
-available through /model or Ctrl+L. Use "jouzu pi --help" for Pi CLI help.`;
+set JOUZU_NO_CLEAR=1 to preserve the existing screen. The Jouzu Models view opens
+through /model or Ctrl+L. Use "jouzu pi --help" for Pi CLI help.`;
 }
