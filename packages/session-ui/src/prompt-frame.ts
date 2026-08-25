@@ -45,20 +45,45 @@ function autocompleteLineCount(editor: CustomEditor, width: number): number {
 }
 
 export class SessionPromptEditor extends CustomEditor {
+	// Pi 0.84.3 restores non-overlay custom UI with setText(savedText). Ignore only
+	// that identical write while the Palette is open so cursor and paste state survive.
+	private preserveIdenticalSetText = false;
+
 	constructor(
 		tui: TUI,
 		theme: EditorTheme,
 		private readonly keybindingsManager: KeybindingsManager,
 		private readonly styles: SessionUiStyles,
-		private readonly onModelPicker?: (query?: string) => void,
+		private readonly onModelPicker?: (query?: string) => Promise<boolean>,
 	) {
 		super(tui, theme, keybindingsManager, { paddingX: 0 });
 		this.borderColor = (value: string) => styles.apply("prompt.border", value);
 	}
 
+	private async openModelPicker(query?: string): Promise<boolean> {
+		if (!this.onModelPicker) return false;
+		this.preserveIdenticalSetText = true;
+		try {
+			return await this.onModelPicker(query);
+		} catch {
+			return false;
+		} finally {
+			this.preserveIdenticalSetText = false;
+		}
+	}
+
+	override setText(text: string): void {
+		if (this.preserveIdenticalSetText && text === this.getText()) return;
+		super.setText(text);
+	}
+
 	override onAction(action: AppKeybinding, handler: () => void): void {
 		if (action === "app.model.select" && this.onModelPicker) {
-			super.onAction(action, () => this.onModelPicker?.());
+			super.onAction(action, () => {
+				void this.openModelPicker().then((opened) => {
+					if (!opened) handler();
+				});
+			});
 			return;
 		}
 		super.onAction(action, handler);
@@ -70,10 +95,15 @@ export class SessionPromptEditor extends CustomEditor {
 			!this.isShowingAutocomplete() &&
 			this.keybindingsManager.matches(data, "tui.input.submit")
 		) {
-			const match = /^\/model(?:\s+(.*))?$/.exec(this.getText().trim());
+			const editorText = this.getText();
+			const match = /^\/model(?:\s+(.*))?$/.exec(editorText.trim());
 			if (match) {
 				this.setText("");
-				this.onModelPicker(match[1]?.trim() || undefined);
+				void this.openModelPicker(match[1]?.trim() || undefined).then((opened) => {
+					if (opened) return;
+					this.setText(editorText);
+					super.handleInput(data);
+				});
 				return;
 			}
 		}

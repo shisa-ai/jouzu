@@ -39,7 +39,10 @@ test("installs one editor, Session Line, and Status Bar owner and cleans up", as
 		const extension = createSessionUiExtension({
 			colorEnabled: false,
 			getHints: () => [{ id: "palette", text: "/model choose", priority: 10, role: "muted" }],
-			onModelPicker: (query) => modelQueries.push(query),
+			onModelPicker: async (query) => {
+				modelQueries.push(query);
+				return true;
+			},
 		});
 		extension.factory({
 			on(name, handler) {

@@ -238,9 +238,8 @@ async function runCli(args: string[]): Promise<void> {
 	const help = createJouzuHelpExtension();
 	const sessionUi = createSessionUiExtension({
 		getHints: () => [{ id: "palette.shortcuts", text: "Ctrl+L models · Ctrl+/ help", priority: 10, role: "muted" }],
-		onModelPicker: (query) => {
-			void modelPicker.open({ source: query ? "command" : "action", ...(query ? { initialSearchInput: query } : {}) });
-		},
+		onModelPicker: (query) =>
+			modelPicker.open({ source: query ? "command" : "action", ...(query ? { initialSearchInput: query } : {}) }),
 	});
 	const runPi = pi.main as (
 		args: string[],

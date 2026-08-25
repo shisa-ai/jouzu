@@ -10,7 +10,7 @@ import { createSessionUiStyles, type SessionUiStyleOptions, type SessionUiStyleS
 
 export interface SessionUiExtensionOptions {
 	getHints?: (snapshot: SessionStatusSnapshot | undefined) => readonly SessionUiHint[];
-	onModelPicker?: (query?: string) => void;
+	onModelPicker?: (query?: string) => Promise<boolean>;
 	styleScheme?: SessionUiStyleScheme;
 	colorEnabled?: boolean;
 	env?: NodeJS.ProcessEnv;
