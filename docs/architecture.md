@@ -56,9 +56,9 @@ There are no circular module imports.
 | Profile consent | `profile-choice.ts` | `state/profile-choice.json` |
 | Keybinding state | `keybindings.ts` | `state/keybindings-state.json` |
 | Self-update state | `updater.ts` | `state/self-update.json` |
-| Model-picker favorites/recents | `model-picker-state.ts` | `state/model-picker.json` |
+| Model-picker project defaults, favorites, and recents | `model-picker-state.ts` | `state/model-picker.json` |
 
-Locks (`profile.lock`, `keybindings.lock`, `self-update.lock`) are created and
+Locks (`profile.lock`, `keybindings.lock`, `self-update.lock`, `model-picker.lock`) are created and
 released by `state-lock.ts`, the shared state-lock primitive used by the
 updater, profile, and keybinding operations. It records a PID, a started-at
 timestamp, and a release token, refuses locks held by a live process, and

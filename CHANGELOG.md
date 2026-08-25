@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- Add the Jouzu Palette Models view on `/model` and `Ctrl+L`, with exact provider/model search, current and previous choices, project/global favorites and recents, session-only selection, explicit global-default selection, context-fit blocking, and floating/replacement presentations.
+- Add the Jouzu Palette Models view on `/model` and `Ctrl+L`, with Recent/Favorite/All filters, result counts, exact provider/model search, current and previous choices, project/global favorites and recents, session-only selection, user-local project defaults, documented startup precedence, context-fit blocking, and floating/replacement presentations.
+- Add `Ctrl+/` and `Ctrl+?` Jouzu help shortcuts and show the model/help shortcuts in the Session Line.
 - Preserve open editor autocomplete behavior before application-level key handling.
 - Add the built-in Jouzu Prompt Frame, Session Line, and responsive Status Bar with provider-neutral local facts and CJK/ANSI-safe width degradation.
 - Match the retained Session UI color baseline through Jouzu-owned semantic style roles that can be replaced by a future global theme.

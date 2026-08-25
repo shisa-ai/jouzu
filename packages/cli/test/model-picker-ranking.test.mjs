@@ -63,7 +63,7 @@ function state() {
 	return value;
 }
 
-test("empty query uses section priority and keeps unavailable favorites inspectable", () => {
+test("Recent and Favorite filters preserve scope order and unavailable favorites", () => {
 	const rows = buildPickerRows({
 		models,
 		state: state(),
@@ -78,13 +78,21 @@ test("empty query uses section priority and keeps unavailable favorites inspecta
 		[
 			["current", "anthropic", "claude-sonnet-test"],
 			["previous", "openai", "gpt-test"],
-			["favorite", "missing-provider", "retired-model"],
 			["project_recent", "openrouter", "anthropic/claude-sonnet-test"],
 		],
 	);
 	assert.equal(rows[1].contextFit, "too-small");
-	assert.equal(rows[2].model.available, false);
 	assert.deepEqual(rows[1].favoriteScopes, ["project"]);
+
+	const favorites = buildPickerRows({ models, state: state(), projectKey, filter: "favorite" });
+	assert.deepEqual(
+		favorites.map((row) => [row.model.provider, row.model.modelId]),
+		[
+			["openai", "gpt-test"],
+			["missing-provider", "retired-model"],
+		],
+	);
+	assert.equal(favorites[1].model.available, false);
 });
 
 test("typed query ranks exact provider identity before proxy-provider IDs and recency", () => {
@@ -93,6 +101,7 @@ test("typed query ranks exact provider identity before proxy-provider IDs and re
 		state: state(),
 		projectKey,
 		query: "anthropic/claude-sonnet-test",
+		filter: "all",
 	});
 	assert.deepEqual(
 		rows.slice(0, 2).map((row) => `${row.model.provider}/${row.model.modelId}`),
@@ -110,8 +119,8 @@ test("typed search is deterministic, Unicode-normalized, and strips terminal con
 			available: true,
 		},
 	];
-	const first = buildPickerRows({ models: dirtyModels, state: state(), projectKey, query: "qwen" });
-	const second = buildPickerRows({ models: dirtyModels, state: state(), projectKey, query: "ｑｗｅｎ" });
+	const first = buildPickerRows({ models: dirtyModels, state: state(), projectKey, query: "qwen", filter: "all" });
+	const second = buildPickerRows({ models: dirtyModels, state: state(), projectKey, query: "ｑｗｅｎ", filter: "all" });
 	assert.equal(first[0].model.modelId, "Ｑｗｅｎ-test");
 	assert.equal(first[0].model.provider.includes("\u001b"), false);
 	assert.equal(first[0].model.name.includes("\u0007"), false);

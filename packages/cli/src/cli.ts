@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { formatHelp, isBlockedPiSelfUpdate, parseJouzuArgs, UsageError } from "./args.js";
 import { createDoctorReport } from "./doctor.js";
+import { createJouzuHelpExtension } from "./help.js";
 import {
 	applyKeybindings,
 	ensureDefaultKeybindings,
@@ -15,6 +16,7 @@ import {
 } from "./keybindings.js";
 import { loadMetadata } from "./metadata.js";
 import { createJouzuModelPicker } from "./model-picker.js";
+import { applyProjectDefaultToArgs, deriveProjectKey, ModelPickerStore } from "./model-picker-state.js";
 import { resolveJouzuPaths } from "./paths.js";
 import { clearInteractiveStartup, createJouzuPresentationExtension, isInteractivePiStartup } from "./presentation.js";
 import { promptForJapaneseSupport, writeProfileChoice } from "./profile-choice.js";
@@ -227,6 +229,20 @@ async function runCli(args: string[]): Promise<void> {
 	if (piImportDiagnostic || !pi || !piRuntimeVersion) {
 		throw new Error(`Jouzu could not load its pinned Pi runtime: ${piImportDiagnostic ?? "unavailable"}`);
 	}
+	let piArgs = parsed.args;
+	if (interactiveStartup) {
+		let projectKey: string;
+		try {
+			projectKey = deriveProjectKey(process.cwd());
+		} catch {
+			projectKey = deriveProjectKey(process.cwd(), { runGit: () => undefined, realpath: (value) => value });
+		}
+		const projectDefault = new ModelPickerStore(paths).load().state.defaults.projects[projectKey];
+		const modelScopeConfigured =
+			(pi.SettingsManager.create(process.cwd(), paths.agentDir, { projectTrusted: true }).getEnabledModels()?.length ??
+				0) > 0;
+		piArgs = applyProjectDefaultToArgs(parsed.args, projectDefault, { modelScopeConfigured });
+	}
 	if (piRuntimeVersion !== metadata.piVersion) {
 		throw new Error(`loaded Pi ${piRuntimeVersion} does not match Jouzu's exact pin ${metadata.piVersion}`);
 	}
@@ -237,8 +253,9 @@ async function runCli(args: string[]): Promise<void> {
 		);
 	}
 	const modelPicker = createJouzuModelPicker(paths);
+	const help = createJouzuHelpExtension();
 	const sessionUi = createSessionUiExtension({
-		getHints: () => [{ id: "palette.models", text: "/model choose", priority: 10, role: "muted" }],
+		getHints: () => [{ id: "palette.shortcuts", text: "Ctrl+L models · Ctrl+/ help", priority: 10, role: "muted" }],
 	});
 	const runPi = pi.main as (
 		args: string[],
@@ -247,13 +264,14 @@ async function runCli(args: string[]): Promise<void> {
 				ReturnType<typeof createJouzuPresentationExtension>,
 				typeof sessionUi,
 				typeof modelPicker.extension,
+				typeof help,
 			];
 			modelPicker: typeof modelPicker.handle;
 		},
 	) => Promise<void>;
 	await withJouzuResumeHint(() =>
-		runPi(parsed.args, {
-			extensionFactories: [createJouzuPresentationExtension(metadata, profile), sessionUi, modelPicker.extension],
+		runPi(piArgs, {
+			extensionFactories: [createJouzuPresentationExtension(metadata, profile), sessionUi, modelPicker.extension, help],
 			modelPicker: modelPicker.handle,
 		}),
 	);

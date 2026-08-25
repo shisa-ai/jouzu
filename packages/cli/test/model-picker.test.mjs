@@ -41,6 +41,7 @@ function rows() {
 			model: { provider: "small", modelId: "tiny", name: "Tiny", contextWindow: 1000, maxTokens: 100, available: true },
 			contextFit: "too-small",
 			favoriteScopes: [],
+			projectDefault: false,
 			rank: 0,
 		},
 		{
@@ -55,6 +56,7 @@ function rows() {
 			},
 			contextFit: "fits",
 			favoriteScopes: [],
+			projectDefault: false,
 			rank: 1,
 		},
 	];
@@ -78,8 +80,8 @@ function createComponent(overrides = {}) {
 		},
 		initialRoute: { view: "models" },
 		getRows: overrides.getRows ?? (() => rows()),
-		onSelect: async (row, persistDefault) => {
-			calls.selected.push([row.model.modelId, persistDefault]);
+		onSelect: async (row, scope) => {
+			calls.selected.push([row.model.modelId, scope]);
 		},
 		onToggleFavorite: (row, scope) => {
 			calls.favorites.push([row.model.modelId, scope]);
@@ -123,6 +125,7 @@ test("Models view keeps ANSI and CJK content inside aligned display-width border
 					},
 					contextFit: "fits",
 					favoriteScopes: [],
+					projectDefault: false,
 					rank: 0,
 				},
 			],
@@ -137,23 +140,25 @@ test("Models view keeps ANSI and CJK content inside aligned display-width border
 	}
 });
 
-test("Models view selects for the session, supports global selection, favorites, and cancel", async () => {
+test("Models view selects for the session or project, toggles filters and favorites, and cancels", async () => {
 	const first = createComponent();
 	first.component.handleInput("down");
 	first.component.handleInput("enter");
 	await Promise.resolve();
 	await Promise.resolve();
-	assert.deepEqual(first.calls.selected, [["fit", false]]);
+	assert.deepEqual(first.calls.selected, [["fit", "session"]]);
 	assert.equal(first.calls.close, 1);
 
 	const second = createComponent();
 	second.component.handleInput("down");
-	second.component.handleInput("\x1b\r");
+	second.component.handleInput("\x1b[13;2u");
 	await Promise.resolve();
 	await Promise.resolve();
-	assert.deepEqual(second.calls.selected, [["fit", true]]);
+	assert.deepEqual(second.calls.selected, [["fit", "project"]]);
 
 	const third = createComponent();
+	third.component.handleInput("\t");
+	third.component.handleInput("\x1b[Z");
 	third.component.handleInput("down");
 	third.component.handleInput("\x06");
 	third.component.handleInput("\x1bf");
@@ -175,7 +180,8 @@ test("Palette routing replaces the query and keeps the component reusable", () =
 	});
 	component.route({ view: "models", query: "sonnet" });
 	component.route({ view: "usage", query: "ignored" });
-	assert.deepEqual(queries, ["", "sonnet"]);
+	assert.ok(queries.includes("sonnet"));
+	assert.equal(queries.includes("ignored"), false);
 });
 
 test("host handler opens the Jouzu Models component through the Palette surface", async () => {

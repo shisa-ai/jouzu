@@ -1,6 +1,7 @@
 import type { ModelPickerState, ModelReference } from "./model-picker-state.js";
 import { modelReferenceKey, modelReferencesEqual } from "./model-picker-state.js";
 
+export type PickerFilter = "recent" | "favorite" | "all";
 export type PickerSection = "current" | "previous" | "favorite" | "project_recent" | "global_recent" | "all";
 export type ContextFit = "fits" | "too-small" | "unknown";
 
@@ -17,6 +18,7 @@ export interface PickerRow {
 	contextFit: ContextFit;
 	favoriteScopes: Array<"project" | "global">;
 	recentScope?: "project" | "global";
+	projectDefault: boolean;
 	rank: number;
 }
 
@@ -27,6 +29,7 @@ export interface BuildPickerRowsOptions {
 	current?: ModelReference;
 	previous?: ModelReference[];
 	query?: string;
+	filter?: PickerFilter;
 	activeContextTokens?: number | null;
 	maxRows?: number;
 }
@@ -128,30 +131,11 @@ function favoriteScopes(options: BuildPickerRowsOptions, reference: ModelReferen
 
 export function buildPickerRows(options: BuildPickerRowsOptions): PickerRow[] {
 	const models = resolvedModels(options);
+	const filter = options.filter ?? "recent";
 	const query = options.query?.trim() ?? "";
-	if (query) {
-		return [...models.values()]
-			.map((model) => ({ model, score: searchScore(model, query) }))
-			.filter((value): value is { model: PickerModel; score: number } => value.score !== undefined)
-			.sort(
-				(left, right) =>
-					left.score - right.score ||
-					Number(right.model.available) - Number(left.model.available) ||
-					favoriteScopes(options, right.model).length - favoriteScopes(options, left.model).length ||
-					modelReferenceKey(left.model).localeCompare(modelReferenceKey(right.model)),
-			)
-			.slice(0, options.maxRows ?? 200)
-			.map(({ model, score }) => ({
-				section: "all",
-				model,
-				contextFit: contextFit(model, options.activeContextTokens),
-				favoriteScopes: favoriteScopes(options, model),
-				rank: score,
-			}));
-	}
-
 	const rows: PickerRow[] = [];
 	const seen = new Set<string>();
+	const projectDefault = options.state.defaults.projects[options.projectKey];
 	const add = (reference: ModelReference | undefined, section: PickerSection, recentScope?: "project" | "global") => {
 		if (!reference) return;
 		const key = modelReferenceKey(reference);
@@ -165,19 +149,40 @@ export function buildPickerRows(options: BuildPickerRowsOptions): PickerRow[] {
 			contextFit: contextFit(model, options.activeContextTokens),
 			favoriteScopes: favoriteScopes(options, model),
 			...(recentScope ? { recentScope } : {}),
+			projectDefault: modelReferencesEqual(projectDefault, model),
 			rank: rows.length,
 		});
 	};
 
-	add(options.current, "current");
-	for (const reference of options.previous ?? []) add(reference, "previous");
-	for (const favorite of options.state.favorites) {
-		if (favorite.scope === "global" || favorite.projectKey === options.projectKey) add(favorite, "favorite");
+	if (filter === "recent") {
+		add(options.current, "current");
+		for (const reference of options.previous ?? []) add(reference, "previous");
+		for (const recent of options.state.recents.projects[options.projectKey] ?? []) {
+			add(recent, "project_recent", "project");
+		}
+		for (const recent of options.state.recents.global) add(recent, "global_recent", "global");
+	} else if (filter === "favorite") {
+		for (const favorite of options.state.favorites) {
+			if (favorite.scope === "project" && favorite.projectKey === options.projectKey) add(favorite, "favorite");
+		}
+		for (const favorite of options.state.favorites) {
+			if (favorite.scope === "global") add(favorite, "favorite");
+		}
+	} else {
+		for (const model of options.models) add(model, "all");
 	}
-	for (const recent of options.state.recents.projects[options.projectKey] ?? []) {
-		add(recent, "project_recent", "project");
-	}
-	for (const recent of options.state.recents.global) add(recent, "global_recent", "global");
-	for (const model of options.models) add(model, "all");
-	return rows.slice(0, options.maxRows ?? Number.MAX_SAFE_INTEGER);
+
+	if (!query) return rows.slice(0, options.maxRows ?? Number.MAX_SAFE_INTEGER);
+	return rows
+		.map((row) => ({ row, score: searchScore(row.model, query) }))
+		.filter((value): value is { row: PickerRow; score: number } => value.score !== undefined)
+		.sort(
+			(left, right) =>
+				left.score - right.score ||
+				Number(right.row.model.available) - Number(left.row.model.available) ||
+				left.row.rank - right.row.rank ||
+				modelReferenceKey(left.row.model).localeCompare(modelReferenceKey(right.row.model)),
+		)
+		.slice(0, options.maxRows ?? 200)
+		.map(({ row, score }) => ({ ...row, rank: score }));
 }

@@ -184,7 +184,7 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	if (existsSync(modelPickerStatePath)) {
 		try {
 			const state = loadModelPickerState(context.paths, { recover: false }).state;
-			modelPickerState = `${state.favorites.length} favorites; ${state.recents.global.length} global recents; ${Object.keys(state.recents.projects).length} project scopes`;
+			modelPickerState = `${Object.keys(state.defaults.projects).length} project defaults; ${state.favorites.length} favorites; ${state.recents.global.length} global recents; ${Object.keys(state.recents.projects).length} project scopes`;
 		} catch (error) {
 			modelPickerState = "unreadable";
 			warnings.push(`Model picker state is unreadable: ${error instanceof Error ? error.message : String(error)}`);

@@ -118,6 +118,25 @@ export function detectBannerColorMode(options: BannerRenderOptions = {}): Banner
 	return "none";
 }
 
+export function renderBrandAccent(
+	value: string,
+	tone: "blue" | "pink",
+	mode: BannerColorMode = detectBannerColorMode(),
+	palette: BannerPalette = DEFAULT_BANNER_PALETTE,
+): string {
+	if (mode === "none") return value;
+	if (mode === "truecolor") {
+		const rgb = tone === "blue" ? palette.versionTruecolor.jouzu : palette.markTruecolor.end;
+		return `\u001b[38;2;${rgb.join(";")}m${value}\u001b[39m`;
+	}
+	if (mode === "256") {
+		const color = tone === "blue" ? palette.version256.jouzu : palette.mark256.at(-1);
+		return `\u001b[38;5;${color}m${value}\u001b[39m`;
+	}
+	const color = tone === "blue" ? palette.version16.jouzu : palette.mark16.at(-1);
+	return `\u001b[${color}m${value}\u001b[39m`;
+}
+
 export function renderBrandGradient(
 	line: string,
 	mode: BannerColorMode,

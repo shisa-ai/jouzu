@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
-import { existsSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 
 import {
+	applyProjectDefaultToArgs,
 	deriveProjectKey,
 	emptyModelPickerState,
 	loadModelPickerState,
@@ -50,6 +51,20 @@ test("missing state is empty and dispatch updates bounded project and global MRU
 	}
 });
 
+test("project defaults persist separately from favorites", () => {
+	const { root, paths } = context();
+	try {
+		const store = new ModelPickerStore(paths);
+		const projectKey = "d".repeat(64);
+		const reference = { provider: "anthropic", modelId: "claude-test" };
+		store.setProjectDefault(reference, projectKey, new Date("2026-08-23T00:00:00.000Z"));
+		assert.deepEqual(store.load().state.defaults.projects[projectKey], reference);
+		assert.deepEqual(store.load().state.favorites, []);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
 test("favorites toggle independently for project and global scope", () => {
 	const { root, paths } = context();
 	try {
@@ -70,6 +85,20 @@ test("favorites toggle independently for project and global scope", () => {
 			store.load().state.favorites.map(({ scope }) => scope),
 			["project"],
 		);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("schema 1 state migrates with empty project defaults", () => {
+	const { root, paths } = context();
+	try {
+		mkdirSync(paths.stateDir, { recursive: true });
+		writeFileSync(
+			join(paths.stateDir, "model-picker.json"),
+			`${JSON.stringify({ schemaVersion: 1, favorites: [], recents: { global: [], projects: {} } })}\n`,
+		);
+		assert.deepEqual(new ModelPickerStore(paths).load().state, emptyModelPickerState());
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
@@ -112,6 +141,24 @@ test("project keys share a git common directory and contain no raw path", () => 
 	assert.equal(one, two);
 	assert.match(one, /^[0-9a-f]{64}$/);
 	assert.equal(one.includes("work"), false);
+});
+
+test("project default startup args yield to explicit, resumed, and scoped model choices", () => {
+	const reference = { provider: "anthropic", modelId: "claude-test" };
+	assert.deepEqual(applyProjectDefaultToArgs([], reference), ["--model", "anthropic/claude-test"]);
+	assert.deepEqual(applyProjectDefaultToArgs(["hello"], reference), ["--model", "anthropic/claude-test", "hello"]);
+	assert.deepEqual(applyProjectDefaultToArgs([], reference, { modelScopeConfigured: true }), []);
+	for (const args of [
+		["--model", "openai/gpt-test"],
+		["--model=openai/gpt-test"],
+		["--models", "anthropic/*"],
+		["--resume"],
+		["--continue"],
+		["--session", "abc"],
+		["--session-id=abc"],
+	]) {
+		assert.deepEqual(applyProjectDefaultToArgs(args, reference), args);
+	}
 });
 
 test("previous model stack follows branch history without returning stale current state", () => {

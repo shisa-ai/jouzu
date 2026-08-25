@@ -126,7 +126,10 @@ test("doctor reports model picker counts and unreadable state without rewriting 
 				platform: "linux",
 				commandPaths: { git: "/usr/bin/git", bash: "/usr/bin/bash", npm: "/usr/bin/npm" },
 			});
-		assert.match(reportFor().text, /Model picker state: 1 favorites; 1 global recents; 1 project scopes/);
+		assert.match(
+			reportFor().text,
+			/Model picker state: 0 project defaults; 1 favorites; 1 global recents; 1 project scopes/,
+		);
 
 		const statePath = join(root, "state", "model-picker.json");
 		writeFileSync(statePath, "{ broken");

@@ -1,6 +1,6 @@
 import type { ExtensionContext, InlineExtension, KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
-import { type Focusable, Input, matchesKey, type TUI, wrapTextWithAnsi } from "@earendil-works/pi-tui";
-import { buildPickerRows, type PickerModel, type PickerRow } from "./model-picker-ranking.js";
+import { type Focusable, Input, matchesKey, type TUI } from "@earendil-works/pi-tui";
+import { buildPickerRows, type PickerFilter, type PickerModel, type PickerRow } from "./model-picker-ranking.js";
 import {
 	deriveProjectKey,
 	MODEL_PICKER_HISTORY_LIMIT,
@@ -18,7 +18,7 @@ import {
 	type PaletteRoute,
 } from "./palette.js";
 import type { JouzuPaths } from "./paths.js";
-import { detectBannerColorMode, renderBrandGradient } from "./presentation.js";
+import { detectBannerColorMode, renderBrandAccent, renderBrandGradient } from "./presentation.js";
 import {
 	fitTerminalText,
 	padTerminalText,
@@ -46,11 +46,14 @@ export type JouzuHostModelPickerHandler = (
 export interface ModelPickerComponentOptions {
 	context: PaletteComponentContext;
 	initialRoute: PaletteRoute;
-	getRows(query: string): PickerRow[];
-	onSelect(row: PickerRow, persistDefault: boolean): Promise<void>;
+	getRows(query: string, filter: PickerFilter): PickerRow[];
+	onSelect(row: PickerRow, scope: "session" | "project"): Promise<void>;
 	onToggleFavorite(row: PickerRow, scope: "project" | "global"): void;
 	onRefresh(): Promise<void>;
 }
+
+const FILTERS: PickerFilter[] = ["recent", "favorite", "all"];
+const FILTER_LABELS: Record<PickerFilter, string> = { recent: "Recent", favorite: "Favorite", all: "All" };
 
 const SECTION_LABELS: Record<PickerRow["section"], string> = {
 	current: "Current",
@@ -73,12 +76,14 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	private readonly theme: Theme;
 	private readonly keybindings: KeybindingsManager;
 	private readonly close: () => void;
-	private readonly getRows: (query: string) => PickerRow[];
-	private readonly onSelect: (row: PickerRow, persistDefault: boolean) => Promise<void>;
+	private readonly getRows: (query: string, filter: PickerFilter) => PickerRow[];
+	private readonly onSelect: (row: PickerRow, scope: "session" | "project") => Promise<void>;
 	private readonly onToggleFavorite: (row: PickerRow, scope: "project" | "global") => void;
 	private readonly onRefresh: () => Promise<void>;
 	private readonly searchInput = new Input();
 	private rows: PickerRow[] = [];
+	private filter: PickerFilter = "recent";
+	private filterCounts: Record<PickerFilter, number> = { recent: 0, favorite: 0, all: 0 };
 	private selectedIndex = 0;
 	private busy = false;
 	private message?: { level: "error" | "info"; text: string };
@@ -119,7 +124,13 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		const selectedKey = this.rows[this.selectedIndex]
 			? modelReferenceKey(this.rows[this.selectedIndex].model)
 			: undefined;
-		this.rows = this.getRows(this.searchInput.getValue());
+		const query = this.searchInput.getValue();
+		this.rows = this.getRows(query, this.filter);
+		this.filterCounts = {
+			recent: this.getRows("", "recent").length,
+			favorite: this.getRows("", "favorite").length,
+			all: this.getRows("", "all").length,
+		};
 		const retainedIndex = selectedKey ? this.rows.findIndex((row) => modelReferenceKey(row.model) === selectedKey) : -1;
 		this.selectedIndex =
 			retainedIndex >= 0 ? retainedIndex : Math.min(this.selectedIndex, Math.max(0, this.rows.length - 1));
@@ -147,7 +158,16 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		this.tui.requestRender();
 	}
 
-	private runSelection(persistDefault: boolean): void {
+	private cycleFilter(delta: number): void {
+		const index = FILTERS.indexOf(this.filter);
+		this.filter = FILTERS[(index + delta + FILTERS.length) % FILTERS.length];
+		this.selectedIndex = 0;
+		this.message = undefined;
+		this.recomputeRows();
+		this.tui.requestRender();
+	}
+
+	private runSelection(scope: "session" | "project"): void {
 		const row = this.rows[this.selectedIndex];
 		if (!row || this.busy) return;
 		if (!row.model.available) {
@@ -166,7 +186,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		this.busy = true;
 		this.message = { level: "info", text: `Selecting ${row.model.provider}/${row.model.modelId}…` };
 		this.tui.requestRender();
-		void this.onSelect(row, persistDefault)
+		void this.onSelect(row, scope)
 			.then(() => this.close())
 			.catch((error) => {
 				if (this.disposed) return;
@@ -223,8 +243,16 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			this.moveSelection(Number.MAX_SAFE_INTEGER);
 			return;
 		}
-		if (matchesKey(data, "alt+enter")) {
-			this.runSelection(true);
+		if (matchesKey(data, "tab")) {
+			this.cycleFilter(1);
+			return;
+		}
+		if (matchesKey(data, "shift+tab")) {
+			this.cycleFilter(-1);
+			return;
+		}
+		if (matchesKey(data, "shift+enter")) {
+			this.runSelection("project");
 			return;
 		}
 		if (matchesKey(data, "ctrl+f")) {
@@ -236,7 +264,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			return;
 		}
 		if (this.keybindings.matches(data, "tui.select.confirm")) {
-			this.runSelection(false);
+			this.runSelection("session");
 			return;
 		}
 		this.searchInput.handleInput(data);
@@ -246,22 +274,25 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	}
 
 	private rowText(row: PickerRow, selected: boolean): string {
-		const marker = selected ? this.theme.fg("accent", "→") : " ";
+		const colorMode = detectBannerColorMode();
+		const marker = selected ? renderBrandAccent("→", "blue", colorMode) : " ";
 		const favorite = row.favoriteScopes.length > 0 ? this.theme.fg("warning", "★") : " ";
+		const projectDefault = row.projectDefault ? this.theme.fg("success", "◆") : " ";
 		const identity = `${row.model.provider}/${row.model.modelId}`;
 		const availability = row.model.available ? "" : this.theme.fg("error", " unavailable");
 		const fit = row.contextFit === "too-small" ? this.theme.fg("warning", " context-small") : "";
-		const text = `${marker} ${favorite} ${this.theme.fg(selected ? "accent" : "text", identity)}${availability}${fit}`;
+		const styledIdentity = selected ? renderBrandAccent(identity, "blue", colorMode) : this.theme.fg("text", identity);
+		const text = `${marker} ${favorite}${projectDefault} ${styledIdentity}${availability}${fit}`;
 		return selected ? this.theme.bg("selectedBg", text) : text;
 	}
 
 	render(width: number): string[] {
 		const wordmark = renderBrandGradient("JOUZU", detectBannerColorMode());
-		const title = `${wordmark} ${this.theme.bold(this.theme.fg("accent", "· Models"))}`;
+		const title = `${wordmark} ${this.theme.bold(this.theme.fg("accent", "· Models"))} ${this.theme.fg("muted", `${this.rows.length}/${this.filterCounts.all}`)}`;
 		if (width < 12) return [fitTerminalText(title, Math.max(1, width))];
 		const innerWidth = Math.max(1, width - 4);
 		const terminalRows = Number(this.tui.terminal?.rows ?? 24);
-		const rowCapacity = Math.max(3, Math.min(12, terminalRows - 12));
+		const rowCapacity = Math.max(3, Math.min(12, terminalRows - 15));
 		const start = Math.max(
 			0,
 			Math.min(this.selectedIndex - Math.floor(rowCapacity / 2), Math.max(0, this.rows.length - rowCapacity)),
@@ -271,34 +302,42 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		const border = (value: string) => this.theme.fg("borderAccent", value);
 		const frameOptions = { border };
 		const line = (value = "") => renderTerminalFrameRow(value, width, frameOptions);
+		const tabs = FILTERS.map((filter) => {
+			const label = `${FILTER_LABELS[filter]} ${this.filterCounts[filter]}`;
+			return filter === this.filter ? this.theme.bg("selectedBg", this.theme.fg("accent", ` ${label} `)) : ` ${label} `;
+		}).join("  ");
 		const lines = [
 			renderTerminalFrameTitle(title, width, frameOptions),
+			line(tabs),
 			line(this.searchInput.render(innerWidth)[0] ?? ""),
-			line(),
 		];
+		if (selected) {
+			const defaultLabel = selected.projectDefault ? " · project default" : "";
+			const name = renderBrandAccent(selected.model.name, "blue", detectBannerColorMode());
+			const detail = ` ${name} · context ${compactNumber(selected.model.contextWindow)} · max ${compactNumber(selected.model.maxTokens)}${defaultLabel}`;
+			lines.push(line(this.theme.bg("selectedBg", padTerminalText(fitTerminalText(detail, innerWidth), innerWidth))));
+		} else {
+			lines.push(line(this.theme.bg("selectedBg", padTerminalText(" No model selected", innerWidth))));
+		}
+		lines.push(line());
 		if (visibleRows.length === 0) lines.push(line(this.theme.fg("muted", "No matching models")));
 		for (let offset = 0; offset < visibleRows.length; offset += 1) {
 			const index = start + offset;
 			const row = visibleRows[offset];
-			lines.push(
-				line(
-					`${this.theme.fg("muted", padTerminalText(SECTION_LABELS[row.section], 8))}${this.rowText(row, index === this.selectedIndex)}`,
-				),
-			);
+			const sectionText = padTerminalText(SECTION_LABELS[row.section], 8);
+			const section =
+				row.section === "current"
+					? renderBrandAccent(sectionText, "pink", detectBannerColorMode())
+					: this.theme.fg("muted", sectionText);
+			lines.push(line(`${section}${this.rowText(row, index === this.selectedIndex)}`));
 		}
-		while (lines.length < rowCapacity + 3) lines.push(line());
-		if (selected) {
-			const detail = `${selected.model.name} · context ${compactNumber(selected.model.contextWindow)} · max ${compactNumber(selected.model.maxTokens)}`;
-			lines.push(...wrapTextWithAnsi(detail, innerWidth).slice(0, 2).map(line));
-		} else {
-			lines.push(line());
-		}
+		while (lines.length < rowCapacity + 6) lines.push(line());
 		if (this.message) {
 			lines.push(line(this.theme.fg(this.message.level === "error" ? "error" : "muted", this.message.text)));
 		} else {
-			lines.push(line(this.theme.fg("dim", "Enter session · Alt+Enter global · Ctrl+F/Alt+F favorite")));
+			lines.push(line(this.theme.fg("dim", "Enter session · Shift+Enter project default · Tab filter")));
 		}
-		lines.push(line(this.theme.fg("dim", "↑↓ move · type search · Esc close")));
+		lines.push(line(this.theme.fg("dim", "Ctrl+F/Alt+F favorite · ↑↓ move · type search · Esc close")));
 		lines.push(renderTerminalFrameBorder(width, { ...frameOptions, left: "╰", right: "╯" }));
 		return lines.map((value) => fitTerminalText(value, width));
 	}
@@ -408,7 +447,7 @@ export function createJouzuModelPicker(paths: JouzuPaths): JouzuModelPickerInteg
 				new ModelPickerComponent({
 					context: componentContext,
 					initialRoute: route,
-					getRows: (query) =>
+					getRows: (query, filter) =>
 						buildPickerRows({
 							models: pickerModels(ctx),
 							state,
@@ -416,13 +455,15 @@ export function createJouzuModelPicker(paths: JouzuPaths): JouzuModelPickerInteg
 							current: modelReference(ctx.model),
 							previous,
 							query,
+							filter,
 							activeContextTokens: ctx.getContextUsage()?.tokens,
 						}),
-					onSelect: async (row, persistDefault) => {
+					onSelect: async (row, scope) => {
 						if (!ctx.isIdle()) throw new Error("Wait for the active model call to finish before switching models.");
 						const model = ctx.modelRegistry.find(row.model.provider, row.model.modelId);
 						if (!model) throw new Error(`Model is unavailable: ${row.model.provider}/${row.model.modelId}`);
-						await actions.setModel(model, { persistDefault });
+						if (scope === "project") state = store.setProjectDefault(row.model, projectKey);
+						await actions.setModel(model, { persistDefault: false });
 					},
 					onToggleFavorite: (row, scope) => {
 						state = store.toggleFavorite(row.model, scope, scope === "project" ? projectKey : undefined);

@@ -17,7 +17,7 @@ import type { JouzuPaths } from "./paths.js";
 import { ensurePrivateDirectory } from "./private-fs.js";
 import { acquireStateLock, type StateLockInspection } from "./state-lock.js";
 
-export const MODEL_PICKER_SCHEMA_VERSION = 1;
+export const MODEL_PICKER_SCHEMA_VERSION = 2;
 export const MODEL_PICKER_RECENT_LIMIT = 12;
 export const MODEL_PICKER_HISTORY_LIMIT = 8;
 
@@ -40,8 +40,11 @@ export interface RecentRecord extends ModelReference {
 }
 
 export interface ModelPickerState {
-	schemaVersion: 1;
+	schemaVersion: 2;
 	favorites: FavoriteRecord[];
+	defaults: {
+		projects: Record<string, ModelReference>;
+	};
 	recents: {
 		global: RecentRecord[];
 		projects: Record<string, RecentRecord[]>;
@@ -75,6 +78,7 @@ export function emptyModelPickerState(): ModelPickerState {
 	return {
 		schemaVersion: MODEL_PICKER_SCHEMA_VERSION,
 		favorites: [],
+		defaults: { projects: {} },
 		recents: { global: [], projects: {} },
 	};
 }
@@ -117,9 +121,10 @@ function parseState(value: unknown): ModelPickerState {
 	const record = value as {
 		schemaVersion?: unknown;
 		favorites?: unknown;
+		defaults?: { projects?: unknown };
 		recents?: { global?: unknown; projects?: unknown };
 	};
-	if (record.schemaVersion !== MODEL_PICKER_SCHEMA_VERSION) {
+	if (record.schemaVersion !== 1 && record.schemaVersion !== MODEL_PICKER_SCHEMA_VERSION) {
 		throw new ModelPickerStateError(`unsupported model picker state schema: ${String(record.schemaVersion)}`);
 	}
 	if (!Array.isArray(record.favorites)) throw new ModelPickerStateError("favorites must be an array");
@@ -152,6 +157,23 @@ function parseState(value: unknown): ModelPickerState {
 		};
 	});
 
+	const defaults: Record<string, ModelReference> = {};
+	if (record.defaults !== undefined) {
+		if (
+			!record.defaults ||
+			typeof record.defaults !== "object" ||
+			!record.defaults.projects ||
+			typeof record.defaults.projects !== "object" ||
+			Array.isArray(record.defaults.projects)
+		) {
+			throw new ModelPickerStateError("defaults must contain a projects object");
+		}
+		for (const [projectKey, reference] of Object.entries(record.defaults.projects)) {
+			if (!validIdentifier(projectKey)) throw new ModelPickerStateError("project default key is invalid");
+			defaults[projectKey] = parseReference(reference);
+		}
+	}
+
 	const projects: Record<string, RecentRecord[]> = {};
 	for (const [projectKey, values] of Object.entries(record.recents.projects)) {
 		if (!validIdentifier(projectKey) || !Array.isArray(values)) {
@@ -163,6 +185,7 @@ function parseState(value: unknown): ModelPickerState {
 	return {
 		schemaVersion: MODEL_PICKER_SCHEMA_VERSION,
 		favorites,
+		defaults: { projects: defaults },
 		recents: {
 			global: record.recents.global.map(parseRecent).slice(0, MODEL_PICKER_RECENT_LIMIT),
 			projects,
@@ -266,6 +289,13 @@ export class ModelPickerStore {
 		}
 	}
 
+	setProjectDefault(reference: ModelReference, projectKey: string, now: Date = new Date()): ModelPickerState {
+		if (!validIdentifier(projectKey)) throw new ModelPickerStateError("project key is invalid");
+		return this.mutate((state) => {
+			state.defaults.projects[projectKey] = { ...reference };
+		}, now);
+	}
+
 	recordDispatch(reference: ModelReference, projectKey: string, now: Date = new Date()): ModelPickerState {
 		if (!validIdentifier(projectKey)) throw new ModelPickerStateError("project key is invalid");
 		return this.mutate((state) => {
@@ -339,6 +369,30 @@ export function deriveProjectKey(
 		return hashProjectIdentity("git", resolveRealpath(absolute));
 	}
 	return hashProjectIdentity("cwd", resolveRealpath(cwd));
+}
+
+const PROJECT_DEFAULT_BYPASS_FLAGS = new Set(["--continue", "-c", "--resume", "-r", "--session", "--session-id"]);
+
+export function applyProjectDefaultToArgs(
+	args: readonly string[],
+	reference: ModelReference | undefined,
+	options: { modelScopeConfigured?: boolean } = {},
+): string[] {
+	if (!reference || options.modelScopeConfigured) return [...args];
+	for (const argument of args) {
+		if (
+			argument === "--model" ||
+			argument.startsWith("--model=") ||
+			argument === "--models" ||
+			argument.startsWith("--models=") ||
+			PROJECT_DEFAULT_BYPASS_FLAGS.has(argument) ||
+			argument.startsWith("--session=") ||
+			argument.startsWith("--session-id=")
+		) {
+			return [...args];
+		}
+	}
+	return ["--model", `${reference.provider}/${reference.modelId}`, ...args];
 }
 
 export function previousModelStack(
