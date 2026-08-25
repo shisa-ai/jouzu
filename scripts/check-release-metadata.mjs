@@ -6,8 +6,9 @@ import { resolve } from "node:path";
 const root = resolve(import.meta.dirname, "..");
 const readJson = (path) => JSON.parse(readFileSync(resolve(root, path), "utf8"));
 const rootPackage = readJson("package.json");
-const cliPackage = readJson("packages/cli/package.json");
-const lock = readJson("package-lock.json");
+const cliPackage = readJson(process.env.JOUZU_CLI_PACKAGE ?? "packages/cli/package.json");
+const sessionUiPackage = readJson(process.env.JOUZU_SESSION_UI_PACKAGE ?? "packages/session-ui/package.json");
+const lock = readJson(process.env.JOUZU_PACKAGE_LOCK ?? "package-lock.json");
 const piLockPath = process.env.JOUZU_PI_LOCK ?? "upstream/pi.lock.json";
 const piLock = readJson(piLockPath);
 const pythonProject = readFileSync(resolve(root, "python/jouzu/pyproject.toml"), "utf8");
@@ -41,6 +42,10 @@ if (lock.packages?.["packages/cli"]?.version !== cliPackage.version) {
 }
 if (!changelog.includes(`## ${cliPackage.version} - `)) throw new Error("CHANGELOG is missing the npm Jouzu version");
 const piName = "@earendil-works/pi-coding-agent";
+const tuiName = "@earendil-works/pi-tui";
+const VERSION_RE = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/;
+const dependencyRangeTargetsVersion = (range, version) =>
+	range === version || range === `^${version}` || range === `~${version}`;
 const lockFields = [
 	"schemaVersion",
 	"repository",
@@ -60,15 +65,43 @@ const piRecord = piLock.packages[piName];
 if (
 	!hasExactFields(piRecord, ["version", "integrity"]) ||
 	typeof piRecord.version !== "string" ||
-	!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(piRecord.version) ||
+	!VERSION_RE.test(piRecord.version) ||
 	typeof piRecord.integrity !== "string" ||
 	!/^sha512-[A-Za-z0-9+/]+={0,2}$/.test(piRecord.integrity)
 ) {
 	throw new Error("Pi lock package record is invalid");
 }
 const piVersion = piRecord.version;
-if (cliPackage.dependencies?.[piName] !== piVersion)
-	throw new Error("npm Jouzu does not use the exact Pi lock version");
+const tuiVersion = cliPackage.dependencies?.[tuiName];
+if (rootPackage.devDependencies?.[piName] !== piVersion || cliPackage.dependencies?.[piName] !== piVersion) {
+	throw new Error("Jouzu does not use the exact Pi lock version");
+}
+if (typeof tuiVersion !== "string" || !VERSION_RE.test(tuiVersion)) {
+	throw new Error("Jouzu does not use an exact Pi TUI version");
+}
+if (
+	sessionUiPackage.peerDependencies?.[piName] !== piVersion ||
+	sessionUiPackage.peerDependencies?.[tuiName] !== tuiVersion
+) {
+	throw new Error("Session UI peer versions differ from the Jouzu Pi tuple");
+}
+const rootLock = lock.packages?.[""];
+const cliLock = lock.packages?.["packages/cli"];
+const sessionUiLock = lock.packages?.["packages/session-ui"];
+const piPackageLock = lock.packages?.[`node_modules/${piName}`];
+const tuiPackageLock = lock.packages?.[`node_modules/${tuiName}`];
+if (
+	rootLock?.devDependencies?.[piName] !== piVersion ||
+	cliLock?.dependencies?.[piName] !== piVersion ||
+	cliLock?.dependencies?.[tuiName] !== tuiVersion ||
+	sessionUiLock?.peerDependencies?.[piName] !== piVersion ||
+	sessionUiLock?.peerDependencies?.[tuiName] !== tuiVersion ||
+	piPackageLock?.version !== piVersion ||
+	tuiPackageLock?.version !== tuiVersion ||
+	!dependencyRangeTargetsVersion(piPackageLock?.dependencies?.[tuiName], tuiVersion)
+) {
+	throw new Error("package-lock Pi and Pi TUI records differ from the Jouzu Pi tuple");
+}
 if (
 	piLock.tag !== `v${piVersion}` ||
 	!/^[0-9a-f]{40}$/.test(piLock.tagCommit) ||

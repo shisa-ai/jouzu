@@ -19,6 +19,7 @@ A Pi release is not adopted because its version is newer. Its npm artifact, upst
 
 - Review direct and transitive dependency changes, Node engine requirements, optional native packages, and licenses.
 - Confirm every Jouzu manifest and `package-lock.json` resolves the same exact Pi version.
+- Update the CLI's exact `@earendil-works/pi-tui` dependency and the Session UI's exact Pi/Pi TUI peers in the same candidate transaction; verify that Pi's declared TUI range includes that version.
 - Inspect packaged entrypoints and bundled/unbundled runtime changes that can affect imports or startup.
 
 ### Jouzu integration

@@ -9,8 +9,11 @@ const root = resolve(import.meta.dirname, "..");
 const lockPath = resolve(root, "upstream", "pi.lock.json");
 const packagePath = resolve(root, "package.json");
 const cliPackagePath = resolve(root, "packages", "cli", "package.json");
+const sessionUiPackagePath = resolve(root, "packages", "session-ui", "package.json");
 const packageLockPath = resolve(root, "package-lock.json");
 const packageName = "@earendil-works/pi-coding-agent";
+const tuiPackageName = "@earendil-works/pi-tui";
+const VERSION_RE = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/;
 
 function fail(message) {
 	throw new Error(message);
@@ -31,10 +34,13 @@ function runNpm(args, options = {}) {
 }
 
 function registryMetadata(spec) {
-	const output = runNpm(["view", spec, "version", "gitHead", "dist.integrity", "dist.tarball", "--json"], {
-		encoding: "utf8",
-		stdio: ["ignore", "pipe", "inherit"],
-	});
+	const output = runNpm(
+		["view", spec, "version", "gitHead", "dist.integrity", "dist.tarball", "dependencies", "--json"],
+		{
+			encoding: "utf8",
+			stdio: ["ignore", "pipe", "inherit"],
+		},
+	);
 	const parsed = JSON.parse(output);
 	if (!parsed.version || !parsed.gitHead || !parsed["dist.integrity"] || !parsed["dist.tarball"]) {
 		fail(`npm metadata for ${spec} is incomplete`);
@@ -44,7 +50,22 @@ function registryMetadata(spec) {
 		gitHead: parsed.gitHead,
 		integrity: parsed["dist.integrity"],
 		tarball: parsed["dist.tarball"],
+		dependencies: parsed.dependencies ?? {},
 	};
+}
+
+function registryVersion(spec) {
+	const output = runNpm(["view", spec, "version", "--json"], {
+		encoding: "utf8",
+		stdio: ["ignore", "pipe", "inherit"],
+	});
+	const version = JSON.parse(output);
+	if (typeof version !== "string" || !VERSION_RE.test(version)) fail(`npm version for ${spec} is invalid`);
+	return version;
+}
+
+function dependencyRangeTargetsVersion(range, version) {
+	return range === version || range === `^${version}` || range === `~${version}`;
 }
 
 function upstreamTagCommit(tag) {
@@ -97,16 +118,21 @@ function verifyTagContainsPackageSource(tag, tagCommit, sourceCommit) {
 function packageLockRecords() {
 	const packageLock = readJson(packageLockPath);
 	const node = packageLock.packages?.[`node_modules/${packageName}`];
+	const tui = packageLock.packages?.[`node_modules/${tuiPackageName}`];
 	const cli = packageLock.packages?.["packages/cli"];
+	const sessionUi = packageLock.packages?.["packages/session-ui"];
 	if (!node) fail(`${packageName} is missing from package-lock.json`);
+	if (!tui) fail(`${tuiPackageName} is missing from package-lock.json`);
 	if (!cli) fail("packages/cli is missing from package-lock.json");
-	return { node, cli };
+	if (!sessionUi) fail("packages/session-ui is missing from package-lock.json");
+	return { node, tui, cli, sessionUi };
 }
 
 function validateLock({ online }) {
 	const lock = readJson(lockPath);
 	const packageJson = readJson(packagePath);
 	const cliPackageJson = readJson(cliPackagePath);
+	const sessionUiPackageJson = readJson(sessionUiPackagePath);
 	const packageLock = packageLockRecords();
 	const packageRecord = lock.packages?.[packageName];
 	if (!packageRecord) fail(`${lockPath} is missing ${packageName}`);
@@ -123,11 +149,34 @@ function validateLock({ online }) {
 	if (cliPackageJson.dependencies?.[packageName] !== packageRecord.version) {
 		fail(`jouzu runtime pin ${cliPackageJson.dependencies?.[packageName]} does not match ${packageRecord.version}`);
 	}
+	const tuiVersion = cliPackageJson.dependencies?.[tuiPackageName];
+	if (typeof tuiVersion !== "string" || !VERSION_RE.test(tuiVersion)) {
+		fail(`jouzu runtime pin for ${tuiPackageName} must be exact`);
+	}
+	if (sessionUiPackageJson.peerDependencies?.[packageName] !== packageRecord.version) {
+		fail(`session UI Pi peer does not match ${packageRecord.version}`);
+	}
+	if (sessionUiPackageJson.peerDependencies?.[tuiPackageName] !== tuiVersion) {
+		fail(`session UI Pi TUI peer does not match ${tuiVersion}`);
+	}
 	if (packageLock.cli.dependencies?.[packageName] !== packageRecord.version) {
 		fail(`package-lock CLI pin ${packageLock.cli.dependencies?.[packageName]} does not match ${packageRecord.version}`);
 	}
+	if (packageLock.cli.dependencies?.[tuiPackageName] !== tuiVersion) {
+		fail(`package-lock CLI Pi TUI pin does not match ${tuiVersion}`);
+	}
+	if (
+		packageLock.sessionUi.peerDependencies?.[packageName] !== packageRecord.version ||
+		packageLock.sessionUi.peerDependencies?.[tuiPackageName] !== tuiVersion
+	) {
+		fail("package-lock Session UI peers do not match the Pi tuple");
+	}
 	if (packageLock.node.version !== packageRecord.version) {
 		fail(`package-lock version ${packageLock.node.version} does not match ${packageRecord.version}`);
+	}
+	if (packageLock.tui.version !== tuiVersion) fail(`package-lock Pi TUI version does not match ${tuiVersion}`);
+	if (!dependencyRangeTargetsVersion(packageLock.node.dependencies?.[tuiPackageName], tuiVersion)) {
+		fail(`Pi package does not target the pinned Pi TUI ${tuiVersion}`);
 	}
 	if (packageLock.node.integrity !== packageRecord.integrity) {
 		fail("package-lock integrity does not match upstream/pi.lock.json");
@@ -140,6 +189,10 @@ function validateLock({ online }) {
 		if (metadata.version !== packageRecord.version) fail("npm version does not match lock");
 		if (metadata.gitHead !== lock.commit) fail(`npm gitHead ${metadata.gitHead} does not match ${lock.commit}`);
 		if (metadata.integrity !== packageRecord.integrity) fail("npm integrity does not match lock");
+		if (!dependencyRangeTargetsVersion(metadata.dependencies[tuiPackageName], tuiVersion)) {
+			fail(`npm Pi package does not target Pi TUI ${tuiVersion}`);
+		}
+		if (registryVersion(`${tuiPackageName}@${tuiVersion}`) !== tuiVersion) fail("npm Pi TUI version is unavailable");
 		const tagCommit = upstreamTagCommit(lock.tag);
 		if (tagCommit !== lock.tagCommit) fail(`upstream ${lock.tag} is ${tagCommit}, expected ${lock.tagCommit}`);
 		verifyTagContainsPackageSource(lock.tag, tagCommit, lock.commit);
@@ -187,6 +240,10 @@ function writeLock(metadata) {
 function update(version) {
 	const spec = version ? `${packageName}@${version}` : `${packageName}@latest`;
 	const metadata = registryMetadata(spec);
+	const tuiVersion = registryVersion(`${tuiPackageName}@${metadata.version}`);
+	if (!dependencyRangeTargetsVersion(metadata.dependencies[tuiPackageName], tuiVersion)) {
+		fail(`${packageName}@${metadata.version} does not target ${tuiPackageName}@${tuiVersion}`);
+	}
 	const tag = `v${metadata.version}`;
 	const tagCommit = upstreamTagCommit(tag);
 	verifyTagContainsPackageSource(tag, tagCommit, metadata.gitHead);
@@ -202,6 +259,20 @@ function update(version) {
 			"packages/cli",
 			"--save-exact",
 			`${packageName}@${metadata.version}`,
+			`${tuiPackageName}@${tuiVersion}`,
+			"--ignore-scripts",
+		],
+		{ stdio: "inherit" },
+	);
+	runNpm(
+		[
+			"install",
+			"--workspace",
+			"packages/session-ui",
+			"--save-peer",
+			"--save-exact",
+			`${packageName}@${metadata.version}`,
+			`${tuiPackageName}@${tuiVersion}`,
 			"--ignore-scripts",
 		],
 		{ stdio: "inherit" },
