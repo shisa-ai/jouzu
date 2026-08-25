@@ -631,6 +631,20 @@ export class JouzuUpdater {
 		);
 	}
 
+	private restoreTarball(path: string, expectedVersion: string): void {
+		let failure: unknown;
+		for (let attempt = 0; attempt < 2; attempt += 1) {
+			try {
+				this.installTarball(path);
+				this.verifyInstalled(expectedVersion);
+				return;
+			} catch (error) {
+				failure = error;
+			}
+		}
+		throw failure;
+	}
+
 	apply(checkResult?: UpdateCheckResult): { changed: boolean; version: string } {
 		if (this.installChannel() !== "global-npm") {
 			throw new UpdateError(
@@ -676,8 +690,7 @@ export class JouzuUpdater {
 				this.report(`Jouzu ${check.version} failed verification; restoring ${this.currentVersion}…`);
 				try {
 					verifyFileIntegrity(backup.path, backup.integrity);
-					this.installTarball(backup.path);
-					this.verifyInstalled(this.currentVersion);
+					this.restoreTarball(backup.path, this.currentVersion);
 				} catch {
 					throw new UpdateError(
 						"Jouzu update and automatic rollback both failed; reinstall the previous Jouzu version with npm",

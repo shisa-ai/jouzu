@@ -41,6 +41,7 @@ function release(version) {
 function fakeNpm(options) {
 	const artifacts = new Map();
 	let installedVersion = options.currentVersion;
+	let rollbackInstallFailures = 0;
 	const calls = [];
 	const run = (args) => {
 		calls.push(args);
@@ -72,6 +73,15 @@ function fakeNpm(options) {
 			const requestedVersion = artifacts.get(path);
 			if (options.failCandidateInstall && requestedVersion === options.latest.version) {
 				return { status: 1, stdout: "", stderr: "permission denied" };
+			}
+			if (
+				options.failFirstRollbackInstall &&
+				requestedVersion === options.currentVersion &&
+				installedVersion === options.latest.version &&
+				rollbackInstallFailures === 0
+			) {
+				rollbackInstallFailures += 1;
+				return { status: 1, stdout: "", stderr: "resource busy" };
 			}
 			installedVersion = requestedVersion;
 			return { status: installedVersion ? 0 : 1, stdout: "", stderr: "" };
@@ -274,10 +284,15 @@ test("a failed install leaves a still-verified current version running without r
 	}
 });
 
-test("failed candidate verification restores the packed previous version", () => {
+test("failed candidate verification retries and restores the packed previous version", () => {
 	const context = fixture();
 	const latest = release("0.1.1");
-	const npm = fakeNpm({ currentVersion: "0.1.0", latest, globalRoot: context.globalRoot });
+	const npm = fakeNpm({
+		currentVersion: "0.1.0",
+		latest,
+		globalRoot: context.globalRoot,
+		failFirstRollbackInstall: true,
+	});
 	try {
 		const updater = new JouzuUpdater({
 			paths: context.paths,
@@ -301,6 +316,7 @@ test("failed candidate verification restores the packed previous version", () =>
 			(error) => error instanceof UpdateError && error.code === "update-rolled-back",
 		);
 		assert.equal(npm.installedVersion(), "0.1.0");
+		assert.equal(npm.calls.filter((args) => args[0] === "install").length, 3);
 		assert.equal(JSON.parse(readFileSync(updateStatePath(context.paths), "utf8")).lastResult, "failed");
 	} finally {
 		rmSync(context.root, { recursive: true, force: true });

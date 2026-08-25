@@ -245,5 +245,5 @@ try {
 		`automatic update smoke installed ${nextVersion} and restored ${currentVersion} after a broken ${brokenVersion}`,
 	);
 } finally {
-	rmSync(temp, { recursive: true, force: true });
+	rmSync(temp, { recursive: true, force: true, maxRetries: 10, retryDelay: 500 });
 }
