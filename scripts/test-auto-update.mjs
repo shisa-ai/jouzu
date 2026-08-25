@@ -194,6 +194,7 @@ function updateEnvironment(temp, prefix, home, registry) {
 }
 
 const temp = mkdtempSync(join(tmpdir(), "jouzu-auto-update-"));
+let smokeError;
 try {
 	const current = await createPackage(temp, currentVersion);
 	const next = await createPackage(temp, nextVersion);
@@ -244,6 +245,20 @@ try {
 	console.log(
 		`automatic update smoke installed ${nextVersion} and restored ${currentVersion} after a broken ${brokenVersion}`,
 	);
-} finally {
-	rmSync(temp, { recursive: true, force: true, maxRetries: 10, retryDelay: 500 });
+} catch (error) {
+	smokeError = error;
 }
+try {
+	rmSync(temp, { recursive: true, force: true, maxRetries: 10, retryDelay: 500 });
+} catch (cleanupError) {
+	const code =
+		cleanupError && typeof cleanupError === "object" && "code" in cleanupError ? cleanupError.code : undefined;
+	if (process.platform === "win32" && (code === "EBUSY" || code === "EPERM")) {
+		console.warn("automatic update smoke could not remove its temporary directory after bounded Windows retries");
+	} else if (smokeError) {
+		console.warn("automatic update smoke also failed to remove its temporary directory");
+	} else {
+		smokeError = cleanupError;
+	}
+}
+if (smokeError) throw smokeError;
