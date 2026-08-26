@@ -1,8 +1,8 @@
-import type { ModelPickerState, ModelReference } from "./model-picker-state.js";
+import type { ModelPickerFilter, ModelPickerState, ModelReference } from "./model-picker-state.js";
 import { modelReferenceKey, modelReferencesEqual } from "./model-picker-state.js";
 import { sanitizeTerminalText } from "./terminal-layout.js";
 
-export type PickerFilter = "recent" | "favorite" | "all";
+export type PickerFilter = ModelPickerFilter;
 export type PickerSection = "current" | "previous" | "favorite" | "project_recent" | "global_recent" | "all";
 export type ContextFit = "fits" | "too-small" | "unknown";
 

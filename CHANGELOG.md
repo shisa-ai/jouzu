@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Restore the last Models filter used when the picker opens again.
+
 ## 0.1.3 - 2026-08-26
 
 - Route `/model` and `Ctrl+L` through the Jouzu Models view when slash autocomplete is visible and when Pi copies its stock handlers directly into the Prompt Frame.

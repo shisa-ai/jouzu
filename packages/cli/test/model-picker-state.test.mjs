@@ -65,6 +65,20 @@ test("project defaults persist separately from favorites", () => {
 	}
 });
 
+test("the last picker filter persists without changing model preferences", () => {
+	const { root, paths } = context();
+	try {
+		const store = new ModelPickerStore(paths);
+		store.setFilter("favorite", new Date("2026-08-23T00:00:00.000Z"));
+		assert.equal(store.load().state.filter, "favorite");
+		assert.deepEqual(store.load().state.favorites, []);
+		assert.deepEqual(store.load().state.defaults.projects, {});
+		assert.throws(() => store.setFilter("retired"), ModelPickerStateError);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
 test("state mutations reject model references with terminal controls", () => {
 	const { root, paths } = context();
 	try {
@@ -96,15 +110,47 @@ test("favorites are one global list with no project scope", () => {
 	}
 });
 
-test("schema 1 state migrates with empty project defaults", () => {
+test("schema 1 and 2 state migrate with the Recent filter", () => {
+	const { root, paths } = context();
+	try {
+		mkdirSync(paths.stateDir, { recursive: true });
+		for (const schemaVersion of [1, 2]) {
+			writeFileSync(
+				join(paths.stateDir, "model-picker.json"),
+				`${JSON.stringify({
+					schemaVersion,
+					favorites: [],
+					...(schemaVersion === 2 ? { defaults: { projects: {} } } : {}),
+					recents: { global: [], projects: {} },
+				})}\n`,
+			);
+			assert.deepEqual(new ModelPickerStore(paths).load().state, emptyModelPickerState());
+		}
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("an unknown saved filter falls back to Recent without discarding picker state", () => {
 	const { root, paths } = context();
 	try {
 		mkdirSync(paths.stateDir, { recursive: true });
 		writeFileSync(
 			join(paths.stateDir, "model-picker.json"),
-			`${JSON.stringify({ schemaVersion: 1, favorites: [], recents: { global: [], projects: {} } })}\n`,
+			`${JSON.stringify({
+				schemaVersion: 3,
+				filter: "retired",
+				favorites: [{ provider: "p", modelId: "m", addedAt: "2026-08-23T00:00:00.000Z" }],
+				defaults: { projects: {} },
+				recents: { global: [], projects: {} },
+			})}\n`,
 		);
-		assert.deepEqual(new ModelPickerStore(paths).load().state, emptyModelPickerState());
+		const state = new ModelPickerStore(paths).load().state;
+		assert.equal(state.filter, "recent");
+		assert.deepEqual(
+			state.favorites.map(({ provider, modelId }) => ({ provider, modelId })),
+			[{ provider: "p", modelId: "m" }],
+		);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}

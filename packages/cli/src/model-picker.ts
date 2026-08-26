@@ -44,9 +44,11 @@ export interface JouzuModelPickerOptions {
 export interface ModelPickerComponentOptions {
 	context: PaletteComponentContext;
 	initialRoute: PaletteRoute;
+	initialFilter?: PickerFilter;
 	getRows(query: string, filter: PickerFilter): PickerRow[];
 	onSelect(row: PickerRow, scope: "session" | "project"): Promise<void>;
 	onToggleFavorite(row: PickerRow): void;
+	onFilterChange?(filter: PickerFilter): void;
 	onRefresh?(signal: AbortSignal): Promise<void>;
 }
 
@@ -89,9 +91,10 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	private readonly getRows: (query: string, filter: PickerFilter) => PickerRow[];
 	private readonly onSelect: (row: PickerRow, scope: "session" | "project") => Promise<void>;
 	private readonly onToggleFavorite: (row: PickerRow) => void;
+	private readonly onFilterChange?: (filter: PickerFilter) => void;
 	private readonly searchInput = new Input();
 	private rows: PickerRow[] = [];
-	private filter: PickerFilter = "recent";
+	private filter: PickerFilter;
 	private filterCounts: Record<PickerFilter, number> = { recent: 0, favorite: 0, all: 0 };
 	private selectedIndex = 0;
 	private busy = false;
@@ -112,6 +115,8 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		this.getRows = options.getRows;
 		this.onSelect = options.onSelect;
 		this.onToggleFavorite = options.onToggleFavorite;
+		this.onFilterChange = options.onFilterChange;
+		this.filter = options.initialFilter ?? "recent";
 		this.searchInput.setValue(options.initialRoute.query ?? "");
 		this.recomputeFilterCounts();
 		this.recomputeRows();
@@ -199,6 +204,14 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		this.filter = FILTERS[(index + delta + FILTERS.length) % FILTERS.length];
 		this.selectedIndex = 0;
 		this.message = undefined;
+		try {
+			this.onFilterChange?.(this.filter);
+		} catch (error) {
+			this.message = {
+				level: "error",
+				text: `Filter choice was not saved: ${sanitizeTerminalText(error instanceof Error ? error.message : String(error))}`,
+			};
+		}
 		this.recomputeRows();
 		this.tui.requestRender();
 	}
@@ -541,6 +554,7 @@ export function createJouzuModelPicker(
 				new ModelPickerComponent({
 					context: componentContext,
 					initialRoute: route,
+					initialFilter: state.filter,
 					getRows: (query, filter) =>
 						buildPickerRows({
 							models: pickerModels(ctx),
@@ -562,6 +576,9 @@ export function createJouzuModelPicker(
 					},
 					onToggleFavorite: (row) => {
 						state = store.toggleFavorite(row.model);
+					},
+					onFilterChange: (filter) => {
+						state = store.setFilter(filter);
 					},
 					onRefresh: async (signal) => {
 						const result = await ctx.modelRegistry.refresh({ signal });

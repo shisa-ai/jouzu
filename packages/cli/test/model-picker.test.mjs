@@ -65,7 +65,7 @@ function rows() {
 }
 
 function createComponent(overrides = {}) {
-	const calls = { close: 0, selected: [], favorites: [], renders: 0 };
+	const calls = { close: 0, selected: [], favorites: [], filters: [], renders: 0 };
 	const component = new ModelPickerComponent({
 		context: {
 			tui: {
@@ -82,12 +82,17 @@ function createComponent(overrides = {}) {
 			},
 		},
 		initialRoute: { view: "models" },
+		...(overrides.initialFilter ? { initialFilter: overrides.initialFilter } : {}),
 		getRows: overrides.getRows ?? (() => rows()),
 		onSelect: async (row, scope) => {
 			calls.selected.push([row.model.modelId, scope]);
 		},
 		onToggleFavorite: (row) => {
 			calls.favorites.push(row.model.modelId);
+		},
+		onFilterChange: (filter) => {
+			calls.filters.push(filter);
+			overrides.onFilterChange?.(filter);
 		},
 		...(overrides.onRefresh ? { onRefresh: overrides.onRefresh } : {}),
 	});
@@ -238,6 +243,42 @@ test("Models view selects for the session or project, toggles filters and favori
 	assert.doesNotMatch(third.component.render(72).join("\n"), /Alt\+F/);
 	third.component.handleInput("escape");
 	assert.equal(third.calls.close, 1);
+});
+
+test("Models view restores the last filter and reports filter changes", () => {
+	const activeFilters = [];
+	const { component, calls } = createComponent({
+		initialFilter: "favorite",
+		getRows(_query, filter) {
+			activeFilters.push(filter);
+			return rows();
+		},
+	});
+	assert.equal(activeFilters.at(-1), "favorite");
+
+	component.handleInput("\t");
+	assert.equal(activeFilters.at(-1), "all");
+	component.handleInput("\x1b[Z");
+	assert.equal(activeFilters.at(-1), "favorite");
+	assert.deepEqual(calls.filters, ["all", "favorite"]);
+});
+
+test("Models view keeps the selected filter when saving it fails", () => {
+	const activeFilters = [];
+	const { component } = createComponent({
+		getRows(_query, filter) {
+			activeFilters.push(filter);
+			return rows();
+		},
+		onFilterChange() {
+			throw new Error("broken\u001b]0;hidden\u0007 state");
+		},
+	});
+	component.handleInput("\t");
+	assert.equal(activeFilters.at(-1), "favorite");
+	const rendered = component.render(72).join("\n");
+	assert.match(rendered, /Filter choice was not saved: broken state/);
+	assert.doesNotMatch(rendered, /hidden/);
 });
 
 test("Palette routing replaces the query and keeps the component reusable", () => {
@@ -502,6 +543,11 @@ test("Jouzu editor wrapper opens the Models component through the Palette surfac
 		assert.doesNotMatch(rendered, /Model catalogs refreshed\./);
 		assert.equal(customOptions.overlay, true);
 		assert.equal(refreshCalls, 1, "opening the Palette must refresh Pi's effective model inventory");
+		assert.equal(
+			new ModelPickerStore(paths).load().state.filter,
+			"all",
+			"filter changes must persist through the integration",
+		);
 		assert.equal(await integration.cycleFavorite("forward"), true);
 		assert.deepEqual(selected, ["fresh"], "Ctrl+P must immediately use a favorite added in the open picker");
 		assert.equal(await integration.handleScopedModelsCommand(), true);

@@ -6,9 +6,12 @@ import type { JouzuPaths } from "./paths.js";
 import { ensurePrivateDirectory, writeFilePrivateAtomic } from "./private-fs.js";
 import { acquireStateLock, type StateLockInspection } from "./state-lock.js";
 
-export const MODEL_PICKER_SCHEMA_VERSION = 2;
+export const MODEL_PICKER_SCHEMA_VERSION = 3;
 export const MODEL_PICKER_RECENT_LIMIT = 12;
 export const MODEL_PICKER_HISTORY_LIMIT = 8;
+
+export const MODEL_PICKER_FILTERS = ["recent", "favorite", "all"] as const;
+export type ModelPickerFilter = (typeof MODEL_PICKER_FILTERS)[number];
 
 export interface ModelReference {
 	provider: string;
@@ -25,7 +28,8 @@ export interface RecentRecord extends ModelReference {
 }
 
 export interface ModelPickerState {
-	schemaVersion: 2;
+	schemaVersion: 3;
+	filter: ModelPickerFilter;
 	favorites: FavoriteRecord[];
 	defaults: {
 		projects: Record<string, ModelReference>;
@@ -62,6 +66,7 @@ export function modelReferencesEqual(left: ModelReference | undefined, right: Mo
 export function emptyModelPickerState(): ModelPickerState {
 	return {
 		schemaVersion: MODEL_PICKER_SCHEMA_VERSION,
+		filter: "recent",
 		favorites: [],
 		defaults: { projects: {} },
 		recents: { global: [], projects: {} },
@@ -81,6 +86,10 @@ function validIdentifier(value: unknown): value is string {
 
 function validTimestamp(value: unknown): value is string {
 	return typeof value === "string" && Number.isFinite(Date.parse(value));
+}
+
+function validFilter(value: unknown): value is ModelPickerFilter {
+	return MODEL_PICKER_FILTERS.some((filter) => filter === value);
 }
 
 function assertValidReference(reference: ModelReference): void {
@@ -111,11 +120,16 @@ function parseState(value: unknown): ModelPickerState {
 	if (!value || typeof value !== "object") throw new ModelPickerStateError("state must be an object");
 	const record = value as {
 		schemaVersion?: unknown;
+		filter?: unknown;
 		favorites?: unknown;
 		defaults?: { projects?: unknown };
 		recents?: { global?: unknown; projects?: unknown };
 	};
-	if (record.schemaVersion !== 1 && record.schemaVersion !== MODEL_PICKER_SCHEMA_VERSION) {
+	if (
+		record.schemaVersion !== 1 &&
+		record.schemaVersion !== 2 &&
+		record.schemaVersion !== MODEL_PICKER_SCHEMA_VERSION
+	) {
 		throw new ModelPickerStateError(`unsupported model picker state schema: ${String(record.schemaVersion)}`);
 	}
 	if (!Array.isArray(record.favorites)) throw new ModelPickerStateError("favorites must be an array");
@@ -164,6 +178,7 @@ function parseState(value: unknown): ModelPickerState {
 
 	return {
 		schemaVersion: MODEL_PICKER_SCHEMA_VERSION,
+		filter: validFilter(record.filter) ? record.filter : "recent",
 		favorites,
 		defaults: { projects: defaults },
 		recents: {
@@ -250,6 +265,13 @@ export class ModelPickerStore {
 		} finally {
 			release();
 		}
+	}
+
+	setFilter(filter: ModelPickerFilter, now: Date = new Date()): ModelPickerState {
+		if (!validFilter(filter)) throw new ModelPickerStateError(`unknown model picker filter: ${String(filter)}`);
+		return this.mutate((state) => {
+			state.filter = filter;
+		}, now);
 	}
 
 	setProjectDefault(reference: ModelReference, projectKey: string, now: Date = new Date()): ModelPickerState {
