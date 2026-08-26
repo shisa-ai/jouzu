@@ -77,7 +77,27 @@ test("a non-interactive first run uses Core without recording Japanese consent",
 		assert.equal(result.stdout.trim(), piVersion);
 		const state = JSON.parse(readFileSync(join(jouzuHome, "state", "profile-state.json"), "utf8"));
 		assert.equal(state.activeProfile, "core");
+		assert.equal(state.profileVersion, 2);
 		assert.equal(existsSync(join(jouzuHome, "state", "profile-choice.json")), false);
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
+
+test("Core registers its three skills and review prompt", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-core-skills-"));
+	try {
+		const result = run(
+			["--jouzu-home", join(temp, "home"), "pi", "--mode", "rpc", "--no-session", "--no-context-files"],
+			{ input: `${JSON.stringify({ id: "commands", type: "get_commands" })}\n` },
+		);
+		assert.equal(result.status, 0, result.stderr);
+		const response = JSON.parse(result.stdout.trim());
+		const commandNames = response.data.commands.map((command) => command.name);
+		assert.deepEqual(
+			commandNames.filter((name) => name === "jouzu-review" || name.startsWith("skill:jouzu-")),
+			["jouzu-review", "skill:jouzu-clear-writing", "skill:jouzu-core", "skill:jouzu-source-check"],
+		);
 	} finally {
 		rmSync(temp, { recursive: true, force: true });
 	}

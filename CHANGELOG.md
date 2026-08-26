@@ -4,6 +4,7 @@
 
 - Restore the last Models filter used when the picker opens again.
 - Route pi-vcc configuration to Jouzu's isolated agent root.
+- Add on-demand Clear Writing and database-free Source Check skills to the Core and JA profiles.
 
 ## 0.1.3 - 2026-08-26
 

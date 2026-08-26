@@ -73,6 +73,14 @@ These surfaces use terminal display columns rather than JavaScript string length
 
 `core` is the safe fallback and provider- and language-neutral base. Product branding, locale, terminal settings, repository text, and path contents never opt a user into a response language.
 
+Core installs three on-demand skills:
+
+- `jouzu-core` for repository inspection, safe edits, validation, and handoff;
+- `jouzu-clear-writing` for revising user-facing technical prose without changing facts; and
+- `jouzu-source-check` for database-free source analysis, factual verification, counterevidence, and synthesis.
+
+It also installs the `jouzu-review` prompt. Pi includes skill names and descriptions in context and loads full skill instructions only when a task matches or the user runs `/skill:<name>`.
+
 The optional `ja` preview extends Core with a concise Japanese response policy while preserving exact code, commands, identifiers, paths, URLs, logs, and source error messages. Enable it through first-run consent or explicit selection at any time:
 
 ```bash

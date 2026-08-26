@@ -47,7 +47,7 @@ test("profile planning is non-mutating and apply converges", () => {
 		assert.deepEqual(plan, {
 			schemaVersion: 1,
 			profile: "ja",
-			profileVersion: 1,
+			profileVersion: 2,
 			manifestSha256: profile.manifestSha256,
 			agentDir: fixture.paths.agentDir,
 			actions: [
@@ -66,9 +66,21 @@ test("profile planning is non-mutating and apply converges", () => {
 				},
 				{
 					type: "create",
+					target: "skills/jouzu-clear-writing/SKILL.md",
+					reason: "missing",
+					desiredSha256: profile.assets.find((asset) => asset.target === "skills/jouzu-clear-writing/SKILL.md").sha256,
+				},
+				{
+					type: "create",
 					target: "skills/jouzu-core/SKILL.md",
 					reason: "missing",
 					desiredSha256: profile.assets.find((asset) => asset.target === "skills/jouzu-core/SKILL.md").sha256,
+				},
+				{
+					type: "create",
+					target: "skills/jouzu-source-check/SKILL.md",
+					reason: "missing",
+					desiredSha256: profile.assets.find((asset) => asset.target === "skills/jouzu-source-check/SKILL.md").sha256,
 				},
 			],
 		});
@@ -144,7 +156,7 @@ test("matching unmanaged files are adopted without rewriting", () => {
 			readFileSync(join(fixture.paths.agentDir, ...asset.target.split("/"))),
 		);
 		const plan = planProfile(profile, fixture.paths, "0.1.0");
-		assert.equal(plan.actions.filter((action) => action.type === "adopt").length, 2);
+		assert.equal(plan.actions.filter((action) => action.type === "adopt").length, 4);
 		applyProfile(profile, fixture.paths, "0.1.0");
 		const after = profile.assets.map((asset) => readFileSync(join(fixture.paths.agentDir, ...asset.target.split("/"))));
 		assert.deepEqual(after, before);

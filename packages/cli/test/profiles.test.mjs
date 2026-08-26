@@ -45,14 +45,46 @@ test("bundled Core and JA profiles resolve exact ordered assets", () => {
 	const ja = loadBundledProfile("ja");
 	assert.deepEqual(
 		core.assets.map((asset) => asset.target),
-		["prompts/jouzu-review.md", "skills/jouzu-core/SKILL.md"],
+		[
+			"prompts/jouzu-review.md",
+			"skills/jouzu-clear-writing/SKILL.md",
+			"skills/jouzu-core/SKILL.md",
+			"skills/jouzu-source-check/SKILL.md",
+		],
 	);
 	assert.deepEqual(
 		ja.assets.map((asset) => asset.target),
-		["APPEND_SYSTEM.md", "prompts/jouzu-review.md", "skills/jouzu-core/SKILL.md"],
+		[
+			"APPEND_SYSTEM.md",
+			"prompts/jouzu-review.md",
+			"skills/jouzu-clear-writing/SKILL.md",
+			"skills/jouzu-core/SKILL.md",
+			"skills/jouzu-source-check/SKILL.md",
+		],
 	);
-	assert.equal(core.manifestSha256, "5643e3dd20f22c586ea812f2038e5d1684301a27fee4ac3572bd6a0dff49a6a2");
-	assert.equal(ja.manifestSha256, "f671a61bed5c3ed0e2ab58dcc6dc4a0d365af6b12576d4863853add509ec210b");
+	assert.equal(core.manifestSha256, "702cb820b6b9fd0fab1fe2ed21db7b01fd4a524a3d6cf0ef0ad2319575c3ac23");
+	assert.equal(ja.manifestSha256, "925a0af4ab085d33dda1c65343bde5d7491a7a8929ad46c23645b3314e37a6b7");
+});
+
+test("bundled skills declare bounded public workflows", () => {
+	const core = loadBundledProfile("core");
+	const clearWriting = core.assets
+		.find((asset) => asset.target === "skills/jouzu-clear-writing/SKILL.md")
+		?.bytes.toString("utf8");
+	const sourceCheck = core.assets
+		.find((asset) => asset.target === "skills/jouzu-source-check/SKILL.md")
+		?.bytes.toString("utf8");
+	assert.match(clearWriting ?? "", /^---\nname: jouzu-clear-writing\n/);
+	assert.match(
+		clearWriting ?? "",
+		/Preserve facts, requirements, identifiers, commands, paths, citations, and quoted text\./,
+	);
+	assert.match(sourceCheck ?? "", /^---\nname: jouzu-source-check\n/);
+	assert.match(
+		sourceCheck ?? "",
+		/Do not register records, modify unrelated files, commit, or publish unless the user asks\./,
+	);
+	assert.doesNotMatch(sourceCheck ?? "", /REALITYCHECK_DATA|rc-db|LanceDB/);
 });
 
 test("manifest validation fails closed for schema, path, inheritance, and digest errors", () => {

@@ -23,6 +23,8 @@ jz profile plan --profile ja
 
 Locale, terminal settings, repository text, and branding never select JA automatically.
 
+Core and JA install the on-demand `jouzu-core`, `jouzu-clear-writing`, and `jouzu-source-check` skills plus the `jouzu-review` prompt. The writing skill revises user-facing prose without changing facts. Source Check performs database-free source analysis, verification, counterevidence search, and synthesis.
+
 Profile planning does not write. Application detects user-file conflicts, retains backups for managed updates/deletions, and never prunes unknown files. Existing unsupported CP932/Shift-JIS profile targets are left unchanged.
 
 Use `/login` to authenticate within Jouzu's agent root. `/model` or `Ctrl+L` opens the Jouzu Palette Models view without clearing the prompt draft. `Tab`/`Shift+Tab` cycle Recent, Favorite, and All filters. The first launch opens Recent; later launches restore the last filter used. Search exact provider/model identity or display names; `Enter` selects for the session, `Shift+Enter` also stores the user-local project default, and `Ctrl+F` toggles a favorite. `Ctrl+P` and its reverse binding cycle available favorites inside the effective model scope. New sessions use the project default unless an explicit model, scoped-model set, or session-resume action takes precedence. Recents update on first request dispatch and remain local. `Ctrl+/` or `Ctrl+?` opens help. `/status` reports provider-neutral session, model, context, profile, and runtime facts.

@@ -1,8 +1,13 @@
 {
   "schemaVersion": 1,
   "id": "core",
-  "version": 1,
+  "version": 2,
   "assets": [
+    {
+      "source": "assets/jouzu-clear-writing-skill.md",
+      "target": "skills/jouzu-clear-writing/SKILL.md",
+      "sha256": "7a9bd8b4ae2ee05a766af664279e73bc2ba56fd167a8b9a664212212d7d76cca"
+    },
     {
       "source": "assets/jouzu-core-skill.md",
       "target": "skills/jouzu-core/SKILL.md",
@@ -12,6 +17,11 @@
       "source": "assets/jouzu-review.md",
       "target": "prompts/jouzu-review.md",
       "sha256": "80c2f09bdb7f6fc10c1c3987e2307aa6c391b393ffdb0c1dbad0ed9db0d05ad6"
+    },
+    {
+      "source": "assets/jouzu-source-check-skill.md",
+      "target": "skills/jouzu-source-check/SKILL.md",
+      "sha256": "da485b92e5650ae0c90497c617f6ce1d7a5c5eaed57270c0d1049409fbfede55"
     }
   ]
 }
