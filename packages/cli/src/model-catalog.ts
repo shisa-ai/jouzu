@@ -314,8 +314,20 @@ function stringAt(
 	maxBytes = MODEL_CATALOG_MAX_ID_BYTES,
 ): string {
 	const value = record[field];
-	if (typeof value !== "string" || value.length === 0 || Buffer.byteLength(value) > maxBytes) {
-		throw new ModelCatalogError("invalid_record", `${path}.${field}`, "must be a non-empty bounded string");
+	if (
+		typeof value !== "string" ||
+		value.length === 0 ||
+		Buffer.byteLength(value) > maxBytes ||
+		Array.from(value).some((character) => {
+			const codePoint = character.codePointAt(0) ?? 0;
+			return codePoint <= 0x1f || (codePoint >= 0x7f && codePoint <= 0x9f);
+		})
+	) {
+		throw new ModelCatalogError(
+			"invalid_record",
+			`${path}.${field}`,
+			"must be a non-empty bounded control-free string",
+		);
 	}
 	return value;
 }
