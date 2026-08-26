@@ -114,7 +114,9 @@ Override all roots together with `--jouzu-home <path>` or `JOUZU_HOME`:
 JOUZU_HOME="$PWD/.jouzu" jz doctor
 ```
 
-Jouzu does not import normal Pi settings, credentials, packages, or sessions. It preserves Pi's project trust behavior, so trusted project `.pi` resources still apply. Pi's documented cross-harness `~/.agents/skills` directory is also a shared read surface. Jouzu is isolated from global Pi state, not from explicitly trusted project resources or provider credentials in the current environment.
+Jouzu does not read normal Pi state during non-interactive commands. On the first interactive setup, it checks an inherited `PI_CODING_AGENT_DIR` and then `~/.pi/agent`. If it finds eligible files, it asks separately before copying custom `models.json` and saved provider credentials from `auth.json`. Both prompts default to no. The source files remain unchanged, and Jouzu never replaces an existing destination. Set `JOUZU_NO_PI_IMPORT=1` to skip the offer for one launch.
+
+The import rejects symbolic links, non-regular files, oversized files, and files whose top-level JSON value is not an object. It does not import `settings.json`, keybindings, packages, extensions, skills, prompts, themes, sessions, caches, or trust decisions. Trusted project `.pi` resources still apply through Pi's project-trust behavior. Pi's documented cross-harness `~/.agents/skills` directory is also a shared read surface.
 
 ## Diagnostics and Pi passthrough
 
@@ -197,7 +199,7 @@ Managed profile assets are UTF-8. Existing CP932/Shift-JIS profile targets produ
 
 - npm is the only v0.1 application channel.
 - Node, npm, Git, Bash, and provider credentials are not bundled.
-- No automatic import from an existing Pi installation.
+- Existing Pi `models.json` and `auth.json` require separate first-run consent; other stock Pi state is not imported.
 - No native installer, standalone archive, background service, hosted gateway, or Jouzu-owned model catalog.
 - The Models view uses Pi's local usable-model inventory; catalog additions, one-turn trials, target-budget compaction, and cost/quota/route preflight are deferred.
 - Third-party Pi packages execute trusted code with the user's permissions and have their own platform support.

@@ -351,6 +351,7 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	const now = new Date();
 	const stateLocks = [
 		{ id: "lock.profile", label: "Profile lock", file: "profile.lock" },
+		{ id: "lock.piImport", label: "Pi import lock", file: "pi-import.lock" },
 		{ id: "lock.keybindings", label: "Keybinding lock", file: "keybindings.lock" },
 		{ id: "lock.modelPicker", label: "Model picker lock", file: "model-picker.lock" },
 		{ id: "lock.update", label: "Update lock", file: "self-update.lock" },

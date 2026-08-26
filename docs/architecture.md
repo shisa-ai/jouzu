@@ -16,6 +16,7 @@ cli.ts  (entry: argument routing, profile resolution, launch)
   ├─ runtime.ts          profile selection + configurePiProcess
   │    └─ profile-manager.ts   strict profile-state reader, plan/apply
   ├─ profile-choice.ts   first-run Japanese support consent
+  ├─ pi-import.ts        opt-in stock-Pi models/auth import
   ├─ profiles.ts         bundled profile loading
   ├─ profile-manager.ts  profile planning/application (see above)
   ├─ keybindings.ts      durable keybinding defaults
@@ -55,13 +56,14 @@ There are no circular module imports.
 | --- | --- | --- |
 | Profile state | `profile-manager.ts` | `state/profile-state.json` |
 | Profile consent | `profile-choice.ts` | `state/profile-choice.json` |
+| Pi import decisions | `pi-import.ts` | `state/pi-import.json` |
 | Keybinding state | `keybindings.ts` | `state/keybindings-state.json` |
 | Self-update state | `updater.ts` | `state/self-update.json` |
 | Model-picker project defaults, favorites, and recents | `model-picker-state.ts` | `state/model-picker.json` |
 
-Locks (`profile.lock`, `keybindings.lock`, `self-update.lock`, `model-picker.lock`) are created and
+Locks (`profile.lock`, `pi-import.lock`, `keybindings.lock`, `self-update.lock`, `model-picker.lock`) are created and
 released by `state-lock.ts`, the shared state-lock primitive used by the
-updater, profile, and keybinding operations. It records a PID, a started-at
+updater, profile, Pi-import, keybinding, and model-picker operations. It records a PID, a started-at
 timestamp, and a release token, refuses locks held by a live process, and
 recovers a dead owner's or owner-unknown lock after the stale threshold.
 

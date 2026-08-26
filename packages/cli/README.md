@@ -29,7 +29,7 @@ Use `/login` to authenticate within Jouzu's agent root. `/model` or `Ctrl+L` ope
 
 Jouzu's built-in interactive session UI adds a width-safe Prompt Frame, a Session Line with protected model identity and a left hint slot, and a responsive Status Bar for workspace, Git, project runtime, context, and active-branch token facts. It keeps Pi's editor/autocomplete/IME behavior and does not claim provider quota or session cost.
 
-Jouzu does not import stock Pi state. Override all roots with `--jouzu-home <path>` or `JOUZU_HOME`. Trusted project `.pi` resources and Pi's cross-harness `~/.agents/skills` read surface still follow Pi behavior. On exit, resume the isolated session with the printed `jz --session SESSION_ID` command; Jouzu resolves its own session root.
+Jouzu imports no stock Pi state automatically. First interactive setup can offer separate opt-in copies of `models.json` and `auth.json`; it preserves the source and existing Jouzu files. Override all roots with `--jouzu-home <path>` or `JOUZU_HOME`. Trusted project `.pi` resources and Pi's cross-harness `~/.agents/skills` read surface still follow Pi behavior. On exit, resume the isolated session with the printed `jz --session SESSION_ID` command; Jouzu resolves its own session root.
 
 Use `jz pi ...` or `jz -- ...` for Pi command collisions. Pi runtime self-update is blocked; package/model updates inside Jouzu state remain available.
 

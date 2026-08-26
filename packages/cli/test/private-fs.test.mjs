@@ -18,6 +18,7 @@ import {
 	ensurePrivateDirectory,
 	PrivatePathError,
 	writeFilePrivateAtomic,
+	writeFilePrivateExclusive,
 } from "../dist/private-fs.js";
 
 function modeOf(path) {
@@ -81,6 +82,21 @@ test(
 		}
 	},
 );
+
+test("writeFilePrivateExclusive creates once and preserves an existing destination", () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-exclusive-"));
+	try {
+		const root = join(temporary, "state");
+		const target = join(root, "nested", "value.json");
+		writeFilePrivateExclusive(target, "first\n", root);
+		assert.equal(readFileSync(target, "utf8"), "first\n");
+		assert.throws(() => writeFilePrivateExclusive(target, "second\n", root), /EEXIST/);
+		assert.equal(readFileSync(target, "utf8"), "first\n");
+		if (process.platform !== "win32") assert.equal(modeOf(target), 0o600);
+	} finally {
+		rmSync(temporary, { recursive: true, force: true });
+	}
+});
 
 test("writeFilePrivateAtomic replaces content and leaves no temporary file", () => {
 	const temporary = mkdtempSync(join(tmpdir(), "jouzu-atomic-"));

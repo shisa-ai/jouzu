@@ -18,6 +18,7 @@ import { loadMetadata } from "./metadata.js";
 import { createJouzuModelPicker } from "./model-picker.js";
 import { projectDefaultAppliesAtStartup } from "./model-picker-state.js";
 import { resolveJouzuPaths } from "./paths.js";
+import { offerPiConfigurationImport, PiImportError } from "./pi-import.js";
 import { clearInteractiveStartup, createJouzuPresentationExtension, isInteractivePiStartup } from "./presentation.js";
 import { promptForJapaneseSupport, writeProfileChoice } from "./profile-choice.js";
 import {
@@ -156,6 +157,7 @@ async function runCli(args: string[]): Promise<void> {
 	}
 
 	if (interactiveStartup) {
+		await offerPiConfigurationImport(paths, { inheritedAgentDir: inheritedPiAgentDir });
 		const bootstrap = ensureDefaultKeybindings(paths);
 		if (bootstrap.message) console.error(bootstrap.message);
 	}
@@ -253,6 +255,11 @@ async function runCli(args: string[]): Promise<void> {
 }
 
 runCli(process.argv.slice(2)).catch((error: unknown) => {
+	if (error instanceof PiImportError) {
+		console.error(`Jouzu Pi import failed: ${error.message}`);
+		process.exitCode = error.exitCode;
+		return;
+	}
 	if (error instanceof KeybindingConflictError) {
 		console.error(formatKeybindingPlan(error.plan));
 		console.error('Resolve the conflicts above, then run "jouzu keybindings apply" again.');

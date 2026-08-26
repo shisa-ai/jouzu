@@ -83,6 +83,24 @@ test("a non-interactive first run uses Core without recording Japanese consent",
 	}
 });
 
+test("non-interactive commands never import existing Pi configuration", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-pi-import-noninteractive-"));
+	try {
+		const jouzuHome = join(temp, "jouzu");
+		const piHome = join(temp, "pi");
+		mkdirSync(piHome, { recursive: true });
+		writeFileSync(join(piHome, "models.json"), "{}\n");
+		writeFileSync(join(piHome, "auth.json"), "{}\n");
+		const result = run(["--jouzu-home", jouzuHome, "--version"], { env: { PI_CODING_AGENT_DIR: piHome } });
+		assert.equal(result.status, 0, result.stderr);
+		assert.equal(existsSync(join(jouzuHome, "agent", "models.json")), false);
+		assert.equal(existsSync(join(jouzuHome, "agent", "auth.json")), false);
+		assert.equal(existsSync(join(jouzuHome, "state", "pi-import.json")), false);
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
+
 test("self-update status and policy are explicit and source-safe", () => {
 	const temp = mkdtempSync(join(tmpdir(), "jouzu-self-update-cli-"));
 	try {

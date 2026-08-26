@@ -71,6 +71,29 @@ export function ensurePrivateDirectory(root: string, directory: string = root): 
 	}
 }
 
+/** Create a private file without replacing an existing destination. */
+export function writeFilePrivateExclusive(
+	path: string,
+	contents: string | Uint8Array,
+	root: string = dirname(path),
+): void {
+	ensurePrivateDirectory(root, dirname(path));
+	let descriptor: number | undefined;
+	let created = false;
+	try {
+		descriptor = openSync(path, "wx", PRIVATE_FILE_MODE);
+		created = true;
+		writeFileSync(descriptor, contents);
+		fsyncSync(descriptor);
+		closeSync(descriptor);
+		descriptor = undefined;
+	} catch (error) {
+		if (descriptor !== undefined) closeSync(descriptor);
+		if (created) rmSync(path, { force: true });
+		throw error;
+	}
+}
+
 /** Copy a backup into a private owned directory without replacing a prior file. */
 export function copyPrivateFile(source: string, destination: string, root: string): void {
 	ensurePrivateDirectory(root, dirname(destination));
