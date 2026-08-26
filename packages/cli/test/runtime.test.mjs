@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { writeProfileChoice } from "../dist/profile-choice.js";
 import { ProfileStateError } from "../dist/profile-manager.js";
-import { resolveProfileSelection } from "../dist/runtime.js";
+import { configurePiProcess, resolveProfileSelection } from "../dist/runtime.js";
 
 function paths(root) {
 	return {
@@ -30,6 +30,37 @@ function validState(activeProfile, manifestSha256) {
 		managedTargets: [],
 	};
 }
+
+test("Jouzu owns Pi and pi-vcc paths inside its isolated root", () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-runtime-environment-"));
+	const originalTitle = process.title;
+	const keys = [
+		"AI_AGENT",
+		"PI_CODING_AGENT",
+		"PI_CODING_AGENT_DIR",
+		"PI_CODING_AGENT_SESSION_DIR",
+		"PI_SKIP_VERSION_CHECK",
+		"PI_VCC_CONFIG_PATH",
+	];
+	const original = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
+	try {
+		const resolved = paths(root);
+		process.env.PI_CODING_AGENT_DIR = "/inherited/pi";
+		process.env.PI_VCC_CONFIG_PATH = "/inherited/pi-vcc.json";
+		configurePiProcess(resolved);
+		assert.equal(process.title, "jouzu");
+		assert.equal(process.env.PI_CODING_AGENT_DIR, resolved.agentDir);
+		assert.equal(process.env.PI_CODING_AGENT_SESSION_DIR, resolved.sessionDir);
+		assert.equal(process.env.PI_VCC_CONFIG_PATH, join(resolved.agentDir, "pi-vcc-config.json"));
+	} finally {
+		process.title = originalTitle;
+		for (const key of keys) {
+			if (original[key] === undefined) delete process.env[key];
+			else process.env[key] = original[key];
+		}
+		rmSync(root, { recursive: true, force: true });
+	}
+});
 
 test("fresh installs default to Core and honor a saved explicit choice", () => {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-runtime-profile-"));

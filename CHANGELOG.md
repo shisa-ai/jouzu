@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Restore the last Models filter used when the picker opens again.
+- Route pi-vcc configuration to Jouzu's isolated agent root.
 
 ## 0.1.3 - 2026-08-26
 
