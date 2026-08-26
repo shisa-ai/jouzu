@@ -84,7 +84,7 @@ export type CatalogSyncStatus =
 export type CatalogRefreshResult =
 	| { status: "unconfigured"; catalogStatus: CatalogSyncStatus }
 	| { status: "not-modified"; catalogStatus: CatalogSyncStatus }
-	| { status: "activated"; catalogStatus: CatalogSyncStatus; document: ModelCatalogDocument }
+	| { status: "activated"; catalogStatus: CatalogSyncStatus }
 	| { status: "quarantined"; catalogStatus: CatalogSyncStatus; revision: string; digest: string; reasons: string[] }
 	| { status: "rejected" | "error"; catalogStatus: CatalogSyncStatus; code: string; message: string };
 
@@ -520,7 +520,7 @@ export async function refreshModelCatalog(
 		writeJson(accountStatePath(paths, config.url, accountRefHash), state, catalogRoot(paths));
 		origin = { schemaVersion: 1, activeAccountRefHash: accountRefHash };
 		writeJson(originStatePath(paths, config.url), origin, catalogRoot(paths));
-		return { status: "activated", catalogStatus: getCatalogStatus(paths, env, now), document };
+		return { status: "activated", catalogStatus: getCatalogStatus(paths, env, now) };
 	} catch (error) {
 		const code = errorCode(error);
 		const message = error instanceof Error ? error.message : String(error);
