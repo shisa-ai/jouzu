@@ -1,0 +1,97 @@
+{
+  "$schema": "https://jouzu.ai/schemas/model-catalog/v1.json",
+  "format": "jouzu.model-catalog",
+  "schemaVersion": "1.0",
+  "kind": "snapshot",
+  "catalogId": "ai.example.test",
+  "revision": "fixture-1",
+  "sequence": "1",
+  "generatedAt": "2026-08-26T00:00:00Z",
+  "source": {
+    "id": "example:test",
+    "type": "authenticated_gateway"
+  },
+  "scope": {
+    "complete": true,
+    "accountScoped": true,
+    "accountRef": "acct_fixture",
+    "includes": [
+      "providers",
+      "routes",
+      "canonicalModels",
+      "modelOfferings",
+      "compatibilityProfiles"
+    ]
+  },
+  "dependencies": [],
+  "providers": [
+    {
+      "id": "ai.example.gateway",
+      "name": "Example Gateway",
+      "api": "openai-chat-completions"
+    }
+  ],
+  "routes": [
+    {
+      "id": "ai.example.gateway/primary",
+      "providerId": "ai.example.gateway",
+      "compatibilityProfileIds": ["ai.example.gateway/openai-ingress-v1"],
+      "availability": {
+        "status": "available",
+        "observedAt": "2026-08-26T00:00:00Z"
+      }
+    }
+  ],
+  "canonicalModels": [
+    {
+      "id": "example/model@1",
+      "developerId": "example",
+      "familyId": "example/model"
+    }
+  ],
+  "modelOfferings": [
+    {
+      "id": "ai.example.gateway/example-model",
+      "providerId": "ai.example.gateway",
+      "modelId": "example-model",
+      "name": "Example Model",
+      "canonicalModelId": "example/model@1",
+      "routeIds": ["ai.example.gateway/primary"],
+      "compatibilityProfileIds": ["ai.example.gateway/openai-ingress-v1"],
+      "api": "openai-chat-completions",
+      "availability": {
+        "status": "available",
+        "observedAt": "2026-08-26T00:00:00Z"
+      },
+      "limits": {
+        "contextWindow": 131072,
+        "maxOutputTokens": 32768
+      },
+      "modalities": ["text"],
+      "capabilities": ["text", "streaming", "tool_calling"]
+    }
+  ],
+  "compatibilityProfiles": [
+    {
+      "id": "ai.example.gateway/openai-ingress-v1",
+      "appliesTo": "ingress",
+      "protocol": "openai-chat-completions",
+      "instructionRoles": {
+        "accepted": ["developer", "system", "user", "assistant", "tool"],
+        "preferred": "developer",
+        "developer": "native"
+      },
+      "reasoning": {
+        "supported": "yes",
+        "effortControl": {
+          "supported": "yes",
+          "levels": ["low", "medium", "high"]
+        }
+      }
+    }
+  ],
+  "matchRules": [],
+  "evidence": [],
+  "tombstones": [],
+  "extensions": {}
+}

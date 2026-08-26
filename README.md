@@ -118,6 +118,19 @@ Jouzu does not read normal Pi state during non-interactive commands. On the firs
 
 The import rejects symbolic links, non-regular files, oversized files, and files whose top-level JSON value is not an object. It does not import `settings.json`, keybindings, packages, extensions, skills, prompts, themes, sessions, caches, or trust decisions. Trusted project `.pi` resources still apply through Pi's project-trust behavior. Pi's documented cross-harness `~/.agents/skills` directory is also a shared read surface.
 
+## Optional model catalog
+
+Jouzu does not require a remote model catalog. With no endpoint configured, it makes no catalog request and continues using Pi's effective model inventory plus local `models.json` configuration. `jouzu catalog status` and `jouzu catalog refresh` report `unconfigured` and exit successfully in that state.
+
+Catalog producers can validate a file against Jouzu's version 1 structural and semantic contract:
+
+```bash
+jouzu catalog validate ./catalog.json
+jouzu catalog conformance ./remote-catalog.json --json
+```
+
+`conformance` also requires the remote-stream sequence field. The JSON Schema is installed at `dist/catalog/model-catalog-v1.schema.json`; runtime validation additionally rejects duplicate JSON keys, broken references, credential-bearing fields, and invalid account scope.
+
 ## Diagnostics and Pi passthrough
 
 ```bash

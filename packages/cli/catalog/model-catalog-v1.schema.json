@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jouzu.ai/schemas/model-catalog/v1.json",
+  "title": "Jouzu model catalog version 1",
+  "type": "object",
+  "required": ["format", "schemaVersion", "kind", "catalogId", "revision", "generatedAt", "source", "scope"],
+  "properties": {
+    "$schema": { "type": "string", "maxLength": 2048 },
+    "format": { "const": "jouzu.model-catalog" },
+    "schemaVersion": { "type": "string", "pattern": "^1\\.[0-9]+$" },
+    "kind": { "enum": ["snapshot", "compatibility-pack"] },
+    "catalogId": { "$ref": "#/$defs/id" },
+    "revision": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "sequence": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,19})$" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "expiresAt": { "type": "string", "format": "date-time" },
+    "source": { "$ref": "#/$defs/source" },
+    "scope": { "$ref": "#/$defs/scope" },
+    "dependencies": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/dependency" }
+    },
+    "providers": { "type": "array", "items": { "$ref": "#/$defs/provider" } },
+    "routes": { "type": "array", "items": { "$ref": "#/$defs/route" } },
+    "canonicalModels": { "type": "array", "items": { "$ref": "#/$defs/canonicalModel" } },
+    "modelOfferings": { "type": "array", "items": { "$ref": "#/$defs/offering" } },
+    "compatibilityProfiles": { "type": "array", "items": { "$ref": "#/$defs/compatibilityProfile" } },
+    "matchRules": { "type": "array", "items": { "$ref": "#/$defs/matchRule" } },
+    "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } },
+    "tombstones": { "type": "array", "items": { "$ref": "#/$defs/tombstone" } },
+    "extensions": { "type": "object" }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 2048 },
+    "triState": { "enum": ["yes", "no", "unknown"] },
+    "source": {
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "type": { "$ref": "#/$defs/id" }
+      },
+      "additionalProperties": true
+    },
+    "scope": {
+      "type": "object",
+      "required": ["complete", "accountScoped", "includes"],
+      "properties": {
+        "complete": { "type": "boolean" },
+        "accountScoped": { "type": "boolean" },
+        "accountRef": { "$ref": "#/$defs/id" },
+        "includes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "providers",
+              "routes",
+              "canonicalModels",
+              "modelOfferings",
+              "compatibilityProfiles",
+              "matchRules",
+              "evidence",
+              "tombstones"
+            ]
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "accountScoped": { "const": true } }, "required": ["accountScoped"] },
+          "then": { "required": ["accountRef"] }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "dependency": {
+      "type": "object",
+      "required": ["catalogId", "revision", "sha256"],
+      "properties": {
+        "catalogId": { "$ref": "#/$defs/id" },
+        "revision": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "provider": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "maxLength": 65536 },
+        "api": { "$ref": "#/$defs/id" },
+        "authenticationClass": { "$ref": "#/$defs/id" },
+        "extensions": { "type": "object" }
+      },
+      "additionalProperties": true
+    },
+    "route": {
+      "type": "object",
+      "required": ["id", "providerId"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "providerId": { "$ref": "#/$defs/id" },
+        "availability": { "$ref": "#/$defs/availability" },
+        "compatibilityProfileIds": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "extensions": { "type": "object" }
+      },
+      "additionalProperties": true
+    },
+    "canonicalModel": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "developerId": { "$ref": "#/$defs/id" },
+        "familyId": { "$ref": "#/$defs/id" },
+        "aliases": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "extensions": { "type": "object" }
+      },
+      "additionalProperties": true
+    },
+    "offering": {
+      "type": "object",
+      "required": ["id", "providerId", "modelId"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "providerId": { "$ref": "#/$defs/id" },
+        "modelId": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "maxLength": 65536 },
+        "canonicalModelId": { "$ref": "#/$defs/id" },
+        "routeIds": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "compatibilityProfileIds": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "api": { "$ref": "#/$defs/id" },
+        "availability": { "$ref": "#/$defs/availability" },
+        "limits": {
+          "type": "object",
+          "properties": {
+            "contextWindow": { "type": "integer", "minimum": 1 },
+            "maxOutputTokens": { "type": "integer", "minimum": 1 }
+          },
+          "additionalProperties": true
+        },
+        "modalities": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "capabilities": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "extensions": { "type": "object" }
+      },
+      "additionalProperties": true
+    },
+    "availability": {
+      "type": "object",
+      "required": ["status", "observedAt"],
+      "properties": {
+        "status": { "enum": ["available", "unavailable", "unknown"] },
+        "observedAt": { "type": "string", "format": "date-time" },
+        "reason": { "type": "string", "maxLength": 65536 }
+      },
+      "additionalProperties": true
+    },
+    "compatibilityProfile": {
+      "type": "object",
+      "required": ["id", "appliesTo", "protocol"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "appliesTo": { "enum": ["ingress", "upstream", "end_to_end"] },
+        "protocol": { "$ref": "#/$defs/id" },
+        "instructionRoles": { "type": "object" },
+        "reasoning": { "type": "object" },
+        "projections": { "type": "object" },
+        "extensions": { "type": "object" }
+      },
+      "additionalProperties": true
+    },
+    "matchRule": {
+      "type": "object",
+      "required": ["id", "match", "apply", "fieldClasses"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "match": { "type": "object" },
+        "apply": { "type": "object" },
+        "fieldClasses": { "type": "array", "items": { "$ref": "#/$defs/id" } }
+      },
+      "additionalProperties": true
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["id", "sourceId", "observedAt"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "sourceId": { "$ref": "#/$defs/id" },
+        "observedAt": { "type": "string", "format": "date-time" },
+        "expiresAt": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": true
+    },
+    "tombstone": {
+      "type": "object",
+      "required": ["id", "recordClass", "retiredAt"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "recordClass": { "enum": ["provider", "route", "canonicalModel", "modelOffering", "compatibilityProfile"] },
+        "retiredAt": { "type": "string", "format": "date-time" },
+        "reason": { "type": "string", "maxLength": 65536 },
+        "replacementIds": { "type": "array", "items": { "$ref": "#/$defs/id" } }
+      },
+      "additionalProperties": true
+    }
+  }
+}

@@ -39,6 +39,37 @@ test("reserves Jouzu diagnostics while allowing escaped Pi collisions", () => {
 	assert.throws(() => parseJouzuArgs(["doctor", "extra"]), /doctor does not accept/);
 });
 
+test("parses optional catalog status, refresh, and file conformance commands", () => {
+	assert.deepEqual(parseJouzuArgs(["catalog"]), {
+		kind: "catalog",
+		options: {},
+		operation: "status",
+		json: false,
+	});
+	assert.deepEqual(parseJouzuArgs(["catalog", "refresh", "--json"]), {
+		kind: "catalog",
+		options: {},
+		operation: "refresh",
+		json: true,
+	});
+	assert.deepEqual(parseJouzuArgs(["catalog", "validate", "/tmp/catalog.json"]), {
+		kind: "catalog",
+		options: {},
+		operation: "validate",
+		path: "/tmp/catalog.json",
+		json: false,
+	});
+	assert.deepEqual(parseJouzuArgs(["catalog", "conformance", "/tmp/catalog.json", "--json"]), {
+		kind: "catalog",
+		options: {},
+		operation: "conformance",
+		path: "/tmp/catalog.json",
+		json: true,
+	});
+	assert.throws(() => parseJouzuArgs(["catalog", "validate"]), UsageError);
+	assert.throws(() => parseJouzuArgs(["catalog", "other"]), UsageError);
+});
+
 test("parses profile planning and application without mixing launch selection", () => {
 	assert.deepEqual(parseJouzuArgs(["profile", "plan", "--profile", "core", "--json"]), {
 		kind: "profile",

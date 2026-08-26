@@ -1,0 +1,51 @@
+{
+  "$schema": "https://jouzu.ai/schemas/model-catalog/v1.json",
+  "format": "jouzu.model-catalog",
+  "schemaVersion": "1.0",
+  "kind": "compatibility-pack",
+  "catalogId": "community.example.compat",
+  "revision": "fixture-1",
+  "generatedAt": "2026-08-26T00:00:00Z",
+  "source": {
+    "id": "community.example.compat",
+    "type": "local"
+  },
+  "scope": {
+    "complete": false,
+    "accountScoped": false,
+    "includes": ["compatibilityProfiles", "matchRules"]
+  },
+  "dependencies": [],
+  "providers": [],
+  "routes": [],
+  "canonicalModels": [],
+  "modelOfferings": [],
+  "compatibilityProfiles": [
+    {
+      "id": "community.example.compat/system-role-v1",
+      "appliesTo": "upstream",
+      "protocol": "openai-chat-completions",
+      "instructionRoles": {
+        "accepted": ["system", "user", "assistant", "tool"],
+        "preferred": "system",
+        "developer": "reject"
+      }
+    }
+  ],
+  "matchRules": [
+    {
+      "id": "community.example.compat/example-model",
+      "match": {
+        "providerIds": ["local-example"],
+        "modelIdGlobs": ["Example*"]
+      },
+      "apply": {
+        "compatibilityProfileIds": ["community.example.compat/system-role-v1"]
+      },
+      "fieldClasses": ["request_compatibility"]
+    }
+  ],
+  "evidence": [],
+  "tombstones": [],
+  "extensions": {}
+}

@@ -3,6 +3,7 @@
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { formatHelp, isBlockedPiSelfUpdate, parseJouzuArgs, UsageError } from "./args.js";
+import { catalogStatus, formatCatalogStatus, validateCatalogFile } from "./catalog-command.js";
 import { createDoctorReport } from "./doctor.js";
 import { createJouzuHelpExtension } from "./help.js";
 import {
@@ -60,6 +61,25 @@ async function runCli(args: string[]): Promise<void> {
 		executable,
 		report: (message) => console.log(message),
 	});
+
+	if (parsed.kind === "catalog") {
+		if (parsed.operation === "status" || parsed.operation === "refresh") {
+			const status = catalogStatus(paths);
+			console.log(parsed.json ? JSON.stringify(status, null, 2) : formatCatalogStatus(status));
+			return;
+		}
+		if (!parsed.path) throw new UsageError(`catalog ${parsed.operation} requires a file path`);
+		const result = validateCatalogFile(parsed.path, parsed.operation === "conformance");
+		console.log(
+			parsed.json
+				? JSON.stringify(result, null, 2)
+				: result.valid
+					? "Model catalog is valid."
+					: `Model catalog is invalid: ${result.error?.message}`,
+		);
+		if (!result.valid) process.exitCode = 1;
+		return;
+	}
 
 	if (parsed.kind === "keybindings") {
 		if (parsed.operation === "status" || parsed.operation === "plan") {

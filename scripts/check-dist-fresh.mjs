@@ -43,7 +43,11 @@ function assertTreeFresh(sourceRoot, outputRoot, label) {
 }
 
 const src = walk(join(cli, "src")).filter((path) => path.endsWith(".ts"));
-assertFresh(src, join(cli, "dist", "cli.js"), "compiled CLI");
+for (const source of src) {
+	const relativePath = relative(join(cli, "src"), source).replace(/\.ts$/, ".js");
+	assertFresh([source], join(cli, "dist", relativePath), `compiled CLI ${relativePath}`);
+}
 assertFresh([join(root, "upstream", "pi.lock.json")], join(cli, "dist", "pi.lock.json"), "Pi lock");
 assertTreeFresh(join(cli, "profiles"), join(cli, "dist", "profiles"), "bundled profile");
+assertTreeFresh(join(cli, "catalog"), join(cli, "dist", "catalog"), "catalog schema");
 console.log("dist is fresh");

@@ -21,6 +21,13 @@ export type ParsedCommand =
 	| { kind: "version"; options: JouzuOptions }
 	| { kind: "help"; options: JouzuOptions }
 	| {
+			kind: "catalog";
+			options: JouzuOptions;
+			operation: "status" | "refresh" | "validate" | "conformance";
+			json: boolean;
+			path?: string;
+	  }
+	| {
 			kind: "self-update";
 			options: JouzuOptions;
 			operation: "status" | "check" | "apply" | "policy";
@@ -53,6 +60,26 @@ function readOptionValue(args: string[], index: number, option: string): { value
 	const value = args[index + 1];
 	if (value === undefined || value.length === 0) throw new UsageError(`${option} requires a value`);
 	return { value, next: index + 2 };
+}
+
+function parseCatalogCommand(options: JouzuOptions, args: string[]): ParsedCommand {
+	const [operation = "status", ...remaining] = args;
+	if (operation !== "status" && operation !== "refresh" && operation !== "validate" && operation !== "conformance") {
+		throw new UsageError('catalog requires "status", "refresh", "validate", or "conformance"');
+	}
+	if (operation === "validate" || operation === "conformance") {
+		const [path, ...extra] = remaining;
+		if (!path || extra.some((token) => token !== "--json") || extra.filter((token) => token === "--json").length > 1) {
+			throw new UsageError(`catalog ${operation} requires one file path and optional --json`);
+		}
+		return { kind: "catalog", options, operation, json: extra.includes("--json"), path };
+	}
+	let json = false;
+	for (const token of remaining) {
+		if (token !== "--json" || json) throw new UsageError(`unknown catalog ${operation} option: ${token}`);
+		json = true;
+	}
+	return { kind: "catalog", options, operation, json };
 }
 
 function parseSelfUpdateCommand(options: JouzuOptions, args: string[]): ParsedCommand {
@@ -164,6 +191,7 @@ export function parseJouzuArgs(args: string[]): ParsedCommand {
 		return { kind: "doctor", options, json };
 	}
 	if (command === "profile") return parseProfileCommand(options, rest);
+	if (command === "catalog") return parseCatalogCommand(options, rest);
 	if (command === "keybindings") return parseKeybindingsCommand(options, rest);
 	if (command === "self-update") return parseSelfUpdateCommand(options, rest);
 	if (command === "--version" || command === "-v") {
@@ -220,6 +248,10 @@ Usage:
   jouzu [Jouzu options] pi [Pi arguments...]
   jouzu [Jouzu options] -- [Pi arguments...]
   jouzu [Jouzu options] doctor [--json]
+  jouzu catalog status [--json]
+  jouzu catalog refresh [--json]
+  jouzu catalog validate <file> [--json]
+  jouzu catalog conformance <file> [--json]
   jouzu profile plan [--profile <core|ja>] [--json]
   jouzu profile apply [--profile <core|ja>]
   jouzu keybindings status [--json]
@@ -234,6 +266,7 @@ Usage:
 
 Commands:
   doctor        Show non-mutating runtime and isolation diagnostics
+  catalog       Inspect optional catalog setup or validate a catalog file
   profile plan  Preview safe Core/JA profile changes without writing
   profile apply Apply the selected profile with conflicts and backups
   keybindings   Inspect, apply, or reset Jouzu's Pi-compatible key defaults
