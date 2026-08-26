@@ -94,10 +94,12 @@ const PI_DEFAULT_IDENTITY =
 	"You are an expert coding assistant operating inside pi, a coding agent harness. You help users by reading files, executing commands, editing code, and writing new files.";
 const JOUZU_DEFAULT_IDENTITY =
 	"You are an expert coding assistant operating inside Jouzu, a coding-agent environment built on the Pi harness. You help users by reading files, executing commands, editing code, and writing new files.";
+export const JOUZU_USER_COMMUNICATION_GUIDANCE =
+	"When communicating with the user, be concise and clear. Do not invent acronyms or use unexplained jargon. Load the `jouzu-clear-writing` skill when drafting, revising, or auditing user-facing prose.";
 
 export function brandDefaultSystemPrompt(systemPrompt: string, customPrompt?: string): string {
 	if (customPrompt || !systemPrompt.startsWith(PI_DEFAULT_IDENTITY)) return systemPrompt;
-	return `${JOUZU_DEFAULT_IDENTITY}${systemPrompt.slice(PI_DEFAULT_IDENTITY.length)}`;
+	return `${JOUZU_DEFAULT_IDENTITY}\n\n${JOUZU_USER_COMMUNICATION_GUIDANCE}${systemPrompt.slice(PI_DEFAULT_IDENTITY.length)}`;
 }
 
 function fitPresentationText(text: string, width: number): string {

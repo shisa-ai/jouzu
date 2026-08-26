@@ -5,6 +5,7 @@ import {
 	createJouzuPresentationExtension,
 	detectBannerColorMode,
 	isInteractivePiStartup,
+	JOUZU_USER_COMMUNICATION_GUIDANCE,
 	renderBannerLines,
 	renderBrandGradient,
 	shouldClearInteractiveStartup,
@@ -56,7 +57,7 @@ function installExtension() {
 	return { handlers, commands };
 }
 
-test("brands only Pi's default identity and preserves its dynamic tool bullets", async () => {
+test("brands only Pi's default prompt, adds writing guidance, and preserves dynamic tool bullets", async () => {
 	const upstream = `You are an expert coding assistant operating inside pi, a coding agent harness. You help users by reading files, executing commands, editing code, and writing new files.
 
 Available tools:
@@ -65,14 +66,18 @@ Available tools:
 
 Guidelines:
 - Be concise in your responses`;
-	const expected = upstream.replace(
-		"operating inside pi, a coding agent harness",
-		"operating inside Jouzu, a coding-agent environment built on the Pi harness",
-	);
+	const expected = upstream
+		.replace(
+			"operating inside pi, a coding agent harness",
+			"operating inside Jouzu, a coding-agent environment built on the Pi harness",
+		)
+		.replace("\n\nAvailable tools:", `\n\n${JOUZU_USER_COMMUNICATION_GUIDANCE}\n\nAvailable tools:`);
 	assert.equal(brandDefaultSystemPrompt(upstream), expected);
 	assert.equal(brandDefaultSystemPrompt(upstream, "user-owned prompt"), upstream);
 	assert.equal(brandDefaultSystemPrompt("You are a reviewer."), "You are a reviewer.");
 	assert.match(expected, /Available tools:\n- read: Read file contents\n- bg_task:/);
+	assert.match(expected, /Do not invent acronyms or use unexplained jargon/);
+	assert.match(expected, /Load the `jouzu-clear-writing` skill/);
 
 	const { handlers } = installExtension();
 	const result = await handlers.get("before_agent_start")({

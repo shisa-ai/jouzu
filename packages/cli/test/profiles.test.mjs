@@ -62,8 +62,8 @@ test("bundled Core and JA profiles resolve exact ordered assets", () => {
 			"skills/jouzu-source-check/SKILL.md",
 		],
 	);
-	assert.equal(core.manifestSha256, "702cb820b6b9fd0fab1fe2ed21db7b01fd4a524a3d6cf0ef0ad2319575c3ac23");
-	assert.equal(ja.manifestSha256, "925a0af4ab085d33dda1c65343bde5d7491a7a8929ad46c23645b3314e37a6b7");
+	assert.equal(core.manifestSha256, "1c7487a7b4e926ad45e3350d9a41fd3a5049873101a0cc917ba3a097f33dfd13");
+	assert.equal(ja.manifestSha256, "8e84e97433dd1563069bd688a6fedde08147dcc86b41d2faa9d955de3ae2116a");
 });
 
 test("bundled skills declare bounded public workflows", () => {
@@ -75,10 +75,10 @@ test("bundled skills declare bounded public workflows", () => {
 		.find((asset) => asset.target === "skills/jouzu-source-check/SKILL.md")
 		?.bytes.toString("utf8");
 	assert.match(clearWriting ?? "", /^---\nname: jouzu-clear-writing\n/);
-	assert.match(
-		clearWriting ?? "",
-		/Preserve facts, requirements, identifiers, commands, paths, citations, and quoted text\./,
-	);
+	assert.match(clearWriting ?? "", /\*\*Draft:\*\* create the minimum text/);
+	assert.match(clearWriting ?? "", /Do not invent acronyms or abbreviations\./);
+	assert.match(clearWriting ?? "", /Put conditions before actions/);
+	assert.match(clearWriting ?? "", /does not claim compliance with ASD-STE100/);
 	assert.match(sourceCheck ?? "", /^---\nname: jouzu-source-check\n/);
 	assert.match(
 		sourceCheck ?? "",

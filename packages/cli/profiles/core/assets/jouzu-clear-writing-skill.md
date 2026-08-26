@@ -1,41 +1,118 @@
 ---
 name: jouzu-clear-writing
-description: Revise user-facing technical prose for clarity and brevity without changing facts. Use when drafting or editing documentation, README text, release notes, issues, prompts, CLI help, diagnostics, or a long user-facing response.
+description: Draft, revise, or audit user-facing technical prose for clarity and brevity without changing facts. Use for documentation, README text, release notes, issues, prompts, tool descriptions, CLI help, diagnostics, or a long user-facing response.
 license: Apache-2.0
 ---
 
 # Clear Technical Writing
 
-Write for the intended reader. Preserve facts, requirements, identifiers, commands, paths, citations, and quoted text.
+Write for the intended reader and the task they need to complete. Preserve facts, requirements, uncertainty, author intent, identifiers, commands, paths, citations, and quoted text.
 
-## Workflow
+## Priorities
 
-1. Identify the reader and the action or decision the text must support.
-2. Mark content that must remain exact: code, commands, paths, API names, numbers, dates, quotations, and externally sourced claims.
-3. Remove sentences that state no fact, decision, reason, instruction, or limitation.
-4. Replace vague or promotional wording with measurable facts.
-5. Re-read the result for unsupported claims, changed meaning, and unexplained terminology.
+Apply these in order:
 
-## Editing rules
+1. Follow the user's request and the target project's language, terminology, format, and style rules.
+2. Preserve factual and technical meaning, including scope, conditions, modality, and uncertainty.
+3. Help the reader find, understand, and act on the information.
+4. Apply the structure and editing rules below.
 
-- Start with the information the reader needs. Delete introductions that describe the document or announce that an explanation follows.
-- State facts directly. Remove editorial adjectives, reassurance, dramatic framing, rhetorical questions, and imagined objections.
-- Remove filler intensifiers and hedges. If uncertainty matters, name the unknown, confidence, evidence gap, or condition.
+Do not enforce a style rule when it would make the text less accurate or harder for the intended reader to use.
+
+## Choose the mode
+
+- **Draft:** create the minimum text that supports the reader's task.
+- **Revise:** improve supplied prose while retaining its material claims, structure requirements, and voice.
+- **Audit:** report concrete findings and proposed changes without rewriting unless requested.
+
+Infer the mode from the request. Do not announce it unless the distinction affects the result.
+
+## Ground the content
+
+Before writing technical documentation:
+
+1. Read the relevant implementation, tests, schemas, command help, and existing documentation.
+2. Separate implemented behavior from proposals, recommendations, and unknowns.
+3. Identify the reader, what they already know, and the action or decision the text must support.
+4. Mark content that must remain exact: code, commands, paths, API names, UI labels, numbers, dates, quotations, and externally sourced claims.
+5. Verify examples and commands in proportion to the cost of an error. State what was not verified.
+
+Do not infer product behavior from a plan when code or runtime evidence is available.
+
+## Select the structure
+
+Choose the smallest structure that fits the reader's need:
+
+- **Overview:** what the product or concept is, who it is for, and its boundaries.
+- **Tutorial:** a guided learning sequence with a working outcome.
+- **Procedure or how-to:** prerequisites, ordered actions, expected result, and recovery.
+- **Reference:** exact syntax, fields, defaults, constraints, and examples.
+- **Explanation:** why behavior exists, how parts relate, and relevant trade-offs.
+- **Troubleshooting:** symptom, likely cause, checks, fix, and verification.
+- **Runbook, migration, or release note:** affected scope, preparation, ordered change, validation, rollback, and remaining limitations.
+
+Lead with the answer, outcome, recommendation, or constraint the reader needs. Put prerequisites, warnings, and conditions before the actions they govern. Keep caveats next to the relevant claim or step.
+
+## Write actions and explanations
+
+- Prefer active voice when the actor matters. Name the actor when a passive sentence would hide responsibility.
+- Address the reader as “you” when giving direct guidance. Start procedural steps with an imperative verb.
+- Put one action in each numbered step. Split a step when actions can fail independently or require separate verification.
+- Keep one main topic in each paragraph. Use numbered lists for sequences and bullets for unordered sets.
+- Use tables only for genuine multi-column comparison or structured data.
+- Preserve modality. Do not turn “may”, “can”, “should”, or a conditional claim into a fact or requirement.
+- Put conditions before actions when the reader must know the condition to act safely or correctly.
+- Stop editing when the text supports the task and further changes would only impose a house voice.
+
+Do not impose fixed sentence-length, tense, vocabulary, or spelling rules across all prose. Shorten or split a sentence when its structure is hard to parse, not to satisfy an arbitrary count.
+
+## Use stable terminology
+
+- Use one term for one concept. Do not rotate synonyms when they could imply different objects or actions.
+- Do not invent acronyms or abbreviations. For an established acronym the reader may not know, write the full term on first use and use the acronym only when repetition makes it useful.
+- Explain necessary jargon at first use or link to a precise definition. Replace jargon that adds no technical precision.
+- Keep necessary domain terms, product names, API names, and terms of art. Do not replace them with vague plain-language substitutes.
+- Make pronoun references unambiguous. Repeat the noun when “it”, “this”, or “they” could refer to more than one thing.
+- Prefer concrete verbs over nominalized actions: describe what acts and what changes.
+
+## Format technical content
+
+- Keep code, commands, paths, URLs, identifiers, log text, UI labels, and quoted source language exact unless the task changes them.
+- Format literals according to the target repository's conventions.
+- Introduce examples with their purpose. Use placeholders that are visibly distinct from literal values and define them once.
+- Use descriptive link text that makes sense without surrounding prose. Avoid directional references such as “above” or “on the left” when a heading or label is available.
+- Do not rely on color, position, icons, or images as the only carrier of meaning.
+- Use explicit dates, versions, counts, or bounded conditions instead of “currently”, “recently”, “new”, or “soon”.
+- Preserve the language requested by the user. Avoid idioms and culture-specific metaphors when writing for a global audience.
+
+## Remove filler and unsupported emphasis
+
+- Delete introductions that only announce the document or say an explanation follows.
+- Remove editorial adjectives, reassurance, dramatic framing, rhetorical questions, and imagined objections.
+- Remove filler intensifiers and hedge stacks. If uncertainty matters, name the unknown, confidence, evidence gap, or condition.
 - Replace vague quantities with counts, ranges, identifiers, or `unknown`.
-- Replace time-relative words such as “currently” and “recently” with a version, date, or bounded condition.
-- Cite attributed claims. Delete unsupported claims presented as consensus or best practice.
-- Prefer concrete verbs and nouns. Avoid marketing language and abstractions that do not describe behavior.
-- Collapse repeated summaries, decorative conclusions, padded transitions, parallel triplets, and dramatic sentence fragments.
-- Use headings to organize facts, not to repeat the following paragraph. Prefer noun phrases or direct imperatives.
+- Cite attributed claims. Delete unsupported claims presented as consensus, quality, security, performance, cost, or best practice.
+- Prefer concrete verbs and nouns over marketing language and abstractions that do not describe behavior.
+- Collapse repeated summaries, decorative conclusions, padded transitions, forced parallel triplets, and dramatic sentence fragments.
+- Use headings to organize information, not to repeat the following paragraph. Prefer sentence-case noun phrases or direct imperatives.
 - Use a list only when its items are distinct. Do not split one claim into multiple bullets for rhythm.
-- Explain specialized terms that the intended reader may not know. Do not replace precise technical terms with vague synonyms.
-- Keep code, commands, paths, URLs, identifiers, log text, and quoted source language byte-accurate unless the task explicitly changes them.
-- Preserve the language requested by the user and the conventions of the target repository.
 
 ## Boundaries
 
-Do not apply style edits to quoted material or source text. When analyzing rhetoric, label the source's wording instead of rewriting it. Do not improve cadence by adding claims, certainty, benefits, or scope that the evidence does not support.
+Do not rewrite quoted material, legal text, source text, code, commands, identifiers, logs, or error messages as a style exercise. When analyzing rhetoric, label the source's wording instead of adopting or rewriting it. Do not add claims, certainty, benefits, causes, frequency, or scope to improve cadence.
+
+This skill does not claim compliance with ASD-STE100 or another controlled-language standard. Apply useful ambiguity-reduction principles without reproducing a restricted dictionary or forcing aerospace procedure rules onto ordinary prose.
 
 ## Final pass
 
-Confirm that each sentence carries at least one of these: a fact, number, path, command, decision, reason, instruction, limitation, or open question. Confirm that the revision retains every material fact and does not hide uncertainty.
+Check the result silently:
+
+1. Is the answer or required action visible early?
+2. Can the reader distinguish facts, inferences, recommendations, requirements, and uncertainty?
+3. Does each paragraph support one reader need?
+4. Are terminology, actors, conditions, prerequisites, risks, and exceptions unambiguous?
+5. Are commands, labels, identifiers, links, examples, dates, and numbers exact and usable?
+6. Did the revision preserve every material claim and qualifier?
+7. Can any sentence be removed without losing meaning or usability? Remove it.
+
+For a normal draft or revision, return the resulting text without a style lecture. For an audit, list findings by location, explain the reader impact, and propose the smallest correction. If the input already supports the reader's task, leave it unchanged.

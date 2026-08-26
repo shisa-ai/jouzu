@@ -23,7 +23,7 @@ jz profile plan --profile ja
 
 Locale, terminal settings, repository text, and branding never select JA automatically.
 
-Core and JA install the on-demand `jouzu-core`, `jouzu-clear-writing`, and `jouzu-source-check` skills plus the `jouzu-review` prompt. The writing skill revises user-facing prose without changing facts. Source Check performs database-free source analysis, verification, counterevidence search, and synthesis.
+Core and JA install the on-demand `jouzu-core`, `jouzu-clear-writing`, and `jouzu-source-check` skills plus the `jouzu-review` prompt. The writing skill drafts, revises, or audits user-facing prose while preserving facts and terminology. Source Check performs database-free source analysis, verification, counterevidence search, and synthesis. With Pi's exact default system prompt, Jouzu asks the agent to communicate concisely and clearly, avoid invented acronyms and unexplained jargon, and load the writing skill for user-facing prose; custom system prompts remain unchanged.
 
 Profile planning does not write. Application detects user-file conflicts, retains backups for managed updates/deletions, and never prunes unknown files. Existing unsupported CP932/Shift-JIS profile targets are left unchanged.
 

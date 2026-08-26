@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "ja",
-  "version": 2,
+  "version": 3,
   "extends": "core",
   "assets": [
     {

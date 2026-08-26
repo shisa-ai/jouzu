@@ -47,7 +47,7 @@ test("profile planning is non-mutating and apply converges", () => {
 		assert.deepEqual(plan, {
 			schemaVersion: 1,
 			profile: "ja",
-			profileVersion: 2,
+			profileVersion: 3,
 			manifestSha256: profile.manifestSha256,
 			agentDir: fixture.paths.agentDir,
 			actions: [
@@ -194,7 +194,7 @@ test("managed updates are backed up before atomic replacement", () => {
 		const replacement = Buffer.from("updated managed asset\n");
 		const updated = {
 			...core,
-			version: 2,
+			version: 4,
 			manifestSha256: "b".repeat(64),
 			assets: core.assets.map((asset, index) =>
 				index === 0 ? { ...asset, bytes: replacement, sha256: hash(replacement) } : asset,
@@ -220,7 +220,7 @@ test("stale state after an interrupted asset update converges without overwritin
 		const replacement = Buffer.from("replacement asset\n");
 		const updated = {
 			...core,
-			version: 2,
+			version: 4,
 			manifestSha256: "a".repeat(64),
 			assets: core.assets.map((asset, index) =>
 				index === 0 ? { ...asset, bytes: replacement, sha256: hash(replacement) } : asset,
@@ -235,7 +235,7 @@ test("stale state after an interrupted asset update converges without overwritin
 		);
 		applyProfile(updated, fixture.paths, "0.1.0");
 		assert.equal(readFileSync(target, "utf8"), "replacement asset\n");
-		assert.equal(readProfileState(fixture.paths.profileStatePath).profileVersion, 2);
+		assert.equal(readProfileState(fixture.paths.profileStatePath).profileVersion, 4);
 	} finally {
 		cleanup(fixture.root);
 	}
