@@ -4,8 +4,13 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { visibleWidth } from "@earendil-works/pi-tui";
-
-import { createJouzuModelPicker, ModelPickerComponent } from "../dist/model-picker.js";
+import { parseAndValidateModelCatalog } from "../dist/model-catalog.js";
+import {
+	catalogModelReference,
+	catalogPickerModel,
+	createJouzuModelPicker,
+	ModelPickerComponent,
+} from "../dist/model-picker.js";
 import { deriveProjectKey, ModelPickerStore } from "../dist/model-picker-state.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
 import { createSessionUiStyles } from "../dist/session-ui/index.js";
@@ -15,6 +20,51 @@ const identityTheme = {
 	bg: (_role, value) => value,
 	bold: (value) => value,
 };
+
+test("active catalog metadata qualifies matching Pi models without changing local fallbacks", () => {
+	const catalog = parseAndValidateModelCatalog(
+		readFileSync(join(import.meta.dirname, "..", "catalog", "fixtures", "account-snapshot-v1.json"), "utf8"),
+		{ remote: true },
+	);
+	const matching = catalogPickerModel(
+		{
+			provider: "ai.example.gateway",
+			id: "example-model",
+			name: "Pi label",
+			contextWindow: 1,
+			maxTokens: 1,
+		},
+		catalog,
+	);
+	assert.deepEqual(
+		{
+			catalogId: matching.catalogId,
+			offeringId: matching.offeringId,
+			name: matching.name,
+			contextWindow: matching.contextWindow,
+			maxTokens: matching.maxTokens,
+			available: matching.available,
+		},
+		{
+			catalogId: "ai.example.test",
+			offeringId: "ai.example.gateway/example-model",
+			name: "Example Model",
+			contextWindow: 131072,
+			maxTokens: 32768,
+			available: true,
+		},
+	);
+	assert.deepEqual(catalogModelReference("ai.example.gateway", "example-model", catalog), {
+		catalogId: "ai.example.test",
+		offeringId: "ai.example.gateway/example-model",
+		provider: "ai.example.gateway",
+		modelId: "example-model",
+	});
+	assert.deepEqual(catalogModelReference("local", "unlisted", catalog), {
+		provider: "local",
+		modelId: "unlisted",
+	});
+});
 
 function stripSgr(value) {
 	return value

@@ -539,10 +539,20 @@ export function validateModelCatalog(value: unknown, options: ValidateCatalogOpt
 		}
 	}
 
+	const offeringPairs = new Set<string>();
 	for (let index = 0; index < arrays.modelOfferings.length; index += 1) {
 		const offering = arrays.modelOfferings[index];
-		stringAt(offering, "modelId", `$.modelOfferings[${index}]`);
+		const modelId = stringAt(offering, "modelId", `$.modelOfferings[${index}]`);
 		const providerId = stringAt(offering, "providerId", `$.modelOfferings[${index}]`);
+		const pair = `${providerId}\0${modelId}`;
+		if (offeringPairs.has(pair)) {
+			throw new ModelCatalogError(
+				"duplicate_identity",
+				`$.modelOfferings[${index}]`,
+				"providerId/modelId pair must be unique within one catalog",
+			);
+		}
+		offeringPairs.add(pair);
 		requireReference(providerId, ids.providers, `$.modelOfferings[${index}].providerId`, includeSet.has("providers"));
 		if (offering.availability !== undefined) {
 			validateAvailability(offering.availability, `$.modelOfferings[${index}].availability`);

@@ -92,24 +92,30 @@ function contextFit(model: PickerModel, activeContextTokens: number | null | und
 	return activeContextTokens <= model.contextWindow - outputReserve ? "fits" : "too-small";
 }
 
+function legacyReferenceKey(reference: ModelReference): string {
+	return `legacy\0${reference.provider}\0${reference.modelId}`;
+}
+
 function resolvedModels(options: BuildPickerRowsOptions): Map<string, PickerModel> {
 	const models = new Map<string, PickerModel>();
 	for (const model of options.models) {
-		models.set(modelReferenceKey(model), {
+		const resolved = {
 			...model,
 			display: {
 				provider: sanitizeTerminalText(model.provider),
 				modelId: sanitizeTerminalText(model.modelId),
 				name: sanitizeTerminalText(model.name),
 			},
-		});
+		};
+		models.set(modelReferenceKey(model), resolved);
+		const legacyKey = legacyReferenceKey(model);
+		if (!models.has(legacyKey)) models.set(legacyKey, resolved);
 	}
 	for (const favorite of options.state.favorites) {
 		const key = modelReferenceKey(favorite);
 		if (!models.has(key)) {
 			models.set(key, {
-				provider: favorite.provider,
-				modelId: favorite.modelId,
+				...favorite,
 				name: favorite.modelId,
 				available: false,
 				display: {
@@ -132,10 +138,10 @@ export function buildPickerRows(options: BuildPickerRowsOptions): PickerRow[] {
 	const projectDefault = options.state.defaults.projects[options.projectKey];
 	const add = (reference: ModelReference | undefined, section: PickerSection, recentScope?: "project" | "global") => {
 		if (!reference) return;
-		const key = modelReferenceKey(reference);
-		if (seen.has(key)) return;
-		const model = models.get(key);
+		const model = models.get(modelReferenceKey(reference));
 		if (!model) return;
+		const key = modelReferenceKey(model);
+		if (seen.has(key)) return;
 		seen.add(key);
 		rows.push({
 			section,

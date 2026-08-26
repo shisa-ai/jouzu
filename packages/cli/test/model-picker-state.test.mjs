@@ -11,6 +11,8 @@ import {
 	MODEL_PICKER_RECENT_LIMIT,
 	ModelPickerStateError,
 	ModelPickerStore,
+	modelReferenceKey,
+	modelReferencesEqual,
 	previousModelStack,
 	projectDefaultAppliesAtStartup,
 } from "../dist/model-picker-state.js";
@@ -46,6 +48,35 @@ test("missing state is empty and dispatch updates bounded project and global MRU
 		assert.equal(state.recents.global[0].modelId, "model-5");
 		assert.equal(state.recents.global[0].useCount, 2);
 		assert.equal(readFileSync(join(paths.stateDir, "model-picker.json"), "utf8").includes(root), false);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("catalog-qualified references persist and remain distinct across catalogs", () => {
+	const { root, paths } = context();
+	try {
+		const store = new ModelPickerStore(paths);
+		const one = {
+			catalogId: "ai.example.one",
+			offeringId: "offering-1",
+			provider: "shared",
+			modelId: "same-model",
+		};
+		const two = { ...one, catalogId: "ai.example.two", offeringId: "offering-2" };
+		store.toggleFavorite(one, new Date("2026-08-23T00:00:00.000Z"));
+		store.toggleFavorite(two, new Date("2026-08-23T00:00:01.000Z"));
+		assert.deepEqual(store.load().state.favorites, [
+			{ ...one, addedAt: "2026-08-23T00:00:00.000Z" },
+			{ ...two, addedAt: "2026-08-23T00:00:01.000Z" },
+		]);
+		assert.notEqual(modelReferenceKey(one), modelReferenceKey(two));
+		assert.equal(modelReferencesEqual(one, two), false);
+		assert.equal(modelReferencesEqual(one, { provider: "shared", modelId: "same-model" }), true);
+		assert.throws(
+			() => store.toggleFavorite({ catalogId: "ai.example.one", provider: "shared", modelId: "same-model" }),
+			ModelPickerStateError,
+		);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
@@ -110,17 +141,17 @@ test("favorites are one global list with no project scope", () => {
 	}
 });
 
-test("schema 1 and 2 state migrate with the Recent filter", () => {
+test("schema 1, 2, and 3 state migrate with legacy model references", () => {
 	const { root, paths } = context();
 	try {
 		mkdirSync(paths.stateDir, { recursive: true });
-		for (const schemaVersion of [1, 2]) {
+		for (const schemaVersion of [1, 2, 3]) {
 			writeFileSync(
 				join(paths.stateDir, "model-picker.json"),
 				`${JSON.stringify({
 					schemaVersion,
 					favorites: [],
-					...(schemaVersion === 2 ? { defaults: { projects: {} } } : {}),
+					...(schemaVersion >= 2 ? { defaults: { projects: {} } } : {}),
 					recents: { global: [], projects: {} },
 				})}\n`,
 			);
@@ -138,7 +169,7 @@ test("an unknown saved filter falls back to Recent without discarding picker sta
 		writeFileSync(
 			join(paths.stateDir, "model-picker.json"),
 			`${JSON.stringify({
-				schemaVersion: 3,
+				schemaVersion: 4,
 				filter: "retired",
 				favorites: [{ provider: "p", modelId: "m", addedAt: "2026-08-23T00:00:00.000Z" }],
 				defaults: { projects: {} },

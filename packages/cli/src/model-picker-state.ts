@@ -6,7 +6,7 @@ import type { JouzuPaths } from "./paths.js";
 import { ensurePrivateDirectory, writeFilePrivateAtomic } from "./private-fs.js";
 import { acquireStateLock, type StateLockInspection } from "./state-lock.js";
 
-export const MODEL_PICKER_SCHEMA_VERSION = 3;
+export const MODEL_PICKER_SCHEMA_VERSION = 4;
 export const MODEL_PICKER_RECENT_LIMIT = 12;
 export const MODEL_PICKER_HISTORY_LIMIT = 8;
 
@@ -14,6 +14,8 @@ export const MODEL_PICKER_FILTERS = ["recent", "favorite", "all"] as const;
 export type ModelPickerFilter = (typeof MODEL_PICKER_FILTERS)[number];
 
 export interface ModelReference {
+	catalogId?: string;
+	offeringId?: string;
 	provider: string;
 	modelId: string;
 }
@@ -28,7 +30,7 @@ export interface RecentRecord extends ModelReference {
 }
 
 export interface ModelPickerState {
-	schemaVersion: 3;
+	schemaVersion: 4;
 	filter: ModelPickerFilter;
 	favorites: FavoriteRecord[];
 	defaults: {
@@ -53,14 +55,24 @@ export class ModelPickerStateError extends Error {
 	}
 }
 
+function isQualifiedReference(
+	reference: ModelReference,
+): reference is ModelReference & { catalogId: string; offeringId: string } {
+	return reference.catalogId !== undefined && reference.offeringId !== undefined;
+}
+
 export function modelReferenceKey(reference: ModelReference): string {
-	return `${reference.provider}\0${reference.modelId}`;
+	return isQualifiedReference(reference)
+		? `catalog\0${reference.catalogId}\0${reference.offeringId}`
+		: `legacy\0${reference.provider}\0${reference.modelId}`;
 }
 
 export function modelReferencesEqual(left: ModelReference | undefined, right: ModelReference | undefined): boolean {
-	return (
-		left !== undefined && right !== undefined && left.provider === right.provider && left.modelId === right.modelId
-	);
+	if (left === undefined || right === undefined) return false;
+	if (isQualifiedReference(left) && isQualifiedReference(right)) {
+		return left.catalogId === right.catalogId && left.offeringId === right.offeringId;
+	}
+	return left.provider === right.provider && left.modelId === right.modelId;
 }
 
 export function emptyModelPickerState(): ModelPickerState {
@@ -96,15 +108,27 @@ function assertValidReference(reference: ModelReference): void {
 	if (!validIdentifier(reference.provider) || !validIdentifier(reference.modelId)) {
 		throw new ModelPickerStateError("model reference requires bounded provider and modelId strings");
 	}
+	const hasCatalog = reference.catalogId !== undefined;
+	const hasOffering = reference.offeringId !== undefined;
+	if (
+		hasCatalog !== hasOffering ||
+		(hasCatalog && (!validIdentifier(reference.catalogId) || !validIdentifier(reference.offeringId)))
+	) {
+		throw new ModelPickerStateError("catalogId and offeringId must be bounded strings that appear together");
+	}
 }
 
 function parseReference(value: unknown): ModelReference {
 	if (!value || typeof value !== "object") throw new ModelPickerStateError("model reference must be an object");
-	const record = value as { provider?: unknown; modelId?: unknown };
-	if (!validIdentifier(record.provider) || !validIdentifier(record.modelId)) {
-		throw new ModelPickerStateError("model reference requires bounded provider and modelId strings");
-	}
-	return { provider: record.provider, modelId: record.modelId };
+	const record = value as { catalogId?: unknown; offeringId?: unknown; provider?: unknown; modelId?: unknown };
+	const reference: ModelReference = {
+		provider: record.provider as string,
+		modelId: record.modelId as string,
+		...(record.catalogId !== undefined ? { catalogId: record.catalogId as string } : {}),
+		...(record.offeringId !== undefined ? { offeringId: record.offeringId as string } : {}),
+	};
+	assertValidReference(reference);
+	return reference;
 }
 
 function parseRecent(value: unknown): RecentRecord {
@@ -128,6 +152,7 @@ function parseState(value: unknown): ModelPickerState {
 	if (
 		record.schemaVersion !== 1 &&
 		record.schemaVersion !== 2 &&
+		record.schemaVersion !== 3 &&
 		record.schemaVersion !== MODEL_PICKER_SCHEMA_VERSION
 	) {
 		throw new ModelPickerStateError(`unsupported model picker state schema: ${String(record.schemaVersion)}`);

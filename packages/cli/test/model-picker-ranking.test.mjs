@@ -92,6 +92,54 @@ test("Recent and Favorite filters preserve global favorite order and unavailable
 	assert.equal(favorites[0].model.available, false);
 });
 
+test("catalog-qualified identities prevent cross-catalog collisions while legacy pairs still resolve", () => {
+	const catalogModels = [
+		{
+			catalogId: "ai.example.one",
+			offeringId: "offering-1",
+			provider: "shared",
+			modelId: "same-model",
+			name: "One",
+			available: true,
+		},
+		{
+			catalogId: "ai.example.two",
+			offeringId: "offering-2",
+			provider: "shared",
+			modelId: "same-model",
+			name: "Two",
+			available: true,
+		},
+	];
+	const catalogState = emptyModelPickerState();
+	catalogState.favorites = catalogModels.map((model, index) => ({
+		catalogId: model.catalogId,
+		offeringId: model.offeringId,
+		provider: model.provider,
+		modelId: model.modelId,
+		addedAt: `2026-08-23T00:00:0${index}.000Z`,
+	}));
+	const favorites = buildPickerRows({ models: catalogModels, state: catalogState, projectKey, filter: "favorite" });
+	assert.deepEqual(
+		favorites.map((row) => [row.model.catalogId, row.model.offeringId, row.model.available]),
+		[
+			["ai.example.one", "offering-1", true],
+			["ai.example.two", "offering-2", true],
+		],
+	);
+
+	catalogState.recents.global = [
+		{
+			provider: "shared",
+			modelId: "same-model",
+			lastUsedAt: "2026-08-23T00:01:00.000Z",
+			useCount: 1,
+		},
+	];
+	const legacy = buildPickerRows({ models: catalogModels, state: catalogState, projectKey });
+	assert.equal(legacy[0].model.catalogId, "ai.example.one");
+});
+
 test("typed query ranks exact provider identity before proxy-provider IDs and recency", () => {
 	const rows = buildPickerRows({
 		models,

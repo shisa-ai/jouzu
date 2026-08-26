@@ -88,6 +88,16 @@ test("strict parsing rejects duplicate keys, unsafe references, and credential f
 			),
 		(error) => error instanceof ModelCatalogError && error.code === "credential_material",
 	);
+	assert.throws(
+		() =>
+			parseAndValidateModelCatalog(
+				invalid(base, (document) => {
+					document.modelOfferings.push({ ...document.modelOfferings[0], id: "another-offering" });
+				}),
+				{ remote: true },
+			),
+		(error) => error instanceof ModelCatalogError && error.code === "duplicate_identity",
+	);
 });
 
 test("account scope, included classes, limits, and availability fail closed", () => {

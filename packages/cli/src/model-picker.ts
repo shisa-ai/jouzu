@@ -1,5 +1,7 @@
 import type { ExtensionContext, InlineExtension, KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
 import { type Focusable, Input, matchesKey, type TUI } from "@earendil-works/pi-tui";
+import type { CatalogModelOffering, ModelCatalogDocument } from "./model-catalog.js";
+import { loadActiveModelCatalog } from "./model-catalog-sync.js";
 import { buildPickerRows, type PickerFilter, type PickerModel, type PickerRow } from "./model-picker-ranking.js";
 import {
 	deriveProjectKey,
@@ -420,25 +422,55 @@ export interface JouzuModelPickerIntegration {
 	handleScopedModelsCommand(): Promise<boolean>;
 }
 
-function modelReference(model: PiModel | undefined): ModelReference | undefined {
-	return model ? { provider: model.provider, modelId: model.id } : undefined;
+function catalogOffering(
+	catalog: ModelCatalogDocument | undefined,
+	provider: string,
+	modelId: string,
+): CatalogModelOffering | undefined {
+	return catalog?.modelOfferings.find((offering) => offering.providerId === provider && offering.modelId === modelId);
+}
+
+export function catalogModelReference(
+	provider: string,
+	modelId: string,
+	catalog?: ModelCatalogDocument,
+): ModelReference {
+	const offering = catalogOffering(catalog, provider, modelId);
+	return {
+		...(offering && catalog ? { catalogId: catalog.catalogId, offeringId: offering.id } : {}),
+		provider,
+		modelId,
+	};
+}
+
+function modelReference(model: PiModel | undefined, catalog?: ModelCatalogDocument): ModelReference | undefined {
+	return model ? catalogModelReference(model.provider, model.id, catalog) : undefined;
 }
 
 function hasConversationEntries(entries: readonly { type: string }[]): boolean {
 	return entries.some((entry) => ["message", "compaction", "branch_summary", "custom_message"].includes(entry.type));
 }
 
-function pickerModels(ctx: ExtensionContext): PickerModel[] {
-	const models =
-		ctx.scopedModels.length > 0 ? ctx.scopedModels.map(({ model }) => model) : ctx.modelRegistry.getAvailable();
-	return models.map((model) => ({
+export function catalogPickerModel(
+	model: Pick<PiModel, "provider" | "id" | "name" | "contextWindow" | "maxTokens">,
+	catalog?: ModelCatalogDocument,
+): PickerModel {
+	const offering = catalogOffering(catalog, model.provider, model.id);
+	return {
+		...(offering && catalog ? { catalogId: catalog.catalogId, offeringId: offering.id } : {}),
 		provider: model.provider,
 		modelId: model.id,
-		name: model.name,
-		contextWindow: model.contextWindow,
-		maxTokens: model.maxTokens,
-		available: true,
-	}));
+		name: offering?.name ?? model.name,
+		contextWindow: offering?.limits?.contextWindow ?? model.contextWindow,
+		maxTokens: offering?.limits?.maxOutputTokens ?? model.maxTokens,
+		available: offering?.availability?.status !== "unavailable",
+	};
+}
+
+function pickerModels(ctx: ExtensionContext, catalog?: ModelCatalogDocument): PickerModel[] {
+	const models =
+		ctx.scopedModels.length > 0 ? ctx.scopedModels.map(({ model }) => model) : ctx.modelRegistry.getAvailable();
+	return models.map((model) => catalogPickerModel(model, catalog));
 }
 
 export function createJouzuModelPicker(
@@ -447,6 +479,13 @@ export function createJouzuModelPicker(
 ): JouzuModelPickerIntegration {
 	const store = new ModelPickerStore(paths);
 	const surface = new JouzuPaletteSurfaceHost();
+	let catalog: ModelCatalogDocument | undefined;
+	let catalogWarning: string | undefined;
+	try {
+		catalog = loadActiveModelCatalog(paths);
+	} catch (error) {
+		catalogWarning = `Cached model catalog was ignored: ${error instanceof Error ? error.message : String(error)}`;
+	}
 	let activeCtx: ExtensionContext | undefined;
 	let state: ModelPickerState = emptyModelPickerState();
 	let projectKey = "";
@@ -469,7 +508,11 @@ export function createJouzuModelPicker(
 			stateWarningShown = true;
 			ctx.ui.notify(loaded.warning, "warning");
 		}
-		const current = modelReference(ctx.model);
+		if (catalogWarning && !stateWarningShown) {
+			stateWarningShown = true;
+			ctx.ui.notify(catalogWarning, "warning");
+		}
+		const current = modelReference(ctx.model, catalog);
 		previous = previousModelStack(ctx.sessionManager.getBranch(), current);
 		pendingDispatch = current;
 	};
@@ -489,7 +532,7 @@ export function createJouzuModelPicker(
 				)
 					return;
 				const reference = state.defaults.projects[projectKey];
-				if (!reference || modelReferencesEqual(reference, modelReference(ctx.model))) return;
+				if (!reference || modelReferencesEqual(reference, modelReference(ctx.model, catalog))) return;
 				const model = ctx.modelRegistry.find(reference.provider, reference.modelId);
 				if (!model) {
 					ctx.ui.notify(`Project default is unavailable: ${reference.provider}/${reference.modelId}`, "warning");
@@ -511,18 +554,18 @@ export function createJouzuModelPicker(
 			});
 			pi.on("model_select", (event, ctx) => {
 				activeCtx = ctx;
-				const old = modelReference(event.previousModel);
+				const old = modelReference(event.previousModel, catalog);
 				if (old) {
 					previous = [old, ...previous.filter((reference) => !modelReferencesEqual(reference, old))].slice(
 						0,
 						MODEL_PICKER_HISTORY_LIMIT,
 					);
 				}
-				pendingDispatch = modelReference(event.model);
+				pendingDispatch = modelReference(event.model, catalog);
 			});
 			pi.on("before_provider_request", (_event, ctx) => {
 				activeCtx = ctx;
-				const dispatched = modelReference(ctx.model);
+				const dispatched = modelReference(ctx.model, catalog);
 				if (!dispatched || !pendingDispatch || !modelReferencesEqual(dispatched, pendingDispatch)) return;
 				try {
 					state = store.recordDispatch(dispatched, projectKey);
@@ -557,10 +600,10 @@ export function createJouzuModelPicker(
 					initialFilter: state.filter,
 					getRows: (query, filter) =>
 						buildPickerRows({
-							models: pickerModels(ctx),
+							models: pickerModels(ctx, catalog),
 							state,
 							projectKey,
-							current: modelReference(ctx.model),
+							current: modelReference(ctx.model, catalog),
 							previous,
 							query,
 							filter,
@@ -604,10 +647,10 @@ export function createJouzuModelPicker(
 			return true;
 		}
 		const favoriteRows = buildPickerRows({
-			models: pickerModels(ctx),
+			models: pickerModels(ctx, catalog),
 			state,
 			projectKey,
-			current: modelReference(ctx.model),
+			current: modelReference(ctx.model, catalog),
 			filter: "favorite",
 			activeContextTokens: ctx.getContextUsage()?.tokens,
 		});
@@ -626,7 +669,7 @@ export function createJouzuModelPicker(
 			);
 			return true;
 		}
-		const current = modelReference(ctx.model);
+		const current = modelReference(ctx.model, catalog);
 		const currentIndex = candidates.findIndex((row) => modelReferencesEqual(row.model, current));
 		if (candidates.length === 1 && currentIndex === 0) {
 			ctx.ui.notify("Only one favorite model is available.", "info");
