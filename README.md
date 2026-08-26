@@ -122,6 +122,15 @@ The import rejects symbolic links, non-regular files, oversized files, and files
 
 Jouzu does not require a remote model catalog. With no endpoint configured, it makes no catalog request and continues using Pi's effective model inventory plus local `models.json` configuration. `jouzu catalog status` and `jouzu catalog refresh` report `unconfigured` and exit successfully in that state.
 
+The initial explicit pilot uses `JOUZU_MODEL_CATALOG_URL` and an optional `JOUZU_MODEL_CATALOG_TOKEN`. The URL must use HTTPS except for localhost development; the token is sent only as an authorization header and is not written to catalog cache or diagnostics. Refresh uses ETag/`304`, validates complete bytes before activation, partitions private cache by account, and keeps the active last-known-good catalog on network or validation failure. Inspect with:
+
+```bash
+jouzu catalog status
+jouzu catalog refresh
+```
+
+A structurally valid large catalog change can be quarantined instead of activated. Review its status, then accept only the exact displayed revision and SHA-256 digest with `jouzu catalog accept REVISION --digest SHA256`.
+
 Catalog producers can validate a file against Jouzu's version 1 structural and semantic contract:
 
 ```bash

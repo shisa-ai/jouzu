@@ -16,6 +16,7 @@ import {
 	resetKeybindings,
 } from "./keybindings.js";
 import { loadMetadata } from "./metadata.js";
+import { acceptQuarantinedCatalog, refreshModelCatalog } from "./model-catalog-sync.js";
 import { createJouzuModelPicker } from "./model-picker.js";
 import { projectDefaultAppliesAtStartup } from "./model-picker-state.js";
 import { resolveJouzuPaths } from "./paths.js";
@@ -63,9 +64,21 @@ async function runCli(args: string[]): Promise<void> {
 	});
 
 	if (parsed.kind === "catalog") {
-		if (parsed.operation === "status" || parsed.operation === "refresh") {
+		if (parsed.operation === "status") {
 			const status = catalogStatus(paths);
 			console.log(parsed.json ? JSON.stringify(status, null, 2) : formatCatalogStatus(status));
+			return;
+		}
+		if (parsed.operation === "refresh") {
+			const result = await refreshModelCatalog(paths);
+			console.log(parsed.json ? JSON.stringify(result, null, 2) : formatCatalogStatus(result.catalogStatus));
+			if (result.status === "rejected" || result.status === "error") process.exitCode = 1;
+			return;
+		}
+		if (parsed.operation === "accept") {
+			if (!parsed.revision || !parsed.digest)
+				throw new UsageError("catalog accept requires an exact revision and digest");
+			console.log(formatCatalogStatus(acceptQuarantinedCatalog(paths, parsed.revision, parsed.digest)));
 			return;
 		}
 		if (!parsed.path) throw new UsageError(`catalog ${parsed.operation} requires a file path`);

@@ -23,9 +23,11 @@ export type ParsedCommand =
 	| {
 			kind: "catalog";
 			options: JouzuOptions;
-			operation: "status" | "refresh" | "validate" | "conformance";
+			operation: "status" | "refresh" | "accept" | "validate" | "conformance";
 			json: boolean;
 			path?: string;
+			revision?: string;
+			digest?: string;
 	  }
 	| {
 			kind: "self-update";
@@ -64,8 +66,21 @@ function readOptionValue(args: string[], index: number, option: string): { value
 
 function parseCatalogCommand(options: JouzuOptions, args: string[]): ParsedCommand {
 	const [operation = "status", ...remaining] = args;
-	if (operation !== "status" && operation !== "refresh" && operation !== "validate" && operation !== "conformance") {
-		throw new UsageError('catalog requires "status", "refresh", "validate", or "conformance"');
+	if (
+		operation !== "status" &&
+		operation !== "refresh" &&
+		operation !== "accept" &&
+		operation !== "validate" &&
+		operation !== "conformance"
+	) {
+		throw new UsageError('catalog requires "status", "refresh", "accept", "validate", or "conformance"');
+	}
+	if (operation === "accept") {
+		const [revision, digestOption, digest, ...extra] = remaining;
+		if (!revision || digestOption !== "--digest" || !digest || extra.length > 0 || !/^[0-9a-f]{64}$/u.test(digest)) {
+			throw new UsageError("catalog accept requires <revision> --digest <sha256>");
+		}
+		return { kind: "catalog", options, operation, json: false, revision, digest };
 	}
 	if (operation === "validate" || operation === "conformance") {
 		const [path, ...extra] = remaining;
@@ -250,6 +265,7 @@ Usage:
   jouzu [Jouzu options] doctor [--json]
   jouzu catalog status [--json]
   jouzu catalog refresh [--json]
+  jouzu catalog accept <revision> --digest <sha256>
   jouzu catalog validate <file> [--json]
   jouzu catalog conformance <file> [--json]
   jouzu profile plan [--profile <core|ja>] [--json]

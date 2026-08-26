@@ -52,6 +52,15 @@ test("parses optional catalog status, refresh, and file conformance commands", (
 		operation: "refresh",
 		json: true,
 	});
+	const digest = "a".repeat(64);
+	assert.deepEqual(parseJouzuArgs(["catalog", "accept", "revision-2", "--digest", digest]), {
+		kind: "catalog",
+		options: {},
+		operation: "accept",
+		revision: "revision-2",
+		digest,
+		json: false,
+	});
 	assert.deepEqual(parseJouzuArgs(["catalog", "validate", "/tmp/catalog.json"]), {
 		kind: "catalog",
 		options: {},
@@ -67,6 +76,7 @@ test("parses optional catalog status, refresh, and file conformance commands", (
 		json: true,
 	});
 	assert.throws(() => parseJouzuArgs(["catalog", "validate"]), UsageError);
+	assert.throws(() => parseJouzuArgs(["catalog", "accept", "revision-2", "--digest", "bad"]), UsageError);
 	assert.throws(() => parseJouzuArgs(["catalog", "other"]), UsageError);
 });
 
