@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.3 - 2026-08-26
+
+- Route `/model` and `Ctrl+L` through the Jouzu Models view when slash autocomplete is visible and when Pi copies its stock handlers directly into the Prompt Frame.
+- Refresh Pi's effective model inventory when the Models view opens; retain cached models with an in-view warning when refresh fails or times out.
+- Use one global favorites list: `Ctrl+F` toggles membership, while `Ctrl+P` and its reverse binding cycle available favorites that fit the active context and effective model scope.
+- Remove project favorites, `Alt+F`, and `/scoped-models` from Jouzu's interactive surface. Explicit and configured Pi model scopes continue to constrain the usable inventory.
+
 ## 0.1.2 - 2026-08-25
 
 - Add the Jouzu Palette Models view on `/model` and `Ctrl+L`, with Recent/Favorite/All filters, result counts, exact provider/model search, current and previous choices, global favorites, project/global recents, session-only selection, user-local project defaults, documented startup precedence, context-fit blocking, and floating/replacement presentations.

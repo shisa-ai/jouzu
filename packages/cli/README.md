@@ -7,7 +7,7 @@ Jouzu is an agentic AI environment built on the Pi coding agent, with CJK-safe t
 Requires Node.js 22.19+, npm, Git, and Bash. Windows requires Git Bash.
 
 ```bash
-npm install --global jouzu@0.1.2
+npm install --global jouzu@0.1.3
 
 jz --version
 jz doctor
