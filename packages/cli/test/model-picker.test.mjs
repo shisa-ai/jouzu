@@ -532,7 +532,7 @@ test("Jouzu editor wrapper opens the Models component through the Palette surfac
 	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-host-"));
 	try {
 		const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
-		const integration = createJouzuModelPicker(paths);
+		const integration = createJouzuModelPicker(paths, { palette: { env: {}, columns: 100, rows: 30 } });
 		const handlers = new Map();
 		const selected = [];
 		let ctx;

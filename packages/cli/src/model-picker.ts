@@ -19,6 +19,7 @@ import {
 	type PaletteComponent,
 	type PaletteComponentContext,
 	type PaletteRoute,
+	type PaletteSurfaceOptions,
 } from "./palette.js";
 import type { JouzuPaths } from "./paths.js";
 import { detectBannerColorMode, renderBrandGradient } from "./presentation.js";
@@ -41,6 +42,7 @@ export interface JouzuModelPickerRequest {
 
 export interface JouzuModelPickerOptions {
 	applyProjectDefaultAtStartup?: boolean;
+	palette?: PaletteSurfaceOptions;
 }
 
 export interface ModelPickerComponentOptions {
@@ -666,6 +668,7 @@ export function createJouzuModelPicker(
 						if (result.aborted) throw new Error("model refresh was aborted");
 					},
 				}),
+			options.palette,
 		);
 	};
 
