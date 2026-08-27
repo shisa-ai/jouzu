@@ -196,7 +196,8 @@ class StrictJsonParser {
 			this.skipWhitespace();
 			if (this.text[this.index] !== ":") this.fail("invalid_json", `${path}.${key}`, "expected ':'");
 			this.index += 1;
-			result[key] = this.parseValue(depth + 1, `${path}.${key}`);
+			const value = this.parseValue(depth + 1, `${path}.${key}`);
+			Object.defineProperty(result, key, { value, writable: true, enumerable: true, configurable: true });
 			this.skipWhitespace();
 			const separator = this.text[this.index];
 			if (separator === "}") {

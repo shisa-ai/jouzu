@@ -88,6 +88,14 @@ test("strict parsing rejects duplicate keys, unsafe references, and credential f
 			),
 		(error) => error instanceof ModelCatalogError && error.code === "credential_material",
 	);
+	const prototypeCredential = fixture("account-snapshot-v1.json").replace(
+		'"id": "ai.example.gateway",',
+		'"id": "ai.example.gateway",\n      "__proto__": { "apiKey": "must-not-appear" },',
+	);
+	assert.throws(
+		() => parseAndValidateModelCatalog(prototypeCredential, { remote: true }),
+		(error) => error instanceof ModelCatalogError && error.code === "credential_material",
+	);
 	assert.throws(
 		() =>
 			parseAndValidateModelCatalog(
