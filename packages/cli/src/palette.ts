@@ -54,10 +54,31 @@ function envPresentation(env: NodeJS.ProcessEnv): PalettePresentation | undefine
 		: undefined;
 }
 
+function terminalRendersInlineImages(env: NodeJS.ProcessEnv): boolean {
+	if (env.TMUX || env.TERM?.toLowerCase().startsWith("tmux") || env.TERM?.toLowerCase().startsWith("screen")) return false;
+	const termProgram = env.TERM_PROGRAM?.toLowerCase();
+	const term = env.TERM?.toLowerCase();
+	return Boolean(
+		env.KITTY_WINDOW_ID ||
+			env.GHOSTTY_RESOURCES_DIR ||
+			env.WEZTERM_PANE ||
+			env.WARP_SESSION_ID ||
+			env.WARP_TERMINAL_SESSION_UUID ||
+			env.ITERM_SESSION_ID ||
+			termProgram === "kitty" ||
+			termProgram === "ghostty" ||
+			termProgram === "wezterm" ||
+			termProgram === "warpterminal" ||
+			termProgram === "iterm.app" ||
+			term?.includes("ghostty"),
+	);
+}
+
 export function selectPalettePresentation(options: PaletteSurfaceOptions = {}): PalettePresentation {
 	const env = options.env ?? process.env;
 	const explicit = options.presentation ?? envPresentation(env);
 	if (explicit) return explicit;
+	if (terminalRendersInlineImages(env)) return "replace";
 	const columns = options.columns ?? process.stdout.columns ?? 80;
 	const rows = options.rows ?? process.stdout.rows ?? 24;
 	return columns >= 58 && rows >= 16 ? "floating" : "replace";

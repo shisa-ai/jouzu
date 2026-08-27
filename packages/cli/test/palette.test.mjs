@@ -71,10 +71,16 @@ function componentFactory(routes) {
 	});
 }
 
-test("presentation selection uses floating for ordinary terminals and replacement for small terminals", () => {
+test("presentation selection avoids overlays where terminals render inline images above text", () => {
 	assert.equal(selectPalettePresentation({ columns: 120, rows: 30, env: {} }), "floating");
 	assert.equal(selectPalettePresentation({ columns: 50, rows: 30, env: {} }), "replace");
 	assert.equal(selectPalettePresentation({ columns: 120, rows: 12, env: {} }), "replace");
+	assert.equal(selectPalettePresentation({ columns: 120, rows: 30, env: { KITTY_WINDOW_ID: "1" } }), "replace");
+	assert.equal(selectPalettePresentation({ columns: 120, rows: 30, env: { TERM_PROGRAM: "iTerm.app" } }), "replace");
+	assert.equal(
+		selectPalettePresentation({ columns: 120, rows: 30, env: { KITTY_WINDOW_ID: "1", TMUX: "/tmp/tmux" } }),
+		"floating",
+	);
 	assert.equal(
 		selectPalettePresentation({ columns: 40, rows: 10, env: { JOUZU_PALETTE_PRESENTATION: "floating" } }),
 		"floating",
