@@ -208,6 +208,7 @@ async function createFavoriteCycleHarness(options = {}) {
 	await handlers.get("session_start")({ reason: "startup" }, ctx);
 	return {
 		ctx,
+		handlers,
 		integration,
 		selected,
 		notifications,
@@ -466,7 +467,10 @@ test("favorite cycling handles empty, active, unauthenticated, and failed switch
 		try {
 			assert.equal(await harness.integration.cycleFavorite("forward"), true);
 			assert.deepEqual(harness.selected, []);
-			assert.match(harness.notifications[0][0], /Wait for the active model call/);
+			assert.match(harness.notifications[0][0], /queued for the next model call: p\/b/);
+			await harness.handlers.get("turn_end")({}, harness.ctx);
+			assert.deepEqual(harness.selected, ["b"]);
+			assert.match(harness.notifications[1][0], /Switched to p\/b/);
 		} finally {
 			await harness.dispose();
 		}
@@ -602,6 +606,76 @@ test("Jouzu editor wrapper opens the Models component through the Palette surfac
 		assert.deepEqual(selected, ["fresh"], "Ctrl+P must immediately use a favorite added in the open picker");
 		assert.equal(await integration.handleScopedModelsCommand(), true);
 		assert.match(notifications.at(-1)[0], /Jouzu uses Favorites/);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("Models selection during an active call switches after turn_end", async () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-queued-"));
+	try {
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+		new ModelPickerStore(paths).setFilter("all");
+		const integration = createJouzuModelPicker(paths);
+		const handlers = new Map();
+		const selected = [];
+		const notifications = [];
+		let ctx;
+		integration.extension.factory({
+			on(name, handler) {
+				handlers.set(name, handler);
+			},
+			async setModel(model) {
+				selected.push(model.id);
+				ctx.model = model;
+				return true;
+			},
+		});
+		const models = ["a", "b"].map((id) => ({
+			provider: "p",
+			id,
+			name: id.toUpperCase(),
+			contextWindow: 100_000,
+			maxTokens: 10_000,
+		}));
+		ctx = {
+			mode: "tui",
+			cwd: root,
+			model: models[0],
+			scopedModels: [],
+			sessionManager: { getBranch: () => [] },
+			modelRegistry: {
+				getAvailable: () => models,
+				find: (provider, id) => (provider === "p" ? models.find((model) => model.id === id) : undefined),
+				refresh: async () => ({ errors: new Map() }),
+			},
+			getContextUsage: () => ({ tokens: 100, contextWindow: 100_000, percent: 1 }),
+			isIdle: () => false,
+			ui: {
+				notify: (...values) => notifications.push(values),
+				custom(factory) {
+					return new Promise((resolve) => {
+						const component = factory(
+							{ terminal: { rows: 30 }, requestRender() {} },
+							identityTheme,
+							fakeKeybindings(),
+							resolve,
+						);
+						setImmediate(() => {
+							component.handleInput("down");
+							component.handleInput("down");
+							component.handleInput("enter");
+						});
+					});
+				},
+			},
+		};
+		await handlers.get("session_start")({ reason: "startup" }, ctx);
+		assert.equal(await integration.open({ source: "action" }), true);
+		assert.deepEqual(selected, []);
+		assert.match(notifications[0][0], /queued for the next model call: p\/b/);
+		await handlers.get("turn_end")({}, ctx);
+		assert.deepEqual(selected, ["b"]);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}

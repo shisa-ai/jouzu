@@ -491,9 +491,23 @@ export function createJouzuModelPicker(
 	let projectKey = "";
 	let previous: ModelReference[] = [];
 	let pendingDispatch: ModelReference | undefined;
+	let queuedModelSwitch:
+		| { model: PiModel; reference: PickerModel; setProjectDefault: boolean }
+		| undefined;
 	let stateWarningShown = false;
 	let cycleBusy = false;
 	let setModel: ((model: PiModel) => Promise<boolean>) | undefined;
+
+	const queueModelSwitch = (
+		ctx: ExtensionContext,
+		model: PiModel,
+		reference: PickerModel,
+		setProjectDefault = false,
+	): void => {
+		queuedModelSwitch = { model, reference, setProjectDefault };
+		const display = modelDisplay(reference);
+		ctx.ui.notify(`Model switch queued for the next model call: ${display.provider}/${display.modelId}.`, "info");
+	};
 
 	const syncSession = (ctx: ExtensionContext): void => {
 		activeCtx = ctx;
@@ -577,9 +591,29 @@ export function createJouzuModelPicker(
 					);
 				}
 			});
+			pi.on("turn_end", async (_event, ctx) => {
+				const queued = queuedModelSwitch;
+				const activateModel = setModel;
+				if (!queued || !activateModel) return;
+				queuedModelSwitch = undefined;
+				const display = modelDisplay(queued.reference);
+				try {
+					if (!(await activateModel(queued.model))) {
+						throw new Error(`No authentication for ${display.provider}/${display.modelId}`);
+					}
+					if (queued.setProjectDefault) state = store.setProjectDefault(queued.reference, projectKey);
+					ctx.ui.notify(`Switched to ${display.provider}/${display.modelId}.`, "info");
+				} catch (error) {
+					ctx.ui.notify(
+						`Queued model switch failed: ${sanitizeTerminalText(error instanceof Error ? error.message : String(error))}`,
+						"warning",
+					);
+				}
+			});
 			pi.on("session_shutdown", () => {
 				activeCtx = undefined;
 				pendingDispatch = undefined;
+				queuedModelSwitch = undefined;
 				cycleBusy = false;
 				setModel = undefined;
 			});
@@ -610,9 +644,12 @@ export function createJouzuModelPicker(
 							activeContextTokens: ctx.getContextUsage()?.tokens,
 						}),
 					onSelect: async (row, scope) => {
-						if (!ctx.isIdle()) throw new Error("Wait for the active model call to finish before switching models.");
 						const model = ctx.modelRegistry.find(row.model.provider, row.model.modelId);
 						if (!model) throw new Error(`Model is unavailable: ${row.model.provider}/${row.model.modelId}`);
+						if (!ctx.isIdle()) {
+							queueModelSwitch(ctx, model, row.model, scope === "project");
+							return;
+						}
 						if (!(await activateModel(model)))
 							throw new Error(`No authentication for ${row.model.provider}/${row.model.modelId}`);
 						if (scope === "project") state = store.setProjectDefault(row.model, projectKey);
@@ -642,15 +679,11 @@ export function createJouzuModelPicker(
 			ctx.ui.notify("A favorite model switch is already in progress.", "info");
 			return true;
 		}
-		if (!ctx.isIdle()) {
-			ctx.ui.notify("Wait for the active model call to finish before switching models.", "warning");
-			return true;
-		}
 		const favoriteRows = buildPickerRows({
 			models: pickerModels(ctx, catalog),
 			state,
 			projectKey,
-			current: modelReference(ctx.model, catalog),
+			current: queuedModelSwitch?.reference ?? modelReference(ctx.model, catalog),
 			filter: "favorite",
 			activeContextTokens: ctx.getContextUsage()?.tokens,
 		});
@@ -690,6 +723,10 @@ export function createJouzuModelPicker(
 				`Favorite model is unavailable: ${modelDisplay(target).provider}/${modelDisplay(target).modelId}`,
 				"warning",
 			);
+			return true;
+		}
+		if (!ctx.isIdle()) {
+			queueModelSwitch(ctx, model, target);
 			return true;
 		}
 		cycleBusy = true;
