@@ -1,6 +1,6 @@
 ---
 name: jouzu-clear-writing
-description: Draft, revise, or audit user-facing technical prose for clarity and brevity without changing facts. Use for documentation, README text, release notes, issues, prompts, tool descriptions, CLI help, diagnostics, or a long user-facing response.
+description: Draft, revise, or audit substantive user-facing technical prose for clarity and brevity without changing facts. Use for documentation, README text, release notes, issues, prompts, tool descriptions, CLI help, diagnostics, or a long technical response.
 license: Apache-2.0
 ---
 

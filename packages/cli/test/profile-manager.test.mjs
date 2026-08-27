@@ -47,7 +47,7 @@ test("profile planning is non-mutating and apply converges", () => {
 		assert.deepEqual(plan, {
 			schemaVersion: 1,
 			profile: "ja",
-			profileVersion: 3,
+			profileVersion: 4,
 			manifestSha256: profile.manifestSha256,
 			agentDir: fixture.paths.agentDir,
 			actions: [

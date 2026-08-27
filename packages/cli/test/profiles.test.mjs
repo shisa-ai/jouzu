@@ -62,14 +62,17 @@ test("bundled Core and JA profiles resolve exact ordered assets", () => {
 			"skills/jouzu-source-check/SKILL.md",
 		],
 	);
-	assert.equal(core.manifestSha256, "1c7487a7b4e926ad45e3350d9a41fd3a5049873101a0cc917ba3a097f33dfd13");
-	assert.equal(ja.manifestSha256, "8e84e97433dd1563069bd688a6fedde08147dcc86b41d2faa9d955de3ae2116a");
+	assert.equal(core.manifestSha256, "9ffcfffe531c73d9bfc95f86159035dcfb5f1d4aebd97bdc3b09ab3128a66bb4");
+	assert.equal(ja.manifestSha256, "dfdafd722bba9e847086cb63ae50f02c8ee84cbe952bea84b25551dc2d0f120a");
 });
 
 test("bundled skills declare bounded public workflows", () => {
 	const core = loadBundledProfile("core");
 	const clearWriting = core.assets
 		.find((asset) => asset.target === "skills/jouzu-clear-writing/SKILL.md")
+		?.bytes.toString("utf8");
+	const coreWorkflow = core.assets
+		.find((asset) => asset.target === "skills/jouzu-core/SKILL.md")
 		?.bytes.toString("utf8");
 	const sourceCheck = core.assets
 		.find((asset) => asset.target === "skills/jouzu-source-check/SKILL.md")
@@ -79,12 +82,14 @@ test("bundled skills declare bounded public workflows", () => {
 	assert.match(clearWriting ?? "", /Do not invent acronyms or abbreviations\./);
 	assert.match(clearWriting ?? "", /Put conditions before actions/);
 	assert.match(clearWriting ?? "", /does not claim compliance with ASD-STE100/);
+	assert.match(coreWorkflow ?? "", /^---\nname: jouzu-core\n/);
+	assert.match(coreWorkflow ?? "", /Work directly by default/);
+	assert.match(coreWorkflow ?? "", /Do not combine these mechanisms unless each has a separate purpose/);
 	assert.match(sourceCheck ?? "", /^---\nname: jouzu-source-check\n/);
-	assert.match(
-		sourceCheck ?? "",
-		/Do not register records, modify unrelated files, commit, or publish unless the user asks\./,
-	);
-	assert.doesNotMatch(sourceCheck ?? "", /REALITYCHECK_DATA|rc-db|LanceDB/);
+	assert.match(sourceCheck ?? "", /Do not modify files, register records, commit, or publish unless the user asks\./);
+	assert.match(sourceCheck ?? "", /Repeated summaries of the same source are not independent\./);
+	assert.match(sourceCheck ?? "", /instead of inventing balance/);
+	assert.doesNotMatch(sourceCheck ?? "", /dialectical|REALITYCHECK_DATA|rc-db|LanceDB/);
 });
 
 test("manifest validation fails closed for schema, path, inheritance, and digest errors", () => {

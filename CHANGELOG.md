@@ -6,6 +6,7 @@
 - Route pi-vcc configuration to Jouzu's isolated agent root.
 - Add on-demand Clear Writing and database-free Source Check skills to the Core and JA profiles.
 - Expand Clear Writing to cover drafting, revision, audit, documentation structure, terminology, and accessibility; point Pi's default system prompt to it while preserving custom prompts.
+- Group Core capability selection for session recall, web research, finite tasks, goals, measured loops, background processes, and scheduled prompts; add an untrusted-web rule and routing evaluation corpus.
 
 ## 0.1.3 - 2026-08-26
 

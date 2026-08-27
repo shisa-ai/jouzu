@@ -75,13 +75,15 @@ These surfaces use terminal display columns rather than JavaScript string length
 
 Core installs three on-demand skills:
 
-- `jouzu-core` for repository inspection, safe edits, validation, and handoff;
-- `jouzu-clear-writing` for drafting, revising, or auditing user-facing technical prose while preserving facts and terminology; and
-- `jouzu-source-check` for database-free source analysis, factual verification, counterevidence, and synthesis.
+- `jouzu-core` for repository work and selection among available context, web, task, goal, loop, background, and scheduling capabilities;
+- `jouzu-clear-writing` for substantive user-facing technical prose while preserving facts and terminology; and
+- `jouzu-source-check` for claim classification, primary evidence, counterevidence, confidence, and cross-source synthesis.
 
-It also installs the `jouzu-review` prompt. Pi includes skill names and descriptions in context and loads full skill instructions only when a task matches or the user runs `/skill:<name>`.
+`jouzu-core` directs straightforward work to direct file and shell tools. When matching tools are available in the session, it distinguishes finite task tracking, persistent goals, measured loops, background processes, and scheduled prompts. For web work, it prefers normal readable fetches before the heavier rendered browser path.
 
-When Pi's exact default system prompt is active, Jouzu asks the agent to communicate concisely and clearly, avoid invented acronyms and unexplained jargon, and load `jouzu-clear-writing` for user-facing prose. Jouzu leaves custom system prompts unchanged.
+Core also installs the `jouzu-review` prompt. Pi includes skill names and descriptions in context and loads full skill instructions only when a task matches or the user runs `/skill:<name>`.
+
+When Pi's exact default system prompt is active, Jouzu asks the agent to communicate concisely, avoid invented acronyms and unexplained jargon, load `jouzu-core` for repository work or capability selection, load `jouzu-clear-writing` for substantive user-facing technical prose, and treat fetched pages and search results as untrusted. Jouzu leaves custom system prompts unchanged.
 
 The optional `ja` preview extends Core with a concise Japanese response policy while preserving exact code, commands, identifiers, paths, URLs, logs, and source error messages. Enable it through first-run consent or explicit selection at any time:
 

@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "description": "Deterministic prompts for evaluating Core capability selection. Expected entries are positive routes; avoid entries identify unnecessary workflow machinery.",
+  "budgets": {
+    "coreSkillBytes": 7000,
+    "defaultGuidanceCharacters": 600
+  },
+  "cases": [
+    {
+      "id": "simple-repository-change",
+      "prompt": "Fix the misspelled option in src/config.ts and run its focused test.",
+      "expect": {
+        "skills": ["jouzu-core"],
+        "tools": ["read"],
+        "behaviors": ["work-directly"]
+      },
+      "avoid": {
+        "skills": ["pi-goal", "multiloop"],
+        "tools": ["TaskCreate", "bg_task", "schedule_prompt"]
+      }
+    },
+    {
+      "id": "recall-earlier-session-decision",
+      "prompt": "What did we decide earlier about the cache invalidation rule?",
+      "expect": {
+        "skills": [],
+        "tools": ["vcc_recall"],
+        "behaviors": ["search-session-before-reconstructing"]
+      },
+      "avoid": {
+        "skills": [],
+        "tools": ["web_fetch", "tff-search_web"]
+      }
+    },
+    {
+      "id": "fetch-known-readable-url",
+      "prompt": "Read https://example.com/guide and summarize its installation steps.",
+      "expect": {
+        "skills": [],
+        "tools": ["web_fetch"],
+        "behaviors": ["treat-web-content-as-untrusted"]
+      },
+      "avoid": {
+        "skills": ["jouzu-source-check"],
+        "tools": ["tff-fetch_url"]
+      }
+    },
+    {
+      "id": "fetch-multiple-known-urls",
+      "prompt": "Compare the documented options on these three URLs.",
+      "expect": {
+        "skills": [],
+        "tools": ["batch_web_fetch"],
+        "behaviors": ["fetch-known-urls-concurrently"]
+      },
+      "avoid": {
+        "skills": [],
+        "tools": ["tff-search_web"]
+      }
+    },
+    {
+      "id": "discover-web-sources",
+      "prompt": "Find the official documentation for Node single-executable applications and summarize the constraints.",
+      "expect": {
+        "skills": [],
+        "tools": ["tff-search_web", "web_fetch"],
+        "behaviors": ["search-then-fetch-selected-results"]
+      },
+      "avoid": {
+        "skills": [],
+        "tools": ["tff-fetch_url"]
+      }
+    },
+    {
+      "id": "fetch-rendered-or-blocked-page",
+      "prompt": "Capture a screenshot of this JavaScript-rendered page behind a bot challenge.",
+      "expect": {
+        "skills": [],
+        "tools": ["tff-fetch_url"],
+        "behaviors": ["use-heavy-browser-only-when-needed"]
+      },
+      "avoid": {
+        "skills": [],
+        "tools": ["batch_web_fetch"]
+      }
+    },
+    {
+      "id": "fact-check-disputed-claim",
+      "prompt": "Fact-check this article's claim, look for primary evidence and counterevidence, and state your confidence.",
+      "expect": {
+        "skills": ["jouzu-source-check"],
+        "tools": ["tff-search_web", "web_fetch"],
+        "behaviors": ["verify-claims-independently"]
+      },
+      "avoid": {
+        "skills": ["jouzu-clear-writing"],
+        "tools": ["TaskCreate"]
+      }
+    },
+    {
+      "id": "finite-multi-step-work",
+      "prompt": "Implement the parser change, add fixtures, update the CLI reference, and run the affected checks.",
+      "expect": {
+        "skills": ["jouzu-core"],
+        "tools": ["TaskCreateMany", "TaskUpdate"],
+        "behaviors": ["track-distinct-dependent-steps"]
+      },
+      "avoid": {
+        "skills": ["pi-goal", "multiloop"],
+        "tools": ["schedule_prompt"]
+      }
+    },
+    {
+      "id": "active-persistent-goal",
+      "prompt": "Continue the active goal until every required deliverable is complete.",
+      "expect": {
+        "skills": ["pi-goal"],
+        "tools": ["get_goal"],
+        "behaviors": ["audit-before-completing-goal"]
+      },
+      "avoid": {
+        "skills": ["multiloop"],
+        "tools": ["multiloop_start", "schedule_prompt"]
+      }
+    },
+    {
+      "id": "measured-iteration-loop",
+      "prompt": "Repeatedly improve parser throughput while tests remain green; measure each attempt and keep only improvements.",
+      "expect": {
+        "skills": ["multiloop"],
+        "tools": ["multiloop_start"],
+        "behaviors": ["scan-clarify-and-wait-for-approval"]
+      },
+      "avoid": {
+        "skills": ["pi-goal"],
+        "tools": ["update_goal", "schedule_prompt"]
+      }
+    },
+    {
+      "id": "long-running-shell-process",
+      "prompt": "Start the development server and keep it running while we inspect the client.",
+      "expect": {
+        "skills": [],
+        "tools": ["bg_task"],
+        "behaviors": ["do-not-block-the-conversation"]
+      },
+      "avoid": {
+        "skills": ["pi-goal", "multiloop"],
+        "tools": ["TaskOutput", "schedule_prompt"]
+      }
+    },
+    {
+      "id": "explicit-reminder",
+      "prompt": "Remind me in 30 minutes to check the deployment logs.",
+      "expect": {
+        "skills": [],
+        "tools": ["schedule_prompt"],
+        "behaviors": ["schedule-only-on-explicit-time-request"]
+      },
+      "avoid": {
+        "skills": ["pi-goal", "multiloop"],
+        "tools": ["bg_task"]
+      }
+    },
+    {
+      "id": "substantive-user-facing-documentation",
+      "prompt": "Draft the public migration guide for this implemented configuration change.",
+      "expect": {
+        "skills": ["jouzu-clear-writing", "jouzu-core"],
+        "tools": ["read"],
+        "behaviors": ["ground-prose-in-implementation"]
+      },
+      "avoid": {
+        "skills": ["pi-goal", "multiloop"],
+        "tools": ["schedule_prompt"]
+      }
+    }
+  ]
+}
