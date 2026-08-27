@@ -16,7 +16,7 @@ Windows users should read [Windows prerequisites](docs/windows.md). Signed insta
 ## Install
 
 ```bash
-npm install --global jouzu@0.1.3
+npm install --global jouzu@0.1.4
 
 jouzu --version
 jz doctor
@@ -25,7 +25,7 @@ jz doctor
 `jz` is an exact alias for `jouzu`. To try the CLI without a global installation:
 
 ```bash
-npx --yes jouzu@0.1.3 --version
+npx --yes jouzu@0.1.4 --version
 ```
 
 ## Quick start
@@ -261,7 +261,7 @@ npm run release:check
 npm run dev:link
 ```
 
-`dev:link` records the UTC build time, Git commit, and dirty-worktree state. `jz --version` displays an identifier such as `0.1.3-dev.20260826-010203+g215b2188`. A `.dirty` suffix marks a build that included uncommitted files. The standard `npm run build` removes development metadata before packing a release artifact.
+`dev:link` records the UTC build time, Git commit, and dirty-worktree state. `jz --version` displays an identifier such as `0.1.4-dev.20260827-010203+g215b2188`. A `.dirty` suffix marks a build that included uncommitted files. The standard `npm run build` removes development metadata before packing a release artifact.
 
 See [docs/architecture.md](docs/architecture.md) for the module map, state-file
 ownership, update lanes, and bundled profile boundaries. [Pi update review](docs/PI-UPDATES.md)
