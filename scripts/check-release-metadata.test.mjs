@@ -122,3 +122,16 @@ test("a qualified Pi lock passes release metadata validation", () => {
 	assert.equal(result.status, 0, result.stderr || result.stdout);
 	assert.ok(result.stdout.includes(`release metadata: jouzu@${realCliPackage.version}, Pi `));
 });
+
+test("the npm publish workflow stays a bounded transport gate", () => {
+	const workflow = readFileSync(join(root, ".github", "workflows", "publish-npm.yml"), "utf8");
+	assert.match(workflow, /timeout-minutes: 15/u);
+	assert.match(workflow, /environment: npm-publish/u);
+	assert.match(workflow, /id-token: write/u);
+	assert.match(workflow, /npm run build/u);
+	assert.match(workflow, /npm run release:metadata && npm run check && npm run pack:check/u);
+	assert.match(workflow, /node scripts\/publish-npm\.mjs/u);
+	assert.doesNotMatch(workflow, /npm run release:check/u);
+	assert.doesNotMatch(workflow, /test:packed|test:auto-update|test:extensions:online|test:live/u);
+	assert.doesNotMatch(workflow, /NPM_TOKEN|NODE_AUTH_TOKEN|npm login|npm trust/u);
+});

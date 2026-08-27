@@ -13,6 +13,7 @@ permissions: {}
 jobs:
   publish:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     environment: npm-publish
     permissions:
       contents: read
@@ -28,7 +29,6 @@ jobs:
           node-version: 22
           registry-url: https://registry.npmjs.org
           cache: npm
-      - uses: astral-sh/setup-uv@38f3f104447c67c051c4a08e39b64a148898af3a # v4.2.0
       - name: Verify immutable release tag
         env:
           RELEASE_REF: ${{ inputs.ref }}
@@ -40,6 +40,12 @@ jobs:
           git merge-base --is-ancestor HEAD refs/remotes/origin/main
           node -e 'const p=require("./packages/cli/package.json"); if (`v${p.version}` !== process.env.RELEASE_REF) process.exit(1)'
       - run: npm ci --ignore-scripts
-      - run: npm run release:check
+        timeout-minutes: 5
+      - run: npm run build
+        timeout-minutes: 5
+      - name: Verify release metadata and package boundary
+        run: npm run release:metadata && npm run check && npm run pack:check
+        timeout-minutes: 5
       - run: npm install --global npm@11.16.0 --ignore-scripts
       - run: node scripts/publish-npm.mjs
+        timeout-minutes: 5
