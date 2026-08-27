@@ -677,11 +677,12 @@ export function createJouzuModelPicker(
 			ctx.ui.notify("A favorite model switch is already in progress.", "info");
 			return true;
 		}
+		const current = queuedModelSwitch?.reference ?? modelReference(ctx.model, catalog);
 		const favoriteRows = buildPickerRows({
 			models: pickerModels(ctx, catalog),
 			state,
 			projectKey,
-			current: queuedModelSwitch?.reference ?? modelReference(ctx.model, catalog),
+			current,
 			filter: "favorite",
 			activeContextTokens: ctx.getContextUsage()?.tokens,
 		});
@@ -700,7 +701,6 @@ export function createJouzuModelPicker(
 			);
 			return true;
 		}
-		const current = modelReference(ctx.model, catalog);
 		const currentIndex = candidates.findIndex((row) => modelReferencesEqual(row.model, current));
 		if (candidates.length === 1 && currentIndex === 0) {
 			ctx.ui.notify("Only one favorite model is available.", "info");

@@ -463,14 +463,19 @@ test("favorite cycling handles empty, active, unauthenticated, and failed switch
 		}
 	});
 	await t.test("active model call", async () => {
-		const harness = await createFavoriteCycleHarness({ favorites: ["a", "b"], isIdle: false });
+		const harness = await createFavoriteCycleHarness({ favorites: ["a", "b", "c"], isIdle: false });
 		try {
 			assert.equal(await harness.integration.cycleFavorite("forward"), true);
+			assert.equal(await harness.integration.cycleFavorite("forward"), true);
+			assert.equal(await harness.integration.cycleFavorite("forward"), true);
 			assert.deepEqual(harness.selected, []);
-			assert.match(harness.notifications[0][0], /queued for the next model call: p\/b/);
+			assert.deepEqual(
+				harness.notifications.map(([message]) => message.match(/p\/[abc]/)?.[0]),
+				["p/b", "p/c", "p/a"],
+			);
 			await harness.handlers.get("turn_end")({}, harness.ctx);
-			assert.deepEqual(harness.selected, ["b"]);
-			assert.match(harness.notifications[1][0], /Switched to p\/b/);
+			assert.deepEqual(harness.selected, ["a"]);
+			assert.match(harness.notifications.at(-1)[0], /Switched to p\/a/);
 		} finally {
 			await harness.dispose();
 		}
