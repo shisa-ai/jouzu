@@ -55,7 +55,8 @@ function envPresentation(env: NodeJS.ProcessEnv): PalettePresentation | undefine
 }
 
 function terminalRendersInlineImages(env: NodeJS.ProcessEnv): boolean {
-	if (env.TMUX || env.TERM?.toLowerCase().startsWith("tmux") || env.TERM?.toLowerCase().startsWith("screen")) return false;
+	if (env.TMUX || env.TERM?.toLowerCase().startsWith("tmux") || env.TERM?.toLowerCase().startsWith("screen"))
+		return false;
 	const termProgram = env.TERM_PROGRAM?.toLowerCase();
 	const term = env.TERM?.toLowerCase();
 	return Boolean(

@@ -491,9 +491,7 @@ export function createJouzuModelPicker(
 	let projectKey = "";
 	let previous: ModelReference[] = [];
 	let pendingDispatch: ModelReference | undefined;
-	let queuedModelSwitch:
-		| { model: PiModel; reference: PickerModel; setProjectDefault: boolean }
-		| undefined;
+	let queuedModelSwitch: { model: PiModel; reference: PickerModel; setProjectDefault: boolean } | undefined;
 	let stateWarningShown = false;
 	let cycleBusy = false;
 	let setModel: ((model: PiModel) => Promise<boolean>) | undefined;
