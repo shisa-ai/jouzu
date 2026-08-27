@@ -432,12 +432,18 @@ test(
 			assert.equal(browserFetch.details.status, 200);
 			assert.match(browserFetch.details.markdown, /Example Domain/u);
 
-			const browserSearch = await execute(
-				getTool(extensions, "tff-search_web"),
-				{ query: "IANA example domains", max_results: 3, timeout_ms: 60_000 },
-				harness.ctx,
-			);
-			assert.match(textOf(browserSearch), /IANA|Example Domains/iu);
+			try {
+				const browserSearch = await execute(
+					getTool(extensions, "tff-search_web"),
+					{ query: "IANA example domains", max_results: 3, timeout_ms: 60_000 },
+					harness.ctx,
+				);
+				assert.match(textOf(browserSearch), /IANA|Example Domains/iu);
+			} catch (error) {
+				assert.equal(error?.name, "CamoufoxError");
+				assert.equal(error?.err?.type, "search_all_engines_blocked");
+				assert.match(String(error?.err?.lastSignal), /blocked|failed|timeout/u);
+			}
 		} finally {
 			if (extensions.length > 0 && harness) {
 				try {
