@@ -62,8 +62,8 @@ test("bundled Core and JA profiles resolve exact ordered assets", () => {
 			"skills/jouzu-source-check/SKILL.md",
 		],
 	);
-	assert.equal(core.manifestSha256, "9ffcfffe531c73d9bfc95f86159035dcfb5f1d4aebd97bdc3b09ab3128a66bb4");
-	assert.equal(ja.manifestSha256, "dfdafd722bba9e847086cb63ae50f02c8ee84cbe952bea84b25551dc2d0f120a");
+	assert.equal(core.manifestSha256, "cb776990ac81b8b269a08e64320c8ce380451d8509510c41d61774b90bc0a262");
+	assert.equal(ja.manifestSha256, "8b5da0441d55935fc012ab7500ad05da4282a32b12da9d7823fc0d6bef7d5870");
 });
 
 test("bundled skills declare bounded public workflows", () => {
@@ -78,10 +78,12 @@ test("bundled skills declare bounded public workflows", () => {
 		.find((asset) => asset.target === "skills/jouzu-source-check/SKILL.md")
 		?.bytes.toString("utf8");
 	assert.match(clearWriting ?? "", /^---\nname: jouzu-clear-writing\n/);
+	assert.match(clearWriting ?? "", /durable user-facing technical artifacts/);
 	assert.match(clearWriting ?? "", /\*\*Draft:\*\* create the minimum text/);
 	assert.match(clearWriting ?? "", /Do not invent acronyms or abbreviations\./);
-	assert.match(clearWriting ?? "", /Put conditions before actions/);
-	assert.match(clearWriting ?? "", /does not claim compliance with ASD-STE100/);
+	assert.match(clearWriting ?? "", /Put prerequisites, warnings, and conditions before the actions they govern/);
+	assert.match(clearWriting ?? "", /do not transfer English style rules mechanically/);
+	assert.doesNotMatch(clearWriting ?? "", /ASD-STE100|[“”]/);
 	assert.match(coreWorkflow ?? "", /^---\nname: jouzu-core\n/);
 	assert.match(coreWorkflow ?? "", /Work directly by default/);
 	assert.match(coreWorkflow ?? "", /Do not combine these mechanisms unless each has a separate purpose/);

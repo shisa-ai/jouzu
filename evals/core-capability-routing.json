@@ -146,7 +146,7 @@
       },
       "avoid": {
         "skills": ["pi-goal", "multiloop"],
-        "tools": ["TaskOutput", "schedule_prompt"]
+        "tools": ["TaskCreate", "schedule_prompt"]
       }
     },
     {
@@ -163,7 +163,7 @@
       }
     },
     {
-      "id": "substantive-user-facing-documentation",
+      "id": "durable-user-facing-documentation",
       "prompt": "Draft the public migration guide for this implemented configuration change.",
       "expect": {
         "skills": ["jouzu-clear-writing", "jouzu-core"],

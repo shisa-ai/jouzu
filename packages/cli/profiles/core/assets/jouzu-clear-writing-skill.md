@@ -1,6 +1,6 @@
 ---
 name: jouzu-clear-writing
-description: Draft, revise, or audit substantive user-facing technical prose for clarity and brevity without changing facts. Use for documentation, README text, release notes, issues, prompts, tool descriptions, CLI help, diagnostics, or a long technical response.
+description: Draft, revise, or audit durable user-facing technical artifacts without changing facts. Use for documentation, README text, release notes, issues, prompts, tool descriptions, CLI help, diagnostics, or other prose intended to persist or leave the current chat.
 license: Apache-2.0
 ---
 
@@ -55,13 +55,11 @@ Lead with the answer, outcome, recommendation, or constraint the reader needs. P
 
 ## Write actions and explanations
 
-- Prefer active voice when the actor matters. Name the actor when a passive sentence would hide responsibility.
-- Address the reader as “you” when giving direct guidance. Start procedural steps with an imperative verb.
+- Name the actor when omission would hide responsibility. Do not force English voice patterns onto another language.
+- Use the target language's normal direct-address convention. In English procedures, address the reader as "you" and start steps with an imperative verb.
 - Put one action in each numbered step. Split a step when actions can fail independently or require separate verification.
 - Keep one main topic in each paragraph. Use numbered lists for sequences and bullets for unordered sets.
 - Use tables only for genuine multi-column comparison or structured data.
-- Preserve modality. Do not turn “may”, “can”, “should”, or a conditional claim into a fact or requirement.
-- Put conditions before actions when the reader must know the condition to act safely or correctly.
 - Stop editing when the text supports the task and further changes would only impose a house voice.
 
 Do not impose fixed sentence-length, tense, vocabulary, or spelling rules across all prose. Shorten or split a sentence when its structure is hard to parse, not to satisfy an arbitrary count.
@@ -72,7 +70,7 @@ Do not impose fixed sentence-length, tense, vocabulary, or spelling rules across
 - Do not invent acronyms or abbreviations. For an established acronym the reader may not know, write the full term on first use and use the acronym only when repetition makes it useful.
 - Explain necessary jargon at first use or link to a precise definition. Replace jargon that adds no technical precision.
 - Keep necessary domain terms, product names, API names, and terms of art. Do not replace them with vague plain-language substitutes.
-- Make pronoun references unambiguous. Repeat the noun when “it”, “this”, or “they” could refer to more than one thing.
+- Make pronoun references unambiguous. Repeat the noun when "it", "this", or "they" could refer to more than one thing.
 - Prefer concrete verbs over nominalized actions: describe what acts and what changes.
 
 ## Format technical content
@@ -80,10 +78,10 @@ Do not impose fixed sentence-length, tense, vocabulary, or spelling rules across
 - Keep code, commands, paths, URLs, identifiers, log text, UI labels, and quoted source language exact unless the task changes them.
 - Format literals according to the target repository's conventions.
 - Introduce examples with their purpose. Use placeholders that are visibly distinct from literal values and define them once.
-- Use descriptive link text that makes sense without surrounding prose. Avoid directional references such as “above” or “on the left” when a heading or label is available.
+- Use descriptive link text that makes sense without surrounding prose. Avoid directional references such as "above" or "on the left" when a heading or label is available.
 - Do not rely on color, position, icons, or images as the only carrier of meaning.
-- Use explicit dates, versions, counts, or bounded conditions instead of “currently”, “recently”, “new”, or “soon”.
-- Preserve the language requested by the user. Avoid idioms and culture-specific metaphors when writing for a global audience.
+- Use explicit dates, versions, counts, or bounded conditions instead of "currently", "recently", "new", or "soon".
+- Preserve the language requested by the user. Follow that language's grammar, voice, capitalization, pronoun, and heading conventions; do not transfer English style rules mechanically. Avoid idioms and culture-specific metaphors when writing for a global audience.
 
 ## Remove filler and unsupported emphasis
 
@@ -92,16 +90,14 @@ Do not impose fixed sentence-length, tense, vocabulary, or spelling rules across
 - Remove filler intensifiers and hedge stacks. If uncertainty matters, name the unknown, confidence, evidence gap, or condition.
 - Replace vague quantities with counts, ranges, identifiers, or `unknown`.
 - Cite attributed claims. Delete unsupported claims presented as consensus, quality, security, performance, cost, or best practice.
-- Prefer concrete verbs and nouns over marketing language and abstractions that do not describe behavior.
+- Replace marketing language and abstractions that do not describe behavior with specific facts.
 - Collapse repeated summaries, decorative conclusions, padded transitions, forced parallel triplets, and dramatic sentence fragments.
-- Use headings to organize information, not to repeat the following paragraph. Prefer sentence-case noun phrases or direct imperatives.
+- Use headings to organize information, not to repeat the following paragraph. Follow the target project's heading style; without one, use concise headings appropriate to the language.
 - Use a list only when its items are distinct. Do not split one claim into multiple bullets for rhythm.
 
 ## Boundaries
 
 Do not rewrite quoted material, legal text, source text, code, commands, identifiers, logs, or error messages as a style exercise. When analyzing rhetoric, label the source's wording instead of adopting or rewriting it. Do not add claims, certainty, benefits, causes, frequency, or scope to improve cadence.
-
-This skill does not claim compliance with ASD-STE100 or another controlled-language standard. Apply useful ambiguity-reduction principles without reproducing a restricted dictionary or forcing aerospace procedure rules onto ordinary prose.
 
 ## Final pass
 

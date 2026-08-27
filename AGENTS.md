@@ -10,6 +10,7 @@ This repository contains the distributable Jouzu product: code, tests, public us
 4. Keep public text user-facing. Do not expose private repository paths, planning IDs, worklog entries, partner details, credentials, local hostnames, or internal review operations.
 5. Product behavior is specified by public code/tests and sanitized public issues. Internal research is not a public API or release promise.
 6. Pi is an exact dependency. Update it only through the checked-in upstream workflow; never let the embedded runtime self-update independently.
+7. Describe the active product surface by default. Do not mention removed, rejected, superseded, unavailable, or hypothetical components in current-state instructions, skills, prompts, README/help text, or assistant prose. Exceptions are explicit planning/porting inventories and versioned changelogs, release notes, or migrations that name the affected versions. Public current-state docs mention prior behavior only when a user must act on an upgrade or compatibility boundary.
 
 ## Before editing
 

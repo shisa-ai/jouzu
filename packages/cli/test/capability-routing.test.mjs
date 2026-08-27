@@ -21,7 +21,7 @@ const expectedCaseIds = [
 	"measured-iteration-loop",
 	"long-running-shell-process",
 	"explicit-reminder",
-	"substantive-user-facing-documentation",
+	"durable-user-facing-documentation",
 ];
 
 function assertStringArray(value, subject) {
@@ -78,4 +78,5 @@ test("jouzu-core contains the bounded routing contract and stays within its cont
 	}
 	assert.match(coreSkill, /Use only tools and skills listed in the current session\./);
 	assert.match(coreSkill, /Do not add task tracking only to make the work appear more thorough\./);
+	assert.doesNotMatch(coreSkill, /\b(?:removed|retired|obsolete|superseded|unavailable)\b/i);
 });

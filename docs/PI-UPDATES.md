@@ -79,13 +79,13 @@ Review all generated manifest and lock changes before qualification. Run focused
 
 #### Jouzu interaction review
 
-- Session-scoped upstream selection aligns with Jouzu's `Enter` behavior and removal of the Palette global-default shortcut.
-- Jouzu's prototype host model-picker option is absent from the pristine 0.84.3 npm artifact. Jouzu no longer requires it: the built-in Prompt Frame intercepts Pi's copied `app.model.select` handler and `/model` submission before stock dispatch, then opens the Palette through Jouzu's extension.
-- The Prompt Frame also intercepts Pi's forward/backward model-cycle actions so they cycle Jouzu's global favorites. It removes `/scoped-models` from autocomplete and handles exact manual submission with guidance; explicit and configured Pi model scopes remain inventory constraints.
+- Session-scoped upstream selection aligns with Jouzu's session-only `Enter` behavior.
+- The built-in Prompt Frame intercepts Pi's copied `app.model.select` handler and exact `/model` submissions before stock dispatch, then opens the Palette through Jouzu's extension.
+- The Prompt Frame intercepts Pi's forward/backward model-cycle actions so they cycle Jouzu's global favorites. It filters model-scope management from autocomplete while explicit and configured Pi model scopes remain inventory constraints.
 - Palette activation calls public extension API `pi.setModel()`, which is session-scoped in 0.84.3. `Shift+Enter` stores Jouzu's separate project default before activating the session model.
 - Project defaults are applied from `session_start` through the same public session-scoped API. Explicit models, resumed sessions, and scoped-model sets retain precedence without injecting a process-wide CLI model override.
-- The autocomplete-priority prototype change is retired. Jouzu's default follow-up binding no longer uses `Tab`, Palette `Tab` is handled inside its component, and the Prompt Frame preserves ordinary autocomplete behavior.
-- Jouzu's Pi contract check now covers official session-only model persistence, semantic editor actions, direct custom-editor handler copying, favorite-cycle routing, scoped-command interception, and packed runtime startup without requiring modified Pi files.
+- Palette `Tab` is handled inside its component, and the Prompt Frame preserves ordinary autocomplete behavior.
+- Jouzu's Pi contract check covers official session-only model persistence, semantic editor actions, direct custom-editor handler copying, favorite-cycle routing, scoped-command interception, and packed runtime startup with the pristine Pi package.
 
 #### Provenance disposition
 
@@ -99,5 +99,3 @@ The first installation attempt stopped at npm's configured minimum-release-age p
 - **Tag and npm `gitHead`:** `914cf1472e715297caa30db4b9535d534a9eb718`
 - **npm integrity:** `sha512-l4E+B7hgXKWddRo8bC/eSue2aWZjEgJ9xIpf5p0Og+lq8a2TArCwJ0HCoCPCgaBP/tN4zbYH/wOwvx9pJpeLCA==`
 - **Disposition:** Qualified for Jouzu v0.1.1 with zero declared deviations.
-
-The v0.1.2 Palette campaign subsequently exposed undeclared local generated-runtime changes used for host picker routing, session-only model activation, and autocomplete priority. Those changes are retired by the 0.84.3 public API and Jouzu Prompt Frame wrapper; no modified Pi file is part of the release design.
