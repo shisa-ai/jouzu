@@ -53,7 +53,7 @@
 		"better-sqlite3": "13.0.1",
 		"camoufox-js": "0.12.0",
 		"pi-code-previews": "0.1.36",
-		"pi-multiloop": "git+https://github.com/lhl/pi-multiloop.git#491968d257a906f34a47f8bf77f065d6348666cc",
+		"pi-multiloop": "git+https://github.com/lhl/pi-multiloop.git#e17a58737451e8c0e91c0517a96e592097fbb694",
 		"pi-schedule-prompt": "0.4.1",
 		"pi-skill-dollar": "git+https://github.com/lhl/pi-skill-dollar.git#4bff5734d87c4f4725d81a4ea1d1c1283c22423c",
 		"pi-smart-fetch": "0.3.17",
