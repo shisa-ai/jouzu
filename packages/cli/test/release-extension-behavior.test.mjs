@@ -313,19 +313,23 @@ test(
 			assert.match(textOf(invalidBatch), /error|failed|invalid/iu);
 
 			const bgTool = getTool(extensions, "bg_task");
-			const spawned = await execute(
-				bgTool,
-				{
-					action: "spawn",
-					command: `${process.execPath} -e "setTimeout(() => {}, 5000)"`,
-					cwd: root,
-					notifyOnExit: true,
-				},
-				harness.ctx,
-			);
-			backgroundPid = spawned.details.task.pid;
-			assert.ok(backgroundPid > 0);
-			assert.match(textOf(await execute(bgTool, { action: "list" }, harness.ctx)), /running/iu);
+			if (process.platform === "win32") {
+				assert.match(textOf(await execute(bgTool, { action: "list" }, harness.ctx)), /No background tasks/iu);
+			} else {
+				const spawned = await execute(
+					bgTool,
+					{
+						action: "spawn",
+						command: `${process.execPath} -e "setTimeout(() => {}, 5000)"`,
+						cwd: root,
+						notifyOnExit: true,
+					},
+					harness.ctx,
+				);
+				backgroundPid = spawned.details.task.pid;
+				assert.ok(backgroundPid > 0);
+				assert.match(textOf(await execute(bgTool, { action: "list" }, harness.ctx)), /running/iu);
+			}
 
 			await invokeHandlers(extensions, "session_shutdown", { type: "session_shutdown", reason: "reload" }, harness.ctx);
 			await sleep(100);
@@ -343,9 +347,11 @@ test(
 				harness.ctx,
 			);
 			await invokeHandlers(extensions, "session_shutdown", { type: "session_shutdown", reason: "quit" }, harness.ctx);
-			await sleep(300);
-			assert.throws(() => process.kill(backgroundPid, 0), /ESRCH/u);
-			backgroundPid = undefined;
+			if (backgroundPid) {
+				await sleep(300);
+				assert.throws(() => process.kill(backgroundPid, 0), /ESRCH/u);
+				backgroundPid = undefined;
+			}
 		} finally {
 			if (extensions.length > 0 && harness) {
 				try {

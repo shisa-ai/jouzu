@@ -16,6 +16,7 @@ concurrency:
 jobs:
   node:
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
@@ -30,14 +31,25 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: npm
       - run: npm ci --ignore-scripts
+        timeout-minutes: 20
       - run: npm run build
+        timeout-minutes: 15
       - run: npm run check
+        timeout-minutes: 10
       - run: npm test --workspaces --if-present
-      - run: npm run pack:check
-      - run: npm run test:packed
-      - run: npm run test:auto-update
+        timeout-minutes: 20
+      - if: matrix.node == 24
+        run: npm run pack:check
+        timeout-minutes: 10
+      - if: matrix.node == 24
+        run: npm run test:packed
+        timeout-minutes: 20
+      - if: matrix.node == 24
+        run: npm run test:auto-update
+        timeout-minutes: 20
       - if: matrix.node == 24
         run: npm run test:extensions:online
+        timeout-minutes: 15
         env:
           JOUZU_EXTENSION_NETWORK: "1"
 
