@@ -317,7 +317,7 @@ test(
 				bgTool,
 				{
 					action: "spawn",
-					command: `${process.execPath} -e "setTimeout(() => {}, 60000)"`,
+					command: `${process.execPath} -e "setTimeout(() => {}, 5000)"`,
 					cwd: root,
 					notifyOnExit: true,
 				},
