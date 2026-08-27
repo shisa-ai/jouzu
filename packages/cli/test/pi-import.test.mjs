@@ -62,7 +62,9 @@ test("requires affirmative consent independently for models and credentials", as
 		assert.throws(() => readFileSync(join(paths.agentDir, "models.json")), /ENOENT/);
 		assert.equal(readFileSync(join(paths.agentDir, "auth.json"), "utf8"), auth);
 		assert.equal(readFileSync(join(source, "auth.json"), "utf8"), auth);
-		assert.equal(statSync(join(paths.agentDir, "auth.json")).mode & 0o777, 0o600);
+		if (process.platform !== "win32") {
+			assert.equal(statSync(join(paths.agentDir, "auth.json")).mode & 0o777, 0o600);
+		}
 		assert.doesNotMatch(output, /secret|anthropic/);
 		assert.equal(readPiImportReceipt(join(paths.stateDir, "pi-import.json")).decidedAt, "2026-08-26T00:00:00.000Z");
 	} finally {

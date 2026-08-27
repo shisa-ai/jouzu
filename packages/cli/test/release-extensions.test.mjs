@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
 import { test } from "node:test";
-import { createJouzuCamoufoxExtension } from "../dist/camoufox-adapter.js";
+import { createJouzuCamoufoxExtension, ensureJouzuCamoufoxInstalled } from "../dist/camoufox-adapter.js";
 import {
 	consolidateReleaseToolConflicts,
 	inspectReleaseExtensions,
@@ -163,6 +163,29 @@ test("conflicts with release-owned tools are consolidated by extension", () => {
 		},
 		{ path: "other.ts", error: `Tool "gamma" conflicts with ${otherPath}` },
 	]);
+});
+
+test("the Jouzu Camoufox installer awaits first-use download and verifies the result", async () => {
+	let locateCalls = 0;
+	let installCalls = 0;
+	await ensureJouzuCamoufoxInstalled({
+		locateInstalled() {
+			locateCalls += 1;
+			if (locateCalls === 1) throw new Error("not installed");
+		},
+		async install() {
+			installCalls += 1;
+		},
+	});
+	assert.equal(installCalls, 1);
+	assert.equal(locateCalls, 2);
+
+	await ensureJouzuCamoufoxInstalled({
+		locateInstalled() {},
+		async install() {
+			throw new Error("must not install");
+		},
+	});
 });
 
 test("the Jouzu Camoufox adapter registers both tools without starting a browser", () => {
