@@ -35,6 +35,10 @@ jobs:
       - run: npm run pack:check
       - run: npm run test:packed
       - run: npm run test:auto-update
+      - if: matrix.node == 24
+        run: npm run test:extensions:online
+        env:
+          JOUZU_EXTENSION_NETWORK: "1"
 
   python:
     runs-on: ${{ matrix.os }}
