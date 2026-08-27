@@ -49,14 +49,15 @@ jobs:
         timeout-minutes: 10
       - if: matrix.node == 24
         run: npm run test:packed
-        timeout-minutes: 20
+        timeout-minutes: 30
       - if: matrix.node == 24
         run: npm run test:auto-update
-        timeout-minutes: 20
+        timeout-minutes: 30
       - if: matrix.node == 24
         run: npm run test:extensions:online
         timeout-minutes: 15
         env:
+          GITHUB_TOKEN: ${{ github.token }}
           JOUZU_EXTENSION_NETWORK: "1"
 
   python:

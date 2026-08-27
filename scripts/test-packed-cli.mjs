@@ -29,7 +29,8 @@ function run(command, args, options = {}) {
 }
 
 function runNpm(args, options = {}) {
-	return run(npmCommand, [...npmPrefix, ...args], { timeout: 300_000, ...options });
+	const timeout = process.platform === "win32" ? 600_000 : 300_000;
+	return run(npmCommand, [...npmPrefix, ...args], { timeout, ...options });
 }
 
 function scrubbedHarnessEnv() {
