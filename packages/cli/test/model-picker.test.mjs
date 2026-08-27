@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -833,6 +834,52 @@ test("corrupt picker state is quarantined and reported after a UI context exists
 		assert.match(notifications[0][0], /Unreadable model picker state was preserved/);
 		assert.equal(notifications[0][1], "warning");
 	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("picker state and cached catalog warnings are each reported once", async () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-warning-latches-"));
+	const previousEndpoint = process.env.JOUZU_MODEL_CATALOG_URL;
+	try {
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+		mkdirSync(paths.stateDir, { recursive: true });
+		writeFileSync(join(paths.stateDir, "model-picker.json"), "{ broken");
+
+		const endpoint = "https://catalog.example.test/v1/jouzu/model-catalog";
+		process.env.JOUZU_MODEL_CATALOG_URL = endpoint;
+		const endpointHash = createHash("sha256").update(endpoint).digest("hex");
+		const originDirectory = join(paths.cacheDir, "model-catalog", endpointHash);
+		mkdirSync(originDirectory, { recursive: true });
+		writeFileSync(join(originDirectory, "origin.json"), "{ broken");
+
+		const integration = createJouzuModelPicker(paths);
+		const handlers = new Map();
+		integration.extension.factory({
+			on(event, handler) {
+				handlers.set(event, handler);
+			},
+			setModel: async () => true,
+		});
+		const notifications = [];
+		const ctx = {
+			mode: "tui",
+			cwd: root,
+			model: undefined,
+			scopedModels: [],
+			sessionManager: { getBranch: () => [] },
+			ui: { notify: (...values) => notifications.push(values) },
+		};
+		await handlers.get("session_start")({ reason: "startup" }, ctx);
+		await handlers.get("session_start")({ reason: "reload" }, ctx);
+
+		assert.equal(notifications.length, 2);
+		assert.match(notifications[0][0], /Unreadable model picker state was preserved/u);
+		assert.match(notifications[1][0], /Cached model catalog was ignored/u);
+		assert.ok(notifications.every(([, level]) => level === "warning"));
+	} finally {
+		if (previousEndpoint === undefined) delete process.env.JOUZU_MODEL_CATALOG_URL;
+		else process.env.JOUZU_MODEL_CATALOG_URL = previousEndpoint;
 		rmSync(root, { recursive: true, force: true });
 	}
 });

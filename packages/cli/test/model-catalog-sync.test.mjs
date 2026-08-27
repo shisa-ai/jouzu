@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 
+import { MODEL_CATALOG_MAX_BYTES } from "../dist/model-catalog.js";
 import {
 	acceptQuarantinedCatalog,
 	loadActiveModelCatalog,
@@ -86,6 +87,41 @@ test("configured refresh activates once and validates unchanged bytes with ETag"
 		assert.equal(second.status, "not-modified");
 		assert.equal(requestHeaders[1].get("if-none-match"), '"fixture-1"');
 		assert.equal(second.catalogStatus.validatedAt, "2026-08-26T02:00:00.000Z");
+	} finally {
+		rmSync(temporary, { recursive: true, force: true });
+	}
+});
+
+test("streaming refresh cancels an understated response above the byte limit", async () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-bounded-stream-"));
+	try {
+		let cancelled = false;
+		let pull = 0;
+		const body = new ReadableStream({
+			pull(controller) {
+				if (pull < 2) controller.enqueue(new Uint8Array(MODEL_CATALOG_MAX_BYTES / 2));
+				else controller.enqueue(Uint8Array.of(1));
+				pull += 1;
+			},
+			cancel() {
+				cancelled = true;
+			},
+		});
+		const result = await refreshModelCatalog(paths(temporary), {
+			env: env(),
+			fetch: async () =>
+				new Response(body, {
+					status: 200,
+					headers: {
+						"Content-Type": "application/vnd.jouzu.model-catalog+json; version=1",
+						"Content-Length": "1",
+					},
+				}),
+		});
+		assert.equal(result.status, "rejected");
+		assert.equal(result.code, "catalog_sync_error");
+		assert.match(result.message, /exceeds 16 MiB/u);
+		assert.equal(cancelled, true);
 	} finally {
 		rmSync(temporary, { recursive: true, force: true });
 	}

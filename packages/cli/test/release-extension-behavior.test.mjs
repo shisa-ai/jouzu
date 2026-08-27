@@ -61,14 +61,14 @@ function createHarness(root) {
 	const sessionFile = join(root, "session.jsonl");
 	writeFileSync(
 		sessionFile,
-		[
+		`${[
 			JSON.stringify({
 				type: "message",
 				id: "m1",
 				message: { role: "user", content: "extension qualification active lineage" },
 			}),
 			JSON.stringify({ type: "message", id: "m2", message: { role: "user", content: "off lineage secret" } }),
-		].join("\n") + "\n",
+		].join("\n")}\n`,
 	);
 	entries.push({
 		type: "message",

@@ -15,7 +15,6 @@ import { acquireStateLock, type StateLockInspection } from "./state-lock.js";
 
 const CATALOG_URL_ENV = "JOUZU_MODEL_CATALOG_URL";
 const CATALOG_TOKEN_ENV = "JOUZU_MODEL_CATALOG_TOKEN";
-const CATALOG_CONNECT_TIMEOUT_MS = 5_000;
 const CATALOG_TOTAL_TIMEOUT_MS = 30_000;
 const QUARANTINE_LIMIT = 3;
 const QUARANTINE_BYTE_LIMIT = 48 * 1024 * 1024;
@@ -349,9 +348,35 @@ async function readBoundedBody(response: Response): Promise<string> {
 	if (Number.isFinite(contentLength) && contentLength > MODEL_CATALOG_MAX_BYTES) {
 		throw new CatalogSyncError("catalog response exceeds 16 MiB");
 	}
-	const bytes = new Uint8Array(await response.arrayBuffer());
-	if (bytes.byteLength > MODEL_CATALOG_MAX_BYTES) throw new CatalogSyncError("catalog response exceeds 16 MiB");
-	return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+	if (!response.body) return "";
+
+	const reader = response.body.getReader();
+	const decoder = new TextDecoder("utf-8", { fatal: true });
+	let received = 0;
+	let text = "";
+	try {
+		while (true) {
+			const { done, value } = await reader.read();
+			if (done) break;
+			if (!value) continue;
+			received += value.byteLength;
+			if (received > MODEL_CATALOG_MAX_BYTES) {
+				await reader.cancel("catalog response exceeds 16 MiB");
+				throw new CatalogSyncError("catalog response exceeds 16 MiB");
+			}
+			text += decoder.decode(value, { stream: true });
+		}
+		return text + decoder.decode();
+	} catch (error) {
+		try {
+			await reader.cancel(error);
+		} catch {
+			// Preserve the read/decode error.
+		}
+		throw error;
+	} finally {
+		reader.releaseLock();
+	}
 }
 
 function errorCode(error: unknown): string {
@@ -597,8 +622,3 @@ export function acceptQuarantinedCatalog(
 		release();
 	}
 }
-
-export const catalogSyncDefaults = {
-	connectTimeoutMs: CATALOG_CONNECT_TIMEOUT_MS,
-	totalTimeoutMs: CATALOG_TOTAL_TIMEOUT_MS,
-};

@@ -495,6 +495,7 @@ export function createJouzuModelPicker(
 	let pendingDispatch: ModelReference | undefined;
 	let queuedModelSwitch: { model: PiModel; reference: PickerModel; setProjectDefault: boolean } | undefined;
 	let stateWarningShown = false;
+	let catalogWarningShown = false;
 	let cycleBusy = false;
 	let setModel: ((model: PiModel) => Promise<boolean>) | undefined;
 
@@ -522,8 +523,8 @@ export function createJouzuModelPicker(
 			stateWarningShown = true;
 			ctx.ui.notify(loaded.warning, "warning");
 		}
-		if (catalogWarning && !stateWarningShown) {
-			stateWarningShown = true;
+		if (catalogWarning && !catalogWarningShown) {
+			catalogWarningShown = true;
 			ctx.ui.notify(catalogWarning, "warning");
 		}
 		const current = modelReference(ctx.model, catalog);
