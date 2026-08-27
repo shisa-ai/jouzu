@@ -46,7 +46,7 @@
 		"@earendil-works/pi-coding-agent": "0.84.3",
 		"@earendil-works/pi-tui": "0.84.3",
 		"@lhl/pi-goal": "git+https://github.com/lhl/pi-goal.git#a38ff5f0aab12a4591d05845de4f0a16033530ca",
-		"@lhl/pi-tasks": "git+https://github.com/lhl/pi-tasks.git#be52712d391d3b3771204222f203c4e06175d3da",
+		"@lhl/pi-tasks": "git+https://github.com/lhl/pi-tasks.git#fc2e88bccfe0c5b818daea7092667d75e8e14b3d",
 		"@sting8k/pi-vcc": "0.7.0",
 		"@the-forge-flow/camoufox-pi": "0.2.1",
 		"@vanillagreen/pi-background-tasks": "2.0.0",

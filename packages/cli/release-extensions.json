@@ -66,8 +66,8 @@
 		{
 			"name": "@lhl/pi-tasks",
 			"version": "0.6.0",
-			"source": "git+https://github.com/lhl/pi-tasks.git#be52712d391d3b3771204222f203c4e06175d3da",
-			"commit": "be52712d391d3b3771204222f203c4e06175d3da",
+			"source": "git+https://github.com/lhl/pi-tasks.git#fc2e88bccfe0c5b818daea7092667d75e8e14b3d",
+			"commit": "fc2e88bccfe0c5b818daea7092667d75e8e14b3d",
 			"repository": "https://github.com/lhl/pi-tasks",
 			"license": "MIT",
 			"licenseEvidence": "LICENSE",

@@ -166,6 +166,7 @@ test(
 		const previousAgentDir = process.env.PI_CODING_AGENT_DIR;
 		const previousTasks = process.env.PI_TASKS;
 		const previousVccConfig = process.env.PI_VCC_CONFIG_PATH;
+		const forceEarlyFailure = process.env.JOUZU_TEST_EXTENSION_EARLY_FAILURE === "1";
 		let extensions = [];
 		let harness;
 		let backgroundPid;
@@ -228,6 +229,7 @@ test(
 				harness.ctx,
 			);
 			assert.match(textOf(startLoop), /qualification/u);
+			if (forceEarlyFailure) throw new Error("intentional extension lifecycle qualification failure");
 			await execute(
 				getTool(extensions, "multiloop_iterate"),
 				{ lane: "qualification", hypothesis: "state records" },
@@ -352,6 +354,8 @@ test(
 				assert.throws(() => process.kill(backgroundPid, 0), /ESRCH/u);
 				backgroundPid = undefined;
 			}
+		} catch (error) {
+			if (!forceEarlyFailure || error?.message !== "intentional extension lifecycle qualification failure") throw error;
 		} finally {
 			if (extensions.length > 0 && harness) {
 				try {

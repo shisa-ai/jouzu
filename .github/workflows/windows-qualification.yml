@@ -1,0 +1,38 @@
+name: Windows qualification
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lifecycle:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci --ignore-scripts
+        timeout-minutes: 20
+      - run: npm run build
+        timeout-minutes: 15
+      - run: npm run check
+        timeout-minutes: 10
+      - name: Complete extension lifecycle
+        run: node --test packages/cli/test/release-extension-behavior.test.mjs
+        timeout-minutes: 5
+      - name: Early-failure extension cleanup
+        run: node --test packages/cli/test/release-extension-behavior.test.mjs
+        timeout-minutes: 5
+        env:
+          JOUZU_TEST_EXTENSION_EARLY_FAILURE: "1"
