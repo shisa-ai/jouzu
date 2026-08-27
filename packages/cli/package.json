@@ -61,8 +61,8 @@
 	},
 	"overrides": {
 		"@the-forge-flow/camoufox-pi": {
-			"camoufox-js": "$camoufox-js",
-			"playwright-core": "$playwright-core"
+			"camoufox-js": "0.12.0",
+			"playwright-core": "1.60.0"
 		}
 	},
 	"bundleDependencies": [
