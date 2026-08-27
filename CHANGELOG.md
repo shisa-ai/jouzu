@@ -2,7 +2,13 @@
 
 ## Unreleased
 
+- Bundle ten release-owned Pi extensions for scheduling, background processes, readable and rendered web access, code previews, tasks, goals, measured loops, context recall, and skill discovery, plus the `pi-goal` and `multiloop` package skills. Matching user-configured copies are suppressed without changing user settings; unrelated Pi packages remain user-managed.
+- Add the optional model catalog and `jouzu catalog status|refresh|accept|validate|conformance` commands, with strict duplicate-key and credential rejection, bounded streaming refresh, account-partitioned private cache, ETag validation, mass-change quarantine, and last-known-good retention.
+- Add separate opt-in first-run imports for stock Pi `models.json` and `auth.json`; both default to no, preserve source and destination files, and record a local receipt.
 - Restore the last Models filter used when the picker opens again.
+- Keep queued model switches responsive during active calls, advance repeated `Ctrl+P` presses through queued favorites, and avoid floating Palette overlays on terminals that render inline images above text.
+- Preserve JSON `__proto__` as an own property during catalog validation, report picker-state and cached-catalog warnings independently, cap response bodies while streaming, and make model-picker tests independent of the developer's terminal.
+- Default isolated Jouzu settings to quiet startup while preserving explicit settings and `--verbose` resource output.
 - Route pi-vcc configuration to Jouzu's isolated agent root.
 - Add on-demand Clear Writing and database-free Source Check skills to the Core and JA profiles.
 - Expand Clear Writing to cover drafting, revision, audit, documentation structure, terminology, and accessibility; point Pi's default system prompt to it while preserving custom prompts.

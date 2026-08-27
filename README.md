@@ -59,6 +59,19 @@ The Models view searches exact provider/model identity and display names. `Tab` 
 
 A switch is blocked when the estimated active context cannot fit the target model's advertised input budget. Jouzu does not infer cache compatibility, model equivalence, cost, routing, privacy, retention, region, or certification guarantees. Those properties belong to the provider and configuration you select unless Jouzu reports verified facts explicitly.
 
+## Included extension tools
+
+Core and JA load the same release-owned extension set:
+
+- `schedule_prompt` manages one-time and recurring prompts.
+- `bg_task` runs and monitors non-blocking shell processes.
+- `web_fetch` and `batch_web_fetch` retrieve readable HTTP content; `tff-fetch_url` and `tff-search_web` use rendered Camoufox browser access when needed.
+- `TaskCreate` and related task tools track finite work; `get_goal` and `update_goal` support a user-created `/goal`; `multiloop_*` records approved measured loops.
+- `vcc_recall` searches the active session and pi-vcc owns deterministic compaction.
+- Code previews render supported tool calls and results. Typing `$` at a token boundary opens skill suggestions.
+
+The extension code and its runtime dependencies ship inside `jouzu`; a normal first launch does not install them from npm or Git. Jouzu updates this set with application releases. Packages that you add through Pi remain separate user-managed state and are not covered by Jouzu's release qualification.
+
 ## Interactive session UI
 
 Jouzu provides its prompt and status surfaces directly:

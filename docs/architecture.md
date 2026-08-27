@@ -17,6 +17,11 @@ cli.ts  (entry: argument routing, profile resolution, launch)
   │    └─ profile-manager.ts   strict profile-state reader, plan/apply
   ├─ profile-choice.ts   first-run Japanese support consent
   ├─ pi-import.ts        opt-in stock-Pi models/auth import
+  ├─ model-catalog.ts    strict catalog parser and semantic validation
+  ├─ model-catalog-sync.ts  bounded remote refresh and private last-known-good cache
+  ├─ catalog-command.ts  catalog status, refresh, acceptance, and conformance commands
+  ├─ release-extensions.ts  exact release manifest and runtime resource resolution
+  ├─ camoufox-adapter.ts lazy release-owned rendered-browser registration
   ├─ profiles.ts         bundled profile loading
   ├─ profile-manager.ts  profile planning/application (see above)
   ├─ keybindings.ts      durable keybinding defaults
@@ -60,10 +65,11 @@ There are no circular module imports.
 | Keybinding state | `keybindings.ts` | `state/keybindings-state.json` |
 | Self-update state | `updater.ts` | `state/self-update.json` |
 | Model-picker project defaults, favorites, and recents | `model-picker-state.ts` | `state/model-picker.json` |
+| Account-partitioned model catalog cache | `model-catalog-sync.ts` | `cache/model-catalog/<endpoint-hash>/` |
 
-Locks (`profile.lock`, `pi-import.lock`, `keybindings.lock`, `self-update.lock`, `model-picker.lock`) are created and
+Locks (`profile.lock`, `pi-import.lock`, `keybindings.lock`, `self-update.lock`, `model-picker.lock`, and per-endpoint catalog `refresh.lock`) are created and
 released by `state-lock.ts`, the shared state-lock primitive used by the
-updater, profile, Pi-import, keybinding, and model-picker operations. It records a PID, a started-at
+updater, profile, Pi-import, keybinding, model-picker, and catalog operations. It records a PID, a started-at
 timestamp, and a release token, refuses locks held by a live process, and
 recovers a dead owner's or owner-unknown lock after the stale threshold.
 
@@ -88,17 +94,20 @@ There are three distinct update lanes:
 - **Pi qualification** (scripts/pi-upstream.mjs, scripts/check-pi-contract.mjs):
   a maintainer lane that pins an exact reviewed Pi artifact before promotion.
   It is not a runtime code path.
-- **Pi-owned extension updates** (`jz update --extensions`): follow Pi's own
-  package behavior. This lane is outside Jouzu's v0.1 compatibility guarantee.
+- **Release-owned extension updates** (`release-extensions.json`): move only with a Jouzu application release. They are bundled dependencies rather than mutable Pi package entries.
+- **User-installed extension updates** (`jz update --extensions`): follow Pi's package behavior inside the isolated Jouzu root. This lane does not replace or independently advance the release-owned set and remains outside Jouzu's release qualification.
+
+## Release-owned extension boundary
+
+`release-extensions.json` records ten selected extension packages, their exact npm versions or Git commits, two package skill paths, three compatibility dependencies, source URLs, licenses, and integrity evidence. `release-extensions.ts` resolves those resources from the packed `jouzu` package and adds them to Core and JA launches. A matching user-configured package entrypoint is suppressed in memory without changing `settings.json`; unrelated packages still load. A different package that registers a release-owned tool name produces one consolidated conflict.
+
+`camoufox-adapter.ts` registers `tff-fetch_url` and `tff-search_web` without starting the browser during ordinary startup. The first browser tool call uses bundled `camoufox-js`, `playwright-core`, and `better-sqlite3`; `session_shutdown` closes the client.
 
 ## Bundled profile boundaries
 
-Jouzu bundles two profiles, `core` (the language-neutral fallback) and `ja`
-(the optional Japanese-focused extension). Each profile declares its assets in
-`profiles/<id>/manifest.json`; `profile-manager.ts` plans and applies those
-assets into the isolated agent root. v0.1 ships no extension or prompt
-catalogs beyond these bundled profiles; the `catalog/`, `profiles/`, and
-`packaging/` top-level directories are placeholders for future releases.
+Jouzu bundles two profiles, `core` (the language-neutral fallback) and `ja` (the optional Japanese-focused extension). Each profile declares its product-owned assets in `profiles/<id>/manifest.json`; `profile-manager.ts` plans and applies those assets into the isolated agent root. Core and JA use the same release-owned extension and five-skill set. JA adds only its response-language prompt asset.
+
+The optional model catalog is a model-metadata input, not an extension installer. With no configured endpoint, it performs no network work. A configured refresh streams at most 16 MiB, validates strict JSON and semantic references before activation, partitions cache by endpoint and account, quarantines bounded mass changes, and preserves the active last-known-good document on failure.
 
 ## Workspace boundary
 
