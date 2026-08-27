@@ -14,6 +14,7 @@
 - Expand Clear Writing to cover drafting, revision, audit, documentation structure, terminology, and accessibility; point Pi's default system prompt to it while preserving custom prompts.
 - Group Core capability selection for session recall, web research, finite tasks, goals, measured loops, background processes, and scheduled prompts; add an untrusted-web rule and routing evaluation corpus.
 - Keep current-state skills and documentation focused on active capabilities; reserve prior-component references for versioned release and migration records.
+- Qualify the bundled extension set on Linux and macOS. Native Windows qualification remains pending; v0.1.3 is the last release qualified by the full Windows matrix.
 
 ## 0.1.3 - 2026-08-26
 

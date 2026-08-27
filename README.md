@@ -251,6 +251,7 @@ Managed profile assets are UTF-8. Existing CP932/Shift-JIS profile targets produ
 - The Models view uses Pi's local usable-model inventory; catalog additions, one-turn trials, target-budget compaction, and cost/quota/route preflight are deferred.
 - Third-party Pi packages execute trusted code with the user's permissions and have their own platform support.
 - `Ctrl+Enter` and `Ctrl+Up` delivery depends on terminal/OS key reporting; both semantic bindings remain user-customizable.
+- Jouzu v0.1.4's bundled extension set is qualified on Linux and macOS. Native Windows qualification is pending; v0.1.3 is the last release qualified by the full Windows matrix.
 - Cross-platform support claims require the release commit's Linux, macOS, and Windows CI matrix to pass.
 
 ## Development
