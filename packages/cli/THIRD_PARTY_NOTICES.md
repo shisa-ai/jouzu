@@ -12,9 +12,9 @@ Jouzu bundles the following release-owned Pi extensions and their runtime depend
 | `@lhl/pi-tasks` | `be52712d391d3b3771204222f203c4e06175d3da` | MIT; `LICENSE` |
 | `@lhl/pi-goal` | `a38ff5f0aab12a4591d05845de4f0a16033530ca` | MIT; `LICENSE` |
 | `pi-multiloop` | `491968d257a906f34a47f8bf77f065d6348666cc` | MIT; `LICENSE` |
-| `@sting8k/pi-vcc` | 0.6.1 | The upstream `README.md` declares MIT under its License heading; the package has no separate license file |
-| `pi-skill-dollar` | 0.1.0 | MIT; `LICENSE` |
-| `camoufox-js` | 0.11.5 | MPL-2.0; `LICENSE.md` |
+| `@sting8k/pi-vcc` | 0.7.0 | The upstream `README.md` declares MIT under its License heading; the package has no separate license file |
+| `pi-skill-dollar` | `4bff5734d87c4f4725d81a4ea1d1c1283c22423c` (v0.2.0) | MIT; `LICENSE` |
+| `camoufox-js` | 0.12.0 | MPL-2.0; `LICENSE.md` |
 | `playwright-core` | 1.60.0 | Apache-2.0; `LICENSE` and `NOTICE` |
 | `better-sqlite3` | 13.0.1 | MIT; `LICENSE` |
 

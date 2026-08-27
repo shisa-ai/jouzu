@@ -51,7 +51,7 @@ test("the release manifest and bundle list contain the selected extension set", 
 	assert.deepEqual(
 		manifest.packages.find((record) => record.name === "@the-forge-flow/camoufox-pi").dependencyOverrides,
 		{
-			"camoufox-js": "0.11.5",
+			"camoufox-js": "0.12.0",
 			"playwright-core": "1.60.0",
 		},
 	);
