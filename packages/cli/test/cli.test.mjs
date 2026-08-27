@@ -51,6 +51,25 @@ function run(args, options = {}) {
 	});
 }
 
+function rpcResponse(stdout, id) {
+	for (const line of stdout.split("\n")) {
+		if (!line.trim()) continue;
+		const value = JSON.parse(line);
+		if (value.id === id && value.type === "response") return value;
+	}
+	throw new Error(`RPC response ${id} was not found`);
+}
+
+function writeInstalledPiPackage(agentDir, name, version, extensionSource) {
+	const root = join(agentDir, "npm", "node_modules", ...name.split("/"));
+	mkdirSync(root, { recursive: true });
+	writeFileSync(
+		join(root, "package.json"),
+		`${JSON.stringify({ name, version, type: "module", pi: { extensions: ["index.ts"] } }, null, 2)}\n`,
+	);
+	writeFileSync(join(root, "index.ts"), extensionSource);
+}
+
 test("prints the Jouzu, Pi, and profile schema version tuple", () => {
 	const result = run(["--version"]);
 	assert.equal(result.status, 0, result.stderr);
@@ -77,7 +96,7 @@ test("a non-interactive first run uses Core without recording Japanese consent",
 		assert.equal(result.stdout.trim(), piVersion);
 		const state = JSON.parse(readFileSync(join(jouzuHome, "state", "profile-state.json"), "utf8"));
 		assert.equal(state.activeProfile, "core");
-		assert.equal(state.profileVersion, 5);
+		assert.equal(state.profileVersion, 6);
 		assert.equal(existsSync(join(jouzuHome, "state", "profile-choice.json")), false);
 	} finally {
 		rmSync(temp, { recursive: true, force: true });
@@ -92,12 +111,177 @@ test("Core registers its three skills and review prompt", () => {
 			{ input: `${JSON.stringify({ id: "commands", type: "get_commands" })}\n` },
 		);
 		assert.equal(result.status, 0, result.stderr);
-		const response = JSON.parse(result.stdout.trim());
+		const response = rpcResponse(result.stdout, "commands");
 		const commandNames = response.data.commands.map((command) => command.name);
 		assert.deepEqual(
 			commandNames.filter((name) => name === "jouzu-review" || name.startsWith("skill:jouzu-")),
 			["jouzu-review", "skill:jouzu-clear-writing", "skill:jouzu-core", "skill:jouzu-source-check"],
 		);
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
+
+test("Core loads the selected release-owned tool, command, and skill surfaces", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-release-surfaces-"));
+	try {
+		const probe = join(temp, "surface probe.js");
+		writeFileSync(
+			probe,
+			`export default function (pi) {
+				pi.registerCommand("jouzu-surface-probe", {
+					handler: async () => {
+						const tools = pi.getAllTools().map((tool) => tool.name).sort();
+						const commands = pi.getCommands().map((command) => command.name).sort();
+						process.stderr.write("JOUZU_SURFACE_PROBE=" + JSON.stringify({ tools, commands }) + "\\n");
+					},
+				});
+			}
+`,
+		);
+		const result = run(
+			[
+				"--jouzu-home",
+				join(temp, "home"),
+				"pi",
+				"--extension",
+				probe,
+				"--mode",
+				"rpc",
+				"--no-session",
+				"--no-context-files",
+			],
+			{
+				input: `${JSON.stringify({ id: "probe", type: "prompt", message: "/jouzu-surface-probe" })}\n${JSON.stringify({ id: "commands", type: "get_commands" })}\n`,
+			},
+		);
+		assert.equal(result.status, 0, result.stderr);
+		const marker = result.stderr.split("\n").find((line) => line.startsWith("JOUZU_SURFACE_PROBE="));
+		assert.ok(marker, result.stderr);
+		const surfaces = JSON.parse(marker.slice("JOUZU_SURFACE_PROBE=".length));
+		for (const tool of [
+			"TaskCreate",
+			"TaskList",
+			"batch_web_fetch",
+			"bg_task",
+			"get_goal",
+			"multiloop_start",
+			"schedule_prompt",
+			"tff-fetch_url",
+			"tff-search_web",
+			"update_goal",
+			"vcc_recall",
+			"web_fetch",
+		]) {
+			assert.ok(surfaces.tools.includes(tool), `missing tool ${tool}`);
+		}
+		for (const command of [
+			"goal",
+			"multiloop",
+			"pi-vcc",
+			"schedule-prompt",
+			"skill:jouzu-clear-writing",
+			"skill:jouzu-core",
+			"skill:jouzu-source-check",
+			"skill:multiloop",
+			"skill:pi-goal",
+			"status",
+			"tasks",
+		]) {
+			assert.ok(surfaces.commands.includes(command), `missing command ${command}`);
+		}
+		assert.equal(rpcResponse(result.stdout, "probe").success, true);
+		assert.equal(rpcResponse(result.stdout, "commands").success, true);
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
+
+test("configured copies of release entrypoints are suppressed without changing settings", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-release-conflict-policy-"));
+	try {
+		const jouzuHome = join(temp, "home");
+		const agentDir = join(jouzuHome, "agent");
+		mkdirSync(agentDir, { recursive: true });
+		writeInstalledPiPackage(
+			agentDir,
+			"@sting8k/pi-vcc",
+			"0.6.1",
+			`export default function (pi) {
+				pi.registerTool({
+					name: "vcc_recall",
+					label: "duplicate",
+					description: "duplicate",
+					parameters: { type: "object", properties: {} },
+					async execute() { return { content: [{ type: "text", text: "duplicate" }], details: {} }; },
+				});
+			}
+`,
+		);
+		writeInstalledPiPackage(
+			agentDir,
+			"jouzu-user-fixture",
+			"1.0.0",
+			`export default function (pi) {
+				pi.registerCommand("user-fixture", { handler: async (_args, ctx) => { await ctx.reload(); } });
+			}
+`,
+		);
+		const settingsPath = join(agentDir, "settings.json");
+		const settings = `${JSON.stringify(
+			{ packages: ["npm:@sting8k/pi-vcc@0.6.1", "npm:jouzu-user-fixture@1.0.0"] },
+			null,
+			2,
+		)}\n`;
+		writeFileSync(settingsPath, settings);
+		const result = run(["--jouzu-home", jouzuHome, "pi", "--mode", "rpc", "--no-session", "--no-context-files"], {
+			input: `${JSON.stringify({ id: "reload", type: "prompt", message: "/user-fixture" })}\n${JSON.stringify({ id: "commands", type: "get_commands" })}\n`,
+		});
+		assert.equal(result.status, 0, result.stderr);
+		assert.doesNotMatch(result.stderr, /conflicts with/u);
+		assert.ok(rpcResponse(result.stdout, "commands").data.commands.some((command) => command.name === "user-fixture"));
+		assert.equal(readFileSync(settingsPath, "utf8"), settings);
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
+
+test("a user package claiming release-owned tools produces one actionable conflict", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-release-name-conflict-"));
+	try {
+		const jouzuHome = join(temp, "home");
+		const agentDir = join(jouzuHome, "agent");
+		mkdirSync(agentDir, { recursive: true });
+		writeInstalledPiPackage(
+			agentDir,
+			"jouzu-conflict-fixture",
+			"1.0.0",
+			`const tool = (name) => ({
+				name,
+				label: name,
+				description: "conflict fixture",
+				parameters: { type: "object", properties: {} },
+				async execute() { return { content: [{ type: "text", text: name }], details: {} }; },
+			});
+			export default function (pi) {
+				pi.registerTool(tool("vcc_recall"));
+				pi.registerTool(tool("web_fetch"));
+			}
+`,
+		);
+		writeFileSync(
+			join(agentDir, "settings.json"),
+			`${JSON.stringify({ packages: ["npm:jouzu-conflict-fixture@1.0.0"] }, null, 2)}\n`,
+		);
+		const result = run(["--jouzu-home", jouzuHome, "pi", "--mode", "rpc", "--no-session", "--no-context-files"], {
+			input: `${JSON.stringify({ id: "commands", type: "get_commands" })}\n`,
+		});
+		assert.equal(result.status, 1, result.stderr);
+		const conflicts = result.stderr.split("\n").filter((line) => line.includes("conflicts with Jouzu release-owned"));
+		assert.equal(conflicts.length, 1, result.stderr);
+		assert.match(conflicts[0], /disable this extension or its package with `jz config`/u);
+		assert.match(conflicts[0], /"vcc_recall"/u);
+		assert.match(conflicts[0], /"web_fetch"/u);
 	} finally {
 		rmSync(temp, { recursive: true, force: true });
 	}
@@ -231,7 +415,7 @@ test("jz --session resolves an ID inside Jouzu's isolated session root", () => {
 			input: `${JSON.stringify({ id: "state", type: "get_state" })}\n`,
 		});
 		assert.equal(result.status, 0, result.stderr);
-		const response = JSON.parse(result.stdout.trim());
+		const response = rpcResponse(result.stdout, "state");
 		assert.equal(response.data.sessionId, sessionId);
 		assert.equal(response.data.sessionFile, sessionFile);
 		assert.doesNotMatch(result.stderr, /Session found in different project/);

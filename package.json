@@ -33,6 +33,12 @@
 		"pi:qualify": "npm run pi:check:online && npm run release:check:candidate && node scripts/check-pi-contract.mjs && node scripts/pi-upstream.mjs promote",
 		"release:check": "npm run release:metadata && npm run release:check:candidate"
 	},
+	"overrides": {
+		"@the-forge-flow/camoufox-pi": {
+			"camoufox-js": "0.11.5",
+			"playwright-core": "1.60.0"
+		}
+	},
 	"devDependencies": {
 		"@biomejs/biome": "2.3.5",
 		"@earendil-works/pi-coding-agent": "0.84.3",

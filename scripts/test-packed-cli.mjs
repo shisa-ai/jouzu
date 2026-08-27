@@ -2,7 +2,7 @@
 
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
@@ -19,6 +19,7 @@ function run(command, args, options = {}) {
 	const result = spawnSync(command, args, {
 		encoding: "utf8",
 		timeout: 120_000,
+		maxBuffer: 128 * 1024 * 1024,
 		...spawnOptions,
 	});
 	if (result.error) throw result.error;
@@ -50,6 +51,73 @@ function cleanupTemp(path) {
 	}
 }
 
+function rpcResponse(stdout, id) {
+	for (const line of stdout.split("\n")) {
+		if (!line.trim()) continue;
+		const value = JSON.parse(line);
+		if (value.id === id && value.type === "response") return value;
+	}
+	throw new Error(`RPC response ${id} was not found`);
+}
+
+function writeInstalledPiPackage(agentDir, name, version, extensionSource) {
+	const root = resolve(agentDir, "npm", "node_modules", ...name.split("/"));
+	mkdirSync(root, { recursive: true });
+	writeFileSync(
+		resolve(root, "package.json"),
+		`${JSON.stringify({ name, version, type: "module", pi: { extensions: ["index.ts"] } }, null, 2)}\n`,
+	);
+	writeFileSync(resolve(root, "index.ts"), extensionSource);
+}
+
+function assertPackedSurfaces(installedCli, probe, cwd, env, profile) {
+	const result = run(
+		process.execPath,
+		[installedCli, "pi", "--extension", probe, "--mode", "rpc", "--no-session", "--no-context-files"],
+		{
+			cwd,
+			env,
+			input: `${JSON.stringify({ id: "probe", type: "prompt", message: "/jouzu-surface-probe" })}\n${JSON.stringify({ id: "commands", type: "get_commands" })}\n`,
+		},
+	);
+	const marker = result.stderr.split("\n").find((line) => line.startsWith("JOUZU_SURFACE_PROBE="));
+	assert.ok(marker, `${profile}: ${result.stderr}`);
+	const surfaces = JSON.parse(marker.slice("JOUZU_SURFACE_PROBE=".length));
+	for (const tool of [
+		"TaskCreate",
+		"TaskList",
+		"batch_web_fetch",
+		"bg_task",
+		"get_goal",
+		"multiloop_start",
+		"schedule_prompt",
+		"tff-fetch_url",
+		"tff-search_web",
+		"update_goal",
+		"vcc_recall",
+		"web_fetch",
+	]) {
+		assert.ok(surfaces.tools.includes(tool), `${profile}: missing tool ${tool}`);
+	}
+	for (const command of [
+		"goal",
+		"multiloop",
+		"pi-vcc",
+		"schedule-prompt",
+		"skill:jouzu-clear-writing",
+		"skill:jouzu-core",
+		"skill:jouzu-source-check",
+		"skill:multiloop",
+		"skill:pi-goal",
+		"status",
+		"tasks",
+	]) {
+		assert.ok(surfaces.commands.includes(command), `${profile}: missing command ${command}`);
+	}
+	assert.equal(rpcResponse(result.stdout, "probe").success, true);
+	assert.equal(rpcResponse(result.stdout, "commands").success, true);
+}
+
 const temp = mkdtempSync(join(tmpdir(), "jouzu-packed-cli-"));
 try {
 	const packResult = runNpm(["pack", "--ignore-scripts", "--json", "--pack-destination", temp], {
@@ -65,10 +133,34 @@ try {
 	runNpm(["install", "--ignore-scripts", tarball], { cwd: temp });
 	const consumerLock = JSON.parse(readFileSync(resolve(temp, "package-lock.json"), "utf8"));
 	const installedPi = consumerLock.packages["node_modules/@earendil-works/pi-coding-agent"];
-	assert.equal(installedPi.version, piVersion);
-	assert.equal(installedPi.integrity, piLock.packages["@earendil-works/pi-coding-agent"].integrity);
+	if (installedPi) {
+		assert.equal(installedPi.version, piVersion);
+		assert.equal(installedPi.integrity, piLock.packages["@earendil-works/pi-coding-agent"].integrity);
+	} else {
+		const bundledPi = JSON.parse(
+			readFileSync(
+				resolve(temp, "node_modules", "jouzu", "node_modules", "@earendil-works", "pi-coding-agent", "package.json"),
+				"utf8",
+			),
+		);
+		assert.equal(bundledPi.version, piVersion);
+	}
 
 	const installedCli = resolve(temp, "node_modules", "jouzu", "dist", "cli.js");
+	const probe = resolve(temp, "surface-probe.js");
+	writeFileSync(
+		probe,
+		`export default function (pi) {
+			pi.registerCommand("jouzu-surface-probe", {
+				handler: async () => {
+					const tools = pi.getAllTools().map((tool) => tool.name).sort();
+					const commands = pi.getCommands().map((command) => command.name).sort();
+					process.stderr.write("JOUZU_SURFACE_PROBE=" + JSON.stringify({ tools, commands }) + "\\n");
+				},
+			});
+		}
+`,
+	);
 	const env = { ...scrubbedHarnessEnv(), JOUZU_HOME: consumer, PI_OFFLINE: "1" };
 	const version = run(process.execPath, [installedCli, "--version"], { cwd: temp, env }).stdout.trim();
 	assert.equal(version, `jouzu ${packageJson.version}\npi ${piVersion}\nprofile schema 1`);
@@ -94,13 +186,69 @@ try {
 	);
 	assert.equal(secondPlan.profile, "core");
 	assert.deepEqual(secondPlan.actions, []);
+	assertPackedSurfaces(installedCli, probe, temp, env, "core");
 	const jaPlan = JSON.parse(
 		run(process.execPath, [installedCli, "profile", "plan", "--profile", "ja", "--json"], { cwd: temp, env }).stdout,
 	);
 	assert.ok(jaPlan.actions.some((action) => action.target === "APPEND_SYSTEM.md"));
 	run(process.execPath, [installedCli, "profile", "apply", "--profile", "ja"], { cwd: temp, env });
+	assertPackedSurfaces(installedCli, probe, temp, env, "ja");
 	run(process.execPath, [installedCli, "profile", "apply", "--profile", "core"], { cwd: temp, env });
 	assert.equal(existsSync(resolve(consumer, "agent", "APPEND_SYSTEM.md")), false);
+
+	const upgradeConsumer = resolve(temp, "upgrade-consumer");
+	const upgradeAgentDir = resolve(upgradeConsumer, "agent");
+	mkdirSync(upgradeAgentDir, { recursive: true });
+	writeInstalledPiPackage(
+		upgradeAgentDir,
+		"@sting8k/pi-vcc",
+		"0.6.1",
+		`export default function (pi) {
+			pi.registerTool({
+				name: "vcc_recall",
+				label: "duplicate",
+				description: "duplicate",
+				parameters: { type: "object", properties: {} },
+				async execute() { return { content: [{ type: "text", text: "duplicate" }], details: {} }; },
+			});
+		}
+`,
+	);
+	writeInstalledPiPackage(
+		upgradeAgentDir,
+		"jouzu-packed-user-fixture",
+		"1.0.0",
+		`export default function (pi) {
+			pi.registerCommand("packed-user-fixture", { handler: async () => {} });
+		}
+`,
+	);
+	const upgradeSettingsPath = resolve(upgradeAgentDir, "settings.json");
+	const upgradeSettings = `${JSON.stringify(
+		{ packages: ["npm:@sting8k/pi-vcc@0.6.1", "npm:jouzu-packed-user-fixture@1.0.0"] },
+		null,
+		2,
+	)}\n`;
+	writeFileSync(upgradeSettingsPath, upgradeSettings);
+	const upgradeEnv = { ...scrubbedHarnessEnv(), JOUZU_HOME: upgradeConsumer, PI_OFFLINE: "1" };
+	const upgradeRun = run(
+		process.execPath,
+		[installedCli, "pi", "--mode", "rpc", "--no-session", "--no-context-files"],
+		{
+			cwd: temp,
+			env: upgradeEnv,
+			input: `${JSON.stringify({ id: "commands", type: "get_commands" })}\n`,
+		},
+	);
+	assert.doesNotMatch(upgradeRun.stderr, /conflicts with/u);
+	const upgradeCommands = rpcResponse(upgradeRun.stdout, "commands").data.commands.map((command) => command.name);
+	assert.ok(upgradeCommands.includes("pi-vcc"));
+	assert.ok(upgradeCommands.includes("packed-user-fixture"));
+	assert.equal(readFileSync(upgradeSettingsPath, "utf8"), upgradeSettings);
+	const upgradeList = run(process.execPath, [installedCli, "list"], { cwd: temp, env: upgradeEnv }).stdout;
+	assert.match(upgradeList, /npm:@sting8k\/pi-vcc@0\.6\.1/u);
+	assert.match(upgradeList, /npm:jouzu-packed-user-fixture@1\.0\.0/u);
+
 	const qualified = piLock.compatibilityStatus === "qualified";
 	const doctor = run(process.execPath, [installedCli, "doctor"], {
 		cwd: temp,

@@ -5,6 +5,7 @@ import type { KeybindingPlan } from "./keybindings.js";
 import type { JouzuMetadata } from "./metadata.js";
 import { loadModelPickerState } from "./model-picker-state.js";
 import type { JouzuPaths } from "./paths.js";
+import type { ReleaseExtensionStatus } from "./release-extensions.js";
 import type { ProfileSelection } from "./runtime.js";
 import { describeStateLock, inspectStateLock, STATE_LOCK_STALE_MS } from "./state-lock.js";
 import type { UpdateInstallChannel, UpdateStatus } from "./updater.js";
@@ -48,6 +49,8 @@ export interface DoctorContext {
 	updateDiagnostic?: string;
 	keybindingPlan?: KeybindingPlan;
 	keybindingDiagnostic?: string;
+	releaseExtensionStatus?: ReleaseExtensionStatus;
+	releaseExtensionDiagnostic?: string;
 }
 
 export type DoctorSeverity = "warning" | "problem";
@@ -267,6 +270,18 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	if (context.keybindingDiagnostic) {
 		warning("keybindings.statusUnavailable", `Keybinding status is unavailable: ${context.keybindingDiagnostic}`);
 	}
+	if (context.releaseExtensionStatus?.errors.length) {
+		problem(
+			"extensions.unavailable",
+			`Release-owned extensions are unavailable: ${context.releaseExtensionStatus.errors.join("; ")}`,
+		);
+	}
+	if (context.releaseExtensionDiagnostic) {
+		problem(
+			"extensions.manifestInvalid",
+			`Release extension inventory is unavailable: ${context.releaseExtensionDiagnostic}`,
+		);
+	}
 	let modelPickerState = "absent";
 	if (existsSync(modelPickerStatePath)) {
 		try {
@@ -294,6 +309,30 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 		`${context.metadata.lock.compatibilityStatus}; deviations=${context.metadata.lock.deviations.length}`,
 	);
 	field("runtime", "profile.schema", "Profile schema", String(context.metadata.profileSchemaVersion));
+	field(
+		"runtime",
+		"extensions.releaseOwned",
+		"Release-owned extensions",
+		context.releaseExtensionStatus
+			? `${context.releaseExtensionStatus.extensionCount} selected; ${context.releaseExtensionStatus.errors.length === 0 ? "ready" : "unavailable"}`
+			: "unavailable",
+	);
+	field(
+		"runtime",
+		"skills.packageOwned",
+		"Package-owned skills",
+		context.releaseExtensionStatus
+			? `${context.releaseExtensionStatus.skillCount} selected; ${context.releaseExtensionStatus.errors.length === 0 ? "ready" : "unavailable"}`
+			: "unavailable",
+	);
+	field(
+		"runtime",
+		"extensions.compatibilityDependencies",
+		"Extension compatibility dependencies",
+		context.releaseExtensionStatus
+			? `${context.releaseExtensionStatus.manifest.compatibilityDependencies.length} selected`
+			: "unavailable",
+	);
 	field(
 		"runtime",
 		"update.installChannel",

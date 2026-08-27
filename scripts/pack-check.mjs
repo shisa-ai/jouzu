@@ -81,6 +81,7 @@ for (const directory of packageDirectories) {
 	const result = spawnSync(npmCommand, [...npmPrefixArguments, "pack", "--dry-run", "--ignore-scripts", "--json"], {
 		cwd: directory,
 		encoding: "utf8",
+		maxBuffer: 128 * 1024 * 1024,
 	});
 	if (result.error) throw result.error;
 	if (result.status !== 0) {
@@ -101,9 +102,9 @@ for (const directory of packageDirectories) {
 		if (packed.files.some((file) => file.path === "dist/build-info.json")) {
 			throw new Error("jouzu tarball contains development build metadata");
 		}
-		const allowedTopLevel = new Set(["LICENSE", "README.md", "package.json"]);
+		const allowedTopLevel = new Set(["LICENSE", "README.md", "THIRD_PARTY_NOTICES.md", "package.json"]);
 		for (const file of packed.files) {
-			if (!allowedTopLevel.has(file.path) && !file.path.startsWith("dist/")) {
+			if (!allowedTopLevel.has(file.path) && !file.path.startsWith("dist/") && !file.path.startsWith("node_modules/")) {
 				throw new Error(`jouzu tarball contains unexpected public file ${file.path}`);
 			}
 		}
@@ -117,11 +118,74 @@ for (const directory of packageDirectories) {
 			throw new Error("jouzu dist/cli.js is missing its Node shebang");
 		}
 		assertProfileFilesPresent(packed.files, deriveRequiredProfileFiles(join(directory, "profiles")));
+		if (!packed.files.some((file) => file.path === "dist/release-extensions.json")) {
+			throw new Error("jouzu tarball is missing dist/release-extensions.json");
+		}
+		if (!packed.files.some((file) => file.path === "THIRD_PARTY_NOTICES.md")) {
+			throw new Error("jouzu tarball is missing THIRD_PARTY_NOTICES.md");
+		}
+		const releaseManifest = JSON.parse(readFileSync(join(directory, "release-extensions.json"), "utf8"));
+		const releaseLock = JSON.parse(readFileSync(join(directory, "package-lock.json"), "utf8"));
+		const releasePackages = [...releaseManifest.packages, ...releaseManifest.compatibilityDependencies];
+		const expectedBundles = releasePackages.map((record) => record.name);
+		for (const name of expectedBundles) {
+			if (!packed.bundled?.includes(name)) throw new Error(`jouzu tarball does not bundle ${name}`);
+			if (!packed.files.some((file) => file.path === `node_modules/${name}/package.json`)) {
+				throw new Error(`jouzu tarball is missing bundled package ${name}`);
+			}
+		}
+		for (const record of releaseManifest.packages) {
+			for (const resource of [...record.extensions, ...record.skills]) {
+				if (!packed.files.some((file) => file.path === `node_modules/${record.name}/${resource}`)) {
+					throw new Error(`jouzu tarball is missing release resource ${record.name}/${resource}`);
+				}
+			}
+		}
+		const camoufoxRecord = releaseManifest.packages.find((record) => record.name === "@the-forge-flow/camoufox-pi");
+		const camoufoxPackage = JSON.parse(
+			readFileSync(join(directory, "node_modules", "@the-forge-flow", "camoufox-pi", "package.json"), "utf8"),
+		);
+		if (
+			camoufoxPackage.dependencies?.["camoufox-js"] !== camoufoxRecord?.dependencyOverrides?.["camoufox-js"] ||
+			camoufoxPackage.dependencies?.["playwright-core"] !== camoufoxRecord?.dependencyOverrides?.["playwright-core"] ||
+			camoufoxPackage.peerDependencies !== undefined
+		) {
+			throw new Error("bundled Camoufox dependency and peer repair differs from the release manifest");
+		}
+		const smartFetchRecord = releaseManifest.packages.find((record) => record.name === "pi-smart-fetch");
+		const smartFetchPackage = JSON.parse(
+			readFileSync(join(directory, "node_modules", "pi-smart-fetch", "package.json"), "utf8"),
+		);
+		if (smartFetchPackage.engines?.node !== smartFetchRecord?.engineOverride) {
+			throw new Error("bundled smart-fetch engine repair differs from the release manifest");
+		}
+		if (
+			packed.files.some(
+				(file) =>
+					file.path.startsWith("node_modules/@mariozechner/") ||
+					file.path.startsWith("node_modules/@the-forge-flow/camoufox-pi/node_modules/camoufox-js/"),
+			)
+		) {
+			throw new Error("jouzu tarball contains a superseded Camoufox runtime or legacy Pi peer");
+		}
+		for (const record of releasePackages) {
+			const locked = releaseLock.packages?.[`node_modules/${record.name}`];
+			if (locked?.version !== record.version) {
+				throw new Error(`release bundle lock differs for ${record.name}@${record.version}`);
+			}
+			if (record.integrity && locked.integrity !== record.integrity) {
+				throw new Error(`release bundle integrity differs for ${record.name}@${record.version}`);
+			}
+			if (record.commit && !locked.resolved?.endsWith(`#${record.commit}`)) {
+				throw new Error(`release bundle commit differs for ${record.name}@${record.commit}`);
+			}
+		}
 		const forbidden = forbiddenPublicContent();
 		for (const file of packed.files) {
 			if (!/\.(?:js|json|md|txt)$/.test(file.path) && file.path !== "LICENSE") continue;
 			const text = readFileSync(join(directory, file.path), "utf8");
 			for (const entry of forbidden) {
+				if (file.path.startsWith("node_modules/") && entry === "AWS_SECRET_ACCESS_KEY") continue;
 				if (text.includes(entry)) throw new Error(`jouzu tarball ${file.path} contains forbidden public content`);
 			}
 		}

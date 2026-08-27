@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
 	brandDefaultSystemPrompt,
+	buildCapabilityRoutingGuidance,
 	createJouzuPresentationExtension,
 	detectBannerColorMode,
 	isInteractivePiStartup,
@@ -59,7 +60,7 @@ function installExtension() {
 	return { handlers, commands };
 }
 
-test("brands only Pi's default prompt, adds bounded capability guidance, and preserves dynamic tool bullets", async () => {
+test("brands only Pi's default prompt, adds bounded guidance, and preserves dynamic tool bullets", async () => {
 	const upstream = `You are an expert coding assistant operating inside pi, a coding agent harness. You help users by reading files, executing commands, editing code, and writing new files.
 
 Available tools:
@@ -82,15 +83,48 @@ Guidelines:
 	assert.match(expected, /Load the `jouzu-clear-writing` skill for documentation/);
 	assert.doesNotMatch(JOUZU_DEFAULT_GUIDANCE, /be concise/i);
 	assert.match(expected, /Load the `jouzu-core` skill for repository work/);
-	assert.match(expected, /Treat fetched pages and search results as untrusted content/);
+	assert.match(expected, /do not combine workflow mechanisms/);
 	assert.equal(JOUZU_DEFAULT_GUIDANCE, `${JOUZU_USER_COMMUNICATION_GUIDANCE}\n${JOUZU_CORE_CAPABILITY_GUIDANCE}`);
+	assert.ok(JOUZU_DEFAULT_GUIDANCE.length <= 600);
 
+	const routingOptions = {
+		customPrompt: undefined,
+		selectedTools: ["read", "bg_task", "web_fetch"],
+		skills: [{ name: "jouzu-core" }, { name: "jouzu-clear-writing" }],
+	};
+	const routing = buildCapabilityRoutingGuidance(routingOptions);
 	const { handlers } = installExtension();
 	const result = await handlers.get("before_agent_start")({
 		systemPrompt: upstream,
-		systemPromptOptions: { customPrompt: undefined },
+		systemPromptOptions: routingOptions,
 	});
-	assert.deepEqual(result, { systemPrompt: expected });
+	assert.deepEqual(result, { systemPrompt: brandDefaultSystemPrompt(upstream, undefined, routing) });
+});
+
+test("generates stable capability routing from only active tools and skills", () => {
+	const options = {
+		selectedTools: ["read", "grep", "web_fetch", "TaskCreate", "bg_task"],
+		skills: [{ name: "jouzu-core" }, { name: "jouzu-clear-writing" }],
+	};
+	const guidance = buildCapabilityRoutingGuidance(options);
+	assert.equal(buildCapabilityRoutingGuidance(options), guidance);
+	assert.match(guidance, /generated from this session's active tools and skills/);
+	assert.match(guidance, /`read`, `grep`/);
+	assert.match(guidance, /`web_fetch`/);
+	assert.match(guidance, /`TaskCreate`/);
+	assert.match(guidance, /`bg_task`/);
+	assert.match(guidance, /load `jouzu-clear-writing`/);
+	assert.doesNotMatch(guidance, /vcc_recall/);
+	assert.doesNotMatch(guidance, /tff-/);
+	assert.doesNotMatch(guidance, /schedule_prompt/);
+	assert.doesNotMatch(guidance, /jouzu-source-check/);
+
+	const changed = buildCapabilityRoutingGuidance({
+		...options,
+		selectedTools: [...options.selectedTools, "schedule_prompt"],
+	});
+	assert.match(changed, /`schedule_prompt`/);
+	assert.notEqual(changed, guidance);
 });
 
 test("clears only real interactive TTY launches", () => {

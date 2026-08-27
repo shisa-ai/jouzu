@@ -31,6 +31,12 @@ import {
 	planProfile,
 } from "./profile-manager.js";
 import { loadBundledProfile } from "./profiles.js";
+import {
+	inspectReleaseExtensions,
+	usesReleaseExtensions,
+	withReleaseExtensionArguments,
+	withReleaseExtensionConflictPolicy,
+} from "./release-extensions.js";
 import { withJouzuResumeHint } from "./resume.js";
 import { configurePiProcess, type ProfileSelection, resolveProfileSelection } from "./runtime.js";
 import { createSessionUiExtension } from "./session-ui/index.js";
@@ -224,6 +230,8 @@ async function runCli(args: string[]): Promise<void> {
 		let updateDiagnostic: string | undefined;
 		let keybindingPlan: ReturnType<typeof planKeybindings> | undefined;
 		let keybindingDiagnostic: string | undefined;
+		let releaseExtensionStatus: ReturnType<typeof inspectReleaseExtensions> | undefined;
+		let releaseExtensionDiagnostic: string | undefined;
 		try {
 			updateStatus = updater.status();
 		} catch (error) {
@@ -233,6 +241,11 @@ async function runCli(args: string[]): Promise<void> {
 			keybindingPlan = planKeybindings(paths);
 		} catch (error) {
 			keybindingDiagnostic = error instanceof Error ? error.message : String(error);
+		}
+		try {
+			releaseExtensionStatus = inspectReleaseExtensions();
+		} catch (error) {
+			releaseExtensionDiagnostic = error instanceof Error ? error.message : String(error);
 		}
 		const result = createDoctorReport({
 			metadata,
@@ -248,6 +261,8 @@ async function runCli(args: string[]): Promise<void> {
 			...(updateDiagnostic ? { updateDiagnostic } : {}),
 			...(keybindingPlan ? { keybindingPlan } : {}),
 			...(keybindingDiagnostic ? { keybindingDiagnostic } : {}),
+			...(releaseExtensionStatus ? { releaseExtensionStatus } : {}),
+			...(releaseExtensionDiagnostic ? { releaseExtensionDiagnostic } : {}),
 		});
 		console.log(parsed.json ? JSON.stringify(result.report, null, 2) : result.text);
 		if (!result.healthy) process.exitCode = 1;
@@ -280,10 +295,16 @@ async function runCli(args: string[]): Promise<void> {
 		onModelCycle: (direction) => modelPicker.cycleFavorite(direction),
 		onScopedModelsCommand: () => modelPicker.handleScopedModelsCommand(),
 	});
-	await withJouzuResumeHint(() =>
-		pi.main(parsed.args, {
+	const releaseExtensionStatus = inspectReleaseExtensions();
+	const piArgs = withReleaseExtensionArguments(parsed.args, releaseExtensionStatus);
+	const startPi = () =>
+		pi.main(piArgs, {
 			extensionFactories: [createJouzuPresentationExtension(metadata, profile), sessionUi, modelPicker.extension, help],
-		}),
+		});
+	await withJouzuResumeHint(() =>
+		usesReleaseExtensions(parsed.args)
+			? withReleaseExtensionConflictPolicy(pi, releaseExtensionStatus, startPi)
+			: startPi(),
 	);
 }
 

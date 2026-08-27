@@ -68,12 +68,16 @@ function sri(bytes) {
 	return `sha512-${createHash("sha512").update(bytes).digest("base64")}`;
 }
 
-async function createPackage(rootDirectory, version, broken = false) {
-	const directory = join(rootDirectory, `package-${version}${broken ? "-broken" : ""}`);
+function preparePackageDirectory(rootDirectory) {
+	const directory = join(rootDirectory, "package");
 	mkdirSync(directory, { recursive: true });
-	for (const entry of ["dist", "LICENSE", "README.md"]) {
+	for (const entry of ["dist", "node_modules", "LICENSE", "README.md", "THIRD_PARTY_NOTICES.md"]) {
 		cpSync(join(packageDirectory, entry), join(directory, entry), { recursive: true });
 	}
+	return directory;
+}
+
+async function createPackage(rootDirectory, directory, version, broken = false) {
 	writeFileSync(join(directory, "package.json"), `${JSON.stringify({ ...currentPackage, version }, null, 2)}\n`);
 	if (broken) {
 		writeFileSync(
@@ -198,9 +202,10 @@ function updateEnvironment(temp, prefix, home, registry) {
 const temp = mkdtempSync(join(tmpdir(), "jouzu-auto-update-"));
 let smokeError;
 try {
-	const current = await createPackage(temp, currentVersion);
-	const next = await createPackage(temp, nextVersion);
-	const broken = await createPackage(temp, brokenVersion, true);
+	const packageFixture = preparePackageDirectory(temp);
+	const current = await createPackage(temp, packageFixture, currentVersion);
+	const next = await createPackage(temp, packageFixture, nextVersion);
+	const broken = await createPackage(temp, packageFixture, brokenVersion, true);
 
 	const successPrefix = join(temp, "success-prefix");
 	const successHome = join(temp, "success-home");

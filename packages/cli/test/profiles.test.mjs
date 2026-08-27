@@ -62,8 +62,8 @@ test("bundled Core and JA profiles resolve exact ordered assets", () => {
 			"skills/jouzu-source-check/SKILL.md",
 		],
 	);
-	assert.equal(core.manifestSha256, "cb776990ac81b8b269a08e64320c8ce380451d8509510c41d61774b90bc0a262");
-	assert.equal(ja.manifestSha256, "8b5da0441d55935fc012ab7500ad05da4282a32b12da9d7823fc0d6bef7d5870");
+	assert.equal(core.manifestSha256, "e260a973fde4520548cdd3afb3d4d97881c598e08249c3dce88685e9acbd4d53");
+	assert.equal(ja.manifestSha256, "6a20129af6bd53f1984d4f6255460383acc8a4d8ed7d9e5a176fa4ed6b903d24");
 });
 
 test("bundled skills declare bounded public workflows", () => {
@@ -86,7 +86,8 @@ test("bundled skills declare bounded public workflows", () => {
 	assert.doesNotMatch(clearWriting ?? "", /ASD-STE100|[“”]/);
 	assert.match(coreWorkflow ?? "", /^---\nname: jouzu-core\n/);
 	assert.match(coreWorkflow ?? "", /Work directly by default/);
-	assert.match(coreWorkflow ?? "", /Do not combine these mechanisms unless each has a separate purpose/);
+	assert.match(coreWorkflow ?? "", /Validate the result/);
+	assert.doesNotMatch(coreWorkflow ?? "", /vcc_recall|web_fetch|TaskCreate|multiloop|schedule_prompt/);
 	assert.match(sourceCheck ?? "", /^---\nname: jouzu-source-check\n/);
 	assert.match(sourceCheck ?? "", /Do not modify files, register records, commit, or publish unless the user asks\./);
 	assert.match(sourceCheck ?? "", /Repeated summaries of the same source are not independent\./);

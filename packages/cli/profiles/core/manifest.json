@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "core",
-  "version": 5,
+  "version": 6,
   "assets": [
     {
       "source": "assets/jouzu-clear-writing-skill.md",
@@ -11,7 +11,7 @@
     {
       "source": "assets/jouzu-core-skill.md",
       "target": "skills/jouzu-core/SKILL.md",
-      "sha256": "4680d0eb16039855bb4b83dfcd463f9c91351d6cf9633d09b4993994cc849e33"
+      "sha256": "8524001127d413dd9eea7548d75eed964680434b008ea840acdf14959afdef48"
     },
     {
       "source": "assets/jouzu-review.md",
