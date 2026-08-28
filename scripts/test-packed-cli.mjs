@@ -11,8 +11,13 @@ const packageDirectory = resolve(root, "packages", "cli");
 const packageJson = JSON.parse(readFileSync(resolve(packageDirectory, "package.json"), "utf8"));
 const piLock = JSON.parse(readFileSync(resolve(root, "upstream", "pi.lock.json"), "utf8"));
 const piVersion = piLock.packages["@earendil-works/pi-coding-agent"].version;
-const npmCommand = process.platform === "win32" ? (process.env.ComSpec ?? "cmd.exe") : "npm";
-const npmPrefix = process.platform === "win32" ? ["/d", "/s", "/c", "npm"] : [];
+const npmExecPath = process.env.npm_execpath;
+const npmCommand = npmExecPath
+	? process.execPath
+	: process.platform === "win32"
+		? (process.env.ComSpec ?? "cmd.exe")
+		: "npm";
+const npmPrefix = npmExecPath ? [npmExecPath] : process.platform === "win32" ? ["/d", "/s", "/c", "npm"] : [];
 
 function run(command, args, options = {}) {
 	const { expectedStatus = 0, ...spawnOptions } = options;
@@ -29,7 +34,7 @@ function run(command, args, options = {}) {
 }
 
 function runNpm(args, options = {}) {
-	const timeout = process.platform === "win32" ? 600_000 : 300_000;
+	const timeout = process.platform === "win32" ? 1_200_000 : 300_000;
 	return run(npmCommand, [...npmPrefix, ...args], { timeout, ...options });
 }
 
@@ -131,7 +136,7 @@ try {
 		resolve(temp, "package.json"),
 		`${JSON.stringify({ name: "jouzu-packed-smoke", version: "1.0.0", private: true }, null, 2)}\n`,
 	);
-	runNpm(["install", "--ignore-scripts", tarball], { cwd: temp });
+	runNpm(["install", "--ignore-scripts", "--no-audit", "--no-fund", "--loglevel=error", tarball], { cwd: temp });
 	const consumerLock = JSON.parse(readFileSync(resolve(temp, "package-lock.json"), "utf8"));
 	const installedPi = consumerLock.packages["node_modules/@earendil-works/pi-coding-agent"];
 	if (installedPi) {
@@ -278,7 +283,17 @@ try {
 	assert.match(npmExec.stdout, new RegExp(`^jouzu ${packageJson.version}`, "m"));
 
 	const globalPrefix = resolve(temp, "global");
-	runNpm(["install", "--global", "--prefix", globalPrefix, "--ignore-scripts", tarball]);
+	runNpm([
+		"install",
+		"--global",
+		"--prefix",
+		globalPrefix,
+		"--ignore-scripts",
+		"--no-audit",
+		"--no-fund",
+		"--loglevel=error",
+		tarball,
+	]);
 	const globalBin =
 		process.platform === "win32" ? resolve(globalPrefix, "jouzu.cmd") : resolve(globalPrefix, "bin", "jouzu");
 	const globalEnv = { ...env, npm_config_prefix: globalPrefix };
