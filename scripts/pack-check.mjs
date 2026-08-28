@@ -78,17 +78,22 @@ const npmPrefixArguments = process.platform === "win32" ? ["/d", "/s", "/c", "np
 
 for (const directory of packageDirectories) {
 	const packageJson = JSON.parse(readFileSync(join(directory, "package.json"), "utf8"));
-	const result = spawnSync(npmCommand, [...npmPrefixArguments, "pack", "--dry-run", "--ignore-scripts", "--json"], {
-		cwd: directory,
-		encoding: "utf8",
-		maxBuffer: 128 * 1024 * 1024,
-	});
-	if (result.error) throw result.error;
-	if (result.status !== 0) {
-		process.stderr.write(result.stderr ?? "npm pack failed without diagnostic output\n");
-		process.exit(result.status ?? 1);
+	let packed;
+	if (process.env.JOUZU_PACK_METADATA) {
+		[packed] = JSON.parse(readFileSync(process.env.JOUZU_PACK_METADATA, "utf8"));
+	} else {
+		const result = spawnSync(npmCommand, [...npmPrefixArguments, "pack", "--dry-run", "--ignore-scripts", "--json"], {
+			cwd: directory,
+			encoding: "utf8",
+			maxBuffer: 128 * 1024 * 1024,
+		});
+		if (result.error) throw result.error;
+		if (result.status !== 0) {
+			process.stderr.write(result.stderr ?? "npm pack failed without diagnostic output\n");
+			process.exit(result.status ?? 1);
+		}
+		[packed] = JSON.parse(result.stdout);
 	}
-	const [packed] = JSON.parse(result.stdout);
 	if (!packed?.files?.length) {
 		throw new Error(`${packageJson.name} would publish no files`);
 	}

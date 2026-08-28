@@ -22,6 +22,7 @@
 		"test:live:ja": "node scripts/live-ja-smoke.mjs",
 		"test:extensions:online": "node --test packages/cli/test/release-extension-behavior.test.mjs",
 		"pack:check": "node scripts/pack-check.mjs",
+		"pack:prepare:ci": "node scripts/prepare-ci-artifacts.mjs",
 		"dev:link": "npm run build:dev && npm link --workspace packages/cli",
 		"build:python": "uv build --project python/jouzu --out-dir dist/python",
 		"check:python": "uvx --from twine twine check dist/python/*",

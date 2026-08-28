@@ -68,6 +68,18 @@ function sri(bytes) {
 	return `sha512-${createHash("sha512").update(bytes).digest("base64")}`;
 }
 
+function preparedArtifact(path, version) {
+	const resolved = resolve(path);
+	const bytes = readFileSync(resolved);
+	return {
+		version,
+		path: resolved,
+		bytes,
+		integrity: sri(bytes),
+		shasum: createHash("sha1").update(bytes).digest("hex"),
+	};
+}
+
 function preparePackageDirectory(rootDirectory) {
 	const directory = join(rootDirectory, "package");
 	mkdirSync(directory, { recursive: true });
@@ -202,10 +214,27 @@ function updateEnvironment(temp, prefix, home, registry) {
 const temp = mkdtempSync(join(tmpdir(), "jouzu-auto-update-"));
 let smokeError;
 try {
-	const packageFixture = preparePackageDirectory(temp);
-	const current = await createPackage(temp, packageFixture, currentVersion);
-	const next = await createPackage(temp, packageFixture, nextVersion);
-	const broken = await createPackage(temp, packageFixture, brokenVersion, true);
+	const prepared = [
+		process.env.JOUZU_UPDATE_CURRENT_TARBALL,
+		process.env.JOUZU_UPDATE_NEXT_TARBALL,
+		process.env.JOUZU_UPDATE_BROKEN_TARBALL,
+	];
+	if (prepared.some(Boolean) && !prepared.every(Boolean)) {
+		throw new Error("prepared updater smoke requires current, next, and broken tarball paths");
+	}
+	let current;
+	let next;
+	let broken;
+	if (prepared.every(Boolean)) {
+		current = preparedArtifact(prepared[0], currentVersion);
+		next = preparedArtifact(prepared[1], nextVersion);
+		broken = preparedArtifact(prepared[2], brokenVersion);
+	} else {
+		const packageFixture = preparePackageDirectory(temp);
+		current = await createPackage(temp, packageFixture, currentVersion);
+		next = await createPackage(temp, packageFixture, nextVersion);
+		broken = await createPackage(temp, packageFixture, brokenVersion, true);
+	}
 
 	const successPrefix = join(temp, "success-prefix");
 	const successHome = join(temp, "success-home");

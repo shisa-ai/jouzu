@@ -126,11 +126,17 @@ function assertPackedSurfaces(installedCli, probe, cwd, env, profile) {
 
 const temp = mkdtempSync(join(tmpdir(), "jouzu-packed-cli-"));
 try {
-	const packResult = runNpm(["pack", "--ignore-scripts", "--json", "--pack-destination", temp], {
-		cwd: packageDirectory,
-	});
-	const [packed] = JSON.parse(packResult.stdout);
-	const tarball = resolve(temp, packed.filename);
+	let tarball;
+	if (process.env.JOUZU_PACKED_TARBALL) {
+		tarball = resolve(process.env.JOUZU_PACKED_TARBALL);
+		assert.ok(existsSync(tarball), `prepared Jouzu tarball does not exist: ${tarball}`);
+	} else {
+		const packResult = runNpm(["pack", "--ignore-scripts", "--json", "--pack-destination", temp], {
+			cwd: packageDirectory,
+		});
+		const [packed] = JSON.parse(packResult.stdout);
+		tarball = resolve(temp, packed.filename);
+	}
 	const consumer = resolve(temp, "consumer");
 	writeFileSync(
 		resolve(temp, "package.json"),

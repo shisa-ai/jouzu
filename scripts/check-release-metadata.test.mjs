@@ -135,3 +135,16 @@ test("the npm publish workflow stays a bounded transport gate", () => {
 	assert.doesNotMatch(workflow, /test:packed|test:auto-update|test:extensions:online|test:live/u);
 	assert.doesNotMatch(workflow, /NPM_TOKEN|NODE_AUTH_TOKEN|npm login|npm trust/u);
 });
+
+test("CI packs once and shares exact artifacts with parallel native gates", () => {
+	const workflow = readFileSync(join(root, ".github", "workflows", "ci.yml"), "utf8");
+	assert.equal(workflow.match(/npm run pack:prepare:ci/gu)?.length, 1);
+	assert.match(workflow, /release-artifacts:/u);
+	assert.match(workflow, /packed-install:[\s\S]*needs: release-artifacts/u);
+	assert.match(workflow, /automatic-update:[\s\S]*needs: release-artifacts/u);
+	assert.match(workflow, /JOUZU_PACKED_TARBALL: dist\/ci-artifacts\/candidate\.tgz/u);
+	assert.match(workflow, /JOUZU_UPDATE_CURRENT_TARBALL: dist\/ci-artifacts\/candidate\.tgz/u);
+	assert.match(workflow, /JOUZU_UPDATE_NEXT_TARBALL: dist\/ci-artifacts\/next\.tgz/u);
+	assert.match(workflow, /JOUZU_UPDATE_BROKEN_TARBALL: dist\/ci-artifacts\/broken\.tgz/u);
+	assert.match(workflow, /node: \[22, 24\]/u);
+});
