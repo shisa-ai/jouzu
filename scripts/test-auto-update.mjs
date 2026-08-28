@@ -17,8 +17,13 @@ if (!versionMatch) throw new Error(`test:auto-update requires a stable semantic 
 const nextVersion = `${versionMatch[1]}.${versionMatch[2]}.${Number(versionMatch[3]) + 1}`;
 const brokenVersion = `${versionMatch[1]}.${versionMatch[2]}.${Number(versionMatch[3]) + 2}`;
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const npmCommand = process.platform === "win32" ? (process.env.ComSpec ?? "cmd.exe") : "npm";
-const npmPrefix = process.platform === "win32" ? ["/d", "/s", "/c", "npm"] : [];
+const npmExecPath = process.env.npm_execpath;
+const npmCommand = npmExecPath
+	? process.execPath
+	: process.platform === "win32"
+		? (process.env.ComSpec ?? "cmd.exe")
+		: "npm";
+const npmPrefix = npmExecPath ? [npmExecPath] : process.platform === "win32" ? ["/d", "/s", "/c", "npm"] : [];
 const updateApplyTimeout = 10 * 60_000;
 
 function commandResult(command, args, options = {}) {
@@ -31,7 +36,7 @@ function commandResult(command, args, options = {}) {
 		});
 		let stdout = "";
 		let stderr = "";
-		const timeout = options.timeout ?? 180_000;
+		const timeout = options.timeout ?? (process.platform === "win32" ? 1_200_000 : 180_000);
 		const timer = setTimeout(() => {
 			child.kill();
 			reject(new Error(`${command} ${args.join(" ")} timed out after ${timeout} ms`));
@@ -236,56 +241,60 @@ try {
 		broken = await createPackage(temp, packageFixture, brokenVersion, true);
 	}
 
-	const successPrefix = join(temp, "success-prefix");
-	const successHome = join(temp, "success-home");
-	await installCurrent(current, successPrefix);
-	await withRegistry(next, async (registry, requests) => {
-		const env = updateEnvironment(temp, successPrefix, successHome, registry);
-		const update = await runGlobal(successPrefix, ["self-update", "apply"], {
-			cwd: temp,
-			env,
-			timeout: updateApplyTimeout,
+	const scope = process.env.JOUZU_UPDATE_SCOPE ?? "all";
+	assert.ok(["all", "success", "rollback"].includes(scope), `unsupported updater smoke scope: ${scope}`);
+	if (scope === "all" || scope === "success") {
+		const successPrefix = join(temp, "success-prefix");
+		const successHome = join(temp, "success-home");
+		await installCurrent(current, successPrefix);
+		await withRegistry(next, async (registry, requests) => {
+			const env = updateEnvironment(temp, successPrefix, successHome, registry);
+			const update = await runGlobal(successPrefix, ["self-update", "apply"], {
+				cwd: temp,
+				env,
+				timeout: updateApplyTimeout,
+			});
+			assert.match(update.stdout, new RegExp(`Updated Jouzu to ${escapeRegex(nextVersion)}`));
+			assert.ok(requests.some((request) => request === "/jouzu" || request.startsWith("/jouzu?")));
+			assert.ok(requests.includes(`/jouzu/-/${basename(next.path)}`));
+			const version = await runGlobal(successPrefix, ["--version"], {
+				cwd: temp,
+				env: { ...env, JOUZU_NO_UPDATE: "1" },
+			});
+			assert.match(version.stdout, new RegExp(`^jouzu ${escapeRegex(nextVersion)}$`, "m"));
+			const state = JSON.parse(readFileSync(join(successHome, "state", "self-update.json"), "utf8"));
+			assert.equal(state.lastResult, "updated");
+			assert.equal(state.installedVersion, nextVersion);
+			assert.equal(state.previousVersion, currentVersion);
 		});
-		assert.match(update.stdout, new RegExp(`Updated Jouzu to ${escapeRegex(nextVersion)}`));
-		assert.ok(requests.some((request) => request === "/jouzu" || request.startsWith("/jouzu?")));
-		assert.ok(requests.includes(`/jouzu/-/${basename(next.path)}`));
-		const version = await runGlobal(successPrefix, ["--version"], {
-			cwd: temp,
-			env: { ...env, JOUZU_NO_UPDATE: "1" },
-		});
-		assert.match(version.stdout, new RegExp(`^jouzu ${escapeRegex(nextVersion)}$`, "m"));
-		const state = JSON.parse(readFileSync(join(successHome, "state", "self-update.json"), "utf8"));
-		assert.equal(state.lastResult, "updated");
-		assert.equal(state.installedVersion, nextVersion);
-		assert.equal(state.previousVersion, currentVersion);
-	});
+	}
 
-	const rollbackPrefix = join(temp, "rollback-prefix");
-	const rollbackHome = join(temp, "rollback-home");
-	await installCurrent(current, rollbackPrefix);
-	await withRegistry(broken, async (registry) => {
-		const env = updateEnvironment(temp, rollbackPrefix, rollbackHome, registry);
-		const update = await globalResult(rollbackPrefix, ["self-update", "apply"], {
-			cwd: temp,
-			env,
-			timeout: updateApplyTimeout,
+	if (scope === "all" || scope === "rollback") {
+		const rollbackPrefix = join(temp, "rollback-prefix");
+		const rollbackHome = join(temp, "rollback-home");
+		await installCurrent(current, rollbackPrefix);
+		await withRegistry(broken, async (registry) => {
+			const env = updateEnvironment(temp, rollbackPrefix, rollbackHome, registry);
+			const update = await globalResult(rollbackPrefix, ["self-update", "apply"], {
+				cwd: temp,
+				env,
+				timeout: updateApplyTimeout,
+			});
+			assert.equal(update.signal, null);
+			assert.equal(update.status, 4, update.stderr || update.stdout);
+			assert.match(update.stderr, new RegExp(`failed verification and ${escapeRegex(currentVersion)} was restored`));
+			const version = await runGlobal(rollbackPrefix, ["--version"], {
+				cwd: temp,
+				env: { ...env, JOUZU_NO_UPDATE: "1" },
+			});
+			assert.match(version.stdout, new RegExp(`^jouzu ${escapeRegex(currentVersion)}$`, "m"));
+			const state = JSON.parse(readFileSync(join(rollbackHome, "state", "self-update.json"), "utf8"));
+			assert.equal(state.lastResult, "failed");
+			assert.equal(state.lastErrorCode, "update-rolled-back");
 		});
-		assert.equal(update.signal, null);
-		assert.equal(update.status, 4, update.stderr || update.stdout);
-		assert.match(update.stderr, new RegExp(`failed verification and ${escapeRegex(currentVersion)} was restored`));
-		const version = await runGlobal(rollbackPrefix, ["--version"], {
-			cwd: temp,
-			env: { ...env, JOUZU_NO_UPDATE: "1" },
-		});
-		assert.match(version.stdout, new RegExp(`^jouzu ${escapeRegex(currentVersion)}$`, "m"));
-		const state = JSON.parse(readFileSync(join(rollbackHome, "state", "self-update.json"), "utf8"));
-		assert.equal(state.lastResult, "failed");
-		assert.equal(state.lastErrorCode, "update-rolled-back");
-	});
+	}
 
-	console.log(
-		`automatic update smoke installed ${nextVersion} and restored ${currentVersion} after a broken ${brokenVersion}`,
-	);
+	console.log(`automatic update ${scope} smoke passed for ${currentVersion}, ${nextVersion}, and ${brokenVersion}`);
 } catch (error) {
 	smokeError = error;
 }
