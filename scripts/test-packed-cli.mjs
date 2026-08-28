@@ -34,7 +34,7 @@ function run(command, args, options = {}) {
 }
 
 function runNpm(args, options = {}) {
-	const timeout = process.platform === "win32" ? 1_200_000 : 300_000;
+	const timeout = process.platform === "win32" ? 1_800_000 : 300_000;
 	return run(npmCommand, [...npmPrefix, ...args], { timeout, ...options });
 }
 

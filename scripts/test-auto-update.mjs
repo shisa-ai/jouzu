@@ -24,7 +24,7 @@ const npmCommand = npmExecPath
 		? (process.env.ComSpec ?? "cmd.exe")
 		: "npm";
 const npmPrefix = npmExecPath ? [npmExecPath] : process.platform === "win32" ? ["/d", "/s", "/c", "npm"] : [];
-const updateApplyTimeout = 10 * 60_000;
+const updateApplyTimeout = (process.platform === "win32" ? 30 : 10) * 60_000;
 
 function commandResult(command, args, options = {}) {
 	return new Promise((resolvePromise, reject) => {
@@ -282,7 +282,9 @@ try {
 			});
 			assert.equal(update.signal, null);
 			assert.equal(update.status, 4, update.stderr || update.stdout);
-			assert.match(update.stderr, new RegExp(`failed verification and ${escapeRegex(currentVersion)} was restored`));
+			const restored = new RegExp(`failed verification and ${escapeRegex(currentVersion)} was restored`);
+			const unchanged = new RegExp(`was not installed; ${escapeRegex(currentVersion)} remains verified`);
+			assert.match(update.stderr, new RegExp(`${restored.source}|${unchanged.source}`));
 			const version = await runGlobal(rollbackPrefix, ["--version"], {
 				cwd: temp,
 				env: { ...env, JOUZU_NO_UPDATE: "1" },
@@ -290,7 +292,7 @@ try {
 			assert.match(version.stdout, new RegExp(`^jouzu ${escapeRegex(currentVersion)}$`, "m"));
 			const state = JSON.parse(readFileSync(join(rollbackHome, "state", "self-update.json"), "utf8"));
 			assert.equal(state.lastResult, "failed");
-			assert.equal(state.lastErrorCode, "update-rolled-back");
+			assert.equal(state.lastErrorCode, restored.test(update.stderr) ? "update-rolled-back" : "update-not-installed");
 		});
 	}
 

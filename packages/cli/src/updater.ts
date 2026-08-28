@@ -8,6 +8,8 @@ import { ensurePrivateDirectory, validatePrivateDirectory, writeFilePrivateAtomi
 import { acquireStateLock, STATE_LOCK_STALE_MS } from "./state-lock.js";
 
 const PI_PACKAGE = "@earendil-works/pi-coding-agent";
+const NPM_PACK_TIMEOUT_MS = process.platform === "win32" ? 600_000 : 60_000;
+const NPM_INSTALL_TIMEOUT_MS = process.platform === "win32" ? 1_200_000 : 300_000;
 const UPDATE_STATE_FIELDS = new Set([
 	"schemaVersion",
 	"policy",
@@ -614,7 +616,7 @@ export class JouzuUpdater {
 					"--fetch-timeout=15000",
 					"--loglevel=error",
 				],
-				60_000,
+				NPM_PACK_TIMEOUT_MS,
 			),
 			"pack",
 		);
@@ -625,7 +627,7 @@ export class JouzuUpdater {
 		requireCommandSuccess(
 			this.runNpm(
 				["install", "--global", path, "--ignore-scripts", "--no-audit", "--no-fund", "--loglevel=error"],
-				300_000,
+				NPM_INSTALL_TIMEOUT_MS,
 			),
 			"install",
 		);
