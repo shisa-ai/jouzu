@@ -24,12 +24,14 @@ export interface ReleaseExtensionPackage {
 	adapter?: "jouzu-lazy-camoufox";
 	engineOverride?: string;
 	dependencyOverrides?: Record<string, string>;
+	dependencyRemovals?: string[];
 	peerDependenciesRemoved?: boolean;
 }
 
 export interface ReleaseCompatibilityDependency {
 	name: string;
 	version: string;
+	bundled?: false;
 	integrity: string;
 	repository: string;
 	license: string;

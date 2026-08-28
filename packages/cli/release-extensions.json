@@ -46,10 +46,8 @@
 			"extensions": ["dist/index.js"],
 			"skills": [],
 			"adapter": "jouzu-lazy-camoufox",
-			"dependencyOverrides": {
-				"camoufox-js": "0.12.0",
-				"playwright-core": "1.60.0"
-			},
+			"dependencyOverrides": {},
+			"dependencyRemovals": ["camoufox-js", "playwright-core"],
 			"peerDependenciesRemoved": true
 		},
 		{
@@ -123,6 +121,7 @@
 		{
 			"name": "camoufox-js",
 			"version": "0.12.0",
+			"bundled": false,
 			"integrity": "sha512-WvWrSL6IH7NixrmB4PM1NODx9cY2R+V/jv9jrmHMVlR4IHP3uheP6whhv0xsoVhFlKIErky5aYx7uA7oECA/Tg==",
 			"repository": "https://github.com/apify/camoufox-js",
 			"license": "MPL-2.0",
@@ -131,6 +130,7 @@
 		{
 			"name": "playwright-core",
 			"version": "1.60.0",
+			"bundled": false,
 			"integrity": "sha512-9bW6zvX/m0lEbgTKJ6YppOKx8H3VOPBMOCFh2irXFOT4BbHgrx5hPjwJYLT40Lu+4qtD36qKc/Hn56StUW57IA==",
 			"repository": "https://github.com/microsoft/playwright",
 			"license": "Apache-2.0",
@@ -139,6 +139,7 @@
 		{
 			"name": "better-sqlite3",
 			"version": "13.0.1",
+			"bundled": false,
 			"integrity": "sha512-LYpmOXdkpQYf4wmlxkdzW01XGlOXNIbjLg45yNkh0FQ4814VbK9PdOFmhZpYbej+EZtR/i3FDdhEG98HqZdgnA==",
 			"repository": "https://github.com/WiseLibs/better-sqlite3",
 			"license": "MIT",

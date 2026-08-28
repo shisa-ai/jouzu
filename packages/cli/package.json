@@ -73,13 +73,10 @@
 		"@sting8k/pi-vcc",
 		"@the-forge-flow/camoufox-pi",
 		"@vanillagreen/pi-background-tasks",
-		"better-sqlite3",
-		"camoufox-js",
 		"pi-code-previews",
 		"pi-multiloop",
 		"pi-schedule-prompt",
 		"pi-skill-dollar",
-		"pi-smart-fetch",
-		"playwright-core"
+		"pi-smart-fetch"
 	]
 }

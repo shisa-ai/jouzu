@@ -132,11 +132,17 @@ for (const directory of packageDirectories) {
 		const releaseManifest = JSON.parse(readFileSync(join(directory, "release-extensions.json"), "utf8"));
 		const releaseLock = JSON.parse(readFileSync(join(directory, "package-lock.json"), "utf8"));
 		const releasePackages = [...releaseManifest.packages, ...releaseManifest.compatibilityDependencies];
-		const expectedBundles = releasePackages.map((record) => record.name);
+		const expectedBundles = releasePackages.filter((record) => record.bundled !== false).map((record) => record.name);
 		for (const name of expectedBundles) {
 			if (!packed.bundled?.includes(name)) throw new Error(`jouzu tarball does not bundle ${name}`);
 			if (!packed.files.some((file) => file.path === `node_modules/${name}/package.json`)) {
 				throw new Error(`jouzu tarball is missing bundled package ${name}`);
+			}
+		}
+		for (const record of releasePackages.filter((candidate) => candidate.bundled === false)) {
+			if (packed.bundled?.includes(record.name)) throw new Error(`jouzu tarball unexpectedly bundles ${record.name}`);
+			if (packed.files.some((file) => file.path.startsWith(`node_modules/${record.name}/`))) {
+				throw new Error(`jouzu tarball contains platform-selected dependency ${record.name}`);
 			}
 		}
 		for (const record of releaseManifest.packages) {
@@ -151,8 +157,10 @@ for (const directory of packageDirectories) {
 			readFileSync(join(directory, "node_modules", "@the-forge-flow", "camoufox-pi", "package.json"), "utf8"),
 		);
 		if (
-			camoufoxPackage.dependencies?.["camoufox-js"] !== camoufoxRecord?.dependencyOverrides?.["camoufox-js"] ||
-			camoufoxPackage.dependencies?.["playwright-core"] !== camoufoxRecord?.dependencyOverrides?.["playwright-core"] ||
+			camoufoxPackage.dependencies?.["camoufox-js"] !== undefined ||
+			camoufoxPackage.dependencies?.["playwright-core"] !== undefined ||
+			!camoufoxRecord?.dependencyRemovals?.includes("camoufox-js") ||
+			!camoufoxRecord?.dependencyRemovals?.includes("playwright-core") ||
 			camoufoxPackage.peerDependencies !== undefined
 		) {
 			throw new Error("bundled Camoufox dependency and peer repair differs from the release manifest");

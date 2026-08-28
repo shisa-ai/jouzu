@@ -40,21 +40,13 @@ test("the release manifest and bundle list contain the selected extension set", 
 	assert.deepEqual(packageNames(manifest.compatibilityDependencies), expectedCompatibility);
 	assert.deepEqual(
 		[...packageJson.bundleDependencies].sort(),
-		[
-			"@earendil-works/pi-coding-agent",
-			"@earendil-works/pi-tui",
-			...expectedExtensions,
-			...expectedCompatibility,
-		].sort(),
+		["@earendil-works/pi-coding-agent", "@earendil-works/pi-tui", ...expectedExtensions].sort(),
 	);
+	for (const record of manifest.compatibilityDependencies) assert.equal(record.bundled, false);
 	assert.equal(manifest.packages.find((record) => record.name === "pi-smart-fetch").engineOverride, ">=22.19.0");
-	assert.deepEqual(
-		manifest.packages.find((record) => record.name === "@the-forge-flow/camoufox-pi").dependencyOverrides,
-		{
-			"camoufox-js": "0.12.0",
-			"playwright-core": "1.60.0",
-		},
-	);
+	const camoufoxExtension = manifest.packages.find((record) => record.name === "@the-forge-flow/camoufox-pi");
+	assert.deepEqual(camoufoxExtension.dependencyOverrides, {});
+	assert.deepEqual(camoufoxExtension.dependencyRemovals, ["camoufox-js", "playwright-core"]);
 	assert.equal(
 		manifest.packages.find((record) => record.name === "@the-forge-flow/camoufox-pi").peerDependenciesRemoved,
 		true,
