@@ -1,5 +1,5 @@
 import type { KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
-import { type Focusable, Input, matchesKey, type TUI } from "@earendil-works/pi-tui";
+import { type Focusable, Input, matchesKey, type TUI, wrapTextWithAnsi } from "@earendil-works/pi-tui";
 import {
 	type CatalogEndpointDiscoveryOptions,
 	type CatalogEndpointDiscoveryResult,
@@ -426,9 +426,10 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		const form = this.form;
 		if (!form) return [];
 		const innerWidth = Math.max(1, width - 4);
+		const labelWidth = 14;
 		const field = (id: FormField, label: string, value: string) => {
 			const marker = form.field === id ? this.styles.apply("palette.marker", "→") : " ";
-			const text = `${marker} ${padTerminalText(label, 13)} ${value}`;
+			const text = `${marker} ${padTerminalText(label, labelWidth)} ${value}`;
 			return line(
 				form.field === id
 					? this.theme.bg("selectedBg", padTerminalText(fitTerminalText(text, innerWidth), innerWidth))
@@ -439,12 +440,37 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		const lines = [
 			line(this.styles.apply("palette.hint", form.mode === "add" ? "Add custom catalog" : "Edit custom catalog")),
 			line(),
-			field("label", "Label", form.label.render(Math.max(1, innerWidth - 16))[0] ?? ""),
-			field("url", "URL or host", form.url.render(Math.max(1, innerWidth - 16))[0] ?? ""),
+			field("label", "Label", form.label.render(Math.max(1, innerWidth - labelWidth - 3))[0] ?? ""),
+			field("url", "URL or host", form.url.render(Math.max(1, innerWidth - labelWidth - 3))[0] ?? ""),
 			field("auth", "Authentication", authValue),
 		];
 		if (form.authType === "bearer") {
-			lines.push(field("credential", "Environment", form.credential.render(Math.max(1, innerWidth - 16))[0] ?? ""));
+			const credentialName = form.credential.getValue().trim();
+			const credentialValue = credentialName ? this.env[credentialName] : undefined;
+			const credentialAvailable = typeof credentialValue === "string" && Boolean(credentialValue.trim());
+			lines.push(
+				field(
+					"credential",
+					"Token variable",
+					form.credential.render(Math.max(1, innerWidth - labelWidth - 3))[0] ?? "",
+				),
+				line(
+					this.styles.apply(
+						"palette.hint",
+						"  Enter the variable name, not the token. Export it before starting Jouzu.",
+					),
+				),
+			);
+			if (credentialName) {
+				lines.push(
+					line(
+						this.styles.apply(
+							"palette.hint",
+							`  ${sanitizeTerminalText(credentialName)} is ${credentialAvailable ? "set" : "not set"} in this Jouzu process.`,
+						),
+					),
+				);
+			}
 		}
 		lines.push(
 			line(),
@@ -526,14 +552,10 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			lines.push(line(this.styles.apply("palette.hint", "Ctrl+L Models · ↑↓ move · Esc close")));
 		}
 		if (this.message) {
-			lines.push(
-				line(
-					this.styles.apply(
-						this.message.level === "error" ? "palette.message.error" : "palette.message.info",
-						this.message.text,
-					),
-				),
-			);
+			const role = this.message.level === "error" ? "palette.message.error" : "palette.message.info";
+			for (const messageLine of wrapTextWithAnsi(this.message.text, innerWidth)) {
+				lines.push(line(this.styles.apply(role, messageLine)));
+			}
 		}
 		lines.push(renderTerminalFrameBorder(width, { ...frameOptions, left: "╰", right: "╯" }));
 		return lines.map((value) => fitTerminalText(value, width));

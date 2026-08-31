@@ -85,6 +85,63 @@ test("Catalogs settings reports source status and expands its full model list wi
 	}
 });
 
+test("Catalogs settings shows complete bearer-token fields and process availability", () => {
+	const { root, paths, context } = setup();
+	try {
+		const env = {};
+		const component = new CatalogSettingsComponent({ context, paths, env });
+		component.handleInput("a");
+		component.handleInput("\t");
+		component.handleInput("\t");
+		component.handleInput(" ");
+
+		const rendered = component.render(84);
+		const text = rendered.join("\n");
+		assert.match(text, /Authentication\s+Bearer token from environment/u);
+		assert.match(text, /Token variable/u);
+		assert.match(text, /JOUZU_MODEL_CATALOG_TOKEN is not set in this Jouzu process/u);
+		assert.ok(rendered.every((line) => terminalTextWidth(line) <= 84));
+
+		env.JOUZU_MODEL_CATALOG_TOKEN = "must-not-render";
+		const availableText = component.render(84).join("\n");
+		assert.match(availableText, /JOUZU_MODEL_CATALOG_TOKEN is set in this Jouzu process/u);
+		assert.doesNotMatch(availableText, /must-not-render/u);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("Catalogs settings wraps save errors without hiding authentication guidance", async () => {
+	const { root, paths, context } = setup();
+	try {
+		const component = new CatalogSettingsComponent({
+			context,
+			paths,
+			env: {},
+			discover: async () => {
+				throw new Error(
+					"Catalog authentication failed (HTTP 401). Check that CODEX_POOL_CATALOG_TOKEN is exported before Jouzu starts and contains a valid bearer token.",
+				);
+			},
+		});
+		component.handleInput("a");
+		for (const character of "Office pool") component.handleInput(character);
+		component.handleInput("\t");
+		for (const character of "catalog.example") component.handleInput(character);
+		component.handleInput("\u001b[13;5u");
+		await new Promise((resolve) => setImmediate(resolve));
+
+		const rendered = component.render(52);
+		const text = rendered.join(" ");
+		assert.match(text, /Catalog authentication failed \(HTTP 401\)/u);
+		assert.match(text, /CODEX_POOL_CATALOG_TOKEN/u);
+		assert.match(text, /contains a valid bearer token/u);
+		assert.ok(rendered.every((line) => terminalTextWidth(line) <= 52));
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
 test("Catalogs settings saves a label and discovered conventional endpoint", async () => {
 	const { root, paths, context } = setup();
 	try {

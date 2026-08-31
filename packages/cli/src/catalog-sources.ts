@@ -328,8 +328,13 @@ export class CatalogSourceStore {
 export function resolveCatalogBearer(source: CatalogSource, env: NodeJS.ProcessEnv = process.env): string | undefined {
 	if (source.auth.type === "none") return undefined;
 	const name = source.auth.credentialRef.slice(4);
-	const value = env[name]?.trim();
-	if (!value) throw new CatalogSourceError(`catalog source ${source.label} requires environment credential ${name}`);
+	const credential = env[name];
+	const value = typeof credential === "string" ? credential.trim() : "";
+	if (!value) {
+		throw new CatalogSourceError(
+			`Catalog token variable ${name} is not set in this Jouzu process. Export it before starting Jouzu, then retry.`,
+		);
+	}
 	return value;
 }
 
@@ -406,7 +411,21 @@ export async function discoverCatalogEndpoint(
 			options.signal?.removeEventListener("abort", abort);
 		}
 	}
+	const accessFailure = attempts.find((attempt) => attempt.result === "HTTP 401" || attempt.result === "HTTP 403");
+	if (accessFailure) {
+		const status = accessFailure.result.slice(5);
+		const summary = status === "401" ? "Catalog authentication failed" : "Catalog access was denied";
+		if (options.auth.type === "bearer") {
+			const name = options.auth.credentialRef.slice(4);
+			throw new CatalogSourceError(
+				`${summary} (HTTP ${status}). Check that ${name} contains a bearer token accepted by the catalog.`,
+			);
+		}
+		throw new CatalogSourceError(
+			`${summary} (HTTP ${status}). Configure bearer-token authentication if this catalog requires it.`,
+		);
+	}
 	throw new CatalogSourceError(
-		`no Jouzu catalog found (${attempts.map((attempt) => `${attempt.url}: ${attempt.result}`).join("; ")})`,
+		`No Jouzu catalog found. Attempts: ${attempts.map((attempt) => `${attempt.url}: ${attempt.result}`).join("; ")}`,
 	);
 }

@@ -129,6 +129,35 @@ test("endpoint discovery tries exact then conventional path with source-scoped b
 	assert.equal(calls[1].redirect, "error");
 });
 
+test("endpoint discovery explains missing and rejected bearer credentials", async () => {
+	await assert.rejects(
+		discoverCatalogEndpoint("127.0.0.1:8989", {
+			auth: { type: "bearer", credentialRef: "env:POOL_TOKEN" },
+			env: {},
+			fetch: async () => response({}, 401),
+		}),
+		(error) => {
+			assert.match(error.message, /POOL_TOKEN is not set in this Jouzu process/u);
+			assert.match(error.message, /Export it before starting Jouzu/u);
+			return true;
+		},
+	);
+
+	await assert.rejects(
+		discoverCatalogEndpoint("127.0.0.1:8989", {
+			auth: { type: "bearer", credentialRef: "env:POOL_TOKEN" },
+			env: { POOL_TOKEN: "rejected-token" },
+			fetch: async () => response({}, 401),
+		}),
+		(error) => {
+			assert.match(error.message, /Catalog authentication failed \(HTTP 401\)/u);
+			assert.match(error.message, /POOL_TOKEN/u);
+			assert.doesNotMatch(error.message, /rejected-token/u);
+			return true;
+		},
+	);
+});
+
 test("catalog registry rejects unsafe files, labels, sources, and credential references", () => {
 	const { root, paths, registryPath } = setup();
 	try {
