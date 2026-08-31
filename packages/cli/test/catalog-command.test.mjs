@@ -27,8 +27,9 @@ test("no catalog endpoint is a normal unconfigured state with no network work", 
 		assert.deepEqual(status, {
 			schemaVersion: 1,
 			status: "unconfigured",
-			configured: false,
-			message: "No model catalog endpoint is configured. Jouzu continues using Pi and local model configuration.",
+			configured: 0,
+			active: 0,
+			sources: [],
 		});
 		assert.equal(fetchCount, 0);
 		assert.match(formatCatalogStatus(status), /unconfigured/);

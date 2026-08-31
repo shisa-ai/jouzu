@@ -52,6 +52,13 @@ test("parses optional catalog status, refresh, and file conformance commands", (
 		operation: "refresh",
 		json: true,
 	});
+	assert.deepEqual(parseJouzuArgs(["catalog", "status", "office", "--json"]), {
+		kind: "catalog",
+		options: {},
+		operation: "status",
+		sourceId: "office",
+		json: true,
+	});
 	const digest = "a".repeat(64);
 	assert.deepEqual(parseJouzuArgs(["catalog", "accept", "revision-2", "--digest", digest]), {
 		kind: "catalog",
@@ -59,6 +66,15 @@ test("parses optional catalog status, refresh, and file conformance commands", (
 		operation: "accept",
 		revision: "revision-2",
 		digest,
+		json: false,
+	});
+	assert.deepEqual(parseJouzuArgs(["catalog", "accept", "revision-2", "--source", "office", "--digest", digest]), {
+		kind: "catalog",
+		options: {},
+		operation: "accept",
+		revision: "revision-2",
+		digest,
+		sourceId: "office",
 		json: false,
 	});
 	assert.deepEqual(parseJouzuArgs(["catalog", "validate", "/tmp/catalog.json"]), {

@@ -25,6 +25,7 @@ export type ParsedCommand =
 			options: JouzuOptions;
 			operation: "status" | "refresh" | "accept" | "validate" | "conformance";
 			json: boolean;
+			sourceId?: string;
 			path?: string;
 			revision?: string;
 			digest?: string;
@@ -76,11 +77,21 @@ function parseCatalogCommand(options: JouzuOptions, args: string[]): ParsedComma
 		throw new UsageError('catalog requires "status", "refresh", "accept", "validate", or "conformance"');
 	}
 	if (operation === "accept") {
-		const [revision, digestOption, digest, ...extra] = remaining;
-		if (!revision || digestOption !== "--digest" || !digest || extra.length > 0 || !/^[0-9a-f]{64}$/u.test(digest)) {
-			throw new UsageError("catalog accept requires <revision> --digest <sha256>");
+		const [revision, ...tokens] = remaining;
+		let digest: string | undefined;
+		let sourceId: string | undefined;
+		for (let index = 0; index < tokens.length; index += 2) {
+			const option = tokens[index];
+			const value = tokens[index + 1];
+			if (!value) throw new UsageError("catalog accept options require values");
+			if (option === "--digest" && digest === undefined) digest = value;
+			else if (option === "--source" && sourceId === undefined) sourceId = value;
+			else throw new UsageError(`unknown catalog accept option: ${option}`);
 		}
-		return { kind: "catalog", options, operation, json: false, revision, digest };
+		if (!revision || !digest || !/^[0-9a-f]{64}$/u.test(digest)) {
+			throw new UsageError("catalog accept requires <revision> --digest <sha256> [--source <source-id>]");
+		}
+		return { kind: "catalog", options, operation, json: false, revision, digest, ...(sourceId ? { sourceId } : {}) };
 	}
 	if (operation === "validate" || operation === "conformance") {
 		const [path, ...extra] = remaining;
@@ -90,11 +101,19 @@ function parseCatalogCommand(options: JouzuOptions, args: string[]): ParsedComma
 		return { kind: "catalog", options, operation, json: extra.includes("--json"), path };
 	}
 	let json = false;
+	let sourceId: string | undefined;
 	for (const token of remaining) {
-		if (token !== "--json" || json) throw new UsageError(`unknown catalog ${operation} option: ${token}`);
-		json = true;
+		if (token === "--json" && !json) {
+			json = true;
+			continue;
+		}
+		if (!token.startsWith("-") && sourceId === undefined) {
+			sourceId = token;
+			continue;
+		}
+		throw new UsageError(`unknown catalog ${operation} option: ${token}`);
 	}
-	return { kind: "catalog", options, operation, json };
+	return { kind: "catalog", options, operation, json, ...(sourceId ? { sourceId } : {}) };
 }
 
 function parseSelfUpdateCommand(options: JouzuOptions, args: string[]): ParsedCommand {
@@ -263,9 +282,9 @@ Usage:
   jouzu [Jouzu options] pi [Pi arguments...]
   jouzu [Jouzu options] -- [Pi arguments...]
   jouzu [Jouzu options] doctor [--json]
-  jouzu catalog status [--json]
-  jouzu catalog refresh [--json]
-  jouzu catalog accept <revision> --digest <sha256>
+  jouzu catalog status [source-id] [--json]
+  jouzu catalog refresh [source-id] [--json]
+  jouzu catalog accept <revision> --digest <sha256> [--source <source-id>]
   jouzu catalog validate <file> [--json]
   jouzu catalog conformance <file> [--json]
   jouzu profile plan [--profile <core|ja>] [--json]
@@ -294,5 +313,6 @@ on exit; Jouzu resolves its isolated session root. First interactive launch asks
 the optional JA profile; Core is the safe fallback. Interactive launches clear
 the viewport and show the Jouzu header;
 set JOUZU_NO_CLEAR=1 to preserve the existing screen. The Jouzu Models view opens
-through /model or Ctrl+L. Use "jouzu pi --help" for Pi CLI help.`;
+through /model or Ctrl+L; /catalogs opens Settings / Catalogs, and Ctrl+, switches
+from Models to Settings. Use "jouzu pi --help" for Pi CLI help.`;
 }

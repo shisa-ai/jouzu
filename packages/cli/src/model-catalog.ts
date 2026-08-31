@@ -140,7 +140,7 @@ export class ModelCatalogError extends Error {
 	}
 }
 
-class StrictJsonParser {
+export class StrictJsonParser {
 	private index = 0;
 	private readonly text: string;
 
@@ -285,6 +285,10 @@ class StrictJsonParser {
 		this.index += literal.length;
 		return true;
 	}
+}
+
+export function parseStrictJson(text: string): unknown {
+	return new StrictJsonParser(text).parse();
 }
 
 function wellFormedUnicode(value: string): boolean {
@@ -434,7 +438,7 @@ export function parseAndValidateModelCatalog(text: string, options: ValidateCata
 	}
 	let value: unknown;
 	try {
-		value = new StrictJsonParser(text).parse();
+		value = parseStrictJson(text);
 	} catch (error) {
 		if (error instanceof ModelCatalogError) throw error;
 		throw new ModelCatalogError("invalid_json", "$", error instanceof Error ? error.message : String(error));

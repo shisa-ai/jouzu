@@ -8,6 +8,7 @@ export type ContextFit = "fits" | "too-small" | "unknown";
 
 export interface PickerModel extends ModelReference {
 	name: string;
+	catalogLabel?: string;
 	contextWindow?: number;
 	maxTokens?: number;
 	available: boolean;
@@ -51,6 +52,7 @@ function searchScore(model: PickerModel, query: string): number | undefined {
 	const modelId = normalized(model.display?.modelId ?? sanitizeTerminalText(model.modelId));
 	const exact = `${provider}/${modelId}`;
 	const name = normalized(model.display?.name ?? sanitizeTerminalText(model.name));
+	const catalogLabel = normalized(sanitizeTerminalText(model.catalogLabel ?? ""));
 	if (exact === needle) return 0;
 	if (modelId === needle) return 1;
 	if (name === needle) return 2;
@@ -58,7 +60,7 @@ function searchScore(model: PickerModel, query: string): number | undefined {
 	if (modelId.startsWith(needle)) return 20 + modelId.length - needle.length;
 	if (name.startsWith(needle)) return 30 + name.length - needle.length;
 
-	const fields = [exact, `${provider} ${modelId}`, name];
+	const fields = [exact, `${provider} ${modelId}`, name, catalogLabel];
 	let best: number | undefined;
 	for (const field of fields) {
 		const substring = field.indexOf(needle);

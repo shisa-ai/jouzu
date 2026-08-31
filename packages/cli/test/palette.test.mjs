@@ -3,6 +3,7 @@ import { test } from "node:test";
 
 import {
 	DEFAULT_PALETTE_OVERLAY_OPTIONS,
+	JouzuPaletteRouter,
 	JouzuPaletteSurfaceHost,
 	selectPalettePresentation,
 } from "../dist/palette.js";
@@ -127,6 +128,65 @@ test("replacement backend omits overlay options and non-TUI modes decline", asyn
 	const rpc = fakeContext("rpc");
 	assert.equal(await rpcHost.open(rpc.ctx, { view: "models" }, componentFactory([])), false);
 	assert.equal(rpc.calls.length, 0);
+});
+
+test("Palette router switches between Models and Settings and disposes replaced views", () => {
+	const routes = [];
+	const disposed = [];
+	const renders = [];
+	const context = {
+		tui: { requestRender() {} },
+		theme: identityTheme,
+		keybindings: {
+			matches() {
+				return false;
+			},
+		},
+		styles: { apply: (_role, value) => value },
+		close() {},
+	};
+	const router = new JouzuPaletteRouter({
+		context,
+		initialRoute: { view: "models" },
+		factories: {
+			models: (_ctx, route) => ({
+				render: () => {
+					renders.push(route.view);
+					return ["models"];
+				},
+				invalidate() {},
+				route(next) {
+					routes.push(next);
+				},
+				dispose() {
+					disposed.push("models");
+				},
+			}),
+			settings: () => ({
+				render: () => ["settings"],
+				invalidate() {},
+				route(next) {
+					routes.push(next);
+				},
+				dispose() {
+					disposed.push("settings");
+				},
+			}),
+		},
+	});
+	assert.deepEqual(router.render(80), ["models"]);
+	router.handleInput("\u001b[44;5u");
+	assert.deepEqual(router.render(80), ["settings"]);
+	assert.deepEqual(disposed, ["models"]);
+	router.route({ view: "settings" });
+	assert.deepEqual(routes, [{ view: "settings" }]);
+	router.handleInput("\f");
+	assert.deepEqual(router.render(80), ["models"]);
+	assert.deepEqual(disposed, ["models", "settings"]);
+	router.route({ view: "models", query: "qwen" });
+	assert.deepEqual(routes, [{ view: "settings" }, { view: "models", query: "qwen" }]);
+	router.dispose();
+	assert.deepEqual(disposed, ["models", "settings", "models"]);
 });
 
 test("the Palette host supplies Jouzu semantic styles to every view", () => {

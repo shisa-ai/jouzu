@@ -1,7 +1,8 @@
 import type { ExtensionContext, InlineExtension, KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
 import { type Focusable, Input, matchesKey, type TUI } from "@earendil-works/pi-tui";
+import { CatalogSettingsComponent } from "./catalog-settings.js";
 import type { CatalogModelOffering, ModelCatalogDocument } from "./model-catalog.js";
-import { loadActiveModelCatalog } from "./model-catalog-sync.js";
+import { type ActiveModelCatalog, loadActiveModelCatalogs } from "./model-catalog-sync.js";
 import { buildPickerRows, type PickerFilter, type PickerModel, type PickerRow } from "./model-picker-ranking.js";
 import {
 	deriveProjectKey,
@@ -15,6 +16,7 @@ import {
 	previousModelStack,
 } from "./model-picker-state.js";
 import {
+	JouzuPaletteRouter,
 	JouzuPaletteSurfaceHost,
 	type PaletteComponent,
 	type PaletteComponentContext,
@@ -336,7 +338,10 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		const availability = row.model.available ? "" : this.styles.apply("palette.unavailable", " unavailable");
 		const fit = row.contextFit === "too-small" ? this.styles.apply("palette.context.small", " context-small") : "";
 		const styledIdentity = this.styles.apply(selected ? "palette.identity.selected" : "palette.identity", identity);
-		const text = `${marker} ${favorite}${projectDefault} ${styledIdentity}${availability}${fit}`;
+		const source = row.model.catalogLabel
+			? this.styles.apply("palette.detail", ` · ${sanitizeTerminalText(row.model.catalogLabel)}`)
+			: "";
+		const text = `${marker} ${favorite}${projectDefault} ${styledIdentity}${source}${availability}${fit}`;
 		return selected ? this.theme.bg("selectedBg", text) : text;
 	}
 
@@ -399,7 +404,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		} else {
 			lines.push(line(this.styles.apply("palette.hint", "Enter session · Shift+Enter project default · Tab filter")));
 		}
-		lines.push(line(this.styles.apply("palette.hint", "Ctrl+F favorite · ↑↓ move · type search · Esc close")));
+		lines.push(line(this.styles.apply("palette.hint", "Ctrl+F favorite · Ctrl+, Settings · ↑↓ move · Esc close")));
 		lines.push(renderTerminalFrameBorder(width, { ...frameOptions, left: "╰", right: "╯" }));
 		return lines.map((value) => fitTerminalText(value, width));
 	}
@@ -420,6 +425,7 @@ export type FavoriteCycleDirection = "forward" | "backward";
 export interface JouzuModelPickerIntegration {
 	extension: InlineExtension;
 	open(request: JouzuModelPickerRequest): Promise<boolean>;
+	openSettings(): Promise<boolean>;
 	cycleFavorite(direction: FavoriteCycleDirection): Promise<boolean>;
 	handleScopedModelsCommand(): Promise<boolean>;
 }
@@ -456,10 +462,12 @@ function hasConversationEntries(entries: readonly { type: string }[]): boolean {
 export function catalogPickerModel(
 	model: Pick<PiModel, "provider" | "id" | "name" | "contextWindow" | "maxTokens">,
 	catalog?: ModelCatalogDocument,
+	catalogLabel?: string,
 ): PickerModel {
 	const offering = catalogOffering(catalog, model.provider, model.id);
 	return {
 		...(offering && catalog ? { catalogId: catalog.catalogId, offeringId: offering.id } : {}),
+		...(offering && catalogLabel ? { catalogLabel: sanitizeTerminalText(catalogLabel) } : {}),
 		provider: model.provider,
 		modelId: model.id,
 		name: offering?.name ?? model.name,
@@ -469,10 +477,20 @@ export function catalogPickerModel(
 	};
 }
 
-function pickerModels(ctx: ExtensionContext, catalog?: ModelCatalogDocument): PickerModel[] {
+export function catalogPickerModels(
+	model: Pick<PiModel, "provider" | "id" | "name" | "contextWindow" | "maxTokens">,
+	catalogs: ActiveModelCatalog[],
+): PickerModel[] {
+	const matches = catalogs.filter(({ document }) => catalogOffering(document, model.provider, model.id));
+	return matches.length > 0
+		? matches.map(({ source, document }) => catalogPickerModel(model, document, source.label))
+		: [catalogPickerModel(model)];
+}
+
+function pickerModels(ctx: ExtensionContext, catalogs: ActiveModelCatalog[]): PickerModel[] {
 	const models =
 		ctx.scopedModels.length > 0 ? ctx.scopedModels.map(({ model }) => model) : ctx.modelRegistry.getAvailable();
-	return models.map((model) => catalogPickerModel(model, catalog));
+	return models.flatMap((model) => catalogPickerModels(model, catalogs));
 }
 
 export function createJouzuModelPicker(
@@ -481,13 +499,27 @@ export function createJouzuModelPicker(
 ): JouzuModelPickerIntegration {
 	const store = new ModelPickerStore(paths);
 	const surface = new JouzuPaletteSurfaceHost();
+	const catalogEnv = options.palette?.env ?? process.env;
+	let catalogs: ActiveModelCatalog[] = [];
 	let catalog: ModelCatalogDocument | undefined;
 	let catalogWarning: string | undefined;
 	try {
-		catalog = loadActiveModelCatalog(paths);
+		catalogs = loadActiveModelCatalogs(paths, catalogEnv);
+		catalog = catalogs[0]?.document;
 	} catch (error) {
 		catalogWarning = `Cached model catalog was ignored: ${error instanceof Error ? error.message : String(error)}`;
 	}
+	const reloadCatalogs = (): void => {
+		try {
+			catalogs = loadActiveModelCatalogs(paths, catalogEnv);
+			catalog = catalogs[0]?.document;
+			catalogWarning = undefined;
+		} catch (error) {
+			catalogs = [];
+			catalog = undefined;
+			catalogWarning = `Cached model catalog was ignored: ${error instanceof Error ? error.message : String(error)}`;
+		}
+	};
 	let activeCtx: ExtensionContext | undefined;
 	let state: ModelPickerState = emptyModelPickerState();
 	let projectKey = "";
@@ -536,6 +568,14 @@ export function createJouzuModelPicker(
 		name: "jouzu-model-picker",
 		factory: (pi) => {
 			setModel = (model) => pi.setModel(model);
+			pi.registerCommand?.("catalogs", {
+				description: "Open Jouzu catalog settings",
+				handler: async (_args, ctx) => {
+					if (ctx.mode !== "tui" || !(await openSettings())) {
+						ctx.ui.notify("Catalog settings require interactive TUI mode.", "warning");
+					}
+				},
+			});
 			pi.on("session_start", async (event, ctx) => {
 				syncSession(ctx);
 				const applyProjectDefault =
@@ -621,57 +661,76 @@ export function createJouzuModelPicker(
 		},
 	};
 
-	const open = async (request: JouzuModelPickerRequest): Promise<boolean> => {
+	const openPalette = async (route: PaletteRoute): Promise<boolean> => {
 		const ctx = activeCtx;
 		const activateModel = setModel;
 		if (!ctx || ctx.mode !== "tui" || !activateModel) return false;
 		return surface.open(
 			ctx,
-			{ view: "models", ...(request.initialSearchInput ? { query: request.initialSearchInput } : {}) },
-			(componentContext, route) =>
-				new ModelPickerComponent({
+			route,
+			(componentContext, initialRoute) =>
+				new JouzuPaletteRouter({
 					context: componentContext,
-					initialRoute: route,
-					initialFilter: state.filter,
-					getRows: (query, filter) =>
-						buildPickerRows({
-							models: pickerModels(ctx, catalog),
-							state,
-							projectKey,
-							current: modelReference(ctx.model, catalog),
-							previous,
-							query,
-							filter,
-							activeContextTokens: ctx.getContextUsage()?.tokens,
-						}),
-					onSelect: async (row, scope) => {
-						const model = ctx.modelRegistry.find(row.model.provider, row.model.modelId);
-						if (!model) throw new Error(`Model is unavailable: ${row.model.provider}/${row.model.modelId}`);
-						if (!ctx.isIdle()) {
-							queueModelSwitch(ctx, model, row.model, scope === "project");
-							return;
-						}
-						if (!(await activateModel(model)))
-							throw new Error(`No authentication for ${row.model.provider}/${row.model.modelId}`);
-						if (scope === "project") state = store.setProjectDefault(row.model, projectKey);
-					},
-					onToggleFavorite: (row) => {
-						state = store.toggleFavorite(row.model);
-					},
-					onFilterChange: (filter) => {
-						state = store.setFilter(filter);
-					},
-					onRefresh: async (signal) => {
-						const result = await ctx.modelRegistry.refresh({ signal });
-						if (result.errors.size > 0) {
-							throw new Error(`could not refresh ${[...result.errors.keys()].join(", ")}`);
-						}
-						if (result.aborted) throw new Error("model refresh was aborted");
+					initialRoute,
+					factories: {
+						models: (childContext, childRoute) =>
+							new ModelPickerComponent({
+								context: childContext,
+								initialRoute: childRoute,
+								initialFilter: state.filter,
+								getRows: (query, filter) =>
+									buildPickerRows({
+										models: pickerModels(ctx, catalogs),
+										state,
+										projectKey,
+										current: modelReference(ctx.model, catalog),
+										previous,
+										query,
+										filter,
+										activeContextTokens: ctx.getContextUsage()?.tokens,
+									}),
+								onSelect: async (row, scope) => {
+									const model = ctx.modelRegistry.find(row.model.provider, row.model.modelId);
+									if (!model) throw new Error(`Model is unavailable: ${row.model.provider}/${row.model.modelId}`);
+									if (!ctx.isIdle()) {
+										queueModelSwitch(ctx, model, row.model, scope === "project");
+										return;
+									}
+									if (!(await activateModel(model)))
+										throw new Error(`No authentication for ${row.model.provider}/${row.model.modelId}`);
+									if (scope === "project") state = store.setProjectDefault(row.model, projectKey);
+								},
+								onToggleFavorite: (row) => {
+									state = store.toggleFavorite(row.model);
+								},
+								onFilterChange: (filter) => {
+									state = store.setFilter(filter);
+								},
+								onRefresh: async (signal) => {
+									const result = await ctx.modelRegistry.refresh({ signal });
+									if (result.errors.size > 0) {
+										throw new Error(`could not refresh ${[...result.errors.keys()].join(", ")}`);
+									}
+									if (result.aborted) throw new Error("model refresh was aborted");
+								},
+							}),
+						settings: (childContext) =>
+							new CatalogSettingsComponent({
+								context: childContext,
+								paths,
+								env: catalogEnv,
+								onCatalogsChanged: reloadCatalogs,
+							}),
 					},
 				}),
 			options.palette,
 		);
 	};
+
+	const open = async (request: JouzuModelPickerRequest): Promise<boolean> =>
+		openPalette({ view: "models", ...(request.initialSearchInput ? { query: request.initialSearchInput } : {}) });
+
+	const openSettings = async (): Promise<boolean> => openPalette({ view: "settings" });
 
 	const cycleFavorite = async (direction: FavoriteCycleDirection): Promise<boolean> => {
 		const ctx = activeCtx;
@@ -683,7 +742,7 @@ export function createJouzuModelPicker(
 		}
 		const current = queuedModelSwitch?.reference ?? modelReference(ctx.model, catalog);
 		const favoriteRows = buildPickerRows({
-			models: pickerModels(ctx, catalog),
+			models: pickerModels(ctx, catalogs),
 			state,
 			projectKey,
 			current,
@@ -762,5 +821,5 @@ export function createJouzuModelPicker(
 		return true;
 	};
 
-	return { extension, open, cycleFavorite, handleScopedModelsCommand };
+	return { extension, open, openSettings, cycleFavorite, handleScopedModelsCommand };
 }

@@ -2,6 +2,7 @@ import { homedir } from "node:os";
 import { posix, win32 } from "node:path";
 
 export interface JouzuPaths {
+	configDir: string;
 	agentDir: string;
 	stateDir: string;
 	cacheDir: string;
@@ -44,16 +45,19 @@ export function resolveJouzuPaths(options: PathResolutionOptions = {}): JouzuPat
 	const cwd = options.cwd ?? process.cwd();
 	const homeOverride = nonEmpty(options.homeOverride) ?? nonEmpty(env.JOUZU_HOME);
 
+	let configDir: string;
 	let agentDir: string;
 	let stateDir: string;
 	let cacheDir: string;
 	if (homeOverride) {
 		const root = absolutePath(homeOverride, home, cwd, platform);
+		configDir = root;
 		agentDir = pathApi.join(root, "agent");
 		stateDir = pathApi.join(root, "state");
 		cacheDir = pathApi.join(root, "cache");
 	} else if (platform === "darwin") {
 		const applicationSupport = pathApi.join(home, "Library", "Application Support", "Jouzu");
+		configDir = applicationSupport;
 		agentDir = pathApi.join(applicationSupport, "agent");
 		stateDir = pathApi.join(applicationSupport, "state");
 		cacheDir = pathApi.join(home, "Library", "Caches", "Jouzu");
@@ -70,7 +74,8 @@ export function resolveJouzuPaths(options: PathResolutionOptions = {}): JouzuPat
 			cwd,
 			platform,
 		);
-		agentDir = pathApi.join(roaming, "Jouzu", "agent");
+		configDir = pathApi.join(roaming, "Jouzu");
+		agentDir = pathApi.join(configDir, "agent");
 		stateDir = pathApi.join(local, "Jouzu", "state");
 		cacheDir = pathApi.join(local, "Jouzu", "cache");
 	} else {
@@ -87,12 +92,14 @@ export function resolveJouzuPaths(options: PathResolutionOptions = {}): JouzuPat
 			platform,
 		);
 		const cacheHome = absolutePath(nonEmpty(env.XDG_CACHE_HOME) ?? pathApi.join(home, ".cache"), home, cwd, platform);
-		agentDir = pathApi.join(configHome, "jouzu", "agent");
+		configDir = pathApi.join(configHome, "jouzu");
+		agentDir = pathApi.join(configDir, "agent");
 		stateDir = pathApi.join(stateHome, "jouzu");
 		cacheDir = pathApi.join(cacheHome, "jouzu");
 	}
 
 	return {
+		configDir,
 		agentDir,
 		stateDir,
 		cacheDir,

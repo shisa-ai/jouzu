@@ -1,8 +1,15 @@
 import type { ExtensionContext, KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
-import type { Component, OverlayHandle, OverlayOptions, TUI } from "@earendil-works/pi-tui";
+import {
+	type Component,
+	type Focusable,
+	matchesKey,
+	type OverlayHandle,
+	type OverlayOptions,
+	type TUI,
+} from "@earendil-works/pi-tui";
 import { createSessionUiStyles, type SessionUiStyles } from "./session-ui/index.js";
 
-export type PaletteViewId = "models" | "usage" | "keys" | "help";
+export type PaletteViewId = "models" | "settings" | "usage" | "keys" | "help";
 export type PalettePresentation = "floating" | "replace";
 
 export interface PaletteRoute {
@@ -25,6 +32,84 @@ export interface PaletteComponentContext {
 }
 
 export type PaletteComponentFactory = (context: PaletteComponentContext, route: PaletteRoute) => PaletteComponent;
+
+export interface PaletteRouterOptions {
+	context: PaletteComponentContext;
+	initialRoute: PaletteRoute;
+	factories: Partial<Record<PaletteViewId, PaletteComponentFactory>>;
+}
+
+function setComponentFocus(component: PaletteComponent | undefined, focused: boolean): void {
+	if (component && "focused" in component) (component as PaletteComponent & Focusable).focused = focused;
+}
+
+export class JouzuPaletteRouter implements PaletteComponent, Focusable {
+	private readonly context: PaletteComponentContext;
+	private readonly factories: Partial<Record<PaletteViewId, PaletteComponentFactory>>;
+	private activeView: PaletteViewId;
+	private component: PaletteComponent;
+	private _focused = false;
+
+	constructor(options: PaletteRouterOptions) {
+		this.context = options.context;
+		this.factories = options.factories;
+		this.activeView = options.initialRoute.view;
+		this.component = this.create(options.initialRoute);
+	}
+
+	get focused(): boolean {
+		return this._focused;
+	}
+
+	set focused(value: boolean) {
+		this._focused = value;
+		setComponentFocus(this.component, value);
+	}
+
+	private create(route: PaletteRoute): PaletteComponent {
+		const factory = this.factories[route.view] ?? this.factories.models;
+		if (!factory) throw new Error(`No Palette component is registered for ${route.view}`);
+		const component = factory(this.context, route);
+		setComponentFocus(component, this._focused);
+		return component;
+	}
+
+	route(route: PaletteRoute): void {
+		if (route.view === this.activeView) {
+			this.component.route(route);
+			this.context.tui.requestRender();
+			return;
+		}
+		this.component.dispose?.();
+		this.activeView = route.view;
+		this.component = this.create(route);
+		this.context.tui.requestRender();
+	}
+
+	handleInput(data: string): void {
+		if (matchesKey(data, "ctrl+,")) {
+			this.route({ view: "settings" });
+			return;
+		}
+		if (matchesKey(data, "ctrl+l")) {
+			this.route({ view: "models" });
+			return;
+		}
+		this.component.handleInput?.(data);
+	}
+
+	render(width: number): string[] {
+		return this.component.render(width);
+	}
+
+	invalidate(): void {
+		this.component.invalidate();
+	}
+
+	dispose(): void {
+		this.component.dispose?.();
+	}
+}
 
 export interface PaletteSurfaceOptions {
 	presentation?: PalettePresentation;

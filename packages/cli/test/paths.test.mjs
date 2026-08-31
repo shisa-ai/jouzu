@@ -11,6 +11,7 @@ test("resolves Linux XDG defaults without using Pi roots", () => {
 			env: {},
 		}),
 		{
+			configDir: "/home/user/.config/jouzu",
 			agentDir: "/home/user/.config/jouzu/agent",
 			stateDir: "/home/user/.local/state/jouzu",
 			cacheDir: "/home/user/.cache/jouzu",
@@ -23,6 +24,7 @@ test("resolves Linux XDG defaults without using Pi roots", () => {
 
 test("resolves macOS native roots", () => {
 	const paths = resolveJouzuPaths({ platform: "darwin", homeDir: "/Users/上手", cwd: "/tmp", env: {} });
+	assert.equal(paths.configDir, "/Users/上手/Library/Application Support/Jouzu");
 	assert.equal(paths.agentDir, "/Users/上手/Library/Application Support/Jouzu/agent");
 	assert.equal(paths.sessionDir, "/Users/上手/Library/Application Support/Jouzu/state/sessions");
 	assert.equal(paths.cacheDir, "/Users/上手/Library/Caches/Jouzu");
@@ -35,6 +37,7 @@ test("resolves Windows native and fallback roots", () => {
 		cwd: "C:\\work",
 		env: { APPDATA: "D:\\Roaming Data", LOCALAPPDATA: "D:\\Local Data" },
 	});
+	assert.equal(native.configDir, "D:\\Roaming Data\\Jouzu");
 	assert.equal(native.agentDir, "D:\\Roaming Data\\Jouzu\\agent");
 	assert.equal(native.sessionDir, "D:\\Local Data\\Jouzu\\state\\sessions");
 
@@ -54,6 +57,7 @@ test("portable home override derives all isolated roots and supports spaces", ()
 		cwd: "/work",
 		env: { JOUZU_HOME: "./上手 home" },
 	});
+	assert.equal(paths.configDir, "/work/上手 home");
 	assert.equal(paths.agentDir, "/work/上手 home/agent");
 	assert.equal(paths.sessionDir, "/work/上手 home/state/sessions");
 	assert.equal(paths.cacheDir, "/work/上手 home/cache");

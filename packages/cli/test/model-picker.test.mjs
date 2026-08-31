@@ -9,6 +9,7 @@ import { parseAndValidateModelCatalog } from "../dist/model-catalog.js";
 import {
 	catalogModelReference,
 	catalogPickerModel,
+	catalogPickerModels,
 	createJouzuModelPicker,
 	ModelPickerComponent,
 } from "../dist/model-picker.js";
@@ -65,6 +66,49 @@ test("active catalog metadata qualifies matching Pi models without changing loca
 		provider: "local",
 		modelId: "unlisted",
 	});
+
+	const secondCatalog = structuredClone(catalog);
+	secondCatalog.catalogId = "org.example.second";
+	secondCatalog.modelOfferings[0].id = "org.example.second/example-model";
+	secondCatalog.modelOfferings[0].name = "Second route";
+	const qualified = catalogPickerModels(
+		{
+			provider: "ai.example.gateway",
+			id: "example-model",
+			name: "Pi label",
+			contextWindow: 1,
+			maxTokens: 1,
+		},
+		[
+			{
+				source: {
+					id: "first",
+					label: "First catalog",
+					url: "https://first.test/catalog",
+					enabled: true,
+					auth: { type: "none" },
+				},
+				document: catalog,
+			},
+			{
+				source: {
+					id: "second",
+					label: "Second catalog",
+					url: "https://second.test/catalog",
+					enabled: true,
+					auth: { type: "none" },
+				},
+				document: secondCatalog,
+			},
+		],
+	);
+	assert.deepEqual(
+		qualified.map((model) => [model.catalogId, model.offeringId, model.catalogLabel]),
+		[
+			["ai.example.test", "ai.example.gateway/example-model", "First catalog"],
+			["org.example.second", "org.example.second/example-model", "Second catalog"],
+		],
+	);
 });
 
 function stripSgr(value) {

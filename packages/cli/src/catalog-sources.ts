@@ -1,0 +1,412 @@
+import { existsSync, lstatSync, readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import {
+	MODEL_CATALOG_MAX_BYTES,
+	MODEL_CATALOG_MEDIA_TYPE,
+	type ModelCatalogDocument,
+	parseAndValidateModelCatalog,
+	parseStrictJson,
+} from "./model-catalog.js";
+import type { JouzuPaths } from "./paths.js";
+import { validatePrivateDirectory, writeFilePrivateAtomic } from "./private-fs.js";
+
+const REGISTRY_MAX_BYTES = 256 * 1024;
+const LABEL_MAX_BYTES = 256;
+const SOURCE_ID_PATTERN = /^[a-z0-9](?:[a-z0-9._-]{0,62}[a-z0-9])?$/u;
+const ENV_NAME_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/u;
+const DISCOVERY_TIMEOUT_MS = 10_000;
+
+export type CatalogSourceAuth = { type: "none" } | { type: "bearer"; credentialRef: `env:${string}` };
+
+export interface CatalogSource {
+	id: string;
+	label: string;
+	url: string;
+	enabled: boolean;
+	auth: CatalogSourceAuth;
+}
+
+export interface CatalogSourceRegistry {
+	schemaVersion: 1;
+	sources: CatalogSource[];
+}
+
+export interface CatalogSourceInput {
+	id?: string;
+	label: string;
+	url: string;
+	enabled?: boolean;
+	auth: CatalogSourceAuth;
+}
+
+export interface ResolveCatalogSourcesOptions {
+	includeDisabled?: boolean;
+}
+
+export interface CatalogEndpointDiscoveryOptions {
+	auth: CatalogSourceAuth;
+	env?: NodeJS.ProcessEnv;
+	fetch?: typeof globalThis.fetch;
+	signal?: AbortSignal;
+}
+
+export interface CatalogEndpointDiscoveryResult {
+	url: string;
+	document: ModelCatalogDocument;
+	attempts: Array<{ url: string; result: string }>;
+}
+
+export class CatalogSourceError extends Error {
+	constructor(message: string) {
+		super(message);
+		this.name = "CatalogSourceError";
+	}
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+	return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function assertOnlyKeys(record: Record<string, unknown>, allowed: readonly string[], context: string): void {
+	const unknown = Object.keys(record).filter((key) => !allowed.includes(key));
+	if (unknown.length > 0) throw new CatalogSourceError(`${context} contains unknown field: ${unknown[0]}`);
+}
+
+function controlFree(value: string, context: string, maxBytes: number): string {
+	const trimmed = value.trim();
+	const hasControl = Array.from(trimmed).some((character) => {
+		const codePoint = character.codePointAt(0) ?? 0;
+		return codePoint <= 0x1f || (codePoint >= 0x7f && codePoint <= 0x9f);
+	});
+	if (!trimmed || Buffer.byteLength(trimmed) > maxBytes || hasControl) {
+		throw new CatalogSourceError(`${context} must be non-empty, bounded, and control-free`);
+	}
+	return trimmed;
+}
+
+function normalizeSourceId(value: string): string {
+	const id = value.trim().toLowerCase();
+	if (!SOURCE_ID_PATTERN.test(id)) {
+		throw new CatalogSourceError(
+			"catalog source id must use 1-64 lowercase letters, numbers, dots, dashes, or underscores",
+		);
+	}
+	return id;
+}
+
+function sourceIdFromLabel(label: string): string {
+	const value = label
+		.normalize("NFKD")
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/gu, "-")
+		.replace(/^-+|-+$/gu, "")
+		.slice(0, 48)
+		.replace(/-+$/u, "");
+	return value || "catalog";
+}
+
+function parseAuth(value: unknown, context: string): CatalogSourceAuth {
+	if (!isRecord(value)) throw new CatalogSourceError(`${context} must be an object`);
+	if (value.type === "none") {
+		assertOnlyKeys(value, ["type"], context);
+		return { type: "none" };
+	}
+	if (value.type === "bearer") {
+		assertOnlyKeys(value, ["type", "credentialRef"], context);
+		if (typeof value.credentialRef !== "string" || !value.credentialRef.startsWith("env:")) {
+			throw new CatalogSourceError(`${context} bearer auth requires an environment credential reference`);
+		}
+		const name = value.credentialRef.slice(4);
+		if (!ENV_NAME_PATTERN.test(name)) {
+			throw new CatalogSourceError(`${context} has an invalid environment credential reference`);
+		}
+		return { type: "bearer", credentialRef: `env:${name}` };
+	}
+	throw new CatalogSourceError(`${context}.type must be none or bearer`);
+}
+
+function inferScheme(value: string): string {
+	if (/^[A-Za-z][A-Za-z0-9+.-]*:\/\//u.test(value)) return value;
+	const host = value.split(/[/?#]/u, 1)[0]?.split(":", 1)[0]?.toLowerCase();
+	const local = host === "localhost" || host === "127.0.0.1" || host === "[::1]";
+	return `${local ? "http" : "https"}://${value}`;
+}
+
+function isLocalhost(parsed: URL): boolean {
+	return parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1" || parsed.hostname === "[::1]";
+}
+
+export function normalizeCatalogSourceUrl(value: string): string {
+	const input = controlFree(value, "catalog source URL", 2048);
+	let parsed: URL;
+	try {
+		parsed = new URL(inferScheme(input));
+	} catch {
+		throw new CatalogSourceError("catalog source URL must be an absolute HTTP(S) URL or host");
+	}
+	if (parsed.username || parsed.password)
+		throw new CatalogSourceError("catalog source URL must not contain credentials");
+	if (parsed.hash || parsed.search)
+		throw new CatalogSourceError("catalog source URL must not contain a query or fragment");
+	if (parsed.protocol !== "https:" && !(parsed.protocol === "http:" && isLocalhost(parsed))) {
+		throw new CatalogSourceError("catalog source URL must use HTTPS except for localhost development");
+	}
+	return parsed.href;
+}
+
+function parseSource(value: unknown, index: number): CatalogSource {
+	if (!isRecord(value)) throw new CatalogSourceError(`catalog source ${index + 1} must be an object`);
+	assertOnlyKeys(value, ["id", "label", "url", "enabled", "auth"], `catalog source ${index + 1}`);
+	if (typeof value.id !== "string" || typeof value.label !== "string" || typeof value.url !== "string") {
+		throw new CatalogSourceError(`catalog source ${index + 1} requires id, label, and url strings`);
+	}
+	if (typeof value.enabled !== "boolean")
+		throw new CatalogSourceError(`catalog source ${index + 1}.enabled must be boolean`);
+	return {
+		id: normalizeSourceId(value.id),
+		label: controlFree(value.label, `catalog source ${index + 1} label`, LABEL_MAX_BYTES),
+		url: normalizeCatalogSourceUrl(value.url),
+		enabled: value.enabled,
+		auth: parseAuth(value.auth, `catalog source ${index + 1}.auth`),
+	};
+}
+
+function validateRegistry(value: unknown): CatalogSourceRegistry {
+	if (!isRecord(value)) throw new CatalogSourceError("catalog source registry must be an object");
+	assertOnlyKeys(value, ["schemaVersion", "sources"], "catalog source registry");
+	if (value.schemaVersion !== 1 || !Array.isArray(value.sources)) {
+		throw new CatalogSourceError("catalog source registry requires schemaVersion 1 and a sources array");
+	}
+	const sources = value.sources.map(parseSource);
+	const ids = new Set<string>();
+	const urls = new Set<string>();
+	for (const source of sources) {
+		if (ids.has(source.id)) throw new CatalogSourceError(`duplicate catalog source id: ${source.id}`);
+		if (urls.has(source.url)) throw new CatalogSourceError(`duplicate catalog source URL: ${source.url}`);
+		ids.add(source.id);
+		urls.add(source.url);
+	}
+	return { schemaVersion: 1, sources };
+}
+
+function configurationRoot(paths: JouzuPaths): string {
+	return paths.configDir ?? dirname(paths.agentDir);
+}
+
+export function catalogSourceRegistryPath(paths: JouzuPaths): string {
+	return join(configurationRoot(paths), "catalogs.json");
+}
+
+export function catalogSourceRegistryExists(paths: JouzuPaths): boolean {
+	return existsSync(catalogSourceRegistryPath(paths));
+}
+
+export function loadCatalogSourceRegistry(paths: JouzuPaths): CatalogSourceRegistry {
+	const path = catalogSourceRegistryPath(paths);
+	if (!existsSync(path)) return { schemaVersion: 1, sources: [] };
+	validatePrivateDirectory(configurationRoot(paths));
+	const metadata = lstatSync(path);
+	if (!metadata.isFile() || metadata.isSymbolicLink() || metadata.size > REGISTRY_MAX_BYTES) {
+		throw new CatalogSourceError("catalog source registry must be a bounded regular file");
+	}
+	try {
+		return validateRegistry(parseStrictJson(readFileSync(path, "utf8")));
+	} catch (error) {
+		if (error instanceof CatalogSourceError) throw error;
+		throw new CatalogSourceError(error instanceof Error ? error.message : String(error));
+	}
+}
+
+function environmentSource(env: NodeJS.ProcessEnv): CatalogSource | undefined {
+	const url = env.JOUZU_MODEL_CATALOG_URL?.trim();
+	if (!url) return undefined;
+	const token = env.JOUZU_MODEL_CATALOG_TOKEN?.trim();
+	return {
+		id: "default",
+		label: "Environment catalog",
+		url: normalizeCatalogSourceUrl(url),
+		enabled: true,
+		auth: token ? { type: "bearer", credentialRef: "env:JOUZU_MODEL_CATALOG_TOKEN" } : { type: "none" },
+	};
+}
+
+export function resolveCatalogSources(
+	paths: JouzuPaths,
+	env: NodeJS.ProcessEnv = process.env,
+	options: ResolveCatalogSourcesOptions = {},
+): CatalogSource[] {
+	const sources = catalogSourceRegistryExists(paths)
+		? loadCatalogSourceRegistry(paths).sources
+		: environmentSource(env)
+			? [environmentSource(env) as CatalogSource]
+			: [];
+	return options.includeDisabled ? sources : sources.filter((source) => source.enabled);
+}
+
+function writeRegistry(paths: JouzuPaths, registry: CatalogSourceRegistry): void {
+	const validated = validateRegistry(registry);
+	writeFilePrivateAtomic(
+		catalogSourceRegistryPath(paths),
+		`${JSON.stringify(validated, null, 2)}\n`,
+		configurationRoot(paths),
+	);
+}
+
+export class CatalogSourceStore {
+	private readonly paths: JouzuPaths;
+	private readonly env: NodeJS.ProcessEnv;
+
+	constructor(paths: JouzuPaths, options: { env?: NodeJS.ProcessEnv } = {}) {
+		this.paths = paths;
+		this.env = options.env ?? process.env;
+	}
+
+	list(): CatalogSource[] {
+		return resolveCatalogSources(this.paths, this.env, { includeDisabled: true });
+	}
+
+	private save(sources: CatalogSource[]): void {
+		writeRegistry(this.paths, { schemaVersion: 1, sources });
+	}
+
+	add(input: CatalogSourceInput): CatalogSource {
+		const sources = this.list();
+		const label = controlFree(input.label, "catalog source label", LABEL_MAX_BYTES);
+		const baseId = input.id ? normalizeSourceId(input.id) : sourceIdFromLabel(label);
+		let id = baseId;
+		let suffix = 2;
+		while (sources.some((source) => source.id === id)) {
+			id = `${baseId.slice(0, Math.max(1, 63 - String(suffix).length))}-${suffix}`;
+			suffix += 1;
+		}
+		const source = parseSource(
+			{
+				id,
+				label,
+				url: input.url,
+				enabled: input.enabled ?? true,
+				auth: input.auth,
+			},
+			sources.length,
+		);
+		this.save([...sources, source]);
+		return source;
+	}
+
+	update(id: string, input: Omit<CatalogSourceInput, "id">): CatalogSource {
+		const normalizedId = normalizeSourceId(id);
+		const sources = this.list();
+		const index = sources.findIndex((source) => source.id === normalizedId);
+		if (index < 0) throw new CatalogSourceError(`catalog source not found: ${normalizedId}`);
+		const source = parseSource({ ...input, id: normalizedId, enabled: input.enabled ?? sources[index].enabled }, index);
+		sources[index] = source;
+		this.save(sources);
+		return source;
+	}
+
+	setEnabled(id: string, enabled: boolean): CatalogSource {
+		const sources = this.list();
+		const normalizedId = normalizeSourceId(id);
+		const index = sources.findIndex((source) => source.id === normalizedId);
+		if (index < 0) throw new CatalogSourceError(`catalog source not found: ${normalizedId}`);
+		sources[index] = { ...sources[index], enabled };
+		this.save(sources);
+		return sources[index];
+	}
+
+	remove(id: string): CatalogSource {
+		const sources = this.list();
+		const normalizedId = normalizeSourceId(id);
+		const index = sources.findIndex((source) => source.id === normalizedId);
+		if (index < 0) throw new CatalogSourceError(`catalog source not found: ${normalizedId}`);
+		const [removed] = sources.splice(index, 1);
+		this.save(sources);
+		return removed;
+	}
+}
+
+export function resolveCatalogBearer(source: CatalogSource, env: NodeJS.ProcessEnv = process.env): string | undefined {
+	if (source.auth.type === "none") return undefined;
+	const name = source.auth.credentialRef.slice(4);
+	const value = env[name]?.trim();
+	if (!value) throw new CatalogSourceError(`catalog source ${source.label} requires environment credential ${name}`);
+	return value;
+}
+
+export function catalogEndpointCandidates(input: string): string[] {
+	const exact = normalizeCatalogSourceUrl(input);
+	const parsed = new URL(exact);
+	const path = parsed.pathname.replace(/\/+$/u, "") || "/";
+	let conventionalPath: string;
+	if (path === "/") conventionalPath = "/v1/jouzu/model-catalog";
+	else if (path.endsWith("/v1")) conventionalPath = `${path}/jouzu/model-catalog`;
+	else if (path.endsWith("/v1/jouzu")) conventionalPath = `${path}/model-catalog`;
+	else conventionalPath = `${path}/v1/jouzu/model-catalog`;
+	const conventional = new URL(parsed.href);
+	conventional.pathname = conventionalPath;
+	const candidates = [exact, conventional.href];
+	return [...new Set(candidates)];
+}
+
+async function boundedResponseText(response: Response): Promise<string> {
+	const contentLength = Number(response.headers.get("content-length") ?? "0");
+	if (Number.isFinite(contentLength) && contentLength > MODEL_CATALOG_MAX_BYTES) {
+		throw new CatalogSourceError("catalog response exceeds 16 MiB");
+	}
+	const text = await response.text();
+	if (Buffer.byteLength(text) > MODEL_CATALOG_MAX_BYTES)
+		throw new CatalogSourceError("catalog response exceeds 16 MiB");
+	return text;
+}
+
+export async function discoverCatalogEndpoint(
+	input: string,
+	options: CatalogEndpointDiscoveryOptions,
+): Promise<CatalogEndpointDiscoveryResult> {
+	const candidates = catalogEndpointCandidates(input);
+	const token =
+		options.auth.type === "bearer"
+			? resolveCatalogBearer(
+					{ id: "discovery", label: "Catalog", url: candidates[0], enabled: true, auth: options.auth },
+					options.env,
+				)
+			: undefined;
+	const attempts: Array<{ url: string; result: string }> = [];
+	for (const url of candidates) {
+		const controller = new AbortController();
+		const abort = () => controller.abort();
+		options.signal?.addEventListener("abort", abort, { once: true });
+		const timeout = setTimeout(abort, DISCOVERY_TIMEOUT_MS);
+		try {
+			const headers = new Headers({ Accept: MODEL_CATALOG_MEDIA_TYPE });
+			if (token) headers.set("Authorization", `Bearer ${token}`);
+			const response = await (options.fetch ?? globalThis.fetch)(url, {
+				method: "GET",
+				headers,
+				redirect: "error",
+				signal: controller.signal,
+			});
+			if (!response.ok) {
+				attempts.push({ url, result: `HTTP ${response.status}` });
+				continue;
+			}
+			const mediaType = response.headers.get("content-type") ?? "";
+			if (!mediaType.toLowerCase().startsWith(MODEL_CATALOG_MEDIA_TYPE)) {
+				attempts.push({ url, result: `unsupported Content-Type ${mediaType || "missing"}` });
+				continue;
+			}
+			const document = parseAndValidateModelCatalog(await boundedResponseText(response), { remote: true });
+			attempts.push({ url, result: "valid" });
+			return { url, document, attempts };
+		} catch (error) {
+			const message = error instanceof Error ? error.message : String(error);
+			attempts.push({ url, result: controller.signal.aborted ? "timed out" : message });
+		} finally {
+			clearTimeout(timeout);
+			options.signal?.removeEventListener("abort", abort);
+		}
+	}
+	throw new CatalogSourceError(
+		`no Jouzu catalog found (${attempts.map((attempt) => `${attempt.url}: ${attempt.result}`).join("; ")})`,
+	);
+}

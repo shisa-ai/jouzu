@@ -3,11 +3,14 @@ import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-
+import { CatalogSourceStore } from "../dist/catalog-sources.js";
 import { MODEL_CATALOG_MAX_BYTES } from "../dist/model-catalog.js";
 import {
 	acceptQuarantinedCatalog,
+	getCatalogStatuses,
 	loadActiveModelCatalog,
+	loadActiveModelCatalogs,
+	refreshAllModelCatalogs,
 	refreshModelCatalog,
 	resolveCatalogEndpoint,
 } from "../dist/model-catalog-sync.js";
@@ -87,6 +90,99 @@ test("configured refresh activates once and validates unchanged bytes with ETag"
 		assert.equal(second.status, "not-modified");
 		assert.equal(requestHeaders[1].get("if-none-match"), '"fixture-1"');
 		assert.equal(second.catalogStatus.validatedAt, "2026-08-26T02:00:00.000Z");
+	} finally {
+		rmSync(temporary, { recursive: true, force: true });
+	}
+});
+
+test("multiple sources refresh independently with optional authentication and aggregate status", async () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-multiple-"));
+	try {
+		const jouzuPaths = paths(temporary);
+		const store = new CatalogSourceStore(jouzuPaths, { env: { PRIVATE_TOKEN: "fixture-token" } });
+		store.add({
+			label: "Public models",
+			url: "https://public.example/v1/jouzu/model-catalog",
+			auth: { type: "none" },
+		});
+		store.add({
+			label: "Private pool",
+			url: "https://private.example/v1/jouzu/model-catalog",
+			auth: { type: "bearer", credentialRef: "env:PRIVATE_TOKEN" },
+		});
+		const headers = new Map();
+		const fetch = async (url, init) => {
+			headers.set(String(url), new Headers(init.headers));
+			const document = snapshot(1);
+			if (String(url).includes("public")) {
+				document.catalogId = "org.example.public";
+				document.scope.accountScoped = false;
+				delete document.scope.accountRef;
+			} else {
+				document.catalogId = "org.example.private";
+				document.scope.accountRef = "acct_private";
+			}
+			return response(document);
+		};
+		const refreshed = await refreshAllModelCatalogs(jouzuPaths, {
+			env: { PRIVATE_TOKEN: "fixture-token" },
+			fetch,
+			now: new Date("2026-08-28T01:00:00Z"),
+		});
+		assert.equal(refreshed.status, "complete");
+		assert.deepEqual(
+			refreshed.results.map((result) => result.source.label),
+			["Public models", "Private pool"],
+		);
+		assert.equal(headers.get("https://public.example/v1/jouzu/model-catalog").get("authorization"), null);
+		assert.equal(
+			headers.get("https://private.example/v1/jouzu/model-catalog").get("authorization"),
+			"Bearer fixture-token",
+		);
+		const active = loadActiveModelCatalogs(jouzuPaths, { PRIVATE_TOKEN: "fixture-token" });
+		assert.deepEqual(
+			active.map(({ source, document }) => [source.label, document.catalogId]),
+			[
+				["Public models", "org.example.public"],
+				["Private pool", "org.example.private"],
+			],
+		);
+		const status = getCatalogStatuses(jouzuPaths, { PRIVATE_TOKEN: "fixture-token" });
+		assert.equal(status.status, "active");
+		assert.equal(status.active, 2);
+		assert.deepEqual(
+			status.sources.map((source) => source.offeringCount),
+			[fixture.modelOfferings.length, fixture.modelOfferings.length],
+		);
+	} finally {
+		rmSync(temporary, { recursive: true, force: true });
+	}
+});
+
+test("all-source refresh activates healthy sources while reporting partial failure", async () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-partial-"));
+	try {
+		const jouzuPaths = paths(temporary);
+		const store = new CatalogSourceStore(jouzuPaths);
+		store.add({ label: "Healthy", url: "https://healthy.example/catalog", auth: { type: "none" } });
+		store.add({ label: "Offline", url: "https://offline.example/catalog", auth: { type: "none" } });
+		const result = await refreshAllModelCatalogs(jouzuPaths, {
+			env: {},
+			fetch: async (url) => {
+				if (String(url).includes("offline")) throw new Error("offline");
+				const document = snapshot(1);
+				document.catalogId = "org.example.healthy";
+				document.scope.accountScoped = false;
+				delete document.scope.accountRef;
+				return response(document);
+			},
+		});
+		assert.equal(result.status, "partial");
+		assert.deepEqual(
+			result.results.map((entry) => entry.result.status),
+			["activated", "error"],
+		);
+		assert.equal(loadActiveModelCatalogs(jouzuPaths, {}).length, 1);
 	} finally {
 		rmSync(temporary, { recursive: true, force: true });
 	}

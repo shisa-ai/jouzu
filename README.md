@@ -143,18 +143,34 @@ Jouzu does not read normal Pi state during non-interactive commands. On the firs
 
 The import rejects symbolic links, non-regular files, oversized files, and files whose top-level JSON value is not an object. It does not import `settings.json`, keybindings, packages, extensions, skills, prompts, themes, sessions, caches, or trust decisions. Trusted project `.pi` resources still apply through Pi's project-trust behavior. Pi's documented cross-harness `~/.agents/skills` directory is also a shared read surface.
 
-## Optional model catalog
+## Optional model catalogs
 
-Jouzu does not require a remote model catalog. With no endpoint configured, it makes no catalog request and continues using Pi's effective model inventory plus local `models.json` configuration. `jouzu catalog status` and `jouzu catalog refresh` report `unconfigured` and exit successfully in that state.
+Jouzu does not require a remote model catalog. With no source configured, it makes no catalog request and continues using Pi's effective model inventory plus local `models.json` configuration. `jouzu catalog status` and `jouzu catalog refresh` report `unconfigured` and exit successfully in that state.
 
-The initial explicit pilot uses `JOUZU_MODEL_CATALOG_URL` and an optional `JOUZU_MODEL_CATALOG_TOKEN`. The URL must use HTTPS except for localhost development; the token is sent only as an authorization header and is not written to catalog cache or diagnostics. Refresh uses ETag/`304`, validates complete bytes before activation, partitions private cache by account, and keeps the active last-known-good catalog on network or validation failure. Inspect with:
+Open Settings / Catalogs with `/catalogs`, or open Models with `Ctrl+L` and press `Ctrl+,`. Each custom source stores a label, URL, enabled state, and authentication mode. Press `A` to add a source, enter its label and a URL or host, then press `Ctrl+Enter`. Jouzu tries the exact input before the conventional `/v1/jouzu/model-catalog` path. HTTPS is required except for localhost development.
+
+Authentication can be disabled or read as a bearer token from a named environment variable. Jouzu stores only the environment-variable name in `catalogs.json`; bearer values are sent only in the source's authorization header and never written to configuration, cache, or diagnostics. Catalog configuration is stored at:
+
+| Platform | Catalog configuration |
+| --- | --- |
+| Linux | `${XDG_CONFIG_HOME:-~/.config}/jouzu/catalogs.json` |
+| macOS | `~/Library/Application Support/Jouzu/catalogs.json` |
+| Windows | `%APPDATA%\Jouzu\catalogs.json` |
+
+Settings reports each source's status and model count. Select a source with `Enter` to expand its cached offerings. `E` edits, `Space` enables or disables, `R` refreshes, and `D` removes the source registration. Removing a source does not remove provider configuration, credentials, favorites, or recents.
+
+Refresh uses ETag/`304`, validates complete bytes before activation, partitions private cache by source and account, and keeps each source's last valid catalog on network or validation failure. CLI status and refresh operate on all enabled sources or one named source:
 
 ```bash
 jouzu catalog status
+jouzu catalog status office
 jouzu catalog refresh
+jouzu catalog refresh office
 ```
 
-A structurally valid large catalog change can be quarantined instead of activated. Review its status, then accept only the exact displayed revision and SHA-256 digest with `jouzu catalog accept REVISION --digest SHA256`.
+`JOUZU_MODEL_CATALOG_URL` and optional `JOUZU_MODEL_CATALOG_TOKEN` remain a single-source shorthand when `catalogs.json` does not exist.
+
+A structurally valid large catalog change can be quarantined instead of activated. Review its status, then accept only the exact displayed revision and SHA-256 digest with `jouzu catalog accept REVISION --digest SHA256 --source SOURCE_ID`.
 
 Catalog producers can validate a file against Jouzu's version 1 structural and semantic contract:
 

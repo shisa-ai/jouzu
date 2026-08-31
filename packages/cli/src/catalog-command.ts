@@ -1,22 +1,51 @@
 import { existsSync, lstatSync, readFileSync } from "node:fs";
+import { resolveCatalogSources } from "./catalog-sources.js";
 import { type CatalogConformanceResult, checkCatalogConformance } from "./model-catalog.js";
-import { type CatalogSyncStatus, getCatalogStatus } from "./model-catalog-sync.js";
+import {
+	type CatalogStatuses,
+	type CatalogSyncStatus,
+	getCatalogSourceStatus,
+	getCatalogStatuses,
+} from "./model-catalog-sync.js";
 import type { JouzuPaths } from "./paths.js";
 
-export type CatalogStatus = CatalogSyncStatus;
+export type CatalogStatus = CatalogStatuses;
 
-export function catalogStatus(paths: JouzuPaths, env: NodeJS.ProcessEnv = process.env): CatalogStatus {
-	return getCatalogStatus(paths, env);
+export function catalogStatus(
+	paths: JouzuPaths,
+	env: NodeJS.ProcessEnv = process.env,
+	sourceId?: string,
+): CatalogStatus | CatalogSyncStatus {
+	if (!sourceId) return getCatalogStatuses(paths, env);
+	const source = resolveCatalogSources(paths, env, { includeDisabled: true }).find(
+		(candidate) => candidate.id === sourceId,
+	);
+	if (!source) throw new Error(`catalog source not found: ${sourceId}`);
+	return getCatalogSourceStatus(paths, source);
 }
 
-export function formatCatalogStatus(status: CatalogStatus): string {
-	if (!status.configured) return `Jouzu model catalog: ${status.status}\n${status.message}`;
-	const lines = [`Jouzu model catalog: ${status.status}`, `Endpoint: ${status.endpoint}`];
-	if (status.catalogId) lines.push(`Catalog: ${status.catalogId}`);
-	if (status.revision) lines.push(`Revision: ${status.revision} (sequence ${status.sequence})`);
-	if (status.validatedAt) lines.push(`Validated: ${status.validatedAt}`);
-	if (status.quarantined > 0) lines.push(`Quarantined candidates: ${status.quarantined}`);
-	if (status.lastError) lines.push(`Last error: ${status.lastError.code}: ${status.lastError.message}`);
+function formatOneCatalogStatus(status: CatalogSyncStatus): string[] {
+	if (!status.configured) return [`Jouzu model catalog: ${status.status}`, status.message];
+	const lines = [
+		`${status.label} [${status.sourceId}]: ${status.enabled ? status.status : "disabled"}`,
+		`  Endpoint: ${status.endpoint}`,
+	];
+	if (status.catalogId) lines.push(`  Catalog: ${status.catalogId}`);
+	if (status.offeringCount !== undefined) lines.push(`  Models: ${status.offeringCount}`);
+	if (status.revision) lines.push(`  Revision: ${status.revision} (sequence ${status.sequence})`);
+	if (status.validatedAt) lines.push(`  Validated: ${status.validatedAt}`);
+	if (status.quarantined > 0) lines.push(`  Quarantined candidates: ${status.quarantined}`);
+	if (status.lastError) lines.push(`  Last error: ${status.lastError.code}: ${status.lastError.message}`);
+	return lines;
+}
+
+export function formatCatalogStatus(status: CatalogStatus | CatalogSyncStatus): string {
+	if (!("sources" in status)) return formatOneCatalogStatus(status).join("\n");
+	if (status.status === "unconfigured") {
+		return "Jouzu model catalogs: unconfigured\nNo model catalog endpoint is configured. Jouzu continues using Pi and local model configuration.";
+	}
+	const lines = [`Jouzu model catalogs: ${status.status} (${status.active}/${status.configured} active)`];
+	for (const source of status.sources) lines.push(...formatOneCatalogStatus(source));
 	return lines.join("\n");
 }
 

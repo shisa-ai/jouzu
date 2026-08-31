@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, lstatSync, readFileSync, rmSync } from "node:fs";
 import { join, relative, resolve, sep } from "node:path";
+import { type CatalogSource, resolveCatalogBearer, resolveCatalogSources } from "./catalog-sources.js";
 import {
 	catalogDocumentSha256,
 	MODEL_CATALOG_MAX_BYTES,
@@ -71,14 +72,26 @@ export type CatalogSyncStatus =
 			schemaVersion: 1;
 			status: "empty" | "active" | "stale";
 			configured: true;
+			sourceId: string;
+			label: string;
+			enabled: boolean;
 			endpoint: string;
 			catalogId?: string;
 			revision?: string;
 			sequence?: string;
 			validatedAt?: string;
+			offeringCount?: number;
 			lastError?: { code: string; message: string; at: string };
 			quarantined: number;
 	  };
+
+export interface CatalogStatuses {
+	schemaVersion: 1;
+	status: "unconfigured" | "empty" | "active" | "degraded";
+	configured: number;
+	active: number;
+	sources: CatalogSyncStatus[];
+}
 
 export type CatalogRefreshResult =
 	| { status: "unconfigured"; catalogStatus: CatalogSyncStatus }
@@ -86,6 +99,21 @@ export type CatalogRefreshResult =
 	| { status: "activated"; catalogStatus: CatalogSyncStatus }
 	| { status: "quarantined"; catalogStatus: CatalogSyncStatus; revision: string; digest: string; reasons: string[] }
 	| { status: "rejected" | "error"; catalogStatus: CatalogSyncStatus; code: string; message: string };
+
+export interface CatalogSourceRefreshResult {
+	source: CatalogSource;
+	result: CatalogRefreshResult;
+}
+
+export interface CatalogRefreshAllResult {
+	status: "unconfigured" | "complete" | "partial" | "failed";
+	results: CatalogSourceRefreshResult[];
+}
+
+export interface ActiveModelCatalog {
+	source: CatalogSource;
+	document: ModelCatalogDocument;
+}
 
 export class CatalogSyncError extends Error {
 	readonly exitCode = 1;
@@ -259,33 +287,38 @@ function publicEndpoint(endpoint: string): string {
 	return `${parsed.protocol}//${parsed.host}${parsed.pathname}`;
 }
 
-export function getCatalogStatus(
-	paths: JouzuPaths,
-	env: NodeJS.ProcessEnv = process.env,
-	now = new Date(),
-): CatalogSyncStatus {
-	const config = resolveCatalogEndpoint(env);
-	if (!config) {
-		return {
-			schemaVersion: 1,
-			status: "unconfigured",
-			configured: false,
-			message: "No model catalog endpoint is configured. Jouzu continues using Pi and local model configuration.",
-		};
-	}
+function unconfiguredStatus(): CatalogSyncStatus {
+	return {
+		schemaVersion: 1,
+		status: "unconfigured",
+		configured: false,
+		message: "No model catalog endpoint is configured. Jouzu continues using Pi and local model configuration.",
+	};
+}
+
+export function getCatalogSourceStatus(paths: JouzuPaths, source: CatalogSource, now = new Date()): CatalogSyncStatus {
 	try {
-		const origin = readOriginState(paths, config.url);
+		const origin = readOriginState(paths, source.url);
 		const account = origin?.activeAccountRefHash
-			? readAccountState(paths, config.url, origin.activeAccountRefHash)
+			? readAccountState(paths, source.url, origin.activeAccountRefHash)
 			: undefined;
+		let offeringCount: number | undefined;
+		if (account?.active && origin?.activeAccountRefHash) {
+			offeringCount = loadDocument(accountRoot(paths, source.url, origin.activeAccountRefHash), account.active)
+				.modelOfferings.length;
+		}
 		return {
 			schemaVersion: 1,
 			status: account?.active ? (account.lastError ? "stale" : "active") : "empty",
 			configured: true,
-			endpoint: publicEndpoint(config.url),
+			sourceId: source.id,
+			label: source.label,
+			enabled: source.enabled,
+			endpoint: publicEndpoint(source.url),
 			...(account?.catalogId ? { catalogId: account.catalogId } : {}),
 			...(account?.active ? { revision: account.active.revision, sequence: account.active.sequence } : {}),
 			...(account?.validatedAt ? { validatedAt: account.validatedAt } : {}),
+			...(offeringCount !== undefined ? { offeringCount } : {}),
 			...(account?.lastError ? { lastError: account.lastError } : {}),
 			quarantined: account?.quarantined.length ?? 0,
 		};
@@ -294,7 +327,10 @@ export function getCatalogStatus(
 			schemaVersion: 1,
 			status: "stale",
 			configured: true,
-			endpoint: publicEndpoint(config.url),
+			sourceId: source.id,
+			label: source.label,
+			enabled: source.enabled,
+			endpoint: publicEndpoint(source.url),
 			lastError: {
 				code: "invalid_cache",
 				message: error instanceof Error ? error.message : String(error),
@@ -303,6 +339,35 @@ export function getCatalogStatus(
 			quarantined: 0,
 		};
 	}
+}
+
+export function getCatalogStatuses(
+	paths: JouzuPaths,
+	env: NodeJS.ProcessEnv = process.env,
+	now = new Date(),
+): CatalogStatuses {
+	const sources = resolveCatalogSources(paths, env, { includeDisabled: true });
+	if (sources.length === 0) return { schemaVersion: 1, status: "unconfigured", configured: 0, active: 0, sources: [] };
+	const statuses = sources.map((source) => getCatalogSourceStatus(paths, source, now));
+	const enabled = statuses.filter((status) => status.configured && status.enabled);
+	const active = enabled.filter((status) => status.status === "active").length;
+	const degraded = enabled.some((status) => status.status === "stale");
+	return {
+		schemaVersion: 1,
+		status: degraded ? "degraded" : active > 0 ? "active" : "empty",
+		configured: sources.length,
+		active,
+		sources: statuses,
+	};
+}
+
+export function getCatalogStatus(
+	paths: JouzuPaths,
+	env: NodeJS.ProcessEnv = process.env,
+	now = new Date(),
+): CatalogSyncStatus {
+	const source = resolveCatalogSources(paths, env)[0];
+	return source ? getCatalogSourceStatus(paths, source, now) : unconfiguredStatus();
 }
 
 function loadDocument(accountDirectory: string, reference: CatalogRevisionRef): ModelCatalogDocument {
@@ -405,16 +470,29 @@ export interface RefreshCatalogOptions {
 	env?: NodeJS.ProcessEnv;
 	fetch?: typeof globalThis.fetch;
 	now?: Date;
+	sourceId?: string;
 }
 
-export async function refreshModelCatalog(
+export async function refreshCatalogSource(
 	paths: JouzuPaths,
+	source: CatalogSource,
 	options: RefreshCatalogOptions = {},
 ): Promise<CatalogRefreshResult> {
 	const env = options.env ?? process.env;
-	const config = resolveCatalogEndpoint(env);
-	if (!config) return { status: "unconfigured", catalogStatus: getCatalogStatus(paths, env) };
 	const now = options.now ?? new Date();
+	const catalogStatus = () => getCatalogSourceStatus(paths, source, now);
+	let token: string | undefined;
+	try {
+		token = resolveCatalogBearer(source, env);
+	} catch (error) {
+		return {
+			status: "error",
+			catalogStatus: catalogStatus(),
+			code: "auth_required",
+			message: error instanceof Error ? error.message : String(error),
+		};
+	}
+	const config: CatalogEndpointConfig = { url: source.url, ...(token ? { token } : {}) };
 	const release = acquireStateLock({
 		path: lockPath(paths, config.url),
 		describe: "model catalog refresh",
@@ -450,7 +528,7 @@ export async function refreshModelCatalog(
 			const etag = response.headers.get("etag");
 			if (etag) activeState.etag = etag;
 			writeJson(accountStatePath(paths, config.url, origin.activeAccountRefHash), activeState, catalogRoot(paths));
-			return { status: "not-modified", catalogStatus: getCatalogStatus(paths, env, now) };
+			return { status: "not-modified", catalogStatus: catalogStatus() };
 		}
 		if (!response.ok) throw new CatalogSyncError(`catalog endpoint returned HTTP ${response.status}`);
 		const mediaType = response.headers.get("content-type") ?? "";
@@ -459,9 +537,11 @@ export async function refreshModelCatalog(
 		}
 		const text = await readBoundedBody(response);
 		const document = parseAndValidateModelCatalog(text, { remote: true });
-		if (!document.scope.accountRef || !document.sequence)
-			throw new CatalogSyncError("remote account catalog is incomplete");
-		const accountRefHash = hash(`${document.catalogId}\0${document.scope.accountRef}`);
+		if (!document.sequence) throw new CatalogSyncError("remote catalog sequence is missing");
+		if (document.scope.accountScoped && !document.scope.accountRef)
+			throw new CatalogSyncError("remote account catalog is missing accountRef");
+		const partitionRef = document.scope.accountScoped ? document.scope.accountRef : "public";
+		const accountRefHash = hash(`${document.catalogId}\0${partitionRef}`);
 		const directory = accountRoot(paths, config.url, accountRefHash);
 		ensurePrivateDirectory(catalogRoot(paths), directory);
 		let state = readAccountState(paths, config.url, accountRefHash);
@@ -490,7 +570,7 @@ export async function refreshModelCatalog(
 				{ schemaVersion: 1, activeAccountRefHash: accountRefHash },
 				catalogRoot(paths),
 			);
-			return { status: "not-modified", catalogStatus: getCatalogStatus(paths, env, now) };
+			return { status: "not-modified", catalogStatus: catalogStatus() };
 		}
 
 		const previous = state.active ? loadDocument(directory, state.active) : undefined;
@@ -522,7 +602,7 @@ export async function refreshModelCatalog(
 			);
 			return {
 				status: "quarantined",
-				catalogStatus: getCatalogStatus(paths, env, now),
+				catalogStatus: catalogStatus(),
 				revision: document.revision,
 				digest,
 				reasons,
@@ -545,14 +625,14 @@ export async function refreshModelCatalog(
 		writeJson(accountStatePath(paths, config.url, accountRefHash), state, catalogRoot(paths));
 		origin = { schemaVersion: 1, activeAccountRefHash: accountRefHash };
 		writeJson(originStatePath(paths, config.url), origin, catalogRoot(paths));
-		return { status: "activated", catalogStatus: getCatalogStatus(paths, env, now) };
+		return { status: "activated", catalogStatus: catalogStatus() };
 	} catch (error) {
 		const code = errorCode(error);
 		const message = error instanceof Error ? error.message : String(error);
 		recordError(paths, config, origin, code, message, now);
 		return {
 			status: error instanceof ModelCatalogError || error instanceof CatalogSyncError ? "rejected" : "error",
-			catalogStatus: getCatalogStatus(paths, env, now),
+			catalogStatus: catalogStatus(),
 			code,
 			message,
 		};
@@ -561,17 +641,80 @@ export async function refreshModelCatalog(
 	}
 }
 
+export async function refreshModelCatalog(
+	paths: JouzuPaths,
+	options: RefreshCatalogOptions = {},
+): Promise<CatalogRefreshResult> {
+	const env = options.env ?? process.env;
+	const sources = resolveCatalogSources(paths, env);
+	if (sources.length === 0) return { status: "unconfigured", catalogStatus: unconfiguredStatus() };
+	const source = options.sourceId ? sources.find((candidate) => candidate.id === options.sourceId) : sources[0];
+	if (!source) {
+		return {
+			status: "error",
+			catalogStatus: unconfiguredStatus(),
+			code: "source_not_found",
+			message: `catalog source not found or disabled: ${options.sourceId}`,
+		};
+	}
+	return refreshCatalogSource(paths, source, options);
+}
+
+export async function refreshAllModelCatalogs(
+	paths: JouzuPaths,
+	options: Omit<RefreshCatalogOptions, "sourceId"> = {},
+): Promise<CatalogRefreshAllResult> {
+	const env = options.env ?? process.env;
+	const sources = resolveCatalogSources(paths, env);
+	if (sources.length === 0) return { status: "unconfigured", results: [] };
+	const results = await Promise.all(
+		sources.map(async (source) => ({ source, result: await refreshCatalogSource(paths, source, options) })),
+	);
+	const successful = results.filter(
+		({ result }) => result.status === "activated" || result.status === "not-modified",
+	).length;
+	return {
+		status: successful === results.length ? "complete" : successful === 0 ? "failed" : "partial",
+		results,
+	};
+}
+
+export function loadActiveCatalogForSource(paths: JouzuPaths, source: CatalogSource): ModelCatalogDocument | undefined {
+	const origin = readOriginState(paths, source.url);
+	if (!origin?.activeAccountRefHash) return undefined;
+	const state = readAccountState(paths, source.url, origin.activeAccountRefHash);
+	if (!state?.active) return undefined;
+	return loadDocument(accountRoot(paths, source.url, origin.activeAccountRefHash), state.active);
+}
+
+export function loadActiveModelCatalogs(paths: JouzuPaths, env: NodeJS.ProcessEnv = process.env): ActiveModelCatalog[] {
+	const active: ActiveModelCatalog[] = [];
+	const streams = new Map<string, { revision: string; sourceId: string }>();
+	for (const source of resolveCatalogSources(paths, env)) {
+		const document = loadActiveCatalogForSource(paths, source);
+		if (!document) continue;
+		const scope = document.scope.accountScoped ? document.scope.accountRef : "public";
+		const streamKey = `${document.catalogId}\0${scope}`;
+		const existing = streams.get(streamKey);
+		if (existing) {
+			if (existing.revision !== document.revision) {
+				throw new CatalogSyncError(
+					`catalog sources ${existing.sourceId} and ${source.id} publish conflicting revisions for one stream`,
+				);
+			}
+			continue;
+		}
+		streams.set(streamKey, { revision: document.revision, sourceId: source.id });
+		active.push({ source, document });
+	}
+	return active;
+}
+
 export function loadActiveModelCatalog(
 	paths: JouzuPaths,
 	env: NodeJS.ProcessEnv = process.env,
 ): ModelCatalogDocument | undefined {
-	const config = resolveCatalogEndpoint(env);
-	if (!config) return undefined;
-	const origin = readOriginState(paths, config.url);
-	if (!origin?.activeAccountRefHash) return undefined;
-	const state = readAccountState(paths, config.url, origin.activeAccountRefHash);
-	if (!state?.active) return undefined;
-	return loadDocument(accountRoot(paths, config.url, origin.activeAccountRefHash), state.active);
+	return loadActiveModelCatalogs(paths, env)[0]?.document;
 }
 
 export function acceptQuarantinedCatalog(
@@ -580,9 +723,12 @@ export function acceptQuarantinedCatalog(
 	digest: string,
 	env: NodeJS.ProcessEnv = process.env,
 	now = new Date(),
+	sourceId?: string,
 ): CatalogSyncStatus {
-	const config = resolveCatalogEndpoint(env);
-	if (!config) return getCatalogStatus(paths, env, now);
+	const sources = resolveCatalogSources(paths, env);
+	const source = sourceId ? sources.find((candidate) => candidate.id === sourceId) : sources[0];
+	if (!source) return unconfiguredStatus();
+	const config: CatalogEndpointConfig = { url: source.url };
 	const release = acquireStateLock({
 		path: lockPath(paths, config.url),
 		describe: "model catalog acceptance",
@@ -617,7 +763,7 @@ export function acceptQuarantinedCatalog(
 		state.lastError = undefined;
 		state.validatedAt = now.toISOString();
 		writeJson(accountStatePath(paths, config.url, origin.activeAccountRefHash), state, catalogRoot(paths));
-		return getCatalogStatus(paths, env, now);
+		return getCatalogSourceStatus(paths, source, now);
 	} finally {
 		release();
 	}
