@@ -57,7 +57,9 @@ There are no circular module imports.
 
 ## Interactive UX authority
 
-The [Palette interaction standards](palette-ux.md) define the contributor requirements for Jouzu-owned Palette views. Read them before changing `palette.ts`, a Palette component, interactive key handling, focus, hints, messages, or terminal layout. Interaction changes require the applicable mode-transition and width tests listed in that guide.
+The [Jouzu interaction model](ux.md) defines the contributor requirements for every Jouzu-owned interactive surface: what Jouzu inherits from Pi, how keys are assigned and routed, which combinations the compositor, terminal, and multiplexer already claim, and how surfaces degrade in narrow, colorless, and non-interactive environments. The [Palette interaction standards](palette-ux.md) add the Palette chapter.
+
+Read both before changing `palette.ts`, a Palette component, `help.ts`, the Session Frame, interactive key handling, focus, hints, messages, or terminal layout. Interaction changes require the applicable mode-transition and width tests listed in those guides.
 
 ## State-file ownership and shared primitives
 

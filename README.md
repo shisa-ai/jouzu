@@ -147,7 +147,7 @@ The import rejects symbolic links, non-regular files, oversized files, and files
 
 Jouzu does not require a remote model catalog. With no source configured, it makes no catalog request and continues using Pi's effective model inventory plus local `models.json` configuration. `jouzu catalog status` and `jouzu catalog refresh` report `unconfigured` and exit successfully in that state.
 
-Open Settings / Catalogs with `/catalogs`, or open Models with `Ctrl+L` and press `Ctrl+,`. Each custom source stores a label, URL, enabled state, and authentication mode. Press `A` to add a source, enter its label and a URL or host, then press `Ctrl+Enter`. Jouzu tries the exact input before the conventional `/v1/jouzu/model-catalog` path. HTTPS is required except for localhost development.
+Open Settings / Catalogs with `/catalogs`. Inside the Models view, `Ctrl+,` also opens it, but Ghostty on Linux and Windows Terminal both bind `Ctrl+,` to their own settings and consume it before Jouzu sees it; `/catalogs` works everywhere. Each custom source stores a label, URL, enabled state, and authentication mode. Press `A` to add a source, move between fields with `↑` and `↓`, enter its label and a URL or host, then press `Enter` to save. Jouzu tries the exact input before the conventional `/v1/jouzu/model-catalog` path. HTTPS is required except for localhost development. `Esc` cancels without writing.
 
 Authentication can be disabled or read as a bearer token from a named environment variable. Jouzu stores only the environment-variable name in `catalogs.json`; bearer values are sent only in the source's authorization header and never written to configuration, cache, or diagnostics. Catalog configuration is stored at:
 
@@ -157,7 +157,7 @@ Authentication can be disabled or read as a bearer token from a named environmen
 | macOS | `~/Library/Application Support/Jouzu/catalogs.json` |
 | Windows | `%APPDATA%\Jouzu\catalogs.json` |
 
-Settings reports each source's status and model count. Select a source with `Enter` to expand its cached offerings. `E` edits, `Space` enables or disables, `R` refreshes, and `D` removes the source registration. Removing a source does not remove provider configuration, credentials, favorites, or recents.
+Settings reports each source's status and model count. `Enter` edits the selected source and `→` expands its cached offerings. `A` adds, `Space` enables or disables, `R` refreshes, and `D` removes the source registration; removal asks for confirmation. Removing a source does not remove provider configuration, credentials, favorites, or recents.
 
 Refresh uses ETag/`304`, validates complete bytes before activation, partitions private cache by source and account, and keeps each source's last valid catalog on network or validation failure. CLI status and refresh operate on all enabled sources or one named source:
 
@@ -219,7 +219,16 @@ jz keybindings reset
 
 `plan` is non-mutating. `apply` merges only missing Jouzu defaults, backs up the existing file, and refuses differing user values or competing editor actions. `reset` removes only entries recorded as Jouzu-inserted and leaves a durable opt-out; modified/user-owned entries are preserved as conflicts. `JOUZU_NO_KEYBINDING_DEFAULTS=1` disables first-run seeding for one invocation. `/hotkeys` displays the effective Pi map.
 
-`Ctrl+Enter` requires modified-Enter reporting through the Kitty keyboard protocol or `modifyOtherKeys`. `Ctrl+Up` requires modified-arrow reporting. In tmux, enable `extended-keys` with `extended-keys-format csi-u`; macOS may reserve Control+Up for Mission Control. `jz keybindings plan` reports these portability notes so users can keep or explicitly customize the semantic actions.
+`Ctrl+Enter` requires modified-Enter reporting through the Kitty keyboard protocol or `modifyOtherKeys`. `Ctrl+Up` requires modified-arrow reporting. Windows Terminal reports both from version 1.25; Apple Terminal reports neither. In tmux, enable `extended-keys` with `extended-keys-format csi-u`; macOS reserves Control+Up for Mission Control.
+
+Ghostty on Linux binds `Ctrl+Enter` to fullscreen and consumes it before Jouzu receives it. Send it to the application instead:
+
+```ini
+# ~/.config/ghostty/config
+keybind = ctrl+enter=csi:13;5u
+```
+
+`jz keybindings plan` reports these portability notes so users can keep or explicitly customize the semantic actions. [Key collisions](docs/ux.md#key-collisions) lists the combinations that compositors and terminals claim by default.
 
 ## Automatic Jouzu updates
 
@@ -281,7 +290,10 @@ npm run dev:link
 `dev:link` records the UTC build time, Git commit, and dirty-worktree state. `jz --version` displays an identifier such as `0.1.4-dev.20260827-010203+g215b2188`. A `.dirty` suffix marks a build that included uncommitted files. The standard `npm run build` removes development metadata before packing a release artifact.
 
 See [docs/architecture.md](docs/architecture.md) for the module map, state-file
-ownership, update lanes, and bundled profile boundaries. [Pi update review](docs/PI-UPDATES.md)
+ownership, update lanes, and bundled profile boundaries.
+[docs/ux.md](docs/ux.md) defines the interaction model for every Jouzu surface,
+including the platform key collisions to design around, and
+[docs/palette-ux.md](docs/palette-ux.md) adds the Palette standards. [Pi update review](docs/PI-UPDATES.md)
 records the candidate checklist, compatibility findings, and reverse-chronological update log.
 
 The opt-in live Japanese tool-flow smoke requires an explicitly selected provider/model and cost budget; it is not part of default tests:
