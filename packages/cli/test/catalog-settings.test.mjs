@@ -27,6 +27,7 @@ function setup() {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-catalog-settings-"));
 	const paths = resolveJouzuPaths({ homeOverride: join(root, "jouzu") });
 	const renders = [];
+	const closes = [];
 	const context = {
 		tui: {
 			requestRender() {
@@ -46,9 +47,11 @@ function setup() {
 			},
 		},
 		styles: createSessionUiStyles(identityTheme),
-		close() {},
+		close() {
+			closes.push(true);
+		},
 	};
-	return { root, paths, context, renders };
+	return { root, paths, context, renders, closes };
 }
 
 function response(document) {
@@ -58,7 +61,7 @@ function response(document) {
 	});
 }
 
-test("Catalogs settings reports source status and expands its full model list within width", async () => {
+test("Catalogs settings uses Enter to edit and horizontal arrows for model disclosure", async () => {
 	const { root, paths, context } = setup();
 	try {
 		const store = new CatalogSourceStore(paths);
@@ -73,13 +76,37 @@ test("Catalogs settings reports source status and expands its full model list wi
 		assert.match(rendered.join("\n"), /Office pool/u);
 		assert.match(rendered.join("\n"), /active/u);
 		assert.match(rendered.join("\n"), /1 model/u);
+		assert.match(rendered.join("\n"), /Enter edit/u);
 		assert.ok(rendered.every((line) => terminalTextWidth(line) <= 84));
 
 		component.handleInput("enter");
 		rendered = component.render(84);
+		assert.match(rendered.join("\n"), /Edit Office pool/u);
+		for (const character of " changed") component.handleInput(character);
+		component.handleInput("escape");
+		assert.equal(new CatalogSourceStore(paths).list()[0].label, "Office pool");
+
+		component.handleInput("\u001b[C");
+		rendered = component.render(84);
 		assert.match(rendered.join("\n"), /Example Model/u);
 		assert.match(rendered.join("\n"), /ai\.example\.gateway\/example-model/u);
+		component.handleInput("\u001b[D");
+		assert.doesNotMatch(component.render(84).join("\n"), /Example Model/u);
 		assert.ok(rendered.every((line) => terminalTextWidth(line) <= 84));
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("Catalogs settings opens empty setup directly and Esc leaves without writing", () => {
+	const { root, paths, context, closes } = setup();
+	try {
+		const component = new CatalogSettingsComponent({ context, paths, env: {} });
+		assert.match(component.render(84).join("\n"), /Add catalog/u);
+		for (const character of "Canceled catalog") component.handleInput(character);
+		component.handleInput("escape");
+		assert.equal(closes.length, 1);
+		assert.deepEqual(new CatalogSourceStore(paths).list(), []);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
@@ -90,22 +117,31 @@ test("Catalogs settings shows complete bearer-token fields and process availabil
 	try {
 		const env = {};
 		const component = new CatalogSettingsComponent({ context, paths, env });
-		component.handleInput("a");
-		component.handleInput("\t");
-		component.handleInput("\t");
-		component.handleInput(" ");
+		component.handleInput("down");
+		component.handleInput("down");
+		component.handleInput("\u001b[C");
 
-		const rendered = component.render(84);
-		const text = rendered.join("\n");
-		assert.match(text, /Authentication\s+Bearer token from environment/u);
+		let rendered = component.render(84);
+		let text = rendered.join("\n");
+		assert.match(text, /Authentication\s+< Bearer token >/u);
 		assert.match(text, /Token variable/u);
 		assert.match(text, /JOUZU_MODEL_CATALOG_TOKEN is not set in this Jouzu process/u);
+		assert.match(text, /Enter save · ↑↓ field · ←→ change/u);
+		assert.doesNotMatch(text, /Exact URL|Tab fields|Ctrl\+Enter/u);
 		assert.ok(rendered.every((line) => terminalTextWidth(line) <= 84));
 
+		component.handleInput("down");
+		assert.match(component.render(84).join("\n"), /→ Token variable/u);
+		component.handleInput("up");
+		component.handleInput("\u001b[D");
+		assert.doesNotMatch(component.render(84).join("\n"), /Token variable/u);
+		component.handleInput("\u001b[C");
+
 		env.JOUZU_MODEL_CATALOG_TOKEN = "must-not-render";
-		const availableText = component.render(84).join("\n");
-		assert.match(availableText, /JOUZU_MODEL_CATALOG_TOKEN is set in this Jouzu process/u);
-		assert.doesNotMatch(availableText, /must-not-render/u);
+		rendered = component.render(84);
+		text = rendered.join("\n");
+		assert.match(text, /JOUZU_MODEL_CATALOG_TOKEN is set in this Jouzu process/u);
+		assert.doesNotMatch(text, /must-not-render/u);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
@@ -124,11 +160,10 @@ test("Catalogs settings wraps save errors without hiding authentication guidance
 				);
 			},
 		});
-		component.handleInput("a");
 		for (const character of "Office pool") component.handleInput(character);
-		component.handleInput("\t");
+		component.handleInput("down");
 		for (const character of "catalog.example") component.handleInput(character);
-		component.handleInput("\u001b[13;5u");
+		component.handleInput("enter");
 		await new Promise((resolve) => setImmediate(resolve));
 
 		const rendered = component.render(52);
@@ -173,11 +208,10 @@ test("Catalogs settings saves a label and discovered conventional endpoint", asy
 				},
 			}),
 		});
-		component.handleInput("a");
 		for (const character of "Local catalog") component.handleInput(character);
-		component.handleInput("\t");
+		component.handleInput("down");
 		for (const character of "127.0.0.1:8989") component.handleInput(character);
-		component.handleInput("\u001b[13;5u");
+		component.handleInput("enter");
 		await new Promise((resolve) => setImmediate(resolve));
 
 		assert.deepEqual(discoveries, [{ input: "127.0.0.1:8989", auth: { type: "none" } }]);

@@ -108,6 +108,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		this.onCatalogsChanged = options.onCatalogsChanged;
 		this.wordmark = renderBrandGradient("JOUZU", detectBannerColorMode());
 		this.reloadViews();
+		if (this.views.length === 0 && !this.message) this.startForm("add");
 	}
 
 	get focused(): boolean {
@@ -229,7 +230,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		const auth: CatalogSourceAuth =
 			form.authType === "none" ? { type: "none" } : { type: "bearer", credentialRef: `env:${credentialName}` };
 		this.busy = true;
-		this.message = { level: "info", text: "Looking for a Jouzu catalog endpoint…" };
+		this.message = { level: "info", text: "Saving catalog…" };
 		this.controller?.abort();
 		const controller = new AbortController();
 		this.controller = controller;
@@ -304,36 +305,35 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	handleInput(data: string): void {
 		if (this.form) {
 			if (this.keybindings.matches(data, "tui.select.cancel")) {
-				if (this.busy) this.controller?.abort();
-				else this.form = undefined;
-				this.syncInputFocus();
+				if (this.busy) {
+					this.controller?.abort();
+				} else {
+					const closeEmptySetup = this.form.mode === "add" && this.views.length === 0;
+					this.form = undefined;
+					this.syncInputFocus();
+					if (closeEmptySetup) this.close();
+				}
 				this.tui.requestRender();
 				return;
 			}
 			if (this.busy) return;
-			if (matchesKey(data, "tab")) {
-				this.cycleFormField(1);
-				return;
-			}
-			if (matchesKey(data, "shift+tab")) {
+			if (this.keybindings.matches(data, "tui.select.up")) {
 				this.cycleFormField(-1);
 				return;
 			}
-			if (matchesKey(data, "ctrl+enter")) {
-				void this.saveForm();
+			if (this.keybindings.matches(data, "tui.select.down")) {
+				this.cycleFormField(1);
 				return;
 			}
-			if (
-				this.form.field === "auth" &&
-				(matchesKey(data, "space") || matchesKey(data, "left") || matchesKey(data, "right"))
-			) {
+			if (this.form.field === "auth" && (matchesKey(data, "left") || matchesKey(data, "right"))) {
 				this.toggleAuth();
 				return;
 			}
 			if (this.keybindings.matches(data, "tui.select.confirm")) {
-				this.cycleFormField(1);
+				void this.saveForm();
 				return;
 			}
+			if (matchesKey(data, "tab") || matchesKey(data, "shift+tab")) return;
 			this.activeInput()?.handleInput(data);
 			this.message = undefined;
 			this.tui.requestRender();
@@ -373,29 +373,34 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			this.moveSelection(1);
 			return;
 		}
-		if (matchesKey(data, "pageUp") && this.expandedSourceId) {
+		if (this.keybindings.matches(data, "tui.select.pageUp") && this.expandedSourceId) {
 			this.expandedOffset = Math.max(0, this.expandedOffset - 8);
 			this.tui.requestRender();
 			return;
 		}
-		if (matchesKey(data, "pageDown") && this.expandedSourceId) {
+		if (this.keybindings.matches(data, "tui.select.pageDown") && this.expandedSourceId) {
 			this.expandedOffset += 8;
 			this.tui.requestRender();
 			return;
 		}
-		if (this.keybindings.matches(data, "tui.select.confirm")) {
-			const sourceId = this.selected()?.source.id;
-			this.expandedSourceId = this.expandedSourceId === sourceId ? undefined : sourceId;
+		if (matchesKey(data, "right") && this.selected()) {
+			this.expandedSourceId = this.selected()?.source.id;
 			this.expandedOffset = 0;
 			this.tui.requestRender();
 			return;
 		}
-		if (data === "a") {
-			this.startForm("add");
+		if (matchesKey(data, "left") && this.expandedSourceId) {
+			this.expandedSourceId = undefined;
+			this.expandedOffset = 0;
+			this.tui.requestRender();
 			return;
 		}
-		if (data === "e") {
+		if (this.keybindings.matches(data, "tui.select.confirm")) {
 			this.startForm("edit");
+			return;
+		}
+		if (data === "a") {
+			this.startForm("add");
 			return;
 		}
 		if (data === "r") {
@@ -427,6 +432,8 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		if (!form) return [];
 		const innerWidth = Math.max(1, width - 4);
 		const labelWidth = 14;
+		const hint = (value: string) =>
+			wrapTextWithAnsi(value, innerWidth).map((hintLine) => line(this.styles.apply("palette.hint", hintLine)));
 		const field = (id: FormField, label: string, value: string) => {
 			const marker = form.field === id ? this.styles.apply("palette.marker", "→") : " ";
 			const text = `${marker} ${padTerminalText(label, labelWidth)} ${value}`;
@@ -436,13 +443,18 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 					: text,
 			);
 		};
-		const authValue = form.authType === "none" ? "No authentication" : "Bearer token from environment";
+		const authValue = form.authType === "none" ? "None" : "Bearer token";
+		const editedSource = form.sourceId
+			? this.views.find((view) => view.source.id === form.sourceId)?.source
+			: undefined;
+		const heading =
+			form.mode === "add" ? "Add catalog" : `Edit ${sanitizeTerminalText(editedSource?.label ?? "catalog")}`;
 		const lines = [
-			line(this.styles.apply("palette.hint", form.mode === "add" ? "Add custom catalog" : "Edit custom catalog")),
+			line(this.theme.bold(this.styles.apply("palette.title", heading))),
 			line(),
 			field("label", "Label", form.label.render(Math.max(1, innerWidth - labelWidth - 3))[0] ?? ""),
 			field("url", "URL or host", form.url.render(Math.max(1, innerWidth - labelWidth - 3))[0] ?? ""),
-			field("auth", "Authentication", authValue),
+			field("auth", "Authentication", `< ${authValue} >`),
 		];
 		if (form.authType === "bearer") {
 			const credentialName = form.credential.getValue().trim();
@@ -454,31 +466,17 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 					"Token variable",
 					form.credential.render(Math.max(1, innerWidth - labelWidth - 3))[0] ?? "",
 				),
-				line(
-					this.styles.apply(
-						"palette.hint",
-						"  Enter the variable name, not the token. Export it before starting Jouzu.",
-					),
-				),
+				...hint("  Enter the variable name, not the token. Its value is never saved."),
 			);
 			if (credentialName) {
 				lines.push(
-					line(
-						this.styles.apply(
-							"palette.hint",
-							`  ${sanitizeTerminalText(credentialName)} is ${credentialAvailable ? "set" : "not set"} in this Jouzu process.`,
-						),
+					...hint(
+						`  ${sanitizeTerminalText(credentialName)} is ${credentialAvailable ? "set" : "not set"} in this Jouzu process.`,
 					),
 				);
 			}
 		}
-		lines.push(
-			line(),
-			line(this.styles.apply("palette.hint", "Exact URL is tried first, then /v1/jouzu/model-catalog.")),
-			line(
-				this.styles.apply("palette.hint", "Tab fields · Space changes auth · Ctrl+Enter discover & save · Esc cancel"),
-			),
-		);
+		lines.push(line(), ...hint("Enter save · ↑↓ field · ←→ change Authentication · Esc cancel"));
 		return lines;
 	}
 
@@ -489,19 +487,14 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		const frameOptions = { border };
 		const line = (value = "") => renderTerminalFrameRow(value, width, frameOptions);
 		const innerWidth = Math.max(1, width - 4);
+		const hint = (value: string) =>
+			wrapTextWithAnsi(value, innerWidth).map((hintLine) => line(this.styles.apply("palette.hint", hintLine)));
 		const lines = [renderTerminalFrameTitle(title, width, frameOptions)];
 		if (this.form) {
 			lines.push(...this.renderForm(width, line));
 		} else {
 			const active = this.views.filter((view) => view.source.enabled && view.status.status === "active").length;
-			lines.push(
-				line(
-					this.styles.apply(
-						"palette.hint",
-						`${active}/${this.views.length} active · custom catalogs are an advanced feature`,
-					),
-				),
-			);
+			lines.push(line(this.styles.apply("palette.hint", `${active}/${this.views.length} active`)));
 			lines.push(line());
 			if (this.views.length === 0) {
 				lines.push(line(this.styles.apply("palette.empty", "No catalog sources configured.")));
@@ -546,10 +539,8 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 				}
 			}
 			lines.push(line());
-			lines.push(
-				line(this.styles.apply("palette.hint", "Enter models · A add · E edit · Space enable · R refresh · D remove")),
-			);
-			lines.push(line(this.styles.apply("palette.hint", "Ctrl+L Models · ↑↓ move · Esc close")));
+			lines.push(...hint("Enter edit · A add · R refresh · D remove"));
+			lines.push(...hint("Space enable · ←→ models · Ctrl+L Models · ↑↓ move · Esc close"));
 		}
 		if (this.message) {
 			const role = this.message.level === "error" ? "palette.message.error" : "palette.message.info";
