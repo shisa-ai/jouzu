@@ -136,7 +136,7 @@ Hints describe available actions, not implementation details.
 - Below 12 columns a view may render its title alone.
 - Bound long collections to the available terminal rows and keep the selected item visible.
 - Do not use color, cursor shape, or position as the only indication of selection, state, or failure.
-- Preserve the same interaction, actions, and cancel result in floating and replacement presentations. The Palette selects replacement below 58 columns or 16 rows, in tmux and screen, and in terminals that render inline images.
+- Preserve the same interaction, actions, and cancel result in floating and replacement presentations. The Palette selects replacement below 58 columns or 16 rows and in terminals that render inline images. Under tmux and GNU Screen, Jouzu suppresses inline-image detection and still chooses from terminal dimensions.
 
 ## Anti-patterns
 

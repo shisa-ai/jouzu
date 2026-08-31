@@ -57,9 +57,9 @@ There are no circular module imports.
 
 ## Interactive UX authority
 
-The [Jouzu interaction model](ux.md) defines the contributor requirements for every Jouzu-owned interactive surface: what Jouzu inherits from Pi, how keys are assigned and routed, which combinations the compositor, terminal, and multiplexer already claim, and how surfaces degrade in narrow, colorless, and non-interactive environments. The [Palette interaction standards](palette-ux.md) add the Palette chapter.
+The [Jouzu interaction model](ux.md) defines the contributor requirements for every Jouzu-owned interactive surface: what Jouzu inherits from Pi, how keys are assigned and routed, and how surfaces degrade in narrow, colorless, and non-interactive environments. The [key collision map](key-collisions.md) records operating-system, terminal, tmux, GNU Screen, and Byobu interceptions. The [Palette interaction standards](palette-ux.md) add the Palette chapter.
 
-Read both before changing `palette.ts`, a Palette component, `help.ts`, the Session Frame, interactive key handling, focus, hints, messages, or terminal layout. Interaction changes require the applicable mode-transition and width tests listed in those guides.
+Read the interaction model and collision map before changing interactive keys. Read the Palette chapter before changing `palette.ts` or a Palette component. Changes to `help.ts`, the Session Frame, focus, hints, messages, or terminal layout require the applicable interaction and width tests listed in those guides.
 
 ## State-file ownership and shared primitives
 

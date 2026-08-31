@@ -219,7 +219,7 @@ jz keybindings reset
 
 `plan` is non-mutating. `apply` merges only missing Jouzu defaults, backs up the existing file, and refuses differing user values or competing editor actions. `reset` removes only entries recorded as Jouzu-inserted and leaves a durable opt-out; modified/user-owned entries are preserved as conflicts. `JOUZU_NO_KEYBINDING_DEFAULTS=1` disables first-run seeding for one invocation. `/hotkeys` displays the effective Pi map.
 
-`Ctrl+Enter` requires modified-Enter reporting through the Kitty keyboard protocol or `modifyOtherKeys`. `Ctrl+Up` requires modified-arrow reporting. Windows Terminal reports both from version 1.25; Apple Terminal reports neither. In tmux, enable `extended-keys` with `extended-keys-format csi-u`; macOS reserves Control+Up for Mission Control.
+`Ctrl+Enter` requires modified-Enter reporting through the Kitty keyboard protocol or `modifyOtherKeys`. `Ctrl+Up` requires modified-arrow reporting. Windows Terminal supports the Kitty keyboard protocol from version 1.25. Apple Terminal may send plain Return for `Shift+Enter`; Pi applies a same-Mac fallback for that gesture, but the fallback does not work over remote SSH. In tmux, enable `extended-keys` with `extended-keys-format csi-u`; macOS reserves Control+Up for Mission Control.
 
 Ghostty on Linux binds `Ctrl+Enter` to fullscreen and consumes it before Jouzu receives it. Send it to the application instead:
 
@@ -228,7 +228,7 @@ Ghostty on Linux binds `Ctrl+Enter` to fullscreen and consumes it before Jouzu r
 keybind = ctrl+enter=csi:13;5u
 ```
 
-`jz keybindings plan` reports these portability notes so users can keep or explicitly customize the semantic actions. [Key collisions](docs/ux.md#key-collisions) lists the combinations that compositors and terminals claim by default.
+`jz keybindings plan` reports the desired actions and generic modified-key warnings. It does not inspect desktop, terminal, or multiplexer configuration. The [key collision map](docs/key-collisions.md) records known defaults and host-verification commands.
 
 ## Automatic Jouzu updates
 
@@ -292,8 +292,8 @@ npm run dev:link
 See [docs/architecture.md](docs/architecture.md) for the module map, state-file
 ownership, update lanes, and bundled profile boundaries.
 [docs/ux.md](docs/ux.md) defines the interaction model for every Jouzu surface,
-including the platform key collisions to design around, and
-[docs/palette-ux.md](docs/palette-ux.md) adds the Palette standards. [Pi update review](docs/PI-UPDATES.md)
+[docs/key-collisions.md](docs/key-collisions.md) maps higher-layer shortcut conflicts,
+and [docs/palette-ux.md](docs/palette-ux.md) adds the Palette standards. [Pi update review](docs/PI-UPDATES.md)
 records the candidate checklist, compatibility findings, and reverse-chronological update log.
 
 The opt-in live Japanese tool-flow smoke requires an explicitly selected provider/model and cost budget; it is not part of default tests:

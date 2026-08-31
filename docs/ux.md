@@ -36,7 +36,7 @@ Two consequences follow. A new Jouzu action gets a semantic ID and a default bin
 
 ## Key assignment rules
 
-1. **Every action must be reachable without a modified key.** Modified keys are accelerators. `Ctrl`, `Alt`, `Shift`, and `Super` combinations that a legacy terminal cannot encode are unavailable to some users on every platform; see [Encoding requirements](#encoding-requirements).
+1. **Every action must be reachable without a modified key.** Modified keys are accelerators. `Ctrl`, `Alt`, `Shift`, and `Super` combinations that a legacy terminal cannot encode are unavailable to some users on every platform; see [Encoding and line discipline](key-collisions.md#encoding-and-line-discipline).
 2. **Check both binding tables before claiming a key.** Pi's `TUI_KEYBINDINGS` and Jouzu's `JOUZU_KEYBINDING_DEFAULTS` are the two tables Jouzu already occupies. A raw `matchesKey` call that shadows an entry in either table is a defect.
 3. **Prefer a semantic action to a raw key.** Use `keybindings.matches(data, "<action>")`. Use `matchesKey` only where Pi defines no action for the interaction, and record why.
 4. **A mode with a live text field has no bare-letter and no bare-`Space` shortcuts.** While a text field holds focus, letters, digits, punctuation, and `Space` belong to it. A mode with no text field may use them. This protects search and IME composition; see [Text, language, and input](#text-language-and-input).
@@ -60,102 +60,25 @@ The same physical key may carry different actions in scopes that are never eligi
 
 ## Key collisions
 
-A keystroke passes through four layers before a Jouzu view sees it. Each layer can consume it, and the layers above the terminal are outside Jouzu's control.
+A keystroke passes through four layers before a Jouzu view sees it:
 
 ```text
-compositor / window manager / OS   niri, GNOME, KDE, Windows, macOS
-   └─ terminal emulator            Ghostty, Windows Terminal, iTerm2, Apple Terminal
-        └─ multiplexer (optional)  tmux, screen
+operating system / desktop / compositor
+   └─ terminal emulator
+        └─ multiplexer (optional: tmux, GNU Screen, Byobu)
              └─ Pi + Jouzu
 ```
 
-A binding that is valid in `keybindings.json` and reportable by the terminal is still unreachable if a higher layer grabs it. Jouzu does not detect these grabs; it avoids them by default and documents the mitigation.
+[`key-collisions.md`](key-collisions.md) is the collision authority. It maps the effective Pi and Jouzu defaults to operating-system, terminal, tmux, GNU Screen, and Byobu interceptions; distinguishes blocked, conditional, prefix, and encoding failures; and records the evidence for each supported baseline.
 
-### Do not bind
+Apply these rules before assigning a key:
 
-| Key | Claimed by | Effect |
-| --- | --- | --- |
-| `Ctrl+,` | Ghostty 1.3 `open_config` on Linux; Windows Terminal `Terminal.OpenSettingsUI` | Opens the terminal's own settings. Never reaches Jouzu. |
-| `Ctrl+Space` | macOS "Select previous input source"; fcitx5 and ibus IME toggle on Linux; common compositor launcher binding | Switches input method or opens a launcher. Unusable for a Japanese-capable product. |
-| `Ctrl+Alt+Backspace` | X11 zap; niri `quit` | Ends the graphical session. |
-| `Ctrl+Alt+F1`–`F12` | Linux virtual-terminal switching | Leaves the graphical session. |
-| `Ctrl+S`, `Ctrl+Q` | Terminal XON/XOFF flow control | Freezes and unfreezes terminal output. |
-| `Ctrl+Z`, `Ctrl+\` | Job control (`SIGTSTP`, `SIGQUIT`) | Suspends or kills the process. |
-| `Super+<key>` | Every desktop compositor | Reserved by the desktop. Reaches the terminal only under a custom configuration. |
-| `Ctrl+Shift+<letter>` | Terminal copy, paste, search, split, tab, palette, inspector across Ghostty and Windows Terminal | Mostly consumed by the terminal. Treat the whole range as unavailable. |
+1. Do not add a default that the map marks **Blocked** or **Prefix** on a supported host.
+2. A **Conditional** or **Encoding-dependent** gesture may be an accelerator only when the same action has a visible unmodified route.
+3. Check the exact key rather than banning an entire modifier range. `Ctrl+Shift` and `Super` ranges contain many platform claims, but no source establishes that every member is blocked.
+4. Treat desktop, terminal, and multiplexer configuration as mutable. The map covers named defaults; `/hotkeys` and host configuration establish one user's effective result.
 
-### Reserved by terminal and desktop
-
-Verified against Ghostty 1.3.1 (`ghostty +list-keybinds --default`), niri 26.04, and the Windows Terminal default action list; macOS entries are from Apple's keyboard-shortcut documentation.
-
-| Key | Layer | Claim |
-| --- | --- | --- |
-| `Ctrl+Enter` | Ghostty (Linux) | `toggle_fullscreen`. Jouzu's `app.message.followUp` default is unreachable until the user overrides it. |
-| `Ctrl+Shift+Enter` | Ghostty | `toggle_split_zoom` |
-| `Ctrl+Tab`, `Ctrl+Shift+Tab` | Ghostty, Windows Terminal | Next and previous tab |
-| `Ctrl+PageUp`, `Ctrl+PageDown` | Ghostty | Previous and next tab |
-| `Shift+Home`, `Shift+End`, `Shift+PageUp`, `Shift+PageDown` | Ghostty | Scrollback movement |
-| `Shift+←`, `Shift+→`, `Shift+↑`, `Shift+↓` | Ghostty | Adjust selection |
-| `Ctrl+Alt+←/→/↑/↓` | Ghostty split focus; niri workspace focus | Two layers claim the same range; niri wins |
-| `Ctrl+Alt+Shift+←/→`, `Ctrl+Shift+Alt+↑/↓` | niri | Move column and move window to workspace |
-| `Alt+1`–`Alt+9` | Ghostty | Go to tab |
-| `Alt+Tab`, `Alt+Shift+Tab`, `Alt+Enter`, `Alt+\`` | niri and most desktops | Window switching and fullscreen |
-| `Ctrl+=`, `Ctrl+-`, `Ctrl+0` | Ghostty, Windows Terminal | Font size |
-| `Ctrl+C`, `Ctrl+V` | Windows Terminal | Copy when a selection exists, otherwise passed through; paste always consumed |
-| `Ctrl+Insert`, `Shift+Insert` | Ghostty, Windows Terminal | Copy and paste |
-| `F11` | Windows Terminal | Fullscreen |
-| `Ctrl+↑`, `Ctrl+↓` | macOS | Mission Control and App Exposé. Jouzu's `app.message.dequeue` default is affected. |
-| `Ctrl+←`, `Ctrl+→` | macOS | Move between Spaces when more than one Space exists |
-| `Ctrl+Cmd+F` | macOS | Fullscreen |
-| Prefix key, default `Ctrl+B` | tmux | Consumed before the application |
-
-Compositor and terminal configurations are user-editable, so this table describes defaults, not guarantees. A user who rebinds a terminal key recovers the application key.
-
-### Encoding requirements
-
-A legacy terminal encodes only what ASCII can express. These gestures need the Kitty keyboard protocol, xterm `modifyOtherKeys`, or an explicit terminal-side mapping:
-
-- `Ctrl+Enter`, `Shift+Enter`, and every other modified `Enter`;
-- modified arrow keys, including `Ctrl+↑` and `Ctrl+↓`;
-- `Ctrl` with punctuation, including `Ctrl+,`;
-- `Super` with anything.
-
-Support by terminal: Ghostty, Kitty, WezTerm, and foot implement the Kitty keyboard protocol. Windows Terminal added it in version 1.25. Apple Terminal does not implement it; iTerm2 does in recent versions. Inside tmux, set `extended-keys on` and `extended-keys-format csi-u`; without them tmux discards the modifiers.
-
-Some `Ctrl` combinations collapse into control codes that are indistinguishable from another key:
-
-| Gesture | Byte | Also produced by |
-| --- | --- | --- |
-| `Ctrl+I` | `0x09` | `Tab` |
-| `Ctrl+M` | `0x0D` | `Enter` |
-| `Ctrl+J` | `0x0A` | `Shift+Enter` under some terminal configurations |
-| `Ctrl+[` | `0x1B` | `Escape` |
-| `Ctrl+H` | `0x08` | `Backspace` |
-| `Ctrl+D` | `0x04` | End of file on an empty line |
-
-Under the Kitty protocol these become distinguishable. Jouzu does not rely on that: a binding that needs disambiguation is an accelerator, and rule 1 still applies.
-
-### Working around a collision
-
-A user who wants a colliding Jouzu binding can remap the higher layer. Ghostty on Linux, where `Ctrl+Enter` is `toggle_fullscreen` by default:
-
-```ini
-# ~/.config/ghostty/config
-keybind = ctrl+enter=csi:13;5u
-```
-
-This sends the CSI-u sequence for `Ctrl+Enter` to the application instead of toggling fullscreen. The equivalent for other layers is to unbind or rebind the grab in the compositor or terminal configuration.
-
-### Verifying on one machine
-
-```bash
-jz keybindings plan          # effective Jouzu/Pi bindings and portability warnings
-/hotkeys                     # effective Pi map inside a session
-ghostty +list-keybinds --default   # Ghostty grabs
-showkey -a                   # bytes a key actually produces (Linux console)
-```
-
-`jz keybindings plan` reports the modified-Enter, modified-arrow, tmux, macOS, and `TERM=dumb` warnings without changing any binding.
+`jz keybindings plan` reports Jouzu's desired actions and generic modified-key warnings. It does not inspect higher-layer shortcuts. Use `/hotkeys` for the effective Pi map, then compare it with the collision map and the host's active terminal and multiplexer configuration.
 
 ## Text, language, and input
 
@@ -174,7 +97,7 @@ showkey -a                   # bytes a key actually produces (Linux console)
 | `TERM=dumb` | No interactive key events are available. Report the limitation rather than rendering an unusable view. |
 | Narrow or short terminal | The Palette falls back from floating to in-place replacement below 58 columns or 16 rows. Both presentations offer the same actions and the same cancel result. |
 | Minimum width | Views render every required label in full at 48 columns. Reduce value width or change layout instead of clipping a label. Below 12 columns a view may render its title alone. |
-| tmux or screen | Inline image protocols are unavailable; the Palette selects the replacement presentation. Modified keys need `extended-keys` as above. |
+| tmux or GNU Screen | Jouzu suppresses terminal inline-image detection, then chooses floating or replacement presentation from terminal dimensions. tmux modified keys need the extended-key settings in the collision map; test GNU Screen delivery on the active stack. |
 | Windows | Windows Terminal or another UTF-8-capable terminal is required. See [`windows.md`](windows.md). |
 
 Color, cursor shape, and cursor position are never the only indication of selection, state, or failure.
@@ -194,7 +117,7 @@ A change to an interactive surface must:
 
 1. use semantic actions where Pi defines them, and record why where it does not;
 2. keep every action reachable without a modified key;
-3. check new bindings against `TUI_KEYBINDINGS`, `JOUZU_KEYBINDING_DEFAULTS`, and the [Do not bind](#do-not-bind) table;
+3. check new bindings against `TUI_KEYBINDINGS`, `JOUZU_KEYBINDING_DEFAULTS`, and the [key collision map](key-collisions.md);
 4. keep every rendered line inside the requested width at 48 columns with mixed-width text;
 5. carry tests for the behavior it changes, including the mode transitions in [`palette-ux.md`](palette-ux.md);
 6. leave no meaning encoded in color alone.
@@ -205,5 +128,5 @@ Run `npm run check` and `npm test` before committing.
 
 | Surface | Deviation | Resolution |
 | --- | --- | --- |
-| Help (`help.ts`) | Renders its own overlay outside the Palette router with its own frame and sizing, and lists a shortcut set that is maintained by hand. | Becomes a Palette view when it can derive commands and effective bindings from the runtime registries. |
+| Help (`help.ts`) | Renders its own overlay outside the Palette router with its own frame and sizing. Its command list is maintained by hand, although semantic key labels resolve from the effective binding map. | Becomes a Palette view when it can derive commands and effective bindings from the runtime registries. |
 | Models (`model-picker.ts`) | `Shift+Enter` is the only path that stores a project default and depends on modified-Enter reporting. | Add an unmodified project-default action before removing the accelerator. |
