@@ -11,6 +11,7 @@ This repository contains the distributable Jouzu product: code, tests, public us
 5. Product behavior is specified by public code/tests and sanitized public issues. Internal research is not a public API or release promise.
 6. Pi is an exact dependency. Update it only through the checked-in upstream workflow; never let the embedded runtime self-update independently.
 7. Describe the active product surface by default. Do not mention removed, rejected, superseded, unavailable, or hypothetical components in current-state instructions, skills, prompts, README/help text, or assistant prose. Exceptions are explicit planning/porting inventories and versioned changelogs, release notes, or migrations that name the affected versions. Public current-state docs mention prior behavior only when a user must act on an upgrade or compatibility boundary.
+8. Before changing a Jouzu-owned interactive terminal view, read and follow [`docs/palette-ux.md`](docs/palette-ux.md). Interaction changes must satisfy the applicable mode, keyboard, hint, cancellation, error, and terminal-width tests in that guide.
 
 ## Before editing
 

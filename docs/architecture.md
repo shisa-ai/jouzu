@@ -55,6 +55,10 @@ types. `runtime.ts` and `profile-manager.ts` depend on `paths.ts` and
 `profiles.ts`; `doctor.ts` depends only on leaf modules and type-only imports.
 There are no circular module imports.
 
+## Interactive UX authority
+
+The [Palette interaction standards](palette-ux.md) define the contributor requirements for Jouzu-owned Palette views. Read them before changing `palette.ts`, a Palette component, interactive key handling, focus, hints, messages, or terminal layout. Interaction changes require the applicable mode-transition and width tests listed in that guide.
+
 ## State-file ownership and shared primitives
 
 | State | Owner | Location |
