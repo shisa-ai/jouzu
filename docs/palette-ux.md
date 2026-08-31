@@ -35,7 +35,7 @@ Use the same key for the same class of action across Palette views:
 
 Resolve selection, paging, confirmation, and cancellation through `KeybindingsManager` semantic actions. Pi defines no select-scope action for `Home`, `End`, `Tab`, `Space`, `←`, or `→`; match those keys directly and keep the meanings in this table.
 
-`tui.select.cancel` resolves to both `Escape` and `Ctrl+C` by default, so both cancel one level. Hints name `Esc`.
+`tui.select.cancel` resolves to both `Escape` and `Ctrl+C` by default, so both cancel one level. Hints show the effective list, such as `Esc/Ctrl+C`; user bindings replace that list.
 
 ### Key precedence
 
@@ -173,6 +173,6 @@ An interaction change must include tests for the affected modes and transitions:
 7. Credential tests prove that availability can be shown without rendering the value.
 8. Render tests cover 48 columns and mixed-width text; every line stays within the requested terminal columns.
 9. `Tab` and `Shift+Tab` move top-level sections in browse mode and cannot discard an edit.
-10. Hints contain the active primary action and omit inactive or internal controls.
+10. Hints contain the active primary action, omit inactive or internal controls, and show user-rebound semantic bindings.
 
 Run the focused interaction tests while iterating, then run `npm run check` and `npm test` before committing.

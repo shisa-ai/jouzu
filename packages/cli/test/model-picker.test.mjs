@@ -118,15 +118,22 @@ function stripSgr(value) {
 		.join("");
 }
 
-function fakeKeybindings() {
+function fakeKeybindings(overrides = {}) {
+	const keys = {
+		"tui.select.down": ["down"],
+		"tui.select.up": ["up"],
+		"tui.select.pageDown": ["pageDown"],
+		"tui.select.pageUp": ["pageUp"],
+		"tui.select.confirm": ["enter"],
+		"tui.select.cancel": ["escape", "ctrl+c"],
+		...overrides,
+	};
 	return {
 		matches(data, action) {
-			return (
-				(action === "tui.select.down" && data === "down") ||
-				(action === "tui.select.up" && data === "up") ||
-				(action === "tui.select.confirm" && data === "enter") ||
-				(action === "tui.select.cancel" && data === "escape")
-			);
+			return keys[action]?.includes(data) ?? false;
+		},
+		getKeys(action) {
+			return [...(keys[action] ?? [])];
 		},
 	};
 }
@@ -171,7 +178,7 @@ function createComponent(overrides = {}) {
 			},
 			theme: identityTheme,
 			styles: createSessionUiStyles(identityTheme),
-			keybindings: fakeKeybindings(),
+			keybindings: overrides.keybindings ?? fakeKeybindings(),
 			close() {
 				calls.close += 1;
 			},
@@ -279,6 +286,22 @@ test("Models view renders within width and blocks a context that cannot fit", as
 	assert.deepEqual(calls.selected, []);
 	assert.equal(calls.close, 0);
 	assert.match(component.render(72).join("\n"), /does not fit/);
+});
+
+test("Models view hints render effective semantic bindings", () => {
+	const { component } = createComponent({
+		keybindings: fakeKeybindings({
+			"tui.select.confirm": ["ctrl+s"],
+			"tui.select.cancel": ["alt+x"],
+			"tui.select.up": ["k"],
+			"tui.select.down": ["j"],
+		}),
+	});
+	const rendered = component.render(72).join("\n");
+	assert.match(rendered, /Ctrl\+S session/u);
+	assert.match(rendered, /K\/J move/u);
+	assert.match(rendered, /Alt\+X close/u);
+	assert.doesNotMatch(rendered, /Enter session|Esc close|↑↓ move/u);
 });
 
 test("Models view keeps ANSI and CJK content inside aligned display-width borders", () => {

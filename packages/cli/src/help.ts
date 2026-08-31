@@ -1,5 +1,6 @@
 import type { ExtensionContext, InlineExtension } from "@earendil-works/pi-coding-agent";
 import { matchesKey, Text } from "@earendil-works/pi-tui";
+import { formatEffectiveKeybinding, formatKeyId } from "./keybinding-hints.js";
 
 const HELP_SHORTCUTS = ["ctrl+/", "ctrl+?"] as const;
 
@@ -11,17 +12,18 @@ export function createJouzuHelpExtension(): InlineExtension {
 				if (ctx.mode !== "tui") return;
 				await ctx.ui.custom<void>(
 					(_tui, theme, keybindings, done) => {
+						const helpKeys = HELP_SHORTCUTS.map((shortcut) => formatKeyId(shortcut)).join(" or ");
 						const text = new Text(
 							[
 								theme.bold(theme.fg("accent", "Jouzu Help")),
 								"",
-								`${theme.fg("accent", "Ctrl+L")}  Models`,
-								`${theme.fg("accent", "Ctrl+P")}  Cycle favorites`,
-								`${theme.fg("accent", "Ctrl+/")}  Help`,
+								`${theme.fg("accent", formatEffectiveKeybinding(keybindings, "app.model.select"))}  Models`,
+								`${theme.fg("accent", formatEffectiveKeybinding(keybindings, "app.model.cycleForward"))}  Cycle favorites`,
+								`${theme.fg("accent", helpKeys)}  Help`,
 								`${theme.fg("accent", "/hotkeys")}  All shortcuts`,
 								`${theme.fg("accent", "/status")}  Session details`,
 								"",
-								theme.fg("dim", "Esc close"),
+								theme.fg("dim", `${formatEffectiveKeybinding(keybindings, "tui.select.cancel")} close`),
 							].join("\n"),
 							1,
 							1,

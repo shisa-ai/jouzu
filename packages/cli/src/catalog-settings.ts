@@ -8,6 +8,7 @@ import {
 	CatalogSourceStore,
 	discoverCatalogEndpoint,
 } from "./catalog-sources.js";
+import { formatEffectiveKeybinding, formatEffectiveKeyPair } from "./keybinding-hints.js";
 import {
 	type CatalogRefreshResult,
 	type CatalogSyncStatus,
@@ -418,7 +419,10 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		}
 		if (data === "d" && this.selected()) {
 			this.confirmRemove = true;
-			this.message = { level: "error", text: "Press Enter to remove this catalog source; Esc cancels." };
+			this.message = {
+				level: "error",
+				text: `Press ${formatEffectiveKeybinding(this.keybindings, "tui.select.confirm")} to remove this catalog source; ${formatEffectiveKeybinding(this.keybindings, "tui.select.cancel")} cancels.`,
+			};
 			this.tui.requestRender();
 			return;
 		}
@@ -485,7 +489,10 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 				);
 			}
 		}
-		lines.push(line(), ...hint("Enter save · ↑↓ field · ←→ change Authentication · Esc cancel"));
+		const confirm = formatEffectiveKeybinding(this.keybindings, "tui.select.confirm");
+		const cancel = formatEffectiveKeybinding(this.keybindings, "tui.select.cancel");
+		const move = formatEffectiveKeyPair(this.keybindings, "tui.select.up", "tui.select.down");
+		lines.push(line(), ...hint(`${confirm} save · ${move} field · ←→ change Authentication · ${cancel} cancel`));
 		return lines;
 	}
 
@@ -541,16 +548,19 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 								line(
 									this.styles.apply(
 										"palette.hint",
-										`    ${this.expandedOffset + 1}-${Math.min(view.offerings.length, this.expandedOffset + available)}/${view.offerings.length} · PgUp/PgDn`,
+										`    ${this.expandedOffset + 1}-${Math.min(view.offerings.length, this.expandedOffset + available)}/${view.offerings.length} · ${formatEffectiveKeyPair(this.keybindings, "tui.select.pageUp", "tui.select.pageDown")}`,
 									),
 								),
 							);
 					}
 				}
 			}
+			const confirm = formatEffectiveKeybinding(this.keybindings, "tui.select.confirm");
+			const cancel = formatEffectiveKeybinding(this.keybindings, "tui.select.cancel");
+			const move = formatEffectiveKeyPair(this.keybindings, "tui.select.up", "tui.select.down");
 			lines.push(line());
-			lines.push(...hint("Enter edit · A add · R refresh · D remove"));
-			lines.push(...hint("Space enable · ←→ models · Tab section · ↑↓ move · Esc close"));
+			lines.push(...hint(`${confirm} edit · A add · R refresh · D remove`));
+			lines.push(...hint(`Space enable · ←→ models · Tab section · ${move} move · ${cancel} close`));
 		}
 		if (this.message) {
 			const role = this.message.level === "error" ? "palette.message.error" : "palette.message.info";

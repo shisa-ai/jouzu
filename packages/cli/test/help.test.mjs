@@ -8,7 +8,7 @@ const identityTheme = {
 	bold: (value) => value,
 };
 
-test("registers slash and question-mark help shortcuts and closes the overlay", async () => {
+test("registers help shortcuts and renders effective semantic bindings", async () => {
 	const shortcuts = new Map();
 	createJouzuHelpExtension().factory({
 		registerShortcut(shortcut, options) {
@@ -25,16 +25,24 @@ test("registers slash and question-mark help shortcuts and closes the overlay", 
 			async custom(factory, options) {
 				customOptions = options;
 				let closed = false;
+				const keys = {
+					"app.model.select": ["alt+m"],
+					"app.model.cycleForward": ["f6"],
+					"tui.select.cancel": ["ctrl+x"],
+				};
 				const component = factory(
 					{},
 					identityTheme,
-					{ matches: (data, action) => data === "escape" && action === "tui.select.cancel" },
+					{
+						matches: (data, action) => keys[action]?.includes(data) ?? false,
+						getKeys: (action) => [...(keys[action] ?? [])],
+					},
 					() => {
 						closed = true;
 					},
 				);
 				rendered = component.render(38).join("\n");
-				component.handleInput("escape");
+				component.handleInput("ctrl+x");
 				assert.equal(closed, true);
 			},
 		},
@@ -42,7 +50,10 @@ test("registers slash and question-mark help shortcuts and closes the overlay", 
 	await shortcuts.get("ctrl+/").handler(ctx);
 	assert.equal(customOptions.overlay, true);
 	assert.match(rendered, /Jouzu Help/);
-	assert.match(rendered, /Ctrl\+L/);
-	assert.match(rendered, /Ctrl\+P.*Cycle favorites/);
+	assert.match(rendered, /Alt\+M.*Models/);
+	assert.match(rendered, /F6.*Cycle favorites/);
+	assert.match(rendered, /Ctrl\+X close/);
+	assert.match(rendered, /Ctrl\+\/ or Ctrl\+\?.*Help/);
+	assert.doesNotMatch(rendered, /Ctrl\+L|Ctrl\+P|Esc close/);
 	assert.match(rendered, /\/hotkeys/);
 });

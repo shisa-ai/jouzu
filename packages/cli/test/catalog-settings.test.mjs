@@ -23,7 +23,27 @@ const identityTheme = {
 	bold: (value) => value,
 };
 
-function setup() {
+function fakeKeybindings(overrides = {}) {
+	const keys = {
+		"tui.select.cancel": ["escape", "ctrl+c"],
+		"tui.select.confirm": ["enter"],
+		"tui.select.up": ["up"],
+		"tui.select.down": ["down"],
+		"tui.select.pageUp": ["pageUp"],
+		"tui.select.pageDown": ["pageDown"],
+		...overrides,
+	};
+	return {
+		matches(data, action) {
+			return keys[action]?.includes(data) ?? false;
+		},
+		getKeys(action) {
+			return [...(keys[action] ?? [])];
+		},
+	};
+}
+
+function setup(options = {}) {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-catalog-settings-"));
 	const paths = resolveJouzuPaths({ homeOverride: join(root, "jouzu") });
 	const renders = [];
@@ -36,16 +56,7 @@ function setup() {
 			terminal: { rows: 32, columns: 100 },
 		},
 		theme: identityTheme,
-		keybindings: {
-			matches(data, id) {
-				return (
-					(data === "escape" && id === "tui.select.cancel") ||
-					(data === "enter" && id === "tui.select.confirm") ||
-					(data === "up" && id === "tui.select.up") ||
-					(data === "down" && id === "tui.select.down")
-				);
-			},
-		},
+		keybindings: options.keybindings ?? fakeKeybindings(),
 		styles: createSessionUiStyles(identityTheme),
 		close() {
 			closes.push(true);
@@ -142,6 +153,27 @@ test("Catalogs settings shows complete bearer-token fields and process availabil
 		text = rendered.join("\n");
 		assert.match(text, /JOUZU_MODEL_CATALOG_TOKEN is set in this Jouzu process/u);
 		assert.doesNotMatch(text, /must-not-render/u);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("Catalogs settings hints render effective semantic bindings", () => {
+	const { root, paths, context } = setup({
+		keybindings: fakeKeybindings({
+			"tui.select.confirm": ["ctrl+s"],
+			"tui.select.cancel": ["alt+x"],
+			"tui.select.up": ["k"],
+			"tui.select.down": ["j"],
+		}),
+	});
+	try {
+		const component = new CatalogSettingsComponent({ context, paths, env: {} });
+		const rendered = component.render(72).join("\n");
+		assert.match(rendered, /Ctrl\+S save/u);
+		assert.match(rendered, /K\/J field/u);
+		assert.match(rendered, /Alt\+X cancel/u);
+		assert.doesNotMatch(rendered, /Enter save|Esc cancel|↑↓ field/u);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}

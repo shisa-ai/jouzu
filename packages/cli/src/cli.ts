@@ -298,9 +298,15 @@ async function runCli(args: string[]): Promise<void> {
 		applyProjectDefaultAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
 	});
 	const help = createJouzuHelpExtension();
+	const effectiveKeyText = (action: "app.model.select" | "app.model.cycleForward") => pi.keyText(action) || "unbound";
 	const sessionUi = createSessionUiExtension({
 		getHints: () => [
-			{ id: "palette.shortcuts", text: "Ctrl+L models · Ctrl+P favorites · Ctrl+/ help", priority: 10, role: "muted" },
+			{
+				id: "palette.shortcuts",
+				text: `${effectiveKeyText("app.model.select")} models · ${effectiveKeyText("app.model.cycleForward")} favorites · Ctrl+/ help`,
+				priority: 10,
+				role: "muted",
+			},
 		],
 		onModelPicker: (query) =>
 			modelPicker.open({ source: query ? "command" : "action", ...(query ? { initialSearchInput: query } : {}) }),

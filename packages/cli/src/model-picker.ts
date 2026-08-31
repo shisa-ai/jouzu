@@ -1,6 +1,7 @@
 import type { ExtensionContext, InlineExtension, KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
 import { type Focusable, Input, matchesKey, type TUI, wrapTextWithAnsi } from "@earendil-works/pi-tui";
 import { CatalogSettingsComponent } from "./catalog-settings.js";
+import { formatEffectiveKeybinding, formatEffectiveKeyPair } from "./keybinding-hints.js";
 import type { CatalogModelOffering, ModelCatalogDocument } from "./model-catalog.js";
 import { type ActiveModelCatalog, loadActiveModelCatalogs } from "./model-catalog-sync.js";
 import { buildPickerRows, type PickerFilter, type PickerModel, type PickerRow } from "./model-picker-ranking.js";
@@ -437,12 +438,15 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 				lines.push(line(this.styles.apply(role, messageLine)));
 			}
 		}
+		const confirm = formatEffectiveKeybinding(this.keybindings, "tui.select.confirm");
+		const cancel = formatEffectiveKeybinding(this.keybindings, "tui.select.cancel");
+		const move = formatEffectiveKeyPair(this.keybindings, "tui.select.up", "tui.select.down");
 		if (this.searchFocused) {
-			lines.push(...hint("Enter session · Shift+Enter project default · ↑↓ move"));
-			lines.push(...hint("Type search · ←→ cursor · Tab section · Esc browse"));
+			lines.push(...hint(`${confirm} session · Shift+Enter project default · ${move} move`));
+			lines.push(...hint(`Type search · ←→ cursor · Tab section · ${cancel} browse`));
 		} else {
-			lines.push(...hint("Enter session · Shift+Enter project default · Space favorite"));
-			lines.push(...hint("←→ View · / search · Tab section · ↑↓ move · Esc close"));
+			lines.push(...hint(`${confirm} session · Shift+Enter project default · Space favorite`));
+			lines.push(...hint(`←→ View · / search · Tab section · ${move} move · ${cancel} close`));
 		}
 		lines.push(renderTerminalFrameBorder(width, { ...frameOptions, left: "╰", right: "╯" }));
 		return lines.map((value) => fitTerminalText(value, width));
