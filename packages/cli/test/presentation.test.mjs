@@ -127,6 +127,21 @@ test("generates stable capability routing from only active tools and skills", ()
 	assert.notEqual(changed, guidance);
 });
 
+test("describes VCC session continuity without claiming infinite context", () => {
+	const guidance = buildCapabilityRoutingGuidance({
+		selectedTools: ["vcc_recall"],
+		skills: [],
+	});
+
+	assert.match(guidance, /Session continuity across compaction/);
+	assert.match(guidance, /pi-vcc compacts automatically/);
+	assert.match(guidance, /Compaction is not context exhaustion/);
+	assert.match(guidance, /workflow token totals are not active context occupancy/);
+	assert.match(guidance, /cannot compact/);
+	assert.match(guidance, /current session/);
+	assert.doesNotMatch(guidance, /infinite context/i);
+});
+
 test("clears only real interactive TTY launches", () => {
 	const tty = { stdinIsTTY: true, stdoutIsTTY: true, env: { TERM: "xterm-256color" } };
 	assert.equal(shouldClearInteractiveStartup([], tty), true);

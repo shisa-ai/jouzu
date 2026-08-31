@@ -33,6 +33,19 @@
       }
     },
     {
+      "id": "continue-after-compaction",
+      "prompt": "This goal has run for half a day and the session compacted. Continue without guessing what we decided earlier.",
+      "expect": {
+        "skills": [],
+        "tools": ["vcc_recall"],
+        "behaviors": ["treat-compaction-as-continuation", "search-session-before-reconstructing"]
+      },
+      "avoid": {
+        "skills": [],
+        "tools": ["update_goal"]
+      }
+    },
+    {
       "id": "fetch-known-readable-url",
       "prompt": "Read https://example.com/guide and summarize its installation steps.",
       "expect": {

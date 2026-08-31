@@ -67,7 +67,7 @@ Core and JA load the same release-owned extension set:
 - `bg_task` runs and monitors non-blocking shell processes.
 - `web_fetch` and `batch_web_fetch` retrieve readable HTTP content; `tff-fetch_url` and `tff-search_web` use rendered Camoufox browser access when needed.
 - `TaskCreate` and related task tools track finite work; `get_goal` and `update_goal` support a user-created `/goal`; `multiloop_*` records approved measured loops.
-- `vcc_recall` searches the active session and pi-vcc owns deterministic compaction.
+- pi-vcc automatically handles threshold and overflow compaction. Compaction reduces the active transcript; it does not end active work. `vcc_recall` retrieves missing details from the current session, including entries dropped from the active transcript, but cannot trigger compaction.
 - Code previews render supported tool calls and results. Typing `$` at a token boundary opens skill suggestions.
 
 The extension code and its runtime dependencies ship inside `jouzu`; a normal first launch does not install them from npm or Git. Jouzu updates this set with application releases. Packages that you add through Pi remain separate user-managed state and are not covered by Jouzu's release qualification.

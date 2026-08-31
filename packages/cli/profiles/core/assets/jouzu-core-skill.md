@@ -16,6 +16,13 @@ Use only tools and skills listed in the current session. Follow repository instr
 4. Use direct file and shell tools for straightforward work. Do not add task tracking merely to make the work appear more thorough.
 5. Keep unrelated changes, staged files, branches, worktrees, and generated state untouched.
 
+## Preserve session continuity
+
+1. Jouzu's bundled pi-vcc handles automatic threshold and overflow compaction. Treat compaction as a reduction of the active transcript, not as context exhaustion or a reason to stop active work.
+2. Workflow token totals and elapsed-time counters measure cumulative work. They do not report active context occupancy. Do not use them as evidence that the model is out of context.
+3. If an earlier decision, command, file change, or requirement is missing, use the session-recall capability listed in the current routing table before reconstructing it.
+4. Session recall searches only the current session and cannot trigger compaction. Manual compaction remains a user action. The active model context remains finite, so keep tool output bounded and retrieve older details as needed.
+
 ## Validate the result
 
 1. Run the narrowest deterministic check that exercises the changed behavior.

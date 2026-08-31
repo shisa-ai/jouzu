@@ -11,6 +11,7 @@ const coreSkill = readFileSync(join(root, "packages/cli/profiles/core/assets/jou
 const expectedCaseIds = [
 	"simple-repository-change",
 	"recall-earlier-session-decision",
+	"continue-after-compaction",
 	"fetch-known-readable-url",
 	"fetch-multiple-known-urls",
 	"discover-web-sources",
@@ -62,6 +63,9 @@ test("Core keeps execution discipline on demand and generates bounded decision-t
 	assert.match(coreSkill, /Work directly by default/);
 	assert.match(coreSkill, /Use only tools and skills listed in the current session\./);
 	assert.match(coreSkill, /Do not add task tracking merely to make the work appear more thorough\./);
+	assert.match(coreSkill, /Workflow token totals and elapsed-time counters measure cumulative work\./);
+	assert.match(coreSkill, /Session recall searches only the current session and cannot trigger compaction\./);
+	assert.doesNotMatch(coreSkill, /infinite context/i);
 	assert.doesNotMatch(coreSkill, /\b(?:removed|retired|obsolete|superseded|unavailable)\b/i);
 
 	const routing = buildCapabilityRoutingGuidance({
