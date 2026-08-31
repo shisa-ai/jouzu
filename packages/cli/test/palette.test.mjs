@@ -5,6 +5,7 @@ import {
 	DEFAULT_PALETTE_OVERLAY_OPTIONS,
 	JouzuPaletteRouter,
 	JouzuPaletteSurfaceHost,
+	renderPaletteTabs,
 	selectPalettePresentation,
 } from "../dist/palette.js";
 
@@ -176,17 +177,54 @@ test("Palette router switches between Models and Settings and disposes replaced 
 	});
 	assert.deepEqual(router.render(80), ["models"]);
 	router.handleInput("\u001b[44;5u");
+	assert.deepEqual(router.render(80), ["models"], "Ctrl+, is not a Palette shortcut");
+	router.handleInput("\t");
 	assert.deepEqual(router.render(80), ["settings"]);
 	assert.deepEqual(disposed, ["models"]);
 	router.route({ view: "settings" });
 	assert.deepEqual(routes, [{ view: "settings" }]);
-	router.handleInput("\f");
+	router.handleInput("\u001b[Z");
 	assert.deepEqual(router.render(80), ["models"]);
 	assert.deepEqual(disposed, ["models", "settings"]);
 	router.route({ view: "models", query: "qwen" });
 	assert.deepEqual(routes, [{ view: "settings" }, { view: "models", query: "qwen" }]);
 	router.dispose();
 	assert.deepEqual(disposed, ["models", "settings", "models"]);
+});
+
+test("Palette tabs expose the active top-level view without relying on color", () => {
+	const styles = { apply: (_role, value) => value };
+	assert.match(renderPaletteTabs("models", identityTheme, styles), /\[Models\].*Settings/u);
+	assert.match(renderPaletteTabs("settings", identityTheme, styles), /Models.*\[Settings\]/u);
+});
+
+test("Palette router pauses global Tab navigation while a view is editing", () => {
+	const inputs = [];
+	const context = {
+		tui: { requestRender() {} },
+		theme: identityTheme,
+		keybindings: {},
+		styles: { apply: (_role, value) => value },
+		close() {},
+	};
+	const router = new JouzuPaletteRouter({
+		context,
+		initialRoute: { view: "settings" },
+		factories: {
+			models: componentFactory([]),
+			settings: () => ({
+				allowsGlobalNavigation: () => false,
+				handleInput: (data) => inputs.push(data),
+				render: () => ["settings"],
+				invalidate() {},
+				route() {},
+			}),
+		},
+	});
+
+	router.handleInput("\t");
+	assert.deepEqual(router.render(80), ["settings"]);
+	assert.deepEqual(inputs, ["\t"]);
 });
 
 test("the Palette host supplies Jouzu semantic styles to every view", () => {

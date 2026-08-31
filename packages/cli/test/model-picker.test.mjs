@@ -270,6 +270,7 @@ test("Models view renders within width and blocks a context that cannot fit", as
 	assert.ok(rendered.length > 8);
 	assert.ok(rendered.every((line) => visibleWidth(line) === 72));
 	assert.match(stripSgr(rendered[0]), /JOUZU · Models/);
+	assert.match(stripSgr(rendered.join("\n")), /\[Models\].*Settings/u);
 	assert.match(rendered.join("\n"), /small\/tiny/);
 	assert.match(rendered.join("\n"), /large\/fit/);
 
@@ -330,13 +331,12 @@ test("Models view selects for the session or project, toggles filters and favori
 	assert.deepEqual(second.calls.selected, [["fit", "project"]]);
 
 	const third = createComponent();
-	third.component.handleInput("\t");
-	third.component.handleInput("\x1b[Z");
+	third.component.handleInput("\u001b[C");
+	third.component.handleInput("\u001b[D");
 	third.component.handleInput("down");
-	third.component.handleInput("\x06");
-	third.component.handleInput("\x1bf");
+	third.component.handleInput(" ");
+	assert.deepEqual(third.calls.filters, ["favorite", "recent"]);
 	assert.deepEqual(third.calls.favorites, ["fit"]);
-	assert.doesNotMatch(third.component.render(72).join("\n"), /Alt\+F/);
 	third.component.handleInput("escape");
 	assert.equal(third.calls.close, 1);
 });
@@ -352,9 +352,9 @@ test("Models view restores the last filter and reports filter changes", () => {
 	});
 	assert.equal(activeFilters.at(-1), "favorite");
 
-	component.handleInput("\t");
+	component.handleInput("\u001b[C");
 	assert.equal(activeFilters.at(-1), "all");
-	component.handleInput("\x1b[Z");
+	component.handleInput("\u001b[D");
 	assert.equal(activeFilters.at(-1), "favorite");
 	assert.deepEqual(calls.filters, ["all", "favorite"]);
 });
@@ -370,11 +370,51 @@ test("Models view keeps the selected filter when saving it fails", () => {
 			throw new Error("broken\u001b]0;hidden\u0007 state");
 		},
 	});
-	component.handleInput("\t");
+	component.handleInput("\u001b[C");
 	assert.equal(activeFilters.at(-1), "favorite");
 	const rendered = component.render(72).join("\n");
 	assert.match(rendered, /Filter choice was not saved: broken state/);
 	assert.doesNotMatch(rendered, /hidden/);
+});
+
+test("Models view separates browse choices from search cursor input", () => {
+	const activeFilters = [];
+	const queries = [];
+	const { component, calls } = createComponent({
+		getRows(query, filter) {
+			queries.push(query);
+			activeFilters.push(filter);
+			return rows();
+		},
+	});
+	const browseText = component.render(72).join("\n");
+	assert.match(browseText, /View\s+< Recent >/u);
+	assert.match(browseText, /Tab section/u);
+	assert.doesNotMatch(browseText, /Ctrl\+,|Tab filter|Ctrl\+F/u);
+
+	component.handleInput("\u001b[C");
+	assert.equal(activeFilters.at(-1), "favorite");
+	component.handleInput("q");
+	const filterChanges = calls.filters.length;
+	component.handleInput("\u001b[C");
+	assert.equal(calls.filters.length, filterChanges, "horizontal arrows edit search instead of changing View");
+	component.handleInput(" ");
+	assert.equal(queries.at(-1), "q ");
+	assert.deepEqual(calls.favorites, []);
+	assert.match(component.render(72).join("\n"), /→ Search/u);
+
+	component.handleInput("escape");
+	assert.equal(calls.close, 0, "Esc leaves search before closing the Palette");
+	component.handleInput(" ");
+	assert.deepEqual(calls.favorites, ["tiny"]);
+	component.handleInput("escape");
+	assert.equal(calls.close, 1);
+
+	const directSearch = createComponent();
+	directSearch.component.handleInput("/");
+	assert.match(directSearch.component.render(72).join("\n"), /→ Search/u);
+	directSearch.component.handleInput("escape");
+	assert.equal(directSearch.calls.close, 0);
 });
 
 test("Palette routing replaces the query and keeps the component reusable", () => {
@@ -629,10 +669,10 @@ test("Jouzu editor wrapper opens the Models component through the Palette surfac
 							resolve,
 						);
 						setImmediate(() => {
-							component.handleInput("\t");
-							component.handleInput("\t");
+							component.handleInput("\u001b[C");
+							component.handleInput("\u001b[C");
 							component.handleInput("down");
-							component.handleInput("\x06");
+							component.handleInput(" ");
 							rendered = component.render(72).join("\n");
 							component.handleInput("escape");
 						});
@@ -996,9 +1036,10 @@ test("typing reuses cached filter counts instead of re-ranking the inventory", (
 	component.handleInput("c");
 	assert.equal(queries.length, 2);
 
-	// Cycling filters re-ranks the active list but does not disturb the counts.
+	// Leaving search and changing View re-ranks the active list without disturbing the counts.
+	component.handleInput("escape");
 	queries.length = 0;
-	component.handleInput("\t");
+	component.handleInput("\u001b[C");
 	assert.equal(queries.length, 1);
 });
 
@@ -1013,9 +1054,10 @@ test("toggling a favorite refreshes the cached filter counts", () => {
 
 	// Type first so the active query is distinguishable from the count queries.
 	component.handleInput("z");
+	component.handleInput("escape");
 	queries.length = 0;
 
-	component.handleInput("\x06");
+	component.handleInput(" ");
 	// A favorite changes the inventory partition, so the three counts are
 	// recomputed and the active query is ranked once more.
 	assert.equal(queries.filter((query) => query === "").length, 3, "all three filter counts refresh");

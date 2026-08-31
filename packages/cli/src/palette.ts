@@ -19,6 +19,7 @@ export interface PaletteRoute {
 
 export interface PaletteComponent extends Component {
 	route(route: PaletteRoute): void;
+	allowsGlobalNavigation?(): boolean;
 	dispose?(): void;
 }
 
@@ -32,6 +33,17 @@ export interface PaletteComponentContext {
 }
 
 export type PaletteComponentFactory = (context: PaletteComponentContext, route: PaletteRoute) => PaletteComponent;
+
+export const PALETTE_TABS = [
+	{ view: "models", label: "Models" },
+	{ view: "settings", label: "Settings" },
+] as const satisfies ReadonlyArray<{ view: PaletteViewId; label: string }>;
+
+export function renderPaletteTabs(activeView: PaletteViewId, theme: Theme, styles: SessionUiStyles): string {
+	return PALETTE_TABS.map(({ view, label }) =>
+		view === activeView ? theme.bg("selectedBg", styles.apply("palette.tab.active", ` [${label}] `)) : ` ${label} `,
+	).join("  ");
+}
 
 export interface PaletteRouterOptions {
 	context: PaletteComponentContext;
@@ -86,14 +98,28 @@ export class JouzuPaletteRouter implements PaletteComponent, Focusable {
 		this.context.tui.requestRender();
 	}
 
+	private activeViewAllowsGlobalNavigation(): boolean {
+		return this.component.allowsGlobalNavigation?.() ?? true;
+	}
+
+	private cycleView(delta: number): void {
+		const available = PALETTE_TABS.filter(({ view }) => Boolean(this.factories[view]));
+		if (available.length < 2) return;
+		const currentIndex = available.findIndex(({ view }) => view === this.activeView);
+		const nextIndex = (Math.max(0, currentIndex) + delta + available.length) % available.length;
+		this.route({ view: available[nextIndex].view });
+	}
+
 	handleInput(data: string): void {
-		if (matchesKey(data, "ctrl+,")) {
-			this.route({ view: "settings" });
-			return;
-		}
-		if (matchesKey(data, "ctrl+l")) {
-			this.route({ view: "models" });
-			return;
+		if (this.activeViewAllowsGlobalNavigation()) {
+			if (matchesKey(data, "tab")) {
+				this.cycleView(1);
+				return;
+			}
+			if (matchesKey(data, "shift+tab")) {
+				this.cycleView(-1);
+				return;
+			}
 		}
 		this.component.handleInput?.(data);
 	}

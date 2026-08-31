@@ -1,5 +1,5 @@
 import type { ExtensionContext, InlineExtension, KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
-import { type Focusable, Input, matchesKey, type TUI } from "@earendil-works/pi-tui";
+import { type Focusable, Input, matchesKey, type TUI, wrapTextWithAnsi } from "@earendil-works/pi-tui";
 import { CatalogSettingsComponent } from "./catalog-settings.js";
 import type { CatalogModelOffering, ModelCatalogDocument } from "./model-catalog.js";
 import { type ActiveModelCatalog, loadActiveModelCatalogs } from "./model-catalog-sync.js";
@@ -22,6 +22,7 @@ import {
 	type PaletteComponentContext,
 	type PaletteRoute,
 	type PaletteSurfaceOptions,
+	renderPaletteTabs,
 } from "./palette.js";
 import type { JouzuPaths } from "./paths.js";
 import { detectBannerColorMode, renderBrandGradient } from "./presentation.js";
@@ -101,6 +102,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	private readonly searchInput = new Input();
 	private rows: PickerRow[] = [];
 	private filter: PickerFilter;
+	private searchFocused = false;
 	private filterCounts: Record<PickerFilter, number> = { recent: 0, favorite: 0, all: 0 };
 	private selectedIndex = 0;
 	private busy = false;
@@ -124,6 +126,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		this.onFilterChange = options.onFilterChange;
 		this.filter = options.initialFilter ?? "recent";
 		this.searchInput.setValue(options.initialRoute.query ?? "");
+		this.searchFocused = Boolean(options.initialRoute.query);
 		this.recomputeFilterCounts();
 		this.recomputeRows();
 		if (options.onRefresh) void this.refresh(options.onRefresh);
@@ -135,15 +138,27 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 
 	set focused(value: boolean) {
 		this._focused = value;
-		this.searchInput.focused = value;
+		this.syncSearchFocus();
+	}
+
+	private syncSearchFocus(): void {
+		this.searchInput.focused = this._focused && this.searchFocused;
 	}
 
 	route(route: PaletteRoute): void {
 		if (route.view !== "models") return;
-		if (route.query !== undefined) this.searchInput.setValue(route.query);
+		if (route.query !== undefined) {
+			this.searchInput.setValue(route.query);
+			this.searchFocused = Boolean(route.query);
+			this.syncSearchFocus();
+		}
 		this.recomputeFilterCounts();
 		this.recomputeRows();
 		this.tui.requestRender();
+	}
+
+	allowsGlobalNavigation(): boolean {
+		return !this.busy;
 	}
 
 	/**
@@ -275,7 +290,14 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 
 	handleInput(data: string): void {
 		if (this.keybindings.matches(data, "tui.select.cancel")) {
-			this.close();
+			if (this.searchFocused) {
+				this.searchFocused = false;
+				this.message = undefined;
+				this.syncSearchFocus();
+				this.tui.requestRender();
+			} else {
+				this.close();
+			}
 			return;
 		}
 		if (this.busy) return;
@@ -295,38 +317,53 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			this.moveSelection(8);
 			return;
 		}
-		if (matchesKey(data, "home")) {
+		if (!this.searchFocused && matchesKey(data, "home")) {
 			this.moveSelection(-Number.MAX_SAFE_INTEGER);
 			return;
 		}
-		if (matchesKey(data, "end")) {
+		if (!this.searchFocused && matchesKey(data, "end")) {
 			this.moveSelection(Number.MAX_SAFE_INTEGER);
 			return;
 		}
-		if (matchesKey(data, "tab")) {
+		if (!this.searchFocused && matchesKey(data, "left")) {
+			this.cycleFilter(-1);
+			return;
+		}
+		if (!this.searchFocused && matchesKey(data, "right")) {
 			this.cycleFilter(1);
 			return;
 		}
-		if (matchesKey(data, "shift+tab")) {
-			this.cycleFilter(-1);
+		if (!this.searchFocused && matchesKey(data, "/")) {
+			this.searchFocused = true;
+			this.message = undefined;
+			this.syncSearchFocus();
+			this.tui.requestRender();
 			return;
 		}
 		if (matchesKey(data, "shift+enter")) {
 			this.runSelection("project");
 			return;
 		}
-		if (matchesKey(data, "ctrl+f")) {
-			this.toggleFavorite();
-			return;
-		}
 		if (this.keybindings.matches(data, "tui.select.confirm")) {
 			this.runSelection("session");
 			return;
 		}
+		if (!this.searchFocused && matchesKey(data, "space")) {
+			this.toggleFavorite();
+			return;
+		}
+		const previousQuery = this.searchInput.getValue();
 		this.searchInput.handleInput(data);
-		this.message = undefined;
-		this.recomputeRows();
-		this.tui.requestRender();
+		const queryChanged = this.searchInput.getValue() !== previousQuery;
+		if (queryChanged && !this.searchFocused) {
+			this.searchFocused = true;
+			this.syncSearchFocus();
+		}
+		if (queryChanged) this.recomputeRows();
+		if (queryChanged || this.searchFocused) {
+			this.message = undefined;
+			this.tui.requestRender();
+		}
 	}
 
 	private rowText(row: PickerRow, selected: boolean): string {
@@ -350,7 +387,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		if (width < 12) return [fitTerminalText(title, Math.max(1, width))];
 		const innerWidth = Math.max(1, width - 4);
 		const terminalRows = Number(this.tui.terminal?.rows ?? 24);
-		const rowCapacity = Math.max(3, Math.min(12, terminalRows - 15));
+		const rowCapacity = Math.max(3, Math.min(12, terminalRows - 16));
 		const start = Math.max(
 			0,
 			Math.min(this.selectedIndex - Math.floor(rowCapacity / 2), Math.max(0, this.rows.length - rowCapacity)),
@@ -360,16 +397,18 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		const border = (value: string) => this.styles.apply("palette.border", value);
 		const frameOptions = { border };
 		const line = (value = "") => renderTerminalFrameRow(value, width, frameOptions);
-		const tabs = FILTERS.map((filter) => {
-			const label = `${FILTER_LABELS[filter]} ${this.filterCounts[filter]}`;
-			return filter === this.filter
-				? this.theme.bg("selectedBg", this.styles.apply("palette.tab.active", ` ${label} `))
-				: ` ${label} `;
-		}).join("  ");
+		const hint = (value: string) =>
+			wrapTextWithAnsi(value, innerWidth).map((hintLine) => line(this.styles.apply("palette.hint", hintLine)));
+		const filterCount = this.filterCounts[this.filter];
+		const viewChoice = `View  < ${FILTER_LABELS[this.filter]} >  ${filterCount} model${filterCount === 1 ? "" : "s"}`;
+		const searchMarker = this.searchFocused ? this.styles.apply("palette.marker", "→") : " ";
+		const searchPrefix = `${searchMarker} Search `;
+		const search = `${searchPrefix}${this.searchInput.render(Math.max(1, innerWidth - 9))[0] ?? ""}`;
 		const lines = [
 			renderTerminalFrameTitle(title, width, frameOptions),
-			line(tabs),
-			line(this.searchInput.render(innerWidth)[0] ?? ""),
+			line(renderPaletteTabs("models", this.theme, this.styles)),
+			line(viewChoice),
+			line(search),
 		];
 		if (selected) {
 			const defaultLabel = selected.projectDefault ? " · project default" : "";
@@ -393,18 +432,18 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		}
 		while (lines.length < rowCapacity + 6) lines.push(line());
 		if (this.message) {
-			lines.push(
-				line(
-					this.styles.apply(
-						this.message.level === "error" ? "palette.message.error" : "palette.message.info",
-						this.message.text,
-					),
-				),
-			);
-		} else {
-			lines.push(line(this.styles.apply("palette.hint", "Enter session · Shift+Enter project default · Tab filter")));
+			const role = this.message.level === "error" ? "palette.message.error" : "palette.message.info";
+			for (const messageLine of wrapTextWithAnsi(this.message.text, innerWidth)) {
+				lines.push(line(this.styles.apply(role, messageLine)));
+			}
 		}
-		lines.push(line(this.styles.apply("palette.hint", "Ctrl+F favorite · Ctrl+, Settings · ↑↓ move · Esc close")));
+		if (this.searchFocused) {
+			lines.push(...hint("Enter session · Shift+Enter project default · ↑↓ move"));
+			lines.push(...hint("Type search · ←→ cursor · Tab section · Esc browse"));
+		} else {
+			lines.push(...hint("Enter session · Shift+Enter project default · Space favorite"));
+			lines.push(...hint("←→ View · / search · Tab section · ↑↓ move · Esc close"));
+		}
 		lines.push(renderTerminalFrameBorder(width, { ...frameOptions, left: "╰", right: "╯" }));
 		return lines.map((value) => fitTerminalText(value, width));
 	}
@@ -750,7 +789,7 @@ export function createJouzuModelPicker(
 			activeContextTokens: ctx.getContextUsage()?.tokens,
 		});
 		if (favoriteRows.length === 0) {
-			ctx.ui.notify("No favorite models. Open Models with Ctrl+L and press Ctrl+F to add one.", "info");
+			ctx.ui.notify("No favorite models. Open Models with Ctrl+L and press Space in browse mode to add one.", "info");
 			return true;
 		}
 		const availableRows = favoriteRows.filter((row) => row.model.available);
@@ -815,7 +854,7 @@ export function createJouzuModelPicker(
 		const ctx = activeCtx;
 		if (!ctx || ctx.mode !== "tui") return false;
 		ctx.ui.notify(
-			"Jouzu uses Favorites for quick switching. Open Models with Ctrl+L and press Ctrl+F to edit them.",
+			"Jouzu uses Favorites for quick switching. Open Models with Ctrl+L and press Space in browse mode to edit them.",
 			"info",
 		);
 		return true;

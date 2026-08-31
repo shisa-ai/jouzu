@@ -40,7 +40,7 @@ Two consequences follow. A new Jouzu action gets a semantic ID and a default bin
 2. **Check both binding tables before claiming a key.** Pi's `TUI_KEYBINDINGS` and Jouzu's `JOUZU_KEYBINDING_DEFAULTS` are the two tables Jouzu already occupies. A raw `matchesKey` call that shadows an entry in either table is a defect.
 3. **Prefer a semantic action to a raw key.** Use `keybindings.matches(data, "<action>")`. Use `matchesKey` only where Pi defines no action for the interaction, and record why.
 4. **A mode with a live text field has no bare-letter and no bare-`Space` shortcuts.** While a text field holds focus, letters, digits, punctuation, and `Space` belong to it. A mode with no text field may use them. This protects search and IME composition; see [Text, language, and input](#text-language-and-input).
-5. **`Tab` belongs to the innermost visible tab row.** A surface shows at most one tab row. A surface with no visible tab row does not advertise `Tab` navigation and does not require `Tab` to reach any control.
+5. **`Tab` belongs to the single visible tab row.** The Palette reserves that row for top-level sections such as Models and Settings. Choices inside a section use `←` and `→`. A surface with no visible tab row does not advertise `Tab` navigation and does not require `Tab` to reach any control.
 6. **The focused element claims its own keys first.** A focused text field keeps `←`, `→`, `Home`, and `End`. Only a non-text focus may use `←` and `→` for a discrete choice or for disclosure. List extremes use `Ctrl+Home` and `Ctrl+End` in a surface whose text field is live.
 7. **Hints name resolved bindings, not hardcoded labels,** wherever `KeybindingsManager` can resolve them. A hint that names a key the user has rebound is wrong on that user's machine.
 8. **Destructive and recovery actions keep a reachable path.** Cancel, interrupt, and exit must remain reachable when a terminal drops modified keys.
@@ -206,5 +206,4 @@ Run `npm run check` and `npm test` before committing.
 | Surface | Deviation | Resolution |
 | --- | --- | --- |
 | Help (`help.ts`) | Renders its own overlay outside the Palette router with its own frame and sizing, and lists a shortcut set that is maintained by hand. | Becomes a Palette view when it can derive commands and effective bindings from the runtime registries. |
-| Models (`model-picker.ts`) | `Ctrl+F` shadows Pi's `tui.editor.cursorRight`; `Shift+Enter` shadows `tui.input.newLine`; `Home` and `End` move the list instead of the search cursor. | Rebinding under review. |
-| Palette router (`palette.ts`) | `Ctrl+,` reaches Settings but is consumed by Ghostty on Linux and by Windows Terminal. A view switch also discards an unsaved form without confirmation. | `/catalogs` is the reliable route. Replacement binding under review. |
+| Models (`model-picker.ts`) | `Shift+Enter` is the only path that stores a project default and depends on modified-Enter reporting. | Add an unmodified project-default action before removing the accelerator. |

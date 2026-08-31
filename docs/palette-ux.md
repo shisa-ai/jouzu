@@ -30,7 +30,7 @@ Use the same key for the same class of action across Palette views:
 | `Enter` | Run the selected item's primary action, save an edit, or accept a confirmation. |
 | `Esc` | Cancel the active edit or confirmation. In browse mode, close the Palette. |
 | `Space` | Toggle a focused boolean field. Unavailable in a view with a live text field. |
-| `Tab` / `Shift+Tab` | Move between the peer groups of the view's visible tab row. |
+| `Tab` / `Shift+Tab` | Move forward or backward through the visible top-level Palette sections. |
 | Typing | Edit the focused text field or the view's visible search field. |
 
 Resolve selection, paging, confirmation, and cancellation through `KeybindingsManager` semantic actions. Pi defines no select-scope action for `Home`, `End`, `Tab`, `Space`, `←`, or `→`; match those keys directly and keep the meanings in this table.
@@ -41,7 +41,7 @@ Resolve selection, paging, confirmation, and cancellation through `KeybindingsMa
 
 `←`, `→`, `Home`, `End`, letters, digits, punctuation, and `Space` are claimed in this order:
 
-1. **A focused text field takes them.** A search field in browse mode and a text field in edit mode are focused text fields. They keep `←`, `→`, `Home`, `End`, and every printable character, including IME composition input.
+1. **A focused text field takes them.** A search field in search mode and a text field in edit mode keep `←`, `→`, `Home`, `End`, and every printable character, including IME composition input.
 2. **A focused non-text control takes `←` and `→`** to change a visible discrete choice.
 3. **The selected row takes `←` and `→`** to collapse and expand disclosure, when neither of the above applies.
 
@@ -58,7 +58,9 @@ When an item supports disclosure as well as a primary action, reserve `Enter` fo
 ### Navigation between views
 
 - The Palette holds one view at a time and switches in place. Opening the Palette again routes the existing instance and focuses it; it does not create a second panel.
-- A view switch while an edit is dirty must confirm or refuse. Discarding unsaved form input without asking is a defect.
+- The top-level tab row shows every registered section. `Tab` and `Shift+Tab` move through that row in browse mode.
+- A section switch while an edit is dirty must confirm or refuse. Discarding unsaved form input without asking is a defect.
+- Nested filters and choices are not tab rows. Change a visible choice with `←` and `→` when no text field holds focus.
 - `Esc` in browse mode closes the Palette. There is no separate root level to return to first.
 - Cancel restores the editor text that was present when the Palette opened.
 - `/catalogs` and `/model` route directly to a view. A route is registered only when its view exists.
@@ -68,7 +70,8 @@ When an item supports disclosure as well as a primary action, reserve `Enter` fo
 - Select the first actionable item when the view opens unless retained state identifies another valid item.
 - Preserve selection when data refreshes and the same item still exists.
 - Keep a visible non-color marker on the selected row. Background color may reinforce selection but cannot be the only indicator.
-- Keep search input active in searchable views while `↑` and `↓` move results, under the [key precedence](#key-precedence) above.
+- A searchable view starts in browse mode. Typing or `/` focuses search; `Esc` returns to browse mode before another `Esc` closes the Palette.
+- While search holds focus, `←`, `→`, `Home`, `End`, and printable input go to the search field. `↑` and `↓` continue to move results.
 - Report the result count against the total when a search or filter is narrowing the collection.
 - A search with no results says so and keeps the search text editable. It does not close, clear the query, or fall back to an unfiltered list.
 - Render an item that cannot be acted on as unavailable, with the reason, rather than hiding it or failing on `Enter`.
@@ -140,7 +143,8 @@ Hints describe available actions, not implementation details.
 Do not ship a Palette view with any of these behaviors:
 
 - `Tab` is the only way to reach a form field.
-- A view with no visible tab row advertises `Tab` navigation.
+- A view with no visible top-level tab row advertises `Tab` navigation.
+- A nested filter uses `Tab` instead of the top-level section row.
 - `Enter` expands an item when the expected primary action is edit or select.
 - An action is reachable only through a modified key, such as `Ctrl+Enter` to save.
 - A bare letter or `Space` is a shortcut in a mode whose text field is live.
@@ -168,6 +172,7 @@ An interaction change must include tests for the affected modes and transitions:
 6. Empty-state setup, empty search results, busy state, success, and representative failures render the intended controls.
 7. Credential tests prove that availability can be shown without rendering the value.
 8. Render tests cover 48 columns and mixed-width text; every line stays within the requested terminal columns.
-9. Hints contain the active primary action and omit inactive or internal controls.
+9. `Tab` and `Shift+Tab` move top-level sections in browse mode and cannot discard an edit.
+10. Hints contain the active primary action and omit inactive or internal controls.
 
 Run the focused interaction tests while iterating, then run `npm run check` and `npm test` before committing.

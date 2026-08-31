@@ -98,7 +98,7 @@ test("Catalogs settings uses Enter to edit and horizontal arrows for model discl
 	}
 });
 
-test("Catalogs settings opens empty setup directly and Esc leaves without writing", () => {
+test("Catalogs settings opens empty setup directly and Esc closes without writing", () => {
 	const { root, paths, context, closes } = setup();
 	try {
 		const component = new CatalogSettingsComponent({ context, paths, env: {} });

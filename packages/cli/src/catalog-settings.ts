@@ -16,7 +16,12 @@ import {
 	type RefreshCatalogOptions,
 	refreshCatalogSource,
 } from "./model-catalog-sync.js";
-import type { PaletteComponent, PaletteComponentContext, PaletteRoute } from "./palette.js";
+import {
+	type PaletteComponent,
+	type PaletteComponentContext,
+	type PaletteRoute,
+	renderPaletteTabs,
+} from "./palette.js";
 import type { JouzuPaths } from "./paths.js";
 import { detectBannerColorMode, renderBrandGradient } from "./presentation.js";
 import type { SessionUiStyles } from "./session-ui/index.js";
@@ -124,6 +129,10 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		if (route.view !== "settings") return;
 		this.reloadViews();
 		this.tui.requestRender();
+	}
+
+	allowsGlobalNavigation(): boolean {
+		return !this.form && !this.confirmRemove && !this.busy;
 	}
 
 	private selected(): SourceView | undefined {
@@ -490,6 +499,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		const hint = (value: string) =>
 			wrapTextWithAnsi(value, innerWidth).map((hintLine) => line(this.styles.apply("palette.hint", hintLine)));
 		const lines = [renderTerminalFrameTitle(title, width, frameOptions)];
+		if (!this.form && !this.confirmRemove) lines.push(line(renderPaletteTabs("settings", this.theme, this.styles)));
 		if (this.form) {
 			lines.push(...this.renderForm(width, line));
 		} else {
@@ -540,7 +550,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			}
 			lines.push(line());
 			lines.push(...hint("Enter edit · A add · R refresh · D remove"));
-			lines.push(...hint("Space enable · ←→ models · Ctrl+L Models · ↑↓ move · Esc close"));
+			lines.push(...hint("Space enable · ←→ models · Tab section · ↑↓ move · Esc close"));
 		}
 		if (this.message) {
 			const role = this.message.level === "error" ? "palette.message.error" : "palette.message.info";
