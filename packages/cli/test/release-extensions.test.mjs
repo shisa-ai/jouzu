@@ -1,12 +1,19 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { createJouzuCamoufoxExtension, ensureJouzuCamoufoxInstalled } from "../dist/camoufox-adapter.js";
+import {
+	createJouzuCamoufoxExtension,
+	ensureJouzuCamoufoxInstalled,
+	shouldDisableCamoufoxWebGl,
+	withJouzuCamoufoxLibraryPath,
+} from "../dist/camoufox-adapter.js";
 import {
 	consolidateReleaseToolConflicts,
 	inspectReleaseExtensions,
+	repairRuntimeDependencyRedirect,
 	suppressConfiguredReleaseResources,
 	usesReleaseExtensions,
 	withReleaseExtensionArguments,
@@ -28,7 +35,7 @@ const expectedExtensions = [
 	"pi-skill-dollar",
 	"pi-smart-fetch",
 ];
-const expectedCompatibility = ["better-sqlite3", "camoufox-js", "playwright-core"];
+const expectedCompatibility = ["better-sqlite3", "camoufox-js", "impit", "playwright-core"];
 
 function packageNames(records) {
 	return records.map((record) => record.name).sort();
@@ -43,7 +50,12 @@ test("the release manifest and bundle list contain the selected extension set", 
 		["@earendil-works/pi-coding-agent", "@earendil-works/pi-tui", ...expectedExtensions].sort(),
 	);
 	for (const record of manifest.compatibilityDependencies) assert.equal(record.bundled, false);
-	assert.equal(manifest.packages.find((record) => record.name === "pi-smart-fetch").engineOverride, ">=22.19.0");
+	const smartFetchExtension = manifest.packages.find((record) => record.name === "pi-smart-fetch");
+	assert.equal(smartFetchExtension.engineOverride, ">=22.19.0");
+	assert.deepEqual(smartFetchExtension.dependencyOverrides, { "wreq-js": "3.0.0" });
+	assert.deepEqual(manifest.runtimeDependencyRedirects, [
+		{ consumer: "camoufox-js", dependency: "impit", version: "0.11.0" },
+	]);
 	const camoufoxExtension = manifest.packages.find((record) => record.name === "@the-forge-flow/camoufox-pi");
 	assert.deepEqual(camoufoxExtension.dependencyOverrides, {});
 	assert.deepEqual(camoufoxExtension.dependencyRemovals, ["camoufox-js", "playwright-core"]);
@@ -84,6 +96,36 @@ test("the bundled native compatibility dependency executes a SQLite query", () =
 		assert.deepEqual(database.prepare("select 1 as value").get(), { value: 1 });
 	} finally {
 		database.close();
+	}
+});
+
+test("an incompatible nested native dependency redirects to the exact direct package", () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-native-redirect-"));
+	try {
+		const modules = join(root, "node_modules");
+		const consumer = join(modules, "camoufox-js");
+		const replacement = join(modules, "impit");
+		const nested = join(consumer, "node_modules", "impit");
+		mkdirSync(nested, { recursive: true });
+		mkdirSync(replacement, { recursive: true });
+		writeFileSync(join(consumer, "package.json"), JSON.stringify({ name: "camoufox-js", version: "0.12.0" }));
+		writeFileSync(
+			join(nested, "package.json"),
+			JSON.stringify({ name: "impit", version: "0.14.4", main: "index.cjs" }),
+		);
+		writeFileSync(join(nested, "index.cjs"), "module.exports = { incompatible: true };\n");
+		writeFileSync(
+			join(replacement, "package.json"),
+			JSON.stringify({ name: "impit", version: "0.11.0", main: "index.cjs" }),
+		);
+		writeFileSync(join(replacement, "index.cjs"), "module.exports = { compatible: true };\n");
+		const record = { consumer: "camoufox-js", dependency: "impit", version: "0.11.0" };
+		const roots = { "camoufox-js": consumer, impit: replacement };
+		assert.equal(repairRuntimeDependencyRedirect(record, roots), true);
+		assert.equal(existsSync(nested), false);
+		assert.equal(repairRuntimeDependencyRedirect(record, roots), false);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
 	}
 });
 
@@ -177,6 +219,41 @@ test("the Jouzu Camoufox installer awaits first-use download and verifies the re
 		async install() {
 			throw new Error("must not install");
 		},
+	});
+});
+
+test("Camoufox disables WebGL only for an incompatible native SQLite binding", async () => {
+	class Database {
+		close() {}
+	}
+	assert.equal(await shouldDisableCamoufoxWebGl(async () => ({ default: Database })), false);
+	assert.equal(
+		await shouldDisableCamoufoxWebGl(async () => {
+			throw new Error("/lib64/libc.so.6: version `GLIBC_2.34' not found");
+		}),
+		true,
+	);
+	await assert.rejects(
+		shouldDisableCamoufoxWebGl(async () => {
+			throw new Error("database is corrupt");
+		}),
+		/database is corrupt/u,
+	);
+});
+
+test("Camoufox scopes a compatibility library path to the browser child", () => {
+	const options = withJouzuCamoufoxLibraryPath(
+		{ env: { EXISTING: "kept" } },
+		{ JOUZU_CAMOUFOX_LIBRARY_PATH: "/opt/jouzu/lib", LD_LIBRARY_PATH: "/usr/local/lib", HOME: "/home/test" },
+	);
+	assert.deepEqual(options.env, {
+		JOUZU_CAMOUFOX_LIBRARY_PATH: "/opt/jouzu/lib",
+		LD_LIBRARY_PATH: "/opt/jouzu/lib:/usr/local/lib",
+		HOME: "/home/test",
+		EXISTING: "kept",
+	});
+	assert.deepEqual(withJouzuCamoufoxLibraryPath({ env: { EXISTING: "kept" } }, {}), {
+		env: { EXISTING: "kept" },
 	});
 });
 

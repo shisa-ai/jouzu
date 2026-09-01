@@ -13,6 +13,12 @@ Jouzu v0.1 is an npm developer preview. It expects an existing development envir
 
 Windows users should read [Windows prerequisites](docs/windows.md). Signed installers, portable archives, and bundled prerequisites are not part of v0.1.
 
+On older enterprise Linux distributions, install the GTK/X11/audio runtime
+libraries required by Firefox. If the system NSS is older than Camoufox requires,
+set `JOUZU_CAMOUFOX_LIBRARY_PATH` to a compatible NSS library directory; Jouzu
+applies it only to the browser child. Jouzu's selected smart-fetch and proxy
+native bindings support glibc 2.28 or newer.
+
 ## Install
 
 ```bash

@@ -1,4 +1,4 @@
-import { existsSync, lstatSync, readFileSync, realpathSync } from "node:fs";
+import { existsSync, lstatSync, readFileSync, realpathSync, renameSync, rmSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -38,10 +38,17 @@ export interface ReleaseCompatibilityDependency {
 	licenseEvidence: string;
 }
 
+export interface ReleaseRuntimeDependencyRedirect {
+	consumer: string;
+	dependency: string;
+	version: string;
+}
+
 export interface ReleaseExtensionManifest {
 	schemaVersion: 1;
 	packages: ReleaseExtensionPackage[];
 	compatibilityDependencies: ReleaseCompatibilityDependency[];
+	runtimeDependencyRedirects: ReleaseRuntimeDependencyRedirect[];
 }
 
 export interface ReleaseExtensionStatus {
@@ -61,7 +68,12 @@ const SAFE_RELATIVE_PATH = /^(?!\/)(?!.*(?:^|\/)\.\.(?:\/|$))[^\\\0]+$/u;
 function readManifest(): ReleaseExtensionManifest {
 	const path = new URL("./release-extensions.json", import.meta.url);
 	const value = JSON.parse(readFileSync(path, "utf8")) as Partial<ReleaseExtensionManifest>;
-	if (value.schemaVersion !== 1 || !Array.isArray(value.packages) || !Array.isArray(value.compatibilityDependencies)) {
+	if (
+		value.schemaVersion !== 1 ||
+		!Array.isArray(value.packages) ||
+		!Array.isArray(value.compatibilityDependencies) ||
+		!Array.isArray(value.runtimeDependencyRedirects)
+	) {
 		throw new Error("release extension manifest is invalid");
 	}
 	return value as ReleaseExtensionManifest;
@@ -300,6 +312,86 @@ export async function withReleaseExtensionConflictPolicy<T>(
 			resourcePrototype.getExtensions = originalGetExtensions;
 		}
 	}
+}
+
+const PACKAGE_NAME = /^(?:@[a-z0-9._~-]+\/)?[a-z0-9._~-]+$/u;
+
+function dependencyPath(root: string, name: string): string {
+	if (!PACKAGE_NAME.test(name)) throw new Error(`unsafe package name ${name}`);
+	return join(root, "node_modules", ...name.split("/"));
+}
+
+function resolveDependencyFromConsumer(consumerRoot: string, record: ReleaseRuntimeDependencyRedirect): string {
+	const consumerRequire = createRequire(join(consumerRoot, "package.json"));
+	let root: string;
+	try {
+		root = dirname(consumerRequire.resolve(`${record.dependency}/package.json`));
+	} catch {
+		root = packageRootFromEntry(record.dependency, consumerRequire.resolve(record.dependency));
+	}
+	validatePackageRoot({ name: record.dependency, version: record.version }, root);
+	consumerRequire(record.dependency);
+	return root;
+}
+
+/**
+ * Remove one incompatible nested native package only after the exact compatible
+ * direct dependency is present. The rename makes rollback possible if resolving
+ * or loading the replacement fails.
+ */
+export function repairRuntimeDependencyRedirect(
+	record: ReleaseRuntimeDependencyRedirect,
+	packageRoots: Record<string, string>,
+): boolean {
+	const consumerRoot = packageRoots[record.consumer];
+	const replacementRoot = packageRoots[record.dependency];
+	if (!consumerRoot) throw new Error(`runtime compatibility consumer ${record.consumer} is unavailable`);
+	if (!replacementRoot) throw new Error(`runtime compatibility dependency ${record.dependency} is unavailable`);
+	validatePackageRoot({ name: record.dependency, version: record.version }, replacementRoot);
+
+	const nestedRoot = dependencyPath(consumerRoot, record.dependency);
+	if (!existsSync(nestedRoot)) {
+		resolveDependencyFromConsumer(consumerRoot, record);
+		return false;
+	}
+	const stat = lstatSync(nestedRoot);
+	if (!stat.isDirectory() || stat.isSymbolicLink()) {
+		throw new Error(`${record.consumer} has an unsafe nested ${record.dependency} entry`);
+	}
+	const nestedMetadata = JSON.parse(readFileSync(join(nestedRoot, "package.json"), "utf8")) as {
+		name?: unknown;
+		version?: unknown;
+	};
+	if (nestedMetadata.name !== record.dependency) {
+		throw new Error(`${record.consumer} nested dependency identifies as ${String(nestedMetadata.name)}`);
+	}
+	if (nestedMetadata.version === record.version) {
+		resolveDependencyFromConsumer(consumerRoot, record);
+		return false;
+	}
+
+	const backupRoot = `${nestedRoot}.jouzu-compat-${process.pid}`;
+	if (existsSync(backupRoot)) throw new Error(`stale compatibility backup exists at ${backupRoot}`);
+	renameSync(nestedRoot, backupRoot);
+	try {
+		resolveDependencyFromConsumer(consumerRoot, record);
+		rmSync(backupRoot, { recursive: true, force: true });
+		return true;
+	} catch (error) {
+		if (existsSync(nestedRoot)) rmSync(nestedRoot, { recursive: true, force: true });
+		renameSync(backupRoot, nestedRoot);
+		throw error;
+	}
+}
+
+export function ensureReleaseRuntimeCompatibility(status = inspectReleaseExtensions()): string[] {
+	const repaired: string[] = [];
+	for (const record of status.manifest.runtimeDependencyRedirects) {
+		if (repairRuntimeDependencyRedirect(record, status.resolvedPackageRoots)) {
+			repaired.push(`${record.consumer} -> ${record.dependency}@${record.version}`);
+		}
+	}
+	return repaired;
 }
 
 export function usesReleaseExtensions(args: string[]): boolean {

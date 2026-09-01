@@ -39,6 +39,12 @@
 		"@the-forge-flow/camoufox-pi": {
 			"camoufox-js": "0.12.0",
 			"playwright-core": "1.60.0"
+		},
+		"camoufox-js": {
+			"impit": "0.11.0"
+		},
+		"pi-smart-fetch": {
+			"wreq-js": "3.0.0"
 		}
 	},
 	"devDependencies": {

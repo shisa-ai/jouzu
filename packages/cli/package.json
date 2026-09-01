@@ -52,6 +52,7 @@
 		"@vanillagreen/pi-background-tasks": "2.0.0",
 		"better-sqlite3": "13.0.1",
 		"camoufox-js": "0.12.0",
+		"impit": "0.11.0",
 		"pi-code-previews": "0.1.36",
 		"pi-multiloop": "git+https://github.com/lhl/pi-multiloop.git#e17a58737451e8c0e91c0517a96e592097fbb694",
 		"pi-schedule-prompt": "0.4.1",
@@ -63,6 +64,12 @@
 		"@the-forge-flow/camoufox-pi": {
 			"camoufox-js": "0.12.0",
 			"playwright-core": "1.60.0"
+		},
+		"camoufox-js": {
+			"impit": "0.11.0"
+		},
+		"pi-smart-fetch": {
+			"wreq-js": "3.0.0"
 		}
 	},
 	"bundleDependencies": [

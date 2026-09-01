@@ -32,6 +32,7 @@ import {
 } from "./profile-manager.js";
 import { loadBundledProfile } from "./profiles.js";
 import {
+	ensureReleaseRuntimeCompatibility,
 	inspectReleaseExtensions,
 	usesReleaseExtensions,
 	withReleaseExtensionArguments,
@@ -315,6 +316,7 @@ async function runCli(args: string[]): Promise<void> {
 		onScopedModelsCommand: () => modelPicker.handleScopedModelsCommand(),
 	});
 	const releaseExtensionStatus = inspectReleaseExtensions();
+	ensureReleaseRuntimeCompatibility(releaseExtensionStatus);
 	const piArgs = withReleaseExtensionArguments(parsed.args, releaseExtensionStatus);
 	const startPi = () =>
 		pi.main(piArgs, {

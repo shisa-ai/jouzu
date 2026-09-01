@@ -172,6 +172,17 @@ for (const directory of packageDirectories) {
 		if (smartFetchPackage.engines?.node !== smartFetchRecord?.engineOverride) {
 			throw new Error("bundled smart-fetch engine repair differs from the release manifest");
 		}
+		for (const [name, version] of Object.entries(smartFetchRecord?.dependencyOverrides ?? {})) {
+			if (smartFetchPackage.dependencies?.[name] !== version) {
+				throw new Error(`bundled smart-fetch ${name} override differs from the release manifest`);
+			}
+			const dependencyPackage = JSON.parse(
+				readFileSync(join(directory, "node_modules", "pi-smart-fetch", "node_modules", name, "package.json"), "utf8"),
+			);
+			if (dependencyPackage.version !== version) {
+				throw new Error(`bundled smart-fetch resolved ${name}@${dependencyPackage.version} instead of ${version}`);
+			}
+		}
 		if (
 			packed.files.some(
 				(file) =>
