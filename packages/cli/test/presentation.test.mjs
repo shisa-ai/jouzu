@@ -6,8 +6,8 @@ import {
 	createJouzuPresentationExtension,
 	detectBannerColorMode,
 	isInteractivePiStartup,
-	JOUZU_CORE_CAPABILITY_GUIDANCE,
 	JOUZU_DEFAULT_GUIDANCE,
+	JOUZU_REPOSITORY_WORK_GUIDANCE,
 	JOUZU_USER_COMMUNICATION_GUIDANCE,
 	renderBannerLines,
 	renderBrandGradient,
@@ -80,17 +80,26 @@ Guidelines:
 	assert.equal(brandDefaultSystemPrompt("You are a reviewer."), "You are a reviewer.");
 	assert.match(expected, /Available tools:\n- read: Read file contents\n- bg_task:/);
 	assert.match(expected, /Do not invent acronyms or use unexplained jargon/);
-	assert.match(expected, /Load the `jouzu-clear-writing` skill for documentation/);
+	assert.match(expected, /Use `jouzu-clear-writing` for documentation/);
+	assert.match(expected, /Work directly by default/);
+	assert.match(expected, /Inspect relevant files before editing/);
+	assert.match(expected, /Distinguish evidence from assumptions/);
+	assert.match(expected, /make the smallest coherent change/);
+	assert.match(expected, /run the narrowest deterministic check/);
+	assert.match(expected, /Report untested limitations honestly/);
+	assert.match(expected, /Use task tracking only for work with three or more distinct steps/);
+	assert.match(expected, /do not combine workflow systems/);
+	assert.match(expected, /exact listed `<location>` once/);
+	assert.match(expected, /never search guessed package paths/);
 	assert.doesNotMatch(JOUZU_DEFAULT_GUIDANCE, /be concise/i);
-	assert.match(expected, /Load the `jouzu-core` skill for repository work/);
-	assert.match(expected, /do not combine workflow mechanisms/);
-	assert.equal(JOUZU_DEFAULT_GUIDANCE, `${JOUZU_USER_COMMUNICATION_GUIDANCE}\n${JOUZU_CORE_CAPABILITY_GUIDANCE}`);
-	assert.ok(JOUZU_DEFAULT_GUIDANCE.length <= 600);
+	assert.doesNotMatch(JOUZU_DEFAULT_GUIDANCE, /jouzu-core/);
+	assert.equal(JOUZU_DEFAULT_GUIDANCE, `${JOUZU_USER_COMMUNICATION_GUIDANCE}\n${JOUZU_REPOSITORY_WORK_GUIDANCE}`);
+	assert.ok(JOUZU_DEFAULT_GUIDANCE.length <= 900);
 
 	const routingOptions = {
 		customPrompt: undefined,
 		selectedTools: ["read", "bg_task", "web_fetch"],
-		skills: [{ name: "jouzu-core" }, { name: "jouzu-clear-writing" }],
+		skills: [{ name: "jouzu-clear-writing" }],
 	};
 	const routing = buildCapabilityRoutingGuidance(routingOptions);
 	const { handlers } = installExtension();
@@ -104,16 +113,16 @@ Guidelines:
 test("generates stable capability routing from only active tools and skills", () => {
 	const options = {
 		selectedTools: ["read", "grep", "web_fetch", "TaskCreate", "bg_task"],
-		skills: [{ name: "jouzu-core" }, { name: "jouzu-clear-writing" }],
+		skills: [{ name: "jouzu-clear-writing" }],
 	};
 	const guidance = buildCapabilityRoutingGuidance(options);
 	assert.equal(buildCapabilityRoutingGuidance(options), guidance);
 	assert.match(guidance, /generated from this session's active tools and skills/);
-	assert.match(guidance, /`read`, `grep`/);
+	assert.doesNotMatch(guidance, /`read`|`grep`/);
 	assert.match(guidance, /`web_fetch`/);
 	assert.match(guidance, /`TaskCreate`/);
 	assert.match(guidance, /`bg_task`/);
-	assert.match(guidance, /load `jouzu-clear-writing`/);
+	assert.match(guidance, /read `jouzu-clear-writing` at its listed `<location>`/);
 	assert.doesNotMatch(guidance, /vcc_recall/);
 	assert.doesNotMatch(guidance, /tff-/);
 	assert.doesNotMatch(guidance, /schedule_prompt/);

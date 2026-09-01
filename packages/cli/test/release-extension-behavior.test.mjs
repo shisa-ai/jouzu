@@ -282,11 +282,13 @@ test(
 			const skillInput = await invokeHandlers(
 				extensions,
 				"input",
-				{ type: "input", text: "$jouzu-core check", images: [], source: "rpc" },
+				{ type: "input", text: "$jouzu-clear-writing check", images: [], source: "rpc" },
 				harness.ctx,
 			);
 			assert.ok(
-				skillInput.some((result) => result?.action === "transform" && result.text === "/skill:jouzu-core check"),
+				skillInput.some(
+					(result) => result?.action === "transform" && result.text === "/skill:jouzu-clear-writing check",
+				),
 			);
 			assert.ok(harness.autocompleteProviders.length > 0);
 

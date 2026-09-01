@@ -111,7 +111,6 @@ function assertPackedSurfaces(installedCli, probe, cwd, env, profile) {
 		"pi-vcc",
 		"schedule-prompt",
 		"skill:jouzu-clear-writing",
-		"skill:jouzu-core",
 		"skill:jouzu-source-check",
 		"skill:multiloop",
 		"skill:pi-goal",
@@ -120,6 +119,7 @@ function assertPackedSurfaces(installedCli, probe, cwd, env, profile) {
 	]) {
 		assert.ok(surfaces.commands.includes(command), `${profile}: missing command ${command}`);
 	}
+	assert.equal(surfaces.commands.includes("skill:jouzu-core"), false);
 	assert.equal(rpcResponse(result.stdout, "probe").success, true);
 	assert.equal(rpcResponse(result.stdout, "commands").success, true);
 }

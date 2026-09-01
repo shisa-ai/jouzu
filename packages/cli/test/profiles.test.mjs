@@ -45,12 +45,7 @@ test("bundled Core and JA profiles resolve exact ordered assets", () => {
 	const ja = loadBundledProfile("ja");
 	assert.deepEqual(
 		core.assets.map((asset) => asset.target),
-		[
-			"prompts/jouzu-review.md",
-			"skills/jouzu-clear-writing/SKILL.md",
-			"skills/jouzu-core/SKILL.md",
-			"skills/jouzu-source-check/SKILL.md",
-		],
+		["prompts/jouzu-review.md", "skills/jouzu-clear-writing/SKILL.md", "skills/jouzu-source-check/SKILL.md"],
 	);
 	assert.deepEqual(
 		ja.assets.map((asset) => asset.target),
@@ -58,21 +53,17 @@ test("bundled Core and JA profiles resolve exact ordered assets", () => {
 			"APPEND_SYSTEM.md",
 			"prompts/jouzu-review.md",
 			"skills/jouzu-clear-writing/SKILL.md",
-			"skills/jouzu-core/SKILL.md",
 			"skills/jouzu-source-check/SKILL.md",
 		],
 	);
-	assert.equal(core.manifestSha256, "437111942328d86fc9d32ed95e8f9dab702f97c8ddff8ac89721811bf073a82f");
-	assert.equal(ja.manifestSha256, "99c9f7b38b7fc211e075c78cef302cd971fd39f8d47d62ada55e7e7fd9f489c8");
+	assert.equal(core.manifestSha256, "5568902db7c7f53c73e7e6351a69b5147aedbc19fbd3d24e718080c8fa37465d");
+	assert.equal(ja.manifestSha256, "4167d6897bf5743aabf7da3f7075917302063a0896b337143e0e42185368c4a6");
 });
 
 test("bundled skills declare bounded public workflows", () => {
 	const core = loadBundledProfile("core");
 	const clearWriting = core.assets
 		.find((asset) => asset.target === "skills/jouzu-clear-writing/SKILL.md")
-		?.bytes.toString("utf8");
-	const coreWorkflow = core.assets
-		.find((asset) => asset.target === "skills/jouzu-core/SKILL.md")
 		?.bytes.toString("utf8");
 	const sourceCheck = core.assets
 		.find((asset) => asset.target === "skills/jouzu-source-check/SKILL.md")
@@ -84,10 +75,10 @@ test("bundled skills declare bounded public workflows", () => {
 	assert.match(clearWriting ?? "", /Put prerequisites, warnings, and conditions before the actions they govern/);
 	assert.match(clearWriting ?? "", /do not transfer English style rules mechanically/);
 	assert.doesNotMatch(clearWriting ?? "", /ASD-STE100|[“”]/);
-	assert.match(coreWorkflow ?? "", /^---\nname: jouzu-core\n/);
-	assert.match(coreWorkflow ?? "", /Work directly by default/);
-	assert.match(coreWorkflow ?? "", /Validate the result/);
-	assert.doesNotMatch(coreWorkflow ?? "", /vcc_recall|web_fetch|TaskCreate|multiloop|schedule_prompt/);
+	assert.equal(
+		core.assets.some((asset) => asset.target === "skills/jouzu-core/SKILL.md"),
+		false,
+	);
 	assert.match(sourceCheck ?? "", /^---\nname: jouzu-source-check\n/);
 	assert.match(sourceCheck ?? "", /Do not modify files, register records, commit, or publish unless the user asks\./);
 	assert.match(sourceCheck ?? "", /Repeated summaries of the same source are not independent\./);

@@ -72,12 +72,6 @@ test("profile planning is non-mutating and apply converges", () => {
 				},
 				{
 					type: "create",
-					target: "skills/jouzu-core/SKILL.md",
-					reason: "missing",
-					desiredSha256: profile.assets.find((asset) => asset.target === "skills/jouzu-core/SKILL.md").sha256,
-				},
-				{
-					type: "create",
 					target: "skills/jouzu-source-check/SKILL.md",
 					reason: "missing",
 					desiredSha256: profile.assets.find((asset) => asset.target === "skills/jouzu-source-check/SKILL.md").sha256,
@@ -156,10 +150,34 @@ test("matching unmanaged files are adopted without rewriting", () => {
 			readFileSync(join(fixture.paths.agentDir, ...asset.target.split("/"))),
 		);
 		const plan = planProfile(profile, fixture.paths, "0.1.0");
-		assert.equal(plan.actions.filter((action) => action.type === "adopt").length, 4);
+		assert.equal(plan.actions.filter((action) => action.type === "adopt").length, 3);
 		applyProfile(profile, fixture.paths, "0.1.0");
 		const after = profile.assets.map((asset) => readFileSync(join(fixture.paths.agentDir, ...asset.target.split("/"))));
 		assert.deepEqual(after, before);
+	} finally {
+		cleanup(fixture.root);
+	}
+});
+
+test("upgrading Core backs up and retires the prior managed repository skill", () => {
+	const fixture = temporary();
+	try {
+		const core = loadBundledProfile("core");
+		const priorBytes = Buffer.from("prior repository skill\n");
+		const priorTarget = "skills/jouzu-core/SKILL.md";
+		const prior = {
+			...core,
+			version: 7,
+			manifestSha256: "c".repeat(64),
+			assets: [...core.assets, { target: priorTarget, sha256: hash(priorBytes), bytes: priorBytes }],
+		};
+		applyProfile(prior, fixture.paths, "0.1.4");
+		const plan = planProfile(core, fixture.paths, "0.1.4");
+		assert.equal(plan.actions.find((action) => action.target === priorTarget)?.type, "delete");
+		const result = applyProfile(core, fixture.paths, "0.1.4");
+		assert.equal(existsSync(join(fixture.paths.agentDir, ...priorTarget.split("/"))), false);
+		assert.ok(result.backupDir);
+		assert.deepEqual(readFileSync(join(result.backupDir, ...priorTarget.split("/"))), priorBytes);
 	} finally {
 		cleanup(fixture.root);
 	}

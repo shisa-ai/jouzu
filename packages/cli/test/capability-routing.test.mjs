@@ -6,7 +6,6 @@ import { buildCapabilityRoutingGuidance, JOUZU_DEFAULT_GUIDANCE } from "../dist/
 
 const root = join(import.meta.dirname, "../../..");
 const corpus = JSON.parse(readFileSync(join(root, "evals/core-capability-routing.json"), "utf8"));
-const coreSkill = readFileSync(join(root, "packages/cli/profiles/core/assets/jouzu-core-skill.md"), "utf8");
 
 const expectedCaseIds = [
 	"simple-repository-change",
@@ -57,16 +56,26 @@ test("Core capability routing corpus covers direct, context, web, and workflow c
 	}
 });
 
-test("Core keeps execution discipline on demand and generates bounded decision-time routing", () => {
-	assert.ok(Buffer.byteLength(coreSkill, "utf8") <= corpus.budgets.coreSkillBytes);
+test("Core keeps repository discipline inline and generates bounded decision-time routing", () => {
 	assert.ok(JOUZU_DEFAULT_GUIDANCE.length <= corpus.budgets.defaultGuidanceCharacters);
-	assert.match(coreSkill, /Work directly by default/);
-	assert.match(coreSkill, /Use only tools and skills listed in the current session\./);
-	assert.match(coreSkill, /Do not add task tracking merely to make the work appear more thorough\./);
-	assert.match(coreSkill, /Workflow token totals and elapsed-time counters measure cumulative work\./);
-	assert.match(coreSkill, /Session recall searches only the current session and cannot trigger compaction\./);
-	assert.doesNotMatch(coreSkill, /infinite context/i);
-	assert.doesNotMatch(coreSkill, /\b(?:removed|retired|obsolete|superseded|unavailable)\b/i);
+	for (const phrase of [
+		"Work directly by default",
+		"Follow repository instructions and preserve user-owned work",
+		"Inspect relevant files before editing",
+		"Distinguish evidence from assumptions",
+		"make the smallest coherent change",
+		"run the narrowest deterministic check",
+		"Report untested limitations honestly",
+		"Use task tracking only for work with three or more distinct steps",
+		"do not combine workflow systems",
+		"exact listed `<location>` once",
+		"never search guessed package paths",
+		"If a skill file is unavailable, continue without it",
+	]) {
+		assert.match(JOUZU_DEFAULT_GUIDANCE, new RegExp(phrase));
+	}
+	assert.doesNotMatch(JOUZU_DEFAULT_GUIDANCE, /jouzu-core/);
+	assert.doesNotMatch(JOUZU_DEFAULT_GUIDANCE, /\b(?:removed|retired|obsolete|superseded)\b/i);
 
 	const routing = buildCapabilityRoutingGuidance({
 		selectedTools: [
@@ -93,6 +102,7 @@ test("Core keeps execution discipline on demand and generates bounded decision-t
 			{ name: "jouzu-clear-writing" },
 		],
 	});
+	assert.doesNotMatch(routing, /Repository files and commands|`read`|`grep`|`find`|`ls`/);
 	for (const phrase of [
 		"vcc_recall",
 		"web_fetch",
@@ -109,4 +119,8 @@ test("Core keeps execution discipline on demand and generates bounded decision-t
 	]) {
 		assert.match(routing, new RegExp(phrase));
 	}
+	assert.match(routing, /read `jouzu-source-check` at its listed `<location>`/);
+	assert.match(routing, /read `pi-goal` at its listed `<location>`/);
+	assert.match(routing, /read `multiloop` at its listed `<location>`/);
+	assert.match(routing, /read `jouzu-clear-writing` at its listed `<location>`/);
 });

@@ -1,16 +1,15 @@
 {
   "schemaVersion": 1,
-  "description": "Deterministic prompts for evaluating Core capability selection. Expected entries are positive routes; avoid entries identify unnecessary workflow machinery.",
+  "description": "Deterministic prompts for evaluating inline Core guidance and capability selection. Expected entries are positive routes; avoid entries identify unnecessary workflow machinery.",
   "budgets": {
-    "coreSkillBytes": 7000,
-    "defaultGuidanceCharacters": 600
+    "defaultGuidanceCharacters": 900
   },
   "cases": [
     {
       "id": "simple-repository-change",
       "prompt": "Fix the misspelled option in src/config.ts and run its focused test.",
       "expect": {
-        "skills": ["jouzu-core"],
+        "skills": [],
         "tools": ["read"],
         "behaviors": ["work-directly"]
       },
@@ -114,7 +113,7 @@
       "id": "finite-multi-step-work",
       "prompt": "Implement the parser change, add fixtures, update the CLI reference, and run the affected checks.",
       "expect": {
-        "skills": ["jouzu-core"],
+        "skills": [],
         "tools": ["TaskCreateMany", "TaskUpdate"],
         "behaviors": ["track-distinct-dependent-steps"]
       },
@@ -179,7 +178,7 @@
       "id": "durable-user-facing-documentation",
       "prompt": "Draft the public migration guide for this implemented configuration change.",
       "expect": {
-        "skills": ["jouzu-clear-writing", "jouzu-core"],
+        "skills": ["jouzu-clear-writing"],
         "tools": ["read"],
         "behaviors": ["ground-prose-in-implementation"]
       },
