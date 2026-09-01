@@ -4,7 +4,13 @@ import { CatalogSettingsComponent } from "./catalog-settings.js";
 import { formatEffectiveKeybinding, formatEffectiveKeyPair } from "./keybinding-hints.js";
 import type { CatalogModelOffering, ModelCatalogDocument } from "./model-catalog.js";
 import { type ActiveModelCatalog, loadActiveModelCatalogs } from "./model-catalog-sync.js";
-import { buildPickerRows, type PickerFilter, type PickerModel, type PickerRow } from "./model-picker-ranking.js";
+import {
+	buildPickerRows,
+	modelContextFit,
+	type PickerFilter,
+	type PickerModel,
+	type PickerRow,
+} from "./model-picker-ranking.js";
 import {
 	deriveProjectKey,
 	emptyModelPickerState,
@@ -56,6 +62,7 @@ export interface ModelPickerComponentOptions {
 	initialFilter?: PickerFilter;
 	getRows(query: string, filter: PickerFilter): PickerRow[];
 	onSelect(row: PickerRow, scope: "session" | "project"): Promise<void>;
+	onCompactAndSelect(row: PickerRow, scope: "session" | "project"): Promise<void>;
 	onToggleFavorite(row: PickerRow): void;
 	onFilterChange?(filter: PickerFilter): void;
 	onRefresh?(signal: AbortSignal): Promise<void>;
@@ -90,6 +97,38 @@ function modelDisplay(model: PickerModel): { provider: string; modelId: string; 
 	);
 }
 
+export function compactContextForModelSwitch(
+	ctx: Pick<ExtensionContext, "compact" | "getContextUsage">,
+	target: PickerModel,
+): Promise<void> {
+	if (modelContextFit(target, ctx.getContextUsage()?.tokens) !== "too-small") return Promise.resolve();
+	const display = modelDisplay(target);
+	return new Promise((resolve, reject) => {
+		try {
+			ctx.compact({
+				// Bundled pi-vcc treats keep:0 as an explicit request to compile the
+				// complete active transcript into the brief before a smaller-model switch.
+				customInstructions: "keep:0",
+				onComplete: (result) => {
+					const activeTokens = ctx.getContextUsage()?.tokens ?? result.estimatedTokensAfter;
+					if (modelContextFit(target, activeTokens) === "too-small") {
+						reject(
+							new Error(
+								`Compaction completed, but the active context still does not fit ${display.provider}/${display.modelId}. Choose a larger-context model.`,
+							),
+						);
+						return;
+					}
+					resolve();
+				},
+				onError: (error) => reject(new Error(`Compaction failed: ${error.message}`)),
+			});
+		} catch (error) {
+			reject(new Error(`Compaction failed: ${error instanceof Error ? error.message : String(error)}`));
+		}
+	});
+}
+
 export class ModelPickerComponent implements PaletteComponent, Focusable {
 	private readonly tui: TUI;
 	private readonly theme: Theme;
@@ -99,6 +138,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	private readonly close: () => void;
 	private readonly getRows: (query: string, filter: PickerFilter) => PickerRow[];
 	private readonly onSelect: (row: PickerRow, scope: "session" | "project") => Promise<void>;
+	private readonly onCompactAndSelect: (row: PickerRow, scope: "session" | "project") => Promise<void>;
 	private readonly onToggleFavorite: (row: PickerRow) => void;
 	private readonly onFilterChange?: (filter: PickerFilter) => void;
 	private readonly searchInput = new Input();
@@ -108,6 +148,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	private filterCounts: Record<PickerFilter, number> = { recent: 0, favorite: 0, all: 0 };
 	private selectedIndex = 0;
 	private busy = false;
+	private compactConfirmation?: { modelKey: string; scope: "session" | "project" };
 	private message?: { level: "error" | "info"; text: string };
 	private refreshController?: AbortController;
 	private disposed = false;
@@ -124,6 +165,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		this.close = options.context.close;
 		this.getRows = options.getRows;
 		this.onSelect = options.onSelect;
+		this.onCompactAndSelect = options.onCompactAndSelect;
 		this.onToggleFavorite = options.onToggleFavorite;
 		this.onFilterChange = options.onFilterChange;
 		this.filter = options.initialFilter ?? "recent";
@@ -160,7 +202,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	}
 
 	allowsGlobalNavigation(): boolean {
-		return !this.busy;
+		return !this.busy && !this.compactConfirmation;
 	}
 
 	/**
@@ -219,6 +261,8 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	private moveSelection(delta: number): void {
 		if (this.rows.length === 0) return;
 		this.selectedIndex = Math.max(0, Math.min(this.rows.length - 1, this.selectedIndex + delta));
+		this.compactConfirmation = undefined;
+		this.message = undefined;
 		this.tui.requestRender();
 	}
 
@@ -226,6 +270,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		const index = FILTERS.indexOf(this.filter);
 		this.filter = FILTERS[(index + delta + FILTERS.length) % FILTERS.length];
 		this.selectedIndex = 0;
+		this.compactConfirmation = undefined;
 		this.message = undefined;
 		try {
 			this.onFilterChange?.(this.filter);
@@ -239,27 +284,19 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		this.tui.requestRender();
 	}
 
-	private runSelection(scope: "session" | "project"): void {
-		const row = this.rows[this.selectedIndex];
-		if (!row || this.busy) return;
-		if (!row.model.available) {
-			this.message = { level: "error", text: "This favorite is unavailable in the active model inventory." };
-			this.tui.requestRender();
-			return;
-		}
-		if (row.contextFit === "too-small") {
-			this.message = {
-				level: "error",
-				text: "The active context does not fit this model. Compact or choose a larger-context model.",
-			};
-			this.tui.requestRender();
-			return;
-		}
+	private executeSelection(row: PickerRow, scope: "session" | "project", compactFirst: boolean): void {
+		this.compactConfirmation = undefined;
 		this.busy = true;
 		const display = modelDisplay(row.model);
-		this.message = { level: "info", text: `Selecting ${display.provider}/${display.modelId}…` };
+		this.message = {
+			level: "info",
+			text: compactFirst
+				? `Compacting before switching to ${display.provider}/${display.modelId}…`
+				: `Selecting ${display.provider}/${display.modelId}…`,
+		};
 		this.tui.requestRender();
-		void this.onSelect(row, scope)
+		const selection = compactFirst ? this.onCompactAndSelect(row, scope) : this.onSelect(row, scope);
+		void selection
 			.then(() => this.close())
 			.catch((error) => {
 				if (this.disposed) return;
@@ -270,6 +307,39 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 				};
 				this.tui.requestRender();
 			});
+	}
+
+	private runSelection(scope: "session" | "project"): void {
+		const row = this.rows[this.selectedIndex];
+		if (!row || this.busy) return;
+		if (!row.model.available) {
+			this.message = { level: "error", text: "This favorite is unavailable in the active model inventory." };
+			this.tui.requestRender();
+			return;
+		}
+		if (row.contextFit === "too-small") {
+			const display = modelDisplay(row.model);
+			this.compactConfirmation = { modelKey: modelReferenceKey(row.model), scope };
+			this.message = {
+				level: "info",
+				text: `Compact the active context and switch to ${display.provider}/${display.modelId}?`,
+			};
+			this.tui.requestRender();
+			return;
+		}
+		this.executeSelection(row, scope, false);
+	}
+
+	private confirmCompaction(): void {
+		const confirmation = this.compactConfirmation;
+		const row = this.rows[this.selectedIndex];
+		if (!confirmation || !row || modelReferenceKey(row.model) !== confirmation.modelKey) {
+			this.compactConfirmation = undefined;
+			this.message = undefined;
+			this.tui.requestRender();
+			return;
+		}
+		this.executeSelection(row, confirmation.scope, true);
 	}
 
 	private toggleFavorite(): void {
@@ -291,8 +361,13 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	}
 
 	handleInput(data: string): void {
+		if (this.busy) return;
 		if (this.keybindings.matches(data, "tui.select.cancel")) {
-			if (this.searchFocused) {
+			if (this.compactConfirmation) {
+				this.compactConfirmation = undefined;
+				this.message = undefined;
+				this.tui.requestRender();
+			} else if (this.searchFocused) {
 				this.searchFocused = false;
 				this.message = undefined;
 				this.syncSearchFocus();
@@ -302,7 +377,10 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			}
 			return;
 		}
-		if (this.busy) return;
+		if (this.compactConfirmation) {
+			if (this.keybindings.matches(data, "tui.select.confirm")) this.confirmCompaction();
+			return;
+		}
 		if (this.keybindings.matches(data, "tui.select.up")) {
 			this.moveSelection(-1);
 			return;
@@ -385,7 +463,8 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	}
 
 	render(width: number): string[] {
-		const title = `${this.wordmark} ${this.theme.bold(this.styles.apply("palette.title", "· Models"))} ${this.styles.apply("palette.count", `${this.rows.length}/${this.filterCounts.all}`)}`;
+		const mode = this.compactConfirmation ? " · Confirm" : "";
+		const title = `${this.wordmark} ${this.theme.bold(this.styles.apply("palette.title", `· Models${mode}`))} ${this.styles.apply("palette.count", `${this.rows.length}/${this.filterCounts.all}`)}`;
 		if (width < 12) return [fitTerminalText(title, Math.max(1, width))];
 		const innerWidth = Math.max(1, width - 4);
 		const terminalRows = Number(this.tui.terminal?.rows ?? 24);
@@ -442,7 +521,9 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		const confirm = formatEffectiveKeybinding(this.keybindings, "tui.select.confirm");
 		const cancel = formatEffectiveKeybinding(this.keybindings, "tui.select.cancel");
 		const move = formatEffectiveKeyPair(this.keybindings, "tui.select.up", "tui.select.down");
-		if (this.searchFocused) {
+		if (this.compactConfirmation) {
+			lines.push(...hint(`${confirm} compact and switch · ${cancel} cancel`));
+		} else if (this.searchFocused) {
 			lines.push(...hint(`${confirm} session · Shift+Enter project default · ${move} move`));
 			lines.push(...hint(`Type search · ←→ cursor · Tab section · ${cancel} browse`));
 		} else {
@@ -773,6 +854,17 @@ export function createJouzuModelPicker(
 										throw new Error(`No authentication for ${row.model.provider}/${row.model.modelId}`);
 									if (scope === "project") state = store.setProjectDefault(row.model, projectKey);
 								},
+								onCompactAndSelect: async (row, scope) => {
+									if (!ctx.isIdle()) {
+										throw new Error("Wait for the active model call to finish, then compact and switch.");
+									}
+									const model = ctx.modelRegistry.find(row.model.provider, row.model.modelId);
+									if (!model) throw new Error(`Model is unavailable: ${row.model.provider}/${row.model.modelId}`);
+									await compactContextForModelSwitch(ctx, row.model);
+									if (!(await activateModel(model)))
+										throw new Error(`No authentication for ${row.model.provider}/${row.model.modelId}`);
+									if (scope === "project") state = store.setProjectDefault(row.model, projectKey);
+								},
 								onToggleFavorite: (row) => {
 									state = store.toggleFavorite(row.model);
 								},
@@ -832,7 +924,7 @@ export function createJouzuModelPicker(
 			ctx.ui.notify(
 				availableRows.length === 0
 					? "No favorite models are available in the current model scope."
-					: "No favorite model can fit the active context. Open Models with Ctrl+L for details.",
+					: "No favorite model can fit the active context. Open Models with Ctrl+L to compact and switch.",
 				"warning",
 			);
 			return true;

@@ -6,6 +6,7 @@
 - Add the optional model catalog and `jouzu catalog status|refresh|accept|validate|conformance` commands, with strict duplicate-key and credential rejection, bounded streaming refresh, account-partitioned private cache, ETag validation, mass-change quarantine, and last-known-good retention.
 - Add separate opt-in first-run imports for stock Pi `models.json` and `auth.json`; both default to no, preserve source and destination files, and record a local receipt.
 - Restore the last Models filter used when the picker opens again.
+- Compare model-switch context fit against a 4,096-token safety margin instead of the model's maximum output cap, and offer confirmed compaction before switching to a model whose context is too small.
 - Keep queued model switches responsive during active calls, advance repeated `Ctrl+P` presses through queued favorites, and avoid floating Palette overlays on terminals that render inline images above text.
 - Preserve JSON `__proto__` as an own property during catalog validation, report picker-state and cached-catalog warnings independently, cap response bodies while streaming, and make model-picker tests independent of the developer's terminal.
 - Default isolated Jouzu settings to quiet startup while preserving explicit settings and `--verbose` resource output.

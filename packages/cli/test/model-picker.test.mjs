@@ -10,6 +10,7 @@ import {
 	catalogModelReference,
 	catalogPickerModel,
 	catalogPickerModels,
+	compactContextForModelSwitch,
 	createJouzuModelPicker,
 	ModelPickerComponent,
 } from "../dist/model-picker.js";
@@ -167,7 +168,7 @@ function rows() {
 }
 
 function createComponent(overrides = {}) {
-	const calls = { close: 0, selected: [], favorites: [], filters: [], renders: 0 };
+	const calls = { close: 0, selected: [], compacted: [], favorites: [], filters: [], renders: 0 };
 	const component = new ModelPickerComponent({
 		context: {
 			tui: {
@@ -188,6 +189,10 @@ function createComponent(overrides = {}) {
 		getRows: overrides.getRows ?? (() => rows()),
 		onSelect: async (row, scope) => {
 			calls.selected.push([row.model.modelId, scope]);
+		},
+		onCompactAndSelect: async (row, scope) => {
+			calls.compacted.push([row.model.modelId, scope]);
+			await overrides.onCompactAndSelect?.(row, scope);
 		},
 		onToggleFavorite: (row) => {
 			calls.favorites.push(row.model.modelId);
@@ -271,7 +276,7 @@ async function createFavoriteCycleHarness(options = {}) {
 	};
 }
 
-test("Models view renders within width and blocks a context that cannot fit", async () => {
+test("Models view confirms compaction before selecting a context-small model", async () => {
 	const { component, calls } = createComponent();
 	const rendered = component.render(72);
 	assert.ok(rendered.length > 8);
@@ -282,10 +287,100 @@ test("Models view renders within width and blocks a context that cannot fit", as
 	assert.match(rendered.join("\n"), /large\/fit/);
 
 	component.handleInput("enter");
-	await Promise.resolve();
 	assert.deepEqual(calls.selected, []);
+	assert.deepEqual(calls.compacted, []);
 	assert.equal(calls.close, 0);
-	assert.match(component.render(72).join("\n"), /does not fit/);
+	const confirmation = component.render(72).join("\n");
+	assert.match(stripSgr(confirmation), /JOUZU · Models · Confirm/);
+	assert.match(confirmation, /Compact the active context and switch to small\/tiny\?/);
+	assert.match(confirmation, /Enter compact and switch · Esc\/Ctrl\+C cancel/);
+	assert.ok(component.render(48).every((line) => visibleWidth(line) === 48));
+
+	component.handleInput("escape");
+	assert.equal(calls.close, 0, "Esc cancels confirmation without closing the Models view");
+	assert.doesNotMatch(component.render(72).join("\n"), /· Confirm/);
+
+	component.handleInput("enter");
+	component.handleInput("enter");
+	await Promise.resolve();
+	await Promise.resolve();
+	assert.deepEqual(calls.compacted, [["tiny", "session"]]);
+	assert.equal(calls.close, 1);
+
+	const project = createComponent();
+	project.component.handleInput("\x1b[13;2u");
+	project.component.handleInput("enter");
+	await Promise.resolve();
+	await Promise.resolve();
+	assert.deepEqual(project.calls.compacted, [["tiny", "project"]]);
+});
+
+test("Models view keeps compact-switch busy and reports sanitized failures", async () => {
+	let failCompaction;
+	const { component, calls } = createComponent({
+		onCompactAndSelect: () =>
+			new Promise((_resolve, reject) => {
+				failCompaction = reject;
+			}),
+	});
+	component.handleInput("enter");
+	component.handleInput("enter");
+	assert.equal(component.allowsGlobalNavigation(), false);
+	assert.match(component.render(72).join("\n"), /Compacting before switching to small\/tiny/);
+	component.handleInput("escape");
+	assert.equal(calls.close, 0, "the Palette stays open while compaction is running");
+
+	failCompaction(new Error("Compaction failed: unavailable\u001b]0;hidden\u0007 service"));
+	await new Promise((resolve) => setImmediate(resolve));
+	const rendered = component.render(72).join("\n");
+	assert.match(rendered, /Compaction failed: unavailable service/);
+	assert.doesNotMatch(rendered, /hidden/);
+	assert.equal(component.allowsGlobalNavigation(), true);
+});
+
+test("model-switch compaction rechecks context and reports failures", async () => {
+	const target = {
+		provider: "p",
+		modelId: "small",
+		name: "Small",
+		contextWindow: 8_000,
+		maxTokens: 8_000,
+		available: true,
+	};
+	let tokens = 10_000;
+	let compactOptions;
+	const ctx = {
+		getContextUsage: () => ({ tokens, contextWindow: 100_000, percent: 10 }),
+		compact(options) {
+			compactOptions = options;
+		},
+	};
+
+	const stillTooLarge = compactContextForModelSwitch(ctx, target);
+	assert.equal(compactOptions.customInstructions, "keep:0");
+	compactOptions.onComplete({ summary: "brief", firstKeptEntryId: "", tokensBefore: 10_000 });
+	await assert.rejects(stillTooLarge, /active context still does not fit p\/small/);
+
+	tokens = 10_000;
+	const estimatedTooLarge = compactContextForModelSwitch(ctx, target);
+	tokens = null;
+	compactOptions.onComplete({
+		summary: "brief",
+		firstKeptEntryId: "",
+		tokensBefore: 10_000,
+		estimatedTokensAfter: 10_000,
+	});
+	await assert.rejects(estimatedTooLarge, /active context still does not fit p\/small/);
+
+	tokens = 10_000;
+	const failed = compactContextForModelSwitch(ctx, target);
+	compactOptions.onError(new Error("compactor unavailable"));
+	await assert.rejects(failed, /Compaction failed: compactor unavailable/);
+
+	tokens = 1_000;
+	compactOptions = undefined;
+	await compactContextForModelSwitch(ctx, target);
+	assert.equal(compactOptions, undefined, "a context that already fits must switch without compaction");
 });
 
 test("Models view hints render effective semantic bindings", () => {
@@ -789,6 +884,79 @@ test("Models selection during an active call switches after turn_end", async () 
 		assert.match(notifications[0][0], /queued for the next model call: p\/b/);
 		await handlers.get("turn_end")({}, ctx);
 		assert.deepEqual(selected, ["b"]);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("context-small selection compacts before switching models", async () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-compact-switch-"));
+	try {
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+		new ModelPickerStore(paths).setFilter("all");
+		const integration = createJouzuModelPicker(paths);
+		const handlers = new Map();
+		const selected = [];
+		let ctx;
+		integration.extension.factory({
+			on(name, handler) {
+				handlers.set(name, handler);
+			},
+			async setModel(model) {
+				selected.push(model.id);
+				ctx.model = model;
+				return true;
+			},
+		});
+		const models = [
+			{ provider: "p", id: "large", name: "Large", contextWindow: 100_000, maxTokens: 16_000 },
+			{ provider: "p", id: "small", name: "Small", contextWindow: 8_000, maxTokens: 8_000 },
+		];
+		let contextTokens = 10_000;
+		let compactOptions;
+		ctx = {
+			mode: "tui",
+			cwd: root,
+			model: models[0],
+			scopedModels: [],
+			sessionManager: { getBranch: () => [] },
+			modelRegistry: {
+				getAvailable: () => models,
+				find: (provider, id) => (provider === "p" ? models.find((model) => model.id === id) : undefined),
+				refresh: async () => ({ errors: new Map() }),
+			},
+			getContextUsage: () => ({ tokens: contextTokens, contextWindow: 100_000, percent: 10 }),
+			isIdle: () => true,
+			compact(options) {
+				compactOptions = options;
+				setImmediate(() => {
+					contextTokens = 1_000;
+					options.onComplete({ summary: "brief", firstKeptEntryId: "", tokensBefore: 10_000 });
+				});
+			},
+			ui: {
+				notify() {},
+				custom(factory) {
+					return new Promise((resolve) => {
+						const component = factory(
+							{ terminal: { rows: 30 }, requestRender() {} },
+							identityTheme,
+							fakeKeybindings(),
+							resolve,
+						);
+						setImmediate(() => {
+							component.handleInput("down");
+							component.handleInput("enter");
+							component.handleInput("enter");
+						});
+					});
+				},
+			},
+		};
+		await handlers.get("session_start")({ reason: "startup" }, ctx);
+		assert.equal(await integration.open({ source: "action" }), true);
+		assert.equal(compactOptions.customInstructions, "keep:0");
+		assert.deepEqual(selected, ["small"]);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
