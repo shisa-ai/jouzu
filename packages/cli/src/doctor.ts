@@ -273,7 +273,18 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	if (context.releaseExtensionStatus?.errors.length) {
 		problem(
 			"extensions.unavailable",
-			`Release-owned extensions are unavailable: ${context.releaseExtensionStatus.errors.join("; ")}`,
+			`Required release extensions are unavailable: ${context.releaseExtensionStatus.errors.join("; ")}`,
+		);
+	}
+	if (context.releaseExtensionStatus?.degradedExtensions.length) {
+		const failures = context.releaseExtensionStatus.degradedExtensions.map((failure) => {
+			const tools = failure.tools.length > 0 ? `; disabled tools: ${failure.tools.join(", ")}` : "";
+			const error = failure.error.trim().replace(/\.+$/u, "");
+			return `${failure.packageName}@${failure.packageVersion}${tools}: ${error}`;
+		});
+		problem(
+			"extensions.optionalUnavailable",
+			`Optional release extensions are unavailable: ${failures.join("; ")}. Correct the reported platform or package error, then rerun \`jz doctor\`.`,
 		);
 	}
 	if (context.releaseExtensionDiagnostic) {
@@ -314,7 +325,7 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 		"extensions.releaseOwned",
 		"Release-owned extensions",
 		context.releaseExtensionStatus
-			? `${context.releaseExtensionStatus.extensionCount} selected; ${context.releaseExtensionStatus.errors.length === 0 ? "ready" : "unavailable"}`
+			? `${context.releaseExtensionStatus.extensionCount} selected; ${context.releaseExtensionStatus.resolvedExtensionPaths.length} ready; ${context.releaseExtensionStatus.degradedExtensions.length} optional unavailable${context.releaseExtensionStatus.errors.length > 0 ? "; required unavailable" : ""}`
 			: "unavailable",
 	);
 	field(
@@ -322,7 +333,7 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 		"skills.packageOwned",
 		"Package-owned skills",
 		context.releaseExtensionStatus
-			? `${context.releaseExtensionStatus.skillCount} selected; ${context.releaseExtensionStatus.errors.length === 0 ? "ready" : "unavailable"}`
+			? `${context.releaseExtensionStatus.skillCount} selected; ${context.releaseExtensionStatus.resolvedSkillPaths.length} ready`
 			: "unavailable",
 	);
 	field(

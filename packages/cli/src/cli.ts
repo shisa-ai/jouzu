@@ -32,8 +32,10 @@ import {
 } from "./profile-manager.js";
 import { loadBundledProfile } from "./profiles.js";
 import {
+	createReleaseExtensionDiagnostics,
 	ensureReleaseRuntimeCompatibility,
 	inspectReleaseExtensions,
+	probeReleaseRuntimeCompatibility,
 	usesReleaseExtensions,
 	withReleaseExtensionArguments,
 	withReleaseExtensionConflictPolicy,
@@ -257,6 +259,7 @@ async function runCli(args: string[]): Promise<void> {
 		}
 		try {
 			releaseExtensionStatus = inspectReleaseExtensions();
+			probeReleaseRuntimeCompatibility(releaseExtensionStatus);
 		} catch (error) {
 			releaseExtensionDiagnostic = error instanceof Error ? error.message : String(error);
 		}
@@ -316,11 +319,19 @@ async function runCli(args: string[]): Promise<void> {
 		onScopedModelsCommand: () => modelPicker.handleScopedModelsCommand(),
 	});
 	const releaseExtensionStatus = inspectReleaseExtensions();
+	probeReleaseRuntimeCompatibility(releaseExtensionStatus);
 	ensureReleaseRuntimeCompatibility(releaseExtensionStatus);
 	const piArgs = withReleaseExtensionArguments(parsed.args, releaseExtensionStatus);
+	const releaseDiagnostics = createReleaseExtensionDiagnostics(releaseExtensionStatus);
 	const startPi = () =>
 		pi.main(piArgs, {
-			extensionFactories: [createJouzuPresentationExtension(metadata, profile), sessionUi, modelPicker.extension, help],
+			extensionFactories: [
+				createJouzuPresentationExtension(metadata, profile),
+				sessionUi,
+				modelPicker.extension,
+				help,
+				releaseDiagnostics,
+			],
 		});
 	await withJouzuResumeHint(() =>
 		usesReleaseExtensions(parsed.args)

@@ -5,19 +5,28 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import {
-	createJouzuCamoufoxExtension,
-	ensureJouzuCamoufoxInstalled,
-	shouldDisableCamoufoxWebGl,
-	withJouzuCamoufoxLibraryPath,
-} from "../dist/camoufox-adapter.js";
-import {
 	consolidateReleaseToolConflicts,
+	createReleaseExtensionDiagnostics,
+	ensureReleaseRuntimeCompatibility,
+	formatReleaseExtensionFailure,
 	inspectReleaseExtensions,
+	omitOptionalReleaseExtensionFailures,
+	probeReleaseRuntimeCompatibility,
 	repairRuntimeDependencyRedirect,
 	suppressConfiguredReleaseResources,
 	usesReleaseExtensions,
 	withReleaseExtensionArguments,
 } from "../dist/release-extensions.js";
+
+const adapterCompatibilityStatus = inspectReleaseExtensions();
+probeReleaseRuntimeCompatibility(adapterCompatibilityStatus);
+ensureReleaseRuntimeCompatibility(adapterCompatibilityStatus);
+const {
+	createJouzuCamoufoxExtension,
+	ensureJouzuCamoufoxInstalled,
+	shouldDisableCamoufoxWebGl,
+	withJouzuCamoufoxLibraryPath,
+} = await import("../dist/camoufox-adapter.js");
 
 const require = createRequire(import.meta.url);
 const packageJson = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
@@ -51,12 +60,16 @@ test("the release manifest and bundle list contain the selected extension set", 
 	);
 	for (const record of manifest.compatibilityDependencies) assert.equal(record.bundled, false);
 	const smartFetchExtension = manifest.packages.find((record) => record.name === "pi-smart-fetch");
+	assert.equal(smartFetchExtension.optional, true);
+	assert.deepEqual(smartFetchExtension.tools, ["web_fetch", "batch_web_fetch"]);
 	assert.equal(smartFetchExtension.engineOverride, ">=22.19.0");
 	assert.deepEqual(smartFetchExtension.dependencyOverrides, { "wreq-js": "3.0.0" });
 	assert.deepEqual(manifest.runtimeDependencyRedirects, [
 		{ consumer: "camoufox-js", dependency: "impit", version: "0.11.0" },
 	]);
 	const camoufoxExtension = manifest.packages.find((record) => record.name === "@the-forge-flow/camoufox-pi");
+	assert.equal(camoufoxExtension.optional, true);
+	assert.deepEqual(camoufoxExtension.tools, ["tff-fetch_url", "tff-search_web"]);
 	assert.deepEqual(camoufoxExtension.dependencyOverrides, {});
 	assert.deepEqual(camoufoxExtension.dependencyRemovals, ["camoufox-js", "playwright-core"]);
 	assert.equal(
@@ -89,13 +102,29 @@ test("all release-owned resources resolve to the exact installed package version
 	}
 });
 
-test("the bundled native compatibility dependency executes a SQLite query", () => {
+test("the selected native runtime dependencies load on the host", () => {
+	const status = inspectReleaseExtensions();
+	probeReleaseRuntimeCompatibility(status);
+	assert.deepEqual(status.errors, []);
+	assert.deepEqual(status.degradedExtensions, []);
+});
+
+test("Camoufox handles the selected SQLite package on the host", async () => {
 	const Database = require("better-sqlite3");
-	const database = new Database(":memory:");
 	try {
-		assert.deepEqual(database.prepare("select 1 as value").get(), { value: 1 });
-	} finally {
-		database.close();
+		const database = new Database(":memory:");
+		try {
+			assert.deepEqual(database.prepare("select 1 as value").get(), { value: 1 });
+		} finally {
+			database.close();
+		}
+	} catch (error) {
+		assert.equal(
+			await shouldDisableCamoufoxWebGl(async () => {
+				throw error;
+			}),
+			true,
+		);
 	}
 });
 
@@ -172,6 +201,69 @@ test("matching configured package entrypoints are suppressed without hiding unre
 	assert.equal(resolved.skills.filter((resource) => !resource.enabled).length, 2);
 	assert.equal(resolved.extensions.at(-2).enabled, true);
 	assert.equal(resolved.extensions.at(-1).enabled, true);
+});
+
+test("optional release extension load failures are omitted while required failures remain fatal", () => {
+	const status = inspectReleaseExtensions();
+	const optional = status.resolvedExtensions.find((record) => record.packageName === "pi-smart-fetch");
+	const required = status.resolvedExtensions.find((record) => record.packageName === "@sting8k/pi-vcc");
+	assert.ok(optional);
+	assert.ok(required);
+	const loaded = {
+		extensions: [],
+		runtime: {},
+		errors: [
+			{ path: optional.path, error: "native binding is unavailable" },
+			{ path: required.path, error: "required extension failed" },
+		],
+	};
+	const result = omitOptionalReleaseExtensionFailures(loaded, status);
+	assert.deepEqual(result.errors, [{ path: required.path, error: "required extension failed" }]);
+	assert.deepEqual(omitOptionalReleaseExtensionFailures(loaded, status).errors, result.errors);
+	assert.equal(status.degradedExtensions.length, 1);
+	assert.deepEqual(status.degradedExtensions[0].tools, ["web_fetch", "batch_web_fetch"]);
+	assert.ok(!status.resolvedExtensionPaths.includes(optional.path));
+	assert.match(
+		formatReleaseExtensionFailure(status.degradedExtensions[0]),
+		/Disabled tools: web_fetch, batch_web_fetch/u,
+	);
+	assert.match(formatReleaseExtensionFailure(status.degradedExtensions[0]), /Run `jz doctor` for details/u);
+});
+
+test("degraded optional extensions report disabled tools when a session starts", async () => {
+	const status = inspectReleaseExtensions();
+	const optional = status.resolvedExtensions.find((record) => record.packageName === "pi-smart-fetch");
+	assert.ok(optional);
+	omitOptionalReleaseExtensionFailures(
+		{
+			extensions: [],
+			runtime: {},
+			errors: [{ path: optional.path, error: "native binding is unavailable" }],
+		},
+		status,
+	);
+	let sessionStart;
+	createReleaseExtensionDiagnostics(status).factory({
+		on(event, handler) {
+			if (event === "session_start") sessionStart = handler;
+		},
+	});
+	assert.ok(sessionStart);
+	const notifications = [];
+	await sessionStart(
+		{ type: "session_start", reason: "startup" },
+		{
+			hasUI: true,
+			ui: {
+				notify(message, severity) {
+					notifications.push({ message, severity });
+				},
+			},
+		},
+	);
+	assert.equal(notifications.length, 1);
+	assert.equal(notifications[0].severity, "warning");
+	assert.match(notifications[0].message, /Disabled tools: web_fetch, batch_web_fetch/u);
 });
 
 test("conflicts with release-owned tools are consolidated by extension", () => {

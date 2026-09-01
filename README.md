@@ -19,6 +19,11 @@ set `JOUZU_CAMOUFOX_LIBRARY_PATH` to a compatible NSS library directory; Jouzu
 applies it only to the browser child. Jouzu's selected smart-fetch and proxy
 native bindings support glibc 2.28 or newer.
 
+Smart Fetch and Camoufox are optional integrations. If either extension cannot
+load, Jouzu starts without its tools and displays a warning. `jz doctor` lists
+the disabled tools, reports the underlying error, and exits with status 1.
+A required release-extension failure still stops startup.
+
 ## Install
 
 ```bash

@@ -207,6 +207,43 @@ test("doctor reports a Pi version mismatch as action required", () => {
 	assert.equal(rmSync(root, { recursive: true, force: true }), undefined);
 });
 
+test("doctor reports degraded optional extensions and disabled tools as action required", () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-doctor-optional-extension-"));
+	try {
+		const report = createDoctorReport({
+			...healthyContext(root),
+			releaseExtensionStatus: {
+				manifest: { schemaVersion: 1, packages: [], compatibilityDependencies: [], runtimeDependencyRedirects: [] },
+				extensionCount: 10,
+				skillCount: 2,
+				resolvedExtensions: [],
+				resolvedExtensionPaths: Array.from({ length: 9 }, (_, index) => `/extension-${index}.js`),
+				resolvedSkillPaths: ["/skill-1.md", "/skill-2.md"],
+				resolvedPackageRoots: {},
+				degradedExtensions: [
+					{
+						packageName: "pi-smart-fetch",
+						packageVersion: "0.3.17",
+						tools: ["web_fetch", "batch_web_fetch"],
+						error: "/lib64/libc.so.6: version `GLIBC_2.34' not found",
+					},
+				],
+				errors: [],
+			},
+		});
+		assert.equal(report.healthy, false);
+		assert.match(report.text, /Release-owned extensions: 10 selected; 9 ready; 1 optional unavailable/u);
+		assert.match(report.text, /Optional release extensions are unavailable: pi-smart-fetch@0\.3\.17/u);
+		assert.match(report.text, /disabled tools: web_fetch, batch_web_fetch/u);
+		assert.match(report.text, /GLIBC_2\.34/u);
+		assert.match(report.text, /rerun `jz doctor`/u);
+		assert.ok(report.report.issues.some((issue) => issue.id === "extensions.optionalUnavailable"));
+		assert.match(report.text, /Result: action required/u);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
 test("doctor reports a leftover profile lock as action required", () => {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-doctor-lock-"));
 	try {

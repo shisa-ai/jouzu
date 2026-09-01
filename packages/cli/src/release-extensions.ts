@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import type {
 	DefaultPackageManager,
 	DefaultResourceLoader,
+	InlineExtension,
 	LoadExtensionsResult,
 	ResolvedPaths,
 	ResolvedResource,
@@ -21,6 +22,8 @@ export interface ReleaseExtensionPackage {
 	licenseEvidence: string;
 	extensions: string[];
 	skills: string[];
+	optional?: boolean;
+	tools?: string[];
 	adapter?: "jouzu-lazy-camoufox";
 	engineOverride?: string;
 	dependencyOverrides?: Record<string, string>;
@@ -51,13 +54,31 @@ export interface ReleaseExtensionManifest {
 	runtimeDependencyRedirects: ReleaseRuntimeDependencyRedirect[];
 }
 
+export interface ResolvedReleaseExtension {
+	packageName: string;
+	packageVersion: string;
+	path: string;
+	optional: boolean;
+	tools: string[];
+}
+
+export interface ReleaseExtensionFailure {
+	packageName: string;
+	packageVersion: string;
+	path?: string;
+	tools: string[];
+	error: string;
+}
+
 export interface ReleaseExtensionStatus {
 	manifest: ReleaseExtensionManifest;
 	extensionCount: number;
 	skillCount: number;
+	resolvedExtensions: ResolvedReleaseExtension[];
 	resolvedExtensionPaths: string[];
 	resolvedSkillPaths: string[];
 	resolvedPackageRoots: Record<string, string>;
+	degradedExtensions: ReleaseExtensionFailure[];
 	errors: string[];
 }
 
@@ -141,51 +162,103 @@ function resolveAdapter(adapter: ReleaseExtensionPackage["adapter"]): string {
 	return path;
 }
 
+function messageFromError(error: unknown): string {
+	return error instanceof Error ? error.message : String(error);
+}
+
+export function markReleaseExtensionUnavailable(
+	status: ReleaseExtensionStatus,
+	packageName: string,
+	error: unknown,
+	path?: string,
+): boolean {
+	const record = status.manifest.packages.find((candidate) => candidate.name === packageName);
+	if (!record) throw new Error(`unknown release extension ${packageName}`);
+	const message = messageFromError(error);
+	if (!record.optional) {
+		const diagnostic = `${record.name}@${record.version}: ${message}`;
+		if (!status.errors.includes(diagnostic)) status.errors.push(diagnostic);
+		return false;
+	}
+	const existing = status.degradedExtensions.find((candidate) => candidate.packageName === record.name);
+	if (existing) {
+		if (!existing.error.split("; ").includes(message)) existing.error = `${existing.error}; ${message}`;
+		if (!existing.path && path) existing.path = path;
+	} else {
+		status.degradedExtensions.push({
+			packageName: record.name,
+			packageVersion: record.version,
+			...(path ? { path } : {}),
+			tools: [...(record.tools ?? [])],
+			error: message,
+		});
+	}
+	const unavailablePaths = new Set(
+		status.resolvedExtensions
+			.filter((candidate) => candidate.packageName === record.name)
+			.map((candidate) => candidate.path),
+	);
+	status.resolvedExtensionPaths = status.resolvedExtensionPaths.filter((candidate) => !unavailablePaths.has(candidate));
+	const packageRoot = status.resolvedPackageRoots[record.name];
+	if (packageRoot) {
+		status.resolvedSkillPaths = status.resolvedSkillPaths.filter((candidate) => {
+			const rel = relative(packageRoot, candidate);
+			return rel === ".." || rel.startsWith(`..${process.platform === "win32" ? "\\" : "/"}`);
+		});
+	}
+	return true;
+}
+
 export function inspectReleaseExtensions(): ReleaseExtensionStatus {
 	const manifest = readManifest();
-	const resolvedExtensionPaths: string[] = [];
-	const resolvedSkillPaths: string[] = [];
-	const resolvedPackageRoots: Record<string, string> = {};
-	const errors: string[] = [];
-	let extensionCount = 0;
-	let skillCount = 0;
+	const status: ReleaseExtensionStatus = {
+		manifest,
+		extensionCount: 0,
+		skillCount: 0,
+		resolvedExtensions: [],
+		resolvedExtensionPaths: [],
+		resolvedSkillPaths: [],
+		resolvedPackageRoots: {},
+		degradedExtensions: [],
+		errors: [],
+	};
 
 	for (const record of manifest.packages) {
-		extensionCount += record.extensions.length;
-		skillCount += record.skills.length;
+		status.extensionCount += record.extensions.length;
+		status.skillCount += record.skills.length;
 		try {
 			const root = resolvePackageRoot(record.name);
 			validatePackageRoot(record, root);
-			resolvedPackageRoots[record.name] = root;
-			if (record.adapter) {
-				resolvedExtensionPaths.push(resolveAdapter(record.adapter));
-			} else {
-				for (const resource of record.extensions) resolvedExtensionPaths.push(resolveResource(root, resource));
+			status.resolvedPackageRoots[record.name] = root;
+			const extensionPaths = record.adapter
+				? [resolveAdapter(record.adapter)]
+				: record.extensions.map((resource) => resolveResource(root, resource));
+			for (const path of extensionPaths) {
+				status.resolvedExtensions.push({
+					packageName: record.name,
+					packageVersion: record.version,
+					path,
+					optional: record.optional === true,
+					tools: [...(record.tools ?? [])],
+				});
+				status.resolvedExtensionPaths.push(path);
 			}
-			for (const resource of record.skills) resolvedSkillPaths.push(resolveResource(root, resource));
+			for (const resource of record.skills) status.resolvedSkillPaths.push(resolveResource(root, resource));
 		} catch (error) {
-			errors.push(`${record.name}@${record.version}: ${error instanceof Error ? error.message : String(error)}`);
+			markReleaseExtensionUnavailable(status, record.name, error);
 		}
 	}
 	for (const record of manifest.compatibilityDependencies) {
 		try {
 			const root = resolvePackageRoot(record.name);
 			validatePackageRoot(record, root);
-			resolvedPackageRoots[record.name] = root;
+			status.resolvedPackageRoots[record.name] = root;
 		} catch (error) {
-			errors.push(`${record.name}@${record.version}: ${error instanceof Error ? error.message : String(error)}`);
+			status.errors.push(`${record.name}@${record.version}: ${messageFromError(error)}`);
 		}
 	}
 
-	return {
-		manifest,
-		extensionCount,
-		skillCount,
-		resolvedExtensionPaths,
-		resolvedSkillPaths,
-		resolvedPackageRoots,
-		errors,
-	};
+	return status;
 }
 
 function releaseResourceIndex(
@@ -281,6 +354,47 @@ export function consolidateReleaseToolConflicts(
 		: { ...result, errors };
 }
 
+export function omitOptionalReleaseExtensionFailures(
+	result: LoadExtensionsResult,
+	status: ReleaseExtensionStatus,
+): LoadExtensionsResult {
+	const optionalByPath = new Map(
+		status.resolvedExtensions
+			.filter((record) => record.optional)
+			.map((record) => [resolve(record.path), record] as const),
+	);
+	const errors: LoadExtensionsResult["errors"] = [];
+	for (const diagnostic of result.errors) {
+		const record = optionalByPath.get(resolve(diagnostic.path));
+		if (!record) {
+			errors.push(diagnostic);
+			continue;
+		}
+		markReleaseExtensionUnavailable(status, record.packageName, diagnostic.error, diagnostic.path);
+	}
+	return errors.length === result.errors.length ? result : { ...result, errors };
+}
+
+export function formatReleaseExtensionFailure(failure: ReleaseExtensionFailure): string {
+	const tools = failure.tools.length > 0 ? ` Disabled tools: ${failure.tools.join(", ")}.` : "";
+	return `Optional extension ${failure.packageName}@${failure.packageVersion} is unavailable.${tools} ${failure.error} Run \`jz doctor\` for details.`;
+}
+
+export function createReleaseExtensionDiagnostics(status: ReleaseExtensionStatus): InlineExtension {
+	return {
+		name: "jouzu-release-extension-diagnostics",
+		factory: (pi) => {
+			pi.on("session_start", (_event, context) => {
+				for (const failure of status.degradedExtensions) {
+					const message = formatReleaseExtensionFailure(failure);
+					if (context.hasUI) context.ui.notify(message, "warning");
+					else console.error(`Jouzu warning: ${message}`);
+				}
+			});
+		},
+	};
+}
+
 export interface ReleaseConflictRuntime {
 	DefaultPackageManager: typeof DefaultPackageManager;
 	DefaultResourceLoader: typeof DefaultResourceLoader;
@@ -300,7 +414,11 @@ export async function withReleaseExtensionConflictPolicy<T>(
 		return suppressConfiguredReleaseResources(paths, status.manifest);
 	};
 	const filteredGetExtensions: DefaultResourceLoader["getExtensions"] = function (this: DefaultResourceLoader) {
-		return consolidateReleaseToolConflicts(originalGetExtensions.call(this), status.resolvedExtensionPaths);
+		const consolidated = consolidateReleaseToolConflicts(
+			originalGetExtensions.call(this),
+			status.resolvedExtensionPaths,
+		);
+		return omitOptionalReleaseExtensionFailures(consolidated, status);
 	};
 	packagePrototype.resolve = filteredResolve;
 	resourcePrototype.getExtensions = filteredGetExtensions;
@@ -384,11 +502,53 @@ export function repairRuntimeDependencyRedirect(
 	}
 }
 
+function resolveOverriddenDependencyRoot(consumerRoot: string, name: string): string {
+	if (!PACKAGE_NAME.test(name)) throw new Error(`unsafe package name ${name}`);
+	const consumerRequire = createRequire(join(consumerRoot, "package.json"));
+	try {
+		return dirname(consumerRequire.resolve(`${name}/package.json`));
+	} catch {
+		return packageRootFromEntry(name, consumerRequire.resolve(name));
+	}
+}
+
+export function probeReleaseRuntimeCompatibility(status = inspectReleaseExtensions()): void {
+	for (const record of status.manifest.packages) {
+		const root = status.resolvedPackageRoots[record.name];
+		if (!root || status.degradedExtensions.some((failure) => failure.packageName === record.name)) continue;
+		for (const [name, version] of Object.entries(record.dependencyOverrides ?? {})) {
+			try {
+				const dependencyRoot = resolveOverriddenDependencyRoot(root, name);
+				validatePackageRoot({ name, version }, dependencyRoot);
+				createRequire(join(root, "package.json"))(name);
+			} catch (error) {
+				markReleaseExtensionUnavailable(status, record.name, error);
+			}
+		}
+	}
+	for (const record of status.manifest.runtimeDependencyRedirects) {
+		if (status.degradedExtensions.some((failure) => failure.packageName === record.consumer)) continue;
+		try {
+			const replacementRoot = status.resolvedPackageRoots[record.dependency];
+			if (!replacementRoot) throw new Error(`runtime compatibility dependency ${record.dependency} is unavailable`);
+			validatePackageRoot({ name: record.dependency, version: record.version }, replacementRoot);
+			require(replacementRoot);
+		} catch (error) {
+			markReleaseExtensionUnavailable(status, record.consumer, error);
+		}
+	}
+}
+
 export function ensureReleaseRuntimeCompatibility(status = inspectReleaseExtensions()): string[] {
 	const repaired: string[] = [];
 	for (const record of status.manifest.runtimeDependencyRedirects) {
-		if (repairRuntimeDependencyRedirect(record, status.resolvedPackageRoots)) {
-			repaired.push(`${record.consumer} -> ${record.dependency}@${record.version}`);
+		if (status.degradedExtensions.some((failure) => failure.packageName === record.consumer)) continue;
+		try {
+			if (repairRuntimeDependencyRedirect(record, status.resolvedPackageRoots)) {
+				repaired.push(`${record.consumer} -> ${record.dependency}@${record.version}`);
+			}
+		} catch (error) {
+			markReleaseExtensionUnavailable(status, record.consumer, error);
 		}
 	}
 	return repaired;
