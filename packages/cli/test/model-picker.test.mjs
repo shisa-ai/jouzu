@@ -13,7 +13,7 @@ import {
 	createJouzuModelPicker,
 	ModelPickerComponent,
 } from "../dist/model-picker.js";
-import { deriveProjectKey, ModelPickerStore } from "../dist/model-picker-state.js";
+import { deriveProjectKey, emptyModelPickerState, ModelPickerStore } from "../dist/model-picker-state.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
 import { createSessionUiStyles } from "../dist/session-ui/index.js";
 
@@ -838,6 +838,264 @@ test("new sessions apply an available project default through session-only exten
 		ctx.scopedModels = [{ model: target }];
 		await handlers.get("session_start")({ reason: "new" }, ctx);
 		assert.deepEqual(selected, ["b"], "a scoped model set must retain precedence");
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("new sessions restore the last dispatched model and its thinking level", async () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-restore-"));
+	try {
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+		const projectKey = deriveProjectKey(root);
+		new ModelPickerStore(paths).recordDispatch({ provider: "p", modelId: "b" }, projectKey, {
+			thinkingLevel: "high",
+			now: new Date("2026-08-23T00:00:00.000Z"),
+		});
+		const integration = createJouzuModelPicker(paths, { restoreLastModelAtStartup: true });
+		const handlers = new Map();
+		const selected = [];
+		const levels = [];
+		integration.extension.factory({
+			on(name, handler) {
+				handlers.set(name, handler);
+			},
+			async setModel(model) {
+				selected.push(model.id);
+				return true;
+			},
+			setThinkingLevel(level) {
+				levels.push(level);
+			},
+		});
+		const current = { provider: "p", id: "a", name: "A", contextWindow: 100_000, maxTokens: 10_000 };
+		const target = { provider: "p", id: "b", name: "B", contextWindow: 100_000, maxTokens: 10_000 };
+		let branch = [];
+		const ctx = {
+			mode: "tui",
+			cwd: root,
+			model: current,
+			scopedModels: [],
+			sessionManager: { getBranch: () => branch },
+			modelRegistry: { find: (provider, id) => (provider === "p" && id === "b" ? target : undefined) },
+			ui: { notify() {} },
+		};
+		await handlers.get("session_start")({ reason: "startup" }, ctx);
+		assert.deepEqual(selected, ["b"]);
+		assert.deepEqual(levels, ["high"], "the recorded thinking level must be restored with the model");
+
+		branch = [{ type: "message", message: { role: "user", content: "existing" } }];
+		await handlers.get("session_start")({ reason: "new" }, ctx);
+		assert.deepEqual(selected, ["b"], "a session with conversation messages must keep its restored model");
+
+		branch = [];
+		ctx.model = target;
+		await handlers.get("session_start")({ reason: "new" }, ctx);
+		assert.deepEqual(selected, ["b"], "restoring the already-active model must be a no-op");
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("a project default takes precedence over the last used model", async () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-restore-precedence-"));
+	try {
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+		const projectKey = deriveProjectKey(root);
+		const store = new ModelPickerStore(paths);
+		store.setProjectDefault({ provider: "p", modelId: "c" }, projectKey);
+		store.recordDispatch({ provider: "p", modelId: "b" }, projectKey, { thinkingLevel: "high" });
+		const integration = createJouzuModelPicker(paths, {
+			applyProjectDefaultAtStartup: true,
+			restoreLastModelAtStartup: true,
+		});
+		const handlers = new Map();
+		const selected = [];
+		const levels = [];
+		integration.extension.factory({
+			on(name, handler) {
+				handlers.set(name, handler);
+			},
+			async setModel(model) {
+				selected.push(model.id);
+				return true;
+			},
+			setThinkingLevel(level) {
+				levels.push(level);
+			},
+		});
+		const models = ["a", "b", "c"].map((id) => ({
+			provider: "p",
+			id,
+			name: id.toUpperCase(),
+			contextWindow: 100_000,
+			maxTokens: 10_000,
+		}));
+		const ctx = {
+			mode: "tui",
+			cwd: root,
+			model: models[0],
+			scopedModels: [],
+			sessionManager: { getBranch: () => [] },
+			modelRegistry: {
+				find: (provider, id) => (provider === "p" ? models.find((model) => model.id === id) : undefined),
+			},
+			ui: { notify() {} },
+		};
+		await handlers.get("session_start")({ reason: "startup" }, ctx);
+		assert.deepEqual(selected, ["c"]);
+		assert.deepEqual(levels, [], "a project default does not borrow the last model's thinking level");
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("legacy state without a last record falls back to the most recent global dispatch", async () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-restore-legacy-"));
+	try {
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+		mkdirSync(paths.stateDir, { recursive: true });
+		writeFileSync(
+			join(paths.stateDir, "model-picker.json"),
+			JSON.stringify({
+				...emptyModelPickerState(),
+				recents: {
+					global: [{ provider: "p", modelId: "b", lastUsedAt: "2026-08-23T00:00:00.000Z", useCount: 3 }],
+					projects: {},
+				},
+			}),
+		);
+		const integration = createJouzuModelPicker(paths, { restoreLastModelAtStartup: true });
+		const handlers = new Map();
+		const selected = [];
+		const levels = [];
+		integration.extension.factory({
+			on(name, handler) {
+				handlers.set(name, handler);
+			},
+			async setModel(model) {
+				selected.push(model.id);
+				return true;
+			},
+			setThinkingLevel(level) {
+				levels.push(level);
+			},
+		});
+		const target = { provider: "p", id: "b", name: "B", contextWindow: 100_000, maxTokens: 10_000 };
+		const ctx = {
+			mode: "tui",
+			cwd: root,
+			model: { provider: "p", id: "a", name: "A", contextWindow: 100_000, maxTokens: 10_000 },
+			scopedModels: [],
+			sessionManager: { getBranch: () => [] },
+			modelRegistry: { find: () => target },
+			ui: { notify() {} },
+		};
+		await handlers.get("session_start")({ reason: "startup" }, ctx);
+		assert.deepEqual(selected, ["b"]);
+		assert.deepEqual(levels, [], "a legacy recent record has no thinking level to restore");
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("last model restore stays off unless requested and warns when the model is unavailable", async () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-restore-off-"));
+	try {
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+		const projectKey = deriveProjectKey(root);
+		new ModelPickerStore(paths).recordDispatch({ provider: "p", modelId: "b" }, projectKey);
+
+		const offIntegration = createJouzuModelPicker(paths);
+		const offHandlers = new Map();
+		const offSelected = [];
+		offIntegration.extension.factory({
+			on(name, handler) {
+				offHandlers.set(name, handler);
+			},
+			async setModel(model) {
+				offSelected.push(model.id);
+				return true;
+			},
+			setThinkingLevel() {},
+		});
+		const current = { provider: "p", id: "a", name: "A", contextWindow: 100_000, maxTokens: 10_000 };
+		const makeCtx = (find, notifications) => ({
+			mode: "tui",
+			cwd: root,
+			model: current,
+			scopedModels: [],
+			sessionManager: { getBranch: () => [] },
+			modelRegistry: { find },
+			ui: { notify: (...values) => notifications?.push(values) },
+		});
+		await offHandlers.get("session_start")(
+			{ reason: "startup" },
+			makeCtx(() => undefined, []),
+		);
+		assert.deepEqual(offSelected, [], "restore must be opt-in so embedded hosts keep Pi's own selection");
+
+		const onIntegration = createJouzuModelPicker(paths, { restoreLastModelAtStartup: true });
+		const onHandlers = new Map();
+		onIntegration.extension.factory({
+			on(name, handler) {
+				onHandlers.set(name, handler);
+			},
+			async setModel() {
+				return true;
+			},
+			setThinkingLevel() {},
+		});
+		const notifications = [];
+		await onHandlers.get("session_start")(
+			{ reason: "startup" },
+			makeCtx(() => undefined, notifications),
+		);
+		assert.match(notifications[0][0], /Last used model is unavailable: p\/b/);
+		assert.equal(notifications[0][1], "warning");
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("thinking level changes persist for the dispatched model only", async () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-thinking-"));
+	try {
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+		const projectKey = deriveProjectKey(root);
+		new ModelPickerStore(paths).recordDispatch({ provider: "p", modelId: "b" }, projectKey, {
+			thinkingLevel: "medium",
+		});
+		const integration = createJouzuModelPicker(paths);
+		const handlers = new Map();
+		integration.extension.factory({
+			on(name, handler) {
+				handlers.set(name, handler);
+			},
+			setModel: async () => true,
+			setThinkingLevel() {},
+		});
+		const modelB = { provider: "p", id: "b", name: "B", contextWindow: 100_000, maxTokens: 10_000 };
+		const ctx = {
+			mode: "tui",
+			cwd: root,
+			model: modelB,
+			scopedModels: [],
+			sessionManager: { getBranch: () => [] },
+			modelRegistry: { find: () => modelB },
+			ui: { notify() {} },
+		};
+		await handlers.get("session_start")({ reason: "startup" }, ctx);
+		await handlers.get("thinking_level_select")({ level: "max", previousLevel: "medium" }, ctx);
+		assert.equal(new ModelPickerStore(paths).load().state.last?.thinkingLevel, "max");
+
+		ctx.model = { provider: "p", id: "a", name: "A", contextWindow: 100_000, maxTokens: 10_000 };
+		await handlers.get("thinking_level_select")({ level: "low", previousLevel: "max" }, ctx);
+		assert.equal(
+			new ModelPickerStore(paths).load().state.last?.thinkingLevel,
+			"max",
+			"a level change on another model must not rewrite the last record",
+		);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}

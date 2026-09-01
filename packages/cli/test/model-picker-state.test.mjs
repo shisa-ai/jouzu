@@ -30,17 +30,13 @@ test("missing state is empty and dispatch updates bounded project and global MRU
 		assert.deepEqual(store.load().state, emptyModelPickerState());
 		const projectKey = "a".repeat(64);
 		for (let index = 0; index < MODEL_PICKER_RECENT_LIMIT + 2; index += 1) {
-			store.recordDispatch(
-				{ provider: "provider", modelId: `model-${index}` },
-				projectKey,
-				new Date(Date.UTC(2026, 7, 23, 0, 0, index)),
-			);
+			store.recordDispatch({ provider: "provider", modelId: `model-${index}` }, projectKey, {
+				now: new Date(Date.UTC(2026, 7, 23, 0, 0, index)),
+			});
 		}
-		store.recordDispatch(
-			{ provider: "provider", modelId: "model-5" },
-			projectKey,
-			new Date("2026-08-23T01:00:00.000Z"),
-		);
+		store.recordDispatch({ provider: "provider", modelId: "model-5" }, projectKey, {
+			now: new Date("2026-08-23T01:00:00.000Z"),
+		});
 
 		const state = store.load().state;
 		assert.equal(state.recents.global.length, MODEL_PICKER_RECENT_LIMIT);
@@ -91,6 +87,91 @@ test("project defaults persist separately from favorites", () => {
 		store.setProjectDefault(reference, projectKey, new Date("2026-08-23T00:00:00.000Z"));
 		assert.deepEqual(store.load().state.defaults.projects[projectKey], reference);
 		assert.deepEqual(store.load().state.favorites, []);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("dispatch records the last used model with its thinking level", () => {
+	const { root, paths } = context();
+	try {
+		const store = new ModelPickerStore(paths);
+		const projectKey = "a".repeat(64);
+		store.recordDispatch({ provider: "p", modelId: "a" }, projectKey, {
+			thinkingLevel: "high",
+			now: new Date("2026-08-23T00:00:00.000Z"),
+		});
+		store.recordDispatch({ provider: "p", modelId: "b" }, projectKey, {
+			thinkingLevel: "low",
+			now: new Date("2026-08-23T01:00:00.000Z"),
+		});
+		assert.deepEqual(store.load().state.last, {
+			provider: "p",
+			modelId: "b",
+			usedAt: "2026-08-23T01:00:00.000Z",
+			thinkingLevel: "low",
+		});
+		store.recordDispatch({ provider: "p", modelId: "a" }, projectKey, { now: new Date("2026-08-23T02:00:00.000Z") });
+		assert.deepEqual(store.load().state.last, {
+			provider: "p",
+			modelId: "a",
+			usedAt: "2026-08-23T02:00:00.000Z",
+		});
+		assert.throws(
+			() => store.recordDispatch({ provider: "p", modelId: "a" }, projectKey, { thinkingLevel: "ludicrous" }),
+			ModelPickerStateError,
+		);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("the last thinking level updates only for the recorded last model", () => {
+	const { root, paths } = context();
+	try {
+		const store = new ModelPickerStore(paths);
+		const projectKey = "a".repeat(64);
+		store.setLastThinkingLevel({ provider: "p", modelId: "a" }, "high");
+		assert.equal(store.load().state.last, undefined, "no dispatch means no last model to annotate");
+		store.recordDispatch({ provider: "p", modelId: "a" }, projectKey, {
+			thinkingLevel: "medium",
+			now: new Date("2026-08-23T00:00:00.000Z"),
+		});
+		store.setLastThinkingLevel({ provider: "p", modelId: "b" }, "max");
+		assert.equal(store.load().state.last?.thinkingLevel, "medium", "a different model must not overwrite the level");
+		store.setLastThinkingLevel({ provider: "p", modelId: "a" }, "max");
+		assert.equal(store.load().state.last?.thinkingLevel, "max");
+		assert.throws(
+			() => store.setLastThinkingLevel({ provider: "p", modelId: "a" }, "ludicrous"),
+			ModelPickerStateError,
+		);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("saved last model state validates its thinking level", () => {
+	const { root, paths } = context();
+	try {
+		const statePath = join(paths.stateDir, "model-picker.json");
+		mkdirSync(paths.stateDir, { recursive: true });
+		const base = { ...emptyModelPickerState() };
+		writeFileSync(
+			statePath,
+			JSON.stringify({
+				...base,
+				last: { provider: "p", modelId: "a", usedAt: "2026-08-23T00:00:00.000Z", thinkingLevel: "ludicrous" },
+			}),
+		);
+		assert.throws(() => loadModelPickerState(paths, { recover: false }), ModelPickerStateError);
+		writeFileSync(
+			statePath,
+			JSON.stringify({
+				...base,
+				last: { provider: "p", modelId: "a", usedAt: "2026-08-23T00:00:00.000Z", thinkingLevel: "xhigh" },
+			}),
+		);
+		assert.equal(loadModelPickerState(paths).state.last?.thinkingLevel, "xhigh");
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
@@ -191,11 +272,9 @@ test("unreadable state is quarantined while symlink state fails closed", { skip:
 	const { root, paths } = context();
 	try {
 		const statePath = join(paths.stateDir, "model-picker.json");
-		new ModelPickerStore(paths).recordDispatch(
-			{ provider: "p", modelId: "m" },
-			"c".repeat(64),
-			new Date("2026-08-23T00:00:00.000Z"),
-		);
+		new ModelPickerStore(paths).recordDispatch({ provider: "p", modelId: "m" }, "c".repeat(64), {
+			now: new Date("2026-08-23T00:00:00.000Z"),
+		});
 		writeFileSync(statePath, "{ broken");
 		const recovered = loadModelPickerState(paths, { now: new Date("2026-08-23T00:00:01.000Z") });
 		assert.deepEqual(recovered.state, emptyModelPickerState());

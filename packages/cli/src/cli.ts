@@ -296,6 +296,7 @@ async function runCli(args: string[]): Promise<void> {
 	}
 	const modelPicker = createJouzuModelPicker(paths, {
 		applyProjectDefaultAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
+		restoreLastModelAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
 	});
 	const help = createJouzuHelpExtension();
 	const effectiveKeyText = (action: "app.model.select" | "app.model.cycleForward") => pi.keyText(action) || "unbound";

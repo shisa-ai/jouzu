@@ -46,6 +46,7 @@ export interface JouzuModelPickerRequest {
 
 export interface JouzuModelPickerOptions {
 	applyProjectDefaultAtStartup?: boolean;
+	restoreLastModelAtStartup?: boolean;
 	palette?: PaletteSurfaceOptions;
 }
 
@@ -621,33 +622,49 @@ export function createJouzuModelPicker(
 			});
 			pi.on("session_start", async (event, ctx) => {
 				syncSession(ctx);
-				const applyProjectDefault =
-					options.applyProjectDefaultAtStartup === true && (event.reason === "startup" || event.reason === "new");
 				if (
-					!applyProjectDefault ||
+					(event.reason !== "startup" && event.reason !== "new") ||
 					hasConversationEntries(ctx.sessionManager.getBranch()) ||
 					ctx.scopedModels.length > 0
 				)
 					return;
-				const reference = state.defaults.projects[projectKey];
+				const projectReference =
+					options.applyProjectDefaultAtStartup === true ? state.defaults.projects[projectKey] : undefined;
+				const lastUsed =
+					options.restoreLastModelAtStartup === true ? (state.last ?? state.recents.global[0]) : undefined;
+				const reference = projectReference ?? lastUsed;
 				if (!reference || modelReferencesEqual(reference, modelReference(ctx.model, catalog))) return;
+				const label = projectReference ? "Project default" : "Last used model";
 				const model = ctx.modelRegistry.find(reference.provider, reference.modelId);
 				if (!model) {
-					ctx.ui.notify(`Project default is unavailable: ${reference.provider}/${reference.modelId}`, "warning");
+					ctx.ui.notify(`${label} is unavailable: ${reference.provider}/${reference.modelId}`, "warning");
 					return;
 				}
 				try {
 					if (!(await pi.setModel(model))) {
-						ctx.ui.notify(
-							`Project default is not authenticated: ${reference.provider}/${reference.modelId}`,
-							"warning",
-						);
+						ctx.ui.notify(`${label} is not authenticated: ${reference.provider}/${reference.modelId}`, "warning");
+						return;
 					}
 				} catch (error) {
 					ctx.ui.notify(
-						`Project default was not applied: ${error instanceof Error ? error.message : String(error)}`,
+						`${label} was not applied: ${error instanceof Error ? error.message : String(error)}`,
 						"warning",
 					);
+					return;
+				}
+				const thinkingLevel =
+					!projectReference && state.last && modelReferencesEqual(state.last, reference)
+						? state.last.thinkingLevel
+						: undefined;
+				if (thinkingLevel) {
+					try {
+						pi.setThinkingLevel(thinkingLevel);
+					} catch (error) {
+						ctx.ui.notify(
+							`Saved thinking level was not applied: ${error instanceof Error ? error.message : String(error)}`,
+							"warning",
+						);
+					}
 				}
 			});
 			pi.on("model_select", (event, ctx) => {
@@ -661,12 +678,25 @@ export function createJouzuModelPicker(
 				}
 				pendingDispatch = modelReference(event.model, catalog);
 			});
+			pi.on("thinking_level_select", (event, ctx) => {
+				activeCtx = ctx;
+				const current = modelReference(ctx.model, catalog);
+				if (!current || !state.last || !modelReferencesEqual(state.last, current)) return;
+				try {
+					state = store.setLastThinkingLevel(current, event.level);
+				} catch (error) {
+					ctx.ui.notify(
+						`Thinking level was not saved: ${error instanceof Error ? error.message : String(error)}`,
+						"warning",
+					);
+				}
+			});
 			pi.on("before_provider_request", (_event, ctx) => {
 				activeCtx = ctx;
 				const dispatched = modelReference(ctx.model, catalog);
 				if (!dispatched || !pendingDispatch || !modelReferencesEqual(dispatched, pendingDispatch)) return;
 				try {
-					state = store.recordDispatch(dispatched, projectKey);
+					state = store.recordDispatch(dispatched, projectKey, { thinkingLevel: ctx.thinkingLevel });
 					pendingDispatch = undefined;
 				} catch (error) {
 					ctx.ui.notify(

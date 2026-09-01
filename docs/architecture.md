@@ -70,7 +70,7 @@ Read the interaction model and collision map before changing interactive keys. R
 | Pi import decisions | `pi-import.ts` | `state/pi-import.json` |
 | Keybinding state | `keybindings.ts` | `state/keybindings-state.json` |
 | Self-update state | `updater.ts` | `state/self-update.json` |
-| Model-picker project defaults, favorites, and recents | `model-picker-state.ts` | `state/model-picker.json` |
+| Model-picker project defaults, favorites, recents, and last used model | `model-picker-state.ts` | `state/model-picker.json` |
 | Account-partitioned model catalog cache | `model-catalog-sync.ts` | `cache/model-catalog/<endpoint-hash>/` |
 
 Locks (`profile.lock`, `pi-import.lock`, `keybindings.lock`, `self-update.lock`, `model-picker.lock`, and per-endpoint catalog `refresh.lock`) are created and

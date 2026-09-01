@@ -13,6 +13,9 @@ export const MODEL_PICKER_HISTORY_LIMIT = 8;
 export const MODEL_PICKER_FILTERS = ["recent", "favorite", "all"] as const;
 export type ModelPickerFilter = (typeof MODEL_PICKER_FILTERS)[number];
 
+export const MODEL_PICKER_THINKING_LEVELS = ["off", "minimal", "low", "medium", "high", "xhigh", "max"] as const;
+export type ModelPickerThinkingLevel = (typeof MODEL_PICKER_THINKING_LEVELS)[number];
+
 export interface ModelReference {
 	catalogId?: string;
 	offeringId?: string;
@@ -29,10 +32,16 @@ export interface RecentRecord extends ModelReference {
 	useCount: number;
 }
 
+export interface LastModelRecord extends ModelReference {
+	usedAt: string;
+	thinkingLevel?: ModelPickerThinkingLevel;
+}
+
 export interface ModelPickerState {
 	schemaVersion: 4;
 	filter: ModelPickerFilter;
 	favorites: FavoriteRecord[];
+	last?: LastModelRecord;
 	defaults: {
 		projects: Record<string, ModelReference>;
 	};
@@ -104,6 +113,10 @@ function validFilter(value: unknown): value is ModelPickerFilter {
 	return MODEL_PICKER_FILTERS.some((filter) => filter === value);
 }
 
+function validThinkingLevel(value: unknown): value is ModelPickerThinkingLevel {
+	return MODEL_PICKER_THINKING_LEVELS.some((level) => level === value);
+}
+
 function assertValidReference(reference: ModelReference): void {
 	if (!validIdentifier(reference.provider) || !validIdentifier(reference.modelId)) {
 		throw new ModelPickerStateError("model reference requires bounded provider and modelId strings");
@@ -140,12 +153,27 @@ function parseRecent(value: unknown): RecentRecord {
 	return { ...reference, lastUsedAt: record.lastUsedAt, useCount: Number(record.useCount) };
 }
 
+function parseLastModel(value: unknown): LastModelRecord {
+	const reference = parseReference(value);
+	const record = value as { usedAt?: unknown; thinkingLevel?: unknown };
+	if (!validTimestamp(record.usedAt)) throw new ModelPickerStateError("last model record has invalid timestamp");
+	if (record.thinkingLevel !== undefined && !validThinkingLevel(record.thinkingLevel)) {
+		throw new ModelPickerStateError("last model record has invalid thinking level");
+	}
+	return {
+		...reference,
+		usedAt: record.usedAt,
+		...(record.thinkingLevel !== undefined ? { thinkingLevel: record.thinkingLevel } : {}),
+	};
+}
+
 function parseState(value: unknown): ModelPickerState {
 	if (!value || typeof value !== "object") throw new ModelPickerStateError("state must be an object");
 	const record = value as {
 		schemaVersion?: unknown;
 		filter?: unknown;
 		favorites?: unknown;
+		last?: unknown;
 		defaults?: { projects?: unknown };
 		recents?: { global?: unknown; projects?: unknown };
 	};
@@ -205,6 +233,7 @@ function parseState(value: unknown): ModelPickerState {
 		schemaVersion: MODEL_PICKER_SCHEMA_VERSION,
 		filter: validFilter(record.filter) ? record.filter : "recent",
 		favorites,
+		...(record.last !== undefined ? { last: parseLastModel(record.last) } : {}),
 		defaults: { projects: defaults },
 		recents: {
 			global: record.recents.global.map(parseRecent).slice(0, MODEL_PICKER_RECENT_LIMIT),
@@ -307,12 +336,41 @@ export class ModelPickerStore {
 		}, now);
 	}
 
-	recordDispatch(reference: ModelReference, projectKey: string, now: Date = new Date()): ModelPickerState {
+	recordDispatch(
+		reference: ModelReference,
+		projectKey: string,
+		options: { thinkingLevel?: ModelPickerThinkingLevel; now?: Date } = {},
+	): ModelPickerState {
 		assertValidReference(reference);
 		if (!validIdentifier(projectKey)) throw new ModelPickerStateError("project key is invalid");
+		if (options.thinkingLevel !== undefined && !validThinkingLevel(options.thinkingLevel)) {
+			throw new ModelPickerStateError(`unknown thinking level: ${String(options.thinkingLevel)}`);
+		}
+		const now = options.now ?? new Date();
 		return this.mutate((state) => {
 			state.recents.global = updateRecent(state.recents.global, reference, now);
 			state.recents.projects[projectKey] = updateRecent(state.recents.projects[projectKey] ?? [], reference, now);
+			state.last = {
+				...reference,
+				usedAt: now.toISOString(),
+				...(options.thinkingLevel !== undefined ? { thinkingLevel: options.thinkingLevel } : {}),
+			};
+		}, now);
+	}
+
+	setLastThinkingLevel(
+		reference: ModelReference,
+		thinkingLevel: ModelPickerThinkingLevel,
+		now: Date = new Date(),
+	): ModelPickerState {
+		assertValidReference(reference);
+		if (!validThinkingLevel(thinkingLevel)) {
+			throw new ModelPickerStateError(`unknown thinking level: ${String(thinkingLevel)}`);
+		}
+		return this.mutate((state) => {
+			if (state.last && modelReferencesEqual(state.last, reference)) {
+				state.last = { ...state.last, thinkingLevel };
+			}
 		}, now);
 	}
 
