@@ -92,6 +92,48 @@ test("Recent and Favorite filters preserve global favorite order and unavailable
 	assert.equal(favorites[0].model.available, false);
 });
 
+test("context fit reserves Pi's safety margin instead of the model output cap", () => {
+	const limits = [
+		{ provider: "local", modelId: "equal-cap", name: "Equal Cap", contextWindow: 8_000, maxTokens: 8_000 },
+		{ provider: "hosted", modelId: "large-output", name: "Large Output", contextWindow: 200_000, maxTokens: 64_000 },
+	].map((model) => ({ ...model, available: true }));
+	const pickerState = emptyModelPickerState();
+
+	const lightlyUsed = buildPickerRows({
+		models: limits,
+		state: pickerState,
+		projectKey,
+		filter: "all",
+		activeContextTokens: 1_000,
+	});
+	assert.deepEqual(
+		lightlyUsed.map((row) => row.contextFit),
+		["fits", "fits"],
+		"a model whose output cap equals its window must still accept a small active context",
+	);
+
+	const boundary = (activeContextTokens) =>
+		buildPickerRows({
+			models: [
+				{
+					provider: "p",
+					modelId: "boundary",
+					name: "Boundary",
+					contextWindow: 128_000,
+					maxTokens: 16_000,
+					available: true,
+				},
+			],
+			state: pickerState,
+			projectKey,
+			filter: "all",
+			activeContextTokens,
+		})[0].contextFit;
+	assert.equal(boundary(120_000), "fits");
+	assert.equal(boundary(123_904), "fits");
+	assert.equal(boundary(123_905), "too-small");
+});
+
 test("catalog-qualified identities prevent cross-catalog collisions while legacy pairs still resolve", () => {
 	const catalogModels = [
 		{

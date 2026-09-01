@@ -6,6 +6,8 @@ export type PickerFilter = ModelPickerFilter;
 export type PickerSection = "current" | "previous" | "favorite" | "project_recent" | "global_recent" | "all";
 export type ContextFit = "fits" | "too-small" | "unknown";
 
+export const MODEL_SWITCH_CONTEXT_SAFETY_TOKENS = 4_096;
+
 export interface PickerModel extends ModelReference {
 	name: string;
 	catalogLabel?: string;
@@ -88,10 +90,13 @@ function searchScore(model: PickerModel, query: string): number | undefined {
 	return best;
 }
 
-function contextFit(model: PickerModel, activeContextTokens: number | null | undefined): ContextFit {
+export function modelContextFit(
+	model: Pick<PickerModel, "contextWindow">,
+	activeContextTokens: number | null | undefined,
+): ContextFit {
 	if (activeContextTokens === undefined || activeContextTokens === null || !model.contextWindow) return "unknown";
-	const outputReserve = Math.max(0, Math.min(model.maxTokens ?? 0, model.contextWindow));
-	return activeContextTokens <= model.contextWindow - outputReserve ? "fits" : "too-small";
+	const safetyReserve = Math.min(MODEL_SWITCH_CONTEXT_SAFETY_TOKENS, model.contextWindow);
+	return activeContextTokens <= model.contextWindow - safetyReserve ? "fits" : "too-small";
 }
 
 function legacyReferenceKey(reference: ModelReference): string {
@@ -148,7 +153,7 @@ export function buildPickerRows(options: BuildPickerRowsOptions): PickerRow[] {
 		rows.push({
 			section,
 			model,
-			contextFit: contextFit(model, options.activeContextTokens),
+			contextFit: modelContextFit(model, options.activeContextTokens),
 			favorite: options.state.favorites.some((favorite) => modelReferencesEqual(favorite, model)),
 			...(recentScope ? { recentScope } : {}),
 			projectDefault: modelReferencesEqual(projectDefault, model),
