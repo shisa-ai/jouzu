@@ -1,6 +1,12 @@
 import type { ExtensionContext, InlineExtension, KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
-import { type Focusable, Input, matchesKey, type TUI, wrapTextWithAnsi } from "@earendil-works/pi-tui";
+import { type Focusable, getKeybindings, Input, matchesKey, type TUI, wrapTextWithAnsi } from "@earendil-works/pi-tui";
 import { CatalogSettingsComponent } from "./catalog-settings.js";
+import {
+	createJouzuKeybindingsManager,
+	formatEffectiveJouzuKeybinding,
+	type JouzuKeybindingsManager,
+	matchesJouzuKeybinding,
+} from "./jouzu-keybindings.js";
 import { formatEffectiveKeybinding, formatEffectiveKeyPair } from "./keybinding-hints.js";
 import type { CatalogModelOffering, ModelCatalogDocument } from "./model-catalog.js";
 import { type ActiveModelCatalog, loadActiveModelCatalogs } from "./model-catalog-sync.js";
@@ -133,6 +139,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	private readonly tui: TUI;
 	private readonly theme: Theme;
 	private readonly keybindings: KeybindingsManager;
+	private readonly jouzuKeybindings: JouzuKeybindingsManager;
 	private readonly styles: SessionUiStyles;
 	private readonly wordmark: string;
 	private readonly close: () => void;
@@ -158,6 +165,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		this.tui = options.context.tui;
 		this.theme = options.context.theme;
 		this.keybindings = options.context.keybindings;
+		this.jouzuKeybindings = options.context.jouzuKeybindings;
 		this.styles = options.context.styles;
 		// The gradient wordmark varies per character, so it is rendered once here
 		// rather than resolved through a single-color role on every frame.
@@ -170,7 +178,8 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		this.onFilterChange = options.onFilterChange;
 		this.filter = options.initialFilter ?? "recent";
 		this.searchInput.setValue(options.initialRoute.query ?? "");
-		this.searchFocused = Boolean(options.initialRoute.query);
+		// A resumed route restores the query without taking over the cursor.
+		this.searchFocused = Boolean(options.initialRoute.query) && options.initialRoute.resume !== true;
 		this.recomputeFilterCounts();
 		this.recomputeRows();
 		if (options.onRefresh) void this.refresh(options.onRefresh);
@@ -199,6 +208,11 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		this.recomputeFilterCounts();
 		this.recomputeRows();
 		this.tui.requestRender();
+	}
+
+	snapshotRoute(): PaletteRoute {
+		const query = this.searchInput.getValue();
+		return query ? { view: "models", query } : { view: "models" };
 	}
 
 	allowsGlobalNavigation(): boolean {
@@ -297,7 +311,10 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		this.tui.requestRender();
 		const selection = compactFirst ? this.onCompactAndSelect(row, scope) : this.onSelect(row, scope);
 		void selection
-			.then(() => this.close())
+			.then(() => {
+				if (this.disposed) return;
+				this.close();
+			})
 			.catch((error) => {
 				if (this.disposed) return;
 				this.busy = false;
@@ -345,9 +362,16 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	private toggleFavorite(): void {
 		const row = this.rows[this.selectedIndex];
 		if (!row || this.busy) return;
+		const display = modelDisplay(row.model);
+		const adding = !row.favorite;
 		try {
 			this.onToggleFavorite(row);
-			this.message = { level: "info", text: "Favorite updated." };
+			this.message = {
+				level: "info",
+				text: adding
+					? `Added ${display.provider}/${display.modelId} to favorites.`
+					: `Removed ${display.provider}/${display.modelId} from favorites.`,
+			};
 			this.recomputeFilterCounts();
 			this.recomputeRows();
 			this.tui.requestRender();
@@ -361,8 +385,14 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	}
 
 	handleInput(data: string): void {
-		if (this.busy) return;
 		if (this.keybindings.matches(data, "tui.select.cancel")) {
+			if (this.busy) {
+				// Model activation does not support cancellation; closing leaves the
+				// operation running and its completion handler is dispose-guarded.
+				this.dispose();
+				this.close();
+				return;
+			}
 			if (this.compactConfirmation) {
 				this.compactConfirmation = undefined;
 				this.message = undefined;
@@ -377,6 +407,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			}
 			return;
 		}
+		if (this.busy) return;
 		if (this.compactConfirmation) {
 			if (this.keybindings.matches(data, "tui.select.confirm")) this.confirmCompaction();
 			return;
@@ -420,7 +451,11 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			this.tui.requestRender();
 			return;
 		}
-		if (matchesKey(data, "shift+enter")) {
+		if (
+			matchesJouzuKeybinding(this.jouzuKeybindings, data, "jouzu.model.selectProjectDefault", {
+				textFieldLive: this.searchFocused,
+			})
+		) {
 			this.runSelection("project");
 			return;
 		}
@@ -428,7 +463,11 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			this.runSelection("session");
 			return;
 		}
-		if (!this.searchFocused && matchesKey(data, "space")) {
+		if (
+			matchesJouzuKeybinding(this.jouzuKeybindings, data, "jouzu.model.toggleFavorite", {
+				textFieldLive: this.searchFocused,
+			})
+		) {
 			this.toggleFavorite();
 			return;
 		}
@@ -463,7 +502,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	}
 
 	render(width: number): string[] {
-		const mode = this.compactConfirmation ? " · Confirm" : "";
+		const mode = this.compactConfirmation ? " · Confirm" : this.searchFocused ? " · Search" : "";
 		const title = `${this.wordmark} ${this.theme.bold(this.styles.apply("palette.title", `· Models${mode}`))} ${this.styles.apply("palette.count", `${this.rows.length}/${this.filterCounts.all}`)}`;
 		if (width < 12) return [fitTerminalText(title, Math.max(1, width))];
 		const innerWidth = Math.max(1, width - 4);
@@ -521,13 +560,24 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		const confirm = formatEffectiveKeybinding(this.keybindings, "tui.select.confirm");
 		const cancel = formatEffectiveKeybinding(this.keybindings, "tui.select.cancel");
 		const move = formatEffectiveKeyPair(this.keybindings, "tui.select.up", "tui.select.down");
+		const projectDefault = formatEffectiveJouzuKeybinding(this.jouzuKeybindings, "jouzu.model.selectProjectDefault", {
+			textFieldLive: this.searchFocused,
+		});
+		const favoriteNow = formatEffectiveJouzuKeybinding(this.jouzuKeybindings, "jouzu.model.toggleFavorite", {
+			textFieldLive: this.searchFocused,
+		});
+		const favoriteAll = formatEffectiveJouzuKeybinding(this.jouzuKeybindings, "jouzu.model.toggleFavorite");
+		const favoriteHint =
+			this.searchFocused && favoriteNow === "Unbound" && favoriteAll !== "Unbound"
+				? `${cancel} then ${favoriteAll} favorite`
+				: `${favoriteNow} favorite`;
 		if (this.compactConfirmation) {
 			lines.push(...hint(`${confirm} compact and switch · ${cancel} cancel`));
 		} else if (this.searchFocused) {
-			lines.push(...hint(`${confirm} session · Shift+Enter project default · ${move} move`));
-			lines.push(...hint(`Type search · ←→ cursor · Tab section · ${cancel} browse`));
+			lines.push(...hint(`${confirm} session · ${projectDefault} project default · ${favoriteHint}`));
+			lines.push(...hint(`Type search · ←→ cursor · ${move} move · Tab section · ${cancel} browse`));
 		} else {
-			lines.push(...hint(`${confirm} session · Shift+Enter project default · Space favorite`));
+			lines.push(...hint(`${confirm} session · ${projectDefault} project default · ${favoriteHint}`));
 			lines.push(...hint(`←→ View · / search · Tab section · ${move} move · ${cancel} close`));
 		}
 		lines.push(renderTerminalFrameBorder(width, { ...frameOptions, left: "╰", right: "╯" }));
@@ -623,7 +673,7 @@ export function createJouzuModelPicker(
 	options: JouzuModelPickerOptions = {},
 ): JouzuModelPickerIntegration {
 	const store = new ModelPickerStore(paths);
-	const surface = new JouzuPaletteSurfaceHost();
+	const surface = new JouzuPaletteSurfaceHost({ jouzuKeybindings: createJouzuKeybindingsManager(paths) });
 	const catalogEnv = options.palette?.env ?? process.env;
 	let catalogs: ActiveModelCatalog[] = [];
 	let catalog: ModelCatalogDocument | undefined;
@@ -897,6 +947,14 @@ export function createJouzuModelPicker(
 
 	const openSettings = async (): Promise<boolean> => openPalette({ view: "settings" });
 
+	const modelsOpenText = (): string => {
+		// Pi installs the app-level manager as the global registry when the TUI
+		// starts; before that the registry resolves only TUI actions, so fall
+		// back to a generic label when app.model.select has no keys.
+		const text = formatEffectiveKeybinding(getKeybindings() as unknown as KeybindingsManager, "app.model.select");
+		return text === "Unbound" ? "the model-select binding" : text;
+	};
+
 	const cycleFavorite = async (direction: FavoriteCycleDirection): Promise<boolean> => {
 		const ctx = activeCtx;
 		const activateModel = setModel;
@@ -915,7 +973,10 @@ export function createJouzuModelPicker(
 			activeContextTokens: ctx.getContextUsage()?.tokens,
 		});
 		if (favoriteRows.length === 0) {
-			ctx.ui.notify("No favorite models. Open Models with Ctrl+L and press Space in browse mode to add one.", "info");
+			ctx.ui.notify(
+				`No favorite models. Open Models with ${modelsOpenText()} and press Space on a model to add one.`,
+				"info",
+			);
 			return true;
 		}
 		const availableRows = favoriteRows.filter((row) => row.model.available);
@@ -924,7 +985,7 @@ export function createJouzuModelPicker(
 			ctx.ui.notify(
 				availableRows.length === 0
 					? "No favorite models are available in the current model scope."
-					: "No favorite model can fit the active context. Open Models with Ctrl+L to compact and switch.",
+					: `No favorite model can fit the active context. Open Models with ${modelsOpenText()} to compact and switch.`,
 				"warning",
 			);
 			return true;
@@ -980,7 +1041,7 @@ export function createJouzuModelPicker(
 		const ctx = activeCtx;
 		if (!ctx || ctx.mode !== "tui") return false;
 		ctx.ui.notify(
-			"Jouzu uses Favorites for quick switching. Open Models with Ctrl+L and press Space in browse mode to edit them.",
+			`Jouzu uses Favorites for quick switching. Open Models with ${modelsOpenText()} and press Space on a model to favorite it.`,
 			"info",
 		);
 		return true;

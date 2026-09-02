@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { visibleWidth } from "@earendil-works/pi-tui";
+import { createJouzuKeybindingsManagerFromConfig } from "../dist/jouzu-keybindings.js";
 import { parseAndValidateModelCatalog } from "../dist/model-catalog.js";
 import {
 	catalogModelReference,
@@ -15,6 +16,7 @@ import {
 	ModelPickerComponent,
 } from "../dist/model-picker.js";
 import { deriveProjectKey, emptyModelPickerState, ModelPickerStore } from "../dist/model-picker-state.js";
+import { JouzuPaletteRouter } from "../dist/palette.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
 import { createSessionUiStyles } from "../dist/session-ui/index.js";
 
@@ -180,6 +182,7 @@ function createComponent(overrides = {}) {
 			theme: identityTheme,
 			styles: createSessionUiStyles(identityTheme),
 			keybindings: overrides.keybindings ?? fakeKeybindings(),
+			jouzuKeybindings: overrides.jouzuKeybindings ?? createJouzuKeybindingsManagerFromConfig(),
 			close() {
 				calls.close += 1;
 			},
@@ -196,6 +199,7 @@ function createComponent(overrides = {}) {
 		},
 		onToggleFavorite: (row) => {
 			calls.favorites.push(row.model.modelId);
+			overrides.onToggleFavorite?.(row);
 		},
 		onFilterChange: (filter) => {
 			calls.filters.push(filter);
@@ -327,7 +331,6 @@ test("Models view keeps compact-switch busy and reports sanitized failures", asy
 	component.handleInput("enter");
 	assert.equal(component.allowsGlobalNavigation(), false);
 	assert.match(component.render(72).join("\n"), /Compacting before switching to small\/tiny/);
-	component.handleInput("escape");
 	assert.equal(calls.close, 0, "the Palette stays open while compaction is running");
 
 	failCompaction(new Error("Compaction failed: unavailable\u001b]0;hidden\u0007 service"));
@@ -336,6 +339,25 @@ test("Models view keeps compact-switch busy and reports sanitized failures", asy
 	assert.match(rendered, /Compaction failed: unavailable service/);
 	assert.doesNotMatch(rendered, /hidden/);
 	assert.equal(component.allowsGlobalNavigation(), true);
+});
+
+test("Esc during a running selection closes the Palette and late completion stays inert", async () => {
+	let failCompaction;
+	const { component, calls } = createComponent({
+		onCompactAndSelect: () =>
+			new Promise((_resolve, reject) => {
+				failCompaction = reject;
+			}),
+	});
+	component.handleInput("enter");
+	component.handleInput("enter");
+	assert.equal(component.allowsGlobalNavigation(), false);
+	component.handleInput("escape");
+	assert.equal(calls.close, 1, "Esc closes the Palette while a selection is running");
+
+	failCompaction(new Error("Compaction failed: late failure"));
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(calls.close, 1, "a late failure does not touch the closed Palette");
 });
 
 test("model-switch compaction rechecks context and reports failures", async () => {
@@ -535,6 +557,114 @@ test("Models view separates browse choices from search cursor input", () => {
 	assert.equal(directSearch.calls.close, 0);
 });
 
+test("Models view toggles favorites with the semantic action in browse and search", () => {
+	const favoriteIds = new Set();
+	const { component, calls } = createComponent({
+		getRows: () => rows().map((row) => ({ ...row, favorite: favoriteIds.has(row.model.modelId) })),
+		onToggleFavorite: (row) => {
+			if (favoriteIds.has(row.model.modelId)) favoriteIds.delete(row.model.modelId);
+			else favoriteIds.add(row.model.modelId);
+		},
+	});
+	assert.doesNotMatch(component.render(72).join("\n"), /· Search/u, "browse state is the unmarked default");
+
+	component.handleInput("down");
+	component.handleInput(" ");
+	assert.deepEqual(calls.favorites, ["fit"]);
+	assert.match(component.render(72).join("\n"), /Added large\/fit to favorites\./u);
+	component.handleInput(" ");
+	assert.match(component.render(72).join("\n"), /Removed large\/fit from favorites\./u);
+
+	component.handleInput("q");
+	const searching = component.render(72).join("\n");
+	assert.match(searching, /· Search/u, "the title names the search state");
+	assert.match(searching, /Ctrl\+Shift\+S favorite/u, "the search hint names the favorite accelerator");
+	assert.doesNotMatch(searching, /Space favorite/u, "the search hint omits the printable binding");
+	component.handleInput(" ");
+	assert.deepEqual(calls.favorites, ["fit", "fit"], "Space stays text input while search holds focus");
+	component.handleInput("\u001b[115;6u");
+	assert.deepEqual(calls.favorites, ["fit", "fit", "fit"], "Ctrl+Shift+S toggles while search holds focus");
+	assert.match(component.render(72).join("\n"), /Added large\/fit to favorites\./u);
+});
+
+test("Models view resolves rebound favorite and project-default bindings", async () => {
+	const { component, calls } = createComponent({
+		jouzuKeybindings: createJouzuKeybindingsManagerFromConfig({
+			"jouzu.model.toggleFavorite": "ctrl+shift+b",
+			"jouzu.model.selectProjectDefault": ["ctrl+shift+d"],
+		}),
+	});
+	const browse = component.render(72).join("\n");
+	assert.match(browse, /Ctrl\+Shift\+B favorite/u);
+	assert.match(browse, /Ctrl\+Shift\+D project default/u);
+	assert.doesNotMatch(browse, /Space favorite|Shift\+Enter/u);
+
+	component.handleInput(" ");
+	assert.deepEqual(calls.favorites, [], "Space no longer toggles after rebinding");
+	component.handleInput("\u001b[98;6u");
+	assert.deepEqual(calls.favorites, ["tiny"], "the rebound key toggles the selected row");
+
+	component.handleInput("down");
+	component.handleInput("\u001b[100;6u");
+	await Promise.resolve();
+	await Promise.resolve();
+	assert.deepEqual(calls.selected, [["fit", "project"]], "the rebound project-default key selects project scope");
+});
+
+test("Models view hints the browse route when a favorite binding is printable", () => {
+	const { component, calls } = createComponent({
+		jouzuKeybindings: createJouzuKeybindingsManagerFromConfig({ "jouzu.model.toggleFavorite": "f" }),
+	});
+	component.handleInput("f");
+	assert.deepEqual(calls.favorites, ["tiny"], "a printable favorite binding works in browse state");
+	component.handleInput("/");
+	const searching = stripSgr(component.render(72).join("\n")).replace(/[│\s]+/gu, " ");
+	assert.match(searching, /Esc\/Ctrl\+C then F favorite/u, "search state hints the browse route");
+	component.handleInput("f");
+	assert.deepEqual(calls.favorites, ["tiny"], "the printable binding stays text input while search holds focus");
+});
+
+test("Palette section switches retain the Models query without grabbing search focus", () => {
+	const context = {
+		tui: { terminal: { rows: 30 }, requestRender() {} },
+		theme: identityTheme,
+		styles: createSessionUiStyles(identityTheme),
+		keybindings: fakeKeybindings(),
+		jouzuKeybindings: createJouzuKeybindingsManagerFromConfig(),
+		close() {},
+	};
+	const router = new JouzuPaletteRouter({
+		context,
+		initialRoute: { view: "models" },
+		factories: {
+			models: (ctx, route) =>
+				new ModelPickerComponent({
+					context: ctx,
+					initialRoute: route,
+					getRows: () => rows(),
+					onSelect: async () => {},
+					onCompactAndSelect: async () => {},
+					onToggleFavorite: () => {},
+				}),
+			settings: () => ({
+				render: () => ["settings"],
+				invalidate() {},
+				route() {},
+				dispose() {},
+			}),
+		},
+	});
+
+	router.handleInput("q");
+	assert.match(router.render(72).join("\n"), /· Search/u);
+	router.handleInput("\t");
+	assert.deepEqual(router.render(72), ["settings"]);
+	router.handleInput("\u001b[Z");
+	const restored = stripSgr(router.render(72).join("\n"));
+	assert.match(restored, /Search > q/u, "the query survives the section round trip");
+	assert.doesNotMatch(restored, /· Search/u, "a resumed route does not grab search focus");
+});
+
 test("Palette routing replaces the query and keeps the component reusable", () => {
 	const queries = [];
 	const { component } = createComponent({
@@ -728,6 +858,23 @@ test("favorite cycling serializes repeated keypresses", async () => {
 		assert.equal(await first, true);
 	} finally {
 		await harness.dispose();
+	}
+});
+
+test("favorite guidance resolves the effective model-select binding", async () => {
+	const { getKeybindings, setKeybindings, KeybindingsManager } = await import("@earendil-works/pi-tui");
+	const previous = getKeybindings();
+	setKeybindings(
+		new KeybindingsManager({ "app.model.select": { defaultKeys: "ctrl+shift+l", description: "test double" } }),
+	);
+	try {
+		const harness = await createFavoriteCycleHarness({ favorites: [] });
+		await harness.integration.cycleFavorite("forward");
+		assert.match(harness.notifications[0][0], /Open Models with Ctrl\+Shift\+L/);
+		assert.doesNotMatch(harness.notifications[0][0], /browse mode/);
+		await harness.dispose();
+	} finally {
+		setKeybindings(previous);
 	}
 });
 
