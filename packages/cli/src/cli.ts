@@ -16,7 +16,12 @@ import {
 	resetKeybindings,
 } from "./keybindings.js";
 import { loadMetadata } from "./metadata.js";
-import { acceptQuarantinedCatalog, refreshAllModelCatalogs, refreshAvailableModelCatalogs, refreshModelCatalog } from "./model-catalog-sync.js";
+import {
+	acceptQuarantinedCatalog,
+	refreshAllModelCatalogs,
+	refreshAvailableModelCatalogs,
+	refreshModelCatalog,
+} from "./model-catalog-sync.js";
 import { createJouzuModelPicker } from "./model-picker.js";
 import { projectDefaultAppliesAtStartup } from "./model-picker-state.js";
 import { resolveJouzuPaths } from "./paths.js";

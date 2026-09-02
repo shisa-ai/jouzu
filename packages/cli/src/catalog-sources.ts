@@ -306,7 +306,10 @@ function writeCatalogSourceOverrides(paths: JouzuPaths, overrides: Record<string
 
 function sameAuth(left: CatalogSourceAuth, right: CatalogSourceAuth): boolean {
 	if (left.type !== right.type) return false;
-	return left.type === "none" || (left.type === "bearer" && right.type === "bearer" && left.credentialRef === right.credentialRef);
+	return (
+		left.type === "none" ||
+		(left.type === "bearer" && right.type === "bearer" && left.credentialRef === right.credentialRef)
+	);
 }
 
 /** True when a source targets the built-in Shisa API endpoint and credential reference. */
@@ -365,9 +368,7 @@ export function resolveCatalogSources(
 	// A registry entry with the reserved id, or any entry targeting the same endpoint and
 	// credential, is the user's own registration of the built-in source. It keeps its label,
 	// enabled state, and URL-keyed cache, and the code-owned descriptor stays out of the way.
-	const claimed = base.some(
-		(source) => source.id === SHISA_API_CATALOG_SOURCE_ID || isShisaApiCatalogEndpoint(source),
-	);
+	const claimed = base.some((source) => source.id === SHISA_API_CATALOG_SOURCE_ID || isShisaApiCatalogEndpoint(source));
 	const sources = claimed ? base : [builtin, ...base];
 	return options.includeDisabled ? sources : sources.filter((source) => source.enabled);
 }

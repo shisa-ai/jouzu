@@ -202,11 +202,11 @@ test("disabling the code-owned built-in writes only an override and re-enabling 
 		const bytes = readFileSync(overridesPath, "utf8");
 		assert.deepEqual(JSON.parse(bytes), { schemaVersion: 1, overrides: { "shisa-api": { enabled: false } } });
 		assert.doesNotMatch(bytes, /SHISA_API_KEY|sk-/u);
-		assert.equal(resolveCatalogSources(paths, {}).some((source) => source.id === "shisa-api"), false);
 		assert.equal(
-			resolveCatalogSources(paths, {}, { includeDisabled: true })[0].enabled,
+			resolveCatalogSources(paths, {}).some((source) => source.id === "shisa-api"),
 			false,
 		);
+		assert.equal(resolveCatalogSources(paths, {}, { includeDisabled: true })[0].enabled, false);
 
 		store.setEnabled("shisa-api", true);
 		assert.equal(existsSync(overridesPath), false);

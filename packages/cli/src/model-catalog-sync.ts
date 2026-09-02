@@ -707,9 +707,7 @@ export async function refreshAllModelCatalogs(
 	options: Omit<RefreshCatalogOptions, "sourceId"> = {},
 ): Promise<CatalogRefreshAllResult> {
 	const env = options.env ?? process.env;
-	const sources = resolveCatalogSources(paths, env).filter(
-		(source) => !automaticallySkipped(paths, source, env),
-	);
+	const sources = resolveCatalogSources(paths, env).filter((source) => !automaticallySkipped(paths, source, env));
 	if (sources.length === 0) return { status: "unconfigured", results: [] };
 	const results = await Promise.all(
 		sources.map(async (source) => ({ source, result: await refreshCatalogSource(paths, source, options) })),
@@ -734,9 +732,7 @@ export async function refreshAvailableModelCatalogs(
 	options: Omit<RefreshCatalogOptions, "sourceId"> = {},
 ): Promise<CatalogRefreshAllResult | undefined> {
 	const env = options.env ?? process.env;
-	const sources = resolveCatalogSources(paths, env).filter((source) =>
-		catalogSourceCredentialAvailable(source, env),
-	);
+	const sources = resolveCatalogSources(paths, env).filter((source) => catalogSourceCredentialAvailable(source, env));
 	if (sources.length === 0) return undefined;
 	const results = await Promise.all(
 		sources.map(async (source) => ({ source, result: await refreshCatalogSource(paths, source, options) })),
