@@ -35,6 +35,7 @@ The action IDs below come from Pi 0.84.3 plus Jouzu keybinding defaults version 
 | `Ctrl+B` | Alternate `tui.editor.cursorLeft` | tmux uses `Ctrl+B` as its default prefix. | **Prefix** in tmux | `←` remains active. Send a literal `Ctrl+B` with `Ctrl+B Ctrl+B` under the default tmux map. |
 | `Ctrl+A` | Editor line start and context-specific select/filter actions | GNU Screen uses `Ctrl+A` as its command prefix. Byobu also intercepts `Ctrl+A` for its prefix setup. | **Prefix** in Screen and Byobu | `Home` remains the editor line-start route. Screen sends a literal `Ctrl+A` with `Ctrl+A a`. |
 | `Enter`, `Ctrl+C` | Submit/confirm and cancel/clear actions | Windows Terminal copies a terminal selection instead of forwarding the key; without a selection it forwards the key. | **Conditional** | Clear the terminal selection. `Escape` remains the default cancel binding. |
+| `Ctrl+Shift+S` | Jouzu `jouzu.model.toggleFavorite` accelerator in Models | Kitty 0.48.2 defaults it to `paste_from_selection`. Under legacy encoding the gesture collapses to `Ctrl+S` (`app.session.toggleSort`). | **Conditional** in Kitty; **Encoding-dependent** elsewhere | `Space` in Models browse state is the visible unmodified route; `Esc` leaves search with the query intact. Unmap the key in Kitty or rebind the Jouzu action. |
 | `Shift+Enter` | Models project-default selection; `tui.input.newLine` | Basic terminal encoding cannot distinguish it from Enter or a newline. A terminal-side `text:\n` mapping also removes the modifier. | **Encoding-dependent** | Session selection remains on the effective `tui.select.confirm` binding. The project-default action is a known deviation until it has an unmodified route. |
 
 These rows are conflicts, not a recommendation to replace one blocked modified key with another. Check the full map before selecting an alternative.
@@ -64,7 +65,7 @@ Only defaults that affect Jouzu or constrain likely alternatives are listed.
 | Terminal baseline | Default interceptions relevant to Jouzu |
 | --- | --- |
 | Ghostty 1.3.1, Linux | `Ctrl+Enter`, `Ctrl+Shift+Enter`, `Ctrl+,`, `Ctrl+Shift+F`, `Ctrl+Shift+O`, `Ctrl+Shift+P`, `Ctrl+-`, `Ctrl+=`, `Ctrl+0`, `Ctrl+Tab`, `Ctrl+Shift+Tab`, `Ctrl+Page Up/Down`, `Shift+arrows`, `Shift+Home/End/Page Up/Page Down`, `Ctrl+Alt+arrows` |
-| Kitty 0.48 default `kitty_mod=Ctrl+Shift`, non-macOS | `Ctrl+Shift+P` starts a sequence; `Ctrl+Shift+F/O/↑/↓/←/→/Page Up/Page Down/Enter` run terminal actions. Kitty's exact map is configurable. |
+| Kitty 0.48 default `kitty_mod=Ctrl+Shift`, non-macOS | `Ctrl+Shift+P` starts a sequence; `Ctrl+Shift+F/O/S/B/↑/↓/←/→/Page Up/Page Down/Enter` run terminal actions (`S` pastes the selection, `B` moves a window). Kitty's exact map is configurable. |
 | WezTerm defaults | `Ctrl+-`, `Ctrl+=`, `Ctrl+0`, `Ctrl+Shift+F/P/↑/↓/←/→`, `Ctrl+Tab`, `Ctrl+Shift+Tab`, `Ctrl+Page Up/Down`, clipboard bindings, and terminal tab/pane actions |
 | Windows Terminal defaults | `Ctrl+,`, `Ctrl+Shift+F`, `Ctrl+Tab`, `Ctrl+Shift+Tab`, `Alt+arrows`, `Alt+Enter`, `F11`, clipboard bindings, and terminal tab/pane actions |
 | Apple Terminal on macOS 26 | `Ctrl+Tab`, `Ctrl+Shift+Tab`, Command-based window, tab, scroll, clipboard, search, settings, and mark actions |

@@ -14,7 +14,9 @@ A Palette view has one visible mode at a time:
 
 **Busy** is a state layered on any of the three, not a fourth mode. While an operation runs, the view names the operation, disables conflicting actions, and offers cancellation when the operation supports it.
 
-The title, selection marker, fields, and key hints must make the active mode and the busy state apparent. Do not require the user to infer a mode from a key that stopped working.
+Search focus is a named state of browse in a searchable view, not a mode and not a secret. The title names it, such as `· Search`; the hint footer lists only keys that work in it; and cancel leaves it before closing the view. Every committal row action — selecting an item, toggling a marker such as favorite, writing a default — must remain reachable while search holds focus, through a semantic accelerator or a one-keystroke transition that keeps the query.
+
+The title, selection marker, fields, and key hints must make the active mode and the busy state apparent. Do not require the user to infer a mode or state from a key that stopped working.
 
 ### Common keys
 
@@ -45,7 +47,7 @@ Resolve selection, paging, confirmation, and cancellation through `KeybindingsMa
 2. **A focused non-text control takes `←` and `→`** to change a visible discrete choice.
 3. **The selected row takes `←` and `→`** to collapse and expand disclosure, when neither of the above applies.
 
-A mode with a live text field has no bare-letter and no bare-`Space` shortcuts. A mode without one may use them, because the two are never eligible at the same time. This keeps search usable and keeps IME composition out of the shortcut layer.
+A mode with a live text field has no bare-letter and no bare-`Space` shortcuts. A mode without one may use them, because the two are never eligible at the same time. This keeps search usable and keeps IME composition out of the shortcut layer. A view with type-to-search, where typing focuses the search field, has no usable bare-letter layer even in browse: every printable character edits the field, so browse actions there use non-printable unmodified keys only.
 
 ### Primary and secondary actions
 
@@ -72,6 +74,7 @@ When an item supports disclosure as well as a primary action, reserve `Enter` fo
 - Keep a visible non-color marker on the selected row. Background color may reinforce selection but cannot be the only indicator.
 - A searchable view starts in browse mode. Typing or `/` focuses search; `Esc` returns to browse mode before another `Esc` closes the Palette.
 - While search holds focus, `←`, `→`, `Home`, `End`, and printable input go to the search field. `↑` and `↓` continue to move results.
+- While search holds focus, the title names the search state and committal row actions keep working through their semantic accelerators. `Esc` returns to browse with the query intact, so a browse-only key is one keystroke away and is hinted as such.
 - Report the result count against the total when a search or filter is narrowing the collection.
 - A search with no results says so and keeps the search text editable. It does not close, clear the query, or fall back to an unfiltered list.
 - Render an item that cannot be acted on as unavailable, with the reason, rather than hiding it or failing on `Enter`.
@@ -113,7 +116,7 @@ Authentication is a visible discrete choice, not a hidden mode toggle.
 Hints describe available actions, not implementation details.
 
 - Put the primary action first, followed by movement and cancellation.
-- Show only keys that work in the active mode and state.
+- Show only keys that work in the active mode and state. While a text field holds focus, omit printable-character bindings from hints; those keys type.
 - Resolve key labels through `KeybindingsManager` where the action has a semantic ID, so a rebound key is named correctly.
 - Keep required controls visible without relying on a README.
 - Prefer two short hint rows over one clipped row.
@@ -148,6 +151,8 @@ Do not ship a Palette view with any of these behaviors:
 - `Enter` expands an item when the expected primary action is edit or select.
 - An action is reachable only through a modified key, such as `Ctrl+Enter` to save.
 - A bare letter or `Space` is a shortcut in a mode whose text field is live.
+- A committal row action works in browse but has no route while search holds focus.
+- A hint names a printable-character shortcut while a text field holds focus.
 - `Space` cycles an enum without showing that the row is a choice.
 - `←` or `→` moves a list or toggles disclosure while a text field holds focus.
 - A conditional field appears without a visible parent choice or explanation.
@@ -173,6 +178,7 @@ An interaction change must include tests for the affected modes and transitions:
 7. Credential tests prove that availability can be shown without rendering the value.
 8. Render tests cover 48 columns and mixed-width text; every line stays within the requested terminal columns.
 9. `Tab` and `Shift+Tab` move top-level sections in browse mode and cannot discard an edit.
-10. Hints contain the active primary action, omit inactive or internal controls, and show user-rebound semantic bindings.
+10. Hints contain the active primary action, omit inactive or internal controls, show user-rebound semantic bindings, and omit printable bindings while a text field is live.
+11. Committal row actions fire through their semantic accelerators while search holds focus, and the title names the search state.
 
 Run the focused interaction tests while iterating, then run `npm run check` and `npm test` before committing.
