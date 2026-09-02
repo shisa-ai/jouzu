@@ -603,6 +603,8 @@ export interface JouzuModelPickerIntegration {
 	openSettings(): Promise<boolean>;
 	cycleFavorite(direction: FavoriteCycleDirection): Promise<boolean>;
 	handleScopedModelsCommand(): Promise<boolean>;
+	/** Re-read activated catalog revisions after an external refresh. */
+	reloadCatalogs(): void;
 }
 
 function catalogOffering(
@@ -1047,5 +1049,5 @@ export function createJouzuModelPicker(
 		return true;
 	};
 
-	return { extension, open, openSettings, cycleFavorite, handleScopedModelsCommand };
+	return { extension, open, openSettings, cycleFavorite, handleScopedModelsCommand, reloadCatalogs };
 }

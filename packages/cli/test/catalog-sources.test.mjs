@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -8,8 +8,10 @@ import {
 	CatalogSourceError,
 	CatalogSourceStore,
 	catalogEndpointCandidates,
+	catalogSourceConflict,
 	discoverCatalogEndpoint,
 	loadCatalogSourceRegistry,
+	resolveCatalogBearer,
 	resolveCatalogSources,
 } from "../dist/catalog-sources.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
@@ -53,7 +55,10 @@ test("catalog source store persists labels and credential references without bea
 		assert.equal(JSON.parse(bytes).schemaVersion, 1);
 
 		assert.equal(store.setEnabled(source.id, false).enabled, false);
-		assert.equal(resolveCatalogSources(paths, {}).length, 0);
+		assert.deepEqual(
+			resolveCatalogSources(paths, {}).map((candidate) => candidate.id),
+			["shisa-api"],
+		);
 		assert.equal(store.setEnabled(source.id, true).enabled, true);
 		assert.equal(store.remove(source.id).id, source.id);
 		assert.deepEqual(loadCatalogSourceRegistry(paths).sources, []);
@@ -70,8 +75,11 @@ test("single-source environment setup migrates only when no registry exists", ()
 			JOUZU_MODEL_CATALOG_TOKEN: "secret",
 		};
 		const migrated = resolveCatalogSources(paths, env, { includeDisabled: true });
-		assert.equal(migrated.length, 1);
-		assert.deepEqual(migrated[0], {
+		assert.deepEqual(
+			migrated.map((source) => source.id),
+			["shisa-api", "default"],
+		);
+		assert.deepEqual(migrated[1], {
 			id: "default",
 			label: "Environment catalog",
 			url: "https://catalog.example/v1/jouzu/model-catalog",
@@ -86,8 +94,160 @@ test("single-source environment setup migrates only when no registry exists", ()
 		});
 		assert.deepEqual(
 			resolveCatalogSources(paths, env, { includeDisabled: true }).map((source) => source.id),
+			["shisa-api", "default", "community"],
+		);
+		// The code-owned built-in is never materialized into the user registry.
+		assert.deepEqual(
+			loadCatalogSourceRegistry(paths).sources.map((source) => source.id),
 			["default", "community"],
 		);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("built-in Shisa API source resolves without a registry and never stores the key", () => {
+	const { root, paths, registryPath } = setup();
+	try {
+		const resolved = resolveCatalogSources(paths, {});
+		assert.deepEqual(resolved, [
+			{
+				id: "shisa-api",
+				label: "Shisa API",
+				url: "https://api.shisa.ai/v1/jouzu/model-catalog",
+				enabled: true,
+				auth: { type: "bearer", credentialRef: "env:SHISA_API_KEY" },
+			},
+		]);
+		// Resolution is pure: no registry or overrides file is written.
+		assert.equal(existsSync(registryPath), false);
+		assert.equal(existsSync(join(paths.configDir, "catalog-overrides.json")), false);
+		// A missing key fails before any request can be constructed.
+		assert.throws(() => resolveCatalogBearer(resolved[0], {}), /SHISA_API_KEY is not set/u);
+		assert.equal(resolveCatalogBearer(resolved[0], { SHISA_API_KEY: "sk-test" }), "sk-test");
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("a matching manual registration supersedes the built-in descriptor", () => {
+	const { root, paths } = setup();
+	try {
+		const store = new CatalogSourceStore(paths, { env: {} });
+		const manual = store.add({
+			id: "shisa",
+			label: "My Shisa",
+			url: "https://api.shisa.ai/v1/jouzu/model-catalog",
+			auth: { type: "bearer", credentialRef: "env:SHISA_API_KEY" },
+		});
+		store.setEnabled(manual.id, false);
+		const resolved = resolveCatalogSources(paths, {}, { includeDisabled: true });
+		assert.deepEqual(
+			resolved.map((source) => source.id),
+			["shisa"],
+		);
+		assert.equal(resolved[0].label, "My Shisa");
+		assert.equal(resolved[0].enabled, false);
+		assert.equal(catalogSourceConflict(resolved[0]), undefined);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("a conflicting registry entry claims the reserved id and blocks the built-in source", () => {
+	const { root, paths, registryPath } = setup();
+	try {
+		// The store suffixes colliding adds, so a conflict only arrives through a
+		// hand-edited registry file.
+		mkdirSync(paths.configDir, { recursive: true });
+		writeFileSync(
+			registryPath,
+			`${JSON.stringify({
+				schemaVersion: 1,
+				sources: [
+					{
+						id: "shisa-api",
+						label: "Elsewhere",
+						url: "https://catalog.example/v1/jouzu/model-catalog",
+						enabled: true,
+						auth: { type: "none" },
+					},
+				],
+			})}\n`,
+		);
+		const resolved = resolveCatalogSources(paths, {}, { includeDisabled: true });
+		assert.deepEqual(
+			resolved.map((source) => source.id),
+			["shisa-api"],
+		);
+		assert.equal(resolved[0].url, "https://catalog.example/v1/jouzu/model-catalog");
+		assert.match(catalogSourceConflict(resolved[0]) ?? "", /reserved for the built-in Shisa API catalog/u);
+		assert.equal(catalogSourceConflict(resolved[0])?.includes("catalog.example"), false);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("disabling the code-owned built-in writes only an override and re-enabling removes it", () => {
+	const { root, paths, registryPath } = setup();
+	try {
+		const overridesPath = join(paths.configDir, "catalog-overrides.json");
+		const store = new CatalogSourceStore(paths, { env: {} });
+		const builtin = store.list().find((source) => source.id === "shisa-api");
+		assert.equal(store.isCodeOwned(builtin), true);
+
+		const disabled = store.setEnabled("shisa-api", false);
+		assert.equal(disabled.enabled, false);
+		assert.equal(existsSync(registryPath), false);
+		const bytes = readFileSync(overridesPath, "utf8");
+		assert.deepEqual(JSON.parse(bytes), { schemaVersion: 1, overrides: { "shisa-api": { enabled: false } } });
+		assert.doesNotMatch(bytes, /SHISA_API_KEY|sk-/u);
+		assert.equal(resolveCatalogSources(paths, {}).some((source) => source.id === "shisa-api"), false);
+		assert.equal(
+			resolveCatalogSources(paths, {}, { includeDisabled: true })[0].enabled,
+			false,
+		);
+
+		store.setEnabled("shisa-api", true);
+		assert.equal(existsSync(overridesPath), false);
+		assert.equal(resolveCatalogSources(paths, {})[0].id, "shisa-api");
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("the code-owned built-in cannot be edited or removed", () => {
+	const { root, paths } = setup();
+	try {
+		const store = new CatalogSourceStore(paths, { env: {} });
+		assert.throws(
+			() => store.update("shisa-api", { label: "x", url: "https://example.test/catalog", auth: { type: "none" } }),
+			/can only be enabled or disabled/u,
+		);
+		assert.throws(() => store.remove("shisa-api"), /can only be enabled or disabled/u);
+		// A label colliding with the reserved id gets a suffixed id instead.
+		const added = store.add({
+			label: "Shisa API",
+			url: "https://community.example/v1/jouzu/model-catalog",
+			auth: { type: "none" },
+		});
+		assert.equal(added.id, "shisa-api-2");
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("catalog overrides reject unsafe files", () => {
+	const { root, paths } = setup();
+	try {
+		const overridesPath = join(paths.configDir, "catalog-overrides.json");
+		mkdirSync(paths.configDir, { recursive: true });
+		writeFileSync(overridesPath, '{"schemaVersion":1,"overrides":[]}');
+		assert.throws(() => resolveCatalogSources(paths, {}), /overrides object/u);
+		writeFileSync(overridesPath, '{"schemaVersion":1,"overrides":{"shisa-api":{"enabled":"no"}}}');
+		assert.throws(() => resolveCatalogSources(paths, {}), /enabled must be boolean/u);
+		writeFileSync(overridesPath, '{"schemaVersion":1,"overrides":{"shisa-api":{"url":"https://x.test"}}}');
+		assert.throws(() => resolveCatalogSources(paths, {}), /unknown field/u);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}

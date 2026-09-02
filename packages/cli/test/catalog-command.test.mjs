@@ -15,7 +15,7 @@ const paths = {
 	backupDir: "/unused/state/backups",
 };
 
-test("no catalog endpoint is a normal unconfigured state with no network work", () => {
+test("built-in source without a key is visible and idle with no network work", () => {
 	let fetchCount = 0;
 	const originalFetch = globalThis.fetch;
 	globalThis.fetch = async () => {
@@ -26,13 +26,28 @@ test("no catalog endpoint is a normal unconfigured state with no network work", 
 		const status = catalogStatus(paths, {});
 		assert.deepEqual(status, {
 			schemaVersion: 1,
-			status: "unconfigured",
-			configured: 0,
+			status: "empty",
+			configured: 1,
 			active: 0,
-			sources: [],
+			sources: [
+				{
+					schemaVersion: 1,
+					status: "empty",
+					configured: true,
+					sourceId: "shisa-api",
+					label: "Shisa API",
+					enabled: true,
+					endpoint: "https://api.shisa.ai/v1/jouzu/model-catalog",
+					credentialName: "SHISA_API_KEY",
+					credentialAvailable: false,
+					quarantined: 0,
+				},
+			],
 		});
 		assert.equal(fetchCount, 0);
-		assert.match(formatCatalogStatus(status), /unconfigured/);
+		const text = formatCatalogStatus(status);
+		assert.match(text, /Shisa API \[shisa-api\]: empty/u);
+		assert.match(text, /Credential: environment variable SHISA_API_KEY \(not set\)/u);
 	} finally {
 		globalThis.fetch = originalFetch;
 	}

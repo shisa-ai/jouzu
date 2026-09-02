@@ -1,4 +1,4 @@
-import { existsSync, lstatSync, readFileSync } from "node:fs";
+import { existsSync, lstatSync, readFileSync, rmSync } from "node:fs";
 import { dirname, join } from "node:path";
 import {
 	MODEL_CATALOG_MAX_BYTES,
@@ -11,10 +11,23 @@ import type { JouzuPaths } from "./paths.js";
 import { validatePrivateDirectory, writeFilePrivateAtomic } from "./private-fs.js";
 
 const REGISTRY_MAX_BYTES = 256 * 1024;
+const OVERRIDES_MAX_BYTES = 64 * 1024;
 const LABEL_MAX_BYTES = 256;
 const SOURCE_ID_PATTERN = /^[a-z0-9](?:[a-z0-9._-]{0,62}[a-z0-9])?$/u;
 const ENV_NAME_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/u;
 const DISCOVERY_TIMEOUT_MS = 10_000;
+
+export const SHISA_API_CATALOG_SOURCE_ID = "shisa-api";
+export const SHISA_API_CATALOG_CREDENTIAL_ENV = "SHISA_API_KEY";
+
+/** Product-owned Shisa API catalog descriptor. Never persisted with a credential value. */
+export const SHISA_API_CATALOG_SOURCE: CatalogSource = {
+	id: SHISA_API_CATALOG_SOURCE_ID,
+	label: "Shisa API",
+	url: "https://api.shisa.ai/v1/jouzu/model-catalog",
+	enabled: true,
+	auth: { type: "bearer", credentialRef: `env:${SHISA_API_CATALOG_CREDENTIAL_ENV}` },
+};
 
 export type CatalogSourceAuth = { type: "none" } | { type: "bearer"; credentialRef: `env:${string}` };
 
@@ -41,6 +54,15 @@ export interface CatalogSourceInput {
 
 export interface ResolveCatalogSourcesOptions {
 	includeDisabled?: boolean;
+}
+
+interface CatalogSourceOverride {
+	enabled?: boolean;
+}
+
+interface CatalogSourceOverridesFile {
+	schemaVersion: 1;
+	overrides: Record<string, CatalogSourceOverride>;
 }
 
 export interface CatalogEndpointDiscoveryOptions {
@@ -230,16 +252,123 @@ function environmentSource(env: NodeJS.ProcessEnv): CatalogSource | undefined {
 	};
 }
 
+export function catalogSourceOverridesPath(paths: JouzuPaths): string {
+	return join(configurationRoot(paths), "catalog-overrides.json");
+}
+
+function parseOverride(value: unknown, id: string): CatalogSourceOverride {
+	if (!isRecord(value)) throw new CatalogSourceError(`catalog source override ${id} must be an object`);
+	assertOnlyKeys(value, ["enabled"], `catalog source override ${id}`);
+	if (value.enabled !== undefined && typeof value.enabled !== "boolean") {
+		throw new CatalogSourceError(`catalog source override ${id}.enabled must be boolean`);
+	}
+	return value.enabled === undefined ? {} : { enabled: value.enabled };
+}
+
+export function loadCatalogSourceOverrides(paths: JouzuPaths): Record<string, CatalogSourceOverride> {
+	const path = catalogSourceOverridesPath(paths);
+	if (!existsSync(path)) return {};
+	validatePrivateDirectory(configurationRoot(paths));
+	const metadata = lstatSync(path);
+	if (!metadata.isFile() || metadata.isSymbolicLink() || metadata.size > OVERRIDES_MAX_BYTES) {
+		throw new CatalogSourceError("catalog source overrides must be a bounded regular file");
+	}
+	let value: unknown;
+	try {
+		value = parseStrictJson(readFileSync(path, "utf8"));
+	} catch (error) {
+		throw new CatalogSourceError(error instanceof Error ? error.message : String(error));
+	}
+	if (!isRecord(value)) throw new CatalogSourceError("catalog source overrides must be an object");
+	assertOnlyKeys(value, ["schemaVersion", "overrides"], "catalog source overrides");
+	if (value.schemaVersion !== 1 || !isRecord(value.overrides)) {
+		throw new CatalogSourceError("catalog source overrides require schemaVersion 1 and an overrides object");
+	}
+	const overrides: Record<string, CatalogSourceOverride> = {};
+	for (const [id, override] of Object.entries(value.overrides)) {
+		overrides[normalizeSourceId(id)] = parseOverride(override, id);
+	}
+	return overrides;
+}
+
+function writeCatalogSourceOverrides(paths: JouzuPaths, overrides: Record<string, CatalogSourceOverride>): void {
+	if (Object.keys(overrides).length === 0) {
+		rmSync(catalogSourceOverridesPath(paths), { force: true });
+		return;
+	}
+	const file: CatalogSourceOverridesFile = { schemaVersion: 1, overrides };
+	writeFilePrivateAtomic(
+		catalogSourceOverridesPath(paths),
+		`${JSON.stringify(file, null, 2)}\n`,
+		configurationRoot(paths),
+	);
+}
+
+function sameAuth(left: CatalogSourceAuth, right: CatalogSourceAuth): boolean {
+	if (left.type !== right.type) return false;
+	return left.type === "none" || (left.type === "bearer" && right.type === "bearer" && left.credentialRef === right.credentialRef);
+}
+
+/** True when a source targets the built-in Shisa API endpoint and credential reference. */
+export function isShisaApiCatalogEndpoint(source: CatalogSource): boolean {
+	return source.url === SHISA_API_CATALOG_SOURCE.url && sameAuth(source.auth, SHISA_API_CATALOG_SOURCE.auth);
+}
+
+/** True when a source is the built-in descriptor itself (reserved id plus exact endpoint and credential). */
+export function isBuiltinCatalogSource(source: CatalogSource): boolean {
+	return source.id === SHISA_API_CATALOG_SOURCE_ID && isShisaApiCatalogEndpoint(source);
+}
+
+/** Explains why a user-registered source claiming the reserved id blocks the built-in source. */
+export function catalogSourceConflict(source: CatalogSource): string | undefined {
+	if (source.id !== SHISA_API_CATALOG_SOURCE_ID || isBuiltinCatalogSource(source)) return undefined;
+	return `source id "${SHISA_API_CATALOG_SOURCE_ID}" is reserved for the built-in Shisa API catalog (${SHISA_API_CATALOG_SOURCE.url}, env:${SHISA_API_CATALOG_CREDENTIAL_ENV}); this entry points elsewhere, so the built-in source stays inactive`;
+}
+
+export function catalogSourceCredentialName(source: CatalogSource): string | undefined {
+	return source.auth.type === "bearer" ? source.auth.credentialRef.slice(4) : undefined;
+}
+
+export function catalogSourceCredentialAvailable(source: CatalogSource, env: NodeJS.ProcessEnv): boolean {
+	const name = catalogSourceCredentialName(source);
+	if (!name) return true;
+	const value = env[name];
+	return typeof value === "string" && Boolean(value.trim());
+}
+
+/** Sources from the user registry, or the single-source environment shorthand when no registry exists. */
+function resolveBaseCatalogSources(paths: JouzuPaths, env: NodeJS.ProcessEnv): CatalogSource[] {
+	if (catalogSourceRegistryExists(paths)) return loadCatalogSourceRegistry(paths).sources;
+	const shorthand = environmentSource(env);
+	return shorthand ? [shorthand] : [];
+}
+
+/** True when the built-in descriptor is supplied by code rather than a user registry entry. */
+export function isCodeOwnedCatalogSource(paths: JouzuPaths, source: CatalogSource, env: NodeJS.ProcessEnv): boolean {
+	return (
+		isBuiltinCatalogSource(source) &&
+		!resolveBaseCatalogSources(paths, env).some((candidate) => candidate.id === source.id)
+	);
+}
+
 export function resolveCatalogSources(
 	paths: JouzuPaths,
 	env: NodeJS.ProcessEnv = process.env,
 	options: ResolveCatalogSourcesOptions = {},
 ): CatalogSource[] {
-	const sources = catalogSourceRegistryExists(paths)
-		? loadCatalogSourceRegistry(paths).sources
-		: environmentSource(env)
-			? [environmentSource(env) as CatalogSource]
-			: [];
+	const base = resolveBaseCatalogSources(paths, env);
+	const override = loadCatalogSourceOverrides(paths)[SHISA_API_CATALOG_SOURCE_ID];
+	const builtin: CatalogSource =
+		override?.enabled === undefined
+			? SHISA_API_CATALOG_SOURCE
+			: { ...SHISA_API_CATALOG_SOURCE, enabled: override.enabled };
+	// A registry entry with the reserved id, or any entry targeting the same endpoint and
+	// credential, is the user's own registration of the built-in source. It keeps its label,
+	// enabled state, and URL-keyed cache, and the code-owned descriptor stays out of the way.
+	const claimed = base.some(
+		(source) => source.id === SHISA_API_CATALOG_SOURCE_ID || isShisaApiCatalogEndpoint(source),
+	);
+	const sources = claimed ? base : [builtin, ...base];
 	return options.includeDisabled ? sources : sources.filter((source) => source.enabled);
 }
 
@@ -265,17 +394,30 @@ export class CatalogSourceStore {
 		return resolveCatalogSources(this.paths, this.env, { includeDisabled: true });
 	}
 
+	/** True when the source is the code-owned built-in rather than a registry entry. */
+	isCodeOwned(source: CatalogSource): boolean {
+		return isCodeOwnedCatalogSource(this.paths, source, this.env);
+	}
+
+	private assertMutable(source: CatalogSource, operation: "edit" | "remove"): void {
+		if (this.isCodeOwned(source)) {
+			throw new CatalogSourceError(
+				`cannot ${operation} the built-in ${source.label} catalog source; it can only be enabled or disabled`,
+			);
+		}
+	}
+
 	private save(sources: CatalogSource[]): void {
 		writeRegistry(this.paths, { schemaVersion: 1, sources });
 	}
 
 	add(input: CatalogSourceInput): CatalogSource {
-		const sources = this.list();
+		const resolved = this.list();
 		const label = controlFree(input.label, "catalog source label", LABEL_MAX_BYTES);
 		const baseId = input.id ? normalizeSourceId(input.id) : sourceIdFromLabel(label);
 		let id = baseId;
 		let suffix = 2;
-		while (sources.some((source) => source.id === id)) {
+		while (resolved.some((source) => source.id === id)) {
 			id = `${baseId.slice(0, Math.max(1, 63 - String(suffix).length))}-${suffix}`;
 			suffix += 1;
 		}
@@ -287,17 +429,22 @@ export class CatalogSourceStore {
 				enabled: input.enabled ?? true,
 				auth: input.auth,
 			},
-			sources.length,
+			resolved.length,
 		);
-		this.save([...sources, source]);
+		// Persist only user-managed sources; the code-owned built-in is never materialized.
+		this.save([...resolveBaseCatalogSources(this.paths, this.env), source]);
 		return source;
 	}
 
 	update(id: string, input: Omit<CatalogSourceInput, "id">): CatalogSource {
 		const normalizedId = normalizeSourceId(id);
-		const sources = this.list();
+		const sources = resolveBaseCatalogSources(this.paths, this.env);
 		const index = sources.findIndex((source) => source.id === normalizedId);
-		if (index < 0) throw new CatalogSourceError(`catalog source not found: ${normalizedId}`);
+		if (index < 0) {
+			const resolved = this.list().find((source) => source.id === normalizedId);
+			if (resolved) this.assertMutable(resolved, "edit");
+			throw new CatalogSourceError(`catalog source not found: ${normalizedId}`);
+		}
 		const source = parseSource({ ...input, id: normalizedId, enabled: input.enabled ?? sources[index].enabled }, index);
 		sources[index] = source;
 		this.save(sources);
@@ -305,20 +452,35 @@ export class CatalogSourceStore {
 	}
 
 	setEnabled(id: string, enabled: boolean): CatalogSource {
-		const sources = this.list();
 		const normalizedId = normalizeSourceId(id);
-		const index = sources.findIndex((source) => source.id === normalizedId);
-		if (index < 0) throw new CatalogSourceError(`catalog source not found: ${normalizedId}`);
+		const resolved = this.list();
+		const source = resolved.find((candidate) => candidate.id === normalizedId);
+		if (!source) throw new CatalogSourceError(`catalog source not found: ${normalizedId}`);
+		if (this.isCodeOwned(source)) {
+			// Store only the override; the descriptor and credential reference stay code-owned.
+			// Returning to the descriptor default drops the override entirely.
+			const overrides = { ...loadCatalogSourceOverrides(this.paths) };
+			if (enabled === SHISA_API_CATALOG_SOURCE.enabled) delete overrides[source.id];
+			else overrides[source.id] = { enabled };
+			writeCatalogSourceOverrides(this.paths, overrides);
+			return { ...source, enabled };
+		}
+		const sources = resolveBaseCatalogSources(this.paths, this.env);
+		const index = sources.findIndex((candidate) => candidate.id === normalizedId);
 		sources[index] = { ...sources[index], enabled };
 		this.save(sources);
 		return sources[index];
 	}
 
 	remove(id: string): CatalogSource {
-		const sources = this.list();
 		const normalizedId = normalizeSourceId(id);
+		const sources = resolveBaseCatalogSources(this.paths, this.env);
 		const index = sources.findIndex((source) => source.id === normalizedId);
-		if (index < 0) throw new CatalogSourceError(`catalog source not found: ${normalizedId}`);
+		if (index < 0) {
+			const resolved = this.list().find((source) => source.id === normalizedId);
+			if (resolved) this.assertMutable(resolved, "remove");
+			throw new CatalogSourceError(`catalog source not found: ${normalizedId}`);
+		}
 		const [removed] = sources.splice(index, 1);
 		this.save(sources);
 		return removed;

@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 
 import { CatalogSettingsComponent } from "../dist/catalog-settings.js";
-import { CatalogSourceStore } from "../dist/catalog-sources.js";
+import { CatalogSourceStore, loadCatalogSourceRegistry } from "../dist/catalog-sources.js";
 import { parseAndValidateModelCatalog } from "../dist/model-catalog.js";
 import { refreshCatalogSource } from "../dist/model-catalog-sync.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
@@ -83,7 +83,9 @@ test("Catalogs settings uses Enter to edit and horizontal arrows for model discl
 		});
 		await refreshCatalogSource(paths, source, { env: {}, fetch: async () => response(fixture) });
 		const component = new CatalogSettingsComponent({ context, paths, env: {} });
+		component.handleInput("down");
 		let rendered = component.render(84);
+		assert.match(rendered.join("\n"), /Shisa API/u);
 		assert.match(rendered.join("\n"), /Office pool/u);
 		assert.match(rendered.join("\n"), /active/u);
 		assert.match(rendered.join("\n"), /1 model/u);
@@ -95,7 +97,7 @@ test("Catalogs settings uses Enter to edit and horizontal arrows for model discl
 		assert.match(rendered.join("\n"), /Edit Office pool/u);
 		for (const character of " changed") component.handleInput(character);
 		component.handleInput("escape");
-		assert.equal(new CatalogSourceStore(paths).list()[0].label, "Office pool");
+		assert.equal(new CatalogSourceStore(paths).list().find((entry) => entry.id === source.id).label, "Office pool");
 
 		component.handleInput("\u001b[C");
 		rendered = component.render(84);
@@ -109,15 +111,47 @@ test("Catalogs settings uses Enter to edit and horizontal arrows for model discl
 	}
 });
 
-test("Catalogs settings opens empty setup directly and Esc closes without writing", () => {
+test("Catalogs settings shows the built-in source and opens the add form with A", () => {
 	const { root, paths, context, closes } = setup();
 	try {
 		const component = new CatalogSettingsComponent({ context, paths, env: {} });
+		const listing = component.render(84).join("\n");
+		assert.match(listing, /Shisa API · SHISA_API_KEY not set/u);
+		assert.doesNotMatch(listing, /Add catalog/u);
+
+		component.handleInput("a");
 		assert.match(component.render(84).join("\n"), /Add catalog/u);
 		for (const character of "Canceled catalog") component.handleInput(character);
 		component.handleInput("escape");
-		assert.equal(closes.length, 1);
-		assert.deepEqual(new CatalogSourceStore(paths).list(), []);
+		// Esc closes only the form; the built-in source remains listed.
+		assert.equal(closes.length, 0);
+		assert.equal(existsSync(join(paths.configDir, "catalogs.json")), false);
+		assert.match(component.render(84).join("\n"), /Shisa API/u);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("Catalogs settings disables the code-owned built-in with Space and guards edit and remove", () => {
+	const { root, paths, context } = setup();
+	try {
+		const component = new CatalogSettingsComponent({ context, paths, env: {} });
+		const overridesPath = join(paths.configDir, "catalog-overrides.json");
+
+		component.handleInput("enter");
+		assert.match(component.render(84).join("\n"), /built-in Jouzu catalog source/u);
+
+		component.handleInput("d");
+		assert.match(component.render(84).join("\n"), /built in and cannot be removed/u);
+
+		component.handleInput(" ");
+		assert.match(component.render(84).join("\n"), /Shisa API · disabled/u);
+		assert.equal(existsSync(overridesPath), true);
+		assert.equal(existsSync(join(paths.configDir, "catalogs.json")), false);
+
+		component.handleInput(" ");
+		assert.match(component.render(84).join("\n"), /Shisa API · SHISA_API_KEY not set/u);
+		assert.equal(existsSync(overridesPath), false);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
@@ -128,6 +162,7 @@ test("Catalogs settings shows complete bearer-token fields and process availabil
 	try {
 		const env = {};
 		const component = new CatalogSettingsComponent({ context, paths, env });
+		component.handleInput("a");
 		component.handleInput("down");
 		component.handleInput("down");
 		component.handleInput("\u001b[C");
@@ -169,6 +204,7 @@ test("Catalogs settings hints render effective semantic bindings", () => {
 	});
 	try {
 		const component = new CatalogSettingsComponent({ context, paths, env: {} });
+		component.handleInput("a");
 		const rendered = component.render(72).join("\n");
 		assert.match(rendered, /Ctrl\+S save/u);
 		assert.match(rendered, /K\/J field/u);
@@ -192,6 +228,7 @@ test("Catalogs settings wraps save errors without hiding authentication guidance
 				);
 			},
 		});
+		component.handleInput("a");
 		for (const character of "Office pool") component.handleInput(character);
 		component.handleInput("down");
 		for (const character of "catalog.example") component.handleInput(character);
@@ -240,6 +277,7 @@ test("Catalogs settings saves a label and discovered conventional endpoint", asy
 				},
 			}),
 		});
+		component.handleInput("a");
 		for (const character of "Local catalog") component.handleInput(character);
 		component.handleInput("down");
 		for (const character of "127.0.0.1:8989") component.handleInput(character);
@@ -247,7 +285,7 @@ test("Catalogs settings saves a label and discovered conventional endpoint", asy
 		await new Promise((resolve) => setImmediate(resolve));
 
 		assert.deepEqual(discoveries, [{ input: "127.0.0.1:8989", auth: { type: "none" } }]);
-		const saved = new CatalogSourceStore(paths).list();
+		const saved = loadCatalogSourceRegistry(paths).sources;
 		assert.equal(saved.length, 1);
 		assert.equal(saved[0].label, "Local catalog");
 		assert.equal(saved[0].url, "http://127.0.0.1:8989/v1/jouzu/model-catalog");

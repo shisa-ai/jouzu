@@ -16,7 +16,7 @@ import {
 	resetKeybindings,
 } from "./keybindings.js";
 import { loadMetadata } from "./metadata.js";
-import { acceptQuarantinedCatalog, refreshAllModelCatalogs, refreshModelCatalog } from "./model-catalog-sync.js";
+import { acceptQuarantinedCatalog, refreshAllModelCatalogs, refreshAvailableModelCatalogs, refreshModelCatalog } from "./model-catalog-sync.js";
 import { createJouzuModelPicker } from "./model-picker.js";
 import { projectDefaultAppliesAtStartup } from "./model-picker-state.js";
 import { resolveJouzuPaths } from "./paths.js";
@@ -302,6 +302,15 @@ async function runCli(args: string[]): Promise<void> {
 		applyProjectDefaultAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
 		restoreLastModelAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
 	});
+	if (interactiveStartup) {
+		// Best-effort catalog refresh in the background: a source is contacted only
+		// when its credential is available, and cached revisions keep serving.
+		void refreshAvailableModelCatalogs(paths)
+			.then((result) => {
+				if (result) modelPicker.reloadCatalogs();
+			})
+			.catch(() => {});
+	}
 	const help = createJouzuHelpExtension();
 	const effectiveKeyText = (action: "app.model.select" | "app.model.cycleForward") => pi.keyText(action) || "unbound";
 	const sessionUi = createSessionUiExtension({

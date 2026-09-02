@@ -21,7 +21,7 @@ export function catalogStatus(
 		(candidate) => candidate.id === sourceId,
 	);
 	if (!source) throw new Error(`catalog source not found: ${sourceId}`);
-	return getCatalogSourceStatus(paths, source);
+	return getCatalogSourceStatus(paths, source, new Date(), env);
 }
 
 function formatOneCatalogStatus(status: CatalogSyncStatus): string[] {
@@ -34,6 +34,12 @@ function formatOneCatalogStatus(status: CatalogSyncStatus): string[] {
 	if (status.offeringCount !== undefined) lines.push(`  Models: ${status.offeringCount}`);
 	if (status.revision) lines.push(`  Revision: ${status.revision} (sequence ${status.sequence})`);
 	if (status.validatedAt) lines.push(`  Validated: ${status.validatedAt}`);
+	if (status.credentialName) {
+		lines.push(
+			`  Credential: environment variable ${status.credentialName} (${status.credentialAvailable ? "set" : "not set"})`,
+		);
+	}
+	if (status.conflict) lines.push(`  Warning: ${status.conflict}`);
 	if (status.quarantined > 0) lines.push(`  Quarantined candidates: ${status.quarantined}`);
 	if (status.lastError) lines.push(`  Last error: ${status.lastError.code}: ${status.lastError.message}`);
 	return lines;

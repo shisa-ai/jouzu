@@ -1,7 +1,16 @@
 import { createHash } from "node:crypto";
 import { existsSync, lstatSync, readFileSync, rmSync } from "node:fs";
 import { join, relative, resolve, sep } from "node:path";
-import { type CatalogSource, resolveCatalogBearer, resolveCatalogSources } from "./catalog-sources.js";
+import {
+	type CatalogSource,
+	catalogSourceConflict,
+	catalogSourceCredentialAvailable,
+	catalogSourceCredentialName,
+	isBuiltinCatalogSource,
+	isCodeOwnedCatalogSource,
+	resolveCatalogBearer,
+	resolveCatalogSources,
+} from "./catalog-sources.js";
 import {
 	catalogDocumentSha256,
 	MODEL_CATALOG_MAX_BYTES,
@@ -82,6 +91,9 @@ export type CatalogSyncStatus =
 			validatedAt?: string;
 			offeringCount?: number;
 			lastError?: { code: string; message: string; at: string };
+			credentialName?: string;
+			credentialAvailable?: boolean;
+			conflict?: string;
 			quarantined: number;
 	  };
 
@@ -296,7 +308,15 @@ function unconfiguredStatus(): CatalogSyncStatus {
 	};
 }
 
-export function getCatalogSourceStatus(paths: JouzuPaths, source: CatalogSource, now = new Date()): CatalogSyncStatus {
+export function getCatalogSourceStatus(
+	paths: JouzuPaths,
+	source: CatalogSource,
+	now = new Date(),
+	env: NodeJS.ProcessEnv = process.env,
+): CatalogSyncStatus {
+	const credentialName = catalogSourceCredentialName(source);
+	const credentialAvailable = credentialName ? catalogSourceCredentialAvailable(source, env) : undefined;
+	const conflict = catalogSourceConflict(source);
 	try {
 		const origin = readOriginState(paths, source.url);
 		const account = origin?.activeAccountRefHash
@@ -320,6 +340,8 @@ export function getCatalogSourceStatus(paths: JouzuPaths, source: CatalogSource,
 			...(account?.validatedAt ? { validatedAt: account.validatedAt } : {}),
 			...(offeringCount !== undefined ? { offeringCount } : {}),
 			...(account?.lastError ? { lastError: account.lastError } : {}),
+			...(credentialName ? { credentialName, credentialAvailable } : {}),
+			...(conflict ? { conflict } : {}),
 			quarantined: account?.quarantined.length ?? 0,
 		};
 	} catch (error) {
@@ -331,6 +353,8 @@ export function getCatalogSourceStatus(paths: JouzuPaths, source: CatalogSource,
 			label: source.label,
 			enabled: source.enabled,
 			endpoint: publicEndpoint(source.url),
+			...(credentialName ? { credentialName, credentialAvailable } : {}),
+			...(conflict ? { conflict } : {}),
 			lastError: {
 				code: "invalid_cache",
 				message: error instanceof Error ? error.message : String(error),
@@ -348,7 +372,7 @@ export function getCatalogStatuses(
 ): CatalogStatuses {
 	const sources = resolveCatalogSources(paths, env, { includeDisabled: true });
 	if (sources.length === 0) return { schemaVersion: 1, status: "unconfigured", configured: 0, active: 0, sources: [] };
-	const statuses = sources.map((source) => getCatalogSourceStatus(paths, source, now));
+	const statuses = sources.map((source) => getCatalogSourceStatus(paths, source, now, env));
 	const enabled = statuses.filter((status) => status.configured && status.enabled);
 	const active = enabled.filter((status) => status.status === "active").length;
 	const degraded = enabled.some((status) => status.status === "stale");
@@ -367,7 +391,7 @@ export function getCatalogStatus(
 	now = new Date(),
 ): CatalogSyncStatus {
 	const source = resolveCatalogSources(paths, env)[0];
-	return source ? getCatalogSourceStatus(paths, source, now) : unconfiguredStatus();
+	return source ? getCatalogSourceStatus(paths, source, now, env) : unconfiguredStatus();
 }
 
 function loadDocument(accountDirectory: string, reference: CatalogRevisionRef): ModelCatalogDocument {
@@ -480,7 +504,7 @@ export async function refreshCatalogSource(
 ): Promise<CatalogRefreshResult> {
 	const env = options.env ?? process.env;
 	const now = options.now ?? new Date();
-	const catalogStatus = () => getCatalogSourceStatus(paths, source, now);
+	const catalogStatus = () => getCatalogSourceStatus(paths, source, now, env);
 	let token: string | undefined;
 	try {
 		token = resolveCatalogBearer(source, env);
@@ -515,6 +539,8 @@ export async function refreshCatalogSource(
 			response = await (options.fetch ?? globalThis.fetch)(config.url, {
 				method: "GET",
 				headers,
+				// Never follow a redirect with an Authorization header attached.
+				redirect: "error",
 				signal: controller.signal,
 			});
 		} finally {
@@ -648,8 +674,11 @@ export async function refreshModelCatalog(
 	const env = options.env ?? process.env;
 	const sources = resolveCatalogSources(paths, env);
 	if (sources.length === 0) return { status: "unconfigured", catalogStatus: unconfiguredStatus() };
-	const source = options.sourceId ? sources.find((candidate) => candidate.id === options.sourceId) : sources[0];
+	const source = options.sourceId
+		? sources.find((candidate) => candidate.id === options.sourceId)
+		: sources.find((candidate) => !automaticallySkipped(paths, candidate, env));
 	if (!source) {
+		if (!options.sourceId) return { status: "unconfigured", catalogStatus: unconfiguredStatus() };
 		return {
 			status: "error",
 			catalogStatus: unconfiguredStatus(),
@@ -660,13 +689,55 @@ export async function refreshModelCatalog(
 	return refreshCatalogSource(paths, source, options);
 }
 
+/**
+ * The code-owned built-in source with an absent credential is an expected
+ * unconfigured state, not an error: bulk refresh skips it without a request.
+ * Registry-backed sources keep their explicit auth_required error instead.
+ */
+function automaticallySkipped(paths: JouzuPaths, source: CatalogSource, env: NodeJS.ProcessEnv): boolean {
+	return (
+		isBuiltinCatalogSource(source) &&
+		isCodeOwnedCatalogSource(paths, source, env) &&
+		!catalogSourceCredentialAvailable(source, env)
+	);
+}
+
 export async function refreshAllModelCatalogs(
 	paths: JouzuPaths,
 	options: Omit<RefreshCatalogOptions, "sourceId"> = {},
 ): Promise<CatalogRefreshAllResult> {
 	const env = options.env ?? process.env;
-	const sources = resolveCatalogSources(paths, env);
+	const sources = resolveCatalogSources(paths, env).filter(
+		(source) => !automaticallySkipped(paths, source, env),
+	);
 	if (sources.length === 0) return { status: "unconfigured", results: [] };
+	const results = await Promise.all(
+		sources.map(async (source) => ({ source, result: await refreshCatalogSource(paths, source, options) })),
+	);
+	const successful = results.filter(
+		({ result }) => result.status === "activated" || result.status === "not-modified",
+	).length;
+	return {
+		status: successful === results.length ? "complete" : successful === 0 ? "failed" : "partial",
+		results,
+	};
+}
+
+/**
+ * Best-effort catalog refresh for interactive startup. Only sources whose
+ * bearer credential is available are contacted, so an unset environment
+ * variable produces no request and no error. Returns undefined when no
+ * source can be refreshed.
+ */
+export async function refreshAvailableModelCatalogs(
+	paths: JouzuPaths,
+	options: Omit<RefreshCatalogOptions, "sourceId"> = {},
+): Promise<CatalogRefreshAllResult | undefined> {
+	const env = options.env ?? process.env;
+	const sources = resolveCatalogSources(paths, env).filter((source) =>
+		catalogSourceCredentialAvailable(source, env),
+	);
+	if (sources.length === 0) return undefined;
 	const results = await Promise.all(
 		sources.map(async (source) => ({ source, result: await refreshCatalogSource(paths, source, options) })),
 	);
@@ -726,7 +797,9 @@ export function acceptQuarantinedCatalog(
 	sourceId?: string,
 ): CatalogSyncStatus {
 	const sources = resolveCatalogSources(paths, env);
-	const source = sourceId ? sources.find((candidate) => candidate.id === sourceId) : sources[0];
+	const source = sourceId
+		? sources.find((candidate) => candidate.id === sourceId)
+		: sources.find((candidate) => !automaticallySkipped(paths, candidate, env));
 	if (!source) return unconfiguredStatus();
 	const config: CatalogEndpointConfig = { url: source.url };
 	const release = acquireStateLock({

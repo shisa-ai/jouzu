@@ -71,8 +71,13 @@ function countLabel(count: number): string {
 }
 
 function sourceStatusText(view: SourceView): string {
+	const status = view.status;
+	if (status.configured && status.conflict) return "reserved-id conflict";
 	if (!view.source.enabled) return "disabled";
-	return view.status.status;
+	if (status.configured && status.credentialName && status.credentialAvailable === false) {
+		return `${status.credentialName} not set`;
+	}
+	return status.status;
 }
 
 export class CatalogSettingsComponent implements PaletteComponent, Focusable {
@@ -147,7 +152,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 				const document = loadActiveCatalogForSource(this.paths, source);
 				return {
 					source,
-					status: getCatalogSourceStatus(this.paths, source),
+					status: getCatalogSourceStatus(this.paths, source, new Date(), this.env),
 					offerings: (document?.modelOfferings ?? []).map((offering) => ({
 						providerId: sanitizeTerminalText(offering.providerId),
 						modelId: sanitizeTerminalText(offering.modelId),
@@ -406,6 +411,15 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			return;
 		}
 		if (this.keybindings.matches(data, "tui.select.confirm")) {
+			const source = this.selected()?.source;
+			if (source && this.store.isCodeOwned(source)) {
+				this.message = {
+					level: "info",
+					text: `${sanitizeTerminalText(source.label)} is a built-in Jouzu catalog source. Space enables or disables it; its endpoint and credential reference stay managed.`,
+				};
+				this.tui.requestRender();
+				return;
+			}
 			this.startForm("edit");
 			return;
 		}
@@ -418,6 +432,15 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			return;
 		}
 		if (data === "d" && this.selected()) {
+			const selected = this.selected()?.source;
+			if (selected && this.store.isCodeOwned(selected)) {
+				this.message = {
+					level: "info",
+					text: `${sanitizeTerminalText(selected.label)} is built in and cannot be removed. Space disables it.`,
+				};
+				this.tui.requestRender();
+				return;
+			}
 			this.confirmRemove = true;
 			this.message = {
 				level: "error",
@@ -531,8 +554,22 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 								: summary,
 						),
 					);
-					if (selected)
-						lines.push(line(this.styles.apply("palette.detail", `  ${sanitizeTerminalText(view.source.url)}`)));
+					if (selected) {
+						const status = view.status;
+						const credential =
+							status.configured && status.credentialName
+								? ` · ${status.credentialName} ${status.credentialAvailable ? "set" : "not set"}`
+								: "";
+						lines.push(
+							line(
+								this.styles.apply(
+									"palette.detail",
+									`  ${sanitizeTerminalText(view.source.url)}${sanitizeTerminalText(credential)}`,
+								),
+							),
+						);
+						if (status.configured && status.conflict) lines.push(...hint(`  ${sanitizeTerminalText(status.conflict)}`));
+					}
 					if (this.expandedSourceId === view.source.id) {
 						const terminalRows = Number(this.tui.terminal?.rows ?? 24);
 						const available = Math.max(3, terminalRows - lines.length - 8);

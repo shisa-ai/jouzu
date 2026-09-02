@@ -153,9 +153,13 @@ The import rejects symbolic links, non-regular files, oversized files, and files
 
 ## Optional model catalogs
 
-Jouzu does not require a remote model catalog. With no source configured, it makes no catalog request and continues using Pi's effective model inventory plus local `models.json` configuration. `jouzu catalog status` and `jouzu catalog refresh` report `unconfigured` and exit successfully in that state.
+Jouzu does not require a remote model catalog. Without `SHISA_API_KEY` and without a configured source, Jouzu makes no catalog request and continues using Pi's effective model inventory plus local `models.json` configuration.
 
-Open Settings / Catalogs with `/catalogs`, or press `Tab` from Models while the Palette is in browse mode. Each custom source stores a label, URL, enabled state, and authentication mode. With no source configured, Settings opens the add form directly. Move between fields with `↑` and `↓`, change Authentication with `←` and `→`, and press `Enter` to save. Jouzu accepts an exact URL or a host and finds the catalog endpoint automatically. HTTPS is required except for localhost development. `Esc` cancels without writing.
+Jouzu includes a built-in `shisa-api` source. When the `SHISA_API_KEY` environment variable holds a bearer token, that source reads the account's model catalog from `https://api.shisa.ai/v1/jouzu/model-catalog` without any configuration. On interactive startup Jouzu refreshes each enabled source whose credential is available, in the background, while cached catalogs keep serving; sources with a missing credential are not contacted and report no error. The token value is sent only in the source's authorization header and is never written to configuration, cache, or diagnostics.
+
+The built-in source can be disabled in Settings / Catalogs. The choice is stored in `catalog-overrides.json` next to `catalogs.json` without any credential, and re-enabling restores the built-in defaults. A manually registered source with the same endpoint and `env:SHISA_API_KEY` credential takes the place of the built-in source, keeping its label, enabled state, and cached catalog. Source id `shisa-api` is reserved; `jouzu catalog status` reports a custom entry that claims it with another endpoint.
+
+Open Settings / Catalogs with `/catalogs`, or press `Tab` from Models while the Palette is in browse mode. Each custom source stores a label, URL, enabled state, and authentication mode. `A` opens the add form. Move between fields with `↑` and `↓`, change Authentication with `←` and `→`, and press `Enter` to save. Jouzu accepts an exact URL or a host and finds the catalog endpoint automatically. HTTPS is required except for localhost development. `Esc` cancels without writing.
 
 Authentication can be disabled or read as a bearer token from a named environment variable. Jouzu stores only the environment-variable name in `catalogs.json`; bearer values are sent only in the source's authorization header and never written to configuration, cache, or diagnostics. Catalog configuration is stored at:
 
@@ -165,7 +169,7 @@ Authentication can be disabled or read as a bearer token from a named environmen
 | macOS | `~/Library/Application Support/Jouzu/catalogs.json` |
 | Windows | `%APPDATA%\Jouzu\catalogs.json` |
 
-Settings reports each source's status and model count. `Enter` edits the selected source; `→` expands its cached offerings and `←` collapses them. `A` adds, `Space` enables or disables, `R` refreshes, and `D` removes the source registration; removal asks for confirmation. Removing a source does not remove provider configuration, credentials, favorites, or recents.
+Settings reports each source's status and model count. `Enter` edits the selected source; `→` expands its cached offerings and `←` collapses them. `A` adds, `Space` enables or disables, `R` refreshes, and `D` removes the source registration; removal asks for confirmation. The built-in `shisa-api` row supports only `Space`; its endpoint and credential reference are managed by Jouzu. Removing a custom source does not remove provider configuration, credentials, favorites, or recents.
 
 Refresh uses ETag/`304`, validates complete bytes before activation, partitions private cache by source and account, and keeps each source's last valid catalog on network or validation failure. CLI status and refresh operate on all enabled sources or one named source:
 
@@ -176,7 +180,7 @@ jouzu catalog refresh
 jouzu catalog refresh office
 ```
 
-`JOUZU_MODEL_CATALOG_URL` and optional `JOUZU_MODEL_CATALOG_TOKEN` remain a single-source shorthand when `catalogs.json` does not exist.
+`JOUZU_MODEL_CATALOG_URL` and optional `JOUZU_MODEL_CATALOG_TOKEN` remain a single-source shorthand when `catalogs.json` does not exist. Refresh requests never follow redirects, so a bearer token cannot be forwarded to another origin.
 
 A structurally valid large catalog change can be quarantined instead of activated. Review its status, then accept only the exact displayed revision and SHA-256 digest with `jouzu catalog accept REVISION --digest SHA256 --source SOURCE_ID`.
 

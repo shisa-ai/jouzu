@@ -11,6 +11,7 @@ import {
 	loadActiveModelCatalog,
 	loadActiveModelCatalogs,
 	refreshAllModelCatalogs,
+	refreshAvailableModelCatalogs,
 	refreshModelCatalog,
 	resolveCatalogEndpoint,
 } from "../dist/model-catalog-sync.js";
@@ -149,9 +150,17 @@ test("multiple sources refresh independently with optional authentication and ag
 		);
 		const status = getCatalogStatuses(jouzuPaths, { PRIVATE_TOKEN: "fixture-token" });
 		assert.equal(status.status, "active");
+		assert.equal(status.configured, 3);
 		assert.equal(status.active, 2);
 		assert.deepEqual(
-			status.sources.map((source) => source.offeringCount),
+			status.sources.map((source) => source.sourceId),
+			["shisa-api", "public-models", "private-pool"],
+		);
+		assert.equal(status.sources[0].status, "empty");
+		assert.equal(status.sources[0].credentialName, "SHISA_API_KEY");
+		assert.equal(status.sources[0].credentialAvailable, false);
+		assert.deepEqual(
+			status.sources.slice(1).map((source) => source.offeringCount),
 			[fixture.modelOfferings.length, fixture.modelOfferings.length],
 		);
 	} finally {
@@ -291,4 +300,120 @@ test("endpoint configuration forbids credentials and non-local cleartext", () =>
 		resolveCatalogEndpoint({ JOUZU_MODEL_CATALOG_URL: "http://localhost:8080/catalog" }).url,
 		"http://localhost:8080/catalog",
 	);
+});
+
+test("startup refresh contacts only sources with available credentials", async () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-startup-"));
+	try {
+		const jouzuPaths = paths(temporary);
+		let calls = 0;
+		const none = await refreshAvailableModelCatalogs(jouzuPaths, {
+			env: {},
+			fetch: async () => {
+				calls += 1;
+				throw new Error("must not fetch");
+			},
+		});
+		assert.equal(none, undefined);
+		assert.equal(calls, 0);
+
+		const requests = [];
+		const result = await refreshAvailableModelCatalogs(jouzuPaths, {
+			env: { SHISA_API_KEY: "sk-fixture" },
+			fetch: async (url, init) => {
+				requests.push({ url: String(url), headers: new Headers(init.headers), redirect: init.redirect });
+				return response(snapshot(1));
+			},
+			now: new Date("2026-09-02T00:00:00Z"),
+		});
+		assert.equal(result.status, "complete");
+		assert.deepEqual(
+			requests.map((request) => request.url),
+			["https://api.shisa.ai/v1/jouzu/model-catalog"],
+		);
+		assert.equal(requests[0].headers.get("authorization"), "Bearer sk-fixture");
+		assert.equal(requests[0].redirect, "error");
+		assert.equal(loadActiveModelCatalog(jouzuPaths, { SHISA_API_KEY: "sk-fixture" }).revision, "fixture-1");
+	} finally {
+		rmSync(temporary, { recursive: true, force: true });
+	}
+});
+
+test("a disabled built-in override produces no startup request", async () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-disabled-"));
+	try {
+		const jouzuPaths = paths(temporary);
+		new CatalogSourceStore(jouzuPaths, { env: {} }).setEnabled("shisa-api", false);
+		let calls = 0;
+		const result = await refreshAvailableModelCatalogs(jouzuPaths, {
+			env: { SHISA_API_KEY: "sk-fixture" },
+			fetch: async () => {
+				calls += 1;
+				throw new Error("must not fetch");
+			},
+		});
+		assert.equal(result, undefined);
+		assert.equal(calls, 0);
+	} finally {
+		rmSync(temporary, { recursive: true, force: true });
+	}
+});
+
+test("explicit built-in refresh without a key reports auth_required without a request", async () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-nokey-"));
+	try {
+		const jouzuPaths = paths(temporary);
+		let calls = 0;
+		const result = await refreshModelCatalog(jouzuPaths, {
+			sourceId: "shisa-api",
+			env: {},
+			fetch: async () => {
+				calls += 1;
+				throw new Error("must not fetch");
+			},
+		});
+		assert.equal(result.status, "error");
+		assert.equal(result.code, "auth_required");
+		assert.match(result.message, /SHISA_API_KEY/);
+		assert.equal(result.catalogStatus.credentialName, "SHISA_API_KEY");
+		assert.equal(result.catalogStatus.credentialAvailable, false);
+		assert.equal(calls, 0);
+	} finally {
+		rmSync(temporary, { recursive: true, force: true });
+	}
+});
+
+test("a manual Shisa registration keeps its cache when the built-in descriptor takes over", async () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-migration-"));
+	try {
+		const jouzuPaths = paths(temporary);
+		const store = new CatalogSourceStore(jouzuPaths, { env: {} });
+		const manual = store.add({
+			id: "shisa",
+			label: "My Shisa",
+			url: "https://api.shisa.ai/v1/jouzu/model-catalog",
+			auth: { type: "bearer", credentialRef: "env:SHISA_API_KEY" },
+		});
+		const refreshed = await refreshModelCatalog(jouzuPaths, {
+			sourceId: manual.id,
+			env: { SHISA_API_KEY: "sk-fixture" },
+			fetch: async () => response(snapshot(7)),
+			now: new Date("2026-09-02T01:00:00Z"),
+		});
+		assert.equal(refreshed.status, "activated");
+		assert.equal(refreshed.catalogStatus.sourceId, "shisa");
+
+		// Removing the manual registration hands the same URL-keyed cache to the built-in.
+		rmSync(join(jouzuPaths.configDir, "catalogs.json"));
+		const resolved = loadActiveModelCatalogs(jouzuPaths, { SHISA_API_KEY: "sk-fixture" });
+		assert.equal(resolved.length, 1);
+		assert.equal(resolved[0].source.id, "shisa-api");
+		assert.equal(resolved[0].document.revision, "fixture-7");
+		const status = getCatalogStatuses(jouzuPaths, { SHISA_API_KEY: "sk-fixture" });
+		assert.equal(status.sources[0].sourceId, "shisa-api");
+		assert.equal(status.sources[0].status, "active");
+		assert.equal(status.sources[0].credentialAvailable, true);
+	} finally {
+		rmSync(temporary, { recursive: true, force: true });
+	}
 });
