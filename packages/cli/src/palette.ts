@@ -7,6 +7,7 @@ import {
 	type OverlayOptions,
 	type TUI,
 } from "@earendil-works/pi-tui";
+import { createJouzuKeybindingsManagerFromConfig, type JouzuKeybindingsManager } from "./jouzu-keybindings.js";
 import { createSessionUiStyles, type SessionUiStyles } from "./session-ui/index.js";
 
 export type PaletteViewId = "models" | "settings" | "usage" | "keys" | "help";
@@ -15,10 +16,14 @@ export type PalettePresentation = "floating" | "replace";
 export interface PaletteRoute {
 	view: PaletteViewId;
 	query?: string;
+	/** Restored retained state; the view must not grab extra focus for it. */
+	resume?: boolean;
 }
 
 export interface PaletteComponent extends Component {
 	route(route: PaletteRoute): void;
+	/** State worth keeping while the user visits another section. */
+	snapshotRoute?(): PaletteRoute;
 	allowsGlobalNavigation?(): boolean;
 	dispose?(): void;
 }
@@ -27,6 +32,7 @@ export interface PaletteComponentContext {
 	tui: TUI;
 	theme: Theme;
 	keybindings: KeybindingsManager;
+	jouzuKeybindings: JouzuKeybindingsManager;
 	/** Jouzu-owned semantic colors. Views style through these roles rather than emitting escapes. */
 	styles: SessionUiStyles;
 	close(): void;
@@ -58,6 +64,7 @@ function setComponentFocus(component: PaletteComponent | undefined, focused: boo
 export class JouzuPaletteRouter implements PaletteComponent, Focusable {
 	private readonly context: PaletteComponentContext;
 	private readonly factories: Partial<Record<PaletteViewId, PaletteComponentFactory>>;
+	private readonly retainedRoutes = new Map<PaletteViewId, PaletteRoute>();
 	private activeView: PaletteViewId;
 	private component: PaletteComponent;
 	private _focused = false;
@@ -92,9 +99,12 @@ export class JouzuPaletteRouter implements PaletteComponent, Focusable {
 			this.context.tui.requestRender();
 			return;
 		}
+		const snapshot = this.component.snapshotRoute?.();
+		if (snapshot) this.retainedRoutes.set(this.activeView, snapshot);
 		this.component.dispose?.();
 		this.activeView = route.view;
-		this.component = this.create(route);
+		const retained = route.query === undefined ? this.retainedRoutes.get(route.view) : undefined;
+		this.component = this.create(retained ? { ...retained, resume: true } : route);
 		this.context.tui.requestRender();
 	}
 
@@ -198,6 +208,13 @@ export function selectPalettePresentation(options: PaletteSurfaceOptions = {}): 
 
 export class JouzuPaletteSurfaceHost {
 	private active?: ActivePalette;
+	private readonly jouzuKeybindings: JouzuKeybindingsManager;
+
+	constructor(options?: { jouzuKeybindings?: JouzuKeybindingsManager }) {
+		// The default carries code defaults without user overrides; the product
+		// wiring passes a manager loaded from the active keybindings.json.
+		this.jouzuKeybindings = options?.jouzuKeybindings ?? createJouzuKeybindingsManagerFromConfig();
+	}
 
 	isOpen(): boolean {
 		return this.active !== undefined;
@@ -235,7 +252,14 @@ export class JouzuPaletteSurfaceHost {
 
 		const promise = ctx.ui.custom<void>((tui, theme, keybindings, done) => {
 			component = factory(
-				{ tui, theme, keybindings, styles: createSessionUiStyles(theme), close: () => done(undefined) },
+				{
+					tui,
+					theme,
+					keybindings,
+					jouzuKeybindings: this.jouzuKeybindings,
+					styles: createSessionUiStyles(theme),
+					close: () => done(undefined),
+				},
 				route,
 			);
 			if (this.active?.token === token) this.active.component = component;
