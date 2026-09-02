@@ -190,12 +190,12 @@ function createComponent(overrides = {}) {
 		initialRoute: { view: "models" },
 		...(overrides.initialFilter ? { initialFilter: overrides.initialFilter } : {}),
 		getRows: overrides.getRows ?? (() => rows()),
-		onSelect: async (row, scope) => {
-			calls.selected.push([row.model.modelId, scope]);
+		onSelect: async (row) => {
+			calls.selected.push(row.model.modelId);
 		},
-		onCompactAndSelect: async (row, scope) => {
-			calls.compacted.push([row.model.modelId, scope]);
-			await overrides.onCompactAndSelect?.(row, scope);
+		onCompactAndSelect: async (row) => {
+			calls.compacted.push(row.model.modelId);
+			await overrides.onCompactAndSelect?.(row);
 		},
 		onToggleFavorite: (row) => {
 			calls.favorites.push(row.model.modelId);
@@ -308,15 +308,8 @@ test("Models view confirms compaction before selecting a context-small model", a
 	component.handleInput("enter");
 	await Promise.resolve();
 	await Promise.resolve();
-	assert.deepEqual(calls.compacted, [["tiny", "session"]]);
+	assert.deepEqual(calls.compacted, ["tiny"]);
 	assert.equal(calls.close, 1);
-
-	const project = createComponent();
-	project.component.handleInput("\x1b[13;2u");
-	project.component.handleInput("enter");
-	await Promise.resolve();
-	await Promise.resolve();
-	assert.deepEqual(project.calls.compacted, [["tiny", "project"]]);
 });
 
 test("Models view keeps compact-switch busy and reports sanitized failures", async () => {
@@ -415,10 +408,10 @@ test("Models view hints render effective semantic bindings", () => {
 		}),
 	});
 	const rendered = component.render(72).join("\n");
-	assert.match(rendered, /Ctrl\+S session/u);
+	assert.match(rendered, /Ctrl\+S select and save for project/u);
 	assert.match(rendered, /K\/J move/u);
 	assert.match(rendered, /Alt\+X close/u);
-	assert.doesNotMatch(rendered, /Enter session|Esc close|↑↓ move/u);
+	assert.doesNotMatch(rendered, /Enter select|Esc close|↑↓ move/u);
 });
 
 test("Models view keeps ANSI and CJK content inside aligned display-width borders", () => {
@@ -454,21 +447,17 @@ test("Models view keeps ANSI and CJK content inside aligned display-width border
 	}
 });
 
-test("Models view selects for the session or project, toggles filters and favorites, and cancels", async () => {
+test("Models view selects and saves for the project, toggles filters and favorites, and cancels", async () => {
 	const first = createComponent();
+	first.component.handleInput("\x1b[13;2u");
+	await Promise.resolve();
+	assert.deepEqual(first.calls.selected, [], "Shift+Enter has no Models action");
 	first.component.handleInput("down");
 	first.component.handleInput("enter");
 	await Promise.resolve();
 	await Promise.resolve();
-	assert.deepEqual(first.calls.selected, [["fit", "session"]]);
+	assert.deepEqual(first.calls.selected, ["fit"]);
 	assert.equal(first.calls.close, 1);
-
-	const second = createComponent();
-	second.component.handleInput("down");
-	second.component.handleInput("\x1b[13;2u");
-	await Promise.resolve();
-	await Promise.resolve();
-	assert.deepEqual(second.calls.selected, [["fit", "project"]]);
 
 	const third = createComponent();
 	third.component.handleInput("\u001b[C");
@@ -587,28 +576,20 @@ test("Models view toggles favorites with the semantic action in browse and searc
 	assert.match(component.render(72).join("\n"), /Added large\/fit to favorites\./u);
 });
 
-test("Models view resolves rebound favorite and project-default bindings", async () => {
+test("Models view resolves a rebound favorite binding", () => {
 	const { component, calls } = createComponent({
 		jouzuKeybindings: createJouzuKeybindingsManagerFromConfig({
 			"jouzu.model.toggleFavorite": "ctrl+shift+b",
-			"jouzu.model.selectProjectDefault": ["ctrl+shift+d"],
 		}),
 	});
 	const browse = component.render(72).join("\n");
 	assert.match(browse, /Ctrl\+Shift\+B favorite/u);
-	assert.match(browse, /Ctrl\+Shift\+D project default/u);
-	assert.doesNotMatch(browse, /Space favorite|Shift\+Enter/u);
+	assert.doesNotMatch(browse, /Space favorite|Shift\+Enter|project default/u);
 
 	component.handleInput(" ");
 	assert.deepEqual(calls.favorites, [], "Space no longer toggles after rebinding");
 	component.handleInput("\u001b[98;6u");
 	assert.deepEqual(calls.favorites, ["tiny"], "the rebound key toggles the selected row");
-
-	component.handleInput("down");
-	component.handleInput("\u001b[100;6u");
-	await Promise.resolve();
-	await Promise.resolve();
-	assert.deepEqual(calls.selected, [["fit", "project"]], "the rebound project-default key selects project scope");
 });
 
 test("Models view hints the browse route when a favorite binding is printable", () => {
@@ -966,6 +947,76 @@ test("Jouzu editor wrapper opens the Models component through the Palette surfac
 	}
 });
 
+test("Enter selects a model and stores it for the project", async () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-persist-selection-"));
+	try {
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+		new ModelPickerStore(paths).setFilter("all");
+		const integration = createJouzuModelPicker(paths);
+		const handlers = new Map();
+		const selected = [];
+		let ctx;
+		integration.extension.factory({
+			on(name, handler) {
+				handlers.set(name, handler);
+			},
+			async setModel(model) {
+				selected.push(model.id);
+				ctx.model = model;
+				return true;
+			},
+		});
+		const models = ["a", "b"].map((id) => ({
+			provider: "p",
+			id,
+			name: id.toUpperCase(),
+			contextWindow: 100_000,
+			maxTokens: 10_000,
+		}));
+		ctx = {
+			mode: "tui",
+			cwd: root,
+			model: models[0],
+			scopedModels: [],
+			sessionManager: { getBranch: () => [] },
+			modelRegistry: {
+				getAvailable: () => models,
+				find: (provider, id) => (provider === "p" ? models.find((model) => model.id === id) : undefined),
+				refresh: async () => ({ errors: new Map() }),
+			},
+			getContextUsage: () => ({ tokens: 100, contextWindow: 100_000, percent: 1 }),
+			isIdle: () => true,
+			ui: {
+				notify() {},
+				custom(factory) {
+					return new Promise((resolve) => {
+						const component = factory(
+							{ terminal: { rows: 30 }, requestRender() {} },
+							identityTheme,
+							fakeKeybindings(),
+							resolve,
+						);
+						setImmediate(() => {
+							component.handleInput("down");
+							component.handleInput("down");
+							component.handleInput("enter");
+						});
+					});
+				},
+			},
+		};
+		await handlers.get("session_start")({ reason: "startup" }, ctx);
+		assert.equal(await integration.open({ source: "action" }), true);
+		assert.deepEqual(selected, ["b"]);
+		assert.deepEqual(new ModelPickerStore(paths).load().state.defaults.projects[deriveProjectKey(root)], {
+			provider: "p",
+			modelId: "b",
+		});
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
 test("Models selection during an active call switches after turn_end", async () => {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-queued-"));
 	try {
@@ -1029,8 +1080,13 @@ test("Models selection during an active call switches after turn_end", async () 
 		assert.equal(await integration.open({ source: "action" }), true);
 		assert.deepEqual(selected, []);
 		assert.match(notifications[0][0], /queued for the next model call: p\/b/);
+		assert.deepEqual(new ModelPickerStore(paths).load().state.defaults.projects, {});
 		await handlers.get("turn_end")({}, ctx);
 		assert.deepEqual(selected, ["b"]);
+		assert.deepEqual(new ModelPickerStore(paths).load().state.defaults.projects[deriveProjectKey(root)], {
+			provider: "p",
+			modelId: "b",
+		});
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
@@ -1104,6 +1160,10 @@ test("context-small selection compacts before switching models", async () => {
 		assert.equal(await integration.open({ source: "action" }), true);
 		assert.equal(compactOptions.customInstructions, "keep:0");
 		assert.deepEqual(selected, ["small"]);
+		assert.deepEqual(new ModelPickerStore(paths).load().state.defaults.projects[deriveProjectKey(root)], {
+			provider: "p",
+			modelId: "small",
+		});
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
@@ -1465,7 +1525,7 @@ test("failed project activation does not persist a project default", async (test
 				await handlers.get("session_start")({ reason: "startup" }, ctx);
 				const opened = integration.open({ source: "action" });
 				await Promise.resolve();
-				component.handleInput("\x1b[13;2u");
+				component.handleInput("enter");
 				await new Promise((resolve) => setTimeout(resolve, 5));
 				component.handleInput("escape");
 				await opened;

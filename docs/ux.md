@@ -129,4 +129,3 @@ Run `npm run check` and `npm test` before committing.
 | Surface | Deviation | Resolution |
 | --- | --- | --- |
 | Help (`help.ts`) | Renders its own overlay outside the Palette router with its own frame and sizing. Its command list is maintained by hand, although semantic key labels resolve from the effective binding map. | Becomes a Palette view when it can derive commands and effective bindings from the runtime registries. |
-| Models (`model-picker.ts`) | Project-default selection (`jouzu.model.selectProjectDefault`, default `Shift+Enter`) still has only a modified, encoding-dependent route. The action is rebindable and its hints resolve the effective binding. | Add an unmodified project-default route with the planned row-expansion action rows, then demote `Shift+Enter` to an accelerator. |

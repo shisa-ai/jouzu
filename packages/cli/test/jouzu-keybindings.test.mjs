@@ -35,11 +35,6 @@ test("Jouzu keybinding registry loads user overrides and ignores Pi-owned entrie
 		);
 		const manager = createJouzuKeybindingsManager(paths);
 		assert.deepEqual(effectiveJouzuKeys(manager, "jouzu.model.toggleFavorite"), ["ctrl+shift+b"]);
-		assert.deepEqual(
-			effectiveJouzuKeys(manager, "jouzu.model.selectProjectDefault"),
-			["shift+enter"],
-			"unmentioned actions keep their code defaults",
-		);
 		assert.equal(matchesJouzuKeybinding(manager, " ", "jouzu.model.toggleFavorite"), false);
 		assert.equal(matchesJouzuKeybinding(manager, CTRL_SHIFT_B, "jouzu.model.toggleFavorite"), true);
 		assert.equal(matchesJouzuKeybinding(manager, CTRL_SHIFT_S, "jouzu.model.toggleFavorite"), false);

@@ -24,10 +24,6 @@ export const JOUZU_KEYBINDING_DEFINITIONS = {
 		defaultKeys: ["space", "ctrl+shift+s"],
 		description: "Toggle favorite for the selected model",
 	},
-	"jouzu.model.selectProjectDefault": {
-		defaultKeys: "shift+enter",
-		description: "Select the model and store it as the project default",
-	},
 } satisfies KeybindingDefinitions;
 
 export type JouzuKeybinding = keyof typeof JOUZU_KEYBINDING_DEFINITIONS;

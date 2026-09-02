@@ -67,8 +67,8 @@ export interface ModelPickerComponentOptions {
 	initialRoute: PaletteRoute;
 	initialFilter?: PickerFilter;
 	getRows(query: string, filter: PickerFilter): PickerRow[];
-	onSelect(row: PickerRow, scope: "session" | "project"): Promise<void>;
-	onCompactAndSelect(row: PickerRow, scope: "session" | "project"): Promise<void>;
+	onSelect(row: PickerRow): Promise<void>;
+	onCompactAndSelect(row: PickerRow): Promise<void>;
 	onToggleFavorite(row: PickerRow): void;
 	onFilterChange?(filter: PickerFilter): void;
 	onRefresh?(signal: AbortSignal): Promise<void>;
@@ -144,8 +144,8 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	private readonly wordmark: string;
 	private readonly close: () => void;
 	private readonly getRows: (query: string, filter: PickerFilter) => PickerRow[];
-	private readonly onSelect: (row: PickerRow, scope: "session" | "project") => Promise<void>;
-	private readonly onCompactAndSelect: (row: PickerRow, scope: "session" | "project") => Promise<void>;
+	private readonly onSelect: (row: PickerRow) => Promise<void>;
+	private readonly onCompactAndSelect: (row: PickerRow) => Promise<void>;
 	private readonly onToggleFavorite: (row: PickerRow) => void;
 	private readonly onFilterChange?: (filter: PickerFilter) => void;
 	private readonly searchInput = new Input();
@@ -155,7 +155,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	private filterCounts: Record<PickerFilter, number> = { recent: 0, favorite: 0, all: 0 };
 	private selectedIndex = 0;
 	private busy = false;
-	private compactConfirmation?: { modelKey: string; scope: "session" | "project" };
+	private compactConfirmation?: { modelKey: string };
 	private message?: { level: "error" | "info"; text: string };
 	private refreshController?: AbortController;
 	private disposed = false;
@@ -298,7 +298,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		this.tui.requestRender();
 	}
 
-	private executeSelection(row: PickerRow, scope: "session" | "project", compactFirst: boolean): void {
+	private executeSelection(row: PickerRow, compactFirst: boolean): void {
 		this.compactConfirmation = undefined;
 		this.busy = true;
 		const display = modelDisplay(row.model);
@@ -309,7 +309,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 				: `Selecting ${display.provider}/${display.modelId}…`,
 		};
 		this.tui.requestRender();
-		const selection = compactFirst ? this.onCompactAndSelect(row, scope) : this.onSelect(row, scope);
+		const selection = compactFirst ? this.onCompactAndSelect(row) : this.onSelect(row);
 		void selection
 			.then(() => {
 				if (this.disposed) return;
@@ -326,7 +326,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			});
 	}
 
-	private runSelection(scope: "session" | "project"): void {
+	private runSelection(): void {
 		const row = this.rows[this.selectedIndex];
 		if (!row || this.busy) return;
 		if (!row.model.available) {
@@ -336,7 +336,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		}
 		if (row.contextFit === "too-small") {
 			const display = modelDisplay(row.model);
-			this.compactConfirmation = { modelKey: modelReferenceKey(row.model), scope };
+			this.compactConfirmation = { modelKey: modelReferenceKey(row.model) };
 			this.message = {
 				level: "info",
 				text: `Compact the active context and switch to ${display.provider}/${display.modelId}?`,
@@ -344,7 +344,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			this.tui.requestRender();
 			return;
 		}
-		this.executeSelection(row, scope, false);
+		this.executeSelection(row, false);
 	}
 
 	private confirmCompaction(): void {
@@ -356,7 +356,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			this.tui.requestRender();
 			return;
 		}
-		this.executeSelection(row, confirmation.scope, true);
+		this.executeSelection(row, true);
 	}
 
 	private toggleFavorite(): void {
@@ -451,16 +451,8 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			this.tui.requestRender();
 			return;
 		}
-		if (
-			matchesJouzuKeybinding(this.jouzuKeybindings, data, "jouzu.model.selectProjectDefault", {
-				textFieldLive: this.searchFocused,
-			})
-		) {
-			this.runSelection("project");
-			return;
-		}
 		if (this.keybindings.matches(data, "tui.select.confirm")) {
-			this.runSelection("session");
+			this.runSelection();
 			return;
 		}
 		if (
@@ -560,9 +552,6 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		const confirm = formatEffectiveKeybinding(this.keybindings, "tui.select.confirm");
 		const cancel = formatEffectiveKeybinding(this.keybindings, "tui.select.cancel");
 		const move = formatEffectiveKeyPair(this.keybindings, "tui.select.up", "tui.select.down");
-		const projectDefault = formatEffectiveJouzuKeybinding(this.jouzuKeybindings, "jouzu.model.selectProjectDefault", {
-			textFieldLive: this.searchFocused,
-		});
 		const favoriteNow = formatEffectiveJouzuKeybinding(this.jouzuKeybindings, "jouzu.model.toggleFavorite", {
 			textFieldLive: this.searchFocused,
 		});
@@ -574,10 +563,10 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		if (this.compactConfirmation) {
 			lines.push(...hint(`${confirm} compact and switch · ${cancel} cancel`));
 		} else if (this.searchFocused) {
-			lines.push(...hint(`${confirm} session · ${projectDefault} project default · ${favoriteHint}`));
+			lines.push(...hint(`${confirm} select and save for project · ${favoriteHint}`));
 			lines.push(...hint(`Type search · ←→ cursor · ${move} move · Tab section · ${cancel} browse`));
 		} else {
-			lines.push(...hint(`${confirm} session · ${projectDefault} project default · ${favoriteHint}`));
+			lines.push(...hint(`${confirm} select and save for project · ${favoriteHint}`));
 			lines.push(...hint(`←→ View · / search · Tab section · ${move} move · ${cancel} close`));
 		}
 		lines.push(renderTerminalFrameBorder(width, { ...frameOptions, left: "╰", right: "╯" }));
@@ -702,19 +691,14 @@ export function createJouzuModelPicker(
 	let projectKey = "";
 	let previous: ModelReference[] = [];
 	let pendingDispatch: ModelReference | undefined;
-	let queuedModelSwitch: { model: PiModel; reference: PickerModel; setProjectDefault: boolean } | undefined;
+	let queuedModelSwitch: { model: PiModel; reference: PickerModel } | undefined;
 	let stateWarningShown = false;
 	let catalogWarningShown = false;
 	let cycleBusy = false;
 	let setModel: ((model: PiModel) => Promise<boolean>) | undefined;
 
-	const queueModelSwitch = (
-		ctx: ExtensionContext,
-		model: PiModel,
-		reference: PickerModel,
-		setProjectDefault = false,
-	): void => {
-		queuedModelSwitch = { model, reference, setProjectDefault };
+	const queueModelSwitch = (ctx: ExtensionContext, model: PiModel, reference: PickerModel): void => {
+		queuedModelSwitch = { model, reference };
 		const display = modelDisplay(reference);
 		ctx.ui.notify(`Model switch queued for the next model call: ${display.provider}/${display.modelId}.`, "info");
 	};
@@ -848,7 +832,7 @@ export function createJouzuModelPicker(
 					if (!(await activateModel(queued.model))) {
 						throw new Error(`No authentication for ${display.provider}/${display.modelId}`);
 					}
-					if (queued.setProjectDefault) state = store.setProjectDefault(queued.reference, projectKey);
+					state = store.setProjectDefault(queued.reference, projectKey);
 					ctx.ui.notify(`Switched to ${display.provider}/${display.modelId}.`, "info");
 				} catch (error) {
 					ctx.ui.notify(
@@ -895,18 +879,18 @@ export function createJouzuModelPicker(
 										filter,
 										activeContextTokens: ctx.getContextUsage()?.tokens,
 									}),
-								onSelect: async (row, scope) => {
+								onSelect: async (row) => {
 									const model = ctx.modelRegistry.find(row.model.provider, row.model.modelId);
 									if (!model) throw new Error(`Model is unavailable: ${row.model.provider}/${row.model.modelId}`);
 									if (!ctx.isIdle()) {
-										queueModelSwitch(ctx, model, row.model, scope === "project");
+										queueModelSwitch(ctx, model, row.model);
 										return;
 									}
 									if (!(await activateModel(model)))
 										throw new Error(`No authentication for ${row.model.provider}/${row.model.modelId}`);
-									if (scope === "project") state = store.setProjectDefault(row.model, projectKey);
+									state = store.setProjectDefault(row.model, projectKey);
 								},
-								onCompactAndSelect: async (row, scope) => {
+								onCompactAndSelect: async (row) => {
 									if (!ctx.isIdle()) {
 										throw new Error("Wait for the active model call to finish, then compact and switch.");
 									}
@@ -915,7 +899,7 @@ export function createJouzuModelPicker(
 									await compactContextForModelSwitch(ctx, row.model);
 									if (!(await activateModel(model)))
 										throw new Error(`No authentication for ${row.model.provider}/${row.model.modelId}`);
-									if (scope === "project") state = store.setProjectDefault(row.model, projectKey);
+									state = store.setProjectDefault(row.model, projectKey);
 								},
 								onToggleFavorite: (row) => {
 									state = store.toggleFavorite(row.model);

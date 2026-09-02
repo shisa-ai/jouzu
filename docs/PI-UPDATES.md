@@ -79,13 +79,13 @@ Review all generated manifest and lock changes before qualification. Run focused
 
 #### Jouzu interaction review
 
-- Session-scoped upstream selection aligns with Jouzu's session-only `Enter` behavior.
+- Pi's upstream model activation is session-scoped. Jouzu stores a successful Palette selection separately as the user-local project default.
 - The built-in Prompt Frame intercepts Pi's copied `app.model.select` handler and exact `/model` submissions before stock dispatch, then opens the Palette through Jouzu's extension.
 - The Prompt Frame intercepts Pi's forward/backward model-cycle actions so they cycle Jouzu's global favorites. It filters model-scope management from autocomplete while explicit and configured Pi model scopes remain inventory constraints.
-- Palette activation calls public extension API `pi.setModel()`, which is session-scoped in 0.84.3. `Shift+Enter` stores Jouzu's separate project default before activating the session model.
+- Palette `Enter` calls public extension API `pi.setModel()`, then stores the project default only after activation succeeds. Models does not bind `Shift+Enter`.
 - Project defaults are applied from `session_start` through the same public session-scoped API. Explicit models, resumed sessions, and scoped-model sets retain precedence without injecting a process-wide CLI model override.
 - Palette `Tab` is handled inside its component, and the Prompt Frame preserves ordinary autocomplete behavior.
-- Jouzu's Pi contract check covers official session-only model persistence, semantic editor actions, direct custom-editor handler copying, favorite-cycle routing, scoped-command interception, and packed runtime startup with the pristine Pi package.
+- Jouzu's Pi contract check covers upstream session model activation, Jouzu project-default persistence, semantic editor actions, direct custom-editor handler copying, favorite-cycle routing, scoped-command interception, and packed runtime startup with the pristine Pi package.
 
 #### Provenance disposition
 
