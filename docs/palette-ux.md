@@ -53,7 +53,7 @@ A mode with a live text field has no bare-letter and no bare-`Space` shortcuts. 
 
 `Enter` always invokes the action named first in the current hint. Examples include selecting a model, editing a catalog, saving a form, and confirming removal.
 
-Modified-key shortcuts are secondary actions for operations such as add, refresh, remove, favorite, or project-default selection. They must not be the only way to perform any action; see the reachability rule in [`ux.md`](ux.md#key-assignment-rules). Check a proposed shortcut against Pi's `TUI_KEYBINDINGS`, Jouzu's `JOUZU_KEYBINDING_DEFAULTS`, and the platform collision tables before claiming it. Recorded exception: Models favorite (`jouzu.model.toggleFavorite`, `Shift+Enter` and `Ctrl+Shift+S`) is accelerator-only while the planned Models row-actions list, reserved in [`key-collisions.md`](key-collisions.md#reserved-ranges-for-future-defaults), is its future unmodified route.
+Modified-key shortcuts are secondary actions for operations such as add, refresh, remove, favorite, or project-default selection. They must not be the only way to perform any action; see the reachability rule in [`ux.md`](ux.md#key-assignment-rules). Check a proposed shortcut against Pi's `TUI_KEYBINDINGS`, Jouzu's `JOUZU_KEYBINDING_DEFAULTS`, and the platform collision tables before claiming it. Recorded exception: Models favorite (`jouzu.model.toggleFavorite`, `Ctrl+Shift+S`) is accelerator-only while the planned Models row-actions list, reserved in [`key-collisions.md`](key-collisions.md#reserved-ranges-for-future-defaults), is its future unmodified route.
 
 When an item supports disclosure as well as a primary action, reserve `Enter` for the primary action and use `←` and `→` to collapse and expand it.
 

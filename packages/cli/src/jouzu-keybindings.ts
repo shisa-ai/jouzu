@@ -21,7 +21,7 @@ import type { JouzuPaths } from "./paths.js";
  */
 export const JOUZU_KEYBINDING_DEFINITIONS = {
 	"jouzu.model.toggleFavorite": {
-		defaultKeys: ["shift+enter", "ctrl+shift+s"],
+		defaultKeys: ["ctrl+shift+s"],
 		description: "Toggle favorite for the selected model",
 	},
 } satisfies KeybindingDefinitions;
