@@ -664,7 +664,8 @@ export function createJouzuModelPicker(
 	options: JouzuModelPickerOptions = {},
 ): JouzuModelPickerIntegration {
 	const store = new ModelPickerStore(paths);
-	const surface = new JouzuPaletteSurfaceHost({ jouzuKeybindings: createJouzuKeybindingsManager(paths) });
+	const jouzuKeybindings = createJouzuKeybindingsManager(paths);
+	const surface = new JouzuPaletteSurfaceHost({ jouzuKeybindings });
 	const catalogEnv = options.palette?.env ?? process.env;
 	let catalogs: ActiveModelCatalog[] = [];
 	let catalog: ModelCatalogDocument | undefined;
@@ -965,7 +966,7 @@ export function createJouzuModelPicker(
 		});
 		if (favoriteRows.length === 0) {
 			ctx.ui.notify(
-				`No favorite models. Open Models with ${modelsOpenText()} and press Space on a model to add one.`,
+				`No favorite models. Open Models with ${modelsOpenText()} and press ${formatEffectiveJouzuKeybinding(jouzuKeybindings, "jouzu.model.toggleFavorite")} on a model to add one.`,
 				"info",
 			);
 			return true;
@@ -1032,7 +1033,7 @@ export function createJouzuModelPicker(
 		const ctx = activeCtx;
 		if (!ctx || ctx.mode !== "tui") return false;
 		ctx.ui.notify(
-			`Jouzu uses Favorites for quick switching. Open Models with ${modelsOpenText()} and press Space on a model to favorite it.`,
+			`Jouzu uses Favorites for quick switching. Open Models with ${modelsOpenText()} and press ${formatEffectiveJouzuKeybinding(jouzuKeybindings, "jouzu.model.toggleFavorite")} on a model to favorite it.`,
 			"info",
 		);
 		return true;

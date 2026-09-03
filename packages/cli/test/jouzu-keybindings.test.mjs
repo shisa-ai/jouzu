@@ -69,11 +69,16 @@ test("Jouzu keybinding matching and hints respect a live text field", () => {
 	assert.equal(isPrintableKeyId("f"), true);
 	assert.equal(isPrintableKeyId("ctrl+shift+s"), false);
 
-	assert.equal(matchesJouzuKeybinding(manager, " ", "jouzu.model.toggleFavorite"), true);
+	assert.equal(matchesJouzuKeybinding(manager, "\x1b[13;2u", "jouzu.model.toggleFavorite"), true);
 	assert.equal(
-		matchesJouzuKeybinding(manager, " ", "jouzu.model.toggleFavorite", { textFieldLive: true }),
+		matchesJouzuKeybinding(manager, " ", "jouzu.model.toggleFavorite"),
 		false,
-		"Space stays text input while the field is live",
+		"Space is no longer a favorite binding",
+	);
+	assert.equal(
+		matchesJouzuKeybinding(manager, "\x1b[13;2u", "jouzu.model.toggleFavorite", { textFieldLive: true }),
+		true,
+		"the modified accelerator works while the field is live",
 	);
 	assert.equal(
 		matchesJouzuKeybinding(manager, CTRL_SHIFT_S, "jouzu.model.toggleFavorite", { textFieldLive: true }),
@@ -82,10 +87,10 @@ test("Jouzu keybinding matching and hints respect a live text field", () => {
 	);
 	assert.equal(matchesJouzuKeybinding(manager, "s", "jouzu.model.toggleFavorite"), false);
 
-	assert.equal(formatEffectiveJouzuKeybinding(manager, "jouzu.model.toggleFavorite"), "Space/Ctrl+Shift+S");
+	assert.equal(formatEffectiveJouzuKeybinding(manager, "jouzu.model.toggleFavorite"), "Shift+Enter/Ctrl+Shift+S");
 	assert.equal(
 		formatEffectiveJouzuKeybinding(manager, "jouzu.model.toggleFavorite", { textFieldLive: true }),
-		"Ctrl+Shift+S",
-		"hints omit the printable binding while the field is live",
+		"Shift+Enter/Ctrl+Shift+S",
+		"hints keep modified bindings while the field is live",
 	);
 });
