@@ -13,7 +13,7 @@ Jouzu v0.1.x is currently in **ALPHA**, but it should be relatively stable and c
 - Bash (`bash` on Linux/macOS; Git Bash on Windows)
 - A provider supported by Pi, authenticated through `/login`, provider environment variables, or explicit `models.json`
 
-Windows users should read [Windows prerequisites](docs/windows.md). Signed installers, portable archives, and bundled prerequisites are not part of v0.1.
+Windows users should read [Windows prerequisites](https://github.com/shisa-ai/jouzu/blob/main/docs/windows.md). Signed installers, portable archives, and bundled prerequisites are not part of v0.1.
 
 On older enterprise Linux distributions, install the GTK/X11/audio runtime
 libraries required by Firefox. If the system NSS is older than Camoufox requires,
@@ -254,7 +254,7 @@ Ghostty on Linux binds `Ctrl+Enter` to fullscreen and consumes it before Jouzu r
 keybind = ctrl+enter=csi:13;5u
 ```
 
-`jz keybindings plan` reports the desired actions and generic modified-key warnings. It does not inspect desktop, terminal, or multiplexer configuration. The [key collision map](docs/key-collisions.md) records known defaults and host-verification commands.
+`jz keybindings plan` reports the desired actions and generic modified-key warnings. It does not inspect desktop, terminal, or multiplexer configuration. The [key collision map](https://github.com/shisa-ai/jouzu/blob/main/docs/key-collisions.md) records known defaults and host-verification commands.
 
 ## Automatic Jouzu updates
 
@@ -315,11 +315,11 @@ npm run dev:link
 
 `dev:link` records the UTC build time, Git commit, and dirty-worktree state. `jz --version` displays an identifier such as `0.1.6-dev.20260903-010203+g215b2188`. A `.dirty` suffix marks a build that included uncommitted files. The standard `npm run build` removes development metadata before packing a release artifact.
 
-See [docs/architecture.md](docs/architecture.md) for the module map, state-file
+See [docs/architecture.md](https://github.com/shisa-ai/jouzu/blob/main/docs/architecture.md) for the module map, state-file
 ownership, update lanes, and bundled profile boundaries.
-[docs/ux.md](docs/ux.md) defines the interaction model for every Jouzu surface,
-[docs/key-collisions.md](docs/key-collisions.md) maps higher-layer shortcut conflicts,
-and [docs/palette-ux.md](docs/palette-ux.md) adds the Palette standards. [Pi update review](docs/PI-UPDATES.md)
+[docs/ux.md](https://github.com/shisa-ai/jouzu/blob/main/docs/ux.md) defines the interaction model for every Jouzu surface,
+[docs/key-collisions.md](https://github.com/shisa-ai/jouzu/blob/main/docs/key-collisions.md) maps higher-layer shortcut conflicts,
+and [docs/palette-ux.md](https://github.com/shisa-ai/jouzu/blob/main/docs/palette-ux.md) adds the Palette standards. [Pi update review](https://github.com/shisa-ai/jouzu/blob/main/docs/PI-UPDATES.md)
 records the candidate checklist, compatibility findings, and reverse-chronological update log.
 
 The opt-in live Japanese tool-flow smoke requires an explicitly selected provider/model and cost budget; it is not part of default tests:
@@ -336,4 +336,4 @@ It installs the packed artifact in a temporary consumer, permits only `read` and
 
 ## License
 
-Apache-2.0. See [LICENSE](LICENSE).
+Apache-2.0. See [LICENSE](https://github.com/shisa-ai/jouzu/blob/main/LICENSE).
