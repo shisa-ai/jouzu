@@ -183,7 +183,6 @@ test("Core loads the selected release-owned tool, command, and skill surfaces", 
 			"skill:jouzu-clear-writing",
 			"skill:jouzu-source-check",
 			"skill:multiloop",
-			"skill:pi-goal",
 			"status",
 			"tasks",
 		]) {

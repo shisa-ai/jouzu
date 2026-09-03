@@ -45,7 +45,6 @@
 	"dependencies": {
 		"@earendil-works/pi-coding-agent": "0.84.3",
 		"@earendil-works/pi-tui": "0.84.3",
-		"@lhl/pi-goal": "git+https://github.com/lhl/pi-goal.git#a38ff5f0aab12a4591d05845de4f0a16033530ca",
 		"@lhl/pi-tasks": "git+https://github.com/lhl/pi-tasks.git#fc2e88bccfe0c5b818daea7092667d75e8e14b3d",
 		"@sting8k/pi-vcc": "0.7.0",
 		"@the-forge-flow/camoufox-pi": "0.2.1",
@@ -54,7 +53,7 @@
 		"camoufox-js": "0.12.0",
 		"impit": "0.11.0",
 		"pi-code-previews": "0.1.36",
-		"pi-multiloop": "git+https://github.com/lhl/pi-multiloop.git#e17a58737451e8c0e91c0517a96e592097fbb694",
+		"pi-multiloop": "git+https://github.com/lhl/pi-multiloop.git#cffc0e58987249dd16d74f1b554623cd103d10d3",
 		"pi-schedule-prompt": "0.4.1",
 		"pi-skill-dollar": "git+https://github.com/lhl/pi-skill-dollar.git#4bff5734d87c4f4725d81a4ea1d1c1283c22423c",
 		"pi-smart-fetch": "0.3.17",
@@ -75,7 +74,6 @@
 	"bundleDependencies": [
 		"@earendil-works/pi-coding-agent",
 		"@earendil-works/pi-tui",
-		"@lhl/pi-goal",
 		"@lhl/pi-tasks",
 		"@sting8k/pi-vcc",
 		"@the-forge-flow/camoufox-pi",

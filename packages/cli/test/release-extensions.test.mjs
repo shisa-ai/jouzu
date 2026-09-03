@@ -33,7 +33,6 @@ const packageJson = JSON.parse(readFileSync(new URL("../package.json", import.me
 const manifest = JSON.parse(readFileSync(new URL("../release-extensions.json", import.meta.url), "utf8"));
 
 const expectedExtensions = [
-	"@lhl/pi-goal",
 	"@lhl/pi-tasks",
 	"@sting8k/pi-vcc",
 	"@the-forge-flow/camoufox-pi",
@@ -88,11 +87,11 @@ test("the release manifest and bundle list contain the selected extension set", 
 test("all release-owned resources resolve to the exact installed package versions", () => {
 	const status = inspectReleaseExtensions();
 	assert.deepEqual(status.errors, []);
-	assert.equal(status.extensionCount, 10);
-	assert.equal(status.skillCount, 2);
-	assert.equal(status.resolvedExtensionPaths.length, 10);
+	assert.equal(status.extensionCount, 9);
+	assert.equal(status.skillCount, 1);
+	assert.equal(status.resolvedExtensionPaths.length, 9);
 	assert.ok(status.resolvedExtensionPaths.some((path) => path.endsWith("camoufox-adapter.js")));
-	assert.equal(status.resolvedSkillPaths.length, 2);
+	assert.equal(status.resolvedSkillPaths.length, 1);
 	assert.deepEqual(
 		Object.keys(status.resolvedPackageRoots).sort(),
 		[...expectedExtensions, ...expectedCompatibility].sort(),
@@ -160,8 +159,8 @@ test("an incompatible nested native dependency redirects to the exact direct pac
 
 test("release resources are added to sessions but not Pi package commands", () => {
 	const session = withReleaseExtensionArguments(["--mode", "rpc", "--no-session"]);
-	assert.equal(session.filter((value) => value === "--extension").length, 10);
-	assert.equal(session.filter((value) => value === "--skill").length, 2);
+	assert.equal(session.filter((value) => value === "--extension").length, 9);
+	assert.equal(session.filter((value) => value === "--skill").length, 1);
 	assert.deepEqual(session.slice(-3), ["--mode", "rpc", "--no-session"]);
 	assert.equal(usesReleaseExtensions(["--mode", "rpc"]), true);
 	for (const command of ["config", "install", "list", "remove", "uninstall", "update"]) {
@@ -197,8 +196,8 @@ test("matching configured package entrypoints are suppressed without hiding unre
 		{ extensions: [...extensions, unrelated, topLevel], skills, prompts: [], themes: [] },
 		status.manifest,
 	);
-	assert.equal(resolved.extensions.filter((resource) => !resource.enabled).length, 10);
-	assert.equal(resolved.skills.filter((resource) => !resource.enabled).length, 2);
+	assert.equal(resolved.extensions.filter((resource) => !resource.enabled).length, 9);
+	assert.equal(resolved.skills.filter((resource) => !resource.enabled).length, 1);
 	assert.equal(resolved.extensions.at(-2).enabled, true);
 	assert.equal(resolved.extensions.at(-1).enabled, true);
 });

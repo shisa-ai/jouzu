@@ -96,12 +96,7 @@ test("Core keeps repository discipline inline and generates bounded decision-tim
 			"bg_task",
 			"schedule_prompt",
 		],
-		skills: [
-			{ name: "jouzu-source-check" },
-			{ name: "pi-goal" },
-			{ name: "multiloop" },
-			{ name: "jouzu-clear-writing" },
-		],
+		skills: [{ name: "jouzu-source-check" }, { name: "multiloop" }, { name: "jouzu-clear-writing" }],
 	});
 	assert.doesNotMatch(routing, /Repository files and commands|`read`|`grep`|`find`|`ls`/);
 	for (const phrase of [
@@ -112,7 +107,7 @@ test("Core keeps repository discipline inline and generates bounded decision-tim
 		"tff-fetch_url",
 		"jouzu-source-check",
 		"TaskCreate",
-		"pi-goal",
+		"get_goal",
 		"multiloop",
 		"bg_task",
 		"schedule_prompt",
@@ -121,7 +116,9 @@ test("Core keeps repository discipline inline and generates bounded decision-tim
 		assert.match(routing, new RegExp(phrase));
 	}
 	assert.match(routing, /read `jouzu-source-check` at its listed `<location>`/);
-	assert.match(routing, /read `pi-goal` at its listed `<location>`/);
 	assert.match(routing, /read `multiloop` at its listed `<location>`/);
+	// The goal and measured-loop routes both come from the multiloop skill now.
+	assert.match(routing, /One user-approved persistent objective/);
+	assert.match(routing, /Repeated measured improvement/);
 	assert.match(routing, /read `jouzu-clear-writing` at its listed `<location>`/);
 });

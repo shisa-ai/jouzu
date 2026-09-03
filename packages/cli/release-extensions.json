@@ -78,21 +78,10 @@
 			"skills": []
 		},
 		{
-			"name": "@lhl/pi-goal",
-			"version": "0.1.0",
-			"source": "git+https://github.com/lhl/pi-goal.git#a38ff5f0aab12a4591d05845de4f0a16033530ca",
-			"commit": "a38ff5f0aab12a4591d05845de4f0a16033530ca",
-			"repository": "https://github.com/lhl/pi-goal",
-			"license": "MIT",
-			"licenseEvidence": "LICENSE",
-			"extensions": ["src/index.ts"],
-			"skills": ["SKILL.md"]
-		},
-		{
 			"name": "pi-multiloop",
-			"version": "0.3.3",
-			"source": "git+https://github.com/lhl/pi-multiloop.git#e17a58737451e8c0e91c0517a96e592097fbb694",
-			"commit": "e17a58737451e8c0e91c0517a96e592097fbb694",
+			"version": "0.4.0",
+			"source": "git+https://github.com/lhl/pi-multiloop.git#cffc0e58987249dd16d74f1b554623cd103d10d3",
+			"commit": "cffc0e58987249dd16d74f1b554623cd103d10d3",
 			"repository": "https://github.com/lhl/pi-multiloop",
 			"license": "MIT",
 			"licenseEvidence": "LICENSE",

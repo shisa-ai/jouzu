@@ -14,7 +14,7 @@
         "behaviors": ["work-directly"]
       },
       "avoid": {
-        "skills": ["pi-goal", "multiloop"],
+        "skills": ["multiloop"],
         "tools": ["TaskCreate", "bg_task", "schedule_prompt"]
       }
     },
@@ -131,7 +131,7 @@
         "behaviors": ["track-distinct-dependent-steps"]
       },
       "avoid": {
-        "skills": ["pi-goal", "multiloop"],
+        "skills": ["multiloop"],
         "tools": ["schedule_prompt"]
       }
     },
@@ -139,12 +139,12 @@
       "id": "active-persistent-goal",
       "prompt": "Continue the active goal until every required deliverable is complete.",
       "expect": {
-        "skills": ["pi-goal"],
+        "skills": ["multiloop"],
         "tools": ["get_goal"],
-        "behaviors": ["audit-before-completing-goal"]
+        "behaviors": ["audit-before-completing-goal", "do-not-run-measured-setup-for-a-goal"]
       },
       "avoid": {
-        "skills": ["multiloop"],
+        "skills": [],
         "tools": ["multiloop_start", "schedule_prompt"]
       }
     },
@@ -154,10 +154,10 @@
       "expect": {
         "skills": ["multiloop"],
         "tools": ["multiloop_start"],
-        "behaviors": ["scan-clarify-and-wait-for-approval"]
+        "behaviors": ["scan-propose-once-and-wait-for-approval"]
       },
       "avoid": {
-        "skills": ["pi-goal"],
+        "skills": [],
         "tools": ["update_goal", "schedule_prompt"]
       }
     },
@@ -170,7 +170,7 @@
         "behaviors": ["do-not-block-the-conversation"]
       },
       "avoid": {
-        "skills": ["pi-goal", "multiloop"],
+        "skills": ["multiloop"],
         "tools": ["TaskCreate", "schedule_prompt"]
       }
     },
@@ -183,7 +183,7 @@
         "behaviors": ["schedule-only-on-explicit-time-request"]
       },
       "avoid": {
-        "skills": ["pi-goal", "multiloop"],
+        "skills": ["multiloop"],
         "tools": ["bg_task"]
       }
     },
@@ -196,7 +196,7 @@
         "behaviors": ["ground-prose-in-implementation"]
       },
       "avoid": {
-        "skills": ["pi-goal", "multiloop"],
+        "skills": ["multiloop"],
         "tools": ["schedule_prompt"]
       }
     }

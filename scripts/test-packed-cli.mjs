@@ -113,7 +113,6 @@ function assertPackedSurfaces(installedCli, probe, cwd, env, profile) {
 		"skill:jouzu-clear-writing",
 		"skill:jouzu-source-check",
 		"skill:multiloop",
-		"skill:pi-goal",
 		"status",
 		"tasks",
 	]) {

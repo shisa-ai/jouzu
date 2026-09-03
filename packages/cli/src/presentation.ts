@@ -168,10 +168,10 @@ export function buildCapabilityRoutingGuidance(options: BuildSystemPromptOptions
 	);
 	const goalTools = selectedNames(["get_goal", "update_goal"], tools);
 	add(
-		goalTools.length > 0 && skills.has("pi-goal"),
+		goalTools.length > 0 && skills.has("multiloop"),
 		"One user-approved persistent objective",
-		`read \`pi-goal\` at its listed \`<location>\`; use ${codeNames(goalTools)}`,
-		"Use only when the user explicitly requests goal tracking or a goal is already active.",
+		`read \`multiloop\` at its listed \`<location>\`; use ${codeNames(goalTools)}`,
+		"The user starts a goal with `/goal`; work it until its completion audit passes. Do not run the measured-loop setup for one.",
 	);
 	const loopTools = [...tools].filter((name) => name.startsWith("multiloop_"));
 	add(

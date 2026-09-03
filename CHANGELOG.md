@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Let the agent ask for context compaction with `compact_context`. The request runs after the current turn ends, uses the bundled pi-vcc compactor, and leaves earlier messages searchable through `vcc_recall`.
+- Move the goal surface into `pi-multiloop` 0.4.0 and drop the separate `@lhl/pi-goal` package. `/goal`, `get_goal`, and `update_goal` work as before and now come from the same package as `/multiloop`, so a goal is listable and resumable alongside measured runs. Existing goals from 0.1.4 remain readable. The bundle falls from ten release-owned extensions and two package skills to nine and one.
+- `/goal <objective>` starts immediately: it derives its own lane, mode, and scope instead of asking setup questions. `/multiloop` reaches a measured launch on one approval rather than a clarification round.
+- Report elapsed time, turns, tool calls, and token totals per run in `/goal` and `/multiloop status`. These counters are no longer written into the model's context, where a running total read as a context-window gauge and could cut work short.
+
 ## 0.1.4 - 2026-08-27
 
 - Bundle ten release-owned Pi extensions for scheduling, background processes, readable and rendered web access, code previews, tasks, goals, measured loops, context recall, and skill discovery, plus the `pi-goal` and `multiloop` package skills. Matching user-configured copies are suppressed without changing user settings; unrelated Pi packages remain user-managed.
