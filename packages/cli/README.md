@@ -1,6 +1,6 @@
 # Jouzu
 
-Jouzu is an agentic AI environment built on the Pi coding agent, with CJK-safe text and path handling. `jouzu` and `jz` run exact Pi `0.84.3` with isolated Jouzu state, a language-neutral Core fallback, an optional JA preview, and non-mutating diagnostics. The optional JA profile requires explicit selection.
+Jouzu is an agentic AI environment built on the Pi coding agent, with CJK-safe text and path handling. `jouzu` and `jz` run exact Pi `0.84.4` with isolated Jouzu state, a language-neutral Core fallback, an optional JA preview, and non-mutating diagnostics. The optional JA profile requires explicit selection.
 
 ## Install and start
 
