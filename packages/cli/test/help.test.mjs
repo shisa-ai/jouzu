@@ -50,7 +50,7 @@ test("registers help shortcuts and renders effective semantic bindings", async (
 	await shortcuts.get("ctrl+/").handler(ctx);
 	assert.equal(customOptions.overlay, true);
 	assert.match(rendered, /Jouzu Help/);
-	assert.match(rendered, /Alt\+M.*Models/);
+	assert.ok(rendered.includes(`${process.platform === "darwin" ? "Option" : "Alt"}+M  Models`));
 	assert.match(rendered, /F6.*Cycle favorites/);
 	assert.match(rendered, /Ctrl\+X close/);
 	assert.match(rendered, /Ctrl\+\/ or Ctrl\+\?.*Help/);

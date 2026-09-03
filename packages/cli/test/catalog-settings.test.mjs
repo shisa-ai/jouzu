@@ -212,7 +212,7 @@ test("Catalogs settings hints render effective semantic bindings", () => {
 		const rendered = component.render(72).join("\n");
 		assert.match(rendered, /Ctrl\+S save/u);
 		assert.match(rendered, /K\/J field/u);
-		assert.match(rendered, /Alt\+X cancel/u);
+		assert.ok(rendered.includes(`${process.platform === "darwin" ? "Option" : "Alt"}+X cancel`));
 		assert.doesNotMatch(rendered, /Enter save|Esc cancel|↑↓ field/u);
 	} finally {
 		rmSync(root, { recursive: true, force: true });

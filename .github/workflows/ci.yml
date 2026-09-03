@@ -81,7 +81,7 @@ jobs:
           doctor_status=$?
           set -e
           test "$doctor_status" -eq 1
-          grep -F "10 selected; 9 ready; 1 optional unavailable" doctor.txt
+          grep -F "9 selected; 8 ready; 1 optional unavailable" doctor.txt
           grep -F "disabled tools: web_fetch, batch_web_fetch" doctor.txt
           printf '%s\n' '{"id":"commands","type":"get_commands"}' |
             PI_OFFLINE=1 JOUZU_HOME="$RUNNER_TEMP/jouzu-degraded" \

@@ -411,7 +411,7 @@ test("Models view hints render effective semantic bindings", () => {
 	const rendered = component.render(72).join("\n");
 	assert.match(rendered, /Ctrl\+S select and save for project/u);
 	assert.match(rendered, /K\/J move/u);
-	assert.match(rendered, /Alt\+X close/u);
+	assert.ok(rendered.includes(`${process.platform === "darwin" ? "Option" : "Alt"}+X close`));
 	assert.doesNotMatch(rendered, /Enter select|Esc close|↑↓ move/u);
 });
 
