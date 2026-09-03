@@ -256,6 +256,18 @@ test("selects truecolor, indexed, basic, and NO_COLOR banner modes deterministic
 	assert.equal(renderBannerLines(identityTheme, metadata, 15, "truecolor")[0], "J O U Z U");
 });
 
+test("re-asserts the Jouzu window title when Pi renames the session", async () => {
+	const { handlers } = installExtension();
+	const { calls, ctx } = interactiveContext();
+
+	await handlers.get("session_info_changed")({ type: "session_info_changed", name: "fix login bug" }, ctx);
+	assert.deepEqual(calls.title, ["Jouzu - fix login bug - 日本語 project"]);
+
+	calls.title.length = 0;
+	await handlers.get("session_info_changed")({ type: "session_info_changed", name: undefined }, ctx);
+	assert.deepEqual(calls.title, ["Jouzu - 日本語 project"]);
+});
+
 test("does not install TUI presentation in RPC mode", async () => {
 	const { handlers } = installExtension();
 	const { calls, ctx } = interactiveContext();

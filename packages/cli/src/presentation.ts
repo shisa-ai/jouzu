@@ -324,6 +324,11 @@ export function renderBannerLines(
 	return [...BRAILLE_MARK.map((line) => renderBrandGradient(line, colorMode, palette)), ...details];
 }
 
+function jouzuWindowTitle(sessionName: string | undefined, cwd: string): string {
+	const cwdBase = basename(cwd) || "workspace";
+	return sessionName ? `Jouzu - ${sessionName} - ${cwdBase}` : `Jouzu - ${cwdBase}`;
+}
+
 export function createJouzuPresentationExtension(
 	metadata: JouzuMetadata,
 	profile: ProfileSelection,
@@ -346,7 +351,7 @@ export function createJouzuPresentationExtension(
 			pi.on("session_start", (_event, ctx) => {
 				if (ctx.mode !== "tui") return;
 				const colorMode = options.colorMode ?? detectBannerColorMode(options);
-				ctx.ui.setTitle(`Jouzu - ${basename(ctx.cwd) || "workspace"}`);
+				ctx.ui.setTitle(jouzuWindowTitle(undefined, ctx.cwd));
 				ctx.ui.setWorkingIndicator({
 					frames: [
 						ctx.ui.theme.fg("dim", "·"),
@@ -360,6 +365,13 @@ export function createJouzuPresentationExtension(
 					render: (width) => renderBannerLines(theme, metadata, width, colorMode, options.palette),
 					invalidate() {},
 				}));
+			});
+
+			// Pi's interactive mode rewrites the window title as "π - ..." whenever the
+			// session info changes; re-assert Jouzu branding on the same event so it wins.
+			pi.on("session_info_changed", (event, ctx) => {
+				if (ctx.mode !== "tui") return;
+				ctx.ui.setTitle(jouzuWindowTitle(event.name, ctx.cwd));
 			});
 
 			registerCompactionRequest(pi);
