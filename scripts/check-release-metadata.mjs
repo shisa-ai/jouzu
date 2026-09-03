@@ -13,6 +13,8 @@ const piLockPath = process.env.JOUZU_PI_LOCK ?? "upstream/pi.lock.json";
 const piLock = readJson(piLockPath);
 const pythonProject = readFileSync(resolve(root, "python/jouzu/pyproject.toml"), "utf8");
 const pythonModule = readFileSync(resolve(root, "python/jouzu/src/jouzu/__init__.py"), "utf8");
+const rootReadme = readFileSync(resolve(root, process.env.JOUZU_ROOT_README ?? "README.md"), "utf8");
+const cliReadme = readFileSync(resolve(root, process.env.JOUZU_CLI_README ?? "packages/cli/README.md"), "utf8");
 const changelog = readFileSync(resolve(root, "CHANGELOG.md"), "utf8");
 const npmWorkflow = readFileSync(resolve(root, ".github/workflows/publish-npm.yml"), "utf8");
 const npmPublisher = readFileSync(resolve(root, "scripts/publish-npm.mjs"), "utf8");
@@ -132,6 +134,12 @@ for (const deviation of piLock.deviations) {
 }
 if (!pythonProject.includes('version = "0.0.1"') || !pythonModule.includes('__version__ = "0.0.1"')) {
 	throw new Error("PyPI must remain at the non-functional 0.0.1 reservation for the npm-only v0.1 release");
+}
+if (cliReadme !== rootReadme) {
+	throw new Error(
+		"packages/cli/README.md differs from the root README.md; npm displays the package README, " +
+			"so copy the root README over packages/cli/README.md",
+	);
 }
 if (rootPackage.workspaces?.length !== 1 || rootPackage.workspaces[0] !== "packages/*") {
 	throw new Error("unexpected npm workspace configuration");

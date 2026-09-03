@@ -18,6 +18,8 @@ function runWithMetadata({
 	cliPackage = realCliPackage,
 	sessionUiPackage = realSessionUiPackage,
 	packageLock = realPackageLock,
+	rootReadme,
+	cliReadme,
 } = {}) {
 	const dir = mkdtempSync(join(tmpdir(), "pi-metadata-fixture-"));
 	try {
@@ -31,15 +33,22 @@ function runWithMetadata({
 			const value = { piLock, cliPackage, sessionUiPackage, packageLock }[name];
 			writeFileSync(path, JSON.stringify(value, null, 2));
 		}
+		const env = {
+			...process.env,
+			JOUZU_PI_LOCK: paths.piLock,
+			JOUZU_CLI_PACKAGE: paths.cliPackage,
+			JOUZU_SESSION_UI_PACKAGE: paths.sessionUiPackage,
+			JOUZU_PACKAGE_LOCK: paths.packageLock,
+		};
+		const rootReadmePath = join(dir, "root-readme.md");
+		writeFileSync(rootReadmePath, rootReadme ?? readFileSync(join(root, "README.md"), "utf8"));
+		env.JOUZU_ROOT_README = rootReadmePath;
+		const cliReadmePath = join(dir, "cli-readme.md");
+		writeFileSync(cliReadmePath, cliReadme ?? readFileSync(join(root, "packages", "cli", "README.md"), "utf8"));
+		env.JOUZU_CLI_README = cliReadmePath;
 		return spawnSync(process.execPath, [script], {
 			encoding: "utf8",
-			env: {
-				...process.env,
-				JOUZU_PI_LOCK: paths.piLock,
-				JOUZU_CLI_PACKAGE: paths.cliPackage,
-				JOUZU_SESSION_UI_PACKAGE: paths.sessionUiPackage,
-				JOUZU_PACKAGE_LOCK: paths.packageLock,
-			},
+			env,
 		});
 	} finally {
 		rmSync(dir, { recursive: true, force: true });
@@ -121,6 +130,20 @@ test("a qualified Pi lock passes release metadata validation", () => {
 	});
 	assert.equal(result.status, 0, result.stderr || result.stdout);
 	assert.ok(result.stdout.includes(`release metadata: jouzu@${realCliPackage.version}, Pi `));
+});
+
+test("a divergent npm README fails release metadata validation", () => {
+	const result = runWithMetadata({
+		cliReadme: "# Jouzu\n\nA condensed npm README that no longer matches the root README.\n",
+	});
+	assert.notEqual(result.status, 0, "divergent package README must fail release metadata");
+	assert.match(result.stderr, /packages\/cli\/README\.md differs from the root README\.md/u);
+});
+
+test("identical root and npm READMEs pass release metadata validation", () => {
+	const readme = readFileSync(join(root, "README.md"), "utf8");
+	const result = runWithMetadata({ rootReadme: readme, cliReadme: readme });
+	assert.equal(result.status, 0, result.stderr || result.stdout);
 });
 
 test("the npm publish workflow stays a bounded transport gate", () => {
