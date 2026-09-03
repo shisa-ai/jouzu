@@ -18,7 +18,7 @@ A new default must avoid every **Blocked** and **Prefix** row in the supported h
 
 ## Conflicts in the effective Jouzu and Pi map
 
-The action IDs below come from Pi 0.84.3 plus Jouzu keybinding defaults version 2. Windows and Windows Subsystem for Linux (WSL) use Pi's Windows variants where noted.
+The action IDs below come from Pi 0.84.4 plus Jouzu keybinding defaults version 2. Windows and Windows Subsystem for Linux (WSL) use Pi's Windows variants where noted.
 
 | Gesture | Jouzu or Pi action | Higher-layer claim | Status | Remaining route or action |
 | --- | --- | --- | --- | --- |

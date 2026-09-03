@@ -43,8 +43,8 @@
 		"access": "public"
 	},
 	"dependencies": {
-		"@earendil-works/pi-coding-agent": "0.84.3",
-		"@earendil-works/pi-tui": "0.84.3",
+		"@earendil-works/pi-coding-agent": "0.84.4",
+		"@earendil-works/pi-tui": "0.84.4",
 		"@lhl/pi-tasks": "git+https://github.com/lhl/pi-tasks.git#fc2e88bccfe0c5b818daea7092667d75e8e14b3d",
 		"@sting8k/pi-vcc": "0.7.0",
 		"@the-forge-flow/camoufox-pi": "0.2.1",

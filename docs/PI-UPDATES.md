@@ -58,6 +58,35 @@ Review all generated manifest and lock changes before qualification. Run focused
 
 ## Update log
 
+### Pi 0.84.4 — qualified
+
+- **Release:** 2026-08-28
+- **Tag and npm `gitHead`:** `v0.84.4` at `b79e4cc834970cca69daebffab7df1da7d1e52c4`
+- **npm package:** `@earendil-works/pi-coding-agent@0.84.4`
+- **npm integrity:** `sha512-jmOlrqUmvhh/siNWFRXjYLJzhKFIHNsAQaysRwzQPQFnPAaV/vhqHsLH/MBsIISA1Rjj7WTUFR3nJrpXoLx39w==`
+- **Disposition:** Adopted and qualified on 2026-09-03 with no Pi source deviations.
+
+#### Relevant upstream changes
+
+- Terminal capability overrides, extension UI prompt events, RPC queue clearing, and configurable fullscreen selection copying were added.
+- Large tool results that cross the auto-compaction threshold are compacted before the next provider request. Compaction and branch summaries no longer force `toolChoice: "none"`, and interactive progress resumes after same-run compaction.
+- Extension messages with `triggerTurn: false` wait for active tool results before entering history, preserving provider-valid tool call ordering.
+- Saving a default model from a non-empty scope keeps it available in that scope. File autocomplete favors direct and shallower matches.
+- Session append repairs, Windows shell-abort handling, thinking-output rendering, provider reasoning replay, explicit tool choice, proxy transport, and model catalog data received fixes.
+
+#### Jouzu interaction review
+
+- The launcher exports and interactive seams used by Jouzu remain available. The contract probe passed `main`, agent-directory resolution, session management, model runtime, resource loading, CLI version/help, isolated RPC startup, semantic key actions, custom-editor handler interception, Palette model activation, session-only persistence, and packed startup.
+- The model-scope fix agrees with Jouzu's project-default layer: activation stays session-scoped while Jouzu stores a successful Palette selection separately. Model selection, favorites, scoped commands, compaction, autocomplete, CJK layout, and extension lifecycle tests passed.
+- Pi owns the new `fullscreenCopyOnSelect` and `Ctrl+X` selection behavior. Jouzu's `Ctrl+Enter`, `Ctrl+Up`, and Models `Ctrl+F` defaults did not change.
+- Both lockfiles retain their prior record sets. Only the seven `@earendil-works/pi-*` runtime packages, the direct Pi TUI package, and the matching manifest records changed from 0.84.3 to 0.84.4. Pi's Node.js minimum remains 22.19 and its package license remains MIT. The packed production audit reported zero vulnerabilities.
+
+#### Qualification evidence
+
+`npm run pi:qualify` passed online npm and Git tag checks, 42 Session UI tests, 300 CLI tests, five pack-check tests, six release-metadata tests, Python build/checks, packed local/npm-exec/global installs, synthetic update and rollback, the Pi contract probe, and promotion. The installed coding-agent package matched all 1,044 npm tarball files byte-for-byte. Release extension network tests passed readable fetch, batch fetch, rendered browser fetch/search, and cleanup. The deployed Shisa catalog returned nine offerings, and the packed JA smoke completed its Japanese write/read flow through `google/gemini-2.5-flash-lite` for `$0.0003658` under a `$0.02` cap.
+
+The npm SLSA provenance names `refs/tags/v0.84.4`, repository `earendil-works/pi`, build workflow `.github/workflows/build-binaries.yml`, and source commit `b79e4cc834970cca69daebffab7df1da7d1e52c4`. The registry `gitHead`, immutable tag, provenance source, and checked-in lock agree.
+
 ### Pi 0.84.3 — qualified
 
 - **Release:** 2026-08-24
