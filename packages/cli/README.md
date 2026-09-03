@@ -29,7 +29,7 @@ A required release-extension failure still stops startup.
 ## Install
 
 ```bash
-npm install --global jouzu@0.1.5
+npm install --global jouzu@0.1.6
 
 jouzu --version
 jz doctor
@@ -38,7 +38,7 @@ jz doctor
 `jz` is an exact alias for `jouzu`. To try the CLI without a global installation:
 
 ```bash
-npx --yes jouzu@0.1.5 --version
+npx --yes jouzu@0.1.6 --version
 ```
 
 ## Quick start
@@ -298,12 +298,12 @@ Managed profile assets are UTF-8. Existing CP932/Shift-JIS profile targets produ
 - npm is the only v0.1 application channel.
 - Node, npm, Git, Bash, and provider credentials are not bundled.
 - Existing Pi `models.json` and `auth.json` require separate first-run consent; other stock Pi state is not imported.
-- No native installer, standalone archive, background service, hosted gateway, or Jouzu-owned model catalog.
+- No native installer, standalone archive, background service, or hosted model gateway.
 - The Models view uses Pi's local usable-model inventory; catalog additions, one-turn trials, adaptive target-budget compaction, and cost/quota/route preflight are deferred.
 - Third-party Pi packages execute trusted code with the user's permissions and have their own platform support.
 - `Ctrl+Enter` and `Ctrl+Up` delivery depends on terminal/OS key reporting; both semantic bindings remain user-customizable.
-- Jouzu v0.1.5's bundled extension set is qualified on Linux, macOS, and Windows with Node 22 and 24.
-- Cross-platform support claims require the release commit's Linux, macOS, and Windows CI matrix to pass.
+- Jouzu v0.1.6's bundled extension set is qualified on Linux and macOS with Node 22 and 24.
+- Windows npm installs remain available, but Windows release qualification is paused while package size and updater rollback time are reduced.
 
 ## Development
 
@@ -313,7 +313,7 @@ npm run release:check
 npm run dev:link
 ```
 
-`dev:link` records the UTC build time, Git commit, and dirty-worktree state. `jz --version` displays an identifier such as `0.1.5-dev.20260903-010203+g215b2188`. A `.dirty` suffix marks a build that included uncommitted files. The standard `npm run build` removes development metadata before packing a release artifact.
+`dev:link` records the UTC build time, Git commit, and dirty-worktree state. `jz --version` displays an identifier such as `0.1.6-dev.20260903-010203+g215b2188`. A `.dirty` suffix marks a build that included uncommitted files. The standard `npm run build` removes development metadata before packing a release artifact.
 
 See [docs/architecture.md](docs/architecture.md) for the module map, state-file
 ownership, update lanes, and bundled profile boundaries.
