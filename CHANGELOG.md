@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.6 - 2026-09-03
+
+- Publish the complete repository README on npm instead of the condensed package copy, and require byte-identical root, package, and packed README content before release.
+- Keep the v0.1.5 runtime and exact Pi 0.84.4 dependency unchanged. Qualify this documentation release on Linux and macOS with Node 22 and 24; Windows release qualification is paused while package size and updater rollback time are reduced.
+
 ## 0.1.5 - 2026-09-03
 
 - Add a built-in `shisa-api` catalog source: when `SHISA_API_KEY` holds a bearer token, Jouzu reads the account's model catalog from the deployed Shisa endpoint with no source configuration, refreshes each enabled source with an available credential in the background at interactive startup, and keeps serving cached catalogs. The token is sent only as the source's authorization header, is never written to configuration, cache, or diagnostics, and authenticated refresh never follows redirects. Without the key and without a configured source, Jouzu makes no catalog request. A manual registration with the same endpoint and credential reference keeps its label, enabled state, and cache; the built-in source can be disabled in Settings / Catalogs without storing a credential.
