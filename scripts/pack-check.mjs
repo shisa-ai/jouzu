@@ -49,6 +49,40 @@ export function assertProfileFilesPresent(packedFiles, required) {
 }
 
 /**
+ * Derive the platform-specific clipboard binding variants that must ship in
+ * the tarball from the installed @mariozechner/clipboard package's own
+ * optionalDependencies, so the gate tracks the pinned Pi runtime's dependency
+ * instead of a hand-written list. Returns unqualified variant package names
+ * (e.g. "clipboard-win32-x64-msvc").
+ */
+export function deriveClipboardBindingVariants(clipboardPackageJson) {
+	const variants = Object.keys(clipboardPackageJson?.optionalDependencies ?? {});
+	if (variants.length === 0) {
+		throw new Error("@mariozechner/clipboard declares no platform binding variants");
+	}
+	return variants.map((name) => {
+		if (!name.startsWith("@mariozechner/clipboard-")) {
+			throw new Error(`unexpected clipboard binding dependency ${name}`);
+		}
+		return name.replace("@mariozechner/", "");
+	});
+}
+
+/**
+ * Assert that every clipboard binding variant is packed inside the bundled Pi
+ * runtime so Windows and macOS installs load native clipboard support instead
+ * of silently degrading.
+ */
+export function assertClipboardBindingsPresent(packedFiles, variants) {
+	for (const variant of variants) {
+		const path = `node_modules/@earendil-works/pi-coding-agent/node_modules/@mariozechner/${variant}/package.json`;
+		if (!packedFiles.some((file) => file.path === path)) {
+			throw new Error(`jouzu tarball is missing clipboard binding ${variant}`);
+		}
+	}
+}
+
+/**
  * Build the deny-list of content that must never appear in a published
  * tarball. Private repository markers are fixed; maintainer home paths are
  * generated at runtime from the building machine's home directory and from
@@ -123,6 +157,22 @@ for (const directory of packageDirectories) {
 			throw new Error("jouzu dist/cli.js is missing its Node shebang");
 		}
 		assertProfileFilesPresent(packed.files, deriveRequiredProfileFiles(join(directory, "profiles")));
+		const clipboardPackage = JSON.parse(
+			readFileSync(
+				join(
+					directory,
+					"node_modules",
+					"@earendil-works",
+					"pi-coding-agent",
+					"node_modules",
+					"@mariozechner",
+					"clipboard",
+					"package.json",
+				),
+				"utf8",
+			),
+		);
+		assertClipboardBindingsPresent(packed.files, deriveClipboardBindingVariants(clipboardPackage));
 		if (!packed.files.some((file) => file.path === "dist/release-extensions.json")) {
 			throw new Error("jouzu tarball is missing dist/release-extensions.json");
 		}

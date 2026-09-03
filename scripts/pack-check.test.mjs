@@ -4,7 +4,13 @@ import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 
-import { assertProfileFilesPresent, deriveRequiredProfileFiles, forbiddenPublicContent } from "./pack-check.mjs";
+import {
+	assertClipboardBindingsPresent,
+	assertProfileFilesPresent,
+	deriveClipboardBindingVariants,
+	deriveRequiredProfileFiles,
+	forbiddenPublicContent,
+} from "./pack-check.mjs";
 
 function makeFixtureProfiles() {
 	const dir = mkdtempSync(join(tmpdir(), "pack-check-"));
@@ -55,6 +61,31 @@ test("all declared assets present in the tarball passes the presence check", () 
 	} finally {
 		rmSync(dir, { recursive: true, force: true });
 	}
+});
+
+test("deriveClipboardBindingVariants unscopes names and rejects unexpected dependencies", () => {
+	const variants = deriveClipboardBindingVariants({
+		optionalDependencies: {
+			"@mariozechner/clipboard-win32-x64-msvc": "0.3.9",
+			"@mariozechner/clipboard-darwin-arm64": "0.3.9",
+		},
+	});
+	assert.deepEqual(variants, ["clipboard-win32-x64-msvc", "clipboard-darwin-arm64"]);
+	assert.throws(() => deriveClipboardBindingVariants({ optionalDependencies: { impit: "1.0.0" } }), /unexpected/);
+	assert.throws(() => deriveClipboardBindingVariants({}), /no platform binding variants/);
+});
+
+test("a clipboard binding variant omitted from the tarball fails the presence check", () => {
+	const packed = [
+		{
+			path: "node_modules/@earendil-works/pi-coding-agent/node_modules/@mariozechner/clipboard-win32-x64-msvc/package.json",
+		},
+	];
+	assertClipboardBindingsPresent(packed, ["clipboard-win32-x64-msvc"]);
+	assert.throws(
+		() => assertClipboardBindingsPresent(packed, ["clipboard-win32-x64-msvc", "clipboard-darwin-arm64"]),
+		/missing clipboard binding clipboard-darwin-arm64/,
+	);
 });
 
 test("forbiddenPublicContent derives the home path at runtime and honors runbook input", () => {

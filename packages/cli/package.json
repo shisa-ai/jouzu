@@ -15,7 +15,7 @@
 		"THIRD_PARTY_NOTICES.md"
 	],
 	"scripts": {
-		"build": "node ../../scripts/install-release-extensions.mjs && tsc -p tsconfig.json && node ../../scripts/copy-session-ui.mjs && node ../../scripts/prepare-cli.mjs && node ../../scripts/copy-pi-lock.mjs dist/pi.lock.json && node ../../scripts/copy-profiles.mjs && node ../../scripts/copy-catalog.mjs && node ../../scripts/copy-release-extensions.mjs",
+		"build": "node ../../scripts/install-release-extensions.mjs && node ../../scripts/vendor-clipboard-bindings.mjs && tsc -p tsconfig.json && node ../../scripts/copy-session-ui.mjs && node ../../scripts/prepare-cli.mjs && node ../../scripts/copy-pi-lock.mjs dist/pi.lock.json && node ../../scripts/copy-profiles.mjs && node ../../scripts/copy-catalog.mjs && node ../../scripts/copy-release-extensions.mjs",
 		"check": "tsc -p tsconfig.json --noEmit",
 		"test": "node ../../scripts/check-dist-fresh.mjs && node --test test/*.test.mjs"
 	},
