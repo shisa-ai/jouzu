@@ -691,14 +691,19 @@ export function createJouzuModelPicker(
 	let projectKey = "";
 	let previous: ModelReference[] = [];
 	let pendingDispatch: ModelReference | undefined;
-	let queuedModelSwitch: { model: PiModel; reference: PickerModel } | undefined;
+	let queuedModelSwitch: { model: PiModel; reference: PickerModel; setProjectDefault: boolean } | undefined;
 	let stateWarningShown = false;
 	let catalogWarningShown = false;
 	let cycleBusy = false;
 	let setModel: ((model: PiModel) => Promise<boolean>) | undefined;
 
-	const queueModelSwitch = (ctx: ExtensionContext, model: PiModel, reference: PickerModel): void => {
-		queuedModelSwitch = { model, reference };
+	const queueModelSwitch = (
+		ctx: ExtensionContext,
+		model: PiModel,
+		reference: PickerModel,
+		setProjectDefault = false,
+	): void => {
+		queuedModelSwitch = { model, reference, setProjectDefault };
 		const display = modelDisplay(reference);
 		ctx.ui.notify(`Model switch queued for the next model call: ${display.provider}/${display.modelId}.`, "info");
 	};
@@ -832,7 +837,7 @@ export function createJouzuModelPicker(
 					if (!(await activateModel(queued.model))) {
 						throw new Error(`No authentication for ${display.provider}/${display.modelId}`);
 					}
-					state = store.setProjectDefault(queued.reference, projectKey);
+					if (queued.setProjectDefault) state = store.setProjectDefault(queued.reference, projectKey);
 					ctx.ui.notify(`Switched to ${display.provider}/${display.modelId}.`, "info");
 				} catch (error) {
 					ctx.ui.notify(
@@ -883,7 +888,7 @@ export function createJouzuModelPicker(
 									const model = ctx.modelRegistry.find(row.model.provider, row.model.modelId);
 									if (!model) throw new Error(`Model is unavailable: ${row.model.provider}/${row.model.modelId}`);
 									if (!ctx.isIdle()) {
-										queueModelSwitch(ctx, model, row.model);
+										queueModelSwitch(ctx, model, row.model, true);
 										return;
 									}
 									if (!(await activateModel(model)))

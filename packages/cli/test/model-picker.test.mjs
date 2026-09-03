@@ -271,6 +271,7 @@ async function createFavoriteCycleHarness(options = {}) {
 		ctx,
 		handlers,
 		integration,
+		paths,
 		selected,
 		notifications,
 		async dispose() {
@@ -736,6 +737,7 @@ test("Ctrl+P cycles global favorites deterministically in both directions", asyn
 		assert.equal(await harness.integration.cycleFavorite("backward"), true);
 		assert.deepEqual(harness.selected, ["b", "c", "a", "c"]);
 		assert.ok(harness.notifications.every(([message]) => message.startsWith("Switched to p/")));
+		assert.deepEqual(new ModelPickerStore(harness.paths).load().state.defaults.projects, {});
 	} finally {
 		await harness.dispose();
 	}
@@ -790,6 +792,8 @@ test("favorite cycling handles empty, active, unauthenticated, and failed switch
 			await harness.handlers.get("turn_end")({}, harness.ctx);
 			assert.deepEqual(harness.selected, ["a"]);
 			assert.match(harness.notifications.at(-1)[0], /Switched to p\/a/);
+			// Cycling switches models without ever persisting a project default.
+			assert.deepEqual(new ModelPickerStore(harness.paths).load().state.defaults.projects, {});
 		} finally {
 			await harness.dispose();
 		}
