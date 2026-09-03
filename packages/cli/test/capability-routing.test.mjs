@@ -11,6 +11,7 @@ const expectedCaseIds = [
 	"simple-repository-change",
 	"recall-earlier-session-decision",
 	"continue-after-compaction",
+	"request-compaction-during-long-task",
 	"fetch-known-readable-url",
 	"fetch-multiple-known-urls",
 	"discover-web-sources",

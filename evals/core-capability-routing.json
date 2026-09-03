@@ -45,6 +45,19 @@
       }
     },
     {
+      "id": "request-compaction-during-long-task",
+      "prompt": "You are deep into a long refactor and the conversation has grown large. Keep going without losing the earlier decisions.",
+      "expect": {
+        "skills": [],
+        "tools": ["compact_context", "vcc_recall"],
+        "behaviors": ["treat-compaction-as-continuation", "search-session-before-reconstructing"]
+      },
+      "avoid": {
+        "skills": [],
+        "tools": ["update_goal", "TaskCreate"]
+      }
+    },
+    {
       "id": "fetch-known-readable-url",
       "prompt": "Read https://example.com/guide and summarize its installation steps.",
       "expect": {

@@ -52,12 +52,18 @@ function interactiveContext() {
 function installExtension() {
 	const handlers = new Map();
 	const commands = new Map();
+	const tools = new Map();
+	const sent = [];
 	const pi = {
 		on: (event, handler) => handlers.set(event, handler),
 		registerCommand: (name, command) => commands.set(name, command),
+		registerTool: (tool) => tools.set(tool.name, tool),
+		sendMessage: async (message, options) => {
+			sent.push({ message, options });
+		},
 	};
 	createJouzuPresentationExtension(metadata, profile, { colorMode: "none" }).factory(pi);
-	return { handlers, commands };
+	return { handlers, commands, tools, sent };
 }
 
 test("brands only Pi's default prompt, adds bounded guidance, and preserves dynamic tool bullets", async () => {
@@ -143,12 +149,23 @@ test("describes VCC session continuity without claiming infinite context", () =>
 	});
 
 	assert.match(guidance, /Session continuity across compaction/);
-	assert.match(guidance, /pi-vcc compacts automatically/);
+	assert.match(guidance, /compaction runs automatically/);
 	assert.match(guidance, /Compaction is not context exhaustion/);
 	assert.match(guidance, /workflow token totals are not active context occupancy/);
 	assert.match(guidance, /cannot compact/);
 	assert.match(guidance, /current session/);
 	assert.doesNotMatch(guidance, /infinite context/i);
+});
+
+test("routes compaction requests to the tool when it is available", () => {
+	const guidance = buildCapabilityRoutingGuidance({
+		selectedTools: ["vcc_recall", "compact_context"],
+		skills: [],
+	});
+
+	assert.match(guidance, /`compact_context` requests one/);
+	assert.match(guidance, /runs after the current turn ends/);
+	assert.doesNotMatch(guidance, /cannot compact/);
 });
 
 test("clears only real interactive TTY launches", () => {
