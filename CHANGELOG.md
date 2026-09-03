@@ -6,6 +6,7 @@
 - Move the goal surface into `pi-multiloop` 0.4.0 and drop the separate `@lhl/pi-goal` package. `/goal`, `get_goal`, and `update_goal` work as before and now come from the same package as `/multiloop`, so a goal is listable and resumable alongside measured runs. Existing goals from 0.1.4 remain readable. The bundle falls from ten release-owned extensions and two package skills to nine and one.
 - `/goal <objective>` starts immediately: it derives its own lane, mode, and scope instead of asking setup questions. `/multiloop` reaches a measured launch on one approval rather than a clarification round.
 - Report elapsed time, turns, tool calls, and token totals per run in `/goal` and `/multiloop status`. These counters are no longer written into the model's context, where a running total read as a context-window gauge and could cut work short.
+- Toggle a Models favorite with `Ctrl+F`, replacing the `Shift+Enter` and `Ctrl+Shift+S` accelerators. `Ctrl+F` reaches the application as a plain control byte, so favoriting no longer depends on the terminal reporting a modified Enter: a terminal that sent an unrecognized `Shift+Enter` did nothing, and one configured to send a bare newline selected a model instead of favoriting it. Inside the Models search field `Ctrl+F` takes precedence over cursor-right, where `→` remains available. Rebind through `jouzu.model.toggleFavorite` in `keybindings.json`.
 
 ## 0.1.4 - 2026-08-27
 
