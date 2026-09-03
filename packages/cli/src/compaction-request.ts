@@ -142,21 +142,36 @@ export function registerCompactionRequest(
 }
 
 function dispatchCompaction(pi: ExtensionAPI, ctx: ExtensionContext, controller: CompactionRequestController): void {
-	ctx.compact({
-		customInstructions: PI_VCC_COMPACT_MARKER,
-		onComplete: (result) => {
-			controller.settle();
-			notify(ctx, describeCompactionOutcome(result?.details), "info");
-			resumeAfterCompaction(pi);
-		},
-		onError: (error) => {
-			// Deliberately no resume here. Resuming after a failed compaction
-			// invites the agent to request it again immediately; the user sees
-			// the notice and can steer.
-			controller.settle();
-			notify(ctx, describeCompactionFailure(error), "warning");
-		},
-	});
+	// `ctx.compact` asserts the extension context is still active before it
+	// dispatches, so it throws synchronously on a context left stale by a
+	// session replacement or reload. That throw runs neither callback below, so
+	// without this guard the controller would stay in `dispatching` and every
+	// later request would be refused as already pending for the rest of the
+	// session.
+	try {
+		ctx.compact({
+			customInstructions: PI_VCC_COMPACT_MARKER,
+			onComplete: (result) => {
+				controller.settle();
+				notify(ctx, describeCompactionOutcome(result?.details), "info");
+				resumeAfterCompaction(pi);
+			},
+			onError: (error) => {
+				// Deliberately no resume here. Resuming after a failed compaction
+				// invites the agent to request it again immediately; the user sees
+				// the notice and can steer.
+				controller.settle();
+				notify(ctx, describeCompactionFailure(error), "warning");
+			},
+		});
+	} catch (error) {
+		controller.settle();
+		notify(ctx, describeCompactionFailure(asError(error)), "warning");
+	}
+}
+
+function asError(value: unknown): Error {
+	return value instanceof Error ? value : new Error(String(value));
 }
 
 function notify(ctx: ExtensionContext, message: string, level: "info" | "warning"): void {

@@ -29,7 +29,7 @@ function installTool() {
 	return { handlers, tools, sent, controller };
 }
 
-function settledContext({ hasPendingMessages = false } = {}) {
+function settledContext({ hasPendingMessages = false, compactThrows } = {}) {
 	const compactCalls = [];
 	const notifications = [];
 	return {
@@ -37,7 +37,10 @@ function settledContext({ hasPendingMessages = false } = {}) {
 		notifications,
 		ctx: {
 			hasPendingMessages: () => hasPendingMessages,
-			compact: (options) => compactCalls.push(options),
+			compact: (options) => {
+				compactCalls.push(options);
+				if (compactThrows) throw compactThrows;
+			},
 			ui: { notify: (message, level) => notifications.push([message, level]) },
 		},
 	};
@@ -110,6 +113,57 @@ test("a failed compaction reports to the user and does not resume the agent", as
 	assert.equal(notifications[0][1], "warning");
 	assert.match(notifications[0][0], /Nothing to compact/);
 	assert.equal(sent.length, 0, "no resume after a failed compaction");
+});
+
+test("a compact call that throws settles the controller instead of stranding it", async () => {
+	const { handlers, tools, sent, controller } = installTool();
+	await tools.get(COMPACTION_TOOL_NAME).execute();
+
+	// ctx.compact asserts the extension context is active before dispatching, so
+	// a context left stale by a session replacement throws synchronously and
+	// runs neither callback.
+	const stale = new Error("This extension ctx is stale after session replacement or reload.");
+	const first = settledContext({ compactThrows: stale });
+	await handlers.get("agent_settled")({ type: "agent_settled" }, first.ctx);
+
+	assert.equal(first.compactCalls.length, 1);
+	assert.equal(controller.getState(), "idle", "a throwing dispatch must not leave the controller dispatching");
+	assert.equal(first.notifications.length, 1);
+	assert.equal(first.notifications[0][1], "warning");
+	assert.match(first.notifications[0][0], /stale after session replacement/);
+	assert.equal(sent.length, 0, "no resume after a dispatch that never ran");
+
+	// The session stays usable: a later request is accepted, not refused as pending.
+	const second = await tools.get(COMPACTION_TOOL_NAME).execute();
+	assert.match(second.content[0].text, /runs once this turn ends/);
+	assert.equal(controller.getState(), "requested");
+});
+
+test("a non-Error thrown from compact is still reported", async () => {
+	const { handlers, tools, controller } = installTool();
+	await tools.get(COMPACTION_TOOL_NAME).execute();
+	const { ctx, notifications } = settledContext({ compactThrows: "boom" });
+	await handlers.get("agent_settled")({ type: "agent_settled" }, ctx);
+	assert.equal(controller.getState(), "idle");
+	assert.match(notifications[0][0], /boom/);
+});
+
+test("a requested compaction resumes at most once", async () => {
+	const { handlers, tools, sent } = installTool();
+	await tools.get(COMPACTION_TOOL_NAME).execute();
+
+	const { ctx, compactCalls } = settledContext();
+	await handlers.get("agent_settled")({ type: "agent_settled" }, ctx);
+	assert.equal(compactCalls.length, 1);
+
+	compactCalls[0].onComplete({ details: { compactor: "pi-vcc" } });
+	assert.equal(sent.length, 1, "exactly one follow-up turn is queued after compaction");
+
+	// A second settle with nothing pending must not queue another resume.
+	const idle = settledContext();
+	await handlers.get("agent_settled")({ type: "agent_settled" }, idle.ctx);
+	assert.equal(idle.compactCalls.length, 0);
+	assert.equal(sent.length, 1);
 });
 
 test("the resume message is filtered out of the model payload", () => {
