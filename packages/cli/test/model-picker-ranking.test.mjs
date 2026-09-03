@@ -230,3 +230,93 @@ test("All-filter query ties use exact identity instead of inventory order", () =
 	assert.deepEqual(rank(candidates), ["a/x2", "b/x1"]);
 	assert.deepEqual(rank([...candidates].reverse()), ["a/x2", "b/x1"]);
 });
+
+test("typed search reaches inventory models outside the active view", () => {
+	const inventory = [
+		...models,
+		{
+			provider: "kimi-coding",
+			modelId: "k3",
+			name: "Kimi K3",
+			contextWindow: 1_048_576,
+			maxTokens: 131_072,
+			available: true,
+		},
+		{
+			provider: "kimi-coding",
+			modelId: "k3-256k",
+			name: "Kimi K3-256K",
+			contextWindow: 262_144,
+			maxTokens: 131_072,
+			available: true,
+		},
+	];
+	const rows = buildPickerRows({ models: inventory, state: state(), projectKey, query: "k3", filter: "recent" });
+	assert.deepEqual(
+		rows.map((row) => [row.model.provider, row.model.modelId]),
+		[
+			["kimi-coding", "k3"],
+			["kimi-coding", "k3-256k"],
+		],
+	);
+	assert.deepEqual(
+		rows.map((row) => row.section),
+		["all", "all"],
+	);
+});
+
+test("Favorite-view search still ranks exact identity above the favorite prefix match", () => {
+	const inventory = [
+		{
+			provider: "kimi-coding",
+			modelId: "k3",
+			name: "Kimi K3",
+			contextWindow: 1_048_576,
+			maxTokens: 131_072,
+			available: true,
+		},
+		{
+			provider: "kimi-coding",
+			modelId: "k3-256k",
+			name: "Kimi K3-256K",
+			contextWindow: 262_144,
+			maxTokens: 131_072,
+			available: true,
+		},
+	];
+	const favoriteState = emptyModelPickerState();
+	favoriteState.favorites = [{ provider: "kimi-coding", modelId: "k3-256k", addedAt: "2026-09-02T05:41:46.759Z" }];
+	const rows = buildPickerRows({
+		models: inventory,
+		state: favoriteState,
+		projectKey,
+		query: "k3",
+		filter: "favorite",
+	});
+	assert.deepEqual(
+		rows.map((row) => [row.section, row.model.modelId, row.favorite]),
+		[
+			["all", "k3", false],
+			["favorite", "k3-256k", true],
+		],
+	);
+});
+
+test("Recent-view search keeps view rows before equal-scoring inventory rows", () => {
+	const inventory = [
+		{ provider: "a", modelId: "sol", name: "Sol", available: true },
+		{ provider: "b", modelId: "sol", name: "Sol", available: true },
+	];
+	const recentState = emptyModelPickerState();
+	recentState.recents.projects[projectKey] = [
+		{ provider: "b", modelId: "sol", lastUsedAt: "2026-09-01T00:00:00.000Z", useCount: 1 },
+	];
+	const rows = buildPickerRows({ models: inventory, state: recentState, projectKey, query: "sol", filter: "recent" });
+	assert.deepEqual(
+		rows.map((row) => [row.section, row.model.provider]),
+		[
+			["project_recent", "b"],
+			["all", "a"],
+		],
+	);
+});

@@ -175,6 +175,10 @@ export function buildPickerRows(options: BuildPickerRowsOptions): PickerRow[] {
 	}
 
 	if (!query) return rows.slice(0, options.maxRows ?? Number.MAX_SAFE_INTEGER);
+	// A query searches the whole inventory, not only the active view's rows, so
+	// a model outside Recent or Favorite stays reachable. Appended rows keep
+	// larger ranks, so view-local matches still win ties in the ranking below.
+	for (const model of options.models) add(model, "all");
 	const compareIdentity = (left: PickerRow, right: PickerRow): number => {
 		const leftKey = modelReferenceKey(left.model);
 		const rightKey = modelReferenceKey(right.model);
