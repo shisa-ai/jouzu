@@ -2,7 +2,7 @@
 
 Jouzu v0.1 is an npm developer preview, not a native Windows installer.
 
-Jouzu v0.1.4's bundled extension set has not completed native Windows qualification. Use v0.1.3 if you require a release that passed the full Windows matrix. The prerequisites below describe the v0.1 npm environment.
+Jouzu v0.1.5's bundled extension set passed the full Linux, macOS, and Windows qualification matrix with Node 22 and 24. The prerequisites below describe the v0.1 npm environment.
 
 ## Required environment
 
