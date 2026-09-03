@@ -1,8 +1,10 @@
 # Jouzu
 
-Jouzu is an agentic AI environment built on the [Pi coding agent](https://pi.dev/), with CJK-safe text and path handling. The `jouzu` and `jz` commands run an exact reviewed Pi runtime with isolated Jouzu state, a language-neutral Core fallback, an optional JA preview, and human-readable diagnostics.
+Jouzu is Shisa AI's agentic coding harness, built on [Pi coding agent](https://pi.dev/).
 
-Jouzu v0.1 is an npm developer preview. It expects an existing development environment.
+It comes "batteries included," with the functionality (including web-search, looping, background tasks) tools that we use every day. It is CJK-safe, with built-in Japanese localization, and also has direct integration with [Shisa AI's API service](https://platform.shisa.ai/), which provides 1-click access to the latest open source coding models.
+
+Jouzu v0.1.x is currently in **ALPHA**, but it should be relatively stable and completely usable.
 
 ## Requirements
 
@@ -27,7 +29,7 @@ A required release-extension failure still stops startup.
 ## Install
 
 ```bash
-npm install --global jouzu@0.1.4
+npm install --global jouzu@0.1.5
 
 jouzu --version
 jz doctor
@@ -36,7 +38,7 @@ jz doctor
 `jz` is an exact alias for `jouzu`. To try the CLI without a global installation:
 
 ```bash
-npx --yes jouzu@0.1.4 --version
+npx --yes jouzu@0.1.5 --version
 ```
 
 ## Quick start
@@ -66,7 +68,11 @@ Inside Pi:
 - `/status` reports provider-neutral session, workspace, model, thinking, context, scoped-model, profile, and runtime facts.
 - `Ctrl+/` or `Ctrl+?` opens Jouzu help; `/hotkeys` lists all Pi shortcuts.
 
-The Palette shows Models and Settings as top-level sections; `Tab` and `Shift+Tab` move between them. The Models view searches exact provider/model identity and display names. `←` and `→` change the Recent, Favorite, or All view; the header reports active results and total selectable inventory. The first launch opens Recent; later launches restore the last view used. Typing or `/` focuses search; the title shows `· Search` while search holds focus, and `Esc` returns to browsing with the query intact before another `Esc` closes the Palette. `Enter` selects the model and stores it as the user-local project default. A new session resolves an explicit `--model` first, then a resumed session's recorded model, then the project default, then the last dispatched model with its thinking level, then Pi's user-wide default and fallback. Explicit resume, continue, session, model, and scoped-model arguments bypass project-default and last-model injection. `Ctrl+F` toggles a favorite, while browsing and while searching. It is rebindable through the `jouzu.model.toggleFavorite` action in `keybindings.json`. `Ctrl+P` cycles the favorite list without leaving the current effective model scope. Recency changes only after the selected model dispatches its first request, and the dispatch also records the model and thinking level used for the next launch. Project defaults, favorites, recents, the last dispatched model, and the last model view remain in local Jouzu state and contain no prompts, tool results, credentials, or raw project paths.
+The Palette shows Models and Settings as top-level sections; `Tab` and `Shift+Tab` move between them. The Models view searches exact provider/model identity and display names. `←` and `→` change the Recent, Favorite, or All view; the header reports active results and total selectable inventory. The first launch opens Recent; later launches restore the last view used. Typing or `/` focuses search; the title shows `· Search` while search holds focus, and `Esc` returns to browsing with the query intact before another `Esc` closes the Palette.
+
+`Enter` selects the model and stores it as the user-local project default. A new session resolves an explicit `--model` first, then a resumed session's recorded model, then the project default, then the last dispatched model with its thinking level, then Pi's user-wide default and fallback. Explicit resume, continue, session, model, and scoped-model arguments bypass project-default and last-model injection.
+
+`Ctrl+F` toggles a favorite while browsing and while searching; rebind it through the `jouzu.model.toggleFavorite` action in `keybindings.json`. `Ctrl+P` cycles the favorite list without leaving the current effective model scope. Recency changes only after the selected model dispatches its first request, and the dispatch also records the model and thinking level used for the next launch. Project defaults, favorites, recents, the last dispatched model, and the last model view remain in local Jouzu state and contain no prompts, tool results, credentials, or raw project paths.
 
 A direct switch is blocked only when the estimated active context plus a 4,096-token safety margin exceeds the target model's context window. Selecting a `context-small` model opens a confirmation: press `Enter` again to compact the full active transcript into a brief and switch after Jouzu rechecks the context, or press `Esc` to cancel. Bundled pi-vcc handles this compaction under the default profile settings. Jouzu does not infer cache compatibility, model equivalence, cost, routing, privacy, retention, region, or certification guarantees. Those properties belong to the provider and configuration you select unless Jouzu reports verified facts explicitly.
 
@@ -296,7 +302,7 @@ Managed profile assets are UTF-8. Existing CP932/Shift-JIS profile targets produ
 - The Models view uses Pi's local usable-model inventory; catalog additions, one-turn trials, adaptive target-budget compaction, and cost/quota/route preflight are deferred.
 - Third-party Pi packages execute trusted code with the user's permissions and have their own platform support.
 - `Ctrl+Enter` and `Ctrl+Up` delivery depends on terminal/OS key reporting; both semantic bindings remain user-customizable.
-- Jouzu v0.1.4's bundled extension set is qualified on Linux and macOS. Native Windows qualification is pending; v0.1.3 is the last release qualified by the full Windows matrix.
+- Jouzu v0.1.5's bundled extension set is qualified on Linux, macOS, and Windows with Node 22 and 24.
 - Cross-platform support claims require the release commit's Linux, macOS, and Windows CI matrix to pass.
 
 ## Development
@@ -307,7 +313,7 @@ npm run release:check
 npm run dev:link
 ```
 
-`dev:link` records the UTC build time, Git commit, and dirty-worktree state. `jz --version` displays an identifier such as `0.1.4-dev.20260827-010203+g215b2188`. A `.dirty` suffix marks a build that included uncommitted files. The standard `npm run build` removes development metadata before packing a release artifact.
+`dev:link` records the UTC build time, Git commit, and dirty-worktree state. `jz --version` displays an identifier such as `0.1.5-dev.20260903-010203+g215b2188`. A `.dirty` suffix marks a build that included uncommitted files. The standard `npm run build` removes development metadata before packing a release artifact.
 
 See [docs/architecture.md](docs/architecture.md) for the module map, state-file
 ownership, update lanes, and bundled profile boundaries.
