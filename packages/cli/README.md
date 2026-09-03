@@ -7,7 +7,7 @@ Jouzu is an agentic AI environment built on the Pi coding agent, with CJK-safe t
 Requires Node.js 22.19+, npm, Git, and Bash. Windows requires Git Bash.
 
 ```bash
-npm install --global jouzu@0.1.4
+npm install --global jouzu@0.1.5
 
 jz --version
 jz doctor
@@ -56,6 +56,6 @@ Interactive launches show an adaptive Jouzu header and clear the viewport. Set `
 
 npm is the only v0.1 channel. PyPI `jouzu==0.0.1` remains a non-functional reservation. Jouzu v0.1 does not bundle prerequisites, native installers, hosted models, routing, or provider privacy/retention guarantees.
 
-Jouzu v0.1.4's bundled extension set is qualified on Linux and macOS. Native Windows qualification is pending; v0.1.3 is the last release qualified by the full Windows matrix.
+Jouzu v0.1.5's bundled extension set is qualified on Linux, macOS, and Windows with Node 22 and 24.
 
 See the [full documentation](https://github.com/shisa-ai/jouzu#readme) and [Windows prerequisites](https://github.com/shisa-ai/jouzu/blob/main/docs/windows.md).
