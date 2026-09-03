@@ -451,7 +451,7 @@ test("Models view keeps ANSI and CJK content inside aligned display-width border
 test("Models view selects and saves for the project, toggles filters and favorites, and cancels", async () => {
 	const first = createComponent();
 	first.component.handleInput("\x1b[13;2u");
-	assert.deepEqual(first.calls.favorites, [], "Shift+Enter has no Models action");
+	assert.deepEqual(first.calls.favorites, ["tiny"], "Shift+Enter toggles favorite for the selected row");
 	assert.deepEqual(first.calls.selected, [], "Shift+Enter does not select or save a project default");
 	first.component.handleInput("down");
 	first.component.handleInput("enter");
@@ -464,7 +464,7 @@ test("Models view selects and saves for the project, toggles filters and favorit
 	third.component.handleInput("\u001b[C");
 	third.component.handleInput("\u001b[D");
 	third.component.handleInput("down");
-	third.component.handleInput("\u001b[115;6u");
+	third.component.handleInput("\x1b[13;2u");
 	assert.deepEqual(third.calls.filters, ["favorite", "recent"]);
 	assert.deepEqual(third.calls.favorites, ["fit"]);
 	third.component.handleInput("escape");
@@ -536,10 +536,10 @@ test("Models view separates browse choices from search cursor input", () => {
 	component.handleInput("escape");
 	assert.equal(calls.close, 0, "Esc leaves search before closing the Palette");
 	component.handleInput("\x1b[13;2u");
-	assert.deepEqual(calls.favorites, [], "Shift+Enter has no Models action in browse");
+	assert.deepEqual(calls.favorites, ["tiny"], "Shift+Enter toggles favorite from browse");
 	component.handleInput(" ");
 	assert.equal(queries.at(-1), "q  ", "Space types into search like every printable character");
-	assert.deepEqual(calls.favorites, [], "Space no longer toggles favorite");
+	assert.deepEqual(calls.favorites, ["tiny"], "Space no longer toggles favorite");
 	component.handleInput("escape");
 	assert.equal(calls.close, 0, "Esc leaves search before closing the Palette");
 	component.handleInput("escape");
@@ -564,16 +564,23 @@ test("Models view toggles favorites with the semantic action in browse and searc
 	assert.doesNotMatch(component.render(72).join("\n"), /· Search/u, "browse state is the unmarked default");
 
 	component.handleInput("down");
-	component.handleInput("\u001b[115;6u");
+	component.handleInput("\x1b[13;2u");
 	assert.deepEqual(calls.favorites, ["fit"]);
 	assert.match(component.render(72).join("\n"), /Added large\/fit to favorites\./u);
-	component.handleInput("\u001b[115;6u");
+	component.handleInput("\x1b[13;2u");
 	assert.match(component.render(72).join("\n"), /Removed large\/fit from favorites\./u);
 
 	component.handleInput("q");
 	const searching = component.render(72).join("\n");
 	assert.match(searching, /· Search/u, "the title names the search state");
-	assert.match(searching, /Ctrl\+Shift\+S favorite/u, "the search hint names the favorite accelerator");
+	assert.match(searching, /Shift\+Enter\/Ctrl\+Shift\+S/u, "the search hint names the favorite accelerators");
+	assert.match(
+		stripSgr(searching)
+			.replace(/[│╭╮╰╯─]/gu, " ")
+			.replace(/\s+/g, " "),
+		/Shift\+Enter\/Ctrl\+Shift\+S favorite/u,
+		"the search hint names the favorite accelerators",
+	);
 	assert.doesNotMatch(searching, /Space favorite/u, "the search hint omits the printable binding");
 	component.handleInput(" ");
 	assert.deepEqual(calls.favorites, ["fit", "fit"], "Space stays text input while search holds focus");
@@ -927,7 +934,7 @@ test("Jouzu editor wrapper opens the Models component through the Palette surfac
 							component.handleInput("\u001b[C");
 							component.handleInput("\u001b[C");
 							component.handleInput("down");
-							component.handleInput("\u001b[115;6u");
+							component.handleInput("\x1b[13;2u");
 							rendered = component.render(72).join("\n");
 							component.handleInput("escape");
 						});
@@ -1722,7 +1729,7 @@ test("toggling a favorite refreshes the cached filter counts", () => {
 	component.handleInput("escape");
 	queries.length = 0;
 
-	component.handleInput("\u001b[115;6u");
+	component.handleInput("\x1b[13;2u");
 	// A favorite changes the inventory partition, so the three counts are
 	// recomputed and the active query is ranked once more.
 	assert.equal(queries.filter((query) => query === "").length, 3, "all three filter counts refresh");
