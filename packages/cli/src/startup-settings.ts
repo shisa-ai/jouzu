@@ -31,3 +31,51 @@ export function ensureQuietStartupDefault(paths: JouzuPaths): boolean {
 	writeFilePrivateAtomic(path, updated, paths.agentDir);
 	return true;
 }
+
+const CHANGELOG_VERSION_KEY = '"lastChangelogVersion"';
+
+/**
+ * Pin Pi's seen-changelog marker to the bundled Pi version so upstream Pi
+ * release notes never appear at Jouzu startup. `/changelog` still shows the
+ * full Pi changelog on demand.
+ */
+export function suppressPiReleaseNotes(paths: JouzuPaths, piVersion: string): boolean {
+	if (!piVersion) return false;
+	const versionJson = JSON.stringify(piVersion);
+	const path = join(paths.agentDir, "settings.json");
+	if (!existsSync(path)) {
+		writeFilePrivateExclusive(path, `{\n  ${CHANGELOG_VERSION_KEY}: ${versionJson}\n}\n`, paths.agentDir);
+		return true;
+	}
+
+	const metadata = lstatSync(path);
+	if (!metadata.isFile() || metadata.isSymbolicLink()) return false;
+	const contents = readFileSync(path, "utf8");
+	let parsed: unknown;
+	try {
+		parsed = JSON.parse(contents);
+	} catch {
+		return false;
+	}
+	if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return false;
+	const record = parsed as Record<string, unknown>;
+	if (!("lastChangelogVersion" in record)) {
+		const closingBrace = contents.search(/\}\s*$/u);
+		if (closingBrace < 0) return false;
+		const separator = Object.keys(record).length === 0 ? "" : ",";
+		const updated = `${contents.slice(0, closingBrace)}${separator}\n  ${CHANGELOG_VERSION_KEY}: ${versionJson}\n${contents.slice(closingBrace)}`;
+		writeFilePrivateAtomic(path, updated, paths.agentDir);
+		return true;
+	}
+	if (record.lastChangelogVersion === piVersion) return false;
+
+	const entryPattern = /"lastChangelogVersion"\s*:\s*"(?:[^"\\]|\\.)*"/;
+	if (entryPattern.test(contents)) {
+		const updated = contents.replace(entryPattern, () => `${CHANGELOG_VERSION_KEY}: ${versionJson}`);
+		writeFilePrivateAtomic(path, updated, paths.agentDir);
+		return true;
+	}
+	record.lastChangelogVersion = piVersion;
+	writeFilePrivateAtomic(path, `${JSON.stringify(record, null, 2)}\n`, paths.agentDir);
+	return true;
+}

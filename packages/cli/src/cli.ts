@@ -48,7 +48,7 @@ import {
 import { withJouzuResumeHint } from "./resume.js";
 import { configurePiProcess, type ProfileSelection, resolveProfileSelection } from "./runtime.js";
 import { createSessionUiExtension } from "./session-ui/index.js";
-import { ensureQuietStartupDefault } from "./startup-settings.js";
+import { ensureQuietStartupDefault, suppressPiReleaseNotes } from "./startup-settings.js";
 import { formatUpdateStatus, JouzuUpdater, relaunchUpdatedJouzu, UpdateError } from "./updater.js";
 
 async function loadPiRuntime(): Promise<typeof import("@earendil-works/pi-coding-agent")> {
@@ -217,6 +217,7 @@ async function runCli(args: string[]): Promise<void> {
 	if (interactiveStartup) {
 		await offerPiConfigurationImport(paths, { inheritedAgentDir: inheritedPiAgentDir });
 		ensureQuietStartupDefault(paths);
+		suppressPiReleaseNotes(paths, metadata.piVersion);
 		const bootstrap = ensureDefaultKeybindings(paths);
 		if (bootstrap.message) console.error(bootstrap.message);
 	}
