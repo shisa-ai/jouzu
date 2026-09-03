@@ -85,6 +85,10 @@ test("Catalogs settings uses Enter to edit and horizontal arrows for model discl
 		const component = new CatalogSettingsComponent({ context, paths, env: {} });
 		component.handleInput("down");
 		let rendered = component.render(84);
+		assert.match(rendered.join("\n"), /Model Catalogs/u);
+		const headerIndex = rendered.findIndex((value) => value.includes("Model Catalogs"));
+		const firstEntryIndex = rendered.findIndex((value) => value.includes("Office pool"));
+		assert.ok(headerIndex >= 0 && firstEntryIndex > headerIndex, "entries list under the Model Catalogs header");
 		assert.match(rendered.join("\n"), /Shisa API/u);
 		assert.match(rendered.join("\n"), /Office pool/u);
 		assert.match(rendered.join("\n"), /active/u);

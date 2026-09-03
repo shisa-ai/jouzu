@@ -539,7 +539,9 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			if (this.views.length === 0) {
 				lines.push(line(this.styles.apply("palette.empty", "No catalog sources configured.")));
 			} else {
+				lines.push(line(this.theme.bold(this.styles.apply("palette.section", "Model Catalogs"))));
 				for (let index = 0; index < this.views.length; index += 1) {
+					if (index > 0) lines.push(line());
 					const view = this.views[index];
 					const selected = index === this.selectedIndex;
 					const marker = selected ? this.styles.apply("palette.marker", "→") : " ";
