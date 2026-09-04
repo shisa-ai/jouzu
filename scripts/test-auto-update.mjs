@@ -24,7 +24,21 @@ const npmCommand = npmExecPath
 		? (process.env.ComSpec ?? "cmd.exe")
 		: "npm";
 const npmPrefix = npmExecPath ? [npmExecPath] : process.platform === "win32" ? ["/d", "/s", "/c", "npm"] : [];
-const updateApplyTimeout = (process.platform === "win32" ? 30 : 10) * 60_000;
+
+function timeoutFromEnvironment(name, fallback) {
+	const raw = process.env[name];
+	if (raw === undefined) return fallback;
+	const value = Number(raw);
+	if (!Number.isSafeInteger(value) || value <= 0) {
+		throw new Error(`${name} must be a positive integer in milliseconds`);
+	}
+	return value;
+}
+
+const updateApplyTimeout = timeoutFromEnvironment(
+	"JOUZU_UPDATE_APPLY_TIMEOUT_MS",
+	(process.platform === "win32" ? 30 : 10) * 60_000,
+);
 
 function commandResult(command, args, options = {}) {
 	return new Promise((resolvePromise, reject) => {
