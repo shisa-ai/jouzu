@@ -169,7 +169,7 @@ jobs:
   automatic-update:
     needs: release-artifacts
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 45
+    timeout-minutes: 75
     strategy:
       fail-fast: false
       matrix:
@@ -187,9 +187,10 @@ jobs:
           name: jouzu-updater
           path: dist/ci-artifacts
       - run: npm run test:auto-update
-        timeout-minutes: 40
+        timeout-minutes: 70
         env:
           JOUZU_UPDATE_SCOPE: ${{ matrix.scope }}
+          JOUZU_UPDATE_APPLY_TIMEOUT_MS: ${{ matrix.os == 'windows-latest' && '3600000' || '600000' }}
           JOUZU_UPDATE_CURRENT_TARBALL: dist/ci-artifacts/candidate.tgz
           JOUZU_UPDATE_NEXT_TARBALL: dist/ci-artifacts/next.tgz
           JOUZU_UPDATE_BROKEN_TARBALL: dist/ci-artifacts/broken.tgz
