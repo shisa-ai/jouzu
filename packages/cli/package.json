@@ -49,7 +49,7 @@
 		"@sting8k/pi-vcc": "0.7.0",
 		"@the-forge-flow/camoufox-pi": "0.2.1",
 		"@vanillagreen/pi-background-tasks": "2.0.0",
-		"better-sqlite3": "13.0.1",
+		"better-sqlite3": "13.0.3",
 		"camoufox-js": "0.12.0",
 		"impit": "0.11.0",
 		"pi-code-previews": "0.1.36",

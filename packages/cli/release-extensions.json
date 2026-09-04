@@ -141,9 +141,9 @@
 		},
 		{
 			"name": "better-sqlite3",
-			"version": "13.0.1",
+			"version": "13.0.3",
 			"bundled": false,
-			"integrity": "sha512-LYpmOXdkpQYf4wmlxkdzW01XGlOXNIbjLg45yNkh0FQ4814VbK9PdOFmhZpYbej+EZtR/i3FDdhEG98HqZdgnA==",
+			"integrity": "sha512-RbOBxmLBG8uvFUc15X9+9SFemKcQ0WBuISBVkpuiaUB2qblC8UWlHEjdWVoZ8AdhSwmoEgsiXKfopX0CQxaACQ==",
 			"repository": "https://github.com/WiseLibs/better-sqlite3",
 			"license": "MIT",
 			"licenseEvidence": "LICENSE"
