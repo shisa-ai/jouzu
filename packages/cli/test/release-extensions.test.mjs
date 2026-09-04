@@ -10,6 +10,7 @@ import {
 	ensureReleaseRuntimeCompatibility,
 	formatReleaseExtensionFailure,
 	inspectReleaseExtensions,
+	markReleaseExtensionUnavailable,
 	omitOptionalReleaseExtensionFailures,
 	probeReleaseRuntimeCompatibility,
 	repairRuntimeDependencyRedirect,
@@ -227,6 +228,25 @@ test("optional release extension load failures are omitted while required failur
 		/Disabled tools: web_fetch, batch_web_fetch/u,
 	);
 	assert.match(formatReleaseExtensionFailure(status.degradedExtensions[0]), /Run `jz doctor` for details/u);
+});
+
+test("native extension diagnostics retain verbose cause details", () => {
+	const status = inspectReleaseExtensions();
+	const failure = new Error("impit couldn't load native bindings.", {
+		cause: new Error("Cannot find module '@apify/impit-win32-x64-msvc'"),
+	});
+	assert.equal(markReleaseExtensionUnavailable(status, "@the-forge-flow/camoufox-pi", failure), true);
+	const degraded = status.degradedExtensions.find(
+		(candidate) => candidate.packageName === "@the-forge-flow/camoufox-pi",
+	);
+	assert.equal(
+		degraded?.error,
+		"impit couldn't load native bindings.\nCaused by: Cannot find module '@apify/impit-win32-x64-msvc'",
+	);
+	assert.match(
+		formatReleaseExtensionFailure(degraded),
+		/Caused by: Cannot find module '@apify\/impit-win32-x64-msvc'/u,
+	);
 });
 
 test("degraded optional extensions report disabled tools when a session starts", async () => {

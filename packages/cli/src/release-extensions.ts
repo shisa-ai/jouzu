@@ -163,7 +163,15 @@ function resolveAdapter(adapter: ReleaseExtensionPackage["adapter"]): string {
 }
 
 function messageFromError(error: unknown): string {
-	return error instanceof Error ? error.message : String(error);
+	const messages: string[] = [];
+	const seen = new Set<unknown>();
+	let current: unknown = error;
+	while (current !== undefined && current !== null && !seen.has(current)) {
+		seen.add(current);
+		messages.push(current instanceof Error ? current.message : String(current));
+		current = current instanceof Error ? current.cause : undefined;
+	}
+	return messages.map((message, index) => (index === 0 ? message : `Caused by: ${message}`)).join("\n");
 }
 
 export function markReleaseExtensionUnavailable(
