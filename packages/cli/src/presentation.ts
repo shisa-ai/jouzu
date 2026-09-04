@@ -1,30 +1,14 @@
 import { basename } from "node:path";
 import type { BuildSystemPromptOptions, InlineExtension, Theme } from "@earendil-works/pi-coding-agent";
 import { COMPACTION_TOOL_NAME, registerCompactionRequest } from "./compaction-request.js";
+import { type InteractiveStartupContext, isInteractivePiStartup } from "./interactive-startup.js";
 import type { JouzuMetadata } from "./metadata.js";
 import type { ProfileSelection } from "./runtime.js";
 import { detectTerminalColorMode, fitTerminalText, type TerminalColorMode } from "./terminal-layout.js";
 
+export { isInteractivePiStartup } from "./interactive-startup.js";
+
 export const CLEAR_SCREEN_SEQUENCE = "\u001b[2J\u001b[H";
-
-const NON_INTERACTIVE_COMMANDS = new Set(["auth", "config", "install", "list", "remove", "uninstall", "update"]);
-const NON_INTERACTIVE_FLAGS = new Set([
-	"-h",
-	"--help",
-	"-p",
-	"--print",
-	"-v",
-	"--version",
-	"--list-models",
-	"--export",
-]);
-const NON_INTERACTIVE_MODES = new Set(["json", "print", "rpc"]);
-
-export interface InteractiveStartupContext {
-	stdinIsTTY?: boolean;
-	stdoutIsTTY?: boolean;
-	env?: NodeJS.ProcessEnv;
-}
 
 export type BannerColorMode = TerminalColorMode;
 
@@ -55,26 +39,6 @@ export interface BannerRenderOptions {
 
 function envFlagIsTrue(value: string | undefined): boolean {
 	return value !== undefined && ["1", "true", "yes", "on"].includes(value.toLowerCase());
-}
-
-export function isInteractivePiStartup(args: string[], context: InteractiveStartupContext = {}): boolean {
-	const env = context.env ?? process.env;
-	const stdinIsTTY = context.stdinIsTTY ?? process.stdin.isTTY === true;
-	const stdoutIsTTY = context.stdoutIsTTY ?? process.stdout.isTTY === true;
-	if (!stdinIsTTY || !stdoutIsTTY || env.TERM === "dumb") return false;
-	if (args.length > 0 && NON_INTERACTIVE_COMMANDS.has(args[0])) return false;
-
-	for (let index = 0; index < args.length; index += 1) {
-		const arg = args[index];
-		if (NON_INTERACTIVE_FLAGS.has(arg) || arg.startsWith("--export=")) return false;
-		if (arg === "--mode") {
-			if (NON_INTERACTIVE_MODES.has(args[index + 1] ?? "")) return false;
-			index += 1;
-			continue;
-		}
-		if (arg.startsWith("--mode=") && NON_INTERACTIVE_MODES.has(arg.slice("--mode=".length))) return false;
-	}
-	return true;
 }
 
 export function shouldClearInteractiveStartup(args: string[], context: InteractiveStartupContext = {}): boolean {

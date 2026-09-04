@@ -329,6 +329,39 @@ test("self-update status and policy are explicit and source-safe", () => {
 	}
 });
 
+test("self-update avoids loading Pi native modules before package replacement", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-self-update-imports-"));
+	try {
+		const marker = join(temp, "clipboard-loaded.txt");
+		const preload = join(temp, "track-clipboard.cjs");
+		writeFileSync(
+			preload,
+			`const fs = require("node:fs");
+const Module = require("node:module");
+const load = Module._load;
+Module._load = function (request, parent, isMain) {
+  if (request === "@mariozechner/clipboard") fs.writeFileSync(process.env.JOUZU_IMPORT_MARKER, request);
+  return load.call(this, request, parent, isMain);
+};
+`,
+		);
+		const env = {
+			DISPLAY: ":99",
+			JOUZU_IMPORT_MARKER: marker,
+			NODE_OPTIONS: `--require=${preload}`,
+		};
+		const status = run(["--jouzu-home", join(temp, "home"), "self-update", "status", "--json"], { env });
+		assert.equal(status.status, 0, status.stderr);
+		assert.equal(existsSync(marker), false, "self-update loaded Pi's clipboard native package");
+
+		const version = run(["--version"], { env });
+		assert.equal(version.status, 0, version.stderr);
+		assert.equal(existsSync(marker), true, "the native-import detector did not observe normal Pi loading");
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
+
 test("keybinding commands plan without mutation, merge explicitly, and reset owned defaults", () => {
 	const temp = mkdtempSync(join(tmpdir(), "jouzu-keybindings-cli-"));
 	try {
