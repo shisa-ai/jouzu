@@ -422,3 +422,14 @@ test("catalog registry rejects unsafe files, labels, sources, and credential ref
 		rmSync(root, { recursive: true, force: true });
 	}
 });
+
+test("source URL validation rejects credentials, queries, and fragments", () => {
+	for (const url of [
+		"https://user:pass@example.test/catalog",
+		"https://example.test/catalog?q=1",
+		"https://example.test/catalog#part",
+	]) {
+		assert.throws(() => catalogEndpointCandidates(url), /credentials|query|fragment/);
+	}
+	assert.equal(catalogEndpointCandidates("http://localhost:8080/catalog")[0], "http://localhost:8080/catalog");
+});
