@@ -10,7 +10,7 @@
 
 ### Changed
 
-- Upgrade Pi from 0.84.4 to 0.85.0 and use Pi WebAIO for readable web fetches.
+- Upgrade Pi from 0.84.4 to 0.85.1 and use Pi WebAIO for readable web fetches.
 - Install the Camoufox client and browser on first rendered fetch or search, rather than bundling the client in every npm install. `jz doctor` reports its installation state.
 - Reduce packaged dependency files and index catalog lookups to reduce installation and model-picker work.
 - Preserve useful document structure and sound wording in the Clear Writing skill.
