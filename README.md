@@ -18,13 +18,13 @@ Windows users should read [Windows prerequisites](https://github.com/shisa-ai/jo
 On older enterprise Linux distributions, install the GTK/X11/audio runtime
 libraries required by Firefox. If the system NSS is older than Camoufox requires,
 set `JOUZU_CAMOUFOX_LIBRARY_PATH` to a compatible NSS library directory; Jouzu
-applies it only to the browser child. Jouzu's selected smart-fetch and proxy
+applies it only to the browser child. Jouzu's selected `pi-webaio` and proxy
 native bindings support glibc 2.28 or newer.
 
-Smart Fetch and Camoufox are optional integrations. If either extension cannot
-load, Jouzu starts without its tools and displays a warning. `jz doctor` lists
-the disabled tools, reports the underlying error, and exits with status 1.
-A required release-extension failure still stops startup.
+Camoufox rendering is optional. If it cannot load, Jouzu starts without the
+rendered fetch and search tools and displays a warning. `jz doctor` lists the
+disabled tools, reports the underlying error, and exits with status 1. The
+static `pi-webaio` fetch tools are required, so their failure stops startup.
 
 ## Install
 
