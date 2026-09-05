@@ -9,7 +9,7 @@ Jouzu bundles the following release-owned Pi extensions and their runtime depend
 | `pi-smart-fetch` | 0.3.17 | MIT; `LICENSE` |
 | `@the-forge-flow/camoufox-pi` | 0.2.1 | MIT; `LICENSE` |
 | `pi-code-previews` | 0.1.36 | MIT; `LICENSE` |
-| `@lhl/pi-tasks` | `5375b18cbdd867609cc3760382154ceaae91ec91` | MIT; `LICENSE` |
+| `@lhl/pi-tasks` | `5b35d3a68e5963cbde6e3d47e21df7d7c1f7d06b` | MIT; `LICENSE` |
 | `pi-multiloop` | `cffc0e58987249dd16d74f1b554623cd103d10d3` (v0.4.0) | MIT; `LICENSE` |
 | `@sting8k/pi-vcc` | 0.7.0 | The upstream `README.md` declares MIT under its License heading; the package has no separate license file |
 | `pi-skill-dollar` | `4bff5734d87c4f4725d81a4ea1d1c1283c22423c` (v0.2.0) | MIT; `LICENSE` |

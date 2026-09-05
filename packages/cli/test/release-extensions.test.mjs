@@ -46,6 +46,10 @@ const expectedExtensions = [
 	"pi-smart-fetch",
 ];
 const expectedCompatibility = ["better-sqlite3", "camoufox-js", "impit", "playwright-core"];
+const expectedPiTasks = {
+	version: "0.6.1",
+	commit: "5b35d3a68e5963cbde6e3d47e21df7d7c1f7d06b",
+};
 
 function packageNames(records) {
 	return records.map((record) => record.name).sort();
@@ -76,6 +80,11 @@ test("the release manifest and bundle list contain the selected extension set", 
 	assert.equal(
 		manifest.packages.find((record) => record.name === "@the-forge-flow/camoufox-pi").peerDependenciesRemoved,
 		true,
+	);
+	const piTasksExtension = manifest.packages.find((record) => record.name === "@lhl/pi-tasks");
+	assert.deepEqual(
+		{ version: piTasksExtension?.version, commit: piTasksExtension?.commit },
+		expectedPiTasks,
 	);
 	for (const record of [...manifest.packages, ...manifest.compatibilityDependencies]) {
 		assert.equal(packageJson.dependencies[record.name], record.commit ? record.source : record.version);

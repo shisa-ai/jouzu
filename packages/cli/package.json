@@ -45,7 +45,7 @@
 	"dependencies": {
 		"@earendil-works/pi-coding-agent": "0.84.4",
 		"@earendil-works/pi-tui": "0.84.4",
-		"@lhl/pi-tasks": "git+https://github.com/lhl/pi-tasks.git#5375b18cbdd867609cc3760382154ceaae91ec91",
+		"@lhl/pi-tasks": "git+https://github.com/lhl/pi-tasks.git#5b35d3a68e5963cbde6e3d47e21df7d7c1f7d06b",
 		"@sting8k/pi-vcc": "0.7.0",
 		"@the-forge-flow/camoufox-pi": "0.2.1",
 		"@vanillagreen/pi-background-tasks": "2.0.0",
