@@ -15,16 +15,9 @@ Jouzu v0.1.x is currently in **ALPHA**, but it should be relatively stable and c
 
 Windows users should read [Windows prerequisites](https://github.com/shisa-ai/jouzu/blob/main/docs/windows.md). Signed installers, portable archives, and bundled prerequisites are not part of v0.1.
 
-On older enterprise Linux distributions, install the GTK/X11/audio runtime
-libraries required by Firefox. If the system NSS is older than Camoufox requires,
-set `JOUZU_CAMOUFOX_LIBRARY_PATH` to a compatible NSS library directory; Jouzu
-applies it only to the browser child. Jouzu's selected smart-fetch and proxy
-native bindings support glibc 2.28 or newer.
+`web_fetch` and `batch_web_fetch` work from the default installation. The rendered-browser tools install their exact Camoufox runtime from npm on the first `tff-fetch_url` or `tff-search_web` call, then download the Camoufox browser if needed. These downloads require network access and writable Jouzu state. `jz doctor` reports whether the optional runtime is absent, ready, or invalid.
 
-Smart Fetch and Camoufox are optional integrations. If either extension cannot
-load, Jouzu starts without its tools and displays a warning. `jz doctor` lists
-the disabled tools, reports the underlying error, and exits with status 1.
-A required release-extension failure still stops startup.
+On older enterprise Linux distributions, install the GTK/X11/audio libraries required by Firefox. If the system NSS is older than Camoufox requires, set `JOUZU_CAMOUFOX_LIBRARY_PATH` to a compatible NSS library directory; Jouzu applies it only to the browser child.
 
 ## Install
 
@@ -88,7 +81,7 @@ Core and JA load the same release-owned extension set:
 - pi-vcc automatically handles threshold and overflow compaction. Compaction reduces the active transcript; it does not end active work. `vcc_recall` retrieves missing details from the current session, including entries dropped from the active transcript, but cannot trigger compaction.
 - Code previews render supported tool calls and results. Typing `$` at a token boundary opens skill suggestions.
 
-The extension code and its runtime dependencies ship inside `jouzu`; a normal first launch does not install them from npm or Git. Jouzu updates this set with application releases. Packages that you add through Pi remain separate user-managed state and are not covered by Jouzu's release qualification.
+Release-owned extensions and their default runtime dependencies ship inside `jouzu`; a normal launch does not install them from npm or Git. The Camoufox client is the exception: Jouzu ships its exact package manifest and lockfile, installs them under Jouzu state on the first rendered-browser call, and does not add them to Pi package settings. Jouzu updates that lockfile with application releases. Packages that you add through Pi remain separate user-managed state and are not covered by Jouzu's release qualification.
 
 ## Interactive session UI
 

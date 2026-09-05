@@ -80,6 +80,7 @@ export function configurePiProcess(paths: JouzuPaths): void {
 	process.env.PI_CODING_AGENT = "true";
 	process.env.PI_CODING_AGENT_DIR = paths.agentDir;
 	process.env.PI_CODING_AGENT_SESSION_DIR = paths.sessionDir;
+	process.env.JOUZU_RUNTIME_STATE_DIR = paths.stateDir;
 	process.env.PI_VCC_CONFIG_PATH = join(paths.agentDir, "pi-vcc-config.json");
 	process.env.PI_SKIP_VERSION_CHECK = "1";
 }

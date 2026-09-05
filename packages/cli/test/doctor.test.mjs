@@ -94,6 +94,8 @@ test("doctor reports an injected healthy Linux runtime without mutating roots", 
 	assert.match(report.text, /Automatic startup update: eligible/);
 	assert.match(report.text, /Keybinding defaults: converged/);
 	assert.match(report.text, /Model picker state: absent/);
+	assert.match(report.text, /Optional Camoufox runtime: not installed; installs on first browser tool use/);
+	assert.match(report.text, /Camoufox runtime install lock: free/);
 	assert.match(report.text, /Jouzu default follow-up key: ctrl\+enter/);
 	assert.match(report.text, /Jouzu default dequeue key: ctrl\+up/);
 	assert.doesNotMatch(report.text, /must-not-appear/);
@@ -222,8 +224,8 @@ test("doctor reports degraded optional extensions and disabled tools as action r
 				resolvedPackageRoots: {},
 				degradedExtensions: [
 					{
-						packageName: "pi-smart-fetch",
-						packageVersion: "0.3.17",
+						packageName: "fixture-fetch-extension",
+						packageVersion: "1.2.3",
 						tools: ["web_fetch", "batch_web_fetch"],
 						error: "/lib64/libc.so.6: version `GLIBC_2.34' not found",
 					},
@@ -233,12 +235,28 @@ test("doctor reports degraded optional extensions and disabled tools as action r
 		});
 		assert.equal(report.healthy, false);
 		assert.match(report.text, /Release-owned extensions: 10 selected; 9 ready; 1 optional unavailable/u);
-		assert.match(report.text, /Optional release extensions are unavailable: pi-smart-fetch@0\.3\.17/u);
+		assert.match(report.text, /Optional release extensions are unavailable: fixture-fetch-extension@1\.2\.3/u);
 		assert.match(report.text, /disabled tools: web_fetch, batch_web_fetch/u);
 		assert.match(report.text, /GLIBC_2\.34/u);
 		assert.match(report.text, /rerun `jz doctor`/u);
 		assert.ok(report.report.issues.some((issue) => issue.id === "extensions.optionalUnavailable"));
 		assert.match(report.text, /Result: action required/u);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("doctor reports invalid optional Camoufox runtime state as action required", () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-doctor-camoufox-"));
+	try {
+		const installRoot = join(root, "state", "camoufox-runtime", "v1.0.0");
+		mkdirSync(installRoot, { recursive: true });
+		const report = createDoctorReport(healthyContext(root));
+		assert.equal(report.healthy, false);
+		assert.match(report.text, /Optional Camoufox runtime: invalid/u);
+		assert.match(report.text, /The optional Camoufox runtime is invalid/u);
+		assert.match(report.text, /remove that directory and retry a browser tool/u);
+		assert.ok(report.report.issues.some((issue) => issue.id === "camoufox.runtimeInvalid"));
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
@@ -347,7 +365,15 @@ test("doctor exposes a structured report whose text rendering matches it", () =>
 		// Experimental schema 1 still requires unique machine keys within one report.
 		const ids = report.fields.map((field) => field.id);
 		assert.equal(new Set(ids).size, ids.length, "field identifiers are unique");
-		for (const required of ["jouzu.version", "pi.runtime", "node", "git", "paths.stateDir", "packages.count"]) {
+		for (const required of [
+			"jouzu.version",
+			"pi.runtime",
+			"camoufox.runtime",
+			"node",
+			"git",
+			"paths.stateDir",
+			"packages.count",
+		]) {
 			assert.ok(ids.includes(required), `expected a ${required} field`);
 		}
 		const issueIds = report.issues.map((issue) => issue.id);

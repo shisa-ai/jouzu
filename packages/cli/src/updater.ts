@@ -8,7 +8,7 @@ import { ensurePrivateDirectory, validatePrivateDirectory, writeFilePrivateAtomi
 import { acquireStateLock, STATE_LOCK_STALE_MS } from "./state-lock.js";
 
 const PI_PACKAGE = "@earendil-works/pi-coding-agent";
-const NPM_PACK_TIMEOUT_MS = process.platform === "win32" ? 600_000 : 60_000;
+const NPM_PACK_TIMEOUT_MS = process.platform === "win32" ? 600_000 : 180_000;
 const NPM_INSTALL_TIMEOUT_MS = process.platform === "win32" ? 1_200_000 : 300_000;
 const UPDATE_STATE_FIELDS = new Set([
 	"schemaVersion",

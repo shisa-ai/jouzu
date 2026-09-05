@@ -108,6 +108,18 @@ export function assertLicenseFilesPresent(packedFiles, required) {
 	}
 }
 
+export function assertDefaultPackagesAbsent(packedFiles, packageJson, packageNames) {
+	for (const name of packageNames) {
+		if (packageJson.dependencies?.[name] !== undefined || packageJson.bundleDependencies?.includes(name)) {
+			throw new Error(`jouzu must not install the first-use Camoufox package ${name} by default`);
+		}
+		const packagePath = `node_modules/${name}/`;
+		if (packedFiles.some((file) => file.path.startsWith(packagePath) || file.path.includes(`/${packagePath}`))) {
+			throw new Error(`jouzu tarball contains first-use Camoufox package ${name}`);
+		}
+	}
+}
+
 /**
  * Build the deny-list of content that must never appear in a published
  * tarball. Private repository markers are fixed; maintainer home paths are
@@ -130,9 +142,14 @@ export function forbiddenPublicContent() {
 	return [...entries, ...runbookInput];
 }
 const piPackageName = "@earendil-works/pi-coding-agent";
+const piServerPackageName = "@earendil-works/pi-server";
+const externalPiRuntimePackageNames = [piServerPackageName];
+const separatelyBundledPiRuntimePackageNames = ["@earendil-works/pi-ai", "@earendil-works/pi-telemetry"];
 const piLock = JSON.parse(readFileSync(join("upstream", "pi.lock.json"), "utf8"));
 const pinnedPiVersion = piLock.packages?.[piPackageName]?.version;
+const pinnedPiServerVersion = piLock.packages?.[piServerPackageName]?.version;
 if (!pinnedPiVersion) throw new Error(`upstream/pi.lock.json is missing ${piPackageName}`);
+if (!pinnedPiServerVersion) throw new Error(`upstream/pi.lock.json is missing ${piServerPackageName}`);
 const npmCommand = process.platform === "win32" ? (process.env.ComSpec ?? "cmd.exe") : "npm";
 const npmPrefixArguments = process.platform === "win32" ? ["/d", "/s", "/c", "npm"] : [];
 
@@ -163,6 +180,25 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 		if (packageJson.dependencies?.[piPackageName] !== pinnedPiVersion) {
 			throw new Error(`jouzu must ship exact Pi ${pinnedPiVersion}`);
 		}
+		for (const name of externalPiRuntimePackageNames) {
+			if (
+				packageJson.dependencies?.[name] !== pinnedPiServerVersion ||
+				packageJson.bundleDependencies?.includes(name)
+			) {
+				throw new Error(`jouzu must install exact external Pi runtime package ${name}@${pinnedPiServerVersion}`);
+			}
+			if (packed.files.some((file) => file.path.startsWith(`node_modules/${name}/`))) {
+				throw new Error(`jouzu tarball unexpectedly bundles external Pi runtime package ${name}`);
+			}
+		}
+		for (const name of separatelyBundledPiRuntimePackageNames) {
+			if (packageJson.dependencies?.[name] !== pinnedPiVersion || !packageJson.bundleDependencies?.includes(name)) {
+				throw new Error(`jouzu must bundle exact Pi runtime package ${name}@${pinnedPiVersion}`);
+			}
+			if (!packed.bundled?.includes(name)) {
+				throw new Error(`jouzu tarball is missing bundled Pi runtime package ${name}`);
+			}
+		}
 		if (!packed.files.some((file) => file.path === "dist/pi.lock.json")) {
 			throw new Error("jouzu tarball is missing dist/pi.lock.json");
 		}
@@ -171,7 +207,12 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 		}
 		const allowedTopLevel = new Set(["LICENSE", "README.md", "THIRD_PARTY_NOTICES.md", "package.json"]);
 		for (const file of packed.files) {
-			if (!allowedTopLevel.has(file.path) && !file.path.startsWith("dist/") && !file.path.startsWith("node_modules/")) {
+			if (
+				!allowedTopLevel.has(file.path) &&
+				!file.path.startsWith("camoufox-runtime/") &&
+				!file.path.startsWith("dist/") &&
+				!file.path.startsWith("node_modules/")
+			) {
 				throw new Error(`jouzu tarball contains unexpected public file ${file.path}`);
 			}
 		}
@@ -210,7 +251,26 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 		const releaseManifest = JSON.parse(readFileSync(join(directory, "release-extensions.json"), "utf8"));
 		const releaseLock = JSON.parse(readFileSync(join(directory, "package-lock.json"), "utf8"));
 		const releasePackages = [...releaseManifest.packages, ...releaseManifest.compatibilityDependencies];
-		const expectedBundles = releasePackages.filter((record) => record.bundled !== false).map((record) => record.name);
+		const esbuildRecord = releaseManifest.compatibilityDependencies.find((record) => record.name === "esbuild");
+		if (
+			!esbuildRecord ||
+			esbuildRecord.bundled !== false ||
+			packageJson.dependencies?.esbuild !== esbuildRecord.version
+		) {
+			throw new Error("jouzu must install the exact external esbuild compatibility dependency");
+		}
+		if (
+			packed.files.some(
+				(file) =>
+					file.path.startsWith("node_modules/@esbuild/") ||
+					file.path.startsWith("node_modules/@earendil-works/pi-coding-agent/node_modules/@esbuild/"),
+			)
+		) {
+			throw new Error("jouzu tarball contains platform-specific esbuild binaries");
+		}
+		const expectedBundles = releasePackages
+			.filter((record) => record.bundled !== false && !record.adapter)
+			.map((record) => record.name);
 		for (const name of expectedBundles) {
 			if (!packed.bundled?.includes(name)) throw new Error(`jouzu tarball does not bundle ${name}`);
 			if (!packed.files.some((file) => file.path === `node_modules/${name}/package.json`)) {
@@ -226,52 +286,41 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 		}
 		for (const record of releaseManifest.packages) {
 			for (const resource of [...record.extensions, ...record.skills]) {
-				if (!packed.files.some((file) => file.path === `node_modules/${record.name}/${resource}`)) {
+				const resourcePath = record.adapter ? resource : `node_modules/${record.name}/${resource}`;
+				if (!packed.files.some((file) => file.path === resourcePath)) {
 					throw new Error(`jouzu tarball is missing release resource ${record.name}/${resource}`);
 				}
 			}
 		}
-		const camoufoxRecord = releaseManifest.packages.find((record) => record.name === "@the-forge-flow/camoufox-pi");
-		const camoufoxPackage = JSON.parse(
-			readFileSync(join(directory, "node_modules", "@the-forge-flow", "camoufox-pi", "package.json"), "utf8"),
-		);
-		if (
-			camoufoxPackage.dependencies?.["camoufox-js"] !== undefined ||
-			camoufoxPackage.dependencies?.["playwright-core"] !== undefined ||
-			!camoufoxRecord?.dependencyRemovals?.includes("camoufox-js") ||
-			!camoufoxRecord?.dependencyRemovals?.includes("playwright-core") ||
-			camoufoxPackage.peerDependencies !== undefined
-		) {
-			throw new Error("bundled Camoufox dependency and peer repair differs from the release manifest");
-		}
-		const smartFetchRecord = releaseManifest.packages.find((record) => record.name === "pi-smart-fetch");
-		const smartFetchPackage = JSON.parse(
-			readFileSync(join(directory, "node_modules", "pi-smart-fetch", "package.json"), "utf8"),
-		);
-		if (smartFetchPackage.engines?.node !== smartFetchRecord?.engineOverride) {
-			throw new Error("bundled smart-fetch engine repair differs from the release manifest");
-		}
-		for (const [name, version] of Object.entries(smartFetchRecord?.dependencyOverrides ?? {})) {
-			if (smartFetchPackage.dependencies?.[name] !== version) {
-				throw new Error(`bundled smart-fetch ${name} override differs from the release manifest`);
-			}
-			const dependencyPackage = JSON.parse(
-				readFileSync(join(directory, "node_modules", "pi-smart-fetch", "node_modules", name, "package.json"), "utf8"),
-			);
-			if (dependencyPackage.version !== version) {
-				throw new Error(`bundled smart-fetch resolved ${name}@${dependencyPackage.version} instead of ${version}`);
+		for (const runtimeInput of ["camoufox-runtime/package.json", "camoufox-runtime/package-lock.json"]) {
+			if (!packed.files.some((file) => file.path === runtimeInput)) {
+				throw new Error(`jouzu tarball is missing ${runtimeInput}`);
 			}
 		}
+		const webaioRecord = releaseManifest.packages.find((record) => record.name === "pi-webaio");
+		const webaioPackage = JSON.parse(
+			readFileSync(join(directory, "node_modules", "pi-webaio", "package.json"), "utf8"),
+		);
 		if (
-			packed.files.some(
-				(file) =>
-					file.path.startsWith("node_modules/@mariozechner/") ||
-					file.path.startsWith("node_modules/@the-forge-flow/camoufox-pi/node_modules/camoufox-js/"),
-			)
+			webaioPackage.optionalDependencies?.playwright !== undefined ||
+			!webaioRecord?.dependencyRemovals?.includes("playwright")
 		) {
-			throw new Error("jouzu tarball contains a superseded Camoufox runtime or legacy Pi peer");
+			throw new Error("bundled pi-webaio browser dependency removal differs from the release manifest");
 		}
-		for (const record of releasePackages) {
+		const forbiddenRuntimePackages = [
+			"@the-forge-flow/camoufox-pi",
+			"better-sqlite3",
+			"camoufox-js",
+			"impit",
+			"playwright",
+			"playwright-core",
+			"ua-parser-js",
+		];
+		assertDefaultPackagesAbsent(packed.files, packageJson, forbiddenRuntimePackages);
+		if (packed.files.some((file) => file.path.startsWith("node_modules/@mariozechner/"))) {
+			throw new Error("jouzu tarball contains a legacy Pi peer");
+		}
+		for (const record of releasePackages.filter((candidate) => !candidate.adapter)) {
 			const locked = releaseLock.packages?.[`node_modules/${record.name}`];
 			if (locked?.version !== record.version) {
 				throw new Error(`release bundle lock differs for ${record.name}@${record.version}`);
@@ -289,6 +338,7 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 			const text = readFileSync(join(directory, file.path), "utf8");
 			for (const entry of forbidden) {
 				if (file.path.startsWith("node_modules/") && entry === "AWS_SECRET_ACCESS_KEY") continue;
+				if (file.path.endsWith("/jose/dist/webapi/key/import.js") && entry === "BEGIN PRIVATE KEY") continue;
 				if (text.includes(entry)) throw new Error(`jouzu tarball ${file.path} contains forbidden public content`);
 			}
 		}
