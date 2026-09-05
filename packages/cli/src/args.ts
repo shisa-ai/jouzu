@@ -1,3 +1,5 @@
+import { isAbsolute } from "node:path";
+
 export const PROFILE_IDS = ["core", "ja"] as const;
 export type ProfileId = (typeof PROFILE_IDS)[number];
 
@@ -13,6 +15,9 @@ export class UsageError extends Error {
 export interface JouzuOptions {
 	home?: string;
 	profile?: ProfileId;
+	textguardPython?: string;
+	textguardFiles?: boolean;
+	textguardYara?: boolean;
 }
 
 export type ParsedCommand =
@@ -209,10 +214,30 @@ export function parseJouzuArgs(args: string[]): ParsedCommand {
 			index = parsed.next;
 			continue;
 		}
+		if (token === "--jouzu-textguard-python" || token.startsWith("--jouzu-textguard-python=")) {
+			if (options.textguardPython !== undefined)
+				throw new UsageError("--jouzu-textguard-python may be specified only once");
+			const parsed = readOptionValue(args, index, "--jouzu-textguard-python");
+			if (!isAbsolute(parsed.value))
+				throw new UsageError("--jouzu-textguard-python requires an absolute Python executable path");
+			options.textguardPython = parsed.value;
+			index = parsed.next;
+			continue;
+		}
+		if (token === "--jouzu-textguard-files" || token === "--jouzu-textguard-yara") {
+			const key = token === "--jouzu-textguard-files" ? "textguardFiles" : "textguardYara";
+			if (options[key]) throw new UsageError(`${token} may be specified only once`);
+			options[key] = true;
+			index += 1;
+			continue;
+		}
 		if (token.startsWith("--jouzu-")) throw new UsageError(`unknown Jouzu option: ${token}`);
 		break;
 	}
 
+	if ((options.textguardFiles || options.textguardYara) && !options.textguardPython) {
+		throw new UsageError("TextGuard options require --jouzu-textguard-python <absolute-path>");
+	}
 	const remaining = args.slice(index);
 	const [command, ...rest] = remaining;
 	if (command === "pi" || command === "--") return { kind: "pi", options, args: rest };
@@ -307,6 +332,11 @@ Commands:
   keybindings   Inspect, apply, or reset Jouzu's Pi-compatible key defaults
   self-update   Inspect, check, apply, or configure Jouzu npm updates
   pi, --        Explicitly pass all remaining arguments to pinned Pi
+
+Experimental local scanning (off by default):
+  --jouzu-textguard-python <absolute-path>  Scan skills and web results with TextGuard 1.0.0
+  --jouzu-textguard-yara                    Include bundled YARA rules (requires textguard[yara])
+  --jouzu-textguard-files                   Also scan ordinary read-tool text
 
 The jz command is an exact alias. Resume with the jz --session command printed
 on exit; Jouzu resolves its isolated session root. First interactive launch asks before enabling

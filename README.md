@@ -106,6 +106,8 @@ With Pi's exact default system prompt, Jouzu tells agents to follow repository i
 
 Core also installs the `jouzu-review` prompt. Pi includes skill names and descriptions in context and loads full skill instructions only when a task matches or the user runs `/skill:<name>`.
 
+Experimental [TextGuard scanning](https://github.com/shisa-ai/jouzu/blob/main/docs/textguard.md) is available with `--jouzu-textguard-python <absolute-path>`. It scans skills and web results with a separately installed TextGuard 1.0.0. Add `--jouzu-textguard-files` to include ordinary file reads. Scanning is off by default, including source builds.
+
 The optional `ja` preview extends Core with a concise Japanese response policy while preserving exact code, commands, identifiers, paths, URLs, logs, and source error messages. Enable it through first-run consent or explicit selection at any time:
 
 ```bash

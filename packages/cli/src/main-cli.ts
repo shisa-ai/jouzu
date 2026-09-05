@@ -302,6 +302,13 @@ export async function runMainCli(args: string[]): Promise<void> {
 	ensureReleaseRuntimeCompatibility(releaseExtensionStatus);
 	const piArgs = withReleaseExtensionArguments(parsed.args, releaseExtensionStatus);
 	const releaseDiagnostics = createReleaseExtensionDiagnostics(releaseExtensionStatus);
+	const textguard = parsed.options.textguardPython
+		? (await import("./textguard-extension.js")).createTextGuardExtension({
+				python: parsed.options.textguardPython,
+				files: parsed.options.textguardFiles,
+				yara: parsed.options.textguardYara,
+			})
+		: undefined;
 	const startPi = () =>
 		pi.main(piArgs, {
 			extensionFactories: [
@@ -311,13 +318,18 @@ export async function runMainCli(args: string[]): Promise<void> {
 				modelPicker.workflowExtension,
 				help,
 				releaseDiagnostics,
+				...(textguard ? [textguard] : []),
 			],
 		});
 	const runPi = () =>
 		usesReleaseExtensions(parsed.args)
 			? withReleaseExtensionConflictPolicy(pi, releaseExtensionStatus, startPi)
 			: startPi();
-	await withJouzuOutput(runPi, interactiveStartup);
+	try {
+		await withJouzuOutput(runPi, interactiveStartup);
+	} finally {
+		await textguard?.dispose();
+	}
 }
 
 export function handleMainCliError(error: unknown): void {
