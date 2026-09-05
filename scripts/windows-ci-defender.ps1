@@ -39,11 +39,30 @@ if ($Mode -eq "cleanup") {
         }
         catch { $failures += $_.Exception.Message }
     }
-    $record.effectiveCurrent = @(Get-Exclusions)
+    try {
+        $record.effectiveCurrent = @(Get-Exclusions)
+        $record.defenderAfter = Get-MpComputerStatus | Select-Object AMRunningMode, AntivirusEnabled, RealTimeProtectionEnabled
+    }
+    catch {
+        $record.effectiveCurrent = $null
+        $record.defenderAfter = $null
+        $record | Add-Member -NotePropertyName inspectionError -NotePropertyValue $_.Exception.Message -Force
+        # A disabled image service can stop answering after setup. With no
+        # job-added exclusions there is no cleanup mutation to perform.
+        if (@($record.added).Count -eq 0 -and -not $record.defenderBefore.RealTimeProtectionEnabled -and
+            $_.Exception.Message -match '0x800106ba') {
+            $record.cleanupStatus = "not-required"
+            Write-Record $record
+            Get-Content -Raw -LiteralPath $statePath | Write-Host
+            return
+        }
+        $record.cleanupStatus = "failed"
+        Write-Record $record
+        throw
+    }
     foreach ($path in $record.added) {
         if ($record.effectiveCurrent -contains $path) { $failures += "Exclusion remains: $path" }
     }
-    $record.defenderAfter = Get-MpComputerStatus | Select-Object AMRunningMode, AntivirusEnabled, RealTimeProtectionEnabled
     if ($record.defenderBefore.RealTimeProtectionEnabled -and -not $record.defenderAfter.RealTimeProtectionEnabled) {
         $failures += "Defender real-time protection was disabled during the job"
     }
