@@ -56,14 +56,24 @@ jobs:
 
   legacy-linux-static-fetch:
     runs-on: ubuntu-latest
-    container: node:24-bullseye@sha256:25f3016fcdae6b5d65bd9bcb4064b7e4198ec8d49493fa40d73f9b463d04fb15
+    container: rockylinux:8@sha256:9794037624aaa6212aeada1d28861ef5e0a935adaf93e4ef79837119f2a2d04c
     timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["22.19.0", "24"]
     steps:
+      - name: Install Git in the minimal baseline image
+        run: dnf install -y -q git
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Record glibc baseline
-        run: getconf GNU_LIBC_VERSION
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - name: Verify glibc support floor
+        run: test "$(getconf GNU_LIBC_VERSION)" = "glibc 2.28"
       - run: npm ci --ignore-scripts
         timeout-minutes: 15
       - run: npm run build

@@ -26,8 +26,8 @@
 		{
 			"name": "pi-webaio",
 			"version": "1.0.5",
-			"source": "git+https://github.com/shisa-ai/pi-webaio.git#7a36f4f6dc38e8420b2f831c94bb13de16414ff6",
-			"commit": "7a36f4f6dc38e8420b2f831c94bb13de16414ff6",
+			"source": "git+https://github.com/shisa-ai/pi-webaio.git#1db1e2807376f9f2df8baa5796313894bd6f5113",
+			"commit": "1db1e2807376f9f2df8baa5796313894bd6f5113",
 			"repository": "https://github.com/shisa-ai/pi-webaio",
 			"license": "MIT",
 			"licenseEvidence": "LICENSE",
