@@ -141,6 +141,17 @@ export function forbiddenPublicContent() {
 			.filter(Boolean) ?? [];
 	return [...entries, ...runbookInput];
 }
+
+export function publicContentForScan(path, text) {
+	if (path === "node_modules/pi-webaio/node_modules/pdf-parse/dist/worker/esm/index.js") {
+		// The published PDF worker includes its upstream build location in this comment.
+		return text.replace(
+			/^\/\/ dataurl:\/home\/runner\/work\/pdf-parse\/pdf-parse\/node_modules\/pdfjs-dist\/legacy\/build\/pdf\.worker\.min\.mjs\r?$/gmu,
+			"// dataurl:pdfjs-dist/legacy/build/pdf.worker.min.mjs",
+		);
+	}
+	return text;
+}
 const piPackageName = "@earendil-works/pi-coding-agent";
 const piServerPackageName = "@earendil-works/pi-server";
 const externalPiRuntimePackageNames = [piServerPackageName];
@@ -335,7 +346,7 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 		const forbidden = forbiddenPublicContent();
 		for (const file of packed.files) {
 			if (!/\.(?:js|json|md|txt)$/.test(file.path) && file.path !== "LICENSE") continue;
-			const text = readFileSync(join(directory, file.path), "utf8");
+			const text = publicContentForScan(file.path, readFileSync(join(directory, file.path), "utf8"));
 			for (const entry of forbidden) {
 				if (file.path.startsWith("node_modules/") && entry === "AWS_SECRET_ACCESS_KEY") continue;
 				if (file.path.endsWith("/jose/dist/webapi/key/import.js") && entry === "BEGIN PRIVATE KEY") continue;
