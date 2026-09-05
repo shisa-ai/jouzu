@@ -69,12 +69,8 @@ export function suppressPiReleaseNotes(paths: JouzuPaths, piVersion: string): bo
 	}
 	if (record.lastChangelogVersion === piVersion) return false;
 
-	const entryPattern = /"lastChangelogVersion"\s*:\s*"(?:[^"\\]|\\.)*"/;
-	if (entryPattern.test(contents)) {
-		const updated = contents.replace(entryPattern, () => `${CHANGELOG_VERSION_KEY}: ${versionJson}`);
-		writeFilePrivateAtomic(path, updated, paths.agentDir);
-		return true;
-	}
+	// Re-serialize the parsed top-level object instead of replacing text: the
+	// same property name may also appear in nested extension settings.
 	record.lastChangelogVersion = piVersion;
 	writeFilePrivateAtomic(path, `${JSON.stringify(record, null, 2)}\n`, paths.agentDir);
 	return true;

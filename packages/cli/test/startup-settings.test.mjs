@@ -83,14 +83,32 @@ test("pi release notes marker is pinned to the bundled Pi version", () => {
 	}
 });
 
-test("a stale pi release notes marker is updated in place", () => {
+test("a stale pi release notes marker is updated at the top level", () => {
 	const { root, paths, settingsPath } = fixture();
 	try {
 		mkdirSync(paths.agentDir, { recursive: true });
 		const existing = '{\n  "theme": "light",\n  "lastChangelogVersion": "0.83.0"\n}\n';
 		writeFileSync(settingsPath, existing);
 		assert.equal(suppressPiReleaseNotes(paths, "0.84.4"), true);
-		assert.equal(readFileSync(settingsPath, "utf8"), '{\n  "theme": "light",\n  "lastChangelogVersion": "0.84.4"\n}\n');
+		assert.deepEqual(JSON.parse(readFileSync(settingsPath, "utf8")), {
+			theme: "light",
+			lastChangelogVersion: "0.84.4",
+		});
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("updating the pi release notes marker leaves nested extension settings unchanged", () => {
+	const { root, paths, settingsPath } = fixture();
+	try {
+		mkdirSync(paths.agentDir, { recursive: true });
+		writeFileSync(settingsPath, '{"plugin":{"lastChangelogVersion":"plugin-value"},"lastChangelogVersion":"0.83.0"}\n');
+		assert.equal(suppressPiReleaseNotes(paths, "0.84.4"), true);
+		assert.deepEqual(JSON.parse(readFileSync(settingsPath, "utf8")), {
+			plugin: { lastChangelogVersion: "plugin-value" },
+			lastChangelogVersion: "0.84.4",
+		});
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
