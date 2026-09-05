@@ -20,6 +20,7 @@ import {
 	deriveRequiredLicenseFiles,
 	deriveRequiredProfileFiles,
 	forbiddenPublicContent,
+	publicContentForScan,
 } from "./pack-check.mjs";
 
 function makeFixtureProfiles() {
@@ -245,4 +246,14 @@ test("pack-check.mjs does not embed a maintainer home path in source", () => {
 	const source = readFileSync(new URL("./pack-check.mjs", import.meta.url), "utf8");
 	assert.ok(!/\/home\/[^"'`]*\//.test(source));
 	assert.ok(!source.includes("/home/lhl"));
+});
+
+test("the public PDF worker build comment does not exempt other home paths", () => {
+	const path = "node_modules/pi-webaio/node_modules/pdf-parse/dist/worker/esm/index.js";
+	const marker =
+		"// dataurl:/home/runner/work/pdf-parse/pdf-parse/node_modules/pdfjs-dist/legacy/build/pdf.worker.min.mjs";
+	assert.equal(publicContentForScan(path, `${marker}\n`).includes("/home/runner"), false);
+	assert.equal(publicContentForScan(path, `${marker}\n/home/runner/private`).includes("/home/runner"), true);
+	assert.equal(publicContentForScan("dist/worker.js", marker).includes("/home/runner"), true);
+	assert.equal(publicContentForScan(path, marker.replace("pdf.worker", "other.worker")).includes("/home/runner"), true);
 });
