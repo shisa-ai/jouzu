@@ -3,10 +3,11 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 const root = resolve(import.meta.dirname, "..");
 const packageDirectory = join(root, "packages", "cli");
@@ -218,10 +219,64 @@ async function installCurrent(current, prefix) {
 	);
 }
 
+function projectFixture(temp, name, withNpmProject = false) {
+	const directory = join(temp, name);
+	mkdirSync(directory, { recursive: true });
+	writeFileSync(join(directory, "README.md"), "User project content\n");
+	if (withNpmProject) {
+		writeFileSync(join(directory, "package.json"), '{"name":"user-project","private":true}\n');
+		writeFileSync(join(directory, "package-lock.json"), '{"name":"user-project","lockfileVersion":3}\n');
+		mkdirSync(join(directory, "node_modules", "user-dependency"), { recursive: true });
+		writeFileSync(join(directory, "node_modules", "user-dependency", "index.js"), "export default 42;\n");
+	}
+	return directory;
+}
+
+function projectSnapshot(directory) {
+	return readdirSync(directory, { withFileTypes: true })
+		.sort((left, right) => left.name.localeCompare(right.name))
+		.map((entry) => {
+			const path = join(directory, entry.name);
+			return [entry.name, entry.isDirectory() ? projectSnapshot(path) : sri(readFileSync(path))];
+		});
+}
+
+// Exercise production startup policy and restart against the installed package,
+// then use --version as a bounded child command.
+function startupDriver(temp, prefix) {
+	const packageRoot =
+		process.platform === "win32" ? join(prefix, "node_modules", "jouzu") : join(prefix, "lib", "node_modules", "jouzu");
+	const moduleUrl = (name) => JSON.stringify(pathToFileURL(join(packageRoot, "dist", name)).href);
+	const driver = join(temp, "startup-update.mjs");
+	writeFileSync(
+		driver,
+		`import assert from "node:assert/strict";
+import { JouzuUpdater, relaunchUpdatedJouzu } from ${moduleUrl("updater.js")};
+import { loadMetadata } from ${moduleUrl("metadata.js")};
+import { resolveJouzuPaths } from ${moduleUrl("paths.js")};
+const executable = ${JSON.stringify(join(packageRoot, "dist", "cli.js"))};
+const updater = new JouzuUpdater({
+  paths: resolveJouzuPaths(),
+  currentVersion: loadMetadata().jouzuVersion,
+  executable,
+  report: (message) => console.log(message),
+});
+const result = updater.startup();
+assert.equal(result.action, "restart", JSON.stringify(result));
+assert.equal(result.version, ${JSON.stringify(nextVersion)});
+process.exitCode = relaunchUpdatedJouzu({ executable, args: ["--version"] });
+`,
+	);
+	return driver;
+}
+
 function updateEnvironment(temp, prefix, home, registry) {
 	return {
 		...process.env,
 		JOUZU_HOME: home,
+		JOUZU_NO_UPDATE: "0",
+		JOUZU_UPDATE_POLICY: "auto-restart",
+		JOUZU_INTERNAL_UPDATE_RESTARTED: "0",
 		npm_config_prefix: prefix,
 		npm_config_registry: registry,
 		"npm_config_@earendil-works:registry": "https://registry.npmjs.org/",
@@ -261,14 +316,18 @@ try {
 		const successPrefix = join(temp, "success-prefix");
 		const successHome = join(temp, "success-home");
 		await installCurrent(current, successPrefix);
+		const project = projectFixture(temp, "success-project 日本語");
+		const before = projectSnapshot(project);
+		const driver = startupDriver(temp, successPrefix);
 		await withRegistry(next, async (registry, requests) => {
 			const env = updateEnvironment(temp, successPrefix, successHome, registry);
-			const update = await runGlobal(successPrefix, ["self-update", "apply"], {
-				cwd: temp,
+			const update = await run(process.execPath, [driver], {
+				cwd: project,
 				env,
 				timeout: updateApplyTimeout,
 			});
-			assert.match(update.stdout, new RegExp(`Updated Jouzu to ${escapeRegex(nextVersion)}`));
+			assert.match(update.stdout, new RegExp(`^jouzu ${escapeRegex(nextVersion)}$`, "m"));
+			assert.deepEqual(projectSnapshot(project), before, "startup update changed the working directory");
 			assert.ok(requests.some((request) => request === "/jouzu" || request.startsWith("/jouzu?")));
 			assert.ok(requests.includes(`/jouzu/-/${basename(next.path)}`));
 			const version = await runGlobal(successPrefix, ["--version"], {
@@ -287,13 +346,16 @@ try {
 		const rollbackPrefix = join(temp, "rollback-prefix");
 		const rollbackHome = join(temp, "rollback-home");
 		await installCurrent(current, rollbackPrefix);
+		const project = projectFixture(temp, "rollback-project 日本語", true);
+		const before = projectSnapshot(project);
 		await withRegistry(broken, async (registry) => {
 			const env = updateEnvironment(temp, rollbackPrefix, rollbackHome, registry);
 			const update = await globalResult(rollbackPrefix, ["self-update", "apply"], {
-				cwd: temp,
+				cwd: project,
 				env,
 				timeout: updateApplyTimeout,
 			});
+			assert.deepEqual(projectSnapshot(project), before, "failed update changed the working directory");
 			assert.equal(update.signal, null);
 			assert.equal(update.status, 4, update.stderr || update.stdout);
 			const restored = new RegExp(`failed verification and ${escapeRegex(currentVersion)} was restored`);
