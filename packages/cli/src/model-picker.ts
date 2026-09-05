@@ -596,12 +596,30 @@ export interface JouzuModelPickerIntegration {
 	reloadCatalogs(): void;
 }
 
+const catalogOfferingIndexes = new WeakMap<ModelCatalogDocument, Map<string, CatalogModelOffering>>();
+
+function catalogOfferingKey(provider: string, modelId: string): string {
+	return `${provider}\0${modelId}`;
+}
+
 function catalogOffering(
 	catalog: ModelCatalogDocument | undefined,
 	provider: string,
 	modelId: string,
 ): CatalogModelOffering | undefined {
-	return catalog?.modelOfferings.find((offering) => offering.providerId === provider && offering.modelId === modelId);
+	if (!catalog) return undefined;
+	let index = catalogOfferingIndexes.get(catalog);
+	if (!index) {
+		index = new Map();
+		for (const offering of catalog.modelOfferings) {
+			const key = catalogOfferingKey(offering.providerId, offering.modelId);
+			if (!index.has(key)) index.set(key, offering);
+		}
+		// Loaded catalog documents are immutable snapshots. A refresh creates a
+		// new document object, so the old index can be reclaimed with its snapshot.
+		catalogOfferingIndexes.set(catalog, index);
+	}
+	return index.get(catalogOfferingKey(provider, modelId));
 }
 
 export function catalogModelReference(

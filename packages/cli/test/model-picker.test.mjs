@@ -114,6 +114,45 @@ test("active catalog metadata qualifies matching Pi models without changing loca
 	);
 });
 
+test("catalog offering lookups index an immutable snapshot once", () => {
+	const catalog = parseAndValidateModelCatalog(
+		readFileSync(join(import.meta.dirname, "..", "catalog", "fixtures", "account-snapshot-v1.json"), "utf8"),
+		{ remote: true },
+	);
+	let offeringReads = 0;
+	catalog.modelOfferings = new Proxy(catalog.modelOfferings, {
+		get(target, property, receiver) {
+			if (typeof property === "string" && /^\d+$/u.test(property)) offeringReads += 1;
+			return Reflect.get(target, property, receiver);
+		},
+	});
+	const activeCatalogs = [
+		{
+			source: {
+				id: "indexed",
+				label: "Indexed catalog",
+				url: "https://indexed.test/catalog",
+				enabled: true,
+				auth: { type: "none" },
+			},
+			document: catalog,
+		},
+	];
+	const model = {
+		provider: "ai.example.gateway",
+		id: "example-model",
+		name: "Pi label",
+		contextWindow: 1,
+		maxTokens: 1,
+	};
+
+	assert.equal(catalogPickerModels(model, activeCatalogs)[0].name, "Example Model");
+	const readsAfterIndexing = offeringReads;
+	assert.ok(readsAfterIndexing > 0);
+	assert.equal(catalogPickerModels(model, activeCatalogs)[0].name, "Example Model");
+	assert.equal(offeringReads, readsAfterIndexing);
+});
+
 function stripSgr(value) {
 	return value
 		.split("\u001b")
