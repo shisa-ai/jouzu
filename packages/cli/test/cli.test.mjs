@@ -15,7 +15,7 @@ import {
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { after, test } from "node:test";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { formatDisplayVersion, parseBuildInfo } from "../dist/metadata.js";
 
 const packageRoot = fileURLToPath(new URL("..", import.meta.url));
@@ -834,7 +834,7 @@ registerHooks({ resolve(specifier, context, nextResolve) {
 }});
 `,
 		);
-		const result = run(["doctor", "--json"], { env: { NODE_OPTIONS: `--import=${preload}` } });
+		const result = run(["doctor", "--json"], { env: { NODE_OPTIONS: `--import=${pathToFileURL(preload).href}` } });
 		assert.equal(result.error, undefined);
 		assert.equal(result.status, 1, result.stderr);
 		assert.equal(result.stderr, "");
@@ -845,7 +845,7 @@ registerHooks({ resolve(specifier, context, nextResolve) {
 				(issue) => issue.id === "pi.runtimeUnavailable" && /Pi import unavailable/.test(issue.message),
 			),
 		);
-		const help = run(["--help"], { env: { NODE_OPTIONS: `--import=${preload}` } });
+		const help = run(["--help"], { env: { NODE_OPTIONS: `--import=${pathToFileURL(preload).href}` } });
 		assert.equal(help.status, 0, help.stderr);
 		assert.match(help.stdout, /Usage:/);
 	} finally {
