@@ -194,6 +194,7 @@ jobs:
         run: node scripts/test-packed-camoufox.mjs
         timeout-minutes: 25
         env:
+          GITHUB_TOKEN: ${{ github.token }}
           JOUZU_PACKED_TARBALL: dist/ci-artifacts/candidate.tgz
       - name: Remove Windows Defender exclusions
         if: always() && (matrix.os == 'windows-latest')
