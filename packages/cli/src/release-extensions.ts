@@ -45,6 +45,7 @@ export interface ReleaseRuntimeDependencyRedirect {
 	consumer: string;
 	dependency: string;
 	version: string;
+	extension: string;
 }
 
 export interface ReleaseExtensionManifest {
@@ -535,14 +536,14 @@ export function probeReleaseRuntimeCompatibility(status = inspectReleaseExtensio
 		}
 	}
 	for (const record of status.manifest.runtimeDependencyRedirects) {
-		if (status.degradedExtensions.some((failure) => failure.packageName === record.consumer)) continue;
+		if (status.degradedExtensions.some((failure) => failure.packageName === record.extension)) continue;
 		try {
 			const replacementRoot = status.resolvedPackageRoots[record.dependency];
 			if (!replacementRoot) throw new Error(`runtime compatibility dependency ${record.dependency} is unavailable`);
 			validatePackageRoot({ name: record.dependency, version: record.version }, replacementRoot);
 			require(replacementRoot);
 		} catch (error) {
-			markReleaseExtensionUnavailable(status, record.consumer, error);
+			markReleaseExtensionUnavailable(status, record.extension, error);
 		}
 	}
 }
@@ -550,13 +551,13 @@ export function probeReleaseRuntimeCompatibility(status = inspectReleaseExtensio
 export function ensureReleaseRuntimeCompatibility(status = inspectReleaseExtensions()): string[] {
 	const repaired: string[] = [];
 	for (const record of status.manifest.runtimeDependencyRedirects) {
-		if (status.degradedExtensions.some((failure) => failure.packageName === record.consumer)) continue;
+		if (status.degradedExtensions.some((failure) => failure.packageName === record.extension)) continue;
 		try {
 			if (repairRuntimeDependencyRedirect(record, status.resolvedPackageRoots)) {
 				repaired.push(`${record.consumer} -> ${record.dependency}@${record.version}`);
 			}
 		} catch (error) {
-			markReleaseExtensionUnavailable(status, record.consumer, error);
+			markReleaseExtensionUnavailable(status, record.extension, error);
 		}
 	}
 	return repaired;

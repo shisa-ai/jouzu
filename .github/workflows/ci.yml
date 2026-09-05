@@ -74,7 +74,7 @@ jobs:
       - name: Degrade when an optional native binding is unavailable
         shell: bash
         run: |
-          binding=packages/cli/node_modules/pi-smart-fetch/node_modules/wreq-js/rust/wreq-js.linux-x64-gnu.node
+          binding=packages/cli/node_modules/impit/node_modules/impit-linux-x64-gnu/impit-node.linux-x64-gnu.node
           mv "$binding" "$binding.disabled"
           set +e
           PI_OFFLINE=1 node packages/cli/dist/cli.js doctor >doctor.txt 2>&1
@@ -82,7 +82,7 @@ jobs:
           set -e
           test "$doctor_status" -eq 1
           grep -F "9 selected; 8 ready; 1 optional unavailable" doctor.txt
-          grep -F "disabled tools: web_fetch, batch_web_fetch" doctor.txt
+          grep -F "disabled tools: tff-fetch_url, tff-search_web" doctor.txt
           printf '%s\n' '{"id":"commands","type":"get_commands"}' |
             PI_OFFLINE=1 JOUZU_HOME="$RUNNER_TEMP/jouzu-degraded" \
             node packages/cli/dist/cli.js pi --mode rpc --no-session --no-context-files >rpc.jsonl

@@ -70,6 +70,16 @@ export function assertClipboardBindingsPresent(packedFiles, requirements) {
 	}
 }
 
+/** Fail the release gate when the resolved dependency lock declares AGPL code. */
+export function assertNoAgplDependencies(lock) {
+	const denied = Object.entries(lock.packages ?? {})
+		.filter(([, record]) => typeof record.license === "string" && /(?:^|\W)AGPL(?:\W|$)/iu.test(record.license))
+		.map(([path, record]) => `${path || "<root>"}@${record.version ?? "unknown"} (${record.license})`);
+	if (denied.length > 0) {
+		throw new Error(`jouzu release dependency lock contains AGPL packages: ${denied.join(", ")}`);
+	}
+}
+
 /**
  * Build the deny-list of content that must never appear in a published
  * tarball. Private repository markers are fixed; maintainer home paths are
@@ -194,6 +204,7 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 		}
 		const releaseManifest = JSON.parse(readFileSync(join(directory, "release-extensions.json"), "utf8"));
 		const releaseLock = JSON.parse(readFileSync(join(directory, "package-lock.json"), "utf8"));
+		assertNoAgplDependencies(releaseLock);
 		const releasePackages = [...releaseManifest.packages, ...releaseManifest.compatibilityDependencies];
 		const esbuildRecord = releaseManifest.compatibilityDependencies.find((record) => record.name === "esbuild");
 		if (
@@ -245,11 +256,24 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 		) {
 			throw new Error("bundled Camoufox dependency and peer repair differs from the release manifest");
 		}
+		const camoufoxRuntimePackage = JSON.parse(
+			readFileSync(join(directory, "node_modules", "camoufox-js", "package.json"), "utf8"),
+		);
+		if (
+			camoufoxRuntimePackage.dependencies?.["better-sqlite3"] !== undefined ||
+			camoufoxRuntimePackage.dependencies?.impit !== undefined ||
+			camoufoxRuntimePackage.dependencies?.["ua-parser-js"] !== undefined
+		) {
+			throw new Error("bundled Camoufox runtime dependency repair differs from the release manifest");
+		}
 		if (
 			packed.files.some(
 				(file) =>
 					file.path.startsWith("node_modules/@mariozechner/") ||
-					file.path.startsWith("node_modules/@the-forge-flow/camoufox-pi/node_modules/camoufox-js/"),
+					file.path.startsWith("node_modules/@the-forge-flow/camoufox-pi/node_modules/camoufox-js/") ||
+					file.path.startsWith("node_modules/camoufox-js/node_modules/better-sqlite3/") ||
+					file.path.startsWith("node_modules/camoufox-js/node_modules/impit/") ||
+					file.path.startsWith("node_modules/camoufox-js/node_modules/ua-parser-js/"),
 			)
 		) {
 			throw new Error("jouzu tarball contains a superseded Camoufox runtime or legacy Pi peer");

@@ -26,8 +26,8 @@
 		{
 			"name": "pi-webaio",
 			"version": "1.0.5",
-			"source": "git+https://github.com/shisa-ai/pi-webaio.git#7a36f4f6dc38e8420b2f831c94bb13de16414ff6",
-			"commit": "7a36f4f6dc38e8420b2f831c94bb13de16414ff6",
+			"source": "git+https://github.com/shisa-ai/pi-webaio.git#78b56cd784440d31159e0a6b159176f4ba375030",
+			"commit": "78b56cd784440d31159e0a6b159176f4ba375030",
 			"repository": "https://github.com/shisa-ai/pi-webaio",
 			"license": "MIT",
 			"licenseEvidence": "LICENSE",
@@ -122,7 +122,6 @@
 		{
 			"name": "camoufox-js",
 			"version": "0.12.0",
-			"bundled": false,
 			"integrity": "sha512-WvWrSL6IH7NixrmB4PM1NODx9cY2R+V/jv9jrmHMVlR4IHP3uheP6whhv0xsoVhFlKIErky5aYx7uA7oECA/Tg==",
 			"repository": "https://github.com/apify/camoufox-js",
 			"license": "MPL-2.0",
@@ -146,6 +145,16 @@
 			"repository": "https://github.com/apify/impit",
 			"license": "Apache-2.0",
 			"licenseEvidence": "package.json"
+		},
+		{
+			"name": "ua-parser-js",
+			"version": "1.0.41",
+			"source": "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-1.0.41.tgz",
+			"repository": "https://github.com/faisalman/ua-parser-js",
+			"license": "MIT",
+			"licenseEvidence": "LICENSE.md",
+			"integrity": "sha512-LbBDqdIC5s8iROCUjMbW1f5dJQTEFB1+KO9ogbvlb3nm9n4YHa5p4KTvFPWvh2Hs8gZMBuiB1/8+pdfe/tDPug==",
+			"bundled": false
 		},
 		{
 			"name": "playwright-core",
@@ -175,5 +184,12 @@
 			"licenseEvidence": "LICENSE"
 		}
 	],
-	"runtimeDependencyRedirects": [{ "consumer": "camoufox-js", "dependency": "impit", "version": "0.11.0" }]
+	"runtimeDependencyRedirects": [
+		{
+			"consumer": "camoufox-js",
+			"dependency": "impit",
+			"version": "0.11.0",
+			"extension": "@the-forge-flow/camoufox-pi"
+		}
+	]
 }

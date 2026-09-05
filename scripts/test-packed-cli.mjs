@@ -5,6 +5,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { assertNoAgplDependencies } from "./pack-check.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const packageDirectory = resolve(root, "packages", "cli");
@@ -147,6 +148,7 @@ try {
 		);
 		runNpm(["install", "--ignore-scripts", "--no-audit", "--no-fund", "--loglevel=error", tarball], { cwd: temp });
 		const consumerLock = JSON.parse(readFileSync(resolve(temp, "package-lock.json"), "utf8"));
+		assertNoAgplDependencies(consumerLock);
 		const installedPi = consumerLock.packages["node_modules/@earendil-works/pi-coding-agent"];
 		if (installedPi) {
 			assert.equal(installedPi.version, piVersion);
