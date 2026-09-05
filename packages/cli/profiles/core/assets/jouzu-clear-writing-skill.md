@@ -51,6 +51,8 @@ Choose the smallest structure that fits the reader's need:
 - **Troubleshooting:** symptom, likely cause, checks, fix, and verification.
 - **Runbook, migration, or release note:** affected scope, preparation, ordered change, validation, rollback, and remaining limitations.
 
+Preserve useful conventions: changelog categories, issue and pull-request templates, formal register where the audience expects it, and lists or tables that help readers find facts. Remove filler inside these structures rather than treating the structures as defects. Three distinct items may remain a three-item list.
+
 Lead with the answer, outcome, recommendation, or constraint the reader needs. Put prerequisites, warnings, and conditions before the actions they govern. Keep caveats next to the relevant claim or step.
 
 ## Write actions and explanations
@@ -110,5 +112,6 @@ Check the result silently:
 5. Are commands, labels, identifiers, links, examples, dates, and numbers exact and usable?
 6. Did the revision preserve every material claim and qualifier?
 7. Can any sentence be removed without losing meaning or usability? Remove it.
+8. Check replacements against the original. If the original was clear, grammatically sound, and conveyed the same meaning in fewer words, keep it. Retain edits that fix ambiguity, errors, or missing requirements; brevity must not remove facts, qualifiers, or necessary context.
 
 For a normal draft or revision, return the resulting text without a style lecture. For an audit, list findings by location, explain the reader impact, and propose the smallest correction. If the input already supports the reader's task, leave it unchanged.

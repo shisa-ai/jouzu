@@ -56,8 +56,8 @@ test("bundled Core and JA profiles resolve exact ordered assets", () => {
 			"skills/jouzu-source-check/SKILL.md",
 		],
 	);
-	assert.equal(core.manifestSha256, "5568902db7c7f53c73e7e6351a69b5147aedbc19fbd3d24e718080c8fa37465d");
-	assert.equal(ja.manifestSha256, "4167d6897bf5743aabf7da3f7075917302063a0896b337143e0e42185368c4a6");
+	assert.equal(core.manifestSha256, "a4fae582e63123fcf33091ef21f29ed40e5482019f496f4344051d3611b4ae73");
+	assert.equal(ja.manifestSha256, "4550f8318f4966d6090701d6bab396567884439531f09ffc2c5824bf525cb9b8");
 });
 
 test("bundled skills declare bounded public workflows", () => {
@@ -74,6 +74,13 @@ test("bundled skills declare bounded public workflows", () => {
 	assert.match(clearWriting ?? "", /Do not invent acronyms or abbreviations\./);
 	assert.match(clearWriting ?? "", /Put prerequisites, warnings, and conditions before the actions they govern/);
 	assert.match(clearWriting ?? "", /do not transfer English style rules mechanically/);
+	assert.match(
+		clearWriting ?? "",
+		/Preserve useful conventions: changelog categories, issue and pull-request templates/,
+	);
+	assert.match(clearWriting ?? "", /Three distinct items may remain a three-item list\./);
+	assert.match(clearWriting ?? "", /Check replacements against the original\./);
+	assert.match(clearWriting ?? "", /brevity must not remove facts, qualifiers, or necessary context\./);
 	assert.doesNotMatch(clearWriting ?? "", /ASD-STE100|[“”]/);
 	assert.equal(
 		core.assets.some((asset) => asset.target === "skills/jouzu-core/SKILL.md"),
