@@ -156,7 +156,12 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 		}
 		const allowedTopLevel = new Set(["LICENSE", "README.md", "THIRD_PARTY_NOTICES.md", "package.json"]);
 		for (const file of packed.files) {
-			if (!allowedTopLevel.has(file.path) && !file.path.startsWith("dist/") && !file.path.startsWith("node_modules/")) {
+			if (
+				!allowedTopLevel.has(file.path) &&
+				!file.path.startsWith("camoufox-runtime/") &&
+				!file.path.startsWith("dist/") &&
+				!file.path.startsWith("node_modules/")
+			) {
 				throw new Error(`jouzu tarball contains unexpected public file ${file.path}`);
 			}
 		}
@@ -212,7 +217,9 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 		) {
 			throw new Error("jouzu tarball contains platform-specific esbuild binaries");
 		}
-		const expectedBundles = releasePackages.filter((record) => record.bundled !== false).map((record) => record.name);
+		const expectedBundles = releasePackages
+			.filter((record) => record.bundled !== false && !record.adapter)
+			.map((record) => record.name);
 		for (const name of expectedBundles) {
 			if (!packed.bundled?.includes(name)) throw new Error(`jouzu tarball does not bundle ${name}`);
 			if (!packed.files.some((file) => file.path === `node_modules/${name}/package.json`)) {
@@ -227,34 +234,36 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 		}
 		for (const record of releaseManifest.packages) {
 			for (const resource of [...record.extensions, ...record.skills]) {
-				if (!packed.files.some((file) => file.path === `node_modules/${record.name}/${resource}`)) {
+				const resourcePath = record.adapter ? resource : `node_modules/${record.name}/${resource}`;
+				if (!packed.files.some((file) => file.path === resourcePath)) {
 					throw new Error(`jouzu tarball is missing release resource ${record.name}/${resource}`);
 				}
 			}
 		}
-		const camoufoxRecord = releaseManifest.packages.find((record) => record.name === "@the-forge-flow/camoufox-pi");
-		const camoufoxPackage = JSON.parse(
-			readFileSync(join(directory, "node_modules", "@the-forge-flow", "camoufox-pi", "package.json"), "utf8"),
-		);
-		if (
-			camoufoxPackage.dependencies?.["camoufox-js"] !== undefined ||
-			camoufoxPackage.dependencies?.["playwright-core"] !== undefined ||
-			!camoufoxRecord?.dependencyRemovals?.includes("camoufox-js") ||
-			!camoufoxRecord?.dependencyRemovals?.includes("playwright-core") ||
-			camoufoxPackage.peerDependencies !== undefined
-		) {
-			throw new Error("bundled Camoufox dependency and peer repair differs from the release manifest");
+		for (const runtimeInput of ["camoufox-runtime/package.json", "camoufox-runtime/package-lock.json"]) {
+			if (!packed.files.some((file) => file.path === runtimeInput)) {
+				throw new Error(`jouzu tarball is missing ${runtimeInput}`);
+			}
 		}
-		if (
-			packed.files.some(
-				(file) =>
-					file.path.startsWith("node_modules/@mariozechner/") ||
-					file.path.startsWith("node_modules/@the-forge-flow/camoufox-pi/node_modules/camoufox-js/"),
-			)
-		) {
-			throw new Error("jouzu tarball contains a superseded Camoufox runtime or legacy Pi peer");
+		const forbiddenRuntimePackages = [
+			"@the-forge-flow/camoufox-pi",
+			"better-sqlite3",
+			"camoufox-js",
+			"impit",
+			"ua-parser-js",
+		];
+		for (const name of forbiddenRuntimePackages) {
+			if (packageJson.dependencies?.[name] !== undefined || packageJson.bundleDependencies?.includes(name)) {
+				throw new Error(`jouzu must not install the first-use Camoufox package ${name} by default`);
+			}
+			if (packed.files.some((file) => file.path.startsWith(`node_modules/${name}/`))) {
+				throw new Error(`jouzu tarball contains first-use Camoufox package ${name}`);
+			}
 		}
-		for (const record of releasePackages) {
+		if (packed.files.some((file) => file.path.startsWith("node_modules/@mariozechner/"))) {
+			throw new Error("jouzu tarball contains a legacy Pi peer");
+		}
+		for (const record of releasePackages.filter((candidate) => !candidate.adapter)) {
 			const locked = releaseLock.packages?.[`node_modules/${record.name}`];
 			if (locked?.version !== record.version) {
 				throw new Error(`release bundle lock differs for ${record.name}@${record.version}`);

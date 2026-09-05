@@ -164,6 +164,7 @@ test(
 		const root = mkdtempSync(join(tmpdir(), "jouzu-extension-behavior-"));
 		const previousCwd = process.cwd();
 		const previousAgentDir = process.env.PI_CODING_AGENT_DIR;
+		const previousRuntimeStateDir = process.env.JOUZU_RUNTIME_STATE_DIR;
 		const previousTasks = process.env.PI_TASKS;
 		const previousVccConfig = process.env.PI_VCC_CONFIG_PATH;
 		const forceEarlyFailure = process.env.JOUZU_TEST_EXTENSION_EARLY_FAILURE === "1";
@@ -173,6 +174,7 @@ test(
 		try {
 			process.chdir(root);
 			process.env.PI_CODING_AGENT_DIR = join(root, "agent");
+			process.env.JOUZU_RUNTIME_STATE_DIR = join(root, "state");
 			process.env.PI_TASKS = "off";
 			process.env.PI_VCC_CONFIG_PATH = join(root, "pi-vcc-config.json");
 			mkdirSync(process.env.PI_CODING_AGENT_DIR, { recursive: true });
@@ -377,6 +379,8 @@ test(
 			process.chdir(previousCwd);
 			if (previousAgentDir === undefined) delete process.env.PI_CODING_AGENT_DIR;
 			else process.env.PI_CODING_AGENT_DIR = previousAgentDir;
+			if (previousRuntimeStateDir === undefined) delete process.env.JOUZU_RUNTIME_STATE_DIR;
+			else process.env.JOUZU_RUNTIME_STATE_DIR = previousRuntimeStateDir;
 			if (previousTasks === undefined) delete process.env.PI_TASKS;
 			else process.env.PI_TASKS = previousTasks;
 			if (previousVccConfig === undefined) delete process.env.PI_VCC_CONFIG_PATH;
@@ -396,11 +400,13 @@ test(
 		const root = mkdtempSync(join(tmpdir(), "jouzu-extension-network-"));
 		const previousCwd = process.cwd();
 		const previousAgentDir = process.env.PI_CODING_AGENT_DIR;
+		const previousRuntimeStateDir = process.env.JOUZU_RUNTIME_STATE_DIR;
 		let extensions = [];
 		let harness;
 		try {
 			process.chdir(root);
 			process.env.PI_CODING_AGENT_DIR = join(root, "agent");
+			process.env.JOUZU_RUNTIME_STATE_DIR = join(root, "state");
 			mkdirSync(process.env.PI_CODING_AGENT_DIR, { recursive: true });
 			harness = createHarness(root);
 			const status = inspectReleaseExtensions();
@@ -470,6 +476,8 @@ test(
 			process.chdir(previousCwd);
 			if (previousAgentDir === undefined) delete process.env.PI_CODING_AGENT_DIR;
 			else process.env.PI_CODING_AGENT_DIR = previousAgentDir;
+			if (previousRuntimeStateDir === undefined) delete process.env.JOUZU_RUNTIME_STATE_DIR;
+			else process.env.JOUZU_RUNTIME_STATE_DIR = previousRuntimeStateDir;
 			rmSync(root, { recursive: true, force: true });
 		}
 	},

@@ -39,6 +39,7 @@ test("Jouzu owns Pi and pi-vcc paths inside its isolated root", () => {
 		"PI_CODING_AGENT",
 		"PI_CODING_AGENT_DIR",
 		"PI_CODING_AGENT_SESSION_DIR",
+		"JOUZU_RUNTIME_STATE_DIR",
 		"PI_SKIP_VERSION_CHECK",
 		"PI_VCC_CONFIG_PATH",
 	];
@@ -51,6 +52,7 @@ test("Jouzu owns Pi and pi-vcc paths inside its isolated root", () => {
 		assert.equal(process.title, "jouzu");
 		assert.equal(process.env.PI_CODING_AGENT_DIR, resolved.agentDir);
 		assert.equal(process.env.PI_CODING_AGENT_SESSION_DIR, resolved.sessionDir);
+		assert.equal(process.env.JOUZU_RUNTIME_STATE_DIR, resolved.stateDir);
 		assert.equal(process.env.PI_VCC_CONFIG_PATH, join(resolved.agentDir, "pi-vcc-config.json"));
 	} finally {
 		process.title = originalTitle;

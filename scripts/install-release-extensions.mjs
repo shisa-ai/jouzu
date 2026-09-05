@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, renameSync, rmSync } from "node:fs";
 import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
@@ -43,16 +43,6 @@ const webaioBuild = spawnSync(
 );
 if (webaioBuild.error) throw webaioBuild.error;
 if (webaioBuild.status !== 0) process.exit(webaioBuild.status ?? 1);
-const camoufoxRoot = resolve(cli, "node_modules", "@the-forge-flow", "camoufox-pi");
-const camoufoxPackagePath = resolve(camoufoxRoot, "package.json");
-const camoufoxPackage = JSON.parse(readFileSync(camoufoxPackagePath, "utf8"));
-delete camoufoxPackage.dependencies["camoufox-js"];
-delete camoufoxPackage.dependencies["playwright-core"];
-delete camoufoxPackage.peerDependencies;
-delete camoufoxPackage.peerDependenciesMeta;
-writeFileSync(camoufoxPackagePath, `${JSON.stringify(camoufoxPackage, null, 2)}\n`);
-rmSync(resolve(camoufoxRoot, "node_modules", "camoufox-js"), { recursive: true, force: true });
-rmSync(resolve(camoufoxRoot, "node_modules", "playwright-core"), { recursive: true, force: true });
 rmSync(resolve(cli, "node_modules", "@earendil-works", "pi-coding-agent", "node_modules", "@esbuild"), {
 	recursive: true,
 	force: true,
