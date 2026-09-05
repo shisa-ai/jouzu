@@ -1,4 +1,10 @@
-import type { ExtensionContext, InlineExtension, KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
+import type {
+	ExtensionAPI,
+	ExtensionContext,
+	InlineExtension,
+	KeybindingsManager,
+	Theme,
+} from "@earendil-works/pi-coding-agent";
 import { type Focusable, getKeybindings, Input, matchesKey, type TUI, wrapTextWithAnsi } from "@earendil-works/pi-tui";
 import { CatalogSettingsComponent } from "./catalog-settings.js";
 import {
@@ -9,7 +15,12 @@ import {
 } from "./jouzu-keybindings.js";
 import { formatEffectiveKeybinding, formatEffectiveKeyPair } from "./keybinding-hints.js";
 import type { CatalogModelOffering, ModelCatalogDocument } from "./model-catalog.js";
-import { type ActiveModelCatalog, loadActiveModelCatalogs } from "./model-catalog-sync.js";
+import { CatalogProjectionController } from "./model-catalog-projection.js";
+import {
+	type ActiveModelCatalog,
+	loadActiveModelCatalogs,
+	refreshAvailableModelCatalogs,
+} from "./model-catalog-sync.js";
 import {
 	buildPickerRows,
 	modelContextFit,
@@ -61,6 +72,8 @@ export interface JouzuModelPickerOptions {
 	restoreLastModelAtStartup?: boolean;
 	restoreLastThinkingLevelAtStartup?: boolean;
 	palette?: PaletteSurfaceOptions;
+	/** Test seam for the catalog refresh performed by /reload. */
+	catalogFetch?: typeof globalThis.fetch;
 }
 
 export interface ModelPickerComponentOptions {
@@ -686,9 +699,12 @@ export function createJouzuModelPicker(
 	const jouzuKeybindings = createJouzuKeybindingsManager(paths);
 	const surface = new JouzuPaletteSurfaceHost({ jouzuKeybindings });
 	const catalogEnv = options.palette?.env ?? process.env;
+	const catalogProjection = new CatalogProjectionController();
 	let catalogs: ActiveModelCatalog[] = [];
 	let catalog: ModelCatalogDocument | undefined;
 	let catalogWarning: string | undefined;
+	let activeCtx: ExtensionContext | undefined;
+	let reapplyCatalogProjection: (() => void) | undefined;
 	try {
 		catalogs = loadActiveModelCatalogs(paths, catalogEnv);
 		catalog = catalogs[0]?.document;
@@ -705,8 +721,8 @@ export function createJouzuModelPicker(
 			catalog = undefined;
 			catalogWarning = `Cached model catalog was ignored: ${error instanceof Error ? error.message : String(error)}`;
 		}
+		reapplyCatalogProjection?.();
 	};
-	let activeCtx: ExtensionContext | undefined;
 	let state: ModelPickerState = emptyModelPickerState();
 	let projectKey = "";
 	let previous: ModelReference[] = [];
@@ -715,6 +731,7 @@ export function createJouzuModelPicker(
 	let stateWarningShown = false;
 	let catalogWarningShown = false;
 	let cycleBusy = false;
+	let extensionApi: ExtensionAPI | undefined;
 	let setModel: ((model: PiModel) => Promise<boolean>) | undefined;
 
 	const queueModelSwitch = (
@@ -753,7 +770,11 @@ export function createJouzuModelPicker(
 	const extension: InlineExtension = {
 		name: "jouzu-model-picker",
 		factory: (pi) => {
+			extensionApi = pi;
 			setModel = (model) => pi.setModel(model);
+			reapplyCatalogProjection = () => {
+				if (activeCtx) catalogProjection.sync(pi, activeCtx, catalogs);
+			};
 			pi.registerCommand?.("catalogs", {
 				description: "Open Jouzu catalog settings",
 				handler: async (_args, ctx) => {
@@ -763,6 +784,53 @@ export function createJouzuModelPicker(
 				},
 			});
 			pi.on("session_start", async (event, ctx) => {
+				activeCtx = ctx;
+				if (event.reason === "reload") {
+					const refreshes = await Promise.allSettled([
+						catalogProjection.refresh(pi, ctx, catalogs, AbortSignal.timeout(15_000)),
+						refreshAvailableModelCatalogs(paths, {
+							env: catalogEnv,
+							fetch: options.catalogFetch,
+							timeoutMs: 15_000,
+						}),
+					]);
+					reloadCatalogs();
+					const modelRefresh = refreshes[0];
+					if (modelRefresh.status === "rejected") {
+						const message =
+							modelRefresh.reason instanceof Error ? modelRefresh.reason.message : String(modelRefresh.reason);
+						ctx.ui.notify(
+							`Models were not refreshed: ${sanitizeTerminalText(message)} Open Models to retry.`,
+							"warning",
+						);
+					} else if (modelRefresh.value.modelRefresh.errors.size > 0) {
+						const providers = [...modelRefresh.value.modelRefresh.errors.keys()]
+							.map((provider) => sanitizeTerminalText(provider))
+							.join(", ");
+						ctx.ui.notify(`Model providers not refreshed: ${providers}. Open Models to retry.`, "warning");
+					}
+					const catalogRefresh = refreshes[1];
+					if (catalogRefresh.status === "rejected") {
+						const message =
+							catalogRefresh.reason instanceof Error ? catalogRefresh.reason.message : String(catalogRefresh.reason);
+						ctx.ui.notify(
+							`Catalogs were not refreshed: ${sanitizeTerminalText(message)} Cached catalog data remains available. Open Catalogs to retry.`,
+							"warning",
+						);
+					} else {
+						const failed = (catalogRefresh.value?.results ?? [])
+							.filter(({ result }) => result.status === "error" || result.status === "rejected")
+							.map(({ source }) => sanitizeTerminalText(source.label));
+						if (failed.length > 0) {
+							ctx.ui.notify(
+								`Catalogs not refreshed: ${failed.join(", ")}. Cached catalog data remains available. Open Catalogs to retry.`,
+								"warning",
+							);
+						}
+					}
+				} else {
+					catalogProjection.sync(pi, ctx, catalogs);
+				}
 				syncSession(ctx);
 				if (
 					(event.reason !== "startup" && event.reason !== "new") ||
@@ -868,11 +936,13 @@ export function createJouzuModelPicker(
 					);
 				}
 			});
-			pi.on("session_shutdown", () => {
+			pi.on("session_shutdown", (_event, ctx) => {
+				catalogProjection.release(pi, ctx);
 				activeCtx = undefined;
 				pendingDispatch = undefined;
 				queuedModelSwitch = undefined;
 				cycleBusy = false;
+				extensionApi = undefined;
 				setModel = undefined;
 			});
 		},
@@ -935,11 +1005,13 @@ export function createJouzuModelPicker(
 									state = store.setFilter(filter);
 								},
 								onRefresh: async (signal) => {
-									const result = await ctx.modelRegistry.refresh({ signal });
-									if (result.errors.size > 0) {
-										throw new Error(`could not refresh ${[...result.errors.keys()].join(", ")}`);
+									const api = extensionApi;
+									if (!api) throw new Error("model refresh is unavailable");
+									const result = await catalogProjection.refresh(api, ctx, catalogs, signal);
+									if (result.modelRefresh.errors.size > 0) {
+										throw new Error(`could not refresh ${[...result.modelRefresh.errors.keys()].join(", ")}`);
 									}
-									if (result.aborted) throw new Error("model refresh was aborted");
+									if (result.modelRefresh.aborted) throw new Error("model refresh was aborted");
 								},
 							}),
 						settings: (childContext) =>

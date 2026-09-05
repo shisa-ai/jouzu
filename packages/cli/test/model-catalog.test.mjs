@@ -88,6 +88,28 @@ test("strict parsing rejects duplicate keys, unsafe references, and credential f
 			),
 		(error) => error instanceof ModelCatalogError && error.code === "credential_material",
 	);
+	for (const mutate of [
+		(document) => {
+			document.providers[0].api = { protocol: "openai" };
+		},
+		(document) => {
+			document.modelOfferings[0].name = ["not", "a", "name"];
+		},
+		(document) => {
+			document.modelOfferings[0].api = 7;
+		},
+		(document) => {
+			document.modelOfferings[0].modalities = ["text", 7];
+		},
+		(document) => {
+			document.modelOfferings[0].capabilities = { reasoning: true };
+		},
+	]) {
+		assert.throws(
+			() => parseAndValidateModelCatalog(invalid(base, mutate), { remote: true }),
+			(error) => error instanceof ModelCatalogError && error.code === "invalid_record",
+		);
+	}
 	const prototypeCredential = fixture("account-snapshot-v1.json").replace(
 		'"id": "ai.example.gateway",',
 		'"id": "ai.example.gateway",\n      "__proto__": { "apiKey": "must-not-appear" },',
