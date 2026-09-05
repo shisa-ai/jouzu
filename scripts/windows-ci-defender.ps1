@@ -79,7 +79,7 @@ if ($LASTEXITCODE -ne 0) { throw "npm cache lookup failed" }
 $prefixOutput = & npm.cmd prefix --global
 if ($LASTEXITCODE -ne 0) { throw "npm global prefix lookup failed" }
 $cache = Full-Path ($cacheOutput | Out-String).Trim()
-$fixtures = Full-Path (Join-Path $env:RUNNER_TEMP "jouzu-fixtures")
+$fixtures = if ($env:JOUZU_CI_FIXTURES) { Full-Path $env:JOUZU_CI_FIXTURES } else { Full-Path (Join-Path $env:RUNNER_TEMP "jouzu-fixtures") }
 $protected = @($env:GITHUB_WORKSPACE, $env:USERPROFILE, ($prefixOutput | Out-String).Trim()) |
     ForEach-Object { Full-Path $_ }
 $requested = @($cache, $fixtures) | Select-Object -Unique

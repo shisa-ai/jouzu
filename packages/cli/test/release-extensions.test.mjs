@@ -81,7 +81,7 @@ test("the release manifest and bundle list contain the selected extension set", 
 	assert.equal(webaioExtension.optional, undefined);
 	assert.deepEqual(webaioExtension.tools, ["web_fetch", "batch_web_fetch"]);
 	assert.deepEqual(webaioExtension.extensions, ["dist/src/jouzu-extension.js"]);
-	assert.deepEqual(webaioExtension.dependencyRemovals, ["playwright", "wreq-js"]);
+	assert.deepEqual(webaioExtension.dependencyRemovals, ["playwright", "wreq-js", "@modelcontextprotocol/sdk"]);
 	assert.deepEqual(manifest.runtimeDependencyRedirects, []);
 	const camoufoxAdapter = manifest.packages.find((record) => record.name === "jouzu-camoufox-adapter");
 	assert.equal(camoufoxAdapter.optional, true);

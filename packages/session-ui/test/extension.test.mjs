@@ -67,7 +67,10 @@ test("installs one editor, Session Line, and Status Bar owner and cleans up", as
 		const calls = { widgets: [], footers: [], editors: [] };
 		const ctx = context(root, calls);
 		await handlers.get("session_start")({}, ctx);
-		await new Promise((resolve) => setTimeout(resolve, 20));
+		const runtimeDeadline = Date.now() + 2000;
+		while (!execCalls.some(({ command }) => command === "node") && Date.now() < runtimeDeadline) {
+			await new Promise((resolve) => setTimeout(resolve, 10));
+		}
 		assert.equal(extension.name, SESSION_UI_RUNTIME_IDS.extension);
 		assert.equal(calls.widgets[0][0], SESSION_UI_RUNTIME_IDS.sessionLineWidget);
 		assert.equal(typeof calls.widgets[0][1], "function");

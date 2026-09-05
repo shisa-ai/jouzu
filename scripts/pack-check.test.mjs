@@ -137,7 +137,7 @@ test("first-use Camoufox packages fail the default manifest and tarball checks",
 				{ dependencies: {} },
 				["ua-parser-js"],
 			),
-		/contains first-use Camoufox package ua-parser-js/u,
+		/contains excluded package ua-parser-js/u,
 	);
 });
 
@@ -280,4 +280,68 @@ test("web transport stays external at every dependency depth", () => {
 		() => assertExternalWebTransport([], { dependencies: { "wreq-js": "^3.2.0" } }, record),
 		/exact external/,
 	);
+});
+
+test("WebAIO pruning rejects shared static and dynamic MCP imports", async () => {
+	const { assertStandaloneMcpBoundary } = await import("./webaio-package-boundary.mjs");
+	const root = mkdtempSync(join(tmpdir(), "jouzu-mcp-boundary-"));
+	try {
+		writeFileSync(join(root, "mcp-server.ts"), 'import { Server } from "@modelcontextprotocol/sdk/server/index.js";');
+		writeFileSync(join(root, "jouzu-extension.ts"), 'import { fetch } from "./webfetch.js";');
+		assert.doesNotThrow(() => assertStandaloneMcpBoundary(root));
+		for (const source of [
+			'import { Server } from "@modelcontextprotocol/sdk/server/index.js";',
+			'await import("./mcp-server.js");',
+			'export * from "./mcp-server.ts";',
+		]) {
+			writeFileSync(join(root, "jouzu-extension.ts"), source);
+			assert.throws(() => assertStandaloneMcpBoundary(root), /standalone MCP server/u);
+		}
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("source install preserves dependency locks and restores files after failure", async () => {
+	const { installSourceDependencies } = await import("./install-source-dependencies.mjs");
+	const root = mkdtempSync(join(tmpdir(), "jouzu-source-install-"));
+	const manifestPath = join(root, "packages/cli/package.json");
+	const lockPath = join(root, "package-lock.json");
+	const manifest = '{"bundleDependencies":["extension"],"dependencies":{"extension":"1.0.0"}}\n';
+	const lock = JSON.stringify({
+		packages: {
+			"packages/cli": JSON.parse(manifest),
+			"packages/cli/node_modules/extension": { version: "1.0.0", integrity: "locked", inBundle: true },
+			"node_modules/runtime/node_modules/native": { inBundle: true },
+		},
+	});
+	try {
+		mkdirSync(join(root, "packages/cli"), { recursive: true });
+		writeFileSync(manifestPath, manifest);
+		writeFileSync(lockPath, lock);
+		assert.throws(
+			() =>
+				installSourceDependencies(root, () => {
+					const installedLock = JSON.parse(readFileSync(lockPath, "utf8"));
+					assert.equal(JSON.parse(readFileSync(manifestPath, "utf8")).bundleDependencies, undefined);
+					assert.deepEqual(installedLock.packages["packages/cli/node_modules/extension"], {
+						version: "1.0.0",
+						integrity: "locked",
+					});
+					assert.equal(installedLock.packages["node_modules/runtime/node_modules/native"].inBundle, true);
+					throw new Error("injected npm failure");
+				}),
+			/injected npm failure/u,
+		);
+		assert.equal(readFileSync(manifestPath, "utf8"), manifest);
+		assert.equal(readFileSync(lockPath, "utf8"), lock);
+		assert.equal(
+			installSourceDependencies(root, () => ({ status: 17 })),
+			17,
+		);
+		assert.equal(readFileSync(manifestPath, "utf8"), manifest);
+		assert.equal(readFileSync(lockPath, "utf8"), lock);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
 });
