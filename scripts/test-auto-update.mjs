@@ -76,7 +76,7 @@ function commandResult(command, args, options = {}) {
 async function run(command, args, options = {}) {
 	const result = await commandResult(command, args, options);
 	assert.equal(result.signal, null, `${command} terminated by ${result.signal}: ${result.stderr}`);
-	assert.equal(result.status, 0, `${command} exited ${result.status}: ${result.stderr || result.stdout}`);
+	assert.equal(result.status, 0, `${command} exited ${result.status}: ${result.stdout}\n${result.stderr}`);
 	return result;
 }
 
@@ -359,8 +359,11 @@ try {
 			assert.equal(update.signal, null);
 			assert.equal(update.status, 4, update.stderr || update.stdout);
 			const restored = new RegExp(`failed verification and ${escapeRegex(currentVersion)} was restored`);
-			const unchanged = new RegExp(`was not installed; ${escapeRegex(currentVersion)} remains verified`);
-			assert.match(update.stderr, new RegExp(`${restored.source}|${unchanged.source}`));
+			assert.match(
+				update.stderr,
+				restored,
+				"rollback smoke must install the broken candidate and restore the previous version",
+			);
 			const version = await runGlobal(rollbackPrefix, ["--version"], {
 				cwd: temp,
 				env: { ...env, JOUZU_NO_UPDATE: "1" },
@@ -368,13 +371,23 @@ try {
 			assert.match(version.stdout, new RegExp(`^jouzu ${escapeRegex(currentVersion)}$`, "m"));
 			const state = JSON.parse(readFileSync(join(rollbackHome, "state", "self-update.json"), "utf8"));
 			assert.equal(state.lastResult, "failed");
-			assert.equal(state.lastErrorCode, restored.test(update.stderr) ? "update-rolled-back" : "update-not-installed");
+			assert.equal(state.lastErrorCode, "update-rolled-back");
 		});
 	}
 
 	console.log(`automatic update ${scope} smoke passed for ${currentVersion}, ${nextVersion}, and ${brokenVersion}`);
 } catch (error) {
 	smokeError = error;
+	const logDirectory = join(temp, "npm-cache", "_logs");
+	try {
+		for (const name of readdirSync(logDirectory)
+			.filter((name) => name.endsWith("-debug-0.log"))
+			.sort()
+			.slice(-3)) {
+			const tail = readFileSync(join(logDirectory, name), "utf8").split(/\r?\n/u).slice(-100).join("\n");
+			console.error(`npm diagnostic ${name}:\n${tail}`);
+		}
+	} catch {}
 }
 try {
 	rmSync(temp, { recursive: true, force: true, maxRetries: 10, retryDelay: 500 });
