@@ -44,11 +44,11 @@
 		"access": "public"
 	},
 	"dependencies": {
-		"@earendil-works/pi-ai": "0.85.0",
-		"@earendil-works/pi-coding-agent": "0.85.0",
-		"@earendil-works/pi-server": "0.85.0",
-		"@earendil-works/pi-telemetry": "0.85.0",
-		"@earendil-works/pi-tui": "0.85.0",
+		"@earendil-works/pi-ai": "0.85.1",
+		"@earendil-works/pi-coding-agent": "0.85.1",
+		"@earendil-works/pi-server": "0.85.1",
+		"@earendil-works/pi-telemetry": "0.85.1",
+		"@earendil-works/pi-tui": "0.85.1",
 		"@lhl/pi-tasks": "git+https://github.com/lhl/pi-tasks.git#5b35d3a68e5963cbde6e3d47e21df7d7c1f7d06b",
 		"@sinclair/typebox": "0.34.52",
 		"@sting8k/pi-vcc": "0.7.0",

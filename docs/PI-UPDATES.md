@@ -58,6 +58,18 @@ Review all generated manifest and lock changes before qualification. Run focused
 
 ## Update log
 
+### Pi 0.85.1 — qualified locally
+
+- **Tag and package source:** `v0.85.1` at `d981de1229ef899957bbe968bc8dcda02a21f477`.
+- **Coding-agent integrity:** `sha512-FGRN+OHbWaefBPGaTggAdLjrIHW+s2PzLyglz/5dfLzb9of7uuXMXYC0fJIeZTw+shS32o2cuQ9jF7YSDuL/oQ==`.
+- **Disposition:** Qualified on 2026-09-05 with no source deviations. The final Jouzu release commit still requires native CI qualification.
+
+Pi 0.85.1 fixes model/thinking selector save bindings, keeps list selection unchanged on mouse hover, adds faster Alt-wheel scrolling, and updates Astra request caching. Its stable CLI entrypoint no longer imports the experimental remote harness. Jouzu's launcher export, extension lifecycle, model activation, editor routing, and child-session interfaces remain compatible.
+
+The update changes only Pi package versions and their dependency layout. Node.js remains at least 22.19 and Pi remains MIT-licensed. Jouzu retains its exact external Pi server dependency; no dependency is made optional by this update. The production lock audit reports zero vulnerabilities.
+
+`npm run pi:qualify` passed the full local candidate gate, packed local/npm-exec/global installs, synthetic update/rollback, and the API/CLI/RPC contract probes before promoting the lock. Registry signatures, signed provenance, and tarball integrity were separately verified for both coding-agent and server packages. Their source commits match the tag; signing identity and provenance name `earendil-works/pi`, `.github/workflows/build-binaries.yml`, and `refs/tags/v0.85.1`. No minimum-release-age override was used.
+
 ### Pi 0.84.4 — qualified
 
 - **Release:** 2026-08-28
