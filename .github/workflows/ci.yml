@@ -33,6 +33,15 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: npm
+      - name: Test Windows Defender exclusion handling
+        if: matrix.os == 'windows-latest' && matrix.node == 24
+        shell: pwsh
+        run: ./scripts/windows-ci-defender.test.ps1
+      - name: Record and configure Windows Defender
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        timeout-minutes: 2
+        run: ./scripts/windows-ci-defender.ps1 setup
       - run: npm ci --ignore-scripts
         timeout-minutes: 20
       - run: npm run build
@@ -53,6 +62,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           JOUZU_EXTENSION_NETWORK: "1"
+      - name: Remove Windows Defender exclusions
+        if: always() && (matrix.os == 'windows-latest')
+        shell: pwsh
+        timeout-minutes: 2
+        run: ./scripts/windows-ci-defender.ps1 cleanup
+      - name: Save Windows Defender state
+        if: always() && (matrix.os == 'windows-latest')
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: windows-defender-node-${{ matrix.node }}
+          path: ${{ runner.temp }}/jouzu-defender.json
+          if-no-files-found: warn
+          retention-days: 7
 
   legacy-linux-static-fetch:
     runs-on: ubuntu-latest
@@ -159,6 +181,11 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
+      - name: Record and configure Windows Defender
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        timeout-minutes: 2
+        run: ./scripts/windows-ci-defender.ps1 setup
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: jouzu-candidate
@@ -168,6 +195,19 @@ jobs:
         timeout-minutes: 25
         env:
           JOUZU_PACKED_TARBALL: dist/ci-artifacts/candidate.tgz
+      - name: Remove Windows Defender exclusions
+        if: always() && (matrix.os == 'windows-latest')
+        shell: pwsh
+        timeout-minutes: 2
+        run: ./scripts/windows-ci-defender.ps1 cleanup
+      - name: Save Windows Defender state
+        if: always() && (matrix.os == 'windows-latest')
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: windows-defender-optional-camoufox
+          path: ${{ runner.temp }}/jouzu-defender.json
+          if-no-files-found: warn
+          retention-days: 7
 
   packed-install:
     needs: release-artifacts
@@ -185,6 +225,11 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
+      - name: Record and configure Windows Defender
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        timeout-minutes: 2
+        run: ./scripts/windows-ci-defender.ps1 ${{ matrix.scope == 'global' && 'scanned' || 'setup' }}
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: jouzu-candidate
@@ -194,6 +239,19 @@ jobs:
         env:
           JOUZU_PACKED_SCOPE: ${{ matrix.scope }}
           JOUZU_PACKED_TARBALL: dist/ci-artifacts/candidate.tgz
+      - name: Remove Windows Defender exclusions
+        if: always() && (matrix.os == 'windows-latest')
+        shell: pwsh
+        timeout-minutes: 2
+        run: ./scripts/windows-ci-defender.ps1 cleanup
+      - name: Save Windows Defender state
+        if: always() && (matrix.os == 'windows-latest')
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: windows-defender-packed-install-${{ matrix.scope }}
+          path: ${{ runner.temp }}/jouzu-defender.json
+          if-no-files-found: warn
+          retention-days: 7
 
   automatic-update:
     needs: release-artifacts
@@ -211,6 +269,11 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
+      - name: Record and configure Windows Defender
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        timeout-minutes: 2
+        run: ./scripts/windows-ci-defender.ps1 setup
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: jouzu-updater
@@ -223,6 +286,19 @@ jobs:
           JOUZU_UPDATE_CURRENT_TARBALL: dist/ci-artifacts/candidate.tgz
           JOUZU_UPDATE_NEXT_TARBALL: dist/ci-artifacts/next.tgz
           JOUZU_UPDATE_BROKEN_TARBALL: dist/ci-artifacts/broken.tgz
+      - name: Remove Windows Defender exclusions
+        if: always() && (matrix.os == 'windows-latest')
+        shell: pwsh
+        timeout-minutes: 2
+        run: ./scripts/windows-ci-defender.ps1 cleanup
+      - name: Save Windows Defender state
+        if: always() && (matrix.os == 'windows-latest')
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: windows-defender-automatic-update-${{ matrix.scope }}
+          path: ${{ runner.temp }}/jouzu-defender.json
+          if-no-files-found: warn
+          retention-days: 7
 
   python:
     runs-on: ${{ matrix.os }}
