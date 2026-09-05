@@ -8,6 +8,20 @@ import { fileURLToPath } from "node:url";
 import { deriveClipboardBindingRequirements } from "./clipboard-bindings.mjs";
 import { isPrunedDependencyMetadata } from "./configure-release-packlists.mjs";
 
+export function assertExternalWebTransport(files, packageJson, record) {
+	if (
+		record?.version !== "3.2.0" ||
+		record.bundled !== false ||
+		packageJson.dependencies?.["wreq-js"] !== record.version ||
+		packageJson.bundleDependencies?.includes("wreq-js")
+	) {
+		throw new Error("jouzu must install the exact external wreq-js transport");
+	}
+	if (files.some(({ path }) => /(?:^|\/)node_modules\/(?:wreq-js|@wreq-js)(?:\/|$)/u.test(path))) {
+		throw new Error("jouzu tarball contains platform-selected wreq-js transport files");
+	}
+}
+
 export { deriveClipboardBindingRequirements } from "./clipboard-bindings.mjs";
 
 const packageDirectories = [join("packages", "cli")];
@@ -262,6 +276,11 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 		const releaseManifest = JSON.parse(readFileSync(join(directory, "release-extensions.json"), "utf8"));
 		const releaseLock = JSON.parse(readFileSync(join(directory, "package-lock.json"), "utf8"));
 		const releasePackages = [...releaseManifest.packages, ...releaseManifest.compatibilityDependencies];
+		assertExternalWebTransport(
+			packed.files,
+			packageJson,
+			releaseManifest.compatibilityDependencies.find((record) => record.name === "wreq-js"),
+		);
 		const esbuildRecord = releaseManifest.compatibilityDependencies.find((record) => record.name === "esbuild");
 		if (
 			!esbuildRecord ||
@@ -313,6 +332,8 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 			readFileSync(join(directory, "node_modules", "pi-webaio", "package.json"), "utf8"),
 		);
 		if (
+			webaioPackage.dependencies?.["wreq-js"] !== undefined ||
+			!webaioRecord?.dependencyRemovals?.includes("wreq-js") ||
 			webaioPackage.optionalDependencies?.playwright !== undefined ||
 			!webaioRecord?.dependencyRemovals?.includes("playwright")
 		) {

@@ -13,6 +13,7 @@ import {
 import {
 	assertClipboardBindingsPresent,
 	assertDefaultPackagesAbsent,
+	assertExternalWebTransport,
 	assertLicenseFilesPresent,
 	assertNoPrunedDependencyMetadata,
 	assertProfileFilesPresent,
@@ -256,4 +257,27 @@ test("the public PDF worker build comment does not exempt other home paths", () 
 	assert.equal(publicContentForScan(path, `${marker}\n/home/runner/private`).includes("/home/runner"), true);
 	assert.equal(publicContentForScan("dist/worker.js", marker).includes("/home/runner"), true);
 	assert.equal(publicContentForScan(path, marker.replace("pdf.worker", "other.worker")).includes("/home/runner"), true);
+});
+
+test("web transport stays external at every dependency depth", () => {
+	const metadata = { dependencies: { "wreq-js": "3.2.0" }, bundleDependencies: [] };
+	const record = { version: "3.2.0", bundled: false };
+	assert.doesNotThrow(() =>
+		assertExternalWebTransport([{ path: "node_modules/pi-webaio/dist/index.js" }], metadata, record),
+	);
+	for (const path of [
+		"node_modules/wreq-js/package.json",
+		"node_modules/pi-webaio/node_modules/wreq-js/index.js",
+		"node_modules/pi-webaio/node_modules/@wreq-js/binding-darwin-arm64/index.node",
+	]) {
+		assert.throws(() => assertExternalWebTransport([{ path }], metadata, record), /transport files/);
+	}
+	assert.throws(
+		() => assertExternalWebTransport([], { ...metadata, bundleDependencies: ["wreq-js"] }, record),
+		/exact external/,
+	);
+	assert.throws(
+		() => assertExternalWebTransport([], { dependencies: { "wreq-js": "^3.2.0" } }, record),
+		/exact external/,
+	);
 });

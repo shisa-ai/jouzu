@@ -50,8 +50,13 @@ if (webaioPackage.optionalDependencies?.playwright === undefined) {
 }
 delete webaioPackage.optionalDependencies.playwright;
 if (Object.keys(webaioPackage.optionalDependencies).length === 0) delete webaioPackage.optionalDependencies;
+if (webaioPackage.dependencies?.["wreq-js"] !== "^3.0.0") {
+	throw new Error("pi-webaio no longer declares the expected wreq-js transport dependency");
+}
+delete webaioPackage.dependencies["wreq-js"];
 writeFileSync(webaioPackagePath, `${JSON.stringify(webaioPackage, null, 2)}\n`);
 rmSync(resolve(webaioRoot, "node_modules", "playwright"), { recursive: true, force: true });
+rmSync(resolve(webaioRoot, "node_modules", "wreq-js"), { recursive: true, force: true });
 rmSync(resolve(cli, "node_modules", "@earendil-works", "pi-coding-agent", "node_modules", "@esbuild"), {
 	recursive: true,
 	force: true,
