@@ -6,9 +6,17 @@ import { test } from "node:test";
 
 import { clipboardBindingDirectoryIsComplete } from "./clipboard-bindings.mjs";
 import {
+	configureReleasePacklists,
+	isPrunedDependencyMetadata,
+	releaseDependencyFiles,
+} from "./configure-release-packlists.mjs";
+import {
 	assertClipboardBindingsPresent,
+	assertLicenseFilesPresent,
+	assertNoPrunedDependencyMetadata,
 	assertProfileFilesPresent,
 	deriveClipboardBindingRequirements,
+	deriveRequiredLicenseFiles,
 	deriveRequiredProfileFiles,
 	forbiddenPublicContent,
 } from "./pack-check.mjs";
@@ -126,6 +134,72 @@ test("a partial extracted binding is not treated as complete", () => {
 		assert.equal(clipboardBindingDirectoryIsComplete(root, requirement), false);
 		writeFileSync(join(root, requirement.entrypoint), "native fixture");
 		assert.equal(clipboardBindingDirectoryIsComplete(root, requirement), true);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("release packlists prune only dependency maps and declarations", () => {
+	assert.equal(isPrunedDependencyMetadata("node_modules/pi/dist/index.js.map"), true);
+	assert.equal(isPrunedDependencyMetadata("node_modules/pi/dist/index.d.mts"), true);
+	assert.equal(isPrunedDependencyMetadata("node_modules/pi/extensions/state.ts"), false);
+	assert.equal(isPrunedDependencyMetadata("dist/index.d.ts"), false);
+	assert.deepEqual(releaseDependencyFiles(["dist", "index.d.ts", "index.js.map"]), [
+		"dist",
+		"!**/*.map",
+		"!**/*.d.ts",
+		"!**/*.d.mts",
+		"!**/*.d.cts",
+	]);
+	assert.throws(
+		() => assertNoPrunedDependencyMetadata([{ path: "node_modules/pi/dist/index.d.ts" }]),
+		/pruned dependency metadata/u,
+	);
+	assert.doesNotThrow(() => assertNoPrunedDependencyMetadata([{ path: "dist/index.d.ts" }]));
+});
+
+test("release packlists apply to nested installed packages", () => {
+	const root = mkdtempSync(join(tmpdir(), "release-packlist-"));
+	const child = join(root, "node_modules", "child");
+	try {
+		mkdirSync(child, { recursive: true });
+		writeFileSync(join(root, "package.json"), '{"name":"parent","version":"1.0.0","files":["dist"]}\n');
+		writeFileSync(join(child, "package.json"), '{"name":"child","version":"1.0.0"}\n');
+		assert.equal(configureReleasePacklists([root]), 2);
+		assert.deepEqual(
+			JSON.parse(readFileSync(join(root, "package.json"), "utf8")).files,
+			releaseDependencyFiles(["dist"]),
+		);
+		assert.deepEqual(JSON.parse(readFileSync(join(child, "package.json"), "utf8")).files, releaseDependencyFiles());
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("dependency licenses remain required after metadata pruning", () => {
+	const root = mkdtempSync(join(tmpdir(), "release-licenses-"));
+	try {
+		const dependency = join(root, "node_modules", "dependency");
+		const nested = join(dependency, "node_modules", "nested");
+		mkdirSync(nested, { recursive: true });
+		writeFileSync(join(dependency, "LICENSE"), "license");
+		writeFileSync(join(nested, "NOTICE.md"), "notice");
+		const packed = [
+			{ path: "node_modules/dependency/package.json" },
+			{ path: "node_modules/dependency/node_modules/nested/package.json" },
+		];
+		const required = deriveRequiredLicenseFiles(root, packed);
+		assert.deepEqual(required, [
+			"node_modules/dependency/LICENSE",
+			"node_modules/dependency/node_modules/nested/NOTICE.md",
+		]);
+		assert.throws(() => assertLicenseFilesPresent([{ path: required[0] }], required), /NOTICE\.md/u);
+		assert.doesNotThrow(() =>
+			assertLicenseFilesPresent(
+				required.map((path) => ({ path })),
+				required,
+			),
+		);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
