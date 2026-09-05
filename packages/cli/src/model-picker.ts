@@ -59,6 +59,7 @@ export interface JouzuModelPickerRequest {
 export interface JouzuModelPickerOptions {
 	applyProjectDefaultAtStartup?: boolean;
 	restoreLastModelAtStartup?: boolean;
+	restoreLastThinkingLevelAtStartup?: boolean;
 	palette?: PaletteSurfaceOptions;
 }
 
@@ -774,30 +775,32 @@ export function createJouzuModelPicker(
 				const lastUsed =
 					options.restoreLastModelAtStartup === true ? (state.last ?? state.recents.global[0]) : undefined;
 				const reference = projectReference ?? lastUsed;
-				if (!reference || modelReferencesEqual(reference, modelReference(ctx.model, catalog))) return;
-				const label = projectReference ? "Project default" : "Last used model";
-				const model = ctx.modelRegistry.find(reference.provider, reference.modelId);
-				if (!model) {
-					ctx.ui.notify(`${label} is unavailable: ${reference.provider}/${reference.modelId}`, "warning");
-					return;
-				}
-				try {
-					if (!(await pi.setModel(model))) {
-						ctx.ui.notify(`${label} is not authenticated: ${reference.provider}/${reference.modelId}`, "warning");
+				if (!reference) return;
+				if (!modelReferencesEqual(reference, modelReference(ctx.model, catalog))) {
+					const label = projectReference ? "Project default" : "Last used model";
+					const model = ctx.modelRegistry.find(reference.provider, reference.modelId);
+					if (!model) {
+						ctx.ui.notify(`${label} is unavailable: ${reference.provider}/${reference.modelId}`, "warning");
 						return;
 					}
-				} catch (error) {
-					ctx.ui.notify(
-						`${label} was not applied: ${error instanceof Error ? error.message : String(error)}`,
-						"warning",
-					);
-					return;
+					try {
+						if (!(await pi.setModel(model))) {
+							ctx.ui.notify(`${label} is not authenticated: ${reference.provider}/${reference.modelId}`, "warning");
+							return;
+						}
+					} catch (error) {
+						ctx.ui.notify(
+							`${label} was not applied: ${error instanceof Error ? error.message : String(error)}`,
+							"warning",
+						);
+						return;
+					}
 				}
 				const thinkingLevel =
 					!projectReference && state.last && modelReferencesEqual(state.last, reference)
 						? state.last.thinkingLevel
 						: undefined;
-				if (thinkingLevel) {
+				if (thinkingLevel && options.restoreLastThinkingLevelAtStartup !== false) {
 					try {
 						pi.setThinkingLevel(thinkingLevel);
 					} catch (error) {

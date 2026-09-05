@@ -1281,59 +1281,69 @@ test("new sessions apply an available project default through session-only exten
 	}
 });
 
-test("new sessions restore the last dispatched model and its thinking level", async () => {
-	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-restore-"));
-	try {
-		const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
-		const projectKey = deriveProjectKey(root);
-		new ModelPickerStore(paths).recordDispatch({ provider: "p", modelId: "b" }, projectKey, {
-			thinkingLevel: "high",
-			now: new Date("2026-08-23T00:00:00.000Z"),
-		});
-		const integration = createJouzuModelPicker(paths, { restoreLastModelAtStartup: true });
-		const handlers = new Map();
-		const selected = [];
-		const levels = [];
-		integration.extension.factory({
-			on(name, handler) {
-				handlers.set(name, handler);
-			},
-			async setModel(model) {
-				selected.push(model.id);
-				return true;
-			},
-			setThinkingLevel(level) {
-				levels.push(level);
-			},
-		});
-		const current = { provider: "p", id: "a", name: "A", contextWindow: 100_000, maxTokens: 10_000 };
-		const target = { provider: "p", id: "b", name: "B", contextWindow: 100_000, maxTokens: 10_000 };
-		let branch = [];
-		const ctx = {
-			mode: "tui",
-			cwd: root,
-			model: current,
-			scopedModels: [],
-			sessionManager: { getBranch: () => branch },
-			modelRegistry: { find: (provider, id) => (provider === "p" && id === "b" ? target : undefined) },
-			ui: { notify() {} },
-		};
-		await handlers.get("session_start")({ reason: "startup" }, ctx);
-		assert.deepEqual(selected, ["b"]);
-		assert.deepEqual(levels, ["high"], "the recorded thinking level must be restored with the model");
+for (const explicitThinking of [false, true]) {
+	test(`new sessions restore last model thinking unless explicit: ${explicitThinking}`, async () => {
+		const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-restore-"));
+		try {
+			const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+			const projectKey = deriveProjectKey(root);
+			new ModelPickerStore(paths).recordDispatch({ provider: "p", modelId: "b" }, projectKey, {
+				thinkingLevel: "high",
+				now: new Date("2026-08-23T00:00:00.000Z"),
+			});
+			const integration = createJouzuModelPicker(paths, {
+				restoreLastModelAtStartup: true,
+				restoreLastThinkingLevelAtStartup: !explicitThinking,
+			});
+			const handlers = new Map();
+			const selected = [];
+			const levels = [];
+			integration.extension.factory({
+				on(name, handler) {
+					handlers.set(name, handler);
+				},
+				async setModel(model) {
+					selected.push(model.id);
+					return true;
+				},
+				setThinkingLevel(level) {
+					levels.push(level);
+				},
+			});
+			const current = { provider: "p", id: "a", name: "A", contextWindow: 100_000, maxTokens: 10_000 };
+			const target = { provider: "p", id: "b", name: "B", contextWindow: 100_000, maxTokens: 10_000 };
+			let branch = [];
+			const ctx = {
+				mode: "tui",
+				cwd: root,
+				model: current,
+				scopedModels: [],
+				sessionManager: { getBranch: () => branch },
+				modelRegistry: { find: (provider, id) => (provider === "p" && id === "b" ? target : undefined) },
+				ui: { notify() {} },
+			};
+			await handlers.get("session_start")({ reason: "startup" }, ctx);
+			assert.deepEqual(selected, ["b"]);
+			assert.deepEqual(
+				levels,
+				explicitThinking ? [] : ["high"],
+				"the recorded thinking level must be restored with the model",
+			);
 
-		branch = [{ type: "message", message: { role: "user", content: "existing" } }];
-		await handlers.get("session_start")({ reason: "new" }, ctx);
-		assert.deepEqual(selected, ["b"], "a session with conversation messages must keep its restored model");
+			branch = [{ type: "message", message: { role: "user", content: "existing" } }];
+			await handlers.get("session_start")({ reason: "new" }, ctx);
+			assert.deepEqual(selected, ["b"], "a session with conversation messages must keep its restored model");
 
-		branch = [];
-		ctx.model = target;
-		await handlers.get("session_start")({ reason: "new" }, ctx);
-		assert.deepEqual(selected, ["b"], "restoring the already-active model must be a no-op");
-	} finally {
-		rmSync(root, { recursive: true, force: true });
-	}
-});
+			branch = [];
+			ctx.model = target;
+			await handlers.get("session_start")({ reason: "new" }, ctx);
+			assert.deepEqual(selected, ["b"], "restoring the already-active model must be a no-op");
+			assert.deepEqual(levels, explicitThinking ? [] : ["high", "high"], "same model still restores saved thinking");
+		} finally {
+			rmSync(root, { recursive: true, force: true });
+		}
+	});
+}
 
 test("a project default takes precedence over the last used model", async () => {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-restore-precedence-"));

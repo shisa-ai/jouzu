@@ -269,6 +269,9 @@ export async function runMainCli(args: string[]): Promise<void> {
 	const modelPicker = createJouzuModelPicker(paths, {
 		applyProjectDefaultAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
 		restoreLastModelAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
+		restoreLastThinkingLevelAtStartup: !parsed.args.some(
+			(arg) => arg === "--thinking" || arg.startsWith("--thinking="),
+		),
 	});
 	if (interactiveStartup) {
 		// Best-effort catalog refresh in the background: a source is contacted only
