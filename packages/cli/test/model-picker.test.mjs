@@ -456,6 +456,10 @@ test("Models view hints render effective semantic bindings", () => {
 
 test("Models view keeps ANSI and CJK content inside aligned display-width borders", () => {
 	const originalColorTerm = process.env.COLORTERM;
+	const originalTerm = process.env.TERM;
+	const originalNoColor = process.env.NO_COLOR;
+	process.env.TERM = "xterm-256color";
+	delete process.env.NO_COLOR;
 	process.env.COLORTERM = "truecolor";
 	try {
 		const { component } = createComponent({
@@ -484,6 +488,10 @@ test("Models view keeps ANSI and CJK content inside aligned display-width border
 	} finally {
 		if (originalColorTerm === undefined) delete process.env.COLORTERM;
 		else process.env.COLORTERM = originalColorTerm;
+		if (originalTerm === undefined) delete process.env.TERM;
+		else process.env.TERM = originalTerm;
+		if (originalNoColor === undefined) delete process.env.NO_COLOR;
+		else process.env.NO_COLOR = originalNoColor;
 	}
 });
 
