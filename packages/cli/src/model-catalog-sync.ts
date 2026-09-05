@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, lstatSync, readFileSync, rmSync } from "node:fs";
 import { join, relative, resolve, sep } from "node:path";
+import { readBoundedResponseText } from "./bounded-response.js";
 import {
 	type CatalogSource,
 	catalogSourceConflict,
@@ -438,42 +439,6 @@ function trimQuarantine(entries: CatalogQuarantineRef[], accountDirectory: strin
 	return retained;
 }
 
-async function readBoundedBody(response: Response): Promise<string> {
-	const contentLength = Number(response.headers.get("content-length") ?? "0");
-	if (Number.isFinite(contentLength) && contentLength > MODEL_CATALOG_MAX_BYTES) {
-		throw new CatalogSyncError("catalog response exceeds 16 MiB");
-	}
-	if (!response.body) return "";
-
-	const reader = response.body.getReader();
-	const decoder = new TextDecoder("utf-8", { fatal: true });
-	let received = 0;
-	let text = "";
-	try {
-		while (true) {
-			const { done, value } = await reader.read();
-			if (done) break;
-			if (!value) continue;
-			received += value.byteLength;
-			if (received > MODEL_CATALOG_MAX_BYTES) {
-				await reader.cancel("catalog response exceeds 16 MiB");
-				throw new CatalogSyncError("catalog response exceeds 16 MiB");
-			}
-			text += decoder.decode(value, { stream: true });
-		}
-		return text + decoder.decode();
-	} catch (error) {
-		try {
-			await reader.cancel(error);
-		} catch {
-			// Preserve the read/decode error.
-		}
-		throw error;
-	} finally {
-		reader.releaseLock();
-	}
-}
-
 function errorCode(error: unknown): string {
 	if (error instanceof ModelCatalogError) return error.code;
 	if (error instanceof CatalogSyncError) return "catalog_sync_error";
@@ -567,7 +532,10 @@ export async function refreshCatalogSource(
 			if (!mediaType.toLowerCase().startsWith(MODEL_CATALOG_MEDIA_TYPE)) {
 				throw new CatalogSyncError(`catalog endpoint returned unsupported Content-Type: ${mediaType || "missing"}`);
 			}
-			text = await readBoundedBody(response);
+			text = await readBoundedResponseText(response, {
+				maxBytes: MODEL_CATALOG_MAX_BYTES,
+				tooLargeError: () => new CatalogSyncError("catalog response exceeds 16 MiB"),
+			});
 		} finally {
 			clearTimeout(timeout);
 		}

@@ -14,6 +14,7 @@ import {
 	resolveCatalogBearer,
 	resolveCatalogSources,
 } from "../dist/catalog-sources.js";
+import { MODEL_CATALOG_MAX_BYTES } from "../dist/model-catalog.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
 
 const fixture = JSON.parse(
@@ -287,6 +288,73 @@ test("endpoint discovery tries exact then conventional path with source-scoped b
 	assert.equal(calls.length, 2);
 	assert.equal(calls[0].headers.get("authorization"), "Bearer fixture-token");
 	assert.equal(calls[1].redirect, "error");
+});
+
+test("endpoint discovery cancels an oversized stream before trying the conventional path", async () => {
+	let calls = 0;
+	let pulls = 0;
+	let cancelled = false;
+	const result = await discoverCatalogEndpoint("https://catalog.example/custom", {
+		auth: { type: "none" },
+		fetch: async () => {
+			calls += 1;
+			if (calls > 1) return response();
+			const body = new ReadableStream({
+				pull(controller) {
+					if (pulls < 20) controller.enqueue(new Uint8Array(MODEL_CATALOG_MAX_BYTES / 16));
+					else controller.close();
+					pulls += 1;
+				},
+				cancel() {
+					cancelled = true;
+				},
+			});
+			return new Response(body, {
+				status: 200,
+				headers: {
+					"Content-Type": "application/vnd.jouzu.model-catalog+json; version=1",
+					"Content-Length": "1",
+				},
+			});
+		},
+	});
+	assert.equal(result.url, "https://catalog.example/custom/v1/jouzu/model-catalog");
+	assert.equal(calls, 2);
+	assert.equal(cancelled, true);
+	assert.ok(pulls < 20);
+});
+
+test("endpoint discovery honors cancellation before and during candidate requests", async () => {
+	const alreadyCanceled = new AbortController();
+	alreadyCanceled.abort();
+	let calls = 0;
+	await assert.rejects(
+		discoverCatalogEndpoint("https://catalog.example/custom", {
+			auth: { type: "none" },
+			signal: alreadyCanceled.signal,
+			fetch: async () => {
+				calls += 1;
+				throw new Error("must not fetch");
+			},
+		}),
+		/canceled/u,
+	);
+	assert.equal(calls, 0);
+
+	const canceledDuringFetch = new AbortController();
+	await assert.rejects(
+		discoverCatalogEndpoint("https://catalog.example/custom", {
+			auth: { type: "none" },
+			signal: canceledDuringFetch.signal,
+			fetch: async () => {
+				calls += 1;
+				canceledDuringFetch.abort();
+				throw new DOMException("canceled", "AbortError");
+			},
+		}),
+		/canceled/u,
+	);
+	assert.equal(calls, 1);
 });
 
 test("endpoint discovery explains missing and rejected bearer credentials", async () => {
