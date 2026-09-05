@@ -6,7 +6,7 @@ Jouzu distributes the following release-owned Pi extensions and their default ru
 | --- | --- | --- |
 | `pi-schedule-prompt` | 0.4.1 | MIT; `LICENSE` |
 | `@vanillagreen/pi-background-tasks` | 2.0.0 | MIT in `package.json`; `THIRD_PARTY_NOTICES.md` contains the upstream attribution and license text |
-| `pi-webaio` | `7a36f4f6dc38e8420b2f831c94bb13de16414ff6` (1.0.5) | MIT; `LICENSE` |
+| `pi-webaio` | `1db1e2807376f9f2df8baa5796313894bd6f5113` (1.0.5) | MIT; `LICENSE` |
 | `@sinclair/typebox` | 0.34.52 | MIT; `license` |
 | `pi-code-previews` | 0.1.36 | MIT; `LICENSE` |
 | `@lhl/pi-tasks` | `fc2e88bccfe0c5b818daea7092667d75e8e14b3d` | MIT; `LICENSE` |
