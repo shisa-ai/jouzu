@@ -1,5 +1,6 @@
 import { existsSync, lstatSync, readFileSync, rmSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { readBoundedResponseText } from "./bounded-response.js";
 import {
 	MODEL_CATALOG_MAX_BYTES,
 	MODEL_CATALOG_MEDIA_TYPE,
@@ -516,21 +517,11 @@ export function catalogEndpointCandidates(input: string): string[] {
 	return [...new Set(candidates)];
 }
 
-async function boundedResponseText(response: Response): Promise<string> {
-	const contentLength = Number(response.headers.get("content-length") ?? "0");
-	if (Number.isFinite(contentLength) && contentLength > MODEL_CATALOG_MAX_BYTES) {
-		throw new CatalogSourceError("catalog response exceeds 16 MiB");
-	}
-	const text = await response.text();
-	if (Buffer.byteLength(text) > MODEL_CATALOG_MAX_BYTES)
-		throw new CatalogSourceError("catalog response exceeds 16 MiB");
-	return text;
-}
-
 export async function discoverCatalogEndpoint(
 	input: string,
 	options: CatalogEndpointDiscoveryOptions,
 ): Promise<CatalogEndpointDiscoveryResult> {
+	if (options.signal?.aborted) throw new CatalogSourceError("Catalog endpoint discovery was canceled.");
 	const candidates = catalogEndpointCandidates(input);
 	const token =
 		options.auth.type === "bearer"
@@ -541,10 +532,11 @@ export async function discoverCatalogEndpoint(
 			: undefined;
 	const attempts: Array<{ url: string; result: string }> = [];
 	for (const url of candidates) {
+		if (options.signal?.aborted) throw new CatalogSourceError("Catalog endpoint discovery was canceled.");
 		const controller = new AbortController();
-		const abort = () => controller.abort();
+		const abort = () => controller.abort(options.signal?.reason);
 		options.signal?.addEventListener("abort", abort, { once: true });
-		const timeout = setTimeout(abort, DISCOVERY_TIMEOUT_MS);
+		const timeout = setTimeout(() => controller.abort(), DISCOVERY_TIMEOUT_MS);
 		try {
 			const headers = new Headers({ Accept: MODEL_CATALOG_MEDIA_TYPE });
 			if (token) headers.set("Authorization", `Bearer ${token}`);
@@ -563,10 +555,15 @@ export async function discoverCatalogEndpoint(
 				attempts.push({ url, result: `unsupported Content-Type ${mediaType || "missing"}` });
 				continue;
 			}
-			const document = parseAndValidateModelCatalog(await boundedResponseText(response), { remote: true });
+			const text = await readBoundedResponseText(response, {
+				maxBytes: MODEL_CATALOG_MAX_BYTES,
+				tooLargeError: () => new CatalogSourceError("catalog response exceeds 16 MiB"),
+			});
+			const document = parseAndValidateModelCatalog(text, { remote: true });
 			attempts.push({ url, result: "valid" });
 			return { url, document, attempts };
 		} catch (error) {
+			if (options.signal?.aborted) throw new CatalogSourceError("Catalog endpoint discovery was canceled.");
 			const message = error instanceof Error ? error.message : String(error);
 			attempts.push({ url, result: controller.signal.aborted ? "timed out" : message });
 		} finally {
