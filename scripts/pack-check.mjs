@@ -3,9 +3,10 @@
 import { spawnSync } from "node:child_process";
 import { readdirSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { deriveClipboardBindingRequirements } from "./clipboard-bindings.mjs";
+import { isPrunedDependencyMetadata } from "./configure-release-packlists.mjs";
 
 export { deriveClipboardBindingRequirements } from "./clipboard-bindings.mjs";
 
@@ -70,6 +71,43 @@ export function assertClipboardBindingsPresent(packedFiles, requirements) {
 	}
 }
 
+export function assertNoPrunedDependencyMetadata(packedFiles) {
+	const deadWeight = packedFiles.find((file) => isPrunedDependencyMetadata(file.path));
+	if (deadWeight) throw new Error(`jouzu tarball contains pruned dependency metadata ${deadWeight.path}`);
+}
+
+export function deriveRequiredLicenseFiles(packageDirectory, packedFiles) {
+	const packageRoots = new Set(
+		packedFiles
+			.map((file) => file.path)
+			.filter((path) => path.startsWith("node_modules/") && path.endsWith("/package.json"))
+			.map(dirname),
+	);
+	const required = new Set();
+	for (const packageRoot of packageRoots) {
+		const pending = [join(packageDirectory, packageRoot)];
+		while (pending.length > 0) {
+			const directory = pending.pop();
+			for (const entry of readdirSync(directory, { withFileTypes: true })) {
+				if (entry.name === "node_modules") continue;
+				const path = join(directory, entry.name);
+				if (entry.isDirectory()) pending.push(path);
+				else if (entry.isFile() && /^(?:licen[cs]e|copying|notice)(?:[._-].*)?$/iu.test(entry.name)) {
+					required.add(relative(packageDirectory, path).split(sep).join("/"));
+				}
+			}
+		}
+	}
+	return [...required].sort();
+}
+
+export function assertLicenseFilesPresent(packedFiles, required) {
+	const packedPaths = new Set(packedFiles.map((file) => file.path));
+	for (const license of required) {
+		if (!packedPaths.has(license)) throw new Error(`jouzu tarball is missing dependency license ${license}`);
+	}
+}
+
 /**
  * Build the deny-list of content that must never appear in a published
  * tarball. Private repository markers are fixed; maintainer home paths are
@@ -121,6 +159,7 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 		throw new Error(`${packageJson.name} would publish no files`);
 	}
 	if (packageJson.name === "jouzu") {
+		assertNoPrunedDependencyMetadata(packed.files);
 		if (packageJson.dependencies?.[piPackageName] !== pinnedPiVersion) {
 			throw new Error(`jouzu must ship exact Pi ${pinnedPiVersion}`);
 		}
@@ -178,6 +217,7 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 				throw new Error(`jouzu tarball is missing bundled package ${name}`);
 			}
 		}
+		assertLicenseFilesPresent(packed.files, deriveRequiredLicenseFiles(directory, packed.files));
 		for (const record of releasePackages.filter((candidate) => candidate.bundled === false)) {
 			if (packed.bundled?.includes(record.name)) throw new Error(`jouzu tarball unexpectedly bundles ${record.name}`);
 			if (packed.files.some((file) => file.path.startsWith(`node_modules/${record.name}/`))) {
