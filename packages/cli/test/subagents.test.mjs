@@ -313,7 +313,12 @@ test("real child cancellation aborts a running shell and its process", { timeout
 					index: 0,
 					id: "call_fixture",
 					type: "function",
-					function: { name: "bash", arguments: JSON.stringify({ command: "echo $$ > worker-shell.pid; sleep 60" }) },
+					function: {
+						name: "bash",
+						arguments: JSON.stringify({
+							command: `node -e 'require("node:fs").writeFileSync("worker-shell.pid", String(process.pid)); setInterval(() => {}, 1000)'`,
+						}),
+					},
 				},
 			],
 		};
