@@ -3,7 +3,11 @@
 import { spawnSync } from "node:child_process";
 import { readdirSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { deriveClipboardBindingRequirements } from "./clipboard-bindings.mjs";
+
+export { deriveClipboardBindingRequirements } from "./clipboard-bindings.mjs";
 
 const packageDirectories = [join("packages", "cli")];
 
@@ -49,35 +53,19 @@ export function assertProfileFilesPresent(packedFiles, required) {
 }
 
 /**
- * Derive the platform-specific clipboard binding variants that must ship in
- * the tarball from the installed @mariozechner/clipboard package's own
- * optionalDependencies, so the gate tracks the pinned Pi runtime's dependency
- * instead of a hand-written list. Returns unqualified variant package names
- * (e.g. "clipboard-win32-x64-msvc").
+ * Assert that every clipboard binding package is packed inside the bundled Pi
+ * runtime and that each non-placeholder package includes its native entrypoint.
  */
-export function deriveClipboardBindingVariants(clipboardPackageJson) {
-	const variants = Object.keys(clipboardPackageJson?.optionalDependencies ?? {});
-	if (variants.length === 0) {
-		throw new Error("@mariozechner/clipboard declares no platform binding variants");
-	}
-	return variants.map((name) => {
-		if (!name.startsWith("@mariozechner/clipboard-")) {
-			throw new Error(`unexpected clipboard binding dependency ${name}`);
+export function assertClipboardBindingsPresent(packedFiles, requirements) {
+	for (const requirement of requirements) {
+		const base = `node_modules/@earendil-works/pi-coding-agent/node_modules/@mariozechner/${requirement.packageName}`;
+		if (!packedFiles.some((file) => file.path === `${base}/package.json`)) {
+			throw new Error(`jouzu tarball is missing clipboard binding ${requirement.packageName}`);
 		}
-		return name.replace("@mariozechner/", "");
-	});
-}
-
-/**
- * Assert that every clipboard binding variant is packed inside the bundled Pi
- * runtime so Windows and macOS installs load native clipboard support instead
- * of silently degrading.
- */
-export function assertClipboardBindingsPresent(packedFiles, variants) {
-	for (const variant of variants) {
-		const path = `node_modules/@earendil-works/pi-coding-agent/node_modules/@mariozechner/${variant}/package.json`;
-		if (!packedFiles.some((file) => file.path === path)) {
-			throw new Error(`jouzu tarball is missing clipboard binding ${variant}`);
+		if (!requirement.placeholder && !packedFiles.some((file) => file.path === `${base}/${requirement.entrypoint}`)) {
+			throw new Error(
+				`jouzu tarball clipboard binding ${requirement.packageName} is missing native entrypoint ${requirement.entrypoint}`,
+			);
 		}
 	}
 }
@@ -110,7 +98,8 @@ if (!pinnedPiVersion) throw new Error(`upstream/pi.lock.json is missing ${piPack
 const npmCommand = process.platform === "win32" ? (process.env.ComSpec ?? "cmd.exe") : "npm";
 const npmPrefixArguments = process.platform === "win32" ? ["/d", "/s", "/c", "npm"] : [];
 
-for (const directory of packageDirectories) {
+const executedDirectly = process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+for (const directory of executedDirectly ? packageDirectories : []) {
 	const packageJson = JSON.parse(readFileSync(join(directory, "package.json"), "utf8"));
 	let packed;
 	if (process.env.JOUZU_PACK_METADATA) {
@@ -172,7 +161,7 @@ for (const directory of packageDirectories) {
 				"utf8",
 			),
 		);
-		assertClipboardBindingsPresent(packed.files, deriveClipboardBindingVariants(clipboardPackage));
+		assertClipboardBindingsPresent(packed.files, deriveClipboardBindingRequirements(clipboardPackage));
 		if (!packed.files.some((file) => file.path === "dist/release-extensions.json")) {
 			throw new Error("jouzu tarball is missing dist/release-extensions.json");
 		}

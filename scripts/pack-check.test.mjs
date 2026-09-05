@@ -4,10 +4,11 @@ import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 
+import { clipboardBindingDirectoryIsComplete } from "./clipboard-bindings.mjs";
 import {
 	assertClipboardBindingsPresent,
 	assertProfileFilesPresent,
-	deriveClipboardBindingVariants,
+	deriveClipboardBindingRequirements,
 	deriveRequiredProfileFiles,
 	forbiddenPublicContent,
 } from "./pack-check.mjs";
@@ -63,29 +64,71 @@ test("all declared assets present in the tarball passes the presence check", () 
 	}
 });
 
-test("deriveClipboardBindingVariants unscopes names and rejects unexpected dependencies", () => {
-	const variants = deriveClipboardBindingVariants({
+test("clipboard requirements derive package names, entrypoints, and exact placeholders", () => {
+	const requirements = deriveClipboardBindingRequirements({
 		optionalDependencies: {
 			"@mariozechner/clipboard-win32-x64-msvc": "0.3.9",
-			"@mariozechner/clipboard-darwin-arm64": "0.3.9",
+			"@mariozechner/clipboard-linux-x64-musl": "0.3.9",
 		},
 	});
-	assert.deepEqual(variants, ["clipboard-win32-x64-msvc", "clipboard-darwin-arm64"]);
-	assert.throws(() => deriveClipboardBindingVariants({ optionalDependencies: { impit: "1.0.0" } }), /unexpected/);
-	assert.throws(() => deriveClipboardBindingVariants({}), /no platform binding variants/);
+	assert.deepEqual(
+		requirements.map(({ packageName, entrypoint, placeholder }) => [packageName, entrypoint, placeholder]),
+		[
+			["clipboard-win32-x64-msvc", "clipboard.win32-x64-msvc.node", false],
+			["clipboard-linux-x64-musl", "clipboard.linux-x64-musl.node", true],
+		],
+	);
+	assert.equal(
+		deriveClipboardBindingRequirements({
+			optionalDependencies: { "@mariozechner/clipboard-linux-x64-musl": "0.4.0" },
+		})[0].placeholder,
+		false,
+	);
+	assert.throws(() => deriveClipboardBindingRequirements({ optionalDependencies: { impit: "1.0.0" } }), /unexpected/);
+	assert.throws(() => deriveClipboardBindingRequirements({}), /no platform binding variants/);
 });
 
-test("a clipboard binding variant omitted from the tarball fails the presence check", () => {
-	const packed = [
-		{
-			path: "node_modules/@earendil-works/pi-coding-agent/node_modules/@mariozechner/clipboard-win32-x64-msvc/package.json",
-		},
-	];
-	assertClipboardBindingsPresent(packed, ["clipboard-win32-x64-msvc"]);
+test("clipboard pack checks require native entrypoints except for exact placeholders", () => {
+	const [native] = deriveClipboardBindingRequirements({
+		optionalDependencies: { "@mariozechner/clipboard-win32-x64-msvc": "0.3.9" },
+	});
+	const nativePackage = `node_modules/@earendil-works/pi-coding-agent/node_modules/@mariozechner/${native.packageName}`;
 	assert.throws(
-		() => assertClipboardBindingsPresent(packed, ["clipboard-win32-x64-msvc", "clipboard-darwin-arm64"]),
-		/missing clipboard binding clipboard-darwin-arm64/,
+		() => assertClipboardBindingsPresent([{ path: `${nativePackage}/package.json` }], [native]),
+		/missing native entrypoint clipboard\.win32-x64-msvc\.node/u,
 	);
+	assert.doesNotThrow(() =>
+		assertClipboardBindingsPresent(
+			[{ path: `${nativePackage}/package.json` }, { path: `${nativePackage}/${native.entrypoint}` }],
+			[native],
+		),
+	);
+
+	const [placeholder] = deriveClipboardBindingRequirements({
+		optionalDependencies: { "@mariozechner/clipboard-linux-x64-musl": "0.3.9" },
+	});
+	const placeholderPackage = `node_modules/@earendil-works/pi-coding-agent/node_modules/@mariozechner/${placeholder.packageName}`;
+	assert.doesNotThrow(() =>
+		assertClipboardBindingsPresent([{ path: `${placeholderPackage}/package.json` }], [placeholder]),
+	);
+});
+
+test("a partial extracted binding is not treated as complete", () => {
+	const root = mkdtempSync(join(tmpdir(), "clipboard-binding-"));
+	try {
+		const [requirement] = deriveClipboardBindingRequirements({
+			optionalDependencies: { "@mariozechner/clipboard-win32-x64-msvc": "0.3.9" },
+		});
+		writeFileSync(
+			join(root, "package.json"),
+			JSON.stringify({ name: requirement.name, version: requirement.version, main: requirement.entrypoint }),
+		);
+		assert.equal(clipboardBindingDirectoryIsComplete(root, requirement), false);
+		writeFileSync(join(root, requirement.entrypoint), "native fixture");
+		assert.equal(clipboardBindingDirectoryIsComplete(root, requirement), true);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
 });
 
 test("forbiddenPublicContent derives the home path at runtime and honors runbook input", () => {
