@@ -202,6 +202,11 @@ try {
 		assert.equal(secondPlan.profile, "core");
 		assert.deepEqual(secondPlan.actions, []);
 		assertPackedSurfaces(installedCli, probe, temp, env, "core");
+		assert.equal(
+			existsSync(resolve(consumer, "state", "camoufox-runtime")),
+			false,
+			"ordinary packed startup installed the optional Camoufox runtime",
+		);
 		const jaPlan = JSON.parse(
 			run(process.execPath, [installedCli, "profile", "plan", "--profile", "ja", "--json"], { cwd: temp, env }).stdout,
 		);

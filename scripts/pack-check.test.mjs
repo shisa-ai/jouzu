@@ -7,6 +7,7 @@ import { test } from "node:test";
 import { clipboardBindingDirectoryIsComplete } from "./clipboard-bindings.mjs";
 import {
 	assertClipboardBindingsPresent,
+	assertDefaultPackagesAbsent,
 	assertProfileFilesPresent,
 	deriveClipboardBindingRequirements,
 	deriveRequiredProfileFiles,
@@ -110,6 +111,23 @@ test("clipboard pack checks require native entrypoints except for exact placehol
 	const placeholderPackage = `node_modules/@earendil-works/pi-coding-agent/node_modules/@mariozechner/${placeholder.packageName}`;
 	assert.doesNotThrow(() =>
 		assertClipboardBindingsPresent([{ path: `${placeholderPackage}/package.json` }], [placeholder]),
+	);
+});
+
+test("first-use Camoufox packages fail the default manifest and tarball checks", () => {
+	assert.doesNotThrow(() => assertDefaultPackagesAbsent([], { dependencies: {} }, ["camoufox-js", "ua-parser-js"]));
+	assert.throws(
+		() => assertDefaultPackagesAbsent([], { dependencies: { "camoufox-js": "0.12.0" } }, ["camoufox-js"]),
+		/default/u,
+	);
+	assert.throws(
+		() =>
+			assertDefaultPackagesAbsent(
+				[{ path: "node_modules/example/node_modules/ua-parser-js/src/main/ua-parser.js" }],
+				{ dependencies: {} },
+				["ua-parser-js"],
+			),
+		/contains first-use Camoufox package ua-parser-js/u,
 	);
 });
 

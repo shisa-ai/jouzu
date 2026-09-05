@@ -54,7 +54,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           JOUZU_EXTENSION_NETWORK: "1"
 
-  legacy-linux-native:
+  legacy-linux-static-fetch:
     runs-on: ubuntu-latest
     container: node:24-bullseye@sha256:25f3016fcdae6b5d65bd9bcb4064b7e4198ec8d49493fa40d73f9b463d04fb15
     timeout-minutes: 25
@@ -68,25 +68,19 @@ jobs:
         timeout-minutes: 15
       - run: npm run build
         timeout-minutes: 10
-      - name: Load release-owned native dependencies
+      - name: Load release-owned dependencies without Camoufox
         run: node --test packages/cli/test/release-extensions.test.mjs
         timeout-minutes: 5
-      - name: Degrade when an optional native binding is unavailable
+      - name: Verify the default installation excludes Camoufox
         shell: bash
         run: |
-          binding=packages/cli/node_modules/pi-smart-fetch/node_modules/wreq-js/rust/wreq-js.linux-x64-gnu.node
-          mv "$binding" "$binding.disabled"
-          set +e
-          PI_OFFLINE=1 node packages/cli/dist/cli.js doctor >doctor.txt 2>&1
-          doctor_status=$?
-          set -e
-          test "$doctor_status" -eq 1
-          grep -F "9 selected; 8 ready; 1 optional unavailable" doctor.txt
-          grep -F "disabled tools: web_fetch, batch_web_fetch" doctor.txt
-          printf '%s\n' '{"id":"commands","type":"get_commands"}' |
-            PI_OFFLINE=1 JOUZU_HOME="$RUNNER_TEMP/jouzu-degraded" \
-            node packages/cli/dist/cli.js pi --mode rpc --no-session --no-context-files >rpc.jsonl
-          grep -F '"id":"commands"' rpc.jsonl
+          test ! -e packages/cli/node_modules/@the-forge-flow/camoufox-pi
+          test ! -e packages/cli/node_modules/camoufox-js
+          test ! -e packages/cli/node_modules/pi-webaio/node_modules/playwright
+          test ! -e packages/cli/node_modules/ua-parser-js
+          PI_OFFLINE=1 JOUZU_HOME="$RUNNER_TEMP/jouzu-default" \
+            node packages/cli/dist/cli.js doctor >doctor.txt
+          grep -F "Optional Camoufox runtime: not installed; installs on first browser tool use" doctor.txt
         timeout-minutes: 5
 
   release-artifacts:
@@ -139,6 +133,31 @@ jobs:
           compression-level: 0
           if-no-files-found: error
           retention-days: 1
+
+  optional-camoufox:
+    needs: release-artifacts
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: jouzu-candidate
+          path: dist/ci-artifacts
+      - name: Install and exercise the first-use browser runtime
+        run: node scripts/test-packed-camoufox.mjs
+        timeout-minutes: 25
+        env:
+          JOUZU_PACKED_TARBALL: dist/ci-artifacts/candidate.tgz
 
   packed-install:
     needs: release-artifacts

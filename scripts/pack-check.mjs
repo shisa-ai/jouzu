@@ -70,6 +70,18 @@ export function assertClipboardBindingsPresent(packedFiles, requirements) {
 	}
 }
 
+export function assertDefaultPackagesAbsent(packedFiles, packageJson, packageNames) {
+	for (const name of packageNames) {
+		if (packageJson.dependencies?.[name] !== undefined || packageJson.bundleDependencies?.includes(name)) {
+			throw new Error(`jouzu must not install the first-use Camoufox package ${name} by default`);
+		}
+		const packagePath = `node_modules/${name}/`;
+		if (packedFiles.some((file) => file.path.startsWith(packagePath) || file.path.includes(`/${packagePath}`))) {
+			throw new Error(`jouzu tarball contains first-use Camoufox package ${name}`);
+		}
+	}
+}
+
 /**
  * Build the deny-list of content that must never appear in a published
  * tarball. Private repository markers are fixed; maintainer home paths are
@@ -245,21 +257,26 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 				throw new Error(`jouzu tarball is missing ${runtimeInput}`);
 			}
 		}
+		const webaioRecord = releaseManifest.packages.find((record) => record.name === "pi-webaio");
+		const webaioPackage = JSON.parse(
+			readFileSync(join(directory, "node_modules", "pi-webaio", "package.json"), "utf8"),
+		);
+		if (
+			webaioPackage.optionalDependencies?.playwright !== undefined ||
+			!webaioRecord?.dependencyRemovals?.includes("playwright")
+		) {
+			throw new Error("bundled pi-webaio browser dependency removal differs from the release manifest");
+		}
 		const forbiddenRuntimePackages = [
 			"@the-forge-flow/camoufox-pi",
 			"better-sqlite3",
 			"camoufox-js",
 			"impit",
+			"playwright",
+			"playwright-core",
 			"ua-parser-js",
 		];
-		for (const name of forbiddenRuntimePackages) {
-			if (packageJson.dependencies?.[name] !== undefined || packageJson.bundleDependencies?.includes(name)) {
-				throw new Error(`jouzu must not install the first-use Camoufox package ${name} by default`);
-			}
-			if (packed.files.some((file) => file.path.startsWith(`node_modules/${name}/`))) {
-				throw new Error(`jouzu tarball contains first-use Camoufox package ${name}`);
-			}
-		}
+		assertDefaultPackagesAbsent(packed.files, packageJson, forbiddenRuntimePackages);
 		if (packed.files.some((file) => file.path.startsWith("node_modules/@mariozechner/"))) {
 			throw new Error("jouzu tarball contains a legacy Pi peer");
 		}

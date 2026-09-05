@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
-import { existsSync, renameSync, rmSync } from "node:fs";
+import { existsSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
@@ -43,6 +43,15 @@ const webaioBuild = spawnSync(
 );
 if (webaioBuild.error) throw webaioBuild.error;
 if (webaioBuild.status !== 0) process.exit(webaioBuild.status ?? 1);
+const webaioPackagePath = resolve(webaioRoot, "package.json");
+const webaioPackage = JSON.parse(readFileSync(webaioPackagePath, "utf8"));
+if (webaioPackage.optionalDependencies?.playwright === undefined) {
+	throw new Error("pi-webaio no longer declares the expected optional playwright dependency");
+}
+delete webaioPackage.optionalDependencies.playwright;
+if (Object.keys(webaioPackage.optionalDependencies).length === 0) delete webaioPackage.optionalDependencies;
+writeFileSync(webaioPackagePath, `${JSON.stringify(webaioPackage, null, 2)}\n`);
+rmSync(resolve(webaioRoot, "node_modules", "playwright"), { recursive: true, force: true });
 rmSync(resolve(cli, "node_modules", "@earendil-works", "pi-coding-agent", "node_modules", "@esbuild"), {
 	recursive: true,
 	force: true,

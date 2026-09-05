@@ -391,7 +391,7 @@ test(
 );
 
 test(
-	"release web extensions fetch and search through their exact clients",
+	"required web extensions fetch without installing the optional browser runtime",
 	{
 		skip: process.env.JOUZU_EXTENSION_NETWORK !== "1",
 		timeout: 600_000,
@@ -433,35 +433,13 @@ test(
 				harness.ctx,
 			);
 			assert.doesNotMatch(textOf(batch), /Unexpected batch_web_fetch failure/u);
-			assert.equal(batch.details.batchResult.total, 2);
-			assert.equal(batch.details.batchResult.succeeded, 2);
-			assert.equal(batch.details.batchResult.failed, 0);
+			assert.equal(batch.details.total, 2);
+			assert.equal(batch.details.succeeded, 2);
+			assert.equal(batch.details.failed, 0);
 
-			const browserFetch = await execute(
-				getTool(extensions, "tff-fetch_url"),
-				{
-					url: "https://example.com/",
-					render_mode: "static",
-					format: "markdown",
-					timeout_ms: 60_000,
-				},
-				harness.ctx,
-			);
-			assert.equal(browserFetch.details.status, 200);
-			assert.match(browserFetch.details.markdown, /Example Domain/u);
-
-			try {
-				const browserSearch = await execute(
-					getTool(extensions, "tff-search_web"),
-					{ query: "IANA example domains", max_results: 3, timeout_ms: 60_000 },
-					harness.ctx,
-				);
-				assert.match(textOf(browserSearch), /IANA|Example Domains/iu);
-			} catch (error) {
-				assert.equal(error?.name, "CamoufoxError");
-				assert.equal(error?.err?.type, "search_all_engines_blocked");
-				assert.match(String(error?.err?.lastSignal), /blocked|failed|timeout/u);
-			}
+			assert.ok(getTool(extensions, "tff-fetch_url"));
+			assert.ok(getTool(extensions, "tff-search_web"));
+			assert.equal(existsSync(join(root, "state", "camoufox-runtime")), false);
 		} finally {
 			if (extensions.length > 0 && harness) {
 				try {
