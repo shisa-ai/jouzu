@@ -12,10 +12,24 @@
 // bundle. Run during the CLI build, before npm pack.
 
 import { spawnSync } from "node:child_process";
-import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { createHash, randomUUID } from "node:crypto";
+import {
+	existsSync,
+	mkdirSync,
+	mkdtempSync,
+	readdirSync,
+	readFileSync,
+	renameSync,
+	rmSync,
+	writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import {
+	assertClipboardBindingDirectory,
+	clipboardBindingDirectoryIsComplete,
+	deriveClipboardBindingRequirements,
+} from "./clipboard-bindings.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const cli = resolve(root, "packages", "cli");
@@ -37,38 +51,20 @@ if (!existsSync(clipboardPackagePath)) {
 	);
 }
 const clipboardPackage = JSON.parse(readFileSync(clipboardPackagePath, "utf8"));
-const variants = Object.entries(clipboardPackage.optionalDependencies ?? {});
-if (variants.length === 0) {
-	throw new Error(`${clipboardName}@${clipboardPackage.version} declares no platform binding variants`);
-}
-
+const requirements = deriveClipboardBindingRequirements(clipboardPackage);
 const lock = JSON.parse(readFileSync(lockPath, "utf8"));
 
-function lockedVariant(variantName) {
-	const entry = lock.packages?.[`node_modules/@earendil-works/pi-coding-agent/node_modules/${variantName}`];
+function lockedVariant(requirement) {
+	const entry = lock.packages?.[`node_modules/@earendil-works/pi-coding-agent/node_modules/${requirement.name}`];
 	if (!entry?.resolved || !entry?.integrity) {
-		throw new Error(`package-lock.json is missing a resolved entry for ${variantName}; refresh the lock`);
+		throw new Error(`package-lock.json is missing a resolved entry for ${requirement.name}; refresh the lock`);
 	}
-	if (clipboardPackage.optionalDependencies[variantName] !== entry.version) {
+	if (requirement.version !== entry.version) {
 		throw new Error(
-			`package-lock.json records ${variantName}@${entry.version} but ${clipboardName}@${clipboardPackage.version} declares ${clipboardPackage.optionalDependencies[variantName]}`,
+			`package-lock.json records ${requirement.name}@${entry.version} but ${clipboardName}@${clipboardPackage.version} declares ${requirement.version}`,
 		);
 	}
 	return entry;
-}
-
-// Some upstream variants are placeholders without a binary (e.g. musl arm64
-// currently ships only package.json), so verification is a version match on
-// the integrity-checked extraction rather than a binary-presence check.
-function variantIsVendored(variantName, version) {
-	const target = resolve(bundleModules, variantName);
-	const packagePath = join(target, "package.json");
-	if (!existsSync(packagePath)) return false;
-	try {
-		return JSON.parse(readFileSync(packagePath, "utf8")).version === version;
-	} catch {
-		return false;
-	}
 }
 
 function extract(tarball, destination) {
@@ -97,36 +93,43 @@ const work = mkdtempSync(join(tmpdir(), "jouzu-clipboard-"));
 try {
 	let vendored = 0;
 	let skipped = 0;
-	for (const [variantName] of variants) {
-		const entry = lockedVariant(variantName);
-		if (variantIsVendored(variantName, entry.version)) {
+	for (const requirement of requirements) {
+		const entry = lockedVariant(requirement);
+		const target = resolve(bundleModules, requirement.name);
+		if (clipboardBindingDirectoryIsComplete(target, requirement)) {
 			skipped += 1;
 			continue;
 		}
-		const tarball = join(work, `${variantName.replace("/", "+")}.tgz`);
+		const tarball = join(work, `${requirement.name.replace("/", "+")}.tgz`);
 		const response = await fetch(entry.resolved);
-		if (!response.ok) throw new Error(`download failed for ${variantName}: ${response.status} ${response.statusText}`);
+		if (!response.ok) {
+			throw new Error(`download failed for ${requirement.name}: ${response.status} ${response.statusText}`);
+		}
 		const body = Buffer.from(await response.arrayBuffer());
 		const [, algorithm, expectedDigest] = /^(sha\d+)-(.+)$/.exec(entry.integrity) ?? [];
 		if (algorithm !== "sha512" || createHash("sha512").update(body).digest("base64") !== expectedDigest) {
-			throw new Error(`integrity mismatch for ${variantName}; refusing to vendor`);
+			throw new Error(`integrity mismatch for ${requirement.name}; refusing to vendor`);
 		}
 		writeFileSync(tarball, body);
-		const target = resolve(bundleModules, variantName);
-		rmSync(target, { recursive: true, force: true });
-		mkdirSync(target, { recursive: true });
-		extract(tarball, target);
-		if (!variantIsVendored(variantName, entry.version)) {
-			throw new Error(`vendored ${variantName} but verification failed`);
+		const staging = join(clipboardOrg, `.${requirement.packageName}.jouzu-stage-${randomUUID()}`);
+		mkdirSync(staging, { recursive: true });
+		try {
+			extract(tarball, staging);
+			assertClipboardBindingDirectory(staging, requirement);
+			rmSync(target, { recursive: true, force: true });
+			renameSync(staging, target);
+		} finally {
+			rmSync(staging, { recursive: true, force: true });
 		}
+		assertClipboardBindingDirectory(target, requirement);
 		vendored += 1;
-		console.log(`vendored ${variantName}@${entry.version}`);
+		console.log(`vendored ${requirement.name}@${entry.version}`);
 	}
-	const pruned = pruneStaleVariants(new Set(variants.map(([name]) => name.split("/").pop())));
+	const pruned = pruneStaleVariants(new Set(requirements.map((requirement) => requirement.packageName)));
 	console.log(
-		`clipboard bindings: ${vendored} vendored, ${skipped} already present, ${pruned} pruned (${variants.length} total)`,
+		`clipboard bindings: ${vendored} vendored, ${skipped} already present, ${pruned} pruned (${requirements.length} total)`,
 	);
-	if (vendored + skipped !== variants.length) {
+	if (vendored + skipped !== requirements.length) {
 		throw new Error("clipboard binding vendoring did not cover every variant");
 	}
 } finally {
