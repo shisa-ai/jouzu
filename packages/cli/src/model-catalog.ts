@@ -536,6 +536,12 @@ export function validateModelCatalog(value: unknown, options: ValidateCatalogOpt
 		tombstones: uniqueIds(arrays.tombstones, "$.tombstones"),
 	};
 
+	for (let index = 0; index < arrays.providers.length; index += 1) {
+		const provider = arrays.providers[index];
+		optionalString(provider, "name", `$.providers[${index}]`);
+		optionalString(provider, "api", `$.providers[${index}]`);
+	}
+
 	for (let index = 0; index < arrays.routes.length; index += 1) {
 		const route = arrays.routes[index];
 		const providerId = stringAt(route, "providerId", `$.routes[${index}]`);
@@ -561,6 +567,14 @@ export function validateModelCatalog(value: unknown, options: ValidateCatalogOpt
 		const offering = arrays.modelOfferings[index];
 		const modelId = stringAt(offering, "modelId", `$.modelOfferings[${index}]`);
 		const providerId = stringAt(offering, "providerId", `$.modelOfferings[${index}]`);
+		optionalString(offering, "name", `$.modelOfferings[${index}]`);
+		optionalString(offering, "api", `$.modelOfferings[${index}]`);
+		if (offering.modalities !== undefined) {
+			stringArray(offering.modalities, `$.modelOfferings[${index}].modalities`);
+		}
+		if (offering.capabilities !== undefined) {
+			stringArray(offering.capabilities, `$.modelOfferings[${index}].capabilities`);
+		}
 		const pair = `${providerId}\0${modelId}`;
 		if (offeringPairs.has(pair)) {
 			throw new ModelCatalogError(

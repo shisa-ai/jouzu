@@ -163,6 +163,8 @@ Jouzu does not require a remote model catalog. Without `SHISA_API_KEY` and witho
 
 Jouzu includes a built-in `shisa-api` source. When the `SHISA_API_KEY` environment variable holds a bearer token, that source reads the account's model catalog from `https://api.shisa.ai/v1/jouzu/model-catalog` without any configuration. On interactive startup Jouzu refreshes each enabled source whose credential is available, in the background, while cached catalogs keep serving; sources with a missing credential are not contacted and report no error. The token value is sent only in the source's authorization header and is never written to configuration, cache, or diagnostics.
 
+An active cached catalog updates model names, capabilities, input types, and token limits for matching provider/model IDs. Complete catalog offerings also appear in Models when Pi already has a configured provider whose API matches the offering. Jouzu does not rewrite `models.json`; local-only models remain available. Catalog metadata takes precedence over ordinary model entries, while Pi's explicit `modelOverrides` block remains a final per-model override. Catalogs cannot supply provider credentials, endpoints, HTTP headers, protocol compatibility settings, or prices.
+
 The built-in source can be disabled in Settings / Catalogs. The choice is stored in `catalog-overrides.json` next to `catalogs.json` without any credential, and re-enabling restores the built-in defaults. A manually registered source with the same endpoint and `env:SHISA_API_KEY` credential takes the place of the built-in source, keeping its label, enabled state, and cached catalog. Source id `shisa-api` is reserved; `jouzu catalog status` reports a custom entry that claims it with another endpoint.
 
 Open Settings / Catalogs with `/catalogs`, or press `Tab` from Models while the Palette is in browse mode. Each custom source stores a label, URL, enabled state, and authentication mode. `A` opens the add form. Move between fields with `↑` and `↓`, change Authentication with `←` and `→`, and press `Enter` to save. Jouzu accepts an exact URL or a host and finds the catalog endpoint automatically. HTTPS is required except for localhost development. `Esc` cancels without writing.
@@ -175,7 +177,7 @@ Authentication can be disabled or read as a bearer token from a named environmen
 | macOS | `~/Library/Application Support/Jouzu/catalogs.json` |
 | Windows | `%APPDATA%\Jouzu\catalogs.json` |
 
-Settings reports each source's status and model count. `Enter` edits the selected source; `→` expands its cached offerings and `←` collapses them. `A` adds, `Space` enables or disables, `R` refreshes, and `D` removes the source registration; removal asks for confirmation. The built-in `shisa-api` row supports only `Space`; its endpoint and credential reference are managed by Jouzu. Removing a custom source does not remove provider configuration, credentials, favorites, or recents.
+Settings reports each source's status and model count. `Enter` edits the selected source; `→` expands its cached offerings and `←` collapses them. `A` adds, `Space` enables or disables, `R` refreshes, and `D` removes the source registration; removal asks for confirmation. Model changes from these actions apply to the current session immediately. `/reload` refreshes local provider models and enabled catalogs whose credentials are available before reapplying the active catalog data. The built-in `shisa-api` row supports only `Space`; its endpoint and credential reference are managed by Jouzu. Removing a custom source does not remove provider configuration, credentials, favorites, or recents.
 
 Refresh uses ETag/`304`, validates complete bytes before activation, partitions private cache by source and account, and keeps each source's last valid catalog on network or validation failure. CLI status and refresh operate on all enabled sources or one named source:
 
@@ -299,7 +301,7 @@ Managed profile assets are UTF-8. Existing CP932/Shift-JIS profile targets produ
 - Node, npm, Git, Bash, and provider credentials are not bundled.
 - Existing Pi `models.json` and `auth.json` require separate first-run consent; other stock Pi state is not imported.
 - No native installer, standalone archive, background service, or hosted model gateway.
-- The Models view uses Pi's local usable-model inventory; catalog additions, one-turn trials, adaptive target-budget compaction, and cost/quota/route preflight are deferred.
+- Catalog-only models require an already configured Pi provider whose API matches the offering; one-turn trials, adaptive target-budget compaction, and cost/quota/route preflight are deferred.
 - Third-party Pi packages execute trusted code with the user's permissions and have their own platform support.
 - `Ctrl+Enter` and `Ctrl+Up` delivery depends on terminal/OS key reporting; both semantic bindings remain user-customizable.
 - Jouzu v0.1.6's bundled extension set is qualified on Linux and macOS with Node 22 and 24.

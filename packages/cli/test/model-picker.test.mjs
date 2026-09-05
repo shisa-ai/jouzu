@@ -5,8 +5,10 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { visibleWidth } from "@earendil-works/pi-tui";
+import { CatalogSourceStore } from "../dist/catalog-sources.js";
 import { createJouzuKeybindingsManagerFromConfig } from "../dist/jouzu-keybindings.js";
-import { parseAndValidateModelCatalog } from "../dist/model-catalog.js";
+import { MODEL_CATALOG_MEDIA_TYPE, parseAndValidateModelCatalog } from "../dist/model-catalog.js";
+import { refreshCatalogSource } from "../dist/model-catalog-sync.js";
 import {
 	catalogModelReference,
 	catalogPickerModel,
@@ -151,6 +153,112 @@ test("catalog offering lookups index an immutable snapshot once", () => {
 	assert.ok(readsAfterIndexing > 0);
 	assert.equal(catalogPickerModels(model, activeCatalogs)[0].name, "Example Model");
 	assert.equal(offeringReads, readsAfterIndexing);
+});
+
+test("session startup, /reload, and Catalogs changes project offerings into configured providers", async () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-catalog-projection-"));
+	try {
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+		const document = JSON.parse(
+			readFileSync(join(import.meta.dirname, "..", "catalog", "fixtures", "account-snapshot-v1.json"), "utf8"),
+		);
+		const sourceStore = new CatalogSourceStore(paths);
+		const source = sourceStore.add({
+			label: "Office pool",
+			url: "http://127.0.0.1:8989/v1/jouzu/model-catalog",
+			auth: { type: "none" },
+		});
+		await refreshCatalogSource(paths, source, {
+			env: {},
+			fetch: async () =>
+				new Response(JSON.stringify(document), {
+					status: 200,
+					headers: { "content-type": MODEL_CATALOG_MEDIA_TYPE },
+				}),
+		});
+
+		const baseline = [
+			{
+				id: "local-only",
+				name: "Local only",
+				provider: "ai.example.gateway",
+				api: "openai-completions",
+				baseUrl: "https://gateway.example.test/v1",
+				reasoning: false,
+				input: ["text"],
+				cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+				contextWindow: 4096,
+				maxTokens: 1024,
+			},
+		];
+		let models = baseline;
+		let registered;
+		const modelRegistry = {
+			getAll: () => models,
+			getAvailable: () => models,
+			getRegisteredProviderConfig: () => registered,
+			getRegisteredNativeProvider: () => undefined,
+			find: (provider, id) => models.find((model) => model.provider === provider && model.id === id),
+			refresh: async () => ({ aborted: false, errors: new Map() }),
+		};
+		const refreshedDocument = structuredClone(document);
+		refreshedDocument.revision = "fixture-2";
+		refreshedDocument.sequence = "2";
+		refreshedDocument.modelOfferings[0].name = "Example Model Refreshed";
+		const handlers = new Map();
+		const integration = createJouzuModelPicker(paths, {
+			palette: { env: {} },
+			catalogFetch: async () =>
+				new Response(JSON.stringify(refreshedDocument), {
+					status: 200,
+					headers: { "content-type": MODEL_CATALOG_MEDIA_TYPE },
+				}),
+		});
+		const pi = {
+			on(event, handler) {
+				handlers.set(event, handler);
+			},
+			registerCommand() {},
+			registerProvider(providerId, config) {
+				registered = config;
+				models = config.models.map((model) => ({ ...model, provider: providerId }));
+			},
+			unregisterProvider() {
+				registered = undefined;
+				models = baseline;
+			},
+			setModel: async () => true,
+			setThinkingLevel() {},
+		};
+		integration.extension.factory(pi);
+		const ctx = {
+			mode: "tui",
+			cwd: root,
+			model: baseline[0],
+			scopedModels: [],
+			sessionManager: { getBranch: () => [] },
+			modelRegistry,
+			ui: { notify() {} },
+		};
+		await handlers.get("session_start")({ reason: "startup" }, ctx);
+		assert.equal(modelRegistry.find("ai.example.gateway", "example-model").contextWindow, 131072);
+		assert.equal(modelRegistry.find("ai.example.gateway", "local-only").name, "Local only");
+
+		sourceStore.setEnabled(source.id, false);
+		integration.reloadCatalogs();
+		assert.equal(modelRegistry.find("ai.example.gateway", "example-model"), undefined);
+		assert.equal(modelRegistry.find("ai.example.gateway", "local-only").name, "Local only");
+
+		sourceStore.setEnabled(source.id, true);
+		integration.reloadCatalogs();
+		assert.equal(modelRegistry.find("ai.example.gateway", "example-model").name, "Example Model");
+
+		await handlers.get("session_start")({ reason: "reload" }, ctx);
+		assert.equal(modelRegistry.find("ai.example.gateway", "example-model").name, "Example Model Refreshed");
+		await handlers.get("session_shutdown")({}, ctx);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
 });
 
 function stripSgr(value) {
@@ -1686,9 +1794,11 @@ test("picker state and cached catalog warnings are each reported once", async ()
 		await handlers.get("session_start")({ reason: "startup" }, ctx);
 		await handlers.get("session_start")({ reason: "reload" }, ctx);
 
-		assert.equal(notifications.length, 2);
+		assert.equal(notifications.length, 3);
 		assert.match(notifications[0][0], /Unreadable model picker state was preserved/u);
 		assert.match(notifications[1][0], /Cached model catalog was ignored/u);
+		assert.match(notifications[2][0], /Catalogs not refreshed/u);
+		assert.match(notifications[2][0], /Cached catalog data remains available/u);
 		assert.ok(notifications.every(([, level]) => level === "warning"));
 	} finally {
 		if (previousEndpoint === undefined) delete process.env.JOUZU_MODEL_CATALOG_URL;
