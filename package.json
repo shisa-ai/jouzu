@@ -16,7 +16,7 @@
 		"test": "npm run test --workspace packages/session-ui && npm run test --workspace packages/cli && npm run test:python && npm run test:pack-check && npm run test:release-metadata",
 		"test:python": "uv run --project python/jouzu python -m unittest discover -s python/jouzu/tests -v",
 		"test:pack-check": "node --test scripts/pack-check.test.mjs",
-		"test:release-metadata": "node --test scripts/check-release-metadata.test.mjs scripts/release-artifact.test.mjs",
+		"test:release-metadata": "node --test scripts/check-release-metadata.test.mjs scripts/release-artifact.test.mjs scripts/smoke-phase.test.mjs",
 		"test:packed": "node scripts/test-packed-cli.mjs",
 		"test:camoufox:packed": "node scripts/test-packed-camoufox.mjs",
 		"test:auto-update": "node scripts/test-auto-update.mjs",

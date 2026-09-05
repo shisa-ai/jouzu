@@ -10,6 +10,7 @@ import { basename, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import { downloadPublished, upgradeVersions } from "./published-upgrade.mjs";
+import { smokePhase } from "./smoke-phase.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const packageDirectory = join(root, "packages", "cli");
@@ -57,9 +58,11 @@ function commandResult(command, args, options = {}) {
 		}, timeout);
 		child.stdout.setEncoding("utf8").on("data", (chunk) => {
 			stdout += chunk;
+			if (options.streamOutput) process.stdout.write(chunk);
 		});
 		child.stderr.setEncoding("utf8").on("data", (chunk) => {
 			stderr += chunk;
+			if (options.streamOutput) process.stderr.write(chunk);
 		});
 		child.once("error", (error) => {
 			clearTimeout(timer);
@@ -73,10 +76,12 @@ function commandResult(command, args, options = {}) {
 }
 
 async function run(command, args, options = {}) {
-	const result = await commandResult(command, args, options);
-	assert.equal(result.signal, null, `${command} terminated by ${result.signal}: ${result.stderr}`);
-	assert.equal(result.status, 0, `${command} exited ${result.status}: ${result.stdout}\n${result.stderr}`);
-	return result;
+	return smokePhase(options.phase ?? `${basename(command)} ${args[0] ?? ""}`, async () => {
+		const result = await commandResult(command, args, options);
+		assert.equal(result.signal, null, `${command} terminated by ${result.signal}: ${result.stderr}`);
+		assert.equal(result.status, 0, `${command} exited ${result.status}: ${result.stdout}\n${result.stderr}`);
+		return result;
+	});
 }
 
 function runNpm(args, options = {}) {
@@ -214,7 +219,7 @@ function globalResult(prefix, args, options = {}) {
 async function installCurrent(current, prefix) {
 	await runNpm(
 		["install", "--global", "--prefix", prefix, current.path, "--ignore-scripts", "--no-audit", "--no-fund"],
-		{ cwd: root, timeout: updateApplyTimeout },
+		{ cwd: root, timeout: updateApplyTimeout, phase: `install ${current.version} into ${basename(prefix)}` },
 	);
 }
 
@@ -315,7 +320,9 @@ try {
 	let broken;
 	if (publishedVersion || prepared.every(Boolean)) {
 		current = publishedVersion
-			? await downloadPublished(temp, publishedVersion)
+			? await smokePhase(`download and verify published ${publishedVersion}`, () =>
+					downloadPublished(temp, publishedVersion),
+				)
 			: preparedArtifact(prepared[0], currentVersion);
 		next = preparedArtifact(prepared[1], nextVersion);
 		broken = preparedArtifact(prepared[2], brokenVersion);
@@ -339,7 +346,13 @@ try {
 			const driver = startupDriver(temp, successPrefix);
 			await withRegistry(next, async (registry, requests) => {
 				const env = updateEnvironment(temp, successPrefix, successHome, registry);
-				const options = { cwd: project, env, timeout: updateApplyTimeout };
+				const options = {
+					cwd: project,
+					env,
+					timeout: updateApplyTimeout,
+					phase: `${mode} upgrade and restart`,
+					streamOutput: true,
+				};
 				const update =
 					mode === "startup"
 						? await run(process.execPath, [driver], options)
@@ -350,6 +363,7 @@ try {
 				assert.ok(requests.some((request) => request === "/jouzu" || request.startsWith("/jouzu?")));
 				assert.ok(requests.includes(`/jouzu/-/${basename(next.path)}`));
 				const version = await runGlobal(successPrefix, ["--version"], {
+					phase: `${mode} verify installed version`,
 					cwd: temp,
 					env: { ...env, JOUZU_NO_UPDATE: "1" },
 				});
@@ -371,11 +385,14 @@ try {
 		const before = projectSnapshot(project);
 		await withRegistry(broken, async (registry) => {
 			const env = updateEnvironment(temp, rollbackPrefix, rollbackHome, registry);
-			const update = await globalResult(rollbackPrefix, ["self-update", "apply"], {
-				cwd: project,
-				env,
-				timeout: updateApplyTimeout,
-			});
+			const update = await smokePhase("run rollback command", () =>
+				globalResult(rollbackPrefix, ["self-update", "apply"], {
+					cwd: project,
+					env,
+					timeout: updateApplyTimeout,
+					streamOutput: true,
+				}),
+			);
 			assert.deepEqual(projectSnapshot(project), before, "failed update changed the working directory");
 			assert.equal(readFileSync(userConfig.path, "utf8"), userConfig.content, "rollback changed user configuration");
 			assert.equal(update.signal, null);
@@ -387,6 +404,7 @@ try {
 				"rollback smoke must install the broken candidate and restore the previous version",
 			);
 			const version = await runGlobal(rollbackPrefix, ["--version"], {
+				phase: "verify restored version",
 				cwd: temp,
 				env: { ...env, JOUZU_NO_UPDATE: "1" },
 			});
@@ -400,6 +418,7 @@ try {
 	console.log(`automatic update ${scope} smoke passed for ${currentVersion}, ${nextVersion}, and ${brokenVersion}`);
 } catch (error) {
 	smokeError = error;
+	console.error(error);
 	const logDirectory =
 		process.env.npm_config_logs_dir || join(process.env.JOUZU_TEST_NPM_CACHE || join(temp, "npm-cache"), "_logs");
 	try {
@@ -413,7 +432,9 @@ try {
 	} catch {}
 }
 try {
-	rmSync(temp, { recursive: true, force: true, maxRetries: 10, retryDelay: 500 });
+	await smokePhase("remove temporary fixtures", () =>
+		rmSync(temp, { recursive: true, force: true, maxRetries: 10, retryDelay: 500 }),
+	);
 } catch (cleanupError) {
 	const code =
 		cleanupError && typeof cleanupError === "object" && "code" in cleanupError ? cleanupError.code : undefined;
