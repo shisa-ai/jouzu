@@ -3,6 +3,7 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
@@ -161,6 +162,10 @@ try {
 			assert.equal(bundledPi.version, piVersion);
 		}
 
+		const installedRoot = resolve(temp, "node_modules", "jouzu");
+		const jouzuRequire = createRequire(resolve(installedRoot, "package.json"));
+		const webaioRequire = createRequire(resolve(installedRoot, "node_modules", "pi-webaio", "package.json"));
+		assert.equal(webaioRequire.resolve("wreq-js"), jouzuRequire.resolve("wreq-js"));
 		const installedCli = resolve(temp, "node_modules", "jouzu", "dist", "cli.js");
 		const probe = resolve(temp, "surface-probe.js");
 		writeFileSync(

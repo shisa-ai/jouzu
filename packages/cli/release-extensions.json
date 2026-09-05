@@ -34,7 +34,10 @@
 			"extensions": ["dist/src/jouzu-extension.js"],
 			"skills": [],
 			"tools": ["web_fetch", "batch_web_fetch"],
-			"dependencyRemovals": ["playwright"]
+			"dependencyRemovals": ["playwright", "wreq-js"],
+			"dependencyOverrides": {
+				"wreq-js": "3.2.0"
+			}
 		},
 		{
 			"name": "jouzu-camoufox-adapter",
@@ -134,6 +137,16 @@
 			"license": "MIT",
 			"licenseEvidence": "license",
 			"integrity": "sha512-meKuifc33Pccx0O6PdIzYMq3Og8zvP4TIi/a+Bw3AEMZMxOD0+RHGQvpglEe6Zdy3wZ8nqn/j95h8LUZLk/6Hg=="
+		},
+		{
+			"name": "wreq-js",
+			"version": "3.2.0",
+			"source": "https://registry.npmjs.org/wreq-js/-/wreq-js-3.2.0.tgz",
+			"repository": "https://github.com/sqdshguy/wreq-js",
+			"license": "MIT",
+			"licenseEvidence": "LICENSE",
+			"integrity": "sha512-dawhEbhvd5hxivKZSvv/mAQGO3mwZYESyctOvIIZ/H3DvQJzUM2UoFQsij0fg7hIClQ/GEQgg+2259UcFwhpMQ==",
+			"bundled": false
 		}
 	],
 	"runtimeDependencyRedirects": []

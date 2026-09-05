@@ -104,9 +104,11 @@ parsing.
 
 ## Release-owned extension boundary
 
-`release-extensions.json` records nine release-owned extension entrypoints, their exact npm versions or Git commits where applicable, one package skill path, and three compatibility dependencies, with source URLs, licenses, and integrity evidence. `release-extensions.ts` resolves those resources from the packed `jouzu` package and adds them to Core and JA launches. A matching user-configured package entrypoint is suppressed in memory without changing `settings.json`; unrelated packages still load. A different package that registers a release-owned tool name produces one consolidated conflict.
+`release-extensions.json` records nine release-owned extension entrypoints, their exact npm versions or Git commits where applicable, one package skill path, and four compatibility dependencies, with source URLs, licenses, and integrity evidence. `release-extensions.ts` resolves those resources from the packed `jouzu` package and adds them to Core and JA launches. A matching user-configured package entrypoint is suppressed in memory without changing `settings.json`; unrelated packages still load. A different package that registers a release-owned tool name produces one consolidated conflict.
 
 `camoufox-adapter.ts` registers `tff-fetch_url` and `tff-search_web` without installing or importing Camoufox during startup. The first browser tool call runs `npm ci` from `camoufox-runtime/package-lock.json` into a private, versioned directory under Jouzu state, verifies the locked package versions, and dynamically imports the runtime. The same call downloads the Camoufox browser when it is absent. `session_shutdown` closes a client that was loaded during the session.
+
+npm installs the exact `wreq-js` static transport on the consumer platform. The Pi WebAIO bundle resolves that direct dependency; its platform-specific transport tree is excluded from the Jouzu tarball.
 
 ## Bundled profile boundaries
 

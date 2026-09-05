@@ -51,7 +51,7 @@ const expectedPiTasks = {
 	version: "0.6.1",
 	commit: "5b35d3a68e5963cbde6e3d47e21df7d7c1f7d06b",
 };
-const expectedCompatibility = ["@sinclair/typebox", "esbuild", "typebox"];
+const expectedCompatibility = ["@sinclair/typebox", "esbuild", "typebox", "wreq-js"];
 
 function packageNames(records) {
 	return records.map((record) => record.name).sort();
@@ -81,7 +81,7 @@ test("the release manifest and bundle list contain the selected extension set", 
 	assert.equal(webaioExtension.optional, undefined);
 	assert.deepEqual(webaioExtension.tools, ["web_fetch", "batch_web_fetch"]);
 	assert.deepEqual(webaioExtension.extensions, ["dist/src/jouzu-extension.js"]);
-	assert.deepEqual(webaioExtension.dependencyRemovals, ["playwright"]);
+	assert.deepEqual(webaioExtension.dependencyRemovals, ["playwright", "wreq-js"]);
 	assert.deepEqual(manifest.runtimeDependencyRedirects, []);
 	const camoufoxAdapter = manifest.packages.find((record) => record.name === "jouzu-camoufox-adapter");
 	assert.equal(camoufoxAdapter.optional, true);
@@ -134,6 +134,10 @@ test("the pi-webaio entrypoint loads its required native transport", async () =>
 	const root = status.resolvedPackageRoots["pi-webaio"];
 	assert.ok(root);
 	const packageRequire = createRequire(join(root, "package.json"));
+	assert.equal(
+		packageRequire.resolve("wreq-js"),
+		createRequire(new URL("../package.json", import.meta.url)).resolve("wreq-js"),
+	);
 	const wreq = packageRequire("wreq-js");
 	assert.ok(wreq.getProfiles().includes("chrome_145"));
 	const webfetch = await import(pathToFileURL(join(root, "dist/src/webfetch.js")).href);
