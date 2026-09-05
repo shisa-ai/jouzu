@@ -82,10 +82,7 @@ test("the release manifest and bundle list contain the selected extension set", 
 		true,
 	);
 	const piTasksExtension = manifest.packages.find((record) => record.name === "@lhl/pi-tasks");
-	assert.deepEqual(
-		{ version: piTasksExtension?.version, commit: piTasksExtension?.commit },
-		expectedPiTasks,
-	);
+	assert.deepEqual({ version: piTasksExtension?.version, commit: piTasksExtension?.commit }, expectedPiTasks);
 	for (const record of [...manifest.packages, ...manifest.compatibilityDependencies]) {
 		assert.equal(packageJson.dependencies[record.name], record.commit ? record.source : record.version);
 		assert.match(record.repository, /^https:\/\//u);
