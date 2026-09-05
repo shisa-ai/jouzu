@@ -18,6 +18,7 @@
 		"test:pack-check": "node --test scripts/pack-check.test.mjs",
 		"test:release-metadata": "node --test scripts/check-release-metadata.test.mjs",
 		"test:packed": "node scripts/test-packed-cli.mjs",
+		"test:camoufox:packed": "node scripts/test-packed-camoufox.mjs",
 		"test:auto-update": "node scripts/test-auto-update.mjs",
 		"test:live:ja": "node scripts/live-ja-smoke.mjs",
 		"test:extensions:online": "node --test packages/cli/test/release-extension-behavior.test.mjs",
@@ -35,21 +36,10 @@
 		"pi:qualify": "npm run pi:check:online && npm run release:check:candidate && node scripts/check-pi-contract.mjs && node scripts/pi-upstream.mjs promote",
 		"release:check": "npm run release:metadata && npm run release:check:candidate"
 	},
-	"overrides": {
-		"@the-forge-flow/camoufox-pi": {
-			"camoufox-js": "0.12.0",
-			"playwright-core": "1.60.0"
-		},
-		"camoufox-js": {
-			"impit": "0.11.0"
-		},
-		"pi-smart-fetch": {
-			"wreq-js": "3.0.0"
-		}
-	},
 	"devDependencies": {
 		"@biomejs/biome": "2.3.5",
-		"@earendil-works/pi-coding-agent": "0.84.4",
+		"@earendil-works/pi-coding-agent": "0.85.0",
+		"@earendil-works/pi-tui": "0.85.0",
 		"@types/node": "24.12.4",
 		"typescript": "5.9.3"
 	}

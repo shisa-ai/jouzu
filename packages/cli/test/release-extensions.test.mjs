@@ -4,6 +4,7 @@ import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { pathToFileURL } from "node:url";
 import {
 	consolidateReleaseToolConflicts,
 	createReleaseExtensionDiagnostics,
@@ -24,12 +25,13 @@ probeReleaseRuntimeCompatibility(adapterCompatibilityStatus);
 ensureReleaseRuntimeCompatibility(adapterCompatibilityStatus);
 const {
 	createJouzuCamoufoxExtension,
-	ensureJouzuCamoufoxInstalled,
+	ensureJouzuCamoufoxRuntimeInstalled,
+	resolveCamoufoxRuntimePaths,
 	shouldDisableCamoufoxWebGl,
+	validateBundledCamoufoxRuntimeLock,
 	withJouzuCamoufoxLibraryPath,
 } = await import("../dist/camoufox-adapter.js");
 
-const require = createRequire(import.meta.url);
 const packageJson = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
 const manifest = JSON.parse(readFileSync(new URL("../release-extensions.json", import.meta.url), "utf8"));
 const thirdPartyNotices = readFileSync(new URL("../THIRD_PARTY_NOTICES.md", import.meta.url), "utf8");
@@ -37,19 +39,19 @@ const thirdPartyNotices = readFileSync(new URL("../THIRD_PARTY_NOTICES.md", impo
 const expectedExtensions = [
 	"@lhl/pi-tasks",
 	"@sting8k/pi-vcc",
-	"@the-forge-flow/camoufox-pi",
 	"@vanillagreen/pi-background-tasks",
+	"jouzu-camoufox-adapter",
 	"pi-code-previews",
 	"pi-multiloop",
 	"pi-schedule-prompt",
 	"pi-skill-dollar",
-	"pi-smart-fetch",
+	"pi-webaio",
 ];
-const expectedCompatibility = ["better-sqlite3", "camoufox-js", "impit", "playwright-core"];
 const expectedPiTasks = {
 	version: "0.6.1",
 	commit: "5b35d3a68e5963cbde6e3d47e21df7d7c1f7d06b",
 };
+const expectedCompatibility = ["@sinclair/typebox", "esbuild", "typebox"];
 
 function packageNames(records) {
 	return records.map((record) => record.name).sort();
@@ -61,39 +63,45 @@ test("the release manifest and bundle list contain the selected extension set", 
 	assert.deepEqual(packageNames(manifest.compatibilityDependencies), expectedCompatibility);
 	assert.deepEqual(
 		[...packageJson.bundleDependencies].sort(),
-		["@earendil-works/pi-coding-agent", "@earendil-works/pi-tui", ...expectedExtensions].sort(),
-	);
-	for (const record of manifest.compatibilityDependencies) assert.equal(record.bundled, false);
-	const smartFetchExtension = manifest.packages.find((record) => record.name === "pi-smart-fetch");
-	assert.equal(smartFetchExtension.optional, true);
-	assert.deepEqual(smartFetchExtension.tools, ["web_fetch", "batch_web_fetch"]);
-	assert.equal(smartFetchExtension.engineOverride, ">=22.19.0");
-	assert.deepEqual(smartFetchExtension.dependencyOverrides, { "wreq-js": "3.0.0" });
-	assert.deepEqual(manifest.runtimeDependencyRedirects, [
-		{ consumer: "camoufox-js", dependency: "impit", version: "0.11.0" },
-	]);
-	const camoufoxExtension = manifest.packages.find((record) => record.name === "@the-forge-flow/camoufox-pi");
-	assert.equal(camoufoxExtension.optional, true);
-	assert.deepEqual(camoufoxExtension.tools, ["tff-fetch_url", "tff-search_web"]);
-	assert.deepEqual(camoufoxExtension.dependencyOverrides, {});
-	assert.deepEqual(camoufoxExtension.dependencyRemovals, ["camoufox-js", "playwright-core"]);
-	assert.equal(
-		manifest.packages.find((record) => record.name === "@the-forge-flow/camoufox-pi").peerDependenciesRemoved,
-		true,
+		[
+			"@earendil-works/pi-ai",
+			"@earendil-works/pi-coding-agent",
+			"@earendil-works/pi-telemetry",
+			"@earendil-works/pi-tui",
+			...expectedExtensions.filter((name) => name !== "jouzu-camoufox-adapter"),
+			"typebox",
+		].sort(),
 	);
 	const piTasksExtension = manifest.packages.find((record) => record.name === "@lhl/pi-tasks");
 	assert.deepEqual({ version: piTasksExtension?.version, commit: piTasksExtension?.commit }, expectedPiTasks);
+	for (const record of manifest.compatibilityDependencies) {
+		assert.equal(record.bundled, record.name === "typebox" ? undefined : false);
+	}
+	const webaioExtension = manifest.packages.find((record) => record.name === "pi-webaio");
+	assert.equal(webaioExtension.optional, undefined);
+	assert.deepEqual(webaioExtension.tools, ["web_fetch", "batch_web_fetch"]);
+	assert.deepEqual(webaioExtension.extensions, ["dist/src/jouzu-extension.js"]);
+	assert.deepEqual(webaioExtension.dependencyRemovals, ["playwright"]);
+	assert.deepEqual(manifest.runtimeDependencyRedirects, []);
+	const camoufoxAdapter = manifest.packages.find((record) => record.name === "jouzu-camoufox-adapter");
+	assert.equal(camoufoxAdapter.optional, true);
+	assert.equal(camoufoxAdapter.adapter, "jouzu-lazy-camoufox");
+	assert.deepEqual(camoufoxAdapter.tools, ["tff-fetch_url", "tff-search_web"]);
+	assert.deepEqual(camoufoxAdapter.extensions, ["dist/camoufox-adapter.js"]);
 	for (const record of [...manifest.packages, ...manifest.compatibilityDependencies]) {
-		assert.equal(packageJson.dependencies[record.name], record.commit ? record.source : record.version);
+		if (!record.adapter)
+			assert.equal(packageJson.dependencies[record.name], record.commit ? record.source : record.version);
 		assert.match(record.repository, /^https:\/\//u);
 		assert.ok(record.license);
 		assert.ok(record.licenseEvidence);
 		if (record.integrity) assert.match(record.integrity, /^sha512-[A-Za-z0-9+/]+={0,2}$/u);
-		const noticePin = record.commit ? `\`${record.commit}\`` : record.version;
-		assert.ok(
-			thirdPartyNotices.includes(`| \`${record.name}\` | ${noticePin}`),
-			`${record.name} notice does not identify ${noticePin}`,
-		);
+		if (!record.adapter) {
+			const noticePin = record.commit ? `\`${record.commit}\`` : record.version;
+			assert.ok(
+				thirdPartyNotices.includes(`| \`${record.name}\` | ${noticePin}`),
+				`${record.name} notice does not identify ${noticePin}`,
+			);
+		}
 	}
 });
 
@@ -107,7 +115,7 @@ test("all release-owned resources resolve to the exact installed package version
 	assert.equal(status.resolvedSkillPaths.length, 1);
 	assert.deepEqual(
 		Object.keys(status.resolvedPackageRoots).sort(),
-		[...expectedExtensions, ...expectedCompatibility].sort(),
+		[...expectedExtensions.filter((name) => name !== "jouzu-camoufox-adapter"), ...expectedCompatibility].sort(),
 	);
 	for (const path of [...status.resolvedExtensionPaths, ...status.resolvedSkillPaths]) {
 		assert.equal(existsSync(path), true, path);
@@ -121,23 +129,15 @@ test("the selected native runtime dependencies load on the host", () => {
 	assert.deepEqual(status.degradedExtensions, []);
 });
 
-test("Camoufox handles the selected SQLite package on the host", async () => {
-	const Database = require("better-sqlite3");
-	try {
-		const database = new Database(":memory:");
-		try {
-			assert.deepEqual(database.prepare("select 1 as value").get(), { value: 1 });
-		} finally {
-			database.close();
-		}
-	} catch (error) {
-		assert.equal(
-			await shouldDisableCamoufoxWebGl(async () => {
-				throw error;
-			}),
-			true,
-		);
-	}
+test("the pi-webaio entrypoint loads its required native transport", async () => {
+	const status = inspectReleaseExtensions();
+	const root = status.resolvedPackageRoots["pi-webaio"];
+	assert.ok(root);
+	const packageRequire = createRequire(join(root, "package.json"));
+	const wreq = packageRequire("wreq-js");
+	assert.ok(wreq.getProfiles().includes("chrome_145"));
+	const webfetch = await import(pathToFileURL(join(root, "dist/src/webfetch.js")).href);
+	assert.equal(typeof webfetch.fetchPage, "function");
 });
 
 test("an incompatible nested native dependency redirects to the exact direct package", () => {
@@ -185,13 +185,15 @@ test("release resources are added to sessions but not Pi package commands", () =
 test("matching configured package entrypoints are suppressed without hiding unrelated resources", () => {
 	const status = inspectReleaseExtensions();
 	const metadata = (baseDir) => ({ source: "fixture", scope: "user", origin: "package", baseDir });
-	const extensions = manifest.packages.flatMap((record) =>
-		record.extensions.map((resource) => ({
-			path: join(status.resolvedPackageRoots[record.name], resource),
-			enabled: true,
-			metadata: metadata(status.resolvedPackageRoots[record.name]),
-		})),
-	);
+	const extensions = manifest.packages
+		.filter((record) => !record.adapter)
+		.flatMap((record) =>
+			record.extensions.map((resource) => ({
+				path: join(status.resolvedPackageRoots[record.name], resource),
+				enabled: true,
+				metadata: metadata(status.resolvedPackageRoots[record.name]),
+			})),
+		);
 	const skills = manifest.packages.flatMap((record) =>
 		record.skills.map((resource) => ({
 			path: join(status.resolvedPackageRoots[record.name], resource),
@@ -209,7 +211,7 @@ test("matching configured package entrypoints are suppressed without hiding unre
 		{ extensions: [...extensions, unrelated, topLevel], skills, prompts: [], themes: [] },
 		status.manifest,
 	);
-	assert.equal(resolved.extensions.filter((resource) => !resource.enabled).length, 9);
+	assert.equal(resolved.extensions.filter((resource) => !resource.enabled).length, 8);
 	assert.equal(resolved.skills.filter((resource) => !resource.enabled).length, 1);
 	assert.equal(resolved.extensions.at(-2).enabled, true);
 	assert.equal(resolved.extensions.at(-1).enabled, true);
@@ -217,8 +219,8 @@ test("matching configured package entrypoints are suppressed without hiding unre
 
 test("optional release extension load failures are omitted while required failures remain fatal", () => {
 	const status = inspectReleaseExtensions();
-	const optional = status.resolvedExtensions.find((record) => record.packageName === "pi-smart-fetch");
-	const required = status.resolvedExtensions.find((record) => record.packageName === "@sting8k/pi-vcc");
+	const optional = status.resolvedExtensions.find((record) => record.packageName === "jouzu-camoufox-adapter");
+	const required = status.resolvedExtensions.find((record) => record.packageName === "pi-webaio");
 	assert.ok(optional);
 	assert.ok(required);
 	const loaded = {
@@ -233,11 +235,11 @@ test("optional release extension load failures are omitted while required failur
 	assert.deepEqual(result.errors, [{ path: required.path, error: "required extension failed" }]);
 	assert.deepEqual(omitOptionalReleaseExtensionFailures(loaded, status).errors, result.errors);
 	assert.equal(status.degradedExtensions.length, 1);
-	assert.deepEqual(status.degradedExtensions[0].tools, ["web_fetch", "batch_web_fetch"]);
+	assert.deepEqual(status.degradedExtensions[0].tools, ["tff-fetch_url", "tff-search_web"]);
 	assert.ok(!status.resolvedExtensionPaths.includes(optional.path));
 	assert.match(
 		formatReleaseExtensionFailure(status.degradedExtensions[0]),
-		/Disabled tools: web_fetch, batch_web_fetch/u,
+		/Disabled tools: tff-fetch_url, tff-search_web/u,
 	);
 	assert.match(formatReleaseExtensionFailure(status.degradedExtensions[0]), /Run `jz doctor` for details/u);
 });
@@ -247,10 +249,8 @@ test("native extension diagnostics retain verbose cause details", () => {
 	const failure = new Error("impit couldn't load native bindings.", {
 		cause: new Error("Cannot find module '@apify/impit-win32-x64-msvc'"),
 	});
-	assert.equal(markReleaseExtensionUnavailable(status, "@the-forge-flow/camoufox-pi", failure), true);
-	const degraded = status.degradedExtensions.find(
-		(candidate) => candidate.packageName === "@the-forge-flow/camoufox-pi",
-	);
+	assert.equal(markReleaseExtensionUnavailable(status, "jouzu-camoufox-adapter", failure), true);
+	const degraded = status.degradedExtensions.find((candidate) => candidate.packageName === "jouzu-camoufox-adapter");
 	assert.equal(
 		degraded?.error,
 		"impit couldn't load native bindings.\nCaused by: Cannot find module '@apify/impit-win32-x64-msvc'",
@@ -263,7 +263,7 @@ test("native extension diagnostics retain verbose cause details", () => {
 
 test("degraded optional extensions report disabled tools when a session starts", async () => {
 	const status = inspectReleaseExtensions();
-	const optional = status.resolvedExtensions.find((record) => record.packageName === "pi-smart-fetch");
+	const optional = status.resolvedExtensions.find((record) => record.packageName === "jouzu-camoufox-adapter");
 	assert.ok(optional);
 	omitOptionalReleaseExtensionFailures(
 		{
@@ -294,7 +294,7 @@ test("degraded optional extensions report disabled tools when a session starts",
 	);
 	assert.equal(notifications.length, 1);
 	assert.equal(notifications[0].severity, "warning");
-	assert.match(notifications[0].message, /Disabled tools: web_fetch, batch_web_fetch/u);
+	assert.match(notifications[0].message, /Disabled tools: tff-fetch_url, tff-search_web/u);
 });
 
 test("conflicts with release-owned tools are consolidated by extension", () => {
@@ -322,27 +322,78 @@ test("conflicts with release-owned tools are consolidated by extension", () => {
 	]);
 });
 
-test("the Jouzu Camoufox installer awaits first-use download and verifies the result", async () => {
-	let locateCalls = 0;
-	let installCalls = 0;
-	await ensureJouzuCamoufoxInstalled({
-		locateInstalled() {
-			locateCalls += 1;
-			if (locateCalls === 1) throw new Error("not installed");
-		},
-		async install() {
-			installCalls += 1;
-		},
-	});
-	assert.equal(installCalls, 1);
-	assert.equal(locateCalls, 2);
+function materializeCamoufoxRuntime(stagingRoot) {
+	const runtimeLock = JSON.parse(
+		readFileSync(new URL("../camoufox-runtime/package-lock.json", import.meta.url), "utf8"),
+	);
+	const runtimeManifest = JSON.parse(
+		readFileSync(new URL("../camoufox-runtime/package.json", import.meta.url), "utf8"),
+	);
+	for (const name of Object.keys(runtimeManifest.dependencies)) {
+		const root = join(stagingRoot, "node_modules", ...name.split("/"));
+		mkdirSync(root, { recursive: true });
+		writeFileSync(
+			join(root, "package.json"),
+			JSON.stringify({ name, version: runtimeLock.packages[`node_modules/${name}`].version }),
+		);
+	}
+}
 
-	await ensureJouzuCamoufoxInstalled({
-		locateInstalled() {},
-		async install() {
-			throw new Error("must not install");
-		},
-	});
+test("the first-use Camoufox runtime install is exact, verified, and reused", async () => {
+	const stateDir = mkdtempSync(join(tmpdir(), "jouzu-camoufox-state-"));
+	let installCalls = 0;
+	try {
+		assert.doesNotThrow(() => validateBundledCamoufoxRuntimeLock());
+		const first = await ensureJouzuCamoufoxRuntimeInstalled(stateDir, undefined, {
+			async install(stagingRoot) {
+				installCalls += 1;
+				materializeCamoufoxRuntime(stagingRoot);
+			},
+		});
+		assert.equal(first.installRoot, resolveCamoufoxRuntimePaths(stateDir).installRoot);
+		assert.equal(existsSync(first.receipt), true);
+		assert.equal(installCalls, 1);
+		await ensureJouzuCamoufoxRuntimeInstalled(stateDir, undefined, {
+			async install() {
+				throw new Error("must not reinstall a verified runtime");
+			},
+		});
+		assert.equal(installCalls, 1);
+
+		writeFileSync(join(first.installRoot, "node_modules", "camoufox-js", "package.json"), "{}\n");
+		await ensureJouzuCamoufoxRuntimeInstalled(stateDir, undefined, {
+			async install(stagingRoot) {
+				installCalls += 1;
+				materializeCamoufoxRuntime(stagingRoot);
+			},
+		});
+		assert.equal(installCalls, 2);
+	} finally {
+		rmSync(stateDir, { recursive: true, force: true });
+	}
+});
+
+test("a cancelled first-use Camoufox install leaves no partial runtime and can retry", async () => {
+	const stateDir = mkdtempSync(join(tmpdir(), "jouzu-camoufox-cancel-"));
+	const controller = new AbortController();
+	try {
+		const cancelled = ensureJouzuCamoufoxRuntimeInstalled(stateDir, controller.signal, {
+			async install(_stagingRoot, signal) {
+				controller.abort(new Error("cancel fixture"));
+				signal.throwIfAborted();
+			},
+		});
+		await assert.rejects(cancelled, /cancel fixture/u);
+		assert.equal(existsSync(resolveCamoufoxRuntimePaths(stateDir).installRoot), false);
+		await ensureJouzuCamoufoxRuntimeInstalled(stateDir, undefined, {
+			async install(stagingRoot) {
+				materializeCamoufoxRuntime(stagingRoot);
+			},
+		});
+		assert.equal(existsSync(resolveCamoufoxRuntimePaths(stateDir).receipt), true);
+	} finally {
+		rmSync(stateDir, { recursive: true, force: true });
+	}
 });
 
 test("Camoufox disables WebGL only for an incompatible native SQLite binding", async () => {
@@ -380,7 +431,8 @@ test("Camoufox scopes a compatibility library path to the browser child", () => 
 	});
 });
 
-test("the Jouzu Camoufox adapter registers both tools without starting a browser", () => {
+test("the Jouzu Camoufox adapter registers both tools without installing its runtime", () => {
+	const stateDir = mkdtempSync(join(tmpdir(), "jouzu-camoufox-lazy-"));
 	const tools = [];
 	const handlers = new Map();
 	const pi = {
@@ -391,8 +443,13 @@ test("the Jouzu Camoufox adapter registers both tools without starting a browser
 			handlers.set(event, handler);
 		},
 	};
-	assert.doesNotThrow(() => createJouzuCamoufoxExtension(pi));
-	assert.deepEqual(tools.sort(), ["tff-fetch_url", "tff-search_web"]);
-	assert.equal(handlers.has("session_start"), true);
-	assert.equal(handlers.has("session_shutdown"), true);
+	try {
+		assert.doesNotThrow(() => createJouzuCamoufoxExtension(pi, stateDir));
+		assert.deepEqual(tools.sort(), ["tff-fetch_url", "tff-search_web"]);
+		assert.equal(handlers.has("session_start"), true);
+		assert.equal(handlers.has("session_shutdown"), true);
+		assert.equal(existsSync(resolveCamoufoxRuntimePaths(stateDir).root), false);
+	} finally {
+		rmSync(stateDir, { recursive: true, force: true });
+	}
 });

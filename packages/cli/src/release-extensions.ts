@@ -235,12 +235,17 @@ export function inspectReleaseExtensions(): ReleaseExtensionStatus {
 		status.extensionCount += record.extensions.length;
 		status.skillCount += record.skills.length;
 		try {
-			const root = resolvePackageRoot(record.name);
-			validatePackageRoot(record, root);
-			status.resolvedPackageRoots[record.name] = root;
-			const extensionPaths = record.adapter
-				? [resolveAdapter(record.adapter)]
-				: record.extensions.map((resource) => resolveResource(root, resource));
+			let extensionPaths: string[];
+			if (record.adapter) {
+				if (record.skills.length > 0) throw new Error("release adapters cannot declare package skills");
+				extensionPaths = [resolveAdapter(record.adapter)];
+			} else {
+				const root = resolvePackageRoot(record.name);
+				validatePackageRoot(record, root);
+				status.resolvedPackageRoots[record.name] = root;
+				extensionPaths = record.extensions.map((resource) => resolveResource(root, resource));
+				for (const resource of record.skills) status.resolvedSkillPaths.push(resolveResource(root, resource));
+			}
 			for (const path of extensionPaths) {
 				status.resolvedExtensions.push({
 					packageName: record.name,
@@ -251,7 +256,6 @@ export function inspectReleaseExtensions(): ReleaseExtensionStatus {
 				});
 				status.resolvedExtensionPaths.push(path);
 			}
-			for (const resource of record.skills) status.resolvedSkillPaths.push(resolveResource(root, resource));
 		} catch (error) {
 			markReleaseExtensionUnavailable(status, record.name, error);
 		}

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Install the exact Camoufox client runtime under private Jouzu state on the first `tff-fetch_url` or `tff-search_web` call. The default npm installation no longer contains Camoufox or `ua-parser-js`; `jz doctor` reports the optional runtime state, and CI tests the default and first-use paths separately.
+
 ## 0.1.6 - 2026-09-03
 
 - Publish the complete repository README on npm instead of the condensed package copy, and require byte-identical root, package, and packed README content before release.

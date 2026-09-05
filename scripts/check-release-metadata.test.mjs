@@ -9,12 +9,17 @@ import { fileURLToPath } from "node:url";
 const script = fileURLToPath(new URL("./check-release-metadata.mjs", import.meta.url));
 const root = fileURLToPath(new URL("..", import.meta.url));
 const realLock = JSON.parse(readFileSync(join(root, "upstream", "pi.lock.json"), "utf8"));
+const validRealLock = {
+	...realLock,
+	reviewedAt: realLock.reviewedAt ?? "2026-09-05",
+	compatibilityStatus: "qualified",
+};
 const realCliPackage = JSON.parse(readFileSync(join(root, "packages", "cli", "package.json"), "utf8"));
 const realSessionUiPackage = JSON.parse(readFileSync(join(root, "packages", "session-ui", "package.json"), "utf8"));
 const realPackageLock = JSON.parse(readFileSync(join(root, "package-lock.json"), "utf8"));
 
 function runWithMetadata({
-	piLock = realLock,
+	piLock = validRealLock,
 	cliPackage = realCliPackage,
 	sessionUiPackage = realSessionUiPackage,
 	packageLock = realPackageLock,
@@ -56,7 +61,7 @@ function runWithMetadata({
 }
 
 test("a pending-qualification Pi lock fails release metadata validation", () => {
-	const pending = { ...realLock, compatibilityStatus: "pending-qualification" };
+	const pending = { ...validRealLock, reviewedAt: null, compatibilityStatus: "pending-qualification" };
 	const result = runWithMetadata({ piLock: pending });
 	assert.notEqual(result.status, 0, "pending lock must fail release metadata");
 	assert.match(result.stderr, /must be qualified for publication/);
@@ -64,12 +69,12 @@ test("a pending-qualification Pi lock fails release metadata validation", () => 
 
 test("malformed qualified Pi locks fail release metadata validation", () => {
 	const fixtures = [
-		["non-ISO reviewedAt", { ...realLock, reviewedAt: "1" }],
-		["unknown top-level field", { ...realLock, unexpected: true }],
+		["non-ISO reviewedAt", { ...validRealLock, reviewedAt: "1" }],
+		["unknown top-level field", { ...validRealLock, unexpected: true }],
 		[
 			"unknown package record field",
 			{
-				...realLock,
+				...validRealLock,
 				packages: {
 					...realLock.packages,
 					"@earendil-works/pi-coding-agent": {
@@ -79,8 +84,8 @@ test("malformed qualified Pi locks fail release metadata validation", () => {
 				},
 			},
 		],
-		["malformed deviation", { ...realLock, deviations: [{}] }],
-		["unsafe deviation path", { ...realLock, deviations: [{ path: "../pi.patch", sha256: "a".repeat(64) }] }],
+		["malformed deviation", { ...validRealLock, deviations: [{}] }],
+		["unsafe deviation path", { ...validRealLock, deviations: [{ path: "../pi.patch", sha256: "a".repeat(64) }] }],
 	];
 	for (const [label, fixture] of fixtures) {
 		const result = runWithMetadata({ piLock: fixture });
@@ -88,12 +93,18 @@ test("malformed qualified Pi locks fail release metadata validation", () => {
 	}
 });
 
-test("Pi and Pi TUI manifest drift fails release metadata validation", () => {
+test("Pi package tuple manifest drift fails release metadata validation", () => {
 	const fixtures = [
 		{
 			cliPackage: {
 				...realCliPackage,
-				dependencies: { ...realCliPackage.dependencies, "@earendil-works/pi-tui": "0.84.2" },
+				dependencies: { ...realCliPackage.dependencies, "@earendil-works/pi-tui": "0.0.0" },
+			},
+		},
+		{
+			cliPackage: {
+				...realCliPackage,
+				dependencies: { ...realCliPackage.dependencies, "@earendil-works/pi-server": "0.0.0" },
 			},
 		},
 		{
@@ -101,7 +112,7 @@ test("Pi and Pi TUI manifest drift fails release metadata validation", () => {
 				...realSessionUiPackage,
 				peerDependencies: {
 					...realSessionUiPackage.peerDependencies,
-					"@earendil-works/pi-coding-agent": "0.84.2",
+					"@earendil-works/pi-coding-agent": "0.0.0",
 				},
 			},
 		},
@@ -112,7 +123,7 @@ test("Pi and Pi TUI manifest drift fails release metadata validation", () => {
 					...realPackageLock.packages,
 					"node_modules/@earendil-works/pi-tui": {
 						...realPackageLock.packages["node_modules/@earendil-works/pi-tui"],
-						version: "0.84.2",
+						version: "0.0.0",
 					},
 				},
 			},
@@ -120,13 +131,13 @@ test("Pi and Pi TUI manifest drift fails release metadata validation", () => {
 	];
 	for (const fixture of fixtures) {
 		const result = runWithMetadata(fixture);
-		assert.notEqual(result.status, 0, "Pi tuple drift must fail release metadata");
+		assert.notEqual(result.status, 0, "Pi package tuple drift must fail release metadata");
 	}
 });
 
 test("a qualified Pi lock passes release metadata validation", () => {
 	const result = runWithMetadata({
-		piLock: { ...realLock, compatibilityStatus: "qualified", reviewedAt: "2026-08-25" },
+		piLock: validRealLock,
 	});
 	assert.equal(result.status, 0, result.stderr || result.stdout);
 	assert.ok(result.stdout.includes(`release metadata: jouzu@${realCliPackage.version}, Pi `));

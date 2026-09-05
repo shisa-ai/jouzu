@@ -55,7 +55,7 @@ const temp = mkdtempSync(join(tmpdir(), "jouzu-ci-artifacts-"));
 try {
 	const fixture = join(temp, "package");
 	mkdirSync(fixture, { recursive: true });
-	for (const entry of ["dist", "node_modules", "LICENSE", "README.md", "THIRD_PARTY_NOTICES.md"]) {
+	for (const entry of ["camoufox-runtime", "dist", "node_modules", "LICENSE", "README.md", "THIRD_PARTY_NOTICES.md"]) {
 		cpSync(join(packageDirectory, entry), join(fixture, entry), { recursive: true });
 	}
 	const next = pack(fixture, nextVersion);

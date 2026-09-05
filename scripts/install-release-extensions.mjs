@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
-import { readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const cli = resolve(root, "packages", "cli");
-const releaseManifest = JSON.parse(readFileSync(resolve(cli, "release-extensions.json"), "utf8"));
 const npmExecPath = process.env.npm_execpath;
 const command = npmExecPath ? process.execPath : process.platform === "win32" ? "npm.cmd" : "npm";
 const args = [
@@ -22,27 +21,50 @@ const args = [
 	"--no-audit",
 	"--no-fund",
 ];
-const result = spawnSync(command, args, { cwd: root, encoding: "utf8", stdio: "inherit" });
-if (result.error) throw result.error;
-if (result.status !== 0) process.exit(result.status ?? 1);
-const camoufoxRoot = resolve(cli, "node_modules", "@the-forge-flow", "camoufox-pi");
-const camoufoxPackagePath = resolve(camoufoxRoot, "package.json");
-const camoufoxPackage = JSON.parse(readFileSync(camoufoxPackagePath, "utf8"));
-delete camoufoxPackage.dependencies["camoufox-js"];
-delete camoufoxPackage.dependencies["playwright-core"];
-delete camoufoxPackage.peerDependencies;
-delete camoufoxPackage.peerDependenciesMeta;
-writeFileSync(camoufoxPackagePath, `${JSON.stringify(camoufoxPackage, null, 2)}\n`);
-const smartFetchPackagePath = resolve(cli, "node_modules", "pi-smart-fetch", "package.json");
-const smartFetchPackage = JSON.parse(readFileSync(smartFetchPackagePath, "utf8"));
-const smartFetchRecord = releaseManifest.packages.find((record) => record.name === "pi-smart-fetch");
-if (!smartFetchRecord?.engineOverride || !smartFetchRecord.dependencyOverrides) {
-	throw new Error("pi-smart-fetch release compatibility metadata is missing");
+let installStatus = 1;
+for (let attempt = 1; attempt <= 3; attempt += 1) {
+	const result = spawnSync(command, args, { cwd: root, encoding: "utf8", stdio: "inherit" });
+	if (result.error) throw result.error;
+	installStatus = result.status ?? 1;
+	if (installStatus === 0) break;
+	if (attempt < 3) {
+		console.warn(`npm ci failed while preparing the release bundle; retrying with a clean tree (${attempt + 1}/3)`);
+		rmSync(resolve(cli, "node_modules"), { recursive: true, force: true, maxRetries: 10, retryDelay: 500 });
+	}
 }
-smartFetchPackage.engines.node = smartFetchRecord.engineOverride;
-Object.assign(smartFetchPackage.dependencies, smartFetchRecord.dependencyOverrides);
-writeFileSync(smartFetchPackagePath, `${JSON.stringify(smartFetchPackage, null, 2)}\n`);
-rmSync(resolve(camoufoxRoot, "node_modules", "camoufox-js"), { recursive: true, force: true });
-rmSync(resolve(camoufoxRoot, "node_modules", "playwright-core"), { recursive: true, force: true });
+if (installStatus !== 0) process.exit(installStatus);
+const webaioRoot = resolve(cli, "node_modules", "pi-webaio");
+const webaioDist = resolve(webaioRoot, "dist");
+rmSync(webaioDist, { recursive: true, force: true });
+const webaioBuild = spawnSync(
+	process.execPath,
+	[resolve(root, "node_modules", "typescript", "bin", "tsc"), "--project", resolve(webaioRoot, "tsconfig.dist.json")],
+	{ cwd: webaioRoot, encoding: "utf8", stdio: "inherit" },
+);
+if (webaioBuild.error) throw webaioBuild.error;
+if (webaioBuild.status !== 0) process.exit(webaioBuild.status ?? 1);
+const webaioPackagePath = resolve(webaioRoot, "package.json");
+const webaioPackage = JSON.parse(readFileSync(webaioPackagePath, "utf8"));
+if (webaioPackage.optionalDependencies?.playwright === undefined) {
+	throw new Error("pi-webaio no longer declares the expected optional playwright dependency");
+}
+delete webaioPackage.optionalDependencies.playwright;
+if (Object.keys(webaioPackage.optionalDependencies).length === 0) delete webaioPackage.optionalDependencies;
+writeFileSync(webaioPackagePath, `${JSON.stringify(webaioPackage, null, 2)}\n`);
+rmSync(resolve(webaioRoot, "node_modules", "playwright"), { recursive: true, force: true });
+rmSync(resolve(cli, "node_modules", "@earendil-works", "pi-coding-agent", "node_modules", "@esbuild"), {
+	recursive: true,
+	force: true,
+});
+const bundledTypeboxSources = [
+	resolve(cli, "node_modules", "@earendil-works", "pi-coding-agent", "node_modules", "typebox"),
+	resolve(cli, "node_modules", "@earendil-works", "pi-agent-core", "node_modules", "typebox"),
+];
+const bundledTypeboxTarget = resolve(cli, "node_modules", "typebox");
+if (!existsSync(bundledTypeboxTarget)) {
+	const bundledTypeboxSource = bundledTypeboxSources.find((path) => existsSync(path));
+	if (!bundledTypeboxSource) throw new Error("installed Pi tree is missing typebox");
+	renameSync(bundledTypeboxSource, bundledTypeboxTarget);
+}
 rmSync(resolve(cli, "node_modules", "pi-skill-dollar", "README.md"), { force: true });
 console.log("installed the exact release-owned extension bundle without lifecycle scripts");
