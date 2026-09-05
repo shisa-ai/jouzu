@@ -214,7 +214,7 @@ function globalResult(prefix, args, options = {}) {
 async function installCurrent(current, prefix) {
 	await runNpm(
 		["install", "--global", "--prefix", prefix, current.path, "--ignore-scripts", "--no-audit", "--no-fund"],
-		{ cwd: root },
+		{ cwd: root, timeout: updateApplyTimeout },
 	);
 }
 

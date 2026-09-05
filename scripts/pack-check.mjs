@@ -92,9 +92,14 @@ export function forbiddenPublicContent() {
 	return [...entries, ...runbookInput];
 }
 const piPackageName = "@earendil-works/pi-coding-agent";
+const piServerPackageName = "@earendil-works/pi-server";
+const externalPiRuntimePackageNames = [piServerPackageName];
+const separatelyBundledPiRuntimePackageNames = ["@earendil-works/pi-ai", "@earendil-works/pi-telemetry"];
 const piLock = JSON.parse(readFileSync(join("upstream", "pi.lock.json"), "utf8"));
 const pinnedPiVersion = piLock.packages?.[piPackageName]?.version;
+const pinnedPiServerVersion = piLock.packages?.[piServerPackageName]?.version;
 if (!pinnedPiVersion) throw new Error(`upstream/pi.lock.json is missing ${piPackageName}`);
+if (!pinnedPiServerVersion) throw new Error(`upstream/pi.lock.json is missing ${piServerPackageName}`);
 const npmCommand = process.platform === "win32" ? (process.env.ComSpec ?? "cmd.exe") : "npm";
 const npmPrefixArguments = process.platform === "win32" ? ["/d", "/s", "/c", "npm"] : [];
 
@@ -123,6 +128,25 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 	if (packageJson.name === "jouzu") {
 		if (packageJson.dependencies?.[piPackageName] !== pinnedPiVersion) {
 			throw new Error(`jouzu must ship exact Pi ${pinnedPiVersion}`);
+		}
+		for (const name of externalPiRuntimePackageNames) {
+			if (
+				packageJson.dependencies?.[name] !== pinnedPiServerVersion ||
+				packageJson.bundleDependencies?.includes(name)
+			) {
+				throw new Error(`jouzu must install exact external Pi runtime package ${name}@${pinnedPiServerVersion}`);
+			}
+			if (packed.files.some((file) => file.path.startsWith(`node_modules/${name}/`))) {
+				throw new Error(`jouzu tarball unexpectedly bundles external Pi runtime package ${name}`);
+			}
+		}
+		for (const name of separatelyBundledPiRuntimePackageNames) {
+			if (packageJson.dependencies?.[name] !== pinnedPiVersion || !packageJson.bundleDependencies?.includes(name)) {
+				throw new Error(`jouzu must bundle exact Pi runtime package ${name}@${pinnedPiVersion}`);
+			}
+			if (!packed.bundled?.includes(name)) {
+				throw new Error(`jouzu tarball is missing bundled Pi runtime package ${name}`);
+			}
 		}
 		if (!packed.files.some((file) => file.path === "dist/pi.lock.json")) {
 			throw new Error("jouzu tarball is missing dist/pi.lock.json");
@@ -171,6 +195,23 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 		const releaseManifest = JSON.parse(readFileSync(join(directory, "release-extensions.json"), "utf8"));
 		const releaseLock = JSON.parse(readFileSync(join(directory, "package-lock.json"), "utf8"));
 		const releasePackages = [...releaseManifest.packages, ...releaseManifest.compatibilityDependencies];
+		const esbuildRecord = releaseManifest.compatibilityDependencies.find((record) => record.name === "esbuild");
+		if (
+			!esbuildRecord ||
+			esbuildRecord.bundled !== false ||
+			packageJson.dependencies?.esbuild !== esbuildRecord.version
+		) {
+			throw new Error("jouzu must install the exact external esbuild compatibility dependency");
+		}
+		if (
+			packed.files.some(
+				(file) =>
+					file.path.startsWith("node_modules/@esbuild/") ||
+					file.path.startsWith("node_modules/@earendil-works/pi-coding-agent/node_modules/@esbuild/"),
+			)
+		) {
+			throw new Error("jouzu tarball contains platform-specific esbuild binaries");
+		}
 		const expectedBundles = releasePackages.filter((record) => record.bundled !== false).map((record) => record.name);
 		for (const name of expectedBundles) {
 			if (!packed.bundled?.includes(name)) throw new Error(`jouzu tarball does not bundle ${name}`);
@@ -204,24 +245,6 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 		) {
 			throw new Error("bundled Camoufox dependency and peer repair differs from the release manifest");
 		}
-		const smartFetchRecord = releaseManifest.packages.find((record) => record.name === "pi-smart-fetch");
-		const smartFetchPackage = JSON.parse(
-			readFileSync(join(directory, "node_modules", "pi-smart-fetch", "package.json"), "utf8"),
-		);
-		if (smartFetchPackage.engines?.node !== smartFetchRecord?.engineOverride) {
-			throw new Error("bundled smart-fetch engine repair differs from the release manifest");
-		}
-		for (const [name, version] of Object.entries(smartFetchRecord?.dependencyOverrides ?? {})) {
-			if (smartFetchPackage.dependencies?.[name] !== version) {
-				throw new Error(`bundled smart-fetch ${name} override differs from the release manifest`);
-			}
-			const dependencyPackage = JSON.parse(
-				readFileSync(join(directory, "node_modules", "pi-smart-fetch", "node_modules", name, "package.json"), "utf8"),
-			);
-			if (dependencyPackage.version !== version) {
-				throw new Error(`bundled smart-fetch resolved ${name}@${dependencyPackage.version} instead of ${version}`);
-			}
-		}
 		if (
 			packed.files.some(
 				(file) =>
@@ -249,6 +272,7 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 			const text = readFileSync(join(directory, file.path), "utf8");
 			for (const entry of forbidden) {
 				if (file.path.startsWith("node_modules/") && entry === "AWS_SECRET_ACCESS_KEY") continue;
+				if (file.path.endsWith("/jose/dist/webapi/key/import.js") && entry === "BEGIN PRIVATE KEY") continue;
 				if (text.includes(entry)) throw new Error(`jouzu tarball ${file.path} contains forbidden public content`);
 			}
 		}

@@ -222,8 +222,8 @@ test("doctor reports degraded optional extensions and disabled tools as action r
 				resolvedPackageRoots: {},
 				degradedExtensions: [
 					{
-						packageName: "pi-smart-fetch",
-						packageVersion: "0.3.17",
+						packageName: "fixture-fetch-extension",
+						packageVersion: "1.2.3",
 						tools: ["web_fetch", "batch_web_fetch"],
 						error: "/lib64/libc.so.6: version `GLIBC_2.34' not found",
 					},
@@ -233,7 +233,7 @@ test("doctor reports degraded optional extensions and disabled tools as action r
 		});
 		assert.equal(report.healthy, false);
 		assert.match(report.text, /Release-owned extensions: 10 selected; 9 ready; 1 optional unavailable/u);
-		assert.match(report.text, /Optional release extensions are unavailable: pi-smart-fetch@0\.3\.17/u);
+		assert.match(report.text, /Optional release extensions are unavailable: fixture-fetch-extension@1\.2\.3/u);
 		assert.match(report.text, /disabled tools: web_fetch, batch_web_fetch/u);
 		assert.match(report.text, /GLIBC_2\.34/u);
 		assert.match(report.text, /rerun `jz doctor`/u);

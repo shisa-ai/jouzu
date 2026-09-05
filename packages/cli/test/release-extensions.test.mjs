@@ -42,9 +42,17 @@ const expectedExtensions = [
 	"pi-multiloop",
 	"pi-schedule-prompt",
 	"pi-skill-dollar",
-	"pi-smart-fetch",
+	"pi-webaio",
 ];
-const expectedCompatibility = ["better-sqlite3", "camoufox-js", "impit", "playwright-core"];
+const expectedCompatibility = [
+	"@sinclair/typebox",
+	"better-sqlite3",
+	"camoufox-js",
+	"esbuild",
+	"impit",
+	"playwright-core",
+	"typebox",
+];
 
 function packageNames(records) {
 	return records.map((record) => record.name).sort();
@@ -56,14 +64,22 @@ test("the release manifest and bundle list contain the selected extension set", 
 	assert.deepEqual(packageNames(manifest.compatibilityDependencies), expectedCompatibility);
 	assert.deepEqual(
 		[...packageJson.bundleDependencies].sort(),
-		["@earendil-works/pi-coding-agent", "@earendil-works/pi-tui", ...expectedExtensions].sort(),
+		[
+			"@earendil-works/pi-ai",
+			"@earendil-works/pi-coding-agent",
+			"@earendil-works/pi-telemetry",
+			"@earendil-works/pi-tui",
+			...expectedExtensions,
+			"typebox",
+		].sort(),
 	);
-	for (const record of manifest.compatibilityDependencies) assert.equal(record.bundled, false);
-	const smartFetchExtension = manifest.packages.find((record) => record.name === "pi-smart-fetch");
-	assert.equal(smartFetchExtension.optional, true);
-	assert.deepEqual(smartFetchExtension.tools, ["web_fetch", "batch_web_fetch"]);
-	assert.equal(smartFetchExtension.engineOverride, ">=22.19.0");
-	assert.deepEqual(smartFetchExtension.dependencyOverrides, { "wreq-js": "3.0.0" });
+	for (const record of manifest.compatibilityDependencies) {
+		assert.equal(record.bundled, record.name === "typebox" ? undefined : false);
+	}
+	const webaioExtension = manifest.packages.find((record) => record.name === "pi-webaio");
+	assert.equal(webaioExtension.optional, undefined);
+	assert.deepEqual(webaioExtension.tools, ["web_fetch", "batch_web_fetch"]);
+	assert.deepEqual(webaioExtension.extensions, ["dist/src/jouzu-extension.js"]);
 	assert.deepEqual(manifest.runtimeDependencyRedirects, [
 		{ consumer: "camoufox-js", dependency: "impit", version: "0.11.0" },
 	]);
@@ -205,8 +221,8 @@ test("matching configured package entrypoints are suppressed without hiding unre
 
 test("optional release extension load failures are omitted while required failures remain fatal", () => {
 	const status = inspectReleaseExtensions();
-	const optional = status.resolvedExtensions.find((record) => record.packageName === "pi-smart-fetch");
-	const required = status.resolvedExtensions.find((record) => record.packageName === "@sting8k/pi-vcc");
+	const optional = status.resolvedExtensions.find((record) => record.packageName === "@the-forge-flow/camoufox-pi");
+	const required = status.resolvedExtensions.find((record) => record.packageName === "pi-webaio");
 	assert.ok(optional);
 	assert.ok(required);
 	const loaded = {
@@ -221,11 +237,11 @@ test("optional release extension load failures are omitted while required failur
 	assert.deepEqual(result.errors, [{ path: required.path, error: "required extension failed" }]);
 	assert.deepEqual(omitOptionalReleaseExtensionFailures(loaded, status).errors, result.errors);
 	assert.equal(status.degradedExtensions.length, 1);
-	assert.deepEqual(status.degradedExtensions[0].tools, ["web_fetch", "batch_web_fetch"]);
+	assert.deepEqual(status.degradedExtensions[0].tools, ["tff-fetch_url", "tff-search_web"]);
 	assert.ok(!status.resolvedExtensionPaths.includes(optional.path));
 	assert.match(
 		formatReleaseExtensionFailure(status.degradedExtensions[0]),
-		/Disabled tools: web_fetch, batch_web_fetch/u,
+		/Disabled tools: tff-fetch_url, tff-search_web/u,
 	);
 	assert.match(formatReleaseExtensionFailure(status.degradedExtensions[0]), /Run `jz doctor` for details/u);
 });
@@ -251,7 +267,7 @@ test("native extension diagnostics retain verbose cause details", () => {
 
 test("degraded optional extensions report disabled tools when a session starts", async () => {
 	const status = inspectReleaseExtensions();
-	const optional = status.resolvedExtensions.find((record) => record.packageName === "pi-smart-fetch");
+	const optional = status.resolvedExtensions.find((record) => record.packageName === "@the-forge-flow/camoufox-pi");
 	assert.ok(optional);
 	omitOptionalReleaseExtensionFailures(
 		{
@@ -282,7 +298,7 @@ test("degraded optional extensions report disabled tools when a session starts",
 	);
 	assert.equal(notifications.length, 1);
 	assert.equal(notifications[0].severity, "warning");
-	assert.match(notifications[0].message, /Disabled tools: web_fetch, batch_web_fetch/u);
+	assert.match(notifications[0].message, /Disabled tools: tff-fetch_url, tff-search_web/u);
 });
 
 test("conflicts with release-owned tools are consolidated by extension", () => {

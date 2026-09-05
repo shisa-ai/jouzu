@@ -1,16 +1,20 @@
 {
 	"schemaVersion": 2,
 	"repository": "https://github.com/earendil-works/pi",
-	"tag": "v0.84.4",
-	"tagCommit": "b79e4cc834970cca69daebffab7df1da7d1e52c4",
-	"commit": "b79e4cc834970cca69daebffab7df1da7d1e52c4",
+	"tag": "v0.85.0",
+	"tagCommit": "107d79f11072bbc8a3a757ed7fd69596bee7d68c",
+	"commit": "107d79f11072bbc8a3a757ed7fd69596bee7d68c",
 	"packages": {
 		"@earendil-works/pi-coding-agent": {
-			"version": "0.84.4",
-			"integrity": "sha512-jmOlrqUmvhh/siNWFRXjYLJzhKFIHNsAQaysRwzQPQFnPAaV/vhqHsLH/MBsIISA1Rjj7WTUFR3nJrpXoLx39w=="
+			"version": "0.85.0",
+			"integrity": "sha512-INxVkLAVfAMju5MojJpmyu/0bMP+r+ffZuS7UqVv32E2JwHBRbcHfELDfmFNvapEbgYfKN2r9OYO1p3TqDBR+g=="
+		},
+		"@earendil-works/pi-server": {
+			"version": "0.85.0",
+			"integrity": "sha512-S8a6a26TM40C7WInj7bNu+HLbVMGosg4gRo2jB5yw0mH1TZ6HHKMxT2YDJpDpnSyGmCwEPj5GBG2sG1jbthWrA=="
 		}
 	},
-	"reviewedAt": "2026-09-03",
+	"reviewedAt": "2026-09-05",
 	"compatibilityStatus": "qualified",
 	"deviations": []
 }
