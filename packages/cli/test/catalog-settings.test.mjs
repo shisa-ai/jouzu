@@ -197,6 +197,12 @@ test("Catalogs settings shows complete bearer-token fields and process availabil
 		text = rendered.join("\n");
 		assert.match(text, /JOUZU_MODEL_CATALOG_TOKEN is set in this Jouzu process/u);
 		assert.doesNotMatch(text, /must-not-render/u);
+
+		const narrowRendered = component.render(48);
+		const narrowText = narrowRendered.join("\n").replace(/[│]/gu, " ").replace(/\s+/gu, " ");
+		assert.ok(narrowRendered.every((line) => terminalTextWidth(line) <= 48));
+		assert.match(narrowText, /Enter an environment variable name/u);
+		assert.match(narrowText, /Its value is never saved/u);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
