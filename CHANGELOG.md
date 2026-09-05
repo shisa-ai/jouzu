@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Replace `pi-smart-fetch` with the pinned `pi-webaio` static adapter while retaining the `web_fetch` and `batch_web_fetch` tools and their per-request options. Static fetches use local extraction, bounded responses, cancellation, and per-hop public-network checks; Camoufox remains the rendered fetch and search path.
+- Update the bundled Pi runtime to 0.85.0 and keep its package tuple qualified with no source deviations.
+- Select MIT-licensed `ua-parser-js` 1.0.41 for Camoufox and reject AGPL dependencies in both the release lock and clean packed installations.
+
 ## 0.1.6 - 2026-09-03
 
 - Publish the complete repository README on npm instead of the condensed package copy, and require byte-identical root, package, and packed README content before release.
