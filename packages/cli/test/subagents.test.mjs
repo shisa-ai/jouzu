@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, readFileSync, symlinkSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -262,6 +262,40 @@ test("review identity changes for tracked and untracked edits", async () => {
 	assert.equal(f.manager.get(run.id).review.status, "changed");
 	assert.match(f.manager.get(run.id).result, /does not establish/);
 	await f.manager.dispose();
+});
+
+test("review identity follows directory aliases and rejects subdirectory coverage", async () => {
+	const { execFileSync } = await import("node:child_process");
+	const { captureReviewCandidate } = await import("../dist/subagents/review.js");
+	const root = mkdtempSync(join(tmpdir(), "jouzu-review-alias-"));
+	const repo = join(root, "repo");
+	const alias = join(root, "alias");
+	try {
+		mkdirSync(repo);
+		const git = (...args) => execFileSync("git", ["-C", repo, ...args], { stdio: "ignore" });
+		git("init");
+		git(
+			"-c",
+			"user.name=Fixture",
+			"-c",
+			"user.email=fixture@example.invalid",
+			"commit",
+			"--allow-empty",
+			"-m",
+			"fixture",
+		);
+		symlinkSync(repo, alias, process.platform === "win32" ? "junction" : "dir");
+		const before = captureReviewCandidate(repo);
+		assert.equal(before.coverage, "git-worktree");
+		assert.deepEqual(captureReviewCandidate(alias), before);
+		writeFileSync(join(alias, "new-file"), "changed through alias");
+		assert.notEqual(captureReviewCandidate(alias).identity, before.identity);
+		const nested = join(repo, "nested");
+		mkdirSync(nested);
+		assert.equal(captureReviewCandidate(nested).coverage, "unavailable");
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
 });
 
 test("real child cancellation aborts a running shell and its process", { timeout: 20000 }, async () => {
