@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -9,14 +9,13 @@ import { MODEL_CATALOG_MAX_BYTES } from "../dist/model-catalog.js";
 import {
 	acceptQuarantinedCatalog,
 	getCatalogStatuses,
-	loadActiveModelCatalog,
 	loadActiveModelCatalogs,
 	refreshAllModelCatalogs,
 	refreshAvailableModelCatalogs,
 	refreshModelCatalog,
-	resolveCatalogEndpoint,
 } from "../dist/model-catalog-sync.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
+import { acquireStateLock } from "../dist/state-lock.js";
 
 const fixture = JSON.parse(
 	readFileSync(join(import.meta.dirname, "..", "catalog", "fixtures", "account-snapshot-v1.json"), "utf8"),
@@ -77,7 +76,7 @@ test("missing endpoint performs no fetch and is a successful unconfigured state"
 		assert.equal(result.status, "unconfigured");
 		assert.equal(result.catalogStatus.status, "unconfigured");
 		assert.equal(calls, 0);
-		assert.equal(loadActiveModelCatalog(paths(temporary), {}), undefined);
+		assert.equal(loadActiveModelCatalogs(paths(temporary), {})[0]?.document, undefined);
 	} finally {
 		rmSync(temporary, { recursive: true, force: true });
 	}
@@ -99,7 +98,7 @@ test("configured refresh activates once and validates unchanged bytes with ETag"
 		assert.equal(first.catalogStatus.status, "active");
 		assert.equal(requestHeaders[0].get("authorization"), "Bearer fixture-token");
 		assert.equal(requestHeaders[0].get("if-none-match"), null);
-		assert.equal(loadActiveModelCatalog(jouzuPaths, env()).revision, "fixture-1");
+		assert.equal(loadActiveModelCatalogs(jouzuPaths, env())[0]?.document.revision, "fixture-1");
 
 		const second = await refreshModelCatalog(jouzuPaths, { env: env(), fetch, now: new Date("2026-08-26T02:00:00Z") });
 		assert.equal(second.status, "not-modified");
@@ -335,12 +334,12 @@ test("network and invalid updates preserve the active last-known-good catalog", 
 		});
 		assert.equal(network.status, "error");
 		assert.equal(network.catalogStatus.status, "stale");
-		assert.equal(loadActiveModelCatalog(jouzuPaths, env()).revision, "fixture-2");
+		assert.equal(loadActiveModelCatalogs(jouzuPaths, env())[0]?.document.revision, "fixture-2");
 
 		const lower = await refreshModelCatalog(jouzuPaths, { env: env(), fetch: async () => response(snapshot(1)) });
 		assert.equal(lower.status, "rejected");
 		assert.match(lower.message, /sequence decreased/);
-		assert.equal(loadActiveModelCatalog(jouzuPaths, env()).revision, "fixture-2");
+		assert.equal(loadActiveModelCatalogs(jouzuPaths, env())[0]?.document.revision, "fixture-2");
 	} finally {
 		rmSync(temporary, { recursive: true, force: true });
 	}
@@ -359,7 +358,7 @@ test("mass removal quarantines exact bytes until revision and digest are accepte
 		});
 		assert.equal(quarantined.status, "quarantined");
 		assert.deepEqual(quarantined.reasons, ["mass_removal"]);
-		assert.equal(loadActiveModelCatalog(jouzuPaths, env()).revision, "fixture-3");
+		assert.equal(loadActiveModelCatalogs(jouzuPaths, env())[0]?.document.revision, "fixture-3");
 
 		const accepted = acceptQuarantinedCatalog(
 			jouzuPaths,
@@ -370,7 +369,7 @@ test("mass removal quarantines exact bytes until revision and digest are accepte
 		);
 		assert.equal(accepted.status, "active");
 		assert.equal(accepted.quarantined, 0);
-		assert.equal(loadActiveModelCatalog(jouzuPaths, env()).revision, "fixture-4");
+		assert.equal(loadActiveModelCatalogs(jouzuPaths, env())[0]?.document.revision, "fixture-4");
 	} finally {
 		rmSync(temporary, { recursive: true, force: true });
 	}
@@ -410,22 +409,10 @@ test("an older quarantined catalog cannot replace a newer active sequence", asyn
 			() => acceptQuarantinedCatalog(jouzuPaths, quarantined.revision, quarantined.digest, env()),
 			/older than the active catalog/u,
 		);
-		assert.equal(loadActiveModelCatalog(jouzuPaths, env()).revision, "fixture-5");
+		assert.equal(loadActiveModelCatalogs(jouzuPaths, env())[0]?.document.revision, "fixture-5");
 	} finally {
 		rmSync(temporary, { recursive: true, force: true });
 	}
-});
-
-test("endpoint configuration forbids credentials and non-local cleartext", () => {
-	assert.throws(() => resolveCatalogEndpoint({ JOUZU_MODEL_CATALOG_URL: "http://example.test/catalog" }), /HTTPS/);
-	assert.throws(
-		() => resolveCatalogEndpoint({ JOUZU_MODEL_CATALOG_URL: "https://user:pass@example.test/catalog" }),
-		/credentials/,
-	);
-	assert.equal(
-		resolveCatalogEndpoint({ JOUZU_MODEL_CATALOG_URL: "http://localhost:8080/catalog" }).url,
-		"http://localhost:8080/catalog",
-	);
 });
 
 test("startup refresh contacts only sources with available credentials", async () => {
@@ -459,7 +446,10 @@ test("startup refresh contacts only sources with available credentials", async (
 		);
 		assert.equal(requests[0].headers.get("authorization"), "Bearer sk-fixture");
 		assert.equal(requests[0].redirect, "error");
-		assert.equal(loadActiveModelCatalog(jouzuPaths, { SHISA_API_KEY: "sk-fixture" }).revision, "fixture-1");
+		assert.equal(
+			loadActiveModelCatalogs(jouzuPaths, { SHISA_API_KEY: "sk-fixture" })[0]?.document.revision,
+			"fixture-1",
+		);
 	} finally {
 		rmSync(temporary, { recursive: true, force: true });
 	}
@@ -539,6 +529,85 @@ test("a manual Shisa registration keeps its cache when the built-in descriptor t
 		assert.equal(status.sources[0].sourceId, "shisa-api");
 		assert.equal(status.sources[0].status, "active");
 		assert.equal(status.sources[0].credentialAvailable, true);
+	} finally {
+		rmSync(temporary, { recursive: true, force: true });
+	}
+});
+
+for (const refresh of [refreshAllModelCatalogs, refreshAvailableModelCatalogs]) {
+	test(`${refresh.name} waits for healthy sources when another source is locked`, async () => {
+		const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-busy-"));
+		let release;
+		try {
+			const jouzuPaths = paths(temporary);
+			const store = new CatalogSourceStore(jouzuPaths, {});
+			const busy = store.add({ label: "Busy", url: "https://busy.example/catalog", auth: { type: "none" } });
+			store.add({ label: "Healthy", url: "https://healthy.example/catalog", auth: { type: "none" } });
+			release = acquireStateLock({
+				path: join(catalogOriginDirectory(jouzuPaths, { JOUZU_MODEL_CATALOG_URL: busy.url }), "refresh.lock"),
+				describe: "test",
+				onBusy: () => new Error("busy"),
+			});
+			let completed = false;
+			const result = await refresh(jouzuPaths, {
+				env: {},
+				fetch: async () => {
+					await new Promise((resolve) => setTimeout(resolve, 20));
+					completed = true;
+					return response(snapshot(1));
+				},
+			});
+			assert.equal(completed, true);
+			assert.equal(result.status, "partial");
+			assert.match(result.results[0].result.message, /busy/);
+			assert.equal(result.results[1].result.status, "activated");
+			assert.equal(loadActiveModelCatalogs(jouzuPaths, {}).length, 1);
+		} finally {
+			release?.();
+			rmSync(temporary, { recursive: true, force: true });
+		}
+	});
+}
+
+test("activated document retention keeps active and previous revisions", async () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-retention-"));
+	try {
+		const jouzuPaths = paths(temporary);
+		for (let sequence = 1; sequence <= 5; sequence++) {
+			assert.equal(
+				(
+					await refreshModelCatalog(jouzuPaths, {
+						env: env(),
+						fetch: async () => response(snapshot(sequence, manyOfferings(20))),
+					})
+				).status,
+				"activated",
+			);
+		}
+		const origin = catalogOriginDirectory(jouzuPaths);
+		const account = JSON.parse(readFileSync(join(origin, "origin.json"))).activeAccountRefHash;
+		const directory = join(origin, "accounts", account);
+		const state = JSON.parse(readFileSync(join(directory, "state.json")));
+		assert.equal(state.active.sequence, "5");
+		assert.equal(state.previous.sequence, "4");
+		assert.deepEqual(
+			readdirSync(join(directory, "documents")).sort(),
+			[`${state.active.digest}.json`, `${state.previous.digest}.json`].sort(),
+		);
+		const candidate = await refreshModelCatalog(jouzuPaths, {
+			env: env(),
+			fetch: async () => response(snapshot(6, manyOfferings(1))),
+		});
+		assert.equal(candidate.status, "quarantined");
+		acceptQuarantinedCatalog(jouzuPaths, candidate.revision, candidate.digest, env());
+		const accepted = JSON.parse(readFileSync(join(directory, "state.json")));
+		assert.equal(accepted.active.sequence, "6");
+		assert.equal(accepted.previous.sequence, "5");
+		assert.deepEqual(
+			readdirSync(join(directory, "documents")).sort(),
+			[`${accepted.active.digest}.json`, `${accepted.previous.digest}.json`].sort(),
+		);
+		for (const ref of [accepted.active, accepted.previous]) assert.ok(existsSync(join(directory, ref.document)));
 	} finally {
 		rmSync(temporary, { recursive: true, force: true });
 	}

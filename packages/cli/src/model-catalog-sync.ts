@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { existsSync, lstatSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, lstatSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { join, relative, resolve, sep } from "node:path";
 import { readBoundedResponseText } from "./bounded-response.js";
 import {
@@ -24,8 +24,6 @@ import type { JouzuPaths } from "./paths.js";
 import { ensurePrivateDirectory, writeFilePrivateAtomic } from "./private-fs.js";
 import { acquireStateLock, type StateLockInspection } from "./state-lock.js";
 
-const CATALOG_URL_ENV = "JOUZU_MODEL_CATALOG_URL";
-const CATALOG_TOKEN_ENV = "JOUZU_MODEL_CATALOG_TOKEN";
 const CATALOG_TOTAL_TIMEOUT_MS = 30_000;
 const QUARANTINE_LIMIT = 3;
 const QUARANTINE_BYTE_LIMIT = 48 * 1024 * 1024;
@@ -135,29 +133,6 @@ export class CatalogSyncError extends Error {
 		super(message);
 		this.name = "CatalogSyncError";
 	}
-}
-
-function nonEmpty(value: string | undefined): string | undefined {
-	return value && value.trim().length > 0 ? value.trim() : undefined;
-}
-
-export function resolveCatalogEndpoint(env: NodeJS.ProcessEnv = process.env): CatalogEndpointConfig | undefined {
-	const rawUrl = nonEmpty(env[CATALOG_URL_ENV]);
-	if (!rawUrl) return undefined;
-	let parsed: URL;
-	try {
-		parsed = new URL(rawUrl);
-	} catch {
-		throw new CatalogSyncError(`${CATALOG_URL_ENV} must be an absolute HTTP(S) URL`);
-	}
-	if (parsed.username || parsed.password || parsed.hash) {
-		throw new CatalogSyncError(`${CATALOG_URL_ENV} must not contain credentials or a fragment`);
-	}
-	const localHttp = parsed.protocol === "http:" && (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1");
-	if (parsed.protocol !== "https:" && !localHttp) {
-		throw new CatalogSyncError(`${CATALOG_URL_ENV} must use HTTPS except for localhost development`);
-	}
-	return { url: parsed.href, ...(nonEmpty(env[CATALOG_TOKEN_ENV]) ? { token: nonEmpty(env[CATALOG_TOKEN_ENV]) } : {}) };
 }
 
 function hash(value: string): string {
@@ -393,13 +368,23 @@ export function getCatalogStatuses(
 	};
 }
 
-export function getCatalogStatus(
-	paths: JouzuPaths,
-	env: NodeJS.ProcessEnv = process.env,
-	now = new Date(),
-): CatalogSyncStatus {
-	const source = resolveCatalogSources(paths, env)[0];
-	return source ? getCatalogSourceStatus(paths, source, now, env) : unconfiguredStatus();
+function pruneDocuments(directory: string, state: CatalogAccountState): void {
+	try {
+		const documents = join(directory, "documents");
+		if (!lstatSync(documents).isDirectory() || lstatSync(documents).isSymbolicLink()) return;
+		const retained = new Set([state.active?.document, state.previous?.document]);
+		for (const entry of readdirSync(documents, { withFileTypes: true })) {
+			if (
+				entry.isFile() &&
+				/^[0-9a-f]{64}\.json$/u.test(entry.name) &&
+				!retained.has(safeRelative(directory, join(documents, entry.name)))
+			) {
+				rmSync(join(documents, entry.name));
+			}
+		}
+	} catch {
+		// A cleanup failure must not turn a committed activation into a failed refresh.
+	}
 }
 
 function loadDocument(accountDirectory: string, reference: CatalogRevisionRef): ModelCatalogDocument {
@@ -489,15 +474,16 @@ export async function refreshCatalogSource(
 		};
 	}
 	const config: CatalogEndpointConfig = { url: source.url, ...(token ? { token } : {}) };
-	const release = acquireStateLock({
-		path: lockPath(paths, config.url),
-		describe: "model catalog refresh",
-		now,
-		onBusy: (inspection: StateLockInspection) =>
-			new CatalogSyncError(`model catalog refresh is busy (${inspection.status})`),
-	});
+	let release: (() => void) | undefined;
 	let origin: CatalogOriginState | undefined;
 	try {
+		release = acquireStateLock({
+			path: lockPath(paths, config.url),
+			describe: "model catalog refresh",
+			now,
+			onBusy: (inspection: StateLockInspection) =>
+				new CatalogSyncError(`model catalog refresh is busy (${inspection.status})`),
+		});
 		origin = readOriginState(paths, config.url);
 		const activeState = origin?.activeAccountRefHash
 			? readAccountState(paths, config.url, origin.activeAccountRefHash)
@@ -628,12 +614,13 @@ export async function refreshCatalogSource(
 		writeJson(accountStatePath(paths, config.url, accountRefHash), state, catalogRoot(paths));
 		origin = { schemaVersion: 1, activeAccountRefHash: accountRefHash };
 		writeJson(originStatePath(paths, config.url), origin, catalogRoot(paths));
+		pruneDocuments(directory, state);
 		return { status: "activated", catalogStatus: catalogStatus() };
 	} catch (error) {
 		const code = errorCode(error);
 		const message = error instanceof Error ? error.message : String(error);
 		try {
-			recordError(paths, config, origin, code, message, now);
+			if (release) recordError(paths, config, origin, code, message, now);
 		} catch {
 			// Keep the original refresh failure when cached state is also unreadable.
 		}
@@ -644,7 +631,7 @@ export async function refreshCatalogSource(
 			message,
 		};
 	} finally {
-		release();
+		release?.();
 	}
 }
 
@@ -690,16 +677,7 @@ export async function refreshAllModelCatalogs(
 	const env = options.env ?? process.env;
 	const sources = resolveCatalogSources(paths, env).filter((source) => !automaticallySkipped(paths, source, env));
 	if (sources.length === 0) return { status: "unconfigured", results: [] };
-	const results = await Promise.all(
-		sources.map(async (source) => ({ source, result: await refreshCatalogSource(paths, source, options) })),
-	);
-	const successful = results.filter(
-		({ result }) => result.status === "activated" || result.status === "not-modified",
-	).length;
-	return {
-		status: successful === results.length ? "complete" : successful === 0 ? "failed" : "partial",
-		results,
-	};
+	return refreshSources(paths, sources, options);
 }
 
 /**
@@ -715,6 +693,14 @@ export async function refreshAvailableModelCatalogs(
 	const env = options.env ?? process.env;
 	const sources = resolveCatalogSources(paths, env).filter((source) => catalogSourceCredentialAvailable(source, env));
 	if (sources.length === 0) return undefined;
+	return refreshSources(paths, sources, options);
+}
+
+async function refreshSources(
+	paths: JouzuPaths,
+	sources: CatalogSource[],
+	options: RefreshCatalogOptions,
+): Promise<CatalogRefreshAllResult> {
 	const results = await Promise.all(
 		sources.map(async (source) => ({ source, result: await refreshCatalogSource(paths, source, options) })),
 	);
@@ -756,13 +742,6 @@ export function loadActiveModelCatalogs(paths: JouzuPaths, env: NodeJS.ProcessEn
 		active.push({ source, document });
 	}
 	return active;
-}
-
-export function loadActiveModelCatalog(
-	paths: JouzuPaths,
-	env: NodeJS.ProcessEnv = process.env,
-): ModelCatalogDocument | undefined {
-	return loadActiveModelCatalogs(paths, env)[0]?.document;
 }
 
 export function acceptQuarantinedCatalog(
@@ -827,6 +806,7 @@ export function acceptQuarantinedCatalog(
 		state.lastError = undefined;
 		state.validatedAt = now.toISOString();
 		writeJson(accountStatePath(paths, config.url, origin.activeAccountRefHash), state, catalogRoot(paths));
+		pruneDocuments(directory, state);
 		return getCatalogSourceStatus(paths, source, now);
 	} finally {
 		release();
