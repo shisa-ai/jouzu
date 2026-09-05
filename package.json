@@ -18,6 +18,7 @@
 		"test:pack-check": "node --test scripts/pack-check.test.mjs",
 		"test:release-metadata": "node --test scripts/check-release-metadata.test.mjs",
 		"test:packed": "node scripts/test-packed-cli.mjs",
+		"test:camoufox:packed": "node scripts/test-packed-camoufox.mjs",
 		"test:auto-update": "node scripts/test-auto-update.mjs",
 		"test:live:ja": "node scripts/live-ja-smoke.mjs",
 		"test:extensions:online": "node --test packages/cli/test/release-extension-behavior.test.mjs",

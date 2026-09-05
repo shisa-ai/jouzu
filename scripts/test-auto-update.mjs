@@ -102,7 +102,7 @@ function preparedArtifact(path, version) {
 function preparePackageDirectory(rootDirectory) {
 	const directory = join(rootDirectory, "package");
 	mkdirSync(directory, { recursive: true });
-	for (const entry of ["dist", "node_modules", "LICENSE", "README.md", "THIRD_PARTY_NOTICES.md"]) {
+	for (const entry of ["camoufox-runtime", "dist", "node_modules", "LICENSE", "README.md", "THIRD_PARTY_NOTICES.md"]) {
 		cpSync(join(packageDirectory, entry), join(directory, entry), { recursive: true });
 	}
 	return directory;

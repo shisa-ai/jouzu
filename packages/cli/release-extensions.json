@@ -33,7 +33,8 @@
 			"licenseEvidence": "LICENSE",
 			"extensions": ["dist/src/jouzu-extension.js"],
 			"skills": [],
-			"tools": ["web_fetch", "batch_web_fetch"]
+			"tools": ["web_fetch", "batch_web_fetch"],
+			"dependencyRemovals": ["playwright"]
 		},
 		{
 			"name": "jouzu-camoufox-adapter",
