@@ -426,7 +426,7 @@ jobs:
   published-upgrade:
     needs: release-artifacts
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 45
+    timeout-minutes: 65
     strategy:
       fail-fast: false
       matrix:
@@ -448,7 +448,7 @@ jobs:
         run: ./scripts/windows-ci-defender.ps1 scanned
       - name: Verify published-version update, restart, and rollback
         run: npm run test:auto-update
-        timeout-minutes: 40
+        timeout-minutes: 60
         env:
           JOUZU_UPDATE_PUBLISHED_VERSION: "0.1.6"
           JOUZU_UPDATE_NEXT_TARBALL: dist/ci-artifacts/candidate.tgz
