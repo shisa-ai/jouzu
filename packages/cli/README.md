@@ -63,12 +63,13 @@ A normal launch reconciles the selected profile. It stops before Pi if a managed
 Inside Pi:
 
 - `/login` configures provider authentication in Jouzu's isolated agent root.
+- `/workflow` opens agent definitions and child runs. Configure separate planner, coder, and reviewer models, or add your own roles. See [Agents and runs](https://github.com/shisa-ai/jouzu/blob/main/docs/subagents.md).
 - `/model` or `Ctrl+L` opens the Jouzu Palette Models view without clearing the prompt draft.
 - `Ctrl+P` and its reverse binding cycle through available favorites in the current model scope.
 - `/status` reports provider-neutral session, workspace, model, thinking, context, scoped-model, profile, and runtime facts.
 - `Ctrl+/` or `Ctrl+?` opens Jouzu help; `/hotkeys` lists all Pi shortcuts.
 
-The Palette shows Models and Settings as top-level sections; `Tab` and `Shift+Tab` move between them. The Models view searches exact provider/model identity and display names. `←` and `→` change the Recent, Favorite, or All view; the header reports active results and total selectable inventory. The first launch opens Recent; later launches restore the last view used. Typing or `/` focuses search; the title shows `· Search` while search holds focus, and `Esc` returns to browsing with the query intact before another `Esc` closes the Palette.
+The Palette shows Models, Workflow, and Settings as top-level sections; `Tab` and `Shift+Tab` move between them. The Models view searches exact provider/model identity and display names. `←` and `→` change the Recent, Favorite, or All view; the header reports active results and total selectable inventory. The first launch opens Recent; later launches restore the last view used. Typing or `/` focuses search; the title shows `· Search` while search holds focus, and `Esc` returns to browsing with the query intact before another `Esc` closes the Palette.
 
 `Enter` selects the model and stores it as the user-local project default. A new session resolves an explicit `--model` first, then a resumed session's recorded model, then the project default, then the last dispatched model with its thinking level, then Pi's user-wide default and fallback. Explicit resume, continue, session, model, and scoped-model arguments bypass project-default and last-model injection.
 
@@ -167,7 +168,7 @@ An active cached catalog updates model names, capabilities, input types, and tok
 
 The built-in source can be disabled in Settings / Catalogs. The choice is stored in `catalog-overrides.json` next to `catalogs.json` without any credential, and re-enabling restores the built-in defaults. A manually registered source with the same endpoint and `env:SHISA_API_KEY` credential takes the place of the built-in source, keeping its label, enabled state, and cached catalog. Source id `shisa-api` is reserved; `jouzu catalog status` reports a custom entry that claims it with another endpoint.
 
-Open Settings / Catalogs with `/catalogs`, or press `Tab` from Models while the Palette is in browse mode. Each custom source stores a label, URL, enabled state, and authentication mode. `A` opens the add form. Move between fields with `↑` and `↓`, change Authentication with `←` and `→`, and press `Enter` to save. Jouzu accepts an exact URL or a host and finds the catalog endpoint automatically. HTTPS is required except for localhost development. `Esc` cancels without writing.
+Open Settings / Catalogs with `/catalogs`, or use `Tab` to reach Settings while the Palette is in browse mode. Each custom source stores a label, URL, enabled state, and authentication mode. `A` opens the add form. Move between fields with `↑` and `↓`, change Authentication with `←` and `→`, and press `Enter` to save. Jouzu accepts an exact URL or a host and finds the catalog endpoint automatically. HTTPS is required except for localhost development. `Esc` cancels without writing.
 
 Authentication can be disabled or read as a bearer token from a named environment variable. Jouzu stores only the environment-variable name in `catalogs.json`; bearer values are sent only in the source's authorization header and never written to configuration, cache, or diagnostics. Catalog configuration is stored at:
 

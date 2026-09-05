@@ -65,7 +65,7 @@ When an item supports disclosure as well as a primary action, reserve `Enter` fo
 - Nested filters and choices are not tab rows. Change a visible choice with `←` and `→` when no text field holds focus.
 - `Esc` in browse mode closes the Palette. There is no separate root level to return to first.
 - Cancel restores the editor text that was present when the Palette opened.
-- `/catalogs` and `/model` route directly to a view. A route is registered only when its view exists.
+- `/catalogs`, `/model`, and `/workflow` route directly to a view. A route is registered only when its view exists.
 
 ## Browse mode
 
@@ -182,3 +182,28 @@ An interaction change must include tests for the affected modes and transitions:
 11. Committal row actions fire through their semantic accelerators while search holds focus, and the title names the search state.
 
 Run the focused interaction tests while iterating, then run `npm run check` and `npm test` before committing.
+
+## Workflow
+
+Workflow uses one top-level tab and a visible **View: ‹ Agents ›** / **View: ‹ Runs ›** choice. The choice uses `←`/`→`; `Tab` remains reserved for Models / Workflow / Settings. Opening `/workflow` shows definitions. Run updates request a redraw without changing the selected view.
+
+```text
+╭ Workflow ─────────────────────────────────────╮
+│ Models  [Workflow]  Settings                   │
+│ → View: ‹ Agents ›                            │
+│   orchestrator · provider/planner-model        │
+│   coder · provider/coder-model                 │
+│   reviewer · provider/review-model             │
+│   + Add agent                                 │
+│ Enter change · ↑/↓ move · Esc/Ctrl+C close     │
+│ Tab/Shift+Tab sections · ←→ change view        │
+╰───────────────────────────────────────────────╯
+```
+
+Select a definition to edit it. The form groups identity and model, placement and child tools, thinking and execution limits, then instructions and actions. Main-session application and child launch are visible rows. Applying, launching, or deleting refuses unsaved edits. A definition save checks whether another session changed the configuration and preserves the draft on conflict.
+
+Workflow forms contain nested model and multiline editors. This extends the form's Enter behavior: Enter on a text field saves the form; Enter on a choice changes it; Enter on a visible action performs that action. The first hint names the focused action. In a multiline editor, Enter inserts a newline and semantic cancel returns the text to the enclosing draft. Only Save persists definition changes; cancelling the enclosing form discards the draft. Top-level navigation and external routes are disabled throughout nested editing.
+
+Runs show role, state, and current tool or assignment. Enter opens run details with model, usage, and output/control rows. Output uses bounded byte pages and a line viewport; semantic Page Up/Page Down moves through the text. Stop opens a confirmation that states existing changes remain. A completed or interrupted run offers Resume with a new assignment. Failures remain visible in the panel and keep the relevant form values.
+
+At narrow widths, rows use terminal cell width and truncate long identities. Fields and action rows scroll with selection. Width tests cover 24, 48, 80, and 120 columns, including Japanese model searches. The Agents/Runs layout sketch is illustrative; rendered key hints resolve the user's effective bindings.

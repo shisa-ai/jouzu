@@ -308,6 +308,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 				presentation.createJouzuPresentationExtension(metadata, profile),
 				sessionUi,
 				modelPicker.extension,
+				modelPicker.workflowExtension,
 				help,
 				releaseDiagnostics,
 			],

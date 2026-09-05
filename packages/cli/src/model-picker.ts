@@ -51,6 +51,7 @@ import {
 import type { JouzuPaths } from "./paths.js";
 import { detectBannerColorMode, renderBrandGradient } from "./presentation.js";
 import type { SessionUiStyles } from "./session-ui/index.js";
+import { createWorkflowIntegration } from "./subagents/integration.js";
 import {
 	fitTerminalText,
 	padTerminalText,
@@ -59,6 +60,7 @@ import {
 	renderTerminalFrameTitle,
 	sanitizeTerminalText,
 } from "./terminal-layout.js";
+import { WorkflowComponent } from "./workflow.js";
 
 type PiModel = NonNullable<ExtensionContext["model"]>;
 
@@ -601,6 +603,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 export type FavoriteCycleDirection = "forward" | "backward";
 
 export interface JouzuModelPickerIntegration {
+	workflowExtension: JouzuModelPickerIntegration["extension"];
 	extension: InlineExtension;
 	open(request: JouzuModelPickerRequest): Promise<boolean>;
 	openSettings(): Promise<boolean>;
@@ -696,6 +699,7 @@ export function createJouzuModelPicker(
 	options: JouzuModelPickerOptions = {},
 ): JouzuModelPickerIntegration {
 	const store = new ModelPickerStore(paths);
+	const workflow = createWorkflowIntegration(paths);
 	const jouzuKeybindings = createJouzuKeybindingsManager(paths);
 	const surface = new JouzuPaletteSurfaceHost({ jouzuKeybindings });
 	const catalogEnv = options.palette?.env ?? process.env;
@@ -1014,6 +1018,7 @@ export function createJouzuModelPicker(
 									if (result.modelRefresh.aborted) throw new Error("model refresh was aborted");
 								},
 							}),
+						workflow: (childContext, route) => new WorkflowComponent(childContext, workflow.service, route),
 						settings: (childContext) =>
 							new CatalogSettingsComponent({
 								context: childContext,
@@ -1132,5 +1137,16 @@ export function createJouzuModelPicker(
 		return true;
 	};
 
-	return { extension, open, openSettings, cycleFavorite, handleScopedModelsCommand, reloadCatalogs };
+	return {
+		extension,
+		workflowExtension: {
+			name: "jouzu-workflow",
+			factory: (pi) => workflow.register(pi, () => openPalette({ view: "workflow" })),
+		},
+		open,
+		openSettings,
+		cycleFavorite,
+		handleScopedModelsCommand,
+		reloadCatalogs,
+	};
 }
