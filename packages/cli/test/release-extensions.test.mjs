@@ -52,6 +52,7 @@ const expectedCompatibility = [
 	"impit",
 	"playwright-core",
 	"typebox",
+	"ua-parser-js",
 ];
 
 function packageNames(records) {
@@ -70,18 +71,24 @@ test("the release manifest and bundle list contain the selected extension set", 
 			"@earendil-works/pi-telemetry",
 			"@earendil-works/pi-tui",
 			...expectedExtensions,
+			"camoufox-js",
 			"typebox",
 		].sort(),
 	);
 	for (const record of manifest.compatibilityDependencies) {
-		assert.equal(record.bundled, record.name === "typebox" ? undefined : false);
+		assert.equal(record.bundled, ["camoufox-js", "typebox"].includes(record.name) ? undefined : false);
 	}
 	const webaioExtension = manifest.packages.find((record) => record.name === "pi-webaio");
 	assert.equal(webaioExtension.optional, undefined);
 	assert.deepEqual(webaioExtension.tools, ["web_fetch", "batch_web_fetch"]);
 	assert.deepEqual(webaioExtension.extensions, ["dist/src/jouzu-extension.js"]);
 	assert.deepEqual(manifest.runtimeDependencyRedirects, [
-		{ consumer: "camoufox-js", dependency: "impit", version: "0.11.0" },
+		{
+			consumer: "camoufox-js",
+			dependency: "impit",
+			version: "0.11.0",
+			extension: "@the-forge-flow/camoufox-pi",
+		},
 	]);
 	const camoufoxExtension = manifest.packages.find((record) => record.name === "@the-forge-flow/camoufox-pi");
 	assert.equal(camoufoxExtension.optional, true);
@@ -125,6 +132,22 @@ test("the selected native runtime dependencies load on the host", () => {
 	assert.deepEqual(status.degradedExtensions, []);
 });
 
+test("a native redirect failure degrades its optional extension", () => {
+	const status = inspectReleaseExtensions();
+	status.resolvedPackageRoots.impit = join(tmpdir(), "missing-jouzu-impit");
+	probeReleaseRuntimeCompatibility(status);
+	assert.deepEqual(status.errors, []);
+	assert.deepEqual(
+		status.degradedExtensions.map(({ packageName, tools }) => ({ packageName, tools })),
+		[
+			{
+				packageName: "@the-forge-flow/camoufox-pi",
+				tools: ["tff-fetch_url", "tff-search_web"],
+			},
+		],
+	);
+});
+
 test("Camoufox handles the selected SQLite package on the host", async () => {
 	const Database = require("better-sqlite3");
 	try {
@@ -164,7 +187,12 @@ test("an incompatible nested native dependency redirects to the exact direct pac
 			JSON.stringify({ name: "impit", version: "0.11.0", main: "index.cjs" }),
 		);
 		writeFileSync(join(replacement, "index.cjs"), "module.exports = { compatible: true };\n");
-		const record = { consumer: "camoufox-js", dependency: "impit", version: "0.11.0" };
+		const record = {
+			consumer: "camoufox-js",
+			dependency: "impit",
+			version: "0.11.0",
+			extension: "@the-forge-flow/camoufox-pi",
+		};
 		const roots = { "camoufox-js": consumer, impit: replacement };
 		assert.equal(repairRuntimeDependencyRedirect(record, roots), true);
 		assert.equal(existsSync(nested), false);

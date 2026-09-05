@@ -7,6 +7,7 @@ import { test } from "node:test";
 import { clipboardBindingDirectoryIsComplete } from "./clipboard-bindings.mjs";
 import {
 	assertClipboardBindingsPresent,
+	assertNoAgplDependencies,
 	assertProfileFilesPresent,
 	deriveClipboardBindingRequirements,
 	deriveRequiredProfileFiles,
@@ -110,6 +111,21 @@ test("clipboard pack checks require native entrypoints except for exact placehol
 	const placeholderPackage = `node_modules/@earendil-works/pi-coding-agent/node_modules/@mariozechner/${placeholder.packageName}`;
 	assert.doesNotThrow(() =>
 		assertClipboardBindingsPresent([{ path: `${placeholderPackage}/package.json` }], [placeholder]),
+	);
+});
+
+test("the release lock rejects AGPL dependencies", () => {
+	assert.doesNotThrow(() =>
+		assertNoAgplDependencies({ packages: { "node_modules/fixture": { version: "1.0.0", license: "MIT" } } }),
+	);
+	assert.throws(
+		() =>
+			assertNoAgplDependencies({
+				packages: {
+					"node_modules/fixture": { version: "2.0.10", license: "AGPL-3.0-or-later" },
+				},
+			}),
+		/node_modules\/fixture@2\.0\.10 \(AGPL-3\.0-or-later\)/u,
 	);
 });
 

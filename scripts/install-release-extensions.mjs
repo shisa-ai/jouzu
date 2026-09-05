@@ -43,16 +43,26 @@ const webaioBuild = spawnSync(
 );
 if (webaioBuild.error) throw webaioBuild.error;
 if (webaioBuild.status !== 0) process.exit(webaioBuild.status ?? 1);
-const camoufoxRoot = resolve(cli, "node_modules", "@the-forge-flow", "camoufox-pi");
-const camoufoxPackagePath = resolve(camoufoxRoot, "package.json");
-const camoufoxPackage = JSON.parse(readFileSync(camoufoxPackagePath, "utf8"));
-delete camoufoxPackage.dependencies["camoufox-js"];
-delete camoufoxPackage.dependencies["playwright-core"];
-delete camoufoxPackage.peerDependencies;
-delete camoufoxPackage.peerDependenciesMeta;
-writeFileSync(camoufoxPackagePath, `${JSON.stringify(camoufoxPackage, null, 2)}\n`);
-rmSync(resolve(camoufoxRoot, "node_modules", "camoufox-js"), { recursive: true, force: true });
-rmSync(resolve(camoufoxRoot, "node_modules", "playwright-core"), { recursive: true, force: true });
+const camoufoxAdapterRoot = resolve(cli, "node_modules", "@the-forge-flow", "camoufox-pi");
+const camoufoxAdapterPackagePath = resolve(camoufoxAdapterRoot, "package.json");
+const camoufoxAdapterPackage = JSON.parse(readFileSync(camoufoxAdapterPackagePath, "utf8"));
+delete camoufoxAdapterPackage.dependencies["camoufox-js"];
+delete camoufoxAdapterPackage.dependencies["playwright-core"];
+delete camoufoxAdapterPackage.peerDependencies;
+delete camoufoxAdapterPackage.peerDependenciesMeta;
+writeFileSync(camoufoxAdapterPackagePath, `${JSON.stringify(camoufoxAdapterPackage, null, 2)}\n`);
+rmSync(resolve(camoufoxAdapterRoot, "node_modules", "camoufox-js"), { recursive: true, force: true });
+rmSync(resolve(camoufoxAdapterRoot, "node_modules", "playwright-core"), { recursive: true, force: true });
+const camoufoxRuntimeRoot = resolve(cli, "node_modules", "camoufox-js");
+const camoufoxRuntimePackagePath = resolve(camoufoxRuntimeRoot, "package.json");
+const camoufoxRuntimePackage = JSON.parse(readFileSync(camoufoxRuntimePackagePath, "utf8"));
+delete camoufoxRuntimePackage.dependencies["better-sqlite3"];
+delete camoufoxRuntimePackage.dependencies.impit;
+delete camoufoxRuntimePackage.dependencies["ua-parser-js"];
+writeFileSync(camoufoxRuntimePackagePath, `${JSON.stringify(camoufoxRuntimePackage, null, 2)}\n`);
+rmSync(resolve(camoufoxRuntimeRoot, "node_modules", "better-sqlite3"), { recursive: true, force: true });
+rmSync(resolve(camoufoxRuntimeRoot, "node_modules", "impit"), { recursive: true, force: true });
+rmSync(resolve(camoufoxRuntimeRoot, "node_modules", "ua-parser-js"), { recursive: true, force: true });
 rmSync(resolve(cli, "node_modules", "@earendil-works", "pi-coding-agent", "node_modules", "@esbuild"), {
 	recursive: true,
 	force: true,
