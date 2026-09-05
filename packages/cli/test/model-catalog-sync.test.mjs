@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -47,6 +48,19 @@ function snapshot(sequence, models = fixture.modelOfferings) {
 	document.generatedAt = `2026-08-${String(20 + sequence).padStart(2, "0")}T00:00:00Z`;
 	document.modelOfferings = structuredClone(models);
 	return document;
+}
+
+function manyOfferings(count, offset = 0) {
+	return Array.from({ length: count }, (_, index) => ({
+		...fixture.modelOfferings[0],
+		id: `ai.example.gateway/model-${offset + index}`,
+		modelId: `model-${offset + index}`,
+	}));
+}
+
+function catalogOriginDirectory(jouzuPaths, environment = env()) {
+	const endpoint = new URL(environment.JOUZU_MODEL_CATALOG_URL).href;
+	return join(jouzuPaths.cacheDir, "model-catalog", createHash("sha256").update(endpoint).digest("hex"));
 }
 
 test("missing endpoint performs no fetch and is a successful unconfigured state", async () => {
@@ -232,6 +246,82 @@ test("streaming refresh cancels an understated response above the byte limit", a
 	}
 });
 
+test("the refresh timeout remains active while the response body is stalled", async () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-body-timeout-"));
+	try {
+		const result = await refreshModelCatalog(paths(temporary), {
+			env: env(),
+			timeoutMs: 10,
+			fetch: async (_url, init) => {
+				const body = new ReadableStream({
+					start(controller) {
+						init.signal.addEventListener(
+							"abort",
+							() => controller.error(new DOMException("catalog request timed out", "AbortError")),
+							{ once: true },
+						);
+					},
+				});
+				return new Response(body, {
+					status: 200,
+					headers: { "Content-Type": "application/vnd.jouzu.model-catalog+json; version=1" },
+				});
+			},
+		});
+		assert.equal(result.status, "error");
+		assert.equal(result.code, "timeout");
+	} finally {
+		rmSync(temporary, { recursive: true, force: true });
+	}
+});
+
+test("an unreadable origin state returns a rejection and releases the refresh lock", async () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-origin-corrupt-"));
+	try {
+		const jouzuPaths = paths(temporary);
+		await refreshModelCatalog(jouzuPaths, { env: env(), fetch: async () => response(snapshot(1)) });
+		const originDirectory = catalogOriginDirectory(jouzuPaths);
+		writeFileSync(join(originDirectory, "origin.json"), "{ broken");
+
+		const result = await refreshModelCatalog(jouzuPaths, {
+			env: env(),
+			fetch: async () => {
+				throw new Error("must not fetch");
+			},
+		});
+		assert.equal(result.status, "rejected");
+		assert.equal(result.code, "catalog_sync_error");
+		assert.equal(existsSync(join(originDirectory, "refresh.lock")), false);
+	} finally {
+		rmSync(temporary, { recursive: true, force: true });
+	}
+});
+
+test("an unreadable account state does not replace the refresh failure or leak its lock", async () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-account-corrupt-"));
+	try {
+		const jouzuPaths = paths(temporary);
+		await refreshModelCatalog(jouzuPaths, { env: env(), fetch: async () => response(snapshot(1)) });
+		const originDirectory = catalogOriginDirectory(jouzuPaths);
+		const accountRefHash = createHash("sha256")
+			.update(`${fixture.catalogId}\0${fixture.scope.accountRef}`)
+			.digest("hex");
+		writeFileSync(join(originDirectory, "accounts", accountRefHash, "state.json"), "{ broken");
+
+		const result = await refreshModelCatalog(jouzuPaths, {
+			env: env(),
+			fetch: async () => {
+				throw new Error("must not fetch");
+			},
+		});
+		assert.equal(result.status, "rejected");
+		assert.equal(result.code, "catalog_sync_error");
+		assert.equal(existsSync(join(originDirectory, "refresh.lock")), false);
+	} finally {
+		rmSync(temporary, { recursive: true, force: true });
+	}
+});
+
 test("network and invalid updates preserve the active last-known-good catalog", async () => {
 	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-lkg-"));
 	try {
@@ -260,11 +350,7 @@ test("mass removal quarantines exact bytes until revision and digest are accepte
 	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-quarantine-"));
 	try {
 		const jouzuPaths = paths(temporary);
-		const many = Array.from({ length: 60 }, (_, index) => ({
-			...fixture.modelOfferings[0],
-			id: `ai.example.gateway/model-${index}`,
-			modelId: `model-${index}`,
-		}));
+		const many = manyOfferings(60);
 		await refreshModelCatalog(jouzuPaths, { env: env(), fetch: async () => response(snapshot(3, many)) });
 		const quarantined = await refreshModelCatalog(jouzuPaths, {
 			env: env(),
@@ -285,6 +371,46 @@ test("mass removal quarantines exact bytes until revision and digest are accepte
 		assert.equal(accepted.status, "active");
 		assert.equal(accepted.quarantined, 0);
 		assert.equal(loadActiveModelCatalog(jouzuPaths, env()).revision, "fixture-4");
+	} finally {
+		rmSync(temporary, { recursive: true, force: true });
+	}
+});
+
+test("mass addition is quarantined while preserving the active catalog", async () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-mass-addition-"));
+	try {
+		const jouzuPaths = paths(temporary);
+		const existing = manyOfferings(60);
+		await refreshModelCatalog(jouzuPaths, { env: env(), fetch: async () => response(snapshot(3, existing)) });
+		const result = await refreshModelCatalog(jouzuPaths, {
+			env: env(),
+			fetch: async () => response(snapshot(4, [...existing, ...manyOfferings(50, existing.length)])),
+		});
+		assert.equal(result.status, "quarantined");
+		assert.deepEqual(result.reasons, ["mass_addition"]);
+	} finally {
+		rmSync(temporary, { recursive: true, force: true });
+	}
+});
+
+test("an older quarantined catalog cannot replace a newer active sequence", async () => {
+	const temporary = mkdtempSync(join(tmpdir(), "jouzu-catalog-stale-quarantine-"));
+	try {
+		const jouzuPaths = paths(temporary);
+		const many = manyOfferings(60);
+		await refreshModelCatalog(jouzuPaths, { env: env(), fetch: async () => response(snapshot(3, many)) });
+		const quarantined = await refreshModelCatalog(jouzuPaths, {
+			env: env(),
+			fetch: async () => response(snapshot(4, many.slice(0, 40))),
+		});
+		assert.equal(quarantined.status, "quarantined");
+		await refreshModelCatalog(jouzuPaths, { env: env(), fetch: async () => response(snapshot(5, many)) });
+
+		assert.throws(
+			() => acceptQuarantinedCatalog(jouzuPaths, quarantined.revision, quarantined.digest, env()),
+			/older than the active catalog/u,
+		);
+		assert.equal(loadActiveModelCatalog(jouzuPaths, env()).revision, "fixture-5");
 	} finally {
 		rmSync(temporary, { recursive: true, force: true });
 	}

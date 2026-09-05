@@ -206,7 +206,14 @@ function readRegularJson(path: string): unknown | undefined {
 	if (!metadata.isFile() || metadata.isSymbolicLink() || metadata.size > 1024 * 1024) {
 		throw new CatalogSyncError(`catalog state must be a bounded regular file: ${path}`);
 	}
-	return JSON.parse(readFileSync(path, "utf8"));
+	const text = readFileSync(path, "utf8");
+	try {
+		return JSON.parse(text);
+	} catch (error) {
+		throw new CatalogSyncError(
+			`catalog state is invalid JSON: ${error instanceof Error ? error.message : String(error)}`,
+		);
+	}
 }
 
 function parseOriginState(value: unknown): CatalogOriginState | undefined {
@@ -403,12 +410,11 @@ function loadDocument(accountDirectory: string, reference: CatalogRevisionRef): 
 
 function removedOfferingReasons(previous: ModelCatalogDocument | undefined, candidate: ModelCatalogDocument): string[] {
 	if (!previous || !candidate.scope.complete || !candidate.scope.includes.includes("modelOfferings")) return [];
+	const previousIds = new Set(previous.modelOfferings.map((offering) => offering.id));
 	const nextIds = new Set(candidate.modelOfferings.map((offering) => offering.id));
 	const removed = previous.modelOfferings.filter((offering) => !nextIds.has(offering.id)).length;
 	if (removed >= 10 && removed / Math.max(previous.modelOfferings.length, 1) > 0.2) return ["mass_removal"];
-	const additions = candidate.modelOfferings.filter(
-		(offering) => !previous.modelOfferings.some((oldOffering) => oldOffering.id === offering.id),
-	).length;
+	const additions = candidate.modelOfferings.filter((offering) => !previousIds.has(offering.id)).length;
 	if (additions >= 50 && additions / Math.max(previous.modelOfferings.length, 1) > 0.5) return ["mass_addition"];
 	return [];
 }
@@ -495,6 +501,7 @@ export interface RefreshCatalogOptions {
 	fetch?: typeof globalThis.fetch;
 	now?: Date;
 	sourceId?: string;
+	timeoutMs?: number;
 }
 
 export async function refreshCatalogSource(
@@ -524,8 +531,9 @@ export async function refreshCatalogSource(
 		onBusy: (inspection: StateLockInspection) =>
 			new CatalogSyncError(`model catalog refresh is busy (${inspection.status})`),
 	});
-	let origin = readOriginState(paths, config.url);
+	let origin: CatalogOriginState | undefined;
 	try {
+		origin = readOriginState(paths, config.url);
 		const activeState = origin?.activeAccountRefHash
 			? readAccountState(paths, config.url, origin.activeAccountRefHash)
 			: undefined;
@@ -533,35 +541,35 @@ export async function refreshCatalogSource(
 		if (config.token) headers.set("Authorization", `Bearer ${config.token}`);
 		if (activeState?.etag) headers.set("If-None-Match", activeState.etag);
 		const controller = new AbortController();
-		const timeout = setTimeout(() => controller.abort(), CATALOG_TOTAL_TIMEOUT_MS);
-		let response: Response;
+		const timeout = setTimeout(() => controller.abort(), options.timeoutMs ?? CATALOG_TOTAL_TIMEOUT_MS);
+		let text: string;
 		try {
-			response = await (options.fetch ?? globalThis.fetch)(config.url, {
+			const response = await (options.fetch ?? globalThis.fetch)(config.url, {
 				method: "GET",
 				headers,
 				// Never follow a redirect with an Authorization header attached.
 				redirect: "error",
 				signal: controller.signal,
 			});
+			if (response.status === 304) {
+				if (!activeState || !origin?.activeAccountRefHash)
+					throw new CatalogSyncError("received 304 without an active cached catalog");
+				activeState.validatedAt = now.toISOString();
+				activeState.lastError = undefined;
+				const etag = response.headers.get("etag");
+				if (etag) activeState.etag = etag;
+				writeJson(accountStatePath(paths, config.url, origin.activeAccountRefHash), activeState, catalogRoot(paths));
+				return { status: "not-modified", catalogStatus: catalogStatus() };
+			}
+			if (!response.ok) throw new CatalogSyncError(`catalog endpoint returned HTTP ${response.status}`);
+			const mediaType = response.headers.get("content-type") ?? "";
+			if (!mediaType.toLowerCase().startsWith(MODEL_CATALOG_MEDIA_TYPE)) {
+				throw new CatalogSyncError(`catalog endpoint returned unsupported Content-Type: ${mediaType || "missing"}`);
+			}
+			text = await readBoundedBody(response);
 		} finally {
 			clearTimeout(timeout);
 		}
-		if (response.status === 304) {
-			if (!activeState || !origin?.activeAccountRefHash)
-				throw new CatalogSyncError("received 304 without an active cached catalog");
-			activeState.validatedAt = now.toISOString();
-			activeState.lastError = undefined;
-			const etag = response.headers.get("etag");
-			if (etag) activeState.etag = etag;
-			writeJson(accountStatePath(paths, config.url, origin.activeAccountRefHash), activeState, catalogRoot(paths));
-			return { status: "not-modified", catalogStatus: catalogStatus() };
-		}
-		if (!response.ok) throw new CatalogSyncError(`catalog endpoint returned HTTP ${response.status}`);
-		const mediaType = response.headers.get("content-type") ?? "";
-		if (!mediaType.toLowerCase().startsWith(MODEL_CATALOG_MEDIA_TYPE)) {
-			throw new CatalogSyncError(`catalog endpoint returned unsupported Content-Type: ${mediaType || "missing"}`);
-		}
-		const text = await readBoundedBody(response);
 		const document = parseAndValidateModelCatalog(text, { remote: true });
 		if (!document.sequence) throw new CatalogSyncError("remote catalog sequence is missing");
 		if (document.scope.accountScoped && !document.scope.accountRef)
@@ -655,7 +663,11 @@ export async function refreshCatalogSource(
 	} catch (error) {
 		const code = errorCode(error);
 		const message = error instanceof Error ? error.message : String(error);
-		recordError(paths, config, origin, code, message, now);
+		try {
+			recordError(paths, config, origin, code, message, now);
+		} catch {
+			// Keep the original refresh failure when cached state is also unreadable.
+		}
 		return {
 			status: error instanceof ModelCatalogError || error instanceof CatalogSyncError ? "rejected" : "error",
 			catalogStatus: catalogStatus(),
@@ -816,6 +828,20 @@ export function acceptQuarantinedCatalog(
 		const text = readFileSync(sourcePath, "utf8");
 		if (catalogDocumentSha256(text) !== digest) throw new CatalogSyncError("quarantined catalog digest mismatch");
 		const document = parseAndValidateModelCatalog(text, { remote: true });
+		if (!document.sequence) throw new CatalogSyncError("quarantined catalog sequence is missing");
+		if (state.active) {
+			const candidateSequence = BigInt(document.sequence);
+			const activeSequence = BigInt(state.active.sequence);
+			if (candidateSequence < activeSequence) {
+				throw new CatalogSyncError("quarantined catalog sequence is older than the active catalog");
+			}
+			if (candidateSequence === activeSequence && document.revision !== state.active.revision) {
+				throw new CatalogSyncError("quarantined catalog sequence was reused by the active catalog");
+			}
+			if (document.revision === state.active.revision && digest !== state.active.digest) {
+				throw new CatalogSyncError("quarantined catalog revision content differs from the active catalog");
+			}
+		}
 		const activePath = join(directory, "documents", `${digest}.json`);
 		writeFilePrivateAtomic(activePath, text, catalogRoot(paths));
 		if (resolve(sourcePath) !== resolve(activePath)) rmSync(sourcePath, { force: true });
