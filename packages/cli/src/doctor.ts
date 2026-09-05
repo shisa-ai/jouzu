@@ -1,6 +1,11 @@
 import { constants, existsSync, readFileSync, statSync } from "node:fs";
 import { homedir } from "node:os";
 import { posix, win32 } from "node:path";
+import {
+	CAMOUFOX_INSTALL_LOCK_STALE_MS,
+	inspectJouzuCamoufoxRuntime,
+	resolveCamoufoxRuntimePaths,
+} from "./camoufox-adapter.js";
 import type { KeybindingPlan } from "./keybindings.js";
 import type { JouzuMetadata } from "./metadata.js";
 import { loadModelPickerState } from "./model-picker-state.js";
@@ -220,6 +225,7 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	const npmPath = context.commandPaths ? (context.commandPaths.npm ?? undefined) : findExecutable("npm", env, platform);
 	const providerEnvironment = PROVIDER_ENVIRONMENT_KEYS.some((key) => Boolean(env[key]));
 	const nodeSupported = nodeIsSupported(nodeVersion);
+	const camoufoxRuntime = inspectJouzuCamoufoxRuntime(context.paths.stateDir);
 
 	if (!nodeSupported) problem("node.unsupported", `Node ${nodeVersion} is unsupported; Jouzu requires >=22.19.0`);
 	if (!gitPath) problem("git.missing", "Git was not found on PATH");
@@ -293,6 +299,12 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 			`Release extension inventory is unavailable: ${context.releaseExtensionDiagnostic}`,
 		);
 	}
+	if (camoufoxRuntime.status === "invalid") {
+		problem(
+			"camoufox.runtimeInvalid",
+			`The optional Camoufox runtime is invalid at ${camoufoxRuntime.installRoot}; remove that directory and retry a browser tool`,
+		);
+	}
 	let modelPickerState = "absent";
 	if (existsSync(modelPickerStatePath)) {
 		try {
@@ -343,6 +355,14 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 		context.releaseExtensionStatus
 			? `${context.releaseExtensionStatus.manifest.compatibilityDependencies.length} selected`
 			: "unavailable",
+	);
+	field(
+		"runtime",
+		"camoufox.runtime",
+		"Optional Camoufox runtime",
+		camoufoxRuntime.status === "not-installed"
+			? "not installed; installs on first browser tool use"
+			: camoufoxRuntime.status,
 	);
 	field(
 		"runtime",
@@ -400,15 +420,21 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 	);
 	const now = new Date();
 	const stateLocks = [
-		{ id: "lock.profile", label: "Profile lock", file: "profile.lock" },
-		{ id: "lock.piImport", label: "Pi import lock", file: "pi-import.lock" },
-		{ id: "lock.keybindings", label: "Keybinding lock", file: "keybindings.lock" },
-		{ id: "lock.modelPicker", label: "Model picker lock", file: "model-picker.lock" },
-		{ id: "lock.update", label: "Update lock", file: "self-update.lock" },
+		{ id: "lock.profile", label: "Profile lock", file: "profile.lock", staleMs: STATE_LOCK_STALE_MS },
+		{ id: "lock.piImport", label: "Pi import lock", file: "pi-import.lock", staleMs: STATE_LOCK_STALE_MS },
+		{ id: "lock.keybindings", label: "Keybinding lock", file: "keybindings.lock", staleMs: STATE_LOCK_STALE_MS },
+		{ id: "lock.modelPicker", label: "Model picker lock", file: "model-picker.lock", staleMs: STATE_LOCK_STALE_MS },
+		{ id: "lock.update", label: "Update lock", file: "self-update.lock", staleMs: STATE_LOCK_STALE_MS },
+		{
+			id: "lock.camoufoxRuntime",
+			label: "Camoufox runtime install lock",
+			file: pathApi.relative(context.paths.stateDir, resolveCamoufoxRuntimePaths(context.paths.stateDir).installLock),
+			staleMs: CAMOUFOX_INSTALL_LOCK_STALE_MS,
+		},
 	];
-	for (const { id, label, file } of stateLocks) {
+	for (const { id, label, file, staleMs } of stateLocks) {
 		const path = pathApi.join(context.paths.stateDir, file);
-		field("roots", id, label, describeStateLock(path, STATE_LOCK_STALE_MS, now));
+		field("roots", id, label, describeStateLock(path, staleMs, now));
 		const status = inspectStateLock(path, now).status;
 		if (status === "held-dead" || status === "owner-unknown" || status === "invalid") {
 			problem(`${id}.stale`, `A leftover state lock blocks Jouzu operations: ${path} (${status})`);

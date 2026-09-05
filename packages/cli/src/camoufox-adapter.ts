@@ -12,8 +12,8 @@ import { acquireStateLock, type StateLockInspection } from "./state-lock.js";
 const RUNTIME_NAME = "@shisa-ai/jouzu-camoufox-runtime";
 const RUNTIME_VERSION = "1.0.0";
 const INSTALL_TIMEOUT_MS = 5 * 60 * 1000;
-const INSTALL_LOCK_STALE_MS = INSTALL_TIMEOUT_MS + 60_000;
-const INSTALL_WAIT_TIMEOUT_MS = INSTALL_LOCK_STALE_MS + 30_000;
+export const CAMOUFOX_INSTALL_LOCK_STALE_MS = INSTALL_TIMEOUT_MS + 60_000;
+const INSTALL_WAIT_TIMEOUT_MS = CAMOUFOX_INSTALL_LOCK_STALE_MS + 30_000;
 const INSTALL_WAIT_INTERVAL_MS = 250;
 const RUNTIME_PACKAGE_NAMES = [
 	"@sinclair/typebox",
@@ -203,6 +203,25 @@ function runtimeIsInstalled(paths: CamoufoxRuntimePaths): boolean {
 	}
 }
 
+export type CamoufoxRuntimeStatus = "not-installed" | "ready" | "invalid";
+
+export interface CamoufoxRuntimeInspection {
+	status: CamoufoxRuntimeStatus;
+	installRoot: string;
+}
+
+export function inspectJouzuCamoufoxRuntime(stateDir: string): CamoufoxRuntimeInspection {
+	const paths = resolveCamoufoxRuntimePaths(stateDir);
+	try {
+		validatePrivateDirectory(paths.root);
+		if (!existsSync(paths.installRoot)) return { status: "not-installed", installRoot: paths.installRoot };
+		validatePrivateDirectory(paths.installRoot);
+		return { status: runtimeIsInstalled(paths) ? "ready" : "invalid", installRoot: paths.installRoot };
+	} catch {
+		return { status: "invalid", installRoot: paths.installRoot };
+	}
+}
+
 function copyRuntimeInputs(stagingRoot: string): void {
 	mkdirSync(stagingRoot, { mode: 0o700 });
 	writeFileSync(join(stagingRoot, "package.json"), readFileSync(bundledRuntimeFile("package.json")), { mode: 0o600 });
@@ -282,7 +301,7 @@ async function installCamoufoxRuntime(
 		try {
 			releaseLock = acquireStateLock({
 				path: paths.installLock,
-				staleMs: INSTALL_LOCK_STALE_MS,
+				staleMs: CAMOUFOX_INSTALL_LOCK_STALE_MS,
 				describe: "Camoufox runtime installation",
 				onBusy: (inspection) => new CamoufoxInstallBusyError(inspection),
 			});
