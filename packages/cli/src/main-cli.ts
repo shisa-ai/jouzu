@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import { formatHelp, isBlockedPiSelfUpdate, parseJouzuArgs, UsageError } from "./args.js";
 import { catalogStatus, formatCatalogStatus, validateCatalogFile } from "./catalog-command.js";
 import { createDoctorReport } from "./doctor.js";
-import { createJouzuHelpExtension } from "./help.js";
+import { isInteractivePiStartup } from "./interactive-startup.js";
 import {
 	applyKeybindings,
 	ensureDefaultKeybindings,
@@ -20,11 +20,9 @@ import {
 	refreshAvailableModelCatalogs,
 	refreshModelCatalog,
 } from "./model-catalog-sync.js";
-import { createJouzuModelPicker } from "./model-picker.js";
 import { projectDefaultAppliesAtStartup } from "./model-picker-state.js";
 import { resolveJouzuPaths } from "./paths.js";
 import { offerPiConfigurationImport, PiImportError } from "./pi-import.js";
-import { clearInteractiveStartup, createJouzuPresentationExtension, isInteractivePiStartup } from "./presentation.js";
 import { promptForJapaneseSupport, writeProfileChoice } from "./profile-choice.js";
 import {
 	applyProfile,
@@ -45,7 +43,6 @@ import {
 } from "./release-extensions.js";
 import { withJouzuResumeHint } from "./resume.js";
 import { configurePiProcess, type ProfileSelection, resolveProfileSelection } from "./runtime.js";
-import { createSessionUiExtension } from "./session-ui/index.js";
 import { ensureQuietStartupDefault, suppressPiReleaseNotes } from "./startup-settings.js";
 import { JouzuUpdater } from "./updater.js";
 import { withJouzuWindowTitle } from "./window-title.js";
@@ -255,13 +252,20 @@ export async function runMainCli(args: string[]): Promise<void> {
 		writeProfileChoice(profileChoicePath, profile.id);
 		console.log(profile.id === "ja" ? "Japanese support enabled." : "Continuing with the Core profile.");
 	}
-	clearInteractiveStartup(parsed.args);
 	if (piImportDiagnostic || !pi || !piRuntimeVersion) {
 		throw new Error(`Jouzu could not load its pinned Pi runtime: ${piImportDiagnostic ?? "unavailable"}`);
 	}
 	if (piRuntimeVersion !== metadata.piVersion) {
 		throw new Error(`loaded Pi ${piRuntimeVersion} does not match Jouzu's exact pin ${metadata.piVersion}`);
 	}
+	const [presentation, { createJouzuModelPicker }, { createJouzuHelpExtension }, { createSessionUiExtension }] =
+		await Promise.all([
+			import("./presentation.js"),
+			import("./model-picker.js"),
+			import("./help.js"),
+			import("./session-ui/index.js"),
+		]);
+	presentation.clearInteractiveStartup(parsed.args);
 	const modelPicker = createJouzuModelPicker(paths, {
 		applyProjectDefaultAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
 		restoreLastModelAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
@@ -299,7 +303,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 	const startPi = () =>
 		pi.main(piArgs, {
 			extensionFactories: [
-				createJouzuPresentationExtension(metadata, profile),
+				presentation.createJouzuPresentationExtension(metadata, profile),
 				sessionUi,
 				modelPicker.extension,
 				help,

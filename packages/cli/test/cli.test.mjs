@@ -820,3 +820,35 @@ test(
 		}
 	},
 );
+
+test("doctor reports a failed Pi import without loading interactive factories", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-doctor-import-"));
+	try {
+		const preload = join(temp, "unavailable-pi.mjs");
+		writeFileSync(
+			preload,
+			`import { registerHooks } from "node:module";
+registerHooks({ resolve(specifier, context, nextResolve) {
+  if (specifier === "@earendil-works/pi-coding-agent") throw new Error("Pi import unavailable");
+  return nextResolve(specifier, context);
+}});
+`,
+		);
+		const result = run(["doctor", "--json"], { env: { NODE_OPTIONS: `--import=${preload}` } });
+		assert.equal(result.error, undefined);
+		assert.equal(result.status, 1, result.stderr);
+		assert.equal(result.stderr, "");
+		const report = JSON.parse(result.stdout);
+		assert.equal(report.healthy, false);
+		assert.ok(
+			report.issues.some(
+				(issue) => issue.id === "pi.runtimeUnavailable" && /Pi import unavailable/.test(issue.message),
+			),
+		);
+		const help = run(["--help"], { env: { NODE_OPTIONS: `--import=${preload}` } });
+		assert.equal(help.status, 0, help.stderr);
+		assert.match(help.stdout, /Usage:/);
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
