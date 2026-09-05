@@ -12,13 +12,17 @@ $global:jouzuDefenderTest.excluded = @()
 $global:jouzuDefenderTest.addFailure = $null
 $global:jouzuDefenderTest.removeFailure = $null
 $global:jouzuDefenderTest.protection = $true
+$global:jouzuDefenderTest.queryFailure = $null
 $global:jouzuDefenderTest.cache = Join-Path $testRoot "npm-cache"
 $global:jouzuDefenderTest.prefix = Join-Path $testRoot "global-prefix"
 
 function Get-MpComputerStatus {
     return [pscustomobject]@{ AMRunningMode = "Normal"; AntivirusEnabled = $true; RealTimeProtectionEnabled = $global:jouzuDefenderTest.protection }
 }
-function Get-MpPreference { return [pscustomobject]@{ ExclusionPath = @($global:jouzuDefenderTest.excluded) } }
+function Get-MpPreference {
+    if ($global:jouzuDefenderTest.queryFailure) { throw $global:jouzuDefenderTest.queryFailure }
+    return [pscustomobject]@{ ExclusionPath = @($global:jouzuDefenderTest.excluded) }
+}
 function Add-MpPreference([string]$ExclusionPath) {
     if ($ExclusionPath -eq $global:jouzuDefenderTest.addFailure) { throw "injected add failure" }
     $global:jouzuDefenderTest.excluded += $ExclusionPath
@@ -39,6 +43,7 @@ function Assert-Fails([scriptblock]$Action, [string]$Pattern) {
     Assert-True ($failure -match $Pattern) "Expected failure matching '$Pattern', got '$failure'"
 }
 function New-Case {
+    $global:jouzuDefenderTest.queryFailure = $null
     $env:JOUZU_CI_FIXTURES = $null
     $env:RUNNER_TEMP = Join-Path $testRoot ([guid]::NewGuid().ToString())
     New-Item -ItemType Directory -Path $env:RUNNER_TEMP | Out-Null
@@ -100,6 +105,37 @@ try {
     & $target cleanup
     Assert-True ($global:jouzuDefenderTest.excluded.Count -eq 2) "Image exclusions were changed"
     Assert-True (-not $global:jouzuDefenderTest.protection) "Image protection was changed"
+
+    New-Case
+    $global:jouzuDefenderTest.protection = $false
+    & $target setup
+    $global:jouzuDefenderTest.queryFailure = 'Operation failed with the following error: 0x800106ba'
+    & $target cleanup
+    Assert-True ((Read-Record).cleanupStatus -eq "not-required") "Disabled service with no added exclusions failed cleanup"
+    Assert-True ($null -eq (Read-Record).defenderAfter) "Unavailable state was reported as observed"
+    Assert-True ((Read-Record).inspectionError -match '0x800106ba') "Unavailable query was not recorded"
+
+    New-Case
+    $global:jouzuDefenderTest.protection = $false
+    & $target setup
+    $global:jouzuDefenderTest.queryFailure = 'unrelated query error'
+    Assert-Fails { & $target cleanup } 'unrelated query error'
+    Assert-True ((Read-Record).cleanupStatus -eq "failed") "An unrelated query error was ignored"
+
+    New-Case
+    & $target scanned
+    $global:jouzuDefenderTest.queryFailure = 'Operation failed with the following error: 0x800106ba'
+    Assert-Fails { & $target cleanup } '0x800106ba'
+    Assert-True ((Read-Record).cleanupStatus -eq "failed") "Initially active protection was not verified"
+
+    New-Case
+    & $target setup
+    $global:jouzuDefenderTest.queryFailure = 'Operation failed with the following error: 0x800106ba'
+    Assert-Fails { & $target cleanup } '0x800106ba'
+    Assert-True ((Read-Record).cleanupStatus -eq "failed") "Unverified job exclusions were ignored"
+    $global:jouzuDefenderTest.queryFailure = $null
+    & $target cleanup
+    Assert-True ($global:jouzuDefenderTest.excluded.Count -eq 0) "Query recovery leaked exclusions"
 
     New-Case
     & $target setup
