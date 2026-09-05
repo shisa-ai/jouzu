@@ -92,7 +92,7 @@ parsing.
 
 ## Update lanes
 
-There are three distinct update lanes:
+There are four distinct update lanes:
 
 - **Jouzu application updates** (`updater.ts`, `jz self-update`): replace the
   installed Jouzu package for a real global npm install, verifying the exact
@@ -101,13 +101,14 @@ There are three distinct update lanes:
   a maintainer lane that pins an exact reviewed Pi artifact before promotion.
   It is not a runtime code path.
 - **Release-owned extension updates** (`release-extensions.json`): move only with a Jouzu application release. They are bundled dependencies rather than mutable Pi package entries.
+- **First-use Camoufox installation** (`camoufox-runtime/package-lock.json`): installs the exact reviewed browser client under Jouzu state when a rendered-browser tool is called. It does not add a Pi package setting or update independently.
 - **User-installed extension updates** (`jz update --extensions`): follow Pi's package behavior inside the isolated Jouzu root. This lane does not replace or independently advance the release-owned set and remains outside Jouzu's release qualification.
 
 ## Release-owned extension boundary
 
-`release-extensions.json` records ten selected extension packages, their exact npm versions or Git commits, two package skill paths, three compatibility dependencies, source URLs, licenses, and integrity evidence. `release-extensions.ts` resolves those resources from the packed `jouzu` package and adds them to Core and JA launches. A matching user-configured package entrypoint is suppressed in memory without changing `settings.json`; unrelated packages still load. A different package that registers a release-owned tool name produces one consolidated conflict.
+`release-extensions.json` records nine release-owned extension entrypoints, their exact npm versions or Git commits where applicable, one package skill path, and three compatibility dependencies, with source URLs, licenses, and integrity evidence. `release-extensions.ts` resolves those resources from the packed `jouzu` package and adds them to Core and JA launches. A matching user-configured package entrypoint is suppressed in memory without changing `settings.json`; unrelated packages still load. A different package that registers a release-owned tool name produces one consolidated conflict.
 
-`camoufox-adapter.ts` registers `tff-fetch_url` and `tff-search_web` without starting the browser during ordinary startup. The first browser tool call uses bundled `camoufox-js`, `playwright-core`, and `better-sqlite3`; `session_shutdown` closes the client.
+`camoufox-adapter.ts` registers `tff-fetch_url` and `tff-search_web` without installing or importing Camoufox during startup. The first browser tool call runs `npm ci` from `camoufox-runtime/package-lock.json` into a private, versioned directory under Jouzu state, verifies the locked package versions, and dynamically imports the runtime. The same call downloads the Camoufox browser when it is absent. `session_shutdown` closes a client that was loaded during the session.
 
 ## Bundled profile boundaries
 
