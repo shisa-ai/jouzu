@@ -61,7 +61,7 @@ jobs:
         if: runner.os == 'Windows' && inputs.npm-cache != 'cold'
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
-          path: ${{ runner.temp }}/jouzu-npm-cache
+          path: ${{ runner.temp }}/jouzu-npm-cache/_cacache
           key: windows-npm-${{ hashFiles('package-lock.json', 'packages/cli/package-lock.json', 'packages/cli/camoufox-runtime/package-lock.json') }}-${{ github.job }}-${{ matrix.node }}
           restore-keys: |
             windows-npm-${{ hashFiles('package-lock.json', 'packages/cli/package-lock.json', 'packages/cli/camoufox-runtime/package-lock.json') }}-
@@ -238,7 +238,7 @@ jobs:
         if: runner.os == 'Windows' && inputs.npm-cache != 'cold'
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
-          path: ${{ runner.temp }}/jouzu-npm-cache
+          path: ${{ runner.temp }}/jouzu-npm-cache/_cacache
           key: windows-npm-${{ hashFiles('package-lock.json', 'packages/cli/package-lock.json', 'packages/cli/camoufox-runtime/package-lock.json') }}-${{ github.job }}-${{ 'default' }}
           restore-keys: |
             windows-npm-${{ hashFiles('package-lock.json', 'packages/cli/package-lock.json', 'packages/cli/camoufox-runtime/package-lock.json') }}-
@@ -307,7 +307,7 @@ jobs:
         if: runner.os == 'Windows' && inputs.npm-cache != 'cold'
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
-          path: ${{ runner.temp }}/jouzu-npm-cache
+          path: ${{ runner.temp }}/jouzu-npm-cache/_cacache
           key: windows-npm-${{ hashFiles('package-lock.json', 'packages/cli/package-lock.json', 'packages/cli/camoufox-runtime/package-lock.json') }}-${{ github.job }}-${{ matrix.scope }}
           restore-keys: |
             windows-npm-${{ hashFiles('package-lock.json', 'packages/cli/package-lock.json', 'packages/cli/camoufox-runtime/package-lock.json') }}-
@@ -375,7 +375,7 @@ jobs:
         if: runner.os == 'Windows' && inputs.npm-cache != 'cold'
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
-          path: ${{ runner.temp }}/jouzu-npm-cache
+          path: ${{ runner.temp }}/jouzu-npm-cache/_cacache
           key: windows-npm-${{ hashFiles('package-lock.json', 'packages/cli/package-lock.json', 'packages/cli/camoufox-runtime/package-lock.json') }}-${{ github.job }}-${{ matrix.scope }}
           restore-keys: |
             windows-npm-${{ hashFiles('package-lock.json', 'packages/cli/package-lock.json', 'packages/cli/camoufox-runtime/package-lock.json') }}-
