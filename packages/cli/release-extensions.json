@@ -34,7 +34,7 @@
 			"extensions": ["dist/src/jouzu-extension.js"],
 			"skills": [],
 			"tools": ["web_fetch", "batch_web_fetch"],
-			"dependencyRemovals": ["playwright", "wreq-js"],
+			"dependencyRemovals": ["playwright", "wreq-js", "@modelcontextprotocol/sdk"],
 			"dependencyOverrides": {
 				"wreq-js": "3.2.0"
 			}

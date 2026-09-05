@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { assertStandaloneMcpBoundary } from "./webaio-package-boundary.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const cli = resolve(root, "packages", "cli");
@@ -21,8 +22,22 @@ const args = [
 	"--no-audit",
 	"--no-fund",
 ];
-let installStatus = 1;
-for (let attempt = 1; attempt <= 3; attempt += 1) {
+const sourceOnly = process.env.JOUZU_BUILD_SOURCE_ONLY === "1";
+if (sourceOnly) {
+	// Root npm ci already installed these exact workspace dependencies. Junctions
+	// preserve the CLI package paths used by the runtime and source tests.
+	const manifest = JSON.parse(readFileSync(resolve(cli, "package.json"), "utf8"));
+	for (const name of Object.keys(manifest.dependencies)) {
+		const target = resolve(cli, "node_modules", name);
+		if (existsSync(target)) continue;
+		const installed = resolve(root, "node_modules", name);
+		if (!existsSync(installed)) throw new Error(`source dependency is missing: ${name}; run npm ci`);
+		mkdirSync(resolve(target, ".."), { recursive: true });
+		symlinkSync(installed, target, "junction");
+	}
+}
+let installStatus = sourceOnly ? 0 : 1;
+for (let attempt = 1; attempt <= (sourceOnly ? 0 : 3); attempt += 1) {
 	const result = spawnSync(command, args, { cwd: root, encoding: "utf8", stdio: "inherit" });
 	if (result.error) throw result.error;
 	installStatus = result.status ?? 1;
@@ -54,6 +69,17 @@ if (webaioPackage.dependencies?.["wreq-js"] !== "^3.0.0") {
 	throw new Error("pi-webaio no longer declares the expected wreq-js transport dependency");
 }
 delete webaioPackage.dependencies["wreq-js"];
+if (webaioPackage.dependencies?.["@modelcontextprotocol/sdk"] !== "^1.30.0") {
+	throw new Error("pi-webaio MCP dependency differs from the expected version");
+}
+assertStandaloneMcpBoundary(resolve(webaioRoot, "src"));
+assertStandaloneMcpBoundary(webaioDist);
+delete webaioPackage.dependencies["@modelcontextprotocol/sdk"];
+delete webaioPackage.bin;
+for (const entry of ["bin", "src/mcp-server.ts", "dist/src/mcp-server.js", "dist/src/mcp-server.d.ts"]) {
+	rmSync(resolve(webaioRoot, entry), { recursive: true, force: true });
+}
+rmSync(resolve(webaioRoot, "node_modules", "@modelcontextprotocol"), { recursive: true, force: true });
 writeFileSync(webaioPackagePath, `${JSON.stringify(webaioPackage, null, 2)}\n`);
 rmSync(resolve(webaioRoot, "node_modules", "playwright"), { recursive: true, force: true });
 rmSync(resolve(webaioRoot, "node_modules", "wreq-js"), { recursive: true, force: true });
@@ -66,7 +92,7 @@ const bundledTypeboxSources = [
 	resolve(cli, "node_modules", "@earendil-works", "pi-agent-core", "node_modules", "typebox"),
 ];
 const bundledTypeboxTarget = resolve(cli, "node_modules", "typebox");
-if (!existsSync(bundledTypeboxTarget)) {
+if (!sourceOnly && !existsSync(bundledTypeboxTarget)) {
 	const bundledTypeboxSource = bundledTypeboxSources.find((path) => existsSync(path));
 	if (!bundledTypeboxSource) throw new Error("installed Pi tree is missing typebox");
 	renameSync(bundledTypeboxSource, bundledTypeboxTarget);

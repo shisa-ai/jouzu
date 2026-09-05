@@ -125,11 +125,11 @@ export function assertLicenseFilesPresent(packedFiles, required) {
 export function assertDefaultPackagesAbsent(packedFiles, packageJson, packageNames) {
 	for (const name of packageNames) {
 		if (packageJson.dependencies?.[name] !== undefined || packageJson.bundleDependencies?.includes(name)) {
-			throw new Error(`jouzu must not install the first-use Camoufox package ${name} by default`);
+			throw new Error(`jouzu must not install the excluded package ${name} by default`);
 		}
 		const packagePath = `node_modules/${name}/`;
 		if (packedFiles.some((file) => file.path.startsWith(packagePath) || file.path.includes(`/${packagePath}`))) {
-			throw new Error(`jouzu tarball contains first-use Camoufox package ${name}`);
+			throw new Error(`jouzu tarball contains excluded package ${name}`);
 		}
 	}
 }
@@ -332,14 +332,18 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 			readFileSync(join(directory, "node_modules", "pi-webaio", "package.json"), "utf8"),
 		);
 		if (
+			webaioPackage.dependencies?.["@modelcontextprotocol/sdk"] !== undefined ||
+			webaioPackage.bin !== undefined ||
+			!webaioRecord?.dependencyRemovals?.includes("@modelcontextprotocol/sdk") ||
 			webaioPackage.dependencies?.["wreq-js"] !== undefined ||
 			!webaioRecord?.dependencyRemovals?.includes("wreq-js") ||
 			webaioPackage.optionalDependencies?.playwright !== undefined ||
 			!webaioRecord?.dependencyRemovals?.includes("playwright")
 		) {
-			throw new Error("bundled pi-webaio browser dependency removal differs from the release manifest");
+			throw new Error("bundled pi-webaio dependency removal differs from the release manifest");
 		}
 		const forbiddenRuntimePackages = [
+			"@modelcontextprotocol/sdk",
 			"@the-forge-flow/camoufox-pi",
 			"better-sqlite3",
 			"camoufox-js",

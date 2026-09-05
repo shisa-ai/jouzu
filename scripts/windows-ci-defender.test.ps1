@@ -3,7 +3,7 @@ $target = Join-Path $PSScriptRoot "windows-ci-defender.ps1"
 $testRoot = Join-Path ([IO.Path]::GetTempPath()) ("jouzu-defender-test-" + [guid]::NewGuid())
 New-Item -ItemType Directory -Path $testRoot | Out-Null
 $saved = @{}
-foreach ($name in @("RUNNER_TEMP", "GITHUB_WORKSPACE", "GITHUB_ENV")) {
+foreach ($name in @("RUNNER_TEMP", "GITHUB_WORKSPACE", "GITHUB_ENV", "JOUZU_CI_FIXTURES")) {
     $saved[$name] = [Environment]::GetEnvironmentVariable($name)
 }
 if (Get-Variable jouzuDefenderTest -Scope Global -ErrorAction SilentlyContinue) { throw "Defender test is already running" }
@@ -39,6 +39,7 @@ function Assert-Fails([scriptblock]$Action, [string]$Pattern) {
     Assert-True ($failure -match $Pattern) "Expected failure matching '$Pattern', got '$failure'"
 }
 function New-Case {
+    $env:JOUZU_CI_FIXTURES = $null
     $env:RUNNER_TEMP = Join-Path $testRoot ([guid]::NewGuid().ToString())
     New-Item -ItemType Directory -Path $env:RUNNER_TEMP | Out-Null
     $env:GITHUB_WORKSPACE = Join-Path $testRoot "checkout"

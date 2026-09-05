@@ -280,7 +280,7 @@ function updateEnvironment(temp, prefix, home, registry) {
 		npm_config_prefix: prefix,
 		npm_config_registry: registry,
 		"npm_config_@earendil-works:registry": "https://registry.npmjs.org/",
-		npm_config_cache: join(temp, "npm-cache"),
+		npm_config_cache: process.env.JOUZU_TEST_NPM_CACHE || join(temp, "npm-cache"),
 		npm_config_update_notifier: "false",
 	};
 }
@@ -378,7 +378,8 @@ try {
 	console.log(`automatic update ${scope} smoke passed for ${currentVersion}, ${nextVersion}, and ${brokenVersion}`);
 } catch (error) {
 	smokeError = error;
-	const logDirectory = join(temp, "npm-cache", "_logs");
+	const logDirectory =
+		process.env.npm_config_logs_dir || join(process.env.JOUZU_TEST_NPM_CACHE || join(temp, "npm-cache"), "_logs");
 	try {
 		for (const name of readdirSync(logDirectory)
 			.filter((name) => name.endsWith("-debug-0.log"))
