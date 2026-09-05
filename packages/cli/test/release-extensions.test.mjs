@@ -32,6 +32,7 @@ const {
 const require = createRequire(import.meta.url);
 const packageJson = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
 const manifest = JSON.parse(readFileSync(new URL("../release-extensions.json", import.meta.url), "utf8"));
+const thirdPartyNotices = readFileSync(new URL("../THIRD_PARTY_NOTICES.md", import.meta.url), "utf8");
 
 const expectedExtensions = [
 	"@lhl/pi-tasks",
@@ -82,6 +83,11 @@ test("the release manifest and bundle list contain the selected extension set", 
 		assert.ok(record.license);
 		assert.ok(record.licenseEvidence);
 		if (record.integrity) assert.match(record.integrity, /^sha512-[A-Za-z0-9+/]+={0,2}$/u);
+		const noticePin = record.commit ? `\`${record.commit}\`` : record.version;
+		assert.ok(
+			thirdPartyNotices.includes(`| \`${record.name}\` | ${noticePin}`),
+			`${record.name} notice does not identify ${noticePin}`,
+		);
 	}
 });
 
