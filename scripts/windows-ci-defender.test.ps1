@@ -92,8 +92,19 @@ try {
 
     New-Case
     $global:jouzuDefenderTest.protection = $false
-    Assert-Fails { & $target setup } 'real-time protection must be enabled'
+    $global:jouzuDefenderTest.excluded = @('C:\', 'D:\')
+    & $target setup
+    Assert-True ((Read-Record).configuration -eq "image-protection-disabled") "Image protection state was not recorded"
+    Assert-True (-not (Test-Path $env:GITHUB_ENV)) "Disabled image protection changed fixture locations"
     & $target cleanup
+    Assert-True ($global:jouzuDefenderTest.excluded.Count -eq 2) "Image exclusions were changed"
+    Assert-True (-not $global:jouzuDefenderTest.protection) "Image protection was changed"
+
+    New-Case
+    & $target setup
+    $global:jouzuDefenderTest.protection = $false
+    Assert-Fails { & $target cleanup } 'disabled during the job'
+    Assert-True ($global:jouzuDefenderTest.excluded.Count -eq 0) "Protection failure leaked exclusions"
     Write-Host "Windows Defender setup, cleanup, failure recovery, and path-boundary tests passed"
 }
 finally {

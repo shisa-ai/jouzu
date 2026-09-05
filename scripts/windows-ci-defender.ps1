@@ -44,7 +44,9 @@ if ($Mode -eq "cleanup") {
         if ($record.effectiveCurrent -contains $path) { $failures += "Exclusion remains: $path" }
     }
     $record.defenderAfter = Get-MpComputerStatus | Select-Object AMRunningMode, AntivirusEnabled, RealTimeProtectionEnabled
-    if (-not $record.defenderAfter.RealTimeProtectionEnabled) { $failures += "Defender real-time protection is disabled" }
+    if ($record.defenderBefore.RealTimeProtectionEnabled -and -not $record.defenderAfter.RealTimeProtectionEnabled) {
+        $failures += "Defender real-time protection was disabled during the job"
+    }
     $record.cleanupStatus = if ($failures.Count) { "failed" } else { "passed" }
     Write-Record $record
     Get-Content -Raw -LiteralPath $statePath | Write-Host
@@ -57,10 +59,10 @@ if (-not $env:GITHUB_ENV -or -not $env:GITHUB_WORKSPACE -or -not $env:USERPROFIL
     throw "GITHUB_ENV, GITHUB_WORKSPACE, and USERPROFILE are required"
 }
 $defender = Get-MpComputerStatus | Select-Object AMRunningMode, AntivirusEnabled, RealTimeProtectionEnabled
-if (-not $defender.RealTimeProtectionEnabled) { throw "Defender real-time protection must be enabled" }
-if ($Mode -eq "scanned") {
+if ($Mode -eq "scanned" -or -not $defender.RealTimeProtectionEnabled) {
     Write-Record ([ordered]@{
         schemaVersion = 1
+        configuration = if ($defender.RealTimeProtectionEnabled) { "image-exclusions" } else { "image-protection-disabled" }
         requested = @()
         added = @()
         effectiveBefore = @(Get-Exclusions)
@@ -69,6 +71,7 @@ if ($Mode -eq "scanned") {
         defenderAfter = $null
         cleanupStatus = "pending"
     })
+    Get-Content -Raw -LiteralPath $statePath | Write-Host
     return
 }
 $cacheOutput = & npm.cmd config get cache
@@ -92,6 +95,7 @@ foreach ($path in $requested) {
 New-Item -ItemType Directory -Force -Path $fixtures, $cache | Out-Null
 $record = [ordered]@{
     schemaVersion = 1
+    configuration = "scoped-exclusions"
     requested = @($requested)
     added = @()
     effectiveBefore = @(Get-Exclusions)
