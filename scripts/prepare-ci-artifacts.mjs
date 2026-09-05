@@ -6,9 +6,17 @@ import { cpSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, write
 import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
 
+import { writeManifest } from "./release-artifact.mjs";
+
 const root = resolve(import.meta.dirname, "..");
 const packageDirectory = join(root, "packages", "cli");
-const packageJson = JSON.parse(readFileSync(join(packageDirectory, "package.json"), "utf8"));
+const source = spawnSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" });
+assert.equal(source.status, 0, source.stderr);
+const sourceCommit = source.stdout.trim();
+const packageJson = {
+	...JSON.parse(readFileSync(join(packageDirectory, "package.json"), "utf8")),
+	gitHead: sourceCommit,
+};
 const versionMatch = /^(\d+)\.(\d+)\.(\d+)$/.exec(packageJson.version);
 if (!versionMatch) throw new Error(`CI artifacts require a stable semantic version, got ${packageJson.version}`);
 const nextVersion = `${versionMatch[1]}.${versionMatch[2]}.${Number(versionMatch[3]) + 1}`;
@@ -43,14 +51,6 @@ function pack(directory, version, broken = false) {
 
 rmSync(outputDirectory, { recursive: true, force: true });
 mkdirSync(outputDirectory, { recursive: true });
-const candidateStdout = runNpm(
-	["pack", "--ignore-scripts", "--json", "--pack-destination", outputDirectory],
-	packageDirectory,
-);
-const [candidate] = JSON.parse(candidateStdout);
-renameSync(join(outputDirectory, candidate.filename), join(outputDirectory, "candidate.tgz"));
-writeFileSync(join(outputDirectory, "pack-metadata.json"), `${JSON.stringify([candidate], null, 2)}\n`);
-
 const temp = mkdtempSync(join(tmpdir(), "jouzu-ci-artifacts-"));
 try {
 	const fixture = join(temp, "package");
@@ -58,6 +58,10 @@ try {
 	for (const entry of ["camoufox-runtime", "dist", "node_modules", "LICENSE", "README.md", "THIRD_PARTY_NOTICES.md"]) {
 		cpSync(join(packageDirectory, entry), join(fixture, entry), { recursive: true });
 	}
+	const candidate = pack(fixture, packageJson.version);
+	renameSync(join(outputDirectory, candidate.filename), join(outputDirectory, "candidate.tgz"));
+	writeFileSync(join(outputDirectory, "pack-metadata.json"), `${JSON.stringify([candidate], null, 2)}\n`);
+	writeManifest(outputDirectory, packageJson.version, sourceCommit);
 	const next = pack(fixture, nextVersion);
 	renameSync(join(outputDirectory, next.filename), join(outputDirectory, "next.tgz"));
 	const broken = pack(fixture, brokenVersion, true);

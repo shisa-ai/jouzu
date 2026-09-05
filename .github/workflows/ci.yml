@@ -185,6 +185,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           JOUZU_EXTENSION_NETWORK: "1"
+      - run: npm run test:release-metadata
+        timeout-minutes: 5
       - run: npm run pack:prepare:ci
         timeout-minutes: 10
       - run: npm run pack:check
@@ -197,9 +199,11 @@ jobs:
           path: |
             dist/ci-artifacts/candidate.tgz
             dist/ci-artifacts/pack-metadata.json
+            dist/ci-artifacts/release-manifest.json
+            dist/ci-artifacts/SHA256SUMS
           compression-level: 0
           if-no-files-found: error
-          retention-days: 1
+          retention-days: 30
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: jouzu-updater
@@ -210,7 +214,7 @@ jobs:
             dist/ci-artifacts/artifacts.json
           compression-level: 0
           if-no-files-found: error
-          retention-days: 1
+          retention-days: 30
 
   optional-camoufox:
     needs: release-artifacts
@@ -418,6 +422,50 @@ jobs:
           path: ${{ runner.temp }}/jouzu-npm-logs
           if-no-files-found: warn
           retention-days: 7
+
+  published-upgrade:
+    needs: release-artifacts
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ${{ fromJSON(inputs.platform == 'windows' && '["windows-latest"]' || '["ubuntu-latest","macos-latest","windows-latest"]') }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: jouzu-updater
+          path: dist/ci-artifacts
+      - name: Record Windows Defender state without exclusions
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./scripts/windows-ci-defender.ps1 scanned
+      - name: Verify published-version update, restart, and rollback
+        run: npm run test:auto-update
+        timeout-minutes: 40
+        env:
+          JOUZU_UPDATE_PUBLISHED_VERSION: "0.1.6"
+          JOUZU_UPDATE_NEXT_TARBALL: dist/ci-artifacts/candidate.tgz
+          JOUZU_UPDATE_BROKEN_TARBALL: dist/ci-artifacts/broken.tgz
+          JOUZU_UPDATE_APPLY_TIMEOUT_MS: "900000"
+      - name: Check Windows Defender state
+        if: always() && runner.os == 'Windows'
+        shell: pwsh
+        run: ./scripts/windows-ci-defender.ps1 cleanup
+      - name: Save Windows Defender state
+        if: always() && runner.os == 'Windows'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: windows-defender-published-upgrade
+          path: ${{ runner.temp }}/jouzu-defender.json
+          if-no-files-found: error
+          retention-days: 30
 
   python:
     runs-on: ${{ matrix.os }}

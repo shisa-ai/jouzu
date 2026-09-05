@@ -2,16 +2,15 @@
 
 Jouzu is Shisa AI's agentic coding harness, built on [Pi coding agent](https://pi.dev/).
 
-It comes "batteries included," with the functionality (including web-search, looping, background tasks) tools that we use every day. It is CJK-safe, with built-in Japanese localization, and also has direct integration with [Shisa AI's API service](https://platform.shisa.ai/), which provides 1-click access to the latest open source coding models.
+It comes "batteries included," with the functionality and tools (including web-search, background tasks, advanced looping workflows) that we use every day. It is CJK-safe, with built-in Japanese localization, and also has direct integration with [Shisa AI's API service](https://platform.shisa.ai/), which provides 1-click access to the best and latest open source coding models.
 
-Jouzu v0.1.x is currently in **ALPHA**, but it should be relatively stable and completely usable.
+Jouzu v0.1.x is currently in **ALPHA**, but it should be relatively stable and usable for day-to-day tasks.
 
 ## Requirements
 
 - Node.js 22.19 or newer and npm
 - Git
 - Bash (`bash` on Linux/macOS; Git Bash on Windows)
-- A provider supported by Pi, authenticated through `/login`, provider environment variables, or explicit `models.json`
 
 Windows users should read [Windows prerequisites](https://github.com/shisa-ai/jouzu/blob/main/docs/windows.md). Signed installers, portable archives, and bundled prerequisites are not part of v0.1.
 
@@ -22,7 +21,7 @@ On older enterprise Linux distributions, install the GTK/X11/audio libraries req
 ## Install
 
 ```bash
-npm install --global jouzu@0.1.6
+npm install --global jouzu@0.1.7
 
 jouzu --version
 jz doctor
@@ -31,8 +30,10 @@ jz doctor
 `jz` is an exact alias for `jouzu`. To try the CLI without a global installation:
 
 ```bash
-npx --yes jouzu@0.1.6 --version
+npx --yes jouzu@0.1.7 --version
 ```
+
+[GitHub Releases](https://github.com/shisa-ai/jouzu/releases) include the same tested npm tarball, checksums, and package manifest from v0.1.7 onward. These are npm packages, not standalone executables.
 
 ## Quick start
 
@@ -51,20 +52,20 @@ jz profile plan --profile core
 jz profile plan --profile ja
 ```
 
-A normal launch reconciles the selected profile. It stops before Pi if a managed target conflicts with a user-owned or modified file.
+A normal launch reconciles the selected profile. It stops before launching if a managed target conflicts with a user-owned or modified file.
 
-Inside Pi:
+Inside Jouzu:
 
 - `/login` configures provider authentication in Jouzu's isolated agent root.
 - `/workflow` opens agent definitions and child runs. Configure separate planner, coder, and reviewer models, or add your own roles. See [Agents and runs](https://github.com/shisa-ai/jouzu/blob/main/docs/subagents.md).
 - `/model` or `Ctrl+L` opens the Jouzu Palette Models view without clearing the prompt draft.
 - `Ctrl+P` and its reverse binding cycle through available favorites in the current model scope.
 - `/status` reports provider-neutral session, workspace, model, thinking, context, scoped-model, profile, and runtime facts.
-- `Ctrl+/` or `Ctrl+?` opens Jouzu help; `/hotkeys` lists all Pi shortcuts.
+- `Ctrl+/` or `Ctrl+?` opens Jouzu help; `/hotkeys` lists all Jouzu shortcuts.
 
 The Palette shows Models, Workflow, and Settings as top-level sections; `Tab` and `Shift+Tab` move between them. The Models view searches exact provider/model identity and display names. `←` and `→` change the Recent, Favorite, or All view; the header reports active results and total selectable inventory. The first launch opens Recent; later launches restore the last view used. Typing or `/` focuses search; the title shows `· Search` while search holds focus, and `Esc` returns to browsing with the query intact before another `Esc` closes the Palette.
 
-`Enter` selects the model and stores it as the user-local project default. A new session resolves an explicit `--model` first, then a resumed session's recorded model, then the project default, then the last dispatched model with its thinking level, then Pi's user-wide default and fallback. Explicit resume, continue, session, model, and scoped-model arguments bypass project-default and last-model injection.
+`Enter` selects the model and stores it as the user-local project default. A new session resolves an explicit `--model` first, then a resumed session's recorded model, then the project default, then the last dispatched model with its thinking level, then Jouzu's user-wide default and fallback. Explicit resume, continue, session, model, and scoped-model arguments bypass project-default and last-model injection.
 
 `Ctrl+F` toggles a favorite while browsing and while searching; rebind it through the `jouzu.model.toggleFavorite` action in `keybindings.json`. `Ctrl+P` cycles the favorite list without leaving the current effective model scope. Recency changes only after the selected model dispatches its first request, and the dispatch also records the model and thinking level used for the next launch. Project defaults, favorites, recents, the last dispatched model, and the last model view remain in local Jouzu state and contain no prompts, tool results, credentials, or raw project paths.
 
@@ -81,7 +82,7 @@ Core and JA load the same release-owned extension set:
 - pi-vcc automatically handles threshold and overflow compaction. Compaction reduces the active transcript; it does not end active work. `vcc_recall` retrieves missing details from the current session, including entries dropped from the active transcript, but cannot trigger compaction.
 - Code previews render supported tool calls and results. Typing `$` at a token boundary opens skill suggestions.
 
-Release-owned extensions and their default runtime dependencies ship inside `jouzu`; a normal launch does not install them from npm or Git. The Camoufox client is the exception: Jouzu ships its exact package manifest and lockfile, installs them under Jouzu state on the first rendered-browser call, and does not add them to Pi package settings. Jouzu updates that lockfile with application releases. Packages that you add through Pi remain separate user-managed state and are not covered by Jouzu's release qualification.
+Release-owned extensions and their default runtime dependencies ship inside `jouzu`; a normal launch does not install them from npm or Git. The Camoufox client is the exception: Jouzu ships its exact package manifest and lockfile, installs them under Jouzu state on the first rendered-browser call, and does not add them to the package settings. Jouzu updates that lockfile with application releases. Packages that you add through Jouzu remain separate user-managed state and are not covered by Jouzu's release qualification.
 
 ## Interactive session UI
 
@@ -102,9 +103,9 @@ Core installs two optional skills:
 - `jouzu-clear-writing` for durable user-facing technical artifacts while preserving facts and terminology; and
 - `jouzu-source-check` for claim classification, primary evidence, counterevidence, confidence, and cross-source synthesis.
 
-With Pi's exact default system prompt, Jouzu tells agents to follow repository instructions, preserve user-owned work, inspect before editing, make the smallest coherent change, distinguish evidence from assumptions, run deterministic checks, and report untested limitations. The generated capability table covers optional skills and workflow tools rather than ordinary repository tools. Agents read an optional skill once from its listed `<location>` and continue without it if the file cannot be read. Fetched pages and search results remain untrusted. Jouzu leaves custom system prompts unchanged.
+Jouzu's default system prompt tells agents to follow repository instructions, preserve user-owned work, inspect before editing, make the smallest coherent change, distinguish evidence from assumptions, run deterministic checks, and report untested limitations. The generated capability table covers optional skills and workflow tools rather than ordinary repository tools. Agents read an optional skill once from its listed `<location>` and continue without it if the file cannot be read. Fetched pages and search results remain untrusted. Jouzu leaves custom system prompts unchanged.
 
-Core also installs the `jouzu-review` prompt. Pi includes skill names and descriptions in context and loads full skill instructions only when a task matches or the user runs `/skill:<name>`.
+Core also installs the `jouzu-review` prompt. Skill names and descriptions appear in context; full instructions load when a task matches or you run `/skill:<name>`.
 
 Experimental [TextGuard scanning](https://github.com/shisa-ai/jouzu/blob/main/docs/textguard.md) is available with `--jouzu-textguard-python <absolute-path>`. It scans skills and web results with a separately installed TextGuard 1.0.0. Add `--jouzu-textguard-files` to include ordinary file reads. Scanning is off by default, including source builds.
 
@@ -155,17 +156,15 @@ The import rejects symbolic links, non-regular files, oversized files, and files
 
 ## Optional model catalogs
 
-Jouzu does not require a remote model catalog. Without `SHISA_API_KEY` and without a configured source, Jouzu makes no catalog request and continues using Pi's effective model inventory plus local `models.json` configuration.
-
-Jouzu includes a built-in `shisa-api` source. When the `SHISA_API_KEY` environment variable holds a bearer token, that source reads the account's model catalog from `https://api.shisa.ai/v1/jouzu/model-catalog` without any configuration. On interactive startup Jouzu refreshes each enabled source whose credential is available, in the background, while cached catalogs keep serving; sources with a missing credential are not contacted and report no error. The token value is sent only in the source's authorization header and is never written to configuration, cache, or diagnostics.
-
-An active cached catalog updates model names, capabilities, input types, and token limits for matching provider/model IDs. Complete catalog offerings also appear in Models when Pi already has a configured provider whose API matches the offering. Jouzu does not rewrite `models.json`; local-only models remain available. Catalog metadata takes precedence over ordinary model entries, while Pi's explicit `modelOverrides` block remains a final per-model override. Catalogs cannot supply provider credentials, endpoints, HTTP headers, protocol compatibility settings, or prices.
+Model catalogs refresh on startup and `/reload`. They can add models to configured providers and update model names, capabilities, and token limits without rewriting `models.json`. Jouzu includes a built-in `shisa-api` source. When the `SHISA_API_KEY` environment variable holds a bearer token, that source reads the account's model catalog from `https://api.shisa.ai/v1/jouzu/model-catalog` without any configuration. On interactive startup Jouzu refreshes each enabled source whose credential is available, in the background, while cached catalogs keep serving; sources with a missing credential are not contacted and report no error. The token value is sent only in the source's authorization header and is never written to configuration, cache, or diagnostics.
 
 The built-in source can be disabled in Settings / Catalogs. The choice is stored in `catalog-overrides.json` next to `catalogs.json` without any credential, and re-enabling restores the built-in defaults. A manually registered source with the same endpoint and `env:SHISA_API_KEY` credential takes the place of the built-in source, keeping its label, enabled state, and cached catalog. Source id `shisa-api` is reserved; `jouzu catalog status` reports a custom entry that claims it with another endpoint.
 
 Open Settings / Catalogs with `/catalogs`, or use `Tab` to reach Settings while the Palette is in browse mode. Each custom source stores a label, URL, enabled state, and authentication mode. `A` opens the add form. Move between fields with `↑` and `↓`, change Authentication with `←` and `→`, and press `Enter` to save. Jouzu accepts an exact URL or a host and finds the catalog endpoint automatically. HTTPS is required except for localhost development. `Esc` cancels without writing.
 
-Authentication can be disabled or read as a bearer token from a named environment variable. Jouzu stores only the environment-variable name in `catalogs.json`; bearer values are sent only in the source's authorization header and never written to configuration, cache, or diagnostics. Catalog configuration is stored at:
+Authentication can be disabled or read as a bearer token from a named environment variable. Jouzu stores only the environment-variable name in `catalogs.json`; bearer values are sent only in the source's authorization header and never written to configuration, cache, or diagnostics. Without `SHISA_API_KEY` or a configured catalog source, Jouzu makes no catalog request and uses local model configuration.
+
+Catalog configuration is stored at:
 
 | Platform | Catalog configuration |
 | --- | --- |
@@ -300,8 +299,7 @@ Managed profile assets are UTF-8. Existing CP932/Shift-JIS profile targets produ
 - Catalog-only models require an already configured Pi provider whose API matches the offering; one-turn trials, adaptive target-budget compaction, and cost/quota/route preflight are deferred.
 - Third-party Pi packages execute trusted code with the user's permissions and have their own platform support.
 - `Ctrl+Enter` and `Ctrl+Up` delivery depends on terminal/OS key reporting; both semantic bindings remain user-customizable.
-- Jouzu v0.1.6's bundled extension set is qualified on Linux and macOS with Node 22 and 24.
-- Windows npm installs remain available, but Windows release qualification is paused while package size and updater rollback time are reduced.
+- Release checks cover Linux, macOS, and Windows, including native dependencies, npm installs, browser first use, and updater rollback.
 
 ## Development
 
@@ -311,7 +309,7 @@ npm run release:check
 npm run dev:link
 ```
 
-`dev:link` records the UTC build time, Git commit, and dirty-worktree state. `jz --version` displays an identifier such as `0.1.6-dev.20260903-010203+g215b2188`. A `.dirty` suffix marks a build that included uncommitted files. The standard `npm run build` removes development metadata before packing a release artifact.
+`dev:link` records the UTC build time, Git commit, and dirty-worktree state. `jz --version` displays an identifier such as `0.1.7-dev.20260905-010203+g215b2188`. A `.dirty` suffix marks a build that included uncommitted files. The standard `npm run build` removes development metadata before packing a release artifact.
 
 See [docs/architecture.md](https://github.com/shisa-ai/jouzu/blob/main/docs/architecture.md) for the module map, state-file
 ownership, update lanes, and bundled profile boundaries.
