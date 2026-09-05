@@ -542,9 +542,10 @@ export async function refreshCatalogSource(
 		if (activeState?.etag) headers.set("If-None-Match", activeState.etag);
 		const controller = new AbortController();
 		const timeout = setTimeout(() => controller.abort(), options.timeoutMs ?? CATALOG_TOTAL_TIMEOUT_MS);
+		let response: Response;
 		let text: string;
 		try {
-			const response = await (options.fetch ?? globalThis.fetch)(config.url, {
+			response = await (options.fetch ?? globalThis.fetch)(config.url, {
 				method: "GET",
 				headers,
 				// Never follow a redirect with an Authorization header attached.
