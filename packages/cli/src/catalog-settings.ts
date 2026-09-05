@@ -502,7 +502,9 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 					"Token variable",
 					form.credential.render(Math.max(1, innerWidth - labelWidth - 3))[0] ?? "",
 				),
-				...hint("  Enter the variable name, not the token. Its value is never saved."),
+				...hint(
+					"  Enter an environment variable name, not the token. Set it before launching Jouzu, for example with export NAME=… in ~/.bashrc or ~/.zshrc. Its value is never saved.",
+				),
 			);
 			if (credentialName) {
 				lines.push(

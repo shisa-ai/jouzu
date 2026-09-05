@@ -173,8 +173,13 @@ test("Catalogs settings shows complete bearer-token fields and process availabil
 
 		let rendered = component.render(84);
 		let text = rendered.join("\n");
+		const normalized = text.replace(/[│]/gu, " ").replace(/\s+/gu, " ");
 		assert.match(text, /Authentication\s+< Bearer token >/u);
 		assert.match(text, /Token variable/u);
+		assert.match(
+			normalized,
+			/Enter an environment variable name, not the token\. Set it before launching Jouzu, for example with export NAME=… in ~\/\.bashrc or ~\/\.zshrc\./u,
+		);
 		assert.match(text, /JOUZU_MODEL_CATALOG_TOKEN is not set in this Jouzu process/u);
 		assert.match(text, /Enter save · ↑↓ field · ←→ change/u);
 		assert.doesNotMatch(text, /Exact URL|Tab fields|Ctrl\+Enter/u);
