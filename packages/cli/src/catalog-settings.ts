@@ -10,6 +10,7 @@ import {
 } from "./catalog-sources.js";
 import { formatEffectiveKeybinding, formatEffectiveKeyPair } from "./keybinding-hints.js";
 import {
+	activateDiscoveredCatalog,
 	type CatalogRefreshResult,
 	type CatalogSyncStatus,
 	getCatalogSourceStatus,
@@ -254,19 +255,27 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			const discovered = await this.discover?.(inputUrl, { auth, env: this.env, signal: controller.signal });
 			if (!discovered) throw new Error("catalog endpoint discovery returned no result");
 			if (this.disposed || controller.signal.aborted) return;
+			let refreshed: CatalogRefreshResult | undefined;
+			const activate = (source: CatalogSource) => {
+				refreshed = activateDiscoveredCatalog(this.paths, source, discovered, this.env);
+				if (refreshed.status === "error" || refreshed.status === "rejected") throw new Error(refreshed.message);
+			};
 			const source =
 				form.mode === "edit" && form.sourceId
-					? this.store.update(form.sourceId, { label, url: discovered.url, enabled: true, auth })
-					: this.store.add({ label, url: discovered.url, auth });
-			const refreshed = await this.refreshSource(this.paths, source, { env: this.env });
-			if (this.disposed || controller.signal.aborted) return;
-			if (refreshed.status === "error" || refreshed.status === "rejected") throw new Error(refreshed.message);
+					? this.store.update(form.sourceId, { label, url: discovered.url, auth }, activate)
+					: this.store.add({ label, url: discovered.url, auth }, activate);
 			this.form = undefined;
 			this.reloadViews(source.id);
-			const count = refreshed.catalogStatus.configured
+			const count = refreshed?.catalogStatus.configured
 				? (refreshed.catalogStatus.offeringCount ?? discovered.document.modelOfferings.length)
 				: discovered.document.modelOfferings.length;
-			this.message = { level: "info", text: `Saved ${sanitizeTerminalText(source.label)} with ${countLabel(count)}.` };
+			this.message =
+				refreshed?.status === "quarantined"
+					? {
+							level: "info",
+							text: `Saved ${sanitizeTerminalText(source.label)}. Catalog revision quarantined: ${refreshed.reasons.join(", ")}.`,
+						}
+					: { level: "info", text: `Saved ${sanitizeTerminalText(source.label)} with ${countLabel(count)}.` };
 			this.onCatalogsChanged?.();
 		} catch (error) {
 			if (this.disposed || controller.signal.aborted) return;
@@ -276,6 +285,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			};
 		} finally {
 			if (this.controller === controller) this.controller = undefined;
+			if (controller.signal.aborted && !this.disposed) this.message = { level: "info", text: "Catalog save canceled." };
 			this.busy = false;
 			this.tui.requestRender();
 		}

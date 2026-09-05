@@ -3,6 +3,7 @@ import { existsSync, lstatSync, readdirSync, readFileSync, rmSync } from "node:f
 import { join, relative, resolve, sep } from "node:path";
 import { readBoundedResponseText } from "./bounded-response.js";
 import {
+	type CatalogEndpointDiscoveryResult,
 	type CatalogSource,
 	catalogSourceConflict,
 	catalogSourceCredentialAvailable,
@@ -525,97 +526,7 @@ export async function refreshCatalogSource(
 		} finally {
 			clearTimeout(timeout);
 		}
-		const document = parseAndValidateModelCatalog(text, { remote: true });
-		if (!document.sequence) throw new CatalogSyncError("remote catalog sequence is missing");
-		if (document.scope.accountScoped && !document.scope.accountRef)
-			throw new CatalogSyncError("remote account catalog is missing accountRef");
-		const partitionRef = document.scope.accountScoped ? document.scope.accountRef : "public";
-		const accountRefHash = hash(`${document.catalogId}\0${partitionRef}`);
-		const directory = accountRoot(paths, config.url, accountRefHash);
-		ensurePrivateDirectory(catalogRoot(paths), directory);
-		let state = readAccountState(paths, config.url, accountRefHash);
-		if (state && state.catalogId !== document.catalogId)
-			throw new CatalogSyncError("catalog identity changed inside one account partition");
-		state ??= { schemaVersion: 1, catalogId: document.catalogId, accountRefHash, quarantined: [] };
-		if (state.active) {
-			const next = BigInt(document.sequence);
-			const active = BigInt(state.active.sequence);
-			if (next < active) throw new CatalogSyncError("catalog sequence decreased");
-			if (next === active && document.revision !== state.active.revision)
-				throw new CatalogSyncError("catalog sequence was reused");
-		}
-		const digest = catalogDocumentSha256(text);
-		if (state.active?.revision === document.revision && state.active.digest !== digest) {
-			throw new CatalogSyncError("catalog revision content changed");
-		}
-		if (state.active?.digest === digest) {
-			state.validatedAt = now.toISOString();
-			state.lastError = undefined;
-			const etag = response.headers.get("etag");
-			if (etag) state.etag = etag;
-			writeJson(accountStatePath(paths, config.url, accountRefHash), state, catalogRoot(paths));
-			writeJson(
-				originStatePath(paths, config.url),
-				{ schemaVersion: 1, activeAccountRefHash: accountRefHash },
-				catalogRoot(paths),
-			);
-			return { status: "not-modified", catalogStatus: catalogStatus() };
-		}
-
-		const previous = state.active ? loadDocument(directory, state.active) : undefined;
-		const reasons = removedOfferingReasons(previous, document);
-		const candidatePath = join(directory, reasons.length > 0 ? "quarantine" : "documents", `${digest}.json`);
-		writeFilePrivateAtomic(candidatePath, text, catalogRoot(paths));
-		if (reasons.length > 0) {
-			state.quarantined = trimQuarantine(
-				[
-					...state.quarantined.filter((entry) => entry.digest !== digest),
-					{
-						digest,
-						revision: document.revision,
-						sequence: document.sequence,
-						document: safeRelative(directory, candidatePath),
-						reasons,
-						receivedAt: now.toISOString(),
-						bytes: Buffer.byteLength(text),
-					},
-				],
-				directory,
-			);
-			state.lastError = { code: "quarantined", message: reasons.join(", "), at: now.toISOString() };
-			writeJson(accountStatePath(paths, config.url, accountRefHash), state, catalogRoot(paths));
-			writeJson(
-				originStatePath(paths, config.url),
-				{ schemaVersion: 1, activeAccountRefHash: accountRefHash },
-				catalogRoot(paths),
-			);
-			return {
-				status: "quarantined",
-				catalogStatus: catalogStatus(),
-				revision: document.revision,
-				digest,
-				reasons,
-			};
-		}
-		const activated: CatalogRevisionRef = {
-			digest,
-			revision: document.revision,
-			sequence: document.sequence,
-			generatedAt: document.generatedAt,
-			document: safeRelative(directory, candidatePath),
-			activatedAt: now.toISOString(),
-		};
-		state.previous = state.active;
-		state.active = activated;
-		state.validatedAt = now.toISOString();
-		state.lastError = undefined;
-		const etag = response.headers.get("etag");
-		if (etag) state.etag = etag;
-		writeJson(accountStatePath(paths, config.url, accountRefHash), state, catalogRoot(paths));
-		origin = { schemaVersion: 1, activeAccountRefHash: accountRefHash };
-		writeJson(originStatePath(paths, config.url), origin, catalogRoot(paths));
-		pruneDocuments(directory, state);
-		return { status: "activated", catalogStatus: catalogStatus() };
+		return activateCatalogDocument(paths, source, text, response.headers.get("etag") ?? undefined, now, env);
 	} catch (error) {
 		const code = errorCode(error);
 		const message = error instanceof Error ? error.message : String(error);
@@ -633,6 +544,127 @@ export async function refreshCatalogSource(
 	} finally {
 		release?.();
 	}
+}
+
+/** Activate the exact discovery response without issuing a second request. */
+export function activateDiscoveredCatalog(
+	paths: JouzuPaths,
+	source: CatalogSource,
+	discovered: CatalogEndpointDiscoveryResult,
+	env: NodeJS.ProcessEnv = process.env,
+): CatalogRefreshResult {
+	if (source.url !== discovered.url) throw new CatalogSyncError("discovered catalog endpoint does not match source");
+	const release = acquireStateLock({
+		path: lockPath(paths, source.url),
+		describe: "model catalog activation",
+		onBusy: (inspection) => new CatalogSyncError(`model catalog refresh is busy (${inspection.status})`),
+	});
+	try {
+		return activateCatalogDocument(paths, source, discovered.text, discovered.etag, new Date(), env);
+	} finally {
+		release();
+	}
+}
+
+function activateCatalogDocument(
+	paths: JouzuPaths,
+	source: CatalogSource,
+	text: string,
+	etag: string | undefined,
+	now: Date,
+	env: NodeJS.ProcessEnv,
+): CatalogRefreshResult {
+	const config = { url: source.url };
+	const catalogStatus = () => getCatalogSourceStatus(paths, source, now, env);
+	const document = parseAndValidateModelCatalog(text, { remote: true });
+	if (!document.sequence) throw new CatalogSyncError("remote catalog sequence is missing");
+	if (document.scope.accountScoped && !document.scope.accountRef)
+		throw new CatalogSyncError("remote account catalog is missing accountRef");
+	const partitionRef = document.scope.accountScoped ? document.scope.accountRef : "public";
+	const accountRefHash = hash(`${document.catalogId}\0${partitionRef}`);
+	const directory = accountRoot(paths, config.url, accountRefHash);
+	ensurePrivateDirectory(catalogRoot(paths), directory);
+	let state = readAccountState(paths, config.url, accountRefHash);
+	if (state && state.catalogId !== document.catalogId)
+		throw new CatalogSyncError("catalog identity changed inside one account partition");
+	state ??= { schemaVersion: 1, catalogId: document.catalogId, accountRefHash, quarantined: [] };
+	if (state.active) {
+		const next = BigInt(document.sequence);
+		const active = BigInt(state.active.sequence);
+		if (next < active) throw new CatalogSyncError("catalog sequence decreased");
+		if (next === active && document.revision !== state.active.revision)
+			throw new CatalogSyncError("catalog sequence was reused");
+	}
+	const digest = catalogDocumentSha256(text);
+	if (state.active?.revision === document.revision && state.active.digest !== digest) {
+		throw new CatalogSyncError("catalog revision content changed");
+	}
+	if (state.active?.digest === digest) {
+		state.validatedAt = now.toISOString();
+		state.lastError = undefined;
+		if (etag) state.etag = etag;
+		writeJson(accountStatePath(paths, config.url, accountRefHash), state, catalogRoot(paths));
+		writeJson(
+			originStatePath(paths, config.url),
+			{ schemaVersion: 1, activeAccountRefHash: accountRefHash },
+			catalogRoot(paths),
+		);
+		return { status: "not-modified", catalogStatus: catalogStatus() };
+	}
+
+	const previous = state.active ? loadDocument(directory, state.active) : undefined;
+	const reasons = removedOfferingReasons(previous, document);
+	const candidatePath = join(directory, reasons.length > 0 ? "quarantine" : "documents", `${digest}.json`);
+	writeFilePrivateAtomic(candidatePath, text, catalogRoot(paths));
+	if (reasons.length > 0) {
+		state.quarantined = trimQuarantine(
+			[
+				...state.quarantined.filter((entry) => entry.digest !== digest),
+				{
+					digest,
+					revision: document.revision,
+					sequence: document.sequence,
+					document: safeRelative(directory, candidatePath),
+					reasons,
+					receivedAt: now.toISOString(),
+					bytes: Buffer.byteLength(text),
+				},
+			],
+			directory,
+		);
+		state.lastError = { code: "quarantined", message: reasons.join(", "), at: now.toISOString() };
+		writeJson(accountStatePath(paths, config.url, accountRefHash), state, catalogRoot(paths));
+		writeJson(
+			originStatePath(paths, config.url),
+			{ schemaVersion: 1, activeAccountRefHash: accountRefHash },
+			catalogRoot(paths),
+		);
+		return {
+			status: "quarantined",
+			catalogStatus: catalogStatus(),
+			revision: document.revision,
+			digest,
+			reasons,
+		};
+	}
+	const activated: CatalogRevisionRef = {
+		digest,
+		revision: document.revision,
+		sequence: document.sequence,
+		generatedAt: document.generatedAt,
+		document: safeRelative(directory, candidatePath),
+		activatedAt: now.toISOString(),
+	};
+	state.previous = state.active;
+	state.active = activated;
+	state.validatedAt = now.toISOString();
+	state.lastError = undefined;
+	if (etag) state.etag = etag;
+	writeJson(accountStatePath(paths, config.url, accountRefHash), state, catalogRoot(paths));
+	const origin = { schemaVersion: 1, activeAccountRefHash: accountRefHash };
+	writeJson(originStatePath(paths, config.url), origin, catalogRoot(paths));
+	pruneDocuments(directory, state);
+	return { status: "activated", catalogStatus: catalogStatus() };
 }
 
 export async function refreshModelCatalog(

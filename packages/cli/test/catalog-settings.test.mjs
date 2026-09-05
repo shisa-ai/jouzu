@@ -1,15 +1,22 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 
 import { CatalogSettingsComponent } from "../dist/catalog-settings.js";
-import { CatalogSourceStore, loadCatalogSourceRegistry } from "../dist/catalog-sources.js";
+import {
+	CatalogSourceStore,
+	catalogSourceRegistryPath,
+	discoverCatalogEndpoint,
+	loadCatalogSourceRegistry,
+} from "../dist/catalog-sources.js";
 import { parseAndValidateModelCatalog } from "../dist/model-catalog.js";
-import { refreshCatalogSource } from "../dist/model-catalog-sync.js";
+import { loadActiveCatalogForSource, refreshCatalogSource } from "../dist/model-catalog-sync.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
 import { createSessionUiStyles } from "../dist/session-ui/index.js";
+import { acquireStateLock } from "../dist/state-lock.js";
 import { terminalTextWidth } from "../dist/terminal-layout.js";
 
 const fixture = parseAndValidateModelCatalog(
@@ -66,7 +73,7 @@ function setup(options = {}) {
 }
 
 function response(document) {
-	return new Response(JSON.stringify(document), {
+	return new Response(JSON.stringify(document, null, 2), {
 		status: 200,
 		headers: { "Content-Type": "application/vnd.jouzu.model-catalog+json; version=1", ETag: '"fixture"' },
 	});
@@ -263,23 +270,13 @@ test("Catalogs settings saves a label and discovered conventional endpoint", asy
 				return {
 					url: "http://127.0.0.1:8989/v1/jouzu/model-catalog",
 					document: fixture,
+					text: JSON.stringify(fixture),
 					attempts: [],
 				};
 			},
-			refresh: async (_paths, source) => ({
-				status: "activated",
-				catalogStatus: {
-					schemaVersion: 1,
-					status: "active",
-					configured: true,
-					sourceId: source.id,
-					label: source.label,
-					enabled: true,
-					endpoint: source.url,
-					offeringCount: 1,
-					quarantined: 0,
-				},
-			}),
+			refresh: async () => {
+				throw new Error("saving must not fetch twice");
+			},
 		});
 		component.handleInput("a");
 		for (const character of "Local catalog") component.handleInput(character);
@@ -298,3 +295,113 @@ test("Catalogs settings saves a label and discovered conventional endpoint", asy
 		rmSync(root, { recursive: true, force: true });
 	}
 });
+
+for (const editing of [false, true]) {
+	test(`catalog save remains retryable after activation failure, editing=${editing}`, async () => {
+		const { root, paths, context } = setup();
+		let release;
+		try {
+			const url = "https://catalog.example/v1/jouzu/model-catalog";
+			const store = new CatalogSourceStore(paths, {});
+			if (editing) store.add({ label: "Original", url, enabled: false, auth: { type: "none" } });
+			const registry = catalogSourceRegistryPath(paths);
+			const before = existsSync(registry) ? readFileSync(registry, "utf8") : undefined;
+			let requests = 0;
+			const component = new CatalogSettingsComponent({
+				context,
+				paths,
+				env: {},
+				discover: (input, options) =>
+					discoverCatalogEndpoint(input, {
+						...options,
+						fetch: async () => {
+							requests++;
+							return response(fixture);
+						},
+					}),
+				refresh: async () => {
+					throw new Error("second request");
+				},
+			});
+			if (editing) {
+				component.handleInput("down");
+				component.handleInput("enter");
+				component.handleInput(" changed");
+			} else {
+				component.handleInput("a");
+				component.handleInput("Catalog");
+				component.handleInput("down");
+				component.handleInput(url);
+			}
+			release = acquireStateLock({
+				path: join(paths.cacheDir, "model-catalog", createHash("sha256").update(url).digest("hex"), "refresh.lock"),
+				describe: "test",
+				onBusy: () => new Error("busy"),
+			});
+			component.handleInput("enter");
+			await new Promise((resolve) => setImmediate(resolve));
+			assert.match(component.render(100).join("\n"), /busy/);
+			assert.equal(existsSync(registry) ? readFileSync(registry, "utf8") : undefined, before);
+			release();
+			release = undefined;
+			component.handleInput("enter");
+			await new Promise((resolve) => setImmediate(resolve));
+			assert.equal(requests, 2, "one discovery request per attempt");
+			const sources = loadCatalogSourceRegistry(paths).sources;
+			assert.equal(sources.length, 1);
+			assert.equal(loadActiveCatalogForSource(paths, sources[0]).revision, fixture.revision);
+			assert.equal(sources[0].enabled, !editing);
+			const origin = join(paths.cacheDir, "model-catalog", createHash("sha256").update(url).digest("hex"));
+			const account = JSON.parse(readFileSync(join(origin, "origin.json"))).activeAccountRefHash;
+			const directory = join(origin, "accounts", account);
+			const state = JSON.parse(readFileSync(join(directory, "state.json")));
+			assert.equal(state.etag, '"fixture"');
+			assert.equal(readFileSync(join(directory, state.active.document), "utf8"), JSON.stringify(fixture, null, 2));
+			assert.match(component.render(100).join("\n"), /Saved/);
+		} finally {
+			release?.();
+			rmSync(root, { recursive: true, force: true });
+		}
+	});
+
+	test(`canceling catalog discovery preserves registry bytes, editing=${editing}`, async () => {
+		const { root, paths, context } = setup();
+		try {
+			const url = "https://catalog.example/catalog";
+			if (editing) new CatalogSourceStore(paths, {}).add({ label: "Original", url, auth: { type: "none" } });
+			const registry = catalogSourceRegistryPath(paths);
+			const before = existsSync(registry) ? readFileSync(registry, "utf8") : undefined;
+			let finish, signal;
+			const component = new CatalogSettingsComponent({
+				context,
+				paths,
+				env: {},
+				discover: (_input, options) => {
+					signal = options.signal;
+					return new Promise((resolve) => {
+						finish = resolve;
+					});
+				},
+			});
+			if (editing) {
+				component.handleInput("down");
+				component.handleInput("enter");
+			} else {
+				component.handleInput("a");
+				component.handleInput("Catalog");
+				component.handleInput("down");
+				component.handleInput(url);
+			}
+			component.handleInput("enter");
+			component.handleInput("escape");
+			assert.equal(signal.aborted, true);
+			finish({ url, document: fixture, text: JSON.stringify(fixture), attempts: [] });
+			await new Promise((resolve) => setImmediate(resolve));
+			assert.equal(existsSync(registry) ? readFileSync(registry, "utf8") : undefined, before);
+			assert.equal(existsSync(join(paths.cacheDir, "model-catalog")), false);
+			assert.match(component.render(100).join("\n"), /Catalog save canceled/);
+		} finally {
+			rmSync(root, { recursive: true, force: true });
+		}
+	});
+}

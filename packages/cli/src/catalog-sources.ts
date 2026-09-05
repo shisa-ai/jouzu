@@ -75,6 +75,8 @@ export interface CatalogEndpointDiscoveryOptions {
 
 export interface CatalogEndpointDiscoveryResult {
 	url: string;
+	text: string;
+	etag?: string;
 	document: ModelCatalogDocument;
 	attempts: Array<{ url: string; result: string }>;
 }
@@ -374,8 +376,9 @@ export function resolveCatalogSources(
 	return options.includeDisabled ? sources : sources.filter((source) => source.enabled);
 }
 
-function writeRegistry(paths: JouzuPaths, registry: CatalogSourceRegistry): void {
+function writeRegistry(paths: JouzuPaths, registry: CatalogSourceRegistry, beforeSave?: () => void): void {
 	const validated = validateRegistry(registry);
+	beforeSave?.();
 	writeFilePrivateAtomic(
 		catalogSourceRegistryPath(paths),
 		`${JSON.stringify(validated, null, 2)}\n`,
@@ -409,11 +412,11 @@ export class CatalogSourceStore {
 		}
 	}
 
-	private save(sources: CatalogSource[]): void {
-		writeRegistry(this.paths, { schemaVersion: 1, sources });
+	private save(sources: CatalogSource[], beforeSave?: () => void): void {
+		writeRegistry(this.paths, { schemaVersion: 1, sources }, beforeSave);
 	}
 
-	add(input: CatalogSourceInput): CatalogSource {
+	add(input: CatalogSourceInput, beforeSave?: (source: CatalogSource) => void): CatalogSource {
 		const resolved = this.list();
 		const label = controlFree(input.label, "catalog source label", LABEL_MAX_BYTES);
 		const baseId = input.id ? normalizeSourceId(input.id) : sourceIdFromLabel(label);
@@ -434,11 +437,15 @@ export class CatalogSourceStore {
 			resolved.length,
 		);
 		// Persist only user-managed sources; the code-owned built-in is never materialized.
-		this.save([...resolveBaseCatalogSources(this.paths, this.env), source]);
+		this.save([...resolveBaseCatalogSources(this.paths, this.env), source], () => beforeSave?.(source));
 		return source;
 	}
 
-	update(id: string, input: Omit<CatalogSourceInput, "id">): CatalogSource {
+	update(
+		id: string,
+		input: Omit<CatalogSourceInput, "id">,
+		beforeSave?: (source: CatalogSource) => void,
+	): CatalogSource {
 		const normalizedId = normalizeSourceId(id);
 		const sources = resolveBaseCatalogSources(this.paths, this.env);
 		const index = sources.findIndex((source) => source.id === normalizedId);
@@ -449,7 +456,7 @@ export class CatalogSourceStore {
 		}
 		const source = parseSource({ ...input, id: normalizedId, enabled: input.enabled ?? sources[index].enabled }, index);
 		sources[index] = source;
-		this.save(sources);
+		this.save(sources, () => beforeSave?.(source));
 		return source;
 	}
 
@@ -561,7 +568,7 @@ export async function discoverCatalogEndpoint(
 			});
 			const document = parseAndValidateModelCatalog(text, { remote: true });
 			attempts.push({ url, result: "valid" });
-			return { url, document, attempts };
+			return { url, document, text, etag: response.headers.get("etag") ?? undefined, attempts };
 		} catch (error) {
 			if (options.signal?.aborted) throw new CatalogSourceError("Catalog endpoint discovery was canceled.");
 			const message = error instanceof Error ? error.message : String(error);
