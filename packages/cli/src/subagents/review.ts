@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { lstatSync, readFileSync, readlinkSync } from "node:fs";
+import { lstatSync, readFileSync, readlinkSync, realpathSync } from "node:fs";
 import { join } from "node:path";
 import { digest } from "./roles.js";
 
@@ -18,7 +18,7 @@ export function captureReviewCandidate(cwd: string): ReviewCandidate {
 				stdio: ["ignore", "pipe", "ignore"],
 			});
 		const root = git("rev-parse", "--show-toplevel").toString("utf8").trim();
-		if (root !== cwd) return { coverage: "unavailable" };
+		if (realpathSync(root) !== realpathSync(cwd)) return { coverage: "unavailable" };
 		const head = git("rev-parse", "HEAD").toString("utf8").trim();
 		const diff = git("diff", "--no-ext-diff", "--no-textconv", "--binary", "HEAD", "--");
 		const status = git("status", "--porcelain=v1", "-z", "--untracked-files=all");
