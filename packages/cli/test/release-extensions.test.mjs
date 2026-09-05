@@ -4,6 +4,7 @@ import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { pathToFileURL } from "node:url";
 import {
 	consolidateReleaseToolConflicts,
 	createReleaseExtensionDiagnostics,
@@ -130,6 +131,17 @@ test("the selected native runtime dependencies load on the host", () => {
 	probeReleaseRuntimeCompatibility(status);
 	assert.deepEqual(status.errors, []);
 	assert.deepEqual(status.degradedExtensions, []);
+});
+
+test("the pi-webaio entrypoint loads its required native transport", async () => {
+	const status = inspectReleaseExtensions();
+	const root = status.resolvedPackageRoots["pi-webaio"];
+	assert.ok(root);
+	const packageRequire = createRequire(join(root, "package.json"));
+	const wreq = packageRequire("wreq-js");
+	assert.ok(wreq.getProfiles().includes("chrome_145"));
+	const webfetch = await import(pathToFileURL(join(root, "dist/src/webfetch.js")).href);
+	assert.equal(typeof webfetch.fetchPage, "function");
 });
 
 test("a native redirect failure degrades its optional extension", () => {
