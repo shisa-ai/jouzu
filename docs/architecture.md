@@ -32,7 +32,7 @@ cli.ts  (entry: argument routing, profile resolution, launch)
   ├─ model-picker*.ts    Models view, ranking, and private picker state
   ├─ terminal-layout.ts  stable CLI re-export of shared display-width helpers
   ├─ session-ui/         build-time adapter to the standalone workspace
-  ├─ resume.ts           session-resume guidance
+  ├─ runtime-output.ts   session-resume guidance and terminal-title branding
   ├─ state-lock.ts       shared state-lock primitive
   └─ private-fs.ts       private directory/file boundary and atomic writes
 

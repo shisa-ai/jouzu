@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { ProcessTerminal } from "@earendil-works/pi-tui";
-import { rewritePiWindowTitle, withJouzuWindowTitle } from "../dist/window-title.js";
+import { rewritePiWindowTitle, withJouzuOutput } from "../dist/runtime-output.js";
 
 const title = (value) => `\u001b]0;${value}\u0007`;
 
@@ -34,13 +34,13 @@ test("owns startup, session, and delayed Pi title writes for the runtime operati
 	process.stdout.write = captureWrite;
 	try {
 		const terminal = new ProcessTerminal();
-		await withJouzuWindowTitle(async () => {
+		await withJouzuOutput(async () => {
 			terminal.setTitle("Jouzu - workspace");
 			terminal.setTitle("π - workspace");
 			terminal.setTitle("π - named session - workspace");
 			await Promise.resolve();
 			terminal.setTitle("π - named session - workspace");
-		});
+		}, true);
 		assert.equal(
 			captured,
 			[

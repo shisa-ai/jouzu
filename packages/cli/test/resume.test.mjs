@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { rewriteResumeHint, withJouzuResumeHint } from "../dist/resume.js";
+import { rewriteResumeHint, withJouzuOutput } from "../dist/runtime-output.js";
 
 const sessionId = "01a02007-8a6e-753c-b232-babb4ba4f3d5";
 
@@ -34,12 +34,47 @@ test("adapts process-level Pi output only for the runtime operation", async () =
 	};
 	process.stdout.write = captureWrite;
 	try {
-		await withJouzuResumeHint(async () => {
+		await withJouzuOutput(async () => {
+			process.stdout.write("\u001b]0;π - workspace\u0007");
 			process.stdout.write(`To resume this session: pi --session-dir /tmp/sessions --session ${sessionId}\n`);
 		});
-		assert.equal(captured, `To resume this session: jz --session ${sessionId}\n`);
+		assert.equal(captured, `\u001b]0;π - workspace\u0007To resume this session: jz --session ${sessionId}\n`);
 		assert.equal(process.stdout.write, captureWrite);
 	} finally {
 		process.stdout.write = processWrite;
+	}
+});
+
+test("output adapter forwards buffers, callbacks, and errors without replacing a successor", async () => {
+	const original = process.stdout.write;
+	const calls = [];
+	const capture = function (...args) {
+		calls.push({ receiver: this, args });
+		return false;
+	};
+	process.stdout.write = capture;
+	try {
+		const bytes = Buffer.from("unchanged");
+		const callback = () => {};
+		await assert.rejects(
+			withJouzuOutput(async () => {
+				assert.equal(process.stdout.write(bytes, callback), false);
+				assert.equal(process.stdout.write("ordinary text", "utf8", callback), false);
+				throw new Error("operation failed");
+			}, true),
+			/operation failed/,
+		);
+		assert.equal(process.stdout.write, capture);
+		assert.equal(calls[0].receiver, process.stdout);
+		assert.equal(calls[0].args[0], bytes);
+		assert.equal(calls[0].args[1], callback);
+		assert.deepEqual(calls[1].args, ["ordinary text", "utf8", callback]);
+		const successor = () => true;
+		await withJouzuOutput(async () => {
+			process.stdout.write = successor;
+		});
+		assert.equal(process.stdout.write, successor);
+	} finally {
+		process.stdout.write = original;
 	}
 });

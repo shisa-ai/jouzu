@@ -41,11 +41,10 @@ import {
 	withReleaseExtensionArguments,
 	withReleaseExtensionConflictPolicy,
 } from "./release-extensions.js";
-import { withJouzuResumeHint } from "./resume.js";
 import { configurePiProcess, type ProfileSelection, resolveProfileSelection } from "./runtime.js";
+import { withJouzuOutput } from "./runtime-output.js";
 import { ensureQuietStartupDefault, suppressPiReleaseNotes } from "./startup-settings.js";
 import { JouzuUpdater } from "./updater.js";
-import { withJouzuWindowTitle } from "./window-title.js";
 
 async function loadPiRuntime(): Promise<typeof import("@earendil-works/pi-coding-agent")> {
 	return import("@earendil-works/pi-coding-agent");
@@ -317,7 +316,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 		usesReleaseExtensions(parsed.args)
 			? withReleaseExtensionConflictPolicy(pi, releaseExtensionStatus, startPi)
 			: startPi();
-	await withJouzuResumeHint(() => (interactiveStartup ? withJouzuWindowTitle(runPi) : runPi()));
+	await withJouzuOutput(runPi, interactiveStartup);
 }
 
 export function handleMainCliError(error: unknown): void {
