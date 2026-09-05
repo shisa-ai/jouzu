@@ -8,7 +8,7 @@ The guide states intended behavior. Tests encode it. A view that disagrees with 
 
 | Surface | Module | Presentation | Governed by |
 | --- | --- | --- | --- |
-| Palette (Models, Settings / Catalogs) | `packages/cli/src/palette.ts`, `model-picker.ts`, `catalog-settings.ts` | Floating overlay or in-place replacement | [`palette-ux.md`](palette-ux.md) |
+| Palette (Models, Workflow, Settings / Catalogs) | `packages/cli/src/palette.ts`, `model-picker.ts`, `workflow.ts`, `catalog-settings.ts` | Floating overlay or in-place replacement | [`palette-ux.md`](palette-ux.md) |
 | Help | `packages/cli/src/help.ts` | Floating overlay | This guide; see [Known deviations](#known-deviations) |
 | Session Frame (prompt frame, session line, status bar) | `packages/session-ui/src` | Persistent, around Pi's editor | This guide |
 | Startup header | `packages/cli/src/presentation.ts` | One-time output | This guide |

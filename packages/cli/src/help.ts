@@ -22,6 +22,7 @@ export function createJouzuHelpExtension(): InlineExtension {
 								`${theme.fg("accent", helpKeys)}  Help`,
 								`${theme.fg("accent", "/hotkeys")}  All shortcuts`,
 								`${theme.fg("accent", "/status")}  Session details`,
+								`${theme.fg("accent", "/workflow")}  Agents and runs`,
 								"",
 								theme.fg("dim", `${formatEffectiveKeybinding(keybindings, "tui.select.cancel")} close`),
 							].join("\n"),
@@ -43,7 +44,7 @@ export function createJouzuHelpExtension(): InlineExtension {
 					},
 					{
 						overlay: true,
-						overlayOptions: { width: 38, maxHeight: 12, anchor: "center", margin: 1 },
+						overlayOptions: { width: 38, maxHeight: 13, anchor: "center", margin: 1 },
 					},
 				);
 			};

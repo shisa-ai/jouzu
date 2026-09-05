@@ -10,7 +10,7 @@ import {
 import { createJouzuKeybindingsManagerFromConfig, type JouzuKeybindingsManager } from "./jouzu-keybindings.js";
 import { createSessionUiStyles, type SessionUiStyles } from "./session-ui/index.js";
 
-export type PaletteViewId = "models" | "settings" | "usage" | "keys" | "help";
+export type PaletteViewId = "models" | "workflow" | "settings" | "usage" | "keys" | "help";
 export type PalettePresentation = "floating" | "replace";
 
 export interface PaletteRoute {
@@ -42,6 +42,7 @@ export type PaletteComponentFactory = (context: PaletteComponentContext, route: 
 
 export const PALETTE_TABS = [
 	{ view: "models", label: "Models" },
+	{ view: "workflow", label: "Workflow" },
 	{ view: "settings", label: "Settings" },
 ] as const satisfies ReadonlyArray<{ view: PaletteViewId; label: string }>;
 
@@ -94,6 +95,7 @@ export class JouzuPaletteRouter implements PaletteComponent, Focusable {
 	}
 
 	route(route: PaletteRoute): void {
+		if (!this.activeViewAllowsGlobalNavigation()) return;
 		if (route.view === this.activeView) {
 			this.component.route(route);
 			this.context.tui.requestRender();
