@@ -1,6 +1,6 @@
 {
 	"name": "jouzu",
-	"version": "0.1.6",
+	"version": "0.1.7",
 	"description": "Agentic AI environment built on the Pi coding agent harness",
 	"type": "module",
 	"bin": {

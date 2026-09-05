@@ -9,14 +9,13 @@ import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
+import { downloadPublished, upgradeVersions } from "./published-upgrade.mjs";
+
 const root = resolve(import.meta.dirname, "..");
 const packageDirectory = join(root, "packages", "cli");
 const currentPackage = JSON.parse(readFileSync(join(packageDirectory, "package.json"), "utf8"));
-const currentVersion = currentPackage.version;
-const versionMatch = /^(\d+)\.(\d+)\.(\d+)$/.exec(currentVersion);
-if (!versionMatch) throw new Error(`test:auto-update requires a stable semantic version, got ${currentVersion}`);
-const nextVersion = `${versionMatch[1]}.${versionMatch[2]}.${Number(versionMatch[3]) + 1}`;
-const brokenVersion = `${versionMatch[1]}.${versionMatch[2]}.${Number(versionMatch[3]) + 2}`;
+const publishedVersion = process.env.JOUZU_UPDATE_PUBLISHED_VERSION;
+const { currentVersion, nextVersion, brokenVersion } = upgradeVersions(currentPackage.version, publishedVersion);
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const npmExecPath = process.env.npm_execpath;
 const npmCommand = npmExecPath
@@ -232,6 +231,15 @@ function projectFixture(temp, name, withNpmProject = false) {
 	return directory;
 }
 
+function configurationFixture(home) {
+	const directory = join(home, "agent");
+	mkdirSync(directory, { recursive: true });
+	const path = join(directory, "settings.json");
+	const content = '{"quietStartup":true,"userSentinel":"日本語 configuration"}\n';
+	writeFileSync(path, content);
+	return { path, content };
+}
+
 function projectSnapshot(directory) {
 	return readdirSync(directory, { withFileTypes: true })
 		.sort((left, right) => left.name.localeCompare(right.name))
@@ -293,14 +301,22 @@ try {
 		process.env.JOUZU_UPDATE_NEXT_TARBALL,
 		process.env.JOUZU_UPDATE_BROKEN_TARBALL,
 	];
-	if (prepared.some(Boolean) && !prepared.every(Boolean)) {
+	if (publishedVersion) {
+		assert.ok(
+			!prepared[0] && prepared[1] && prepared[2],
+			"published upgrade requires candidate and broken tarballs only",
+		);
+	}
+	if (!publishedVersion && prepared.some(Boolean) && !prepared.every(Boolean)) {
 		throw new Error("prepared updater smoke requires current, next, and broken tarball paths");
 	}
 	let current;
 	let next;
 	let broken;
-	if (prepared.every(Boolean)) {
-		current = preparedArtifact(prepared[0], currentVersion);
+	if (publishedVersion || prepared.every(Boolean)) {
+		current = publishedVersion
+			? await downloadPublished(temp, publishedVersion)
+			: preparedArtifact(prepared[0], currentVersion);
 		next = preparedArtifact(prepared[1], nextVersion);
 		broken = preparedArtifact(prepared[2], brokenVersion);
 	} else {
@@ -313,38 +329,43 @@ try {
 	const scope = process.env.JOUZU_UPDATE_SCOPE ?? "all";
 	assert.ok(["all", "success", "rollback"].includes(scope), `unsupported updater smoke scope: ${scope}`);
 	if (scope === "all" || scope === "success") {
-		const successPrefix = join(temp, "success-prefix");
-		const successHome = join(temp, "success-home");
-		await installCurrent(current, successPrefix);
-		const project = projectFixture(temp, "success-project 日本語");
-		const before = projectSnapshot(project);
-		const driver = startupDriver(temp, successPrefix);
-		await withRegistry(next, async (registry, requests) => {
-			const env = updateEnvironment(temp, successPrefix, successHome, registry);
-			const update = await run(process.execPath, [driver], {
-				cwd: project,
-				env,
-				timeout: updateApplyTimeout,
+		for (const mode of publishedVersion ? ["startup", "explicit"] : ["startup"]) {
+			const successPrefix = join(temp, `${mode}-success-prefix`);
+			const successHome = join(temp, `${mode}-success-home`);
+			const userConfig = configurationFixture(successHome);
+			await installCurrent(current, successPrefix);
+			const project = projectFixture(temp, `${mode}-success-project 日本語`);
+			const before = projectSnapshot(project);
+			const driver = startupDriver(temp, successPrefix);
+			await withRegistry(next, async (registry, requests) => {
+				const env = updateEnvironment(temp, successPrefix, successHome, registry);
+				const options = { cwd: project, env, timeout: updateApplyTimeout };
+				const update =
+					mode === "startup"
+						? await run(process.execPath, [driver], options)
+						: await runGlobal(successPrefix, ["self-update", "apply"], options);
+				if (mode === "startup") assert.match(update.stdout, new RegExp(`^jouzu ${escapeRegex(nextVersion)}$`, "m"));
+				assert.equal(readFileSync(userConfig.path, "utf8"), userConfig.content, "update changed user configuration");
+				assert.deepEqual(projectSnapshot(project), before, "startup update changed the working directory");
+				assert.ok(requests.some((request) => request === "/jouzu" || request.startsWith("/jouzu?")));
+				assert.ok(requests.includes(`/jouzu/-/${basename(next.path)}`));
+				const version = await runGlobal(successPrefix, ["--version"], {
+					cwd: temp,
+					env: { ...env, JOUZU_NO_UPDATE: "1" },
+				});
+				assert.match(version.stdout, new RegExp(`^jouzu ${escapeRegex(nextVersion)}$`, "m"));
+				const state = JSON.parse(readFileSync(join(successHome, "state", "self-update.json"), "utf8"));
+				assert.equal(state.lastResult, "updated");
+				assert.equal(state.installedVersion, nextVersion);
+				assert.equal(state.previousVersion, currentVersion);
 			});
-			assert.match(update.stdout, new RegExp(`^jouzu ${escapeRegex(nextVersion)}$`, "m"));
-			assert.deepEqual(projectSnapshot(project), before, "startup update changed the working directory");
-			assert.ok(requests.some((request) => request === "/jouzu" || request.startsWith("/jouzu?")));
-			assert.ok(requests.includes(`/jouzu/-/${basename(next.path)}`));
-			const version = await runGlobal(successPrefix, ["--version"], {
-				cwd: temp,
-				env: { ...env, JOUZU_NO_UPDATE: "1" },
-			});
-			assert.match(version.stdout, new RegExp(`^jouzu ${escapeRegex(nextVersion)}$`, "m"));
-			const state = JSON.parse(readFileSync(join(successHome, "state", "self-update.json"), "utf8"));
-			assert.equal(state.lastResult, "updated");
-			assert.equal(state.installedVersion, nextVersion);
-			assert.equal(state.previousVersion, currentVersion);
-		});
+		}
 	}
 
 	if (scope === "all" || scope === "rollback") {
 		const rollbackPrefix = join(temp, "rollback-prefix");
 		const rollbackHome = join(temp, "rollback-home");
+		const userConfig = configurationFixture(rollbackHome);
 		await installCurrent(current, rollbackPrefix);
 		const project = projectFixture(temp, "rollback-project 日本語", true);
 		const before = projectSnapshot(project);
@@ -356,6 +377,7 @@ try {
 				timeout: updateApplyTimeout,
 			});
 			assert.deepEqual(projectSnapshot(project), before, "failed update changed the working directory");
+			assert.equal(readFileSync(userConfig.path, "utf8"), userConfig.content, "rollback changed user configuration");
 			assert.equal(update.signal, null);
 			assert.equal(update.status, 4, update.stderr || update.stdout);
 			const restored = new RegExp(`failed verification and ${escapeRegex(currentVersion)} was restored`);

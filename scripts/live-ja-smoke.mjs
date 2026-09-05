@@ -2,6 +2,7 @@
 
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
@@ -48,11 +49,25 @@ function scrubbedHarnessEnv() {
 
 try {
 	mkdirSync(project, { recursive: true });
-	run("npm", ["run", "build"]);
-	const packed = JSON.parse(
-		run("npm", ["pack", "--workspace", "jouzu", "--ignore-scripts", "--json", "--pack-destination", temp]).stdout,
-	)[0];
-	run("npm", ["install", "--prefix", resolve(temp, "consumer"), "--ignore-scripts", resolve(temp, packed.filename)]);
+	let tarball = process.env.JOUZU_PACKED_TARBALL;
+	if (!tarball) {
+		run("npm", ["run", "build"]);
+		const packed = JSON.parse(
+			run("npm", ["pack", "--workspace", "jouzu", "--ignore-scripts", "--json", "--pack-destination", temp]).stdout,
+		)[0];
+		tarball = resolve(temp, packed.filename);
+	}
+	tarball = resolve(tarball);
+	const artifactIntegrity = `sha512-${createHash("sha512").update(readFileSync(tarball)).digest("base64")}`;
+	run("npm", [
+		"install",
+		"--prefix",
+		resolve(temp, "consumer"),
+		"--ignore-scripts",
+		"--no-audit",
+		"--no-fund",
+		tarball,
+	]);
 	const cli = resolve(temp, "consumer", "node_modules", "jouzu", "dist", "cli.js");
 	const jouzuHome = resolve(temp, "jouzu-home");
 	const prompt = [
@@ -96,7 +111,12 @@ try {
 	if (!assistant || assistant.stopReason === "error" || assistant.errorMessage) {
 		throw new Error(`live provider failed: ${assistant?.errorMessage ?? "no assistant completion"}`);
 	}
-	const cost = Number(assistant.usage?.cost?.total ?? 0);
+	const completions = end.messages.filter((message) => message.role === "assistant");
+	assert.ok(
+		completions.every((message) => Number.isFinite(message.usage?.cost?.total)),
+		"provider cost is unavailable",
+	);
+	const cost = completions.reduce((total, message) => total + message.usage.cost.total, 0);
 	if (!Number.isFinite(cost) || cost > budget) throw new Error(`live smoke cost ${cost} exceeded budget ${budget}`);
 	assert.deepEqual(readFileSync(output), expected, "live tool flow changed the requested Japanese bytes");
 	const profileState = JSON.parse(readFileSync(resolve(jouzuHome, "state", "profile-state.json"), "utf8"));
@@ -113,6 +133,7 @@ try {
 		JSON.stringify(
 			{
 				schemaVersion: 1,
+				artifactIntegrity,
 				provider,
 				model,
 				budgetUsd: budget,

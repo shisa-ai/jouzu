@@ -1,45 +1,50 @@
 #!/usr/bin/env node
 
+import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
+import { pinnedNpm, verifyArtifact, verifyQualification } from "./release-artifact.mjs";
 
-const packageDirectories = [join("packages", "cli")];
-const npmCommand = process.platform === "win32" ? (process.env.ComSpec ?? "cmd.exe") : "npm";
-const npmPrefixArguments = process.platform === "win32" ? ["/d", "/s", "/c", "npm"] : [];
-const dryRun = process.argv.includes("--dry-run");
-const unknown = process.argv.slice(2).filter((argument) => argument !== "--dry-run");
-if (unknown.length > 0) {
-	throw new Error("Usage: node scripts/publish-npm.mjs [--dry-run]");
-}
-
-function run(command, args, cwd, capture = false) {
-	const result = spawnSync(command, args, {
-		cwd,
+const [directoryArg, ...flags] = process.argv.slice(2);
+assert.ok(
+	directoryArg && flags.every((flag) => flag === "--dry-run"),
+	"Usage: node scripts/publish-npm.mjs ARTIFACT_DIRECTORY [--dry-run]",
+);
+const directory = resolve(directoryArg);
+const commit = process.env.GITHUB_SHA;
+const tag = process.env.GITHUB_REF_NAME;
+assert.match(tag || "", /^v\d+\.\d+\.\d+$/);
+const manifest = verifyArtifact(directory, { sourceCommit: commit, version: tag.slice(1) });
+const run = JSON.parse(readFileSync(join(directory, "ci-run.json"), "utf8"));
+const jobs = JSON.parse(readFileSync(join(directory, "ci-jobs.json"), "utf8"));
+verifyQualification(run, jobs, manifest);
+const npm = (args, capture = false) => {
+	const result = spawnSync("npm", args, {
 		encoding: "utf8",
-		stdio: capture ? ["ignore", "pipe", "pipe"] : "inherit",
+		stdio: capture ? "pipe" : "inherit",
+		timeout: 300_000,
 	});
 	if (result.error) throw result.error;
-	return result;
-}
-
-for (const directory of packageDirectories) {
-	const packageJson = JSON.parse(readFileSync(join(directory, "package.json"), "utf8"));
-	const packageId = `${packageJson.name}@${packageJson.version}`;
-	const lookup = run(npmCommand, [...npmPrefixArguments, "view", packageId, "version", "--json"], undefined, true);
-	if (lookup.status === 0 && lookup.stdout?.trim()) {
-		throw new Error(`${packageId} is already published; verify registry state and release a new version`);
-	}
-	const lookupError = lookup.stderr ?? "";
-	if (!lookupError.includes("E404") && !lookupError.includes("404 Not Found")) {
-		process.stderr.write(lookupError || "npm view failed without diagnostic output\n");
-		process.exit(lookup.status ?? 1);
-	}
-
-	const args = dryRun
-		? ["pack", "--dry-run", "--ignore-scripts"]
-		: ["publish", "--access", "public", "--provenance", "--ignore-scripts"];
-	console.log(`${dryRun ? "Validating" : "Publishing"} ${packageId}`);
-	const publish = run(npmCommand, [...npmPrefixArguments, ...args], directory);
-	if (publish.status !== 0) process.exit(publish.status ?? 1);
-}
+	assert.equal(result.status, 0, result.stderr || "npm command failed");
+	return result.stdout;
+};
+assert.equal(npm(["--version"], true).trim(), pinnedNpm);
+const response = await fetch(`https://registry.npmjs.org/jouzu/${manifest.version}`, {
+	signal: AbortSignal.timeout(30_000),
+});
+assert.equal(
+	response.status,
+	404,
+	response.ok ? "version is already published" : "registry absence could not be confirmed",
+);
+// Publishing an existing tarball preserves the exact bytes installed by CI.
+npm([
+	"publish",
+	join(directory, "candidate.tgz"),
+	"--registry=https://registry.npmjs.org/",
+	"--access=public",
+	"--provenance",
+	"--ignore-scripts",
+	...(flags.includes("--dry-run") ? ["--dry-run"] : []),
+]);

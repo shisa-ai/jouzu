@@ -7,6 +7,14 @@ on:
         description: Annotated Git tag to publish
         required: true
         type: string
+      ci-run-id:
+        description: Completed all-platform qualification run
+        required: true
+        type: string
+      ci-run-attempt:
+        description: Qualification run attempt
+        required: true
+        type: string
 
 permissions: {}
 
@@ -17,6 +25,7 @@ jobs:
     environment: npm-publish
     permissions:
       contents: read
+      actions: read
       id-token: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -26,26 +35,39 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 22
+          node-version: 24
           registry-url: https://registry.npmjs.org
-          cache: npm
       - name: Verify immutable release tag
         env:
           RELEASE_REF: ${{ inputs.ref }}
         run: |
           [[ "$RELEASE_REF" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          [[ "$GITHUB_REF" == "refs/tags/$RELEASE_REF" ]]
           [[ "$(git cat-file -t "refs/tags/$RELEASE_REF")" == "tag" ]]
-          [[ "$(git rev-parse "refs/tags/$RELEASE_REF^{commit}")" == "$(git rev-parse HEAD)" ]]
+          [[ "$(git rev-parse "refs/tags/$RELEASE_REF^{commit}")" == "$GITHUB_SHA" ]]
+          [[ "$(git rev-parse HEAD)" == "$GITHUB_SHA" ]]
           git fetch --no-tags origin main:refs/remotes/origin/main
           git merge-base --is-ancestor HEAD refs/remotes/origin/main
           node -e 'const p=require("./packages/cli/package.json"); if (`v${p.version}` !== process.env.RELEASE_REF) process.exit(1)'
-      - run: npm ci --ignore-scripts
-        timeout-minutes: 5
-      - run: npm run build
-        timeout-minutes: 5
-      - name: Verify release metadata and package boundary
-        run: npm run release:metadata && npm run check && npm run pack:check
-        timeout-minutes: 5
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: jouzu-candidate
+          path: dist/ci-artifacts
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.ci-run-id }}
+      - name: Read qualification evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CI_RUN_ID: ${{ inputs.ci-run-id }}
+          CI_RUN_ATTEMPT: ${{ inputs.ci-run-attempt }}
+        run: |
+          [[ "$CI_RUN_ID" =~ ^[1-9][0-9]*$ ]]
+          [[ "$CI_RUN_ATTEMPT" =~ ^[1-9][0-9]*$ ]]
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$CI_RUN_ID/attempts/$CI_RUN_ATTEMPT" > dist/ci-artifacts/ci-run.json
+          gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/actions/runs/$CI_RUN_ID/attempts/$CI_RUN_ATTEMPT/jobs?per_page=100" | jq '[.[].jobs[]]' > dist/ci-artifacts/ci-jobs.json
+          node -e 'const m=require("./dist/ci-artifacts/release-manifest.json"); if(m.qualification.runId!==process.env.CI_RUN_ID || String(m.qualification.runAttempt)!==process.env.CI_RUN_ATTEMPT) process.exit(1)'
+        timeout-minutes: 2
       - run: npm install --global npm@11.16.0 --ignore-scripts
-      - run: node scripts/publish-npm.mjs
+        timeout-minutes: 3
+      - run: node scripts/publish-npm.mjs dist/ci-artifacts
         timeout-minutes: 5

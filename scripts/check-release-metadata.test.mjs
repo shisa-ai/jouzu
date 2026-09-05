@@ -162,8 +162,10 @@ test("the npm publish workflow stays a bounded transport gate", () => {
 	assert.match(workflow, /timeout-minutes: 15/u);
 	assert.match(workflow, /environment: npm-publish/u);
 	assert.match(workflow, /id-token: write/u);
-	assert.match(workflow, /npm run build/u);
-	assert.match(workflow, /npm run release:metadata && npm run check && npm run pack:check/u);
+	assert.match(workflow, /actions\/download-artifact/u);
+	assert.match(workflow, /ci-run-id:/u);
+	assert.match(workflow, /ci-run-attempt:/u);
+	assert.doesNotMatch(workflow, /npm run build|npm ci|npm run pack:check/u);
 	assert.match(workflow, /node scripts\/publish-npm\.mjs/u);
 	assert.doesNotMatch(workflow, /npm run release:check/u);
 	assert.doesNotMatch(workflow, /test:packed|test:auto-update|test:extensions:online|test:live/u);
@@ -185,4 +187,7 @@ test("CI packs once and shares exact artifacts with parallel native gates", () =
 	assert.match(workflow, /JOUZU_UPDATE_NEXT_TARBALL: dist\/ci-artifacts\/next\.tgz/u);
 	assert.match(workflow, /JOUZU_UPDATE_BROKEN_TARBALL: dist\/ci-artifacts\/broken\.tgz/u);
 	assert.match(workflow, /node: \[22, 24\]/u);
+	assert.match(workflow, /published-upgrade:[\s\S]*needs: release-artifacts/u);
+	assert.match(workflow, /retention-days: 30/u);
+	assert.match(workflow, /release-manifest\.json/u);
 });

@@ -1,8 +1,32 @@
 # Changelog
 
-## Unreleased
+## 0.1.7 - 2026-09-05
 
-- Install the exact Camoufox client runtime under private Jouzu state on the first `tff-fetch_url` or `tff-search_web` call. The default npm installation no longer contains Camoufox or `ua-parser-js`; `jz doctor` reports the optional runtime state, and CI tests the default and first-use paths separately.
+### Added
+
+- Configure agent roles, models, and instructions in `/workflow`. Launch child agents, read their output, send follow-ups, stop them, and resume saved runs. Read-only reviewers report whether the workspace changed during review.
+- Add catalog models to configured providers and apply names, capabilities, and token limits to active sessions without rewriting `models.json`.
+- Add optional TextGuard scanning for skills and web results. It requires a separate TextGuard 1.0.0 installation and is off by default.
+
+### Changed
+
+- Upgrade Pi from 0.84.4 to 0.85.0 and use Pi WebAIO for readable web fetches.
+- Install the Camoufox client and browser on first rendered fetch or search, rather than bundling the client in every npm install. `jz doctor` reports its installation state.
+- Reduce packaged dependency files and index catalog lookups to reduce installation and model-picker work.
+- Preserve useful document structure and sound wording in the Clear Writing skill.
+
+### Fixed
+
+- Include cross-platform clipboard bindings, select the web transport for the installed platform, and use SQLite prebuilt binaries instead of requiring a C++ compiler.
+- Keep updates, help, and diagnostics available when interactive runtime imports fail.
+- Preserve Jouzu terminal titles and explicit thinking settings; suppress automatic upstream release-note banners.
+- Fix catalog cancellation, timeouts, response limits, activation, cache retention, and per-source error handling.
+- Use public absolute documentation links in the npm README.
+
+### Release checks
+
+- Require Linux, macOS, and Windows qualification, including a published v0.1.6 upgrade to the candidate, restart, and rollback.
+- Publish the exact tested npm tarball and attach the same package, checksums, and manifest to GitHub Releases. Verify registry signatures, provenance, and package bytes before reporting completion.
 
 ## 0.1.6 - 2026-09-03
 
