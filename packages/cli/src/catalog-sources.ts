@@ -161,6 +161,25 @@ function isLocalhost(parsed: URL): boolean {
 	return parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1" || parsed.hostname === "[::1]";
 }
 
+/**
+ * True when a catalog URL ships credentials in cleartext: plain HTTP to a host
+ * that is not this machine. Localhost HTTP stays off the network, so it is exempt.
+ */
+export function isInsecureCatalogTransport(url: string): boolean {
+	try {
+		const parsed = new URL(url);
+		return parsed.protocol === "http:" && !isLocalhost(parsed);
+	} catch {
+		return false;
+	}
+}
+
+/** Warning shown when a catalog source would send its bearer token over plain HTTP. */
+export function catalogInsecureTransportWarning(url: string): string | undefined {
+	if (!isInsecureCatalogTransport(url)) return undefined;
+	return "This catalog uses HTTP, so its bearer token is sent in plain text and can be read on the network. Use HTTPS if the catalog supports it.";
+}
+
 export function normalizeCatalogSourceUrl(value: string): string {
 	const input = controlFree(value, "catalog source URL", 2048);
 	let parsed: URL;
@@ -173,8 +192,9 @@ export function normalizeCatalogSourceUrl(value: string): string {
 		throw new CatalogSourceError("catalog source URL must not contain credentials");
 	if (parsed.hash || parsed.search)
 		throw new CatalogSourceError("catalog source URL must not contain a query or fragment");
-	if (parsed.protocol !== "https:" && !(parsed.protocol === "http:" && isLocalhost(parsed))) {
-		throw new CatalogSourceError("catalog source URL must use HTTPS except for localhost development");
+	// Plain HTTP is allowed but flagged: see catalogInsecureTransportWarning.
+	if (parsed.protocol !== "https:" && parsed.protocol !== "http:") {
+		throw new CatalogSourceError("catalog source URL must use HTTP or HTTPS");
 	}
 	return parsed.href;
 }

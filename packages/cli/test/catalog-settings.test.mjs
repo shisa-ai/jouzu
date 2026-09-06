@@ -122,6 +122,43 @@ test("Catalogs settings uses Enter to edit and horizontal arrows for model discl
 	}
 });
 
+test("plain HTTP catalog URLs save with a plain-text token warning", () => {
+	const { root, paths, context } = setup();
+	try {
+		const store = new CatalogSourceStore(paths);
+		const insecure = store.add({ label: "Insecure pool", url: "http://example.test/catalog", auth: { type: "none" } });
+		const local = store.add({ label: "Local pool", url: "http://127.0.0.1:8989/catalog", auth: { type: "none" } });
+		const component = new CatalogSettingsComponent({ context, paths, env: {} });
+
+		// Sources list: the built-in Shisa API (HTTPS) carries no warning; the plain-HTTP
+		// source warns only while selected, next to its URL.
+		assert.doesNotMatch(component.render(84).join("\n"), /plain text/u);
+		component.handleInput("down");
+		let rendered = component.render(84).join("\n");
+		assert.match(rendered, /Insecure pool/u);
+		assert.match(rendered, /Warning: This catalog uses HTTP/u);
+		assert.match(rendered, /plain text/u);
+		assert.ok(component.render(84).every((line) => terminalTextWidth(line) <= 84));
+		component.handleInput("down");
+		assert.doesNotMatch(component.render(84).join("\n"), /plain text/u);
+
+		// Add form: the warning appears live once the URL field holds a plain-HTTP endpoint.
+		component.handleInput("a");
+		for (const character of "Cleartext pool") component.handleInput(character);
+		component.handleInput("down");
+		for (const character of "http://example.test/other") component.handleInput(character);
+		rendered = component.render(84).join("\n");
+		assert.match(rendered, /URL or host/u);
+		assert.match(rendered, /Warning: This catalog uses HTTP/u);
+		assert.ok(component.render(84).every((line) => terminalTextWidth(line) <= 84));
+
+		assert.equal(insecure.url, "http://example.test/catalog");
+		assert.equal(local.url, "http://127.0.0.1:8989/catalog");
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
 test("Catalogs settings shows the built-in source and opens the add form with A", () => {
 	const { root, paths, context, closes } = setup();
 	try {

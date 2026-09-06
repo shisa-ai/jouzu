@@ -55,6 +55,7 @@ export type SessionUiStyleRole =
 	| "palette.tab.active"
 	| "palette.empty"
 	| "palette.message.error"
+	| "palette.message.warning"
 	| "palette.message.info"
 	| "palette.hint";
 
@@ -129,6 +130,7 @@ export const DEFAULT_SESSION_UI_STYLE_SCHEME: SessionUiStyleScheme = Object.free
 	"palette.tab.active": theme("accent"),
 	"palette.empty": theme("muted"),
 	"palette.message.error": theme("error"),
+	"palette.message.warning": theme("warning"),
 	"palette.message.info": theme("muted"),
 	"palette.hint": theme("dim"),
 });
