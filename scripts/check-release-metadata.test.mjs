@@ -191,3 +191,38 @@ test("CI packs once and shares exact artifacts with parallel native gates", () =
 	assert.match(workflow, /retention-days: 30/u);
 	assert.match(workflow, /release-manifest\.json/u);
 });
+
+test("CI qualification matrices stay on hosted Linux and macOS with Windows as manual diagnostics", () => {
+	const workflow = readFileSync(join(root, ".github", "workflows", "ci.yml"), "utf8");
+	assert.doesNotMatch(workflow, /\["ubuntu-latest","macos-latest","windows-latest"\]/u);
+	assert.equal(
+		workflow.match(
+			/inputs\.platform == 'windows' && '\["windows-latest"\]' \|\| '\["ubuntu-latest","macos-latest"\]'/gu,
+		)?.length,
+		6,
+		"every hosted matrix must run ubuntu-latest and macos-latest only",
+	);
+	assert.match(workflow, /options: \[windows, all\]/u);
+	assert.match(workflow, /default: windows/u);
+	assert.match(workflow, /legacy-linux-static-fetch:[\s\S]*if: inputs\.platform != 'windows'/u);
+});
+
+test("publish requires native Windows qualification evidence for the exact candidate", () => {
+	const workflow = readFileSync(join(root, ".github", "workflows", "publish-npm.yml"), "utf8");
+	assert.match(
+		workflow,
+		/windows-evidence:\n\s+description: Native Windows qualification JSON for the exact candidate\n\s+required: true\n\s+type: string/u,
+	);
+	assert.match(workflow, /WINDOWS_QUALIFICATION_JSON: \$\{\{ inputs\.windows-evidence \}\}/u);
+	assert.match(workflow, /dist\/ci-artifacts\/windows-qualification\.json/u);
+	const publisher = readFileSync(join(root, "scripts", "publish-npm.mjs"), "utf8");
+	assert.match(publisher, /import \{[^}]*verifyWindowsQualification[^}]*\} from "\.\/release-artifact\.mjs";/u);
+	assert.match(
+		publisher,
+		/verifyWindowsQualification\(\s*JSON\.parse\(readFileSync\(join\(directory, "windows-qualification\.json"\), "utf8"\)\),\s*manifest\s*\)/u,
+	);
+	assert.ok(
+		publisher.indexOf("verifyWindowsQualification(") < publisher.indexOf('"publish"'),
+		"windows qualification must be verified before npm publish",
+	);
+});

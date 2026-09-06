@@ -8,11 +8,16 @@ on:
         required: true
         type: string
       ci-run-id:
-        description: Completed all-platform qualification run
+        description: Completed Linux and macOS qualification run
         required: true
         type: string
       ci-run-attempt:
         description: Qualification run attempt
+        required: true
+        type: string
+
+      windows-evidence:
+        description: Native Windows qualification JSON for the exact candidate
         required: true
         type: string
 
@@ -60,7 +65,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           CI_RUN_ID: ${{ inputs.ci-run-id }}
           CI_RUN_ATTEMPT: ${{ inputs.ci-run-attempt }}
+          WINDOWS_QUALIFICATION_JSON: ${{ inputs.windows-evidence }}
         run: |
+          node -e 'const fs=require("node:fs"); const e=JSON.parse(process.env.WINDOWS_QUALIFICATION_JSON); fs.writeFileSync("dist/ci-artifacts/windows-qualification.json", JSON.stringify(e))'
           [[ "$CI_RUN_ID" =~ ^[1-9][0-9]*$ ]]
           [[ "$CI_RUN_ATTEMPT" =~ ^[1-9][0-9]*$ ]]
           gh api "repos/$GITHUB_REPOSITORY/actions/runs/$CI_RUN_ID/attempts/$CI_RUN_ATTEMPT" > dist/ci-artifacts/ci-run.json

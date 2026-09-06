@@ -1,12 +1,14 @@
 # CI runs
 
-Pushes and pull requests run the full platform matrix. To run Windows checks manually:
+Pushes and pull requests run Linux and macOS checks. Releases also require native local Windows qualification of the exact CI-built package, with matching source and artifact identities, test results, and unchanged Defender protection settings. The publisher rejects missing or failed Windows evidence.
+
+To run hosted Windows diagnostics manually:
 
 ```sh
 gh workflow run ci.yml --ref main -f platform=windows -f npm-cache=warm -f fixture-drive=runner
 ```
 
-This runs Windows Node 22/24, Python 3.10/3.12/3.13, packed local/global/npm-exec installation, update success/rollback, and first-use Camoufox. One Ubuntu job builds and checks the shared release artifacts before the Windows consumers start.
+This runs Windows Node 22/24, Python 3.10/3.12/3.13, packed local/global/npm-exec installation, update success/rollback, published-version upgrades, and first-use Camoufox. One Ubuntu job builds and checks the shared release artifacts before the Windows consumers start.
 
 `npm-cache=warm` restores npm archives and lets the updater reuse the job's cache. The first run can miss the cache. `npm-cache=cold` skips restoration and gives the updater a fresh cache. Both modes install fresh dependency trees. Compare repeated runs at the same commit to measure cache effects.
 
