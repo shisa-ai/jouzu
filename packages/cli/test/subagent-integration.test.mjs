@@ -27,14 +27,17 @@ function fixture() {
 		return worker;
 	});
 	const handlers = new Map();
+	const commands = new Map();
+	const opened = [];
 	let tool;
 	let command;
 	let selected;
 	integration.register(
 		{
 			on: (name, handler) => handlers.set(name, handler),
-			registerCommand: (name) => {
+			registerCommand: (name, definition) => {
 				command = name;
+				commands.set(name, definition);
 			},
 			registerTool: (value) => {
 				tool = value;
@@ -47,7 +50,10 @@ function fixture() {
 			appendEntry: (type, data) => entries.push({ type, data }),
 			sendMessage: (message, options) => messages.push({ message, options }),
 		},
-		async () => true,
+		async (section) => {
+			opened.push(section);
+			return true;
+		},
 	);
 	const models = ["gpt-6-astra", "glm-5.3-flash"].map((id) => ({
 		id,
@@ -73,6 +79,8 @@ function fixture() {
 		paths,
 		integration,
 		handlers,
+		commands,
+		opened,
 		workers,
 		messages,
 		entries,
@@ -93,6 +101,12 @@ test("Workflow registers a tool and command, applies main instructions, and coal
 	try {
 		await f.handlers.get("session_start")({}, f.ctx);
 		assert.equal(f.command, "workflow");
+		await f.commands.get("subagents").handler("", f.ctx);
+		assert.deepEqual(f.opened, ["runs"]);
+		await f.commands.get("subagents").handler("hide", f.ctx);
+		assert.match(f.notifications.at(-1)[0], /pane hidden/);
+		await f.commands.get("subagents").handler("show", f.ctx);
+		assert.match(f.notifications.at(-1)[0], /pane enabled/);
 		await f.integration.service.activate("orchestrator");
 		assert.equal(f.selected.id, "gpt-6-astra");
 		assert.equal(f.entries.length, 1);
@@ -121,6 +135,22 @@ test("Workflow registers a tool and command, applies main instructions, and coal
 		await f.shutdown();
 	}
 });
+test("subagents command reports JSON without opening a non-interactive pane", async (t) => {
+	const f = fixture();
+	try {
+		f.ctx.mode = "print";
+		f.ctx.hasUI = false;
+		await f.handlers.get("session_start")({}, f.ctx);
+		const output = [];
+		t.mock.method(console, "log", (text) => output.push(text));
+		await f.commands.get("subagents").handler("", f.ctx);
+		assert.deepEqual(JSON.parse(output[0]), { runs: [] });
+		assert.deepEqual(f.opened, []);
+	} finally {
+		await f.shutdown();
+	}
+});
+
 test("malformed definitions preserve session startup and a cancelled child does not wake the main agent", async () => {
 	const f = fixture();
 	try {

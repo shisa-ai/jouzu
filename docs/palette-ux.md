@@ -65,7 +65,7 @@ When an item supports disclosure as well as a primary action, reserve `Enter` fo
 - Nested filters and choices are not tab rows. Change a visible choice with `←` and `→` when no text field holds focus.
 - `Esc` in browse mode closes the Palette. There is no separate root level to return to first.
 - Cancel restores the editor text that was present when the Palette opened.
-- `/catalogs`, `/model`, and `/workflow` route directly to a view. A route is registered only when its view exists.
+- `/catalogs`, `/model`, `/workflow`, and `/subagents` route directly to a view. A route is registered only when its view exists.
 
 ## Browse mode
 
@@ -185,7 +185,7 @@ Run the focused interaction tests while iterating, then run `npm run check` and 
 
 ## Workflow
 
-Workflow uses one top-level tab and a visible **View: ‹ Agents ›** / **View: ‹ Runs ›** choice. The choice uses `←`/`→`; `Tab` remains reserved for Models / Workflow / Settings. Opening `/workflow` shows definitions. Run updates request a redraw without changing the selected view.
+Workflow uses one top-level tab and a visible **View: ‹ Agents ›** / **View: ‹ Runs ›** choice. The choice uses `←`/`→`; `Tab` remains reserved for Models / Workflow / Settings. Opening `/workflow` shows definitions; `/subagents` opens Runs. The compact Subagents status pane above the prompt provides the same `/subagents` route. Run updates request a redraw without changing the selected view or run.
 
 ```text
 ╭ Workflow ─────────────────────────────────────╮
@@ -204,6 +204,6 @@ Select a definition to edit it. The form groups identity and model, placement an
 
 Workflow forms contain nested model and multiline editors. This extends the form's Enter behavior: Enter on a text field saves the form; Enter on a choice changes it; Enter on a visible action performs that action. The first hint names the focused action. In a multiline editor, Enter inserts a newline and semantic cancel returns the text to the enclosing draft. Only Save persists definition changes; cancelling the enclosing form discards the draft. Top-level navigation and external routes are disabled throughout nested editing.
 
-Runs show role, state, and current tool or assignment. Enter opens run details with model, usage, and output/control rows. Output uses bounded byte pages and a line viewport; semantic Page Up/Page Down moves through the text. Stop opens a confirmation that states existing changes remain. A completed or interrupted run offers Resume with a new assignment. Failures remain visible in the panel and keep the relevant form values.
+Runs show role, state, and current tool or assignment. Enter opens run details with model, workspace, context-sharing policy, usage, and output/control rows. Output uses bounded byte pages and a line viewport; semantic Page Up/Page Down moves through the text. Stop opens a confirmation that states existing changes remain. A completed or interrupted run offers Resume with a new assignment. Failures remain visible in the panel and keep the relevant form values.
 
 At narrow widths, rows use terminal cell width and truncate long identities. Fields and action rows scroll with selection. Width tests cover 24, 48, 80, and 120 columns, including Japanese model searches. The Agents/Runs layout sketch is illustrative; rendered key hints resolve the user's effective bindings.

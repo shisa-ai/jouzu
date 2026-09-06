@@ -1178,7 +1178,10 @@ export function createJouzuModelPicker(
 		extension,
 		workflowExtension: {
 			name: "jouzu-workflow",
-			factory: (pi) => workflow.register(pi, () => openPalette({ view: "workflow" })),
+			factory: (pi) =>
+				workflow.register(pi, (section) =>
+					openPalette({ view: "workflow", ...(section === "runs" ? { query: "runs" } : {}) }),
+				),
 		},
 		open,
 		openSettings,

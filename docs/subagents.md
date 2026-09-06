@@ -46,6 +46,16 @@ Launch returns immediately with a run ID. Completion summaries arrive as attribu
 
 **Runs** provides output reading, messaging, Stop, and Resume. Stop requests tool cancellation, then forces process cleanup after a grace period. Files already written remain. Resume starts another run using the original role revision, exact provider/model, workspace, and saved child conversation. Use a new launch for a fresh context or changed definition.
 
+## Subagent dashboard
+
+The **Subagents** pane appears above the prompt when the session has child runs. It shows active, queued, and finished counts, followed by active runs first. Run rows show status, role/model, current tool, and workspace. The pane updates on run events without a polling timer and limits its height to leave room for the prompt. Finished runs remain available until the session changes.
+
+- `/subagents` opens **Workflow → Runs**, with output, message, Stop, and Resume controls.
+- `/subagents hide` hides the status pane without stopping work.
+- `/subagents show` restores the pane. Visibility resets when the session starts or reloads.
+
+The Runs detail view includes workspace and context-sharing policy. Incoming run updates preserve the selected run. In non-interactive mode, `/subagents` reports run summaries as JSON instead of opening a pane.
+
 ## Workspace and context
 
 `workspace` on `launch` accepts an absolute path, a path relative to the parent working directory, or a home-relative path such as `~/project`. The directory must exist and be accessible before authentication or model startup. It becomes the child's working directory and the basis for repository instruction loading and writer coordination. It is not a filesystem sandbox: file tools can read reference material outside it, and enabled edit or shell tools retain normal filesystem access. A restart is not needed to assign another folder. Resume keeps the original workspace; workspace and context options are rejected on resume.

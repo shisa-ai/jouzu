@@ -185,6 +185,8 @@ test("Runs opens output, requires Stop confirmation, and exposes Resume after ca
 		role: f.config.roles[1],
 		model: { provider: "fixture", id: "test" },
 		status: "running",
+		cwd: "/workspace/日本語",
+		context: { mode: "fresh", parentLookup: true },
 		task: "Inspect fixture",
 		usage: { input: 1, output: 2, cacheRead: 0, cacheWrite: 0, cost: null },
 	};
@@ -202,6 +204,9 @@ test("Runs opens output, requires Stop confirmation, and exposes Resume after ca
 	down(f.view);
 	enter(f.view);
 	assert.match(f.text(80), /Read output/);
+	assert.match(f.text(80), /Workspace.*日本語/);
+	assert.match(f.text(80), /Context.*fresh/);
+	for (const line of f.view.render(48)) assert.ok(visibleWidth(line) <= 48);
 	enter(f.view);
 	assert.match(f.text(80), /Output evidence/);
 	cancel(f.view);
@@ -216,4 +221,39 @@ test("Runs opens output, requires Stop confirmation, and exposes Resume after ca
 	await new Promise((resolve) => setImmediate(resolve));
 	assert.equal(stops, 1);
 	assert.match(f.text(80), /Resume with a task/);
+});
+
+test("direct Runs route preserves selected run when activity inserts another run", () => {
+	const f = fixture();
+	let changed;
+	const runs = [
+		{
+			id: "original",
+			role: f.config.roles[1],
+			status: "running",
+			task: "Original",
+			cwd: "/work/original",
+			model: { provider: "fixture", id: "original-model" },
+			usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, cost: null },
+		},
+	];
+	f.service.runs = () => runs;
+	f.service.subscribe = (callback) => {
+		changed = callback;
+		return () => {};
+	};
+	const view = new WorkflowComponent(f.context, f.service, { view: "workflow", query: "runs" });
+	assert.match(view.render(80).join("\n"), /Runs/);
+	down(view);
+	view.render(80);
+	runs.unshift({ ...runs[0], id: "new", model: { provider: "fixture", id: "new-model" } });
+	changed();
+	enter(view);
+	assert.match(view.render(80).join("\n"), /original-model/);
+	assert.equal(view.allowsGlobalNavigation(), false);
+	cancel(view);
+	assert.equal(view.allowsGlobalNavigation(), true);
+	cancel(view);
+	assert.equal(f.closes, 1);
+	view.dispose();
 });

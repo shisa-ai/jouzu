@@ -23,6 +23,7 @@ export function createJouzuHelpExtension(): InlineExtension {
 								`${theme.fg("accent", "/hotkeys")}  All shortcuts`,
 								`${theme.fg("accent", "/status")}  Session details`,
 								`${theme.fg("accent", "/workflow")}  Agents and runs`,
+								`${theme.fg("accent", "/subagents")}  Child run dashboard`,
 								"",
 								theme.fg("dim", `${formatEffectiveKeybinding(keybindings, "tui.select.cancel")} close`),
 							].join("\n"),

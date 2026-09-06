@@ -10,6 +10,7 @@ The guide states intended behavior. Tests encode it. A view that disagrees with 
 | --- | --- | --- | --- |
 | Palette (Models, Workflow, Settings / Catalogs) | `packages/cli/src/palette.ts`, `model-picker.ts`, `workflow.ts`, `catalog-settings.ts` | Floating overlay or in-place replacement | [`palette-ux.md`](palette-ux.md) |
 | Help | `packages/cli/src/help.ts` | Floating overlay | This guide; see [Known deviations](#known-deviations) |
+| Subagent status pane | `packages/cli/src/subagents/dashboard.ts` | Event-driven widget above the prompt; `/subagents` opens Workflow Runs | This guide and [`subagents.md`](subagents.md#subagent-dashboard) |
 | Session Frame (prompt frame, session line, status bar) | `packages/session-ui/src` | Persistent, around Pi's editor | This guide |
 | Startup header | `packages/cli/src/presentation.ts` | One-time output | This guide |
 | First-run prompts (Japanese support, Pi import) | `profile-choice.ts`, `pi-import.ts` | Line-oriented `readline` | This guide, [Non-interactive and degraded modes](#non-interactive-and-degraded-modes) |
