@@ -1,5 +1,5 @@
 import { existsSync, lstatSync, readFileSync } from "node:fs";
-import { resolveCatalogSources } from "./catalog-sources.js";
+import { catalogInsecureTransportWarning, resolveCatalogSources } from "./catalog-sources.js";
 import { type CatalogConformanceResult, checkCatalogConformance } from "./model-catalog.js";
 import {
 	type CatalogStatuses,
@@ -30,6 +30,8 @@ function formatOneCatalogStatus(status: CatalogSyncStatus): string[] {
 		`${status.label} [${status.sourceId}]: ${status.enabled ? status.status : "disabled"}`,
 		`  Endpoint: ${status.endpoint}`,
 	];
+	const transportWarning = catalogInsecureTransportWarning(status.endpoint);
+	if (transportWarning) lines.push(`  Warning: ${transportWarning}`);
 	if (status.catalogId) lines.push(`  Catalog: ${status.catalogId}`);
 	if (status.offeringCount !== undefined) lines.push(`  Models: ${status.offeringCount}`);
 	if (status.revision) lines.push(`  Revision: ${status.revision} (sequence ${status.sequence})`);

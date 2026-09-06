@@ -6,6 +6,7 @@ import {
 	type CatalogSource,
 	type CatalogSourceAuth,
 	CatalogSourceStore,
+	catalogInsecureTransportWarning,
 	discoverCatalogEndpoint,
 } from "./catalog-sources.js";
 import { formatEffectiveKeybinding, formatEffectiveKeyPair } from "./keybinding-hints.js";
@@ -77,6 +78,12 @@ function countLabel(count: number): string {
 	return `${count} model${count === 1 ? "" : "s"}`;
 }
 
+function warnHint(styles: SessionUiStyles, value: string, width: number, line: (value?: string) => string): string[] {
+	return wrapTextWithAnsi(value, width).map((warningLine) =>
+		line(styles.apply("palette.message.warning", warningLine)),
+	);
+}
+
 function sourceStatusText(view: SourceView): string {
 	const status = view.status;
 	if (status.configured && status.conflict) return "reserved-id conflict";
@@ -101,6 +108,12 @@ function sourceStatusRole(view: SourceView): SessionUiStyleRole {
 
 const SOURCE_LABEL_COLUMN = 22;
 const FORM_LABEL_COLUMN = 14;
+
+/** Plain-text token warning for a source URL, prefixed for list rendering. */
+function transportWarningText(url: string): string | undefined {
+	const warning = catalogInsecureTransportWarning(url);
+	return warning ? `  Warning: ${warning}` : undefined;
+}
 
 export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	private readonly tui: TUI;
@@ -522,8 +535,10 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			line(renderPaletteHeading(heading, innerWidth, this.theme, this.styles)),
 			field("label", "Label", form.label.render(inputWidth)[0] ?? ""),
 			field("url", "URL or host", form.url.render(inputWidth)[0] ?? ""),
-			field("auth", "Authentication", paletteChoice(form.authType === "none" ? "None" : "Bearer token")),
 		];
+		const transportWarning = transportWarningText(form.url.getValue().trim());
+		if (transportWarning) lines.push(...warnHint(this.styles, transportWarning, innerWidth, line));
+		lines.push(field("auth", "Authentication", paletteChoice(form.authType === "none" ? "None" : "Bearer token")));
 		if (form.authType === "bearer") {
 			const credentialName = form.credential.getValue().trim();
 			const credentialValue = credentialName ? this.env[credentialName] : undefined;
@@ -634,6 +649,8 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 						),
 					),
 				);
+				const transportWarning = transportWarningText(view.source.url);
+				if (transportWarning) lines.push(...warnHint(this.styles, transportWarning, innerWidth, line));
 				if (status.configured && status.conflict) lines.push(...hint(`    ${sanitizeTerminalText(status.conflict)}`));
 			}
 			if (!expanded) continue;

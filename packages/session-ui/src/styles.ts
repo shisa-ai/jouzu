@@ -64,6 +64,7 @@ export type SessionUiStyleRole =
 	| "palette.status.off"
 	| "palette.empty"
 	| "palette.message.error"
+	| "palette.message.warning"
 	| "palette.message.info"
 	| "palette.hint";
 
@@ -147,6 +148,7 @@ export const DEFAULT_SESSION_UI_STYLE_SCHEME: SessionUiStyleScheme = Object.free
 	"palette.status.off": theme("dim"),
 	"palette.empty": theme("muted"),
 	"palette.message.error": theme("error"),
+	"palette.message.warning": theme("warning"),
 	"palette.message.info": theme("muted"),
 	"palette.hint": theme("dim"),
 });

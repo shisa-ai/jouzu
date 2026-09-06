@@ -8,6 +8,7 @@ import {
 	CatalogSourceError,
 	CatalogSourceStore,
 	catalogEndpointCandidates,
+	catalogInsecureTransportWarning,
 	catalogSourceConflict,
 	discoverCatalogEndpoint,
 	loadCatalogSourceRegistry,
@@ -414,10 +415,9 @@ test("catalog registry rejects unsafe files, labels, sources, and credential ref
 				}),
 			/environment credential reference/u,
 		);
-		assert.throws(
-			() => store.add({ label: "Cleartext", url: "http://example.test/catalog", auth: { type: "none" } }),
-			/HTTPS/u,
-		);
+		const cleartext = store.add({ label: "Cleartext", url: "http://example.test/catalog", auth: { type: "none" } });
+		assert.equal(cleartext.url, "http://example.test/catalog");
+		assert.match(catalogInsecureTransportWarning(cleartext.url), /plain text/u);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
@@ -432,4 +432,13 @@ test("source URL validation rejects credentials, queries, and fragments", () => 
 		assert.throws(() => catalogEndpointCandidates(url), /credentials|query|fragment/);
 	}
 	assert.equal(catalogEndpointCandidates("http://localhost:8080/catalog")[0], "http://localhost:8080/catalog");
+});
+
+test("plain HTTP is allowed but flagged as an insecure transport", () => {
+	assert.equal(catalogInsecureTransportWarning("https://example.test/catalog"), undefined);
+	assert.equal(catalogInsecureTransportWarning("http://localhost:8080/catalog"), undefined);
+	assert.equal(catalogInsecureTransportWarning("http://127.0.0.1:8989/v1/jouzu/model-catalog"), undefined);
+	assert.match(catalogInsecureTransportWarning("http://example.test/catalog"), /plain text/u);
+	assert.match(catalogInsecureTransportWarning("http://192.168.1.10:8080/v1/jouzu/model-catalog"), /plain text/u);
+	assert.equal(catalogInsecureTransportWarning("not a url"), undefined);
 });
