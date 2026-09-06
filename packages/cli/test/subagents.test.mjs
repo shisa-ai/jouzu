@@ -4,8 +4,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { SubagentManager, workerEnvironment } from "../dist/subagents/manager.js";
+import { CHILD_EXTRA_TOOLS, childResourceLoader, configureChildResources } from "../dist/subagents/resources.js";
 import { AgentRoleStore, defaultAgentConfig, parseAgentConfig, resolveAgentModel } from "../dist/subagents/roles.js";
-import { childResourceLoader, requireWorkspacePath } from "../dist/subagents/worker.js";
+import { resolveWorkspace } from "../dist/subagents/workspace.js";
 
 function paths() {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-agents-test-"));
@@ -90,34 +91,51 @@ test("read-only children run concurrently, cancellation frees capacity, foreign 
 	assert.throws(() => f.manager.get("foreign"), /parent session/);
 	await f.manager.dispose();
 });
-test("child configuration excludes ambient resources and reviewer instructions", () => {
+test("child configuration loads working capabilities and project guidance without delegation", async () => {
 	const p = paths();
 	writeFileSync(join(p.cwd, "AGENTS.md"), "PROJECT_INJECTION");
 	const launch = { role: defaultAgentConfig().roles[2], directory: join(p.cwd, "child"), cwd: p.cwd };
-	const loader = childResourceLoader(launch);
-	assert.deepEqual(loader.getAgentsFiles().agentsFiles, []);
-	assert.deepEqual(loader.getExtensions().extensions, []);
-	assert.deepEqual(loader.getSkills().skills, []);
-	assert.equal(
-		childResourceLoader({ ...launch, role: defaultAgentConfig().roles[1] })
-			.getAgentsFiles()
-			.agentsFiles.some((entry) => entry.content.includes("PROJECT_INJECTION")),
-		true,
-	);
+	const env = { ...process.env };
+	try {
+		configureChildResources(launch);
+		const loader = await childResourceLoader(launch);
+		assert.ok(loader.getAgentsFiles().agentsFiles.some((entry) => entry.content.includes("PROJECT_INJECTION")));
+		const tools = loader.getExtensions().extensions.flatMap((extension) => [...extension.tools.keys()]);
+		for (const name of CHILD_EXTRA_TOOLS) assert.ok(tools.includes(name), name);
+		for (const name of [
+			"subagent",
+			"TaskExecute",
+			"TaskOutput",
+			"TaskStop",
+			"schedule_prompt",
+			"bg_task",
+			"multiloop_start",
+		])
+			assert.ok(!tools.includes(name), name);
+		assert.ok(loader.getSkills().skills.some((skill) => skill.name === "jouzu-clear-writing"));
+		assert.ok(loader.getSkills().skills.some((skill) => skill.name === "jouzu-source-check"));
+		assert.ok(!loader.getSkills().skills.some((skill) => skill.name === "multiloop"));
+	} finally {
+		for (const key of Object.keys(process.env)) if (!(key in env)) delete process.env[key];
+		Object.assign(process.env, env);
+	}
 	assert.deepEqual(workerEnvironment({ PATH: "/bin", OPENAI_API_KEY: "secret", NODE_OPTIONS: "--require bad.js" }), {
 		PATH: "/bin",
 		PI_SKIP_VERSION_CHECK: "1",
 		NO_COLOR: "1",
 	});
 });
-test("file tools refuse traversal and symlink escapes", () => {
+test("workspace routing accepts other folders and aliases and rejects unusable targets", () => {
 	const p = paths();
 	const outside = paths();
 	mkdirSync(join(p.cwd, "inside"));
-	requireWorkspacePath(p.cwd, "inside/new.txt");
-	assert.throws(() => requireWorkspacePath(p.cwd, "../bad.txt"), /outside/);
-	symlinkSync(outside.cwd, join(p.cwd, "linked"));
-	assert.throws(() => requireWorkspacePath(p.cwd, "linked/new.txt"), /outside/);
+	assert.equal(resolveWorkspace(p.cwd, "inside"), join(p.cwd, "inside"));
+	assert.equal(resolveWorkspace(p.cwd, outside.cwd), outside.cwd);
+	assert.throws(() => resolveWorkspace(p.cwd, "missing"), /Workspace:.*does not exist/);
+	writeFileSync(join(p.cwd, "file"), "text");
+	assert.throws(() => resolveWorkspace(p.cwd, "file"), /not an accessible directory/);
+	symlinkSync(outside.cwd, join(p.cwd, "linked"), process.platform === "win32" ? "junction" : "dir");
+	assert.equal(resolveWorkspace(p.cwd, "linked"), outside.cwd);
 });
 test("failure and timeout never become empty successful results", async () => {
 	const f = fixture();
@@ -182,7 +200,14 @@ test(
 			assert.ok(result.sessionFile);
 			assert.match(readFileSync(result.sessionFile, "utf8"), /Verified fixture/);
 			assert.equal(requests.length, 1);
-			assert.ok(requests[0].tools.every((tool) => ["read", "grep", "find", "ls"].includes(tool.function.name)));
+			assert.ok(
+				requests[0].tools.every((tool) =>
+					["read", "grep", "find", "ls", ...CHILD_EXTRA_TOOLS].includes(tool.function.name),
+				),
+			);
+			assert.ok(requests[0].tools.some((tool) => tool.function.name === "vcc_recall"));
+			assert.ok(result.tools.includes("TaskCreate"));
+			assert.ok(result.skills.includes("jouzu-source-check"));
 			assert.equal(JSON.stringify(manager.list()).includes("fixture-key"), false);
 			const resumedDone = new Promise((resolve) => {
 				completed = resolve;
@@ -351,7 +376,7 @@ test("real child cancellation aborts a running shell and its process", { timeout
 			task: "Run the assigned command",
 		});
 		let pid;
-		for (let i = 0; i < 150; i++) {
+		for (let i = 0; i < 400; i++) {
 			try {
 				pid = Number(readFileSync(join(p.cwd, "worker-shell.pid"), "utf8"));
 				break;

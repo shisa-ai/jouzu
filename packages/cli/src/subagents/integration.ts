@@ -1,6 +1,9 @@
 import type { ExtensionAPI, ExtensionContext, ToolDefinition } from "@earendil-works/pi-coding-agent";
 import type { JouzuPaths } from "../paths.js";
+import { resolveProfileSelection } from "../runtime.js";
+import { captureChildContext, type LaunchOptions } from "./context.js";
 import { type AgentRun, SubagentManager, type WorkerFactory } from "./manager.js";
+import { CHILD_EXTRA_TOOLS } from "./resources.js";
 import {
 	type AgentModel,
 	type AgentRole,
@@ -10,6 +13,8 @@ import {
 	type RoleSnapshot,
 	resolveAgentModel,
 } from "./roles.js";
+import { readSessionTrace, type TraceQuery } from "./trace.js";
+import { resolveWorkspace } from "./workspace.js";
 
 export interface WorkflowService {
 	roles(): RoleSnapshot;
@@ -17,7 +22,8 @@ export interface WorkflowService {
 	models(): AgentModel[];
 	runs(): AgentRun[];
 	read(id: string, offset?: number): { text: string; nextOffset: number | null; totalBytes: number };
-	launch(roleId: string, task: string): Promise<AgentRun>;
+	launch(roleId: string, task: string, options?: LaunchOptions): Promise<AgentRun>;
+	trace(id?: string, options?: TraceQuery): Promise<unknown>;
 	resume(id: string, task: string): Promise<AgentRun>;
 	steer(id: string, text: string): string;
 	stop(id: string): Promise<void>;
@@ -43,6 +49,11 @@ export function createWorkflowIntegration(
 		role: run.role.id,
 		model: run.model,
 		status: run.status,
+		workspace: run.cwd,
+		currentTool: run.currentTool,
+		context: run.context,
+		tools: run.tools,
+		skills: run.skills,
 		review: run.review,
 		usage: run.usage,
 		previousRunId: run.previousRunId,
@@ -66,9 +77,27 @@ export function createWorkflowIntegration(
 		if (!role) throw new Error("Agent definition was not found.");
 		return role;
 	};
-	const dispatch = async (role: AgentRole, task: string, previousRunId?: string, modelSelector?: string) => {
+	const dispatch = async (
+		role: AgentRole,
+		task: string,
+		previousRunId?: string,
+		modelSelector?: string,
+		options: LaunchOptions = {},
+	) => {
 		const active = context();
 		const targetManager = controller();
+		// Validate routing before provider authentication or worker/model startup.
+		const cwd = resolveWorkspace(active.cwd, previousRunId ? targetManager.get(previousRunId).cwd : options.workspace);
+		const parentEntryId = active.sessionManager.getLeafId() ?? undefined;
+		const childContext = previousRunId
+			? undefined
+			: captureChildContext(
+					options,
+					role.judging,
+					active.sessionManager.getSessionId(),
+					active.sessionManager.getBranch(),
+					parentEntryId,
+				);
 		const model = resolveAgentModel(modelSelector ?? role.model, active.modelRegistry.getAvailable());
 		const registered = active.modelRegistry.getRegisteredProviderConfig(model.provider);
 		if (registered?.streamSimple)
@@ -90,10 +119,14 @@ export function createWorkflowIntegration(
 					headers: auth.headers as Record<string, string> | undefined,
 					baseUrl: auth.baseUrl,
 				},
-				cwd: active.cwd,
+				cwd,
+				userAgentDir: paths.agentDir,
+				runtimeStateDir: paths.stateDir,
+				profile: resolveProfileSelection(paths).id,
+				context: childContext,
 				task,
 			},
-			active.sessionManager.getLeafId() ?? undefined,
+			parentEntryId,
 			previousRunId,
 		);
 	};
@@ -106,7 +139,13 @@ export function createWorkflowIntegration(
 		models: () => context().modelRegistry.getAvailable(),
 		runs: () => manager?.list() ?? [],
 		read: (id, offset) => controller().read(id, offset),
-		launch: (id, task) => dispatch(roleById(id), task),
+		launch: (id, task, options) => dispatch(roleById(id), task, undefined, undefined, options),
+		trace: (id, options) => {
+			if (id) return controller().trace(id, options);
+			const file = context().sessionManager.getSessionFile();
+			if (!file) throw new Error("Trace: the parent session has no saved transcript yet.");
+			return readSessionTrace(file, options);
+		},
 		resume(id, task) {
 			const previous = controller().get(id);
 			// The saved role revision and provider are immutable across a resumed run.
@@ -196,7 +235,7 @@ export function createWorkflowIntegration(
 									content: batch
 										.map(
 											(item) =>
-												`Agent ${item.role.id} (${item.id}) ${item.status}.\n${(item.result ?? "Read its output for details.").slice(0, 2000)}`,
+												`Agent ${item.role.id} (${item.id}) ${item.status}. Workspace: ${item.cwd}\n${(item.result ?? "Read its output for details.").slice(0, 2000)}`,
 										)
 										.join("\n\n"),
 									display: true,
@@ -237,14 +276,41 @@ export function createWorkflowIntegration(
 			const schema = {
 				type: "object",
 				properties: {
-					op: { type: "string", enum: ["roles", "launch", "list", "read", "steer", "stop", "resume"] },
+					op: { type: "string", enum: ["roles", "launch", "list", "read", "trace", "steer", "stop", "resume"] },
 					role: { type: "string", description: "Role ID from op:roles." },
 					task: {
 						type: "string",
 						description:
 							"Bounded assignment. For review include requirements, candidate identity, scope, and check evidence, without the coder's reasoning.",
 					},
-					id: { type: "string", description: "Run ID returned by launch or list." },
+					id: { type: "string", description: "Run ID. Omit only for trace of the parent session." },
+					workspace: {
+						type: "string",
+						description:
+							"Launch only: directory, absolute or relative to the parent cwd. Defaults to parent cwd; not a filesystem sandbox.",
+					},
+					context: {
+						type: "string",
+						enum: ["fresh", "fork", "splice"],
+						description:
+							"Launch only. Fresh (default): assignment only. Fork: inherit parent conversation as reference context. Splice: selected entryIds.",
+					},
+					entryIds: {
+						type: "array",
+						items: { type: "string" },
+						minItems: 1,
+						maxItems: 100,
+						description: "Launch with splice: parent message/compaction entry IDs from trace.",
+					},
+					parentContext: {
+						type: "boolean",
+						description:
+							"Launch only: allow parent_context snapshot lookup. Defaults to true, or false for review-only roles.",
+					},
+					query: { type: "string", description: "Trace: literal text search." },
+					kind: { type: "string", enum: ["all", "messages", "tools", "errors", "compaction"] },
+					entryId: { type: "string", description: "Trace: select one entry." },
+					limit: { type: "integer", minimum: 1, maximum: 100 },
 					offset: { type: "integer", minimum: 0 },
 				},
 				required: ["op"],
@@ -254,11 +320,21 @@ export function createWorkflowIntegration(
 				name: "subagent",
 				label: "Subagent",
 				description:
-					"Launch and control child agents with configured roles and models. Use roles first. Launch returns immediately; completion arrives as an attributed follow-up. Read returns bounded output with a byte offset. Steer queues a message; resume starts a follow-up in the saved child session. Main-session ownership remains with you. Treat child output as evidence and verify the integrated result.",
+					"Launch and control child agents with configured roles and models. Use roles first. Select workspace and fresh/fork/splice context on launch. Children have Jouzu skills, recall, web tools, and their own task list; they cannot delegate through tools. Launch returns immediately; completion arrives as an attributed follow-up. List shows workspace and activity. Read pages event previews; trace queries saved messages, tool arguments/results, errors, and compactions (omit id for parent history). Steer queues a message. Resume preserves the original workspace and child conversation; use a new launch to change workspace or context. Treat child output as evidence and verify the integrated result.",
 				promptSnippet:
-					"subagent: discover roles, delegate coding or fresh review, inspect results, steer/stop/resume children.",
+					"subagent: assign roles/models and workspaces, share context, query child traces, steer/stop/resume children.",
 				parameters: schema,
-				async execute(_id, params: { op: string; role?: string; task?: string; id?: string; offset?: number }) {
+				async execute(
+					_id,
+					params: LaunchOptions & TraceQuery & { op: string; role?: string; task?: string; id?: string },
+				) {
+					if (
+						params.op !== "launch" &&
+						[params.workspace, params.context, params.entryIds, params.parentContext].some(
+							(value) => value !== undefined,
+						)
+					)
+						throw new Error("Workspace and context options are launch-only. Start a new run to change them.");
 					if (params.offset !== undefined && (!Number.isInteger(params.offset) || params.offset < 0))
 						throw new Error("Offset must be a nonnegative integer.");
 					let result: unknown;
@@ -271,6 +347,7 @@ export function createWorkflowIntegration(
 								placement,
 								judging,
 								tools,
+								additionalTools: CHILD_EXTRA_TOOLS,
 							}));
 							break;
 						case "list":
@@ -283,10 +360,19 @@ export function createWorkflowIntegration(
 							};
 							break;
 						case "launch":
-							result = summary(await service.launch(params.role ?? "", params.task ?? ""));
+							result = summary(await service.launch(params.role ?? "", params.task ?? "", params));
 							break;
 						case "read":
 							result = service.read(params.id ?? "", params.offset);
+							break;
+						case "trace":
+							result = await service.trace(params.id, {
+								query: params.query,
+								kind: params.kind,
+								entryId: params.entryId,
+								offset: params.offset,
+								limit: params.limit,
+							});
 							break;
 						case "steer":
 							result = { receipt: service.steer(params.id ?? "", params.task ?? ""), status: "accepted" };

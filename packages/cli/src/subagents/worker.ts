@@ -1,16 +1,18 @@
-import { existsSync, realpathSync } from "node:fs";
-import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import {
 	type AgentSession,
 	createAgentSession,
-	createExtensionRuntime,
-	loadProjectContextFiles,
 	ModelRuntime,
-	type ResourceLoader,
 	SessionManager,
 	SettingsManager,
 } from "@earendil-works/pi-coding-agent";
+import { inheritedContextText, parentContextTool } from "./context.js";
 import type { WorkerCommand, WorkerEvent, WorkerLaunch } from "./protocol.js";
+import { childResourceLoader, configureChildResources } from "./resources.js";
+import { resolveWorkspace } from "./workspace.js";
+
+export { childResourceLoader } from "./resources.js";
+
+class WorkerSetupError extends Error {}
 
 function boundedText(text: string, limit: number): string {
 	return text.length > limit
@@ -20,37 +22,31 @@ function boundedText(text: string, limit: number): string {
 function send(event: WorkerEvent): void {
 	if (process.connected) process.send?.(event);
 }
-/** Resolve existing ancestors too, so a new file cannot escape through a symlink. */
-export function requireWorkspacePath(cwd: string, path: string): void {
-	const root = realpathSync(cwd);
-	let target = resolve(cwd, path);
-	while (!existsSync(target)) {
-		const parent = dirname(target);
-		if (parent === target) break;
-		target = parent;
-	}
-	const rel = relative(root, realpathSync(target));
-	if (isAbsolute(rel) || rel === ".." || rel.startsWith(`..${sep}`))
-		throw new Error("Access denied: the path is outside the assigned workspace.");
-}
-export function childResourceLoader(launch: WorkerLaunch): ResourceLoader {
-	const entries = launch.role.judging ? [] : loadProjectContextFiles({ cwd: launch.cwd, agentDir: launch.directory });
-	return {
-		getExtensions: () => ({ extensions: [], errors: [], runtime: createExtensionRuntime() }),
-		getSkills: () => ({ skills: [], diagnostics: [] }),
-		getPrompts: () => ({ prompts: [], diagnostics: [] }),
-		getThemes: () => ({ themes: [], diagnostics: [] }),
-		getAgentsFiles: () => ({ agentsFiles: entries }),
-		getSystemPrompt: () => undefined,
-		getSystemPromptSource: () => undefined,
-		getAppendSystemPrompt: () => [launch.role.instructions],
-		getAppendSystemPromptSources: () => [],
-		extendResources: () => {},
-		reload: async () => {},
-	};
-}
 export async function runWorker(launch: WorkerLaunch, onSession: (session: AgentSession) => void): Promise<void> {
 	const { model, auth, role } = launch;
+	try {
+		launch.cwd = resolveWorkspace(launch.cwd);
+	} catch (error) {
+		throw new WorkerSetupError((error as Error).message);
+	}
+	configureChildResources(launch);
+	let resourceLoader: Awaited<ReturnType<typeof childResourceLoader>>;
+	try {
+		resourceLoader = await childResourceLoader(launch);
+	} catch {
+		throw new WorkerSetupError(
+			"Resources: child capabilities could not load. Run jz doctor and repair the Jouzu installation.",
+		);
+	}
+	const customTools =
+		launch.context?.parentLookup && launch.parentContextFile ? [parentContextTool(launch.parentContextFile)] : [];
+	const tools = [
+		...new Set([
+			...role.tools,
+			...resourceLoader.getExtensions().extensions.flatMap((extension) => [...extension.tools.keys()]),
+			...customTools.map((tool) => tool.name),
+		]),
+	];
 	// A closed credential store prevents discovery or mutation of the user's auth.json.
 	const credentials = {
 		read: async () => undefined,
@@ -76,18 +72,29 @@ export async function runWorker(launch: WorkerLaunch, onSession: (session: Agent
 	const sessionManager = launch.sessionFile
 		? SessionManager.open(launch.sessionFile, launch.directory, launch.cwd)
 		: SessionManager.create(launch.cwd, launch.directory);
+	if (!launch.sessionFile && launch.context) {
+		const inherited = inheritedContextText(launch.context);
+		if (inherited) sessionManager.appendCustomMessageEntry("jouzu-parent-context", inherited, true);
+	}
 	const { session, modelFallbackMessage } = await createAgentSession({
 		cwd: launch.cwd,
 		agentDir: launch.directory,
 		modelRuntime: runtime,
 		model: { ...model, headers: { ...model.headers, ...auth.headers }, baseUrl: auth.baseUrl ?? model.baseUrl },
 		thinkingLevel: role.thinking,
-		tools: role.tools,
+		tools,
+		customTools,
 		sessionManager,
 		settingsManager,
-		resourceLoader: childResourceLoader(launch),
+		resourceLoader,
+		sessionStartEvent: { type: "session_start", reason: launch.sessionFile ? "resume" : "startup" },
 	});
-	if (modelFallbackMessage) throw new Error("Model: the requested model could not be restored.");
+	if (modelFallbackMessage) {
+		session.dispose();
+		throw new WorkerSetupError(
+			"Model: the requested model could not be restored. Choose an available model in Workflow.",
+		);
+	}
 	onSession(session);
 	if (!process.connected && process.send) {
 		session.dispose();
@@ -98,23 +105,30 @@ export async function runWorker(launch: WorkerLaunch, onSession: (session: Agent
 	let lastText = "";
 	let lastStop = "";
 	let toolCount = 0;
-	// The child has no extensions. Enforce file-tool paths at the execution boundary.
-	session.agent.beforeToolCall = async ({ toolCall, args }) => {
-		if (!role.tools.includes(toolCall.name as (typeof role.tools)[number]))
-			return { block: true, reason: "Access denied: tool is not in the role definition." };
-		try {
-			const path = (args as { path?: unknown })?.path;
-			if (typeof path === "string") requireWorkspacePath(launch.cwd, path);
-			if (++toolCount > role.maxTurns * 20) {
-				exhausted = true;
-				return { block: true, reason: "Tool limit reached. Report remaining work." };
-			}
-		} catch (error) {
-			return { block: true, reason: error instanceof Error ? error.message : "Access denied." };
+	// Compose with Pi's hook: replacing it would bypass extension tool-call events.
+	const beforeToolCall = session.agent.beforeToolCall;
+	session.agent.beforeToolCall = async (call, signal) => {
+		if (!tools.includes(call.toolCall.name))
+			return { block: true, reason: "Tool unavailable: this child role does not enable it." };
+		if (++toolCount > role.maxTurns * 20) {
+			exhausted = true;
+			return { block: true, reason: "Tool limit reached. Report remaining work.", terminate: true };
 		}
-		return undefined;
+		return beforeToolCall?.(call, signal);
 	};
 	const unsubscribe = session.subscribe((event) => {
+		if (event.type === "compaction_end")
+			send({
+				type: "diagnostic",
+				category: "compaction",
+				text: event.result
+					? "Compaction completed."
+					: event.aborted
+						? "Compaction cancelled."
+						: event.errorMessage?.includes("Nothing to compact")
+							? "Compaction skipped: the session is too small."
+							: "Compaction failed. Check the selected model and provider before retrying.",
+			});
 		if (event.type === "tool_execution_start") send({ type: "activity", tool: event.toolName });
 		if (event.type === "message_end") {
 			const message = event.message;
@@ -163,9 +177,29 @@ export async function runWorker(launch: WorkerLaunch, onSession: (session: Agent
 			void session.abort();
 		}
 	});
-	send({ type: "ready", sessionFile: sessionManager.getSessionFile()!, sessionId: sessionManager.getSessionId() });
 	try {
-		await session.prompt(launch.task);
+		await session.bindExtensions({
+			mode: "print",
+			onError: () =>
+				send({
+					type: "diagnostic",
+					category: "extension",
+					text: "An extension hook failed. Inspect child tool results and run jz doctor if capabilities are unavailable.",
+				}),
+		});
+		send({
+			type: "ready",
+			sessionFile: sessionManager.getSessionFile()!,
+			sessionId: sessionManager.getSessionId(),
+			tools: session.getActiveToolNames(),
+			skills: resourceLoader.getSkills().skills.map((skill) => skill.name),
+		});
+		await session.prompt(launch.task, { expandPromptTemplates: false });
+		// A compact_context request can start a new run after prompt() resolves.
+		do {
+			await resourceLoader.compaction.waitForIdle();
+			await session.waitForIdle();
+		} while (resourceLoader.compaction.getState() !== "idle" || !session.isIdle);
 		const failed = exhausted || lastStop !== "stop" || !lastText.trim();
 		send({
 			type: "result",
@@ -178,7 +212,11 @@ export async function runWorker(launch: WorkerLaunch, onSession: (session: Agent
 		});
 	} finally {
 		unsubscribe();
-		session.dispose();
+		try {
+			await session.extensionRunner.emit({ type: "session_shutdown", reason: "quit" });
+		} finally {
+			session.dispose();
+		}
 	}
 }
 
@@ -225,14 +263,16 @@ if (process.send) {
 				throw new Error("Agent cancelled before startup.");
 			}
 		})
-			.catch(() => {
+			.catch((error: unknown) => {
 				// Provider exceptions may contain headers or URLs. Keep diagnostics out of IPC/storage.
 				send({
 					type: "result",
 					status: cancelled ? "cancelled" : "failed",
 					text: cancelled
 						? "Agent cancelled."
-						: "Agent failed. Check the selected model and provider authentication, then retry.",
+						: error instanceof WorkerSetupError
+							? error.message
+							: "Model/provider: the child request failed. Check the selected model, endpoint, and authentication, then retry. Provider details are withheld because they may contain credentials.",
 				});
 			})
 			.finally(() => {

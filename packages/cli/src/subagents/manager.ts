@@ -15,9 +15,12 @@ import { dirname, isAbsolute, join, relative, sep } from "node:path";
 import type { JouzuPaths } from "../paths.js";
 import { ensurePrivateDirectory, writeFilePrivateAtomic } from "../private-fs.js";
 import { acquireStateLock } from "../state-lock.js";
+import type { ChildContext } from "./context.js";
 import type { WorkerCommand, WorkerEvent, WorkerLaunch } from "./protocol.js";
 import { captureReviewCandidate, type ReviewCandidate } from "./review.js";
 import { type AgentRole, digest, parseAgentConfig } from "./roles.js";
+import { readSessionTrace, type TraceQuery } from "./trace.js";
+import { resolveWorkspace } from "./workspace.js";
 
 export type RunStatus = "queued" | "starting" | "running" | "completed" | "failed" | "cancelled" | "interrupted";
 export interface AgentRun {
@@ -36,6 +39,10 @@ export interface AgentRun {
 	updatedAt: string;
 	sessionFile?: string;
 	childSessionId?: string;
+	context?: Omit<ChildContext, "entries">;
+	parentContextFile?: string;
+	tools?: string[];
+	skills?: string[];
 	currentTool?: string;
 	result?: string;
 	usage: {
@@ -326,7 +333,14 @@ export class SubagentManager {
 			closeSync(fd);
 		}
 	}
+	async trace(id: string, options?: TraceQuery) {
+		const run = this.get(id);
+		if (!run.sessionFile) return { records: [], nextOffset: null, notice: "No saved child messages yet." };
+		if (!this.containsSession(run.sessionFile)) throw new Error("Trace: the saved child session is unavailable.");
+		return readSessionTrace(run.sessionFile, options);
+	}
 	launch(launch: Omit<WorkerLaunch, "directory">, parentEntryId?: string, previousRunId?: string): AgentRun {
+		const cwd = resolveWorkspace(launch.cwd);
 		this.acquireOwner();
 		if (!launch.task.trim() || launch.task.length > 32_000) throw new Error("Task: enter 1–32000 characters.");
 		if (launch.role.placement === "main") throw new Error("Choose a role that can run as a child agent.");
@@ -341,7 +355,7 @@ export class SubagentManager {
 			role: structuredClone(launch.role),
 			roleRevision: digest(launch.role),
 			model: { provider: launch.model.provider, id: launch.model.id },
-			cwd: realpathSync(launch.cwd),
+			cwd,
 			task: launch.task,
 			status: "queued",
 			createdAt: now,
@@ -360,6 +374,8 @@ export class SubagentManager {
 			)
 				throw new Error("Resume requires the original workspace, role revision, and model.");
 			sessionFile = previous.sessionFile;
+			run.context = previous.context;
+			run.parentContextFile = previous.parentContextFile;
 			if (
 				[...this.runs.values()].some(
 					(other) =>
@@ -374,6 +390,23 @@ export class SubagentManager {
 		run.sessionFile = sessionFile;
 		if (run.role.judging) run.review = { candidate: captureReviewCandidate(run.cwd), status: "pending" };
 		ensurePrivateDirectory(this.root, this.directory(id));
+		if (!previousRunId && launch.context) {
+			const { entries, ...context } = launch.context;
+			run.context = context;
+			const snapshot =
+				[
+					JSON.stringify({ type: "session", version: 3, id: context.parentSessionId, cwd }),
+					...entries.map((entry) => JSON.stringify(entry)),
+				].join("\n") + "\n";
+			if (Buffer.byteLength(snapshot) > 32_000_000)
+				throw new Error(
+					"Context: parent snapshot exceeds 32 MB. Launch with parentContext: false and a fresh context, and include a focused summary in the assignment.",
+				);
+			if (context.parentLookup || context.mode !== "fresh") {
+				run.parentContextFile = join(this.directory(id), "parent-context.jsonl");
+				writeFilePrivateAtomic(run.parentContextFile, snapshot, this.root);
+			}
+		}
 		this.persist(run);
 		this.event(run, { type: "task", text: launch.task, roleRevision: run.roleRevision });
 		this.runs.set(id, run);
@@ -386,6 +419,12 @@ export class SubagentManager {
 				? `${launch.task}\n\nReview candidate: ${JSON.stringify(run.review.candidate)}. Inspect the assigned scope independently. Return findings with severity, file/line, failure conditions and evidence, then coverage and checks you could not perform. A response is not approval to ship.`
 				: launch.task,
 			cwd: run.cwd,
+			parentContextFile: run.parentContextFile,
+			context: launch.context
+				? structuredClone(launch.context)
+				: run.context
+					? { ...run.context, entries: [] }
+					: undefined,
 			directory: sessionFile ? dirname(sessionFile) : this.directory(id),
 			sessionFile,
 		});
@@ -467,6 +506,8 @@ export class SubagentManager {
 				run.status = "running";
 				run.sessionFile = event.sessionFile;
 				run.childSessionId = event.sessionId;
+				run.tools = event.tools;
+				run.skills = event.skills;
 			}
 			if (event.type === "activity") run.currentTool = event.tool;
 			if (event.type === "usage") {

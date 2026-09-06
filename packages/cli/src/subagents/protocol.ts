@@ -1,3 +1,4 @@
+import type { ChildContext } from "./context.js";
 import type { AgentModel, AgentRole } from "./roles.js";
 
 /** Credentials travel only over the private parent/child pipe, never into run records. */
@@ -8,6 +9,11 @@ export interface WorkerLaunch {
 	cwd: string;
 	directory: string;
 	sessionFile?: string;
+	userAgentDir?: string;
+	runtimeStateDir?: string;
+	profile?: "core" | "ja";
+	context?: ChildContext;
+	parentContextFile?: string;
 	task: string;
 }
 export type WorkerCommand =
@@ -15,7 +21,8 @@ export type WorkerCommand =
 	| { type: "steer"; id: string; text: string }
 	| { type: "stop" };
 export type WorkerEvent =
-	| { type: "ready"; sessionFile: string; sessionId: string }
+	| { type: "ready"; sessionFile: string; sessionId: string; tools?: string[]; skills?: string[] }
+	| { type: "diagnostic"; category: "resources" | "extension" | "compaction"; text: string }
 	| { type: "activity"; tool: string }
 	| { type: "message"; role: string; text: string; entryId?: string }
 	| { type: "usage"; input: number; output: number; cacheRead: number; cacheWrite: number; cost: number | null }

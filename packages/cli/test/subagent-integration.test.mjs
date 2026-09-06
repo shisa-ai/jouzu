@@ -3,11 +3,12 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { resolveJouzuPaths } from "../dist/paths.js";
 import { createWorkflowIntegration } from "../dist/subagents/integration.js";
 
 function fixture() {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-agent-integration-"));
-	const paths = { configDir: join(root, "config"), stateDir: join(root, "state") };
+	const paths = resolveJouzuPaths({ homeOverride: join(root, "config") });
 	const workers = [];
 	const messages = [];
 	const entries = [];
@@ -111,7 +112,7 @@ test("Workflow registers a tool and command, applies main instructions, and coal
 		await new Promise((resolve) => setTimeout(resolve, 130));
 		assert.equal(f.messages.length, 1);
 		assert.equal(f.messages[0].options.triggerTurn, true);
-		assert.ok(f.messages[0].message.content.length < 4300);
+		assert.ok(f.messages[0].message.content.length < 4600);
 		const runs = await f.invoke({ op: "list" });
 		assert.equal(runs.runs.length, 2);
 		assert.equal(runs.runs[0].result, undefined);
@@ -136,6 +137,86 @@ test("malformed definitions preserve session startup and a cancelled child does 
 		await f.invoke({ op: "stop", id: a.id });
 		await new Promise((resolve) => setTimeout(resolve, 130));
 		assert.equal(f.messages[0].options.triggerTurn, false);
+	} finally {
+		await f.shutdown();
+	}
+});
+
+test("launch routes workspace before authentication and resume retains the original folder and context", async () => {
+	const f = fixture();
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		let authCalls = 0;
+		f.ctx.modelRegistry.getApiKeyAndHeaders = async () => {
+			authCalls++;
+			return { ok: true, apiKey: "secret" };
+		};
+		await assert.rejects(
+			f.invoke({ op: "launch", role: "coder", task: "Work", workspace: "missing" }),
+			/Workspace:.*does not exist/,
+		);
+		assert.equal(authCalls, 0);
+		assert.equal(f.workers.length, 0);
+		const workspace = join(f.root, "worktree");
+		mkdirSync(workspace);
+		const launched = await f.invoke({ op: "launch", role: "coder", task: "Work", workspace: "worktree" });
+		assert.equal(launched.workspace, workspace);
+		assert.equal(launched.context.mode, "fresh");
+		assert.equal(launched.context.parentLookup, true);
+		assert.equal(f.workers[0].launch.cwd, workspace);
+		assert.ok(f.workers[0].launch.parentContextFile);
+		const sessionFile = join(f.workers[0].launch.directory, "session.jsonl");
+		writeFileSync(sessionFile, "{}");
+		f.workers[0].emit({ type: "ready", sessionFile, sessionId: "child" });
+		f.workers[0].emit({ type: "result", status: "completed", text: "Done" });
+		f.workers[0].exit(true);
+		f.ctx.cwd = f.root;
+		await assert.rejects(
+			f.invoke({ op: "resume", id: launched.id, task: "Continue", workspace: f.root }),
+			/launch-only/,
+		);
+		const resumed = await f.invoke({ op: "resume", id: launched.id, task: "Continue" });
+		assert.equal(resumed.workspace, workspace);
+		assert.equal(f.workers[1].launch.parentContextFile, f.workers[0].launch.parentContextFile);
+		assert.equal(f.workers[1].launch.context.parentLookup, true);
+		assert.equal((await f.invoke({ op: "list" })).runs[0].workspace, workspace);
+	} finally {
+		await f.shutdown();
+	}
+});
+
+test("fresh reviewers get no parent lookup unless explicitly requested; splice validates selected entries", async () => {
+	const f = fixture();
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		f.ctx.sessionManager.getBranch = () => [
+			{
+				type: "message",
+				id: "user-1",
+				parentId: null,
+				timestamp: new Date().toISOString(),
+				message: { role: "user", content: "Project requirement", timestamp: Date.now() },
+			},
+		];
+		const fresh = await f.invoke({ op: "launch", role: "reviewer", task: "Review" });
+		assert.equal(fresh.context.parentLookup, false);
+		assert.equal(f.workers[0].launch.parentContextFile, undefined);
+		await assert.rejects(
+			f.invoke({ op: "launch", role: "reviewer", task: "Review", context: "splice", entryIds: ["not-found"] }),
+			/splice requires/,
+		);
+		const shared = await f.invoke({
+			op: "launch",
+			role: "reviewer",
+			task: "Review",
+			context: "splice",
+			entryIds: ["user-1"],
+			parentContext: true,
+		});
+		assert.equal(shared.context.mode, "splice");
+		assert.equal(shared.context.parentLookup, true);
+		assert.equal(f.workers[1].launch.context.entries[0].message.content, "Project requirement");
+		assert.ok(f.workers[1].launch.parentContextFile);
 	} finally {
 		await f.shutdown();
 	}
