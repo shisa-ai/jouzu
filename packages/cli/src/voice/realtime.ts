@@ -1,6 +1,6 @@
 import WebSocket from "ws";
 import { VoiceError } from "./errors.js";
-import { VoiceTranscript } from "./transcript.js";
+import { type VoiceSnapshot, VoiceTranscript } from "./transcript.js";
 
 export const VOICE_ENDPOINT = "wss://api.shisa.ai/ws/asr/realtime";
 export const MAX_AUDIO_BUFFER_BYTES = 256_000;
@@ -17,6 +17,7 @@ export interface VoiceConnectionOptions {
 	language: VoiceLanguage;
 	signal: AbortSignal;
 	onPreview(text: string): void;
+	onSnapshot?(snapshot: VoiceSnapshot): void;
 	onError(error: Error): void;
 	/** Local protocol-test seam; the interactive command uses the fixed Shisa endpoint. */
 	endpoint?: string;
@@ -96,7 +97,7 @@ export function connectVoice(options: VoiceConnectionOptions): Promise<VoiceConn
 				const event: unknown = JSON.parse(data.toString());
 				if (!event || typeof event !== "object" || Array.isArray(event)) throw new Error("invalid response");
 				const record = event as Record<string, unknown>;
-				if (record.type === "error") {
+				if (record.type === "error" && !(record.fatal === false && typeof record.utterance_id === "string")) {
 					// Never echo remote error bodies: they may contain credentials or terminal controls.
 					fail(new VoiceError("Voice transcription failed. Check Shisa service access and try again."));
 					return;
@@ -105,6 +106,7 @@ export function connectVoice(options: VoiceConnectionOptions): Promise<VoiceConn
 					record.text = record.text.replaceAll(options.apiKey, "[redacted]");
 				}
 				transcript.accept(record);
+				options.onSnapshot?.(transcript.snapshot);
 				if (record.type === "asr.partial_result" || record.type === "asr.final_result") {
 					options.onPreview(transcript.preview);
 				}
@@ -120,7 +122,11 @@ export function connectVoice(options: VoiceConnectionOptions): Promise<VoiceConn
 			}
 			terminal = true;
 			cleanup();
-			finishResolve?.(transcript.text);
+			try {
+				finishResolve?.(transcript.finish());
+			} catch (error) {
+				finishReject?.(error as Error);
+			}
 		});
 		socket.once("open", () => {
 			if (terminal) return;
@@ -143,6 +149,8 @@ export function connectVoice(options: VoiceConnectionOptions): Promise<VoiceConn
 					},
 					finish() {
 						if (finishing) return finishing;
+						transcript.beginFinish();
+						options.onSnapshot?.(transcript.snapshot);
 						finishing = new Promise<string>((done, failed) => {
 							finishResolve = done;
 							finishReject = failed;

@@ -7,7 +7,7 @@ import { visibleWidth } from "@earendil-works/pi-tui";
 import { resolveJouzuPaths } from "../dist/paths.js";
 import { captureEnvironment } from "../dist/voice/capture.js";
 import { createVoiceExtension, renderVoiceWidget } from "../dist/voice/integration.js";
-import { VoiceTranscript } from "../dist/voice/transcript.js";
+import { VoiceReviewRequired, VoiceTranscript } from "../dist/voice/transcript.js";
 
 function deferred() {
 	let resolve;
@@ -294,6 +294,81 @@ test("the recording deadline stops capture and finalizes once", async (t) => {
 	await Promise.resolve();
 	assert.equal(h.draft, "existing draft\nこんにちは");
 	assert.equal(h.calls.filter(([name]) => name === "capture.stop").length, 1);
+});
+
+test("failed finalization preserves chunks for explicit review and confirmation", async (t) => {
+	const h = await harness(t);
+	h.connection.finish = async () => {
+		throw new VoiceReviewRequired({
+			segments: [
+				{ id: "a", state: "final", text: "good" },
+				{ id: "b", state: "failed", text: "rough" },
+			],
+		});
+	};
+	await h.command("start");
+	await h.command("stop");
+	assert.equal(h.draft, "existing draft");
+	h.ctx.ui.editor = async (_title, text) => {
+		assert.match(text, /Unfinalized chunk 2/);
+		return "good\ncorrected";
+	};
+	h.ctx.ui.confirm = async () => true;
+	await h.command("review");
+	assert.equal(h.draft, "existing draft\ngood\ncorrected");
+});
+
+test("review cannot insert marked chunks or unconfirmed edits", async (t) => {
+	const h = await harness(t);
+	h.connection.finish = async () => {
+		throw new VoiceReviewRequired({ segments: [{ id: "a", state: "failed", text: "rough" }] });
+	};
+	await h.command("start");
+	await h.command("stop");
+	h.ctx.ui.editor = async (_title, text) => text;
+	h.ctx.ui.confirm = async () => assert.fail("marked chunks cannot be confirmed");
+	await h.command("review");
+	h.ctx.ui.editor = async () => "edited";
+	h.ctx.ui.confirm = async () => false;
+	await h.command("review");
+	assert.equal(h.draft, "existing draft");
+});
+
+test("transport failure retains good chunks and ignores old connection callbacks", async (t) => {
+	const h = await harness(t);
+	await h.command("start");
+	const options = h.connectionOptions;
+	options.onSnapshot({ segments: [{ id: "a", state: "final", text: "good" }] });
+	options.onError(new Error("lost network"));
+	const callCount = h.calls.length;
+	options.onSnapshot({ segments: [] });
+	assert.equal(h.calls.length, callCount);
+	assert.equal(h.draft, "existing draft");
+	h.ctx.ui.editor = async (_title, text) => {
+		assert.match(text, /good/);
+		assert.match(text, /No transcript/);
+		return "good";
+	};
+	h.ctx.ui.confirm = async () => true;
+	await h.command("review");
+	assert.equal(h.draft, "existing draft\ngood");
+});
+
+test("session shutdown invalidates a late review result", async (t) => {
+	const h = await harness(t);
+	h.connection.finish = async () => {
+		throw new VoiceReviewRequired({ segments: [{ id: "a", state: "failed", text: "rough" }] });
+	};
+	await h.command("start");
+	await h.command("stop");
+	const pending = deferred();
+	h.ctx.ui.editor = () => pending.promise;
+	h.ctx.ui.confirm = async () => assert.fail("stale review must not confirm");
+	const review = h.command("review");
+	h.shutdown();
+	pending.resolve("edited");
+	await review;
+	assert.equal(h.draft, "existing draft");
 });
 
 test("microphone helper environment excludes service credentials and Node injection", () => {

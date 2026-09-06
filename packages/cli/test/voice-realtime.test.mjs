@@ -135,6 +135,57 @@ test("backpressure cancels rather than accumulating unbounded audio", async (t) 
 	await assert.rejects(connection.finish(), /closed/);
 });
 
+test("nonfatal finalizer errors keep the socket alive and require review on normal close", async (t) => {
+	const snapshots = [];
+	const endpoint = await server(t, (ws) => {
+		ws.on("message", (data) => {
+			if (JSON.parse(data.toString()).type === "session.close") {
+				for (const event of [
+					{
+						type: "asr.final_result",
+						utterance_id: "a",
+						result_id: "f1",
+						text: "good",
+						audio_start_ms: 0,
+						audio_end_ms: 1000,
+					},
+					{
+						type: "asr.partial_result",
+						utterance_id: "b",
+						result_id: "p1",
+						text: "rough",
+						audio_start_ms: 1000,
+						audio_end_ms: 2000,
+					},
+					{ type: "error", fatal: false, utterance_id: "b", message: "test-secret", code: "finalization_timeout" },
+				])
+					ws.send(JSON.stringify(event));
+				ws.close(1000);
+			}
+		});
+	});
+	const connection = await connectVoice(options(t, endpoint, { onSnapshot: (snapshot) => snapshots.push(snapshot) }));
+	await assert.rejects(connection.finish(), (error) => error.snapshot?.segments[1].state === "failed");
+	assert.deepEqual(
+		snapshots.at(-1).segments.map((s) => s.state),
+		["final", "failed"],
+	);
+	assert.ok(!JSON.stringify(snapshots).includes("test-secret"));
+});
+
+test("normal close with a missing final does not treat preview text as completed", async (t) => {
+	const endpoint = await server(t, (ws) => {
+		ws.on("message", (data) => {
+			if (JSON.parse(data.toString()).type === "session.close") {
+				ws.send(JSON.stringify({ type: "asr.partial_result", utterance_id: "a", result_id: "p1", text: "rough" }));
+				ws.close(1000);
+			}
+		});
+	});
+	const connection = await connectVoice(options(t, endpoint));
+	await assert.rejects(connection.finish(), /did not finalize/);
+});
+
 test("oversized server messages fail without exposing the message", async (t) => {
 	let resolveError;
 	const failed = new Promise((resolve) => {
