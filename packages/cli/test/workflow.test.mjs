@@ -166,7 +166,7 @@ test("multiline instructions stay in the enclosing draft and fit a short termina
 	enter(f.view);
 	down(f.view, 9);
 	enter(f.view);
-	assert.match(f.text(80), /Edit text/);
+	assert.match(f.text(80), /Edit instructions/);
 	f.view.handleInput("\r");
 	f.view.handleInput("Additional instruction");
 	assert.ok(f.view.render(48).length <= 16);

@@ -53,6 +53,15 @@ export type SessionUiStyleRole =
 	| "palette.section.current"
 	| "palette.detail"
 	| "palette.tab.active"
+	| "palette.tab.inactive"
+	| "palette.heading"
+	| "palette.rule"
+	| "palette.key"
+	| "palette.label"
+	| "palette.value"
+	| "palette.status.ready"
+	| "palette.status.attention"
+	| "palette.status.off"
 	| "palette.empty"
 	| "palette.message.error"
 	| "palette.message.info"
@@ -127,6 +136,15 @@ export const DEFAULT_SESSION_UI_STYLE_SCHEME: SessionUiStyleScheme = Object.free
 	"palette.section.current": BRAND_PINK,
 	"palette.detail": BRAND_BLUE,
 	"palette.tab.active": theme("accent"),
+	"palette.tab.inactive": theme("muted"),
+	"palette.heading": BRAND_BLUE,
+	"palette.rule": theme("borderMuted"),
+	"palette.key": theme("accent"),
+	"palette.label": theme("muted"),
+	"palette.value": theme("text"),
+	"palette.status.ready": theme("success"),
+	"palette.status.attention": theme("warning"),
+	"palette.status.off": theme("dim"),
 	"palette.empty": theme("muted"),
 	"palette.message.error": theme("error"),
 	"palette.message.info": theme("muted"),

@@ -127,7 +127,7 @@ test("Catalogs settings shows the built-in source and opens the add form with A"
 	try {
 		const component = new CatalogSettingsComponent({ context, paths, env: {} });
 		const listing = component.render(84).join("\n");
-		assert.match(listing, /Shisa API · SHISA_API_KEY not set/u);
+		assert.match(listing, /Shisa API\s+SHISA_API_KEY not set/u);
 		assert.doesNotMatch(listing, /Add catalog/u);
 
 		component.handleInput("a");
@@ -156,12 +156,12 @@ test("Catalogs settings disables the code-owned built-in with Space and guards e
 		assert.match(component.render(84).join("\n"), /built in and cannot be removed/u);
 
 		component.handleInput(" ");
-		assert.match(component.render(84).join("\n"), /Shisa API · disabled/u);
+		assert.match(component.render(84).join("\n"), /Shisa API\s+disabled/u);
 		assert.equal(existsSync(overridesPath), true);
 		assert.equal(existsSync(join(paths.configDir, "catalogs.json")), false);
 
 		component.handleInput(" ");
-		assert.match(component.render(84).join("\n"), /Shisa API · SHISA_API_KEY not set/u);
+		assert.match(component.render(84).join("\n"), /Shisa API\s+SHISA_API_KEY not set/u);
 		assert.equal(existsSync(overridesPath), false);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
@@ -180,10 +180,10 @@ test("Catalogs settings shows complete bearer-token fields and process availabil
 
 		let rendered = component.render(84);
 		let text = rendered.join("\n");
-		assert.match(text, /Authentication\s+< Bearer token >/u);
+		assert.match(text, /Authentication\s+‹ Bearer token ›/u);
 		assert.match(text, /Token variable/u);
 		assert.match(text, /JOUZU_MODEL_CATALOG_TOKEN is not set in this Jouzu process/u);
-		assert.match(text, /Enter save · ↑↓ field · ←→ change/u);
+		assert.match(text, /Enter save\s+↑↓ field\s+←→ change/u);
 		assert.doesNotMatch(text, /Exact URL|Tab fields|Ctrl\+Enter/u);
 		assert.ok(rendered.every((line) => terminalTextWidth(line) <= 84));
 

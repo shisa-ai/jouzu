@@ -8,7 +8,16 @@ import {
 	type TUI,
 } from "@earendil-works/pi-tui";
 import { createJouzuKeybindingsManagerFromConfig, type JouzuKeybindingsManager } from "./jouzu-keybindings.js";
-import { createSessionUiStyles, type SessionUiStyles } from "./session-ui/index.js";
+import {
+	createSessionUiStyles,
+	fillTerminalColumns,
+	fitTerminalText,
+	padTerminalText,
+	renderTerminalFrameBorder,
+	type SessionUiStyleRole,
+	type SessionUiStyles,
+	terminalTextWidth,
+} from "./session-ui/index.js";
 
 export type PaletteViewId = "models" | "workflow" | "settings" | "usage" | "keys" | "help";
 export type PalettePresentation = "floating" | "replace";
@@ -46,10 +55,153 @@ export const PALETTE_TABS = [
 	{ view: "settings", label: "Settings" },
 ] as const satisfies ReadonlyArray<{ view: PaletteViewId; label: string }>;
 
+/**
+ * Tab cells keep one width whether or not they are active, so switching
+ * sections never shifts the labels beside the active one. The brackets carry
+ * the active state without color, for terminals that render none.
+ */
 export function renderPaletteTabs(activeView: PaletteViewId, theme: Theme, styles: SessionUiStyles): string {
 	return PALETTE_TABS.map(({ view, label }) =>
-		view === activeView ? theme.bg("selectedBg", styles.apply("palette.tab.active", ` [${label}] `)) : ` ${label} `,
+		view === activeView
+			? theme.bg("selectedBg", theme.bold(styles.apply("palette.tab.active", `[${label}]`)))
+			: styles.apply("palette.tab.inactive", ` ${label} `),
 	).join("  ");
+}
+
+/** Abbreviate a count for a column that has no room for every digit. */
+export function compactNumber(value: number | undefined): string {
+	if (value === undefined) return "unknown";
+	if (value >= 1_000_000) return `${Math.round(value / 100_000) / 10}M`;
+	if (value >= 1_000) return `${Math.round(value / 100) / 10}K`;
+	return String(value);
+}
+
+/** Inner columns a framed row offers: one border and one pad column per side. */
+export function paletteInnerWidth(width: number): number {
+	return Math.max(1, width - 4);
+}
+
+/** A horizontal divider that joins the frame's left and right edges. */
+export function renderPaletteDivider(width: number, styles: SessionUiStyles): string {
+	const border = (value: string) => styles.apply("palette.border", value);
+	return renderTerminalFrameBorder(width, { border, left: "├", right: "┤" });
+}
+
+/** A left/right choice control. One chevron pair is used across every view. */
+export function paletteChoice(value: string): string {
+	return `‹ ${value} ›`;
+}
+
+/**
+ * Paint a row across the full inner width so the selection reads as one band
+ * rather than a highlight that stops at the end of the text.
+ */
+export function renderPaletteBand(value: string, innerWidth: number, theme: Theme): string {
+	return theme.bg("selectedBg", padTerminalText(fitTerminalText(value, innerWidth), innerWidth));
+}
+
+/**
+ * A section heading with a rule that runs to the right edge, optionally
+ * closing on right-aligned metadata. Rules give the stacked groups inside one
+ * frame a visible boundary without spending a blank line on each.
+ */
+export function renderPaletteHeading(
+	label: string,
+	innerWidth: number,
+	theme: Theme,
+	styles: SessionUiStyles,
+	meta = "",
+): string {
+	const heading = theme.bold(styles.apply("palette.heading", label));
+	const trailing = meta ? styles.apply("palette.count", meta) : "";
+	const fill = innerWidth - terminalTextWidth(label) - (meta ? terminalTextWidth(meta) + 2 : 1);
+	if (fill < 1) return fitTerminalText(`${heading} ${trailing}`, innerWidth);
+	const rule = styles.apply("palette.rule", fillTerminalColumns("─", fill));
+	return meta ? `${heading} ${rule} ${trailing}` : `${heading} ${rule}`;
+}
+
+export interface PaletteFieldOptions {
+	label: string;
+	/** Second column. Leave unset for an action row that carries no value. */
+	value?: string;
+	/** Right-aligned third column: a disclosure chevron or a trailing detail. */
+	meta?: string;
+	/** Zero leaves the label unpadded, for rows with no value column. */
+	labelWidth: number;
+	/**
+	 * Override the label color. Form rows read label-then-value, so the label is
+	 * muted by default; list rows lead with an identity and pass a brighter role.
+	 */
+	labelRole?: SessionUiStyleRole;
+	innerWidth: number;
+	selected: boolean;
+	theme: Theme;
+	styles: SessionUiStyles;
+}
+
+/**
+ * A row whose value column starts at the same terminal column on every row, so
+ * a field list reads as aligned columns instead of ragged text. The optional
+ * meta column is flushed right against the frame.
+ */
+export function renderPaletteField(options: PaletteFieldOptions): string {
+	const { label, labelWidth, innerWidth, selected, theme, styles } = options;
+	const value = options.value ?? "";
+	const meta = options.meta ?? "";
+	const marker = selected ? styles.apply("palette.marker", "→") : " ";
+	// Pad to the column, but never truncate to it: a label is an identity, so an
+	// outlier pushes its own value right rather than losing characters.
+	const labelText = labelWidth > 0 ? padTerminalText(label, Math.max(labelWidth, terminalTextWidth(label))) : label;
+	const styledLabel = selected
+		? theme.bold(styles.apply(options.labelRole ?? "palette.value", labelText))
+		: styles.apply(options.labelRole ?? (value ? "palette.label" : "palette.value"), labelText);
+	const headWidth = 2 + terminalTextWidth(labelText);
+	const metaWidth = meta ? terminalTextWidth(meta) + 1 : 0;
+	const valueRoom = Math.max(0, innerWidth - headWidth - 1 - metaWidth);
+	const fittedValue = value ? fitTerminalText(value, valueRoom) : "";
+	const gap = Math.max(0, innerWidth - headWidth - 1 - terminalTextWidth(fittedValue) - metaWidth);
+	const text = `${marker} ${styledLabel} ${fittedValue}${" ".repeat(gap)}${meta ? `${styles.apply("palette.count", meta)} ` : ""}`;
+	return selected ? renderPaletteBand(text, innerWidth, theme) : text;
+}
+
+export interface PaletteKeyHint {
+	key: string;
+	label: string;
+}
+
+/**
+ * The footer key bar: a filled band of `key label` pairs, with the key in the
+ * accent color. Unbound actions are dropped so a rebound keymap never
+ * advertises a key the user cannot press.
+ */
+export function renderPaletteKeyBar(
+	hints: readonly PaletteKeyHint[],
+	innerWidth: number,
+	theme: Theme,
+	styles: SessionUiStyles,
+): string[] {
+	const usable = hints.filter((hint) => hint.key !== "Unbound" && hint.key.length > 0);
+	if (usable.length === 0) return [];
+	const lines: string[] = [];
+	let plain = "";
+	let styled = "";
+	const flush = (): void => {
+		if (!plain) return;
+		const padding = " ".repeat(Math.max(0, innerWidth - terminalTextWidth(plain)));
+		lines.push(theme.bg("selectedBg", `${styled}${padding}`));
+		plain = "";
+		styled = "";
+	};
+	for (const hint of usable) {
+		const segment = `${hint.key} ${hint.label}`;
+		const separator = plain ? "  " : " ";
+		if (plain && terminalTextWidth(`${plain}${separator}${segment}`) > innerWidth) flush();
+		const lead = plain ? "  " : " ";
+		plain += `${lead}${segment}`;
+		styled += `${lead}${theme.bold(styles.apply("palette.key", hint.key))} ${styles.apply("palette.value", hint.label)}`;
+	}
+	flush();
+	return lines;
 }
 
 export interface PaletteRouterOptions {

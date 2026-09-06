@@ -40,12 +40,19 @@ import {
 	previousModelStack,
 } from "./model-picker-state.js";
 import {
+	compactNumber,
 	JouzuPaletteRouter,
 	JouzuPaletteSurfaceHost,
 	type PaletteComponent,
 	type PaletteComponentContext,
+	type PaletteKeyHint,
 	type PaletteRoute,
 	type PaletteSurfaceOptions,
+	paletteChoice,
+	paletteInnerWidth,
+	renderPaletteDivider,
+	renderPaletteField,
+	renderPaletteKeyBar,
 	renderPaletteTabs,
 } from "./palette.js";
 import type { JouzuPaths } from "./paths.js";
@@ -101,13 +108,6 @@ const SECTION_LABELS: Record<PickerRow["section"], string> = {
 	global_recent: "Recent",
 	all: "All",
 };
-
-function compactNumber(value: number | undefined): string {
-	if (value === undefined) return "unknown";
-	if (value >= 1_000_000) return `${Math.round(value / 100_000) / 10}M`;
-	if (value >= 1_000) return `${Math.round(value / 100) / 10}K`;
-	return String(value);
-}
 
 function modelDisplay(model: PickerModel): { provider: string; modelId: string; name: string } {
 	return (
@@ -513,7 +513,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		const mode = this.compactConfirmation ? " · Confirm" : this.searchFocused ? " · Search" : "";
 		const title = `${this.wordmark} ${this.theme.bold(this.styles.apply("palette.title", `· Models${mode}`))} ${this.styles.apply("palette.count", `${this.rows.length}/${this.filterCounts.all}`)}`;
 		if (width < 12) return [fitTerminalText(title, Math.max(1, width))];
-		const innerWidth = Math.max(1, width - 4);
+		const innerWidth = paletteInnerWidth(width);
 		const terminalRows = Number(this.tui.terminal?.rows ?? 24);
 		const rowCapacity = Math.max(3, Math.min(12, terminalRows - 16));
 		const start = Math.max(
@@ -525,18 +525,35 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		const border = (value: string) => this.styles.apply("palette.border", value);
 		const frameOptions = { border };
 		const line = (value = "") => renderTerminalFrameRow(value, width, frameOptions);
-		const hint = (value: string) =>
-			wrapTextWithAnsi(value, innerWidth).map((hintLine) => line(this.styles.apply("palette.hint", hintLine)));
 		const filterCount = this.filterCounts[this.filter];
-		const viewChoice = `View  < ${FILTER_LABELS[this.filter]} >  ${filterCount} model${filterCount === 1 ? "" : "s"}`;
-		const searchMarker = this.searchFocused ? this.styles.apply("palette.marker", "→") : " ";
-		const searchPrefix = `${searchMarker} Search `;
-		const search = `${searchPrefix}${this.searchInput.render(Math.max(1, innerWidth - 9))[0] ?? ""}`;
+		const control = (label: string, value: string, focused: boolean, meta?: string) =>
+			line(
+				renderPaletteField({
+					label,
+					value,
+					...(meta ? { meta } : {}),
+					labelWidth: CONTROL_LABEL_COLUMN,
+					innerWidth,
+					selected: focused,
+					theme: this.theme,
+					styles: this.styles,
+				}),
+			);
 		const lines = [
 			renderTerminalFrameTitle(title, width, frameOptions),
 			line(renderPaletteTabs("models", this.theme, this.styles)),
-			line(viewChoice),
-			line(search),
+			renderPaletteDivider(width, this.styles),
+			control(
+				"View",
+				paletteChoice(FILTER_LABELS[this.filter]),
+				false,
+				`${filterCount} model${filterCount === 1 ? "" : "s"}`,
+			),
+			control(
+				"Search",
+				this.searchInput.render(Math.max(1, innerWidth - CONTROL_LABEL_COLUMN - 3))[0] ?? "",
+				this.searchFocused,
+			),
 		];
 		if (selected) {
 			const defaultLabel = selected.projectDefault ? " · project default" : "";
@@ -558,7 +575,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			);
 			lines.push(line(`${section}${this.rowText(row, index === this.selectedIndex)}`));
 		}
-		while (lines.length < rowCapacity + 6) lines.push(line());
+		while (lines.length < rowCapacity + 7) lines.push(line());
 		if (this.message) {
 			const role = this.message.level === "error" ? "palette.message.error" : "palette.message.info";
 			for (const messageLine of wrapTextWithAnsi(this.message.text, innerWidth)) {
@@ -572,19 +589,37 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			textFieldLive: this.searchFocused,
 		});
 		const favoriteAll = formatEffectiveJouzuKeybinding(this.jouzuKeybindings, "jouzu.model.toggleFavorite");
-		const favoriteHint =
+		// A favorite binding that is not live inside the search field is advertised
+		// as its browse-mode route rather than dropped, so the accelerator stays
+		// discoverable while the user is typing.
+		const favoriteHints: PaletteKeyHint[] =
 			this.searchFocused && favoriteNow === "Unbound" && favoriteAll !== "Unbound"
-				? `${cancel} then ${favoriteAll} favorite`
-				: `${favoriteNow} favorite`;
-		if (this.compactConfirmation) {
-			lines.push(...hint(`${confirm} compact and switch · ${cancel} cancel`));
-		} else if (this.searchFocused) {
-			lines.push(...hint(`${confirm} select and save for project · ${favoriteHint}`));
-			lines.push(...hint(`Type search · ←→ cursor · ${move} move · Tab section · ${cancel} browse`));
-		} else {
-			lines.push(...hint(`${confirm} select and save for project · ${favoriteHint}`));
-			lines.push(...hint(`←→ View · / search · Tab section · ${move} move · ${cancel} close`));
-		}
+				? [{ key: `${cancel} then ${favoriteAll}`, label: "favorite" }]
+				: [{ key: favoriteNow, label: "favorite" }];
+		const hints: PaletteKeyHint[] = this.compactConfirmation
+			? [
+					{ key: confirm, label: "compact and switch" },
+					{ key: cancel, label: "cancel" },
+				]
+			: this.searchFocused
+				? [
+						{ key: confirm, label: "select and save for project" },
+						...favoriteHints,
+						{ key: "←→", label: "cursor" },
+						{ key: move, label: "move" },
+						{ key: "Tab", label: "section" },
+						{ key: cancel, label: "browse" },
+					]
+				: [
+						{ key: confirm, label: "select and save for project" },
+						...favoriteHints,
+						{ key: "←→", label: "View" },
+						{ key: "/", label: "search" },
+						{ key: move, label: "move" },
+						{ key: "Tab", label: "section" },
+						{ key: cancel, label: "close" },
+					];
+		lines.push(...renderPaletteKeyBar(hints, innerWidth, this.theme, this.styles).map(line));
 		lines.push(renderTerminalFrameBorder(width, { ...frameOptions, left: "╰", right: "╯" }));
 		return lines.map((value) => fitTerminalText(value, width));
 	}
@@ -612,6 +647,8 @@ export interface JouzuModelPickerIntegration {
 	/** Re-read activated catalog revisions after an external refresh. */
 	reloadCatalogs(): void;
 }
+
+const CONTROL_LABEL_COLUMN = 8;
 
 const catalogOfferingIndexes = new WeakMap<ModelCatalogDocument, Map<string, CatalogModelOffering>>();
 

@@ -445,7 +445,7 @@ test("Models view confirms compaction before selecting a context-small model", a
 	const confirmation = component.render(72).join("\n");
 	assert.match(stripSgr(confirmation), /JOUZU · Models · Confirm/);
 	assert.match(confirmation, /Compact the active context and switch to small\/tiny\?/);
-	assert.match(confirmation, /Enter compact and switch · Esc\/Ctrl\+C cancel/);
+	assert.match(confirmation, /Enter compact and switch\s+Esc\/Ctrl\+C cancel/);
 	assert.ok(component.render(48).every((line) => visibleWidth(line) === 48));
 
 	component.handleInput("escape");
@@ -673,7 +673,7 @@ test("Models view separates browse choices from search cursor input", () => {
 		},
 	});
 	const browseText = component.render(72).join("\n");
-	assert.match(browseText, /View\s+< Recent >/u);
+	assert.match(browseText, /View\s+‹ Recent ›/u);
 	assert.match(browseText, /Tab section/u);
 	assert.doesNotMatch(browseText, /Ctrl\+,|Tab filter/u);
 
@@ -810,7 +810,7 @@ test("Palette section switches retain the Models query without grabbing search f
 	assert.deepEqual(router.render(72), ["settings"]);
 	router.handleInput("\u001b[Z");
 	const restored = stripSgr(router.render(72).join("\n"));
-	assert.match(restored, /Search > q/u, "the query survives the section round trip");
+	assert.match(restored, /Search\s+> q/u, "the query survives the section round trip");
 	assert.doesNotMatch(restored, /· Search/u, "a resumed route does not grab search focus");
 });
 

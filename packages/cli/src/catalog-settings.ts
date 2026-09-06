@@ -21,15 +21,21 @@ import {
 import {
 	type PaletteComponent,
 	type PaletteComponentContext,
+	type PaletteKeyHint,
 	type PaletteRoute,
+	paletteChoice,
+	paletteInnerWidth,
+	renderPaletteDivider,
+	renderPaletteField,
+	renderPaletteHeading,
+	renderPaletteKeyBar,
 	renderPaletteTabs,
 } from "./palette.js";
 import type { JouzuPaths } from "./paths.js";
 import { detectBannerColorMode, renderBrandGradient } from "./presentation.js";
-import type { SessionUiStyles } from "./session-ui/index.js";
+import type { SessionUiStyleRole, SessionUiStyles } from "./session-ui/index.js";
 import {
 	fitTerminalText,
-	padTerminalText,
 	renderTerminalFrameBorder,
 	renderTerminalFrameRow,
 	renderTerminalFrameTitle,
@@ -80,6 +86,21 @@ function sourceStatusText(view: SourceView): string {
 	}
 	return status.status;
 }
+
+/** Colour the status column so a broken source is visible without reading it. */
+function sourceStatusRole(view: SourceView): SessionUiStyleRole {
+	const status = view.status;
+	if (status.configured && status.conflict) return "palette.message.error";
+	if (!view.source.enabled) return "palette.status.off";
+	if (status.configured && status.credentialName && status.credentialAvailable === false)
+		return "palette.status.attention";
+	if (status.status === "active") return "palette.status.ready";
+	if (status.status === "stale") return "palette.status.attention";
+	return "palette.status.off";
+}
+
+const SOURCE_LABEL_COLUMN = 22;
+const FORM_LABEL_COLUMN = 14;
 
 export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	private readonly tui: TUI;
@@ -476,56 +497,175 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	private renderForm(width: number, line: (value?: string) => string): string[] {
 		const form = this.form;
 		if (!form) return [];
-		const innerWidth = Math.max(1, width - 4);
-		const labelWidth = 14;
+		const innerWidth = paletteInnerWidth(width);
 		const hint = (value: string) =>
 			wrapTextWithAnsi(value, innerWidth).map((hintLine) => line(this.styles.apply("palette.hint", hintLine)));
-		const field = (id: FormField, label: string, value: string) => {
-			const marker = form.field === id ? this.styles.apply("palette.marker", "→") : " ";
-			const text = `${marker} ${padTerminalText(label, labelWidth)} ${value}`;
-			return line(
-				form.field === id
-					? this.theme.bg("selectedBg", padTerminalText(fitTerminalText(text, innerWidth), innerWidth))
-					: text,
+		const field = (id: FormField, label: string, value: string) =>
+			line(
+				renderPaletteField({
+					label,
+					value,
+					labelWidth: FORM_LABEL_COLUMN,
+					innerWidth,
+					selected: form.field === id,
+					theme: this.theme,
+					styles: this.styles,
+				}),
 			);
-		};
-		const authValue = form.authType === "none" ? "None" : "Bearer token";
+		const inputWidth = Math.max(1, innerWidth - FORM_LABEL_COLUMN - 3);
 		const editedSource = form.sourceId
 			? this.views.find((view) => view.source.id === form.sourceId)?.source
 			: undefined;
 		const heading =
 			form.mode === "add" ? "Add catalog" : `Edit ${sanitizeTerminalText(editedSource?.label ?? "catalog")}`;
 		const lines = [
-			line(this.theme.bold(this.styles.apply("palette.title", heading))),
-			line(),
-			field("label", "Label", form.label.render(Math.max(1, innerWidth - labelWidth - 3))[0] ?? ""),
-			field("url", "URL or host", form.url.render(Math.max(1, innerWidth - labelWidth - 3))[0] ?? ""),
-			field("auth", "Authentication", `< ${authValue} >`),
+			line(renderPaletteHeading(heading, innerWidth, this.theme, this.styles)),
+			field("label", "Label", form.label.render(inputWidth)[0] ?? ""),
+			field("url", "URL or host", form.url.render(inputWidth)[0] ?? ""),
+			field("auth", "Authentication", paletteChoice(form.authType === "none" ? "None" : "Bearer token")),
 		];
 		if (form.authType === "bearer") {
 			const credentialName = form.credential.getValue().trim();
 			const credentialValue = credentialName ? this.env[credentialName] : undefined;
 			const credentialAvailable = typeof credentialValue === "string" && Boolean(credentialValue.trim());
 			lines.push(
-				field(
-					"credential",
-					"Token variable",
-					form.credential.render(Math.max(1, innerWidth - labelWidth - 3))[0] ?? "",
+				field("credential", "Token variable", form.credential.render(inputWidth)[0] ?? ""),
+				...hint(
+					`${" ".repeat(FORM_LABEL_COLUMN + 2)}Enter the variable name, not the token. Its value is never saved.`,
 				),
-				...hint("  Enter the variable name, not the token. Its value is never saved."),
 			);
 			if (credentialName) {
 				lines.push(
 					...hint(
-						`  ${sanitizeTerminalText(credentialName)} is ${credentialAvailable ? "set" : "not set"} in this Jouzu process.`,
+						`${" ".repeat(FORM_LABEL_COLUMN + 2)}${sanitizeTerminalText(credentialName)} is ${credentialAvailable ? "set" : "not set"} in this Jouzu process.`,
 					),
 				);
 			}
 		}
+		return lines;
+	}
+
+	private hints(): PaletteKeyHint[] {
 		const confirm = formatEffectiveKeybinding(this.keybindings, "tui.select.confirm");
 		const cancel = formatEffectiveKeybinding(this.keybindings, "tui.select.cancel");
 		const move = formatEffectiveKeyPair(this.keybindings, "tui.select.up", "tui.select.down");
-		lines.push(line(), ...hint(`${confirm} save · ${move} field · ←→ change Authentication · ${cancel} cancel`));
+		if (this.form)
+			return [
+				{ key: confirm, label: "save" },
+				{ key: move, label: "field" },
+				{ key: "←→", label: "change Authentication" },
+				{ key: cancel, label: "cancel" },
+			];
+		if (this.confirmRemove)
+			return [
+				{ key: confirm, label: "remove" },
+				{ key: cancel, label: "cancel" },
+			];
+		return [
+			{ key: confirm, label: "edit" },
+			{ key: "A", label: "add" },
+			{ key: "R", label: "refresh" },
+			{ key: "D", label: "remove" },
+			{ key: "Space", label: "enable" },
+			{ key: "←→", label: "models" },
+			{ key: "Tab", label: "section" },
+			{ key: move, label: "move" },
+			{ key: cancel, label: "close" },
+		];
+	}
+
+	private renderSources(width: number, line: (value?: string) => string): string[] {
+		const innerWidth = paletteInnerWidth(width);
+		const lines: string[] = [];
+		const hint = (value: string) =>
+			wrapTextWithAnsi(value, innerWidth).map((hintLine) => line(this.styles.apply("palette.hint", hintLine)));
+		const active = this.views.filter((view) => view.source.enabled && view.status.status === "active").length;
+		lines.push(
+			line(
+				renderPaletteHeading(
+					"Model Catalogs",
+					innerWidth,
+					this.theme,
+					this.styles,
+					`${active}/${this.views.length} active`,
+				),
+			),
+		);
+		if (this.views.length === 0) {
+			lines.push(line(this.styles.apply("palette.empty", "  No catalog sources configured.")));
+			return lines;
+		}
+		for (let index = 0; index < this.views.length; index += 1) {
+			const view = this.views[index];
+			const selected = index === this.selectedIndex;
+			const expanded = this.expandedSourceId === view.source.id;
+			const count = view.status.configured
+				? (view.status.offeringCount ?? view.offerings.length)
+				: view.offerings.length;
+			lines.push(
+				line(
+					renderPaletteField({
+						label: `${expanded ? "▾" : "▸"} ${sanitizeTerminalText(view.source.label)}`,
+						labelRole: "palette.identity",
+						value: this.styles.apply(sourceStatusRole(view), sourceStatusText(view)),
+						meta: countLabel(count),
+						labelWidth: SOURCE_LABEL_COLUMN,
+						innerWidth,
+						selected,
+						theme: this.theme,
+						styles: this.styles,
+					}),
+				),
+			);
+			if (selected) {
+				const status = view.status;
+				const credential =
+					status.configured && status.credentialName
+						? ` · ${status.credentialName} ${status.credentialAvailable ? "set" : "not set"}`
+						: "";
+				lines.push(
+					line(
+						this.styles.apply(
+							"palette.detail",
+							fitTerminalText(
+								`    ${sanitizeTerminalText(view.source.url)}${sanitizeTerminalText(credential)}`,
+								innerWidth,
+							),
+						),
+					),
+				);
+				if (status.configured && status.conflict) lines.push(...hint(`    ${sanitizeTerminalText(status.conflict)}`));
+			}
+			if (!expanded) continue;
+			const terminalRows = Number(this.tui.terminal?.rows ?? 24);
+			const available = Math.max(3, terminalRows - lines.length - 10);
+			const maximumOffset = Math.max(0, view.offerings.length - available);
+			this.expandedOffset = Math.min(this.expandedOffset, maximumOffset);
+			for (const offering of view.offerings.slice(this.expandedOffset, this.expandedOffset + available)) {
+				lines.push(
+					line(
+						renderPaletteField({
+							label: `    ${offering.providerId}/${offering.modelId}`,
+							labelRole: "palette.identity",
+							value: this.styles.apply("palette.detail", offering.name),
+							labelWidth: SOURCE_LABEL_COLUMN + 12,
+							innerWidth,
+							selected: false,
+							theme: this.theme,
+							styles: this.styles,
+						}),
+					),
+				);
+			}
+			if (view.offerings.length === 0)
+				lines.push(line(this.styles.apply("palette.empty", "    No cached model offerings.")));
+			else if (view.offerings.length > available)
+				lines.push(
+					...hint(
+						`    ${this.expandedOffset + 1}-${Math.min(view.offerings.length, this.expandedOffset + available)}/${view.offerings.length} · ${formatEffectiveKeyPair(this.keybindings, "tui.select.pageUp", "tui.select.pageDown")}`,
+					),
+				);
+		}
 		return lines;
 	}
 
@@ -535,88 +675,21 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		const border = (value: string) => this.styles.apply("palette.border", value);
 		const frameOptions = { border };
 		const line = (value = "") => renderTerminalFrameRow(value, width, frameOptions);
-		const innerWidth = Math.max(1, width - 4);
-		const hint = (value: string) =>
-			wrapTextWithAnsi(value, innerWidth).map((hintLine) => line(this.styles.apply("palette.hint", hintLine)));
+		const innerWidth = paletteInnerWidth(width);
 		const lines = [renderTerminalFrameTitle(title, width, frameOptions)];
-		if (!this.form && !this.confirmRemove) lines.push(line(renderPaletteTabs("settings", this.theme, this.styles)));
-		if (this.form) {
-			lines.push(...this.renderForm(width, line));
-		} else {
-			const active = this.views.filter((view) => view.source.enabled && view.status.status === "active").length;
-			lines.push(line(this.styles.apply("palette.hint", `${active}/${this.views.length} active`)));
-			lines.push(line());
-			if (this.views.length === 0) {
-				lines.push(line(this.styles.apply("palette.empty", "No catalog sources configured.")));
-			} else {
-				lines.push(line(this.theme.bold(this.styles.apply("palette.section", "Model Catalogs"))));
-				for (let index = 0; index < this.views.length; index += 1) {
-					if (index > 0) lines.push(line());
-					const view = this.views[index];
-					const selected = index === this.selectedIndex;
-					const marker = selected ? this.styles.apply("palette.marker", "→") : " ";
-					const count = view.status.configured
-						? (view.status.offeringCount ?? view.offerings.length)
-						: view.offerings.length;
-					const summary = `${marker} ${sanitizeTerminalText(view.source.label)} · ${sourceStatusText(view)} · ${countLabel(count)}`;
-					lines.push(
-						line(
-							selected
-								? this.theme.bg("selectedBg", padTerminalText(fitTerminalText(summary, innerWidth), innerWidth))
-								: summary,
-						),
-					);
-					if (selected) {
-						const status = view.status;
-						const credential =
-							status.configured && status.credentialName
-								? ` · ${status.credentialName} ${status.credentialAvailable ? "set" : "not set"}`
-								: "";
-						lines.push(
-							line(
-								this.styles.apply(
-									"palette.detail",
-									`  ${sanitizeTerminalText(view.source.url)}${sanitizeTerminalText(credential)}`,
-								),
-							),
-						);
-						if (status.configured && status.conflict) lines.push(...hint(`  ${sanitizeTerminalText(status.conflict)}`));
-					}
-					if (this.expandedSourceId === view.source.id) {
-						const terminalRows = Number(this.tui.terminal?.rows ?? 24);
-						const available = Math.max(3, terminalRows - lines.length - 8);
-						const maximumOffset = Math.max(0, view.offerings.length - available);
-						this.expandedOffset = Math.min(this.expandedOffset, maximumOffset);
-						for (const offering of view.offerings.slice(this.expandedOffset, this.expandedOffset + available)) {
-							lines.push(line(`    ${offering.providerId}/${offering.modelId} · ${offering.name}`));
-						}
-						if (view.offerings.length === 0)
-							lines.push(line(this.styles.apply("palette.empty", "    No cached model offerings.")));
-						else if (view.offerings.length > available)
-							lines.push(
-								line(
-									this.styles.apply(
-										"palette.hint",
-										`    ${this.expandedOffset + 1}-${Math.min(view.offerings.length, this.expandedOffset + available)}/${view.offerings.length} · ${formatEffectiveKeyPair(this.keybindings, "tui.select.pageUp", "tui.select.pageDown")}`,
-									),
-								),
-							);
-					}
-				}
-			}
-			const confirm = formatEffectiveKeybinding(this.keybindings, "tui.select.confirm");
-			const cancel = formatEffectiveKeybinding(this.keybindings, "tui.select.cancel");
-			const move = formatEffectiveKeyPair(this.keybindings, "tui.select.up", "tui.select.down");
-			lines.push(line());
-			lines.push(...hint(`${confirm} edit · A add · R refresh · D remove`));
-			lines.push(...hint(`Space enable · ←→ models · Tab section · ${move} move · ${cancel} close`));
+		if (!this.form && !this.confirmRemove) {
+			lines.push(line(renderPaletteTabs("settings", this.theme, this.styles)));
+			lines.push(renderPaletteDivider(width, this.styles));
 		}
+		lines.push(...(this.form ? this.renderForm(width, line) : this.renderSources(width, line)));
 		if (this.message) {
 			const role = this.message.level === "error" ? "palette.message.error" : "palette.message.info";
+			lines.push(line());
 			for (const messageLine of wrapTextWithAnsi(this.message.text, innerWidth)) {
 				lines.push(line(this.styles.apply(role, messageLine)));
 			}
 		}
+		lines.push(...renderPaletteKeyBar(this.hints(), innerWidth, this.theme, this.styles).map(line));
 		lines.push(renderTerminalFrameBorder(width, { ...frameOptions, left: "╰", right: "╯" }));
 		return lines.map((value) => fitTerminalText(value, width));
 	}
