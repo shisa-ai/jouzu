@@ -15,6 +15,7 @@ import {
 	modelReferencesEqual,
 	previousModelStack,
 	projectDefaultAppliesAtStartup,
+	savedModelThinkingLevel,
 } from "../dist/model-picker-state.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
 
@@ -126,25 +127,44 @@ test("dispatch records the last used model with its thinking level", () => {
 	}
 });
 
-test("the last thinking level updates only for the recorded last model", () => {
+test("model thinking preferences persist without changing recency or another model's level", () => {
 	const { root, paths } = context();
 	try {
 		const store = new ModelPickerStore(paths);
-		const projectKey = "a".repeat(64);
-		store.setLastThinkingLevel({ provider: "p", modelId: "a" }, "high");
-		assert.equal(store.load().state.last, undefined, "no dispatch means no last model to annotate");
-		store.recordDispatch({ provider: "p", modelId: "a" }, projectKey, {
-			thinkingLevel: "medium",
-			now: new Date("2026-08-23T00:00:00.000Z"),
-		});
-		store.setLastThinkingLevel({ provider: "p", modelId: "b" }, "max");
-		assert.equal(store.load().state.last?.thinkingLevel, "medium", "a different model must not overwrite the level");
-		store.setLastThinkingLevel({ provider: "p", modelId: "a" }, "max");
-		assert.equal(store.load().state.last?.thinkingLevel, "max");
-		assert.throws(
-			() => store.setLastThinkingLevel({ provider: "p", modelId: "a" }, "ludicrous"),
-			ModelPickerStateError,
+		const a = { provider: "p", modelId: "a" };
+		const b = { provider: "p", modelId: "b" };
+		store.setModelThinkingLevel(a, "high");
+		assert.equal(store.load().state.last, undefined);
+		assert.deepEqual(store.load().state.recents.global, [], "a preference is not a dispatch");
+		assert.equal(savedModelThinkingLevel(store.load().state, a), "high");
+		store.recordDispatch(a, "project-one", { thinkingLevel: "high" });
+		store.recordDispatch(a, "project-two", { thinkingLevel: "high" });
+		store.recordDispatch(b, "project-one", { thinkingLevel: "low" });
+		const before = store.load().state.recents;
+		store.setModelThinkingLevel(a, "max");
+		const state = new ModelPickerStore(paths).load().state;
+		assert.equal(state.last.thinkingLevel, "low");
+		assert.equal(savedModelThinkingLevel(state, a), "max");
+		assert.equal(savedModelThinkingLevel(state, b), "low");
+		for (const [records, previous] of [
+			[state.recents.global, before.global],
+			[state.recents.projects["project-one"], before.projects["project-one"]],
+			[state.recents.projects["project-two"], before.projects["project-two"]],
+		]) {
+			assert.deepEqual(
+				records,
+				previous.map((record) => (record.modelId === "a" ? { ...record, thinkingLevel: "max" } : record)),
+			);
+		}
+		store.setModelThinkingLevel(b, "off");
+		assert.equal(store.load().state.last.thinkingLevel, "off");
+		store.clearRecents("all");
+		assert.equal(
+			savedModelThinkingLevel(store.load().state, a),
+			"max",
+			"clearing recents preserves explicit preferences",
 		);
+		assert.throws(() => store.setModelThinkingLevel(a, "ludicrous"), ModelPickerStateError);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
@@ -172,6 +192,59 @@ test("saved last model state validates its thinking level", () => {
 			}),
 		);
 		assert.equal(loadModelPickerState(paths).state.last?.thinkingLevel, "xhigh");
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("thinking state accepts missing fields and rejects invalid preferences and recent levels", () => {
+	const { root, paths } = context();
+	try {
+		mkdirSync(paths.stateDir, { recursive: true });
+		const path = join(paths.stateDir, "model-picker.json");
+		const { thinkingLevels: _levels, ...legacy } = emptyModelPickerState();
+		const reference = { provider: "p", modelId: "a" };
+		writeFileSync(
+			path,
+			JSON.stringify({ ...legacy, last: { ...reference, usedAt: "2026-08-23T00:00:00.000Z", thinkingLevel: "max" } }),
+		);
+		assert.equal(savedModelThinkingLevel(loadModelPickerState(paths).state, reference), "max");
+		assert.deepEqual(loadModelPickerState(paths).state.thinkingLevels, []);
+		for (const fields of [
+			{ thinkingLevels: {} },
+			{ thinkingLevels: [{ ...reference, thinkingLevel: "invalid" }] },
+			{
+				recents: {
+					global: [{ ...reference, lastUsedAt: "2026-08-23T00:00:00.000Z", useCount: 1, thinkingLevel: "invalid" }],
+					projects: {},
+				},
+			},
+		]) {
+			writeFileSync(path, JSON.stringify({ ...legacy, ...fields }));
+			assert.throws(() => loadModelPickerState(paths, { recover: false }), ModelPickerStateError);
+		}
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("thinking preferences remain distinct across providers and catalog offerings", () => {
+	const { root, paths } = context();
+	try {
+		const store = new ModelPickerStore(paths);
+		const references = [
+			{ provider: "one", modelId: "same" },
+			{ provider: "two", modelId: "same" },
+			{ provider: "shared", modelId: "same", catalogId: "one", offeringId: "model" },
+			{ provider: "shared", modelId: "same", catalogId: "two", offeringId: "model" },
+		];
+		const levels = ["off", "low", "high", "max"];
+		for (const [index, reference] of references.entries()) store.setModelThinkingLevel(reference, levels[index]);
+		const state = new ModelPickerStore(paths).load().state;
+		assert.deepEqual(
+			references.map((reference) => savedModelThinkingLevel(state, reference)),
+			levels,
+		);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}

@@ -34,10 +34,12 @@ import {
 	MODEL_PICKER_HISTORY_LIMIT,
 	type ModelPickerState,
 	ModelPickerStore,
+	type ModelPickerThinkingLevel,
 	type ModelReference,
 	modelReferenceKey,
 	modelReferencesEqual,
 	previousModelStack,
+	savedModelThinkingLevel,
 } from "./model-picker-state.js";
 import {
 	compactNumber,
@@ -768,6 +770,15 @@ export function createJouzuModelPicker(
 	let projectKey = "";
 	let previous: ModelReference[] = [];
 	let pendingDispatch: ModelReference | undefined;
+	let selectedReference: ModelReference | undefined;
+	let restoringStartupModel = false;
+	let applyingSavedThinking = false;
+	let thinkingNotificationCount = 0;
+	const pendingThinkingNotifications: {
+		reference: ModelReference;
+		level: ModelPickerThinkingLevel;
+		previousLevel: ModelPickerThinkingLevel;
+	}[] = [];
 	let queuedModelSwitch: { model: PiModel; reference: PickerModel; setProjectDefault: boolean } | undefined;
 	let stateWarningShown = false;
 	let catalogWarningShown = false;
@@ -806,6 +817,39 @@ export function createJouzuModelPicker(
 		const current = modelReference(ctx.model, catalog);
 		previous = previousModelStack(ctx.sessionManager.getBranch(), current);
 		pendingDispatch = current;
+		selectedReference = current;
+	};
+
+	const applyThinking = (
+		pi: ExtensionAPI,
+		ctx: ExtensionContext,
+		level: ModelPickerThinkingLevel | undefined,
+	): void => {
+		if (level === undefined) return;
+		const reference = modelReference(ctx.model, catalog);
+		const previousLevel = ctx.thinkingLevel;
+		const notificationCount = thinkingNotificationCount;
+		try {
+			applyingSavedThinking = true;
+			pi.setThinkingLevel(level);
+			// Earlier extensions may delay this notification until after setThinkingLevel returns.
+			if (
+				thinkingNotificationCount === notificationCount &&
+				reference &&
+				previousLevel !== undefined &&
+				ctx.thinkingLevel !== undefined &&
+				ctx.thinkingLevel !== previousLevel
+			) {
+				pendingThinkingNotifications.push({ reference, level: ctx.thinkingLevel, previousLevel });
+			}
+		} catch (error) {
+			ctx.ui.notify(
+				`Saved thinking level was not applied: ${error instanceof Error ? error.message : String(error)}`,
+				"warning",
+			);
+		} finally {
+			applyingSavedThinking = false;
+		}
 	};
 
 	const extension: InlineExtension = {
@@ -885,6 +929,7 @@ export function createJouzuModelPicker(
 					options.restoreLastModelAtStartup === true ? (state.last ?? state.recents.global[0]) : undefined;
 				const reference = projectReference ?? lastUsed;
 				if (!reference) return;
+				const startupThinkingLevel = ctx.thinkingLevel;
 				if (!modelReferencesEqual(reference, modelReference(ctx.model, catalog))) {
 					const label = projectReference ? "Project default" : "Last used model";
 					const model = ctx.modelRegistry.find(reference.provider, reference.modelId);
@@ -893,6 +938,7 @@ export function createJouzuModelPicker(
 						return;
 					}
 					try {
+						restoringStartupModel = true;
 						if (!(await pi.setModel(model))) {
 							ctx.ui.notify(`${label} is not authenticated: ${reference.provider}/${reference.modelId}`, "warning");
 							return;
@@ -903,22 +949,18 @@ export function createJouzuModelPicker(
 							"warning",
 						);
 						return;
+					} finally {
+						restoringStartupModel = false;
 					}
 				}
-				const thinkingLevel =
-					!projectReference && state.last && modelReferencesEqual(state.last, reference)
-						? state.last.thinkingLevel
-						: undefined;
-				if (thinkingLevel && options.restoreLastThinkingLevelAtStartup !== false) {
-					try {
-						pi.setThinkingLevel(thinkingLevel);
-					} catch (error) {
-						ctx.ui.notify(
-							`Saved thinking level was not applied: ${error instanceof Error ? error.message : String(error)}`,
-							"warning",
-						);
-					}
-				}
+				selectedReference = reference;
+				applyThinking(
+					pi,
+					ctx,
+					options.restoreLastThinkingLevelAtStartup !== false
+						? savedModelThinkingLevel(state, reference)
+						: startupThinkingLevel,
+				);
 			});
 			pi.on("model_select", (event, ctx) => {
 				activeCtx = ctx;
@@ -930,13 +972,40 @@ export function createJouzuModelPicker(
 					);
 				}
 				pendingDispatch = modelReference(event.model, catalog);
+				selectedReference = pendingDispatch;
+				if (!selectedReference || restoringStartupModel || event.source === "restore") return;
+				const scopedLevel = ctx.scopedModels.find(
+					({ model }) => model.provider === event.model.provider && model.id === event.model.id,
+				)?.thinkingLevel;
+				state = store.load().state;
+				applyThinking(pi, ctx, scopedLevel ?? savedModelThinkingLevel(state, selectedReference));
 			});
 			pi.on("thinking_level_select", (event, ctx) => {
+				thinkingNotificationCount += 1;
 				activeCtx = ctx;
 				const current = modelReference(ctx.model, catalog);
-				if (!current || !state.last || !modelReferencesEqual(state.last, current)) return;
+				const pendingIndex = pendingThinkingNotifications.findIndex(
+					(record) =>
+						modelReferencesEqual(record.reference, current) &&
+						record.level === event.level &&
+						record.previousLevel === event.previousLevel,
+				);
+				if (pendingIndex !== -1) {
+					pendingThinkingNotifications.splice(pendingIndex, 1);
+					return;
+				}
+				// Pi emits automatic thinking changes before model_select. Do not save
+				// the incoming model's default/clamped level over its preference.
+				if (
+					!current ||
+					!modelReferencesEqual(selectedReference, current) ||
+					restoringStartupModel ||
+					applyingSavedThinking ||
+					(ctx.thinkingLevel !== undefined && event.level !== ctx.thinkingLevel)
+				)
+					return;
 				try {
-					state = store.setLastThinkingLevel(current, event.level);
+					state = store.setModelThinkingLevel(current, event.level);
 				} catch (error) {
 					ctx.ui.notify(
 						`Thinking level was not saved: ${error instanceof Error ? error.message : String(error)}`,
@@ -981,6 +1050,8 @@ export function createJouzuModelPicker(
 				catalogProjection.release(pi, ctx);
 				activeCtx = undefined;
 				pendingDispatch = undefined;
+				selectedReference = undefined;
+				pendingThinkingNotifications.length = 0;
 				queuedModelSwitch = undefined;
 				cycleBusy = false;
 				extensionApi = undefined;

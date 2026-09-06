@@ -30,6 +30,11 @@ export interface FavoriteRecord extends ModelReference {
 export interface RecentRecord extends ModelReference {
 	lastUsedAt: string;
 	useCount: number;
+	thinkingLevel?: ModelPickerThinkingLevel;
+}
+
+export interface ModelThinkingRecord extends ModelReference {
+	thinkingLevel: ModelPickerThinkingLevel;
 }
 
 export interface LastModelRecord extends ModelReference {
@@ -41,6 +46,7 @@ export interface ModelPickerState {
 	schemaVersion: 4;
 	filter: ModelPickerFilter;
 	favorites: FavoriteRecord[];
+	thinkingLevels: ModelThinkingRecord[];
 	last?: LastModelRecord;
 	defaults: {
 		projects: Record<string, ModelReference>;
@@ -89,6 +95,7 @@ export function emptyModelPickerState(): ModelPickerState {
 		schemaVersion: MODEL_PICKER_SCHEMA_VERSION,
 		filter: "recent",
 		favorites: [],
+		thinkingLevels: [],
 		defaults: { projects: {} },
 		recents: { global: [], projects: {} },
 	};
@@ -146,11 +153,19 @@ function parseReference(value: unknown): ModelReference {
 
 function parseRecent(value: unknown): RecentRecord {
 	const reference = parseReference(value);
-	const record = value as { lastUsedAt?: unknown; useCount?: unknown };
+	const record = value as { lastUsedAt?: unknown; useCount?: unknown; thinkingLevel?: unknown };
 	if (!validTimestamp(record.lastUsedAt) || !Number.isInteger(record.useCount) || Number(record.useCount) < 1) {
 		throw new ModelPickerStateError("recent record has invalid timestamp or use count");
 	}
-	return { ...reference, lastUsedAt: record.lastUsedAt, useCount: Number(record.useCount) };
+	if (record.thinkingLevel !== undefined && !validThinkingLevel(record.thinkingLevel)) {
+		throw new ModelPickerStateError("recent record has invalid thinking level");
+	}
+	return {
+		...reference,
+		lastUsedAt: record.lastUsedAt,
+		useCount: Number(record.useCount),
+		...(record.thinkingLevel !== undefined ? { thinkingLevel: record.thinkingLevel } : {}),
+	};
 }
 
 function parseLastModel(value: unknown): LastModelRecord {
@@ -173,6 +188,7 @@ function parseState(value: unknown): ModelPickerState {
 		schemaVersion?: unknown;
 		filter?: unknown;
 		favorites?: unknown;
+		thinkingLevels?: unknown;
 		last?: unknown;
 		defaults?: { projects?: unknown };
 		recents?: { global?: unknown; projects?: unknown };
@@ -204,6 +220,16 @@ function parseState(value: unknown): ModelPickerState {
 		return { ...reference, addedAt: favorite.addedAt };
 	});
 
+	if (record.thinkingLevels !== undefined && !Array.isArray(record.thinkingLevels)) {
+		throw new ModelPickerStateError("model thinking levels must be an array");
+	}
+	const thinkingLevels = (record.thinkingLevels ?? []).map((value): ModelThinkingRecord => {
+		const reference = parseReference(value);
+		const level = (value as { thinkingLevel?: unknown }).thinkingLevel;
+		if (!validThinkingLevel(level)) throw new ModelPickerStateError("model thinking level is invalid");
+		return { ...reference, thinkingLevel: level };
+	});
+
 	const defaults: Record<string, ModelReference> = {};
 	if (record.defaults !== undefined) {
 		if (
@@ -233,6 +259,7 @@ function parseState(value: unknown): ModelPickerState {
 		schemaVersion: MODEL_PICKER_SCHEMA_VERSION,
 		filter: validFilter(record.filter) ? record.filter : "recent",
 		favorites,
+		thinkingLevels,
 		...(record.last !== undefined ? { last: parseLastModel(record.last) } : {}),
 		defaults: { projects: defaults },
 		recents: {
@@ -284,10 +311,32 @@ export function loadModelPickerState(
 	}
 }
 
-function updateRecent(records: RecentRecord[], reference: ModelReference, now: Date): RecentRecord[] {
+export function savedModelThinkingLevel(
+	state: ModelPickerState,
+	reference: ModelReference,
+): ModelPickerThinkingLevel | undefined {
+	return (
+		state.thinkingLevels.find((record) => modelReferencesEqual(record, reference))?.thinkingLevel ??
+		(modelReferencesEqual(state.last, reference) ? state.last?.thinkingLevel : undefined) ??
+		state.recents.global.find((record) => modelReferencesEqual(record, reference))?.thinkingLevel
+	);
+}
+
+function updateRecent(
+	records: RecentRecord[],
+	reference: ModelReference,
+	now: Date,
+	thinkingLevel?: ModelPickerThinkingLevel,
+): RecentRecord[] {
 	const existing = records.find((record) => modelReferencesEqual(record, reference));
+	const level = thinkingLevel ?? existing?.thinkingLevel;
 	return [
-		{ ...reference, lastUsedAt: now.toISOString(), useCount: (existing?.useCount ?? 0) + 1 },
+		{
+			...reference,
+			lastUsedAt: now.toISOString(),
+			useCount: (existing?.useCount ?? 0) + 1,
+			...(level !== undefined ? { thinkingLevel: level } : {}),
+		},
 		...records.filter((record) => !modelReferencesEqual(record, reference)),
 	].slice(0, MODEL_PICKER_RECENT_LIMIT);
 }
@@ -348,8 +397,13 @@ export class ModelPickerStore {
 		}
 		const now = options.now ?? new Date();
 		return this.mutate((state) => {
-			state.recents.global = updateRecent(state.recents.global, reference, now);
-			state.recents.projects[projectKey] = updateRecent(state.recents.projects[projectKey] ?? [], reference, now);
+			state.recents.global = updateRecent(state.recents.global, reference, now, options.thinkingLevel);
+			state.recents.projects[projectKey] = updateRecent(
+				state.recents.projects[projectKey] ?? [],
+				reference,
+				now,
+				options.thinkingLevel,
+			);
 			state.last = {
 				...reference,
 				usedAt: now.toISOString(),
@@ -358,7 +412,7 @@ export class ModelPickerStore {
 		}, now);
 	}
 
-	setLastThinkingLevel(
+	setModelThinkingLevel(
 		reference: ModelReference,
 		thinkingLevel: ModelPickerThinkingLevel,
 		now: Date = new Date(),
@@ -368,6 +422,15 @@ export class ModelPickerStore {
 			throw new ModelPickerStateError(`unknown thinking level: ${String(thinkingLevel)}`);
 		}
 		return this.mutate((state) => {
+			state.thinkingLevels = [
+				{ ...reference, thinkingLevel },
+				...state.thinkingLevels.filter((record) => !modelReferencesEqual(record, reference)),
+			];
+			for (const records of [state.recents.global, ...Object.values(state.recents.projects)]) {
+				for (const record of records) {
+					if (modelReferencesEqual(record, reference)) record.thinkingLevel = thinkingLevel;
+				}
+			}
 			if (state.last && modelReferencesEqual(state.last, reference)) {
 				state.last = { ...state.last, thinkingLevel };
 			}
