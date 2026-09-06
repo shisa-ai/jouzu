@@ -282,6 +282,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 			.catch(() => {});
 	}
 	const help = createJouzuHelpExtension();
+	const voice = (await import("./voice/integration.js")).createVoiceExtension(paths);
 	const effectiveKeyText = (action: "app.model.select" | "app.model.cycleForward") => pi.keyText(action) || "unbound";
 	const sessionUi = createSessionUiExtension({
 		getHints: () => [
@@ -316,6 +317,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 				sessionUi,
 				modelPicker.extension,
 				modelPicker.workflowExtension,
+				voice,
 				help,
 				releaseDiagnostics,
 				...(textguard ? [textguard] : []),

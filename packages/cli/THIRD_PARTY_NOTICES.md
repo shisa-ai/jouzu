@@ -19,6 +19,15 @@ Jouzu distributes the following release-owned Pi extensions and their default ru
 
 The bundled `pi-webaio` entrypoint supplies Jouzu's static `web_fetch` and `batch_web_fetch` tools without starting a browser. The package bundle also contains transitive dependencies. Their package metadata and included license or notice files remain with their source files under `node_modules`.
 
+## Voice capture and transport
+
+| Package | Version | License evidence |
+| --- | --- | --- |
+| `@picovoice/pvrecorder-node` | 1.2.9 | Apache-2.0 in `package.json`; source headers credit Copyright 2021–2023 Picovoice Inc. The npm package omits a separate license file; Jouzu's bundled `LICENSE` contains the Apache-2.0 terms. |
+| `ws` | 8.21.0 | MIT; `LICENSE` |
+
+PvRecorder's native binaries and JavaScript binding are distributed unchanged. They load only in the microphone helper process when voice capture or device enumeration is requested.
+
 ## First-use Camoufox runtime
 
 Jouzu does not distribute or install the following packages by default. The first `tff-fetch_url` or `tff-search_web` call installs them from the npm registry under Jouzu state using the exact versions and SHA-512 integrity values in `camoufox-runtime/package-lock.json`.

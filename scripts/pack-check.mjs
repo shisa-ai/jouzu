@@ -7,6 +7,7 @@ import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { deriveClipboardBindingRequirements } from "./clipboard-bindings.mjs";
 import { isPrunedDependencyMetadata } from "./configure-release-packlists.mjs";
+import { assertVoiceBundlePresent } from "./voice-package-boundary.mjs";
 
 export function assertExternalWebTransport(files, packageJson, record) {
 	if (
@@ -251,6 +252,7 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 			throw new Error("jouzu dist/cli.js is missing its Node shebang");
 		}
 		assertProfileFilesPresent(packed.files, deriveRequiredProfileFiles(join(directory, "profiles")));
+		assertVoiceBundlePresent(packed.files);
 		const clipboardPackage = JSON.parse(
 			readFileSync(
 				join(

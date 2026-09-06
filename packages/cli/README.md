@@ -94,6 +94,12 @@ Jouzu provides its prompt and status surfaces directly:
 
 These surfaces use terminal display columns rather than JavaScript string length and are tested with CJK, full-width spaces, combining marks, emoji, ANSI color, and no-color output. The compact bar does not report provider quota or session cost until Jouzu has an authoritative source for those facts.
 
+## Voice input
+
+`/voice` starts microphone dictation through Shisa realtime speech recognition. `/voice stop` inserts final text into the editable prompt without sending it; `/voice cancel` discards it. Use `/voice devices` to choose a microphone and `/voice language ja` for Japanese (default: automatic language detection).
+
+Set `SHISA_API_KEY` with `shisa/asr-realtime` access first. Audio is sent to Shisa; Jouzu writes no recording files. Capture uses the machine running Jouzu, including when connected over SSH. Real-microphone and platform permission checks are still required. See [Voice input](https://github.com/shisa-ai/jouzu/blob/main/docs/voice.md) for limits, platform details, and optional shortcut configuration.
+
 ## Profiles
 
 `core` is the safe fallback and provider- and language-neutral base. Product branding, locale, terminal settings, repository text, and path contents never opt a user into a response language.

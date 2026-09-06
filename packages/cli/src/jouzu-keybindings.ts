@@ -20,6 +20,10 @@ import type { JouzuPaths } from "./paths.js";
  * audit before they change.
  */
 export const JOUZU_KEYBINDING_DEFINITIONS = {
+	"jouzu.voice.toggle": {
+		defaultKeys: [],
+		description: "Start or stop voice dictation",
+	},
 	"jouzu.model.toggleFavorite": {
 		defaultKeys: ["ctrl+f"],
 		description: "Toggle favorite for the selected model",
