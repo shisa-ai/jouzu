@@ -9,9 +9,12 @@ Jouzu v0.1.5's bundled extension set passed the full Linux, macOS, and Windows q
 - Windows 10 or Windows 11 on x64
 - Node.js 22.19 or newer, including npm
 - Git for Windows, including Git Bash
+- [Microsoft Visual C++ Redistributable (x64)](https://aka.ms/vc14/vc_redist.x64.exe)
 - Windows Terminal or another UTF-8-capable terminal
 
 Install Jouzu from a PowerShell or Git Bash session with npm. Pi's coding tools execute Bash commands, so Git Bash must remain installed even when `jouzu` itself is launched from PowerShell or Windows Terminal.
+
+Install the Microsoft Visual C++ Redistributable before launching Jouzu. The bundled `wreq-js` HTTP transport requires `VCRUNTIME140.dll`. If startup reports `Failed to load native module for win32-x64-msvc` and `The specified module could not be found`, a missing runtime is one possible cause. Install or repair the redistributable, then run `jouzu doctor` again. Jouzu does not install this runtime automatically.
 
 Run the following after installation:
 
