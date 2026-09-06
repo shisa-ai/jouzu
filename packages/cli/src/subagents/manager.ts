@@ -264,7 +264,7 @@ export class SubagentManager {
 			if (isActiveRun(run)) {
 				run.status = "interrupted";
 				run.result = "Previous execution could not be verified. Inspect the workspace before resuming.";
-				this.persist(run);
+				this.finalize(run);
 			}
 	}
 	private persist(run: AgentRun): void {
@@ -502,6 +502,9 @@ export class SubagentManager {
 					? result.text
 					: "Agent exited before a complete result was recorded. Inspect its output before retrying.";
 		}
+		this.finalize(run);
+	}
+	private finalize(run: AgentRun): void {
 		if (run.review) {
 			const after = captureReviewCandidate(run.cwd);
 			run.review.status =
@@ -551,9 +554,7 @@ export class SubagentManager {
 		if (worker) {
 			await worker.stop();
 		} else {
-			this.persist(run);
-			this.changed();
-			this.pump();
+			this.finalize(run);
 		}
 	}
 	async dispose(): Promise<void> {

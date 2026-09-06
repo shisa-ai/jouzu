@@ -41,6 +41,44 @@ function fixture(maxConcurrent = 2) {
 	};
 }
 
+test("role defaults allow 500 turns and two hours, with configurable multi-day limits", () => {
+	const config = defaultAgentConfig();
+	assert.ok(config.roles.every((role) => role.maxTurns === 500 && role.timeoutSeconds === 7200));
+	const role = { ...config.roles[1], maxTurns: 10000, timeoutSeconds: 3 * 24 * 60 * 60 };
+	assert.equal(parseAgentConfig({ ...config, roles: [role] }).roles[0].timeoutSeconds, 259200);
+	for (const fields of [{ timeoutSeconds: 2147484 }, { maxTurns: Number.MAX_SAFE_INTEGER + 1 }, { maxTurns: 0 }]) {
+		assert.throws(() => parseAgentConfig({ ...config, roles: [{ ...role, ...fields }] }), /Validation/);
+	}
+	const p = paths();
+	const store = new AgentRoleStore(p);
+	const saved = store.load();
+	saved.config.roles[1].maxTurns = 40;
+	saved.config.roles[1].timeoutSeconds = 900;
+	store.save(saved.config, saved.revision);
+	assert.equal(store.load().config.roles[1].maxTurns, 40, "saved user limits must not be silently migrated");
+	assert.equal(store.load().config.roles[1].timeoutSeconds, 900);
+});
+
+test("recovered active records emit one interrupted completion when the parent attaches", async () => {
+	const f = fixture();
+	const run = f.launch();
+	const path = join(f.children[0].launch.directory, "run.json");
+	await f.manager.dispose();
+	writeFileSync(path, JSON.stringify({ ...JSON.parse(readFileSync(path, "utf8")), status: "running" }));
+	const completions = [];
+	const manager = new SubagentManager(f.p, "parent", 2, undefined, (result) => completions.push(result));
+	try {
+		manager.attach();
+		manager.attach();
+		assert.equal(completions.length, 1);
+		assert.equal(completions[0].id, run.id);
+		assert.equal(completions[0].status, "interrupted");
+		assert.match(manager.read(run.id).text, /"type":"terminal","status":"interrupted"/);
+	} finally {
+		await manager.dispose();
+	}
+});
+
 test("role definitions are arbitrary, revision checked, and judging tools cannot escalate", () => {
 	const p = paths();
 	const store = new AgentRoleStore(p);

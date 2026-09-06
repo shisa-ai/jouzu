@@ -36,7 +36,7 @@ export function digest(value: unknown): string {
 	return createHash("sha256").update(JSON.stringify(value)).digest("hex");
 }
 export function defaultAgentConfig(): AgentConfig {
-	const common = { thinking: "medium" as const, timeoutSeconds: 900, maxTurns: 40 };
+	const common = { thinking: "medium" as const, timeoutSeconds: 7200, maxTurns: 500 };
 	return {
 		schemaVersion: 1,
 		maxConcurrent: 2,
@@ -126,8 +126,9 @@ export function parseAgentConfig(value: unknown): AgentConfig {
 			judging: role.judging,
 			tools,
 			thinking: role.thinking as AgentRole["thinking"],
-			timeoutSeconds: integer(role.timeoutSeconds, "Timeout seconds", 10, 7200),
-			maxTurns: integer(role.maxTurns, "Maximum turns", 1, 500),
+			// Node timers overflow above 2^31 - 1 milliseconds and otherwise fire almost immediately.
+			timeoutSeconds: integer(role.timeoutSeconds, "Timeout seconds", 10, Math.floor(2_147_483_647 / 1000)),
+			maxTurns: integer(role.maxTurns, "Maximum turns", 1, Number.MAX_SAFE_INTEGER),
 		};
 	});
 	return { schemaVersion: 1, roles, maxConcurrent: integer(raw.maxConcurrent, "Concurrent agents", 1, 8) };

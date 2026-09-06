@@ -31,6 +31,7 @@ export function createWorkflowIntegration(
 ): { service: WorkflowService; register(pi: ExtensionAPI, open: () => Promise<boolean>): void } {
 	const store = new AgentRoleStore(paths);
 	let ctx: ExtensionContext | undefined;
+	let sessionGeneration = 0;
 	let api: ExtensionAPI | undefined;
 	let manager: SubagentManager | undefined;
 	let mainRole: AgentRole | undefined;
@@ -68,6 +69,7 @@ export function createWorkflowIntegration(
 	};
 	const dispatch = async (role: AgentRole, task: string, previousRunId?: string, modelSelector?: string) => {
 		const active = context();
+		const generation = sessionGeneration;
 		const targetManager = controller();
 		const model = resolveAgentModel(modelSelector ?? role.model, active.modelRegistry.getAvailable());
 		const registered = active.modelRegistry.getRegisteredProviderConfig(model.provider);
@@ -76,7 +78,7 @@ export function createWorkflowIntegration(
 				"Model: this provider uses an in-process extension. Choose a provider with a built-in API for child agents.",
 			);
 		const auth = await active.modelRegistry.getApiKeyAndHeaders(model);
-		if (ctx !== active || manager !== targetManager)
+		if (sessionGeneration !== generation || manager !== targetManager)
 			throw new Error("Session changed before the agent could start. Retry in this session.");
 		if (!auth.ok) throw new Error("Authentication: sign in to the selected agent provider and retry.");
 		if (auth.env && Object.keys(auth.env).length)
@@ -153,11 +155,13 @@ export function createWorkflowIntegration(
 				},
 			});
 			pi.on("session_start", async (_event, active) => {
+				const generation = ++sessionGeneration;
 				unsubscribe?.();
 				clearTimeout(completionTimer);
 				completed = [];
 				ctx = undefined;
 				await manager?.dispose();
+				if (generation !== sessionGeneration) return;
 				ctx = active;
 				mainRole = undefined;
 				for (const entry of active.sessionManager.getBranch())
@@ -183,11 +187,11 @@ export function createWorkflowIntegration(
 					concurrency,
 					workerFactory,
 					(run) => {
-						if (ctx !== active) return;
+						if (generation !== sessionGeneration || !ctx) return;
 						completed.push(run);
 						clearTimeout(completionTimer);
 						completionTimer = setTimeout(() => {
-							if (ctx !== active) return;
+							if (generation !== sessionGeneration || !ctx) return;
 							const batch = completed;
 							completed = [];
 							pi.sendMessage(
@@ -204,9 +208,7 @@ export function createWorkflowIntegration(
 								},
 								{
 									deliverAs: "followUp",
-									triggerTurn:
-										batch.some((item) => item.status !== "cancelled" && item.status !== "interrupted") &&
-										!active.hasPendingMessages(),
+									triggerTurn: !ctx.hasPendingMessages(),
 								},
 							);
 						}, 100);
@@ -226,6 +228,7 @@ export function createWorkflowIntegration(
 				return { systemPrompt: `${event.systemPrompt}\n\nAgent role: ${mainRole.id}\n${mainRole.instructions}` };
 			});
 			pi.on("session_shutdown", async () => {
+				sessionGeneration += 1;
 				ctx = undefined;
 				clearTimeout(completionTimer);
 				completed = [];
@@ -254,7 +257,7 @@ export function createWorkflowIntegration(
 				name: "subagent",
 				label: "Subagent",
 				description:
-					"Launch and control child agents with configured roles and models. Use roles first. Launch returns immediately; completion arrives as an attributed follow-up. Read returns bounded output with a byte offset. Steer queues a message; resume starts a follow-up in the saved child session. Main-session ownership remains with you. Treat child output as evidence and verify the integrated result.",
+					"Launch and control child agents with configured roles and models. Use roles first. Launch returns immediately; terminal results arrive as attributed follow-ups while the parent session is open. Read returns bounded output with a byte offset. Steer queues a message; resume starts a follow-up in the saved child session. Main-session ownership remains with you. Treat child output as evidence and verify the integrated result.",
 				promptSnippet:
 					"subagent: discover roles, delegate coding or fresh review, inspect results, steer/stop/resume children.",
 				parameters: schema,
@@ -264,14 +267,18 @@ export function createWorkflowIntegration(
 					let result: unknown;
 					switch (params.op) {
 						case "roles":
-							result = roles().config.roles.map(({ id, description, model, placement, judging, tools }) => ({
-								id,
-								description,
-								model,
-								placement,
-								judging,
-								tools,
-							}));
+							result = roles().config.roles.map(
+								({ id, description, model, placement, judging, tools, maxTurns, timeoutSeconds }) => ({
+									id,
+									description,
+									model,
+									placement,
+									judging,
+									tools,
+									maxTurns,
+									timeoutSeconds,
+								}),
+							);
 							break;
 						case "list":
 							result = {

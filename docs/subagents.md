@@ -22,7 +22,9 @@ Definitions are stored in `agents.json` in Jouzu's configuration directory (`jz 
 | `placement` | `main`, `child`, or `both`. |
 | `judging` | Fresh review context with read-only tools; requires `child`. |
 | `tools` | Child tool names: `read`, `grep`, `find`, `ls`, `write`, `edit`, `bash`, `powershell`. |
-| `timeoutSeconds`, `maxTurns` | Child runtime limit (10–7200 seconds) and turn limit (1–500). |
+| `timeoutSeconds`, `maxTurns` | Defaults: 7,200 seconds (2 hours) and 500 turns. Runtime accepts 10–2,147,483 seconds (about 24 days); turns accept whole numbers from 1 to 9,007,199,254,740,991. |
+
+Saved definitions keep their configured limits. Edit and save them to use different limits; active runs and resumed follow-ups retain their original definition. The runtime ceiling avoids Node timer overflow; for example, 259,200 seconds allows a three-day run. A run stops at whichever limit it reaches first.
 
 `maxConcurrent` defaults to 2 and accepts 1–8. Changes to this file's concurrency setting take effect when a parent session attaches. The queue holds up to 32 waiting tasks. Roles with write, edit, or shell tools run one at a time per workspace; within a parent session, readers also wait for its writer. Separate Jouzu parent sessions serialize child writers through a workspace lock. Main-session edits and external programs do not participate in that lock.
 
@@ -40,7 +42,7 @@ The main model receives the `subagent` tool:
 {"op":"resume","id":"<run-id>","task":"Address the reported failure and rerun the check."}
 ```
 
-Launch returns immediately with a run ID. Completion summaries arrive as attributed follow-ups; nearby completions are combined. Pending messages retain priority. Stopping a child does not start a new main-agent turn. `list` returns up to 20 runs; pass its `nextOffset` to continue. `read` pages event output and returns a UTF-8-safe byte `nextOffset`. Run summaries include the saved child session path for reading complete messages when event previews are truncated. A steering receipt records acceptance into the controller and then whether the child queued or rejected the message; queuing does not prove model consumption.
+Launch returns immediately with a run ID. Terminal summaries arrive as attributed follow-ups while the parent session is open, including successful completion, limit exhaustion, timeout, cancellation, and crashes. Nearby results are combined. Each batch wakes an idle main agent unless messages are already pending; pending messages retain priority. `list` returns up to 20 runs; pass its `nextOffset` to continue. `read` pages event output and returns a UTF-8-safe byte `nextOffset`. Run summaries include the saved child session path for reading complete messages when event previews are truncated. A steering receipt records acceptance into the controller and then whether the child queued or rejected the message; queuing does not prove model consumption.
 
 **Runs** provides output reading, messaging, Stop, and Resume. Stop requests tool cancellation, then forces process cleanup after a grace period. Files already written remain. Resume starts another run using the original role revision, exact provider/model, workspace, and saved child conversation. Use a new launch for a fresh context or changed definition.
 
@@ -58,4 +60,4 @@ Children run through Jouzu's pinned Pi SDK in separate Node processes. They use 
 
 Coder children load repository `AGENTS.md` instructions. Children do not load ambient extensions or skills and cannot delegate through the `subagent` tool. File tools reject explicit paths outside the assigned workspace. Shell tools execute with the user's OS permissions and can access files or the network; this process separation is not an OS sandbox. Use child roles only for trusted local work.
 
-Run records, events, and Pi child sessions remain under Jouzu's state directory in `subagents/`. They include parent/session links, definition digests, model identity, control receipts, usage, and completion state. Credentials passed to the worker are excluded from these records, though task and tool output can contain sensitive content. There is no automatic retention deletion. Parent shutdown stops owned children; reopening a parent marks unverifiable active records interrupted and leaves them for inspection and explicit resume.
+Run records, events, and Pi child sessions remain under Jouzu's state directory in `subagents/`. They include parent/session links, definition digests, model identity, control receipts, usage, and completion state. Credentials passed to the worker are excluded from these records, though task and tool output can contain sensitive content. There is no automatic retention deletion. Parent shutdown stops owned children; reopening a parent marks unverifiable active records interrupted, reports them to the main agent, and leaves them for inspection and explicit resume.

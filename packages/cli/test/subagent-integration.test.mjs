@@ -5,14 +5,18 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { createWorkflowIntegration } from "../dist/subagents/integration.js";
 
-function fixture() {
+function fixture(realWorker = false) {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-agent-integration-"));
 	const paths = { configDir: join(root, "config"), stateDir: join(root, "state") };
 	const workers = [];
 	const messages = [];
 	const entries = [];
 	const notifications = [];
-	const integration = createWorkflowIntegration(paths, (launch, emit, exit) => {
+	let resolveMessage;
+	const nextMessage = new Promise((resolve) => {
+		resolveMessage = resolve;
+	});
+	const workerFactory = (launch, emit, exit) => {
 		const worker = {
 			launch,
 			emit,
@@ -24,7 +28,8 @@ function fixture() {
 		};
 		workers.push(worker);
 		return worker;
-	});
+	};
+	const integration = createWorkflowIntegration(paths, realWorker ? undefined : workerFactory);
 	const handlers = new Map();
 	let tool;
 	let command;
@@ -44,7 +49,10 @@ function fixture() {
 			},
 			setThinkingLevel() {},
 			appendEntry: (type, data) => entries.push({ type, data }),
-			sendMessage: (message, options) => messages.push({ message, options }),
+			sendMessage: (message, options) => {
+				messages.push({ message, options });
+				resolveMessage({ message, options });
+			},
 		},
 		async () => true,
 	);
@@ -74,6 +82,7 @@ function fixture() {
 		handlers,
 		workers,
 		messages,
+		nextMessage,
 		entries,
 		notifications,
 		ctx,
@@ -120,7 +129,151 @@ test("Workflow registers a tool and command, applies main instructions, and coal
 		await f.shutdown();
 	}
 });
-test("malformed definitions preserve session startup and a cancelled child does not wake the main agent", async () => {
+test("a real child's turn-limit failure reaches the parent after its context changes", { timeout: 20000 }, async () => {
+	const { createServer } = await import("node:http");
+	const { once } = await import("node:events");
+	const f = fixture(true);
+	const server = createServer(async (req, res) => {
+		for await (const _chunk of req) {
+		}
+		res.writeHead(200, { "Content-Type": "text/event-stream" });
+		const delta = {
+			role: "assistant",
+			tool_calls: [
+				{
+					index: 0,
+					id: "call_read",
+					type: "function",
+					function: { name: "read", arguments: JSON.stringify({ path: "input.txt" }) },
+				},
+			],
+		};
+		res.write(`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta, finish_reason: null }] })}\n\n`);
+		res.write(
+			`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta: {}, finish_reason: "tool_calls" }] })}\n\n`,
+		);
+		res.end("data: [DONE]\n\n");
+	});
+	server.listen(0, "127.0.0.1");
+	await once(server, "listening");
+	try {
+		writeFileSync(join(f.root, "input.txt"), "fixture input");
+		const model = {
+			provider: "fixture",
+			id: "test",
+			name: "Fixture",
+			api: "openai-completions",
+			baseUrl: `http://127.0.0.1:${server.address().port}/v1`,
+			reasoning: false,
+			input: ["text"],
+			cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+			contextWindow: 32000,
+			maxTokens: 512,
+		};
+		f.ctx.modelRegistry.getAvailable = () => [model];
+		const snapshot = f.integration.service.roles();
+		snapshot.config.roles[1] = {
+			...snapshot.config.roles[1],
+			model: "fixture/test",
+			maxTurns: 1,
+			thinking: "off",
+			tools: ["read"],
+		};
+		f.integration.service.save(snapshot);
+		await f.handlers.get("session_start")({}, f.ctx);
+		const run = await f.invoke({ op: "launch", role: "coder", task: "Read input.txt repeatedly." });
+		f.handlers.get("before_agent_start")({ systemPrompt: "Base" }, { ...f.ctx });
+		const result = await f.nextMessage;
+		assert.equal(result.message.details.runs[0].id, run.id);
+		assert.equal(result.message.details.runs[0].status, "failed");
+		assert.match(result.message.content, /Agent limit reached/);
+		assert.equal(result.options.triggerTurn, true);
+	} finally {
+		await f.shutdown();
+		server.closeAllConnections();
+		server.close();
+	}
+});
+
+test("terminal results survive fresh per-turn contexts and are delivered once", async (t) => {
+	t.mock.timers.enable({ apis: ["setTimeout"] });
+	const f = fixture();
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		const run = await f.invoke({ op: "launch", role: "coder", task: "Implement a change" });
+		f.handlers.get("before_agent_start")({ systemPrompt: "Base" }, { ...f.ctx });
+		f.workers[0].emit({ type: "result", status: "failed", text: "Agent limit reached. Work is incomplete." });
+		f.workers[0].exit(true);
+		f.workers[0].exit(true);
+		// The context can change again while the completion batch is waiting.
+		f.handlers.get("before_agent_start")({ systemPrompt: "Base" }, { ...f.ctx });
+		t.mock.timers.tick(100);
+		assert.equal(f.messages.length, 1);
+		assert.match(f.messages[0].message.content, /limit reached/);
+		assert.equal(f.messages[0].message.details.runs[0].id, run.id);
+		assert.equal(f.messages[0].message.details.runs[0].status, "failed");
+		assert.equal(f.messages[0].options.triggerTurn, true);
+	} finally {
+		await f.shutdown();
+	}
+});
+
+for (const terminal of ["completed", "crash", "timeout", "cancelled", "queued-cancelled"]) {
+	test(`attributed terminal notification: ${terminal}`, async (t) => {
+		t.mock.timers.enable({ apis: ["setTimeout"] });
+		const f = fixture();
+		try {
+			await f.handlers.get("session_start")({}, f.ctx);
+			const first = await f.invoke({ op: "launch", role: "coder", task: "Implement a change" });
+			const run =
+				terminal === "queued-cancelled"
+					? await f.invoke({ op: "launch", role: "coder", task: "Queued change" })
+					: first;
+			f.handlers.get("before_agent_start")({ systemPrompt: "Base" }, { ...f.ctx });
+			if (terminal === "completed") {
+				f.workers[0].emit({ type: "result", status: "completed", text: "Done." });
+				f.workers[0].exit(true);
+			} else if (terminal === "crash") {
+				f.workers[0].exit(false);
+			} else if (terminal === "timeout") {
+				t.mock.timers.tick(f.workers[0].launch.role.timeoutSeconds * 1000);
+				await Promise.resolve();
+			} else {
+				await f.invoke({ op: "stop", id: run.id });
+			}
+			t.mock.timers.tick(100);
+			assert.equal(f.messages.length, 1);
+			const status = terminal === "completed" ? "completed" : terminal.includes("cancelled") ? "cancelled" : "failed";
+			assert.equal(f.messages[0].message.details.runs[0].id, run.id);
+			assert.equal(f.messages[0].message.details.runs[0].status, status);
+			assert.equal(f.messages[0].options.triggerTurn, true);
+			if (terminal === "timeout") assert.match(f.messages[0].message.content, /timed out/);
+		} finally {
+			await f.shutdown();
+		}
+	});
+}
+
+test("session replacement discards old-session completion batches", async (t) => {
+	t.mock.timers.enable({ apis: ["setTimeout"] });
+	const f = fixture();
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		await f.invoke({ op: "launch", role: "coder", task: "Implement a change" });
+		f.workers[0].emit({ type: "result", status: "completed", text: "Old session result." });
+		f.workers[0].exit(true);
+		await f.handlers.get("session_start")(
+			{},
+			{ ...f.ctx, sessionManager: { ...f.ctx.sessionManager, getSessionId: () => "replacement" } },
+		);
+		t.mock.timers.tick(100);
+		assert.deepEqual(f.messages, []);
+	} finally {
+		await f.shutdown();
+	}
+});
+
+test("malformed definitions preserve session startup and cancellation notifies the main agent", async () => {
 	const f = fixture();
 	try {
 		mkdirSync(f.paths.configDir);
@@ -135,7 +288,7 @@ test("malformed definitions preserve session startup and a cancelled child does 
 		const a = await f.invoke({ op: "launch", role: "coder", task: "Do assigned work" });
 		await f.invoke({ op: "stop", id: a.id });
 		await new Promise((resolve) => setTimeout(resolve, 130));
-		assert.equal(f.messages[0].options.triggerTurn, false);
+		assert.equal(f.messages[0].options.triggerTurn, true);
 	} finally {
 		await f.shutdown();
 	}
