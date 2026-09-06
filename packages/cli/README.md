@@ -309,13 +309,28 @@ Managed profile assets are UTF-8. Existing CP932/Shift-JIS profile targets produ
 
 ## Development
 
+From a source checkout, with Bash, Git, npm, and Node.js >=22.19.0 available:
+
 ```bash
-npm ci --ignore-scripts
-npm run release:check
-npm run dev:link
+npm run dev:setup                     # install locked dependencies, check, build, and smoke-test
+node packages/cli/dist/cli.js         # run this local copy without changing global commands
+npm run dev:link                      # optional: replace global jz/jouzu links with this checkout
 ```
 
-`dev:link` records the UTC build time, Git commit, and dirty-worktree state. `jz --version` displays an identifier such as `0.1.7-dev.20260905-010203+g215b2188`. A `.dirty` suffix marks a build that included uncommitted files. The standard `npm run build` removes development metadata before packing a release artifact.
+The helper installs dependencies with lifecycle scripts disabled and repeats installation when manifests or lockfiles change. Builds record UTC build time, Git commit, and dirty-worktree state. `--version` displays an identifier such as `0.1.7-dev.20260905-010203+g215b2188`; `.dirty` marks uncommitted files. The offline startup check uses isolated temporary state and a 15-second deadline. No provider key is required.
+
+`dev:setup` does not change command links or install Git hooks. If global commands already point to this checkout, rebuilding updates the code they run. To opt in to automatic rebuilds after Git operations:
+
+```bash
+./dev-build.sh install-hooks
+./dev-build.sh uninstall-hooks        # remove only this helper's hooks
+```
+
+Hooks build without linking, preserve unmanaged hooks, and report build failures without failing Git. They apply only to the checkout that installed them. Set `JOUZU_REPO` to select another local checkout; the helper never clones or publishes.
+
+The helper and its hermetic `npm run test:dev-build` suite are tested on Linux; the suite additionally requires Python 3. For Windows without Bash, use `npm ci --ignore-scripts`, `npm run build:dev`, and `node packages/cli/dist/cli.js`; global linking remains an explicit `npm link --workspace packages/cli --ignore-scripts` step. Native Windows and macOS helper qualification remains separate.
+
+Run `npm run release:check` for the full release gate. The standard `npm run build` removes development metadata before packing a release artifact.
 
 See [docs/architecture.md](https://github.com/shisa-ai/jouzu/blob/main/docs/architecture.md) for the module map, state-file
 ownership, update lanes, and bundled profile boundaries.
