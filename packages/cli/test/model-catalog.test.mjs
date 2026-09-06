@@ -40,6 +40,31 @@ test("canonical account snapshot and local compatibility pack conform", () => {
 	assert.match(catalogDocumentSha256(snapshotText), /^[0-9a-f]{64}$/);
 });
 
+test("per-model reasoning defaults match the schema and remain optional", () => {
+	const schema = JSON.parse(readFileSync(join(catalogRoot, "model-catalog-v1.schema.json"), "utf8"));
+	const levels = schema.$defs.offering.properties.defaultThinkingLevel.enum;
+	assert.deepEqual(levels, ["off", "minimal", "low", "medium", "high", "xhigh", "max"]);
+	for (const level of [...levels, undefined]) {
+		const document = accountSnapshot();
+		if (level === undefined) delete document.modelOfferings[0].defaultThinkingLevel;
+		else document.modelOfferings[0].defaultThinkingLevel = level;
+		const parsed = parseAndValidateModelCatalog(JSON.stringify(document), { remote: true });
+		assert.equal(parsed.modelOfferings[0].defaultThinkingLevel, level);
+		assert.equal(Object.hasOwn(parsed.modelOfferings[0], "defaultThinkingLevel"), level !== undefined);
+	}
+	for (const level of [null, true, 1, "", "auto", "MEDIUM", {}, ["medium"]]) {
+		const document = accountSnapshot();
+		document.modelOfferings[0].defaultThinkingLevel = level;
+		assert.throws(
+			() => parseAndValidateModelCatalog(JSON.stringify(document), { remote: true }),
+			(error) =>
+				error instanceof ModelCatalogError &&
+				error.code === "invalid_record" &&
+				error.path === "$.modelOfferings[0].defaultThinkingLevel",
+		);
+	}
+});
+
 test("remote documents require a bounded uint64 sequence", () => {
 	const base = accountSnapshot();
 	for (const value of [undefined, "01", "18446744073709551616", 2]) {

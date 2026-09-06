@@ -7,6 +7,8 @@ export const MODEL_CATALOG_MAX_DEPTH = 64;
 export const MODEL_CATALOG_MAX_RECORDS = 100_000;
 export const MODEL_CATALOG_MAX_ID_BYTES = 2_048;
 export const MODEL_CATALOG_MAX_STRING_BYTES = 64 * 1024;
+export const CATALOG_THINKING_LEVELS = ["off", "minimal", "low", "medium", "high", "xhigh", "max"] as const;
+export type CatalogThinkingLevel = (typeof CATALOG_THINKING_LEVELS)[number];
 const UINT64_MAX = 18_446_744_073_709_551_615n;
 
 const RECORD_CLASSES = [
@@ -69,6 +71,7 @@ export interface CatalogCanonicalModel extends Record<string, unknown> {
 
 export interface CatalogModelOffering extends Record<string, unknown> {
 	id: string;
+	defaultThinkingLevel?: CatalogThinkingLevel;
 	providerId: string;
 	modelId: string;
 	name?: string;
@@ -569,6 +572,16 @@ export function validateModelCatalog(value: unknown, options: ValidateCatalogOpt
 		const providerId = stringAt(offering, "providerId", `$.modelOfferings[${index}]`);
 		optionalString(offering, "name", `$.modelOfferings[${index}]`);
 		optionalString(offering, "api", `$.modelOfferings[${index}]`);
+		if (
+			offering.defaultThinkingLevel !== undefined &&
+			!CATALOG_THINKING_LEVELS.includes(offering.defaultThinkingLevel as CatalogThinkingLevel)
+		) {
+			throw new ModelCatalogError(
+				"invalid_record",
+				`$.modelOfferings[${index}].defaultThinkingLevel`,
+				`must be one of: ${CATALOG_THINKING_LEVELS.join(", ")}`,
+			);
+		}
 		if (offering.modalities !== undefined) {
 			stringArray(offering.modalities, `$.modelOfferings[${index}].modalities`);
 		}

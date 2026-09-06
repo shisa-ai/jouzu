@@ -128,6 +128,10 @@
         "id": { "$ref": "#/$defs/id" },
         "providerId": { "$ref": "#/$defs/id" },
         "modelId": { "$ref": "#/$defs/id" },
+        "defaultThinkingLevel": {
+          "description": "Recommended reasoning level for this provider/model. Explicit user choices take precedence; omission means no catalog recommendation. This field does not declare supported reasoning controls.",
+          "enum": ["off", "minimal", "low", "medium", "high", "xhigh", "max"]
+        },
         "name": { "type": "string", "maxLength": 65536 },
         "canonicalModelId": { "$ref": "#/$defs/id" },
         "routeIds": { "type": "array", "items": { "$ref": "#/$defs/id" } },

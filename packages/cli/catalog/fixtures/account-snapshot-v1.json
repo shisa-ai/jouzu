@@ -54,6 +54,7 @@
       "id": "ai.example.gateway/example-model",
       "providerId": "ai.example.gateway",
       "modelId": "example-model",
+      "defaultThinkingLevel": "medium",
       "name": "Example Model",
       "canonicalModelId": "example/model@1",
       "routeIds": ["ai.example.gateway/primary"],
