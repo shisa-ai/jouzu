@@ -1,6 +1,7 @@
 import type { ExtensionAPI, ExtensionContext, ToolDefinition } from "@earendil-works/pi-coding-agent";
 import type { JouzuPaths } from "../paths.js";
 import { type AgentRun, SubagentManager, type WorkerFactory } from "./manager.js";
+import { parseSubagentResult, runPresentation, subagentComponent } from "./render.js";
 import {
 	type AgentModel,
 	type AgentRole,
@@ -10,6 +11,7 @@ import {
 	type RoleSnapshot,
 	resolveAgentModel,
 } from "./roles.js";
+import { resolveWorkspace } from "./workspace.js";
 
 export interface WorkflowService {
 	roles(): RoleSnapshot;
@@ -17,7 +19,7 @@ export interface WorkflowService {
 	models(): AgentModel[];
 	runs(): AgentRun[];
 	read(id: string, offset?: number): { text: string; nextOffset: number | null; totalBytes: number };
-	launch(roleId: string, task: string): Promise<AgentRun>;
+	launch(roleId: string, task: string, options?: { workspace?: string }): Promise<AgentRun>;
 	resume(id: string, task: string): Promise<AgentRun>;
 	steer(id: string, text: string): string;
 	stop(id: string): Promise<void>;
@@ -44,6 +46,7 @@ export function createWorkflowIntegration(
 		role: run.role.id,
 		model: run.model,
 		status: run.status,
+		workspace: run.cwd,
 		review: run.review,
 		usage: run.usage,
 		previousRunId: run.previousRunId,
@@ -67,10 +70,17 @@ export function createWorkflowIntegration(
 		if (!role) throw new Error("Agent definition was not found.");
 		return role;
 	};
-	const dispatch = async (role: AgentRole, task: string, previousRunId?: string, modelSelector?: string) => {
+	const dispatch = async (
+		role: AgentRole,
+		task: string,
+		previousRunId?: string,
+		modelSelector?: string,
+		workspace?: string,
+	) => {
 		const active = context();
 		const generation = sessionGeneration;
 		const targetManager = controller();
+		const cwd = resolveWorkspace(active.cwd, previousRunId ? targetManager.get(previousRunId).cwd : workspace);
 		const model = resolveAgentModel(modelSelector ?? role.model, active.modelRegistry.getAvailable());
 		const registered = active.modelRegistry.getRegisteredProviderConfig(model.provider);
 		if (registered?.streamSimple)
@@ -92,7 +102,7 @@ export function createWorkflowIntegration(
 					headers: auth.headers as Record<string, string> | undefined,
 					baseUrl: auth.baseUrl,
 				},
-				cwd: active.cwd,
+				cwd,
 				task,
 			},
 			active.sessionManager.getLeafId() ?? undefined,
@@ -108,7 +118,7 @@ export function createWorkflowIntegration(
 		models: () => context().modelRegistry.getAvailable(),
 		runs: () => manager?.list() ?? [],
 		read: (id, offset) => controller().read(id, offset),
-		launch: (id, task) => dispatch(roleById(id), task),
+		launch: (id, task, options) => dispatch(roleById(id), task, undefined, undefined, options?.workspace),
 		resume(id, task) {
 			const previous = controller().get(id);
 			// The saved role revision and provider are immutable across a resumed run.
@@ -138,6 +148,14 @@ export function createWorkflowIntegration(
 		service,
 		register(pi, open) {
 			api = pi;
+			pi.registerMessageRenderer("jouzu-subagent-result", (message, { expanded }, theme) => {
+				const details = message.details as { presentation?: unknown; runs?: unknown } | undefined;
+				return subagentComponent(
+					details?.presentation ?? (details?.runs ? { runs: details.runs } : message.content),
+					theme,
+					expanded,
+				);
+			});
 			pi.registerCommand("workflow", {
 				description: "Open agent definitions and child runs",
 				handler: async (_args, active) => {
@@ -204,7 +222,7 @@ export function createWorkflowIntegration(
 										)
 										.join("\n\n"),
 									display: true,
-									details: { runs: batch.map(summary) },
+									details: { runs: batch.map(summary), presentation: { runs: batch.map(runPresentation) } },
 								},
 								{
 									deliverAs: "followUp",
@@ -248,6 +266,11 @@ export function createWorkflowIntegration(
 							"Bounded assignment. For review include requirements, candidate identity, scope, and check evidence, without the coder's reasoning.",
 					},
 					id: { type: "string", description: "Run ID returned by launch or list." },
+					workspace: {
+						type: "string",
+						description:
+							"Launch only: working directory, absolute or relative to the parent. Defaults to parent cwd; not a filesystem sandbox. For review, choose the repository whose candidate identity should be captured.",
+					},
 					offset: { type: "integer", minimum: 0 },
 				},
 				required: ["op"],
@@ -257,14 +280,40 @@ export function createWorkflowIntegration(
 				name: "subagent",
 				label: "Subagent",
 				description:
-					"Launch and control child agents with configured roles and models. Use roles first. Launch returns immediately; terminal results arrive as attributed follow-ups while the parent session is open. Read returns bounded output with a byte offset. Steer queues a message; resume starts a follow-up in the saved child session. Main-session ownership remains with you. Treat child output as evidence and verify the integrated result.",
+					"Launch and control child agents with configured roles and models. Use roles first. Set workspace on launch to select the working directory and review candidate repository. File access follows enabled role tools and OS permissions, not a workspace fence. Launch returns immediately; terminal results arrive as attributed follow-ups while the parent session is open. Read returns bounded output with a byte offset. Steer queues a message; resume starts a follow-up in the saved child session. Main-session ownership remains with you. Treat child output as evidence and verify the integrated result.",
 				promptSnippet:
 					"subagent: discover roles, delegate coding or fresh review, inspect results, steer/stop/resume children.",
 				parameters: schema,
-				async execute(_id, params: { op: string; role?: string; task?: string; id?: string; offset?: number }) {
+				renderCall(raw, theme) {
+					const args = raw as { op?: string; role?: string };
+					return subagentComponent(
+						`Subagent · ${args?.op ?? "preparing"}${args?.role ? ` · ${args.role}` : ""}`,
+						theme,
+						false,
+						"call",
+					);
+				},
+				renderResult(result, { expanded }, theme, renderContext) {
+					if (renderContext.isError)
+						return subagentComponent(parseSubagentResult(result.content), theme, expanded, "error");
+					const details = result.details as { presentation?: unknown } | undefined;
+					return subagentComponent(
+						details?.presentation ?? parseSubagentResult(result.content),
+						theme,
+						expanded,
+						String((renderContext.args as { op?: string } | undefined)?.op ?? ""),
+					);
+				},
+				async execute(
+					_id,
+					params: { op: string; role?: string; task?: string; id?: string; offset?: number; workspace?: string },
+				) {
+					if (params.workspace !== undefined && params.op !== "launch")
+						throw new Error("Workspace is launch-only. Resume keeps the original workspace.");
 					if (params.offset !== undefined && (!Number.isInteger(params.offset) || params.offset < 0))
 						throw new Error("Offset must be a nonnegative integer.");
 					let result: unknown;
+					let presentation: unknown;
 					switch (params.op) {
 						case "roles":
 							result = roles().config.roles.map(
@@ -289,9 +338,12 @@ export function createWorkflowIntegration(
 								nextOffset: service.runs().length > (params.offset ?? 0) + 20 ? (params.offset ?? 0) + 20 : null,
 							};
 							break;
-						case "launch":
-							result = summary(await service.launch(params.role ?? "", params.task ?? ""));
+						case "launch": {
+							const run = await service.launch(params.role ?? "", params.task ?? "", { workspace: params.workspace });
+							result = summary(run);
+							presentation = runPresentation(run);
 							break;
+						}
 						case "read":
 							result = service.read(params.id ?? "", params.offset);
 							break;
@@ -302,13 +354,27 @@ export function createWorkflowIntegration(
 							await service.stop(params.id ?? "");
 							result = { status: "cancelled" };
 							break;
-						case "resume":
-							result = summary(await service.resume(params.id ?? "", params.task ?? ""));
+						case "resume": {
+							const run = await service.resume(params.id ?? "", params.task ?? "");
+							result = summary(run);
+							presentation = runPresentation(run);
 							break;
+						}
 						default:
 							throw new Error("Choose a supported subagent operation.");
 					}
-					return { content: [{ type: "text", text: JSON.stringify(result) }], details: undefined };
+					if (params.op === "list")
+						presentation = {
+							...(result as object),
+							runs: service
+								.runs()
+								.slice(params.offset ?? 0, (params.offset ?? 0) + 20)
+								.map(runPresentation),
+						};
+					return {
+						content: [{ type: "text", text: JSON.stringify(result) }],
+						details: presentation ? { presentation } : undefined,
+					};
 				},
 			});
 		},

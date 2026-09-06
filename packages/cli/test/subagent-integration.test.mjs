@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -32,11 +33,16 @@ function fixture(realWorker = false) {
 	const integration = createWorkflowIntegration(paths, realWorker ? undefined : workerFactory);
 	const handlers = new Map();
 	let tool;
+	let messageRenderer;
 	let command;
 	let selected;
 	integration.register(
 		{
 			on: (name, handler) => handlers.set(name, handler),
+			registerMessageRenderer(name, renderer) {
+				assert.equal(name, "jouzu-subagent-result");
+				messageRenderer = renderer;
+			},
 			registerCommand: (name) => {
 				command = name;
 			},
@@ -92,10 +98,114 @@ function fixture(realWorker = false) {
 		get selected() {
 			return selected;
 		},
+		get tool() {
+			return tool;
+		},
+		get messageRenderer() {
+			return messageRenderer;
+		},
 		invoke: async (params) => JSON.parse((await tool.execute("id", params)).content[0].text),
 		shutdown: () => handlers.get("session_shutdown")(),
 	};
 }
+test("explicit workspace routes child and review candidate away from the parent repository", async () => {
+	const f = fixture();
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		const target = join(f.root, "target");
+		mkdirSync(target);
+		execFileSync("git", ["init", "-q", target]);
+		execFileSync("git", [
+			"-C",
+			target,
+			"-c",
+			"user.name=Test",
+			"-c",
+			"user.email=test@example.invalid",
+			"commit",
+			"--allow-empty",
+			"-qm",
+			"fixture",
+		]);
+		const result = await f.tool.execute("id", {
+			op: "launch",
+			role: "reviewer",
+			task: "Review target and sibling reference",
+			workspace: target,
+		});
+		const parsed = JSON.parse(result.content[0].text);
+		assert.equal(parsed.workspace, target);
+		assert.equal(
+			parsed.review.candidate.head,
+			execFileSync("git", ["-C", target, "rev-parse", "HEAD"], { encoding: "utf8" }).trim(),
+		);
+		assert.equal(f.workers[0].launch.cwd, target);
+		assert.match(f.workers[0].launch.task, /identity covers only that workspace/);
+		assert.equal(result.details.presentation.task, "Review target and sibling reference");
+		assert.equal(parsed.task, undefined);
+		assert.equal(typeof f.tool.renderResult, "function");
+		await assert.rejects(f.invoke({ op: "resume", id: parsed.id, workspace: target }), /launch-only/);
+		const childSession = join(f.workers[0].launch.directory, "session.jsonl");
+		writeFileSync(childSession, "{}\n");
+		f.workers[0].emit({ type: "ready", sessionFile: childSession, sessionId: "child" });
+		f.workers[0].emit({ type: "result", status: "completed", text: "Scope inspected" });
+		f.workers[0].exit(true);
+		const resumed = await f.invoke({ op: "resume", id: parsed.id, task: "Follow up" });
+		assert.equal(resumed.workspace, target);
+		assert.equal(f.workers[1].launch.cwd, target);
+		await assert.rejects(
+			f.invoke({ op: "launch", role: "reviewer", task: "review", workspace: join(target, "missing") }),
+			/does not exist/,
+		);
+	} finally {
+		await f.shutdown();
+	}
+});
+
+test("registered tool and message renderers handle persisted summaries and errors", async () => {
+	const f = fixture();
+	const theme = { fg: (_role, text) => text };
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		const launched = await f.tool.execute("id", { op: "launch", role: "coder", task: "Repair findings" });
+		const lines = f.tool
+			.renderResult(launched, { expanded: false }, theme, { args: { op: "launch" } })
+			.render(80)
+			.join("\n");
+		assert.match(lines, /Repair findings/);
+		assert.doesNotMatch(lines, /"usage"/);
+		const failed = f.tool
+			.renderResult({ content: [{ type: "text", text: "No such run" }] }, { expanded: false }, theme, {
+				args: { op: "stop" },
+				isError: true,
+			})
+			.render(80)
+			.join("\n");
+		assert.match(failed, /failed/);
+		assert.doesNotMatch(failed, /cancellation requested/);
+		const message = f
+			.messageRenderer(
+				{
+					content: "legacy outcome",
+					details: {
+						presentation: {
+							runs: [{ ...launched.details.presentation, status: "completed", outcome: "Review blocked" }],
+						},
+					},
+				},
+				{ expanded: true },
+				theme,
+			)
+			.render(80)
+			.join("\n");
+		assert.match(message, /Completed/);
+		assert.match(message, /Review blocked/);
+		assert.doesNotMatch(message, /approved/);
+	} finally {
+		await f.shutdown();
+	}
+});
+
 test("Workflow registers a tool and command, applies main instructions, and coalesces bounded child results", async () => {
 	const f = fixture();
 	try {

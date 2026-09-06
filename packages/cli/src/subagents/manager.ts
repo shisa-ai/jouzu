@@ -383,7 +383,7 @@ export class SubagentManager {
 			model: structuredClone(launch.model),
 			auth: structuredClone(launch.auth),
 			task: run.review
-				? `${launch.task}\n\nReview candidate: ${JSON.stringify(run.review.candidate)}. Inspect the assigned scope independently. Return findings with severity, file/line, failure conditions and evidence, then coverage and checks you could not perform. A response is not approval to ship.`
+				? `${launch.task}\n\nReview candidate for workspace ${JSON.stringify(run.cwd)}: ${JSON.stringify(run.review.candidate)}. This identity covers only that workspace, not sibling repositories or the full assignment. Inspect the assigned scope independently. Return findings with severity, file/line, failure conditions and evidence, then coverage and checks you could not perform. A response is not approval to ship.`
 				: launch.task,
 			cwd: run.cwd,
 			directory: sessionFile ? dirname(sessionFile) : this.directory(id),

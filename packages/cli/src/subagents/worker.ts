@@ -1,5 +1,3 @@
-import { existsSync, realpathSync } from "node:fs";
-import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import {
 	type AgentSession,
 	createAgentSession,
@@ -19,19 +17,6 @@ function boundedText(text: string, limit: number): string {
 }
 function send(event: WorkerEvent): void {
 	if (process.connected) process.send?.(event);
-}
-/** Resolve existing ancestors too, so a new file cannot escape through a symlink. */
-export function requireWorkspacePath(cwd: string, path: string): void {
-	const root = realpathSync(cwd);
-	let target = resolve(cwd, path);
-	while (!existsSync(target)) {
-		const parent = dirname(target);
-		if (parent === target) break;
-		target = parent;
-	}
-	const rel = relative(root, realpathSync(target));
-	if (isAbsolute(rel) || rel === ".." || rel.startsWith(`..${sep}`))
-		throw new Error("Access denied: the path is outside the assigned workspace.");
 }
 export function childResourceLoader(launch: WorkerLaunch): ResourceLoader {
 	const entries = launch.role.judging ? [] : loadProjectContextFiles({ cwd: launch.cwd, agentDir: launch.directory });
@@ -98,13 +83,11 @@ export async function runWorker(launch: WorkerLaunch, onSession: (session: Agent
 	let lastText = "";
 	let lastStop = "";
 	let toolCount = 0;
-	// The child has no extensions. Enforce file-tool paths at the execution boundary.
-	session.agent.beforeToolCall = async ({ toolCall, args }) => {
+	// Roles control tools; the working directory is not a filesystem sandbox.
+	session.agent.beforeToolCall = async ({ toolCall }) => {
 		if (!role.tools.includes(toolCall.name as (typeof role.tools)[number]))
 			return { block: true, reason: "Access denied: tool is not in the role definition." };
 		try {
-			const path = (args as { path?: unknown })?.path;
-			if (typeof path === "string") requireWorkspacePath(launch.cwd, path);
 			if (++toolCount > role.maxTurns * 20) {
 				exhausted = true;
 				return { block: true, reason: "Tool limit reached. Report remaining work." };

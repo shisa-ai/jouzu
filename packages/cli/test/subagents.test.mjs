@@ -5,7 +5,8 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { SubagentManager, workerEnvironment } from "../dist/subagents/manager.js";
 import { AgentRoleStore, defaultAgentConfig, parseAgentConfig, resolveAgentModel } from "../dist/subagents/roles.js";
-import { childResourceLoader, requireWorkspacePath } from "../dist/subagents/worker.js";
+import { childResourceLoader } from "../dist/subagents/worker.js";
+import { resolveWorkspace } from "../dist/subagents/workspace.js";
 
 function paths() {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-agents-test-"));
@@ -148,14 +149,14 @@ test("child configuration excludes ambient resources and reviewer instructions",
 		NO_COLOR: "1",
 	});
 });
-test("file tools refuse traversal and symlink escapes", () => {
+test("workspace routing resolves explicit directories and aliases without a containment fence", () => {
 	const p = paths();
 	const outside = paths();
-	mkdirSync(join(p.cwd, "inside"));
-	requireWorkspacePath(p.cwd, "inside/new.txt");
-	assert.throws(() => requireWorkspacePath(p.cwd, "../bad.txt"), /outside/);
+	assert.equal(resolveWorkspace(p.cwd, outside.cwd), outside.cwd);
 	symlinkSync(outside.cwd, join(p.cwd, "linked"));
-	assert.throws(() => requireWorkspacePath(p.cwd, "linked/new.txt"), /outside/);
+	assert.equal(resolveWorkspace(p.cwd, "linked"), outside.cwd);
+	assert.throws(() => resolveWorkspace(p.cwd, "missing"), /does not exist/);
+	assert.throws(() => resolveWorkspace(p.cwd, ""), /nonempty/);
 });
 test("failure and timeout never become empty successful results", async () => {
 	const f = fixture();

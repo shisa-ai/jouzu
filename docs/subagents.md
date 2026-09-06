@@ -35,6 +35,7 @@ The main model receives the `subagent` tool:
 ```json
 {"op":"roles"}
 {"op":"launch","role":"coder","task":"Implement the assigned parser change. Run its focused tests and report files, results, and remaining work."}
+{"op":"launch","role":"reviewer","workspace":"../target-repo","task":"Review this repository and ../reference-repo. Read their instructions. Report each repository's HEAD, inspected changes, findings, and coverage separately."}
 {"op":"list"}
 {"op":"read","id":"<run-id>","offset":0}
 {"op":"steer","id":"<run-id>","task":"Keep the existing public API."}
@@ -44,13 +45,17 @@ The main model receives the `subagent` tool:
 
 Launch returns immediately with a run ID. Terminal summaries arrive as attributed follow-ups while the parent session is open, including successful completion, limit exhaustion, timeout, cancellation, and crashes. Nearby results are combined. Each batch wakes an idle main agent unless messages are already pending; pending messages retain priority. `list` returns up to 20 runs; pass its `nextOffset` to continue. `read` pages event output and returns a UTF-8-safe byte `nextOffset`. Run summaries include the saved child session path for reading complete messages when event previews are truncated. A steering receipt records acceptance into the controller and then whether the child queued or rejected the message; queuing does not prove model consumption.
 
+Set `workspace` on launch to choose the child's working directory and the repository used for candidate identity. Paths may be absolute, relative to the parent directory, or start with `~`. It defaults to the parent's working directory. Resume keeps the original directory; changing it requires a new launch. This directory does not restrict file access.
+
+Tool results and completion messages show a themed summary of role, model, status, assignment, short run ID, workspace, and available outcome. Expand tool output for the full ID, token/cost details, and candidate identity metadata. Zero token counts are omitted; unknown cost is labelled unknown. Terminal elapsed time includes queue time. Status labels carry the same meaning with color disabled. A completed status records process completion, not acceptance.
+
 **Runs** provides output reading, messaging, Stop, and Resume. Stop requests tool cancellation, then forces process cleanup after a grace period. Files already written remain. Resume starts another run using the original role revision, exact provider/model, workspace, and saved child conversation. Use a new launch for a fresh context or changed definition.
 
 ## Review evidence
 
 A review-only child receives the assignment, role instructions, and its own tools. It does not receive the parent's transcript, extensions, skills, or automatically loaded project instructions. Include requirements, scope, and check evidence in the assignment. The reviewer can read repository instructions as source material; it cannot execute repository tests with its read-only tool set.
 
-Jouzu records a Git working-tree identity at launch and compares it at completion. This covers HEAD, tracked changes, and untracked files within bounded snapshot limits. Changes produce a **changed** review marker. Non-root workspaces, submodules, unavailable Git data, and snapshots exceeding limits produce **unverified** coverage. Ignored files are outside this identity. An unchanged identity establishes only that the captured inputs match.
+Jouzu records a Git working-tree identity at launch and compares it at completion. This covers HEAD, tracked changes, and untracked files in the selected workspace within bounded snapshot limits. It does not cover sibling repositories merely because the reviewer reads them. For multi-repository work, state each target and baseline in the assignment and require separate coverage evidence. Changes produce a **changed** review marker. Non-root workspaces, submodules, unavailable Git data, and snapshots exceeding limits produce **unverified** coverage. Ignored files are outside this identity. An unchanged identity establishes only that the captured inputs match.
 
 A completed run means the child returned a final response and exited successfully. It does not mean the assignment passed acceptance checks or the review approved release. Findings and test claims remain evidence for the main agent to verify. Review output requests severity, location, failure conditions, evidence, and incomplete coverage; Jouzu does not parse it into an approval verdict.
 
@@ -58,6 +63,6 @@ A completed run means the child returned a final response and exited successfull
 
 Children run through Jouzu's pinned Pi SDK in separate Node processes. They use the selected model and resolved API key/token or headers through a private IPC channel. Authentication requiring extension code or additional credential environment variables is rejected before launch. Long-lived runs do not refresh authentication tokens. Model-reported usage is accumulated per run; missing cost information stays unknown.
 
-Coder children load repository `AGENTS.md` instructions. Children do not load ambient extensions or skills and cannot delegate through the `subagent` tool. File tools reject explicit paths outside the assigned workspace. Shell tools execute with the user's OS permissions and can access files or the network; this process separation is not an OS sandbox. Use child roles only for trusted local work.
+Coder children load repository `AGENTS.md` instructions. Children do not load ambient extensions or skills and cannot delegate through the `subagent` tool. Enabled file tools can access sibling directories and other paths permitted by the operating system. Role tool selection controls what operations a child can perform; the working directory is not a filesystem sandbox. Shell tools also run with the user's OS permissions. Workspace locks coordinate children using the same selected directory, not arbitrary cross-directory writes. Use child roles only for trusted local work.
 
 Run records, events, and Pi child sessions remain under Jouzu's state directory in `subagents/`. They include parent/session links, definition digests, model identity, control receipts, usage, and completion state. Credentials passed to the worker are excluded from these records, though task and tool output can contain sensitive content. There is no automatic retention deletion. Parent shutdown stops owned children; reopening a parent marks unverifiable active records interrupted, reports them to the main agent, and leaves them for inspection and explicit resume.
