@@ -16,7 +16,7 @@ export interface VoiceSnapshot {
 
 export class VoiceReviewRequired extends VoiceError {
 	constructor(readonly snapshot: VoiceSnapshot) {
-		super("Some voice chunks did not finalize. Use /voice review to check the text, or /voice cancel to discard it.");
+		super("Some voice chunks did not finalize.");
 	}
 }
 

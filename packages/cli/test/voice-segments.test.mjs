@@ -131,11 +131,11 @@ test("hybrid widget labels states, retains history, and fits small terminals", (
 		})),
 	};
 	for (const width of [1, 10, 12, 24, 48, 80]) {
-		const lines = renderVoiceWidget("review", "", width, snapshot);
+		const lines = renderVoiceWidget("recording", "", width, snapshot);
 		assert.ok(lines.every((line) => visibleWidth(line) <= width));
 	}
-	const rendered = renderVoiceWidget("review", "", 80, snapshot).join("\n");
+	const rendered = renderVoiceWidget("recording", "", 80, snapshot).join("\n");
 	assert.match(rendered, /4 earlier chunks retained/);
 	assert.match(rendered, /Final.*Pending|Pending/s);
-	assert.match(rendered, /\/voice review/);
+	assert.match(rendered, /\/voice stop/);
 });

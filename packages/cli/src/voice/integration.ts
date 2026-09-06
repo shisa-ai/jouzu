@@ -8,7 +8,7 @@ import { VoiceError } from "./errors.js";
 import type { VoiceConnection, VoiceConnectionOptions, VoiceLanguage } from "./realtime.js";
 import { VoiceReviewRequired, type VoiceSnapshot } from "./transcript.js";
 
-export type VoiceState = "starting" | "recording" | "finishing" | "review";
+export type VoiceState = "starting" | "recording" | "finishing";
 export interface VoiceDependencies {
 	connect(options: VoiceConnectionOptions): Promise<VoiceConnection>;
 	capture(options: CaptureOptions): Promise<VoiceCapture>;
@@ -37,17 +37,11 @@ export function renderVoiceWidget(
 			? "Voice: connecting…"
 			: state === "recording"
 				? "Voice: recording"
-				: state === "review"
-					? "Voice: review required"
-					: "Voice: finishing transcription…";
+				: "Voice: finishing transcription…";
 	return [
 		...wrapTextWithAnsi(status, width),
 		...wrapTextWithAnsi(
-			state === "recording"
-				? "/voice stop to insert · /voice cancel to discard"
-				: state === "review"
-					? "/voice review to edit · /voice cancel to discard"
-					: "/voice cancel to discard",
+			state === "recording" ? "/voice stop to insert · /voice cancel to discard" : "/voice cancel to discard",
 			width,
 		),
 		...(snapshot?.segments.length
@@ -88,7 +82,6 @@ export function createVoiceExtension(paths: JouzuPaths, overrides: Partial<Voice
 				state: VoiceState;
 				preview: string;
 				snapshot?: VoiceSnapshot;
-				reviewing?: boolean;
 				connection?: VoiceConnection;
 				capture?: VoiceCapture;
 				timer?: ReturnType<typeof setTimeout>;
@@ -115,27 +108,15 @@ export function createVoiceExtension(paths: JouzuPaths, overrides: Partial<Voice
 					invalidate() {},
 				}));
 			};
-			const retainForReview = (active: ActiveRecording, snapshot: VoiceSnapshot) => {
-				const segments = snapshot.segments.map((segment) => ({
-					...segment,
-					state: segment.state === "final" ? ("final" as const) : ("failed" as const),
-				}));
-				if (!segments.some((segment) => segment.state === "failed"))
-					segments.push({ id: "interrupted-tail", state: "failed", text: "" });
-				run = {
-					controller: new AbortController(),
-					ctx: active.ctx,
-					state: "review",
-					preview: "",
-					snapshot: { segments },
-				};
-				clearTimeout(active.timer);
-				active.controller.abort();
-				active.capture?.cancel();
-				active.connection?.cancel();
-				refresh();
+			const insertIncomplete = (active: ActiveRecording, snapshot: VoiceSnapshot) => {
+				const chunks = snapshot.segments.map((segment) => (segment.state === "final" ? segment.text : "[garbled]"));
+				// A disconnected tail may have no segment in the last snapshot.
+				if (!snapshot.segments.some((segment) => segment.state !== "final")) chunks.push("[garbled]");
+				const text = chunks.filter(Boolean).join("\n");
+				cancel();
+				active.ctx.ui.pasteToEditor(`${active.ctx.ui.getEditorText() ? "\n" : ""}${text}`);
 				active.ctx.ui.notify(
-					"Voice needs review. Use /voice review to correct the marked chunks, or /voice cancel to discard them.",
+					"Voice text inserted with [garbled] for missing speech. Edit the prompt, then press Enter to send.",
 					"warning",
 				);
 			};
@@ -143,12 +124,7 @@ export function createVoiceExtension(paths: JouzuPaths, overrides: Partial<Voice
 				const active = run;
 				if (!active) return;
 				if (active.state !== "recording") {
-					active.ctx.ui.notify(
-						active.state === "review"
-							? "Use /voice review to edit retained text, or /voice cancel to discard it."
-							: "Voice is still preparing or finishing. Use /voice cancel to discard it.",
-						"info",
-					);
+					active.ctx.ui.notify("Voice is still preparing or finishing. Use /voice cancel to discard it.", "info");
 					return;
 				}
 				active.state = "finishing";
@@ -168,11 +144,11 @@ export function createVoiceExtension(paths: JouzuPaths, overrides: Partial<Voice
 				} catch (error) {
 					if (run !== active) return;
 					if (error instanceof VoiceReviewRequired) {
-						retainForReview(active, error.snapshot);
+						insertIncomplete(active, error.snapshot);
 						return;
 					}
 					if (active.snapshot?.segments.length) {
-						retainForReview(active, active.snapshot);
+						insertIncomplete(active, active.snapshot);
 						return;
 					}
 					cancel();
@@ -195,7 +171,7 @@ export function createVoiceExtension(paths: JouzuPaths, overrides: Partial<Voice
 				const onError = (error: Error) => {
 					if (run !== active) return;
 					if (active.snapshot?.segments.length) {
-						retainForReview(active, active.snapshot);
+						insertIncomplete(active, active.snapshot);
 						return;
 					}
 					cancel();
@@ -254,44 +230,6 @@ export function createVoiceExtension(paths: JouzuPaths, overrides: Partial<Voice
 					);
 				}
 			};
-			const review = async () => {
-				const active = run;
-				if (!active || active.state !== "review" || active.reviewing) return;
-				active.reviewing = true;
-				try {
-					const draft =
-						active.snapshot?.segments
-							.map((segment, index) =>
-								segment.state === "final"
-									? segment.text
-									: `[Unfinalized chunk ${index + 1}]\n${segment.text || "[No transcript]"}`,
-							)
-							.filter(Boolean)
-							.join("\n\n") ?? "";
-					const text = await active.ctx.ui.editor("Review voice: correct or remove marked chunks", draft);
-					if (run !== active || text === undefined) return;
-					if (/\[Unfinalized chunk \d+\]|\[No transcript\]/u.test(text)) {
-						active.ctx.ui.notify(
-							"Correct or remove the marked chunks before inserting. Use /voice review again.",
-							"warning",
-						);
-						return;
-					}
-					if (
-						!(await active.ctx.ui.confirm(
-							"Insert reviewed voice text?",
-							"This pastes your edited text into the prompt without sending it.",
-							{ signal: active.controller.signal },
-						)) ||
-						run !== active
-					)
-						return;
-					cancel();
-					if (text) active.ctx.ui.pasteToEditor(`${active.ctx.ui.getEditorText() ? "\n" : ""}${text}`);
-				} finally {
-					active.reviewing = false;
-				}
-			};
 			const command = async (args: string, ctx: ExtensionContext) => {
 				if (ctx.mode !== "tui" || deps.env.TERM === "dumb") {
 					ctx.ui.notify("Voice input requires an interactive terminal on the machine with the microphone.", "error");
@@ -303,8 +241,6 @@ export function createVoiceExtension(paths: JouzuPaths, overrides: Partial<Voice
 					deviceQuery = undefined;
 					cancel();
 					ctx.ui.notify("Voice cancelled. Your prompt is unchanged.", "info");
-				} else if (action === "review") {
-					await review();
 				} else if (action === "stop" || (!action && run)) {
 					await stop();
 				} else if (!action || action === "start") {
@@ -339,14 +275,14 @@ export function createVoiceExtension(paths: JouzuPaths, overrides: Partial<Voice
 					ctx.ui.notify(`Voice language: ${language}.`, "info");
 				} else
 					ctx.ui.notify(
-						"Use /voice [start|stop|cancel|review|devices|language auto|language ja|language en|language zh].",
+						"Use /voice [start|stop|cancel|devices|language auto|language ja|language en|language zh].",
 						"info",
 					);
 			};
 			pi.registerCommand("voice", {
-				description: "Dictate into the prompt; start, stop, cancel, review incomplete text, or configure voice",
+				description: "Dictate into the prompt; start, stop, cancel, or configure voice",
 				getArgumentCompletions: (prefix) =>
-					["start", "stop", "cancel", "review", "devices", "language auto", "language ja", "language en", "language zh"]
+					["start", "stop", "cancel", "devices", "language auto", "language ja", "language en", "language zh"]
 						.filter((value) => value.startsWith(prefix))
 						.map((value) => ({ value, label: value })),
 				handler: command,
