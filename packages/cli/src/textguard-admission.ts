@@ -90,6 +90,37 @@ export class TextGuardAdmission {
 		} catch {
 			evidence = unavailable("scanner");
 		}
+		return this.decide(source, contentDigest, validUnicode, scannerIdentity, evidence, generation, signal);
+	}
+
+	/** The host must hash the complete payload; truncated or invalid snapshots cannot be approved. */
+	async checkUnavailableSnapshot(
+		source: string,
+		contentDigest: string,
+		reason: "input-limit",
+		signal?: AbortSignal,
+	): Promise<ContentDecision> {
+		if (!/^[a-f0-9]{64}$/.test(contentDigest)) throw new Error("Invalid TextGuard content identity");
+		const generation = this.generation;
+		let scannerIdentity = "unavailable";
+		try {
+			const identity = await this.scanner.initialize();
+			if (identity && /^[a-f0-9]{64}$/.test(identity)) scannerIdentity = identity;
+		} catch {
+			/* Coverage remains unavailable. */
+		}
+		return this.decide(source, contentDigest, true, scannerIdentity, unavailable(reason), generation, signal);
+	}
+
+	private decide(
+		source: string,
+		contentDigest: string,
+		validUnicode: boolean,
+		scannerIdentity: string,
+		evidence: ScanEvidence,
+		generation: number,
+		signal?: AbortSignal,
+	): ContentDecision {
 		if (signal?.aborted) evidence = unavailable("timeout");
 		const active = generation === this.generation && !signal?.aborted;
 		if (generation !== this.generation) evidence = unavailable("closed");
