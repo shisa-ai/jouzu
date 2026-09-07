@@ -1,13 +1,13 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, realpathSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { createWorkflowIntegration } from "../dist/subagents/integration.js";
 
 function fixture(realWorker = false, options = {}) {
-	const root = mkdtempSync(join(tmpdir(), "jouzu-agent-integration-"));
+	const root = realpathSync(mkdtempSync(join(tmpdir(), "jouzu-agent-integration-")));
 	const paths = { configDir: join(root, "config"), stateDir: join(root, "state") };
 	const workers = [];
 	const messages = [];
