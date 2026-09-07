@@ -31,6 +31,7 @@ export function createNotificationInbox(deps: InboxDeps) {
 	let inFlight: string | undefined;
 	let inFlightItems: NotificationRecord[] = [];
 	let inFlightHash: string | undefined;
+	let startedBatch: string | undefined;
 	const withheld = new Set<string>();
 	const identity = (item: NotificationRecord) => JSON.stringify([item.id, item.revision]);
 	function withholdInFlight() {
@@ -38,6 +39,7 @@ export function createNotificationInbox(deps: InboxDeps) {
 		inFlight = undefined;
 		inFlightItems = [];
 		inFlightHash = undefined;
+		startedBatch = undefined;
 		optionalReply = undefined;
 	}
 	let optionalReply: { batchId: string; contentHash: string } | undefined;
@@ -127,6 +129,7 @@ export function createNotificationInbox(deps: InboxDeps) {
 		inFlight = undefined;
 		inFlightItems = [];
 		inFlightHash = undefined;
+		startedBatch = undefined;
 		withheld.clear();
 		optionalReply = undefined;
 	}
@@ -166,6 +169,12 @@ export function createNotificationInbox(deps: InboxDeps) {
 			if (
 				event.message.customType === deps.customType &&
 				marker?.sessionId === sessionId &&
+				marker?.batchId === inFlight
+			)
+				startedBatch = inFlight;
+			if (
+				event.message.customType === deps.customType &&
+				marker?.sessionId === sessionId &&
 				marker?.batchId === inFlight &&
 				inFlight !== undefined &&
 				notificationHash(event.message.content) !== inFlightHash
@@ -186,11 +195,19 @@ export function createNotificationInbox(deps: InboxDeps) {
 					: undefined;
 		}
 	});
+	function finishDelivery() {
+		reconcile();
+		if (startedBatch && startedBatch === inFlight) {
+			withholdInFlight();
+			deps.reportError(new Error("Notification receipt is missing after delivery."));
+		}
+		startedBatch = undefined;
+	}
 	deps.pi.on("turn_end", (_event, active) => {
 		if (!owns(active)) return;
 		ctx = active;
 		try {
-			reconcile();
+			finishDelivery();
 		} catch (error) {
 			deps.reportError(error);
 		}
@@ -199,6 +216,11 @@ export function createNotificationInbox(deps: InboxDeps) {
 		if (!owns(active)) return;
 		ctx = active;
 		optionalReply = undefined;
+		try {
+			finishDelivery();
+		} catch (error) {
+			deps.reportError(error);
+		}
 		request();
 	});
 	deps.pi.on("session_compact", () => {

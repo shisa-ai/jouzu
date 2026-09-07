@@ -13,7 +13,16 @@ import {
 } from "@earendil-works/pi-coding-agent";
 import { createWorkflowIntegration } from "../dist/subagents/integration.js";
 
-for (const scenario of ["observed", "redacted-read", "acknowledge", "reply", "stale", "mixed", "queued"]) {
+for (const scenario of [
+	"observed",
+	"redacted-read",
+	"redacted-metadata",
+	"acknowledge",
+	"reply",
+	"stale",
+	"mixed",
+	"queued",
+]) {
 	test(`real Pi subagent inbox request count: ${scenario}`, { timeout: 15000 }, async (t) => {
 		t.mock.method(globalThis, "fetch", async () => {
 			throw new Error("Network disabled in inbox fixture");
@@ -73,6 +82,7 @@ for (const scenario of ["observed", "redacted-read", "acknowledge", "reply", "st
 		let session;
 		let requests = 0;
 		let scriptFailure;
+		let rejectedBatch;
 		const errors = [];
 		const text = (value) => ({ type: "text", text: value });
 		const tool = (name, args, id) => ({ type: "toolCall", name, arguments: args, id });
@@ -96,7 +106,15 @@ for (const scenario of ["observed", "redacted-read", "acknowledge", "reply", "st
 					: [text("Initial work finished.")];
 			}
 			if (["observed", "redacted-read"].includes(scenario)) return [text("Read tools finished.")];
-			if (requests === 3) {
+			if (scenario === "redacted-metadata" && requests === 3) {
+				return [tool("subagent", { op: "launch", role: "coder", task: "Later result" }, "later")];
+			}
+			if (scenario === "redacted-metadata" && requests === 4) {
+				workers[3].emit({ type: "result", status: "completed", text: "Later success" });
+				workers[3].exit(true);
+				return [text("Later child finished.")];
+			}
+			if (requests === 3 || (scenario === "redacted-metadata" && requests === 5)) {
 				const entry = [...session.sessionManager.getBranch()]
 					.reverse()
 					.find((item) => item.type === "custom_message" && item.customType === "jouzu-subagent-result");
@@ -160,6 +178,23 @@ for (const scenario of ["observed", "redacted-read", "acknowledge", "reply", "st
 				noSkills: true,
 				noPromptTemplates: true,
 				noContextFiles: true,
+				contentPolicy:
+					scenario === "redacted-metadata"
+						? {
+								filterSkills: async (skills) => skills,
+								shouldInspectTool: () => false,
+								filterToolResult: async ({ result }) => result,
+								filterContext: async (messages) =>
+									messages.map((message) => {
+										if (message.role !== "custom" || message.customType !== "jouzu-subagent-result") return message;
+										const id = message.details?.inbox?.batchId;
+										if (id) rejectedBatch ??= id;
+										return id === rejectedBatch
+											? { ...message, content: [text("Policy withheld the notification")], details: {} }
+											: message;
+									}),
+							}
+						: undefined,
 				extensionFactories: [
 					(pi) => {
 						integration.register(pi, async () => false);
@@ -201,11 +236,18 @@ for (const scenario of ["observed", "redacted-read", "acknowledge", "reply", "st
 			await new Promise((resolve) => setTimeout(resolve, 20));
 			if (scriptFailure) throw scriptFailure;
 			assert.deepEqual(errors, []);
-			assert.equal(requests, ["mixed", "stale", "queued", "redacted-read"].includes(scenario) ? 4 : 3);
+			assert.equal(
+				requests,
+				scenario === "redacted-metadata" ? 5 : ["mixed", "stale", "queued", "redacted-read"].includes(scenario) ? 4 : 3,
+			);
 			const batches = session.sessionManager
 				.getBranch()
 				.filter((entry) => entry.type === "custom_message" && entry.customType === "jouzu-subagent-result");
-			assert.equal(batches.length, scenario === "observed" ? 0 : 1);
+			assert.equal(batches.length, scenario === "observed" ? 0 : scenario === "redacted-metadata" ? 2 : 1);
+			if (scenario === "redacted-metadata") {
+				assert.deepEqual(batches[0].details, {});
+				assert.equal(integration.service.runs().filter((run) => !run.completion.handled).length, 3);
+			}
 			const prose = session.messages
 				.filter((message) => message.role === "assistant")
 				.flatMap((message) => message.content.filter((part) => part.type === "text").map((part) => part.text));
