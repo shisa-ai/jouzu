@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { createWorkflowIntegration } from "../dist/subagents/integration.js";
 
-function fixture(realWorker = false) {
+function fixture(realWorker = false, options = {}) {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-agent-integration-"));
 	const paths = { configDir: join(root, "config"), stateDir: join(root, "state") };
 	const workers = [];
@@ -30,7 +30,7 @@ function fixture(realWorker = false) {
 		workers.push(worker);
 		return worker;
 	};
-	const integration = createWorkflowIntegration(paths, realWorker ? undefined : workerFactory);
+	const integration = createWorkflowIntegration(paths, realWorker ? undefined : workerFactory, options);
 	const handlers = new Map();
 	let tool;
 	let messageRenderer;
@@ -108,8 +108,8 @@ function fixture(realWorker = false) {
 		shutdown: () => handlers.get("session_shutdown")(),
 	};
 }
-test("explicit workspace routes child and review candidate away from the parent repository", async () => {
-	const f = fixture();
+test("explicit workspace and file scanning carry into child launch and resume", async () => {
+	const f = fixture(false, { textguardFiles: true });
 	try {
 		await f.handlers.get("session_start")({}, f.ctx);
 		const target = join(f.root, "target");
@@ -140,6 +140,7 @@ test("explicit workspace routes child and review candidate away from the parent 
 			execFileSync("git", ["-C", target, "rev-parse", "HEAD"], { encoding: "utf8" }).trim(),
 		);
 		assert.equal(f.workers[0].launch.cwd, target);
+		assert.equal(f.workers[0].launch.textguardFiles, true);
 		assert.match(f.workers[0].launch.task, /identity covers only that workspace/);
 		assert.equal(result.details.presentation.task, "Review target and sibling reference");
 		assert.equal(parsed.task, undefined);
@@ -153,6 +154,7 @@ test("explicit workspace routes child and review candidate away from the parent 
 		const resumed = await f.invoke({ op: "resume", id: parsed.id, task: "Follow up" });
 		assert.equal(resumed.workspace, target);
 		assert.equal(f.workers[1].launch.cwd, target);
+		assert.equal(f.workers[1].launch.textguardFiles, true);
 		await assert.rejects(
 			f.invoke({ op: "launch", role: "reviewer", task: "review", workspace: join(target, "missing") }),
 			/does not exist/,

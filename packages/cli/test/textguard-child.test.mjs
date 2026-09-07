@@ -9,12 +9,12 @@ import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { SubagentManager } from "../dist/subagents/manager.js";
 import { defaultAgentConfig } from "../dist/subagents/roles.js";
 
-for (const variant of ["clear-skill", "major-skill", "ordinary-file"]) {
+for (const variant of ["clear-skill", "major-skill", "ordinary-file", "ordinary-file-opt-in"]) {
 	test(`real child admission and restored expansion: ${variant}`, { timeout: 30000 }, async () => {
 		const root = mkdtempSync(join(tmpdir(), "jouzu-child-textguard-"));
 		const cwd = join(root, "workspace");
 		mkdirSync(cwd);
-		const path = join(cwd, variant === "ordinary-file" ? "reference.txt" : "SKILL.md");
+		const path = join(cwd, variant.startsWith("ordinary-file") ? "reference.txt" : "SKILL.md");
 		const body = `CHILD_SOURCE_MARKER${variant === "clear-skill" ? "" : "\u202e"}`;
 		writeFileSync(path, body);
 		const requests = [];
@@ -59,6 +59,7 @@ for (const variant of ["clear-skill", "major-skill", "ordinary-file"]) {
 		);
 		const launch = {
 			cwd,
+			textguardFiles: variant === "ordinary-file-opt-in",
 			role: { ...defaultAgentConfig().roles[2], thinking: "off" },
 			task: "Read the file",
 			auth: { apiKey: "fixture" },
@@ -82,8 +83,9 @@ for (const variant of ["clear-skill", "major-skill", "ordinary-file"]) {
 			assert.equal(result.status, "completed", result.result);
 			assert.equal(requests.length, 2);
 			const visible = JSON.stringify(requests[1].messages);
-			assert.equal(visible.includes("CHILD_SOURCE_MARKER"), variant !== "major-skill");
-			if (variant === "major-skill") {
+			const blocked = variant === "major-skill" || variant === "ordinary-file-opt-in";
+			assert.equal(visible.includes("CHILD_SOURCE_MARKER"), !blocked);
+			if (blocked) {
 				assert.match(visible, /TextGuard withheld/);
 				assert.doesNotMatch(readFileSync(result.sessionFile, "utf8"), /CHILD_SOURCE_MARKER/);
 			}

@@ -266,6 +266,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 		]);
 	presentation.clearInteractiveStartup(parsed.args);
 	const modelPicker = createJouzuModelPicker(paths, {
+		textguardFiles: parsed.options.textguardFiles,
 		applyProjectDefaultAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
 		restoreLastModelAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
 		restoreLastThinkingLevelAtStartup: !parsed.args.some(

@@ -30,6 +30,7 @@ export interface WorkflowService {
 export function createWorkflowIntegration(
 	paths: JouzuPaths,
 	workerFactory?: WorkerFactory,
+	options: { textguardFiles?: boolean } = {},
 ): { service: WorkflowService; register(pi: ExtensionAPI, open: () => Promise<boolean>): void } {
 	const store = new AgentRoleStore(paths);
 	let ctx: ExtensionContext | undefined;
@@ -104,6 +105,7 @@ export function createWorkflowIntegration(
 				},
 				cwd,
 				task,
+				textguardFiles: options.textguardFiles === true,
 			},
 			active.sessionManager.getLeafId() ?? undefined,
 			previousRunId,

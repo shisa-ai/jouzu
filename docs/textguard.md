@@ -52,7 +52,9 @@ including any truncation, rather than every byte of the source file.
 Jouzu child agents check skill-file reads and expanded skill text in restored
 sessions. Each child has its own scanner and decisions; it does not inherit
 parent approvals. Child agents cannot open approval dialogs, so content requiring
-approval stays withheld. Role-based tool restrictions still apply.
+approval stays withheld. `--jouzu-textguard-files` also checks ordinary reads in
+child agents launched or resumed from that CLI session. Role-based tool
+restrictions still apply.
 
 ## Python comparison reports
 

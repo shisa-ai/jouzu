@@ -79,6 +79,7 @@ export interface JouzuModelPickerRequest {
 }
 
 export interface JouzuModelPickerOptions {
+	textguardFiles?: boolean;
 	applyProjectDefaultAtStartup?: boolean;
 	restoreLastModelAtStartup?: boolean;
 	restoreLastThinkingLevelAtStartup?: boolean;
@@ -738,7 +739,7 @@ export function createJouzuModelPicker(
 	options: JouzuModelPickerOptions = {},
 ): JouzuModelPickerIntegration {
 	const store = new ModelPickerStore(paths);
-	const workflow = createWorkflowIntegration(paths);
+	const workflow = createWorkflowIntegration(paths, undefined, { textguardFiles: options.textguardFiles });
 	const jouzuKeybindings = createJouzuKeybindingsManager(paths);
 	const surface = new JouzuPaletteSurfaceHost({ jouzuKeybindings });
 	const catalogEnv = options.palette?.env ?? process.env;

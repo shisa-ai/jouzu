@@ -41,7 +41,10 @@ export function childResourceLoader(
 	};
 }
 export async function runWorker(launch: WorkerLaunch, onSession: (session: AgentSession) => void): Promise<void> {
-	const textguard = new TextGuardRuntime({ cachePath: join(launch.directory, "textguard-scans.json") });
+	const textguard = new TextGuardRuntime({
+		cachePath: join(launch.directory, "textguard-scans.json"),
+		files: launch.textguardFiles,
+	});
 	try {
 		await runGuardedWorker(launch, onSession, textguard);
 	} finally {

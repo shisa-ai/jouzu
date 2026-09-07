@@ -8,6 +8,7 @@ export interface WorkerLaunch {
 	cwd: string;
 	directory: string;
 	sessionFile?: string;
+	textguardFiles?: boolean;
 	task: string;
 }
 export type WorkerCommand =
