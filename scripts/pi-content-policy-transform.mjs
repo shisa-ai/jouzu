@@ -113,6 +113,60 @@ export function transform(path, source) {
 		);
 	} else if (path === "dist/core/agent-session.js") {
 		change(
+			"    // =========================================================================\n    // Compaction\n    // =========================================================================\n    /** Generate Pi's built-in compaction summary for manual and automatic compaction. */",
+			`    // =========================================================================
+    // Compaction
+    // =========================================================================
+    /**
+     * Run summarization source entries through the content policy before preparation,
+     * extension hooks, or serialization can send them to a model. Restored sessions can
+     * contain tool results and expanded skill text this session's policy has not admitted.
+     * Returns cloned entries so live session history is never modified.
+     */
+    async _filterSummarizationEntries(entries, signal, label) {
+        const policy = this.resourceLoader.contentPolicy;
+        if (!policy) return entries;
+        const targets = [];
+        for (const entry of entries) {
+            if (entry.type === "message" && entry.message &&
+                (entry.message.role === "user" || entry.message.role === "assistant" || entry.message.role === "toolResult")) {
+                targets.push(entry);
+            }
+        }
+        if (targets.length === 0) return entries;
+        let admitted;
+        try {
+            admitted = await policy.filterContext(targets.map((entry) => entry.message), signal);
+            if (!Array.isArray(admitted) || admitted.length !== targets.length) throw new Error("Invalid content-policy result");
+            for (let i = 0; i < admitted.length; i++) {
+                if (!admitted[i] || admitted[i].role !== targets[i].message.role) throw new Error("Invalid content-policy result");
+            }
+        } catch {
+            if (signal?.aborted) throw new Error(label === "compaction" ? "Compaction cancelled" : "Branch summarization cancelled");
+            throw new Error("TextGuard could not check session history; " + label + " withheld.");
+        }
+        const replacements = new Map();
+        for (let i = 0; i < targets.length; i++) {
+            if (admitted[i] !== targets[i].message) replacements.set(targets[i], admitted[i]);
+        }
+        if (replacements.size === 0) return entries;
+        return entries.map((entry) => (replacements.has(entry) ? { ...entry, message: replacements.get(entry) } : entry));
+    }
+    /** Generate Pi's built-in compaction summary for manual and automatic compaction. */`,
+		);
+		change(
+			"                throw new Error(formatNoModelSelectedMessage());\n            }\n            const { model: requestModel, apiKey, headers, env } = await this._getSummarizationRequestAuth(this.model);\n            const pathEntries = this.sessionManager.getBranch();",
+			'                throw new Error(formatNoModelSelectedMessage());\n            }\n            const { model: requestModel, apiKey, headers, env } = await this._getSummarizationRequestAuth(this.model);\n            const pathEntries = await this._filterSummarizationEntries(this.sessionManager.getBranch(), this._compactionAbortController.signal, "compaction");',
+		);
+		change(
+			'            const pathEntries = this.sessionManager.getBranch();\n            const preparation = prepareCompaction(pathEntries, settings);\n            if (!preparation) {\n                return false;\n            }\n            this._emit({ type: "compaction_start", reason });\n            this._autoCompactionAbortController = new AbortController();\n            started = true;',
+			'            this._autoCompactionAbortController = new AbortController();\n            const pathEntries = await this._filterSummarizationEntries(this.sessionManager.getBranch(), this._autoCompactionAbortController.signal, "compaction");\n            const preparation = prepareCompaction(pathEntries, settings);\n            if (!preparation) {\n                return false;\n            }\n            this._emit({ type: "compaction_start", reason });\n            started = true;',
+		);
+		change(
+			"        // Set up abort controller for summarization\n        this._branchSummaryAbortController = new AbortController();\n        try {",
+			'        // Set up abort controller for summarization\n        this._branchSummaryAbortController = new AbortController();\n        try {\n            if (this.resourceLoader.contentPolicy)\n                entriesToSummarize.splice(0, entriesToSummarize.length, ...(await this._filterSummarizationEntries(entriesToSummarize, this._branchSummaryAbortController.signal, "branch summary")));',
+		);
+		change(
 			"this._resourceLoader.extendResources(extensionPaths);",
 			"await this._resourceLoader.extendResources(extensionPaths);",
 		);
@@ -167,11 +221,20 @@ export function transform(path, source) {
                 if (!Array.isArray(admitted) || admitted.length !== 1 || admitted[0].role !== event.message.role) throw new Error("Invalid content-policy result");
                 this._replaceMessageInPlace(event.message, admitted[0]);
             } catch {
-                this._replaceMessageInPlace(event.message, {
-                    role: event.message.role, toolCallId: event.message.toolCallId, toolName: event.message.toolName,
-                    customType: event.message.customType, display: event.message.display, timestamp: event.message.timestamp,
-                    content: [{ type: "text", text: "TextGuard could not check this message; content withheld." }], details: {},
-                });
+                if (event.message.role === "toolResult") {
+                    this._replaceMessageInPlace(event.message, {
+                        role: "toolResult", toolCallId: event.message.toolCallId, toolName: event.message.toolName, timestamp: event.message.timestamp,
+                        content: [{ type: "text", text: "TextGuard could not check this message; content withheld." }], details: {}, isError: true,
+                    });
+                } else if (event.message.role === "user") {
+                    this._replaceMessageInPlace(event.message, {
+                        role: "user", timestamp: event.message.timestamp,
+                        content: [{ type: "text", text: "TextGuard could not check this message; content withheld." }],
+                    });
+                }
+                // Assistant, custom, and bashExecution messages are not scanned here; on a failed
+                // check they must stay intact so required provider metadata, session statistics,
+                // and subscribers keep working instead of receiving an unusable placeholder shape.
             }
         }
         // Notify all listeners

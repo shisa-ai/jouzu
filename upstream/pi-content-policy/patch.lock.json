@@ -29,7 +29,7 @@
 		},
 		"dist/core/agent-session.js": {
 			"before": "fb8a3981c20c8c0bbd42231b1c99a10335fb3858b659056b341954de9cfa467f",
-			"after": "6b7ff93bd148f6cde2979c17484cb6d0356e8f1fb8acdae8b78580328f365976"
+			"after": "4b672563d046b914677500107ec3bc76ff6d55301c03ffa7006c2faefecaa270"
 		}
 	},
 	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863"
