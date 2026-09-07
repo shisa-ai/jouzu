@@ -2077,3 +2077,109 @@ test("Models search selects and remembers the gateway offering over a conflictin
 		rmSync(root, { recursive: true, force: true });
 	}
 });
+
+test(
+	"selecting the active Models row preserves live and saved thinking with the Pi session setter",
+	{ timeout: 15000 },
+	async () => {
+		const { createAgentSession, DefaultResourceLoader, ModelRuntime, SessionManager, SettingsManager } = await import(
+			"@earendil-works/pi-coding-agent"
+		);
+		const root = mkdtempSync(join(tmpdir(), "jouzu-picker-same-thinking-"));
+		let session;
+		try {
+			const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+			const store = new ModelPickerStore(paths);
+			const reference = { provider: "thinking-fixture", modelId: "fixture" };
+			store.setModelThinkingLevel(reference, "high");
+			const runtime = await ModelRuntime.create({
+				modelsPath: null,
+				modelsStorePath: join(root, "models.json"),
+				refreshOnCreate: false,
+				allowModelNetwork: false,
+				credentials: {
+					read: async () => undefined,
+					list: async () => [],
+					modify: async () => undefined,
+					delete: async () => {},
+				},
+			});
+			runtime.registerProvider(reference.provider, {
+				api: "openai-completions",
+				baseUrl: "http://127.0.0.1:1",
+				apiKey: "fixture-only",
+				models: [
+					{
+						id: "fixture",
+						name: "Fixture",
+						reasoning: true,
+						input: ["text"],
+						contextWindow: 32000,
+						maxTokens: 1000,
+						cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+					},
+				],
+			});
+			const integration = createJouzuModelPicker(paths, {
+				palette: { env: { TERM: "xterm-256color" }, columns: 100, rows: 30 },
+			});
+			const loader = new DefaultResourceLoader({
+				cwd: root,
+				agentDir: paths.agentDir,
+				noExtensions: true,
+				noSkills: true,
+				noPromptTemplates: true,
+				noContextFiles: true,
+				extensionFactories: [integration.extension.factory],
+			});
+			await loader.reload();
+			({ session } = await createAgentSession({
+				cwd: root,
+				agentDir: paths.agentDir,
+				modelRuntime: runtime,
+				model: runtime.getModel(reference.provider, reference.modelId),
+				resourceLoader: loader,
+				sessionManager: SessionManager.inMemory(root),
+				tools: [],
+				settingsManager: SettingsManager.inMemory({ defaultThinkingLevel: "medium" }),
+			}));
+			const errors = [];
+			await session.bindExtensions({
+				mode: "tui",
+				onError: (error) => errors.push(error),
+				uiContext: {
+					notify() {},
+					custom: (factory) =>
+						new Promise((resolve, reject) => {
+							const component = factory(
+								{ terminal: { rows: 30 }, requestRender() {} },
+								identityTheme,
+								fakeKeybindings(),
+								resolve,
+							);
+							setImmediate(() => {
+								try {
+									assert.match(stripSgr(component.render(100).join("\n")), /fixture/);
+									component.handleInput("enter");
+								} catch (error) {
+									reject(error);
+								}
+							});
+						}),
+				},
+			});
+			assert.equal(session.thinkingLevel, "high");
+			await integration.open({ source: "action", initialSearchInput: "fixture" });
+			assert.equal(session.thinkingLevel, "high");
+			assert.equal(store.load().state.thinkingLevels[0].thinkingLevel, "high");
+			assert.deepEqual(store.load().state.defaults.projects[deriveProjectKey(root)], reference);
+			session.setThinkingLevel("low");
+			await new Promise((resolve) => setImmediate(resolve));
+			assert.equal(store.load().state.thinkingLevels[0].thinkingLevel, "low", "later user changes still persist");
+			assert.deepEqual(errors, []);
+		} finally {
+			session?.dispose();
+			rmSync(root, { recursive: true, force: true });
+		}
+	},
+);

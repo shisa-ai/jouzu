@@ -47,6 +47,7 @@ import {
 	preferredModelThinkingLevel,
 	previousModelStack,
 } from "./model-picker-state.js";
+import { hasExplicitStartupThinking } from "./model-thinking-startup.js";
 import {
 	compactNumber,
 	JouzuPaletteRouter,
@@ -89,6 +90,7 @@ export interface JouzuModelPickerOptions {
 	applyProjectDefaultAtStartup?: boolean;
 	restoreLastModelAtStartup?: boolean;
 	restoreLastThinkingLevelAtStartup?: boolean;
+	startupArgs?: readonly string[];
 	palette?: PaletteSurfaceOptions;
 	/** Test seam for the catalog refresh performed by /reload. */
 	catalogFetch?: typeof globalThis.fetch;
@@ -1009,7 +1011,21 @@ export function createJouzuModelPicker(
 		factory: (pi) => {
 			catalogProjection.registerStartup(pi, catalogs);
 			extensionApi = pi;
-			setModel = (model) => pi.setModel(model);
+			setModel = async (model) => {
+				const ctx = activeCtx;
+				const sameModel = ctx?.model?.provider === model.provider && ctx.model.id === model.id;
+				if (!ctx || !sameModel) return pi.setModel(model);
+				// Pi reapplies defaults even for the active model, without model_select.
+				// Keep its live reasoning and do not persist that automatic reset.
+				const level = ctx.thinkingLevel;
+				try {
+					restoringStartupModel = true;
+					return await pi.setModel(model);
+				} finally {
+					applyThinking(pi, ctx, level);
+					restoringStartupModel = false;
+				}
+			};
 			reapplyCatalogProjection = () => {
 				if (activeCtx) catalogProjection.sync(pi, activeCtx, catalogs);
 			};
@@ -1076,6 +1092,9 @@ export function createJouzuModelPicker(
 					ctx.scopedModels.length > 0
 				)
 					return;
+				const restoreThinking =
+					options.restoreLastThinkingLevelAtStartup !== false &&
+					!hasExplicitStartupThinking(options.startupArgs ?? [], ctx.modelRegistry);
 				const projectReference =
 					options.applyProjectDefaultAtStartup === true ? state.defaults.projects[projectKey] : undefined;
 				const lastUsed =
@@ -1083,7 +1102,7 @@ export function createJouzuModelPicker(
 				const reference = projectReference ?? lastUsed;
 				if (!reference) {
 					const current = modelReference(ctx.model, catalog);
-					if (current && options.restoreLastThinkingLevelAtStartup !== false)
+					if (current && restoreThinking)
 						applyThinking(
 							pi,
 							ctx,
@@ -1119,7 +1138,7 @@ export function createJouzuModelPicker(
 				applyThinking(
 					pi,
 					ctx,
-					options.restoreLastThinkingLevelAtStartup !== false
+					restoreThinking
 						? preferredModelThinkingLevel(state, reference, catalogThinkingLevel(reference, catalogs))
 						: startupThinkingLevel,
 				);

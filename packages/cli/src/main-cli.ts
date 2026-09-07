@@ -269,9 +269,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 		textguardFiles: parsed.options.textguardFiles,
 		applyProjectDefaultAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
 		restoreLastModelAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
-		restoreLastThinkingLevelAtStartup: !parsed.args.some(
-			(arg) => arg === "--thinking" || arg.startsWith("--thinking="),
-		),
+		startupArgs: parsed.args,
 	});
 	if (interactiveStartup) {
 		// Best-effort catalog refresh in the background: a source is contacted only
