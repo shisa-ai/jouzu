@@ -5,6 +5,9 @@ on:
     paths:
       - "upstream/textguard/**"
       - "scripts/*textguard*"
+      - "packages/cli/src/textguard*.ts"
+      - "packages/cli/test/textguard-native*.test.mjs"
+      - "package-lock.json"
       - ".github/workflows/textguard-native.yml"
   workflow_dispatch:
 
@@ -33,5 +36,11 @@ jobs:
         run: go test -mod=vendor . ./internal/... ./cmd/textguard-helper
       - name: Build and verify six locked artifacts
         run: node scripts/build-textguard.mjs
-      - name: Execute the native artifact and check distribution contents
-        run: node --test scripts/textguard-artifact.test.mjs
+      - name: Install pinned JavaScript dependencies
+        run: npm ci --ignore-scripts
+      - name: Compile the helper supervisor
+        run: |
+          npm run build --workspace packages/session-ui
+          npx tsc -p packages/cli/tsconfig.json
+      - name: Execute the native artifact and supervisor tests
+        run: node --test scripts/textguard-artifact.test.mjs packages/cli/test/textguard-native.test.mjs packages/cli/test/textguard-native-queue.test.mjs
