@@ -66,7 +66,7 @@ func (r *ProductionRunner) scan(payload []byte) ProductionResponse {
 		Findings: []ProductionFinding{}, DecodeReasons: []string{},
 		SeverityCounts: map[string]int{"info": 0, "warn": 0, "error": 0},
 	}
-	if len(payload) > MaxRequestBytes || validateJSON(payload) != nil {
+	if len(payload) > MaxRequestBytes || validateJSON(payload, "version", "id", "text") != nil {
 		return response
 	}
 	var request struct {

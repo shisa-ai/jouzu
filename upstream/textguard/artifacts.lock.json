@@ -2,37 +2,37 @@
   "schemaVersion": 1,
   "protocol": 1,
   "policy": "default-trimmed-split-bundled-v1",
-  "sourceDigest": "39223bc89ad63c32f66baa94c2709f5babaef9092a1df90b65660c9e7bd9102b",
+  "sourceDigest": "45490c1dfc0f1f26579255b7ba75fd39f5a38a6b0d6e521aaa1da2a5c26d546f",
   "toolchain": "go1.26.1",
   "artifacts": {
     "linux-amd64": {
       "filename": "textguard-linux-amd64",
-      "sha256": "1cd4a0cb09671e65fbb7d34226f08ffb9ef25cc6d04b9d7da8865e9e23b3aa9b",
+      "sha256": "ec86b2978eeac29d610c6d3b9e568b7c9d60d3cd4084237658cae95af8a1686c",
       "bytes": 3776638
     },
     "linux-arm64": {
       "filename": "textguard-linux-arm64",
-      "sha256": "41eb2ed253d552feeb28c49b8079cfb3204096dc5a4b9404dfc1b4afcfa724d7",
+      "sha256": "3bb2fd5275bea8fa02db3759cb2f04729d37f9c66d6992b91d24b58bdd66d6e8",
       "bytes": 3604606
     },
     "windows-amd64": {
       "filename": "textguard-windows-amd64.exe",
-      "sha256": "2cfea57d68761169f0c35b9c7703e4a51b4fab58456c35d8bc27d38e45d9e8d1",
-      "bytes": 3917824
+      "sha256": "69b19a88216d43fac750e9f354b2d03b7ca38363e93015b1dc9a82164edc77cd",
+      "bytes": 3918336
     },
     "windows-arm64": {
       "filename": "textguard-windows-arm64.exe",
-      "sha256": "3b71240bc4d17e5393ed29a7eec94d3a6477f2f39a486fb2e75632aacc02ae67",
-      "bytes": 3658240
+      "sha256": "88130378cfa3c9e2d8d7f98fd35e620ce98fb262f879ce5122aeb2611d3bd547",
+      "bytes": 3658752
     },
     "darwin-amd64": {
       "filename": "textguard-darwin-amd64",
-      "sha256": "f732ec24591c85d4e34e64f708303552b5aecaa567cc9235e21512b2cc4f05c4",
+      "sha256": "5b9f5092024db28f56b2db06acd2315d6a637ff1166079dc001a946cb89b90d6",
       "bytes": 3833776
     },
     "darwin-arm64": {
       "filename": "textguard-darwin-arm64",
-      "sha256": "5e9235046807fb175c21984c5335f58dbfbb3b3def0ee9c32027ef7f2f5e101d",
+      "sha256": "210006f14971aedfa91e7874d18b45bd3f3d55131797383d50631197c78e22ba",
       "bytes": 3661506
     }
   }

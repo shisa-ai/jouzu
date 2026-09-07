@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"slices"
 	"strconv"
 	"sync"
 	"time"
@@ -88,7 +89,7 @@ func (r *Runner) Handle(payload []byte) []byte {
 	if len(payload) > MaxRequestBytes {
 		return errorResponse("", fmt.Errorf("request exceeds %d bytes", MaxRequestBytes))
 	}
-	if err := validateJSON(payload); err != nil {
+	if err := validateJSON(payload, "version", "id", "op", "text", "preset", "confusables", "split_tokens", "include_context", "yara_bundled"); err != nil {
 		return errorResponse("", err)
 	}
 	var q Request
@@ -153,7 +154,7 @@ func (r *Runner) Handle(payload []byte) []byte {
 
 // validateJSON rejects duplicate keys, trailing values and unpaired JSON
 // surrogate escapes instead of letting encoding/json silently replace them.
-func validateJSON(payload []byte) error {
+func validateJSON(payload []byte, allowedKeys ...string) error {
 	if !utf8.Valid(payload) || !validScalarEscapes(payload) {
 		return fmt.Errorf("request contains invalid Unicode")
 	}
@@ -166,7 +167,7 @@ func validateJSON(payload []byte) error {
 	for d.More() {
 		tok, err = d.Token()
 		name, ok := tok.(string)
-		if err != nil || !ok || seen[name] {
+		if err != nil || !ok || seen[name] || !slices.Contains(allowedKeys, name) {
 			return fmt.Errorf("invalid or duplicate request key")
 		}
 		seen[name] = true

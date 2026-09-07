@@ -124,6 +124,28 @@ test("native helper serves isolated complete and unavailable outcomes", () => {
 	assert.equal(replies[3].status, "clear");
 });
 
+test("native helper rejects case aliases before scanning", () => {
+	const requests = [
+		'{"version":1,"id":"a","text":"\\u202e","Text":"safe"}',
+		'{"Version":1,"id":"a","text":"safe"}',
+		'{"version":1,"id":"a","ID":"b","text":"safe"}',
+		'{"version":1,"id":"a","text":"safe","\\u0054ext":"other"}',
+	];
+	const result = run(`${requests.join("\n")}\n`);
+	assert.equal(result.status, 0);
+	const replies = result.stdout
+		.trim()
+		.split("\n")
+		.map((line) => JSON.parse(line));
+	assert.equal(replies.length, requests.length);
+	for (const reply of replies) {
+		assert.equal(reply.status, "unavailable");
+		assert.equal(reply.reason, "protocol");
+		assert.equal(reply.input_sha256, "");
+		assert.deepEqual(reply.findings, []);
+	}
+});
+
 test("native helper rejects protocol overrides and oversized lines", () => {
 	const result = run('{"version":1,"id":"a","text":"hello","yara_bundled":false}\n');
 	assert.equal(result.status, 0);
