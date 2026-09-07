@@ -98,6 +98,9 @@ export interface ModelPickerComponentOptions {
 	onToggleFavorite(row: PickerRow): void;
 	onFilterChange?(filter: PickerFilter): void;
 	onRefresh?(signal: AbortSignal): Promise<void>;
+	onRefreshCatalogs?(signal: AbortSignal): Promise<void>;
+	/** Subscribe to catalog reloads; returns the unsubscribe function. */
+	subscribeCatalogsReloaded?(listener: () => void): () => void;
 }
 
 const FILTERS: PickerFilter[] = ["recent", "favorite", "all"];
@@ -176,6 +179,8 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	private busy = false;
 	private compactConfirmation?: { modelKey: string };
 	private message?: { level: "error" | "info"; text: string };
+	private readonly onRefreshCatalogs?: (signal: AbortSignal) => Promise<void>;
+	private unsubscribeCatalogsReloaded?: () => void;
 	private refreshController?: AbortController;
 	private disposed = false;
 	private _focused = false;
@@ -195,12 +200,22 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		this.onCompactAndSelect = options.onCompactAndSelect;
 		this.onToggleFavorite = options.onToggleFavorite;
 		this.onFilterChange = options.onFilterChange;
+		this.onRefreshCatalogs = options.onRefreshCatalogs;
 		this.filter = options.initialFilter ?? "recent";
 		this.searchInput.setValue(options.initialRoute.query ?? "");
 		// A resumed route restores the query without taking over the cursor.
 		this.searchFocused = Boolean(options.initialRoute.query) && options.initialRoute.resume !== true;
 		this.recomputeFilterCounts();
 		this.recomputeRows();
+		// A catalog reload that lands while this view is open (startup background
+		// refresh, /reload) updates the registry synchronously; recompute so the
+		// open view shows the new models without requiring a reopen.
+		this.unsubscribeCatalogsReloaded = options.subscribeCatalogsReloaded?.(() => {
+			if (this.disposed) return;
+			this.recomputeFilterCounts();
+			this.recomputeRows();
+			this.tui.requestRender();
+		});
 		if (options.onRefresh) void this.refresh(options.onRefresh);
 	}
 
@@ -262,6 +277,31 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 	}
 
 	private async refresh(onRefresh: (signal: AbortSignal) => Promise<void>): Promise<void> {
+		await this.runRefresh(onRefresh, {
+			timeoutText: "Model refresh timed out; showing cached models.",
+			failureText: (detail) => `Model refresh failed; showing cached models: ${detail}`,
+		});
+	}
+
+	private async refreshCatalogs(): Promise<void> {
+		if (!this.onRefreshCatalogs) return;
+		this.message = { level: "info", text: "Refreshing model catalog…" };
+		this.tui.requestRender();
+		await this.runRefresh((signal) => this.onRefreshCatalogs?.(signal) ?? Promise.resolve(), {
+			successText: "Model catalog refreshed.",
+			timeoutText: "Model catalog refresh timed out; showing cached models.",
+			failureText: (detail) => `Model catalog refresh failed; showing cached models: ${detail}`,
+		});
+	}
+
+	private async runRefresh(
+		operation: (signal: AbortSignal) => Promise<void>,
+		messages: {
+			successText?: string;
+			timeoutText: string;
+			failureText: (detail: string) => string;
+		},
+	): Promise<void> {
 		this.refreshController?.abort();
 		const controller = new AbortController();
 		this.refreshController = controller;
@@ -271,18 +311,19 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			controller.abort();
 		}, 15_000);
 		try {
-			await onRefresh(controller.signal);
+			await operation(controller.signal);
 			if (this.disposed || controller.signal.aborted) return;
 			this.recomputeFilterCounts();
 			this.recomputeRows();
+			if (messages.successText) this.message = { level: "info", text: messages.successText };
 			this.tui.requestRender();
 		} catch (error) {
 			if (this.disposed || (controller.signal.aborted && !timedOut)) return;
 			this.message = {
 				level: "error",
 				text: timedOut
-					? "Model refresh timed out; showing cached models."
-					: `Model refresh failed; showing cached models: ${sanitizeTerminalText(error instanceof Error ? error.message : String(error))}`,
+					? messages.timeoutText
+					: messages.failureText(sanitizeTerminalText(error instanceof Error ? error.message : String(error))),
 			};
 			this.tui.requestRender();
 		} finally {
@@ -482,6 +523,14 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			this.toggleFavorite();
 			return;
 		}
+		if (
+			matchesJouzuKeybinding(this.jouzuKeybindings, data, "jouzu.model.refresh", {
+				textFieldLive: this.searchFocused,
+			})
+		) {
+			void this.refreshCatalogs();
+			return;
+		}
 		const previousQuery = this.searchInput.getValue();
 		this.searchInput.handleInput(data);
 		const queryChanged = this.searchInput.getValue() !== previousQuery;
@@ -592,6 +641,8 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 			textFieldLive: this.searchFocused,
 		});
 		const favoriteAll = formatEffectiveJouzuKeybinding(this.jouzuKeybindings, "jouzu.model.toggleFavorite");
+		const refreshKey = formatEffectiveJouzuKeybinding(this.jouzuKeybindings, "jouzu.model.refresh");
+		const refreshHints: PaletteKeyHint[] = refreshKey === "Unbound" ? [] : [{ key: refreshKey, label: "refresh" }];
 		// A favorite binding that is not live inside the search field is advertised
 		// as its browse-mode route rather than dropped, so the accelerator stays
 		// discoverable while the user is typing.
@@ -608,6 +659,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 				? [
 						{ key: confirm, label: "select and save for project" },
 						...favoriteHints,
+						...refreshHints,
 						{ key: "←→", label: "cursor" },
 						{ key: move, label: "move" },
 						{ key: "Tab", label: "section" },
@@ -616,6 +668,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 				: [
 						{ key: confirm, label: "select and save for project" },
 						...favoriteHints,
+						...refreshHints,
 						{ key: "←→", label: "View" },
 						{ key: "/", label: "search" },
 						{ key: move, label: "move" },
@@ -635,6 +688,8 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		this.disposed = true;
 		this.refreshController?.abort();
 		this.refreshController = undefined;
+		this.unsubscribeCatalogsReloaded?.();
+		this.unsubscribeCatalogsReloaded = undefined;
 	}
 }
 
@@ -758,6 +813,7 @@ export function createJouzuModelPicker(
 	const catalogEnv = options.palette?.env ?? process.env;
 	const catalogProjection = new CatalogProjectionController();
 	let catalogs: ActiveModelCatalog[] = [];
+	const catalogReloadListeners = new Set<() => void>();
 	let catalog: ModelCatalogDocument | undefined;
 	let catalogWarning: string | undefined;
 	let activeCtx: ExtensionContext | undefined;
@@ -779,6 +835,8 @@ export function createJouzuModelPicker(
 			catalogWarning = `Cached model catalog was ignored: ${error instanceof Error ? error.message : String(error)}`;
 		}
 		reapplyCatalogProjection?.();
+		// The registry is updated synchronously above; open views recompute now.
+		for (const listener of catalogReloadListeners) listener();
 	};
 	let state: ModelPickerState = emptyModelPickerState();
 	let projectKey = "";
@@ -1152,6 +1210,51 @@ export function createJouzuModelPicker(
 										throw new Error(`could not refresh ${[...result.modelRefresh.errors.keys()].join(", ")}`);
 									}
 									if (result.modelRefresh.aborted) throw new Error("model refresh was aborted");
+								},
+								subscribeCatalogsReloaded: (listener) => {
+									catalogReloadListeners.add(listener);
+									return () => {
+										catalogReloadListeners.delete(listener);
+									};
+								},
+								onRefreshCatalogs: async (signal) => {
+									const api = extensionApi;
+									if (!api) throw new Error("model refresh is unavailable");
+									const refreshes = await Promise.allSettled([
+										catalogProjection.refresh(api, ctx, catalogs, signal),
+										refreshAvailableModelCatalogs(paths, {
+											env: catalogEnv,
+											fetch: options.catalogFetch,
+											timeoutMs: 15_000,
+										}),
+									]);
+									reloadCatalogs();
+									const modelRefresh = refreshes[0];
+									if (modelRefresh.status === "rejected") {
+										const message =
+											modelRefresh.reason instanceof Error ? modelRefresh.reason.message : String(modelRefresh.reason);
+										throw new Error(`models were not refreshed: ${sanitizeTerminalText(message)}`);
+									}
+									if (modelRefresh.value.modelRefresh.errors.size > 0) {
+										const providers = [...modelRefresh.value.modelRefresh.errors.keys()]
+											.map((provider) => sanitizeTerminalText(provider))
+											.join(", ");
+										throw new Error(`model providers were not refreshed: ${providers}`);
+									}
+									const catalogRefresh = refreshes[1];
+									if (catalogRefresh.status === "rejected") {
+										const message =
+											catalogRefresh.reason instanceof Error
+												? catalogRefresh.reason.message
+												: String(catalogRefresh.reason);
+										throw new Error(`catalogs were not refreshed: ${sanitizeTerminalText(message)}`);
+									}
+									const failed = (catalogRefresh.value?.results ?? [])
+										.filter(({ result }) => result.status === "error" || result.status === "rejected")
+										.map(({ source }) => sanitizeTerminalText(source.label));
+									if (failed.length > 0) {
+										throw new Error(`catalogs were not refreshed: ${failed.join(", ")}`);
+									}
 								},
 							}),
 						workflow: (childContext, route) => new WorkflowComponent(childContext, workflow.service, route),

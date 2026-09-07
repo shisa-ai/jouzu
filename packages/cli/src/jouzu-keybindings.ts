@@ -28,6 +28,10 @@ export const JOUZU_KEYBINDING_DEFINITIONS = {
 		defaultKeys: ["ctrl+f"],
 		description: "Toggle favorite for the selected model",
 	},
+	"jouzu.model.refresh": {
+		defaultKeys: ["ctrl+shift+r"],
+		description: "Refresh model catalogs and providers in Models",
+	},
 } satisfies KeybindingDefinitions;
 
 export type JouzuKeybinding = keyof typeof JOUZU_KEYBINDING_DEFINITIONS;

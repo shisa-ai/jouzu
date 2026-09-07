@@ -122,3 +122,18 @@ test("voice toggle defaults to ctrl+backslash in both encodings", () => {
 		"ctrl+r stays with Pi's app.session.rename",
 	);
 });
+
+test("model refresh defaults to ctrl+shift+r and needs enhanced encoding", () => {
+	const manager = createJouzuKeybindingsManagerFromConfig();
+	assert.deepEqual(effectiveJouzuKeys(manager, "jouzu.model.refresh"), ["ctrl+shift+r"]);
+	assert.equal(
+		matchesJouzuKeybinding(manager, "\u001b[114;6u", "jouzu.model.refresh"),
+		true,
+		"the Kitty/modifyOtherKeys encoding matches",
+	);
+	assert.equal(
+		matchesJouzuKeybinding(manager, "\u0012", "jouzu.model.refresh"),
+		false,
+		"the legacy ctrl+r byte stays with Pi's app.session.rename",
+	);
+});

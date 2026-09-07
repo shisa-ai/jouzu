@@ -353,6 +353,8 @@ function createComponent(overrides = {}) {
 			overrides.onFilterChange?.(filter);
 		},
 		...(overrides.onRefresh ? { onRefresh: overrides.onRefresh } : {}),
+		...(overrides.onRefreshCatalogs ? { onRefreshCatalogs: overrides.onRefreshCatalogs } : {}),
+		...(overrides.subscribeCatalogsReloaded ? { subscribeCatalogsReloaded: overrides.subscribeCatalogsReloaded } : {}),
 	});
 	return { component, calls };
 }
@@ -601,6 +603,50 @@ test("Models view keeps ANSI and CJK content inside aligned display-width border
 		if (originalNoColor === undefined) delete process.env.NO_COLOR;
 		else process.env.NO_COLOR = originalNoColor;
 	}
+});
+
+test("Models view refreshes catalogs through the refresh binding", () => {
+	const refreshSignals = [];
+	const { component, calls } = createComponent({
+		onRefreshCatalogs: (signal) => {
+			refreshSignals.push(signal);
+			return new Promise((_resolve, reject) => {
+				signal.addEventListener("abort", () => reject(new Error("aborted")));
+			});
+		},
+	});
+	const rendersBefore = calls.renders;
+	component.handleInput("\u001b[114;6u");
+	assert.equal(refreshSignals.length, 1, "Ctrl+Shift+R starts a catalog refresh");
+	assert.ok(calls.renders > rendersBefore, "the refreshing state renders");
+	component.handleInput("\u001b[114;6u");
+	assert.equal(refreshSignals.length, 2, "a second press restarts the refresh");
+	assert.equal(refreshSignals[0].aborted, true, "the previous refresh is aborted");
+	component.dispose();
+});
+
+test("Models view recomputes rows when catalogs reload in the background", () => {
+	const listeners = new Set();
+	let rowCount = 0;
+	const { component, calls } = createComponent({
+		getRows: () => {
+			rowCount += 1;
+			return rows();
+		},
+		subscribeCatalogsReloaded: (listener) => {
+			listeners.add(listener);
+			return () => {
+				listeners.delete(listener);
+			};
+		},
+	});
+	const computedBefore = rowCount;
+	const rendersBefore = calls.renders;
+	for (const listener of listeners) listener();
+	assert.ok(rowCount > computedBefore, "rows are recomputed after the reload");
+	assert.ok(calls.renders > rendersBefore, "the view re-renders after the reload");
+	component.dispose();
+	assert.equal(listeners.size, 0, "dispose unsubscribes the view");
 });
 
 test("Models view selects and saves for the project, toggles filters and favorites, and cancels", async () => {
