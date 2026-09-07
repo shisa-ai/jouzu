@@ -1,0 +1,117 @@
+import { createHash } from "node:crypto";
+import { MAX_SCAN_BYTES, type ScanEvidence, type TextScanner, unavailable } from "./textguard.js";
+import { type NativeEvidence, parseNativeEvidence } from "./textguard-native.js";
+
+export const ADMISSION_POLICY = "error-or-incomplete-v1";
+const MAX_DECISIONS = 128;
+const digest = (text: string) => createHash("sha256").update(text).digest("hex");
+interface IdentifiedScanner extends TextScanner {
+	initialize(): Promise<string | undefined>;
+}
+export interface ContentReview {
+	id: string;
+	source: string;
+	contentDigest: string;
+	scannerIdentity: string;
+	policy: string;
+	evidence: ScanEvidence;
+}
+export interface ContentDecision {
+	allowed: boolean;
+	approved: boolean;
+	review: ContentReview;
+}
+
+/** Escape untrusted labels, including invisible Unicode, rather than displaying source snippets. */
+export function reviewLabel(text: string): string {
+	return JSON.stringify(text.slice(0, 256)).replace(
+		/[\u007f-\uffff]/g,
+		(character) => `\\u${character.charCodeAt(0).toString(16).padStart(4, "0")}`,
+	);
+}
+
+/** One instance per session. Only the host's user-confirmation path may call approve(). */
+export class TextGuardAdmission {
+	private pending = new Map<string, ContentReview>();
+	private approvals = new Set<string>();
+	private generation = 0;
+	constructor(private scanner: IdentifiedScanner) {}
+
+	reviews(): ContentReview[] {
+		return structuredClone([...this.pending.values()]);
+	}
+	approve(id: string): boolean {
+		if (!this.pending.has(id)) return false;
+		this.pending.delete(id);
+		this.approvals.add(id);
+		while (this.approvals.size > MAX_DECISIONS) this.approvals.delete(this.approvals.values().next().value as string);
+		return true;
+	}
+	clearApprovals(): void {
+		this.generation += 1;
+		this.approvals.clear();
+		this.pending.clear();
+	}
+
+	async check(source: string, text: string, signal?: AbortSignal): Promise<ContentDecision> {
+		const generation = this.generation;
+		let scannerIdentity = "unavailable";
+		let evidence: ScanEvidence = unavailable("scanner");
+		const contentDigest = digest(text);
+		const validUnicode = !/[\uD800-\uDFFF]/u.test(text);
+		try {
+			const identity = await this.scanner.initialize();
+			scannerIdentity = identity && /^[a-f0-9]{64}$/.test(identity) ? identity : "unavailable";
+			if (signal?.aborted) evidence = unavailable("timeout");
+			else if (scannerIdentity === "unavailable") evidence = unavailable("version");
+			else if (!validUnicode) evidence = unavailable("protocol");
+			else if (Buffer.byteLength(text) > MAX_SCAN_BYTES) evidence = unavailable("input-limit");
+			else {
+				const result = (await this.scanner.scan(text, 2000, signal)) as NativeEvidence;
+				// Validate complete verdicts even when the injected scanner is not the native supervisor.
+				evidence = parseNativeEvidence(
+					Buffer.from(
+						JSON.stringify({
+							version: 1,
+							id: "admission",
+							input_sha256: contentDigest,
+							status: result.status,
+							findings: result.findings,
+							finding_count: result.status === "unavailable" ? 0 : result.findingCount,
+							severity_counts: result.status === "unavailable" ? { info: 0, warn: 0, error: 0 } : result.severityCounts,
+							decode_reasons: result.status === "unavailable" ? [] : result.decodeReasons,
+							reason: result.reason,
+						}),
+					),
+					"admission",
+					contentDigest,
+				);
+			}
+		} catch {
+			evidence = unavailable("scanner");
+		}
+		if (signal?.aborted) evidence = unavailable("timeout");
+		const active = generation === this.generation && !signal?.aborted;
+		if (generation !== this.generation) evidence = unavailable("closed");
+		// Invalid Unicode has no exact UTF-8 identity and therefore cannot be approved.
+		const id = digest(JSON.stringify([source, contentDigest, scannerIdentity, ADMISSION_POLICY, validUnicode]));
+		const review: ContentReview = {
+			id,
+			source: reviewLabel(source),
+			contentDigest,
+			scannerIdentity,
+			policy: ADMISSION_POLICY,
+			evidence,
+		};
+		const blocked = evidence.status === "unavailable" || (evidence.severityCounts?.error ?? 0) > 0;
+		const approved = validUnicode && active && this.approvals.has(id);
+		if (blocked && !approved && validUnicode && active) {
+			this.pending.delete(id);
+			this.pending.set(id, review);
+			while (this.pending.size > MAX_DECISIONS) this.pending.delete(this.pending.keys().next().value as string);
+		} else if (active) {
+			this.pending.delete(id);
+		}
+		return { allowed: active && (!blocked || approved), approved, review: structuredClone(review) };
+	}
+}
