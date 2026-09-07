@@ -94,8 +94,18 @@ export class NativeTextGuard implements TextScanner {
 		job.resolve(evidence);
 	}
 
-	private async start(): Promise<void> {
-		if (this.child) return;
+	async initialize(): Promise<string | undefined> {
+		if (this.closed) return undefined;
+		try {
+			await this.verifyExecutable();
+			return this.verifiedIdentity;
+		} catch {
+			this.verifiedIdentity = undefined;
+			return undefined;
+		}
+	}
+
+	private async verifyExecutable(): Promise<string> {
 		const arch = { x64: "amd64", arm64: "arm64" }[process.arch as "x64" | "arm64"];
 		if (!arch || !["linux", "darwin", "win32"].includes(process.platform)) throw new Error("platform");
 		const target = `${process.platform === "win32" ? "windows" : process.platform}-${arch}`;
@@ -126,6 +136,12 @@ export class NativeTextGuard implements TextScanner {
 				protocol: manifest.protocol,
 			}),
 		);
+		return executable;
+	}
+
+	private async start(): Promise<void> {
+		if (this.child) return;
+		const executable = await this.verifyExecutable();
 		this.directory ??= await mkdtemp(join(tmpdir(), "jouzu-textguard-native-"));
 		if (this.closed || this.active?.done) return;
 		const env: NodeJS.ProcessEnv = {
