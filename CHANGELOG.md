@@ -1,10 +1,10 @@
 # Changelog
 
-## Unreleased — v0.1.8
+## 0.1.8 - 2026-09-07
 
 ### Added
 
-- Scan skills and web results locally with bundled TextGuard, enabled by default without a separate Python installation. Use `/textguard` to review withheld content and approve it for the current session. `--jouzu-textguard-files` also checks ordinary file reads, including child-agent reads. Scanning does not establish that content is safe.
+- Scan skills and web results locally with bundled TextGuard, enabled by default without a separate Python installation. Use `/textguard` to review withheld content and approve it for the current session. The review lists viewing the flagged content first, shows the exact body with its fingerprint, and explains each finding in plain language. `--jouzu-textguard-files` also checks ordinary file reads, including child-agent reads. Scanning does not establish that content is safe.
 - Dictate into the prompt with `/voice`. See live transcription while recording, then use `/voice stop` to insert final text for editing. Missing speech is marked `[garbled]`; the prompt is never sent automatically. Requires `SHISA_API_KEY` with realtime speech access. Audio goes to Shisa; Jouzu writes no recording files.
 - Build a source checkout with `npm run dev:setup`. Global linking through `npm run dev:link` and automatic rebuild hooks are opt-in.
 
@@ -21,6 +21,8 @@
 
 - Deliver child completion and queued-cancellation notifications across parent turns, and retain unread completion records across reloads.
 - Preserve line breaks in child output and separate run details from their actions in Workflow.
+- Bound skill discovery reads, directory iteration, and inventory size before parsing, so an oversized or hostile skill directory cannot consume unbounded work; discovery fails closed with an explicit diagnostic.
+- Keep Catalogs selections, transport warnings, forms, and messages within the visible overlay on short terminals; page long failure text and expanded model lists contiguously.
 - Build declared Git dependencies and prepare native TextGuard checks during source setup.
 
 ### Testing limits

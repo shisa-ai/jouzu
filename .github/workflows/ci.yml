@@ -462,7 +462,7 @@ jobs:
         run: npm run test:auto-update
         timeout-minutes: 60
         env:
-          JOUZU_UPDATE_PUBLISHED_VERSION: "0.1.6"
+          JOUZU_UPDATE_PUBLISHED_VERSION: "0.1.7"
           JOUZU_UPDATE_NEXT_TARBALL: dist/ci-artifacts/candidate.tgz
           JOUZU_UPDATE_BROKEN_TARBALL: dist/ci-artifacts/broken.tgz
           JOUZU_UPDATE_APPLY_TIMEOUT_MS: "900000"
