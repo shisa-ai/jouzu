@@ -37,6 +37,9 @@ export class VoiceTranscript {
 	private readonly results = new Map<string, string>();
 	private readonly retired = new Set<string>();
 	private readonly sequences = new Map<string, number>();
+	private readonly replacedResults = new Map<string, string>();
+	private readonly replacementRanges: { from: number; to: number; owner: string }[] = [];
+	private readonly noSpeechUtterances = new Set<string>();
 	private noSpeechCount = 0;
 	private finalErrorCount = 0;
 	private completedUsage = false;
@@ -61,7 +64,17 @@ export class VoiceTranscript {
 		const isResult = isFinal || event.type === "asr.partial_result";
 		const resultId = isResult ? identifier(event.result_id) : undefined;
 		const id = identifier(event.utterance_id ?? resultId);
+		// Terminal accounting includes empty finals even if their text was superseded.
+		if (isFinal && typeof event.text === "string" && !event.text.trim()) {
+			this.noSpeechUtterances.add(id);
+			this.checkLimits();
+		}
 		if (this.retired.has(id)) return;
+		const replacementOwner = resultId ? this.replacedResults.get(resultId) : undefined;
+		if (replacementOwner !== undefined) {
+			if (replacementOwner !== id) this.retire(id);
+			return;
+		}
 		const previous = this.segments.get(id);
 		if (previous?.state === "final" && !isFinal) return;
 		const seq = time(event.seq);
@@ -75,12 +88,17 @@ export class VoiceTranscript {
 			if (typeof event.text !== "string" || event.text.length > MAX_TRANSCRIPT_CHARS) this.tooLarge();
 			text = sanitizeTerminalText(event.text as string).trim();
 		}
+		const replaced = new Set<string>();
+		const replacedIds: string[] = [];
+		let replacementRange: { from: number; to: number; owner: string } | undefined;
 		if (isFinal) {
-			const replaced = new Set<string>();
 			if (event.replaces !== undefined) {
 				if (!Array.isArray(event.replaces) || event.replaces.length > 10_000) this.tooLarge();
 				for (const result of event.replaces as unknown[]) {
-					const owner = this.results.get(identifier(result));
+					const replacedId = identifier(result);
+					if (replacedId === resultId) continue;
+					replacedIds.push(replacedId);
+					const owner = this.results.get(replacedId);
 					if (owner) replaced.add(owner);
 				}
 			}
@@ -92,6 +110,7 @@ export class VoiceTranscript {
 				const to = time(range[1]);
 				if (from === undefined || to === undefined || to <= from)
 					throw new VoiceError("Voice returned an invalid replacement range.");
+				replacementRange = { from, to, owner: id };
 				for (const segment of this.segments.values()) {
 					if (
 						segment.startMs !== undefined &&
@@ -102,12 +121,26 @@ export class VoiceTranscript {
 						replaced.add(segment.id);
 				}
 			}
-			for (const old of replaced) {
-				if (old === id) continue;
-				this.segments.delete(old);
-				this.retired.add(old);
+		}
+		for (const range of this.replacementRanges) {
+			if (range.owner === id || replaced.has(range.owner)) continue;
+			if (startMs !== undefined && endMs !== undefined && startMs >= range.from && endMs <= range.to) {
+				this.retire(id);
+				return;
 			}
 		}
+		for (const old of replaced) {
+			if (old !== id) this.retire(old);
+		}
+		// Carry replacement history forward when a correction itself is corrected.
+		for (const [result, owner] of this.replacedResults) {
+			if (replaced.has(owner)) this.replacedResults.set(result, id);
+		}
+		for (const range of this.replacementRanges) {
+			if (replaced.has(range.owner)) range.owner = id;
+		}
+		for (const result of replacedIds) this.replacedResults.set(result, id);
+		if (replacementRange) this.replacementRanges.push(replacementRange);
 		const state: VoiceSegmentState = isFinal
 			? "final"
 			: event.type === "error"
@@ -128,7 +161,20 @@ export class VoiceTranscript {
 		this.segments.set(id, { id, state, text, startMs, endMs });
 		if (resultId) this.results.set(resultId, id);
 		if (seq !== undefined) this.sequences.set(id, seq);
+		this.checkLimits();
+	}
+
+	private retire(id: string): void {
+		this.segments.delete(id);
+		this.retired.add(id);
+		this.checkLimits();
+	}
+
+	private checkLimits(): void {
 		if (
+			this.replacedResults.size > 10_000 ||
+			this.replacementRanges.length > 2_000 ||
+			this.noSpeechUtterances.size > 2_000 ||
 			this.segments.size + this.retired.size > 2_000 ||
 			this.results.size > 10_000 ||
 			[...this.segments.values()].reduce((sum, segment) => sum + segment.text.length, 0) > MAX_TRANSCRIPT_CHARS
@@ -170,9 +216,13 @@ export class VoiceTranscript {
 			this.completedUsage &&
 			this.finalErrorCount === 0 &&
 			unresolved.every((segment) => !segment.text && segment.state !== "failed") &&
-			this.noSpeechCount >= unresolved.length
+			this.noSpeechCount - this.noSpeechUtterances.size >= unresolved.length
 		) {
-			for (const segment of unresolved) this.segments.delete(segment.id);
+			for (const segment of unresolved) {
+				this.noSpeechUtterances.add(segment.id);
+				this.segments.delete(segment.id);
+			}
+			this.checkLimits();
 		} else if (unresolved.length || this.finalErrorCount > 0) {
 			for (const segment of unresolved) segment.state = "failed";
 			if (!unresolved.length)

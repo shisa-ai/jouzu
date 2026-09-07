@@ -81,6 +81,80 @@ test("replacement IDs and chronological ordering do not depend on completion ord
 	assert.equal(t.finish(), "revised\nsecond");
 });
 
+for (const replacement of [{ replaces: ["a-asr.final_result"] }, { replaces_audio_range_ms: [0, 1000] }]) {
+	test(`replacement survives delayed delivery: ${JSON.stringify(replacement)}`, () => {
+		const t = new VoiceTranscript();
+		t.accept(result("asr.final_result", "b", "corrected", 0, 1000, replacement));
+		t.accept(result("asr.final_result", "a", "superseded"));
+		t.accept(result("asr.partial_result", "a", "late partial"));
+		assert.equal(t.finish(), "corrected");
+	});
+}
+
+test("replacement history follows later corrections without blocking the same utterance", () => {
+	const t = new VoiceTranscript();
+	t.accept(result("asr.final_result", "b", "first correction", 0, 1000, { replaces_audio_range_ms: [0, 1000] }));
+	t.accept(result("asr.final_result", "c", "second correction", 0, 1000, { replaces: ["b-asr.final_result"] }));
+	t.accept(result("asr.final_result", "c", "latest correction", 0, 1000, { result_id: "c-new", seq: 5 }));
+	t.accept(result("asr.final_result", "a", "superseded"));
+	assert.equal(t.finish(), "latest correction");
+});
+
+test("same-utterance result replacement ignores stale results but allows newer finals", () => {
+	const t = new VoiceTranscript();
+	t.accept(result("asr.final_result", "a", "corrected", 0, 1000, { result_id: "new", replaces: ["old"] }));
+	t.accept(result("asr.final_result", "a", "stale", 0, 1000, { result_id: "old" }));
+	t.accept(result("asr.final_result", "a", "latest", 0, 1000, { result_id: "newest" }));
+	assert.equal(t.finish(), "latest");
+});
+
+test("replacement ranges only retire fully covered audio", () => {
+	const t = new VoiceTranscript();
+	t.accept(result("asr.final_result", "b", "corrected", 1000, 2000, { replaces_audio_range_ms: [1000, 2000] }));
+	t.accept(result("asr.final_result", "a", "overlap", 500, 1500));
+	t.accept(result("asr.final_result", "c", "next", 2000, 3000));
+	assert.equal(t.finish(), "overlap\ncorrected\nnext");
+});
+
+test("replacement metadata stays bounded even for one utterance", () => {
+	const ids = new VoiceTranscript();
+	ids.accept(
+		result("asr.final_result", "a", "text", 0, 1000, {
+			replaces: Array.from({ length: 10_000 }, (_, i) => `old-${i}`),
+		}),
+	);
+	assert.throws(() => ids.accept(result("asr.final_result", "a", "text", 0, 1000, { replaces: ["extra"] })), /limit/);
+	const ranges = new VoiceTranscript();
+	for (let i = 0; i < 2_000; i++)
+		ranges.accept(result("asr.final_result", "a", "text", 0, 1000, { replaces_audio_range_ms: [0, 1000] }));
+	assert.throws(
+		() => ranges.accept(result("asr.final_result", "a", "text", 0, 1000, { replaces_audio_range_ms: [0, 1000] })),
+		/limit/,
+	);
+});
+
+test("empty-final accounting is unique and remains consumed after replacement or finish", () => {
+	const t = new VoiceTranscript();
+	t.accept(result("asr.final_result", "a", ""));
+	t.accept(result("asr.final_result", "a", ""));
+	t.accept(result("asr.final_result", "c", "correction", 0, 1000, { replaces: ["a-asr.final_result"] }));
+	t.accept({ type: "speech_stopped", utterance_id: "b", audio_start_ms: 1000, audio_end_ms: 2000 });
+	t.accept({ type: "session.usage", final: true, usage: { status: "completed", final_no_speech_count: 2 } });
+	assert.equal(t.finish(), "correction");
+	assert.equal(t.finish(), "correction");
+	t.accept({ type: "speech_stopped", utterance_id: "d", audio_start_ms: 2000, audio_end_ms: 3000 });
+	assert.throws(() => t.finish(), VoiceReviewRequired);
+});
+
+test("received empty finals cannot account for another missing final", () => {
+	const t = new VoiceTranscript();
+	t.accept(result("asr.final_result", "a", ""));
+	t.accept({ type: "speech_stopped", utterance_id: "b", audio_start_ms: 1000, audio_end_ms: 2000 });
+	t.accept({ type: "session.usage", final: true, usage: { status: "completed", final_no_speech_count: 1 } });
+	assert.throws(() => t.finish(), VoiceReviewRequired);
+	assert.equal(t.snapshot.segments.find((s) => s.id === "b").state, "failed");
+});
+
 test("nonfatal chunk failure retains other finals and requires explicit review", () => {
 	const t = new VoiceTranscript();
 	t.accept(result("asr.final_result", "a", "first"));
