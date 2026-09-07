@@ -31,7 +31,7 @@ On older enterprise Linux distributions, install the GTK/X11/audio libraries req
 ## Install
 
 ```bash
-npm install -g jouzu@0.1.8
+npm install -g jouzu
 
 jouzu --version
 jz doctor
