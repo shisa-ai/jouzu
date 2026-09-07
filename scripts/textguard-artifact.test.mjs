@@ -29,6 +29,16 @@ function run(input) {
 	return result;
 }
 
+test("native CI applies the pinned Pi contract before compiling the supervisor", () => {
+	const workflow = readFileSync(join(root, ".github/workflows/textguard-native.yml"), "utf8");
+	const install = workflow.indexOf("run: npm ci --ignore-scripts");
+	const patch = workflow.indexOf("node scripts/apply-pi-content-policy.mjs");
+	const compile = workflow.indexOf("npx tsc -p packages/cli/tsconfig.json");
+	assert.ok(install >= 0 && patch > install && compile > patch);
+	assert.ok(workflow.includes('"upstream/pi-content-policy/**"'));
+	assert.ok(workflow.includes('"scripts/*pi-content-policy*"'));
+});
+
 test("all six packaged executables match the reviewed manifest", () => {
 	const manifest = JSON.parse(readFileSync(join(directory, "manifest.json"), "utf8"));
 	assert.deepEqual(manifest, expected);

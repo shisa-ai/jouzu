@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - "upstream/textguard/**"
+      - "upstream/pi-content-policy/**"
+      - "upstream/pi.lock.json"
+      - "scripts/*pi-content-policy*"
       - "scripts/*textguard*"
       - "packages/cli/src/textguard*.ts"
       - "packages/cli/test/textguard-native*.test.mjs"
@@ -40,6 +43,7 @@ jobs:
         run: npm ci --ignore-scripts
       - name: Compile the helper supervisor
         run: |
+          node scripts/apply-pi-content-policy.mjs
           npm run build --workspace packages/session-ui
           npx tsc -p packages/cli/tsconfig.json
       - name: Execute the native artifact and supervisor tests
