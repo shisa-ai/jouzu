@@ -1390,7 +1390,7 @@ test("new sessions apply an available project default through session-only exten
 });
 
 for (const explicitThinking of [false, true]) {
-	test(`new sessions restore last model thinking unless explicit: ${explicitThinking}`, async () => {
+	test(`new sessions restore last model user override unless explicit: ${explicitThinking}`, async () => {
 		const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-restore-"));
 		try {
 			const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
@@ -1399,6 +1399,7 @@ for (const explicitThinking of [false, true]) {
 				thinkingLevel: "high",
 				now: new Date("2026-08-23T00:00:00.000Z"),
 			});
+			new ModelPickerStore(paths).setModelThinkingLevel({ provider: "p", modelId: "b" }, "high");
 			const integration = createJouzuModelPicker(paths, {
 				restoreLastModelAtStartup: true,
 				restoreLastThinkingLevelAtStartup: !explicitThinking,
@@ -1435,7 +1436,7 @@ for (const explicitThinking of [false, true]) {
 			assert.deepEqual(
 				levels,
 				explicitThinking ? [] : ["high"],
-				"the recorded thinking level must be restored with the model",
+				"the explicit user thinking preference must be restored with the model",
 			);
 
 			branch = [{ type: "message", message: { role: "user", content: "existing" } }];

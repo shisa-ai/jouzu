@@ -38,8 +38,8 @@ import {
 	type ModelReference,
 	modelReferenceKey,
 	modelReferencesEqual,
+	preferredModelThinkingLevel,
 	previousModelStack,
-	savedModelThinkingLevel,
 } from "./model-picker-state.js";
 import {
 	compactNumber,
@@ -696,6 +696,19 @@ function modelReference(model: PiModel | undefined, catalog?: ModelCatalogDocume
 	return model ? catalogModelReference(model.provider, model.id, catalog) : undefined;
 }
 
+export function catalogThinkingLevel(
+	reference: ModelReference,
+	catalogs: ActiveModelCatalog[],
+): ModelPickerThinkingLevel | undefined {
+	const matches = catalogs.flatMap(({ document }) => {
+		if (reference.catalogId && document.catalogId !== reference.catalogId) return [];
+		const offering = catalogOffering(document, reference.provider, reference.modelId);
+		return offering && (!reference.offeringId || offering.id === reference.offeringId) ? [offering] : [];
+	});
+	const levels = new Set(matches.map((offering) => offering.defaultThinkingLevel));
+	return levels.size === 1 ? matches[0]?.defaultThinkingLevel : undefined;
+}
+
 function hasConversationEntries(entries: readonly { type: string }[]): boolean {
 	return entries.some((entry) => ["message", "compaction", "branch_summary", "custom_message"].includes(entry.type));
 }
@@ -929,7 +942,16 @@ export function createJouzuModelPicker(
 				const lastUsed =
 					options.restoreLastModelAtStartup === true ? (state.last ?? state.recents.global[0]) : undefined;
 				const reference = projectReference ?? lastUsed;
-				if (!reference) return;
+				if (!reference) {
+					const current = modelReference(ctx.model, catalog);
+					if (current && options.restoreLastThinkingLevelAtStartup !== false)
+						applyThinking(
+							pi,
+							ctx,
+							preferredModelThinkingLevel(state, current, catalogThinkingLevel(current, catalogs)),
+						);
+					return;
+				}
 				const startupThinkingLevel = ctx.thinkingLevel;
 				if (!modelReferencesEqual(reference, modelReference(ctx.model, catalog))) {
 					const label = projectReference ? "Project default" : "Last used model";
@@ -959,7 +981,7 @@ export function createJouzuModelPicker(
 					pi,
 					ctx,
 					options.restoreLastThinkingLevelAtStartup !== false
-						? savedModelThinkingLevel(state, reference)
+						? preferredModelThinkingLevel(state, reference, catalogThinkingLevel(reference, catalogs))
 						: startupThinkingLevel,
 				);
 			});
@@ -979,7 +1001,12 @@ export function createJouzuModelPicker(
 					({ model }) => model.provider === event.model.provider && model.id === event.model.id,
 				)?.thinkingLevel;
 				state = store.load().state;
-				applyThinking(pi, ctx, scopedLevel ?? savedModelThinkingLevel(state, selectedReference));
+				applyThinking(
+					pi,
+					ctx,
+					scopedLevel ??
+						preferredModelThinkingLevel(state, selectedReference, catalogThinkingLevel(selectedReference, catalogs)),
+				);
 			});
 			pi.on("thinking_level_select", (event, ctx) => {
 				thinkingNotificationCount += 1;

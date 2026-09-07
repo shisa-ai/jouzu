@@ -322,6 +322,16 @@ export function savedModelThinkingLevel(
 	);
 }
 
+export function preferredModelThinkingLevel(
+	state: ModelPickerState,
+	reference: ModelReference,
+	catalogDefault?: ModelPickerThinkingLevel,
+): ModelPickerThinkingLevel | undefined {
+	return (
+		state.thinkingLevels.find((record) => modelReferencesEqual(record, reference))?.thinkingLevel ?? catalogDefault
+	);
+}
+
 function updateRecent(
 	records: RecentRecord[],
 	reference: ModelReference,
