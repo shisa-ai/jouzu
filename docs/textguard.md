@@ -47,6 +47,13 @@ jz --jouzu-textguard-files
 Pass Jouzu flags before Pi arguments. This checks the result returned by `read`,
 including any truncation, rather than every byte of the source file.
 
+## Child agents
+
+Jouzu child agents check skill-file reads and expanded skill text in restored
+sessions. Each child has its own scanner and decisions; it does not inherit
+parent approvals. Child agents cannot open approval dialogs, so content requiring
+approval stays withheld. Role-based tool restrictions still apply.
+
 ## Python comparison reports
 
 To add reports from a separately installed TextGuard 1.0.0:

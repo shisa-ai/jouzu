@@ -1,3 +1,4 @@
+import { join } from "node:path";
 import {
 	type AgentSession,
 	createAgentSession,
@@ -8,6 +9,7 @@ import {
 	SessionManager,
 	SettingsManager,
 } from "@earendil-works/pi-coding-agent";
+import { TextGuardRuntime } from "../textguard-runtime.js";
 import type { WorkerCommand, WorkerEvent, WorkerLaunch } from "./protocol.js";
 
 function boundedText(text: string, limit: number): string {
@@ -18,9 +20,13 @@ function boundedText(text: string, limit: number): string {
 function send(event: WorkerEvent): void {
 	if (process.connected) process.send?.(event);
 }
-export function childResourceLoader(launch: WorkerLaunch): ResourceLoader {
+export function childResourceLoader(
+	launch: WorkerLaunch,
+	contentPolicy?: ResourceLoader["contentPolicy"],
+): ResourceLoader {
 	const entries = launch.role.judging ? [] : loadProjectContextFiles({ cwd: launch.cwd, agentDir: launch.directory });
 	return {
+		contentPolicy,
 		getExtensions: () => ({ extensions: [], errors: [], runtime: createExtensionRuntime() }),
 		getSkills: () => ({ skills: [], diagnostics: [] }),
 		getPrompts: () => ({ prompts: [], diagnostics: [] }),
@@ -35,6 +41,19 @@ export function childResourceLoader(launch: WorkerLaunch): ResourceLoader {
 	};
 }
 export async function runWorker(launch: WorkerLaunch, onSession: (session: AgentSession) => void): Promise<void> {
+	const textguard = new TextGuardRuntime({ cachePath: join(launch.directory, "textguard-scans.json") });
+	try {
+		await runGuardedWorker(launch, onSession, textguard);
+	} finally {
+		await textguard.close();
+	}
+}
+
+async function runGuardedWorker(
+	launch: WorkerLaunch,
+	onSession: (session: AgentSession) => void,
+	textguard: TextGuardRuntime,
+): Promise<void> {
 	const { model, auth, role } = launch;
 	// A closed credential store prevents discovery or mutation of the user's auth.json.
 	const credentials = {
@@ -70,7 +89,10 @@ export async function runWorker(launch: WorkerLaunch, onSession: (session: Agent
 		tools: role.tools,
 		sessionManager,
 		settingsManager,
-		resourceLoader: childResourceLoader(launch),
+		resourceLoader: childResourceLoader(
+			launch,
+			await textguard.createPolicy({ cwd: launch.cwd, sessionId: sessionManager.getSessionId() }),
+		),
 	});
 	if (modelFallbackMessage) throw new Error("Model: the requested model could not be restored.");
 	onSession(session);
@@ -148,7 +170,13 @@ export async function runWorker(launch: WorkerLaunch, onSession: (session: Agent
 	});
 	send({ type: "ready", sessionFile: sessionManager.getSessionFile()!, sessionId: sessionManager.getSessionId() });
 	try {
-		await session.prompt(launch.task);
+		try {
+			await session.prompt(launch.task);
+		} catch (error) {
+			// Admission also observes aborts. Preserve the role-limit outcome when
+			// its cancellation interrupts a final context check.
+			if (!exhausted) throw error;
+		}
 		const failed = exhausted || lastStop !== "stop" || !lastText.trim();
 		send({
 			type: "result",
