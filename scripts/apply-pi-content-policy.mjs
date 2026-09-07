@@ -8,8 +8,13 @@ import { paths, transform } from "./pi-content-policy-transform.mjs";
 const root = resolve(import.meta.dirname, "..");
 const sha = (text) => createHash("sha256").update(text).digest("hex");
 export async function applyContentPolicy(packageRoot, checkOnly = false) {
-	const lock = JSON.parse(await readFile(join(root, "upstream/pi-content-policy/patch.lock.json"), "utf8"));
+	const manifestPath = "upstream/pi-content-policy/patch.lock.json";
+	const manifest = await readFile(join(root, manifestPath), "utf8");
+	const lock = JSON.parse(manifest);
 	const pin = JSON.parse(await readFile(join(root, "upstream/pi.lock.json"), "utf8"));
+	const records = pin.deviations?.filter((record) => record.path === manifestPath) ?? [];
+	if (records.length !== 1 || records[0].sha256 !== sha(manifest))
+		throw new Error("Pi content-policy manifest does not match the pinned deviation");
 	if (
 		lock.schemaVersion !== 1 ||
 		lock.package !== "@earendil-works/pi-coding-agent" ||

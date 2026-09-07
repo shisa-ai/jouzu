@@ -18,10 +18,8 @@
 	"compatibilityStatus": "pending-qualification",
 	"deviations": [
 		{
-			"name": "host-content-policy",
-			"manifest": "upstream/pi-content-policy/patch.lock.json",
-			"apply": "scripts/apply-pi-content-policy.mjs",
-			"tests": "scripts/pi-content-policy.test.mjs"
+			"path": "upstream/pi-content-policy/patch.lock.json",
+			"sha256": "97ea0812b0fe0a94643b8f61049ee140c062d57207b8c4b1bdf43479b64aea74"
 		}
 	]
 }

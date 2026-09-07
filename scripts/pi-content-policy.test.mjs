@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -31,6 +32,17 @@ const passthrough = () => ({
 	async filterContext(messages) {
 		return messages;
 	},
+});
+
+test("patch manifest uses the release deviation schema and pins its exact bytes", async () => {
+	const pin = JSON.parse(await readFile(new URL("../upstream/pi.lock.json", import.meta.url), "utf8"));
+	const manifest = await readFile(new URL("../upstream/pi-content-policy/patch.lock.json", import.meta.url));
+	assert.deepEqual(pin.deviations, [
+		{
+			path: "upstream/pi-content-policy/patch.lock.json",
+			sha256: createHash("sha256").update(manifest).digest("hex"),
+		},
+	]);
 });
 
 test("patch is locked and idempotent; modified input never gets overwritten", async () => {
