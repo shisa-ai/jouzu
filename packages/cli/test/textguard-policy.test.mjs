@@ -153,11 +153,25 @@ test("approved skill expansion inherits only the exact checked prefix, and reset
 	assert.match(await gate.readSkill(skill), /PRIVATE BODY/);
 	const text = `<skill name="fixture" location="${path}">\nReferences are relative to ${directory}.\n\nPRIVATE BODY\n</skill>`;
 	const message = { role: "user", content: `${text}\n\nuser arguments`, timestamp: 1 };
-	assert.equal((await gate.filterContext([message]))[0], message);
+	assert.deepEqual((await gate.filterContext([message]))[0], message);
 	const changed = { ...message, content: message.content.replace("PRIVATE BODY", "PRIVATE CHANGED") };
 	assert.equal(JSON.stringify((await gate.filterContext([changed]))[0]).includes("PRIVATE"), false);
 	gate.clear();
 	assert.equal(JSON.stringify((await gate.filterContext([message]))[0]).includes("PRIVATE"), false);
+});
+
+test("expanded user messages return the checked snapshot after concurrent mutation", async () => {
+	const message = {
+		role: "user",
+		content: [{ type: "text", text: '<skill name="fixture">public</skill>' }],
+		timestamp: 1,
+	};
+	const gate = policy(async () => {
+		message.content[0].text = "PRIVATE MUTATION";
+		return clear;
+	});
+	const checked = await gate.filterContext([message]);
+	assert.equal(checked[0].content[0].text, '<skill name="fixture">public</skill>');
 });
 
 test("scanner exceptions withhold content without exposing exception text", async () => {

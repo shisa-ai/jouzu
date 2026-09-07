@@ -231,8 +231,19 @@ export class NativeContentPolicy implements Policy {
 				continue;
 			}
 			if (message.role === "user") {
-				const content =
+				const original =
 					typeof message.content === "string" ? [{ type: "text" as const, text: message.content }] : message.content;
+				if (!original.some((part) => part.type === "text" && part.text.includes("<skill "))) {
+					admitted.push(message);
+					continue;
+				}
+				const snapshot = snapshotPayload(message.content);
+				if (snapshot.status !== "identified") {
+					admitted.push({ role: "user", content: this.withheld().content, timestamp: message.timestamp });
+					continue;
+				}
+				const content =
+					typeof snapshot.value === "string" ? [{ type: "text" as const, text: snapshot.value }] : snapshot.value;
 				let denied = false;
 				for (const part of content) {
 					if (part.type === "text" && part.text.includes("<skill ") && !this.knownExpansion(part.text)) {
@@ -242,9 +253,11 @@ export class NativeContentPolicy implements Policy {
 						}
 					}
 				}
-				admitted.push(
-					denied ? { role: "user", content: this.withheld().content, timestamp: message.timestamp } : message,
-				);
+				admitted.push({
+					role: "user",
+					content: denied ? this.withheld().content : snapshot.value,
+					timestamp: message.timestamp,
+				});
 			} else admitted.push(message);
 		}
 		if (generation !== this.generation || boundedSignal.aborted) throw new Error("TextGuard context check interrupted");
