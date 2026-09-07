@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { formatHelp, isBlockedPiSelfUpdate, parseJouzuArgs, UsageError } from "./args.js";
+import { createAstraCompatibilityExtension } from "./astra-compatibility.js";
 import { catalogStatus, formatCatalogStatus, validateCatalogFile } from "./catalog-command.js";
 import { createDoctorReport } from "./doctor.js";
 import { isInteractivePiStartup } from "./interactive-startup.js";
@@ -326,6 +327,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 				sessionUi,
 				modelPicker.extension,
 				modelPicker.workflowExtension,
+				createAstraCompatibilityExtension(),
 				voice,
 				help,
 				releaseDiagnostics,

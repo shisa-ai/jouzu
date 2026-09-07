@@ -3,6 +3,7 @@ import type { BuildSystemPromptOptions, InlineExtension, Theme } from "@earendil
 import { COMPACTION_TOOL_NAME, registerCompactionRequest } from "./compaction-request.js";
 import { type InteractiveStartupContext, isInteractivePiStartup } from "./interactive-startup.js";
 import type { JouzuMetadata } from "./metadata.js";
+import { buildModelGuidance } from "./model-guidance.js";
 import type { ProfileSelection } from "./runtime.js";
 import { detectTerminalColorMode, fitTerminalText, type TerminalColorMode } from "./terminal-layout.js";
 
@@ -301,8 +302,13 @@ export function createJouzuPresentationExtension(
 	return {
 		name: "jouzu",
 		factory: (pi) => {
-			pi.on("before_agent_start", (event) => {
-				const capabilityRouting = buildCapabilityRoutingGuidance(event.systemPromptOptions);
+			pi.on("before_agent_start", (event, ctx) => {
+				const capabilityRouting = [
+					buildCapabilityRoutingGuidance(event.systemPromptOptions),
+					buildModelGuidance(ctx?.model?.id, event.systemPromptOptions.selectedTools),
+				]
+					.filter(Boolean)
+					.join("\n\n");
 				const systemPrompt = brandDefaultSystemPrompt(
 					event.systemPrompt,
 					event.systemPromptOptions.customPrompt,
