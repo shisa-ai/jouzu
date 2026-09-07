@@ -106,3 +106,19 @@ test("Jouzu keybinding matching and hints respect a live text field", () => {
 		"hints keep modified bindings while the field is live",
 	);
 });
+
+test("voice toggle defaults to ctrl+backslash in both encodings", () => {
+	const manager = createJouzuKeybindingsManagerFromConfig();
+	assert.deepEqual(effectiveJouzuKeys(manager, "jouzu.voice.toggle"), ["ctrl+\\"]);
+	assert.equal(matchesJouzuKeybinding(manager, "\u001c", "jouzu.voice.toggle"), true, "the raw control byte matches");
+	assert.equal(
+		matchesJouzuKeybinding(manager, "\u001b[92;5u", "jouzu.voice.toggle"),
+		true,
+		"the Kitty/modifyOtherKeys encoding matches",
+	);
+	assert.equal(
+		matchesJouzuKeybinding(manager, "\u0012", "jouzu.voice.toggle"),
+		false,
+		"ctrl+r stays with Pi's app.session.rename",
+	);
+});

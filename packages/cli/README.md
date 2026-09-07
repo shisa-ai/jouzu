@@ -106,9 +106,9 @@ These surfaces use terminal display columns rather than JavaScript string length
 
 ## Voice input
 
-`/voice` starts microphone dictation through Shisa realtime speech recognition. `/voice stop` inserts final text into the editable prompt without sending it; `/voice cancel` discards it. Use `/voice devices` to choose a microphone and `/voice language ja` for Japanese (default: automatic language detection).
+`/voice` starts microphone dictation through Shisa realtime speech recognition. `/voice stop` inserts final text into the editable prompt without sending it; `/voice cancel` discards it. `Ctrl+\` starts or stops recording from the prompt. Use `/voice devices` to choose a microphone and `/voice language ja` for Japanese (default: automatic language detection).
 
-Set `SHISA_API_KEY` with `shisa/asr-realtime` access first. Audio is sent to Shisa; Jouzu writes no recording files. Capture uses the machine running Jouzu, including when connected over SSH. Real-microphone and platform permission checks are still required. See [Voice input](https://github.com/shisa-ai/jouzu/blob/main/docs/voice.md) for limits, platform details, and optional shortcut configuration.
+Set `SHISA_API_KEY` with `shisa/asr-realtime` access first. Audio is sent to Shisa; Jouzu writes no recording files. Capture uses the machine running Jouzu, including when connected over SSH. Real-microphone and platform permission checks are still required. See [Voice input](https://github.com/shisa-ai/jouzu/blob/main/docs/voice.md) for limits, platform details, and shortcut configuration.
 
 ## Profiles
 

@@ -21,7 +21,7 @@ import type { JouzuPaths } from "./paths.js";
  */
 export const JOUZU_KEYBINDING_DEFINITIONS = {
 	"jouzu.voice.toggle": {
-		defaultKeys: [],
+		defaultKeys: ["ctrl+\\"],
 		description: "Start or stop voice dictation",
 	},
 	"jouzu.model.toggleFavorite": {

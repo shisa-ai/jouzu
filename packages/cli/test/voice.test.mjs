@@ -123,11 +123,16 @@ async function harness(t, overrides = {}) {
 	};
 }
 
-test("voice loads without capture, network access, or a default shortcut", async (t) => {
+test("voice loads without capture or network access and registers the default shortcut", async (t) => {
 	const h = await harness(t);
 	assert.equal(h.connectionOptions, undefined);
 	assert.equal(h.captureOptions, undefined);
-	assert.equal(h.calls.length, 0);
+	const shortcuts = h.calls.filter((call) => call[0] === "shortcut");
+	assert.deepEqual(
+		shortcuts.map((call) => call[1]),
+		["ctrl+\\"],
+	);
+	assert.equal(h.calls.length, shortcuts.length, "nothing beyond the shortcut registration");
 });
 
 test("voice registers a configured modified shortcut but leaves bare keys for typing", (t) => {
@@ -145,6 +150,23 @@ test("voice registers a configured modified shortcut but leaves bare keys for ty
 		},
 	});
 	assert.deepEqual(keys, ["alt+r"]);
+});
+
+test("voice registers no shortcut when the default is unbound", (t) => {
+	const home = mkdtempSync(join(tmpdir(), "jouzu-voice-keys-"));
+	t.after(() => rmSync(home, { recursive: true, force: true }));
+	const paths = resolveJouzuPaths({ homeOverride: home });
+	mkdirSync(paths.agentDir, { recursive: true });
+	writeFileSync(join(paths.agentDir, "keybindings.json"), JSON.stringify({ "jouzu.voice.toggle": [] }));
+	const keys = [];
+	createVoiceExtension(paths).factory({
+		registerCommand() {},
+		on() {},
+		registerShortcut(key) {
+			keys.push(key);
+		},
+	});
+	assert.deepEqual(keys, []);
 });
 
 test("voice finalizes after capture stops and inserts into the live draft only", async (t) => {

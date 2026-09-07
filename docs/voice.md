@@ -39,9 +39,9 @@ Final results replace the matching chunks using their identifiers and logical au
 
 Stopping inserts finalized text and `[garbled]` markers directly into the prompt, without a confirmation dialog. Provisional text is replaced by a marker, not treated as final. If the connection fails, Jouzu stops recording and inserts the available finalized text with markers for missing speech; an interrupted tail with no known unfinished chunk gets a trailing marker. Edit the prompt if needed, then press Enter to send.
 
-## Optional shortcut
+## Shortcut
 
-No shortcut is assigned by default. Set `jouzu.voice.toggle` to an unused modified key in Jouzu's `agent/keybindings.json`, then run `/reload`. For example, if `Alt+R` is free in your terminal and extensions:
+`Ctrl+\` starts or stops recording, just like `/voice`. It is the default `jouzu.voice.toggle` binding. To change it, set the action to another modified key in Jouzu's `agent/keybindings.json` and run `/reload`; an empty array removes the shortcut:
 
 ```json
 {
@@ -49,7 +49,7 @@ No shortcut is assigned by default. Set `jouzu.voice.toggle` to an unused modifi
 }
 ```
 
-The shortcut starts or stops recording just like `/voice`. Bare keys are ignored so they remain available for typing. `/voice cancel` is always the explicit discard route.
+Bare keys are ignored so they remain available for typing. `/voice cancel` is always the explicit discard route.
 
 ## Privacy and limits
 

@@ -289,7 +289,7 @@ export function createVoiceExtension(paths: JouzuPaths, overrides: Partial<Voice
 			});
 			const keybindings = createJouzuKeybindingsManager(paths);
 			for (const key of effectiveJouzuKeys(keybindings, "jouzu.voice.toggle")) {
-				// Bare keys remain editor input. There is no portable, unclaimed default shortcut.
+				// Bare keys remain editor input; only modified keys become shortcuts.
 				if (!isPrintableKeyId(key))
 					pi.registerShortcut(key as KeyId, {
 						description: "Start or stop voice dictation",
