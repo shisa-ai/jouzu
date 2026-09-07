@@ -1,10 +1,12 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { visibleWidth } from "@earendil-works/pi-tui";
 
 import {
 	DEFAULT_PALETTE_OVERLAY_OPTIONS,
 	JouzuPaletteRouter,
 	JouzuPaletteSurfaceHost,
+	renderPaletteField,
 	renderPaletteTabs,
 	selectPalettePresentation,
 } from "../dist/palette.js";
@@ -14,6 +16,34 @@ const identityTheme = {
 	bg: (_role, value) => value,
 	bold: (value) => value,
 };
+
+test("field metadata truncates before a required value and right-aligns", () => {
+	const field = (value, meta) =>
+		renderPaletteField({
+			label: "coder",
+			labelRole: "palette.identity",
+			...(value ? { value } : {}),
+			...(meta ? { meta } : {}),
+			labelWidth: 8,
+			innerWidth: 44,
+			selected: false,
+			theme: identityTheme,
+			styles: { apply: (_role, value) => value },
+		});
+	for (const status of ["queued", "starting", "running", "completed", "failed", "cancelled", "interrupted"]) {
+		const statusLine = field(status, "\u9577\u3044\u5272\u308a\u5f53\u3066\u3002".repeat(12));
+		assert.ok(statusLine.includes(status), `${status} is not hidden by unbounded metadata`);
+		assert.ok(visibleWidth(statusLine) <= 44, `${status}: ${statusLine}`);
+	}
+	const disclosure = field("p/very-long-model-name-that-fills-the-value-column", "\u203a");
+	assert.ok(disclosure.includes("\u203a"), "a short disclosure chevron survives beside a long value");
+	assert.ok(visibleWidth(disclosure) <= 44, `${disclosure}`);
+	assert.match(
+		field("failed", "\u9577\u3044\u5272\u308a\u5f53\u3066\u3002".repeat(12)).trimEnd(),
+		/\u9577\u3044\u5272\u308a\u5f53\u3066\u3002$/u,
+		"metadata right-aligns against the frame",
+	);
+});
 
 function deferred() {
 	let resolve;

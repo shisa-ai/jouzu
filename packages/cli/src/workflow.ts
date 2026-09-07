@@ -73,6 +73,13 @@ interface Row {
 /** Cap the label column so one long agent id cannot squeeze out every value. */
 const LABEL_COLUMN_MAXIMUM = 22;
 const LABEL_COLUMN_MINIMUM = 8;
+/**
+ * Cap a run identity locally: the label column never truncates, so an
+ * outlier id would push the run status off a 48-column row. 18 columns
+ * leaves every run status (the longest is 11) fully visible beside
+ * unbounded metadata at 48 columns.
+ */
+const RUN_LABEL_MAXIMUM = 18;
 /** Width of a standalone control label, matched to the Models view. */
 const CONTROL_LABEL_COLUMN = 8;
 
@@ -137,7 +144,12 @@ export class WorkflowComponent implements PaletteComponent, Focusable {
 	}
 	set focused(value: boolean) {
 		this._focused = value;
-		if (this.editor) this.editor.focused = value;
+		this.syncFocus();
+	}
+	/** Forward component focus to the live text controls that render it. */
+	private syncFocus(): void {
+		this.modelSearch.focused = this._focused && this.mode === "models";
+		if (this.editor) this.editor.focused = this._focused;
 	}
 	allowsGlobalNavigation(): boolean {
 		return this.mode === "browse" && !this.busy;
@@ -159,6 +171,7 @@ export class WorkflowComponent implements PaletteComponent, Focusable {
 	}
 	private setMode(mode: Mode): void {
 		this.mode = mode;
+		this.syncFocus();
 		this.selected = 0;
 		this.message = "";
 		this.messageLevel = "info";
@@ -297,7 +310,7 @@ export class WorkflowComponent implements PaletteComponent, Focusable {
 				const runs = this.service.runs();
 				rows.push(
 					...runs.map((run, index) => ({
-						label: run.role.id,
+						label: fitTerminalText(run.role.id, RUN_LABEL_MAXIMUM),
 						labelRole: "palette.identity" as const,
 						value: run.status,
 						meta: run.currentTool ?? run.task.replace(/\s+/g, " "),

@@ -156,11 +156,20 @@ export function renderPaletteField(options: PaletteFieldOptions): string {
 		? theme.bold(styles.apply(options.labelRole ?? "palette.value", labelText))
 		: styles.apply(options.labelRole ?? (value ? "palette.label" : "palette.value"), labelText);
 	const headWidth = 2 + terminalTextWidth(labelText);
-	const metaWidth = meta ? terminalTextWidth(meta) + 1 : 0;
-	const valueRoom = Math.max(0, innerWidth - headWidth - 1 - metaWidth);
+	// The value keeps at least half of the room after the label; metadata
+	// truncates to the remainder, so an unbounded detail (a run assignment)
+	// can never hide a required value such as a run status.
+	const available = Math.max(0, innerWidth - headWidth - 1);
+	const valueFloor = available === 0 ? 0 : Math.max(1, Math.ceil(available / 2));
+	const metaRoom = Math.max(0, available - valueFloor - 2); // separator and trailing space
+	const fittedMeta = meta ? fitTerminalText(meta, metaRoom) : "";
+	const metaColumns = fittedMeta ? terminalTextWidth(fittedMeta) : 0;
+	const valueRoom = available === 0 ? 0 : Math.max(1, available - metaColumns - (fittedMeta ? 2 : 0));
 	const fittedValue = value ? fitTerminalText(value, valueRoom) : "";
-	const gap = Math.max(0, innerWidth - headWidth - 1 - terminalTextWidth(fittedValue) - metaWidth);
-	const text = `${marker} ${styledLabel} ${fittedValue}${" ".repeat(gap)}${meta ? `${styles.apply("palette.count", meta)} ` : ""}`;
+	const gap = Math.max(0, available - terminalTextWidth(fittedValue) - metaColumns - (fittedMeta ? 1 : 0));
+	const text = `${marker} ${styledLabel} ${fittedValue}${" ".repeat(gap)}${
+		fittedMeta ? `${styles.apply("palette.count", fittedMeta)} ` : ""
+	}`;
 	return selected ? renderPaletteBand(text, innerWidth, theme) : text;
 }
 

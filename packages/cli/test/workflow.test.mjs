@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { KeybindingsManager, TUI_KEYBINDINGS, visibleWidth } from "@earendil-works/pi-tui";
+import { CURSOR_MARKER, KeybindingsManager, TUI_KEYBINDINGS, visibleWidth } from "@earendil-works/pi-tui";
 import { JouzuPaletteRouter } from "../dist/palette.js";
 import { defaultAgentConfig, digest } from "../dist/subagents/roles.js";
 import { WorkflowComponent } from "../dist/workflow.js";
@@ -175,6 +175,62 @@ test("multiline instructions stay in the enclosing draft and fit a short termina
 	assert.equal(f.writes, 0);
 	cancel(f.view);
 	assert.equal(f.writes, 0);
+});
+
+test("model search receives the hardware cursor marker while focused", () => {
+	const f = fixture();
+	down(f.view);
+	enter(f.view);
+	down(f.view, 2);
+	enter(f.view);
+	assert.match(f.text(), /Search/);
+	assert.ok(
+		f.text().includes(CURSOR_MARKER),
+		"the focused model search renders the hardware cursor marker for IME anchoring",
+	);
+	f.view.focused = false;
+	assert.ok(!f.text().includes(CURSOR_MARKER), "an unfocused palette drops the cursor marker from the search field");
+	f.view.focused = true;
+	cancel(f.view);
+	assert.match(f.text(), /Edit agent/);
+	assert.ok(!f.text().includes(CURSOR_MARKER), "exiting the search to the Model row drops the cursor marker");
+	enter(f.view);
+	assert.match(f.text(), /Search/);
+	assert.ok(f.text().includes(CURSOR_MARKER), "reopening the model search restores the cursor marker");
+});
+
+test("every run status stays fully visible beside unbounded metadata at 48 columns", () => {
+	const f = fixture();
+	const statuses = ["queued", "starting", "running", "completed", "failed", "cancelled", "interrupted"];
+	const longIdentity = "とても長いエージェント識別子".repeat(3);
+	const longTool = "非常に長いツール名".repeat(6);
+	const longTask = "長い割り当て。".repeat(24);
+	f.view.handleInput("\x1b[C");
+	down(f.view);
+	for (const status of statuses) {
+		for (const meta of ["currentTool", "task"]) {
+			const run = {
+				id: `fixture-${status}-${meta}`,
+				role: { id: longIdentity },
+				model: { provider: "fixture", id: "test" },
+				status,
+				...(meta === "currentTool" ? { currentTool: longTool, task: "Inspect" } : { task: longTask }),
+				usage: { input: 1, output: 2, cacheRead: 0, cacheWrite: 0, cost: null },
+			};
+			f.service.runs = () => [run];
+			const lines = f.view.render(48);
+			const text = lines.join("\n");
+			assert.ok(text.includes(status), `48: ${status} stays fully visible with a long ${meta} and CJK identity`);
+			for (const line of lines) assert.ok(visibleWidth(line) <= 48, `48: ${line}`);
+			if (status === "interrupted") {
+				const metaText = meta === "currentTool" ? longTool : longTask;
+				assert.ok(text.includes(metaText.slice(0, 4)), "metadata still renders when spare space allows");
+				for (const width of [24, 80, 120]) {
+					for (const line of f.view.render(width)) assert.ok(visibleWidth(line) <= width, `${width}: ${line}`);
+				}
+			}
+		}
+	}
 });
 
 test("Runs opens output, requires Stop confirmation, and exposes Resume after cancellation", async () => {
