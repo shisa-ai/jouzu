@@ -39,6 +39,24 @@ test("native CI applies the pinned Pi contract before compiling the supervisor",
 	assert.ok(workflow.includes('"scripts/*pi-content-policy*"'));
 });
 
+test("CI installs pinned Go in every CLI build job and pins native actions", () => {
+	const workflow = readFileSync(join(root, ".github/workflows/ci.yml"), "utf8");
+	const jobs = workflow.split(/^  [a-z][a-z0-9-]*:\s*$/m).slice(1);
+	const builders = jobs.filter((job) => job.includes("run: npm run build"));
+	assert.equal(builders.length, 3);
+	for (const job of builders) {
+		const setup = job.indexOf("uses: actions/setup-go@");
+		assert.ok(setup >= 0 && setup < job.indexOf("run: npm run build"));
+		assert.match(job.slice(setup), /go-version: "1\.26\.1"/);
+	}
+	const native = readFileSync(join(root, ".github/workflows/textguard-native.yml"), "utf8");
+	for (const action of native.matchAll(/uses: (\S+)/g)) {
+		assert.match(action[1], /@[a-f0-9]{40}$/);
+	}
+	assert.ok(native.includes('"packages/cli/test/textguard*.test.mjs"'));
+	assert.ok(native.includes("persist-credentials: false"));
+});
+
 test("all six packaged executables match the reviewed manifest", () => {
 	const manifest = JSON.parse(readFileSync(join(directory, "manifest.json"), "utf8"));
 	assert.deepEqual(manifest, expected);

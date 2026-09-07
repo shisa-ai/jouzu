@@ -9,7 +9,13 @@ on:
       - "scripts/*pi-content-policy*"
       - "scripts/*textguard*"
       - "packages/cli/src/textguard*.ts"
-      - "packages/cli/test/textguard-native*.test.mjs"
+      - "packages/cli/test/textguard*.test.mjs"
+      - "packages/cli/src/main-cli.ts"
+      - "packages/cli/src/args.ts"
+      - "packages/cli/src/model-picker.ts"
+      - "packages/cli/src/subagents/**"
+      - "packages/cli/package.json"
+      - "package.json"
       - "package-lock.json"
       - ".github/workflows/textguard-native.yml"
   workflow_dispatch:
@@ -26,12 +32,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
           go-version: "1.26.1"
           cache: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "24"
       - name: Test deterministic scanner
