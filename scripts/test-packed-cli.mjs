@@ -6,6 +6,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 const root = resolve(import.meta.dirname, "..");
 const packageDirectory = resolve(root, "packages", "cli");
@@ -116,6 +117,7 @@ function assertPackedSurfaces(installedCli, probe, cwd, env, profile) {
 		"skill:multiloop",
 		"status",
 		"tasks",
+		"textguard",
 	]) {
 		assert.ok(surfaces.commands.includes(command), `${profile}: missing command ${command}`);
 	}
@@ -167,6 +169,27 @@ try {
 		const webaioRequire = createRequire(resolve(installedRoot, "node_modules", "pi-webaio", "package.json"));
 		assert.equal(webaioRequire.resolve("wreq-js"), jouzuRequire.resolve("wreq-js"));
 		const installedCli = resolve(temp, "node_modules", "jouzu", "dist", "cli.js");
+		const nativeModule = pathToFileURL(resolve(installedRoot, "dist", "textguard-native.js")).href;
+		run(
+			process.execPath,
+			[
+				"--input-type=module",
+				"--eval",
+				`import assert from "node:assert/strict";
+				import { NativeTextGuard } from ${JSON.stringify(nativeModule)};
+				const scanner = new NativeTextGuard();
+				try {
+					assert.equal((await scanner.scan("日本語の資料を確認します。")).status, "clear");
+					assert.match(scanner.identity, /^[a-f0-9]{64}$/);
+					const flagged = await scanner.scan("packed\\u202econtent");
+					assert.equal(flagged.status, "findings");
+					assert.ok(flagged.severityCounts.error > 0);
+					assert.equal((await scanner.scan("after findings")).status, "clear");
+				} finally { await scanner.close(); }
+				assert.equal((await scanner.scan("closed")).reason, "closed");`,
+			],
+			{ cwd: temp, env: baseEnv },
+		);
 		const probe = resolve(temp, "surface-probe.js");
 		writeFileSync(
 			probe,
