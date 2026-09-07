@@ -310,9 +310,19 @@ export async function runMainCli(args: string[]): Promise<void> {
 				yara: parsed.options.textguardYara,
 			})
 		: undefined;
+	const [{ TextGuardRuntime }, { createTextGuardReviewExtension }] = await Promise.all([
+		import("./textguard-runtime.js"),
+		import("./textguard-review.js"),
+	]);
+	const nativeTextguard = new TextGuardRuntime({
+		cachePath: join(paths.cacheDir, "textguard", "scans.json"),
+		files: parsed.options.textguardFiles,
+	});
 	const startPi = () =>
 		pi.main(piArgs, {
+			contentPolicyFactory: nativeTextguard.createPolicy,
 			extensionFactories: [
+				{ name: "jouzu-textguard-review", factory: createTextGuardReviewExtension(nativeTextguard) },
 				presentation.createJouzuPresentationExtension(metadata, profile),
 				sessionUi,
 				modelPicker.extension,
@@ -330,7 +340,11 @@ export async function runMainCli(args: string[]): Promise<void> {
 	try {
 		await withJouzuOutput(runPi, interactiveStartup);
 	} finally {
-		await textguard?.dispose();
+		try {
+			await textguard?.dispose();
+		} finally {
+			await nativeTextguard.close();
+		}
 	}
 }
 

@@ -18,7 +18,7 @@ const result = (severity = "warn") => ({
 });
 const reply = (payload = result(), code = 2) => ({ stdout: JSON.stringify(payload), code });
 
-test("TextGuard requires explicit flags and an absolute interpreter", () => {
+test("Python comparison requires an absolute interpreter; file scanning is independent", () => {
 	assert.equal(parseJouzuArgs([]).options.textguardPython, undefined);
 	const python = process.execPath;
 	assert.deepEqual(
@@ -33,13 +33,13 @@ test("TextGuard requires explicit flags and an absolute interpreter", () => {
 		{ textguardPython: python, textguardFiles: true, textguardYara: true },
 	);
 	for (const args of [
-		["--jouzu-textguard-files"],
 		["--jouzu-textguard-yara"],
 		["--jouzu-textguard-python", "python3"],
 		["--jouzu-textguard-python"],
 	]) {
 		assert.throws(() => parseJouzuArgs(args));
 	}
+	assert.equal(parseJouzuArgs(["--jouzu-textguard-files"]).options.textguardFiles, true);
 	assert.deepEqual(parseJouzuArgs(["--", "--jouzu-textguard-files"]).args, ["--jouzu-textguard-files"]);
 });
 
@@ -271,7 +271,7 @@ test(
 );
 
 test(
-	"CLI opt-in scans a skill and web result before the provider receives them",
+	"CLI Python comparison reports cannot bypass native skill and web withholding",
 	{
 		skip: !process.env.JOUZU_TEST_TEXTGUARD_PYTHON,
 		timeout: 30000,
@@ -352,9 +352,10 @@ export default function(pi) {
 					(message) => message.role === "toolResult" && message.toolCallId === "fixture-web",
 				);
 				assert.ok(web);
-				assert.equal(web.content[0].text, "Web result with hidden\u200b text.");
-				assert.equal(JSON.stringify(web).includes("TextGuard"), enabled);
-				if (enabled) assert.match(JSON.stringify(web), /invisible_char/);
+				assert.equal(web.isError, true);
+				assert.match(web.content[0].text, /TextGuard withheld/);
+				assert.equal(JSON.stringify(contexts).includes("Web result with hidden\u200b text."), false);
+				assert.equal(JSON.stringify(contexts).includes("Inspect\u200b this fixture."), false);
 			}
 		} finally {
 			await rm(dir, { recursive: true, force: true });

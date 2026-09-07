@@ -235,8 +235,8 @@ export function parseJouzuArgs(args: string[]): ParsedCommand {
 		break;
 	}
 
-	if ((options.textguardFiles || options.textguardYara) && !options.textguardPython) {
-		throw new UsageError("TextGuard options require --jouzu-textguard-python <absolute-path>");
+	if (options.textguardYara && !options.textguardPython) {
+		throw new UsageError("--jouzu-textguard-yara requires --jouzu-textguard-python <absolute-path>");
 	}
 	const remaining = args.slice(index);
 	const [command, ...rest] = remaining;
@@ -333,10 +333,11 @@ Commands:
   self-update   Inspect, check, apply, or configure Jouzu npm updates
   pi, --        Explicitly pass all remaining arguments to pinned Pi
 
-Experimental local scanning (off by default):
-  --jouzu-textguard-python <absolute-path>  Scan skills and web results with TextGuard 1.0.0
-  --jouzu-textguard-yara                    Include bundled YARA rules (requires textguard[yara])
-  --jouzu-textguard-files                   Also scan ordinary read-tool text
+TextGuard scans skills and web content locally by default.
+Use /textguard in an interactive session to review withheld content.
+  --jouzu-textguard-files                   Also scan ordinary read-tool content
+  --jouzu-textguard-python <absolute-path>  Add TextGuard 1.0.0 Python comparison reports
+  --jouzu-textguard-yara                    Include Python YARA rules (requires textguard[yara])
 
 The jz command is an exact alias. Resume with the jz --session command printed
 on exit; Jouzu resolves its isolated session root. First interactive launch asks before enabling
