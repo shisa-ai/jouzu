@@ -76,6 +76,12 @@ class DevBuildTests(unittest.TestCase):
         )
         (path / "scripts" / "check-dist-fresh.mjs").write_text("// test fixture\n", encoding="utf-8")
         shutil.copy2(SOURCE_SCRIPT.parent / "scripts" / "dev-smoke.mjs", path / "scripts" / "dev-smoke.mjs")
+        (path / "scripts" / "apply-pi-content-policy.mjs").write_text(
+            'import { appendFileSync } from "node:fs";\n'
+            'appendFileSync(process.env.DEV_BUILD_TEST_LOG, "policy-setup\\n");\n'
+            'if (process.env.DEV_BUILD_TEST_POLICY_FAILS) process.exit(1);\n',
+            encoding="utf-8",
+        )
         if with_typescript:
             tsc = path / "node_modules" / ".bin" / "tsc"
             tsc.parent.mkdir(parents=True)
@@ -283,6 +289,22 @@ class DevBuildTests(unittest.TestCase):
         second_commands = self.log.read_text(encoding="utf-8")
         self.assertNotIn("\tci\t", second_commands)
         self.assertNotIn("\tlink\t", second_commands)
+
+    def test_policy_setup_precedes_typecheck_and_failure_stops_build(self) -> None:
+        sibling = self.root / "jouzu"
+        self._create_jouzu_repo(sibling)
+        result = self._run()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        commands = self.log.read_text(encoding="utf-8")
+        self.assertLess(commands.index("policy-setup"), commands.index("\tcheck\t"))
+        self.log.write_text("", encoding="utf-8")
+        self.env["DEV_BUILD_TEST_POLICY_FAILS"] = "1"
+        failed = self._run()
+        self.assertNotEqual(failed.returncode, 0)
+        commands = self.log.read_text(encoding="utf-8")
+        self.assertNotIn("\tcheck\t", commands)
+        self.assertNotIn("\tbuild:dev", commands)
+        self.assertIn("Pi content policy setup failed", failed.stderr)
 
     def test_existing_typescript_tree_reinstalls_after_lock_update(self) -> None:
         sibling = self.root / "jouzu"
