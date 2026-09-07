@@ -4,17 +4,17 @@ Jouzu is Shisa AI's agentic coding harness, built on [Pi coding agent](https://p
 
 It comes batteries included with the tools and workflows we use every day:
 
-- **Models that remember your choices.** Search providers and models in the Palette, keep favorites, and save project defaults and per-model reasoning preferences. [Shisa AI's API service](https://platform.shisa.ai/) supplies an account-aware model catalog when configured.
-- **Child agents with defined roles.** Assign a model, tools, instructions, and workspace; inspect results, send follow-ups, stop runs, and resume their conversations.
-- **Web search and readable pages.** Fetch pages directly or use browser-backed search and rendering. The browser runtime installs on first use.
-- **Background work without repeated interruptions.** Run shell jobs while you keep working, inspect logs, and receive batched unread completion summaries.
 - **Goals, loops, and scheduled work.** Track multi-step tasks, work toward a goal, run measured improvement loops, and schedule prompts.
-- **Searchable session history.** Recall earlier decisions and code after context compaction without keeping the whole conversation in the model's active context.
+- **Background work without repeated interruptions.** Run shell jobs while you keep working, inspect logs, and receive batched unread completion summaries.
+- **Child agents with defined roles.** Assign a model, tools, instructions, and workspace; inspect results, send follow-ups, stop runs, and resume their conversations.
+- **Web search and readable pages.** Fetch pages directly or use browser-backed search and rendering. A Camoufox browser runtime installs on first use for a full headless browsing agent.
 - **Local content scanning.** TextGuard checks skills and web results before they reach the model. Review withheld content explicitly; scanning is not a guarantee of safety.
+- **Searchable session history.** Recall earlier decisions and code after context compaction without keeping the whole conversation in the model's active context.
+- **Japanese and mixed-width text support.** Terminal layouts account for Japanese, Chinese, Korean, and emoji display widths. The optional Japanese profile adds language-focused instructions and skills.
 - **Voice dictation.** Speak into an editable prompt with live previews and finalized transcription through Shisa. Requires realtime speech access; never auto-sends.
-- **Japanese and mixed-width text support.** Terminal layouts account for Japanese, Chinese, Korean, and emoji display widths. The optional Japanese profile adds language-focused instructions and skills; interface labels are English.
+- **Models that remember your choices.** Search providers and models in the Palette, keep favorites, and save project defaults and per-model reasoning preferences. [Shisa AI's API service](https://platform.shisa.ai/) supplies an account-aware model catalog when configured.
 
-Jouzu v0.1.x is **alpha** software. We use it for day-to-day work; review generated changes and test before relying on them.
+Jouzu v0.1.x is **alpha** software. We use it as our daily driver, so it's fully usable, but expect frequent updates and changes.
 
 ## Requirements
 
@@ -31,7 +31,7 @@ On older enterprise Linux distributions, install the GTK/X11/audio libraries req
 ## Install
 
 ```bash
-npm install --global jouzu@0.1.7
+npm install -g jouzu
 
 jouzu --version
 jz doctor
@@ -40,7 +40,7 @@ jz doctor
 `jz` is an exact alias for `jouzu`. To try the CLI without a global installation:
 
 ```bash
-npx --yes jouzu@0.1.7 --version
+npx --yes jouzu --version
 ```
 
 [GitHub Releases](https://github.com/shisa-ai/jouzu/releases) include the same tested npm tarball, checksums, and package manifest from v0.1.7 onward. These are npm packages, not standalone executables.
