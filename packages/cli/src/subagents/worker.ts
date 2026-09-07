@@ -30,7 +30,7 @@ export function childResourceLoader(launch: WorkerLaunch): ResourceLoader {
 		getSystemPromptSource: () => undefined,
 		getAppendSystemPrompt: () => [launch.role.instructions],
 		getAppendSystemPromptSources: () => [],
-		extendResources: () => {},
+		extendResources: async () => {},
 		reload: async () => {},
 	};
 }

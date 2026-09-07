@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"package": "@earendil-works/pi-coding-agent",
+	"version": "0.85.1",
+	"files": {
+		"dist/main.js": {
+			"before": "f0b7e5a8419af8d149ffe367af2992c76ce70b73484c15492bd50787d4f4962a",
+			"after": "cdfd95d6d0dcb67b72623c39392d176424b0c2af0d1da25c5fc4b20c144f32a3"
+		},
+		"dist/main.d.ts": {
+			"before": "cf197873ee07f73d5682fe2236e24989714d1f5c1acf8820264e570a5c17dadc",
+			"after": "efa02873c9cd908ecaf5474c6cbf51db41957d20aac9c7775898e32f88e8cdf9"
+		},
+		"dist/core/resource-loader.js": {
+			"before": "8e8a1bc1c5bc9e955f6a2314dd1db02071be56d48b1fea7b8b2cacb4fc9a0628",
+			"after": "49fa53383f00c242243123cc5e65fc3e4f679c00d514778b6b5f6f850e7c9bfd"
+		},
+		"dist/core/resource-loader.d.ts": {
+			"before": "f7c1dac7b3d661dff5fbfe51d1b50dff12b4c4329ae29a280ae713740b162493",
+			"after": "4848cfef0a2a2038e079f9bad1d27edbe95deaff88aed77d712f6850be3ba17f"
+		},
+		"dist/core/sdk.js": {
+			"before": "6969bd56ba8e1628cd033bb15cb15fe38299f00b5ad84f4f8ef37a33a98681c9",
+			"after": "16a99c4216808d724f801c3a3bccce7fb6e26895af58d4a754ec8914f7acf69b"
+		},
+		"dist/core/sdk.d.ts": {
+			"before": "fbb34394c71e113b1f1fb5dd2e3d1da8d559580b339daace88826cd1a666cc4c",
+			"after": "aefb63790292d5d27c6b733b05a8cba753344fdfe06c963578d253decd49aed3"
+		},
+		"dist/core/agent-session.js": {
+			"before": "fb8a3981c20c8c0bbd42231b1c99a10335fb3858b659056b341954de9cfa467f",
+			"after": "6b7ff93bd148f6cde2979c17484cb6d0356e8f1fb8acdae8b78580328f365976"
+		}
+	},
+	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863"
+}
