@@ -9,8 +9,27 @@ const root = resolve(import.meta.dirname, "..");
 const directory = process.env.TEXTGUARD_ARTIFACT_DIR ?? join(root, "packages/cli/dist/textguard");
 const expected = JSON.parse(readFileSync(join(root, "upstream/textguard/artifacts.lock.json"), "utf8"));
 const sha = (bytes) => createHash("sha256").update(bytes).digest("hex");
-const target = `${process.platform}-${{ x64: "amd64", arm64: "arm64" }[process.arch]}`;
+const artifactTarget = (platform, arch) =>
+	`${platform === "win32" ? "windows" : platform}-${{ x64: "amd64", arm64: "arm64" }[arch]}`;
+const target = artifactTarget(process.platform, process.arch);
 const executable = join(directory, expected.artifacts[target]?.filename ?? "unsupported-platform");
+
+test("artifact test target mapping covers all six Node platforms", () => {
+	for (const [platform, os] of [
+		["win32", "windows"],
+		["linux", "linux"],
+		["darwin", "darwin"],
+	]) {
+		for (const [arch, goArch] of [
+			["x64", "amd64"],
+			["arm64", "arm64"],
+		]) {
+			const key = artifactTarget(platform, arch);
+			assert.equal(key, `${os}-${goArch}`);
+			assert.ok(expected.artifacts[key]);
+		}
+	}
+});
 
 function run(input) {
 	const result = spawnSync(executable, [], {
@@ -41,7 +60,7 @@ test("native CI applies the pinned Pi contract before compiling the supervisor",
 
 test("CI installs pinned Go in every CLI build job and pins native actions", () => {
 	const workflow = readFileSync(join(root, ".github/workflows/ci.yml"), "utf8");
-	const jobs = workflow.split(/^  [a-z][a-z0-9-]*:\s*$/m).slice(1);
+	const jobs = workflow.split(/^ {2}[a-z][a-z0-9-]*:\s*$/m).slice(1);
 	const builders = jobs.filter((job) => job.includes("run: npm run build"));
 	assert.equal(builders.length, 3);
 	for (const job of builders) {
