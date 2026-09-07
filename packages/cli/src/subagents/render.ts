@@ -54,6 +54,8 @@ export function subagentComponent(value: unknown, theme: Pick<Theme, "fg">, expa
 			const root = object(value);
 			const runs = Array.isArray(root.runs) ? root.runs : root.role && root.id ? [root] : undefined;
 			if (runs) {
+				detail("", root.summary, 8);
+				if (root.omitted) detail("", root.retrieval, 8);
 				for (const raw of runs.slice(0, expanded ? 20 : 5)) {
 					const run = object(raw);
 					const status = text(run.status, 40);
@@ -92,6 +94,7 @@ export function subagentComponent(value: unknown, theme: Pick<Theme, "fg">, expa
 						const seconds = Math.floor((end - start) / 1000);
 						add(muted(`Elapsed ${Math.floor(seconds / 60)}m ${seconds % 60}s (including queue)`));
 					}
+					detail("", run.reviewWarning, 8);
 					detail("", run.outcome, expanded ? 12 : 3);
 					if (expanded) {
 						const usage = object(run.usage);

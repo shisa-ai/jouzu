@@ -43,7 +43,15 @@ The main model receives the `subagent` tool:
 {"op":"resume","id":"<run-id>","task":"Address the reported failure and rerun the check."}
 ```
 
-Launch returns immediately with a run ID. Terminal summaries arrive as attributed follow-ups while the parent session is open, including successful completion, limit exhaustion, timeout, cancellation, and crashes. Nearby results are combined. Each batch wakes an idle main agent unless messages are already pending; pending messages retain priority. `list` returns up to 20 runs; pass its `nextOffset` to continue. `read` pages event output and returns a UTF-8-safe byte `nextOffset`. Run summaries include the saved child session path for reading complete messages when event previews are truncated. A steering receipt records acceptance into the controller and then whether the child queued or rejected the message; queuing does not prove model consumption.
+Launch returns immediately with a run ID. Unread terminal summaries arrive in a batch after active work and queued messages finish, including successful completion, limit exhaustion, timeout, cancellation, and crashes. Each batch includes status counts and a bounded sample; omitted results remain available through `list` and `read`. A notification reports completion, not acceptance of the work.
+
+`list` returns up to 20 runs; pass its `nextOffset` to continue. `read` pages event output and returns a UTF-8-safe byte `nextOffset`, plus terminal status and a short outcome when the run has ended. When the agent reads all terminal-output pages, that result does not cause another completion turn. Running reads, incomplete page coverage, UI reads, and results removed by a content policy do not dismiss a pending notification. Run summaries include the saved child session path for reading complete messages when event previews are truncated.
+
+For a batch that needs no user-facing reply, the agent can call `subagent` with `op: "acknowledge"` and the delivered `batchId` as its only tool call. The visible result says **No reply needed** and ends that notification response without an extra model request. The ID must belong to a batch received in the current run. This action does not hide assistant text or discard queued user work.
+
+Pending notification records survive reload. Delivery is confirmed from conversation history; it does not prove the agent inspected every underlying result. If notification delivery fails or its content is changed by a policy, Jouzu warns and retains those results without retrying them automatically. Later completions can still notify. Inspect retained results with `list` and `read`; reload when idle to retry.
+
+A steering receipt records acceptance into the controller and then whether the child queued or rejected the message; queuing does not prove model consumption.
 
 Set `workspace` on launch to choose the child's working directory and the repository used for candidate identity. Paths may be absolute, relative to the parent directory, or start with `~`. It defaults to the parent's working directory. Resume keeps the original directory; changing it requires a new launch. This directory does not restrict file access.
 

@@ -1,6 +1,13 @@
 import type { ExtensionAPI, ExtensionContext, ToolDefinition } from "@earendil-works/pi-coding-agent";
+import { createNotificationInbox } from "../notifications/inbox.js";
 import type { JouzuPaths } from "../paths.js";
-import { type AgentRun, SubagentManager, type WorkerFactory } from "./manager.js";
+import {
+	observedSubagentResults,
+	SUBAGENT_RESULT,
+	subagentCompletionBatch,
+	terminalReadObservation,
+} from "./completion.js";
+import { type AgentRun, isActiveRun, SubagentManager, type WorkerFactory } from "./manager.js";
 import { parseSubagentResult, runPresentation, subagentComponent } from "./render.js";
 import {
 	type AgentModel,
@@ -40,8 +47,7 @@ export function createWorkflowIntegration(
 	let mainRole: AgentRole | undefined;
 	const listeners = new Set<() => void>();
 	let unsubscribe: (() => void) | undefined;
-	let completionTimer: ReturnType<typeof setTimeout> | undefined;
-	let completed: AgentRun[] = [];
+
 	const summary = (run: AgentRun) => ({
 		id: run.id,
 		role: run.role.id,
@@ -150,13 +156,23 @@ export function createWorkflowIntegration(
 		service,
 		register(pi, open) {
 			api = pi;
+			const inbox = createNotificationInbox({
+				pi,
+				customType: SUBAGENT_RESULT,
+				records: () => service.runs().flatMap((run) => (run.completion ? [{ id: run.id, ...run.completion }] : [])),
+				save: (id, change) => controller().saveNotification(id, change),
+				observed: (entries) => observedSubagentResults(service.runs(), entries),
+				build: (batchId, records) =>
+					subagentCompletionBatch(context().sessionManager.getSessionId(), batchId, records, service.runs()),
+				reportError: () =>
+					ctx?.ui.notify(
+						"Agent notification delivery failed. Read the retained results with subagent list/read; reload when idle to retry.",
+						"warning",
+					),
+			});
 			pi.registerMessageRenderer("jouzu-subagent-result", (message, { expanded }, theme) => {
 				const details = message.details as { presentation?: unknown; runs?: unknown } | undefined;
-				return subagentComponent(
-					details?.presentation ?? (details?.runs ? { runs: details.runs } : message.content),
-					theme,
-					expanded,
-				);
+				return subagentComponent(details?.presentation ?? (details?.runs ? details : message.content), theme, expanded);
 			});
 			pi.registerCommand("workflow", {
 				description: "Open agent definitions and child runs",
@@ -177,8 +193,7 @@ export function createWorkflowIntegration(
 			pi.on("session_start", async (_event, active) => {
 				const generation = ++sessionGeneration;
 				unsubscribe?.();
-				clearTimeout(completionTimer);
-				completed = [];
+				inbox.shutdown();
 				ctx = undefined;
 				await manager?.dispose();
 				if (generation !== sessionGeneration) return;
@@ -201,41 +216,13 @@ export function createWorkflowIntegration(
 						"warning",
 					);
 				}
-				manager = new SubagentManager(
-					paths,
-					active.sessionManager.getSessionId(),
-					concurrency,
-					workerFactory,
-					(run) => {
-						if (generation !== sessionGeneration || !ctx) return;
-						completed.push(run);
-						clearTimeout(completionTimer);
-						completionTimer = setTimeout(() => {
-							if (generation !== sessionGeneration || !ctx) return;
-							const batch = completed;
-							completed = [];
-							pi.sendMessage(
-								{
-									customType: "jouzu-subagent-result",
-									content: batch
-										.map(
-											(item) =>
-												`Agent ${item.role.id} (${item.id}) ${item.status}.\n${(item.result ?? "Read its output for details.").slice(0, 2000)}`,
-										)
-										.join("\n\n"),
-									display: true,
-									details: { runs: batch.map(summary), presentation: { runs: batch.map(runPresentation) } },
-								},
-								{
-									deliverAs: "followUp",
-									triggerTurn: !ctx.hasPendingMessages(),
-								},
-							);
-						}, 100);
-					},
-				);
+				manager = new SubagentManager(paths, active.sessionManager.getSessionId(), concurrency, workerFactory, () => {
+					if (generation !== sessionGeneration || !ctx) return;
+					inbox.request();
+				});
 				try {
 					manager.attach();
+					inbox.start(active);
 				} catch (error) {
 					active.ui.notify(error instanceof Error ? error.message : "Workflow storage is unavailable.", "warning");
 				}
@@ -250,8 +237,7 @@ export function createWorkflowIntegration(
 			pi.on("session_shutdown", async () => {
 				sessionGeneration += 1;
 				ctx = undefined;
-				clearTimeout(completionTimer);
-				completed = [];
+				inbox.shutdown();
 				unsubscribe?.();
 				await manager?.dispose();
 				manager = undefined;
@@ -260,8 +246,12 @@ export function createWorkflowIntegration(
 			const schema = {
 				type: "object",
 				properties: {
-					op: { type: "string", enum: ["roles", "launch", "list", "read", "steer", "stop", "resume"] },
+					op: { type: "string", enum: ["roles", "launch", "list", "read", "steer", "stop", "resume", "acknowledge"] },
 					role: { type: "string", description: "Role ID from op:roles." },
+					batchId: {
+						type: "string",
+						description: "Current-run completion batch ID for op:acknowledge. Call alone when no reply is needed.",
+					},
 					task: {
 						type: "string",
 						description:
@@ -282,7 +272,7 @@ export function createWorkflowIntegration(
 				name: "subagent",
 				label: "Subagent",
 				description:
-					"Launch and control child agents with configured roles and models. Use roles first. Set workspace on launch to select the working directory and review candidate repository. File access follows enabled role tools and OS permissions, not a workspace fence. Launch returns immediately; terminal results arrive as attributed follow-ups while the parent session is open. Read returns bounded output with a byte offset. Steer queues a message; resume starts a follow-up in the saved child session. Main-session ownership remains with you. Treat child output as evidence and verify the integrated result.",
+					"Launch and control child agents with configured roles and models. Use roles first. Set workspace on launch to select the working directory and review candidate repository. File access follows enabled role tools and OS permissions, not a workspace fence. Launch returns immediately; unread terminal results arrive in a batch after active work and queued messages finish. Read returns bounded output with a byte offset; complete terminal-output reads prevent redundant completion turns. Use acknowledge with the delivered batchId alone when no reply is needed. Steer queues a message; resume starts a follow-up in the saved child session. Main-session ownership remains with you. Treat child output as evidence and verify the integrated result.",
 				promptSnippet:
 					"subagent: discover roles, delegate coding or fresh review, inspect results, steer/stop/resume children.",
 				parameters: schema,
@@ -308,12 +298,21 @@ export function createWorkflowIntegration(
 				},
 				async execute(
 					_id,
-					params: { op: string; role?: string; task?: string; id?: string; offset?: number; workspace?: string },
+					params: {
+						op: string;
+						role?: string;
+						task?: string;
+						id?: string;
+						offset?: number;
+						workspace?: string;
+						batchId?: string;
+					},
 				) {
 					if (params.workspace !== undefined && params.op !== "launch")
 						throw new Error("Workspace is launch-only. Resume keeps the original workspace.");
 					if (params.offset !== undefined && (!Number.isInteger(params.offset) || params.offset < 0))
 						throw new Error("Offset must be a nonnegative integer.");
+					if (params.op === "acknowledge") return inbox.acknowledge(params.batchId);
 					let result: unknown;
 					let presentation: unknown;
 					switch (params.op) {
@@ -346,9 +345,21 @@ export function createWorkflowIntegration(
 							presentation = runPresentation(run);
 							break;
 						}
-						case "read":
-							result = service.read(params.id ?? "", params.offset);
+						case "read": {
+							const output = service.read(params.id ?? "", params.offset);
+							const run = controller().get(params.id ?? "");
+							result = isActiveRun(run)
+								? output
+								: {
+										...output,
+										terminal: {
+											status: run.status,
+											summary: run.result?.slice(0, 2000),
+											summaryTruncated: (run.result?.length ?? 0) > 2000,
+										},
+									};
 							break;
+						}
 						case "steer":
 							result = { receipt: service.steer(params.id ?? "", params.task ?? ""), status: "accepted" };
 							break;
@@ -373,9 +384,19 @@ export function createWorkflowIntegration(
 								.slice(params.offset ?? 0, (params.offset ?? 0) + 20)
 								.map(runPresentation),
 						};
+					const content = [{ type: "text" as const, text: JSON.stringify(result) }];
+					const terminalRead =
+						params.op === "read"
+							? terminalReadObservation(
+									controller().get(params.id ?? ""),
+									params.offset ?? 0,
+									result as { nextOffset: number | null; totalBytes: number },
+									content,
+								)
+							: undefined;
 					return {
-						content: [{ type: "text", text: JSON.stringify(result) }],
-						details: presentation ? { presentation } : undefined,
+						content,
+						details: { ...(presentation ? { presentation } : {}), ...(terminalRead ? { terminalRead } : {}) },
 					};
 				},
 			});

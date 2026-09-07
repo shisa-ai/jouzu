@@ -12,6 +12,7 @@ import {
 	realpathSync,
 } from "node:fs";
 import { dirname, isAbsolute, join, relative, sep } from "node:path";
+import type { NotificationRecord } from "../notifications/inbox.js";
 import type { JouzuPaths } from "../paths.js";
 import { ensurePrivateDirectory, writeFilePrivateAtomic } from "../private-fs.js";
 import { acquireStateLock } from "../state-lock.js";
@@ -22,6 +23,7 @@ import { type AgentRole, digest, parseAgentConfig } from "./roles.js";
 export type RunStatus = "queued" | "starting" | "running" | "completed" | "failed" | "cancelled" | "interrupted";
 export interface AgentRun {
 	id: string;
+	completion?: Omit<NotificationRecord, "id">;
 	parentSessionId: string;
 	parentEntryId?: string;
 	previousRunId?: string;
@@ -204,6 +206,20 @@ function ownedJson(path: string): AgentRun {
 		run.roleRevision !== digest(run.role)
 	)
 		throw new Error("Invalid agent run record.");
+	if (run.completion !== undefined) {
+		const receipt = run.completion;
+		if (
+			!receipt ||
+			typeof receipt.revision !== "string" ||
+			!/^[a-f0-9-]{36}$/.test(receipt.revision) ||
+			typeof receipt.handled !== "boolean" ||
+			(receipt.batchId !== undefined &&
+				(typeof receipt.batchId !== "string" || !/^[a-f0-9-]{36}$/.test(receipt.batchId))) ||
+			(receipt.contentHash !== undefined &&
+				(typeof receipt.contentHash !== "string" || !/^[a-f0-9]{64}$/.test(receipt.contentHash)))
+		)
+			throw new Error("Storage: invalid agent completion record.");
+	}
 	return run;
 }
 export class SubagentManager {
@@ -298,6 +314,15 @@ export class SubagentManager {
 		const run = this.runs.get(id);
 		if (!run) throw new Error("Agent run was not found in this parent session.");
 		return structuredClone(run);
+	}
+	saveNotification(id: string, change: Partial<NotificationRecord>): void {
+		this.acquireOwner();
+		const run = this.runs.get(id);
+		if (!run?.completion) throw new Error("Agent completion record was not found.");
+		const next = structuredClone(run);
+		next.completion = { ...run.completion, ...change };
+		writeFilePrivateAtomic(join(this.directory(id), "run.json"), `${JSON.stringify(next)}\n`, this.root);
+		this.runs.set(id, next);
 	}
 	read(id: string, offset = 0, limit = 12_000): { text: string; nextOffset: number | null; totalBytes: number } {
 		this.get(id);
@@ -517,6 +542,7 @@ export class SubagentManager {
 				run.result = `Review candidate ${run.review.status}; this result does not establish the final workspace state.\n${run.result ?? ""}`;
 		}
 		run.currentTool = undefined;
+		run.completion ??= { revision: randomUUID(), handled: false };
 		try {
 			this.persist(run);
 			this.event(run, { type: "terminal", status: run.status });
@@ -565,6 +591,7 @@ export class SubagentManager {
 			const run = this.runs.get(id)!;
 			run.status = "interrupted";
 			run.result = "Parent session closed before this agent started.";
+			run.completion ??= { revision: randomUUID(), handled: false };
 			try {
 				this.persist(run);
 			} catch {}

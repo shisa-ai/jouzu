@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, realpathSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { createWorkflowIntegration } from "../dist/subagents/integration.js";
+import { digest } from "../dist/subagents/roles.js";
 
 function fixture(realWorker = false, options = {}) {
 	const root = realpathSync(mkdtempSync(join(tmpdir(), "jouzu-agent-integration-")));
@@ -12,6 +13,7 @@ function fixture(realWorker = false, options = {}) {
 	const workers = [];
 	const messages = [];
 	const entries = [];
+	const branch = [];
 	const notifications = [];
 	let resolveMessage;
 	const nextMessage = new Promise((resolve) => {
@@ -73,7 +75,7 @@ function fixture(realWorker = false, options = {}) {
 		cwd: root,
 		isIdle: () => true,
 		hasPendingMessages: () => false,
-		sessionManager: { getBranch: () => [], getSessionId: () => "parent", getLeafId: () => "entry" },
+		sessionManager: { getBranch: () => branch, getSessionId: () => "parent", getLeafId: () => "entry" },
 		modelRegistry: {
 			getAvailable: () => models,
 			getRegisteredProviderConfig: () => undefined,
@@ -90,6 +92,7 @@ function fixture(realWorker = false, options = {}) {
 		messages,
 		nextMessage,
 		entries,
+		branch,
 		notifications,
 		ctx,
 		get command() {
@@ -384,6 +387,129 @@ test("session replacement discards old-session completion batches", async (t) =>
 		await f.shutdown();
 	}
 });
+
+test("terminal reads withdraw pending results only after complete model-visible coverage", async () => {
+	const f = fixture();
+	f.ctx.isIdle = () => false;
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		const run = await f.invoke({ op: "launch", role: "coder", task: "Read terminal output" });
+		f.workers[0].emit({ type: "result", status: "completed", text: "Output ".repeat(4000) });
+		f.workers[0].exit(true);
+		await new Promise((resolve) => setTimeout(resolve, 150));
+		assert.equal(f.messages.length, 0, "completion stays outside the Pi queue while busy");
+		let offset = 0;
+		while (offset !== null) {
+			const result = await f.tool.execute("read", { op: "read", id: run.id, offset });
+			f.branch.push({ type: "message", message: { role: "toolResult", toolName: "subagent", ...result } });
+			offset = JSON.parse(result.content[0].text).nextOffset;
+			f.handlers.get("turn_end")({}, f.ctx);
+			assert.equal(f.integration.service.runs()[0].completion.handled, offset === null);
+		}
+		f.ctx.isIdle = () => true;
+		f.handlers.get("agent_settled")({}, f.ctx);
+		await new Promise((resolve) => setTimeout(resolve, 10));
+		assert.equal(f.messages.length, 0);
+	} finally {
+		await f.shutdown();
+	}
+});
+
+for (const altered of ["error", "redacted", "list", "ui"]) {
+	test(`${altered} reads do not withdraw a completion`, async () => {
+		const f = fixture();
+		f.ctx.isIdle = () => false;
+		try {
+			await f.handlers.get("session_start")({}, f.ctx);
+			const run = await f.invoke({ op: "launch", role: "coder", task: "Unread completion" });
+			f.workers[0].emit({ type: "result", status: "completed", text: "Done" });
+			f.workers[0].exit(true);
+			const result = await f.tool.execute("read", { op: altered === "list" ? "list" : "read", id: run.id });
+			if (altered === "error") result.isError = true;
+			if (altered === "redacted") result.content = [{ type: "text", text: "Content removed" }];
+			if (altered !== "ui")
+				f.branch.push({ type: "message", message: { role: "toolResult", toolName: "subagent", ...result } });
+			f.ctx.isIdle = () => true;
+			f.handlers.get("agent_settled")({}, f.ctx);
+			await new Promise((resolve) => setTimeout(resolve, 10));
+			assert.equal(f.messages.length, 1);
+		} finally {
+			await f.shutdown();
+		}
+	});
+}
+
+test("delivered membership survives manager restart and no-reply permission is current-run only", async () => {
+	const f = fixture();
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		await f.invoke({ op: "launch", role: "coder", task: "Recover receipt" });
+		f.workers[0].emit({ type: "result", status: "completed", text: "Done" });
+		f.workers[0].exit(true);
+		await new Promise((resolve) => setTimeout(resolve, 10));
+		const message = f.messages[0].message;
+		const batchId = message.details.inbox.batchId;
+		f.handlers.get("agent_start")();
+		f.handlers.get("message_start")({ message: { role: "custom", ...message } }, f.ctx);
+		f.branch.push({ type: "custom_message", ...message });
+		const result = await f.tool.execute("ack", { op: "acknowledge", batchId });
+		assert.equal(result.terminate, true);
+		await assert.rejects(f.tool.execute("ack", { op: "acknowledge", batchId }));
+		// Restart before turn_end reconciles the receipt: membership is in run.json.
+		await f.handlers.get("session_start")({}, f.ctx);
+		await new Promise((resolve) => setTimeout(resolve, 10));
+		assert.equal(f.messages.length, 1);
+		assert.equal(f.integration.service.runs()[0].completion.handled, true);
+		await assert.rejects(f.tool.execute("ack", { op: "acknowledge", batchId }));
+	} finally {
+		await f.shutdown();
+	}
+});
+
+test("queued user messages take priority over unread child completions", async () => {
+	const f = fixture();
+	f.ctx.hasPendingMessages = () => true;
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		await f.invoke({ op: "launch", role: "coder", task: "Wait behind user" });
+		f.workers[0].exit(false);
+		await new Promise((resolve) => setTimeout(resolve, 10));
+		assert.equal(f.messages.length, 0);
+		f.ctx.hasPendingMessages = () => false;
+		f.handlers.get("agent_settled")({}, f.ctx);
+		await new Promise((resolve) => setTimeout(resolve, 10));
+		assert.equal(f.messages.length, 1);
+	} finally {
+		await f.shutdown();
+	}
+});
+
+for (const legacy of [false, true]) {
+	test(`${legacy ? "legacy terminal" : "unreceived terminal"} records restore without duplicate historical notifications`, async () => {
+		const f = fixture();
+		f.ctx.isIdle = () => false;
+		try {
+			await f.handlers.get("session_start")({}, f.ctx);
+			const run = await f.invoke({ op: "launch", role: "coder", task: "Restart pending result" });
+			f.workers[0].emit({ type: "result", status: "completed", text: "Retained result" });
+			f.workers[0].exit(true);
+			await f.shutdown();
+			if (legacy) {
+				const file = join(f.paths.stateDir, "subagents", digest("parent"), run.id, "run.json");
+				const saved = JSON.parse(readFileSync(file, "utf8"));
+				delete saved.completion;
+				writeFileSync(file, JSON.stringify(saved));
+			}
+			f.ctx.isIdle = () => true;
+			await f.handlers.get("session_start")({}, f.ctx);
+			await new Promise((resolve) => setTimeout(resolve, 10));
+			assert.equal(f.messages.length, legacy ? 0 : 1);
+			assert.equal(f.integration.service.runs()[0].result, "Retained result");
+		} finally {
+			await f.shutdown();
+		}
+	});
+}
 
 test("malformed definitions preserve session startup and cancellation notifies the main agent", async () => {
 	const f = fixture();
