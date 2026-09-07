@@ -9,6 +9,9 @@ const MAX_OUTPUT_BYTES = 8 * 1024 * 1024;
 const SCANNER_VERSION = "1.0.0";
 export type UnavailableReason =
 	| "input-limit"
+	| "finding-limit"
+	| "decode-limit"
+	| "scanner"
 	| "output-limit"
 	| "timeout"
 	| "process"
@@ -31,7 +34,7 @@ export interface ScanEvidence {
 	severityCounts?: Record<ScanFinding["severity"], number>;
 }
 export interface TextScanner {
-	scan(text: string, timeoutMs?: number): Promise<ScanEvidence>;
+	scan(text: string, timeoutMs?: number, signal?: AbortSignal): Promise<ScanEvidence>;
 	close(): Promise<void>;
 }
 export const unavailable = (reason: UnavailableReason): ScanEvidence => ({
