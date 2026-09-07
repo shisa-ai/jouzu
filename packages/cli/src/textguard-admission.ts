@@ -30,10 +30,35 @@ export function reviewLabel(text: string): string {
 	);
 }
 
+const DISPLAY_ESCAPE = /[\u007f-\u009f\u00ad\u200b-\u200f\u202a-\u202e\u2060-\u206f\ufeff]/gu;
+
+/**
+ * Escape only the characters that are invisible or can reorder terminal display,
+ * so a review label stays readable (including CJK) while controls stay visible.
+ */
+export function displayLabel(text: string): string {
+	return escapeInvisible(JSON.stringify(text));
+}
+
+/** Apply the invisible-character escapes to text that is already quoted or otherwise safe. */
+export function escapeInvisible(text: string): string {
+	return text.replace(DISPLAY_ESCAPE, (character) => `\\u${character.charCodeAt(0).toString(16).padStart(4, "0")}`);
+}
+
+/** Scanned text and its raw source label, retained only so the reviewer can view what was flagged. */
+export interface ContentSnapshot {
+	source: string;
+	body?: string;
+}
+
+const MAX_SNAPSHOTS = 8;
+const MAX_SNAPSHOT_SOURCE = 4096;
+
 /** One instance per session. Only the host's user-confirmation path may call approve(). */
 export class TextGuardAdmission {
 	private pending = new Map<string, ContentReview>();
 	private approvals = new Set<string>();
+	private snapshots = new Map<string, ContentSnapshot>();
 	private generation = 0;
 	constructor(private scanner: IdentifiedScanner) {}
 
@@ -51,6 +76,13 @@ export class TextGuardAdmission {
 		this.generation += 1;
 		this.approvals.clear();
 		this.pending.clear();
+		this.snapshots.clear();
+	}
+
+	/** Access is bound to the exact reviewed identity; no source is ever re-read for the viewer. */
+	snapshotFor(id: string): ContentSnapshot | undefined {
+		const snapshot = this.snapshots.get(id);
+		return snapshot ? structuredClone(snapshot) : undefined;
 	}
 
 	async check(source: string, text: string, signal?: AbortSignal): Promise<ContentDecision> {
@@ -90,7 +122,7 @@ export class TextGuardAdmission {
 		} catch {
 			evidence = unavailable("scanner");
 		}
-		return this.decide(source, contentDigest, validUnicode, scannerIdentity, evidence, generation, signal);
+		return this.decide(source, contentDigest, validUnicode, scannerIdentity, evidence, generation, signal, text);
 	}
 
 	/** The host must hash the complete payload; truncated or invalid snapshots cannot be approved. */
@@ -120,6 +152,7 @@ export class TextGuardAdmission {
 		evidence: ScanEvidence,
 		generation: number,
 		signal?: AbortSignal,
+		body?: string,
 	): ContentDecision {
 		if (signal?.aborted) evidence = unavailable("timeout");
 		const active = generation === this.generation && !signal?.aborted;
@@ -135,6 +168,15 @@ export class TextGuardAdmission {
 			evidence,
 		};
 		const blocked = evidence.status === "unavailable" || (evidence.severityCounts?.error ?? 0) > 0;
+		if (blocked) {
+			// Retain the exact scanned text for the review viewer, in bounded session memory only.
+			this.snapshots.delete(id);
+			this.snapshots.set(id, {
+				source: source.slice(0, MAX_SNAPSHOT_SOURCE),
+				...(validUnicode && body !== undefined ? { body } : {}),
+			});
+			while (this.snapshots.size > MAX_SNAPSHOTS) this.snapshots.delete(this.snapshots.keys().next().value as string);
+		}
 		const approved = validUnicode && active && this.approvals.has(id);
 		if (blocked && !approved && validUnicode && active) {
 			this.pending.delete(id);

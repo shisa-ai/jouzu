@@ -183,3 +183,23 @@ test("scanner exceptions withhold content without exposing exception text", asyn
 	assert.equal(withheld.isError, true);
 	assert.equal(gate.reviews()[0].evidence.status, "unavailable");
 });
+
+test("content snapshots expose the scanned body only for withheld reviews, by exact identity", async () => {
+	const gate = policy();
+	const blocked = await gate.filterToolResult(event());
+	const review = gate.reviews()[0];
+	assert.equal(blocked.isError, true);
+	const snapshot = gate.contentSnapshot(review);
+	assert.ok(snapshot.body.includes("PRIVATE BODY"));
+	assert.equal(gate.contentSnapshot({ ...review, id: "forged" }), undefined);
+	// Warning-level findings do not withhold, so nothing is retained for viewing.
+	const warns = policy(async () => ({
+		status: "findings",
+		findings: [{ kind: "ansi_escape", severity: "warn", offset: 0, codepoint: "" }],
+		findingCount: 1,
+		severityCounts: { info: 0, warn: 1, error: 0 },
+		decodeReasons: [],
+	}));
+	await warns.filterToolResult(event());
+	assert.equal(warns.reviews().length, 0);
+});

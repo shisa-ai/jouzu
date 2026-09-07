@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { type MainOptions, type Skill, stripFrontmatter } from "@earendil-works/pi-coding-agent";
 import type { UnavailableReason } from "./textguard.js";
-import { type ContentReview, TextGuardAdmission } from "./textguard-admission.js";
+import { type ContentReview, type ContentSnapshot, TextGuardAdmission } from "./textguard-admission.js";
 import { snapshotPayload } from "./textguard-payload.js";
 import { TextGuardSkills } from "./textguard-skills.js";
 
@@ -60,6 +60,10 @@ export class NativeContentPolicy implements Policy {
 		return [...this.skills.scanNotices().map(({ reason }) => ({ reason })), ...structuredClone(this.notices)].slice(
 			-LIMIT,
 		);
+	}
+	/** Retained scanned text for one exact review identity; nothing is re-read and reviews stay metadata-only. */
+	contentSnapshot(review: ContentReview): ContentSnapshot | undefined {
+		return this.admission.snapshotFor(review.id);
 	}
 	clear(): void {
 		this.generation++;

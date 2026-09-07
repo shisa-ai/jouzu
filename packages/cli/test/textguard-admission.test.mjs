@@ -97,6 +97,36 @@ test("review records are bounded, contain no source body, and cannot be mutated 
 	assert.match(label, /\\u202e/);
 });
 
+test("blocked scans retain the exact body for the reviewer, in a bounded identity-bound store", async () => {
+	const gate = new TextGuardAdmission(scanner(verdict("error")));
+	const ids = [];
+	for (let i = 0; i < 9; i++) {
+		const decision = await gate.check(`source ${i}`, `PRIVATE BODY ${i}`);
+		ids.push(decision.review.id);
+	}
+	// Reviews stay metadata-only; bodies live in the separate bounded snapshot store.
+	assert.equal(JSON.stringify(gate.reviews()).includes("PRIVATE BODY"), false);
+	// Only the most recent eight blocked reviews retain their bodies.
+	assert.equal(gate.snapshotFor(ids[0])?.body, undefined);
+	assert.equal(gate.snapshotFor(ids[1])?.body, "PRIVATE BODY 1");
+	assert.equal(gate.snapshotFor(ids[8])?.body, "PRIVATE BODY 8");
+	// Access is bound to the exact reviewed identity.
+	assert.equal(gate.snapshotFor("forged"), undefined);
+	assert.equal(gate.snapshotFor(ids[8].slice(0, 63)), undefined);
+	// Session reset clears the store.
+	gate.clearApprovals();
+	assert.equal(gate.snapshotFor(ids[8]), undefined);
+});
+
+test("unavailable snapshots and invalid Unicode keep the source label but no viewable body", async () => {
+	const gate = new TextGuardAdmission(scanner({ status: "unavailable", reason: "scanner", findings: [] }));
+	const missing = await gate.checkUnavailableSnapshot("web", "b".repeat(64), "input-limit");
+	assert.equal(gate.snapshotFor(missing.review.id)?.body, undefined);
+	assert.match(gate.snapshotFor(missing.review.id)?.source ?? "", /web/);
+	const invalid = await gate.check("web", "\ud800");
+	assert.equal(gate.snapshotFor(invalid.review.id)?.body, undefined);
+});
+
 test("reset invalidates in-flight decisions without repopulating pending reviews", async () => {
 	const source = scanner();
 	let release;
