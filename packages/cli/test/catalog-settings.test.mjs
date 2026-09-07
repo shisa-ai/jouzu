@@ -24,6 +24,34 @@ const fixture = parseAndValidateModelCatalog(
 	{ remote: true },
 );
 
+/** Row budget the floating palette overlay grants a component: 82% of rows minus its margin. */
+function overlayBudget(rows) {
+	return Math.min(Math.floor(rows * 0.82), rows - 2);
+}
+
+function selectedLine(rendered) {
+	// With the identity theme the selection marker leads the framed row; key-bar
+	// hints never do (they lead with a space and the key name).
+	return rendered.find((value) => value.slice(2).startsWith("→ "));
+}
+
+const fixtureRaw = JSON.parse(
+	readFileSync(join(import.meta.dirname, "..", "catalog", "fixtures", "account-snapshot-v1.json"), "utf8"),
+);
+
+const manyModelsFixture = parseAndValidateModelCatalog(
+	JSON.stringify({
+		...fixtureRaw,
+		modelOfferings: Array.from({ length: 30 }, (_, index) => ({
+			...fixtureRaw.modelOfferings[0],
+			id: `ai.example.gateway/model-${index}`,
+			modelId: `model-${index}`,
+			name: `Example Model ${index}`,
+		})),
+	}),
+	{ remote: true },
+);
+
 const identityTheme = {
 	fg: (_role, value) => value,
 	bg: (_role, value) => value,
@@ -60,7 +88,7 @@ function setup(options = {}) {
 			requestRender() {
 				renders.push(true);
 			},
-			terminal: { rows: 32, columns: 100 },
+			terminal: { rows: options.rows ?? 32, columns: options.columns ?? 100 },
 		},
 		theme: identityTheme,
 		keybindings: options.keybindings ?? fakeKeybindings(),
@@ -442,3 +470,339 @@ for (const editing of [false, true]) {
 		}
 	});
 }
+
+test("Catalogs view keeps the selected row and footer inside the overlay budget with many sources", () => {
+	const { root, paths, context } = setup({ rows: 20 });
+	try {
+		const store = new CatalogSourceStore(paths);
+		for (let index = 0; index < 12; index += 1) {
+			store.add({ label: `Pool ${index}`, url: `https://pool${index}.example/catalog`, auth: { type: "none" } });
+		}
+		const component = new CatalogSettingsComponent({ context, paths, env: {} });
+		const budget = overlayBudget(20);
+		const labels = ["Shisa API", ...Array.from({ length: 12 }, (_, index) => `Pool ${index}`)];
+		for (let step = 0; step < labels.length; step += 1) {
+			const rendered = component.render(84);
+			assert.ok(rendered.length <= budget, `render stays within ${budget} rows at step ${step}`);
+			assert.match(rendered.join("\n"), /Model Catalogs/u);
+			assert.match(rendered.join("\n"), /Enter edit/u, "footer key bar stays visible");
+			const marker = selectedLine(rendered);
+			assert.ok(marker?.includes(labels[step]), `selected row ${labels[step]} stays visible at step ${step}`);
+			assert.ok(rendered.every((line) => terminalTextWidth(line) <= 84));
+			component.handleInput("down");
+		}
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("Catalogs view renders mixed-width labels and transport warnings within 48 columns", () => {
+	const { root, paths, context } = setup({ rows: 24 });
+	try {
+		const store = new CatalogSourceStore(paths);
+		store.add({ label: "オフィスモデルプール", url: "http://example.test/catalog", auth: { type: "none" } });
+		const component = new CatalogSettingsComponent({ context, paths, env: {} });
+		component.handleInput("down");
+		const budget = overlayBudget(24);
+		const rendered = component.render(48);
+		assert.ok(rendered.length <= budget, `render stays within ${budget} rows`);
+		assert.ok(
+			rendered.every((line) => terminalTextWidth(line) <= 48),
+			"every line fits 48 columns",
+		);
+		assert.match(rendered.join("\n"), /Warning: This catalog uses HTTP/u);
+		assert.ok(selectedLine(rendered)?.includes("オフィスモデルプール"), "mixed-width label stays readable");
+		assert.match(rendered.join("\n"), /Enter edit/u, "footer key bar stays visible");
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("Bearer form keeps the transport warning and footer inside the budget on a short terminal", async () => {
+	const { root, paths, context } = setup({ rows: 20 });
+	try {
+		const component = new CatalogSettingsComponent({
+			context,
+			paths,
+			env: {},
+			discover: async () => {
+				throw new Error(
+					"Catalog authentication failed (HTTP 401). Check that the token variable is exported before Jouzu starts and contains a valid bearer token.",
+				);
+			},
+		});
+		const budget = overlayBudget(20);
+		component.handleInput("a");
+		for (const character of "Cleartext pool") component.handleInput(character);
+		component.handleInput("down");
+		for (const character of "http://example.test/other") component.handleInput(character);
+		component.handleInput("down");
+		component.handleInput("\u001b[C");
+		let rendered = component.render(52);
+		assert.ok(rendered.length <= budget, `form render stays within ${budget} rows`);
+		assert.match(rendered.join("\n"), /Warning: This catalog uses HTTP/u, "transport warning stays visible");
+		assert.match(rendered.join("\n"), /Token variable/u);
+		assert.match(rendered.join("\n"), /Enter save/u, "footer key bar stays visible");
+		assert.match(selectedLine(rendered) ?? "", /Authentication/u, "focused field stays marked");
+
+		component.handleInput("down");
+		rendered = component.render(52);
+		assert.ok(rendered.length <= budget);
+		assert.match(selectedLine(rendered) ?? "", /Token variable/u, "credential field can take focus");
+
+		component.handleInput("enter");
+		await new Promise((resolve) => setImmediate(resolve));
+		rendered = component.render(52);
+		assert.ok(rendered.length <= budget, `failed-save render stays within ${budget} rows`);
+		assert.match(rendered.join("\n"), /Warning: This catalog uses HTTP/u, "transport warning survives the error");
+		assert.match(rendered.join("\n"), /Catalog authentication failed \(HTTP 401\)/u);
+		assert.match(rendered.join("\n"), /Enter save/u, "footer key bar survives the error");
+		assert.ok(rendered.every((line) => terminalTextWidth(line) <= 52));
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("Expanding a source pages its offerings inside the overlay budget", async () => {
+	const { root, paths, context } = setup({ rows: 24 });
+	try {
+		const store = new CatalogSourceStore(paths);
+		const source = store.add({
+			label: "Paged pool",
+			url: "https://paged.example/v1/jouzu/model-catalog",
+			auth: { type: "none" },
+		});
+		await refreshCatalogSource(paths, source, { env: {}, fetch: async () => response(manyModelsFixture) });
+		const component = new CatalogSettingsComponent({ context, paths, env: {} });
+		component.handleInput("down");
+		component.handleInput("\u001b[C");
+		const budget = overlayBudget(24);
+		let rendered = component.render(84);
+		assert.ok(rendered.length <= budget, `expanded render stays within ${budget} rows`);
+		assert.match(rendered.join("\n"), /Example Model 0/u);
+		assert.match(rendered.join("\n"), /1-8\/30/u, "paging hint names the visible window");
+		assert.ok(selectedLine(rendered)?.includes("Paged pool"), "selected source row stays visible while expanded");
+		assert.match(rendered.join("\n"), /Enter edit/u, "footer key bar stays visible while expanded");
+
+		component.handleInput("pageDown");
+		rendered = component.render(84);
+		assert.ok(rendered.length <= budget);
+		assert.match(rendered.join("\n"), /9-16\/30/u);
+
+		component.handleInput("pageDown");
+		rendered = component.render(84);
+		assert.ok(rendered.length <= budget);
+		assert.match(rendered.join("\n"), /17-24\/30/u);
+
+		component.handleInput("pageDown");
+		rendered = component.render(84);
+		assert.ok(rendered.length <= budget);
+		assert.match(rendered.join("\n"), /23-30\/30/u, "paging clamps at the end of the catalog");
+
+		component.handleInput("pageDown");
+		assert.match(component.render(84).join("\n"), /23-30\/30/u);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("Paging steps by the rendered capacity so every offering stays reachable", async () => {
+	const { root, paths, context } = setup({ rows: 20 });
+	try {
+		const store = new CatalogSourceStore(paths);
+		const source = store.add({
+			label: "Paged pool",
+			url: "https://paged.example/v1/jouzu/model-catalog",
+			auth: { type: "none" },
+		});
+		await refreshCatalogSource(paths, source, { env: {}, fetch: async () => response(manyModelsFixture) });
+		const component = new CatalogSettingsComponent({ context, paths, env: {} });
+		component.handleInput("down");
+		component.handleInput("\u001b[C");
+		const budget = overlayBudget(20);
+		// The 20-row budget leaves room for a five-row page, smaller than the
+		// historical fixed eight; paging must follow the page size, not skip it.
+		const windows = ["1-5/30", "6-10/30", "11-15/30", "16-20/30", "21-25/30", "26-30/30"];
+		for (const [step, window] of windows.entries()) {
+			const rendered = component.render(84);
+			assert.ok(rendered.length <= budget, `render stays within ${budget} rows at window ${window}`);
+			assert.ok(rendered.join("\n").includes(window), `window ${step} (${window}) shown`);
+			assert.match(rendered.join("\n"), /Enter edit/u, "footer stays visible");
+			if (step < windows.length - 1) component.handleInput("pageDown");
+		}
+		// Every offering appeared exactly once across the windows: no gaps, no
+		// silently skipped rows.
+		const seen = new Set(
+			component
+				.render(84)
+				.join("\n")
+				.match(/model-\d+/gu) ?? [],
+		);
+		assert.equal(seen.size, 5);
+		component.handleInput("pageUp");
+		assert.match(component.render(84).join("\n"), /21-25\/30/u, "pageUp walks back one full window");
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("Expansion survives moving the selection and pages the sticky source by capacity", async () => {
+	const { root, paths, context } = setup({ rows: 20 });
+	try {
+		const store = new CatalogSourceStore(paths);
+		const source = store.add({
+			label: "Paged pool",
+			url: "https://paged.example/v1/jouzu/model-catalog",
+			auth: { type: "none" },
+		});
+		await refreshCatalogSource(paths, source, { env: {}, fetch: async () => response(manyModelsFixture) });
+		const component = new CatalogSettingsComponent({ context, paths, env: {} });
+		const budget = overlayBudget(20);
+		component.handleInput("down");
+		component.handleInput("\u001b[C");
+		component.handleInput("up");
+		let rendered = component.render(84);
+		assert.ok(rendered.length <= budget, "sticky expansion stays within the budget");
+		assert.ok(selectedLine(rendered)?.includes("Shisa API"), "selection moved to the built-in source");
+		assert.match(rendered.join("\n"), /1-5\/30/u, "sticky source keeps a paged window");
+		assert.match(rendered.join("\n"), /Enter edit/u, "footer stays visible");
+
+		component.handleInput("pageDown");
+		rendered = component.render(84);
+		assert.ok(rendered.length <= budget);
+		assert.match(rendered.join("\n"), /6-10\/30/u, "sticky paging advances by the rendered capacity");
+		assert.doesNotMatch(rendered.join("\n"), /1-5\/30/u, "no overlapping re-show of the first window");
+
+		component.handleInput("\u001b[D");
+		assert.doesNotMatch(component.render(84).join("\n"), /Example Model/u, "left collapses the expansion");
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("A long failure message keeps its status and pages every recovery line", async () => {
+	const { root, paths, context } = setup({ rows: 24 });
+	try {
+		const detail =
+			"Catalog authentication failed (HTTP 401). Check that the token variable is exported before Jouzu starts and contains a valid bearer token. Ask the catalog operator for a current token, or point JOUZU_MODEL_CATALOG_TOKEN at a variable that holds one.";
+		const component = new CatalogSettingsComponent({
+			context,
+			paths,
+			env: {},
+			discover: async () => {
+				throw new Error(`${detail} ${detail}`);
+			},
+		});
+		const budget = overlayBudget(24);
+		component.handleInput("a");
+		for (const character of "Cleartext pool") component.handleInput(character);
+		component.handleInput("down");
+		for (const character of "http://example.test/other") component.handleInput(character);
+		component.handleInput("down");
+		component.handleInput("\u001b[C");
+		component.handleInput("enter");
+		await new Promise((resolve) => setImmediate(resolve));
+		const rendered = component.render(48);
+		assert.ok(rendered.length <= budget, `render stays within ${budget} rows`);
+		assert.match(rendered.join("\n"), /Catalog authentication failed \(HTTP 401\)/u, "status line kept");
+		assert.match(rendered.join("\n"), /1-\d+\/\d+/u, "message paging is visible");
+		const messages = rendered.join("\n");
+		let pages = messages;
+		for (let index = 0; index < 30; index++) {
+			component.handleInput("pageDown");
+			const page = component.render(48);
+			assert.ok(page.length <= budget);
+			pages += page.join("\n");
+		}
+		assert.match(pages, /holds one\./u, "the last recovery instruction remains reachable");
+		component.handleInput("pageUp");
+		assert.ok(component.render(48).length <= budget);
+		assert.match(rendered.join("\n"), /Warning: This catalog uses HTTP/u, "transport warning kept");
+		assert.match(rendered.join("\n"), /Enter save/u, "footer kept");
+		assert.match(rendered.join("\n"), /Token variable/u, "bearer field kept");
+		assert.ok(rendered.every((value) => terminalTextWidth(value) <= 48));
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("Short HTTP forms keep each focused field and page failures without clipping", async () => {
+	const { root, paths, context } = setup({ rows: 16 });
+	try {
+		const component = new CatalogSettingsComponent({
+			context,
+			paths,
+			env: {},
+			discover: async () => {
+				throw new Error("Authentication failed. " + "Detailed recovery instruction. ".repeat(20) + "END-RECOVERY");
+			},
+		});
+		component.handleInput("a");
+		component.handleInput("down");
+		for (const character of "http://example.test/other") component.handleInput(character);
+		component.handleInput("down");
+		component.handleInput("\u001b[C");
+		component.handleInput("enter");
+		await new Promise((resolve) => setImmediate(resolve));
+		for (const field of ["Authentication", "Token variable", "Label", "URL or host"]) {
+			const lines = component.render(48);
+			assert.ok(lines.length <= overlayBudget(16), lines.join("\n"));
+			assert.match(selectedLine(lines) ?? "", new RegExp(field));
+			assert.match(lines.join("\n"), /Warning: This catalog uses HTTP/u);
+			assert.match(lines.join("\n"), /Authentication failed/u);
+			assert.match(lines.join("\n"), /Enter save/u);
+			component.handleInput("down");
+		}
+		let pages = "";
+		for (let index = 0; index < 50; index++) {
+			const lines = component.render(48);
+			assert.ok(lines.length <= overlayBudget(16));
+			pages += lines.join("\n");
+			component.handleInput("pageDown");
+		}
+		assert.match(pages, /END-RECOVERY/u);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("At the 16-row floating floor the sources view keeps warning, selection, and footer", () => {
+	const { root, paths, context } = setup({ rows: 16 });
+	try {
+		const store = new CatalogSourceStore(paths);
+		store.add({ label: "Insecure pool", url: "http://example.test/catalog", auth: { type: "none" } });
+		const component = new CatalogSettingsComponent({ context, paths, env: {} });
+		component.handleInput("down");
+		const budget = overlayBudget(16);
+		const rendered = component.render(48);
+		assert.ok(rendered.length <= budget, `render stays within ${budget} rows`);
+		assert.match(rendered.join("\n"), /Warning: This catalog uses HTTP/u, "full transport warning kept");
+		assert.ok(selectedLine(rendered)?.includes("Insecure pool"), "selected row kept");
+		assert.match(rendered.join("\n"), /Enter edit/u, "footer kept");
+		assert.ok(rendered.every((value) => terminalTextWidth(value) <= 48));
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("At the 16-row floating floor the bearer form keeps the warning, focus, and footer", () => {
+	const { root, paths, context } = setup({ rows: 16 });
+	try {
+		const component = new CatalogSettingsComponent({ context, paths, env: {} });
+		const budget = overlayBudget(16);
+		component.handleInput("a");
+		for (const character of "Cleartext pool") component.handleInput(character);
+		component.handleInput("down");
+		for (const character of "http://example.test/other") component.handleInput(character);
+		component.handleInput("down");
+		component.handleInput("\u001b[C");
+		const rendered = component.render(48);
+		assert.ok(rendered.length <= budget, `render stays within ${budget} rows`);
+		assert.match(rendered.join("\n"), /Warning: This catalog uses HTTP/u, "full transport warning kept");
+		assert.match(rendered.join("\n"), /Enter save/u, "footer kept");
+		assert.match(selectedLine(rendered) ?? "", /Authentication/u, "focused field kept");
+		assert.ok(rendered.every((value) => terminalTextWidth(value) <= 48));
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
