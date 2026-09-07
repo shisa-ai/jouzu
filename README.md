@@ -2,9 +2,19 @@
 
 Jouzu is Shisa AI's agentic coding harness, built on [Pi coding agent](https://pi.dev/).
 
-It comes "batteries included," with the functionality and tools (including web-search, background tasks, advanced looping workflows) that we use every day. It is CJK-safe, with built-in Japanese localization, and also has direct integration with [Shisa AI's API service](https://platform.shisa.ai/), which provides 1-click access to the best and latest open source coding models.
+It comes batteries included with the tools and workflows we use every day:
 
-Jouzu v0.1.x is currently in **ALPHA**, but it should be relatively stable and usable for day-to-day tasks.
+- **Models that remember your choices.** Search providers and models in the Palette, keep favorites, and save project defaults and per-model reasoning preferences. [Shisa AI's API service](https://platform.shisa.ai/) supplies an account-aware model catalog when configured.
+- **Child agents with defined roles.** Assign a model, tools, instructions, and workspace; inspect results, send follow-ups, stop runs, and resume their conversations.
+- **Web search and readable pages.** Fetch pages directly or use browser-backed search and rendering. The browser runtime installs on first use.
+- **Background work without repeated interruptions.** Run shell jobs while you keep working, inspect logs, and receive batched unread completion summaries.
+- **Goals, loops, and scheduled work.** Track multi-step tasks, work toward a goal, run measured improvement loops, and schedule prompts.
+- **Searchable session history.** Recall earlier decisions and code after context compaction without keeping the whole conversation in the model's active context.
+- **Local content scanning.** TextGuard checks skills and web results before they reach the model. Review withheld content explicitly; scanning is not a guarantee of safety.
+- **Voice dictation.** Speak into an editable prompt with live previews and finalized transcription through Shisa. Requires realtime speech access; never auto-sends.
+- **Japanese and mixed-width text support.** Terminal layouts account for Japanese, Chinese, Korean, and emoji display widths. The optional Japanese profile adds language-focused instructions and skills; interface labels are English.
+
+Jouzu v0.1.x is **alpha** software. We use it for day-to-day work; review generated changes and test before relying on them.
 
 ## Requirements
 
@@ -67,7 +77,7 @@ The Palette shows Models, Workflow, and Settings as top-level sections; `Tab` an
 
 `Enter` selects the model and stores it as the user-local project default. A new session resolves an explicit `--model` first, then a resumed session's recorded model, then the project default, then the last dispatched model, then Jouzu's user-wide default and fallback. Restoring a project default or last dispatched model also restores that model's saved thinking (reasoning) level unless you pass `--thinking`. Explicit resume, continue, session, model, and scoped-model arguments bypass project-default and last-model injection.
 
-`Ctrl+F` toggles a favorite while browsing and while searching; rebind it through the `jouzu.model.toggleFavorite` action in `keybindings.json`. `Ctrl+P` cycles the favorite list without leaving the current effective model scope. Each model remembers its thinking level when you switch back to it; an explicit scoped-model thinking level takes precedence. Changing the thinking level saves the preference immediately, even before another request. Recency changes only after the selected model dispatches its first request, which records its thinking level in global and project recents. Clearing recents keeps explicit thinking preferences. Project defaults, favorites, recents, thinking preferences, the last dispatched model, and the last model view remain in local Jouzu state and contain no prompts, tool results, credentials, or raw project paths.
+`Ctrl+F` toggles a favorite while browsing and while searching; rebind it through the `jouzu.model.toggleFavorite` action in `keybindings.json`. `Ctrl+P` cycles the favorite list without leaving the current effective model scope. Each model remembers your explicit thinking-level override when you switch back to it. Without an override, Jouzu uses the catalog offering's `defaultThinkingLevel`, then Pi's configured default. Dispatch history does not override these defaults. Explicit startup thinking arguments, resumed-session levels, and scoped-model thinking pins retain precedence. Changing the thinking level saves the preference immediately, even before another request. Recency changes only after the selected model dispatches its first request, which records its thinking level in global and project recents. Clearing recents keeps explicit thinking preferences. Project defaults, favorites, recents, thinking preferences, the last dispatched model, and the last model view remain in local Jouzu state and contain no prompts, tool results, credentials, or raw project paths.
 
 A direct switch is blocked only when the estimated active context plus a 4,096-token safety margin exceeds the target model's context window. Selecting a `context-small` model opens a confirmation: press `Enter` again to compact the full active transcript into a brief and switch after Jouzu rechecks the context, or press `Esc` to cancel. Bundled pi-vcc handles this compaction under the default profile settings. Jouzu does not infer cache compatibility, model equivalence, cost, routing, privacy, retention, region, or certification guarantees. Those properties belong to the provider and configuration you select unless Jouzu reports verified facts explicitly.
 

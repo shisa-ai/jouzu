@@ -1,5 +1,32 @@
 # Changelog
 
+## Unreleased — v0.1.8
+
+### Added
+
+- Scan skills and web results locally with bundled TextGuard, enabled by default without a separate Python installation. Use `/textguard` to review withheld content and approve it for the current session. `--jouzu-textguard-files` also checks ordinary file reads, including child-agent reads. Scanning does not establish that content is safe.
+- Dictate into the prompt with `/voice`. See live transcription while recording, then use `/voice stop` to insert final text for editing. Missing speech is marked `[garbled]`; the prompt is never sent automatically. Requires `SHISA_API_KEY` with realtime speech access. Audio goes to Shisa; Jouzu writes no recording files.
+- Build a source checkout with `npm run dev:setup`. Global linking through `npm run dev:link` and automatic rebuild hooks are opt-in.
+
+### Changed
+
+- Remember your reasoning-level override for each model. Without an override, use the catalog's default reasoning level, then the configured global default. Explicit startup settings and resumed-session settings retain precedence.
+- Batch unread background-task and child-agent completions after active work and queued messages finish. Results the agent has already read do not trigger another completion response. The agent can acknowledge a delivered batch with **No reply needed** without generating another response.
+- Show child runs with themed status, model, assignment, and outcome summaries instead of raw JSON. Expanded output includes usage and review details; completion does not mean the work was approved.
+- Let child agents use a chosen working directory and read sibling repositories with their enabled tools. The working directory is not a filesystem sandbox. Review identity checks cover the selected checkout, not every repository mentioned in an assignment.
+- Raise default child limits to 500 turns and two hours. Saved role settings and active runs keep their existing limits.
+- Align Palette tabs, Workflow and Settings rows, selection highlights, and status colors. Allow plain-HTTP catalog sources with a warning that authentication tokens are sent unencrypted.
+
+### Fixed
+
+- Deliver child completion and queued-cancellation notifications across parent turns, and retain unread completion records across reloads.
+- Preserve line breaks in child output and separate run details from their actions in Workflow.
+- Build declared Git dependencies and prepare native TextGuard checks during source setup.
+
+### Testing limits
+
+- Voice microphone permissions, device behavior, and transcription quality still need live testing. Over SSH, capture uses the microphone on the machine running Jouzu.
+
 ## 0.1.7 - 2026-09-05
 
 ### Added
