@@ -1,3 +1,4 @@
+// Modified for Jouzu: isolate Windows home-directory configuration in tests.
 package textguard
 
 import (
@@ -10,6 +11,10 @@ import (
 // helper: setEnv sets an env var for the duration of a test and restores it on cleanup.
 func setEnv(t *testing.T, key, value string) {
 	t.Helper()
+	if key == "HOME" {
+		// os.UserHomeDir uses USERPROFILE on Windows rather than HOME.
+		setEnv(t, "USERPROFILE", value)
+	}
 	old, existed := os.LookupEnv(key)
 	os.Setenv(key, value)
 	t.Cleanup(func() {

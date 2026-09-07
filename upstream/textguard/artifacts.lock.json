@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "protocol": 1,
   "policy": "default-trimmed-split-bundled-v1",
-  "sourceDigest": "d1746eb8811fb6df70d35db7505f179705a576b854895bb5b39a070cb882c56b",
+  "sourceDigest": "39223bc89ad63c32f66baa94c2709f5babaef9092a1df90b65660c9e7bd9102b",
   "toolchain": "go1.26.1",
   "artifacts": {
     "linux-amd64": {
