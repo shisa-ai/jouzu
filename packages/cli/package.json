@@ -53,7 +53,7 @@
 		"@picovoice/pvrecorder-node": "1.2.9",
 		"@sinclair/typebox": "0.34.52",
 		"@sting8k/pi-vcc": "0.7.0",
-		"@vanillagreen/pi-background-tasks": "git+https://github.com/shisa-ai/kendex.git#84694a0a6392f1e8cc76eebe944cb1d5e092356e",
+		"@vanillagreen/pi-background-tasks": "git+https://github.com/shisa-ai/kendex.git#1c4e7a6b3469fa6bfd3337b36df45ddea6014eda",
 		"esbuild": "0.28.1",
 		"pi-code-previews": "0.1.36",
 		"pi-multiloop": "git+https://github.com/lhl/pi-multiloop.git#cffc0e58987249dd16d74f1b554623cd103d10d3",

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
-const commit = "84694a0a6392f1e8cc76eebe944cb1d5e092356e";
+const commit = "1c4e7a6b3469fa6bfd3337b36df45ddea6014eda";
 const name = "@vanillagreen/pi-background-tasks";
 const readJson = (path) => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
 
