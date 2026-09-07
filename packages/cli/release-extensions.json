@@ -15,9 +15,9 @@
 		{
 			"name": "@vanillagreen/pi-background-tasks",
 			"version": "2.0.0",
-			"source": "https://registry.npmjs.org/@vanillagreen/pi-background-tasks/-/pi-background-tasks-2.0.0.tgz",
-			"integrity": "sha512-HQwFxRkvWO8m+ki7IMNyP4HUM2ZOw1elfrhRYKZZrQJmtSi5w1gJ2CDzur4b2ABLLgpSLmqzMI/ldvm2sZq2Jg==",
-			"repository": "https://github.com/vanillagreencom/kendex/tree/main/pi-extensions/pi-background-tasks",
+			"source": "git+https://github.com/shisa-ai/kendex.git#84694a0a6392f1e8cc76eebe944cb1d5e092356e",
+			"commit": "84694a0a6392f1e8cc76eebe944cb1d5e092356e",
+			"repository": "https://github.com/shisa-ai/kendex/tree/packages/pi-background-tasks",
 			"license": "MIT",
 			"licenseEvidence": "package.json and THIRD_PARTY_NOTICES.md",
 			"extensions": ["extensions/background-tasks.ts"],
