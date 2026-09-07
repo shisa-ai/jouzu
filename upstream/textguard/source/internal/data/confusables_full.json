@@ -1,0 +1,8478 @@
+{
+  "mappings": {
+    "00F6": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "ة",
+      "target_scripts": [
+        "Arabic"
+      ]
+    },
+    "019B": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "λ̸",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "02B3": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "ᣴ",
+      "target_scripts": [
+        "Canadian_Aboriginal"
+      ]
+    },
+    "02E1": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "ᣳ",
+      "target_scripts": [
+        "Canadian_Aboriginal"
+      ]
+    },
+    "02E2": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "ᣵ",
+      "target_scripts": [
+        "Canadian_Aboriginal"
+      ]
+    },
+    "0370": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ⱶ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0376": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "И",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "0377": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ᴎ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "037A": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "i",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "037B": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ɔ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "037D": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ꜿ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "037F": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "J",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0391": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "A",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0392": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "B",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0395": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "E",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0396": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Z",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0397": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "H",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0398": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "O̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0399": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "039A": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "K",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "039B": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ʌ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "039C": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "M",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "039D": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "N",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "039F": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03A1": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "P",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03A3": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ʃ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03A4": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "T",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03A5": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03A7": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "X",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03B1": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "a",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03B2": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ß",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03B3": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03B4": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ẟ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03B5": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ꞓ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03B7": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "n̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03B8": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "O̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03B9": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "i",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03BA": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ĸ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03BD": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "v",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03BF": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03C1": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "p",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03C3": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03C4": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ᴛ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03C5": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "u",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03C6": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ɸ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03D0": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ß",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03D1": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "O̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03D2": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03D5": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ɸ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03DC": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "F",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03E4": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "Ч",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "03E5": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ч",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "03E9": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ƨ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03ED": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03F0": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ĸ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03F1": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "p",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03F2": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "c",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03F3": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "j",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03F4": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "O̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03F5": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ꞓ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03F7": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Þ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03F8": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "p",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03F9": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "C",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03FA": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "M",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03FD": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ɔ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03FF": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ꜿ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0404": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Ꞓ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0405": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "S",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0406": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0408": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "J",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0410": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "A",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0411": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "b̄",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0412": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "B",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0413": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Γ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "0415": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "E",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "041A": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "K",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "041B": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Ʌ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "041C": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "M",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "041D": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "H",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "041E": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "041F": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Π",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "0420": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "P",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0421": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "C",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0422": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "T",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0423": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0424": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Φ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "0425": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "X",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "042B": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "bl",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "042C": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "b",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "042E": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "lO",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0430": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "a",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0432": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ʙ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0433": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "r",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0435": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "e",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0437": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ɜ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0438": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ᴎ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "043A": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ĸ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "043C": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ʍ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "043D": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ʜ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "043E": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "043F": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "π",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "0440": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "p",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0441": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "c",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0442": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ᴛ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0443": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0444": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ɸ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0445": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "x",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0448": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "w",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "044A": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ˉb",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "044B": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ƅi",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "044C": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ƅ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "044F": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ᴙ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0454": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ꞓ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0455": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "s",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0456": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "i",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0458": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "j",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "045B": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "h̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "045F": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "u̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0461": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "w",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0462": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "b̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0463": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "b̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0470": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Ψ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "0471": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ψ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "0472": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "O̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0473": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "o̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0474": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "V",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0475": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "v",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "047D": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "w҆҇",
+      "target_scripts": [
+        "Cyrillic",
+        "Latin"
+      ]
+    },
+    "048C": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "b̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "048D": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "b̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0490": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Γ'",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "0491": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "r'",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0492": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Γ̵",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "0493": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "r̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0499": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ɜ̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "049A": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "K̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "049B": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ĸ̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "049E": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "K̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "049F": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ĸ̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04A2": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "H̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04A3": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ʜ̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04AA": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "C̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04AB": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "c̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04AC": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "T̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04AD": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ᴛ̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04AE": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04AF": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04B0": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Y̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04B1": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "y̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04B2": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "X̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04BB": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "h",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04BD": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "e",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04BF": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ę",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04C0": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04C5": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Ʌ̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04C7": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "H̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04C8": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ʜ̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04C9": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "H̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04CA": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ʜ̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04CD": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "M̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04CE": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ʍ̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04CF": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04D4": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "AE",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04D5": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ae",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04D8": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Ə",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04D9": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ǝ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04E1": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ȝ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04E8": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "O̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04E9": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "o̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0501": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "d",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "050A": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Ƕ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "050C": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "G",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "050D": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ɢ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0510": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Ɛ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0511": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ꞓ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "051B": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "q",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "051C": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "W",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "051D": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "w",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "053B": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "ኮ",
+      "target_scripts": [
+        "Ethiopic"
+      ]
+    },
+    "0544": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "ሆ",
+      "target_scripts": [
+        "Ethiopic"
+      ]
+    },
+    "054A": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "ጣ",
+      "target_scripts": [
+        "Ethiopic"
+      ]
+    },
+    "054C": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "ቡ",
+      "target_scripts": [
+        "Ethiopic"
+      ]
+    },
+    "054D": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "U",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "054F": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "S",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0553": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "Φ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "0555": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0561": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "w",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0563": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "q",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0566": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "q",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "056E": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "ẟ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0570": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "h",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0572": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "n̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0575": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "ȷ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0578": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "n",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "057A": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "ɰ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "057C": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "n",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "057D": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "u",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0581": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "g",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0582": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "i",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0584": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "f",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0585": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0587": {
+      "mapping_type": "MA",
+      "source_script": "Armenian",
+      "target": "եi",
+      "target_scripts": [
+        "Armenian",
+        "Latin"
+      ]
+    },
+    "05C0": {
+      "mapping_type": "MA",
+      "source_script": "Hebrew",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "05D5": {
+      "mapping_type": "MA",
+      "source_script": "Hebrew",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "05D8": {
+      "mapping_type": "MA",
+      "source_script": "Hebrew",
+      "target": "v",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "05DF": {
+      "mapping_type": "MA",
+      "source_script": "Hebrew",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "05E1": {
+      "mapping_type": "MA",
+      "source_script": "Hebrew",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "05F0": {
+      "mapping_type": "MA",
+      "source_script": "Hebrew",
+      "target": "ll",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "05F1": {
+      "mapping_type": "MA",
+      "source_script": "Hebrew",
+      "target": "l'",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0609": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "º/₀₀",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "060A": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "º/₀₀₀",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0623": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "lٴ",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "0625": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "lٕ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0627": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0647": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0661": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0665": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0667": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "V",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0668": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "Ʌ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "066A": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "º/₀",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0672": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "lٴ",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "0673": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "lٕ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0675": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "lٴ",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "06BE": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "06C1": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "06D5": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "06F1": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "06F5": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "06F7": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "V",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "06F8": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "Ʌ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "06FF": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "ô",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "07C0": {
+      "mapping_type": "MA",
+      "source_script": "Nko",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "07CA": {
+      "mapping_type": "MA",
+      "source_script": "Nko",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0910": {
+      "mapping_type": "MA",
+      "source_script": "Devanagari",
+      "target": "ए𑭤",
+      "target_scripts": [
+        "Devanagari",
+        "Sharada"
+      ]
+    },
+    "0913": {
+      "mapping_type": "MA",
+      "source_script": "Devanagari",
+      "target": "अा𑭤",
+      "target_scripts": [
+        "Devanagari",
+        "Sharada"
+      ]
+    },
+    "093F": {
+      "mapping_type": "MA",
+      "source_script": "Devanagari",
+      "target": "ি",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "0947": {
+      "mapping_type": "MA",
+      "source_script": "Devanagari",
+      "target": "𑭤",
+      "target_scripts": [
+        "Sharada"
+      ]
+    },
+    "0956": {
+      "mapping_type": "MA",
+      "source_script": "Devanagari",
+      "target": "𑭢",
+      "target_scripts": [
+        "Sharada"
+      ]
+    },
+    "0957": {
+      "mapping_type": "MA",
+      "source_script": "Devanagari",
+      "target": "𑭣",
+      "target_scripts": [
+        "Sharada"
+      ]
+    },
+    "0966": {
+      "mapping_type": "MA",
+      "source_script": "Devanagari",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0967": {
+      "mapping_type": "MA",
+      "source_script": "Devanagari",
+      "target": "٩",
+      "target_scripts": [
+        "Arabic"
+      ]
+    },
+    "09E6": {
+      "mapping_type": "MA",
+      "source_script": "Bengali",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0A03": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "ঃ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "0A07": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "प्टি",
+      "target_scripts": [
+        "Bengali",
+        "Devanagari"
+      ]
+    },
+    "0A08": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "प्टੀ",
+      "target_scripts": [
+        "Devanagari",
+        "Gurmukhi"
+      ]
+    },
+    "0A09": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "ੳ𑭢",
+      "target_scripts": [
+        "Gurmukhi",
+        "Sharada"
+      ]
+    },
+    "0A0A": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "ੳ𑭣",
+      "target_scripts": [
+        "Gurmukhi",
+        "Sharada"
+      ]
+    },
+    "0A0F": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "प्ट𑭤",
+      "target_scripts": [
+        "Devanagari",
+        "Sharada"
+      ]
+    },
+    "0A10": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "ਅै",
+      "target_scripts": [
+        "Devanagari",
+        "Gurmukhi"
+      ]
+    },
+    "0A15": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "व",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0A1C": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "त्त",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0A1F": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "ट",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0A20": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "ठ",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0A24": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "उ",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0A27": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "प",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0A2B": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "ढ",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0A2E": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "भ",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0A35": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "ह",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0A38": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "म",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0A3F": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "ি",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "0A41": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "𑭢",
+      "target_scripts": [
+        "Sharada"
+      ]
+    },
+    "0A42": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "𑭣",
+      "target_scripts": [
+        "Sharada"
+      ]
+    },
+    "0A47": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "𑭤",
+      "target_scripts": [
+        "Sharada"
+      ]
+    },
+    "0A48": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "ै",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0A4B": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "ॆ",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0A4D": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "्",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0A66": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0A72": {
+      "mapping_type": "MA",
+      "source_script": "Gurmukhi",
+      "target": "प्ट",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0AAA": {
+      "mapping_type": "MA",
+      "source_script": "Gujarati",
+      "target": "ч",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "0AB0": {
+      "mapping_type": "MA",
+      "source_script": "Gujarati",
+      "target": "२",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0ABD": {
+      "mapping_type": "MA",
+      "source_script": "Gujarati",
+      "target": "ऽ",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0AC1": {
+      "mapping_type": "MA",
+      "source_script": "Gujarati",
+      "target": "ु",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0AC2": {
+      "mapping_type": "MA",
+      "source_script": "Gujarati",
+      "target": "ू",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0ACD": {
+      "mapping_type": "MA",
+      "source_script": "Gujarati",
+      "target": "्",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0AE6": {
+      "mapping_type": "MA",
+      "source_script": "Gujarati",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0AE8": {
+      "mapping_type": "MA",
+      "source_script": "Gujarati",
+      "target": "२",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0AEA": {
+      "mapping_type": "MA",
+      "source_script": "Gujarati",
+      "target": "४",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0AEB": {
+      "mapping_type": "MA",
+      "source_script": "Gujarati",
+      "target": "ч",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "0AEE": {
+      "mapping_type": "MA",
+      "source_script": "Gujarati",
+      "target": "८",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0AF0": {
+      "mapping_type": "MA",
+      "source_script": "Gujarati",
+      "target": "॰",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0B20": {
+      "mapping_type": "MA",
+      "source_script": "Oriya",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0B66": {
+      "mapping_type": "MA",
+      "source_script": "Oriya",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0BE6": {
+      "mapping_type": "MA",
+      "source_script": "Tamil",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0C02": {
+      "mapping_type": "MA",
+      "source_script": "Telugu",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0C03": {
+      "mapping_type": "MA",
+      "source_script": "Telugu",
+      "target": "ঃ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "0C16": {
+      "mapping_type": "MA",
+      "source_script": "Telugu",
+      "target": "ಖ̣",
+      "target_scripts": [
+        "Kannada"
+      ]
+    },
+    "0C20": {
+      "mapping_type": "MA",
+      "source_script": "Telugu",
+      "target": "రּ",
+      "target_scripts": [
+        "Hebrew",
+        "Telugu"
+      ]
+    },
+    "0C25": {
+      "mapping_type": "MA",
+      "source_script": "Telugu",
+      "target": "ధּ",
+      "target_scripts": [
+        "Hebrew",
+        "Telugu"
+      ]
+    },
+    "0C66": {
+      "mapping_type": "MA",
+      "source_script": "Telugu",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0C82": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0C83": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ঃ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "0C85": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "అ",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0C86": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ఆ",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0C87": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ఇ",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0C90": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ఐ",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0C92": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ఒ",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0C93": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ఒౕ",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0C94": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ఒౌ",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0C97": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "గ",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0C9C": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "జ",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0C9D": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ఝ",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0C9E": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ఞ",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0C9F": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ట",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0CA3": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ణ",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0CA6": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ద",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0CA8": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "న",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0CAF": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "య",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0CB0": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ర",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0CB1": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ఱ",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0CB2": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ల",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0CB3": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ళ",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0CBF": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ి",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0CC1": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ు",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0CC3": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "ృ",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0CDC": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "౜",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0CE6": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0CE7": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "౧",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0CE8": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "౨",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0CEF": {
+      "mapping_type": "MA",
+      "source_script": "Kannada",
+      "target": "౯",
+      "target_scripts": [
+        "Telugu"
+      ]
+    },
+    "0D02": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0D03": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "ঃ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "0D09": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "உ",
+      "target_scripts": [
+        "Tamil"
+      ]
+    },
+    "0D0A": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "உൗ",
+      "target_scripts": [
+        "Malayalam",
+        "Tamil"
+      ]
+    },
+    "0D10": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "ெഎ",
+      "target_scripts": [
+        "Malayalam",
+        "Tamil"
+      ]
+    },
+    "0D16": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "வ",
+      "target_scripts": [
+        "Tamil"
+      ]
+    },
+    "0D1C": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "ஐ",
+      "target_scripts": [
+        "Tamil"
+      ]
+    },
+    "0D1F": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "s",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0D20": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0D23": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "ண",
+      "target_scripts": [
+        "Tamil"
+      ]
+    },
+    "0D25": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "ம",
+      "target_scripts": [
+        "Tamil"
+      ]
+    },
+    "0D34": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "ழ",
+      "target_scripts": [
+        "Tamil"
+      ]
+    },
+    "0D36": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "ஶ",
+      "target_scripts": [
+        "Tamil"
+      ]
+    },
+    "0D3A": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "டி",
+      "target_scripts": [
+        "Tamil"
+      ]
+    },
+    "0D3F": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "ி",
+      "target_scripts": [
+        "Tamil"
+      ]
+    },
+    "0D40": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "ி",
+      "target_scripts": [
+        "Tamil"
+      ]
+    },
+    "0D46": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "ெ",
+      "target_scripts": [
+        "Tamil"
+      ]
+    },
+    "0D47": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "ே",
+      "target_scripts": [
+        "Tamil"
+      ]
+    },
+    "0D48": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "ெெ",
+      "target_scripts": [
+        "Tamil"
+      ]
+    },
+    "0D4E": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "ॱ",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "0D5F": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "oരo",
+      "target_scripts": [
+        "Latin",
+        "Malayalam"
+      ]
+    },
+    "0D66": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0D7A": {
+      "mapping_type": "MA",
+      "source_script": "Malayalam",
+      "target": "ண്",
+      "target_scripts": [
+        "Malayalam",
+        "Tamil"
+      ]
+    },
+    "0D82": {
+      "mapping_type": "MA",
+      "source_script": "Sinhala",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0D83": {
+      "mapping_type": "MA",
+      "source_script": "Sinhala",
+      "target": "ঃ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "0E50": {
+      "mapping_type": "MA",
+      "source_script": "Thai",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0E88": {
+      "mapping_type": "MA",
+      "source_script": "Lao",
+      "target": "จ",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "0E8D": {
+      "mapping_type": "MA",
+      "source_script": "Lao",
+      "target": "ย",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "0E9A": {
+      "mapping_type": "MA",
+      "source_script": "Lao",
+      "target": "บ",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "0E9B": {
+      "mapping_type": "MA",
+      "source_script": "Lao",
+      "target": "ป",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "0E9D": {
+      "mapping_type": "MA",
+      "source_script": "Lao",
+      "target": "ฝ",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "0E9E": {
+      "mapping_type": "MA",
+      "source_script": "Lao",
+      "target": "พ",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "0E9F": {
+      "mapping_type": "MA",
+      "source_script": "Lao",
+      "target": "ฟ",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "0EB8": {
+      "mapping_type": "MA",
+      "source_script": "Lao",
+      "target": "ุ",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "0EB9": {
+      "mapping_type": "MA",
+      "source_script": "Lao",
+      "target": "ู",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "0EC8": {
+      "mapping_type": "MA",
+      "source_script": "Lao",
+      "target": "่",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "0EC9": {
+      "mapping_type": "MA",
+      "source_script": "Lao",
+      "target": "้",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "0ECA": {
+      "mapping_type": "MA",
+      "source_script": "Lao",
+      "target": "๊",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "0ECB": {
+      "mapping_type": "MA",
+      "source_script": "Lao",
+      "target": "๋",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "0ED0": {
+      "mapping_type": "MA",
+      "source_script": "Lao",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1000": {
+      "mapping_type": "MA",
+      "source_script": "Myanmar",
+      "target": "രာ",
+      "target_scripts": [
+        "Malayalam",
+        "Myanmar"
+      ]
+    },
+    "1002": {
+      "mapping_type": "MA",
+      "source_script": "Myanmar",
+      "target": "ര",
+      "target_scripts": [
+        "Malayalam"
+      ]
+    },
+    "1004": {
+      "mapping_type": "MA",
+      "source_script": "Myanmar",
+      "target": "c",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1010": {
+      "mapping_type": "MA",
+      "source_script": "Myanmar",
+      "target": "oာ",
+      "target_scripts": [
+        "Latin",
+        "Myanmar"
+      ]
+    },
+    "1018E": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "N̊",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "101A0": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ք",
+      "target_scripts": [
+        "Armenian"
+      ]
+    },
+    "101D": {
+      "mapping_type": "MA",
+      "source_script": "Myanmar",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1023": {
+      "mapping_type": "MA",
+      "source_script": "Myanmar",
+      "target": "രာ္രာ",
+      "target_scripts": [
+        "Malayalam",
+        "Myanmar"
+      ]
+    },
+    "10282": {
+      "mapping_type": "MA",
+      "source_script": "Lycian",
+      "target": "B",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10285": {
+      "mapping_type": "MA",
+      "source_script": "Lycian",
+      "target": "Δ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "10286": {
+      "mapping_type": "MA",
+      "source_script": "Lycian",
+      "target": "E",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10287": {
+      "mapping_type": "MA",
+      "source_script": "Lycian",
+      "target": "F",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1028A": {
+      "mapping_type": "MA",
+      "source_script": "Lycian",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1028D": {
+      "mapping_type": "MA",
+      "source_script": "Lycian",
+      "target": "Ʌ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10290": {
+      "mapping_type": "MA",
+      "source_script": "Lycian",
+      "target": "X",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10292": {
+      "mapping_type": "MA",
+      "source_script": "Lycian",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10294": {
+      "mapping_type": "MA",
+      "source_script": "Lycian",
+      "target": "ᛜ",
+      "target_scripts": [
+        "Runic"
+      ]
+    },
+    "10295": {
+      "mapping_type": "MA",
+      "source_script": "Lycian",
+      "target": "P",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10296": {
+      "mapping_type": "MA",
+      "source_script": "Lycian",
+      "target": "S",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10297": {
+      "mapping_type": "MA",
+      "source_script": "Lycian",
+      "target": "T",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "102A": {
+      "mapping_type": "MA",
+      "source_script": "Myanmar",
+      "target": "သြେာ်",
+      "target_scripts": [
+        "Myanmar",
+        "Oriya"
+      ]
+    },
+    "102A0": {
+      "mapping_type": "MA",
+      "source_script": "Carian",
+      "target": "A",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "102A1": {
+      "mapping_type": "MA",
+      "source_script": "Carian",
+      "target": "B",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "102A2": {
+      "mapping_type": "MA",
+      "source_script": "Carian",
+      "target": "C",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "102A3": {
+      "mapping_type": "MA",
+      "source_script": "Carian",
+      "target": "Δ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "102A5": {
+      "mapping_type": "MA",
+      "source_script": "Carian",
+      "target": "F",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "102AB": {
+      "mapping_type": "MA",
+      "source_script": "Carian",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "102AD": {
+      "mapping_type": "MA",
+      "source_script": "Carian",
+      "target": "Ϙ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "102B0": {
+      "mapping_type": "MA",
+      "source_script": "Carian",
+      "target": "M",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "102B1": {
+      "mapping_type": "MA",
+      "source_script": "Carian",
+      "target": "T",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "102B2": {
+      "mapping_type": "MA",
+      "source_script": "Carian",
+      "target": "Y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "102B3": {
+      "mapping_type": "MA",
+      "source_script": "Carian",
+      "target": "Φ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "102B4": {
+      "mapping_type": "MA",
+      "source_script": "Carian",
+      "target": "X",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "102B5": {
+      "mapping_type": "MA",
+      "source_script": "Carian",
+      "target": "Ψ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "102B6": {
+      "mapping_type": "MA",
+      "source_script": "Carian",
+      "target": "Ω",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "102B8": {
+      "mapping_type": "MA",
+      "source_script": "Carian",
+      "target": "ⵀ",
+      "target_scripts": [
+        "Tifinagh"
+      ]
+    },
+    "102CF": {
+      "mapping_type": "MA",
+      "source_script": "Carian",
+      "target": "H",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10301": {
+      "mapping_type": "MA",
+      "source_script": "Old_Italic",
+      "target": "B",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10302": {
+      "mapping_type": "MA",
+      "source_script": "Old_Italic",
+      "target": "C",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10309": {
+      "mapping_type": "MA",
+      "source_script": "Old_Italic",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1031": {
+      "mapping_type": "MA",
+      "source_script": "Myanmar",
+      "target": "େ",
+      "target_scripts": [
+        "Oriya"
+      ]
+    },
+    "10311": {
+      "mapping_type": "MA",
+      "source_script": "Old_Italic",
+      "target": "M",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10312": {
+      "mapping_type": "MA",
+      "source_script": "Old_Italic",
+      "target": "Ϙ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "10315": {
+      "mapping_type": "MA",
+      "source_script": "Old_Italic",
+      "target": "T",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10317": {
+      "mapping_type": "MA",
+      "source_script": "Old_Italic",
+      "target": "X",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10320": {
+      "mapping_type": "MA",
+      "source_script": "Old_Italic",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10322": {
+      "mapping_type": "MA",
+      "source_script": "Old_Italic",
+      "target": "X",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1038": {
+      "mapping_type": "MA",
+      "source_script": "Myanmar",
+      "target": "ঃ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "103D1": {
+      "mapping_type": "MA",
+      "source_script": "Old_Persian",
+      "target": "𐎂",
+      "target_scripts": [
+        "Ugaritic"
+      ]
+    },
+    "103D3": {
+      "mapping_type": "MA",
+      "source_script": "Old_Persian",
+      "target": "𐎓",
+      "target_scripts": [
+        "Ugaritic"
+      ]
+    },
+    "1040": {
+      "mapping_type": "MA",
+      "source_script": "Myanmar",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10401": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "Ɛ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10404": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10411": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "ꓶ",
+      "target_scripts": [
+        "Lisu"
+      ]
+    },
+    "10415": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "C",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1041B": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "L",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1041F": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "Ɒ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10420": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "S",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10423": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "Ɔ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10425": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "И",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "10429": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "ꞓ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1042A": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "ʚ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1042C": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1043D": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "c",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1043F": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "ɷ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10442": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "ɞ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10443": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "ʟ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10448": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "s",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1044B": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "ɔ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1044D": {
+      "mapping_type": "MA",
+      "source_script": "Deseret",
+      "target": "ᴎ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "104B0": {
+      "mapping_type": "MA",
+      "source_script": "Osage",
+      "target": "Ʌ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "104B4": {
+      "mapping_type": "MA",
+      "source_script": "Osage",
+      "target": "R",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "104BC": {
+      "mapping_type": "MA",
+      "source_script": "Osage",
+      "target": "Ӄ",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "104C2": {
+      "mapping_type": "MA",
+      "source_script": "Osage",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "104C3": {
+      "mapping_type": "MA",
+      "source_script": "Osage",
+      "target": "ʘ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "104C4": {
+      "mapping_type": "MA",
+      "source_script": "Osage",
+      "target": "Þ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "104CD": {
+      "mapping_type": "MA",
+      "source_script": "Osage",
+      "target": "Ћ",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "104CE": {
+      "mapping_type": "MA",
+      "source_script": "Osage",
+      "target": "U",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "104D0": {
+      "mapping_type": "MA",
+      "source_script": "Osage",
+      "target": "ᛦ",
+      "target_scripts": [
+        "Runic"
+      ]
+    },
+    "104D1": {
+      "mapping_type": "MA",
+      "source_script": "Osage",
+      "target": "Ψ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "104D8": {
+      "mapping_type": "MA",
+      "source_script": "Osage",
+      "target": "ʌ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "104DB": {
+      "mapping_type": "MA",
+      "source_script": "Osage",
+      "target": "λ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "104EA": {
+      "mapping_type": "MA",
+      "source_script": "Osage",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "104EB": {
+      "mapping_type": "MA",
+      "source_script": "Osage",
+      "target": "ꙩ",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "104F6": {
+      "mapping_type": "MA",
+      "source_script": "Osage",
+      "target": "u",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "104F9": {
+      "mapping_type": "MA",
+      "source_script": "Osage",
+      "target": "ψ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "10513": {
+      "mapping_type": "MA",
+      "source_script": "Elbasan",
+      "target": "N",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10516": {
+      "mapping_type": "MA",
+      "source_script": "Elbasan",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10518": {
+      "mapping_type": "MA",
+      "source_script": "Elbasan",
+      "target": "K",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1051C": {
+      "mapping_type": "MA",
+      "source_script": "Elbasan",
+      "target": "C",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1051D": {
+      "mapping_type": "MA",
+      "source_script": "Elbasan",
+      "target": "V",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10525": {
+      "mapping_type": "MA",
+      "source_script": "Elbasan",
+      "target": "F",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10526": {
+      "mapping_type": "MA",
+      "source_script": "Elbasan",
+      "target": "L",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10527": {
+      "mapping_type": "MA",
+      "source_script": "Elbasan",
+      "target": "X",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "105A": {
+      "mapping_type": "MA",
+      "source_script": "Myanmar",
+      "target": "c",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1081": {
+      "mapping_type": "MA",
+      "source_script": "Myanmar",
+      "target": "രှ",
+      "target_scripts": [
+        "Malayalam",
+        "Myanmar"
+      ]
+    },
+    "10A0": {
+      "mapping_type": "MA",
+      "source_script": "Georgian",
+      "target": "Ꞇ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10D7": {
+      "mapping_type": "MA",
+      "source_script": "Georgian",
+      "target": "oာ",
+      "target_scripts": [
+        "Latin",
+        "Myanmar"
+      ]
+    },
+    "10D8": {
+      "mapping_type": "MA",
+      "source_script": "Georgian",
+      "target": "ര",
+      "target_scripts": [
+        "Malayalam"
+      ]
+    },
+    "10E7": {
+      "mapping_type": "MA",
+      "source_script": "Georgian",
+      "target": "y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10F3": {
+      "mapping_type": "MA",
+      "source_script": "Georgian",
+      "target": "ȝ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "10FF": {
+      "mapping_type": "MA",
+      "source_script": "Georgian",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "110BB": {
+      "mapping_type": "MA",
+      "source_script": "Kaithi",
+      "target": "॰",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "111C7": {
+      "mapping_type": "MA",
+      "source_script": "Sharada",
+      "target": "॰",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "111CB": {
+      "mapping_type": "MA",
+      "source_script": "Sharada",
+      "target": "ऺ",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "111DB": {
+      "mapping_type": "MA",
+      "source_script": "Sharada",
+      "target": "꣼",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "111DC": {
+      "mapping_type": "MA",
+      "source_script": "Sharada",
+      "target": "ꣻ",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "11492": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ঘ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "11494": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "চ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "11496": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "জ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "11498": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ঞ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "11499": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ট",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "1149B": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ড",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "1149D": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ল",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "1149E": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ত",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "1149F": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "থ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114A0": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "দ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114A1": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ধ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114A2": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ন",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114A3": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "প",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114A7": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ম",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114A8": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "য",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114A9": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ব",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114AA": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ণ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114AB": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "র",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114AD": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ষ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114AE": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "স",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114B0": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "া",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114B1": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ি",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114B9": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ে",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114BC": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ো",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114BD": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ৗ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114BE": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ৌ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114C1": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ঃ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114C2": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "্",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114C4": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ঽ",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114C5": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "ẇ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "114D0": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "114D1": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "১",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114D2": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "২",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "114D6": {
+      "mapping_type": "MA",
+      "source_script": "Tirhuta",
+      "target": "৬",
+      "target_scripts": [
+        "Bengali"
+      ]
+    },
+    "1162": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅡ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "1164": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅣ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "1166": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅥ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "1168": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅧ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "116B": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅩᅡ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "116C": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅩ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "1170": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅮᅥ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "11700": {
+      "mapping_type": "MA",
+      "source_script": "Ahom",
+      "target": "rn",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "11706": {
+      "mapping_type": "MA",
+      "source_script": "Ahom",
+      "target": "v",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1170A": {
+      "mapping_type": "MA",
+      "source_script": "Ahom",
+      "target": "w",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1170E": {
+      "mapping_type": "MA",
+      "source_script": "Ahom",
+      "target": "w",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1170F": {
+      "mapping_type": "MA",
+      "source_script": "Ahom",
+      "target": "w",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1171": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅮ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "1174": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ー丨",
+      "target_scripts": [
+        "Han"
+      ]
+    },
+    "1175": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "丨",
+      "target_scripts": [
+        "Han"
+      ]
+    },
+    "1180": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅩᅥ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "1181": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅩᅧ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "1185": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅭᅣ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "1188": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅭ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "118A": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅮᅡ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "118A0": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "V",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118A2": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "F",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118A3": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "L",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118A4": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "Y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118A6": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "E",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118A9": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "Z",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118AE": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "E",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118B2": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "L",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118B5": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118B7": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "ᛜ",
+      "target_scripts": [
+        "Runic"
+      ]
+    },
+    "118B8": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "U",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118BC": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "T",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118C": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅮᅧ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "118C0": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "v",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118C1": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "s",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118C2": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "F",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118C3": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "i",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118C4": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "z",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118C8": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118CE": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "ꞓ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118D7": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118D8": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "u",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118DC": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118E0": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118E3": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "rn",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118E4": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "٩",
+      "target_scripts": [
+        "Arabic"
+      ]
+    },
+    "118E5": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "Z",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118E6": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "W",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118E9": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "C",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118EC": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "X",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118EF": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "W",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "118F2": {
+      "mapping_type": "MA",
+      "source_script": "Warang_Citi",
+      "target": "C",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1190": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅲᅥ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "1192": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅲᅧ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "1194": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅲ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "1197": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ー丨ᅮ",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "1198": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "丨ᅡ",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "1199": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "丨ᅣ",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "119A": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "丨ᅩ",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "119B": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "丨ᅮ",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "119C": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "丨ー",
+      "target_scripts": [
+        "Han"
+      ]
+    },
+    "119D": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "丨ᆞ",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "11A1": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᆞ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "11A7": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅩᅣ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "11B60": {
+      "mapping_type": "MA",
+      "source_script": "Sharada",
+      "target": "ऺ",
+      "target_scripts": [
+        "Devanagari"
+      ]
+    },
+    "11DDA": {
+      "mapping_type": "MA",
+      "source_script": "Tolong_Siki",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "11DE0": {
+      "mapping_type": "MA",
+      "source_script": "Tolong_Siki",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "11DE1": {
+      "mapping_type": "MA",
+      "source_script": "Tolong_Siki",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1200": {
+      "mapping_type": "MA",
+      "source_script": "Ethiopic",
+      "target": "U",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "12038": {
+      "mapping_type": "MA",
+      "source_script": "Cuneiform",
+      "target": "𐎚",
+      "target_scripts": [
+        "Ugaritic"
+      ]
+    },
+    "1223": {
+      "mapping_type": "MA",
+      "source_script": "Ethiopic",
+      "target": "ɰ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1240": {
+      "mapping_type": "MA",
+      "source_script": "Ethiopic",
+      "target": "Φ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "1260": {
+      "mapping_type": "MA",
+      "source_script": "Ethiopic",
+      "target": "Ո",
+      "target_scripts": [
+        "Armenian"
+      ]
+    },
+    "1294": {
+      "mapping_type": "MA",
+      "source_script": "Ethiopic",
+      "target": "ձ",
+      "target_scripts": [
+        "Armenian"
+      ]
+    },
+    "12D0": {
+      "mapping_type": "MA",
+      "source_script": "Ethiopic",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "132F9": {
+      "mapping_type": "MA",
+      "source_script": "Egyptian_Hieroglyphs",
+      "target": "𐦞",
+      "target_scripts": [
+        "Meroitic_Hieroglyphs"
+      ]
+    },
+    "13A0": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "D",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13A1": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "R",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13A2": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "T",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13A4": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "O'",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13A5": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "i",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13A8": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "Ⱶ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13A9": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "Y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13AA": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "A",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13AB": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "J",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13AC": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "E",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13B0": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "Ⱶ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13B1": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "Γ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "13B3": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "W",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13B7": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "M",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13BB": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "H",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13BD": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "Y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13BE": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "O̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13BF": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ƫ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13C0": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "G",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13C2": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "h",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13C3": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "Z",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13C7": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "Ѡ",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "13CB": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "Ɛ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13CC": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "U̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13CF": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "b",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13D2": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "R",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13D4": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "W",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13D5": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "S",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13D9": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "V",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13DA": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "S",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13DE": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "L",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13DF": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "C",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13E2": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "P",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13E6": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "K",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13E7": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "d",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13EB": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "O̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13F0": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ß",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13F2": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "h̔",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13F3": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "G",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13F4": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "B",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13FB": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ɢ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "13FC": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ʙ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1403": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "Δ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "140E": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "·Δ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "140F": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "Δ·",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "142C": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "Δᐠ",
+      "target_scripts": [
+        "Canadian_Aboriginal",
+        "Greek"
+      ]
+    },
+    "142F": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "V",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1431": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "Ʌ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "143A": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "·V",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "143B": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "V·",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "143C": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "·Ʌ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "143D": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "Ʌ·",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "144C": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "U",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "144E": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "Ո",
+      "target_scripts": [
+        "Armenian"
+      ]
+    },
+    "1457": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "·U",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1458": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "U·",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1459": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "·Ո",
+      "target_scripts": [
+        "Armenian"
+      ]
+    },
+    "145A": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "Ո·",
+      "target_scripts": [
+        "Armenian"
+      ]
+    },
+    "1467": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "U'",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1468": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "Ո'",
+      "target_scripts": [
+        "Armenian"
+      ]
+    },
+    "146D": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "P",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "146F": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "d",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1472": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "b",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1473": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "ḃ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1476": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "·P",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1477": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "p·",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "147A": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "·d",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "147B": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "d·",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "147E": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "·b",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "147F": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "b·",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1480": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "·ḃ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1481": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "ḃ·",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1486": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "P'",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1487": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "d'",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1488": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "b'",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "148D": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "J",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1498": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "·J",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1499": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "J·",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "14A5": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "Γ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "14AA": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "L",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "14AE": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "·Γ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "14AF": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "Γ·",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "14B6": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "·L",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "14B7": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "l·",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "150E": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "ᔋb",
+      "target_scripts": [
+        "Canadian_Aboriginal",
+        "Latin"
+      ]
+    },
+    "1541": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "x",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1577": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "ẟ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "157C": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "H",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "157D": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "x",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "157F": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "ᕐP",
+      "target_scripts": [
+        "Canadian_Aboriginal",
+        "Latin"
+      ]
+    },
+    "1581": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "ᕐd",
+      "target_scripts": [
+        "Canadian_Aboriginal",
+        "Latin"
+      ]
+    },
+    "1583": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "ᕐb",
+      "target_scripts": [
+        "Canadian_Aboriginal",
+        "Latin"
+      ]
+    },
+    "1584": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "ᕐḃ",
+      "target_scripts": [
+        "Canadian_Aboriginal",
+        "Latin"
+      ]
+    },
+    "1587": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "R",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1591": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "ᖕJ",
+      "target_scripts": [
+        "Canadian_Aboriginal",
+        "Latin"
+      ]
+    },
+    "15AF": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "b",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "15B4": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "F",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "15B5": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "Ⅎ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "15B7": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "ꟻ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "15C4": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "Ɐ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "15C5": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "A",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "15DE": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "D",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "15EA": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "D",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "15EF": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "Ѡ",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "15F0": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "M",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "15F7": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "B",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "162E": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "Ʊ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "162F": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "Ω",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "1634": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "Ʊ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1635": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "Ω",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "166D": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "X",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "166E": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "x",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1673": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "ᖖJ",
+      "target_scripts": [
+        "Canadian_Aboriginal",
+        "Latin"
+      ]
+    },
+    "16B7": {
+      "mapping_type": "MA",
+      "source_script": "Runic",
+      "target": "X",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "16C1": {
+      "mapping_type": "MA",
+      "source_script": "Runic",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "16D5": {
+      "mapping_type": "MA",
+      "source_script": "Runic",
+      "target": "K",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "16D6": {
+      "mapping_type": "MA",
+      "source_script": "Runic",
+      "target": "M",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "16D8": {
+      "mapping_type": "MA",
+      "source_script": "Runic",
+      "target": "Ψ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "16EA6": {
+      "mapping_type": "MA",
+      "source_script": "Beria_Erfe",
+      "target": "Π",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "16EAA": {
+      "mapping_type": "MA",
+      "source_script": "Beria_Erfe",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "16EB6": {
+      "mapping_type": "MA",
+      "source_script": "Beria_Erfe",
+      "target": "b",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "16EC1": {
+      "mapping_type": "MA",
+      "source_script": "Beria_Erfe",
+      "target": "π",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "16ED1": {
+      "mapping_type": "MA",
+      "source_script": "Beria_Erfe",
+      "target": "ƅ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "16F0": {
+      "mapping_type": "MA",
+      "source_script": "Runic",
+      "target": "Φ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "16F07": {
+      "mapping_type": "MA",
+      "source_script": "Miao",
+      "target": "Γ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "16F08": {
+      "mapping_type": "MA",
+      "source_script": "Miao",
+      "target": "V",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "16F0A": {
+      "mapping_type": "MA",
+      "source_script": "Miao",
+      "target": "T",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "16F16": {
+      "mapping_type": "MA",
+      "source_script": "Miao",
+      "target": "L",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "16F1A": {
+      "mapping_type": "MA",
+      "source_script": "Miao",
+      "target": "Δ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "16F1C": {
+      "mapping_type": "MA",
+      "source_script": "Miao",
+      "target": "Ꙙ",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "16F26": {
+      "mapping_type": "MA",
+      "source_script": "Miao",
+      "target": "ꓶ",
+      "target_scripts": [
+        "Lisu"
+      ]
+    },
+    "16F28": {
+      "mapping_type": "MA",
+      "source_script": "Miao",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "16F2D": {
+      "mapping_type": "MA",
+      "source_script": "Miao",
+      "target": "Ɛ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "16F35": {
+      "mapping_type": "MA",
+      "source_script": "Miao",
+      "target": "R",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "16F3A": {
+      "mapping_type": "MA",
+      "source_script": "Miao",
+      "target": "S",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "16F3D": {
+      "mapping_type": "MA",
+      "source_script": "Miao",
+      "target": "Ʌ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "16F40": {
+      "mapping_type": "MA",
+      "source_script": "Miao",
+      "target": "A",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "16F42": {
+      "mapping_type": "MA",
+      "source_script": "Miao",
+      "target": "U",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "16F43": {
+      "mapping_type": "MA",
+      "source_script": "Miao",
+      "target": "Y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1734": {
+      "mapping_type": "MA",
+      "source_script": "Hanunoo",
+      "target": "᜕",
+      "target_scripts": [
+        "Tagalog"
+      ]
+    },
+    "17B7": {
+      "mapping_type": "MA",
+      "source_script": "Khmer",
+      "target": "ิ",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "17B8": {
+      "mapping_type": "MA",
+      "source_script": "Khmer",
+      "target": "ี",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "17B9": {
+      "mapping_type": "MA",
+      "source_script": "Khmer",
+      "target": "ึ",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "17BA": {
+      "mapping_type": "MA",
+      "source_script": "Khmer",
+      "target": "ื",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "17CB": {
+      "mapping_type": "MA",
+      "source_script": "Khmer",
+      "target": "่",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "17D4": {
+      "mapping_type": "MA",
+      "source_script": "Khmer",
+      "target": "ฯ",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "17D5": {
+      "mapping_type": "MA",
+      "source_script": "Khmer",
+      "target": "๚",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "17D9": {
+      "mapping_type": "MA",
+      "source_script": "Khmer",
+      "target": "๏",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "17DA": {
+      "mapping_type": "MA",
+      "source_script": "Khmer",
+      "target": "๛",
+      "target_scripts": [
+        "Thai"
+      ]
+    },
+    "17E0": {
+      "mapping_type": "MA",
+      "source_script": "Khmer",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "18ED": {
+      "mapping_type": "MA",
+      "source_script": "Canadian_Aboriginal",
+      "target": "Ѡ·",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "1D202": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ӿ",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "1D20B": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "И",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "1D20D": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "V",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D213": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "F",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D214": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "𐊼",
+      "target_scripts": [
+        "Carian"
+      ]
+    },
+    "1D215": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ꓶ",
+      "target_scripts": [
+        "Lisu"
+      ]
+    },
+    "1D216": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "R",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D217": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ɐ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D21A": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "O̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D21C": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ꓕ",
+      "target_scripts": [
+        "Lisu"
+      ]
+    },
+    "1D221": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ɛ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D222": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ѡ",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "1D22A": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "L",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D22B": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ꓶ",
+      "target_scripts": [
+        "Lisu"
+      ]
+    },
+    "1D230": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ꟻ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D23F": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ᛋ",
+      "target_scripts": [
+        "Runic"
+      ]
+    },
+    "1D245": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ո",
+      "target_scripts": [
+        "Armenian"
+      ]
+    },
+    "1D26": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "r",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D27": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ʌ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D29": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ᴘ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D3E": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "ᣖ",
+      "target_scripts": [
+        "Canadian_Aboriginal"
+      ]
+    },
+    "1D78": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ᴴ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1DBA": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "ᣔ",
+      "target_scripts": [
+        "Canadian_Aboriginal"
+      ]
+    },
+    "1DBB": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "ᙆ",
+      "target_scripts": [
+        "Canadian_Aboriginal"
+      ]
+    },
+    "1E8C7": {
+      "mapping_type": "MA",
+      "source_script": "Mende_Kikakui",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1E8C9": {
+      "mapping_type": "MA",
+      "source_script": "Mende_Kikakui",
+      "target": "٣",
+      "target_scripts": [
+        "Arabic"
+      ]
+    },
+    "1EE00": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1EE24": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1EE64": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1EE80": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1EE84": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1FBE": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "i",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1FF6": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ꮿ",
+      "target_scripts": [
+        "Cherokee"
+      ]
+    },
+    "2C82": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "B",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C83": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ʙ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C84": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "Γ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "2C85": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "r",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C86": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "Δ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "2C88": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "Ꞓ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C89": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ꞓ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C8B": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ς",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "2C8C": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "Ⱬ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C8D": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ⱬ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C8E": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "H",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C8F": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ʜ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C90": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "O̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C91": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "o̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C92": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C93": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "i",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C94": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "K",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C95": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ĸ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C96": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "λ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "2C97": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ʌ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C98": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "M",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C99": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ʍ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C9A": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "N",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C9B": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ɴ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C9D": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ʓ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C9E": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2C9F": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CA0": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "Π",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "2CA1": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "π",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "2CA2": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "P",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CA3": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "p",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CA4": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "C",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CA5": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "c",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CA6": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "T",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CA7": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ᴛ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CA8": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "Y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CA9": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CAA": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "Φ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "2CAB": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ɸ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CAC": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "X",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CAD": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "χ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "2CAE": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "Ψ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "2CAF": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ψ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "2CB0": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "Ꙍ",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "2CB1": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ω",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "2CB6": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "Ξ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "2CBC": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "Ш",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "2CBD": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "w",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CC0": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "Ք",
+      "target_scripts": [
+        "Armenian"
+      ]
+    },
+    "2CC1": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ϼ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "2CC5": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ȝ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CCD": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ȝ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CCE": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "P",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CCF": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "p",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CD0": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "L",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CD1": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ʟ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CDD": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ẟ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CE0": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ɸ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CE1": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ɸ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2CE4": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "ϗ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "2CE8": {
+      "mapping_type": "MA",
+      "source_script": "Coptic",
+      "target": "Ք",
+      "target_scripts": [
+        "Armenian"
+      ]
+    },
+    "2D31": {
+      "mapping_type": "MA",
+      "source_script": "Tifinagh",
+      "target": "O̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2D37": {
+      "mapping_type": "MA",
+      "source_script": "Tifinagh",
+      "target": "Ʌ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2D38": {
+      "mapping_type": "MA",
+      "source_script": "Tifinagh",
+      "target": "V",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2D39": {
+      "mapping_type": "MA",
+      "source_script": "Tifinagh",
+      "target": "E",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2D3A": {
+      "mapping_type": "MA",
+      "source_script": "Tifinagh",
+      "target": "Ǝ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2D41": {
+      "mapping_type": "MA",
+      "source_script": "Tifinagh",
+      "target": "O̸",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2D49": {
+      "mapping_type": "MA",
+      "source_script": "Tifinagh",
+      "target": "Ʃ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2D4F": {
+      "mapping_type": "MA",
+      "source_script": "Tifinagh",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2D54": {
+      "mapping_type": "MA",
+      "source_script": "Tifinagh",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2D55": {
+      "mapping_type": "MA",
+      "source_script": "Tifinagh",
+      "target": "Q",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2D59": {
+      "mapping_type": "MA",
+      "source_script": "Tifinagh",
+      "target": "ʘ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2D5D": {
+      "mapping_type": "MA",
+      "source_script": "Tifinagh",
+      "target": "X",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "2D60": {
+      "mapping_type": "MA",
+      "source_script": "Tifinagh",
+      "target": "Δ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "2D63": {
+      "mapping_type": "MA",
+      "source_script": "Tifinagh",
+      "target": "ᛯ",
+      "target_scripts": [
+        "Runic"
+      ]
+    },
+    "2ED1": {
+      "mapping_type": "MA",
+      "source_script": "Han",
+      "target": "ᄐーᄂᄌ",
+      "target_scripts": [
+        "Hangul"
+      ]
+    },
+    "2F59": {
+      "mapping_type": "MA",
+      "source_script": "Han",
+      "target": "누丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "2FA7": {
+      "mapping_type": "MA",
+      "source_script": "Han",
+      "target": "ᄐーᄂᄌ",
+      "target_scripts": [
+        "Hangul"
+      ]
+    },
+    "3007": {
+      "mapping_type": "MA",
+      "source_script": "Han",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "30A4": {
+      "mapping_type": "MA",
+      "source_script": "Katakana",
+      "target": "亻",
+      "target_scripts": [
+        "Han"
+      ]
+    },
+    "30A8": {
+      "mapping_type": "MA",
+      "source_script": "Katakana",
+      "target": "工",
+      "target_scripts": [
+        "Han"
+      ]
+    },
+    "30AB": {
+      "mapping_type": "MA",
+      "source_script": "Katakana",
+      "target": "力",
+      "target_scripts": [
+        "Han"
+      ]
+    },
+    "30BF": {
+      "mapping_type": "MA",
+      "source_script": "Katakana",
+      "target": "夕",
+      "target_scripts": [
+        "Han"
+      ]
+    },
+    "30C8": {
+      "mapping_type": "MA",
+      "source_script": "Katakana",
+      "target": "卜",
+      "target_scripts": [
+        "Han"
+      ]
+    },
+    "30CB": {
+      "mapping_type": "MA",
+      "source_script": "Katakana",
+      "target": "二",
+      "target_scripts": [
+        "Han"
+      ]
+    },
+    "30CF": {
+      "mapping_type": "MA",
+      "source_script": "Katakana",
+      "target": "八",
+      "target_scripts": [
+        "Han"
+      ]
+    },
+    "30D8": {
+      "mapping_type": "MA",
+      "source_script": "Katakana",
+      "target": "へ",
+      "target_scripts": [
+        "Hiragana"
+      ]
+    },
+    "30ED": {
+      "mapping_type": "MA",
+      "source_script": "Katakana",
+      "target": "口",
+      "target_scripts": [
+        "Han"
+      ]
+    },
+    "3126": {
+      "mapping_type": "MA",
+      "source_script": "Bopomofo",
+      "target": "儿",
+      "target_scripts": [
+        "Han"
+      ]
+    },
+    "3150": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅡ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "3152": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅣ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "3154": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅥ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "3156": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅧ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "3159": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅩᅡ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "315A": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅩ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "315E": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅮᅥ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "315F": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅮ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "3162": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ー丨",
+      "target_scripts": [
+        "Han"
+      ]
+    },
+    "3163": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "丨",
+      "target_scripts": [
+        "Han"
+      ]
+    },
+    "3188": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅭᅣ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "3189": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅭ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "318B": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅲᅧ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "318C": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅲ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "318E": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᆞ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "4E15": {
+      "mapping_type": "MA",
+      "source_script": "Han",
+      "target": "조",
+      "target_scripts": [
+        "Hangul"
+      ]
+    },
+    "4E1B": {
+      "mapping_type": "MA",
+      "source_script": "Han",
+      "target": "ᄉᄉー",
+      "target_scripts": [
+        "Hangul"
+      ]
+    },
+    "4E8E": {
+      "mapping_type": "MA",
+      "source_script": "Han",
+      "target": "𛄢",
+      "target_scripts": [
+        "Katakana"
+      ]
+    },
+    "4ECA": {
+      "mapping_type": "MA",
+      "source_script": "Han",
+      "target": "ᄉーᄀ",
+      "target_scripts": [
+        "Hangul"
+      ]
+    },
+    "535F": {
+      "mapping_type": "MA",
+      "source_script": "Han",
+      "target": "마",
+      "target_scripts": [
+        "Hangul"
+      ]
+    },
+    "5408": {
+      "mapping_type": "MA",
+      "source_script": "Han",
+      "target": "ᄉーᄆ",
+      "target_scripts": [
+        "Hangul"
+      ]
+    },
+    "723F": {
+      "mapping_type": "MA",
+      "source_script": "Han",
+      "target": "누丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "9577": {
+      "mapping_type": "MA",
+      "source_script": "Han",
+      "target": "ᄐーᄂᄌ",
+      "target_scripts": [
+        "Hangul"
+      ]
+    },
+    "A4D0": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "B",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4D1": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "P",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4D2": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "d",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4D3": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "D",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4D4": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "T",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4D6": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "G",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4D7": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "K",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4D9": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "J",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4DA": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "C",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4DB": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "Ɔ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4DC": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "Z",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4DD": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "F",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4DE": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "Ⅎ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4DF": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "M",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4E0": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "N",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4E1": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "L",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4E2": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "S",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4E3": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "R",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4E5": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "Ʌ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4E6": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "V",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4E7": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "H",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4EA": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "W",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4EB": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "X",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4EC": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "Y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4ED": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "ᙠ",
+      "target_scripts": [
+        "Canadian_Aboriginal"
+      ]
+    },
+    "A4EE": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "A",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4EF": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "Ɐ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4F0": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "E",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4F1": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "Ǝ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4F2": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4F3": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4F4": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "U",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A4F5": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "Ո",
+      "target_scripts": [
+        "Armenian"
+      ]
+    },
+    "A4F7": {
+      "mapping_type": "MA",
+      "source_script": "Lisu",
+      "target": "ᗡ",
+      "target_scripts": [
+        "Canadian_Aboriginal"
+      ]
+    },
+    "A645": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ƨ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A647": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "i",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A64D": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ω",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "A650": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Ъl",
+      "target_scripts": [
+        "Cyrillic",
+        "Latin"
+      ]
+    },
+    "A651": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ˉbi",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A668": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ʘ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A695": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "h̔",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A698": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "OO",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A699": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "oo",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A69A": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "𐊨",
+      "target_scripts": [
+        "Carian"
+      ]
+    },
+    "A6A1": {
+      "mapping_type": "MA",
+      "source_script": "Bamum",
+      "target": "И",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "A6B0": {
+      "mapping_type": "MA",
+      "source_script": "Bamum",
+      "target": "ᚹ",
+      "target_scripts": [
+        "Runic"
+      ]
+    },
+    "A6B1": {
+      "mapping_type": "MA",
+      "source_script": "Bamum",
+      "target": "Ⱶ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A6CD": {
+      "mapping_type": "MA",
+      "source_script": "Bamum",
+      "target": "ʡ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A6CE": {
+      "mapping_type": "MA",
+      "source_script": "Bamum",
+      "target": "Ʌ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A6DB": {
+      "mapping_type": "MA",
+      "source_script": "Bamum",
+      "target": "Π",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "A6DF": {
+      "mapping_type": "MA",
+      "source_script": "Bamum",
+      "target": "V",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A79A": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "𐐒",
+      "target_scripts": [
+        "Deseret"
+      ]
+    },
+    "A79B": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "𐐺",
+      "target_scripts": [
+        "Deseret"
+      ]
+    },
+    "A79E": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "ꓤ",
+      "target_scripts": [
+        "Lisu"
+      ]
+    },
+    "A7B1": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "ꓕ",
+      "target_scripts": [
+        "Lisu"
+      ]
+    },
+    "A7B6": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "Ꙍ",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "A7B7": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "ω",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "A7DB": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "λ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "A7F1": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "ᣵ",
+      "target_scripts": [
+        "Canadian_Aboriginal"
+      ]
+    },
+    "A992": {
+      "mapping_type": "MA",
+      "source_script": "Javanese",
+      "target": "ⰿ",
+      "target_scripts": [
+        "Glagolitic"
+      ]
+    },
+    "AB53": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "χ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "AB55": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "χ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "AB60": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "љ",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "AB70": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ᴅ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB71": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ʀ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB72": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ᴛ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB74": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ơ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB75": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "i",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB7A": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ᴀ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB7B": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ᴊ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB7C": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ᴇ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB7E": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ɂ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB80": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ⱶ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB81": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "r",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB83": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "w",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB87": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ʍ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB8B": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ʜ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB8E": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "o̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB90": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ɢ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB93": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "z",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB9B": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ꞓ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB9C": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "u̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "AB9F": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ƅ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "ABA2": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ʀ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "ABA9": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "v",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "ABAA": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "s",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "ABAE": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ʟ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "ABAF": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "c",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "ABB2": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ᴘ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "ABB6": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "ĸ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "ABBB": {
+      "mapping_type": "MA",
+      "source_script": "Cherokee",
+      "target": "o̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "D7B1": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅩᅩ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "D7B3": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅭᅡ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "D7B6": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅮ丨丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "D7B7": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᅲᅡ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "D7BB": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ーᅥ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "D7BD": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "丨ᅣᅩ",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "D7BE": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "丨ᅣ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "D7BF": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "丨ᅧ",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "D7C0": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "丨ᅧ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "D7C1": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "丨ᅩ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "D7C2": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "丨ᅭ",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "D7C3": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "丨ᅲ",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "D7C4": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "丨丨",
+      "target_scripts": [
+        "Han"
+      ]
+    },
+    "D7C6": {
+      "mapping_type": "MA",
+      "source_script": "Hangul",
+      "target": "ᆞᅥ丨",
+      "target_scripts": [
+        "Han",
+        "Hangul"
+      ]
+    },
+    "FBA6": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FBA7": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FBA8": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FBA9": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FBAA": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FBAB": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FBAC": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FBAD": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FBEA": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "ىٴl",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FBEB": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "ىٴl",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FBEC": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "ىٴo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FBED": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "ىٴo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FC37": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "كl",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FC51": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "oج",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FC52": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "oم",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FC53": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "oى",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FC54": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "oى",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FC80": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "كl",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FC88": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "مl",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FC9B": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "ىٴo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FCA0": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "بo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FCA5": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "تo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FCCD": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "لo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FCD6": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "نo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FCD7": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "oج",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FCD8": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "oم",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FCD9": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "oٰ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FCDE": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "ىo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FCE0": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "ىٴo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FCE2": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "بo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FCE4": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "تo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FCE6": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "ىۛo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FCE8": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "سo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FCEA": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "سۛo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FCEF": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "نo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FCF1": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "ىo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FD31": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "سo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FD32": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "سۛo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FD3C": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "l̋",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FD3D": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "l̋",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FD93": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "oمج",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FD94": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "oمم",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FDF2": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "lللّٰo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FDF3": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "lكبر",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FDF7": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "علىo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FDFA": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "صلى lللo علىo وسلم",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FDFB": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "جل جلlلo",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FDFC": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "رىlل",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FE83": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "lٴ",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FE84": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "lٴ",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FE87": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "lٕ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FE88": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "lٕ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FE8D": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FE8E": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FEE9": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FEEA": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FEEB": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FEEC": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "FEF7": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "لlٴ",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FEF8": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "لlٴ",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FEF9": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "لlٕ",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FEFA": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "لlٕ",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FEFB": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "لl",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    },
+    "FEFC": {
+      "mapping_type": "MA",
+      "source_script": "Arabic",
+      "target": "لl",
+      "target_scripts": [
+        "Arabic",
+        "Latin"
+      ]
+    }
+  },
+  "metadata": {
+    "declared_source_version": "17.0.0",
+    "generated_at": "2026-04-10T11:57:43Z",
+    "mapping_count": 1041,
+    "mode": "full",
+    "sources": [
+      {
+        "name": "confusables.txt",
+        "sha256": "091c7f82fc39ef208faf8f94d29c244de99254675e09de163160c810d13ef22a",
+        "url": "https://www.unicode.org/Public/security/latest/confusables.txt"
+      }
+    ],
+    "unicode_version": "17.0.0"
+  }
+}

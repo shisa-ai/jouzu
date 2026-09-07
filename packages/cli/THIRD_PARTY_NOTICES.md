@@ -19,6 +19,19 @@ Jouzu distributes the following release-owned Pi extensions and their default ru
 
 The bundled `pi-webaio` entrypoint supplies Jouzu's static `web_fetch` and `batch_web_fetch` tools without starting a browser. The package bundle also contains transitive dependencies. Their package metadata and included license or notice files remain with their source files under `node_modules`.
 
+## Native TextGuard helper
+
+`dist/textguard/` contains Linux, Windows, and macOS executables for x64 and
+ARM64. `manifest.json` identifies their SHA-256 hashes, source snapshot, Go
+toolchain, and scan policy. Build inputs and modifications are recorded in
+`upstream/textguard/` in the Jouzu source repository.
+
+`dist/textguard/licenses/` includes the Apache-2.0 TextGuard license, the Go
+runtime and golang.org/x/net and golang.org/x/text licenses, the BurntSushi TOML
+parser's COPYING file, and Unicode License V3. Embedded confusable and script
+data retain Unicode 17.0.0 provenance; generated character classes use Unicode
+15.0.0 properties. The helper does not include model-classification runtimes.
+
 ## Voice capture and transport
 
 | Package | Version | License evidence |

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "protocol": 1,
+  "policy": "default-trimmed-split-bundled-v1",
+  "sourceDigest": "d1746eb8811fb6df70d35db7505f179705a576b854895bb5b39a070cb882c56b",
+  "toolchain": "go1.26.1",
+  "artifacts": {
+    "linux-amd64": {
+      "filename": "textguard-linux-amd64",
+      "sha256": "1cd4a0cb09671e65fbb7d34226f08ffb9ef25cc6d04b9d7da8865e9e23b3aa9b",
+      "bytes": 3776638
+    },
+    "linux-arm64": {
+      "filename": "textguard-linux-arm64",
+      "sha256": "41eb2ed253d552feeb28c49b8079cfb3204096dc5a4b9404dfc1b4afcfa724d7",
+      "bytes": 3604606
+    },
+    "windows-amd64": {
+      "filename": "textguard-windows-amd64.exe",
+      "sha256": "2cfea57d68761169f0c35b9c7703e4a51b4fab58456c35d8bc27d38e45d9e8d1",
+      "bytes": 3917824
+    },
+    "windows-arm64": {
+      "filename": "textguard-windows-arm64.exe",
+      "sha256": "3b71240bc4d17e5393ed29a7eec94d3a6477f2f39a486fb2e75632aacc02ae67",
+      "bytes": 3658240
+    },
+    "darwin-amd64": {
+      "filename": "textguard-darwin-amd64",
+      "sha256": "f732ec24591c85d4e34e64f708303552b5aecaa567cc9235e21512b2cc4f05c4",
+      "bytes": 3833776
+    },
+    "darwin-arm64": {
+      "filename": "textguard-darwin-arm64",
+      "sha256": "5e9235046807fb175c21984c5335f58dbfbb3b3def0ee9c32027ef7f2f5e101d",
+      "bytes": 3661506
+    }
+  }
+}

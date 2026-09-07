@@ -1,0 +1,1532 @@
+{
+  "mappings": {
+    "019B": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "λ̸",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "0370": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ⱶ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0377": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ᴎ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "037A": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "i",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "037B": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ɔ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "037D": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ꜿ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "037F": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "J",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0391": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "A",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0392": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "B",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0395": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "E",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0396": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Z",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0397": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "H",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0398": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "O̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0399": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "039A": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "K",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "039B": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ʌ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "039C": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "M",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "039D": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "N",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "039F": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03A1": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "P",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03A3": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ʃ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03A4": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "T",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03A5": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03A7": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "X",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03B1": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "a",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03B2": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ß",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03B3": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03B4": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ẟ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03B5": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ꞓ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03B7": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "n̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03B8": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "O̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03B9": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "i",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03BA": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ĸ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03BD": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "v",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03BF": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03C1": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "p",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03C3": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03C4": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ᴛ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03C5": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "u",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03C6": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ɸ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03D0": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ß",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03D1": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "O̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03D2": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03D5": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ɸ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03DC": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "F",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03F0": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ĸ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03F1": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "p",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03F2": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "c",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03F3": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "j",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03F4": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "O̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03F5": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ꞓ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03F7": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Þ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03F8": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "p",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03F9": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "C",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03FA": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "M",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03FD": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ɔ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "03FF": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ꜿ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0404": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Ꞓ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0405": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "S",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0406": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0408": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "J",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0410": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "A",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0411": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "b̄",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0412": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "B",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0415": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "E",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "041A": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "K",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "041B": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Ʌ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "041C": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "M",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "041D": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "H",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "041E": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "O",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0420": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "P",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0421": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "C",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0422": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "T",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0423": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0425": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "X",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "042B": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "bl",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "042C": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "b",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "042E": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "lO",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0430": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "a",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0432": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ʙ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0433": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "r",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0435": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "e",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0437": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ɜ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0438": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ᴎ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "043A": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ĸ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "043C": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ʍ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "043D": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ʜ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "043E": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "o",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0440": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "p",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0441": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "c",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0442": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ᴛ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0443": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0444": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ɸ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0445": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "x",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0448": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "w",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "044A": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ˉb",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "044B": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ƅi",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "044C": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ƅ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "044F": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ᴙ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0454": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ꞓ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0455": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "s",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0456": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "i",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0458": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "j",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "045B": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "h̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "045F": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "u̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0461": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "w",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0462": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "b̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0463": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "b̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0472": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "O̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0473": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "o̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0474": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "V",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0475": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "v",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "047D": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "w҆҇",
+      "target_scripts": [
+        "Cyrillic",
+        "Latin"
+      ]
+    },
+    "048C": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "b̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "048D": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "b̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0491": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "r'",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0493": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "r̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0499": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ɜ̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "049A": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "K̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "049B": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ĸ̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "049E": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "K̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "049F": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ĸ̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04A2": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "H̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04A3": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ʜ̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04AA": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "C̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04AB": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "c̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04AC": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "T̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04AD": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ᴛ̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04AE": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04AF": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "y",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04B0": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Y̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04B1": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "y̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04B2": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "X̩",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04BB": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "h",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04BD": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "e",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04BF": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ę",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04C0": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04C5": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Ʌ̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04C7": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "H̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04C8": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ʜ̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04C9": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "H̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04CA": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ʜ̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04CD": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "M̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04CE": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ʍ̦",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04CF": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "l",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04D4": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "AE",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04D5": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ae",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04D8": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Ə",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04D9": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ǝ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04E1": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ȝ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04E8": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "O̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "04E9": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "o̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0501": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "d",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "050A": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Ƕ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "050C": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "G",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "050D": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ɢ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0510": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Ɛ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "0511": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ꞓ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "051B": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "q",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "051C": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "W",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "051D": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "w",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1018E": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "N̊",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D20D": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "V",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D213": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "F",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D216": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "R",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D217": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ɐ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D21A": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "O̵",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D221": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "Ɛ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D22A": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "L",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D230": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ꟻ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D26": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "r",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D27": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ʌ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D29": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "ᴘ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1D78": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ᴴ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "1FBE": {
+      "mapping_type": "MA",
+      "source_script": "Greek",
+      "target": "i",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A645": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ƨ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A647": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "i",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A650": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "Ъl",
+      "target_scripts": [
+        "Cyrillic",
+        "Latin"
+      ]
+    },
+    "A651": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ˉbi",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A668": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "ʘ",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A695": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "h̔",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A698": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "OO",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A699": {
+      "mapping_type": "MA",
+      "source_script": "Cyrillic",
+      "target": "oo",
+      "target_scripts": [
+        "Latin"
+      ]
+    },
+    "A7B6": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "Ꙍ",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    },
+    "A7B7": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "ω",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "A7DB": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "λ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "AB53": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "χ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "AB55": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "χ",
+      "target_scripts": [
+        "Greek"
+      ]
+    },
+    "AB60": {
+      "mapping_type": "MA",
+      "source_script": "Latin",
+      "target": "љ",
+      "target_scripts": [
+        "Cyrillic"
+      ]
+    }
+  },
+  "metadata": {
+    "declared_source_version": "17.0.0",
+    "generated_at": "2026-04-10T11:57:43Z",
+    "mapping_count": 189,
+    "mode": "trimmed",
+    "sources": [
+      {
+        "name": "confusables.txt",
+        "sha256": "091c7f82fc39ef208faf8f94d29c244de99254675e09de163160c810d13ef22a",
+        "url": "https://www.unicode.org/Public/security/latest/confusables.txt"
+      }
+    ],
+    "unicode_version": "17.0.0"
+  }
+}

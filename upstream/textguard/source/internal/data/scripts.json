@@ -1,0 +1,11450 @@
+{
+  "metadata": {
+    "generated_at": "2026-04-10T11:57:43Z",
+    "sources": [
+      {
+        "name": "Scripts.txt",
+        "sha256": "9f5e50d3abaee7d6ce09480f325c706f485ae3240912527e651954d2d6b035bf",
+        "url": "https://www.unicode.org/Public/17.0.0/ucd/Scripts.txt"
+      }
+    ],
+    "unicode_version": "17.0.0"
+  },
+  "ranges": [
+    {
+      "end": 31,
+      "script": "Common",
+      "start": 0
+    },
+    {
+      "end": 32,
+      "script": "Common",
+      "start": 32
+    },
+    {
+      "end": 35,
+      "script": "Common",
+      "start": 33
+    },
+    {
+      "end": 36,
+      "script": "Common",
+      "start": 36
+    },
+    {
+      "end": 39,
+      "script": "Common",
+      "start": 37
+    },
+    {
+      "end": 40,
+      "script": "Common",
+      "start": 40
+    },
+    {
+      "end": 41,
+      "script": "Common",
+      "start": 41
+    },
+    {
+      "end": 42,
+      "script": "Common",
+      "start": 42
+    },
+    {
+      "end": 43,
+      "script": "Common",
+      "start": 43
+    },
+    {
+      "end": 44,
+      "script": "Common",
+      "start": 44
+    },
+    {
+      "end": 45,
+      "script": "Common",
+      "start": 45
+    },
+    {
+      "end": 47,
+      "script": "Common",
+      "start": 46
+    },
+    {
+      "end": 57,
+      "script": "Common",
+      "start": 48
+    },
+    {
+      "end": 59,
+      "script": "Common",
+      "start": 58
+    },
+    {
+      "end": 62,
+      "script": "Common",
+      "start": 60
+    },
+    {
+      "end": 64,
+      "script": "Common",
+      "start": 63
+    },
+    {
+      "end": 90,
+      "script": "Latin",
+      "start": 65
+    },
+    {
+      "end": 91,
+      "script": "Common",
+      "start": 91
+    },
+    {
+      "end": 92,
+      "script": "Common",
+      "start": 92
+    },
+    {
+      "end": 93,
+      "script": "Common",
+      "start": 93
+    },
+    {
+      "end": 94,
+      "script": "Common",
+      "start": 94
+    },
+    {
+      "end": 95,
+      "script": "Common",
+      "start": 95
+    },
+    {
+      "end": 96,
+      "script": "Common",
+      "start": 96
+    },
+    {
+      "end": 122,
+      "script": "Latin",
+      "start": 97
+    },
+    {
+      "end": 123,
+      "script": "Common",
+      "start": 123
+    },
+    {
+      "end": 124,
+      "script": "Common",
+      "start": 124
+    },
+    {
+      "end": 125,
+      "script": "Common",
+      "start": 125
+    },
+    {
+      "end": 126,
+      "script": "Common",
+      "start": 126
+    },
+    {
+      "end": 159,
+      "script": "Common",
+      "start": 127
+    },
+    {
+      "end": 160,
+      "script": "Common",
+      "start": 160
+    },
+    {
+      "end": 161,
+      "script": "Common",
+      "start": 161
+    },
+    {
+      "end": 165,
+      "script": "Common",
+      "start": 162
+    },
+    {
+      "end": 166,
+      "script": "Common",
+      "start": 166
+    },
+    {
+      "end": 167,
+      "script": "Common",
+      "start": 167
+    },
+    {
+      "end": 168,
+      "script": "Common",
+      "start": 168
+    },
+    {
+      "end": 169,
+      "script": "Common",
+      "start": 169
+    },
+    {
+      "end": 170,
+      "script": "Latin",
+      "start": 170
+    },
+    {
+      "end": 171,
+      "script": "Common",
+      "start": 171
+    },
+    {
+      "end": 172,
+      "script": "Common",
+      "start": 172
+    },
+    {
+      "end": 173,
+      "script": "Common",
+      "start": 173
+    },
+    {
+      "end": 174,
+      "script": "Common",
+      "start": 174
+    },
+    {
+      "end": 175,
+      "script": "Common",
+      "start": 175
+    },
+    {
+      "end": 176,
+      "script": "Common",
+      "start": 176
+    },
+    {
+      "end": 177,
+      "script": "Common",
+      "start": 177
+    },
+    {
+      "end": 179,
+      "script": "Common",
+      "start": 178
+    },
+    {
+      "end": 180,
+      "script": "Common",
+      "start": 180
+    },
+    {
+      "end": 181,
+      "script": "Common",
+      "start": 181
+    },
+    {
+      "end": 183,
+      "script": "Common",
+      "start": 182
+    },
+    {
+      "end": 184,
+      "script": "Common",
+      "start": 184
+    },
+    {
+      "end": 185,
+      "script": "Common",
+      "start": 185
+    },
+    {
+      "end": 186,
+      "script": "Latin",
+      "start": 186
+    },
+    {
+      "end": 187,
+      "script": "Common",
+      "start": 187
+    },
+    {
+      "end": 190,
+      "script": "Common",
+      "start": 188
+    },
+    {
+      "end": 191,
+      "script": "Common",
+      "start": 191
+    },
+    {
+      "end": 214,
+      "script": "Latin",
+      "start": 192
+    },
+    {
+      "end": 215,
+      "script": "Common",
+      "start": 215
+    },
+    {
+      "end": 246,
+      "script": "Latin",
+      "start": 216
+    },
+    {
+      "end": 247,
+      "script": "Common",
+      "start": 247
+    },
+    {
+      "end": 442,
+      "script": "Latin",
+      "start": 248
+    },
+    {
+      "end": 443,
+      "script": "Latin",
+      "start": 443
+    },
+    {
+      "end": 447,
+      "script": "Latin",
+      "start": 444
+    },
+    {
+      "end": 451,
+      "script": "Latin",
+      "start": 448
+    },
+    {
+      "end": 659,
+      "script": "Latin",
+      "start": 452
+    },
+    {
+      "end": 661,
+      "script": "Latin",
+      "start": 660
+    },
+    {
+      "end": 687,
+      "script": "Latin",
+      "start": 662
+    },
+    {
+      "end": 696,
+      "script": "Latin",
+      "start": 688
+    },
+    {
+      "end": 705,
+      "script": "Common",
+      "start": 697
+    },
+    {
+      "end": 709,
+      "script": "Common",
+      "start": 706
+    },
+    {
+      "end": 721,
+      "script": "Common",
+      "start": 710
+    },
+    {
+      "end": 735,
+      "script": "Common",
+      "start": 722
+    },
+    {
+      "end": 740,
+      "script": "Latin",
+      "start": 736
+    },
+    {
+      "end": 745,
+      "script": "Common",
+      "start": 741
+    },
+    {
+      "end": 747,
+      "script": "Bopomofo",
+      "start": 746
+    },
+    {
+      "end": 748,
+      "script": "Common",
+      "start": 748
+    },
+    {
+      "end": 749,
+      "script": "Common",
+      "start": 749
+    },
+    {
+      "end": 750,
+      "script": "Common",
+      "start": 750
+    },
+    {
+      "end": 767,
+      "script": "Common",
+      "start": 751
+    },
+    {
+      "end": 879,
+      "script": "Inherited",
+      "start": 768
+    },
+    {
+      "end": 883,
+      "script": "Greek",
+      "start": 880
+    },
+    {
+      "end": 884,
+      "script": "Common",
+      "start": 884
+    },
+    {
+      "end": 885,
+      "script": "Greek",
+      "start": 885
+    },
+    {
+      "end": 887,
+      "script": "Greek",
+      "start": 886
+    },
+    {
+      "end": 890,
+      "script": "Greek",
+      "start": 890
+    },
+    {
+      "end": 893,
+      "script": "Greek",
+      "start": 891
+    },
+    {
+      "end": 894,
+      "script": "Common",
+      "start": 894
+    },
+    {
+      "end": 895,
+      "script": "Greek",
+      "start": 895
+    },
+    {
+      "end": 900,
+      "script": "Greek",
+      "start": 900
+    },
+    {
+      "end": 901,
+      "script": "Common",
+      "start": 901
+    },
+    {
+      "end": 902,
+      "script": "Greek",
+      "start": 902
+    },
+    {
+      "end": 903,
+      "script": "Common",
+      "start": 903
+    },
+    {
+      "end": 906,
+      "script": "Greek",
+      "start": 904
+    },
+    {
+      "end": 908,
+      "script": "Greek",
+      "start": 908
+    },
+    {
+      "end": 929,
+      "script": "Greek",
+      "start": 910
+    },
+    {
+      "end": 993,
+      "script": "Greek",
+      "start": 931
+    },
+    {
+      "end": 1007,
+      "script": "Coptic",
+      "start": 994
+    },
+    {
+      "end": 1013,
+      "script": "Greek",
+      "start": 1008
+    },
+    {
+      "end": 1014,
+      "script": "Greek",
+      "start": 1014
+    },
+    {
+      "end": 1023,
+      "script": "Greek",
+      "start": 1015
+    },
+    {
+      "end": 1153,
+      "script": "Cyrillic",
+      "start": 1024
+    },
+    {
+      "end": 1154,
+      "script": "Cyrillic",
+      "start": 1154
+    },
+    {
+      "end": 1156,
+      "script": "Cyrillic",
+      "start": 1155
+    },
+    {
+      "end": 1158,
+      "script": "Inherited",
+      "start": 1157
+    },
+    {
+      "end": 1159,
+      "script": "Cyrillic",
+      "start": 1159
+    },
+    {
+      "end": 1161,
+      "script": "Cyrillic",
+      "start": 1160
+    },
+    {
+      "end": 1327,
+      "script": "Cyrillic",
+      "start": 1162
+    },
+    {
+      "end": 1366,
+      "script": "Armenian",
+      "start": 1329
+    },
+    {
+      "end": 1369,
+      "script": "Armenian",
+      "start": 1369
+    },
+    {
+      "end": 1375,
+      "script": "Armenian",
+      "start": 1370
+    },
+    {
+      "end": 1416,
+      "script": "Armenian",
+      "start": 1376
+    },
+    {
+      "end": 1417,
+      "script": "Armenian",
+      "start": 1417
+    },
+    {
+      "end": 1418,
+      "script": "Armenian",
+      "start": 1418
+    },
+    {
+      "end": 1422,
+      "script": "Armenian",
+      "start": 1421
+    },
+    {
+      "end": 1423,
+      "script": "Armenian",
+      "start": 1423
+    },
+    {
+      "end": 1469,
+      "script": "Hebrew",
+      "start": 1425
+    },
+    {
+      "end": 1470,
+      "script": "Hebrew",
+      "start": 1470
+    },
+    {
+      "end": 1471,
+      "script": "Hebrew",
+      "start": 1471
+    },
+    {
+      "end": 1472,
+      "script": "Hebrew",
+      "start": 1472
+    },
+    {
+      "end": 1474,
+      "script": "Hebrew",
+      "start": 1473
+    },
+    {
+      "end": 1475,
+      "script": "Hebrew",
+      "start": 1475
+    },
+    {
+      "end": 1477,
+      "script": "Hebrew",
+      "start": 1476
+    },
+    {
+      "end": 1478,
+      "script": "Hebrew",
+      "start": 1478
+    },
+    {
+      "end": 1479,
+      "script": "Hebrew",
+      "start": 1479
+    },
+    {
+      "end": 1514,
+      "script": "Hebrew",
+      "start": 1488
+    },
+    {
+      "end": 1522,
+      "script": "Hebrew",
+      "start": 1519
+    },
+    {
+      "end": 1524,
+      "script": "Hebrew",
+      "start": 1523
+    },
+    {
+      "end": 1540,
+      "script": "Arabic",
+      "start": 1536
+    },
+    {
+      "end": 1541,
+      "script": "Common",
+      "start": 1541
+    },
+    {
+      "end": 1544,
+      "script": "Arabic",
+      "start": 1542
+    },
+    {
+      "end": 1546,
+      "script": "Arabic",
+      "start": 1545
+    },
+    {
+      "end": 1547,
+      "script": "Arabic",
+      "start": 1547
+    },
+    {
+      "end": 1548,
+      "script": "Common",
+      "start": 1548
+    },
+    {
+      "end": 1549,
+      "script": "Arabic",
+      "start": 1549
+    },
+    {
+      "end": 1551,
+      "script": "Arabic",
+      "start": 1550
+    },
+    {
+      "end": 1562,
+      "script": "Arabic",
+      "start": 1552
+    },
+    {
+      "end": 1563,
+      "script": "Common",
+      "start": 1563
+    },
+    {
+      "end": 1564,
+      "script": "Arabic",
+      "start": 1564
+    },
+    {
+      "end": 1566,
+      "script": "Arabic",
+      "start": 1565
+    },
+    {
+      "end": 1567,
+      "script": "Common",
+      "start": 1567
+    },
+    {
+      "end": 1599,
+      "script": "Arabic",
+      "start": 1568
+    },
+    {
+      "end": 1600,
+      "script": "Common",
+      "start": 1600
+    },
+    {
+      "end": 1610,
+      "script": "Arabic",
+      "start": 1601
+    },
+    {
+      "end": 1621,
+      "script": "Inherited",
+      "start": 1611
+    },
+    {
+      "end": 1631,
+      "script": "Arabic",
+      "start": 1622
+    },
+    {
+      "end": 1641,
+      "script": "Arabic",
+      "start": 1632
+    },
+    {
+      "end": 1645,
+      "script": "Arabic",
+      "start": 1642
+    },
+    {
+      "end": 1647,
+      "script": "Arabic",
+      "start": 1646
+    },
+    {
+      "end": 1648,
+      "script": "Inherited",
+      "start": 1648
+    },
+    {
+      "end": 1747,
+      "script": "Arabic",
+      "start": 1649
+    },
+    {
+      "end": 1748,
+      "script": "Arabic",
+      "start": 1748
+    },
+    {
+      "end": 1749,
+      "script": "Arabic",
+      "start": 1749
+    },
+    {
+      "end": 1756,
+      "script": "Arabic",
+      "start": 1750
+    },
+    {
+      "end": 1757,
+      "script": "Common",
+      "start": 1757
+    },
+    {
+      "end": 1758,
+      "script": "Arabic",
+      "start": 1758
+    },
+    {
+      "end": 1764,
+      "script": "Arabic",
+      "start": 1759
+    },
+    {
+      "end": 1766,
+      "script": "Arabic",
+      "start": 1765
+    },
+    {
+      "end": 1768,
+      "script": "Arabic",
+      "start": 1767
+    },
+    {
+      "end": 1769,
+      "script": "Arabic",
+      "start": 1769
+    },
+    {
+      "end": 1773,
+      "script": "Arabic",
+      "start": 1770
+    },
+    {
+      "end": 1775,
+      "script": "Arabic",
+      "start": 1774
+    },
+    {
+      "end": 1785,
+      "script": "Arabic",
+      "start": 1776
+    },
+    {
+      "end": 1788,
+      "script": "Arabic",
+      "start": 1786
+    },
+    {
+      "end": 1790,
+      "script": "Arabic",
+      "start": 1789
+    },
+    {
+      "end": 1791,
+      "script": "Arabic",
+      "start": 1791
+    },
+    {
+      "end": 1805,
+      "script": "Syriac",
+      "start": 1792
+    },
+    {
+      "end": 1807,
+      "script": "Syriac",
+      "start": 1807
+    },
+    {
+      "end": 1808,
+      "script": "Syriac",
+      "start": 1808
+    },
+    {
+      "end": 1809,
+      "script": "Syriac",
+      "start": 1809
+    },
+    {
+      "end": 1839,
+      "script": "Syriac",
+      "start": 1810
+    },
+    {
+      "end": 1866,
+      "script": "Syriac",
+      "start": 1840
+    },
+    {
+      "end": 1871,
+      "script": "Syriac",
+      "start": 1869
+    },
+    {
+      "end": 1919,
+      "script": "Arabic",
+      "start": 1872
+    },
+    {
+      "end": 1957,
+      "script": "Thaana",
+      "start": 1920
+    },
+    {
+      "end": 1968,
+      "script": "Thaana",
+      "start": 1958
+    },
+    {
+      "end": 1969,
+      "script": "Thaana",
+      "start": 1969
+    },
+    {
+      "end": 1993,
+      "script": "Nko",
+      "start": 1984
+    },
+    {
+      "end": 2026,
+      "script": "Nko",
+      "start": 1994
+    },
+    {
+      "end": 2035,
+      "script": "Nko",
+      "start": 2027
+    },
+    {
+      "end": 2037,
+      "script": "Nko",
+      "start": 2036
+    },
+    {
+      "end": 2038,
+      "script": "Nko",
+      "start": 2038
+    },
+    {
+      "end": 2041,
+      "script": "Nko",
+      "start": 2039
+    },
+    {
+      "end": 2042,
+      "script": "Nko",
+      "start": 2042
+    },
+    {
+      "end": 2045,
+      "script": "Nko",
+      "start": 2045
+    },
+    {
+      "end": 2047,
+      "script": "Nko",
+      "start": 2046
+    },
+    {
+      "end": 2069,
+      "script": "Samaritan",
+      "start": 2048
+    },
+    {
+      "end": 2073,
+      "script": "Samaritan",
+      "start": 2070
+    },
+    {
+      "end": 2074,
+      "script": "Samaritan",
+      "start": 2074
+    },
+    {
+      "end": 2083,
+      "script": "Samaritan",
+      "start": 2075
+    },
+    {
+      "end": 2084,
+      "script": "Samaritan",
+      "start": 2084
+    },
+    {
+      "end": 2087,
+      "script": "Samaritan",
+      "start": 2085
+    },
+    {
+      "end": 2088,
+      "script": "Samaritan",
+      "start": 2088
+    },
+    {
+      "end": 2093,
+      "script": "Samaritan",
+      "start": 2089
+    },
+    {
+      "end": 2110,
+      "script": "Samaritan",
+      "start": 2096
+    },
+    {
+      "end": 2136,
+      "script": "Mandaic",
+      "start": 2112
+    },
+    {
+      "end": 2139,
+      "script": "Mandaic",
+      "start": 2137
+    },
+    {
+      "end": 2142,
+      "script": "Mandaic",
+      "start": 2142
+    },
+    {
+      "end": 2154,
+      "script": "Syriac",
+      "start": 2144
+    },
+    {
+      "end": 2183,
+      "script": "Arabic",
+      "start": 2160
+    },
+    {
+      "end": 2184,
+      "script": "Arabic",
+      "start": 2184
+    },
+    {
+      "end": 2191,
+      "script": "Arabic",
+      "start": 2185
+    },
+    {
+      "end": 2193,
+      "script": "Arabic",
+      "start": 2192
+    },
+    {
+      "end": 2207,
+      "script": "Arabic",
+      "start": 2199
+    },
+    {
+      "end": 2248,
+      "script": "Arabic",
+      "start": 2208
+    },
+    {
+      "end": 2249,
+      "script": "Arabic",
+      "start": 2249
+    },
+    {
+      "end": 2273,
+      "script": "Arabic",
+      "start": 2250
+    },
+    {
+      "end": 2274,
+      "script": "Common",
+      "start": 2274
+    },
+    {
+      "end": 2303,
+      "script": "Arabic",
+      "start": 2275
+    },
+    {
+      "end": 2306,
+      "script": "Devanagari",
+      "start": 2304
+    },
+    {
+      "end": 2307,
+      "script": "Devanagari",
+      "start": 2307
+    },
+    {
+      "end": 2361,
+      "script": "Devanagari",
+      "start": 2308
+    },
+    {
+      "end": 2362,
+      "script": "Devanagari",
+      "start": 2362
+    },
+    {
+      "end": 2363,
+      "script": "Devanagari",
+      "start": 2363
+    },
+    {
+      "end": 2364,
+      "script": "Devanagari",
+      "start": 2364
+    },
+    {
+      "end": 2365,
+      "script": "Devanagari",
+      "start": 2365
+    },
+    {
+      "end": 2368,
+      "script": "Devanagari",
+      "start": 2366
+    },
+    {
+      "end": 2376,
+      "script": "Devanagari",
+      "start": 2369
+    },
+    {
+      "end": 2380,
+      "script": "Devanagari",
+      "start": 2377
+    },
+    {
+      "end": 2381,
+      "script": "Devanagari",
+      "start": 2381
+    },
+    {
+      "end": 2383,
+      "script": "Devanagari",
+      "start": 2382
+    },
+    {
+      "end": 2384,
+      "script": "Devanagari",
+      "start": 2384
+    },
+    {
+      "end": 2388,
+      "script": "Inherited",
+      "start": 2385
+    },
+    {
+      "end": 2391,
+      "script": "Devanagari",
+      "start": 2389
+    },
+    {
+      "end": 2401,
+      "script": "Devanagari",
+      "start": 2392
+    },
+    {
+      "end": 2403,
+      "script": "Devanagari",
+      "start": 2402
+    },
+    {
+      "end": 2405,
+      "script": "Common",
+      "start": 2404
+    },
+    {
+      "end": 2415,
+      "script": "Devanagari",
+      "start": 2406
+    },
+    {
+      "end": 2416,
+      "script": "Devanagari",
+      "start": 2416
+    },
+    {
+      "end": 2417,
+      "script": "Devanagari",
+      "start": 2417
+    },
+    {
+      "end": 2431,
+      "script": "Devanagari",
+      "start": 2418
+    },
+    {
+      "end": 2432,
+      "script": "Bengali",
+      "start": 2432
+    },
+    {
+      "end": 2433,
+      "script": "Bengali",
+      "start": 2433
+    },
+    {
+      "end": 2435,
+      "script": "Bengali",
+      "start": 2434
+    },
+    {
+      "end": 2444,
+      "script": "Bengali",
+      "start": 2437
+    },
+    {
+      "end": 2448,
+      "script": "Bengali",
+      "start": 2447
+    },
+    {
+      "end": 2472,
+      "script": "Bengali",
+      "start": 2451
+    },
+    {
+      "end": 2480,
+      "script": "Bengali",
+      "start": 2474
+    },
+    {
+      "end": 2482,
+      "script": "Bengali",
+      "start": 2482
+    },
+    {
+      "end": 2489,
+      "script": "Bengali",
+      "start": 2486
+    },
+    {
+      "end": 2492,
+      "script": "Bengali",
+      "start": 2492
+    },
+    {
+      "end": 2493,
+      "script": "Bengali",
+      "start": 2493
+    },
+    {
+      "end": 2496,
+      "script": "Bengali",
+      "start": 2494
+    },
+    {
+      "end": 2500,
+      "script": "Bengali",
+      "start": 2497
+    },
+    {
+      "end": 2504,
+      "script": "Bengali",
+      "start": 2503
+    },
+    {
+      "end": 2508,
+      "script": "Bengali",
+      "start": 2507
+    },
+    {
+      "end": 2509,
+      "script": "Bengali",
+      "start": 2509
+    },
+    {
+      "end": 2510,
+      "script": "Bengali",
+      "start": 2510
+    },
+    {
+      "end": 2519,
+      "script": "Bengali",
+      "start": 2519
+    },
+    {
+      "end": 2525,
+      "script": "Bengali",
+      "start": 2524
+    },
+    {
+      "end": 2529,
+      "script": "Bengali",
+      "start": 2527
+    },
+    {
+      "end": 2531,
+      "script": "Bengali",
+      "start": 2530
+    },
+    {
+      "end": 2543,
+      "script": "Bengali",
+      "start": 2534
+    },
+    {
+      "end": 2545,
+      "script": "Bengali",
+      "start": 2544
+    },
+    {
+      "end": 2547,
+      "script": "Bengali",
+      "start": 2546
+    },
+    {
+      "end": 2553,
+      "script": "Bengali",
+      "start": 2548
+    },
+    {
+      "end": 2554,
+      "script": "Bengali",
+      "start": 2554
+    },
+    {
+      "end": 2555,
+      "script": "Bengali",
+      "start": 2555
+    },
+    {
+      "end": 2556,
+      "script": "Bengali",
+      "start": 2556
+    },
+    {
+      "end": 2557,
+      "script": "Bengali",
+      "start": 2557
+    },
+    {
+      "end": 2558,
+      "script": "Bengali",
+      "start": 2558
+    },
+    {
+      "end": 2562,
+      "script": "Gurmukhi",
+      "start": 2561
+    },
+    {
+      "end": 2563,
+      "script": "Gurmukhi",
+      "start": 2563
+    },
+    {
+      "end": 2570,
+      "script": "Gurmukhi",
+      "start": 2565
+    },
+    {
+      "end": 2576,
+      "script": "Gurmukhi",
+      "start": 2575
+    },
+    {
+      "end": 2600,
+      "script": "Gurmukhi",
+      "start": 2579
+    },
+    {
+      "end": 2608,
+      "script": "Gurmukhi",
+      "start": 2602
+    },
+    {
+      "end": 2611,
+      "script": "Gurmukhi",
+      "start": 2610
+    },
+    {
+      "end": 2614,
+      "script": "Gurmukhi",
+      "start": 2613
+    },
+    {
+      "end": 2617,
+      "script": "Gurmukhi",
+      "start": 2616
+    },
+    {
+      "end": 2620,
+      "script": "Gurmukhi",
+      "start": 2620
+    },
+    {
+      "end": 2624,
+      "script": "Gurmukhi",
+      "start": 2622
+    },
+    {
+      "end": 2626,
+      "script": "Gurmukhi",
+      "start": 2625
+    },
+    {
+      "end": 2632,
+      "script": "Gurmukhi",
+      "start": 2631
+    },
+    {
+      "end": 2637,
+      "script": "Gurmukhi",
+      "start": 2635
+    },
+    {
+      "end": 2641,
+      "script": "Gurmukhi",
+      "start": 2641
+    },
+    {
+      "end": 2652,
+      "script": "Gurmukhi",
+      "start": 2649
+    },
+    {
+      "end": 2654,
+      "script": "Gurmukhi",
+      "start": 2654
+    },
+    {
+      "end": 2671,
+      "script": "Gurmukhi",
+      "start": 2662
+    },
+    {
+      "end": 2673,
+      "script": "Gurmukhi",
+      "start": 2672
+    },
+    {
+      "end": 2676,
+      "script": "Gurmukhi",
+      "start": 2674
+    },
+    {
+      "end": 2677,
+      "script": "Gurmukhi",
+      "start": 2677
+    },
+    {
+      "end": 2678,
+      "script": "Gurmukhi",
+      "start": 2678
+    },
+    {
+      "end": 2690,
+      "script": "Gujarati",
+      "start": 2689
+    },
+    {
+      "end": 2691,
+      "script": "Gujarati",
+      "start": 2691
+    },
+    {
+      "end": 2701,
+      "script": "Gujarati",
+      "start": 2693
+    },
+    {
+      "end": 2705,
+      "script": "Gujarati",
+      "start": 2703
+    },
+    {
+      "end": 2728,
+      "script": "Gujarati",
+      "start": 2707
+    },
+    {
+      "end": 2736,
+      "script": "Gujarati",
+      "start": 2730
+    },
+    {
+      "end": 2739,
+      "script": "Gujarati",
+      "start": 2738
+    },
+    {
+      "end": 2745,
+      "script": "Gujarati",
+      "start": 2741
+    },
+    {
+      "end": 2748,
+      "script": "Gujarati",
+      "start": 2748
+    },
+    {
+      "end": 2749,
+      "script": "Gujarati",
+      "start": 2749
+    },
+    {
+      "end": 2752,
+      "script": "Gujarati",
+      "start": 2750
+    },
+    {
+      "end": 2757,
+      "script": "Gujarati",
+      "start": 2753
+    },
+    {
+      "end": 2760,
+      "script": "Gujarati",
+      "start": 2759
+    },
+    {
+      "end": 2761,
+      "script": "Gujarati",
+      "start": 2761
+    },
+    {
+      "end": 2764,
+      "script": "Gujarati",
+      "start": 2763
+    },
+    {
+      "end": 2765,
+      "script": "Gujarati",
+      "start": 2765
+    },
+    {
+      "end": 2768,
+      "script": "Gujarati",
+      "start": 2768
+    },
+    {
+      "end": 2785,
+      "script": "Gujarati",
+      "start": 2784
+    },
+    {
+      "end": 2787,
+      "script": "Gujarati",
+      "start": 2786
+    },
+    {
+      "end": 2799,
+      "script": "Gujarati",
+      "start": 2790
+    },
+    {
+      "end": 2800,
+      "script": "Gujarati",
+      "start": 2800
+    },
+    {
+      "end": 2801,
+      "script": "Gujarati",
+      "start": 2801
+    },
+    {
+      "end": 2809,
+      "script": "Gujarati",
+      "start": 2809
+    },
+    {
+      "end": 2815,
+      "script": "Gujarati",
+      "start": 2810
+    },
+    {
+      "end": 2817,
+      "script": "Oriya",
+      "start": 2817
+    },
+    {
+      "end": 2819,
+      "script": "Oriya",
+      "start": 2818
+    },
+    {
+      "end": 2828,
+      "script": "Oriya",
+      "start": 2821
+    },
+    {
+      "end": 2832,
+      "script": "Oriya",
+      "start": 2831
+    },
+    {
+      "end": 2856,
+      "script": "Oriya",
+      "start": 2835
+    },
+    {
+      "end": 2864,
+      "script": "Oriya",
+      "start": 2858
+    },
+    {
+      "end": 2867,
+      "script": "Oriya",
+      "start": 2866
+    },
+    {
+      "end": 2873,
+      "script": "Oriya",
+      "start": 2869
+    },
+    {
+      "end": 2876,
+      "script": "Oriya",
+      "start": 2876
+    },
+    {
+      "end": 2877,
+      "script": "Oriya",
+      "start": 2877
+    },
+    {
+      "end": 2878,
+      "script": "Oriya",
+      "start": 2878
+    },
+    {
+      "end": 2879,
+      "script": "Oriya",
+      "start": 2879
+    },
+    {
+      "end": 2880,
+      "script": "Oriya",
+      "start": 2880
+    },
+    {
+      "end": 2884,
+      "script": "Oriya",
+      "start": 2881
+    },
+    {
+      "end": 2888,
+      "script": "Oriya",
+      "start": 2887
+    },
+    {
+      "end": 2892,
+      "script": "Oriya",
+      "start": 2891
+    },
+    {
+      "end": 2893,
+      "script": "Oriya",
+      "start": 2893
+    },
+    {
+      "end": 2902,
+      "script": "Oriya",
+      "start": 2901
+    },
+    {
+      "end": 2903,
+      "script": "Oriya",
+      "start": 2903
+    },
+    {
+      "end": 2909,
+      "script": "Oriya",
+      "start": 2908
+    },
+    {
+      "end": 2913,
+      "script": "Oriya",
+      "start": 2911
+    },
+    {
+      "end": 2915,
+      "script": "Oriya",
+      "start": 2914
+    },
+    {
+      "end": 2927,
+      "script": "Oriya",
+      "start": 2918
+    },
+    {
+      "end": 2928,
+      "script": "Oriya",
+      "start": 2928
+    },
+    {
+      "end": 2929,
+      "script": "Oriya",
+      "start": 2929
+    },
+    {
+      "end": 2935,
+      "script": "Oriya",
+      "start": 2930
+    },
+    {
+      "end": 2946,
+      "script": "Tamil",
+      "start": 2946
+    },
+    {
+      "end": 2947,
+      "script": "Tamil",
+      "start": 2947
+    },
+    {
+      "end": 2954,
+      "script": "Tamil",
+      "start": 2949
+    },
+    {
+      "end": 2960,
+      "script": "Tamil",
+      "start": 2958
+    },
+    {
+      "end": 2965,
+      "script": "Tamil",
+      "start": 2962
+    },
+    {
+      "end": 2970,
+      "script": "Tamil",
+      "start": 2969
+    },
+    {
+      "end": 2972,
+      "script": "Tamil",
+      "start": 2972
+    },
+    {
+      "end": 2975,
+      "script": "Tamil",
+      "start": 2974
+    },
+    {
+      "end": 2980,
+      "script": "Tamil",
+      "start": 2979
+    },
+    {
+      "end": 2986,
+      "script": "Tamil",
+      "start": 2984
+    },
+    {
+      "end": 3001,
+      "script": "Tamil",
+      "start": 2990
+    },
+    {
+      "end": 3007,
+      "script": "Tamil",
+      "start": 3006
+    },
+    {
+      "end": 3008,
+      "script": "Tamil",
+      "start": 3008
+    },
+    {
+      "end": 3010,
+      "script": "Tamil",
+      "start": 3009
+    },
+    {
+      "end": 3016,
+      "script": "Tamil",
+      "start": 3014
+    },
+    {
+      "end": 3020,
+      "script": "Tamil",
+      "start": 3018
+    },
+    {
+      "end": 3021,
+      "script": "Tamil",
+      "start": 3021
+    },
+    {
+      "end": 3024,
+      "script": "Tamil",
+      "start": 3024
+    },
+    {
+      "end": 3031,
+      "script": "Tamil",
+      "start": 3031
+    },
+    {
+      "end": 3055,
+      "script": "Tamil",
+      "start": 3046
+    },
+    {
+      "end": 3058,
+      "script": "Tamil",
+      "start": 3056
+    },
+    {
+      "end": 3064,
+      "script": "Tamil",
+      "start": 3059
+    },
+    {
+      "end": 3065,
+      "script": "Tamil",
+      "start": 3065
+    },
+    {
+      "end": 3066,
+      "script": "Tamil",
+      "start": 3066
+    },
+    {
+      "end": 3072,
+      "script": "Telugu",
+      "start": 3072
+    },
+    {
+      "end": 3075,
+      "script": "Telugu",
+      "start": 3073
+    },
+    {
+      "end": 3076,
+      "script": "Telugu",
+      "start": 3076
+    },
+    {
+      "end": 3084,
+      "script": "Telugu",
+      "start": 3077
+    },
+    {
+      "end": 3088,
+      "script": "Telugu",
+      "start": 3086
+    },
+    {
+      "end": 3112,
+      "script": "Telugu",
+      "start": 3090
+    },
+    {
+      "end": 3129,
+      "script": "Telugu",
+      "start": 3114
+    },
+    {
+      "end": 3132,
+      "script": "Telugu",
+      "start": 3132
+    },
+    {
+      "end": 3133,
+      "script": "Telugu",
+      "start": 3133
+    },
+    {
+      "end": 3136,
+      "script": "Telugu",
+      "start": 3134
+    },
+    {
+      "end": 3140,
+      "script": "Telugu",
+      "start": 3137
+    },
+    {
+      "end": 3144,
+      "script": "Telugu",
+      "start": 3142
+    },
+    {
+      "end": 3149,
+      "script": "Telugu",
+      "start": 3146
+    },
+    {
+      "end": 3158,
+      "script": "Telugu",
+      "start": 3157
+    },
+    {
+      "end": 3162,
+      "script": "Telugu",
+      "start": 3160
+    },
+    {
+      "end": 3165,
+      "script": "Telugu",
+      "start": 3164
+    },
+    {
+      "end": 3169,
+      "script": "Telugu",
+      "start": 3168
+    },
+    {
+      "end": 3171,
+      "script": "Telugu",
+      "start": 3170
+    },
+    {
+      "end": 3183,
+      "script": "Telugu",
+      "start": 3174
+    },
+    {
+      "end": 3191,
+      "script": "Telugu",
+      "start": 3191
+    },
+    {
+      "end": 3198,
+      "script": "Telugu",
+      "start": 3192
+    },
+    {
+      "end": 3199,
+      "script": "Telugu",
+      "start": 3199
+    },
+    {
+      "end": 3200,
+      "script": "Kannada",
+      "start": 3200
+    },
+    {
+      "end": 3201,
+      "script": "Kannada",
+      "start": 3201
+    },
+    {
+      "end": 3203,
+      "script": "Kannada",
+      "start": 3202
+    },
+    {
+      "end": 3204,
+      "script": "Kannada",
+      "start": 3204
+    },
+    {
+      "end": 3212,
+      "script": "Kannada",
+      "start": 3205
+    },
+    {
+      "end": 3216,
+      "script": "Kannada",
+      "start": 3214
+    },
+    {
+      "end": 3240,
+      "script": "Kannada",
+      "start": 3218
+    },
+    {
+      "end": 3251,
+      "script": "Kannada",
+      "start": 3242
+    },
+    {
+      "end": 3257,
+      "script": "Kannada",
+      "start": 3253
+    },
+    {
+      "end": 3260,
+      "script": "Kannada",
+      "start": 3260
+    },
+    {
+      "end": 3261,
+      "script": "Kannada",
+      "start": 3261
+    },
+    {
+      "end": 3262,
+      "script": "Kannada",
+      "start": 3262
+    },
+    {
+      "end": 3263,
+      "script": "Kannada",
+      "start": 3263
+    },
+    {
+      "end": 3268,
+      "script": "Kannada",
+      "start": 3264
+    },
+    {
+      "end": 3270,
+      "script": "Kannada",
+      "start": 3270
+    },
+    {
+      "end": 3272,
+      "script": "Kannada",
+      "start": 3271
+    },
+    {
+      "end": 3275,
+      "script": "Kannada",
+      "start": 3274
+    },
+    {
+      "end": 3277,
+      "script": "Kannada",
+      "start": 3276
+    },
+    {
+      "end": 3286,
+      "script": "Kannada",
+      "start": 3285
+    },
+    {
+      "end": 3294,
+      "script": "Kannada",
+      "start": 3292
+    },
+    {
+      "end": 3297,
+      "script": "Kannada",
+      "start": 3296
+    },
+    {
+      "end": 3299,
+      "script": "Kannada",
+      "start": 3298
+    },
+    {
+      "end": 3311,
+      "script": "Kannada",
+      "start": 3302
+    },
+    {
+      "end": 3314,
+      "script": "Kannada",
+      "start": 3313
+    },
+    {
+      "end": 3315,
+      "script": "Kannada",
+      "start": 3315
+    },
+    {
+      "end": 3329,
+      "script": "Malayalam",
+      "start": 3328
+    },
+    {
+      "end": 3331,
+      "script": "Malayalam",
+      "start": 3330
+    },
+    {
+      "end": 3340,
+      "script": "Malayalam",
+      "start": 3332
+    },
+    {
+      "end": 3344,
+      "script": "Malayalam",
+      "start": 3342
+    },
+    {
+      "end": 3386,
+      "script": "Malayalam",
+      "start": 3346
+    },
+    {
+      "end": 3388,
+      "script": "Malayalam",
+      "start": 3387
+    },
+    {
+      "end": 3389,
+      "script": "Malayalam",
+      "start": 3389
+    },
+    {
+      "end": 3392,
+      "script": "Malayalam",
+      "start": 3390
+    },
+    {
+      "end": 3396,
+      "script": "Malayalam",
+      "start": 3393
+    },
+    {
+      "end": 3400,
+      "script": "Malayalam",
+      "start": 3398
+    },
+    {
+      "end": 3404,
+      "script": "Malayalam",
+      "start": 3402
+    },
+    {
+      "end": 3405,
+      "script": "Malayalam",
+      "start": 3405
+    },
+    {
+      "end": 3406,
+      "script": "Malayalam",
+      "start": 3406
+    },
+    {
+      "end": 3407,
+      "script": "Malayalam",
+      "start": 3407
+    },
+    {
+      "end": 3414,
+      "script": "Malayalam",
+      "start": 3412
+    },
+    {
+      "end": 3415,
+      "script": "Malayalam",
+      "start": 3415
+    },
+    {
+      "end": 3422,
+      "script": "Malayalam",
+      "start": 3416
+    },
+    {
+      "end": 3425,
+      "script": "Malayalam",
+      "start": 3423
+    },
+    {
+      "end": 3427,
+      "script": "Malayalam",
+      "start": 3426
+    },
+    {
+      "end": 3439,
+      "script": "Malayalam",
+      "start": 3430
+    },
+    {
+      "end": 3448,
+      "script": "Malayalam",
+      "start": 3440
+    },
+    {
+      "end": 3449,
+      "script": "Malayalam",
+      "start": 3449
+    },
+    {
+      "end": 3455,
+      "script": "Malayalam",
+      "start": 3450
+    },
+    {
+      "end": 3457,
+      "script": "Sinhala",
+      "start": 3457
+    },
+    {
+      "end": 3459,
+      "script": "Sinhala",
+      "start": 3458
+    },
+    {
+      "end": 3478,
+      "script": "Sinhala",
+      "start": 3461
+    },
+    {
+      "end": 3505,
+      "script": "Sinhala",
+      "start": 3482
+    },
+    {
+      "end": 3515,
+      "script": "Sinhala",
+      "start": 3507
+    },
+    {
+      "end": 3517,
+      "script": "Sinhala",
+      "start": 3517
+    },
+    {
+      "end": 3526,
+      "script": "Sinhala",
+      "start": 3520
+    },
+    {
+      "end": 3530,
+      "script": "Sinhala",
+      "start": 3530
+    },
+    {
+      "end": 3537,
+      "script": "Sinhala",
+      "start": 3535
+    },
+    {
+      "end": 3540,
+      "script": "Sinhala",
+      "start": 3538
+    },
+    {
+      "end": 3542,
+      "script": "Sinhala",
+      "start": 3542
+    },
+    {
+      "end": 3551,
+      "script": "Sinhala",
+      "start": 3544
+    },
+    {
+      "end": 3567,
+      "script": "Sinhala",
+      "start": 3558
+    },
+    {
+      "end": 3571,
+      "script": "Sinhala",
+      "start": 3570
+    },
+    {
+      "end": 3572,
+      "script": "Sinhala",
+      "start": 3572
+    },
+    {
+      "end": 3632,
+      "script": "Thai",
+      "start": 3585
+    },
+    {
+      "end": 3633,
+      "script": "Thai",
+      "start": 3633
+    },
+    {
+      "end": 3635,
+      "script": "Thai",
+      "start": 3634
+    },
+    {
+      "end": 3642,
+      "script": "Thai",
+      "start": 3636
+    },
+    {
+      "end": 3647,
+      "script": "Common",
+      "start": 3647
+    },
+    {
+      "end": 3653,
+      "script": "Thai",
+      "start": 3648
+    },
+    {
+      "end": 3654,
+      "script": "Thai",
+      "start": 3654
+    },
+    {
+      "end": 3662,
+      "script": "Thai",
+      "start": 3655
+    },
+    {
+      "end": 3663,
+      "script": "Thai",
+      "start": 3663
+    },
+    {
+      "end": 3673,
+      "script": "Thai",
+      "start": 3664
+    },
+    {
+      "end": 3675,
+      "script": "Thai",
+      "start": 3674
+    },
+    {
+      "end": 3714,
+      "script": "Lao",
+      "start": 3713
+    },
+    {
+      "end": 3716,
+      "script": "Lao",
+      "start": 3716
+    },
+    {
+      "end": 3722,
+      "script": "Lao",
+      "start": 3718
+    },
+    {
+      "end": 3747,
+      "script": "Lao",
+      "start": 3724
+    },
+    {
+      "end": 3749,
+      "script": "Lao",
+      "start": 3749
+    },
+    {
+      "end": 3760,
+      "script": "Lao",
+      "start": 3751
+    },
+    {
+      "end": 3761,
+      "script": "Lao",
+      "start": 3761
+    },
+    {
+      "end": 3763,
+      "script": "Lao",
+      "start": 3762
+    },
+    {
+      "end": 3772,
+      "script": "Lao",
+      "start": 3764
+    },
+    {
+      "end": 3773,
+      "script": "Lao",
+      "start": 3773
+    },
+    {
+      "end": 3780,
+      "script": "Lao",
+      "start": 3776
+    },
+    {
+      "end": 3782,
+      "script": "Lao",
+      "start": 3782
+    },
+    {
+      "end": 3790,
+      "script": "Lao",
+      "start": 3784
+    },
+    {
+      "end": 3801,
+      "script": "Lao",
+      "start": 3792
+    },
+    {
+      "end": 3807,
+      "script": "Lao",
+      "start": 3804
+    },
+    {
+      "end": 3840,
+      "script": "Tibetan",
+      "start": 3840
+    },
+    {
+      "end": 3843,
+      "script": "Tibetan",
+      "start": 3841
+    },
+    {
+      "end": 3858,
+      "script": "Tibetan",
+      "start": 3844
+    },
+    {
+      "end": 3859,
+      "script": "Tibetan",
+      "start": 3859
+    },
+    {
+      "end": 3860,
+      "script": "Tibetan",
+      "start": 3860
+    },
+    {
+      "end": 3863,
+      "script": "Tibetan",
+      "start": 3861
+    },
+    {
+      "end": 3865,
+      "script": "Tibetan",
+      "start": 3864
+    },
+    {
+      "end": 3871,
+      "script": "Tibetan",
+      "start": 3866
+    },
+    {
+      "end": 3881,
+      "script": "Tibetan",
+      "start": 3872
+    },
+    {
+      "end": 3891,
+      "script": "Tibetan",
+      "start": 3882
+    },
+    {
+      "end": 3892,
+      "script": "Tibetan",
+      "start": 3892
+    },
+    {
+      "end": 3893,
+      "script": "Tibetan",
+      "start": 3893
+    },
+    {
+      "end": 3894,
+      "script": "Tibetan",
+      "start": 3894
+    },
+    {
+      "end": 3895,
+      "script": "Tibetan",
+      "start": 3895
+    },
+    {
+      "end": 3896,
+      "script": "Tibetan",
+      "start": 3896
+    },
+    {
+      "end": 3897,
+      "script": "Tibetan",
+      "start": 3897
+    },
+    {
+      "end": 3898,
+      "script": "Tibetan",
+      "start": 3898
+    },
+    {
+      "end": 3899,
+      "script": "Tibetan",
+      "start": 3899
+    },
+    {
+      "end": 3900,
+      "script": "Tibetan",
+      "start": 3900
+    },
+    {
+      "end": 3901,
+      "script": "Tibetan",
+      "start": 3901
+    },
+    {
+      "end": 3903,
+      "script": "Tibetan",
+      "start": 3902
+    },
+    {
+      "end": 3911,
+      "script": "Tibetan",
+      "start": 3904
+    },
+    {
+      "end": 3948,
+      "script": "Tibetan",
+      "start": 3913
+    },
+    {
+      "end": 3966,
+      "script": "Tibetan",
+      "start": 3953
+    },
+    {
+      "end": 3967,
+      "script": "Tibetan",
+      "start": 3967
+    },
+    {
+      "end": 3972,
+      "script": "Tibetan",
+      "start": 3968
+    },
+    {
+      "end": 3973,
+      "script": "Tibetan",
+      "start": 3973
+    },
+    {
+      "end": 3975,
+      "script": "Tibetan",
+      "start": 3974
+    },
+    {
+      "end": 3980,
+      "script": "Tibetan",
+      "start": 3976
+    },
+    {
+      "end": 3991,
+      "script": "Tibetan",
+      "start": 3981
+    },
+    {
+      "end": 4028,
+      "script": "Tibetan",
+      "start": 3993
+    },
+    {
+      "end": 4037,
+      "script": "Tibetan",
+      "start": 4030
+    },
+    {
+      "end": 4038,
+      "script": "Tibetan",
+      "start": 4038
+    },
+    {
+      "end": 4044,
+      "script": "Tibetan",
+      "start": 4039
+    },
+    {
+      "end": 4047,
+      "script": "Tibetan",
+      "start": 4046
+    },
+    {
+      "end": 4052,
+      "script": "Tibetan",
+      "start": 4048
+    },
+    {
+      "end": 4056,
+      "script": "Common",
+      "start": 4053
+    },
+    {
+      "end": 4058,
+      "script": "Tibetan",
+      "start": 4057
+    },
+    {
+      "end": 4138,
+      "script": "Myanmar",
+      "start": 4096
+    },
+    {
+      "end": 4140,
+      "script": "Myanmar",
+      "start": 4139
+    },
+    {
+      "end": 4144,
+      "script": "Myanmar",
+      "start": 4141
+    },
+    {
+      "end": 4145,
+      "script": "Myanmar",
+      "start": 4145
+    },
+    {
+      "end": 4151,
+      "script": "Myanmar",
+      "start": 4146
+    },
+    {
+      "end": 4152,
+      "script": "Myanmar",
+      "start": 4152
+    },
+    {
+      "end": 4154,
+      "script": "Myanmar",
+      "start": 4153
+    },
+    {
+      "end": 4156,
+      "script": "Myanmar",
+      "start": 4155
+    },
+    {
+      "end": 4158,
+      "script": "Myanmar",
+      "start": 4157
+    },
+    {
+      "end": 4159,
+      "script": "Myanmar",
+      "start": 4159
+    },
+    {
+      "end": 4169,
+      "script": "Myanmar",
+      "start": 4160
+    },
+    {
+      "end": 4175,
+      "script": "Myanmar",
+      "start": 4170
+    },
+    {
+      "end": 4181,
+      "script": "Myanmar",
+      "start": 4176
+    },
+    {
+      "end": 4183,
+      "script": "Myanmar",
+      "start": 4182
+    },
+    {
+      "end": 4185,
+      "script": "Myanmar",
+      "start": 4184
+    },
+    {
+      "end": 4189,
+      "script": "Myanmar",
+      "start": 4186
+    },
+    {
+      "end": 4192,
+      "script": "Myanmar",
+      "start": 4190
+    },
+    {
+      "end": 4193,
+      "script": "Myanmar",
+      "start": 4193
+    },
+    {
+      "end": 4196,
+      "script": "Myanmar",
+      "start": 4194
+    },
+    {
+      "end": 4198,
+      "script": "Myanmar",
+      "start": 4197
+    },
+    {
+      "end": 4205,
+      "script": "Myanmar",
+      "start": 4199
+    },
+    {
+      "end": 4208,
+      "script": "Myanmar",
+      "start": 4206
+    },
+    {
+      "end": 4212,
+      "script": "Myanmar",
+      "start": 4209
+    },
+    {
+      "end": 4225,
+      "script": "Myanmar",
+      "start": 4213
+    },
+    {
+      "end": 4226,
+      "script": "Myanmar",
+      "start": 4226
+    },
+    {
+      "end": 4228,
+      "script": "Myanmar",
+      "start": 4227
+    },
+    {
+      "end": 4230,
+      "script": "Myanmar",
+      "start": 4229
+    },
+    {
+      "end": 4236,
+      "script": "Myanmar",
+      "start": 4231
+    },
+    {
+      "end": 4237,
+      "script": "Myanmar",
+      "start": 4237
+    },
+    {
+      "end": 4238,
+      "script": "Myanmar",
+      "start": 4238
+    },
+    {
+      "end": 4239,
+      "script": "Myanmar",
+      "start": 4239
+    },
+    {
+      "end": 4249,
+      "script": "Myanmar",
+      "start": 4240
+    },
+    {
+      "end": 4252,
+      "script": "Myanmar",
+      "start": 4250
+    },
+    {
+      "end": 4253,
+      "script": "Myanmar",
+      "start": 4253
+    },
+    {
+      "end": 4255,
+      "script": "Myanmar",
+      "start": 4254
+    },
+    {
+      "end": 4293,
+      "script": "Georgian",
+      "start": 4256
+    },
+    {
+      "end": 4295,
+      "script": "Georgian",
+      "start": 4295
+    },
+    {
+      "end": 4301,
+      "script": "Georgian",
+      "start": 4301
+    },
+    {
+      "end": 4346,
+      "script": "Georgian",
+      "start": 4304
+    },
+    {
+      "end": 4347,
+      "script": "Common",
+      "start": 4347
+    },
+    {
+      "end": 4348,
+      "script": "Georgian",
+      "start": 4348
+    },
+    {
+      "end": 4351,
+      "script": "Georgian",
+      "start": 4349
+    },
+    {
+      "end": 4607,
+      "script": "Hangul",
+      "start": 4352
+    },
+    {
+      "end": 4680,
+      "script": "Ethiopic",
+      "start": 4608
+    },
+    {
+      "end": 4685,
+      "script": "Ethiopic",
+      "start": 4682
+    },
+    {
+      "end": 4694,
+      "script": "Ethiopic",
+      "start": 4688
+    },
+    {
+      "end": 4696,
+      "script": "Ethiopic",
+      "start": 4696
+    },
+    {
+      "end": 4701,
+      "script": "Ethiopic",
+      "start": 4698
+    },
+    {
+      "end": 4744,
+      "script": "Ethiopic",
+      "start": 4704
+    },
+    {
+      "end": 4749,
+      "script": "Ethiopic",
+      "start": 4746
+    },
+    {
+      "end": 4784,
+      "script": "Ethiopic",
+      "start": 4752
+    },
+    {
+      "end": 4789,
+      "script": "Ethiopic",
+      "start": 4786
+    },
+    {
+      "end": 4798,
+      "script": "Ethiopic",
+      "start": 4792
+    },
+    {
+      "end": 4800,
+      "script": "Ethiopic",
+      "start": 4800
+    },
+    {
+      "end": 4805,
+      "script": "Ethiopic",
+      "start": 4802
+    },
+    {
+      "end": 4822,
+      "script": "Ethiopic",
+      "start": 4808
+    },
+    {
+      "end": 4880,
+      "script": "Ethiopic",
+      "start": 4824
+    },
+    {
+      "end": 4885,
+      "script": "Ethiopic",
+      "start": 4882
+    },
+    {
+      "end": 4954,
+      "script": "Ethiopic",
+      "start": 4888
+    },
+    {
+      "end": 4959,
+      "script": "Ethiopic",
+      "start": 4957
+    },
+    {
+      "end": 4968,
+      "script": "Ethiopic",
+      "start": 4960
+    },
+    {
+      "end": 4988,
+      "script": "Ethiopic",
+      "start": 4969
+    },
+    {
+      "end": 5007,
+      "script": "Ethiopic",
+      "start": 4992
+    },
+    {
+      "end": 5017,
+      "script": "Ethiopic",
+      "start": 5008
+    },
+    {
+      "end": 5109,
+      "script": "Cherokee",
+      "start": 5024
+    },
+    {
+      "end": 5117,
+      "script": "Cherokee",
+      "start": 5112
+    },
+    {
+      "end": 5120,
+      "script": "Canadian_Aboriginal",
+      "start": 5120
+    },
+    {
+      "end": 5740,
+      "script": "Canadian_Aboriginal",
+      "start": 5121
+    },
+    {
+      "end": 5741,
+      "script": "Canadian_Aboriginal",
+      "start": 5741
+    },
+    {
+      "end": 5742,
+      "script": "Canadian_Aboriginal",
+      "start": 5742
+    },
+    {
+      "end": 5759,
+      "script": "Canadian_Aboriginal",
+      "start": 5743
+    },
+    {
+      "end": 5760,
+      "script": "Ogham",
+      "start": 5760
+    },
+    {
+      "end": 5786,
+      "script": "Ogham",
+      "start": 5761
+    },
+    {
+      "end": 5787,
+      "script": "Ogham",
+      "start": 5787
+    },
+    {
+      "end": 5788,
+      "script": "Ogham",
+      "start": 5788
+    },
+    {
+      "end": 5866,
+      "script": "Runic",
+      "start": 5792
+    },
+    {
+      "end": 5869,
+      "script": "Common",
+      "start": 5867
+    },
+    {
+      "end": 5872,
+      "script": "Runic",
+      "start": 5870
+    },
+    {
+      "end": 5880,
+      "script": "Runic",
+      "start": 5873
+    },
+    {
+      "end": 5905,
+      "script": "Tagalog",
+      "start": 5888
+    },
+    {
+      "end": 5908,
+      "script": "Tagalog",
+      "start": 5906
+    },
+    {
+      "end": 5909,
+      "script": "Tagalog",
+      "start": 5909
+    },
+    {
+      "end": 5919,
+      "script": "Tagalog",
+      "start": 5919
+    },
+    {
+      "end": 5937,
+      "script": "Hanunoo",
+      "start": 5920
+    },
+    {
+      "end": 5939,
+      "script": "Hanunoo",
+      "start": 5938
+    },
+    {
+      "end": 5940,
+      "script": "Hanunoo",
+      "start": 5940
+    },
+    {
+      "end": 5942,
+      "script": "Common",
+      "start": 5941
+    },
+    {
+      "end": 5969,
+      "script": "Buhid",
+      "start": 5952
+    },
+    {
+      "end": 5971,
+      "script": "Buhid",
+      "start": 5970
+    },
+    {
+      "end": 5996,
+      "script": "Tagbanwa",
+      "start": 5984
+    },
+    {
+      "end": 6000,
+      "script": "Tagbanwa",
+      "start": 5998
+    },
+    {
+      "end": 6003,
+      "script": "Tagbanwa",
+      "start": 6002
+    },
+    {
+      "end": 6067,
+      "script": "Khmer",
+      "start": 6016
+    },
+    {
+      "end": 6069,
+      "script": "Khmer",
+      "start": 6068
+    },
+    {
+      "end": 6070,
+      "script": "Khmer",
+      "start": 6070
+    },
+    {
+      "end": 6077,
+      "script": "Khmer",
+      "start": 6071
+    },
+    {
+      "end": 6085,
+      "script": "Khmer",
+      "start": 6078
+    },
+    {
+      "end": 6086,
+      "script": "Khmer",
+      "start": 6086
+    },
+    {
+      "end": 6088,
+      "script": "Khmer",
+      "start": 6087
+    },
+    {
+      "end": 6099,
+      "script": "Khmer",
+      "start": 6089
+    },
+    {
+      "end": 6102,
+      "script": "Khmer",
+      "start": 6100
+    },
+    {
+      "end": 6103,
+      "script": "Khmer",
+      "start": 6103
+    },
+    {
+      "end": 6106,
+      "script": "Khmer",
+      "start": 6104
+    },
+    {
+      "end": 6107,
+      "script": "Khmer",
+      "start": 6107
+    },
+    {
+      "end": 6108,
+      "script": "Khmer",
+      "start": 6108
+    },
+    {
+      "end": 6109,
+      "script": "Khmer",
+      "start": 6109
+    },
+    {
+      "end": 6121,
+      "script": "Khmer",
+      "start": 6112
+    },
+    {
+      "end": 6137,
+      "script": "Khmer",
+      "start": 6128
+    },
+    {
+      "end": 6145,
+      "script": "Mongolian",
+      "start": 6144
+    },
+    {
+      "end": 6147,
+      "script": "Common",
+      "start": 6146
+    },
+    {
+      "end": 6148,
+      "script": "Mongolian",
+      "start": 6148
+    },
+    {
+      "end": 6149,
+      "script": "Common",
+      "start": 6149
+    },
+    {
+      "end": 6150,
+      "script": "Mongolian",
+      "start": 6150
+    },
+    {
+      "end": 6154,
+      "script": "Mongolian",
+      "start": 6151
+    },
+    {
+      "end": 6157,
+      "script": "Mongolian",
+      "start": 6155
+    },
+    {
+      "end": 6158,
+      "script": "Mongolian",
+      "start": 6158
+    },
+    {
+      "end": 6159,
+      "script": "Mongolian",
+      "start": 6159
+    },
+    {
+      "end": 6169,
+      "script": "Mongolian",
+      "start": 6160
+    },
+    {
+      "end": 6210,
+      "script": "Mongolian",
+      "start": 6176
+    },
+    {
+      "end": 6211,
+      "script": "Mongolian",
+      "start": 6211
+    },
+    {
+      "end": 6264,
+      "script": "Mongolian",
+      "start": 6212
+    },
+    {
+      "end": 6276,
+      "script": "Mongolian",
+      "start": 6272
+    },
+    {
+      "end": 6278,
+      "script": "Mongolian",
+      "start": 6277
+    },
+    {
+      "end": 6312,
+      "script": "Mongolian",
+      "start": 6279
+    },
+    {
+      "end": 6313,
+      "script": "Mongolian",
+      "start": 6313
+    },
+    {
+      "end": 6314,
+      "script": "Mongolian",
+      "start": 6314
+    },
+    {
+      "end": 6389,
+      "script": "Canadian_Aboriginal",
+      "start": 6320
+    },
+    {
+      "end": 6430,
+      "script": "Limbu",
+      "start": 6400
+    },
+    {
+      "end": 6434,
+      "script": "Limbu",
+      "start": 6432
+    },
+    {
+      "end": 6438,
+      "script": "Limbu",
+      "start": 6435
+    },
+    {
+      "end": 6440,
+      "script": "Limbu",
+      "start": 6439
+    },
+    {
+      "end": 6443,
+      "script": "Limbu",
+      "start": 6441
+    },
+    {
+      "end": 6449,
+      "script": "Limbu",
+      "start": 6448
+    },
+    {
+      "end": 6450,
+      "script": "Limbu",
+      "start": 6450
+    },
+    {
+      "end": 6456,
+      "script": "Limbu",
+      "start": 6451
+    },
+    {
+      "end": 6459,
+      "script": "Limbu",
+      "start": 6457
+    },
+    {
+      "end": 6464,
+      "script": "Limbu",
+      "start": 6464
+    },
+    {
+      "end": 6469,
+      "script": "Limbu",
+      "start": 6468
+    },
+    {
+      "end": 6479,
+      "script": "Limbu",
+      "start": 6470
+    },
+    {
+      "end": 6509,
+      "script": "Tai_Le",
+      "start": 6480
+    },
+    {
+      "end": 6516,
+      "script": "Tai_Le",
+      "start": 6512
+    },
+    {
+      "end": 6571,
+      "script": "New_Tai_Lue",
+      "start": 6528
+    },
+    {
+      "end": 6601,
+      "script": "New_Tai_Lue",
+      "start": 6576
+    },
+    {
+      "end": 6617,
+      "script": "New_Tai_Lue",
+      "start": 6608
+    },
+    {
+      "end": 6618,
+      "script": "New_Tai_Lue",
+      "start": 6618
+    },
+    {
+      "end": 6623,
+      "script": "New_Tai_Lue",
+      "start": 6622
+    },
+    {
+      "end": 6655,
+      "script": "Khmer",
+      "start": 6624
+    },
+    {
+      "end": 6678,
+      "script": "Buginese",
+      "start": 6656
+    },
+    {
+      "end": 6680,
+      "script": "Buginese",
+      "start": 6679
+    },
+    {
+      "end": 6682,
+      "script": "Buginese",
+      "start": 6681
+    },
+    {
+      "end": 6683,
+      "script": "Buginese",
+      "start": 6683
+    },
+    {
+      "end": 6687,
+      "script": "Buginese",
+      "start": 6686
+    },
+    {
+      "end": 6740,
+      "script": "Tai_Tham",
+      "start": 6688
+    },
+    {
+      "end": 6741,
+      "script": "Tai_Tham",
+      "start": 6741
+    },
+    {
+      "end": 6742,
+      "script": "Tai_Tham",
+      "start": 6742
+    },
+    {
+      "end": 6743,
+      "script": "Tai_Tham",
+      "start": 6743
+    },
+    {
+      "end": 6750,
+      "script": "Tai_Tham",
+      "start": 6744
+    },
+    {
+      "end": 6752,
+      "script": "Tai_Tham",
+      "start": 6752
+    },
+    {
+      "end": 6753,
+      "script": "Tai_Tham",
+      "start": 6753
+    },
+    {
+      "end": 6754,
+      "script": "Tai_Tham",
+      "start": 6754
+    },
+    {
+      "end": 6756,
+      "script": "Tai_Tham",
+      "start": 6755
+    },
+    {
+      "end": 6764,
+      "script": "Tai_Tham",
+      "start": 6757
+    },
+    {
+      "end": 6770,
+      "script": "Tai_Tham",
+      "start": 6765
+    },
+    {
+      "end": 6780,
+      "script": "Tai_Tham",
+      "start": 6771
+    },
+    {
+      "end": 6783,
+      "script": "Tai_Tham",
+      "start": 6783
+    },
+    {
+      "end": 6793,
+      "script": "Tai_Tham",
+      "start": 6784
+    },
+    {
+      "end": 6809,
+      "script": "Tai_Tham",
+      "start": 6800
+    },
+    {
+      "end": 6822,
+      "script": "Tai_Tham",
+      "start": 6816
+    },
+    {
+      "end": 6823,
+      "script": "Tai_Tham",
+      "start": 6823
+    },
+    {
+      "end": 6829,
+      "script": "Tai_Tham",
+      "start": 6824
+    },
+    {
+      "end": 6845,
+      "script": "Inherited",
+      "start": 6832
+    },
+    {
+      "end": 6846,
+      "script": "Inherited",
+      "start": 6846
+    },
+    {
+      "end": 6877,
+      "script": "Inherited",
+      "start": 6847
+    },
+    {
+      "end": 6891,
+      "script": "Inherited",
+      "start": 6880
+    },
+    {
+      "end": 6915,
+      "script": "Balinese",
+      "start": 6912
+    },
+    {
+      "end": 6916,
+      "script": "Balinese",
+      "start": 6916
+    },
+    {
+      "end": 6963,
+      "script": "Balinese",
+      "start": 6917
+    },
+    {
+      "end": 6964,
+      "script": "Balinese",
+      "start": 6964
+    },
+    {
+      "end": 6965,
+      "script": "Balinese",
+      "start": 6965
+    },
+    {
+      "end": 6970,
+      "script": "Balinese",
+      "start": 6966
+    },
+    {
+      "end": 6971,
+      "script": "Balinese",
+      "start": 6971
+    },
+    {
+      "end": 6972,
+      "script": "Balinese",
+      "start": 6972
+    },
+    {
+      "end": 6977,
+      "script": "Balinese",
+      "start": 6973
+    },
+    {
+      "end": 6978,
+      "script": "Balinese",
+      "start": 6978
+    },
+    {
+      "end": 6980,
+      "script": "Balinese",
+      "start": 6979
+    },
+    {
+      "end": 6988,
+      "script": "Balinese",
+      "start": 6981
+    },
+    {
+      "end": 6991,
+      "script": "Balinese",
+      "start": 6990
+    },
+    {
+      "end": 7001,
+      "script": "Balinese",
+      "start": 6992
+    },
+    {
+      "end": 7008,
+      "script": "Balinese",
+      "start": 7002
+    },
+    {
+      "end": 7018,
+      "script": "Balinese",
+      "start": 7009
+    },
+    {
+      "end": 7027,
+      "script": "Balinese",
+      "start": 7019
+    },
+    {
+      "end": 7036,
+      "script": "Balinese",
+      "start": 7028
+    },
+    {
+      "end": 7039,
+      "script": "Balinese",
+      "start": 7037
+    },
+    {
+      "end": 7041,
+      "script": "Sundanese",
+      "start": 7040
+    },
+    {
+      "end": 7042,
+      "script": "Sundanese",
+      "start": 7042
+    },
+    {
+      "end": 7072,
+      "script": "Sundanese",
+      "start": 7043
+    },
+    {
+      "end": 7073,
+      "script": "Sundanese",
+      "start": 7073
+    },
+    {
+      "end": 7077,
+      "script": "Sundanese",
+      "start": 7074
+    },
+    {
+      "end": 7079,
+      "script": "Sundanese",
+      "start": 7078
+    },
+    {
+      "end": 7081,
+      "script": "Sundanese",
+      "start": 7080
+    },
+    {
+      "end": 7082,
+      "script": "Sundanese",
+      "start": 7082
+    },
+    {
+      "end": 7085,
+      "script": "Sundanese",
+      "start": 7083
+    },
+    {
+      "end": 7087,
+      "script": "Sundanese",
+      "start": 7086
+    },
+    {
+      "end": 7097,
+      "script": "Sundanese",
+      "start": 7088
+    },
+    {
+      "end": 7103,
+      "script": "Sundanese",
+      "start": 7098
+    },
+    {
+      "end": 7141,
+      "script": "Batak",
+      "start": 7104
+    },
+    {
+      "end": 7142,
+      "script": "Batak",
+      "start": 7142
+    },
+    {
+      "end": 7143,
+      "script": "Batak",
+      "start": 7143
+    },
+    {
+      "end": 7145,
+      "script": "Batak",
+      "start": 7144
+    },
+    {
+      "end": 7148,
+      "script": "Batak",
+      "start": 7146
+    },
+    {
+      "end": 7149,
+      "script": "Batak",
+      "start": 7149
+    },
+    {
+      "end": 7150,
+      "script": "Batak",
+      "start": 7150
+    },
+    {
+      "end": 7153,
+      "script": "Batak",
+      "start": 7151
+    },
+    {
+      "end": 7155,
+      "script": "Batak",
+      "start": 7154
+    },
+    {
+      "end": 7167,
+      "script": "Batak",
+      "start": 7164
+    },
+    {
+      "end": 7203,
+      "script": "Lepcha",
+      "start": 7168
+    },
+    {
+      "end": 7211,
+      "script": "Lepcha",
+      "start": 7204
+    },
+    {
+      "end": 7219,
+      "script": "Lepcha",
+      "start": 7212
+    },
+    {
+      "end": 7221,
+      "script": "Lepcha",
+      "start": 7220
+    },
+    {
+      "end": 7223,
+      "script": "Lepcha",
+      "start": 7222
+    },
+    {
+      "end": 7231,
+      "script": "Lepcha",
+      "start": 7227
+    },
+    {
+      "end": 7241,
+      "script": "Lepcha",
+      "start": 7232
+    },
+    {
+      "end": 7247,
+      "script": "Lepcha",
+      "start": 7245
+    },
+    {
+      "end": 7257,
+      "script": "Ol_Chiki",
+      "start": 7248
+    },
+    {
+      "end": 7287,
+      "script": "Ol_Chiki",
+      "start": 7258
+    },
+    {
+      "end": 7293,
+      "script": "Ol_Chiki",
+      "start": 7288
+    },
+    {
+      "end": 7295,
+      "script": "Ol_Chiki",
+      "start": 7294
+    },
+    {
+      "end": 7306,
+      "script": "Cyrillic",
+      "start": 7296
+    },
+    {
+      "end": 7354,
+      "script": "Georgian",
+      "start": 7312
+    },
+    {
+      "end": 7359,
+      "script": "Georgian",
+      "start": 7357
+    },
+    {
+      "end": 7367,
+      "script": "Sundanese",
+      "start": 7360
+    },
+    {
+      "end": 7378,
+      "script": "Inherited",
+      "start": 7376
+    },
+    {
+      "end": 7379,
+      "script": "Common",
+      "start": 7379
+    },
+    {
+      "end": 7392,
+      "script": "Inherited",
+      "start": 7380
+    },
+    {
+      "end": 7393,
+      "script": "Common",
+      "start": 7393
+    },
+    {
+      "end": 7400,
+      "script": "Inherited",
+      "start": 7394
+    },
+    {
+      "end": 7404,
+      "script": "Common",
+      "start": 7401
+    },
+    {
+      "end": 7405,
+      "script": "Inherited",
+      "start": 7405
+    },
+    {
+      "end": 7411,
+      "script": "Common",
+      "start": 7406
+    },
+    {
+      "end": 7412,
+      "script": "Inherited",
+      "start": 7412
+    },
+    {
+      "end": 7414,
+      "script": "Common",
+      "start": 7413
+    },
+    {
+      "end": 7415,
+      "script": "Common",
+      "start": 7415
+    },
+    {
+      "end": 7417,
+      "script": "Inherited",
+      "start": 7416
+    },
+    {
+      "end": 7418,
+      "script": "Common",
+      "start": 7418
+    },
+    {
+      "end": 7461,
+      "script": "Latin",
+      "start": 7424
+    },
+    {
+      "end": 7466,
+      "script": "Greek",
+      "start": 7462
+    },
+    {
+      "end": 7467,
+      "script": "Cyrillic",
+      "start": 7467
+    },
+    {
+      "end": 7516,
+      "script": "Latin",
+      "start": 7468
+    },
+    {
+      "end": 7521,
+      "script": "Greek",
+      "start": 7517
+    },
+    {
+      "end": 7525,
+      "script": "Latin",
+      "start": 7522
+    },
+    {
+      "end": 7530,
+      "script": "Greek",
+      "start": 7526
+    },
+    {
+      "end": 7543,
+      "script": "Latin",
+      "start": 7531
+    },
+    {
+      "end": 7544,
+      "script": "Cyrillic",
+      "start": 7544
+    },
+    {
+      "end": 7578,
+      "script": "Latin",
+      "start": 7545
+    },
+    {
+      "end": 7614,
+      "script": "Latin",
+      "start": 7579
+    },
+    {
+      "end": 7615,
+      "script": "Greek",
+      "start": 7615
+    },
+    {
+      "end": 7679,
+      "script": "Inherited",
+      "start": 7616
+    },
+    {
+      "end": 7935,
+      "script": "Latin",
+      "start": 7680
+    },
+    {
+      "end": 7957,
+      "script": "Greek",
+      "start": 7936
+    },
+    {
+      "end": 7965,
+      "script": "Greek",
+      "start": 7960
+    },
+    {
+      "end": 8005,
+      "script": "Greek",
+      "start": 7968
+    },
+    {
+      "end": 8013,
+      "script": "Greek",
+      "start": 8008
+    },
+    {
+      "end": 8023,
+      "script": "Greek",
+      "start": 8016
+    },
+    {
+      "end": 8025,
+      "script": "Greek",
+      "start": 8025
+    },
+    {
+      "end": 8027,
+      "script": "Greek",
+      "start": 8027
+    },
+    {
+      "end": 8029,
+      "script": "Greek",
+      "start": 8029
+    },
+    {
+      "end": 8061,
+      "script": "Greek",
+      "start": 8031
+    },
+    {
+      "end": 8116,
+      "script": "Greek",
+      "start": 8064
+    },
+    {
+      "end": 8124,
+      "script": "Greek",
+      "start": 8118
+    },
+    {
+      "end": 8125,
+      "script": "Greek",
+      "start": 8125
+    },
+    {
+      "end": 8126,
+      "script": "Greek",
+      "start": 8126
+    },
+    {
+      "end": 8129,
+      "script": "Greek",
+      "start": 8127
+    },
+    {
+      "end": 8132,
+      "script": "Greek",
+      "start": 8130
+    },
+    {
+      "end": 8140,
+      "script": "Greek",
+      "start": 8134
+    },
+    {
+      "end": 8143,
+      "script": "Greek",
+      "start": 8141
+    },
+    {
+      "end": 8147,
+      "script": "Greek",
+      "start": 8144
+    },
+    {
+      "end": 8155,
+      "script": "Greek",
+      "start": 8150
+    },
+    {
+      "end": 8159,
+      "script": "Greek",
+      "start": 8157
+    },
+    {
+      "end": 8172,
+      "script": "Greek",
+      "start": 8160
+    },
+    {
+      "end": 8175,
+      "script": "Greek",
+      "start": 8173
+    },
+    {
+      "end": 8180,
+      "script": "Greek",
+      "start": 8178
+    },
+    {
+      "end": 8188,
+      "script": "Greek",
+      "start": 8182
+    },
+    {
+      "end": 8190,
+      "script": "Greek",
+      "start": 8189
+    },
+    {
+      "end": 8202,
+      "script": "Common",
+      "start": 8192
+    },
+    {
+      "end": 8203,
+      "script": "Common",
+      "start": 8203
+    },
+    {
+      "end": 8205,
+      "script": "Inherited",
+      "start": 8204
+    },
+    {
+      "end": 8207,
+      "script": "Common",
+      "start": 8206
+    },
+    {
+      "end": 8213,
+      "script": "Common",
+      "start": 8208
+    },
+    {
+      "end": 8215,
+      "script": "Common",
+      "start": 8214
+    },
+    {
+      "end": 8216,
+      "script": "Common",
+      "start": 8216
+    },
+    {
+      "end": 8217,
+      "script": "Common",
+      "start": 8217
+    },
+    {
+      "end": 8218,
+      "script": "Common",
+      "start": 8218
+    },
+    {
+      "end": 8220,
+      "script": "Common",
+      "start": 8219
+    },
+    {
+      "end": 8221,
+      "script": "Common",
+      "start": 8221
+    },
+    {
+      "end": 8222,
+      "script": "Common",
+      "start": 8222
+    },
+    {
+      "end": 8223,
+      "script": "Common",
+      "start": 8223
+    },
+    {
+      "end": 8231,
+      "script": "Common",
+      "start": 8224
+    },
+    {
+      "end": 8232,
+      "script": "Common",
+      "start": 8232
+    },
+    {
+      "end": 8233,
+      "script": "Common",
+      "start": 8233
+    },
+    {
+      "end": 8238,
+      "script": "Common",
+      "start": 8234
+    },
+    {
+      "end": 8239,
+      "script": "Common",
+      "start": 8239
+    },
+    {
+      "end": 8248,
+      "script": "Common",
+      "start": 8240
+    },
+    {
+      "end": 8249,
+      "script": "Common",
+      "start": 8249
+    },
+    {
+      "end": 8250,
+      "script": "Common",
+      "start": 8250
+    },
+    {
+      "end": 8254,
+      "script": "Common",
+      "start": 8251
+    },
+    {
+      "end": 8256,
+      "script": "Common",
+      "start": 8255
+    },
+    {
+      "end": 8259,
+      "script": "Common",
+      "start": 8257
+    },
+    {
+      "end": 8260,
+      "script": "Common",
+      "start": 8260
+    },
+    {
+      "end": 8261,
+      "script": "Common",
+      "start": 8261
+    },
+    {
+      "end": 8262,
+      "script": "Common",
+      "start": 8262
+    },
+    {
+      "end": 8273,
+      "script": "Common",
+      "start": 8263
+    },
+    {
+      "end": 8274,
+      "script": "Common",
+      "start": 8274
+    },
+    {
+      "end": 8275,
+      "script": "Common",
+      "start": 8275
+    },
+    {
+      "end": 8276,
+      "script": "Common",
+      "start": 8276
+    },
+    {
+      "end": 8286,
+      "script": "Common",
+      "start": 8277
+    },
+    {
+      "end": 8287,
+      "script": "Common",
+      "start": 8287
+    },
+    {
+      "end": 8292,
+      "script": "Common",
+      "start": 8288
+    },
+    {
+      "end": 8303,
+      "script": "Common",
+      "start": 8294
+    },
+    {
+      "end": 8304,
+      "script": "Common",
+      "start": 8304
+    },
+    {
+      "end": 8305,
+      "script": "Latin",
+      "start": 8305
+    },
+    {
+      "end": 8313,
+      "script": "Common",
+      "start": 8308
+    },
+    {
+      "end": 8316,
+      "script": "Common",
+      "start": 8314
+    },
+    {
+      "end": 8317,
+      "script": "Common",
+      "start": 8317
+    },
+    {
+      "end": 8318,
+      "script": "Common",
+      "start": 8318
+    },
+    {
+      "end": 8319,
+      "script": "Latin",
+      "start": 8319
+    },
+    {
+      "end": 8329,
+      "script": "Common",
+      "start": 8320
+    },
+    {
+      "end": 8332,
+      "script": "Common",
+      "start": 8330
+    },
+    {
+      "end": 8333,
+      "script": "Common",
+      "start": 8333
+    },
+    {
+      "end": 8334,
+      "script": "Common",
+      "start": 8334
+    },
+    {
+      "end": 8348,
+      "script": "Latin",
+      "start": 8336
+    },
+    {
+      "end": 8385,
+      "script": "Common",
+      "start": 8352
+    },
+    {
+      "end": 8412,
+      "script": "Inherited",
+      "start": 8400
+    },
+    {
+      "end": 8416,
+      "script": "Inherited",
+      "start": 8413
+    },
+    {
+      "end": 8417,
+      "script": "Inherited",
+      "start": 8417
+    },
+    {
+      "end": 8420,
+      "script": "Inherited",
+      "start": 8418
+    },
+    {
+      "end": 8432,
+      "script": "Inherited",
+      "start": 8421
+    },
+    {
+      "end": 8449,
+      "script": "Common",
+      "start": 8448
+    },
+    {
+      "end": 8450,
+      "script": "Common",
+      "start": 8450
+    },
+    {
+      "end": 8454,
+      "script": "Common",
+      "start": 8451
+    },
+    {
+      "end": 8455,
+      "script": "Common",
+      "start": 8455
+    },
+    {
+      "end": 8457,
+      "script": "Common",
+      "start": 8456
+    },
+    {
+      "end": 8467,
+      "script": "Common",
+      "start": 8458
+    },
+    {
+      "end": 8468,
+      "script": "Common",
+      "start": 8468
+    },
+    {
+      "end": 8469,
+      "script": "Common",
+      "start": 8469
+    },
+    {
+      "end": 8471,
+      "script": "Common",
+      "start": 8470
+    },
+    {
+      "end": 8472,
+      "script": "Common",
+      "start": 8472
+    },
+    {
+      "end": 8477,
+      "script": "Common",
+      "start": 8473
+    },
+    {
+      "end": 8483,
+      "script": "Common",
+      "start": 8478
+    },
+    {
+      "end": 8484,
+      "script": "Common",
+      "start": 8484
+    },
+    {
+      "end": 8485,
+      "script": "Common",
+      "start": 8485
+    },
+    {
+      "end": 8486,
+      "script": "Greek",
+      "start": 8486
+    },
+    {
+      "end": 8487,
+      "script": "Common",
+      "start": 8487
+    },
+    {
+      "end": 8488,
+      "script": "Common",
+      "start": 8488
+    },
+    {
+      "end": 8489,
+      "script": "Common",
+      "start": 8489
+    },
+    {
+      "end": 8491,
+      "script": "Latin",
+      "start": 8490
+    },
+    {
+      "end": 8493,
+      "script": "Common",
+      "start": 8492
+    },
+    {
+      "end": 8494,
+      "script": "Common",
+      "start": 8494
+    },
+    {
+      "end": 8497,
+      "script": "Common",
+      "start": 8495
+    },
+    {
+      "end": 8498,
+      "script": "Latin",
+      "start": 8498
+    },
+    {
+      "end": 8500,
+      "script": "Common",
+      "start": 8499
+    },
+    {
+      "end": 8504,
+      "script": "Common",
+      "start": 8501
+    },
+    {
+      "end": 8505,
+      "script": "Common",
+      "start": 8505
+    },
+    {
+      "end": 8507,
+      "script": "Common",
+      "start": 8506
+    },
+    {
+      "end": 8511,
+      "script": "Common",
+      "start": 8508
+    },
+    {
+      "end": 8516,
+      "script": "Common",
+      "start": 8512
+    },
+    {
+      "end": 8521,
+      "script": "Common",
+      "start": 8517
+    },
+    {
+      "end": 8522,
+      "script": "Common",
+      "start": 8522
+    },
+    {
+      "end": 8523,
+      "script": "Common",
+      "start": 8523
+    },
+    {
+      "end": 8525,
+      "script": "Common",
+      "start": 8524
+    },
+    {
+      "end": 8526,
+      "script": "Latin",
+      "start": 8526
+    },
+    {
+      "end": 8527,
+      "script": "Common",
+      "start": 8527
+    },
+    {
+      "end": 8543,
+      "script": "Common",
+      "start": 8528
+    },
+    {
+      "end": 8578,
+      "script": "Latin",
+      "start": 8544
+    },
+    {
+      "end": 8580,
+      "script": "Latin",
+      "start": 8579
+    },
+    {
+      "end": 8584,
+      "script": "Latin",
+      "start": 8581
+    },
+    {
+      "end": 8585,
+      "script": "Common",
+      "start": 8585
+    },
+    {
+      "end": 8587,
+      "script": "Common",
+      "start": 8586
+    },
+    {
+      "end": 8596,
+      "script": "Common",
+      "start": 8592
+    },
+    {
+      "end": 8601,
+      "script": "Common",
+      "start": 8597
+    },
+    {
+      "end": 8603,
+      "script": "Common",
+      "start": 8602
+    },
+    {
+      "end": 8607,
+      "script": "Common",
+      "start": 8604
+    },
+    {
+      "end": 8608,
+      "script": "Common",
+      "start": 8608
+    },
+    {
+      "end": 8610,
+      "script": "Common",
+      "start": 8609
+    },
+    {
+      "end": 8611,
+      "script": "Common",
+      "start": 8611
+    },
+    {
+      "end": 8613,
+      "script": "Common",
+      "start": 8612
+    },
+    {
+      "end": 8614,
+      "script": "Common",
+      "start": 8614
+    },
+    {
+      "end": 8621,
+      "script": "Common",
+      "start": 8615
+    },
+    {
+      "end": 8622,
+      "script": "Common",
+      "start": 8622
+    },
+    {
+      "end": 8653,
+      "script": "Common",
+      "start": 8623
+    },
+    {
+      "end": 8655,
+      "script": "Common",
+      "start": 8654
+    },
+    {
+      "end": 8657,
+      "script": "Common",
+      "start": 8656
+    },
+    {
+      "end": 8658,
+      "script": "Common",
+      "start": 8658
+    },
+    {
+      "end": 8659,
+      "script": "Common",
+      "start": 8659
+    },
+    {
+      "end": 8660,
+      "script": "Common",
+      "start": 8660
+    },
+    {
+      "end": 8691,
+      "script": "Common",
+      "start": 8661
+    },
+    {
+      "end": 8959,
+      "script": "Common",
+      "start": 8692
+    },
+    {
+      "end": 8967,
+      "script": "Common",
+      "start": 8960
+    },
+    {
+      "end": 8968,
+      "script": "Common",
+      "start": 8968
+    },
+    {
+      "end": 8969,
+      "script": "Common",
+      "start": 8969
+    },
+    {
+      "end": 8970,
+      "script": "Common",
+      "start": 8970
+    },
+    {
+      "end": 8971,
+      "script": "Common",
+      "start": 8971
+    },
+    {
+      "end": 8991,
+      "script": "Common",
+      "start": 8972
+    },
+    {
+      "end": 8993,
+      "script": "Common",
+      "start": 8992
+    },
+    {
+      "end": 9000,
+      "script": "Common",
+      "start": 8994
+    },
+    {
+      "end": 9001,
+      "script": "Common",
+      "start": 9001
+    },
+    {
+      "end": 9002,
+      "script": "Common",
+      "start": 9002
+    },
+    {
+      "end": 9083,
+      "script": "Common",
+      "start": 9003
+    },
+    {
+      "end": 9084,
+      "script": "Common",
+      "start": 9084
+    },
+    {
+      "end": 9114,
+      "script": "Common",
+      "start": 9085
+    },
+    {
+      "end": 9139,
+      "script": "Common",
+      "start": 9115
+    },
+    {
+      "end": 9179,
+      "script": "Common",
+      "start": 9140
+    },
+    {
+      "end": 9185,
+      "script": "Common",
+      "start": 9180
+    },
+    {
+      "end": 9257,
+      "script": "Common",
+      "start": 9186
+    },
+    {
+      "end": 9290,
+      "script": "Common",
+      "start": 9280
+    },
+    {
+      "end": 9371,
+      "script": "Common",
+      "start": 9312
+    },
+    {
+      "end": 9449,
+      "script": "Common",
+      "start": 9372
+    },
+    {
+      "end": 9471,
+      "script": "Common",
+      "start": 9450
+    },
+    {
+      "end": 9654,
+      "script": "Common",
+      "start": 9472
+    },
+    {
+      "end": 9655,
+      "script": "Common",
+      "start": 9655
+    },
+    {
+      "end": 9664,
+      "script": "Common",
+      "start": 9656
+    },
+    {
+      "end": 9665,
+      "script": "Common",
+      "start": 9665
+    },
+    {
+      "end": 9719,
+      "script": "Common",
+      "start": 9666
+    },
+    {
+      "end": 9727,
+      "script": "Common",
+      "start": 9720
+    },
+    {
+      "end": 9838,
+      "script": "Common",
+      "start": 9728
+    },
+    {
+      "end": 9839,
+      "script": "Common",
+      "start": 9839
+    },
+    {
+      "end": 10087,
+      "script": "Common",
+      "start": 9840
+    },
+    {
+      "end": 10088,
+      "script": "Common",
+      "start": 10088
+    },
+    {
+      "end": 10089,
+      "script": "Common",
+      "start": 10089
+    },
+    {
+      "end": 10090,
+      "script": "Common",
+      "start": 10090
+    },
+    {
+      "end": 10091,
+      "script": "Common",
+      "start": 10091
+    },
+    {
+      "end": 10092,
+      "script": "Common",
+      "start": 10092
+    },
+    {
+      "end": 10093,
+      "script": "Common",
+      "start": 10093
+    },
+    {
+      "end": 10094,
+      "script": "Common",
+      "start": 10094
+    },
+    {
+      "end": 10095,
+      "script": "Common",
+      "start": 10095
+    },
+    {
+      "end": 10096,
+      "script": "Common",
+      "start": 10096
+    },
+    {
+      "end": 10097,
+      "script": "Common",
+      "start": 10097
+    },
+    {
+      "end": 10098,
+      "script": "Common",
+      "start": 10098
+    },
+    {
+      "end": 10099,
+      "script": "Common",
+      "start": 10099
+    },
+    {
+      "end": 10100,
+      "script": "Common",
+      "start": 10100
+    },
+    {
+      "end": 10101,
+      "script": "Common",
+      "start": 10101
+    },
+    {
+      "end": 10131,
+      "script": "Common",
+      "start": 10102
+    },
+    {
+      "end": 10175,
+      "script": "Common",
+      "start": 10132
+    },
+    {
+      "end": 10180,
+      "script": "Common",
+      "start": 10176
+    },
+    {
+      "end": 10181,
+      "script": "Common",
+      "start": 10181
+    },
+    {
+      "end": 10182,
+      "script": "Common",
+      "start": 10182
+    },
+    {
+      "end": 10213,
+      "script": "Common",
+      "start": 10183
+    },
+    {
+      "end": 10214,
+      "script": "Common",
+      "start": 10214
+    },
+    {
+      "end": 10215,
+      "script": "Common",
+      "start": 10215
+    },
+    {
+      "end": 10216,
+      "script": "Common",
+      "start": 10216
+    },
+    {
+      "end": 10217,
+      "script": "Common",
+      "start": 10217
+    },
+    {
+      "end": 10218,
+      "script": "Common",
+      "start": 10218
+    },
+    {
+      "end": 10219,
+      "script": "Common",
+      "start": 10219
+    },
+    {
+      "end": 10220,
+      "script": "Common",
+      "start": 10220
+    },
+    {
+      "end": 10221,
+      "script": "Common",
+      "start": 10221
+    },
+    {
+      "end": 10222,
+      "script": "Common",
+      "start": 10222
+    },
+    {
+      "end": 10223,
+      "script": "Common",
+      "start": 10223
+    },
+    {
+      "end": 10239,
+      "script": "Common",
+      "start": 10224
+    },
+    {
+      "end": 10495,
+      "script": "Braille",
+      "start": 10240
+    },
+    {
+      "end": 10626,
+      "script": "Common",
+      "start": 10496
+    },
+    {
+      "end": 10627,
+      "script": "Common",
+      "start": 10627
+    },
+    {
+      "end": 10628,
+      "script": "Common",
+      "start": 10628
+    },
+    {
+      "end": 10629,
+      "script": "Common",
+      "start": 10629
+    },
+    {
+      "end": 10630,
+      "script": "Common",
+      "start": 10630
+    },
+    {
+      "end": 10631,
+      "script": "Common",
+      "start": 10631
+    },
+    {
+      "end": 10632,
+      "script": "Common",
+      "start": 10632
+    },
+    {
+      "end": 10633,
+      "script": "Common",
+      "start": 10633
+    },
+    {
+      "end": 10634,
+      "script": "Common",
+      "start": 10634
+    },
+    {
+      "end": 10635,
+      "script": "Common",
+      "start": 10635
+    },
+    {
+      "end": 10636,
+      "script": "Common",
+      "start": 10636
+    },
+    {
+      "end": 10637,
+      "script": "Common",
+      "start": 10637
+    },
+    {
+      "end": 10638,
+      "script": "Common",
+      "start": 10638
+    },
+    {
+      "end": 10639,
+      "script": "Common",
+      "start": 10639
+    },
+    {
+      "end": 10640,
+      "script": "Common",
+      "start": 10640
+    },
+    {
+      "end": 10641,
+      "script": "Common",
+      "start": 10641
+    },
+    {
+      "end": 10642,
+      "script": "Common",
+      "start": 10642
+    },
+    {
+      "end": 10643,
+      "script": "Common",
+      "start": 10643
+    },
+    {
+      "end": 10644,
+      "script": "Common",
+      "start": 10644
+    },
+    {
+      "end": 10645,
+      "script": "Common",
+      "start": 10645
+    },
+    {
+      "end": 10646,
+      "script": "Common",
+      "start": 10646
+    },
+    {
+      "end": 10647,
+      "script": "Common",
+      "start": 10647
+    },
+    {
+      "end": 10648,
+      "script": "Common",
+      "start": 10648
+    },
+    {
+      "end": 10711,
+      "script": "Common",
+      "start": 10649
+    },
+    {
+      "end": 10712,
+      "script": "Common",
+      "start": 10712
+    },
+    {
+      "end": 10713,
+      "script": "Common",
+      "start": 10713
+    },
+    {
+      "end": 10714,
+      "script": "Common",
+      "start": 10714
+    },
+    {
+      "end": 10715,
+      "script": "Common",
+      "start": 10715
+    },
+    {
+      "end": 10747,
+      "script": "Common",
+      "start": 10716
+    },
+    {
+      "end": 10748,
+      "script": "Common",
+      "start": 10748
+    },
+    {
+      "end": 10749,
+      "script": "Common",
+      "start": 10749
+    },
+    {
+      "end": 11007,
+      "script": "Common",
+      "start": 10750
+    },
+    {
+      "end": 11055,
+      "script": "Common",
+      "start": 11008
+    },
+    {
+      "end": 11076,
+      "script": "Common",
+      "start": 11056
+    },
+    {
+      "end": 11078,
+      "script": "Common",
+      "start": 11077
+    },
+    {
+      "end": 11084,
+      "script": "Common",
+      "start": 11079
+    },
+    {
+      "end": 11123,
+      "script": "Common",
+      "start": 11085
+    },
+    {
+      "end": 11263,
+      "script": "Common",
+      "start": 11126
+    },
+    {
+      "end": 11359,
+      "script": "Glagolitic",
+      "start": 11264
+    },
+    {
+      "end": 11387,
+      "script": "Latin",
+      "start": 11360
+    },
+    {
+      "end": 11389,
+      "script": "Latin",
+      "start": 11388
+    },
+    {
+      "end": 11391,
+      "script": "Latin",
+      "start": 11390
+    },
+    {
+      "end": 11492,
+      "script": "Coptic",
+      "start": 11392
+    },
+    {
+      "end": 11498,
+      "script": "Coptic",
+      "start": 11493
+    },
+    {
+      "end": 11502,
+      "script": "Coptic",
+      "start": 11499
+    },
+    {
+      "end": 11505,
+      "script": "Coptic",
+      "start": 11503
+    },
+    {
+      "end": 11507,
+      "script": "Coptic",
+      "start": 11506
+    },
+    {
+      "end": 11516,
+      "script": "Coptic",
+      "start": 11513
+    },
+    {
+      "end": 11517,
+      "script": "Coptic",
+      "start": 11517
+    },
+    {
+      "end": 11519,
+      "script": "Coptic",
+      "start": 11518
+    },
+    {
+      "end": 11557,
+      "script": "Georgian",
+      "start": 11520
+    },
+    {
+      "end": 11559,
+      "script": "Georgian",
+      "start": 11559
+    },
+    {
+      "end": 11565,
+      "script": "Georgian",
+      "start": 11565
+    },
+    {
+      "end": 11623,
+      "script": "Tifinagh",
+      "start": 11568
+    },
+    {
+      "end": 11631,
+      "script": "Tifinagh",
+      "start": 11631
+    },
+    {
+      "end": 11632,
+      "script": "Tifinagh",
+      "start": 11632
+    },
+    {
+      "end": 11647,
+      "script": "Tifinagh",
+      "start": 11647
+    },
+    {
+      "end": 11670,
+      "script": "Ethiopic",
+      "start": 11648
+    },
+    {
+      "end": 11686,
+      "script": "Ethiopic",
+      "start": 11680
+    },
+    {
+      "end": 11694,
+      "script": "Ethiopic",
+      "start": 11688
+    },
+    {
+      "end": 11702,
+      "script": "Ethiopic",
+      "start": 11696
+    },
+    {
+      "end": 11710,
+      "script": "Ethiopic",
+      "start": 11704
+    },
+    {
+      "end": 11718,
+      "script": "Ethiopic",
+      "start": 11712
+    },
+    {
+      "end": 11726,
+      "script": "Ethiopic",
+      "start": 11720
+    },
+    {
+      "end": 11734,
+      "script": "Ethiopic",
+      "start": 11728
+    },
+    {
+      "end": 11742,
+      "script": "Ethiopic",
+      "start": 11736
+    },
+    {
+      "end": 11775,
+      "script": "Cyrillic",
+      "start": 11744
+    },
+    {
+      "end": 11777,
+      "script": "Common",
+      "start": 11776
+    },
+    {
+      "end": 11778,
+      "script": "Common",
+      "start": 11778
+    },
+    {
+      "end": 11779,
+      "script": "Common",
+      "start": 11779
+    },
+    {
+      "end": 11780,
+      "script": "Common",
+      "start": 11780
+    },
+    {
+      "end": 11781,
+      "script": "Common",
+      "start": 11781
+    },
+    {
+      "end": 11784,
+      "script": "Common",
+      "start": 11782
+    },
+    {
+      "end": 11785,
+      "script": "Common",
+      "start": 11785
+    },
+    {
+      "end": 11786,
+      "script": "Common",
+      "start": 11786
+    },
+    {
+      "end": 11787,
+      "script": "Common",
+      "start": 11787
+    },
+    {
+      "end": 11788,
+      "script": "Common",
+      "start": 11788
+    },
+    {
+      "end": 11789,
+      "script": "Common",
+      "start": 11789
+    },
+    {
+      "end": 11798,
+      "script": "Common",
+      "start": 11790
+    },
+    {
+      "end": 11799,
+      "script": "Common",
+      "start": 11799
+    },
+    {
+      "end": 11801,
+      "script": "Common",
+      "start": 11800
+    },
+    {
+      "end": 11802,
+      "script": "Common",
+      "start": 11802
+    },
+    {
+      "end": 11803,
+      "script": "Common",
+      "start": 11803
+    },
+    {
+      "end": 11804,
+      "script": "Common",
+      "start": 11804
+    },
+    {
+      "end": 11805,
+      "script": "Common",
+      "start": 11805
+    },
+    {
+      "end": 11807,
+      "script": "Common",
+      "start": 11806
+    },
+    {
+      "end": 11808,
+      "script": "Common",
+      "start": 11808
+    },
+    {
+      "end": 11809,
+      "script": "Common",
+      "start": 11809
+    },
+    {
+      "end": 11810,
+      "script": "Common",
+      "start": 11810
+    },
+    {
+      "end": 11811,
+      "script": "Common",
+      "start": 11811
+    },
+    {
+      "end": 11812,
+      "script": "Common",
+      "start": 11812
+    },
+    {
+      "end": 11813,
+      "script": "Common",
+      "start": 11813
+    },
+    {
+      "end": 11814,
+      "script": "Common",
+      "start": 11814
+    },
+    {
+      "end": 11815,
+      "script": "Common",
+      "start": 11815
+    },
+    {
+      "end": 11816,
+      "script": "Common",
+      "start": 11816
+    },
+    {
+      "end": 11817,
+      "script": "Common",
+      "start": 11817
+    },
+    {
+      "end": 11822,
+      "script": "Common",
+      "start": 11818
+    },
+    {
+      "end": 11823,
+      "script": "Common",
+      "start": 11823
+    },
+    {
+      "end": 11833,
+      "script": "Common",
+      "start": 11824
+    },
+    {
+      "end": 11835,
+      "script": "Common",
+      "start": 11834
+    },
+    {
+      "end": 11839,
+      "script": "Common",
+      "start": 11836
+    },
+    {
+      "end": 11840,
+      "script": "Common",
+      "start": 11840
+    },
+    {
+      "end": 11841,
+      "script": "Common",
+      "start": 11841
+    },
+    {
+      "end": 11842,
+      "script": "Common",
+      "start": 11842
+    },
+    {
+      "end": 11855,
+      "script": "Common",
+      "start": 11843
+    },
+    {
+      "end": 11857,
+      "script": "Common",
+      "start": 11856
+    },
+    {
+      "end": 11860,
+      "script": "Common",
+      "start": 11858
+    },
+    {
+      "end": 11861,
+      "script": "Common",
+      "start": 11861
+    },
+    {
+      "end": 11862,
+      "script": "Common",
+      "start": 11862
+    },
+    {
+      "end": 11863,
+      "script": "Common",
+      "start": 11863
+    },
+    {
+      "end": 11864,
+      "script": "Common",
+      "start": 11864
+    },
+    {
+      "end": 11865,
+      "script": "Common",
+      "start": 11865
+    },
+    {
+      "end": 11866,
+      "script": "Common",
+      "start": 11866
+    },
+    {
+      "end": 11867,
+      "script": "Common",
+      "start": 11867
+    },
+    {
+      "end": 11868,
+      "script": "Common",
+      "start": 11868
+    },
+    {
+      "end": 11869,
+      "script": "Common",
+      "start": 11869
+    },
+    {
+      "end": 11929,
+      "script": "Han",
+      "start": 11904
+    },
+    {
+      "end": 12019,
+      "script": "Han",
+      "start": 11931
+    },
+    {
+      "end": 12245,
+      "script": "Han",
+      "start": 12032
+    },
+    {
+      "end": 12287,
+      "script": "Common",
+      "start": 12272
+    },
+    {
+      "end": 12288,
+      "script": "Common",
+      "start": 12288
+    },
+    {
+      "end": 12291,
+      "script": "Common",
+      "start": 12289
+    },
+    {
+      "end": 12292,
+      "script": "Common",
+      "start": 12292
+    },
+    {
+      "end": 12293,
+      "script": "Han",
+      "start": 12293
+    },
+    {
+      "end": 12294,
+      "script": "Common",
+      "start": 12294
+    },
+    {
+      "end": 12295,
+      "script": "Han",
+      "start": 12295
+    },
+    {
+      "end": 12296,
+      "script": "Common",
+      "start": 12296
+    },
+    {
+      "end": 12297,
+      "script": "Common",
+      "start": 12297
+    },
+    {
+      "end": 12298,
+      "script": "Common",
+      "start": 12298
+    },
+    {
+      "end": 12299,
+      "script": "Common",
+      "start": 12299
+    },
+    {
+      "end": 12300,
+      "script": "Common",
+      "start": 12300
+    },
+    {
+      "end": 12301,
+      "script": "Common",
+      "start": 12301
+    },
+    {
+      "end": 12302,
+      "script": "Common",
+      "start": 12302
+    },
+    {
+      "end": 12303,
+      "script": "Common",
+      "start": 12303
+    },
+    {
+      "end": 12304,
+      "script": "Common",
+      "start": 12304
+    },
+    {
+      "end": 12305,
+      "script": "Common",
+      "start": 12305
+    },
+    {
+      "end": 12307,
+      "script": "Common",
+      "start": 12306
+    },
+    {
+      "end": 12308,
+      "script": "Common",
+      "start": 12308
+    },
+    {
+      "end": 12309,
+      "script": "Common",
+      "start": 12309
+    },
+    {
+      "end": 12310,
+      "script": "Common",
+      "start": 12310
+    },
+    {
+      "end": 12311,
+      "script": "Common",
+      "start": 12311
+    },
+    {
+      "end": 12312,
+      "script": "Common",
+      "start": 12312
+    },
+    {
+      "end": 12313,
+      "script": "Common",
+      "start": 12313
+    },
+    {
+      "end": 12314,
+      "script": "Common",
+      "start": 12314
+    },
+    {
+      "end": 12315,
+      "script": "Common",
+      "start": 12315
+    },
+    {
+      "end": 12316,
+      "script": "Common",
+      "start": 12316
+    },
+    {
+      "end": 12317,
+      "script": "Common",
+      "start": 12317
+    },
+    {
+      "end": 12319,
+      "script": "Common",
+      "start": 12318
+    },
+    {
+      "end": 12320,
+      "script": "Common",
+      "start": 12320
+    },
+    {
+      "end": 12329,
+      "script": "Han",
+      "start": 12321
+    },
+    {
+      "end": 12333,
+      "script": "Inherited",
+      "start": 12330
+    },
+    {
+      "end": 12335,
+      "script": "Hangul",
+      "start": 12334
+    },
+    {
+      "end": 12336,
+      "script": "Common",
+      "start": 12336
+    },
+    {
+      "end": 12341,
+      "script": "Common",
+      "start": 12337
+    },
+    {
+      "end": 12343,
+      "script": "Common",
+      "start": 12342
+    },
+    {
+      "end": 12346,
+      "script": "Han",
+      "start": 12344
+    },
+    {
+      "end": 12347,
+      "script": "Han",
+      "start": 12347
+    },
+    {
+      "end": 12348,
+      "script": "Common",
+      "start": 12348
+    },
+    {
+      "end": 12349,
+      "script": "Common",
+      "start": 12349
+    },
+    {
+      "end": 12351,
+      "script": "Common",
+      "start": 12350
+    },
+    {
+      "end": 12438,
+      "script": "Hiragana",
+      "start": 12353
+    },
+    {
+      "end": 12442,
+      "script": "Inherited",
+      "start": 12441
+    },
+    {
+      "end": 12444,
+      "script": "Common",
+      "start": 12443
+    },
+    {
+      "end": 12446,
+      "script": "Hiragana",
+      "start": 12445
+    },
+    {
+      "end": 12447,
+      "script": "Hiragana",
+      "start": 12447
+    },
+    {
+      "end": 12448,
+      "script": "Common",
+      "start": 12448
+    },
+    {
+      "end": 12538,
+      "script": "Katakana",
+      "start": 12449
+    },
+    {
+      "end": 12539,
+      "script": "Common",
+      "start": 12539
+    },
+    {
+      "end": 12540,
+      "script": "Common",
+      "start": 12540
+    },
+    {
+      "end": 12542,
+      "script": "Katakana",
+      "start": 12541
+    },
+    {
+      "end": 12543,
+      "script": "Katakana",
+      "start": 12543
+    },
+    {
+      "end": 12591,
+      "script": "Bopomofo",
+      "start": 12549
+    },
+    {
+      "end": 12686,
+      "script": "Hangul",
+      "start": 12593
+    },
+    {
+      "end": 12689,
+      "script": "Common",
+      "start": 12688
+    },
+    {
+      "end": 12693,
+      "script": "Common",
+      "start": 12690
+    },
+    {
+      "end": 12703,
+      "script": "Common",
+      "start": 12694
+    },
+    {
+      "end": 12735,
+      "script": "Bopomofo",
+      "start": 12704
+    },
+    {
+      "end": 12773,
+      "script": "Common",
+      "start": 12736
+    },
+    {
+      "end": 12783,
+      "script": "Common",
+      "start": 12783
+    },
+    {
+      "end": 12799,
+      "script": "Katakana",
+      "start": 12784
+    },
+    {
+      "end": 12830,
+      "script": "Hangul",
+      "start": 12800
+    },
+    {
+      "end": 12841,
+      "script": "Common",
+      "start": 12832
+    },
+    {
+      "end": 12871,
+      "script": "Common",
+      "start": 12842
+    },
+    {
+      "end": 12879,
+      "script": "Common",
+      "start": 12872
+    },
+    {
+      "end": 12880,
+      "script": "Common",
+      "start": 12880
+    },
+    {
+      "end": 12895,
+      "script": "Common",
+      "start": 12881
+    },
+    {
+      "end": 12926,
+      "script": "Hangul",
+      "start": 12896
+    },
+    {
+      "end": 12927,
+      "script": "Common",
+      "start": 12927
+    },
+    {
+      "end": 12937,
+      "script": "Common",
+      "start": 12928
+    },
+    {
+      "end": 12976,
+      "script": "Common",
+      "start": 12938
+    },
+    {
+      "end": 12991,
+      "script": "Common",
+      "start": 12977
+    },
+    {
+      "end": 13007,
+      "script": "Common",
+      "start": 12992
+    },
+    {
+      "end": 13054,
+      "script": "Katakana",
+      "start": 13008
+    },
+    {
+      "end": 13055,
+      "script": "Common",
+      "start": 13055
+    },
+    {
+      "end": 13143,
+      "script": "Katakana",
+      "start": 13056
+    },
+    {
+      "end": 13311,
+      "script": "Common",
+      "start": 13144
+    },
+    {
+      "end": 19903,
+      "script": "Han",
+      "start": 13312
+    },
+    {
+      "end": 19967,
+      "script": "Common",
+      "start": 19904
+    },
+    {
+      "end": 40959,
+      "script": "Han",
+      "start": 19968
+    },
+    {
+      "end": 40980,
+      "script": "Yi",
+      "start": 40960
+    },
+    {
+      "end": 40981,
+      "script": "Yi",
+      "start": 40981
+    },
+    {
+      "end": 42124,
+      "script": "Yi",
+      "start": 40982
+    },
+    {
+      "end": 42182,
+      "script": "Yi",
+      "start": 42128
+    },
+    {
+      "end": 42231,
+      "script": "Lisu",
+      "start": 42192
+    },
+    {
+      "end": 42237,
+      "script": "Lisu",
+      "start": 42232
+    },
+    {
+      "end": 42239,
+      "script": "Lisu",
+      "start": 42238
+    },
+    {
+      "end": 42507,
+      "script": "Vai",
+      "start": 42240
+    },
+    {
+      "end": 42508,
+      "script": "Vai",
+      "start": 42508
+    },
+    {
+      "end": 42511,
+      "script": "Vai",
+      "start": 42509
+    },
+    {
+      "end": 42527,
+      "script": "Vai",
+      "start": 42512
+    },
+    {
+      "end": 42537,
+      "script": "Vai",
+      "start": 42528
+    },
+    {
+      "end": 42539,
+      "script": "Vai",
+      "start": 42538
+    },
+    {
+      "end": 42605,
+      "script": "Cyrillic",
+      "start": 42560
+    },
+    {
+      "end": 42606,
+      "script": "Cyrillic",
+      "start": 42606
+    },
+    {
+      "end": 42607,
+      "script": "Cyrillic",
+      "start": 42607
+    },
+    {
+      "end": 42610,
+      "script": "Cyrillic",
+      "start": 42608
+    },
+    {
+      "end": 42611,
+      "script": "Cyrillic",
+      "start": 42611
+    },
+    {
+      "end": 42621,
+      "script": "Cyrillic",
+      "start": 42612
+    },
+    {
+      "end": 42622,
+      "script": "Cyrillic",
+      "start": 42622
+    },
+    {
+      "end": 42623,
+      "script": "Cyrillic",
+      "start": 42623
+    },
+    {
+      "end": 42651,
+      "script": "Cyrillic",
+      "start": 42624
+    },
+    {
+      "end": 42653,
+      "script": "Cyrillic",
+      "start": 42652
+    },
+    {
+      "end": 42655,
+      "script": "Cyrillic",
+      "start": 42654
+    },
+    {
+      "end": 42725,
+      "script": "Bamum",
+      "start": 42656
+    },
+    {
+      "end": 42735,
+      "script": "Bamum",
+      "start": 42726
+    },
+    {
+      "end": 42737,
+      "script": "Bamum",
+      "start": 42736
+    },
+    {
+      "end": 42743,
+      "script": "Bamum",
+      "start": 42738
+    },
+    {
+      "end": 42774,
+      "script": "Common",
+      "start": 42752
+    },
+    {
+      "end": 42783,
+      "script": "Common",
+      "start": 42775
+    },
+    {
+      "end": 42785,
+      "script": "Common",
+      "start": 42784
+    },
+    {
+      "end": 42863,
+      "script": "Latin",
+      "start": 42786
+    },
+    {
+      "end": 42864,
+      "script": "Latin",
+      "start": 42864
+    },
+    {
+      "end": 42887,
+      "script": "Latin",
+      "start": 42865
+    },
+    {
+      "end": 42888,
+      "script": "Common",
+      "start": 42888
+    },
+    {
+      "end": 42890,
+      "script": "Common",
+      "start": 42889
+    },
+    {
+      "end": 42894,
+      "script": "Latin",
+      "start": 42891
+    },
+    {
+      "end": 42895,
+      "script": "Latin",
+      "start": 42895
+    },
+    {
+      "end": 42972,
+      "script": "Latin",
+      "start": 42896
+    },
+    {
+      "end": 42996,
+      "script": "Latin",
+      "start": 42993
+    },
+    {
+      "end": 42998,
+      "script": "Latin",
+      "start": 42997
+    },
+    {
+      "end": 42999,
+      "script": "Latin",
+      "start": 42999
+    },
+    {
+      "end": 43001,
+      "script": "Latin",
+      "start": 43000
+    },
+    {
+      "end": 43002,
+      "script": "Latin",
+      "start": 43002
+    },
+    {
+      "end": 43007,
+      "script": "Latin",
+      "start": 43003
+    },
+    {
+      "end": 43009,
+      "script": "Syloti_Nagri",
+      "start": 43008
+    },
+    {
+      "end": 43010,
+      "script": "Syloti_Nagri",
+      "start": 43010
+    },
+    {
+      "end": 43013,
+      "script": "Syloti_Nagri",
+      "start": 43011
+    },
+    {
+      "end": 43014,
+      "script": "Syloti_Nagri",
+      "start": 43014
+    },
+    {
+      "end": 43018,
+      "script": "Syloti_Nagri",
+      "start": 43015
+    },
+    {
+      "end": 43019,
+      "script": "Syloti_Nagri",
+      "start": 43019
+    },
+    {
+      "end": 43042,
+      "script": "Syloti_Nagri",
+      "start": 43020
+    },
+    {
+      "end": 43044,
+      "script": "Syloti_Nagri",
+      "start": 43043
+    },
+    {
+      "end": 43046,
+      "script": "Syloti_Nagri",
+      "start": 43045
+    },
+    {
+      "end": 43047,
+      "script": "Syloti_Nagri",
+      "start": 43047
+    },
+    {
+      "end": 43051,
+      "script": "Syloti_Nagri",
+      "start": 43048
+    },
+    {
+      "end": 43052,
+      "script": "Syloti_Nagri",
+      "start": 43052
+    },
+    {
+      "end": 43061,
+      "script": "Common",
+      "start": 43056
+    },
+    {
+      "end": 43063,
+      "script": "Common",
+      "start": 43062
+    },
+    {
+      "end": 43064,
+      "script": "Common",
+      "start": 43064
+    },
+    {
+      "end": 43065,
+      "script": "Common",
+      "start": 43065
+    },
+    {
+      "end": 43123,
+      "script": "Phags_Pa",
+      "start": 43072
+    },
+    {
+      "end": 43127,
+      "script": "Phags_Pa",
+      "start": 43124
+    },
+    {
+      "end": 43137,
+      "script": "Saurashtra",
+      "start": 43136
+    },
+    {
+      "end": 43187,
+      "script": "Saurashtra",
+      "start": 43138
+    },
+    {
+      "end": 43203,
+      "script": "Saurashtra",
+      "start": 43188
+    },
+    {
+      "end": 43205,
+      "script": "Saurashtra",
+      "start": 43204
+    },
+    {
+      "end": 43215,
+      "script": "Saurashtra",
+      "start": 43214
+    },
+    {
+      "end": 43225,
+      "script": "Saurashtra",
+      "start": 43216
+    },
+    {
+      "end": 43249,
+      "script": "Devanagari",
+      "start": 43232
+    },
+    {
+      "end": 43255,
+      "script": "Devanagari",
+      "start": 43250
+    },
+    {
+      "end": 43258,
+      "script": "Devanagari",
+      "start": 43256
+    },
+    {
+      "end": 43259,
+      "script": "Devanagari",
+      "start": 43259
+    },
+    {
+      "end": 43260,
+      "script": "Devanagari",
+      "start": 43260
+    },
+    {
+      "end": 43262,
+      "script": "Devanagari",
+      "start": 43261
+    },
+    {
+      "end": 43263,
+      "script": "Devanagari",
+      "start": 43263
+    },
+    {
+      "end": 43273,
+      "script": "Kayah_Li",
+      "start": 43264
+    },
+    {
+      "end": 43301,
+      "script": "Kayah_Li",
+      "start": 43274
+    },
+    {
+      "end": 43309,
+      "script": "Kayah_Li",
+      "start": 43302
+    },
+    {
+      "end": 43310,
+      "script": "Common",
+      "start": 43310
+    },
+    {
+      "end": 43311,
+      "script": "Kayah_Li",
+      "start": 43311
+    },
+    {
+      "end": 43334,
+      "script": "Rejang",
+      "start": 43312
+    },
+    {
+      "end": 43345,
+      "script": "Rejang",
+      "start": 43335
+    },
+    {
+      "end": 43347,
+      "script": "Rejang",
+      "start": 43346
+    },
+    {
+      "end": 43359,
+      "script": "Rejang",
+      "start": 43359
+    },
+    {
+      "end": 43388,
+      "script": "Hangul",
+      "start": 43360
+    },
+    {
+      "end": 43394,
+      "script": "Javanese",
+      "start": 43392
+    },
+    {
+      "end": 43395,
+      "script": "Javanese",
+      "start": 43395
+    },
+    {
+      "end": 43442,
+      "script": "Javanese",
+      "start": 43396
+    },
+    {
+      "end": 43443,
+      "script": "Javanese",
+      "start": 43443
+    },
+    {
+      "end": 43445,
+      "script": "Javanese",
+      "start": 43444
+    },
+    {
+      "end": 43449,
+      "script": "Javanese",
+      "start": 43446
+    },
+    {
+      "end": 43451,
+      "script": "Javanese",
+      "start": 43450
+    },
+    {
+      "end": 43453,
+      "script": "Javanese",
+      "start": 43452
+    },
+    {
+      "end": 43456,
+      "script": "Javanese",
+      "start": 43454
+    },
+    {
+      "end": 43469,
+      "script": "Javanese",
+      "start": 43457
+    },
+    {
+      "end": 43471,
+      "script": "Common",
+      "start": 43471
+    },
+    {
+      "end": 43481,
+      "script": "Javanese",
+      "start": 43472
+    },
+    {
+      "end": 43487,
+      "script": "Javanese",
+      "start": 43486
+    },
+    {
+      "end": 43492,
+      "script": "Myanmar",
+      "start": 43488
+    },
+    {
+      "end": 43493,
+      "script": "Myanmar",
+      "start": 43493
+    },
+    {
+      "end": 43494,
+      "script": "Myanmar",
+      "start": 43494
+    },
+    {
+      "end": 43503,
+      "script": "Myanmar",
+      "start": 43495
+    },
+    {
+      "end": 43513,
+      "script": "Myanmar",
+      "start": 43504
+    },
+    {
+      "end": 43518,
+      "script": "Myanmar",
+      "start": 43514
+    },
+    {
+      "end": 43560,
+      "script": "Cham",
+      "start": 43520
+    },
+    {
+      "end": 43566,
+      "script": "Cham",
+      "start": 43561
+    },
+    {
+      "end": 43568,
+      "script": "Cham",
+      "start": 43567
+    },
+    {
+      "end": 43570,
+      "script": "Cham",
+      "start": 43569
+    },
+    {
+      "end": 43572,
+      "script": "Cham",
+      "start": 43571
+    },
+    {
+      "end": 43574,
+      "script": "Cham",
+      "start": 43573
+    },
+    {
+      "end": 43586,
+      "script": "Cham",
+      "start": 43584
+    },
+    {
+      "end": 43587,
+      "script": "Cham",
+      "start": 43587
+    },
+    {
+      "end": 43595,
+      "script": "Cham",
+      "start": 43588
+    },
+    {
+      "end": 43596,
+      "script": "Cham",
+      "start": 43596
+    },
+    {
+      "end": 43597,
+      "script": "Cham",
+      "start": 43597
+    },
+    {
+      "end": 43609,
+      "script": "Cham",
+      "start": 43600
+    },
+    {
+      "end": 43615,
+      "script": "Cham",
+      "start": 43612
+    },
+    {
+      "end": 43631,
+      "script": "Myanmar",
+      "start": 43616
+    },
+    {
+      "end": 43632,
+      "script": "Myanmar",
+      "start": 43632
+    },
+    {
+      "end": 43638,
+      "script": "Myanmar",
+      "start": 43633
+    },
+    {
+      "end": 43641,
+      "script": "Myanmar",
+      "start": 43639
+    },
+    {
+      "end": 43642,
+      "script": "Myanmar",
+      "start": 43642
+    },
+    {
+      "end": 43643,
+      "script": "Myanmar",
+      "start": 43643
+    },
+    {
+      "end": 43644,
+      "script": "Myanmar",
+      "start": 43644
+    },
+    {
+      "end": 43645,
+      "script": "Myanmar",
+      "start": 43645
+    },
+    {
+      "end": 43647,
+      "script": "Myanmar",
+      "start": 43646
+    },
+    {
+      "end": 43695,
+      "script": "Tai_Viet",
+      "start": 43648
+    },
+    {
+      "end": 43696,
+      "script": "Tai_Viet",
+      "start": 43696
+    },
+    {
+      "end": 43697,
+      "script": "Tai_Viet",
+      "start": 43697
+    },
+    {
+      "end": 43700,
+      "script": "Tai_Viet",
+      "start": 43698
+    },
+    {
+      "end": 43702,
+      "script": "Tai_Viet",
+      "start": 43701
+    },
+    {
+      "end": 43704,
+      "script": "Tai_Viet",
+      "start": 43703
+    },
+    {
+      "end": 43709,
+      "script": "Tai_Viet",
+      "start": 43705
+    },
+    {
+      "end": 43711,
+      "script": "Tai_Viet",
+      "start": 43710
+    },
+    {
+      "end": 43712,
+      "script": "Tai_Viet",
+      "start": 43712
+    },
+    {
+      "end": 43713,
+      "script": "Tai_Viet",
+      "start": 43713
+    },
+    {
+      "end": 43714,
+      "script": "Tai_Viet",
+      "start": 43714
+    },
+    {
+      "end": 43740,
+      "script": "Tai_Viet",
+      "start": 43739
+    },
+    {
+      "end": 43741,
+      "script": "Tai_Viet",
+      "start": 43741
+    },
+    {
+      "end": 43743,
+      "script": "Tai_Viet",
+      "start": 43742
+    },
+    {
+      "end": 43754,
+      "script": "Meetei_Mayek",
+      "start": 43744
+    },
+    {
+      "end": 43755,
+      "script": "Meetei_Mayek",
+      "start": 43755
+    },
+    {
+      "end": 43757,
+      "script": "Meetei_Mayek",
+      "start": 43756
+    },
+    {
+      "end": 43759,
+      "script": "Meetei_Mayek",
+      "start": 43758
+    },
+    {
+      "end": 43761,
+      "script": "Meetei_Mayek",
+      "start": 43760
+    },
+    {
+      "end": 43762,
+      "script": "Meetei_Mayek",
+      "start": 43762
+    },
+    {
+      "end": 43764,
+      "script": "Meetei_Mayek",
+      "start": 43763
+    },
+    {
+      "end": 43765,
+      "script": "Meetei_Mayek",
+      "start": 43765
+    },
+    {
+      "end": 43766,
+      "script": "Meetei_Mayek",
+      "start": 43766
+    },
+    {
+      "end": 43782,
+      "script": "Ethiopic",
+      "start": 43777
+    },
+    {
+      "end": 43790,
+      "script": "Ethiopic",
+      "start": 43785
+    },
+    {
+      "end": 43798,
+      "script": "Ethiopic",
+      "start": 43793
+    },
+    {
+      "end": 43814,
+      "script": "Ethiopic",
+      "start": 43808
+    },
+    {
+      "end": 43822,
+      "script": "Ethiopic",
+      "start": 43816
+    },
+    {
+      "end": 43866,
+      "script": "Latin",
+      "start": 43824
+    },
+    {
+      "end": 43867,
+      "script": "Common",
+      "start": 43867
+    },
+    {
+      "end": 43871,
+      "script": "Latin",
+      "start": 43868
+    },
+    {
+      "end": 43876,
+      "script": "Latin",
+      "start": 43872
+    },
+    {
+      "end": 43877,
+      "script": "Greek",
+      "start": 43877
+    },
+    {
+      "end": 43880,
+      "script": "Latin",
+      "start": 43878
+    },
+    {
+      "end": 43881,
+      "script": "Latin",
+      "start": 43881
+    },
+    {
+      "end": 43883,
+      "script": "Common",
+      "start": 43882
+    },
+    {
+      "end": 43967,
+      "script": "Cherokee",
+      "start": 43888
+    },
+    {
+      "end": 44002,
+      "script": "Meetei_Mayek",
+      "start": 43968
+    },
+    {
+      "end": 44004,
+      "script": "Meetei_Mayek",
+      "start": 44003
+    },
+    {
+      "end": 44005,
+      "script": "Meetei_Mayek",
+      "start": 44005
+    },
+    {
+      "end": 44007,
+      "script": "Meetei_Mayek",
+      "start": 44006
+    },
+    {
+      "end": 44008,
+      "script": "Meetei_Mayek",
+      "start": 44008
+    },
+    {
+      "end": 44010,
+      "script": "Meetei_Mayek",
+      "start": 44009
+    },
+    {
+      "end": 44011,
+      "script": "Meetei_Mayek",
+      "start": 44011
+    },
+    {
+      "end": 44012,
+      "script": "Meetei_Mayek",
+      "start": 44012
+    },
+    {
+      "end": 44013,
+      "script": "Meetei_Mayek",
+      "start": 44013
+    },
+    {
+      "end": 44025,
+      "script": "Meetei_Mayek",
+      "start": 44016
+    },
+    {
+      "end": 55203,
+      "script": "Hangul",
+      "start": 44032
+    },
+    {
+      "end": 55238,
+      "script": "Hangul",
+      "start": 55216
+    },
+    {
+      "end": 55291,
+      "script": "Hangul",
+      "start": 55243
+    },
+    {
+      "end": 64109,
+      "script": "Han",
+      "start": 63744
+    },
+    {
+      "end": 64217,
+      "script": "Han",
+      "start": 64112
+    },
+    {
+      "end": 64262,
+      "script": "Latin",
+      "start": 64256
+    },
+    {
+      "end": 64279,
+      "script": "Armenian",
+      "start": 64275
+    },
+    {
+      "end": 64285,
+      "script": "Hebrew",
+      "start": 64285
+    },
+    {
+      "end": 64286,
+      "script": "Hebrew",
+      "start": 64286
+    },
+    {
+      "end": 64296,
+      "script": "Hebrew",
+      "start": 64287
+    },
+    {
+      "end": 64297,
+      "script": "Hebrew",
+      "start": 64297
+    },
+    {
+      "end": 64310,
+      "script": "Hebrew",
+      "start": 64298
+    },
+    {
+      "end": 64316,
+      "script": "Hebrew",
+      "start": 64312
+    },
+    {
+      "end": 64318,
+      "script": "Hebrew",
+      "start": 64318
+    },
+    {
+      "end": 64321,
+      "script": "Hebrew",
+      "start": 64320
+    },
+    {
+      "end": 64324,
+      "script": "Hebrew",
+      "start": 64323
+    },
+    {
+      "end": 64335,
+      "script": "Hebrew",
+      "start": 64326
+    },
+    {
+      "end": 64433,
+      "script": "Arabic",
+      "start": 64336
+    },
+    {
+      "end": 64450,
+      "script": "Arabic",
+      "start": 64434
+    },
+    {
+      "end": 64466,
+      "script": "Arabic",
+      "start": 64451
+    },
+    {
+      "end": 64829,
+      "script": "Arabic",
+      "start": 64467
+    },
+    {
+      "end": 64830,
+      "script": "Common",
+      "start": 64830
+    },
+    {
+      "end": 64831,
+      "script": "Common",
+      "start": 64831
+    },
+    {
+      "end": 64847,
+      "script": "Arabic",
+      "start": 64832
+    },
+    {
+      "end": 64911,
+      "script": "Arabic",
+      "start": 64848
+    },
+    {
+      "end": 64913,
+      "script": "Arabic",
+      "start": 64912
+    },
+    {
+      "end": 64967,
+      "script": "Arabic",
+      "start": 64914
+    },
+    {
+      "end": 64975,
+      "script": "Arabic",
+      "start": 64968
+    },
+    {
+      "end": 65019,
+      "script": "Arabic",
+      "start": 65008
+    },
+    {
+      "end": 65020,
+      "script": "Arabic",
+      "start": 65020
+    },
+    {
+      "end": 65023,
+      "script": "Arabic",
+      "start": 65021
+    },
+    {
+      "end": 65039,
+      "script": "Inherited",
+      "start": 65024
+    },
+    {
+      "end": 65046,
+      "script": "Common",
+      "start": 65040
+    },
+    {
+      "end": 65047,
+      "script": "Common",
+      "start": 65047
+    },
+    {
+      "end": 65048,
+      "script": "Common",
+      "start": 65048
+    },
+    {
+      "end": 65049,
+      "script": "Common",
+      "start": 65049
+    },
+    {
+      "end": 65069,
+      "script": "Inherited",
+      "start": 65056
+    },
+    {
+      "end": 65071,
+      "script": "Cyrillic",
+      "start": 65070
+    },
+    {
+      "end": 65072,
+      "script": "Common",
+      "start": 65072
+    },
+    {
+      "end": 65074,
+      "script": "Common",
+      "start": 65073
+    },
+    {
+      "end": 65076,
+      "script": "Common",
+      "start": 65075
+    },
+    {
+      "end": 65077,
+      "script": "Common",
+      "start": 65077
+    },
+    {
+      "end": 65078,
+      "script": "Common",
+      "start": 65078
+    },
+    {
+      "end": 65079,
+      "script": "Common",
+      "start": 65079
+    },
+    {
+      "end": 65080,
+      "script": "Common",
+      "start": 65080
+    },
+    {
+      "end": 65081,
+      "script": "Common",
+      "start": 65081
+    },
+    {
+      "end": 65082,
+      "script": "Common",
+      "start": 65082
+    },
+    {
+      "end": 65083,
+      "script": "Common",
+      "start": 65083
+    },
+    {
+      "end": 65084,
+      "script": "Common",
+      "start": 65084
+    },
+    {
+      "end": 65085,
+      "script": "Common",
+      "start": 65085
+    },
+    {
+      "end": 65086,
+      "script": "Common",
+      "start": 65086
+    },
+    {
+      "end": 65087,
+      "script": "Common",
+      "start": 65087
+    },
+    {
+      "end": 65088,
+      "script": "Common",
+      "start": 65088
+    },
+    {
+      "end": 65089,
+      "script": "Common",
+      "start": 65089
+    },
+    {
+      "end": 65090,
+      "script": "Common",
+      "start": 65090
+    },
+    {
+      "end": 65091,
+      "script": "Common",
+      "start": 65091
+    },
+    {
+      "end": 65092,
+      "script": "Common",
+      "start": 65092
+    },
+    {
+      "end": 65094,
+      "script": "Common",
+      "start": 65093
+    },
+    {
+      "end": 65095,
+      "script": "Common",
+      "start": 65095
+    },
+    {
+      "end": 65096,
+      "script": "Common",
+      "start": 65096
+    },
+    {
+      "end": 65100,
+      "script": "Common",
+      "start": 65097
+    },
+    {
+      "end": 65103,
+      "script": "Common",
+      "start": 65101
+    },
+    {
+      "end": 65106,
+      "script": "Common",
+      "start": 65104
+    },
+    {
+      "end": 65111,
+      "script": "Common",
+      "start": 65108
+    },
+    {
+      "end": 65112,
+      "script": "Common",
+      "start": 65112
+    },
+    {
+      "end": 65113,
+      "script": "Common",
+      "start": 65113
+    },
+    {
+      "end": 65114,
+      "script": "Common",
+      "start": 65114
+    },
+    {
+      "end": 65115,
+      "script": "Common",
+      "start": 65115
+    },
+    {
+      "end": 65116,
+      "script": "Common",
+      "start": 65116
+    },
+    {
+      "end": 65117,
+      "script": "Common",
+      "start": 65117
+    },
+    {
+      "end": 65118,
+      "script": "Common",
+      "start": 65118
+    },
+    {
+      "end": 65121,
+      "script": "Common",
+      "start": 65119
+    },
+    {
+      "end": 65122,
+      "script": "Common",
+      "start": 65122
+    },
+    {
+      "end": 65123,
+      "script": "Common",
+      "start": 65123
+    },
+    {
+      "end": 65126,
+      "script": "Common",
+      "start": 65124
+    },
+    {
+      "end": 65128,
+      "script": "Common",
+      "start": 65128
+    },
+    {
+      "end": 65129,
+      "script": "Common",
+      "start": 65129
+    },
+    {
+      "end": 65131,
+      "script": "Common",
+      "start": 65130
+    },
+    {
+      "end": 65140,
+      "script": "Arabic",
+      "start": 65136
+    },
+    {
+      "end": 65276,
+      "script": "Arabic",
+      "start": 65142
+    },
+    {
+      "end": 65279,
+      "script": "Common",
+      "start": 65279
+    },
+    {
+      "end": 65283,
+      "script": "Common",
+      "start": 65281
+    },
+    {
+      "end": 65284,
+      "script": "Common",
+      "start": 65284
+    },
+    {
+      "end": 65287,
+      "script": "Common",
+      "start": 65285
+    },
+    {
+      "end": 65288,
+      "script": "Common",
+      "start": 65288
+    },
+    {
+      "end": 65289,
+      "script": "Common",
+      "start": 65289
+    },
+    {
+      "end": 65290,
+      "script": "Common",
+      "start": 65290
+    },
+    {
+      "end": 65291,
+      "script": "Common",
+      "start": 65291
+    },
+    {
+      "end": 65292,
+      "script": "Common",
+      "start": 65292
+    },
+    {
+      "end": 65293,
+      "script": "Common",
+      "start": 65293
+    },
+    {
+      "end": 65295,
+      "script": "Common",
+      "start": 65294
+    },
+    {
+      "end": 65305,
+      "script": "Common",
+      "start": 65296
+    },
+    {
+      "end": 65307,
+      "script": "Common",
+      "start": 65306
+    },
+    {
+      "end": 65310,
+      "script": "Common",
+      "start": 65308
+    },
+    {
+      "end": 65312,
+      "script": "Common",
+      "start": 65311
+    },
+    {
+      "end": 65338,
+      "script": "Latin",
+      "start": 65313
+    },
+    {
+      "end": 65339,
+      "script": "Common",
+      "start": 65339
+    },
+    {
+      "end": 65340,
+      "script": "Common",
+      "start": 65340
+    },
+    {
+      "end": 65341,
+      "script": "Common",
+      "start": 65341
+    },
+    {
+      "end": 65342,
+      "script": "Common",
+      "start": 65342
+    },
+    {
+      "end": 65343,
+      "script": "Common",
+      "start": 65343
+    },
+    {
+      "end": 65344,
+      "script": "Common",
+      "start": 65344
+    },
+    {
+      "end": 65370,
+      "script": "Latin",
+      "start": 65345
+    },
+    {
+      "end": 65371,
+      "script": "Common",
+      "start": 65371
+    },
+    {
+      "end": 65372,
+      "script": "Common",
+      "start": 65372
+    },
+    {
+      "end": 65373,
+      "script": "Common",
+      "start": 65373
+    },
+    {
+      "end": 65374,
+      "script": "Common",
+      "start": 65374
+    },
+    {
+      "end": 65375,
+      "script": "Common",
+      "start": 65375
+    },
+    {
+      "end": 65376,
+      "script": "Common",
+      "start": 65376
+    },
+    {
+      "end": 65377,
+      "script": "Common",
+      "start": 65377
+    },
+    {
+      "end": 65378,
+      "script": "Common",
+      "start": 65378
+    },
+    {
+      "end": 65379,
+      "script": "Common",
+      "start": 65379
+    },
+    {
+      "end": 65381,
+      "script": "Common",
+      "start": 65380
+    },
+    {
+      "end": 65391,
+      "script": "Katakana",
+      "start": 65382
+    },
+    {
+      "end": 65392,
+      "script": "Common",
+      "start": 65392
+    },
+    {
+      "end": 65437,
+      "script": "Katakana",
+      "start": 65393
+    },
+    {
+      "end": 65439,
+      "script": "Common",
+      "start": 65438
+    },
+    {
+      "end": 65470,
+      "script": "Hangul",
+      "start": 65440
+    },
+    {
+      "end": 65479,
+      "script": "Hangul",
+      "start": 65474
+    },
+    {
+      "end": 65487,
+      "script": "Hangul",
+      "start": 65482
+    },
+    {
+      "end": 65495,
+      "script": "Hangul",
+      "start": 65490
+    },
+    {
+      "end": 65500,
+      "script": "Hangul",
+      "start": 65498
+    },
+    {
+      "end": 65505,
+      "script": "Common",
+      "start": 65504
+    },
+    {
+      "end": 65506,
+      "script": "Common",
+      "start": 65506
+    },
+    {
+      "end": 65507,
+      "script": "Common",
+      "start": 65507
+    },
+    {
+      "end": 65508,
+      "script": "Common",
+      "start": 65508
+    },
+    {
+      "end": 65510,
+      "script": "Common",
+      "start": 65509
+    },
+    {
+      "end": 65512,
+      "script": "Common",
+      "start": 65512
+    },
+    {
+      "end": 65516,
+      "script": "Common",
+      "start": 65513
+    },
+    {
+      "end": 65518,
+      "script": "Common",
+      "start": 65517
+    },
+    {
+      "end": 65531,
+      "script": "Common",
+      "start": 65529
+    },
+    {
+      "end": 65533,
+      "script": "Common",
+      "start": 65532
+    },
+    {
+      "end": 65547,
+      "script": "Linear_B",
+      "start": 65536
+    },
+    {
+      "end": 65574,
+      "script": "Linear_B",
+      "start": 65549
+    },
+    {
+      "end": 65594,
+      "script": "Linear_B",
+      "start": 65576
+    },
+    {
+      "end": 65597,
+      "script": "Linear_B",
+      "start": 65596
+    },
+    {
+      "end": 65613,
+      "script": "Linear_B",
+      "start": 65599
+    },
+    {
+      "end": 65629,
+      "script": "Linear_B",
+      "start": 65616
+    },
+    {
+      "end": 65786,
+      "script": "Linear_B",
+      "start": 65664
+    },
+    {
+      "end": 65794,
+      "script": "Common",
+      "start": 65792
+    },
+    {
+      "end": 65843,
+      "script": "Common",
+      "start": 65799
+    },
+    {
+      "end": 65855,
+      "script": "Common",
+      "start": 65847
+    },
+    {
+      "end": 65908,
+      "script": "Greek",
+      "start": 65856
+    },
+    {
+      "end": 65912,
+      "script": "Greek",
+      "start": 65909
+    },
+    {
+      "end": 65929,
+      "script": "Greek",
+      "start": 65913
+    },
+    {
+      "end": 65931,
+      "script": "Greek",
+      "start": 65930
+    },
+    {
+      "end": 65934,
+      "script": "Greek",
+      "start": 65932
+    },
+    {
+      "end": 65948,
+      "script": "Common",
+      "start": 65936
+    },
+    {
+      "end": 65952,
+      "script": "Greek",
+      "start": 65952
+    },
+    {
+      "end": 66044,
+      "script": "Common",
+      "start": 66000
+    },
+    {
+      "end": 66045,
+      "script": "Inherited",
+      "start": 66045
+    },
+    {
+      "end": 66204,
+      "script": "Lycian",
+      "start": 66176
+    },
+    {
+      "end": 66256,
+      "script": "Carian",
+      "start": 66208
+    },
+    {
+      "end": 66272,
+      "script": "Inherited",
+      "start": 66272
+    },
+    {
+      "end": 66299,
+      "script": "Common",
+      "start": 66273
+    },
+    {
+      "end": 66335,
+      "script": "Old_Italic",
+      "start": 66304
+    },
+    {
+      "end": 66339,
+      "script": "Old_Italic",
+      "start": 66336
+    },
+    {
+      "end": 66351,
+      "script": "Old_Italic",
+      "start": 66349
+    },
+    {
+      "end": 66368,
+      "script": "Gothic",
+      "start": 66352
+    },
+    {
+      "end": 66369,
+      "script": "Gothic",
+      "start": 66369
+    },
+    {
+      "end": 66377,
+      "script": "Gothic",
+      "start": 66370
+    },
+    {
+      "end": 66378,
+      "script": "Gothic",
+      "start": 66378
+    },
+    {
+      "end": 66421,
+      "script": "Old_Permic",
+      "start": 66384
+    },
+    {
+      "end": 66426,
+      "script": "Old_Permic",
+      "start": 66422
+    },
+    {
+      "end": 66461,
+      "script": "Ugaritic",
+      "start": 66432
+    },
+    {
+      "end": 66463,
+      "script": "Ugaritic",
+      "start": 66463
+    },
+    {
+      "end": 66499,
+      "script": "Old_Persian",
+      "start": 66464
+    },
+    {
+      "end": 66511,
+      "script": "Old_Persian",
+      "start": 66504
+    },
+    {
+      "end": 66512,
+      "script": "Old_Persian",
+      "start": 66512
+    },
+    {
+      "end": 66517,
+      "script": "Old_Persian",
+      "start": 66513
+    },
+    {
+      "end": 66639,
+      "script": "Deseret",
+      "start": 66560
+    },
+    {
+      "end": 66687,
+      "script": "Shavian",
+      "start": 66640
+    },
+    {
+      "end": 66717,
+      "script": "Osmanya",
+      "start": 66688
+    },
+    {
+      "end": 66729,
+      "script": "Osmanya",
+      "start": 66720
+    },
+    {
+      "end": 66771,
+      "script": "Osage",
+      "start": 66736
+    },
+    {
+      "end": 66811,
+      "script": "Osage",
+      "start": 66776
+    },
+    {
+      "end": 66855,
+      "script": "Elbasan",
+      "start": 66816
+    },
+    {
+      "end": 66915,
+      "script": "Caucasian_Albanian",
+      "start": 66864
+    },
+    {
+      "end": 66927,
+      "script": "Caucasian_Albanian",
+      "start": 66927
+    },
+    {
+      "end": 66938,
+      "script": "Vithkuqi",
+      "start": 66928
+    },
+    {
+      "end": 66954,
+      "script": "Vithkuqi",
+      "start": 66940
+    },
+    {
+      "end": 66962,
+      "script": "Vithkuqi",
+      "start": 66956
+    },
+    {
+      "end": 66965,
+      "script": "Vithkuqi",
+      "start": 66964
+    },
+    {
+      "end": 66977,
+      "script": "Vithkuqi",
+      "start": 66967
+    },
+    {
+      "end": 66993,
+      "script": "Vithkuqi",
+      "start": 66979
+    },
+    {
+      "end": 67001,
+      "script": "Vithkuqi",
+      "start": 66995
+    },
+    {
+      "end": 67004,
+      "script": "Vithkuqi",
+      "start": 67003
+    },
+    {
+      "end": 67059,
+      "script": "Todhri",
+      "start": 67008
+    },
+    {
+      "end": 67382,
+      "script": "Linear_A",
+      "start": 67072
+    },
+    {
+      "end": 67413,
+      "script": "Linear_A",
+      "start": 67392
+    },
+    {
+      "end": 67431,
+      "script": "Linear_A",
+      "start": 67424
+    },
+    {
+      "end": 67461,
+      "script": "Latin",
+      "start": 67456
+    },
+    {
+      "end": 67504,
+      "script": "Latin",
+      "start": 67463
+    },
+    {
+      "end": 67514,
+      "script": "Latin",
+      "start": 67506
+    },
+    {
+      "end": 67589,
+      "script": "Cypriot",
+      "start": 67584
+    },
+    {
+      "end": 67592,
+      "script": "Cypriot",
+      "start": 67592
+    },
+    {
+      "end": 67637,
+      "script": "Cypriot",
+      "start": 67594
+    },
+    {
+      "end": 67640,
+      "script": "Cypriot",
+      "start": 67639
+    },
+    {
+      "end": 67644,
+      "script": "Cypriot",
+      "start": 67644
+    },
+    {
+      "end": 67647,
+      "script": "Cypriot",
+      "start": 67647
+    },
+    {
+      "end": 67669,
+      "script": "Imperial_Aramaic",
+      "start": 67648
+    },
+    {
+      "end": 67671,
+      "script": "Imperial_Aramaic",
+      "start": 67671
+    },
+    {
+      "end": 67679,
+      "script": "Imperial_Aramaic",
+      "start": 67672
+    },
+    {
+      "end": 67702,
+      "script": "Palmyrene",
+      "start": 67680
+    },
+    {
+      "end": 67704,
+      "script": "Palmyrene",
+      "start": 67703
+    },
+    {
+      "end": 67711,
+      "script": "Palmyrene",
+      "start": 67705
+    },
+    {
+      "end": 67742,
+      "script": "Nabataean",
+      "start": 67712
+    },
+    {
+      "end": 67759,
+      "script": "Nabataean",
+      "start": 67751
+    },
+    {
+      "end": 67826,
+      "script": "Hatran",
+      "start": 67808
+    },
+    {
+      "end": 67829,
+      "script": "Hatran",
+      "start": 67828
+    },
+    {
+      "end": 67839,
+      "script": "Hatran",
+      "start": 67835
+    },
+    {
+      "end": 67861,
+      "script": "Phoenician",
+      "start": 67840
+    },
+    {
+      "end": 67867,
+      "script": "Phoenician",
+      "start": 67862
+    },
+    {
+      "end": 67871,
+      "script": "Phoenician",
+      "start": 67871
+    },
+    {
+      "end": 67897,
+      "script": "Lydian",
+      "start": 67872
+    },
+    {
+      "end": 67903,
+      "script": "Lydian",
+      "start": 67903
+    },
+    {
+      "end": 67929,
+      "script": "Sidetic",
+      "start": 67904
+    },
+    {
+      "end": 67999,
+      "script": "Meroitic_Hieroglyphs",
+      "start": 67968
+    },
+    {
+      "end": 68023,
+      "script": "Meroitic_Cursive",
+      "start": 68000
+    },
+    {
+      "end": 68029,
+      "script": "Meroitic_Cursive",
+      "start": 68028
+    },
+    {
+      "end": 68031,
+      "script": "Meroitic_Cursive",
+      "start": 68030
+    },
+    {
+      "end": 68047,
+      "script": "Meroitic_Cursive",
+      "start": 68032
+    },
+    {
+      "end": 68095,
+      "script": "Meroitic_Cursive",
+      "start": 68050
+    },
+    {
+      "end": 68096,
+      "script": "Kharoshthi",
+      "start": 68096
+    },
+    {
+      "end": 68099,
+      "script": "Kharoshthi",
+      "start": 68097
+    },
+    {
+      "end": 68102,
+      "script": "Kharoshthi",
+      "start": 68101
+    },
+    {
+      "end": 68111,
+      "script": "Kharoshthi",
+      "start": 68108
+    },
+    {
+      "end": 68115,
+      "script": "Kharoshthi",
+      "start": 68112
+    },
+    {
+      "end": 68119,
+      "script": "Kharoshthi",
+      "start": 68117
+    },
+    {
+      "end": 68149,
+      "script": "Kharoshthi",
+      "start": 68121
+    },
+    {
+      "end": 68154,
+      "script": "Kharoshthi",
+      "start": 68152
+    },
+    {
+      "end": 68159,
+      "script": "Kharoshthi",
+      "start": 68159
+    },
+    {
+      "end": 68168,
+      "script": "Kharoshthi",
+      "start": 68160
+    },
+    {
+      "end": 68184,
+      "script": "Kharoshthi",
+      "start": 68176
+    },
+    {
+      "end": 68220,
+      "script": "Old_South_Arabian",
+      "start": 68192
+    },
+    {
+      "end": 68222,
+      "script": "Old_South_Arabian",
+      "start": 68221
+    },
+    {
+      "end": 68223,
+      "script": "Old_South_Arabian",
+      "start": 68223
+    },
+    {
+      "end": 68252,
+      "script": "Old_North_Arabian",
+      "start": 68224
+    },
+    {
+      "end": 68255,
+      "script": "Old_North_Arabian",
+      "start": 68253
+    },
+    {
+      "end": 68295,
+      "script": "Manichaean",
+      "start": 68288
+    },
+    {
+      "end": 68296,
+      "script": "Manichaean",
+      "start": 68296
+    },
+    {
+      "end": 68324,
+      "script": "Manichaean",
+      "start": 68297
+    },
+    {
+      "end": 68326,
+      "script": "Manichaean",
+      "start": 68325
+    },
+    {
+      "end": 68335,
+      "script": "Manichaean",
+      "start": 68331
+    },
+    {
+      "end": 68342,
+      "script": "Manichaean",
+      "start": 68336
+    },
+    {
+      "end": 68405,
+      "script": "Avestan",
+      "start": 68352
+    },
+    {
+      "end": 68415,
+      "script": "Avestan",
+      "start": 68409
+    },
+    {
+      "end": 68437,
+      "script": "Inscriptional_Parthian",
+      "start": 68416
+    },
+    {
+      "end": 68447,
+      "script": "Inscriptional_Parthian",
+      "start": 68440
+    },
+    {
+      "end": 68466,
+      "script": "Inscriptional_Pahlavi",
+      "start": 68448
+    },
+    {
+      "end": 68479,
+      "script": "Inscriptional_Pahlavi",
+      "start": 68472
+    },
+    {
+      "end": 68497,
+      "script": "Psalter_Pahlavi",
+      "start": 68480
+    },
+    {
+      "end": 68508,
+      "script": "Psalter_Pahlavi",
+      "start": 68505
+    },
+    {
+      "end": 68527,
+      "script": "Psalter_Pahlavi",
+      "start": 68521
+    },
+    {
+      "end": 68680,
+      "script": "Old_Turkic",
+      "start": 68608
+    },
+    {
+      "end": 68786,
+      "script": "Old_Hungarian",
+      "start": 68736
+    },
+    {
+      "end": 68850,
+      "script": "Old_Hungarian",
+      "start": 68800
+    },
+    {
+      "end": 68863,
+      "script": "Old_Hungarian",
+      "start": 68858
+    },
+    {
+      "end": 68899,
+      "script": "Hanifi_Rohingya",
+      "start": 68864
+    },
+    {
+      "end": 68903,
+      "script": "Hanifi_Rohingya",
+      "start": 68900
+    },
+    {
+      "end": 68921,
+      "script": "Hanifi_Rohingya",
+      "start": 68912
+    },
+    {
+      "end": 68937,
+      "script": "Garay",
+      "start": 68928
+    },
+    {
+      "end": 68941,
+      "script": "Garay",
+      "start": 68938
+    },
+    {
+      "end": 68942,
+      "script": "Garay",
+      "start": 68942
+    },
+    {
+      "end": 68943,
+      "script": "Garay",
+      "start": 68943
+    },
+    {
+      "end": 68965,
+      "script": "Garay",
+      "start": 68944
+    },
+    {
+      "end": 68973,
+      "script": "Garay",
+      "start": 68969
+    },
+    {
+      "end": 68974,
+      "script": "Garay",
+      "start": 68974
+    },
+    {
+      "end": 68975,
+      "script": "Garay",
+      "start": 68975
+    },
+    {
+      "end": 68997,
+      "script": "Garay",
+      "start": 68976
+    },
+    {
+      "end": 69007,
+      "script": "Garay",
+      "start": 69006
+    },
+    {
+      "end": 69246,
+      "script": "Arabic",
+      "start": 69216
+    },
+    {
+      "end": 69289,
+      "script": "Yezidi",
+      "start": 69248
+    },
+    {
+      "end": 69292,
+      "script": "Yezidi",
+      "start": 69291
+    },
+    {
+      "end": 69293,
+      "script": "Yezidi",
+      "start": 69293
+    },
+    {
+      "end": 69297,
+      "script": "Yezidi",
+      "start": 69296
+    },
+    {
+      "end": 69316,
+      "script": "Arabic",
+      "start": 69314
+    },
+    {
+      "end": 69317,
+      "script": "Arabic",
+      "start": 69317
+    },
+    {
+      "end": 69319,
+      "script": "Arabic",
+      "start": 69318
+    },
+    {
+      "end": 69328,
+      "script": "Arabic",
+      "start": 69328
+    },
+    {
+      "end": 69336,
+      "script": "Arabic",
+      "start": 69329
+    },
+    {
+      "end": 69375,
+      "script": "Arabic",
+      "start": 69370
+    },
+    {
+      "end": 69404,
+      "script": "Old_Sogdian",
+      "start": 69376
+    },
+    {
+      "end": 69414,
+      "script": "Old_Sogdian",
+      "start": 69405
+    },
+    {
+      "end": 69415,
+      "script": "Old_Sogdian",
+      "start": 69415
+    },
+    {
+      "end": 69445,
+      "script": "Sogdian",
+      "start": 69424
+    },
+    {
+      "end": 69456,
+      "script": "Sogdian",
+      "start": 69446
+    },
+    {
+      "end": 69460,
+      "script": "Sogdian",
+      "start": 69457
+    },
+    {
+      "end": 69465,
+      "script": "Sogdian",
+      "start": 69461
+    },
+    {
+      "end": 69505,
+      "script": "Old_Uyghur",
+      "start": 69488
+    },
+    {
+      "end": 69509,
+      "script": "Old_Uyghur",
+      "start": 69506
+    },
+    {
+      "end": 69513,
+      "script": "Old_Uyghur",
+      "start": 69510
+    },
+    {
+      "end": 69572,
+      "script": "Chorasmian",
+      "start": 69552
+    },
+    {
+      "end": 69579,
+      "script": "Chorasmian",
+      "start": 69573
+    },
+    {
+      "end": 69622,
+      "script": "Elymaic",
+      "start": 69600
+    },
+    {
+      "end": 69632,
+      "script": "Brahmi",
+      "start": 69632
+    },
+    {
+      "end": 69633,
+      "script": "Brahmi",
+      "start": 69633
+    },
+    {
+      "end": 69634,
+      "script": "Brahmi",
+      "start": 69634
+    },
+    {
+      "end": 69687,
+      "script": "Brahmi",
+      "start": 69635
+    },
+    {
+      "end": 69702,
+      "script": "Brahmi",
+      "start": 69688
+    },
+    {
+      "end": 69709,
+      "script": "Brahmi",
+      "start": 69703
+    },
+    {
+      "end": 69733,
+      "script": "Brahmi",
+      "start": 69714
+    },
+    {
+      "end": 69743,
+      "script": "Brahmi",
+      "start": 69734
+    },
+    {
+      "end": 69744,
+      "script": "Brahmi",
+      "start": 69744
+    },
+    {
+      "end": 69746,
+      "script": "Brahmi",
+      "start": 69745
+    },
+    {
+      "end": 69748,
+      "script": "Brahmi",
+      "start": 69747
+    },
+    {
+      "end": 69749,
+      "script": "Brahmi",
+      "start": 69749
+    },
+    {
+      "end": 69759,
+      "script": "Brahmi",
+      "start": 69759
+    },
+    {
+      "end": 69761,
+      "script": "Kaithi",
+      "start": 69760
+    },
+    {
+      "end": 69762,
+      "script": "Kaithi",
+      "start": 69762
+    },
+    {
+      "end": 69807,
+      "script": "Kaithi",
+      "start": 69763
+    },
+    {
+      "end": 69810,
+      "script": "Kaithi",
+      "start": 69808
+    },
+    {
+      "end": 69814,
+      "script": "Kaithi",
+      "start": 69811
+    },
+    {
+      "end": 69816,
+      "script": "Kaithi",
+      "start": 69815
+    },
+    {
+      "end": 69818,
+      "script": "Kaithi",
+      "start": 69817
+    },
+    {
+      "end": 69820,
+      "script": "Kaithi",
+      "start": 69819
+    },
+    {
+      "end": 69821,
+      "script": "Kaithi",
+      "start": 69821
+    },
+    {
+      "end": 69825,
+      "script": "Kaithi",
+      "start": 69822
+    },
+    {
+      "end": 69826,
+      "script": "Kaithi",
+      "start": 69826
+    },
+    {
+      "end": 69837,
+      "script": "Kaithi",
+      "start": 69837
+    },
+    {
+      "end": 69864,
+      "script": "Sora_Sompeng",
+      "start": 69840
+    },
+    {
+      "end": 69881,
+      "script": "Sora_Sompeng",
+      "start": 69872
+    },
+    {
+      "end": 69890,
+      "script": "Chakma",
+      "start": 69888
+    },
+    {
+      "end": 69926,
+      "script": "Chakma",
+      "start": 69891
+    },
+    {
+      "end": 69931,
+      "script": "Chakma",
+      "start": 69927
+    },
+    {
+      "end": 69932,
+      "script": "Chakma",
+      "start": 69932
+    },
+    {
+      "end": 69940,
+      "script": "Chakma",
+      "start": 69933
+    },
+    {
+      "end": 69951,
+      "script": "Chakma",
+      "start": 69942
+    },
+    {
+      "end": 69955,
+      "script": "Chakma",
+      "start": 69952
+    },
+    {
+      "end": 69956,
+      "script": "Chakma",
+      "start": 69956
+    },
+    {
+      "end": 69958,
+      "script": "Chakma",
+      "start": 69957
+    },
+    {
+      "end": 69959,
+      "script": "Chakma",
+      "start": 69959
+    },
+    {
+      "end": 70002,
+      "script": "Mahajani",
+      "start": 69968
+    },
+    {
+      "end": 70003,
+      "script": "Mahajani",
+      "start": 70003
+    },
+    {
+      "end": 70005,
+      "script": "Mahajani",
+      "start": 70004
+    },
+    {
+      "end": 70006,
+      "script": "Mahajani",
+      "start": 70006
+    },
+    {
+      "end": 70017,
+      "script": "Sharada",
+      "start": 70016
+    },
+    {
+      "end": 70018,
+      "script": "Sharada",
+      "start": 70018
+    },
+    {
+      "end": 70066,
+      "script": "Sharada",
+      "start": 70019
+    },
+    {
+      "end": 70069,
+      "script": "Sharada",
+      "start": 70067
+    },
+    {
+      "end": 70078,
+      "script": "Sharada",
+      "start": 70070
+    },
+    {
+      "end": 70080,
+      "script": "Sharada",
+      "start": 70079
+    },
+    {
+      "end": 70084,
+      "script": "Sharada",
+      "start": 70081
+    },
+    {
+      "end": 70088,
+      "script": "Sharada",
+      "start": 70085
+    },
+    {
+      "end": 70092,
+      "script": "Sharada",
+      "start": 70089
+    },
+    {
+      "end": 70093,
+      "script": "Sharada",
+      "start": 70093
+    },
+    {
+      "end": 70094,
+      "script": "Sharada",
+      "start": 70094
+    },
+    {
+      "end": 70095,
+      "script": "Sharada",
+      "start": 70095
+    },
+    {
+      "end": 70105,
+      "script": "Sharada",
+      "start": 70096
+    },
+    {
+      "end": 70106,
+      "script": "Sharada",
+      "start": 70106
+    },
+    {
+      "end": 70107,
+      "script": "Sharada",
+      "start": 70107
+    },
+    {
+      "end": 70108,
+      "script": "Sharada",
+      "start": 70108
+    },
+    {
+      "end": 70111,
+      "script": "Sharada",
+      "start": 70109
+    },
+    {
+      "end": 70132,
+      "script": "Sinhala",
+      "start": 70113
+    },
+    {
+      "end": 70161,
+      "script": "Khojki",
+      "start": 70144
+    },
+    {
+      "end": 70187,
+      "script": "Khojki",
+      "start": 70163
+    },
+    {
+      "end": 70190,
+      "script": "Khojki",
+      "start": 70188
+    },
+    {
+      "end": 70193,
+      "script": "Khojki",
+      "start": 70191
+    },
+    {
+      "end": 70195,
+      "script": "Khojki",
+      "start": 70194
+    },
+    {
+      "end": 70196,
+      "script": "Khojki",
+      "start": 70196
+    },
+    {
+      "end": 70197,
+      "script": "Khojki",
+      "start": 70197
+    },
+    {
+      "end": 70199,
+      "script": "Khojki",
+      "start": 70198
+    },
+    {
+      "end": 70205,
+      "script": "Khojki",
+      "start": 70200
+    },
+    {
+      "end": 70206,
+      "script": "Khojki",
+      "start": 70206
+    },
+    {
+      "end": 70208,
+      "script": "Khojki",
+      "start": 70207
+    },
+    {
+      "end": 70209,
+      "script": "Khojki",
+      "start": 70209
+    },
+    {
+      "end": 70278,
+      "script": "Multani",
+      "start": 70272
+    },
+    {
+      "end": 70280,
+      "script": "Multani",
+      "start": 70280
+    },
+    {
+      "end": 70285,
+      "script": "Multani",
+      "start": 70282
+    },
+    {
+      "end": 70301,
+      "script": "Multani",
+      "start": 70287
+    },
+    {
+      "end": 70312,
+      "script": "Multani",
+      "start": 70303
+    },
+    {
+      "end": 70313,
+      "script": "Multani",
+      "start": 70313
+    },
+    {
+      "end": 70366,
+      "script": "Khudawadi",
+      "start": 70320
+    },
+    {
+      "end": 70367,
+      "script": "Khudawadi",
+      "start": 70367
+    },
+    {
+      "end": 70370,
+      "script": "Khudawadi",
+      "start": 70368
+    },
+    {
+      "end": 70378,
+      "script": "Khudawadi",
+      "start": 70371
+    },
+    {
+      "end": 70393,
+      "script": "Khudawadi",
+      "start": 70384
+    },
+    {
+      "end": 70401,
+      "script": "Grantha",
+      "start": 70400
+    },
+    {
+      "end": 70403,
+      "script": "Grantha",
+      "start": 70402
+    },
+    {
+      "end": 70412,
+      "script": "Grantha",
+      "start": 70405
+    },
+    {
+      "end": 70416,
+      "script": "Grantha",
+      "start": 70415
+    },
+    {
+      "end": 70440,
+      "script": "Grantha",
+      "start": 70419
+    },
+    {
+      "end": 70448,
+      "script": "Grantha",
+      "start": 70442
+    },
+    {
+      "end": 70451,
+      "script": "Grantha",
+      "start": 70450
+    },
+    {
+      "end": 70457,
+      "script": "Grantha",
+      "start": 70453
+    },
+    {
+      "end": 70459,
+      "script": "Inherited",
+      "start": 70459
+    },
+    {
+      "end": 70460,
+      "script": "Grantha",
+      "start": 70460
+    },
+    {
+      "end": 70461,
+      "script": "Grantha",
+      "start": 70461
+    },
+    {
+      "end": 70463,
+      "script": "Grantha",
+      "start": 70462
+    },
+    {
+      "end": 70464,
+      "script": "Grantha",
+      "start": 70464
+    },
+    {
+      "end": 70468,
+      "script": "Grantha",
+      "start": 70465
+    },
+    {
+      "end": 70472,
+      "script": "Grantha",
+      "start": 70471
+    },
+    {
+      "end": 70477,
+      "script": "Grantha",
+      "start": 70475
+    },
+    {
+      "end": 70480,
+      "script": "Grantha",
+      "start": 70480
+    },
+    {
+      "end": 70487,
+      "script": "Grantha",
+      "start": 70487
+    },
+    {
+      "end": 70497,
+      "script": "Grantha",
+      "start": 70493
+    },
+    {
+      "end": 70499,
+      "script": "Grantha",
+      "start": 70498
+    },
+    {
+      "end": 70508,
+      "script": "Grantha",
+      "start": 70502
+    },
+    {
+      "end": 70516,
+      "script": "Grantha",
+      "start": 70512
+    },
+    {
+      "end": 70537,
+      "script": "Tulu_Tigalari",
+      "start": 70528
+    },
+    {
+      "end": 70539,
+      "script": "Tulu_Tigalari",
+      "start": 70539
+    },
+    {
+      "end": 70542,
+      "script": "Tulu_Tigalari",
+      "start": 70542
+    },
+    {
+      "end": 70581,
+      "script": "Tulu_Tigalari",
+      "start": 70544
+    },
+    {
+      "end": 70583,
+      "script": "Tulu_Tigalari",
+      "start": 70583
+    },
+    {
+      "end": 70586,
+      "script": "Tulu_Tigalari",
+      "start": 70584
+    },
+    {
+      "end": 70592,
+      "script": "Tulu_Tigalari",
+      "start": 70587
+    },
+    {
+      "end": 70594,
+      "script": "Tulu_Tigalari",
+      "start": 70594
+    },
+    {
+      "end": 70597,
+      "script": "Tulu_Tigalari",
+      "start": 70597
+    },
+    {
+      "end": 70602,
+      "script": "Tulu_Tigalari",
+      "start": 70599
+    },
+    {
+      "end": 70605,
+      "script": "Tulu_Tigalari",
+      "start": 70604
+    },
+    {
+      "end": 70606,
+      "script": "Tulu_Tigalari",
+      "start": 70606
+    },
+    {
+      "end": 70607,
+      "script": "Tulu_Tigalari",
+      "start": 70607
+    },
+    {
+      "end": 70608,
+      "script": "Tulu_Tigalari",
+      "start": 70608
+    },
+    {
+      "end": 70609,
+      "script": "Tulu_Tigalari",
+      "start": 70609
+    },
+    {
+      "end": 70610,
+      "script": "Tulu_Tigalari",
+      "start": 70610
+    },
+    {
+      "end": 70611,
+      "script": "Tulu_Tigalari",
+      "start": 70611
+    },
+    {
+      "end": 70613,
+      "script": "Tulu_Tigalari",
+      "start": 70612
+    },
+    {
+      "end": 70616,
+      "script": "Tulu_Tigalari",
+      "start": 70615
+    },
+    {
+      "end": 70626,
+      "script": "Tulu_Tigalari",
+      "start": 70625
+    },
+    {
+      "end": 70708,
+      "script": "Newa",
+      "start": 70656
+    },
+    {
+      "end": 70711,
+      "script": "Newa",
+      "start": 70709
+    },
+    {
+      "end": 70719,
+      "script": "Newa",
+      "start": 70712
+    },
+    {
+      "end": 70721,
+      "script": "Newa",
+      "start": 70720
+    },
+    {
+      "end": 70724,
+      "script": "Newa",
+      "start": 70722
+    },
+    {
+      "end": 70725,
+      "script": "Newa",
+      "start": 70725
+    },
+    {
+      "end": 70726,
+      "script": "Newa",
+      "start": 70726
+    },
+    {
+      "end": 70730,
+      "script": "Newa",
+      "start": 70727
+    },
+    {
+      "end": 70735,
+      "script": "Newa",
+      "start": 70731
+    },
+    {
+      "end": 70745,
+      "script": "Newa",
+      "start": 70736
+    },
+    {
+      "end": 70747,
+      "script": "Newa",
+      "start": 70746
+    },
+    {
+      "end": 70749,
+      "script": "Newa",
+      "start": 70749
+    },
+    {
+      "end": 70750,
+      "script": "Newa",
+      "start": 70750
+    },
+    {
+      "end": 70753,
+      "script": "Newa",
+      "start": 70751
+    },
+    {
+      "end": 70831,
+      "script": "Tirhuta",
+      "start": 70784
+    },
+    {
+      "end": 70834,
+      "script": "Tirhuta",
+      "start": 70832
+    },
+    {
+      "end": 70840,
+      "script": "Tirhuta",
+      "start": 70835
+    },
+    {
+      "end": 70841,
+      "script": "Tirhuta",
+      "start": 70841
+    },
+    {
+      "end": 70842,
+      "script": "Tirhuta",
+      "start": 70842
+    },
+    {
+      "end": 70846,
+      "script": "Tirhuta",
+      "start": 70843
+    },
+    {
+      "end": 70848,
+      "script": "Tirhuta",
+      "start": 70847
+    },
+    {
+      "end": 70849,
+      "script": "Tirhuta",
+      "start": 70849
+    },
+    {
+      "end": 70851,
+      "script": "Tirhuta",
+      "start": 70850
+    },
+    {
+      "end": 70853,
+      "script": "Tirhuta",
+      "start": 70852
+    },
+    {
+      "end": 70854,
+      "script": "Tirhuta",
+      "start": 70854
+    },
+    {
+      "end": 70855,
+      "script": "Tirhuta",
+      "start": 70855
+    },
+    {
+      "end": 70873,
+      "script": "Tirhuta",
+      "start": 70864
+    },
+    {
+      "end": 71086,
+      "script": "Siddham",
+      "start": 71040
+    },
+    {
+      "end": 71089,
+      "script": "Siddham",
+      "start": 71087
+    },
+    {
+      "end": 71093,
+      "script": "Siddham",
+      "start": 71090
+    },
+    {
+      "end": 71099,
+      "script": "Siddham",
+      "start": 71096
+    },
+    {
+      "end": 71101,
+      "script": "Siddham",
+      "start": 71100
+    },
+    {
+      "end": 71102,
+      "script": "Siddham",
+      "start": 71102
+    },
+    {
+      "end": 71104,
+      "script": "Siddham",
+      "start": 71103
+    },
+    {
+      "end": 71127,
+      "script": "Siddham",
+      "start": 71105
+    },
+    {
+      "end": 71131,
+      "script": "Siddham",
+      "start": 71128
+    },
+    {
+      "end": 71133,
+      "script": "Siddham",
+      "start": 71132
+    },
+    {
+      "end": 71215,
+      "script": "Modi",
+      "start": 71168
+    },
+    {
+      "end": 71218,
+      "script": "Modi",
+      "start": 71216
+    },
+    {
+      "end": 71226,
+      "script": "Modi",
+      "start": 71219
+    },
+    {
+      "end": 71228,
+      "script": "Modi",
+      "start": 71227
+    },
+    {
+      "end": 71229,
+      "script": "Modi",
+      "start": 71229
+    },
+    {
+      "end": 71230,
+      "script": "Modi",
+      "start": 71230
+    },
+    {
+      "end": 71232,
+      "script": "Modi",
+      "start": 71231
+    },
+    {
+      "end": 71235,
+      "script": "Modi",
+      "start": 71233
+    },
+    {
+      "end": 71236,
+      "script": "Modi",
+      "start": 71236
+    },
+    {
+      "end": 71257,
+      "script": "Modi",
+      "start": 71248
+    },
+    {
+      "end": 71276,
+      "script": "Mongolian",
+      "start": 71264
+    },
+    {
+      "end": 71338,
+      "script": "Takri",
+      "start": 71296
+    },
+    {
+      "end": 71339,
+      "script": "Takri",
+      "start": 71339
+    },
+    {
+      "end": 71340,
+      "script": "Takri",
+      "start": 71340
+    },
+    {
+      "end": 71341,
+      "script": "Takri",
+      "start": 71341
+    },
+    {
+      "end": 71343,
+      "script": "Takri",
+      "start": 71342
+    },
+    {
+      "end": 71349,
+      "script": "Takri",
+      "start": 71344
+    },
+    {
+      "end": 71350,
+      "script": "Takri",
+      "start": 71350
+    },
+    {
+      "end": 71351,
+      "script": "Takri",
+      "start": 71351
+    },
+    {
+      "end": 71352,
+      "script": "Takri",
+      "start": 71352
+    },
+    {
+      "end": 71353,
+      "script": "Takri",
+      "start": 71353
+    },
+    {
+      "end": 71369,
+      "script": "Takri",
+      "start": 71360
+    },
+    {
+      "end": 71395,
+      "script": "Myanmar",
+      "start": 71376
+    },
+    {
+      "end": 71450,
+      "script": "Ahom",
+      "start": 71424
+    },
+    {
+      "end": 71453,
+      "script": "Ahom",
+      "start": 71453
+    },
+    {
+      "end": 71454,
+      "script": "Ahom",
+      "start": 71454
+    },
+    {
+      "end": 71455,
+      "script": "Ahom",
+      "start": 71455
+    },
+    {
+      "end": 71457,
+      "script": "Ahom",
+      "start": 71456
+    },
+    {
+      "end": 71461,
+      "script": "Ahom",
+      "start": 71458
+    },
+    {
+      "end": 71462,
+      "script": "Ahom",
+      "start": 71462
+    },
+    {
+      "end": 71467,
+      "script": "Ahom",
+      "start": 71463
+    },
+    {
+      "end": 71481,
+      "script": "Ahom",
+      "start": 71472
+    },
+    {
+      "end": 71483,
+      "script": "Ahom",
+      "start": 71482
+    },
+    {
+      "end": 71486,
+      "script": "Ahom",
+      "start": 71484
+    },
+    {
+      "end": 71487,
+      "script": "Ahom",
+      "start": 71487
+    },
+    {
+      "end": 71494,
+      "script": "Ahom",
+      "start": 71488
+    },
+    {
+      "end": 71723,
+      "script": "Dogra",
+      "start": 71680
+    },
+    {
+      "end": 71726,
+      "script": "Dogra",
+      "start": 71724
+    },
+    {
+      "end": 71735,
+      "script": "Dogra",
+      "start": 71727
+    },
+    {
+      "end": 71736,
+      "script": "Dogra",
+      "start": 71736
+    },
+    {
+      "end": 71738,
+      "script": "Dogra",
+      "start": 71737
+    },
+    {
+      "end": 71739,
+      "script": "Dogra",
+      "start": 71739
+    },
+    {
+      "end": 71903,
+      "script": "Warang_Citi",
+      "start": 71840
+    },
+    {
+      "end": 71913,
+      "script": "Warang_Citi",
+      "start": 71904
+    },
+    {
+      "end": 71922,
+      "script": "Warang_Citi",
+      "start": 71914
+    },
+    {
+      "end": 71935,
+      "script": "Warang_Citi",
+      "start": 71935
+    },
+    {
+      "end": 71942,
+      "script": "Dives_Akuru",
+      "start": 71936
+    },
+    {
+      "end": 71945,
+      "script": "Dives_Akuru",
+      "start": 71945
+    },
+    {
+      "end": 71955,
+      "script": "Dives_Akuru",
+      "start": 71948
+    },
+    {
+      "end": 71958,
+      "script": "Dives_Akuru",
+      "start": 71957
+    },
+    {
+      "end": 71983,
+      "script": "Dives_Akuru",
+      "start": 71960
+    },
+    {
+      "end": 71989,
+      "script": "Dives_Akuru",
+      "start": 71984
+    },
+    {
+      "end": 71992,
+      "script": "Dives_Akuru",
+      "start": 71991
+    },
+    {
+      "end": 71996,
+      "script": "Dives_Akuru",
+      "start": 71995
+    },
+    {
+      "end": 71997,
+      "script": "Dives_Akuru",
+      "start": 71997
+    },
+    {
+      "end": 71998,
+      "script": "Dives_Akuru",
+      "start": 71998
+    },
+    {
+      "end": 71999,
+      "script": "Dives_Akuru",
+      "start": 71999
+    },
+    {
+      "end": 72000,
+      "script": "Dives_Akuru",
+      "start": 72000
+    },
+    {
+      "end": 72001,
+      "script": "Dives_Akuru",
+      "start": 72001
+    },
+    {
+      "end": 72002,
+      "script": "Dives_Akuru",
+      "start": 72002
+    },
+    {
+      "end": 72003,
+      "script": "Dives_Akuru",
+      "start": 72003
+    },
+    {
+      "end": 72006,
+      "script": "Dives_Akuru",
+      "start": 72004
+    },
+    {
+      "end": 72025,
+      "script": "Dives_Akuru",
+      "start": 72016
+    },
+    {
+      "end": 72103,
+      "script": "Nandinagari",
+      "start": 72096
+    },
+    {
+      "end": 72144,
+      "script": "Nandinagari",
+      "start": 72106
+    },
+    {
+      "end": 72147,
+      "script": "Nandinagari",
+      "start": 72145
+    },
+    {
+      "end": 72151,
+      "script": "Nandinagari",
+      "start": 72148
+    },
+    {
+      "end": 72155,
+      "script": "Nandinagari",
+      "start": 72154
+    },
+    {
+      "end": 72159,
+      "script": "Nandinagari",
+      "start": 72156
+    },
+    {
+      "end": 72160,
+      "script": "Nandinagari",
+      "start": 72160
+    },
+    {
+      "end": 72161,
+      "script": "Nandinagari",
+      "start": 72161
+    },
+    {
+      "end": 72162,
+      "script": "Nandinagari",
+      "start": 72162
+    },
+    {
+      "end": 72163,
+      "script": "Nandinagari",
+      "start": 72163
+    },
+    {
+      "end": 72164,
+      "script": "Nandinagari",
+      "start": 72164
+    },
+    {
+      "end": 72192,
+      "script": "Zanabazar_Square",
+      "start": 72192
+    },
+    {
+      "end": 72202,
+      "script": "Zanabazar_Square",
+      "start": 72193
+    },
+    {
+      "end": 72242,
+      "script": "Zanabazar_Square",
+      "start": 72203
+    },
+    {
+      "end": 72248,
+      "script": "Zanabazar_Square",
+      "start": 72243
+    },
+    {
+      "end": 72249,
+      "script": "Zanabazar_Square",
+      "start": 72249
+    },
+    {
+      "end": 72250,
+      "script": "Zanabazar_Square",
+      "start": 72250
+    },
+    {
+      "end": 72254,
+      "script": "Zanabazar_Square",
+      "start": 72251
+    },
+    {
+      "end": 72262,
+      "script": "Zanabazar_Square",
+      "start": 72255
+    },
+    {
+      "end": 72263,
+      "script": "Zanabazar_Square",
+      "start": 72263
+    },
+    {
+      "end": 72272,
+      "script": "Soyombo",
+      "start": 72272
+    },
+    {
+      "end": 72278,
+      "script": "Soyombo",
+      "start": 72273
+    },
+    {
+      "end": 72280,
+      "script": "Soyombo",
+      "start": 72279
+    },
+    {
+      "end": 72283,
+      "script": "Soyombo",
+      "start": 72281
+    },
+    {
+      "end": 72329,
+      "script": "Soyombo",
+      "start": 72284
+    },
+    {
+      "end": 72342,
+      "script": "Soyombo",
+      "start": 72330
+    },
+    {
+      "end": 72343,
+      "script": "Soyombo",
+      "start": 72343
+    },
+    {
+      "end": 72345,
+      "script": "Soyombo",
+      "start": 72344
+    },
+    {
+      "end": 72348,
+      "script": "Soyombo",
+      "start": 72346
+    },
+    {
+      "end": 72349,
+      "script": "Soyombo",
+      "start": 72349
+    },
+    {
+      "end": 72354,
+      "script": "Soyombo",
+      "start": 72350
+    },
+    {
+      "end": 72383,
+      "script": "Canadian_Aboriginal",
+      "start": 72368
+    },
+    {
+      "end": 72440,
+      "script": "Pau_Cin_Hau",
+      "start": 72384
+    },
+    {
+      "end": 72457,
+      "script": "Devanagari",
+      "start": 72448
+    },
+    {
+      "end": 72544,
+      "script": "Sharada",
+      "start": 72544
+    },
+    {
+      "end": 72545,
+      "script": "Sharada",
+      "start": 72545
+    },
+    {
+      "end": 72548,
+      "script": "Sharada",
+      "start": 72546
+    },
+    {
+      "end": 72549,
+      "script": "Sharada",
+      "start": 72549
+    },
+    {
+      "end": 72550,
+      "script": "Sharada",
+      "start": 72550
+    },
+    {
+      "end": 72551,
+      "script": "Sharada",
+      "start": 72551
+    },
+    {
+      "end": 72672,
+      "script": "Sunuwar",
+      "start": 72640
+    },
+    {
+      "end": 72673,
+      "script": "Sunuwar",
+      "start": 72673
+    },
+    {
+      "end": 72697,
+      "script": "Sunuwar",
+      "start": 72688
+    },
+    {
+      "end": 72712,
+      "script": "Bhaiksuki",
+      "start": 72704
+    },
+    {
+      "end": 72750,
+      "script": "Bhaiksuki",
+      "start": 72714
+    },
+    {
+      "end": 72751,
+      "script": "Bhaiksuki",
+      "start": 72751
+    },
+    {
+      "end": 72758,
+      "script": "Bhaiksuki",
+      "start": 72752
+    },
+    {
+      "end": 72765,
+      "script": "Bhaiksuki",
+      "start": 72760
+    },
+    {
+      "end": 72766,
+      "script": "Bhaiksuki",
+      "start": 72766
+    },
+    {
+      "end": 72767,
+      "script": "Bhaiksuki",
+      "start": 72767
+    },
+    {
+      "end": 72768,
+      "script": "Bhaiksuki",
+      "start": 72768
+    },
+    {
+      "end": 72773,
+      "script": "Bhaiksuki",
+      "start": 72769
+    },
+    {
+      "end": 72793,
+      "script": "Bhaiksuki",
+      "start": 72784
+    },
+    {
+      "end": 72812,
+      "script": "Bhaiksuki",
+      "start": 72794
+    },
+    {
+      "end": 72817,
+      "script": "Marchen",
+      "start": 72816
+    },
+    {
+      "end": 72847,
+      "script": "Marchen",
+      "start": 72818
+    },
+    {
+      "end": 72871,
+      "script": "Marchen",
+      "start": 72850
+    },
+    {
+      "end": 72873,
+      "script": "Marchen",
+      "start": 72873
+    },
+    {
+      "end": 72880,
+      "script": "Marchen",
+      "start": 72874
+    },
+    {
+      "end": 72881,
+      "script": "Marchen",
+      "start": 72881
+    },
+    {
+      "end": 72883,
+      "script": "Marchen",
+      "start": 72882
+    },
+    {
+      "end": 72884,
+      "script": "Marchen",
+      "start": 72884
+    },
+    {
+      "end": 72886,
+      "script": "Marchen",
+      "start": 72885
+    },
+    {
+      "end": 72966,
+      "script": "Masaram_Gondi",
+      "start": 72960
+    },
+    {
+      "end": 72969,
+      "script": "Masaram_Gondi",
+      "start": 72968
+    },
+    {
+      "end": 73008,
+      "script": "Masaram_Gondi",
+      "start": 72971
+    },
+    {
+      "end": 73014,
+      "script": "Masaram_Gondi",
+      "start": 73009
+    },
+    {
+      "end": 73018,
+      "script": "Masaram_Gondi",
+      "start": 73018
+    },
+    {
+      "end": 73021,
+      "script": "Masaram_Gondi",
+      "start": 73020
+    },
+    {
+      "end": 73029,
+      "script": "Masaram_Gondi",
+      "start": 73023
+    },
+    {
+      "end": 73030,
+      "script": "Masaram_Gondi",
+      "start": 73030
+    },
+    {
+      "end": 73031,
+      "script": "Masaram_Gondi",
+      "start": 73031
+    },
+    {
+      "end": 73049,
+      "script": "Masaram_Gondi",
+      "start": 73040
+    },
+    {
+      "end": 73061,
+      "script": "Gunjala_Gondi",
+      "start": 73056
+    },
+    {
+      "end": 73064,
+      "script": "Gunjala_Gondi",
+      "start": 73063
+    },
+    {
+      "end": 73097,
+      "script": "Gunjala_Gondi",
+      "start": 73066
+    },
+    {
+      "end": 73102,
+      "script": "Gunjala_Gondi",
+      "start": 73098
+    },
+    {
+      "end": 73105,
+      "script": "Gunjala_Gondi",
+      "start": 73104
+    },
+    {
+      "end": 73108,
+      "script": "Gunjala_Gondi",
+      "start": 73107
+    },
+    {
+      "end": 73109,
+      "script": "Gunjala_Gondi",
+      "start": 73109
+    },
+    {
+      "end": 73110,
+      "script": "Gunjala_Gondi",
+      "start": 73110
+    },
+    {
+      "end": 73111,
+      "script": "Gunjala_Gondi",
+      "start": 73111
+    },
+    {
+      "end": 73112,
+      "script": "Gunjala_Gondi",
+      "start": 73112
+    },
+    {
+      "end": 73129,
+      "script": "Gunjala_Gondi",
+      "start": 73120
+    },
+    {
+      "end": 73176,
+      "script": "Tolong_Siki",
+      "start": 73136
+    },
+    {
+      "end": 73177,
+      "script": "Tolong_Siki",
+      "start": 73177
+    },
+    {
+      "end": 73179,
+      "script": "Tolong_Siki",
+      "start": 73178
+    },
+    {
+      "end": 73193,
+      "script": "Tolong_Siki",
+      "start": 73184
+    },
+    {
+      "end": 73458,
+      "script": "Makasar",
+      "start": 73440
+    },
+    {
+      "end": 73460,
+      "script": "Makasar",
+      "start": 73459
+    },
+    {
+      "end": 73462,
+      "script": "Makasar",
+      "start": 73461
+    },
+    {
+      "end": 73464,
+      "script": "Makasar",
+      "start": 73463
+    },
+    {
+      "end": 73473,
+      "script": "Kawi",
+      "start": 73472
+    },
+    {
+      "end": 73474,
+      "script": "Kawi",
+      "start": 73474
+    },
+    {
+      "end": 73475,
+      "script": "Kawi",
+      "start": 73475
+    },
+    {
+      "end": 73488,
+      "script": "Kawi",
+      "start": 73476
+    },
+    {
+      "end": 73523,
+      "script": "Kawi",
+      "start": 73490
+    },
+    {
+      "end": 73525,
+      "script": "Kawi",
+      "start": 73524
+    },
+    {
+      "end": 73530,
+      "script": "Kawi",
+      "start": 73526
+    },
+    {
+      "end": 73535,
+      "script": "Kawi",
+      "start": 73534
+    },
+    {
+      "end": 73536,
+      "script": "Kawi",
+      "start": 73536
+    },
+    {
+      "end": 73537,
+      "script": "Kawi",
+      "start": 73537
+    },
+    {
+      "end": 73538,
+      "script": "Kawi",
+      "start": 73538
+    },
+    {
+      "end": 73551,
+      "script": "Kawi",
+      "start": 73539
+    },
+    {
+      "end": 73561,
+      "script": "Kawi",
+      "start": 73552
+    },
+    {
+      "end": 73562,
+      "script": "Kawi",
+      "start": 73562
+    },
+    {
+      "end": 73648,
+      "script": "Lisu",
+      "start": 73648
+    },
+    {
+      "end": 73684,
+      "script": "Tamil",
+      "start": 73664
+    },
+    {
+      "end": 73692,
+      "script": "Tamil",
+      "start": 73685
+    },
+    {
+      "end": 73696,
+      "script": "Tamil",
+      "start": 73693
+    },
+    {
+      "end": 73713,
+      "script": "Tamil",
+      "start": 73697
+    },
+    {
+      "end": 73727,
+      "script": "Tamil",
+      "start": 73727
+    },
+    {
+      "end": 74649,
+      "script": "Cuneiform",
+      "start": 73728
+    },
+    {
+      "end": 74862,
+      "script": "Cuneiform",
+      "start": 74752
+    },
+    {
+      "end": 74868,
+      "script": "Cuneiform",
+      "start": 74864
+    },
+    {
+      "end": 75075,
+      "script": "Cuneiform",
+      "start": 74880
+    },
+    {
+      "end": 77808,
+      "script": "Cypro_Minoan",
+      "start": 77712
+    },
+    {
+      "end": 77810,
+      "script": "Cypro_Minoan",
+      "start": 77809
+    },
+    {
+      "end": 78895,
+      "script": "Egyptian_Hieroglyphs",
+      "start": 77824
+    },
+    {
+      "end": 78911,
+      "script": "Egyptian_Hieroglyphs",
+      "start": 78896
+    },
+    {
+      "end": 78912,
+      "script": "Egyptian_Hieroglyphs",
+      "start": 78912
+    },
+    {
+      "end": 78918,
+      "script": "Egyptian_Hieroglyphs",
+      "start": 78913
+    },
+    {
+      "end": 78933,
+      "script": "Egyptian_Hieroglyphs",
+      "start": 78919
+    },
+    {
+      "end": 82938,
+      "script": "Egyptian_Hieroglyphs",
+      "start": 78944
+    },
+    {
+      "end": 83526,
+      "script": "Anatolian_Hieroglyphs",
+      "start": 82944
+    },
+    {
+      "end": 90397,
+      "script": "Gurung_Khema",
+      "start": 90368
+    },
+    {
+      "end": 90409,
+      "script": "Gurung_Khema",
+      "start": 90398
+    },
+    {
+      "end": 90412,
+      "script": "Gurung_Khema",
+      "start": 90410
+    },
+    {
+      "end": 90415,
+      "script": "Gurung_Khema",
+      "start": 90413
+    },
+    {
+      "end": 90425,
+      "script": "Gurung_Khema",
+      "start": 90416
+    },
+    {
+      "end": 92728,
+      "script": "Bamum",
+      "start": 92160
+    },
+    {
+      "end": 92766,
+      "script": "Mro",
+      "start": 92736
+    },
+    {
+      "end": 92777,
+      "script": "Mro",
+      "start": 92768
+    },
+    {
+      "end": 92783,
+      "script": "Mro",
+      "start": 92782
+    },
+    {
+      "end": 92862,
+      "script": "Tangsa",
+      "start": 92784
+    },
+    {
+      "end": 92873,
+      "script": "Tangsa",
+      "start": 92864
+    },
+    {
+      "end": 92909,
+      "script": "Bassa_Vah",
+      "start": 92880
+    },
+    {
+      "end": 92916,
+      "script": "Bassa_Vah",
+      "start": 92912
+    },
+    {
+      "end": 92917,
+      "script": "Bassa_Vah",
+      "start": 92917
+    },
+    {
+      "end": 92975,
+      "script": "Pahawh_Hmong",
+      "start": 92928
+    },
+    {
+      "end": 92982,
+      "script": "Pahawh_Hmong",
+      "start": 92976
+    },
+    {
+      "end": 92987,
+      "script": "Pahawh_Hmong",
+      "start": 92983
+    },
+    {
+      "end": 92991,
+      "script": "Pahawh_Hmong",
+      "start": 92988
+    },
+    {
+      "end": 92995,
+      "script": "Pahawh_Hmong",
+      "start": 92992
+    },
+    {
+      "end": 92996,
+      "script": "Pahawh_Hmong",
+      "start": 92996
+    },
+    {
+      "end": 92997,
+      "script": "Pahawh_Hmong",
+      "start": 92997
+    },
+    {
+      "end": 93017,
+      "script": "Pahawh_Hmong",
+      "start": 93008
+    },
+    {
+      "end": 93025,
+      "script": "Pahawh_Hmong",
+      "start": 93019
+    },
+    {
+      "end": 93047,
+      "script": "Pahawh_Hmong",
+      "start": 93027
+    },
+    {
+      "end": 93071,
+      "script": "Pahawh_Hmong",
+      "start": 93053
+    },
+    {
+      "end": 93506,
+      "script": "Kirat_Rai",
+      "start": 93504
+    },
+    {
+      "end": 93546,
+      "script": "Kirat_Rai",
+      "start": 93507
+    },
+    {
+      "end": 93548,
+      "script": "Kirat_Rai",
+      "start": 93547
+    },
+    {
+      "end": 93551,
+      "script": "Kirat_Rai",
+      "start": 93549
+    },
+    {
+      "end": 93561,
+      "script": "Kirat_Rai",
+      "start": 93552
+    },
+    {
+      "end": 93823,
+      "script": "Medefaidrin",
+      "start": 93760
+    },
+    {
+      "end": 93846,
+      "script": "Medefaidrin",
+      "start": 93824
+    },
+    {
+      "end": 93850,
+      "script": "Medefaidrin",
+      "start": 93847
+    },
+    {
+      "end": 93880,
+      "script": "Beria_Erfe",
+      "start": 93856
+    },
+    {
+      "end": 93907,
+      "script": "Beria_Erfe",
+      "start": 93883
+    },
+    {
+      "end": 94026,
+      "script": "Miao",
+      "start": 93952
+    },
+    {
+      "end": 94031,
+      "script": "Miao",
+      "start": 94031
+    },
+    {
+      "end": 94032,
+      "script": "Miao",
+      "start": 94032
+    },
+    {
+      "end": 94087,
+      "script": "Miao",
+      "start": 94033
+    },
+    {
+      "end": 94098,
+      "script": "Miao",
+      "start": 94095
+    },
+    {
+      "end": 94111,
+      "script": "Miao",
+      "start": 94099
+    },
+    {
+      "end": 94176,
+      "script": "Tangut",
+      "start": 94176
+    },
+    {
+      "end": 94177,
+      "script": "Nushu",
+      "start": 94177
+    },
+    {
+      "end": 94178,
+      "script": "Han",
+      "start": 94178
+    },
+    {
+      "end": 94179,
+      "script": "Han",
+      "start": 94179
+    },
+    {
+      "end": 94180,
+      "script": "Khitan_Small_Script",
+      "start": 94180
+    },
+    {
+      "end": 94193,
+      "script": "Han",
+      "start": 94192
+    },
+    {
+      "end": 94195,
+      "script": "Han",
+      "start": 94194
+    },
+    {
+      "end": 94198,
+      "script": "Han",
+      "start": 94196
+    },
+    {
+      "end": 101119,
+      "script": "Tangut",
+      "start": 94208
+    },
+    {
+      "end": 101589,
+      "script": "Khitan_Small_Script",
+      "start": 101120
+    },
+    {
+      "end": 101631,
+      "script": "Khitan_Small_Script",
+      "start": 101631
+    },
+    {
+      "end": 101662,
+      "script": "Tangut",
+      "start": 101632
+    },
+    {
+      "end": 101874,
+      "script": "Tangut",
+      "start": 101760
+    },
+    {
+      "end": 110579,
+      "script": "Katakana",
+      "start": 110576
+    },
+    {
+      "end": 110587,
+      "script": "Katakana",
+      "start": 110581
+    },
+    {
+      "end": 110590,
+      "script": "Katakana",
+      "start": 110589
+    },
+    {
+      "end": 110592,
+      "script": "Katakana",
+      "start": 110592
+    },
+    {
+      "end": 110879,
+      "script": "Hiragana",
+      "start": 110593
+    },
+    {
+      "end": 110882,
+      "script": "Katakana",
+      "start": 110880
+    },
+    {
+      "end": 110898,
+      "script": "Hiragana",
+      "start": 110898
+    },
+    {
+      "end": 110930,
+      "script": "Hiragana",
+      "start": 110928
+    },
+    {
+      "end": 110933,
+      "script": "Katakana",
+      "start": 110933
+    },
+    {
+      "end": 110951,
+      "script": "Katakana",
+      "start": 110948
+    },
+    {
+      "end": 111355,
+      "script": "Nushu",
+      "start": 110960
+    },
+    {
+      "end": 113770,
+      "script": "Duployan",
+      "start": 113664
+    },
+    {
+      "end": 113788,
+      "script": "Duployan",
+      "start": 113776
+    },
+    {
+      "end": 113800,
+      "script": "Duployan",
+      "start": 113792
+    },
+    {
+      "end": 113817,
+      "script": "Duployan",
+      "start": 113808
+    },
+    {
+      "end": 113820,
+      "script": "Duployan",
+      "start": 113820
+    },
+    {
+      "end": 113822,
+      "script": "Duployan",
+      "start": 113821
+    },
+    {
+      "end": 113823,
+      "script": "Duployan",
+      "start": 113823
+    },
+    {
+      "end": 113827,
+      "script": "Common",
+      "start": 113824
+    },
+    {
+      "end": 117999,
+      "script": "Common",
+      "start": 117760
+    },
+    {
+      "end": 118009,
+      "script": "Common",
+      "start": 118000
+    },
+    {
+      "end": 118012,
+      "script": "Common",
+      "start": 118010
+    },
+    {
+      "end": 118451,
+      "script": "Common",
+      "start": 118016
+    },
+    {
+      "end": 118480,
+      "script": "Common",
+      "start": 118458
+    },
+    {
+      "end": 118511,
+      "script": "Common",
+      "start": 118496
+    },
+    {
+      "end": 118512,
+      "script": "Common",
+      "start": 118512
+    },
+    {
+      "end": 118573,
+      "script": "Inherited",
+      "start": 118528
+    },
+    {
+      "end": 118598,
+      "script": "Inherited",
+      "start": 118576
+    },
+    {
+      "end": 118723,
+      "script": "Common",
+      "start": 118608
+    },
+    {
+      "end": 119029,
+      "script": "Common",
+      "start": 118784
+    },
+    {
+      "end": 119078,
+      "script": "Common",
+      "start": 119040
+    },
+    {
+      "end": 119140,
+      "script": "Common",
+      "start": 119081
+    },
+    {
+      "end": 119142,
+      "script": "Common",
+      "start": 119141
+    },
+    {
+      "end": 119145,
+      "script": "Inherited",
+      "start": 119143
+    },
+    {
+      "end": 119148,
+      "script": "Common",
+      "start": 119146
+    },
+    {
+      "end": 119154,
+      "script": "Common",
+      "start": 119149
+    },
+    {
+      "end": 119162,
+      "script": "Common",
+      "start": 119155
+    },
+    {
+      "end": 119170,
+      "script": "Inherited",
+      "start": 119163
+    },
+    {
+      "end": 119172,
+      "script": "Common",
+      "start": 119171
+    },
+    {
+      "end": 119179,
+      "script": "Inherited",
+      "start": 119173
+    },
+    {
+      "end": 119209,
+      "script": "Common",
+      "start": 119180
+    },
+    {
+      "end": 119213,
+      "script": "Inherited",
+      "start": 119210
+    },
+    {
+      "end": 119274,
+      "script": "Common",
+      "start": 119214
+    },
+    {
+      "end": 119361,
+      "script": "Greek",
+      "start": 119296
+    },
+    {
+      "end": 119364,
+      "script": "Greek",
+      "start": 119362
+    },
+    {
+      "end": 119365,
+      "script": "Greek",
+      "start": 119365
+    },
+    {
+      "end": 119507,
+      "script": "Common",
+      "start": 119488
+    },
+    {
+      "end": 119539,
+      "script": "Common",
+      "start": 119520
+    },
+    {
+      "end": 119638,
+      "script": "Common",
+      "start": 119552
+    },
+    {
+      "end": 119672,
+      "script": "Common",
+      "start": 119648
+    },
+    {
+      "end": 119892,
+      "script": "Common",
+      "start": 119808
+    },
+    {
+      "end": 119964,
+      "script": "Common",
+      "start": 119894
+    },
+    {
+      "end": 119967,
+      "script": "Common",
+      "start": 119966
+    },
+    {
+      "end": 119970,
+      "script": "Common",
+      "start": 119970
+    },
+    {
+      "end": 119974,
+      "script": "Common",
+      "start": 119973
+    },
+    {
+      "end": 119980,
+      "script": "Common",
+      "start": 119977
+    },
+    {
+      "end": 119993,
+      "script": "Common",
+      "start": 119982
+    },
+    {
+      "end": 119995,
+      "script": "Common",
+      "start": 119995
+    },
+    {
+      "end": 120003,
+      "script": "Common",
+      "start": 119997
+    },
+    {
+      "end": 120069,
+      "script": "Common",
+      "start": 120005
+    },
+    {
+      "end": 120074,
+      "script": "Common",
+      "start": 120071
+    },
+    {
+      "end": 120084,
+      "script": "Common",
+      "start": 120077
+    },
+    {
+      "end": 120092,
+      "script": "Common",
+      "start": 120086
+    },
+    {
+      "end": 120121,
+      "script": "Common",
+      "start": 120094
+    },
+    {
+      "end": 120126,
+      "script": "Common",
+      "start": 120123
+    },
+    {
+      "end": 120132,
+      "script": "Common",
+      "start": 120128
+    },
+    {
+      "end": 120134,
+      "script": "Common",
+      "start": 120134
+    },
+    {
+      "end": 120144,
+      "script": "Common",
+      "start": 120138
+    },
+    {
+      "end": 120485,
+      "script": "Common",
+      "start": 120146
+    },
+    {
+      "end": 120512,
+      "script": "Common",
+      "start": 120488
+    },
+    {
+      "end": 120513,
+      "script": "Common",
+      "start": 120513
+    },
+    {
+      "end": 120538,
+      "script": "Common",
+      "start": 120514
+    },
+    {
+      "end": 120539,
+      "script": "Common",
+      "start": 120539
+    },
+    {
+      "end": 120570,
+      "script": "Common",
+      "start": 120540
+    },
+    {
+      "end": 120571,
+      "script": "Common",
+      "start": 120571
+    },
+    {
+      "end": 120596,
+      "script": "Common",
+      "start": 120572
+    },
+    {
+      "end": 120597,
+      "script": "Common",
+      "start": 120597
+    },
+    {
+      "end": 120628,
+      "script": "Common",
+      "start": 120598
+    },
+    {
+      "end": 120629,
+      "script": "Common",
+      "start": 120629
+    },
+    {
+      "end": 120654,
+      "script": "Common",
+      "start": 120630
+    },
+    {
+      "end": 120655,
+      "script": "Common",
+      "start": 120655
+    },
+    {
+      "end": 120686,
+      "script": "Common",
+      "start": 120656
+    },
+    {
+      "end": 120687,
+      "script": "Common",
+      "start": 120687
+    },
+    {
+      "end": 120712,
+      "script": "Common",
+      "start": 120688
+    },
+    {
+      "end": 120713,
+      "script": "Common",
+      "start": 120713
+    },
+    {
+      "end": 120744,
+      "script": "Common",
+      "start": 120714
+    },
+    {
+      "end": 120745,
+      "script": "Common",
+      "start": 120745
+    },
+    {
+      "end": 120770,
+      "script": "Common",
+      "start": 120746
+    },
+    {
+      "end": 120771,
+      "script": "Common",
+      "start": 120771
+    },
+    {
+      "end": 120779,
+      "script": "Common",
+      "start": 120772
+    },
+    {
+      "end": 120831,
+      "script": "Common",
+      "start": 120782
+    },
+    {
+      "end": 121343,
+      "script": "SignWriting",
+      "start": 120832
+    },
+    {
+      "end": 121398,
+      "script": "SignWriting",
+      "start": 121344
+    },
+    {
+      "end": 121402,
+      "script": "SignWriting",
+      "start": 121399
+    },
+    {
+      "end": 121452,
+      "script": "SignWriting",
+      "start": 121403
+    },
+    {
+      "end": 121460,
+      "script": "SignWriting",
+      "start": 121453
+    },
+    {
+      "end": 121461,
+      "script": "SignWriting",
+      "start": 121461
+    },
+    {
+      "end": 121475,
+      "script": "SignWriting",
+      "start": 121462
+    },
+    {
+      "end": 121476,
+      "script": "SignWriting",
+      "start": 121476
+    },
+    {
+      "end": 121478,
+      "script": "SignWriting",
+      "start": 121477
+    },
+    {
+      "end": 121483,
+      "script": "SignWriting",
+      "start": 121479
+    },
+    {
+      "end": 121503,
+      "script": "SignWriting",
+      "start": 121499
+    },
+    {
+      "end": 121519,
+      "script": "SignWriting",
+      "start": 121505
+    },
+    {
+      "end": 122633,
+      "script": "Latin",
+      "start": 122624
+    },
+    {
+      "end": 122634,
+      "script": "Latin",
+      "start": 122634
+    },
+    {
+      "end": 122654,
+      "script": "Latin",
+      "start": 122635
+    },
+    {
+      "end": 122666,
+      "script": "Latin",
+      "start": 122661
+    },
+    {
+      "end": 122886,
+      "script": "Glagolitic",
+      "start": 122880
+    },
+    {
+      "end": 122904,
+      "script": "Glagolitic",
+      "start": 122888
+    },
+    {
+      "end": 122913,
+      "script": "Glagolitic",
+      "start": 122907
+    },
+    {
+      "end": 122916,
+      "script": "Glagolitic",
+      "start": 122915
+    },
+    {
+      "end": 122922,
+      "script": "Glagolitic",
+      "start": 122918
+    },
+    {
+      "end": 122989,
+      "script": "Cyrillic",
+      "start": 122928
+    },
+    {
+      "end": 123023,
+      "script": "Cyrillic",
+      "start": 123023
+    },
+    {
+      "end": 123180,
+      "script": "Nyiakeng_Puachue_Hmong",
+      "start": 123136
+    },
+    {
+      "end": 123190,
+      "script": "Nyiakeng_Puachue_Hmong",
+      "start": 123184
+    },
+    {
+      "end": 123197,
+      "script": "Nyiakeng_Puachue_Hmong",
+      "start": 123191
+    },
+    {
+      "end": 123209,
+      "script": "Nyiakeng_Puachue_Hmong",
+      "start": 123200
+    },
+    {
+      "end": 123214,
+      "script": "Nyiakeng_Puachue_Hmong",
+      "start": 123214
+    },
+    {
+      "end": 123215,
+      "script": "Nyiakeng_Puachue_Hmong",
+      "start": 123215
+    },
+    {
+      "end": 123565,
+      "script": "Toto",
+      "start": 123536
+    },
+    {
+      "end": 123566,
+      "script": "Toto",
+      "start": 123566
+    },
+    {
+      "end": 123627,
+      "script": "Wancho",
+      "start": 123584
+    },
+    {
+      "end": 123631,
+      "script": "Wancho",
+      "start": 123628
+    },
+    {
+      "end": 123641,
+      "script": "Wancho",
+      "start": 123632
+    },
+    {
+      "end": 123647,
+      "script": "Wancho",
+      "start": 123647
+    },
+    {
+      "end": 124138,
+      "script": "Nag_Mundari",
+      "start": 124112
+    },
+    {
+      "end": 124139,
+      "script": "Nag_Mundari",
+      "start": 124139
+    },
+    {
+      "end": 124143,
+      "script": "Nag_Mundari",
+      "start": 124140
+    },
+    {
+      "end": 124153,
+      "script": "Nag_Mundari",
+      "start": 124144
+    },
+    {
+      "end": 124397,
+      "script": "Ol_Onal",
+      "start": 124368
+    },
+    {
+      "end": 124399,
+      "script": "Ol_Onal",
+      "start": 124398
+    },
+    {
+      "end": 124400,
+      "script": "Ol_Onal",
+      "start": 124400
+    },
+    {
+      "end": 124410,
+      "script": "Ol_Onal",
+      "start": 124401
+    },
+    {
+      "end": 124415,
+      "script": "Ol_Onal",
+      "start": 124415
+    },
+    {
+      "end": 124638,
+      "script": "Tai_Yo",
+      "start": 124608
+    },
+    {
+      "end": 124642,
+      "script": "Tai_Yo",
+      "start": 124640
+    },
+    {
+      "end": 124643,
+      "script": "Tai_Yo",
+      "start": 124643
+    },
+    {
+      "end": 124645,
+      "script": "Tai_Yo",
+      "start": 124644
+    },
+    {
+      "end": 124646,
+      "script": "Tai_Yo",
+      "start": 124646
+    },
+    {
+      "end": 124653,
+      "script": "Tai_Yo",
+      "start": 124647
+    },
+    {
+      "end": 124655,
+      "script": "Tai_Yo",
+      "start": 124654
+    },
+    {
+      "end": 124660,
+      "script": "Tai_Yo",
+      "start": 124656
+    },
+    {
+      "end": 124661,
+      "script": "Tai_Yo",
+      "start": 124661
+    },
+    {
+      "end": 124670,
+      "script": "Tai_Yo",
+      "start": 124670
+    },
+    {
+      "end": 124671,
+      "script": "Tai_Yo",
+      "start": 124671
+    },
+    {
+      "end": 124902,
+      "script": "Ethiopic",
+      "start": 124896
+    },
+    {
+      "end": 124907,
+      "script": "Ethiopic",
+      "start": 124904
+    },
+    {
+      "end": 124910,
+      "script": "Ethiopic",
+      "start": 124909
+    },
+    {
+      "end": 124926,
+      "script": "Ethiopic",
+      "start": 124912
+    },
+    {
+      "end": 125124,
+      "script": "Mende_Kikakui",
+      "start": 124928
+    },
+    {
+      "end": 125135,
+      "script": "Mende_Kikakui",
+      "start": 125127
+    },
+    {
+      "end": 125142,
+      "script": "Mende_Kikakui",
+      "start": 125136
+    },
+    {
+      "end": 125251,
+      "script": "Adlam",
+      "start": 125184
+    },
+    {
+      "end": 125258,
+      "script": "Adlam",
+      "start": 125252
+    },
+    {
+      "end": 125259,
+      "script": "Adlam",
+      "start": 125259
+    },
+    {
+      "end": 125273,
+      "script": "Adlam",
+      "start": 125264
+    },
+    {
+      "end": 125279,
+      "script": "Adlam",
+      "start": 125278
+    },
+    {
+      "end": 126123,
+      "script": "Common",
+      "start": 126065
+    },
+    {
+      "end": 126124,
+      "script": "Common",
+      "start": 126124
+    },
+    {
+      "end": 126127,
+      "script": "Common",
+      "start": 126125
+    },
+    {
+      "end": 126128,
+      "script": "Common",
+      "start": 126128
+    },
+    {
+      "end": 126132,
+      "script": "Common",
+      "start": 126129
+    },
+    {
+      "end": 126253,
+      "script": "Common",
+      "start": 126209
+    },
+    {
+      "end": 126254,
+      "script": "Common",
+      "start": 126254
+    },
+    {
+      "end": 126269,
+      "script": "Common",
+      "start": 126255
+    },
+    {
+      "end": 126467,
+      "script": "Arabic",
+      "start": 126464
+    },
+    {
+      "end": 126495,
+      "script": "Arabic",
+      "start": 126469
+    },
+    {
+      "end": 126498,
+      "script": "Arabic",
+      "start": 126497
+    },
+    {
+      "end": 126500,
+      "script": "Arabic",
+      "start": 126500
+    },
+    {
+      "end": 126503,
+      "script": "Arabic",
+      "start": 126503
+    },
+    {
+      "end": 126514,
+      "script": "Arabic",
+      "start": 126505
+    },
+    {
+      "end": 126519,
+      "script": "Arabic",
+      "start": 126516
+    },
+    {
+      "end": 126521,
+      "script": "Arabic",
+      "start": 126521
+    },
+    {
+      "end": 126523,
+      "script": "Arabic",
+      "start": 126523
+    },
+    {
+      "end": 126530,
+      "script": "Arabic",
+      "start": 126530
+    },
+    {
+      "end": 126535,
+      "script": "Arabic",
+      "start": 126535
+    },
+    {
+      "end": 126537,
+      "script": "Arabic",
+      "start": 126537
+    },
+    {
+      "end": 126539,
+      "script": "Arabic",
+      "start": 126539
+    },
+    {
+      "end": 126543,
+      "script": "Arabic",
+      "start": 126541
+    },
+    {
+      "end": 126546,
+      "script": "Arabic",
+      "start": 126545
+    },
+    {
+      "end": 126548,
+      "script": "Arabic",
+      "start": 126548
+    },
+    {
+      "end": 126551,
+      "script": "Arabic",
+      "start": 126551
+    },
+    {
+      "end": 126553,
+      "script": "Arabic",
+      "start": 126553
+    },
+    {
+      "end": 126555,
+      "script": "Arabic",
+      "start": 126555
+    },
+    {
+      "end": 126557,
+      "script": "Arabic",
+      "start": 126557
+    },
+    {
+      "end": 126559,
+      "script": "Arabic",
+      "start": 126559
+    },
+    {
+      "end": 126562,
+      "script": "Arabic",
+      "start": 126561
+    },
+    {
+      "end": 126564,
+      "script": "Arabic",
+      "start": 126564
+    },
+    {
+      "end": 126570,
+      "script": "Arabic",
+      "start": 126567
+    },
+    {
+      "end": 126578,
+      "script": "Arabic",
+      "start": 126572
+    },
+    {
+      "end": 126583,
+      "script": "Arabic",
+      "start": 126580
+    },
+    {
+      "end": 126588,
+      "script": "Arabic",
+      "start": 126585
+    },
+    {
+      "end": 126590,
+      "script": "Arabic",
+      "start": 126590
+    },
+    {
+      "end": 126601,
+      "script": "Arabic",
+      "start": 126592
+    },
+    {
+      "end": 126619,
+      "script": "Arabic",
+      "start": 126603
+    },
+    {
+      "end": 126627,
+      "script": "Arabic",
+      "start": 126625
+    },
+    {
+      "end": 126633,
+      "script": "Arabic",
+      "start": 126629
+    },
+    {
+      "end": 126651,
+      "script": "Arabic",
+      "start": 126635
+    },
+    {
+      "end": 126705,
+      "script": "Arabic",
+      "start": 126704
+    },
+    {
+      "end": 127019,
+      "script": "Common",
+      "start": 126976
+    },
+    {
+      "end": 127123,
+      "script": "Common",
+      "start": 127024
+    },
+    {
+      "end": 127150,
+      "script": "Common",
+      "start": 127136
+    },
+    {
+      "end": 127167,
+      "script": "Common",
+      "start": 127153
+    },
+    {
+      "end": 127183,
+      "script": "Common",
+      "start": 127169
+    },
+    {
+      "end": 127221,
+      "script": "Common",
+      "start": 127185
+    },
+    {
+      "end": 127244,
+      "script": "Common",
+      "start": 127232
+    },
+    {
+      "end": 127405,
+      "script": "Common",
+      "start": 127245
+    },
+    {
+      "end": 127487,
+      "script": "Common",
+      "start": 127462
+    },
+    {
+      "end": 127488,
+      "script": "Hiragana",
+      "start": 127488
+    },
+    {
+      "end": 127490,
+      "script": "Common",
+      "start": 127489
+    },
+    {
+      "end": 127547,
+      "script": "Common",
+      "start": 127504
+    },
+    {
+      "end": 127560,
+      "script": "Common",
+      "start": 127552
+    },
+    {
+      "end": 127569,
+      "script": "Common",
+      "start": 127568
+    },
+    {
+      "end": 127589,
+      "script": "Common",
+      "start": 127584
+    },
+    {
+      "end": 127994,
+      "script": "Common",
+      "start": 127744
+    },
+    {
+      "end": 127999,
+      "script": "Common",
+      "start": 127995
+    },
+    {
+      "end": 128728,
+      "script": "Common",
+      "start": 128000
+    },
+    {
+      "end": 128748,
+      "script": "Common",
+      "start": 128732
+    },
+    {
+      "end": 128764,
+      "script": "Common",
+      "start": 128752
+    },
+    {
+      "end": 128985,
+      "script": "Common",
+      "start": 128768
+    },
+    {
+      "end": 129003,
+      "script": "Common",
+      "start": 128992
+    },
+    {
+      "end": 129008,
+      "script": "Common",
+      "start": 129008
+    },
+    {
+      "end": 129035,
+      "script": "Common",
+      "start": 129024
+    },
+    {
+      "end": 129095,
+      "script": "Common",
+      "start": 129040
+    },
+    {
+      "end": 129113,
+      "script": "Common",
+      "start": 129104
+    },
+    {
+      "end": 129159,
+      "script": "Common",
+      "start": 129120
+    },
+    {
+      "end": 129197,
+      "script": "Common",
+      "start": 129168
+    },
+    {
+      "end": 129211,
+      "script": "Common",
+      "start": 129200
+    },
+    {
+      "end": 129217,
+      "script": "Common",
+      "start": 129216
+    },
+    {
+      "end": 129240,
+      "script": "Common",
+      "start": 129232
+    },
+    {
+      "end": 129623,
+      "script": "Common",
+      "start": 129280
+    },
+    {
+      "end": 129645,
+      "script": "Common",
+      "start": 129632
+    },
+    {
+      "end": 129660,
+      "script": "Common",
+      "start": 129648
+    },
+    {
+      "end": 129674,
+      "script": "Common",
+      "start": 129664
+    },
+    {
+      "end": 129734,
+      "script": "Common",
+      "start": 129678
+    },
+    {
+      "end": 129736,
+      "script": "Common",
+      "start": 129736
+    },
+    {
+      "end": 129756,
+      "script": "Common",
+      "start": 129741
+    },
+    {
+      "end": 129770,
+      "script": "Common",
+      "start": 129759
+    },
+    {
+      "end": 129784,
+      "script": "Common",
+      "start": 129775
+    },
+    {
+      "end": 129938,
+      "script": "Common",
+      "start": 129792
+    },
+    {
+      "end": 130031,
+      "script": "Common",
+      "start": 129940
+    },
+    {
+      "end": 130041,
+      "script": "Common",
+      "start": 130032
+    },
+    {
+      "end": 130042,
+      "script": "Common",
+      "start": 130042
+    },
+    {
+      "end": 173791,
+      "script": "Han",
+      "start": 131072
+    },
+    {
+      "end": 178205,
+      "script": "Han",
+      "start": 173824
+    },
+    {
+      "end": 183981,
+      "script": "Han",
+      "start": 178208
+    },
+    {
+      "end": 191456,
+      "script": "Han",
+      "start": 183984
+    },
+    {
+      "end": 192093,
+      "script": "Han",
+      "start": 191472
+    },
+    {
+      "end": 195101,
+      "script": "Han",
+      "start": 194560
+    },
+    {
+      "end": 201546,
+      "script": "Han",
+      "start": 196608
+    },
+    {
+      "end": 210041,
+      "script": "Han",
+      "start": 201552
+    },
+    {
+      "end": 917505,
+      "script": "Common",
+      "start": 917505
+    },
+    {
+      "end": 917631,
+      "script": "Common",
+      "start": 917536
+    },
+    {
+      "end": 917999,
+      "script": "Inherited",
+      "start": 917760
+    }
+  ]
+}
