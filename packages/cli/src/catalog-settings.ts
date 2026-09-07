@@ -716,7 +716,12 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	 * overlay clips its bottom edge. Other source rows and expanded model pages
 	 * spend only the rows that remain.
 	 */
-	private renderSources(width: number, line: (value?: string) => string, budget: number): string[] {
+	private renderSources(
+		width: number,
+		line: (value?: string) => string,
+		budget: number,
+		reclaimTabs: () => number,
+	): string[] {
 		this.expandedCapacity = 0;
 		const innerWidth = paletteInnerWidth(width);
 		const lines: string[] = [];
@@ -769,6 +774,11 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			}
 		};
 		while (pool < 0 && (extras.conflict.length > 0 || extras.detail.length > 0 || headingKept)) dropOrShrink();
+		// An expanded selection keeps its first offering and paging trailer
+		// ahead of optional source rows. When even that does not fit, the tab row
+		// and divider yield first so the expansion stays reachable.
+		const offeringReserve = selectedExpanded ? Math.min(selected.offerings.length, 1) : 0;
+		if (pool - offeringReserve < 0) pool += reclaimTabs();
 		if (pool < 0) {
 			// Mandatory rows alone exceed the budget; overflow honestly.
 			pool = 0;
@@ -777,17 +787,16 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		let visibleOthers = others;
 		let pageSize = 0;
 		let stickyPageSize = 0;
-		if (pool >= others) {
+		if (pool - offeringReserve >= others) {
 			visibleOthers = others;
-			const pagePool = pool - others;
-			pageSize = selectedExpanded ? Math.max(0, Math.min(selected.offerings.length, pagePool)) : 0;
+			const pagePool = pool - others - offeringReserve;
+			pageSize = selectedExpanded ? Math.max(0, Math.min(selected.offerings.length, pagePool + offeringReserve)) : 0;
 			stickyPageSize = sticky
-				? Math.max(0, Math.min(this.views[stickyIndex].offerings.length, pagePool - pageSize))
+				? Math.max(0, Math.min(this.views[stickyIndex].offerings.length, pagePool + offeringReserve - pageSize))
 				: 0;
 		} else {
-			// Window the source rows; the selected expansion keeps at least one
-			// offering row ahead of any further source row.
-			const offeringReserve = selectedExpanded ? 1 : 0;
+			// Window the source rows; the reserved offering row keeps at least one
+			// entry of the selected expansion visible ahead of further sources.
 			visibleOthers = Math.max(0, pool - offeringReserve);
 			pageSize = selectedExpanded ? Math.max(0, Math.min(selected.offerings.length, pool - visibleOthers)) : 0;
 		}
@@ -815,7 +824,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			lines.push(
 				line(
 					renderPaletteField({
-						label: `${expanded ? "▾" : "▸"} ${sanitizeTerminalText(view.source.label)}`,
+						label: `${expanded ? "▾" : "▸"} ${fitTerminalText(sanitizeTerminalText(view.source.label), SOURCE_LABEL_COLUMN - 2)}`,
 						labelRole: "palette.identity",
 						value: this.styles.apply(sourceStatusRole(view), sourceStatusText(view)),
 						meta: countLabel(count),
@@ -944,7 +953,19 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			...baseTail,
 		];
 		const bodyBudget = Math.max(1, budget - head.length - tail.length);
-		const body = this.form ? this.renderForm(width, line, bodyBudget) : this.renderSources(width, line, bodyBudget);
+		// renderSources may reclaim the tab row and divider when an expanded
+		// selection would otherwise have no reachable offerings; the returned
+		// rows join its pool so the total stays inside the budget.
+		let tabsReclaimed = false;
+		const reclaimTabs = (): number => {
+			if (tabsReclaimed || head.length <= 1) return 0;
+			head.splice(1, 2);
+			tabsReclaimed = true;
+			return 2;
+		};
+		const body = this.form
+			? this.renderForm(width, line, bodyBudget)
+			: this.renderSources(width, line, bodyBudget, reclaimTabs);
 		return [...head, ...body, ...tail].map((value) => fitTerminalText(value, width));
 	}
 

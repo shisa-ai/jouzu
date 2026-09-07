@@ -734,7 +734,7 @@ test("Short HTTP forms keep each focused field and page failures without clippin
 			paths,
 			env: {},
 			discover: async () => {
-				throw new Error("Authentication failed. " + "Detailed recovery instruction. ".repeat(20) + "END-RECOVERY");
+				throw new Error(`Authentication failed. ${"Detailed recovery instruction. ".repeat(20)}END-RECOVERY`);
 			},
 		});
 		component.handleInput("a");
@@ -802,6 +802,56 @@ test("At the 16-row floating floor the bearer form keeps the warning, focus, and
 		assert.match(rendered.join("\n"), /Enter save/u, "footer kept");
 		assert.match(selectedLine(rendered) ?? "", /Authentication/u, "focused field kept");
 		assert.ok(rendered.every((value) => terminalTextWidth(value) <= 48));
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("Expanded HTTP sources keep reachable offerings at the 16-row floor", async () => {
+	const { root, paths, context } = setup({ rows: 16 });
+	try {
+		const store = new CatalogSourceStore(paths);
+		const source = store.add({
+			label: "Insecure pool",
+			url: "http://example.test/catalog",
+			auth: { type: "none" },
+		});
+		await refreshCatalogSource(paths, source, { env: {}, fetch: async () => response(manyModelsFixture) });
+		const component = new CatalogSettingsComponent({ context, paths, env: {} });
+		const budget = overlayBudget(16);
+		component.handleInput("down");
+		component.handleInput("\u001b[C");
+		let rendered = component.render(48);
+		assert.ok(rendered.length <= budget, `render stays within ${budget} rows`);
+		assert.match(rendered.join("\n"), /model-0/u, "the first offering of the expansion is visible");
+		component.handleInput("pageDown");
+		rendered = component.render(48);
+		assert.ok(rendered.length <= budget);
+		assert.match(rendered.join("\n"), /model-1/u, "paging advances to the next offering");
+		assert.match(rendered.join("\n"), /Warning: This catalog uses HTTP/u, "the transport warning stays visible");
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("Long source labels leave the status column readable", async () => {
+	const { root, paths, context } = setup({ rows: 24 });
+	try {
+		const store = new CatalogSourceStore(paths);
+		const source = store.add({
+			label: "X".repeat(64),
+			url: "https://example.test/catalog",
+			auth: { type: "none" },
+		});
+		await refreshCatalogSource(paths, source, { env: {}, fetch: async () => response(fixture) });
+		const component = new CatalogSettingsComponent({ context, paths, env: {} });
+		for (const width of [48, 80]) {
+			const rendered = component.render(width);
+			const row = rendered.find((value) => value.includes("XXXX"));
+			assert.ok(row, "the selected row renders");
+			assert.match(row, /active/u, "the status stays readable beside a long label");
+			assert.ok(rendered.every((value) => terminalTextWidth(value) <= width));
+		}
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
