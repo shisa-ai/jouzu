@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { readFileSync } from "node:fs";
+import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -9,6 +11,7 @@ import {
 	AgentSession,
 	createAgentSession,
 	DefaultResourceLoader,
+	loadSkills,
 	ModelRuntime,
 	SessionManager,
 	SettingsManager,
@@ -109,6 +112,229 @@ test("inventory publication waits for admission and exceptions withhold all meta
 	} finally {
 		await rm(directory, { recursive: true, force: true });
 	}
+});
+
+test("bounded discovery withholds oversized skill files before parsing and preserves upstream without a policy", async (t) => {
+	const directory = await mkdtemp(join(tmpdir(), "jouzu-policy-bounds-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const skillsDir = join(directory, "skills");
+	await mkdir(join(skillsDir, "normal"), { recursive: true });
+	await writeFile(join(skillsDir, "normal", "SKILL.md"), "---\nname: normal\ndescription: fine\n---\nbody\n");
+	await writeFile(
+		join(skillsDir, "oversized.md"),
+		`---\nname: oversized\ndescription: huge\n---\n${"A".repeat(8 * 1024 * 1024)}`,
+	);
+	const readBefore = process.platform === "linux" ? readFileSync("/proc/self/io", "utf8") : undefined;
+	const result = loadSkills({
+		cwd: directory,
+		agentDir: directory,
+		skillPaths: [skillsDir],
+		includeDefaults: false,
+		admissionLimits: true,
+	});
+	assert.deepEqual(
+		result.skills.map((skill) => skill.name),
+		["normal"],
+	);
+	// The 8 MiB file was read only up to the per-file cap before refusal.
+	assert.ok(result.admission.totalBytes < 256 * 1024 + 1024, `observed ${result.admission.totalBytes} bytes`);
+	assert.equal(result.admission.exhausted, false);
+	assert.ok(
+		result.diagnostics.some(
+			(diagnostic) => diagnostic.type === "warning" && /admission limit/.test(diagnostic.message),
+		),
+	);
+	if (readBefore !== undefined) {
+		const readAfter = readFileSync("/proc/self/io", "utf8");
+		const delta = Number(readAfter.match(/^rchar:\s*(\d+)/m)[1]) - Number(readBefore.match(/^rchar:\s*(\d+)/m)[1]);
+		assert.ok(delta < 1024 * 1024, `discovery read ${delta} bytes`);
+	} else {
+		t.skip("rchar cross-check requires Linux /proc");
+	}
+	// Without a content policy the unbounded upstream discovery reads and parses everything.
+	const unbounded = loadSkills({
+		cwd: directory,
+		agentDir: directory,
+		skillPaths: [skillsDir],
+		includeDefaults: false,
+	});
+	assert.deepEqual(unbounded.skills.map((skill) => skill.name).sort(), ["normal", "oversized"]);
+	assert.equal("admission" in unbounded, false);
+});
+
+test("bounded discovery fails closed with bounded observed operations on oversized inventory", async (t) => {
+	const build = async (name, prepare) => {
+		const directory = await mkdtemp(join(tmpdir(), `jouzu-policy-${name}-`));
+		const skillsDir = join(directory, "skills");
+		await mkdir(skillsDir, { recursive: true });
+		await prepare(skillsDir);
+		t.after(() => rm(directory, { recursive: true, force: true }));
+		return loadSkills({
+			cwd: directory,
+			agentDir: directory,
+			skillPaths: [skillsDir],
+			includeDefaults: false,
+			admissionLimits: true,
+		});
+	};
+	// Enumeration: a 5000-entry directory stops iterating at the 4096-entry budget.
+	const entries = await build("entries", async (skillsDir) => {
+		for (let index = 0; index < 5000; index++)
+			await writeFile(join(skillsDir, `f${String(index).padStart(4, "0")}.md`), "x");
+	});
+	assert.equal(entries.admission.entries, 4097);
+	assert.equal(entries.admission.exhausted, true);
+	assert.deepEqual(entries.skills, []);
+	assert.ok(entries.diagnostics.some((diagnostic) => diagnostic.type === "error"));
+	// Directories: 600 empty subdirectories exceed the 512-directory budget.
+	const dirs = await build("dirs", async (skillsDir) => {
+		for (let index = 0; index < 600; index++) await mkdir(join(skillsDir, `d${index}`));
+	});
+	assert.equal(dirs.admission.dirs, 513);
+	assert.equal(dirs.admission.exhausted, true);
+	assert.deepEqual(dirs.skills, []);
+	// Inventory: the 129th parsed skill fails the whole discovery closed.
+	const inventory = await build("inventory", async (skillsDir) => {
+		for (let index = 0; index < 130; index++) {
+			await mkdir(join(skillsDir, `s${index}`), { recursive: true });
+			await writeFile(join(skillsDir, `s${index}`, "SKILL.md"), `---\nname: s${index}\ndescription: ok\n---\nbody\n`);
+		}
+	});
+	assert.equal(inventory.admission.skills, 129);
+	assert.equal(inventory.admission.exhausted, true);
+	assert.deepEqual(inventory.skills, []);
+	// Aggregate bytes: 20 files of 250 KiB exceed the 4 MiB budget; no read exceeds the per-file cap.
+	const bytes = await build("bytes", async (skillsDir) => {
+		for (let index = 0; index < 20; index++)
+			await writeFile(
+				join(skillsDir, `f${index}.md`),
+				`---\nname: f${index}\ndescription: ok\n---\n${"A".repeat(250 * 1024)}`,
+			);
+	});
+	assert.equal(bytes.admission.exhausted, true);
+	assert.deepEqual(bytes.skills, []);
+	assert.ok(bytes.admission.totalBytes <= 4 * 1024 * 1024 + 256 * 1024 + 2, `observed ${bytes.admission.totalBytes}`);
+});
+
+test("bounded discovery counts ignore-file reads into an aggregate byte budget", async (t) => {
+	const build = async (dirCount) => {
+		const directory = await mkdtemp(join(tmpdir(), "jouzu-policy-ignore-"));
+		const skillsDir = join(directory, "skills");
+		await mkdir(skillsDir, { recursive: true });
+		const lines = [];
+		let size = 0;
+		for (let index = 0; size < 20 * 1024; index++) {
+			lines.push(`pattern-${index}-xxxxxxxx`);
+			size += lines[lines.length - 1].length + 1;
+		}
+		for (let index = 0; index < dirCount; index++) {
+			await mkdir(join(skillsDir, `d${index}`), { recursive: true });
+			await writeFile(join(skillsDir, `d${index}`, ".gitignore"), `${lines.join("\n")}\n`);
+		}
+		t.after(() => rm(directory, { recursive: true, force: true }));
+		return loadSkills({
+			cwd: directory,
+			agentDir: directory,
+			skillPaths: [skillsDir],
+			includeDefaults: false,
+			admissionLimits: true,
+		});
+	};
+	const over = await build(15);
+	assert.equal(over.admission.exhausted, true);
+	assert.deepEqual(over.skills, []);
+	assert.ok(over.admission.ignoreBytes <= 256 * 1024 + 64 * 1024 + 2, `observed ${over.admission.ignoreBytes}`);
+	const under = await build(3);
+	assert.equal(under.admission.exhausted, false);
+	assert.ok(under.admission.ignoreBytes > 0 && under.admission.ignoreBytes <= 256 * 1024);
+});
+
+test("bounded discovery records depth cutoffs, terminates symlink cycles, and admits normal skills", async (t) => {
+	const directory = await mkdtemp(join(tmpdir(), "jouzu-policy-symlink-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const skillsDir = join(directory, "skills");
+	await mkdir(join(skillsDir, "normal"), { recursive: true });
+	await writeFile(join(skillsDir, "normal", "SKILL.md"), "---\nname: normal\ndescription: ok\n---\nbody\n");
+	// A self-referencing directory symlink terminates through the depth cutoff.
+	await symlink(skillsDir, join(skillsDir, "loop"), "dir");
+	// Bounded following still discovers skills through a symlinked directory.
+	const outside = join(directory, "outside");
+	await mkdir(join(outside, "linked"), { recursive: true });
+	await writeFile(join(outside, "linked", "SKILL.md"), "---\nname: linked\ndescription: ok\n---\nbody\n");
+	await symlink(outside, join(skillsDir, "link"), "dir");
+	// A skill nested deeper than 16 levels is skipped with an explicit diagnostic.
+	let nested = join(skillsDir, "deep");
+	await mkdir(nested, { recursive: true });
+	for (let index = 0; index < 20; index++) {
+		nested = join(nested, `l${index}`);
+		await mkdir(nested, { recursive: true });
+	}
+	await writeFile(join(nested, "SKILL.md"), "---\nname: deep\ndescription: ok\n---\nbody\n");
+	const result = loadSkills({
+		cwd: directory,
+		agentDir: directory,
+		skillPaths: [skillsDir],
+		includeDefaults: false,
+		admissionLimits: true,
+	});
+	assert.deepEqual(result.skills.map((skill) => skill.name).sort(), ["linked", "normal"]);
+	assert.equal(result.admission.exhausted, false);
+	assert.ok(result.admission.dirs <= 512);
+	assert.ok(
+		result.diagnostics.some(
+			(diagnostic) => diagnostic.type === "warning" && /nesting exceeds 16 levels/.test(diagnostic.message),
+		),
+	);
+});
+
+test("bounded discovery completes without hanging when skill entries are not regular files", async (t) => {
+	if (process.platform === "win32") {
+		t.skip("FIFOs are POSIX-only");
+		return;
+	}
+	const directory = await mkdtemp(join(tmpdir(), "jouzu-policy-fifo-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const skillsDir = join(directory, "skills");
+	await mkdir(join(skillsDir, "normal"), { recursive: true });
+	await writeFile(join(skillsDir, "normal", "SKILL.md"), "---\nname: normal\ndescription: ok\n---\nbody\n");
+	execFileSync("mkfifo", [join(skillsDir, "blocked.md")]);
+	const result = loadSkills({
+		cwd: directory,
+		agentDir: directory,
+		skillPaths: [skillsDir],
+		includeDefaults: false,
+		admissionLimits: true,
+	});
+	assert.deepEqual(
+		result.skills.map((skill) => skill.name),
+		["normal"],
+	);
+	// Non-regular entries are gated before any open; nothing blocked and no unbounded read occurred.
+	assert.ok(result.admission.totalBytes < 256 * 1024);
+});
+
+test("native policy skill inventory admits scanned skills and withholds oversized files", async (t) => {
+	const directory = await mkdtemp(join(tmpdir(), "jouzu-policy-native-skills-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const skillsDir = join(directory, "skills");
+	await mkdir(join(skillsDir, "clear"), { recursive: true });
+	await writeFile(join(skillsDir, "clear", "SKILL.md"), "---\nname: clear\ndescription: CLEAN SKILL\n---\nbody\n");
+	await mkdir(join(skillsDir, "oversized"), { recursive: true });
+	await writeFile(
+		join(skillsDir, "oversized", "SKILL.md"),
+		`---\nname: oversized\ndescription: huge\n---\n${"A".repeat(300 * 1024)}`,
+	);
+	const loader = new DefaultResourceLoader({
+		cwd: directory,
+		agentDir: directory,
+		contentPolicy: new NativeContentPolicy({ cwd: directory, scanner: textguardScanner() }),
+		noExtensions: true,
+	});
+	await loader.updateSkillsFromPaths([skillsDir], new Map());
+	assert.deepEqual(
+		loader.getSkills().skills.map((skill) => skill.name),
+		["clear"],
+	);
 });
 
 test("skill expansion injects checked bytes and awaits both queued paths", async () => {

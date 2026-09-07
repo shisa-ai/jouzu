@@ -13,7 +13,7 @@
 		},
 		"dist/core/resource-loader.js": {
 			"before": "8e8a1bc1c5bc9e955f6a2314dd1db02071be56d48b1fea7b8b2cacb4fc9a0628",
-			"after": "49fa53383f00c242243123cc5e65fc3e4f679c00d514778b6b5f6f850e7c9bfd"
+			"after": "f475ec8aa1ec5c1b657c831c9942a5270c1e76f09509dd360dc7c680d219c303"
 		},
 		"dist/core/resource-loader.d.ts": {
 			"before": "f7c1dac7b3d661dff5fbfe51d1b50dff12b4c4329ae29a280ae713740b162493",
@@ -30,6 +30,14 @@
 		"dist/core/agent-session.js": {
 			"before": "fb8a3981c20c8c0bbd42231b1c99a10335fb3858b659056b341954de9cfa467f",
 			"after": "4b672563d046b914677500107ec3bc76ff6d55301c03ffa7006c2faefecaa270"
+		},
+		"dist/core/skills.js": {
+			"before": "3b7cc3997c630553eb88931de978e0db623ce51fbf7356e0ab922183885e208c",
+			"after": "772205cb86d94348f7347eb9cbb238193580919d771929863fcd0a98badafee1"
+		},
+		"dist/core/skills.d.ts": {
+			"before": "8230b7f16b693ce3fbdf814d537105b3539ce7c07ba6cfef9605bf35695cdf58",
+			"after": "ee73c560e8bbc55bb5590b6edf1a13d417b29c52c6b0716ba286a7798ade752d"
 		}
 	},
 	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863"
