@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { fileURLToPath } from "node:url";
 import { visibleWidth } from "@earendil-works/pi-tui";
 import {
 	contentPages,
@@ -12,9 +11,9 @@ import { TextGuardRuntime } from "../dist/textguard-runtime.js";
 
 const piRoot = new URL("./", import.meta.resolve("@earendil-works/pi-coding-agent"));
 const { ExtensionSelectorComponent } = await import(
-	fileURLToPath(new URL("modes/interactive/components/extension-selector.js", piRoot))
+	new URL("modes/interactive/components/extension-selector.js", piRoot)
 );
-const { initTheme } = await import(fileURLToPath(new URL("modes/interactive/theme/theme.js", piRoot)));
+const { initTheme } = await import(new URL("modes/interactive/theme/theme.js", piRoot));
 initTheme("dark");
 const VIEW = "View flagged content";
 const KEEP = "Keep withheld";
