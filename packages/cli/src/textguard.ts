@@ -9,6 +9,7 @@ const MAX_OUTPUT_BYTES = 8 * 1024 * 1024;
 const SCANNER_VERSION = "1.0.0";
 export type UnavailableReason =
 	| "input-limit"
+	| "unsupported-content"
 	| "finding-limit"
 	| "decode-limit"
 	| "scanner"

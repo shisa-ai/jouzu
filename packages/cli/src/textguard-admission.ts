@@ -97,7 +97,7 @@ export class TextGuardAdmission {
 	async checkUnavailableSnapshot(
 		source: string,
 		contentDigest: string,
-		reason: "input-limit",
+		reason: "input-limit" | "unsupported-content",
 		signal?: AbortSignal,
 	): Promise<ContentDecision> {
 		if (!/^[a-f0-9]{64}$/.test(contentDigest)) throw new Error("Invalid TextGuard content identity");
