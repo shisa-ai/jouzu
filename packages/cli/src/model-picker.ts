@@ -1278,7 +1278,7 @@ export function createJouzuModelPicker(
 	const openPalette = async (route: PaletteRoute): Promise<boolean> => {
 		const ctx = activeCtx;
 		const activateModel = setModel;
-		if (!ctx || ctx.mode !== "tui" || !activateModel) return false;
+		if (ctx?.mode !== "tui" || !activateModel) return false;
 		return surface.open(
 			ctx,
 			route,
@@ -1416,7 +1416,7 @@ export function createJouzuModelPicker(
 	const cycleFavorite = async (direction: FavoriteCycleDirection): Promise<boolean> => {
 		const ctx = activeCtx;
 		const activateModel = setModel;
-		if (!ctx || ctx.mode !== "tui" || !activateModel) return false;
+		if (ctx?.mode !== "tui" || !activateModel) return false;
 		if (cycleBusy) {
 			ctx.ui.notify("A favorite model switch is already in progress.", "info");
 			return true;
@@ -1497,7 +1497,7 @@ export function createJouzuModelPicker(
 
 	const handleScopedModelsCommand = async (): Promise<boolean> => {
 		const ctx = activeCtx;
-		if (!ctx || ctx.mode !== "tui") return false;
+		if (ctx?.mode !== "tui") return false;
 		ctx.ui.notify(
 			`Jouzu uses Favorites for quick switching. Open Models with ${modelsOpenText()} and press ${formatEffectiveJouzuKeybinding(jouzuKeybindings, "jouzu.model.toggleFavorite")} on a model to favorite it.`,
 			"info",

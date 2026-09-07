@@ -104,7 +104,7 @@ test("native helper serves isolated complete and unavailable outcomes", () => {
 		{ version: 1, id: "flood", text: "\u200b".repeat(20000) },
 		{ version: 1, id: "again", text: "hello" },
 	];
-	const result = run(requests.map((value) => JSON.stringify(value)).join("\n") + "\n");
+	const result = run(`${requests.map((value) => JSON.stringify(value)).join("\n")}\n`);
 	assert.equal(result.status, 0);
 	assert.equal(result.stderr, "");
 	const replies = result.stdout
@@ -150,7 +150,7 @@ test("native helper rejects protocol overrides and oversized lines", () => {
 	const result = run('{"version":1,"id":"a","text":"hello","yara_bundled":false}\n');
 	assert.equal(result.status, 0);
 	assert.equal(JSON.parse(result.stdout).reason, "protocol");
-	const oversized = run("x".repeat((2 << 20) + 1) + "\n");
+	const oversized = run(`${"x".repeat((2 << 20) + 1)}\n`);
 	assert.equal(oversized.status, 1);
 	assert.equal(oversized.stdout, "");
 	assert.equal(oversized.stderr.trim(), "invalid protocol input");

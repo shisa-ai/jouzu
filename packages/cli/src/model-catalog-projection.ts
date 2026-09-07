@@ -329,7 +329,7 @@ function gatewayCompat(catalog: ActiveModelCatalog, offering: CatalogModelOfferi
 	const compat: Record<string, unknown> = {};
 	for (const id of ids) {
 		const profile = catalog.document.compatibilityProfiles.find((profile) => profile.id === id);
-		if (!profile || profile.appliesTo !== "ingress") continue;
+		if (profile?.appliesTo !== "ingress") continue;
 		const roles = profile.instructionRoles as { developer?: string } | undefined;
 		if (roles?.developer === "native") compat.supportsDeveloperRole = true;
 		else if (roles?.developer === "reject" || roles?.developer === "rewrite_to_system")

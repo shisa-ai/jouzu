@@ -33,7 +33,9 @@ test("snapshot copies structured payloads before asynchronous checks can observe
 	assert.equal(snapshot.value.content[0].text, "BODY");
 	assert.equal(Object.getPrototypeOf(snapshot.value), Object.prototype);
 	assert.equal(Object.hasOwn(snapshot.value, "__proto__"), true);
-	assert.equal(snapshot.value.__proto__.text, "original");
+	// JSON.parse creates an own "__proto__" data property; read it without the
+	// deprecated accessor so the preserved literal key is checked, not the prototype.
+	assert.equal(Object.getOwnPropertyDescriptor(snapshot.value, "__proto__")?.value.text, "original");
 });
 
 test("oversized scan text retains a full identity without retaining a second serialized body", () => {

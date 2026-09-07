@@ -561,63 +561,62 @@ test("Pi package operations write only to the isolated Jouzu agent root", () => 
 	}
 });
 
-test(
-	"preserves interactive runtime termination handling",
-	{ skip: process.platform === "win32" ? "POSIX signal assertion" : false, timeout: 30_000 },
-	async () => {
-		const temp = mkdtempSync(join(tmpdir(), "jouzu-signal-"));
-		try {
-			const child = spawn(process.execPath, [cli, "pi", "--mode", "rpc", "--no-session", "--no-context-files"], {
-				env: (() => {
-					const env = {};
-					for (const [key, value] of Object.entries(process.env)) {
-						if (key === "AI_AGENT" || /^JOUZU_/.test(key) || /^PI_CODING_AGENT(?:_|$)/.test(key)) continue;
-						env[key] = value;
-					}
-					return { ...env, JOUZU_HOME: temp, PI_OFFLINE: "1" };
-				})(),
-				stdio: ["pipe", "pipe", "pipe"],
-			});
-			let stdout = "";
-			let stderr = "";
-			child.stdout.setEncoding("utf8");
-			child.stderr.setEncoding("utf8");
-			child.stdout.on("data", (chunk) => {
-				stdout += chunk;
-			});
-			child.stderr.on("data", (chunk) => {
-				stderr += chunk;
-			});
-			child.stdin.write(`${JSON.stringify({ id: "state", type: "get_state" })}\n`);
-			await new Promise((resolveReady, rejectReady) => {
-				const timeout = setTimeout(() => rejectReady(new Error(`RPC startup timed out: ${stderr}`)), 15_000);
-				const poll = setInterval(() => {
-					if (stdout.includes('"id":"state"')) {
-						clearInterval(poll);
-						clearTimeout(timeout);
-						resolveReady();
-					}
-				}, 20);
-				child.once("exit", (code, signal) => {
+test("preserves interactive runtime termination handling", {
+	skip: process.platform === "win32" ? "POSIX signal assertion" : false,
+	timeout: 30_000,
+}, async () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-signal-"));
+	try {
+		const child = spawn(process.execPath, [cli, "pi", "--mode", "rpc", "--no-session", "--no-context-files"], {
+			env: (() => {
+				const env = {};
+				for (const [key, value] of Object.entries(process.env)) {
+					if (key === "AI_AGENT" || /^JOUZU_/.test(key) || /^PI_CODING_AGENT(?:_|$)/.test(key)) continue;
+					env[key] = value;
+				}
+				return { ...env, JOUZU_HOME: temp, PI_OFFLINE: "1" };
+			})(),
+			stdio: ["pipe", "pipe", "pipe"],
+		});
+		let stdout = "";
+		let stderr = "";
+		child.stdout.setEncoding("utf8");
+		child.stderr.setEncoding("utf8");
+		child.stdout.on("data", (chunk) => {
+			stdout += chunk;
+		});
+		child.stderr.on("data", (chunk) => {
+			stderr += chunk;
+		});
+		child.stdin.write(`${JSON.stringify({ id: "state", type: "get_state" })}\n`);
+		await new Promise((resolveReady, rejectReady) => {
+			const timeout = setTimeout(() => rejectReady(new Error(`RPC startup timed out: ${stderr}`)), 15_000);
+			const poll = setInterval(() => {
+				if (stdout.includes('"id":"state"')) {
 					clearInterval(poll);
 					clearTimeout(timeout);
-					rejectReady(new Error(`RPC exited before signal test: code=${code} signal=${signal} ${stderr}`));
-				});
+					resolveReady();
+				}
+			}, 20);
+			child.once("exit", (code, signal) => {
+				clearInterval(poll);
+				clearTimeout(timeout);
+				rejectReady(new Error(`RPC exited before signal test: code=${code} signal=${signal} ${stderr}`));
 			});
-			const exitPromise = new Promise((resolveExit) => {
-				child.once("exit", (code, signal) => resolveExit({ code, signal }));
-			});
-			child.kill("SIGTERM");
-			const result = await exitPromise;
-			assert.ok(
-				result.signal === "SIGTERM" || result.code === 143,
-				`expected SIGTERM semantics, got ${JSON.stringify(result)}`,
-			);
-		} finally {
-			rmSync(temp, { recursive: true, force: true });
-		}
-	},
-);
+		});
+		const exitPromise = new Promise((resolveExit) => {
+			child.once("exit", (code, signal) => resolveExit({ code, signal }));
+		});
+		child.kill("SIGTERM");
+		const result = await exitPromise;
+		assert.ok(
+			result.signal === "SIGTERM" || result.code === 143,
+			`expected SIGTERM semantics, got ${JSON.stringify(result)}`,
+		);
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
 
 test("an inherited Jouzu environment does not leak a selected profile into another home", () => {
 	const temp = mkdtempSync(join(tmpdir(), "jouzu-profile-leak-"));
@@ -683,31 +682,29 @@ test("an ordinary launch recovers a stale empty profile lock", () => {
 	}
 });
 
-test(
-	"profile operations reject symlinked Jouzu-owned state and agent roots",
-	{ skip: process.platform === "win32" ? "symlink fixture requires privileges" : false },
-	() => {
-		const temp = mkdtempSync(join(tmpdir(), "jouzu-owned-root-link-"));
-		try {
-			for (const [rootName, profile] of [
-				["state", "core"],
-				["agent", "ja"],
-			]) {
-				const jouzuHome = join(temp, `home-${rootName}`);
-				const outside = join(temp, `outside-${rootName}`);
-				mkdirSync(jouzuHome, { recursive: true });
-				mkdirSync(outside);
-				symlinkSync(outside, join(jouzuHome, rootName));
-				const result = run(["--jouzu-home", jouzuHome, "profile", "apply", "--profile", profile]);
-				assert.equal(result.status, 1, `${rootName} symlink was accepted: ${result.stdout}`);
-				assert.match(result.stderr, /must be a real directory/);
-				assert.deepEqual(readdirSync(outside), [], `${rootName} symlink destination was modified`);
-			}
-		} finally {
-			rmSync(temp, { recursive: true, force: true });
+test("profile operations reject symlinked Jouzu-owned state and agent roots", {
+	skip: process.platform === "win32" ? "symlink fixture requires privileges" : false,
+}, () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-owned-root-link-"));
+	try {
+		for (const [rootName, profile] of [
+			["state", "core"],
+			["agent", "ja"],
+		]) {
+			const jouzuHome = join(temp, `home-${rootName}`);
+			const outside = join(temp, `outside-${rootName}`);
+			mkdirSync(jouzuHome, { recursive: true });
+			mkdirSync(outside);
+			symlinkSync(outside, join(jouzuHome, rootName));
+			const result = run(["--jouzu-home", jouzuHome, "profile", "apply", "--profile", profile]);
+			assert.equal(result.status, 1, `${rootName} symlink was accepted: ${result.stdout}`);
+			assert.match(result.stderr, /must be a real directory/);
+			assert.deepEqual(readdirSync(outside), [], `${rootName} symlink destination was modified`);
 		}
-	},
-);
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
 
 test("corrupt profile state fails with exit 1 and a recovery action, not the conflict status", () => {
 	const temp = mkdtempSync(join(tmpdir(), "jouzu-corrupt-state-"));
@@ -774,52 +771,50 @@ function modeOf(path) {
 	return statSync(path).mode & 0o777;
 }
 
-test(
-	"Jouzu-owned directories get deterministic private modes regardless of umask or order",
-	{ skip: process.platform === "win32" ? "POSIX permission assertion" : false },
-	() => {
-		const temp = mkdtempSync(join(tmpdir(), "jouzu-perms-"));
-		try {
-			for (const umask of ["022", "077"]) {
-				for (const [label, args] of [
-					["profile", ["profile", "apply", "--profile", "core"]],
-					["keybinding", ["keybindings", "apply"]],
-					["updater", ["self-update", "policy", "notify"]],
-					["noninteractive", ["pi", "--version"]],
-				]) {
-					const jouzuHome = join(temp, `home-${umask}-${label}`);
-					mkdirSync(jouzuHome, { recursive: true });
-					// Simulate a caller-owned home root that Jouzu must not chmod.
-					const wrapped = spawnSync(
-						"sh",
-						["-c", `umask ${umask}; exec "$@"`, "sh", process.execPath, cli, "--jouzu-home", jouzuHome, ...args],
-						{
-							encoding: "utf8",
-							timeout: 30_000,
-							env: { ...scrubbedEnv(), JOUZU_HOME: defaultHome, PI_OFFLINE: "1" },
-						},
-					);
-					assert.equal(wrapped.status, 0, `${label} apply failed: ${wrapped.stderr}`);
-					assert.equal(modeOf(jouzuHome), 0o755, `${label} must not chmod the caller-owned home root`);
-					assert.equal(modeOf(join(jouzuHome, "state")), 0o700, `${label} state dir mode`);
-					if (label !== "updater") {
-						assert.equal(modeOf(join(jouzuHome, "agent")), 0o700, `${label} agent dir mode`);
-					}
-					// The persistent state file is always private.
-					const stateFile =
-						label === "updater"
-							? "self-update.json"
-							: label === "keybinding"
-								? "keybindings-state.json"
-								: "profile-state.json";
-					assert.equal(modeOf(join(jouzuHome, "state", stateFile)), 0o600, `${label} state file mode`);
+test("Jouzu-owned directories get deterministic private modes regardless of umask or order", {
+	skip: process.platform === "win32" ? "POSIX permission assertion" : false,
+}, () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-perms-"));
+	try {
+		for (const umask of ["022", "077"]) {
+			for (const [label, args] of [
+				["profile", ["profile", "apply", "--profile", "core"]],
+				["keybinding", ["keybindings", "apply"]],
+				["updater", ["self-update", "policy", "notify"]],
+				["noninteractive", ["pi", "--version"]],
+			]) {
+				const jouzuHome = join(temp, `home-${umask}-${label}`);
+				mkdirSync(jouzuHome, { recursive: true });
+				// Simulate a caller-owned home root that Jouzu must not chmod.
+				const wrapped = spawnSync(
+					"sh",
+					["-c", `umask ${umask}; exec "$@"`, "sh", process.execPath, cli, "--jouzu-home", jouzuHome, ...args],
+					{
+						encoding: "utf8",
+						timeout: 30_000,
+						env: { ...scrubbedEnv(), JOUZU_HOME: defaultHome, PI_OFFLINE: "1" },
+					},
+				);
+				assert.equal(wrapped.status, 0, `${label} apply failed: ${wrapped.stderr}`);
+				assert.equal(modeOf(jouzuHome), 0o755, `${label} must not chmod the caller-owned home root`);
+				assert.equal(modeOf(join(jouzuHome, "state")), 0o700, `${label} state dir mode`);
+				if (label !== "updater") {
+					assert.equal(modeOf(join(jouzuHome, "agent")), 0o700, `${label} agent dir mode`);
 				}
+				// The persistent state file is always private.
+				const stateFile =
+					label === "updater"
+						? "self-update.json"
+						: label === "keybinding"
+							? "keybindings-state.json"
+							: "profile-state.json";
+				assert.equal(modeOf(join(jouzuHome, "state", stateFile)), 0o600, `${label} state file mode`);
 			}
-		} finally {
-			rmSync(temp, { recursive: true, force: true });
 		}
-	},
-);
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
 
 test("doctor reports a failed Pi import without loading interactive factories", () => {
 	const temp = mkdtempSync(join(tmpdir(), "jouzu-doctor-import-"));

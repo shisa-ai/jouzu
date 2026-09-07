@@ -69,7 +69,7 @@ export function detectTerminalColorMode(options: TerminalColorDetectionOptions =
 			: undefined);
 	if ((colorDepth ?? 0) >= 24 || /^(truecolor|24bit)$/i.test(env.COLORTERM ?? "")) return "truecolor";
 	if ((colorDepth ?? 0) >= 8 || /256color/i.test(env.TERM ?? "")) return "256";
-	if ((colorDepth ?? 0) >= 4 || Boolean(env.TERM)) return "16";
+	if ((colorDepth ?? 0) >= 4 || env.TERM) return "16";
 	return "none";
 }
 

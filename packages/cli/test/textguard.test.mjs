@@ -247,49 +247,42 @@ test("queued and resumed expanded skills are scanned at the context boundary wit
 	assert.equal(updated.messages[2], messages[2]);
 });
 
-test(
-	"real TextGuard 1.0.0 CLI detects Unicode concealment and ignores inherited configuration",
-	{
-		skip: !process.env.JOUZU_TEST_TEXTGUARD_PYTHON,
-	},
-	async () => {
-		const old = process.env.TEXTGUARD_PROMPTGUARD_MODEL;
-		process.env.TEXTGUARD_PROMPTGUARD_MODEL = "/must-not-load-a-model";
-		const scanner = new PythonTextGuard({ python: process.env.JOUZU_TEST_TEXTGUARD_PYTHON });
-		try {
-			const clean = await scanner.scan("日本語の資料を確認します。");
-			assert.equal(clean.status, "clear");
-			const concealed = await scanner.scan("hello\u200bworld");
-			assert.equal(concealed.status, "findings");
-			assert.ok(concealed.findings.some((finding) => finding.kind === "invisible_char" && finding.offset === 5));
-		} finally {
-			await scanner.close();
-			if (old === undefined) delete process.env.TEXTGUARD_PROMPTGUARD_MODEL;
-			else process.env.TEXTGUARD_PROMPTGUARD_MODEL = old;
-		}
-	},
-);
+test("real TextGuard 1.0.0 CLI detects Unicode concealment and ignores inherited configuration", {
+	skip: !process.env.JOUZU_TEST_TEXTGUARD_PYTHON,
+}, async () => {
+	const old = process.env.TEXTGUARD_PROMPTGUARD_MODEL;
+	process.env.TEXTGUARD_PROMPTGUARD_MODEL = "/must-not-load-a-model";
+	const scanner = new PythonTextGuard({ python: process.env.JOUZU_TEST_TEXTGUARD_PYTHON });
+	try {
+		const clean = await scanner.scan("日本語の資料を確認します。");
+		assert.equal(clean.status, "clear");
+		const concealed = await scanner.scan("hello\u200bworld");
+		assert.equal(concealed.status, "findings");
+		assert.ok(concealed.findings.some((finding) => finding.kind === "invisible_char" && finding.offset === 5));
+	} finally {
+		await scanner.close();
+		if (old === undefined) delete process.env.TEXTGUARD_PROMPTGUARD_MODEL;
+		else process.env.TEXTGUARD_PROMPTGUARD_MODEL = old;
+	}
+});
 
-test(
-	"CLI Python comparison reports cannot bypass native skill and web withholding",
-	{
-		skip: !process.env.JOUZU_TEST_TEXTGUARD_PYTHON,
-		timeout: 30000,
-	},
-	async () => {
-		const { execFile } = await import("node:child_process");
-		const { promisify } = await import("node:util");
-		const { fileURLToPath } = await import("node:url");
-		const { readFile } = await import("node:fs/promises");
-		const dir = await mkdtemp(join(tmpdir(), "jouzu-textguard-cli-"));
-		const extension = join(dir, "fixture.mjs");
-		const skill = join(dir, "SKILL.md");
-		const captured = join(dir, "contexts.json");
-		try {
-			await writeFile(skill, "---\nname: guard-test\ndescription: A fixture skill\n---\nInspect\u200b this fixture.");
-			await writeFile(
-				extension,
-				`
+test("CLI Python comparison reports cannot bypass native skill and web withholding", {
+	skip: !process.env.JOUZU_TEST_TEXTGUARD_PYTHON,
+	timeout: 30000,
+}, async () => {
+	const { execFile } = await import("node:child_process");
+	const { promisify } = await import("node:util");
+	const { fileURLToPath } = await import("node:url");
+	const { readFile } = await import("node:fs/promises");
+	const dir = await mkdtemp(join(tmpdir(), "jouzu-textguard-cli-"));
+	const extension = join(dir, "fixture.mjs");
+	const skill = join(dir, "SKILL.md");
+	const captured = join(dir, "contexts.json");
+	try {
+		await writeFile(skill, "---\nname: guard-test\ndescription: A fixture skill\n---\nInspect\u200b this fixture.");
+		await writeFile(
+			extension,
+			`
 import { createAssistantMessageEventStream } from ${JSON.stringify(import.meta.resolve("@earendil-works/pi-ai/utils/event-stream"))};
 import { writeFileSync } from 'node:fs';
 export default function(pi) {
@@ -309,59 +302,58 @@ export default function(pi) {
  });
 }
 `,
+		);
+		for (const enabled of [false, true]) {
+			const env = Object.fromEntries(
+				Object.entries(process.env).filter(([key]) => !/^(JOUZU_|PI_CODING_AGENT|SHISA_|AI_AGENT)/u.test(key)),
 			);
-			for (const enabled of [false, true]) {
-				const env = Object.fromEntries(
-					Object.entries(process.env).filter(([key]) => !/^(JOUZU_|PI_CODING_AGENT|SHISA_|AI_AGENT)/u.test(key)),
-				);
-				env.PI_OFFLINE = "1";
-				const args = [
-					fileURLToPath(new URL("../dist/cli.js", import.meta.url)),
-					"--jouzu-home",
-					join(dir, enabled ? "on" : "off"),
-					...(enabled ? ["--jouzu-textguard-python", process.env.JOUZU_TEST_TEXTGUARD_PYTHON] : []),
-					"--no-extensions",
-					"--no-skills",
-					"--no-context-files",
-					"--no-prompt-templates",
-					"--extension",
-					extension,
-					"--skill",
-					skill,
-					"--provider",
-					"textguard-fixture",
-					"--model",
-					"fixture",
-					"--mode",
-					"json",
-					"-p",
-					"/skill:guard-test",
-				];
-				const execution = promisify(execFile)(process.execPath, args, {
-					cwd: dir,
-					env,
-					timeout: 12000,
-					maxBuffer: 2 * 1024 * 1024,
-				});
-				execution.child.stdin.end();
-				await execution;
-				const contexts = JSON.parse(await readFile(captured, "utf8"));
-				assert.equal(contexts.length, 2);
-				assert.equal(JSON.stringify(contexts[0]).includes("TextGuard"), enabled);
-				const web = contexts[1].messages.find(
-					(message) => message.role === "toolResult" && message.toolCallId === "fixture-web",
-				);
-				assert.ok(web);
-				assert.equal(web.isError, true);
-				assert.match(web.content[0].text, /TextGuard withheld/);
-				assert.equal(JSON.stringify(contexts).includes("Web result with hidden\u200b text."), false);
-				assert.equal(JSON.stringify(contexts).includes("Inspect\u200b this fixture."), false);
-			}
-		} finally {
-			await rm(dir, { recursive: true, force: true });
+			env.PI_OFFLINE = "1";
+			const args = [
+				fileURLToPath(new URL("../dist/cli.js", import.meta.url)),
+				"--jouzu-home",
+				join(dir, enabled ? "on" : "off"),
+				...(enabled ? ["--jouzu-textguard-python", process.env.JOUZU_TEST_TEXTGUARD_PYTHON] : []),
+				"--no-extensions",
+				"--no-skills",
+				"--no-context-files",
+				"--no-prompt-templates",
+				"--extension",
+				extension,
+				"--skill",
+				skill,
+				"--provider",
+				"textguard-fixture",
+				"--model",
+				"fixture",
+				"--mode",
+				"json",
+				"-p",
+				"/skill:guard-test",
+			];
+			const execution = promisify(execFile)(process.execPath, args, {
+				cwd: dir,
+				env,
+				timeout: 12000,
+				maxBuffer: 2 * 1024 * 1024,
+			});
+			execution.child.stdin.end();
+			await execution;
+			const contexts = JSON.parse(await readFile(captured, "utf8"));
+			assert.equal(contexts.length, 2);
+			assert.equal(JSON.stringify(contexts[0]).includes("TextGuard"), enabled);
+			const web = contexts[1].messages.find(
+				(message) => message.role === "toolResult" && message.toolCallId === "fixture-web",
+			);
+			assert.ok(web);
+			assert.equal(web.isError, true);
+			assert.match(web.content[0].text, /TextGuard withheld/);
+			assert.equal(JSON.stringify(contexts).includes("Web result with hidden\u200b text."), false);
+			assert.equal(JSON.stringify(contexts).includes("Inspect\u200b this fixture."), false);
 		}
-	},
-);
+	} finally {
+		await rm(dir, { recursive: true, force: true });
+	}
+});
 
 test("bounded finding samples retain counts for errors beyond the sample limit", async () => {
 	const payload = result("info");

@@ -167,93 +167,91 @@ test("failure and timeout never become empty successful results", async () => {
 	await f.manager.dispose();
 });
 
-test(
-	"real child process completes through the pinned Pi SDK and persists a recoverable session",
-	{ timeout: 20000 },
-	async () => {
-		const { createServer } = await import("node:http");
-		const { once } = await import("node:events");
-		const requests = [];
-		const server = createServer(async (req, res) => {
-			const chunks = [];
-			for await (const chunk of req) chunks.push(chunk);
-			requests.push(JSON.parse(Buffer.concat(chunks).toString()));
-			res.writeHead(200, { "Content-Type": "text/event-stream" });
-			res.write(
-				`data: ${JSON.stringify({ id: "test", object: "chat.completion.chunk", choices: [{ index: 0, delta: { role: "assistant", content: "Verified fixture result." }, finish_reason: null }] })}\n\n`,
-			);
-			res.write(
-				`data: ${JSON.stringify({ id: "test", choices: [{ index: 0, delta: {}, finish_reason: "stop" }], usage: { prompt_tokens: 20, completion_tokens: 5, total_tokens: 25 } })}\n\n`,
-			);
-			res.end("data: [DONE]\n\n");
+test("real child process completes through the pinned Pi SDK and persists a recoverable session", {
+	timeout: 20000,
+}, async () => {
+	const { createServer } = await import("node:http");
+	const { once } = await import("node:events");
+	const requests = [];
+	const server = createServer(async (req, res) => {
+		const chunks = [];
+		for await (const chunk of req) chunks.push(chunk);
+		requests.push(JSON.parse(Buffer.concat(chunks).toString()));
+		res.writeHead(200, { "Content-Type": "text/event-stream" });
+		res.write(
+			`data: ${JSON.stringify({ id: "test", object: "chat.completion.chunk", choices: [{ index: 0, delta: { role: "assistant", content: "Verified fixture result." }, finish_reason: null }] })}\n\n`,
+		);
+		res.write(
+			`data: ${JSON.stringify({ id: "test", choices: [{ index: 0, delta: {}, finish_reason: "stop" }], usage: { prompt_tokens: 20, completion_tokens: 5, total_tokens: 25 } })}\n\n`,
+		);
+		res.end("data: [DONE]\n\n");
+	});
+	server.listen(0, "127.0.0.1");
+	await once(server, "listening");
+	const p = paths();
+	let completed;
+	const done = new Promise((resolve) => {
+		completed = resolve;
+	});
+	const manager = new SubagentManager(p, "real-parent", 2, undefined, (run) => completed(run));
+	try {
+		const role = { ...defaultAgentConfig().roles[2], model: "fixture/test", thinking: "off" };
+		const selectedModel = {
+			...model,
+			provider: "fixture",
+			name: "Fixture",
+			baseUrl: `http://127.0.0.1:${server.address().port}/v1`,
+			reasoning: false,
+			input: ["text"],
+			cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+			contextWindow: 32000,
+			maxTokens: 512,
+		};
+		manager.launch({
+			role,
+			model: selectedModel,
+			auth: { apiKey: "fixture-key" },
+			cwd: p.cwd,
+			task: "Report fixture result.",
 		});
-		server.listen(0, "127.0.0.1");
-		await once(server, "listening");
-		const p = paths();
-		let completed;
-		const done = new Promise((resolve) => {
+		const result = await done;
+		assert.equal(result.status, "completed", result.result);
+		assert.match(result.result, /Verified fixture/);
+		assert.ok(result.sessionFile);
+		assert.match(readFileSync(result.sessionFile, "utf8"), /Verified fixture/);
+		assert.equal(requests.length, 1);
+		assert.ok(requests[0].tools.every((tool) => ["read", "grep", "find", "ls"].includes(tool.function.name)));
+		assert.equal(JSON.stringify(manager.list()).includes("fixture-key"), false);
+		const resumedDone = new Promise((resolve) => {
 			completed = resolve;
 		});
-		const manager = new SubagentManager(p, "real-parent", 2, undefined, (run) => completed(run));
-		try {
-			const role = { ...defaultAgentConfig().roles[2], model: "fixture/test", thinking: "off" };
-			const selectedModel = {
-				...model,
-				provider: "fixture",
-				name: "Fixture",
-				baseUrl: `http://127.0.0.1:${server.address().port}/v1`,
-				reasoning: false,
-				input: ["text"],
-				cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
-				contextWindow: 32000,
-				maxTokens: 512,
-			};
-			manager.launch({
+		const resumed = manager.launch(
+			{
 				role,
 				model: selectedModel,
 				auth: { apiKey: "fixture-key" },
 				cwd: p.cwd,
-				task: "Report fixture result.",
-			});
-			const result = await done;
-			assert.equal(result.status, "completed", result.result);
-			assert.match(result.result, /Verified fixture/);
-			assert.ok(result.sessionFile);
-			assert.match(readFileSync(result.sessionFile, "utf8"), /Verified fixture/);
-			assert.equal(requests.length, 1);
-			assert.ok(requests[0].tools.every((tool) => ["read", "grep", "find", "ls"].includes(tool.function.name)));
-			assert.equal(JSON.stringify(manager.list()).includes("fixture-key"), false);
-			const resumedDone = new Promise((resolve) => {
-				completed = resolve;
-			});
-			const resumed = manager.launch(
-				{
-					role,
-					model: selectedModel,
-					auth: { apiKey: "fixture-key" },
-					cwd: p.cwd,
-					task: "Continue from your prior answer.",
-				},
-				undefined,
-				result.id,
-			);
-			const followup = await resumedDone;
-			assert.equal(followup.status, "completed", followup.result);
-			assert.equal(followup.previousRunId, result.id);
-			assert.equal(followup.childSessionId, result.childSessionId);
-			assert.notEqual(resumed.id, result.id);
-			assert.ok(
-				requests[1].messages.some(
-					(message) => message.role === "assistant" && JSON.stringify(message.content).includes("Verified fixture"),
-				),
-			);
-		} finally {
-			await manager.dispose();
-			server.closeAllConnections();
-			server.close();
-		}
-	},
-);
+				task: "Continue from your prior answer.",
+			},
+			undefined,
+			result.id,
+		);
+		const followup = await resumedDone;
+		assert.equal(followup.status, "completed", followup.result);
+		assert.equal(followup.previousRunId, result.id);
+		assert.equal(followup.childSessionId, result.childSessionId);
+		assert.notEqual(resumed.id, result.id);
+		assert.ok(
+			requests[1].messages.some(
+				(message) => message.role === "assistant" && JSON.stringify(message.content).includes("Verified fixture"),
+			),
+		);
+	} finally {
+		await manager.dispose();
+		server.closeAllConnections();
+		server.close();
+	}
+});
 
 test("output pagination preserves Japanese UTF-8 and resume refuses a session outside storage", async () => {
 	const f = fixture();

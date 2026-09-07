@@ -284,11 +284,7 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 			releaseManifest.compatibilityDependencies.find((record) => record.name === "wreq-js"),
 		);
 		const esbuildRecord = releaseManifest.compatibilityDependencies.find((record) => record.name === "esbuild");
-		if (
-			!esbuildRecord ||
-			esbuildRecord.bundled !== false ||
-			packageJson.dependencies?.esbuild !== esbuildRecord.version
-		) {
+		if (esbuildRecord?.bundled !== false || packageJson.dependencies?.esbuild !== esbuildRecord.version) {
 			throw new Error("jouzu must install the exact external esbuild compatibility dependency");
 		}
 		if (

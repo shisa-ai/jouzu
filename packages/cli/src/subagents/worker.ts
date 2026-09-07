@@ -171,7 +171,13 @@ async function runGuardedWorker(
 			void session.abort();
 		}
 	});
-	send({ type: "ready", sessionFile: sessionManager.getSessionFile()!, sessionId: sessionManager.getSessionId() });
+	const sessionFile = sessionManager.getSessionFile();
+	if (!sessionFile) throw new Error("Worker session file was not created before reporting readiness.");
+	send({
+		type: "ready",
+		sessionFile,
+		sessionId: sessionManager.getSessionId(),
+	});
 	try {
 		try {
 			await session.prompt(launch.task);
@@ -220,7 +226,7 @@ if (process.send) {
 		}
 		if (raw.type === "steer") {
 			try {
-				if (!session || !session.isStreaming) throw new Error();
+				if (!session?.isStreaming) throw new Error();
 				void session.steer(raw.text).then(
 					() => send({ type: "control", id: raw.id, status: "queued" }),
 					() => send({ type: "control", id: raw.id, status: "rejected" }),

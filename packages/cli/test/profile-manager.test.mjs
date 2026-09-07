@@ -259,25 +259,23 @@ test("stale state after an interrupted asset update converges without overwritin
 	}
 });
 
-test(
-	"symlink profile targets conflict without touching the link destination",
-	{ skip: process.platform === "win32" ? "symlink privileges vary on Windows" : false },
-	() => {
-		const fixture = temporary();
-		try {
-			const outside = join(fixture.root, "outside.md");
-			writeFileSync(outside, "outside\n");
-			mkdirSync(fixture.paths.agentDir, { recursive: true });
-			symlinkSync(outside, join(fixture.paths.agentDir, "APPEND_SYSTEM.md"));
-			const plan = planProfile(loadBundledProfile("ja"), fixture.paths, "0.1.0");
-			assert.equal(plan.actions.find((action) => action.target === "APPEND_SYSTEM.md")?.reason, "unsafe-target");
-			assert.throws(() => applyProfile(loadBundledProfile("ja"), fixture.paths, "0.1.0"), ProfileConflictError);
-			assert.equal(readFileSync(outside, "utf8"), "outside\n");
-		} finally {
-			cleanup(fixture.root);
-		}
-	},
-);
+test("symlink profile targets conflict without touching the link destination", {
+	skip: process.platform === "win32" ? "symlink privileges vary on Windows" : false,
+}, () => {
+	const fixture = temporary();
+	try {
+		const outside = join(fixture.root, "outside.md");
+		writeFileSync(outside, "outside\n");
+		mkdirSync(fixture.paths.agentDir, { recursive: true });
+		symlinkSync(outside, join(fixture.paths.agentDir, "APPEND_SYSTEM.md"));
+		const plan = planProfile(loadBundledProfile("ja"), fixture.paths, "0.1.0");
+		assert.equal(plan.actions.find((action) => action.target === "APPEND_SYSTEM.md")?.reason, "unsafe-target");
+		assert.throws(() => applyProfile(loadBundledProfile("ja"), fixture.paths, "0.1.0"), ProfileConflictError);
+		assert.equal(readFileSync(outside, "utf8"), "outside\n");
+	} finally {
+		cleanup(fixture.root);
+	}
+});
 
 test("an existing operation lock is preserved", () => {
 	const fixture = temporary();

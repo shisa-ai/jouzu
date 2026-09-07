@@ -170,14 +170,14 @@ export const processWorker: WorkerFactory = (launch, emit, onExit) => {
 				} catch {}
 			}
 			if (child.connected) child.send({ type: "stop" } satisfies WorkerCommand, () => {});
-			let timer: ReturnType<typeof setTimeout>;
+			let timer: ReturnType<typeof setTimeout> | undefined;
 			await Promise.race([
 				closed,
 				new Promise<void>((done) => {
 					timer = setTimeout(done, 3000);
 				}),
 			]);
-			clearTimeout(timer!);
+			clearTimeout(timer);
 			for (const pid of descendants.reverse()) {
 				try {
 					process.kill(pid, "SIGKILL");
@@ -435,9 +435,11 @@ export class SubagentManager {
 		try {
 			for (const [id, launch] of this.pending) {
 				if (this.workers.size >= this.maxConcurrent) break;
-				const run = this.runs.get(id)!;
+				const run = this.runs.get(id);
+				if (!run) continue;
 				const sameWorkspace = [...this.workers.keys()]
-					.map((key) => this.runs.get(key)!)
+					.map((key) => this.runs.get(key))
+					.filter((other): other is AgentRun => other !== undefined)
 					.filter((other) => other.cwd === run.cwd);
 				if (sameWorkspace.some((other) => roleCanWrite(other.role)) || (roleCanWrite(run.role) && sameWorkspace.length))
 					continue;
@@ -560,7 +562,8 @@ export class SubagentManager {
 		const worker = this.workers.get(id);
 		if (!worker) throw new Error("This agent is not running. Use Resume for a follow-up.");
 		const receipt = randomUUID();
-		this.event(this.runs.get(id)!, { type: "steer", id: receipt, status: "accepted", text });
+		const run = this.runs.get(id);
+		if (run) this.event(run, { type: "steer", id: receipt, status: "accepted", text });
 		worker.send({ type: "steer", id: receipt, text });
 		return receipt;
 	}
@@ -588,7 +591,8 @@ export class SubagentManager {
 		this.disposed = true;
 		clearTimeout(this.queueTimer);
 		for (const id of this.pending.keys()) {
-			const run = this.runs.get(id)!;
+			const run = this.runs.get(id);
+			if (!run) continue;
 			run.status = "interrupted";
 			run.result = "Parent session closed before this agent started.";
 			run.completion ??= { revision: randomUUID(), handled: false };
@@ -598,7 +602,8 @@ export class SubagentManager {
 		}
 		this.pending.clear();
 		for (const id of this.workers.keys()) {
-			const run = this.runs.get(id)!;
+			const run = this.runs.get(id);
+			if (!run) continue;
 			run.status = "interrupted";
 			run.result = "Parent session closed. Inspect changes before resuming.";
 		}

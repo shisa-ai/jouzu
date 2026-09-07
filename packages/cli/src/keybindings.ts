@@ -494,7 +494,7 @@ function upgradeOwnedKeybindings(paths: JouzuPaths, now = new Date()): Bootstrap
 		const path = configPath(paths);
 		const statePath = keybindingStatePath(paths);
 		const state = readKeybindingState(statePath);
-		if (!state || state.policy !== "applied" || state.defaultsVersion >= JOUZU_KEYBINDING_DEFAULTS_VERSION) {
+		if (state?.policy !== "applied" || state.defaultsVersion >= JOUZU_KEYBINDING_DEFAULTS_VERSION) {
 			return { changed: false };
 		}
 
