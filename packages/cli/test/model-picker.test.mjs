@@ -1953,3 +1953,127 @@ test("toggling a favorite refreshes the cached filter counts", () => {
 		"the active query is re-ranked exactly once",
 	);
 });
+
+test("Models search selects and remembers the gateway offering over a conflicting local provider", async () => {
+	const { ModelRuntime, ModelRegistry } = await import("@earendil-works/pi-coding-agent");
+	const root = mkdtempSync(join(tmpdir(), "jouzu-picker-gateway-"));
+	try {
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+		const document = JSON.parse(
+			readFileSync(join(import.meta.dirname, "..", "catalog", "fixtures", "account-snapshot-v1.json"), "utf8"),
+		);
+		const env = { PICKER_GATEWAY_TOKEN: "picker-gateway-jwt" };
+		const source = new CatalogSourceStore(paths).add({
+			label: "Office pool",
+			url: "https://pool.example.test/v1/jouzu/model-catalog",
+			auth: { type: "bearer", credentialRef: "env:PICKER_GATEWAY_TOKEN" },
+		});
+		await refreshCatalogSource(paths, source, {
+			env,
+			fetch: async () =>
+				new Response(JSON.stringify(document), { status: 200, headers: { "content-type": MODEL_CATALOG_MEDIA_TYPE } }),
+		});
+		mkdirSync(paths.agentDir, { recursive: true });
+		const modelsPath = join(paths.agentDir, "models.json");
+		writeFileSync(
+			modelsPath,
+			JSON.stringify({
+				providers: {
+					"ai.example.gateway": {
+						api: "openai-completions",
+						baseUrl: "https://direct.example.test/v1",
+						apiKey: "$MISSING_DIRECT_KEY",
+						models: [{ id: "example-model", name: "Direct model" }],
+					},
+				},
+			}),
+		);
+		const runtime = await ModelRuntime.create({ modelsPath, authPath: join(paths.agentDir, "auth.json") });
+		const registry = new ModelRegistry(runtime);
+		registry.refresh = () => runtime.refresh({ allowNetwork: false });
+		const handlers = new Map();
+		let selected;
+		let ctx;
+		const integration = createJouzuModelPicker(paths, { palette: { env, columns: 100, rows: 30 } });
+		const pi = {
+			on: (name, handler) => handlers.set(name, handler),
+			registerProvider: (...args) => registry.registerProvider(...args),
+			unregisterProvider: (id) => registry.unregisterProvider(id),
+			setThinkingLevel() {},
+			setModel: async (model) => {
+				selected = model;
+				ctx.model = model;
+				return true;
+			},
+		};
+		integration.extension.factory(pi);
+		ctx = {
+			mode: "tui",
+			cwd: root,
+			model: registry.find("ai.example.gateway", "example-model"),
+			scopedModels: [],
+			modelRegistry: registry,
+			sessionManager: { getBranch: () => [] },
+			getContextUsage: () => undefined,
+			isIdle: () => true,
+			ui: {
+				notify() {},
+				custom: (factory) =>
+					new Promise((resolve, reject) => {
+						const component = factory(
+							{ terminal: { rows: 30 }, requestRender() {} },
+							identityTheme,
+							fakeKeybindings(),
+							resolve,
+						);
+						setImmediate(() => {
+							try {
+								const rendered = stripSgr(component.render(100).join("\n"));
+								assert.match(rendered, /ai\.example\.gateway\/example-model/);
+								assert.match(rendered, /Office pool/);
+								assert.doesNotMatch(rendered, /Direct model|catalog:/);
+								component.handleInput("enter");
+								setTimeout(() => {
+									if (!selected) reject(new Error(stripSgr(component.render(100).join("\n"))));
+								}, 300);
+							} catch (error) {
+								reject(error);
+							}
+						});
+					}),
+			},
+		};
+		await handlers.get("session_start")({ reason: "startup" }, ctx);
+		await integration.open({ source: "action", initialSearchInput: "example-model" });
+		assert.equal(selected.baseUrl, "https://pool.example.test/v1");
+		assert.equal((await runtime.prepareRequest(selected)).options.apiKey, "picker-gateway-jwt");
+		const saved = new ModelPickerStore(paths).load().state.defaults.projects[deriveProjectKey(root)];
+		assert.deepEqual(saved, {
+			provider: "ai.example.gateway",
+			modelId: "example-model",
+			catalogId: document.catalogId,
+			offeringId: document.modelOfferings[0].id,
+		});
+		ctx.model = registry.find("ai.example.gateway", "example-model");
+		assert.deepEqual(await handlers.get("input")({ text: "hello" }, ctx), { action: "continue" });
+		assert.equal(
+			ctx.model.baseUrl,
+			"https://pool.example.test/v1",
+			"an existing local selection is rebound before dispatch",
+		);
+		ctx.model = registry.find("ai.example.gateway", "example-model");
+		pi.setModel = async () => false;
+		let restoredDraft;
+		ctx.ui.setEditorText = (text) => {
+			restoredDraft = text;
+		};
+		assert.deepEqual(await handlers.get("input")({ text: "keep this draft" }, ctx), { action: "handled" });
+		assert.equal(
+			restoredDraft,
+			"keep this draft",
+			"failed gateway activation must preserve the prompt and stop local dispatch",
+		);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});

@@ -265,3 +265,220 @@ test("projection controller removes only its own overlay and restores the local 
 	controller.release(pi, ctx);
 	assert.deepEqual(models, baseline);
 });
+
+test("gateway catalog wins local route, auth, headers and explicit overrides without modifying local state", async () => {
+	const { catalogRuntimeProvider, resolveCatalogModel } = await import("../dist/model-catalog-projection.js");
+	const { pickerModels } = await import("../dist/model-picker.js");
+	const root = mkdtempSync(join(tmpdir(), "jouzu-gateway-precedence-"));
+	try {
+		const modelsPath = join(root, "models.json");
+		const localConfig = JSON.stringify({
+			providers: {
+				"ai.example.gateway": {
+					baseUrl: "https://direct.example.test/v1",
+					api: "openai-completions",
+					apiKey: "$JOUZU_TEST_MISSING_UPSTREAM_KEY",
+					headers: { "x-local-secret": "must-not-forward" },
+					models: [{ id: "example-model", contextWindow: 4096 }, { id: "local-only" }],
+					modelOverrides: {
+						"example-model": {
+							name: "Local override",
+							contextWindow: 2048,
+							headers: { Authorization: "Bearer wrong" },
+						},
+					},
+				},
+			},
+		});
+		writeFileSync(modelsPath, localConfig);
+		const runtime = await ModelRuntime.create({ modelsPath, authPath: join(root, "auth.json") });
+		const registry = new ModelRegistry(runtime);
+		const ctx = { modelRegistry: registry, scopedModels: [] };
+		const pi = {
+			registerProvider: (...args) => registry.registerProvider(...args),
+			unregisterProvider: (id) => registry.unregisterProvider(id),
+		};
+		const controller = new CatalogProjectionController({ GATEWAY_TOKEN: "gateway-jwt" });
+		const catalog = activeCatalog(fixture());
+		catalog.source.url = "https://pool.example.test/v1/jouzu/model-catalog";
+		catalog.source.auth = { type: "bearer", credentialRef: "env:GATEWAY_TOKEN" };
+		const added = structuredClone(catalog.document.modelOfferings[0]);
+		added.providerId = "new-provider";
+		added.modelId = "new-model";
+		added.id = "new-provider/new-model";
+		catalog.document.modelOfferings.push(added);
+		controller.sync(pi, ctx, [catalog]);
+		const reference = { provider: "ai.example.gateway", modelId: "example-model" };
+		const effective = resolveCatalogModel(ctx, reference, [catalog]);
+		assert.equal(
+			effective.provider,
+			catalogRuntimeProvider(catalog.document.catalogId, reference.provider, catalog.source.url),
+		);
+		assert.equal(effective.baseUrl, "https://pool.example.test/v1");
+		assert.equal(effective.name, "Example Model");
+		assert.equal(effective.contextWindow, 131072);
+		const request = await runtime.prepareRequest(effective);
+		assert.equal(request.options.apiKey, "gateway-jwt");
+		assert.equal(request.options.headers.Authorization, "Bearer gateway-jwt");
+		assert.equal(request.options.headers["x-local-secret"], undefined);
+		assert.equal(registry.find("ai.example.gateway", "local-only").baseUrl, "https://direct.example.test/v1");
+		const rows = pickerModels(ctx, [catalog], { GATEWAY_TOKEN: "gateway-jwt" });
+		assert.equal(
+			rows.filter((row) => row.provider === reference.provider && row.modelId === reference.modelId).length,
+			1,
+		);
+		assert.ok(rows.some((row) => row.provider === "new-provider" && row.available));
+		assert.ok(rows.every((row) => !row.provider.startsWith("catalog:")));
+		assert.equal(rows.find((row) => row.provider === reference.provider).catalogId, catalog.document.catalogId);
+		const refreshing = controller.refresh(pi, ctx, [catalog], AbortSignal.timeout(5000));
+		assert.ok(registry.find(effective.provider, effective.id), "refresh keeps displayed gateway models selectable");
+		await refreshing;
+		assert.equal(resolveCatalogModel(ctx, reference, [catalog]).baseUrl, "https://pool.example.test/v1");
+		catalog.source.url = "https://replacement.example.test/v1/jouzu/model-catalog";
+		controller.sync(pi, ctx, [catalog]);
+		const rebound = resolveCatalogModel(ctx, reference, [catalog]);
+		assert.notEqual(
+			rebound.provider,
+			effective.provider,
+			"changing gateway origins invalidates the old connection identity",
+		);
+		assert.equal(rebound.baseUrl, "https://replacement.example.test/v1");
+		assert.equal(registry.find(effective.provider, effective.id), undefined);
+		assert.equal(readFileSync(modelsPath, "utf8"), localConfig);
+		controller.sync(pi, ctx, []);
+		assert.equal(resolveCatalogModel(ctx, reference, []).baseUrl, "https://direct.example.test/v1");
+		assert.equal(registry.find(effective.provider, effective.id), undefined);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("catalog-qualified selection keeps two gateway credentials separate and never falls back to a local collision", async () => {
+	const { resolveCatalogModel } = await import("../dist/model-catalog-projection.js");
+	const { pickerModels } = await import("../dist/model-picker.js");
+	const root = mkdtempSync(join(tmpdir(), "jouzu-gateway-sources-"));
+	try {
+		const modelsPath = join(root, "models.json");
+		writeFileSync(
+			modelsPath,
+			JSON.stringify({
+				providers: {
+					"ai.example.gateway": {
+						baseUrl: "https://local.example.test/v1",
+						api: "openai-completions",
+						apiKey: "local-key",
+						models: [{ id: "example-model" }, { id: "local-only" }],
+					},
+				},
+			}),
+		);
+		const runtime = await ModelRuntime.create({ modelsPath, authPath: join(root, "auth.json") });
+		const registry = new ModelRegistry(runtime);
+		const ctx = { modelRegistry: registry, scopedModels: [] };
+		const pi = {
+			registerProvider: (...args) => registry.registerProvider(...args),
+			unregisterProvider: (id) => registry.unregisterProvider(id),
+		};
+		const first = activeCatalog(fixture());
+		first.source.url = "https://first.example.test/v1/jouzu/model-catalog";
+		first.source.auth = { type: "bearer", credentialRef: "env:FIRST_GATEWAY_KEY" };
+		const second = structuredClone(first);
+		second.document.catalogId = "ai.example.second";
+		second.source.url = "https://second.example.test/v1/jouzu/model-catalog";
+		second.source.auth.credentialRef = "env:SECOND_GATEWAY_KEY";
+		const catalogs = [first, second];
+		const controller = new CatalogProjectionController({
+			FIRST_GATEWAY_KEY: "first-key",
+			SECOND_GATEWAY_KEY: "second-key",
+		});
+		controller.sync(pi, ctx, catalogs);
+		const reference = { provider: "ai.example.gateway", modelId: "example-model" };
+		assert.equal(
+			resolveCatalogModel(ctx, reference, catalogs),
+			undefined,
+			"unqualified ambiguous selection must not use local credentials",
+		);
+		for (const [catalog, key] of [
+			[first, "first-key"],
+			[second, "second-key"],
+		]) {
+			const selected = resolveCatalogModel(ctx, { ...reference, catalogId: catalog.document.catalogId }, catalogs);
+			assert.equal((await runtime.prepareRequest(selected)).options.apiKey, key);
+		}
+		const rows = pickerModels(ctx, catalogs, { FIRST_GATEWAY_KEY: "first-key", SECOND_GATEWAY_KEY: "second-key" });
+		assert.equal(rows.filter((row) => row.modelId === "example-model").length, 2);
+		assert.ok(rows.some((row) => row.modelId === "local-only" && row.available));
+		controller.release(pi, ctx);
+		const missing = new CatalogProjectionController({});
+		first.source.auth.credentialRef = "env:JOUZU_TEST_MISSING_GATEWAY_KEY";
+		missing.sync(pi, ctx, [first]);
+		await runtime.refresh({ allowNetwork: false });
+		const unavailable = pickerModels(ctx, [first]).find((row) => row.modelId === "example-model");
+		assert.equal(unavailable.available, false);
+		assert.equal(unavailable.catalogId, first.document.catalogId);
+		missing.release(pi, ctx);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("gateway model dispatch sends the catalog bearer and compatibility to the gateway", async () => {
+	const { createServer } = await import("node:http");
+	const { once } = await import("node:events");
+	const { resolveCatalogModel } = await import("../dist/model-catalog-projection.js");
+	const requests = [];
+	const server = createServer(async (request, response) => {
+		let body = "";
+		for await (const chunk of request) body += chunk;
+		requests.push({ url: request.url, headers: request.headers, body: JSON.parse(body) });
+		response.writeHead(200, { "Content-Type": "text/event-stream" });
+		response.end(
+			'data: {"id":"reply","object":"chat.completion.chunk","choices":[{"index":0,"delta":{"role":"assistant","content":"ok"},"finish_reason":null}]}\n\ndata: {"id":"reply","choices":[{"index":0,"delta":{},"finish_reason":"stop"}],"usage":{"prompt_tokens":1,"completion_tokens":1,"total_tokens":2}}\n\ndata: [DONE]\n\n',
+		);
+	});
+	server.listen(0, "127.0.0.1");
+	await once(server, "listening");
+	const root = mkdtempSync(join(tmpdir(), "jouzu-gateway-dispatch-"));
+	try {
+		const runtime = await ModelRuntime.create({
+			modelsPath: join(root, "models.json"),
+			authPath: join(root, "auth.json"),
+		});
+		const registry = new ModelRegistry(runtime);
+		const ctx = { modelRegistry: registry };
+		const pi = {
+			registerProvider: (...args) => registry.registerProvider(...args),
+			unregisterProvider: (id) => registry.unregisterProvider(id),
+		};
+		const catalog = activeCatalog(fixture());
+		catalog.source.url = `http://127.0.0.1:${server.address().port}/v1/jouzu/model-catalog`;
+		catalog.source.auth = { type: "bearer", credentialRef: "env:GATEWAY_TOKEN" };
+		catalog.document.compatibilityProfiles[0].projections = {
+			pi: { compat: { supportsDeveloperRole: false, maxTokensField: "max_tokens" } },
+		};
+		const controller = new CatalogProjectionController({ GATEWAY_TOKEN: "gateway-test-jwt" });
+		controller.registerStartup(pi, [catalog]);
+		const reference = { provider: "ai.example.gateway", modelId: "example-model" };
+		assert.ok(resolveCatalogModel(ctx, reference, [catalog]), "registered before session restoration");
+		controller.sync(pi, ctx, [catalog]);
+		const selected = resolveCatalogModel(ctx, reference, [catalog]);
+		const result = await runtime.complete(
+			selected,
+			{ systemPrompt: "test instruction", messages: [{ role: "user", content: "hello", timestamp: Date.now() }] },
+			{ maxTokens: 8 },
+		);
+		assert.equal(result.stopReason, "stop", result.errorMessage);
+		assert.equal(requests.length, 1);
+		assert.equal(requests[0].url, "/v1/chat/completions");
+		assert.equal(requests[0].headers.authorization, "Bearer gateway-test-jwt");
+		assert.equal(requests[0].body.model, "example-model");
+		assert.equal(requests[0].body.max_tokens, 8);
+		assert.equal(requests[0].body.messages[0].role, "system");
+		controller.release(pi, ctx);
+		assert.equal(registry.find(selected.provider, selected.id), undefined);
+	} finally {
+		server.closeAllConnections();
+		await new Promise((resolve) => server.close(resolve));
+		rmSync(root, { recursive: true, force: true });
+	}
+});

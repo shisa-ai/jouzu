@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { existsSync, lstatSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
+import { catalogRuntimeIdentity, preferCatalogModels } from "../model-catalog-projection.js";
 import type { JouzuPaths } from "../paths.js";
 import { writeFilePrivateAtomic } from "../private-fs.js";
 import { acquireStateLock } from "../state-lock.js";
@@ -170,7 +171,12 @@ export class AgentRoleStore {
 	}
 }
 export function resolveAgentModel(selector: string, models: readonly AgentModel[]): AgentModel {
-	const matches = models.filter((model) => selector === `${model.provider}/${model.id}` || selector === model.id);
+	const matches = preferCatalogModels(models).filter(
+		(model) =>
+			selector === `${model.provider}/${model.id}` ||
+			selector === `${catalogRuntimeIdentity(model.provider)?.provider}/${model.id}` ||
+			selector === model.id,
+	);
 	const unique = [...new Map(matches.map((model) => [`${model.provider}/${model.id}`, model])).values()];
 	if (unique.length !== 1)
 		throw new Error(

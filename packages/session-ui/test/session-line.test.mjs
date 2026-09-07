@@ -94,3 +94,15 @@ test("keeps CJK labels width-safe and strips terminal controls", () => {
 	assert.equal(rendered.includes("\n"), false);
 	assert.equal(rendered.includes("\t"), false);
 });
+
+test("catalog provider connections retain the readable provider and model in the session line", () => {
+	const value = snapshot({
+		model: { providerId: "catalog:ai.example.pool:lunaroute:0123456789abcdef", modelId: "glm-5.3" },
+	});
+	for (const width of [48, 80, 120]) {
+		const line = renderSessionLine(value, [], width, styles);
+		assert.match(line, /Lunaroute glm-5\.3/);
+		assert.doesNotMatch(line, /catalog:|0123456789abcdef/);
+		assert.equal(terminalTextWidth(line), width);
+	}
+});

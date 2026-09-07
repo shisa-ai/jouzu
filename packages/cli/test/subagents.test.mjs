@@ -446,3 +446,19 @@ test("a resumed conversation cannot start twice before its worker is ready", asy
 	assert.throws(resume, /active follow-up/);
 	await f.manager.dispose();
 });
+
+test("agent model resolution prefers gateway offerings over local provider collisions", async () => {
+	const { catalogRuntimeProvider, preferCatalogModels } = await import("../dist/model-catalog-projection.js");
+	const local = { ...model, provider: "upstream" };
+	const gateway = { ...local, provider: catalogRuntimeProvider("gateway.example", "upstream") };
+	assert.equal(resolveAgentModel("upstream/test", [local, gateway]), gateway);
+	assert.equal(resolveAgentModel("test", [local, gateway]), gateway);
+	const other = { ...gateway, provider: catalogRuntimeProvider("other.example", "upstream") };
+	assert.throws(() => resolveAgentModel("upstream/test", [local, gateway, other]), /multiple/);
+	assert.equal(resolveAgentModel(`${gateway.provider}/test`, [local, gateway, other]), gateway);
+	assert.deepEqual(
+		preferCatalogModels([local], [local, gateway]),
+		[],
+		"an unauthenticated gateway must not fall back to local credentials",
+	);
+});

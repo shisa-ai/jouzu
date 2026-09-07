@@ -7,6 +7,14 @@ import type { SessionUiStyleRole, SessionUiStyles } from "./styles.js";
 
 function formatProvider(providerId: string | undefined): string {
 	if (!providerId) return "";
+	const catalogParts = providerId.split(":");
+	if (catalogParts[0] === "catalog" && (catalogParts.length === 3 || catalogParts.length === 4)) {
+		try {
+			providerId = decodeURIComponent(catalogParts[2]);
+		} catch {
+			// Malformed external identities still pass through terminal sanitization.
+		}
+	}
 	const known: Readonly<Record<string, string>> = {
 		anthropic: "Anthropic",
 		codex: "Codex",

@@ -7,6 +7,7 @@ import type {
 } from "@earendil-works/pi-coding-agent";
 import { type Focusable, getKeybindings, Input, matchesKey, type TUI, wrapTextWithAnsi } from "@earendil-works/pi-tui";
 import { CatalogSettingsComponent } from "./catalog-settings.js";
+import { catalogSourceCredentialAvailable } from "./catalog-sources.js";
 import {
 	createJouzuKeybindingsManager,
 	formatEffectiveJouzuKeybinding,
@@ -15,7 +16,12 @@ import {
 } from "./jouzu-keybindings.js";
 import { formatEffectiveKeybinding, formatEffectiveKeyPair } from "./keybinding-hints.js";
 import type { CatalogModelOffering, ModelCatalogDocument } from "./model-catalog.js";
-import { CatalogProjectionController } from "./model-catalog-projection.js";
+import {
+	CatalogProjectionController,
+	catalogGatewayBase,
+	catalogRuntimeIdentity,
+	resolveCatalogModel,
+} from "./model-catalog-projection.js";
 import {
 	type ActiveModelCatalog,
 	loadActiveModelCatalogs,
@@ -390,7 +396,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 		const row = this.rows[this.selectedIndex];
 		if (!row || this.busy) return;
 		if (!row.model.available) {
-			this.message = { level: "error", text: "This favorite is unavailable in the active model inventory." };
+			this.message = { level: "error", text: "This model is unavailable. Check its provider or catalog credentials." };
 			this.tui.requestRender();
 			return;
 		}
@@ -739,16 +745,14 @@ export function catalogModelReference(
 	modelId: string,
 	catalog?: ModelCatalogDocument,
 ): ModelReference {
+	const identity = catalogRuntimeIdentity(provider);
+	if (identity) provider = identity.provider;
 	const offering = catalogOffering(catalog, provider, modelId);
 	return {
 		...(offering && catalog ? { catalogId: catalog.catalogId, offeringId: offering.id } : {}),
 		provider,
 		modelId,
 	};
-}
-
-function modelReference(model: PiModel | undefined, catalog?: ModelCatalogDocument): ModelReference | undefined {
-	return model ? catalogModelReference(model.provider, model.id, catalog) : undefined;
 }
 
 export function catalogThinkingLevel(
@@ -790,16 +794,73 @@ export function catalogPickerModels(
 	model: Pick<PiModel, "provider" | "id" | "name" | "contextWindow" | "maxTokens">,
 	catalogs: ActiveModelCatalog[],
 ): PickerModel[] {
-	const matches = catalogs.filter(({ document }) => catalogOffering(document, model.provider, model.id));
+	const identity = catalogRuntimeIdentity(model.provider);
+	if (identity) {
+		const active = catalogs.find(({ document }) => document.catalogId === identity.catalogId);
+		return active
+			? [catalogPickerModel({ ...model, provider: identity.provider }, active.document, active.source.label)]
+			: [];
+	}
+	const matches = catalogs.filter(
+		(active) => !catalogGatewayBase(active) && catalogOffering(active.document, model.provider, model.id),
+	);
 	return matches.length > 0
 		? matches.map(({ source, document }) => catalogPickerModel(model, document, source.label))
 		: [catalogPickerModel(model)];
 }
 
-function pickerModels(ctx: ExtensionContext, catalogs: ActiveModelCatalog[]): PickerModel[] {
-	const models =
-		ctx.scopedModels.length > 0 ? ctx.scopedModels.map(({ model }) => model) : ctx.modelRegistry.getAvailable();
-	return models.flatMap((model) => catalogPickerModels(model, catalogs));
+export function pickerModels(
+	ctx: ExtensionContext,
+	catalogs: ActiveModelCatalog[],
+	env: NodeJS.ProcessEnv = process.env,
+): PickerModel[] {
+	const available = ctx.modelRegistry.getAvailable();
+	const availableKeys = new Set(available.map((model) => `${model.provider}\0${model.id}`));
+	const gateways = catalogs.filter((active) => catalogGatewayBase(active));
+	const collisions = new Set(
+		gateways.flatMap(({ document }) =>
+			document.modelOfferings.map((offering) => `${offering.providerId}\0${offering.modelId}`),
+		),
+	);
+	const all = typeof ctx.modelRegistry.getAll === "function" ? ctx.modelRegistry.getAll() : available;
+	const models = [
+		...available.filter(
+			(model) => !catalogRuntimeIdentity(model.provider) && !collisions.has(`${model.provider}\0${model.id}`),
+		),
+		...all.filter((model) => {
+			const identity = catalogRuntimeIdentity(model.provider);
+			return identity && gateways.some(({ document }) => document.catalogId === identity.catalogId);
+		}),
+	];
+	const scope = ctx.scopedModels.map(({ model }) => ({
+		...model,
+		provider: catalogRuntimeIdentity(model.provider)?.provider ?? model.provider,
+		catalogId: catalogRuntimeIdentity(model.provider)?.catalogId,
+	}));
+	return models.flatMap((model) => {
+		const identity = catalogRuntimeIdentity(model.provider);
+		if (
+			scope.length > 0 &&
+			!scope.some(
+				(scoped) =>
+					scoped.provider === (identity?.provider ?? model.provider) &&
+					scoped.id === model.id &&
+					(!scoped.catalogId || scoped.catalogId === identity?.catalogId),
+			)
+		)
+			return [];
+		return catalogPickerModels(model, catalogs).map((row) => ({
+			...row,
+			available:
+				row.available &&
+				availableKeys.has(`${model.provider}\0${model.id}`) &&
+				(!identity ||
+					gateways.some(
+						(active) =>
+							active.document.catalogId === identity.catalogId && catalogSourceCredentialAvailable(active.source, env),
+					)),
+		}));
+	});
 }
 
 export function createJouzuModelPicker(
@@ -811,8 +872,18 @@ export function createJouzuModelPicker(
 	const jouzuKeybindings = createJouzuKeybindingsManager(paths);
 	const surface = new JouzuPaletteSurfaceHost({ jouzuKeybindings });
 	const catalogEnv = options.palette?.env ?? process.env;
-	const catalogProjection = new CatalogProjectionController();
+	const catalogProjection = new CatalogProjectionController(catalogEnv);
 	let catalogs: ActiveModelCatalog[] = [];
+	const modelReference = (model: PiModel | undefined, fallback?: ModelCatalogDocument): ModelReference | undefined => {
+		if (!model) return undefined;
+		const identity = catalogRuntimeIdentity(model.provider);
+		const document = identity
+			? catalogs.find(({ document }) => document.catalogId === identity.catalogId)?.document
+			: catalogs.some((active) => active.document === fallback && catalogGatewayBase(active))
+				? undefined
+				: fallback;
+		return catalogModelReference(model.provider, model.id, document);
+	};
 	const catalogReloadListeners = new Set<() => void>();
 	let catalog: ModelCatalogDocument | undefined;
 	let catalogWarning: string | undefined;
@@ -887,7 +958,16 @@ export function createJouzuModelPicker(
 			ctx.ui.notify(catalogWarning, "warning");
 		}
 		const current = modelReference(ctx.model, catalog);
-		previous = previousModelStack(ctx.sessionManager.getBranch(), current);
+		previous = previousModelStack(ctx.sessionManager.getBranch(), current).map((reference) => {
+			const identity = catalogRuntimeIdentity(reference.provider);
+			return identity
+				? catalogModelReference(
+						reference.provider,
+						reference.modelId,
+						catalogs.find(({ document }) => document.catalogId === identity.catalogId)?.document,
+					)
+				: reference;
+		});
 		pendingDispatch = current;
 		selectedReference = current;
 	};
@@ -927,6 +1007,7 @@ export function createJouzuModelPicker(
 	const extension: InlineExtension = {
 		name: "jouzu-model-picker",
 		factory: (pi) => {
+			catalogProjection.registerStartup(pi, catalogs);
 			extensionApi = pi;
 			setModel = (model) => pi.setModel(model);
 			reapplyCatalogProjection = () => {
@@ -1013,7 +1094,7 @@ export function createJouzuModelPicker(
 				const startupThinkingLevel = ctx.thinkingLevel;
 				if (!modelReferencesEqual(reference, modelReference(ctx.model, catalog))) {
 					const label = projectReference ? "Project default" : "Last used model";
-					const model = ctx.modelRegistry.find(reference.provider, reference.modelId);
+					const model = resolveCatalogModel(ctx, reference, catalogs);
 					if (!model) {
 						ctx.ui.notify(`${label} is unavailable: ${reference.provider}/${reference.modelId}`, "warning");
 						return;
@@ -1099,6 +1180,33 @@ export function createJouzuModelPicker(
 					);
 				}
 			});
+			pi.on("input", async (event, ctx) => {
+				if (!ctx.model || !ctx.isIdle()) return { action: "continue" };
+				const identity = catalogRuntimeIdentity(ctx.model.provider);
+				const reference = modelReference(ctx.model, catalog);
+				if (!reference) return { action: "continue" };
+				try {
+					if (identity && !catalogs.some(({ document }) => document.catalogId === identity.catalogId))
+						throw new Error("The selected model catalog is disabled or unavailable. Open Models to select a model.");
+					const effective = resolveCatalogModel(ctx, reference, catalogs);
+					if (!effective) throw new Error(`Model is unavailable: ${reference.provider}/${reference.modelId}`);
+					if (
+						effective.provider !== ctx.model.provider ||
+						effective.baseUrl !== ctx.model.baseUrl ||
+						(identity && JSON.stringify(effective) !== JSON.stringify(ctx.model))
+					) {
+						if (!(await pi.setModel(effective)))
+							throw new Error(
+								`No authentication for ${reference.provider}/${reference.modelId}. Open Catalogs to check its credential.`,
+							);
+					}
+					return { action: "continue" };
+				} catch (error) {
+					ctx.ui.notify(sanitizeTerminalText(error instanceof Error ? error.message : String(error)), "error");
+					if (ctx.mode === "tui") ctx.ui.setEditorText?.(event.text);
+					return { action: "handled" };
+				}
+			});
 			pi.on("before_provider_request", (_event, ctx) => {
 				activeCtx = ctx;
 				const dispatched = modelReference(ctx.model, catalog);
@@ -1120,7 +1228,9 @@ export function createJouzuModelPicker(
 				queuedModelSwitch = undefined;
 				const display = modelDisplay(queued.reference);
 				try {
-					if (!(await activateModel(queued.model))) {
+					const effective = resolveCatalogModel(ctx, queued.reference, catalogs);
+					if (!effective) throw new Error(`Model is unavailable: ${display.provider}/${display.modelId}`);
+					if (!(await activateModel(effective))) {
 						throw new Error(`No authentication for ${display.provider}/${display.modelId}`);
 					}
 					if (queued.setProjectDefault) state = store.setProjectDefault(queued.reference, projectKey);
@@ -1165,7 +1275,7 @@ export function createJouzuModelPicker(
 								initialFilter: state.filter,
 								getRows: (query, filter) =>
 									buildPickerRows({
-										models: pickerModels(ctx, catalogs),
+										models: pickerModels(ctx, catalogs, catalogEnv),
 										state,
 										projectKey,
 										current: modelReference(ctx.model, catalog),
@@ -1175,7 +1285,7 @@ export function createJouzuModelPicker(
 										activeContextTokens: ctx.getContextUsage()?.tokens,
 									}),
 								onSelect: async (row) => {
-									const model = ctx.modelRegistry.find(row.model.provider, row.model.modelId);
+									const model = resolveCatalogModel(ctx, row.model, catalogs);
 									if (!model) throw new Error(`Model is unavailable: ${row.model.provider}/${row.model.modelId}`);
 									if (!ctx.isIdle()) {
 										queueModelSwitch(ctx, model, row.model, true);
@@ -1189,7 +1299,7 @@ export function createJouzuModelPicker(
 									if (!ctx.isIdle()) {
 										throw new Error("Wait for the active model call to finish, then compact and switch.");
 									}
-									const model = ctx.modelRegistry.find(row.model.provider, row.model.modelId);
+									const model = resolveCatalogModel(ctx, row.model, catalogs);
 									if (!model) throw new Error(`Model is unavailable: ${row.model.provider}/${row.model.modelId}`);
 									await compactContextForModelSwitch(ctx, row.model);
 									if (!(await activateModel(model)))
@@ -1294,7 +1404,7 @@ export function createJouzuModelPicker(
 		}
 		const current = queuedModelSwitch?.reference ?? modelReference(ctx.model, catalog);
 		const favoriteRows = buildPickerRows({
-			models: pickerModels(ctx, catalogs),
+			models: pickerModels(ctx, catalogs, catalogEnv),
 			state,
 			projectKey,
 			current,
@@ -1333,7 +1443,7 @@ export function createJouzuModelPicker(
 					? (currentIndex + 1) % candidates.length
 					: (currentIndex - 1 + candidates.length) % candidates.length;
 		const target = candidates[targetIndex].model;
-		const model = ctx.modelRegistry.find(target.provider, target.modelId);
+		const model = resolveCatalogModel(ctx, target, catalogs);
 		if (!model) {
 			ctx.ui.notify(
 				`Favorite model is unavailable: ${modelDisplay(target).provider}/${modelDisplay(target).modelId}`,

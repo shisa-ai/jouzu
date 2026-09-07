@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import type {
 	ExtensionAPI,
 	ExtensionContext,
@@ -6,6 +7,7 @@ import type {
 } from "@earendil-works/pi-coding-agent";
 import type { CatalogModelOffering } from "./model-catalog.js";
 import type { ActiveModelCatalog } from "./model-catalog-sync.js";
+import type { ModelReference } from "./model-picker-state.js";
 
 type PiModel = NonNullable<ExtensionContext["model"]>;
 
@@ -233,9 +235,189 @@ export function projectCatalogProviders(
 	return { providers, skipped };
 }
 
+/** Stable runtime identity keeps local provider settings out of gateway requests. */
+export function catalogRuntimeProvider(catalogId: string, providerId: string, sourceUrl?: string): string {
+	const binding = sourceUrl ? `:${createHash("sha256").update(sourceUrl).digest("hex").slice(0, 16)}` : "";
+	return `catalog:${encodeURIComponent(catalogId)}:${encodeURIComponent(providerId)}${binding}`;
+}
+
+export function catalogRuntimeIdentity(provider: string): { catalogId: string; provider: string } | undefined {
+	const parts = provider.split(":");
+	if ((parts.length !== 3 && parts.length !== 4) || parts[0] !== "catalog") return undefined;
+	try {
+		return { catalogId: decodeURIComponent(parts[1]), provider: decodeURIComponent(parts[2]) };
+	} catch {
+		return undefined;
+	}
+}
+
+/** Catalog-owned identities shadow matching local models even when gateway auth is missing. */
+export function preferCatalogModels<T extends { provider: string; id: string }>(
+	models: readonly T[],
+	inventory: readonly T[] = models,
+): T[] {
+	const collisions = new Set(
+		inventory.flatMap((model) => {
+			const identity = catalogRuntimeIdentity(model.provider);
+			return identity ? [`${identity.provider}\0${model.id}`] : [];
+		}),
+	);
+	return models.filter(
+		(model) => catalogRuntimeIdentity(model.provider) || !collisions.has(`${model.provider}\0${model.id}`),
+	);
+}
+
+/** The conventional gateway catalog and inference APIs share an origin and bearer. */
+export function catalogGatewayBase(catalog: ActiveModelCatalog): string | undefined {
+	if (catalog.document.source.type !== "authenticated_gateway" || catalog.source.auth.type !== "bearer")
+		return undefined;
+	const url = new URL(catalog.source.url);
+	if (!url.pathname.endsWith("/v1/jouzu/model-catalog")) return undefined;
+	url.pathname = url.pathname.slice(0, -"/jouzu/model-catalog".length);
+	url.search = "";
+	url.hash = "";
+	return url.toString().replace(/\/$/u, "");
+}
+
+export function resolveCatalogModel(
+	ctx: Pick<ExtensionContext, "modelRegistry">,
+	reference: ModelReference,
+	catalogs: readonly ActiveModelCatalog[],
+): PiModel | undefined {
+	if (
+		reference.catalogId &&
+		!catalogs.some(
+			({ document }) =>
+				document.catalogId === reference.catalogId &&
+				document.modelOfferings.some(
+					(offering) =>
+						offering.providerId === reference.provider &&
+						offering.modelId === reference.modelId &&
+						(!reference.offeringId || offering.id === reference.offeringId),
+				),
+		)
+	)
+		return undefined;
+	const gateways = catalogs.filter(
+		(catalog) =>
+			catalogGatewayBase(catalog) &&
+			(!reference.catalogId || catalog.document.catalogId === reference.catalogId) &&
+			catalog.document.modelOfferings.some(
+				(offering) =>
+					offering.providerId === reference.provider &&
+					offering.modelId === reference.modelId &&
+					(!reference.offeringId || offering.id === reference.offeringId),
+			),
+	);
+	if (gateways.length > 0) {
+		if (gateways.length !== 1) return undefined;
+		return ctx.modelRegistry.find(
+			catalogRuntimeProvider(gateways[0].document.catalogId, reference.provider, gateways[0].source.url),
+			reference.modelId,
+		);
+	}
+	return ctx.modelRegistry.find(reference.provider, reference.modelId);
+}
+
+function gatewayCompat(catalog: ActiveModelCatalog, offering: CatalogModelOffering): PiModel["compat"] {
+	const ids = [
+		...catalog.document.routes
+			.filter((route) => offering.routeIds?.includes(route.id))
+			.flatMap((route) => route.compatibilityProfileIds ?? []),
+		...(offering.compatibilityProfileIds ?? []),
+	];
+	const compat: Record<string, unknown> = {};
+	for (const id of ids) {
+		const profile = catalog.document.compatibilityProfiles.find((profile) => profile.id === id);
+		if (!profile || profile.appliesTo !== "ingress") continue;
+		const roles = profile.instructionRoles as { developer?: string } | undefined;
+		if (roles?.developer === "native") compat.supportsDeveloperRole = true;
+		else if (roles?.developer === "reject" || roles?.developer === "rewrite_to_system")
+			compat.supportsDeveloperRole = false;
+		const projection = (profile.projections as { pi?: { compat?: Record<string, unknown> } } | undefined)?.pi?.compat;
+		for (const key of [
+			"supportsDeveloperRole",
+			"supportsReasoningEffort",
+			"supportsStore",
+			"supportsUsageInStreaming",
+		]) {
+			if (typeof projection?.[key] === "boolean") compat[key] = projection[key];
+		}
+		if (projection?.maxTokensField === "max_tokens" || projection?.maxTokensField === "max_completion_tokens")
+			compat.maxTokensField = projection.maxTokensField;
+		if (
+			typeof projection?.thinkingFormat === "string" &&
+			[
+				"openai",
+				"openrouter",
+				"deepseek",
+				"together",
+				"baseten",
+				"zai",
+				"qwen",
+				"chat-template",
+				"qwen-chat-template",
+				"string-thinking",
+				"ant-ling",
+			].includes(projection.thinkingFormat)
+		)
+			compat.thinkingFormat = projection.thinkingFormat;
+	}
+	return Object.keys(compat).length ? compat : undefined;
+}
+
+function gatewayProviders(catalog: ActiveModelCatalog): CatalogProviderProjection[] {
+	const baseUrl = catalogGatewayBase(catalog);
+	if (!baseUrl) return [];
+	const providers = new Map<string, CatalogProviderProjection>();
+	for (const offering of catalog.document.modelOfferings) {
+		const protocol = offering.api ?? catalog.document.providers.find((p) => p.id === offering.providerId)?.api;
+		const api = protocol === "openai-chat-completions" ? "openai-completions" : protocol;
+		if (api !== "openai-completions" && api !== "openai-responses" && api !== "anthropic-messages") continue;
+		const patch = offeringPatch(offering);
+		if (!patch.input || patch.contextWindow === undefined || patch.maxTokens === undefined) continue;
+		const providerId = catalogRuntimeProvider(catalog.document.catalogId, offering.providerId, catalog.source.url);
+		const provider = providers.get(providerId) ?? { providerId, models: [], addedModelIds: [], overriddenModelIds: [] };
+		provider.models.push({
+			id: offering.modelId,
+			name: patch.name ?? offering.modelId,
+			api,
+			baseUrl: api === "anthropic-messages" ? baseUrl.slice(0, -3) : baseUrl,
+			reasoning: patch.reasoning ?? false,
+			input: patch.input,
+			contextWindow: patch.contextWindow,
+			maxTokens: patch.maxTokens,
+			cost: { ...EMPTY_COST },
+			compat: gatewayCompat(catalog, offering),
+		});
+		provider.addedModelIds.push(offering.modelId);
+		providers.set(providerId, provider);
+	}
+	return [...providers.values()];
+}
+
 /** Owns only provider overlays installed by one Jouzu model-picker instance. */
 export class CatalogProjectionController {
 	private readonly owned = new Map<string, OwnedProviderRegistration>();
+	private readonly pending = new Map<string, ProviderConfig>();
+
+	private gatewayConfig(catalog: ActiveModelCatalog): ProviderConfig {
+		if (catalog.source.auth.type !== "bearer") return {};
+		const name = catalog.source.auth.credentialRef.slice(4);
+		return { apiKey: this.env[name]?.trim() || `$${name}`, authHeader: true };
+	}
+
+	registerStartup(pi: ExtensionAPI, catalogs: readonly ActiveModelCatalog[]): void {
+		for (const catalog of catalogs) {
+			for (const projection of gatewayProviders(catalog)) {
+				const config = { ...this.gatewayConfig(catalog), models: projection.models };
+				pi.registerProvider(projection.providerId, config);
+				this.pending.set(projection.providerId, config);
+			}
+		}
+	}
+
+	constructor(private readonly env: NodeJS.ProcessEnv = process.env) {}
 
 	private supportsProjection(ctx: ExtensionContext): boolean {
 		const registry = ctx.modelRegistry as Partial<ExtensionContext["modelRegistry"]> | undefined;
@@ -246,17 +428,24 @@ export class CatalogProjectionController {
 		);
 	}
 
-	private releaseOwned(pi: ExtensionAPI, ctx: ExtensionContext): void {
+	private releaseOwned(pi: ExtensionAPI, ctx: ExtensionContext, keepGateways = false): void {
 		if (!this.supportsProjection(ctx)) {
 			this.owned.clear();
 			return;
 		}
+		for (const [providerId, pending] of this.pending) {
+			const config = ctx.modelRegistry.getRegisteredProviderConfig(providerId);
+			if (config && config.models === pending.models && config.apiKey === pending.apiKey)
+				this.owned.set(providerId, { config });
+		}
+		this.pending.clear();
 		for (const [providerId, owned] of this.owned) {
+			if (keepGateways && catalogRuntimeIdentity(providerId)) continue;
 			if (ctx.modelRegistry.getRegisteredProviderConfig(providerId) === owned.config) {
 				pi.unregisterProvider(providerId);
 			}
+			this.owned.delete(providerId);
 		}
-		this.owned.clear();
 	}
 
 	release(pi: ExtensionAPI, ctx: ExtensionContext): void {
@@ -266,7 +455,18 @@ export class CatalogProjectionController {
 	sync(pi: ExtensionAPI, ctx: ExtensionContext, catalogs: readonly ActiveModelCatalog[]): CatalogProjectionSyncResult {
 		this.releaseOwned(pi, ctx);
 		if (!this.supportsProjection(ctx)) return { providers: [], skipped: [], blockedProviderIds: [] };
-		const result = projectCatalogProviders(ctx.modelRegistry.getAll(), catalogs);
+		const result = projectCatalogProviders(
+			ctx.modelRegistry.getAll(),
+			catalogs.filter((catalog) => !catalogGatewayBase(catalog)),
+		);
+		const gatewayConfigs = new Map<string, ProviderConfig>();
+		for (const catalog of catalogs) {
+			for (const projection of gatewayProviders(catalog)) {
+				if (catalog.source.auth.type !== "bearer") continue;
+				gatewayConfigs.set(projection.providerId, this.gatewayConfig(catalog));
+				result.providers.push(projection);
+			}
+		}
 		const blockedProviderIds: string[] = [];
 		for (const projection of result.providers) {
 			if (
@@ -276,7 +476,10 @@ export class CatalogProjectionController {
 				blockedProviderIds.push(projection.providerId);
 				continue;
 			}
-			pi.registerProvider(projection.providerId, { models: projection.models });
+			pi.registerProvider(projection.providerId, {
+				...gatewayConfigs.get(projection.providerId),
+				models: projection.models,
+			});
 			const config = ctx.modelRegistry.getRegisteredProviderConfig(projection.providerId);
 			if (config) this.owned.set(projection.providerId, { config });
 		}
@@ -289,7 +492,7 @@ export class CatalogProjectionController {
 		catalogs: readonly ActiveModelCatalog[],
 		signal?: AbortSignal,
 	): Promise<CatalogProjectionRefreshResult> {
-		this.releaseOwned(pi, ctx);
+		this.releaseOwned(pi, ctx, true);
 		const refresh = (ctx.modelRegistry as Partial<ExtensionContext["modelRegistry"]> | undefined)?.refresh;
 		if (typeof refresh !== "function") {
 			return {

@@ -1,4 +1,5 @@
 import type { ExtensionAPI, ExtensionContext, ToolDefinition } from "@earendil-works/pi-coding-agent";
+import { preferCatalogModels } from "../model-catalog-projection.js";
 import { createNotificationInbox } from "../notifications/inbox.js";
 import type { JouzuPaths } from "../paths.js";
 import {
@@ -71,6 +72,11 @@ export function createWorkflowIntegration(
 		if (!manager) throw new Error("Workflow requires an active session.");
 		return manager;
 	};
+	const availableModels = () => {
+		const registry = context().modelRegistry;
+		const available = registry.getAvailable();
+		return preferCatalogModels(available, typeof registry.getAll === "function" ? registry.getAll() : available);
+	};
 	const roles = () => store.load();
 	const roleById = (id: string) => {
 		const role = roles().config.roles.find((item) => item.id === id);
@@ -88,7 +94,7 @@ export function createWorkflowIntegration(
 		const generation = sessionGeneration;
 		const targetManager = controller();
 		const cwd = resolveWorkspace(active.cwd, previousRunId ? targetManager.get(previousRunId).cwd : workspace);
-		const model = resolveAgentModel(modelSelector ?? role.model, active.modelRegistry.getAvailable());
+		const model = resolveAgentModel(modelSelector ?? role.model, availableModels());
 		const registered = active.modelRegistry.getRegisteredProviderConfig(model.provider);
 		if (registered?.streamSimple)
 			throw new Error(
@@ -123,7 +129,7 @@ export function createWorkflowIntegration(
 			store.save(snapshot.config, snapshot.revision);
 			notify();
 		},
-		models: () => context().modelRegistry.getAvailable(),
+		models: availableModels,
 		runs: () => manager?.list() ?? [],
 		read: (id, offset) => controller().read(id, offset),
 		launch: (id, task, options) => dispatch(roleById(id), task, undefined, undefined, options?.workspace),
@@ -139,7 +145,7 @@ export function createWorkflowIntegration(
 			const role = roleById(id);
 			if (role.placement === "child") throw new Error("Choose a definition that allows use in the main session.");
 			if (!active.isIdle()) throw new Error("Wait for the main agent to finish before changing its role.");
-			const model = resolveAgentModel(role.model, active.modelRegistry.getAvailable());
+			const model = resolveAgentModel(role.model, availableModels());
 			if (!api || !(await api.setModel(model))) throw new Error("Model: authentication is unavailable for this role.");
 			api.setThinkingLevel(role.thinking);
 			mainRole = structuredClone(role);
