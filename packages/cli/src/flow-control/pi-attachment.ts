@@ -3,6 +3,7 @@ import { openLocalFlowSession } from "./local-storage.js";
 import { FlowOwnership } from "./ownership.js";
 import { createPiLedgerStore } from "./pi-ledger-store.js";
 import { FlowReceiptLedger, type FlowScope } from "./receipt-ledger.js";
+import { FlowResultManifestStore } from "./result-manifest.js";
 import { FlowSubmissionStore } from "./submission-store.js";
 
 /** Own the Pi receipt session from open through its final close. */
@@ -12,6 +13,7 @@ export class PiFlowAttachment {
 		private readonly session: Session,
 		readonly ledger: FlowReceiptLedger,
 		readonly submissions: FlowSubmissionStore,
+		readonly results: FlowResultManifestStore,
 	) {}
 
 	/** The opener must use the owned directory and return an exclusively owned session. */
@@ -33,7 +35,8 @@ export class PiFlowAttachment {
 				ownership.scope,
 			);
 			const submissions = await FlowSubmissionStore.attach(session, ownership);
-			return new PiFlowAttachment(ownership, session, ledger, submissions);
+			const results = await FlowResultManifestStore.attach(session, ownership);
+			return new PiFlowAttachment(ownership, session, ledger, submissions, results);
 		} catch (error) {
 			try {
 				await ownership.close(() => session?.close(BACKGROUND_CONTEXT));
