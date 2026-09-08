@@ -333,6 +333,10 @@ test("native queue cancellation preserves duplicate input identity and unrelated
 	const [cancelled] = await f.service.branch().attachment.submissions.snapshot();
 	assert.deepEqual(cancelled.dispatch.queueCancellations, [{ id: first.id, revision: 1 }]);
 	assert.deepEqual(cancelled.dispatch.queueClaims, [{ id: first.id, revision: 1, consumed: false }]);
+	const [view] = await f.service.branch().attachment.submissionViews();
+	assert.equal(view.admission, "cancelled");
+	assert.equal(view.delivery, "none");
+	assert.deepEqual(view.nativeQueueCancellations, [{ id: first.id, revision: 1, removal: "confirmed" }]);
 	await f.session.continueQueued();
 	assert.equal(f.requests.length, 1);
 	const records = await f.service.branch().attachment.submissions.snapshot();
@@ -382,6 +386,10 @@ test("persisted cancellation blocks consumption after native removal fails", asy
 		throw new Error("removal failed");
 	});
 	await assert.rejects(f.service.cancelNativeQueue(item.id, 1), /removal failed/);
+	const [view] = await f.service.branch().attachment.submissionViews();
+	assert.equal(view.admission, "held");
+	assert.equal(view.nativeQueueCancellations[0].removal, "unconfirmed");
+	assert.match(view.reason, /removal reconciliation/);
 	mock.mock.restore();
 	await f.session.continueQueued();
 	assert.equal(f.requests.length, 0);

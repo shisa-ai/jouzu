@@ -10,6 +10,7 @@ export interface FlowSubmissionView {
 	delivery: "none" | "consumed" | "history" | "partial" | "included" | "uncertain";
 	attemptIds: string[];
 	nativeRequests?: NativeSubmissionRequestView[];
+	nativeQueueCancellations?: { id: string; revision: number; removal: "confirmed" | "unconfirmed" | "consumed" }[];
 	reason?: string;
 }
 
@@ -126,8 +127,26 @@ export function projectFlowSubmissions(
 				else if (consumed && delivery === "none") delivery = "consumed";
 			}
 		}
+		const nativeQueueCancellations = record.dispatch?.queueCancellations?.map((cancelled) => {
+			const claim = claims.find((claim) => claim.id === cancelled.id && claim.revision === cancelled.revision);
+			return {
+				...cancelled,
+				removal: claim ? (claim.consumed ? ("consumed" as const) : ("confirmed" as const)) : ("unconfirmed" as const),
+			};
+		});
+		const fullyCancelled =
+			delivery === "none" &&
+			attempts.length === 0 &&
+			unconsumedNative &&
+			record.dispatch?.inputs?.every((input) =>
+				nativeQueueCancellations?.some(
+					(cancelled) => cancelled.id === input.queue?.id && cancelled.removal === "confirmed",
+				),
+			);
+
 		const reserved = attempts.some((attempt) => attempt.id === ledger.activeAttemptId);
-		const admission = record.status === "cancelled" ? "cancelled" : reserved ? "reserved" : held ? "held" : "pending";
+		const admission =
+			record.status === "cancelled" || fullyCancelled ? "cancelled" : reserved ? "reserved" : held ? "held" : "pending";
 		return {
 			id: record.id,
 			revision: record.revision,
@@ -135,9 +154,13 @@ export function projectFlowSubmissions(
 			delivery,
 			attemptIds: attempts.map((attempt) => attempt.id),
 			...(native ? { nativeRequests: native.get(record.id) ?? [] } : {}),
+			...(nativeQueueCancellations?.length ? { nativeQueueCancellations } : {}),
 			...(admission === "held"
 				? {
 						reason:
+							(nativeQueueCancellations?.some((item) => item.removal === "unconfirmed")
+								? "Queue cancellation requires removal reconciliation."
+								: undefined) ??
 							admissionHolds[0]?.reason ??
 							(record.dispatch
 								? "Native dispatch requires reconciliation before replay."

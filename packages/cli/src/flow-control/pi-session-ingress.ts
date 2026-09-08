@@ -72,6 +72,34 @@ export class PiSessionFlowIngress implements Ingress {
 		);
 	}
 
+	/** Versioned read-only management snapshot; neither inspection nor receipt presence authorizes replay. */
+	inspect() {
+		return this.track(async () => {
+			const branch = this.branch();
+			const submissions = await branch.attachment.submissionViews();
+			if (this.branch() !== branch) throw new FlowLedgerError("stale", "Flow inspection branch changed.");
+			return { version: 1 as const, scope: { ...branch.scope }, submissions };
+		});
+	}
+	private manage<T>(run: (service: PiFlowSessionService) => Promise<T>): Promise<T> {
+		this.branch();
+		const service = this.service;
+		if (!service) return Promise.reject(new FlowLedgerError("stale", "Flow management has no attached session."));
+		return this.track(() => run(service));
+	}
+	cancelNativeQueue(id: string, revision: number): Promise<void> {
+		return this.manage((service) => service.cancelNativeQueue(id, revision));
+	}
+	reconcileNativeQueueEdit(id: string, revision: number): Promise<void> {
+		return this.manage((service) => service.reconcileNativeQueueEdit(id, revision));
+	}
+	retryNativeRequest(id: string, expectedHash: string): Promise<void> {
+		return this.manage((service) => service.retryNativeRequest(id, expectedHash));
+	}
+	cancelNativeSources(id: string, expectedHash: string, indices: number[]): Promise<void> {
+		return this.manage((service) => service.cancelNativeSources(id, expectedHash, indices));
+	}
+
 	private async admit(
 		submission: Submission,
 		branch: PiFlowBranchResources,

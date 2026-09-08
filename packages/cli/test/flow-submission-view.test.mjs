@@ -191,3 +191,35 @@ test("unlinked consumed history cannot make an unidentified retained input pendi
 	assert.equal(view.admission, "held");
 	assert.equal(view.delivery, "uncertain");
 });
+
+test("partial native cancellation cannot mark a mixed submission cancelled", async (t) => {
+	const f = await fixture(t);
+	const store = f.attachment.submissions;
+	await store.dispatch("source", 1, "operation", async (observer) => {
+		await observer.observe({ kind: "followUp", args: ["one"], queue: { id: "one", revision: 1 } });
+		await observer.observe({ kind: "followUp", args: ["two"], queue: { id: "two", revision: 1 } });
+	});
+	await store.cancelQueue("operation", { id: "one", revision: 1 });
+	await store.recordQueueClaim("operation", { id: "one", revision: 1 }, false);
+	let view = await f.view();
+	assert.equal(view.admission, "held");
+	assert.deepEqual(view.nativeQueueCancellations, [{ id: "one", revision: 1, removal: "confirmed" }]);
+	await store.recordQueueClaim("operation", { id: "two", revision: 1 }, true);
+	view = await f.view();
+	assert.equal(view.admission, "held");
+	assert.equal(view.delivery, "consumed");
+});
+
+test("a consumed claim cannot be reported as successful native cancellation", async (t) => {
+	const f = await fixture(t);
+	const store = f.attachment.submissions;
+	await store.dispatch("source", 1, "operation", async (observer) => {
+		await observer.observe({ kind: "followUp", args: ["one"], queue: { id: "one", revision: 1 } });
+	});
+	await store.cancelQueue("operation", { id: "one", revision: 1 });
+	await store.recordQueueClaim("operation", { id: "one", revision: 1 }, true);
+	const view = await f.view();
+	assert.equal(view.admission, "held");
+	assert.equal(view.delivery, "consumed");
+	assert.deepEqual(view.nativeQueueCancellations, [{ id: "one", revision: 1, removal: "consumed" }]);
+});

@@ -625,3 +625,27 @@ test("retained cancellation refuses input already owned by the native queue", as
 	await f.session.continueQueued();
 	assert.equal(f.sent.length, 1);
 });
+
+test("ingress management inspects and cancels an edited native queue without a model call", async (t) => {
+	const f = await fixture(t);
+	await f.session.followUp("original");
+	const [item] = f.session.agent.inspectQueuedMessages();
+	f.session.agent.editQueuedMessage(item.id, 1, {
+		role: "user",
+		content: [{ type: "text", text: "edited" }],
+		timestamp: 1,
+	});
+	await f.ingress.reconcileNativeQueueEdit(item.id, 2);
+	await f.ingress.cancelNativeQueue(item.id, 2);
+	const view = await f.ingress.inspect();
+	assert.equal(view.version, 1);
+	assert.equal(view.scope.sessionId, f.session.sessionId);
+	assert.equal(view.submissions[0].admission, "cancelled");
+	assert.deepEqual(view.submissions[0].nativeQueueCancellations, [{ id: item.id, revision: 2, removal: "confirmed" }]);
+	view.submissions[0].nativeQueueCancellations[0].removal = "unconfirmed";
+	assert.equal((await f.ingress.inspect()).submissions[0].nativeQueueCancellations[0].removal, "confirmed");
+	assert.equal(f.sent.length, 0);
+	await f.ingress.dispose();
+	await assert.rejects(f.ingress.inspect(), { code: "stale" });
+	assert.throws(() => f.ingress.cancelNativeQueue(item.id, 2), { code: "stale" });
+});
