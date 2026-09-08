@@ -6,7 +6,7 @@ import type { NativeRequestSource } from "./native-request-store.js";
 import { PiHostHooks } from "./pi-host-hooks.js";
 import { PiNativeHistory } from "./pi-native-history.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
-import type { FlowNativeObserver, FlowSubmissionStore } from "./submission-store.js";
+import type { FlowNativeObserver, FlowSubmissionStore, RetainedSubmission } from "./submission-store.js";
 
 interface Frame {
 	active: boolean;
@@ -31,6 +31,7 @@ export class PiNativeDispatch {
 	constructor(
 		private readonly session: AgentSession,
 		private readonly store: FlowSubmissionStore,
+		private readonly admitQueued?: (record: RetainedSubmission) => Promise<boolean>,
 	) {
 		if (session.sessionId !== store.scope.sessionId)
 			throw new FlowLedgerError("scope", "Native observation requires matching session storage.");
@@ -107,7 +108,53 @@ export class PiNativeDispatch {
 				if (edited) return false;
 				const accepted = previous?.beforeQueueClaim ? await previous.beforeQueueClaim(items, signal) : true;
 				this.assertActive();
-				return accepted;
+				if (!accepted) return false;
+				const records = await this.store.snapshot();
+				const selected = new Map<string, number>();
+				for (const item of items) {
+					const observed = this.queued.get(item.id);
+					if (!observed) continue;
+					const record = records.find((record) => record.dispatch?.operationId === observed.operationId);
+					if (
+						record?.status !== "retained" ||
+						!record.dispatch?.inputs?.some(
+							(input) => input.queue?.id === item.id && input.queue.revision === item.revision,
+						)
+					)
+						return false;
+					if (selected.has(record.id)) continue;
+					if (this.admitQueued) {
+						let allowed: boolean;
+						try {
+							allowed = await this.admitQueued(structuredClone(record));
+						} catch {
+							this.assertActive();
+							signal?.throwIfAborted();
+							this.held.set(item.id, {
+								id: item.id,
+								revision: item.revision,
+								reason: "Queue admission could not complete.",
+							});
+							return false;
+						}
+						if (!allowed) {
+							this.held.set(item.id, {
+								id: item.id,
+								revision: item.revision,
+								reason: "Queued input is held by session policy.",
+							});
+							return false;
+						}
+						this.held.delete(item.id);
+					}
+					selected.set(record.id, record.revision);
+				}
+				const current = await this.store.snapshot();
+				this.assertActive();
+				signal?.throwIfAborted();
+				return [...selected].every(([id, revision]) =>
+					current.some((record) => record.id === id && record.revision === revision && record.status === "retained"),
+				);
 			},
 			afterQueueClaim: async (receipt, signal) => {
 				this.assertActive();
@@ -122,7 +169,18 @@ export class PiNativeDispatch {
 					);
 				}
 				await previous?.afterQueueClaim?.(receipt, signal);
+				const records = await this.store.snapshot();
 				this.assertActive();
+				for (const item of receipt.claimed) {
+					const observed = this.queued.get(item.id);
+					if (
+						observed &&
+						!records.some(
+							(record) => record.dispatch?.operationId === observed.operationId && record.status === "retained",
+						)
+					)
+						throw new FlowLedgerError("stale", "Native input was cancelled during queue consumption.");
+				}
 				this.history.accept(
 					receipt.claimed.map((item) => ({
 						...item,

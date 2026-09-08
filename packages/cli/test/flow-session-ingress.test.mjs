@@ -239,3 +239,145 @@ test("admission rejects reentrant release instead of awaiting its own promise", 
 	await f.session.prompt("one instruction");
 	assert.equal(f.sent.length, 1);
 });
+
+test("queue admission rechecks policy after a previously admitted send", async (t) => {
+	let allowQueue = false;
+	const phases = [];
+	const f = await fixture(t, {
+		admit: async (_submission, _branch, phase) => {
+			phases.push(phase);
+			return phase === "submission" || allowQueue;
+		},
+	});
+	await f.session.followUp("queued instruction");
+	await f.session.continueQueued();
+	assert.equal(f.sent.length, 0);
+	assert.equal(f.session.agent.inspectQueuedMessages().length, 1);
+	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.equal(record.dispatch.queueClaims, undefined);
+	assert.equal(f.session.agent.inspectQueuedMessages().length, 1);
+	allowQueue = true;
+	await f.session.continueQueued();
+	assert.equal(f.sent.length, 1);
+	assert.equal(f.session.agent.inspectQueuedMessages().length, 0);
+	assert.deepEqual(phases, ["submission", "queue", "queue"]);
+});
+
+test("cancellation during queued policy prevents consumption and provider execution", async (t) => {
+	const f = await fixture(t, {
+		admit: async (submission, branch, phase) => {
+			if (phase === "queue") {
+				const record = (await branch.attachment.submissions.snapshot()).find((item) => item.id === submission.id);
+				await branch.attachment.submissions.cancel(record.id, record.revision);
+			}
+			return true;
+		},
+	});
+	await f.session.followUp("cancel before claim");
+	await f.session.continueQueued();
+	assert.equal(f.sent.length, 0);
+	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.equal(record.status, "cancelled");
+	assert.equal(record.dispatch.queueClaims, undefined);
+	assert.equal(f.session.agent.inspectQueuedMessages().length, 1);
+	assert.equal(record.dispatch.queueHistory, undefined);
+});
+
+test("queued cancellation after native removal keeps consumed evidence and prevents history", async (t) => {
+	const f = await fixture(t);
+	await f.session.followUp("cancel at claim");
+	const store = f.ingress.branch().attachment.submissions;
+	const [record] = await store.snapshot();
+	const claim = store.recordQueueClaim.bind(store);
+	t.mock.method(store, "recordQueueClaim", async (...args) => {
+		await claim(...args);
+		if (args[2]) await store.cancel(record.id, record.revision);
+	});
+	await f.session.continueQueued();
+	assert.equal(f.sent.length, 0);
+	const [cancelled] = await store.snapshot();
+	assert.equal(cancelled.dispatch.queueClaims[0].consumed, true);
+	assert.equal(cancelled.dispatch.queueHistory, undefined);
+	assert.equal(f.session.agent.inspectQueuedMessages().length, 0);
+	assert.match(f.session.agent.state.errorMessage, /cancelled during queue consumption/);
+});
+
+test("queue admission receives exact identity for duplicate sends", async (t) => {
+	const ids = [];
+	const f = await fixture(t, {
+		admit: async (submission, _branch, phase) => {
+			if (phase === "queue") ids.push(submission.id);
+			return true;
+		},
+	});
+	await f.session.followUp("same");
+	await f.session.followUp("same");
+	f.session.agent.followUpMode = "all";
+	await f.session.continueQueued();
+	assert.equal(ids.length, 2);
+	assert.notEqual(ids[0], ids[1]);
+	assert.equal(f.sent.length, 1);
+	const records = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.deepEqual(
+		ids,
+		records.map((record) => record.id),
+	);
+});
+
+test("one denied member holds the complete native queue candidate batch", async (t) => {
+	const f = await fixture(t, {
+		admit: async (submission, _branch, phase) => phase === "submission" || submission.args[0] !== "held",
+	});
+	await f.session.followUp("allowed");
+	await f.session.followUp("held");
+	f.session.agent.followUpMode = "all";
+	await f.session.continueQueued();
+	assert.equal(f.sent.length, 0);
+	assert.equal(f.session.agent.inspectQueuedMessages().length, 2);
+	assert.ok(
+		(await f.ingress.branch().attachment.submissions.snapshot()).every(
+			(record) => !record.dispatch.queueClaims && !record.dispatch.queueHistory,
+		),
+	);
+});
+
+test("queue policy errors retain native candidates without provider execution", async (t) => {
+	const f = await fixture(t, {
+		admit: async (_submission, _branch, phase) => {
+			if (phase === "queue") throw new Error("queue policy failure");
+			return true;
+		},
+	});
+	await f.session.followUp("queued");
+	await f.session.continueQueued();
+	assert.equal(f.sent.length, 0);
+	assert.equal(f.session.agent.inspectQueuedMessages().length, 1);
+	assert.equal(f.ingress.branch().native.heldInputs()[0].reason, "Queue admission could not complete.");
+});
+
+test("queue edits during policy cannot consume the original observed revision", async (t) => {
+	let session;
+	const f = await fixture(t, {
+		admit: async (_submission, _branch, phase) => {
+			if (phase === "queue") {
+				const [item] = session.agent.inspectQueuedMessages();
+				session.agent.editQueuedMessage(item.id, item.revision, {
+					role: "user",
+					content: [{ type: "text", text: "edited" }],
+					timestamp: 1,
+				});
+			}
+			return true;
+		},
+	});
+	session = f.session;
+	await session.followUp("original");
+	await session.continueQueued();
+	assert.equal(f.sent.length, 0);
+	assert.equal(session.agent.inspectQueuedMessages()[0].revision, 2);
+	await session.continueQueued();
+	assert.equal(f.sent.length, 0);
+	assert.equal(f.ingress.branch().native.heldInputs()[0].reason, "Edited native input requires a new observation.");
+	const [edited] = session.agent.inspectQueuedMessages();
+	session.agent.cancelQueuedMessage(edited.id, edited.revision);
+});

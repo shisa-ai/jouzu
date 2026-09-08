@@ -9,12 +9,14 @@ import { PiNativeDispatch } from "./pi-native-dispatch.js";
 import { PiNativeRequests } from "./pi-native-requests.js";
 import { PiFlowSessionRegistry } from "./pi-session-registry.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
+import type { RetainedSubmission } from "./submission-store.js";
 
 export interface PiFlowSessionOptions {
 	root: string;
 	maxInputBytes: number;
 	maxResultBytes: number;
 	host: Omit<PiControllerHostOptions, "results">;
+	admitNativeQueue?(record: RetainedSubmission): Promise<boolean>;
 	policy(): Omit<FlowAdmissionGates, "hostReady">;
 }
 export interface PiFlowBranchResources {
@@ -93,7 +95,7 @@ export class PiFlowSessionService {
 			const state = await attachment.ledger.snapshot();
 
 			let recoveryBlocked = recovery.unresolved > 0 || state.attempts.some((attempt) => attempt.phase === "uncertain");
-			const native = new PiNativeDispatch(this.session, attachment.submissions);
+			const native = new PiNativeDispatch(this.session, attachment.submissions, this.options.admitNativeQueue);
 			this.opening.native = native;
 			const sourceRecovery = await native.recoverSources();
 			recoveryBlocked ||= sourceRecovery.unresolved > 0;

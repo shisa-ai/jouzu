@@ -5,9 +5,9 @@ import { FlowLedgerError } from "./receipt-ledger.js";
 
 type Ingress = NonNullable<CreateAgentSessionOptions["flowIngress"]>;
 type Submission = Parameters<Ingress["submit"]>[0];
-export interface PiFlowIngressOptions extends PiFlowSessionOptions {
+export interface PiFlowIngressOptions extends Omit<PiFlowSessionOptions, "admitNativeQueue"> {
 	/** Host policy must establish source authority, lane order, wait gates, and independence. */
-	admit(submission: Submission, branch: PiFlowBranchResources): Promise<boolean>;
+	admit(submission: Submission, branch: PiFlowBranchResources, phase: "submission" | "queue"): Promise<boolean>;
 }
 interface Pending {
 	branch: PiFlowBranchResources;
@@ -34,7 +34,18 @@ export class PiSessionFlowIngress implements Ingress {
 		if (this.disposed || this.opening || this.service)
 			return Promise.reject(new FlowLedgerError("stale", "Flow ingress is already attached or closed."));
 		this.opening = (async () => {
-			const service = await PiFlowSessionService.open(session, this.options);
+			const service = await PiFlowSessionService.open(session, {
+				...this.options,
+				admitNativeQueue: (record) =>
+					this.track(async () => {
+						const branch = this.branch();
+						if (branch.attachment.nativeRequests.recoveryBlocked) return false;
+						const allowed = await this.options.admit(structuredClone(record.submission), branch, "queue");
+						if (this.branch() !== branch)
+							throw new FlowLedgerError("stale", "Queued input branch changed during admission.");
+						return allowed && !branch.attachment.nativeRequests.recoveryBlocked;
+					}, record.id),
+			});
 			this.service = service;
 		})();
 		return this.opening;
@@ -84,7 +95,7 @@ export class PiSessionFlowIngress implements Ingress {
 		if (pending.running) return pending.running;
 		const run = this.track(async () => {
 			if (branch.attachment.nativeRequests.recoveryBlocked) return false;
-			if (!(await this.options.admit(structuredClone(pending.submission), branch))) return false;
+			if (!(await this.options.admit(structuredClone(pending.submission), branch, "submission"))) return false;
 			if (this.branch() !== branch || this.pending.get(id) !== pending)
 				throw new FlowLedgerError("stale", "Retained send changed during admission.");
 			if (branch.attachment.nativeRequests.recoveryBlocked) return false;
