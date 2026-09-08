@@ -10,6 +10,7 @@ import { paths } from "../../../scripts/background-flow-transform.mjs";
 import { createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { attachBackgroundWaitSource } from "../dist/flow-control/background-adapter.js";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
+import { createFlowWaitExtension } from "../dist/flow-control/wait-tools.js";
 
 const root = resolve(import.meta.dirname, "../../.."),
 	installed = join(root, "packages/cli/node_modules/@vanillagreen/pi-background-tasks");
@@ -65,6 +66,7 @@ for (const outcome of ["success", "failure", "stop"]) {
 		const background = await loadBackground(t),
 			tools = new Map(),
 			failures = [];
+		let attachment;
 		const { session, requests } = await createFlowSession(t, {
 			persist: true,
 			extensions: [
@@ -77,6 +79,14 @@ for (const outcome of ["success", "failure", "stop"]) {
 							pi.registerTool(tool);
 						};
 						background.default(proxy);
+						createFlowWaitExtension({
+							attachment: () => attachment,
+							maxDurationMs: 10000,
+							authorize(work) {
+								if (work !== "work") throw new Error("unauthorized work");
+								return { actor: "lane", revision: 2, assertActive() {} };
+							},
+						}).factory(proxy);
 					},
 				},
 			],
@@ -85,7 +95,7 @@ for (const outcome of ["success", "failure", "stop"]) {
 		assert.ok(tools.has("bg_task"));
 		const directory = await mkdtemp(join(tmpdir(), "jouzu-bg-owner-"));
 		const scope = { sessionId: session.sessionId, branchId: "background-branch" };
-		let attachment = await PiFlowAttachment.open(directory, scope);
+		attachment = await PiFlowAttachment.open(directory, scope);
 		t.after(async () => {
 			await attachment.close();
 			await rm(directory, { recursive: true, force: true });
@@ -152,21 +162,21 @@ for (const outcome of ["success", "failure", "stop"]) {
 			},
 			(error) => failures.push(error),
 		);
-		const wait = await attachment.waits.declareOwned(
-			"lane",
-			2,
-			{
-				scope,
-				workId: "work",
-				token: "wait",
-				reason: "background process exit",
-				mode: "all",
-				on: [{ producer: "bg", handle: task.id, execution: task.flow.execution, until: "exit" }],
-				expiresAt: Date.now() + 10000,
-			},
-			Date.now(),
-			10000,
-		);
+		const wait = (
+			await tools.get("agent_wait").execute(
+				"wait",
+				{
+					work: "work",
+					reason: "background process exit",
+					mode: "all",
+					deadline: "10s",
+					on: [{ producer: "bg", handle: task.id, execution: task.flow.execution, until: "exit" }],
+				},
+				undefined,
+				undefined,
+				{ sessionManager: session.sessionManager },
+			)
+		).details;
 		if (outcome === "stop") await tools.get("bg_task").execute("stop", { action: "stop", id: task.id });
 		if (wait.state !== expected) await completed.promise;
 		unsubscribe();

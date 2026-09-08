@@ -1,0 +1,9 @@
+{
+	"schemaVersion": 1,
+	"package": "pi-multiloop",
+	"version": "0.4.0",
+	"commit": "cffc0e58987249dd16d74f1b554623cd103d10d3",
+	"path": "skills/multiloop/SKILL.md",
+	"before": "c2bd39492531d74f7b127fa8b57773639c80c29309857f0ab24fb1a7b115df6e",
+	"after": "293eb455789a102808833bff0e9897e53aee4929c3e523d260345afc5804a691"
+}

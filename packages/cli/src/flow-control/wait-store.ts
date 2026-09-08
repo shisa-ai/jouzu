@@ -341,9 +341,11 @@ export class FlowWaitStore {
 		now: number,
 		maxDurationMs: number,
 		replaceToken?: string,
+		assertActive?: () => void,
 	): Promise<FlowWaitState> {
 		const captured = structuredClone(request);
 		return this.update((state) => {
+			assertActive?.();
 			const authority = state.authority ?? emptyWaitAuthority();
 			requireOpenAuthorityWork(requireAuthorityWork(authority, captured.workId, producer, workRevision));
 			const observations = authorityObservations(authority, state.scope, captured.workId, captured.on);
@@ -358,8 +360,10 @@ export class FlowWaitStore {
 		token: string,
 		reason: string,
 		now: number,
+		assertActive?: () => void,
 	): Promise<FlowWaitState> {
 		return this.update((state) => {
+			assertActive?.();
 			const authority = state.authority ?? emptyWaitAuthority();
 			const index = state.waits.findIndex((wait) => wait.token === token && authority.waitTokens.includes(token));
 			if (index < 0) throw new FlowLedgerError("identity", "Owned wait token is not registered.");

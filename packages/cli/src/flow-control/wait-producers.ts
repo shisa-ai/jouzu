@@ -156,6 +156,29 @@ export class FlowWaitProducerRegistry {
 		return registration;
 	}
 
+	/** Bind an exact tool dependency or reuse its retained terminal evidence. */
+	async bindForWait(
+		namespace: string,
+		identity: Omit<FlowExecutionIdentity, "scope">,
+		workRevision: number,
+	): Promise<void> {
+		if (this.closed) throw new FlowLedgerError("stale", "Wait producer registry is closed.");
+		if (this.updating) throw new FlowLedgerError("busy", "Producer subscriptions are changing.");
+		const captured = structuredClone(identity);
+		const authority = await this.store.authoritySnapshot();
+		requireAuthorityWork(authority, captured.workId, namespace, workRevision);
+		const known = authority.executions.find(
+			(execution) => execution.producer === namespace && execution.execution === captured.execution,
+		);
+		if (known && (known.workId !== captured.workId || known.handle !== captured.handle))
+			throw new FlowLedgerError("identity", "Wait execution has different ownership.");
+		if (this.closed) throw new FlowLedgerError("stale", "Wait producer registry is closed.");
+		if (known?.predicates.every((predicate) => predicate.state !== "pending")) return;
+		const producer = this.producers.get(namespace);
+		if (!producer) throw new FlowLedgerError("identity", "Wait producer is not attached.");
+		if (!(await producer.flushExecution(captured.execution))) await producer.bind(captured, workRevision);
+	}
+
 	/** Reconcile retained pending executions before the branch admits another request. */
 	async restorePending(): Promise<{ restored: number; missing: string[] }> {
 		if (this.closed) throw new FlowLedgerError("stale", "Wait producer registry is closed.");

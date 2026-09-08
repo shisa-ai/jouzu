@@ -50,7 +50,16 @@ export function deferred() {
 
 export async function createFlowSession(
 	t,
-	{ ingress, extensions = [], checkpoints, policy, persist = false, root: fixtureRoot, sessionManager } = {},
+	{
+		ingress,
+		extensions = [],
+		checkpoints,
+		policy,
+		persist = false,
+		root: fixtureRoot,
+		sessionManager,
+		tools = [],
+	} = {},
 ) {
 	const root = fixtureRoot ?? (await mkdtemp(join(tmpdir(), "jouzu-flow-session-")));
 	let session;
@@ -88,7 +97,7 @@ export async function createFlowSession(
 		sessionManager:
 			sessionManager ?? (persist ? SessionManager.create(root, join(root, "history")) : SessionManager.inMemory(root)),
 		settingsManager: SettingsManager.inMemory({ retry: { enabled: false }, compaction: { enabled: false } }),
-		tools: [],
+		tools,
 		flowIngress: ingress,
 		flowCheckpoints: checkpoints,
 	}));
