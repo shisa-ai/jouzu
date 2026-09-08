@@ -437,6 +437,20 @@ export class FlowReceiptLedger {
 		});
 	}
 
+	/** A request failed before its external-effect intent; earlier requests still own the run. */
+	withholdRequest(id: string, requestId: string, reason: string): Promise<void> {
+		requireIdentity(reason);
+		return this.mutate((state) => {
+			const attempt = this.attempt(state, id, ["prepared"]);
+			const request = attempt.requests.at(-1);
+			if (!request || request.id !== requestId || request.handedOff)
+				throw new FlowLedgerError("identity", "Unknown unsent request.");
+			attempt.reason = reason;
+			attempt.phase = attempt.requests.some((item) => item.handedOff) ? "running" : "withheld";
+			if (attempt.phase === "withheld") delete state.activeAttemptId;
+		});
+	}
+
 	handoff(id: string, requestId: string): Promise<void> {
 		return this.mutate((state) => {
 			const attempt = this.attempt(state, id, ["prepared"]);
