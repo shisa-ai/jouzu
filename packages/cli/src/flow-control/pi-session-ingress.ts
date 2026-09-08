@@ -41,6 +41,8 @@ export class PiSessionFlowIngress implements Ingress {
 	private readonly active = new Set<Promise<unknown>>();
 	private unsubscribeIdle?: () => void;
 	private scheduledRelease?: ReturnType<typeof setImmediate>;
+	private releaseRequested = false;
+	private automaticReleaseRunning = false;
 	private releasing?: Promise<{ released: string[]; held: string[] }>;
 	constructor(private readonly options: PiFlowIngressOptions) {}
 
@@ -78,21 +80,31 @@ export class PiSessionFlowIngress implements Ingress {
 	}
 	/** Policy changes and drained host operations use one deferred scheduling entry point. */
 	requestRelease(): void {
-		if (!this.options.autoRelease || this.disposed || this.fenced || this.scheduledRelease) return;
+		if (!this.options.autoRelease || this.disposed || this.fenced) return;
+		this.releaseRequested = true;
+		if (this.scheduledRelease || this.automaticReleaseRunning) return;
 		this.scheduledRelease = this.frames.exit(() =>
 			setImmediate(() => {
 				this.scheduledRelease = undefined;
 				if (this.disposed || this.fenced) return;
+				this.releaseRequested = false;
+				this.automaticReleaseRunning = true;
+				const joinedExisting = !!this.releasing;
 				void Promise.resolve()
 					.then(() => this.releaseReady())
 					.then((result) => {
-						if (result.released.length && result.held.length) this.requestRelease();
+						if (joinedExisting || (result.released.length && result.held.length)) this.releaseRequested = true;
+					})
+					.finally(() => {
+						this.automaticReleaseRunning = false;
+						if (this.releaseRequested) this.requestRelease();
 					})
 					.catch((error: unknown) => this.options.autoRelease?.onError(error));
 			}),
 		);
 	}
 	private stopReleaseNotifications(): void {
+		this.releaseRequested = false;
 		this.unsubscribeIdle?.();
 		this.unsubscribeIdle = undefined;
 		if (this.scheduledRelease) clearImmediate(this.scheduledRelease);

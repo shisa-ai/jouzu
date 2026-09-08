@@ -1413,3 +1413,39 @@ test("automatic release reports synchronous lifecycle failure", async (t) => {
 	assert.match((await reported.promise).message, /attachment changed/);
 	assert.equal(f.sent.length, 0);
 });
+
+for (const manual of [false, true])
+	test(`policy changes during ${manual ? "manual" : "automatic"} release retain another scheduling pass`, async (t) => {
+		let phase = "initial";
+		const entered = deferred(),
+			proceed = deferred(),
+			admitted = deferred();
+		const failures = [];
+		const f = await fixture(t, {
+			autoRelease: { onError: (error) => failures.push(error) },
+			admit: async () => {
+				const captured = phase;
+				if (captured === "checking") {
+					entered.resolve();
+					await proceed.promise;
+				}
+				if (captured === "ready") admitted.resolve();
+				return captured === "ready";
+			},
+		});
+		await f.session.prompt("retained until changed policy is checked");
+		phase = "checking";
+		const running = manual ? f.ingress.releaseReady() : undefined;
+		if (!manual) f.ingress.requestRelease();
+		await entered.promise;
+		phase = "ready";
+		for (let i = 0; i < 10; i++) f.ingress.requestRelease();
+		// Let notification processing observe the still-running admission.
+		await new Promise((resolve) => setImmediate(resolve));
+		proceed.resolve();
+		await running;
+		await admitted.promise;
+		await f.ingress.releaseReady();
+		assert.equal(f.sent.length, 1);
+		assert.deepEqual(failures, []);
+	});
