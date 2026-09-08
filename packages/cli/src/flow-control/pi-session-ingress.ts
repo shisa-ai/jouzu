@@ -164,13 +164,17 @@ export class PiSessionFlowIngress implements Ingress {
 					.then(() => this.releaseReady())
 					.then(async (result) => {
 						if (joinedExisting || (result.released.length && result.held.length)) this.releaseRequested = true;
-						if (wakeSemantic && this.branch().controller.view().producers.length) await this.wakeProducers();
+						if (wakeSemantic && !this.disposed && !this.fenced && this.branch().controller.view().producers.length)
+							await this.wakeProducers();
 					})
 					.finally(() => {
 						this.automaticReleaseRunning = false;
 						if (this.releaseRequested) this.queueRelease(false);
 					})
-					.catch((error: unknown) => this.options.autoRelease?.onError(error));
+					.catch((error: unknown) => {
+						if ((this.disposed || this.fenced) && error instanceof FlowLedgerError && error.code === "stale") return;
+						this.options.autoRelease?.onError(error);
+					});
 			}),
 		);
 	}

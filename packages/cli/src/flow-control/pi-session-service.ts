@@ -10,6 +10,7 @@ import { PiNativeRequests } from "./pi-native-requests.js";
 import { PiFlowSessionRegistry } from "./pi-session-registry.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import type { FlowNativeInput, RetainedSubmission } from "./submission-store.js";
+import { createFlowWaitDecisionProducer } from "./wait-decisions.js";
 
 export interface PiFlowSessionOptions {
 	root: string;
@@ -125,6 +126,7 @@ export class PiFlowSessionService {
 			);
 			this.opening.host = host;
 			const controller = new SessionFlowController(host, this.options.maxInputBytes, this.options.maxResultBytes);
+			controller.register(createFlowWaitDecisionProducer(attachment.waits));
 			this.current = {
 				scope: Object.freeze({ ...scope }),
 				attachment,

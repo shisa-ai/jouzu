@@ -1936,3 +1936,96 @@ test("host admission override cannot bypass a wait declared while the override i
 	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
 	assert.equal(record.dispatch, undefined);
 });
+
+for (const outcome of ["expired", "resolved", "failed"])
+	test(`terminal wait ${outcome} uses one receipt identity across wake and reopen`, async (t) => {
+		const f = await fixture(t, { provider: true, admit: null });
+		const branch = f.ingress.branch();
+		const wait = await declareIngressWait(branch);
+		if (outcome === "expired") await branch.attachment.waits.expireDue(100);
+		else
+			await branch.attachment.waits.reconcile(
+				"wait",
+				wait.observations.map((item) => ({
+					...item,
+					state: outcome === "resolved" ? "satisfied" : "failed",
+				})),
+				20,
+			);
+		await branch.controller.wake();
+		assert.equal(f.sent.length, 1);
+		assert.ok(JSON.stringify(f.sent[0]).includes(outcome));
+		const [attempt] = (await branch.attachment.ledger.snapshot()).attempts;
+		assert.equal(attempt.outcome, "success");
+		assert.equal(attempt.members[0].kind, "wait");
+		assert.equal(attempt.admission.choice.intent.rank, 3);
+		await branch.controller.wake();
+		assert.equal(f.sent.length, 1);
+		await f.ingress.dispose();
+		const next = await fixture(t, {
+			root: f.root,
+			provider: true,
+			admit: null,
+			manager: SessionManager.open(f.session.sessionManager.getSessionFile()),
+		});
+		await next.ingress.branch().controller.wake();
+		assert.equal(next.sent.length, 0);
+		assert.equal((await next.ingress.branch().attachment.ledger.snapshot()).attempts.length, 1);
+	});
+
+test("cancelled wait does not schedule a decision request", async (t) => {
+	const f = await fixture(t, { provider: true, admit: null });
+	const branch = f.ingress.branch();
+	await declareIngressWait(branch);
+	await branch.attachment.waits.cancel("wait", "user cancelled gate", 10);
+	await branch.controller.wake();
+	assert.equal(f.sent.length, 0);
+});
+
+test("a preempted wait decision retries its retained identity without repeating a successful request", async (t) => {
+	let userPending = false;
+	const f = await fixture(t, {
+		provider: true,
+		admit: null,
+		policy: () => ({
+			userPending,
+			recoveryBlocked: false,
+			waitingWorkIds: [],
+		}),
+	});
+	const branch = f.ingress.branch(),
+		queued = deferred(),
+		proceed = deferred();
+	await declareIngressWait(branch);
+	await branch.attachment.waits.expireDue(100);
+	const run = branch.host.run.bind(branch.host);
+	let first = true;
+	t.mock.method(branch.host, "run", async () => {
+		if (first) {
+			first = false;
+			queued.resolve();
+			await proceed.promise;
+		}
+		await run();
+	});
+	const waking = branch.controller.wake();
+	await queued.promise;
+	userPending = true;
+	proceed.resolve();
+	await waking;
+	assert.equal(f.sent.length, 0);
+	const [cancelled] = (await branch.attachment.ledger.snapshot()).attempts;
+	assert.equal(cancelled.phase, "cancelled");
+	assert.equal(cancelled.consumed, false);
+	userPending = false;
+	await branch.controller.wake();
+	assert.equal(f.sent.length, 1);
+	const attempts = (await branch.attachment.ledger.snapshot()).attempts;
+	assert.equal(attempts.length, 2);
+	assert.deepEqual(
+		attempts[0].members.map(({ id, revision }) => ({ id, revision })),
+		attempts[1].members.map(({ id, revision }) => ({ id, revision })),
+	);
+	await branch.controller.wake();
+	assert.equal(f.sent.length, 1);
+});
