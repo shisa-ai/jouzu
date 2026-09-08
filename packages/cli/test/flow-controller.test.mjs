@@ -982,3 +982,63 @@ test("disposed registration cannot notify an owner scheduler on the deferred cal
 	await assert.rejects(changed, { code: "stale" });
 	assert.equal(notifications, 0);
 });
+
+const decisionProducer = (build) =>
+	producer(
+		"decisions",
+		[descriptor("decisions", "decision", 3)],
+		build ??
+			((item) => ({
+				id: item.id,
+				revision: item.revision,
+				kind: "wait",
+				text: "dependency resolved",
+			})),
+	);
+
+test("composed decision is revalidated after owning work builds", async (t) => {
+	const f = await fixture(t, false);
+	const decisions = decisionProducer();
+	const work = producer("work", [descriptor("work")], (item) => {
+		decisions.items = [];
+		return { id: item.id, revision: item.revision, kind: "work", text: "work" };
+	});
+	f.controller.register(decisions);
+	f.controller.register(work);
+	await f.controller.wake();
+	assert.deepEqual(f.calls, []);
+	assert.deepEqual((await f.ledger.snapshot()).attempts, []);
+});
+
+test("a new owning-work wait during decision build prevents the composed request", async (t) => {
+	const f = await fixture(t, false);
+	f.controller.register(
+		decisionProducer((item) => {
+			f.policy.waitingWorkIds = ["work"];
+			return { id: item.id, revision: item.revision, kind: "wait", text: "decision" };
+		}),
+	);
+	f.controller.register(producer("work"));
+	await f.controller.wake();
+	assert.deepEqual(f.calls, []);
+});
+
+test("oversized owning instructions stay held while the terminal decision can be delivered", async (t) => {
+	const f = await fixture(t, false);
+	f.controller.register(decisionProducer());
+	f.controller.register(
+		producer("work", [descriptor("work")], (item) => ({
+			id: item.id,
+			revision: item.revision,
+			kind: "work",
+			text: "x".repeat(100_000),
+		})),
+	);
+	await f.controller.wake();
+	assert.deepEqual(f.calls, ["decision"]);
+	assert.ok(f.controller.view().held.some((item) => item.producer === "work"));
+	assert.deepEqual(
+		(await f.ledger.snapshot()).attempts[0].members.map((item) => item.kind),
+		["wait"],
+	);
+});

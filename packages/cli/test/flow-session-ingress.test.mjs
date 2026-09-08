@@ -2198,3 +2198,57 @@ test("expiry during awaited callback admission defers the callback for a fresh s
 	await f.ingress.dispose();
 	assert.deepEqual(errors, []);
 });
+
+test("terminal wait and eligible owning work share one request and survive reopen without replay", async (t) => {
+	const f = await fixture(t, { provider: true, admit: null });
+	const branch = f.ingress.branch(),
+		wait = await declareIngressWait(branch);
+	await branch.attachment.waits.reconcile(
+		"wait",
+		wait.observations.map((item) => ({ ...item, state: "satisfied" })),
+		20,
+	);
+	const producer = {
+		version: 1,
+		namespace: "resumed-work",
+		snapshot: async () => [
+			{
+				id: "resumed",
+				revision: "1",
+				producer: "resumed-work",
+				sequence: 1,
+				rank: 4,
+				workId: "work",
+				workRevision: "1",
+				independent: false,
+				runnable: true,
+			},
+		],
+		build: async () => ({ id: "resumed", revision: "1", kind: "work", text: "resume owning work" }),
+	};
+	branch.controller.register(producer);
+	await branch.controller.wake();
+	assert.equal(f.sent.length, 1);
+	const body = JSON.stringify(f.sent[0]);
+	assert.ok(body.includes("resolved"));
+	assert.ok(body.includes("resume owning work"));
+	const [attempt] = (await branch.attachment.ledger.snapshot()).attempts;
+	assert.deepEqual(
+		attempt.members.map((member) => member.kind),
+		["wait", "work"],
+	);
+	assert.equal(attempt.admission.choice.intent.rank, 4);
+	assert.equal(attempt.admission.charged, true);
+	await branch.controller.wake();
+	assert.equal(f.sent.length, 1);
+	await f.ingress.dispose();
+	const next = await fixture(t, {
+		root: f.root,
+		provider: true,
+		admit: null,
+		manager: SessionManager.open(f.session.sessionManager.getSessionFile()),
+	});
+	next.ingress.branch().controller.register(producer);
+	await next.ingress.branch().controller.wake();
+	assert.equal(next.sent.length, 0);
+});

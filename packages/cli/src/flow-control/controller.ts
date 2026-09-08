@@ -243,7 +243,7 @@ export class SessionFlowController {
 				}
 			}
 			if (this.closed || revision !== this.revision) return;
-			const choice = chooseFlowIntent(
+			const trigger = chooseFlowIntent(
 				admission,
 				items.filter(
 					(item) =>
@@ -259,7 +259,20 @@ export class SessionFlowController {
 				),
 				this.host.gate(),
 			);
-			if (!choice) return;
+			if (!trigger) return;
+			// A decision keeps trigger precedence while eligible work owns the fairness charge.
+			const work =
+				trigger.intent.rank === 3
+					? chooseFlowIntent(
+							admission,
+							items.filter((item) => (item.rank === 4 || item.rank === 5) && !retainedByReceipt(item, state)),
+							this.host.gate(),
+						)
+					: undefined;
+			const choice = work ?? trigger;
+			const decision = work ? trigger.intent : undefined;
+			const decisionProducer = decision ? this.producers.get(decision.producer) : undefined;
+			if (decision && !decisionProducer) return;
 			const producer = this.producers.get(choice.intent.producer);
 			if (!producer) return;
 			const resultCandidates = items.filter(
@@ -287,6 +300,13 @@ export class SessionFlowController {
 				const current = latest.find((item) => same(item, choice.intent));
 				const byProducer = new Map([[producer.namespace, latest]]);
 				try {
+					if (decision && decisionProducer) {
+						if (this.producers.get(decisionProducer.namespace) !== decisionProducer) return false;
+						const descriptors =
+							byProducer.get(decisionProducer.namespace) ?? (await this.descriptors(decisionProducer, signal));
+						byProducer.set(decisionProducer.namespace, descriptors);
+						if (!descriptors.some((item) => same(item, decision) && item.runnable)) return false;
+					}
 					for (const result of selectedResults) {
 						if (this.producers.get(result.producer.namespace) !== result.producer) return false;
 						let descriptors = byProducer.get(result.producer.namespace);
@@ -328,6 +348,12 @@ export class SessionFlowController {
 					throw new FlowLedgerError("identity", "Built input differs from the selected descriptor.");
 				const attemptId = randomUUID();
 				const built: FlowInputItem[] = item ? [item] : [];
+				if (decision && decisionProducer) {
+					const outcome = await cancellable(signal, () => decisionProducer.build(structuredClone(decision), signal));
+					if (outcome.id !== decision.id || outcome.revision !== decision.revision || outcome.kind !== "wait")
+						throw new FlowLedgerError("identity", "Built wait decision differs from its descriptor.");
+					built.unshift(outcome);
+				}
 				this.deferredResults = [];
 				if (aggregate && retainResults) {
 					const members: FlowResultReference[] = [];
