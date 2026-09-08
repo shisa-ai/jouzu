@@ -400,7 +400,7 @@ test("native context mutation during model conversion prevents provider executio
 	await f.session.prompt("original");
 	assert.equal(f.sent.length, 0);
 	assert.deepEqual(await f.store.snapshot(), []);
-	assert.match(f.session.agent.state.errorMessage, /changed after source disposition/);
+	assert.match(f.session.agent.state.errorMessage, /Native context changed/);
 });
 
 test("native context receipt schema rejects foreign, conflicting, and incomplete positions", async (t) => {
@@ -426,4 +426,139 @@ test("native context receipt schema rejects foreign, conflicting, and incomplete
 		);
 	}
 	assert.equal((await f.store.snapshot()).length, 1);
+});
+
+for (const mode of ["reorder", "clone", "remove", "duplicate"])
+	test(`native model dispositions distinguish duplicate sources through ${mode}`, async (t) => {
+		const f = await nativeRequests(t, {
+			retainInputs: true,
+			contextTransform: (messages) => messages,
+			modelTransform: (messages) => {
+				if (mode === "reorder") return [...messages].reverse();
+				if (mode === "clone") return structuredClone(messages);
+				if (mode === "remove") return messages.slice(1);
+				return [messages[0], ...messages];
+			},
+		});
+		await f.session.followUp("same");
+		await f.session.followUp("same");
+		f.session.agent.followUpMode = "all";
+		await f.session.continueQueued();
+		const [request] = await f.store.snapshot();
+		const model = request.sourceCapture.model;
+		assert.equal(model.hash, request.modelHash);
+		assert.deepEqual(
+			request.sourceCapture.context.members.map((member) => member.status),
+			["intact", "intact"],
+		);
+		const expected = {
+			reorder: [
+				["intact", 1],
+				["intact", 0],
+			],
+			clone: [
+				["unresolved", undefined],
+				["unresolved", undefined],
+			],
+			remove: [
+				["unresolved", undefined],
+				["intact", 0],
+			],
+			duplicate: [
+				["unresolved", undefined],
+				["intact", 2],
+			],
+		}[mode];
+		assert.deepEqual(
+			model.members.map(({ status, index }) => [status, index]),
+			expected,
+		);
+		assert.equal(request.outcome, "success");
+	});
+
+test("native custom conversion records unresolved model provenance despite matching content", async (t) => {
+	const f = await nativeRequests(t, { retainInputs: true, contextTransform: (messages) => messages });
+	await f.session.prompt("seed");
+	const [seed] = await f.attachment.submissions.snapshot();
+	const saved = await f.attachment.submissions.retain({ ...seed.submission, id: "custom-model" });
+	await f.dispatch.dispatch(saved.id, saved.revision, "custom-operation", () =>
+		f.session.agent.prompt([
+			{
+				role: "custom",
+				customType: "source",
+				content: "custom instruction",
+				display: false,
+				timestamp: 1,
+			},
+		]),
+	);
+	const request = (await f.store.snapshot())[1];
+	const offset = request.sourceCapture.members.findIndex((member) => member.operationId === "custom-operation");
+	assert.ok(offset >= 0);
+	assert.equal(request.sourceCapture.context.members[offset].status, "intact");
+	assert.equal(request.sourceCapture.model.members[offset].status, "unresolved");
+	assert.ok(f.sent[1].messages.some((message) => JSON.stringify(message).includes("custom instruction")));
+});
+
+test("native model conversion drains before close and missing checkpoints block dispatch", async (t) => {
+	const entered = deferred(),
+		release = deferred();
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		contextTransform: (messages) => messages,
+		modelTransform: async (messages) => {
+			entered.resolve();
+			await release.promise;
+			return messages;
+		},
+	});
+	const running = f.session.prompt("source");
+	await entered.promise;
+	await assert.rejects(f.bridge.close(), { code: "busy" });
+	assert.equal(f.sent.length, 0);
+	release.resolve();
+	await running;
+	assert.equal((await f.store.snapshot())[0].sourceCapture.model.members[0].status, "intact");
+	f.session.agent.convertToLlm = (messages) => messages.filter((message) => message.role === "user");
+	await f.session.prompt("missing checkpoint");
+	assert.match(f.session.agent.state.errorMessage, /no model conversion checkpoint/);
+	assert.equal(f.sent.length, 1);
+});
+
+test("native model schema cannot restore a source with unresolved context", async (t) => {
+	const f = await nativeRequests(t, { retainInputs: true, contextTransform: (messages) => structuredClone(messages) });
+	await f.session.prompt("source");
+	const [request] = await f.store.snapshot();
+	assert.equal(request.sourceCapture.model.members[0].status, "unresolved");
+	await assert.rejects(
+		f.store.begin({
+			...request,
+			id: "false-model-link",
+			sourceCapture: {
+				...request.sourceCapture,
+				model: { ...request.sourceCapture.model, members: [{ sourceIndex: 0, status: "intact", index: 0 }] },
+			},
+		}),
+		{ code: "identity" },
+	);
+});
+
+test("Pi extension-runner cloning leaves model source provenance unresolved", async (t) => {
+	const f = await nativeRequests(t, { retainInputs: true });
+	await f.session.prompt("default pipeline");
+	const [request] = await f.store.snapshot();
+	assert.equal(request.sourceCapture.context.members[0].status, "unresolved");
+	assert.equal(request.sourceCapture.model.members[0].status, "unresolved");
+	assert.equal(request.outcome, "success");
+});
+
+test("Pi blocked-image conversion cannot retain an intact source receipt", async (t) => {
+	const f = await nativeRequests(t, { retainInputs: true, contextTransform: (messages) => messages });
+	f.session.settingsManager.setBlockImages(true);
+	await f.session.prompt("image", { images: [{ type: "image", mimeType: "image/png", data: "YQ==" }] });
+	const [request] = await f.store.snapshot();
+	assert.equal(request.sourceCapture.context.members[0].status, "intact");
+	assert.equal(request.sourceCapture.model.members[0].status, "unresolved");
+	assert.ok(JSON.stringify(f.sent[0]).includes("Image reading is disabled."));
+	assert.ok(!JSON.stringify(f.sent[0]).includes("data:image/png"));
 });

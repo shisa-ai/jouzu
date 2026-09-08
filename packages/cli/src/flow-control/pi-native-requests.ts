@@ -16,6 +16,7 @@ export class PiNativeRequests {
 	private active = 0;
 	private closed = false;
 	private capture?: NativeSourceCapture;
+	private references?: AgentMessage[];
 	constructor(
 		private readonly session: AgentSession,
 		private readonly store: FlowNativeRequestStore,
@@ -34,6 +35,7 @@ export class PiNativeRequests {
 				this.assertActive();
 				this.active++;
 				this.capture = undefined;
+				this.references = undefined;
 				try {
 					const sourceHash = hash(messages),
 						references = [...messages];
@@ -79,6 +81,46 @@ export class PiNativeRequests {
 						}),
 					};
 					this.capture = capture;
+					this.references = references;
+					return result;
+				} finally {
+					this.active--;
+				}
+			});
+			const convert = session.agent.convertToLlm;
+			this.hooks.set(session.agent, "convertToLlm", async (messages) => {
+				this.assertActive();
+				this.active++;
+				try {
+					const capture = this.capture,
+						references = this.references;
+					if (!capture?.context || !references)
+						throw new FlowLedgerError("identity", "Native model conversion lacks source context.");
+					if (hash(messages) !== capture.context.hash)
+						throw new FlowLedgerError("stale", "Native context changed before model conversion.");
+					const result = await convert(messages);
+					this.assertActive();
+					const positions = new Map<AgentMessage, number[]>();
+					for (const [index, message] of result.entries()) {
+						const existing = positions.get(message) ?? [];
+						existing.push(index);
+						positions.set(message, existing);
+					}
+					capture.model = {
+						hash: hash(result),
+						count: result.length,
+						members: capture.members.map((member, offset) => {
+							const original = references[member.index];
+							const matches = positions.get(original) ?? [];
+							if (capture.context?.members[offset].status === "unresolved" || matches.length !== 1)
+								return { sourceIndex: member.index, status: "unresolved" };
+							return {
+								sourceIndex: member.index,
+								status: hash(original) === member.messageHash ? "intact" : "changed",
+								index: matches[0],
+							};
+						}),
+					};
 					return result;
 				} finally {
 					this.active--;
@@ -104,6 +146,10 @@ export class PiNativeRequests {
 						this.capture.context.hash !== hash(input.transformedMessages)
 					)
 						throw new FlowLedgerError("stale", "Native context changed after source disposition capture.");
+					if (identifySources && !this.capture?.model)
+						throw new FlowLedgerError("identity", "Native request has no model conversion checkpoint.");
+					if (this.capture?.model && this.capture.model.hash !== hash(input.modelMessages))
+						throw new FlowLedgerError("stale", "Native model input changed after source disposition capture.");
 					await store.begin({
 						id: input.requestId,
 						sourceHash: hash(input.sourceMessages),
@@ -115,6 +161,7 @@ export class PiNativeRequests {
 					this.pending = input.requestId;
 				} finally {
 					this.capture = undefined;
+					this.references = undefined;
 					this.active--;
 				}
 			},
@@ -235,6 +282,7 @@ export class PiNativeRequests {
 		if (this.pending) await this.store.finish(this.pending, "withheld");
 		this.pending = undefined;
 		this.capture = undefined;
+		this.references = undefined;
 		this.closed = true;
 		this.hooks.close();
 		attached.delete(this.session);

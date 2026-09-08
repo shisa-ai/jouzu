@@ -16,6 +16,7 @@ export async function nativeRequests(
 		native,
 		retainInputs = false,
 		contextTransform,
+		modelTransform,
 		identifySources,
 		manager,
 	} = {},
@@ -40,6 +41,10 @@ export async function nativeRequests(
 	const scope = { sessionId: session.sessionId, branchId: "main" };
 	attachment = await PiFlowAttachment.open(join(root, "receipts"), scope);
 	if (contextTransform) session.agent.transformContext = contextTransform;
+	if (modelTransform) {
+		const convert = session.agent.convertToLlm;
+		session.agent.convertToLlm = async (messages) => modelTransform(await convert(messages));
+	}
 	if (retainInputs) dispatch = new PiNativeDispatch(session, attachment.submissions);
 	const sent = [];
 	session.agent.streamFunction =

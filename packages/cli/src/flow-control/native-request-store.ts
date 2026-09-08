@@ -20,15 +20,17 @@ export interface NativeRequestSource {
 	prompt?: { inputIndex: number; messageIndex: number };
 	queue?: { id: string; revision: number };
 }
+export interface NativeSourceDisposition {
+	hash: string;
+	count: number;
+	members: { sourceIndex: number; status: "intact" | "changed" | "unresolved"; index?: number }[];
+}
 export interface NativeSourceCapture {
 	hash: string;
 	count: number;
 	members: NativeRequestSource[];
-	context?: {
-		hash: string;
-		count: number;
-		members: { sourceIndex: number; status: "intact" | "changed" | "unresolved"; index?: number }[];
-	};
+	context?: NativeSourceDisposition;
+	model?: NativeSourceDisposition;
 }
 interface Header {
 	version: 1;
@@ -115,12 +117,16 @@ export class FlowNativeRequestStore {
 					positions.add(member.index);
 					sources.add(key);
 				}
-				const context = capture.context;
-				if (context !== undefined) {
+				for (const [stage, expectedHash] of [
+					["context", record.transformedHash],
+					["model", record.modelHash],
+				] as const) {
+					const context = capture[stage];
+					if (context === undefined) continue;
 					if (
 						!context ||
 						!hash(context.hash) ||
-						context.hash !== record.transformedHash ||
+						context.hash !== expectedHash ||
 						!Number.isSafeInteger(context.count) ||
 						context.count < 0 ||
 						!Array.isArray(context.members) ||
@@ -142,6 +148,12 @@ export class FlowNativeRequestStore {
 									mapped.has(member.index))
 						)
 							throw new FlowLedgerError("identity", "Invalid native context source position.");
+						if (
+							stage === "model" &&
+							(!capture.context ||
+								(member.status !== "unresolved" && capture.context.members[offset]?.status === "unresolved"))
+						)
+							throw new FlowLedgerError("identity", "Native model source lacks context provenance.");
 						if (member.index !== undefined) mapped.add(member.index);
 					}
 				}
