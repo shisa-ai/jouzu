@@ -217,7 +217,7 @@ export function transform(path, source) {
 		);
 		change(
 			"            // Switch leaf (with or without summary)",
-			"            await this._flowBinding?.beforeBranchChange();\n            // Switch leaf (with or without summary)",
+			"            if (this._flowBinding) {\n                this._branchSummaryAbortController = undefined;\n                await this._flowBinding.beforeBranchChange();\n            }\n            // Switch leaf (with or without summary)",
 		);
 		change(
 			"            // Emit session_tree event",

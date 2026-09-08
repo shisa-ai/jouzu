@@ -512,11 +512,14 @@ test("branch callbacks drain and attach before tree events while sends remain fe
 	const seen = [];
 	const held = inbox();
 	held.handler.beforeBranchChange = async (scope) => {
+		assert.equal(session.isIdle, true);
+		assert.equal(session.isCompacting, false);
 		seen.push(["before", scope]);
 		before.resolve();
 		await releaseBefore.promise;
 	};
 	held.handler.branchChanged = async (scope) => {
+		assert.equal(session.isIdle, true);
 		seen.push(["after", scope]);
 		after.resolve();
 		await releaseAfter.promise;

@@ -57,6 +57,7 @@ async function fixture(t, native, options = {}) {
 	if (native) {
 		({ session } = await createFlowSession(t, {
 			persist: true,
+			ingress: options.ingress,
 			checkpoints: options.checkpoints,
 			sessionManager: options.sessionManager,
 			extensions: options.extensions,
@@ -845,5 +846,90 @@ for (const navigate of [false, true]) {
 		assert.equal(state.attempts[0].phase, "settled");
 		assert.equal(state.attempts[0].requests[0].payload.inclusion[0].disposition, "included");
 		assert.deepEqual(await first.ledger.snapshot(), before);
+	});
+}
+
+for (const summarize of [false, "extension", "native"]) {
+	test(`Pi: branch lifecycle hands off and attaches before tree events, summary=${summarize}`, async (t) => {
+		let first, second, nextAttachment, navigationSignal;
+		const events = [];
+		const sent = [];
+		const ingress = {
+			version: 1,
+			submit: (_input, dispatch) => dispatch(),
+			async beforeBranchChange() {
+				first.host.handoffNavigation();
+				await first.controller.close();
+				events.push("detached");
+			},
+			async branchChanged() {
+				nextAttachment = await PiFlowAttachment.open(first.storageRoot, {
+					sessionId: first.session.sessionId,
+					branchId: "next",
+				});
+				const host = new PiControllerHost(
+					first.session,
+					nextAttachment.ledger,
+					{
+						projections: new Map([["openai-completions", openAIFlowPayload("openai-completions")]]),
+						maxPayloadBytes: 100000,
+						containsUserInput: () => false,
+					},
+					() => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: [] }),
+				);
+				second = new SessionFlowController(host, 4096);
+				second.register(producer("beta"));
+				events.push("attached");
+			},
+		};
+		first = await fixture(t, true, {
+			ingress,
+			fetch: async (_url, init) => {
+				const body = JSON.parse(init.body);
+				const content = body.messages.findLast((item) => item.role === "user").content;
+				let frame;
+				try {
+					frame = JSON.parse(typeof content === "string" ? content : content[0].text);
+				} catch {
+					/* Native summary prompt. */
+				}
+				sent.push(frame?.flowInput?.[2] ?? "summary");
+				return answer();
+			},
+			extensions: [
+				(pi) =>
+					pi.on("session_before_tree", ({ signal }) => {
+						navigationSignal = signal;
+						if (summarize === "extension") return { summary: { summary: "Retained branch summary" } };
+					}),
+				(pi) =>
+					pi.on("session_tree", () => {
+						events.push("tree");
+					}),
+			],
+		});
+		t.after(async () => {
+			await second?.close();
+			await nextAttachment?.close();
+		});
+		first.controller.register(producer("alpha"));
+		await first.controller.wake();
+		const oldState = await first.ledger.snapshot();
+		const oldPrompt = first.session.prompt.bind(first.session);
+		const target = first.session.sessionManager
+			.getBranch()
+			.find((entry) => entry.type === "message" && entry.message.role === "user");
+		const navigation = await first.session.navigateTree(target.id, { summarize: !!summarize });
+		assert.equal(navigationSignal.aborted, false);
+		if (summarize === "native") assert.match(navigation.summaryEntry.summary, /\n\nDone$/);
+		else if (summarize) assert.equal(navigation.summaryEntry.summary, "Retained branch summary");
+		assert.deepEqual(events, ["detached", "attached", "tree"]);
+		await assert.rejects(oldPrompt("stale"), { code: "stale" });
+		await second.wake();
+		assert.deepEqual(sent, summarize === "native" ? ["alpha", "summary", "beta"] : ["alpha", "beta"]);
+		assert.equal((await nextAttachment.ledger.snapshot()).attempts[0].phase, "settled");
+		assert.deepEqual(await first.ledger.snapshot(), oldState);
+		await first.host.close();
+		await second.close();
 	});
 }

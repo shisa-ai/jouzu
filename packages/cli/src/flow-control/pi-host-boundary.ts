@@ -6,7 +6,7 @@ import { PiHostHooks } from "./pi-host-hooks.js";
 import { FlowLedgerError, type FlowOutcome, type FlowReceiptLedger } from "./receipt-ledger.js";
 
 interface Frame {
-	kind: "operation" | "boundary";
+	kind: "operation" | "navigation" | "boundary";
 	active: boolean;
 }
 export type PiBoundaryResult<T> = { kind: "busy" } | { kind: "idle"; value: T };
@@ -22,6 +22,7 @@ export class PiHostBoundary {
 	private stoppingPromise?: Promise<void>;
 	private drained?: () => void;
 	private navigated = false;
+	private navigationReleased = false;
 	private barrier?: Promise<void>;
 	private readonly sessionId: string;
 	constructor(private readonly session: AgentSession) {
@@ -51,7 +52,7 @@ export class PiHostBoundary {
 				} finally {
 					if (session.sessionManager.getLeafId() !== leaf) this.navigated = true;
 				}
-			}),
+			}, "navigation"),
 		);
 		for (const name of ["steer", "followUp"] as const) {
 			const enqueue = agent[name].bind(agent);
@@ -64,8 +65,11 @@ export class PiHostBoundary {
 		this.hooks.set(session, "setModel", this.wrap(session.setModel.bind(session)));
 		this.hooks.set(session, "cycleModel", this.wrap(session.cycleModel.bind(session)));
 	}
-	private wrap<A extends unknown[], R>(fn: (...args: A) => Promise<R>): (...args: A) => Promise<R> {
-		return (...args) => this.operation(() => fn(...args));
+	private wrap<A extends unknown[], R>(
+		fn: (...args: A) => Promise<R>,
+		kind: "operation" | "navigation" = "operation",
+	): (...args: A) => Promise<R> {
+		return (...args) => this.operation(() => fn(...args), kind);
 	}
 	private assertActive(): void {
 		if (this.closed || this.session.sessionId !== this.sessionId)
@@ -81,6 +85,32 @@ export class PiHostBoundary {
 			this.drained?.();
 		}
 	}
+	/** Call only from ingress beforeBranchChange, after Pi has finished preparing navigation. */
+	handoffNavigation(): void {
+		this.assertWritable();
+		const frame = this.frames.getStore();
+		if (
+			frame?.kind !== "navigation" ||
+			!frame.active ||
+			this.active !== 1 ||
+			this.barrier ||
+			!this.session.isIdle ||
+			this.session.agent.state.isStreaming ||
+			this.session.isRetrying ||
+			this.session.isCompacting ||
+			this.session.agent.hasQueuedMessages() ||
+			this.session.pendingMessageCount
+		)
+			throw new FlowLedgerError(
+				"busy",
+				"Navigation handoff requires prepared navigation with no other active host work.",
+			);
+		this.stopping = true;
+		this.navigationReleased = true;
+		frame.active = false;
+		this.active--;
+		this.notifyDrained();
+	}
 	/** Fence new host writes, abort native execution, and join preflight and idle transactions. */
 	abortAndJoin(): Promise<void> {
 		if (this.frames.getStore()?.active)
@@ -88,7 +118,7 @@ export class PiHostBoundary {
 		this.stopping = true;
 		this.stoppingPromise ??= (async () => {
 			try {
-				await this.session.abort();
+				if (!this.navigationReleased) await this.session.abort();
 			} finally {
 				if (this.active || this.barrier)
 					await new Promise<void>((resolve) => {
@@ -99,7 +129,7 @@ export class PiHostBoundary {
 		})();
 		return this.stoppingPromise;
 	}
-	private async operation<T>(run: () => Promise<T>): Promise<T> {
+	private async operation<T>(run: () => Promise<T>, kind: "operation" | "navigation" = "operation"): Promise<T> {
 		this.assertWritable();
 		const parent = this.frames.getStore();
 		if (parent?.kind === "boundary")
@@ -115,13 +145,15 @@ export class PiHostBoundary {
 		}
 		while (this.barrier) await this.barrier;
 		this.assertWritable();
-		const frame: Frame = { kind: "operation", active: true };
+		const frame: Frame = { kind, active: true };
 		this.active++;
 		try {
 			return await this.frames.run(frame, run);
 		} finally {
-			frame.active = false;
-			this.active--;
+			if (frame.active) {
+				frame.active = false;
+				this.active--;
+			}
 			this.notifyDrained();
 		}
 	}

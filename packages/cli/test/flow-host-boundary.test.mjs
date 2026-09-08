@@ -301,3 +301,46 @@ test("close retains the fence until active preflight exits before restoring meth
 	assert.equal(session.prompt, nativePrompt);
 	assert.deepEqual(requests, []);
 });
+
+test("navigation handoff rejects idle and ordinary-operation callers without fencing them", async (t) => {
+	const { session, boundary, requests } = await fixture(t);
+	assert.throws(() => boundary.handoffNavigation(), { code: "busy" });
+	await boundary.atIdle(async () => assert.throws(() => boundary.handoffNavigation(), { code: "busy" }));
+	const unsubscribe = session.agent.subscribe((event) => {
+		if (event.type === "agent_end") assert.throws(() => boundary.handoffNavigation(), { code: "busy" });
+	});
+	t.after(unsubscribe);
+	await session.prompt("ordinary");
+	assert.equal(requests.length, 1);
+});
+
+test("navigation handoff preserves a concurrent model operation and refuses early detachment", async (t) => {
+	const entered = deferred(),
+		release = deferred();
+	let boundary;
+	const { session } = await createFlowSession(t, {
+		ingress: {
+			version: 1,
+			submit: (_input, dispatch) => dispatch(),
+			beforeBranchChange: () => boundary.handoffNavigation(),
+		},
+		extensions: [
+			(pi) =>
+				pi.on("model_select", async () => {
+					entered.resolve();
+					await release.promise;
+				}),
+		],
+	});
+	const target = session.sessionManager.appendMessage({ role: "user", content: "target", timestamp: 1 });
+	session.sessionManager.appendMessage({ role: "user", content: "later", timestamp: 2 });
+	boundary = new PiHostBoundary(session);
+	t.after(() => boundary.close());
+	const changing = session.setModel({ ...model, id: "other" });
+	await entered.promise;
+	await assert.rejects(session.navigateTree(target), { code: "busy" });
+	assert.equal((await boundary.atIdle(async () => {})).kind, "busy");
+	release.resolve();
+	await changing;
+	assert.equal((await boundary.atIdle(async () => {})).kind, "idle");
+});

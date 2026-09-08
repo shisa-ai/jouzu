@@ -192,6 +192,11 @@ export class PiControllerHost implements FlowControllerHost {
 	async abort(): Promise<void> {
 		await this.boundary.abortAndJoin();
 	}
+	/** Release the prepared navigation callback before closing this branch's controller. */
+	handoffNavigation(): void {
+		this.assertActive();
+		this.boundary.handoffNavigation();
+	}
 	close(): Promise<void> {
 		this.closing ??= this.detach();
 		return this.closing;
