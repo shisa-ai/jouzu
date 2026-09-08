@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import type { Message } from "@earendil-works/pi-ai";
 import type { NativePayloadSource, NativeSourceCapture } from "./native-request-store.js";
+import { payloadRowOrigin } from "./payload-copy.js";
 import { openAIFlowPayload } from "./provider-payload.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
@@ -62,7 +63,9 @@ export class NativePayloadSources {
 				return unresolved;
 			const link = this.links.get(model.index);
 			if (!link) return unresolved;
-			const matches = finalRows.flatMap((row, index) => (row === link.output ? [index] : []));
+			const matches = finalRows.flatMap((row, index) =>
+				payloadRowOrigin(row) === payloadRowOrigin(link.output) ? [index] : [],
+			);
 			if (matches.length !== 1) return unresolved;
 			const index = matches[0];
 			try {

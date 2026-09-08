@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import type { ImageContent, Message, TextContent } from "@earendil-works/pi-ai";
 import type { FlowModelInput } from "./model-input.js";
+import { copyFlowPayload } from "./payload-copy.js";
 import { type FlowInclusion, FlowLedgerError, type FlowReceiptLedger } from "./receipt-ledger.js";
 
 export type FlowPayloadProjection = (payload: unknown) => Message[];
@@ -98,10 +99,8 @@ export async function admitFlowPayload(
 	if (!Number.isSafeInteger(maxBytes) || maxBytes < 1)
 		throw new FlowLedgerError("capacity", "Invalid provider payload byte limit.");
 	// Serialize before awaiting storage: later mutation of the caller's object cannot alter admission.
-	const serialized = JSON.stringify(payload);
-	if (serialized === undefined) throw new FlowLedgerError("schema", "Provider payload is not JSON.");
+	const { serialized, owned } = copyFlowPayload(payload);
 	const bytes = Buffer.byteLength(serialized);
-	const owned: unknown = JSON.parse(serialized);
 	let failure: unknown;
 	let inclusion: FlowInclusion[];
 	try {
