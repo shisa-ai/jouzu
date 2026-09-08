@@ -47,7 +47,7 @@ async function fixture(t, config = {}) {
 		await options?.onPayload?.({ messages: context.messages }, model);
 		return native(model, context, options);
 	};
-	service = await PiFlowSessionService.open(session, options(root));
+	service = await PiFlowSessionService.open(session, { ...options(root), attachWaitSources: config.attachWaitSources });
 	t.after(async () => {
 		await service.close();
 		if (!config.root) await rm(root, { recursive: true, force: true });
@@ -417,4 +417,125 @@ test("native queue cancellation evidence survives session-service reopen", async
 	const [record] = await next.service.branch().attachment.submissions.snapshot();
 	assert.equal(record.dispatch.queueCancellations[0].id, item.id);
 	assert.equal(record.dispatch.queueClaims[0].consumed, false);
+});
+
+test("branch startup awaits source registration and closes each source on navigation", async (t) => {
+	const scopes = [],
+		closed = [];
+	const f = await fixture(t, {
+		attachWaitSources: async (attachment) => {
+			scopes.push(attachment.ledger.scope);
+			attachment.waitProducers.register(
+				{
+					version: 1,
+					namespace: "bg",
+					subscribe: () => () => {},
+					snapshot: async () => {
+						throw new Error("unused");
+					},
+					close: () => {
+						closed.push(attachment.ledger.scope);
+					},
+				},
+				assert.ifError,
+			);
+		},
+	});
+	assert.deepEqual(scopes, [f.service.branch().scope]);
+	await f.session.prompt("question");
+	const user = f.session.sessionManager
+		.getBranch()
+		.find((entry) => entry.type === "message" && entry.message.role === "user");
+	await f.session.navigateTree(user.id);
+	assert.equal(scopes.length, 2);
+	assert.deepEqual(closed, [scopes[0]]);
+	assert.deepEqual(f.service.branch().waitSourceRecovery, { restored: 0, missing: [] });
+	await f.service.close();
+	assert.deepEqual(closed, scopes);
+});
+
+test("reopening reconciles retained executions before exposing the branch and holds missing producers", async (t) => {
+	const first = await fixture(t);
+	const attachment = first.service.branch().attachment;
+	await attachment.waits.registerWork("work", "lane", 0);
+	await attachment.waits.shareWork("work", "lane", 1, "bg", 0);
+	await attachment.waits.registerExecution(
+		{
+			producer: "bg",
+			workId: "work",
+			handle: "bg-1",
+			execution: "exec",
+			revision: 1,
+			predicates: [{ until: "exit", state: "pending" }],
+		},
+		2,
+		0,
+	);
+	await first.service.close();
+	let failedSourceClosed = 0;
+	await assert.rejects(
+		PiFlowSessionService.open(first.session, {
+			...options(first.root),
+			attachWaitSources: async (attachment) => {
+				attachment.waitProducers.register(
+					{
+						version: 1,
+						namespace: "bg",
+						subscribe: () => () => {},
+						snapshot: async () => {
+							throw new Error("snapshot unavailable");
+						},
+						close: () => {
+							failedSourceClosed++;
+						},
+					},
+					assert.ifError,
+				);
+			},
+		}),
+		/snapshot unavailable/,
+	);
+	assert.equal(failedSourceClosed, 1);
+	const manager = () => SessionManager.open(first.session.sessionManager.getSessionFile());
+	const missing = await fixture(t, { root: first.root, manager: manager() });
+	assert.deepEqual(missing.service.branch().waitSourceRecovery, { restored: 0, missing: ["bg"] });
+	assert.equal(missing.service.branch().host.gate().recoveryBlocked, true);
+	await missing.service.close();
+	const entered = deferred(),
+		proceed = deferred();
+	const opening = fixture(t, {
+		root: first.root,
+		manager: manager(),
+		attachWaitSources: async (attachment) => {
+			attachment.waitProducers.register(
+				{
+					version: 1,
+					namespace: "bg",
+					subscribe: () => () => {},
+					snapshot: async (identity) => {
+						entered.resolve();
+						await proceed.promise;
+						return { ...identity, revision: 2, predicates: [{ until: "exit", state: "satisfied" }] };
+					},
+				},
+				assert.ifError,
+			);
+		},
+	});
+	await entered.promise;
+	let opened = false;
+	void opening.then(() => {
+		opened = true;
+	});
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(opened, false);
+	proceed.resolve();
+	const restored = await opening;
+	assert.deepEqual(restored.service.branch().waitSourceRecovery, { restored: 1, missing: [] });
+	assert.equal(restored.service.branch().host.gate().recoveryBlocked, false);
+	assert.equal(
+		(await restored.service.branch().attachment.waits.authoritySnapshot()).executions[0].predicates[0].state,
+		"satisfied",
+	);
+	assert.deepEqual(restored.requests, []);
 });

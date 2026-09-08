@@ -340,6 +340,7 @@ export class PiSessionFlowIngress implements Ingress {
 			this.nativeRecoveryBlocked(submission, branch, phase) ||
 			branch.recovery.unresolved > 0 ||
 			branch.sourceRecovery.unresolved > 0 ||
+			branch.waitSourceRecovery.missing.length > 0 ||
 			state.attempts.some((attempt) => attempt.phase === "uncertain");
 		let decision = decideNativeAdmission(
 			submission,

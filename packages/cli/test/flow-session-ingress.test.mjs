@@ -3018,3 +3018,32 @@ for (const replay of [false, true]) {
 		assert.deepEqual(errors, []);
 	});
 }
+
+test("missing retained producer prevents native user dispatch after reopening", async (t) => {
+	const first = await fixture(t, { provider: true });
+	const waits = first.ingress.branch().attachment.waits;
+	await waits.registerWork("work", "lane", 0);
+	await waits.shareWork("work", "lane", 1, "bg", 0);
+	await waits.registerExecution(
+		{
+			producer: "bg",
+			workId: "work",
+			handle: "bg-1",
+			execution: "exec",
+			revision: 1,
+			predicates: [{ until: "exit", state: "pending" }],
+		},
+		2,
+		0,
+	);
+	await first.ingress.dispose();
+	const reopened = await fixture(t, {
+		root: first.root,
+		manager: SessionManager.open(first.session.sessionManager.getSessionFile()),
+		provider: true,
+	});
+	await reopened.session.prompt("status");
+	assert.deepEqual(reopened.ingress.branch().waitSourceRecovery, { restored: 0, missing: ["bg"] });
+	assert.equal((await reopened.ingress.heldInputs()).length, 1);
+	assert.deepEqual(reopened.sent, []);
+});

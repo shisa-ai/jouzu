@@ -85,7 +85,7 @@ for (const outcome of ["success", "failure", "stop"]) {
 		assert.ok(tools.has("bg_task"));
 		const directory = await mkdtemp(join(tmpdir(), "jouzu-bg-owner-"));
 		const scope = { sessionId: session.sessionId, branchId: "background-branch" };
-		const attachment = await PiFlowAttachment.open(directory, scope);
+		let attachment = await PiFlowAttachment.open(directory, scope);
 		t.after(async () => {
 			await attachment.close();
 			await rm(directory, { recursive: true, force: true });
@@ -128,6 +128,17 @@ for (const outcome of ["success", "failure", "stop"]) {
 		await assert.rejects(source.bind({ ...identity, workId: "other" }, 2), /work/);
 		currentWork = { id: "other", revision: 2 };
 		await source.bind(identity, 2);
+		await attachment.close();
+		attachment = await PiFlowAttachment.open(directory, scope);
+		attachBackgroundWaitSource(
+			attachment,
+			background.backgroundFlowSource,
+			(error) => failures.push(error),
+			() => currentWork,
+		);
+		const restoration = await attachment.waitProducers.restorePending();
+		assert.deepEqual(restoration.missing, []);
+		if (outcome === "stop") assert.equal(restoration.restored, 1);
 		const expected = outcome === "success" ? "resolved" : "failed";
 		const completed = deferred();
 		const unsubscribe = attachment.waits.onChanged(

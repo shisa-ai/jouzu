@@ -21,6 +21,8 @@ export interface PiFlowSessionOptions {
 	decorateNativeContext?: NativeContextDecorator;
 	admitNativeQueue?(record: RetainedSubmission, input: FlowNativeInput): Promise<boolean>;
 	policy(): Omit<FlowAdmissionGates, "hostReady">;
+	/** Register branch-owned sources before retained executions are reconciled. */
+	attachWaitSources?(attachment: PiFlowAttachment): Promise<void>;
 }
 export interface PiFlowBranchResources {
 	scope: Readonly<FlowScope>;
@@ -31,6 +33,7 @@ export interface PiFlowBranchResources {
 	requests: PiNativeRequests;
 	recovery: { recovered: number; unresolved: number };
 	sourceRecovery: { recovered: number; unresolved: number };
+	waitSourceRecovery: { restored: number; missing: string[] };
 }
 
 /** Own session storage and each branch controller across awaited Pi lifecycle callbacks. */
@@ -94,10 +97,15 @@ export class PiFlowSessionService {
 		const attachment = await PiFlowAttachment.open(this.options.root, scope);
 		this.opening = { attachment };
 		try {
+			await this.options.attachWaitSources?.(attachment);
+			const waitSourceRecovery = await attachment.waitProducers.restorePending();
 			const recovery = await recoverPiHistory(this.session.sessionManager, attachment.ledger);
 			const state = await attachment.ledger.snapshot();
 
-			let recoveryBlocked = recovery.unresolved > 0 || state.attempts.some((attempt) => attempt.phase === "uncertain");
+			let recoveryBlocked =
+				waitSourceRecovery.missing.length > 0 ||
+				recovery.unresolved > 0 ||
+				state.attempts.some((attempt) => attempt.phase === "uncertain");
 			const native = new PiNativeDispatch(this.session, attachment.submissions, this.options.admitNativeQueue);
 			this.opening.native = native;
 			const sourceRecovery = await native.recoverSources();
@@ -149,6 +157,7 @@ export class PiFlowSessionService {
 				requests,
 				recovery,
 				sourceRecovery,
+				waitSourceRecovery,
 			};
 			this.opening = undefined;
 		} catch (error) {

@@ -280,3 +280,59 @@ test("active notification floods report a bounded queue failure without unhandle
 	assert.equal(producer.listeners, 0);
 	assert.equal((await f.attachment.waits.authoritySnapshot()).executions[0].revision, 1);
 });
+
+test("restoration reconciles pending execution at the latest work revision without replaying terminal subscriptions", async (t) => {
+	const f = await fixture(t);
+	await f.attachment.waitProducers.register(source(), assert.ifError).bind(identity, 2);
+	await f.attachment.waits.declareOwned("lane", 2, waitRequest(), Date.now(), 100000);
+	await f.attachment.waits.changeWork("work", "lane", 2, "paused", "pause", Date.now());
+	await f.reopen();
+	const producer = source(async () => evidence(2, "satisfied"));
+	f.attachment.waitProducers.register(producer, assert.ifError);
+	assert.deepEqual(await f.attachment.waitProducers.restorePending(), { restored: 1, missing: [] });
+	assert.equal((await f.attachment.waits.snapshot())[0].state, "resolved");
+	assert.deepEqual(await f.attachment.waitProducers.restorePending(), { restored: 0, missing: [] });
+	assert.equal(producer.listeners, 1);
+	await f.reopen();
+	assert.deepEqual(await f.attachment.waitProducers.restorePending(), { restored: 0, missing: [] });
+	assert.equal(producer.listeners, 0);
+});
+
+test("restoration reports missing namespaces and holds readiness through snapshot reconciliation", async (t) => {
+	const f = await fixture(t);
+	await f.attachment.waitProducers.register(source(), assert.ifError).bind(identity, 2);
+	await f.reopen();
+	const registry = f.attachment.waitProducers;
+	assert.deepEqual(await registry.restorePending(), { restored: 0, missing: ["bg"] });
+	const entered = deferred(),
+		proceed = deferred();
+	registry.register(
+		source(async () => {
+			entered.resolve();
+			await proceed.promise;
+			return evidence();
+		}),
+		assert.ifError,
+	);
+	const restoring = registry.restorePending();
+	assert.equal(registry.updating, true);
+	await entered.promise;
+	await assert.rejects(registry.restorePending(), { code: "busy" });
+	proceed.resolve();
+	assert.deepEqual(await restoring, { restored: 1, missing: [] });
+	assert.equal(registry.updating, false);
+	assert.deepEqual(await registry.restorePending(), { restored: 0, missing: [] });
+});
+
+test("restoration cannot count a failed live subscription as reconciled", async (t) => {
+	const f = await fixture(t),
+		producer = source();
+	const binding = await f.attachment.waitProducers
+		.register(producer, (error) => f.errors.push(error))
+		.bind(identity, 2);
+	producer.emit({ ...evidence(2, "satisfied"), workId: "foreign" });
+	await assert.rejects(binding.flush(), { code: "identity" });
+	await assert.rejects(f.attachment.waitProducers.restorePending(), { code: "identity" });
+	assert.equal(f.attachment.waitProducers.updating, false);
+	assert.equal(f.errors.length, 1);
+});

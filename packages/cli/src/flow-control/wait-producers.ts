@@ -23,11 +23,21 @@ export interface FlowWaitExecutionSource {
 	close?(): void | Promise<void>;
 }
 
+interface ProducerRegistration {
+	bind(
+		identity: Omit<FlowExecutionIdentity, "scope">,
+		workRevision: number,
+	): Promise<{ flush(): Promise<void>; close(): Promise<void> }>;
+	flushExecution(execution: string): Promise<boolean>;
+	close(): Promise<void>;
+}
+
 /** One namespace registration per attachment; each execution has one subscription owner. */
 export class FlowWaitProducerRegistry {
-	private readonly producers = new Map<string, { close(): Promise<void> }>();
+	private readonly producers = new Map<string, ProducerRegistration>();
 	private closed = false;
 	private pendingBindings = 0;
+	private restoring = false;
 	private readonly listeners = new Set<{ changed(): void; onError(error: unknown): void }>();
 	onChanged(changed: () => void, onError: (error: unknown) => void): () => void {
 		if (this.closed) throw new FlowLedgerError("stale", "Wait producer registry is closed.");
@@ -49,7 +59,7 @@ export class FlowWaitProducerRegistry {
 			});
 	}
 	get updating(): boolean {
-		return this.pendingBindings > 0;
+		return this.restoring || this.pendingBindings > 0;
 	}
 	constructor(
 		private readonly store: FlowWaitStore,
@@ -78,6 +88,12 @@ export class FlowWaitProducerRegistry {
 		let closed = false;
 		let closing: Promise<void> | undefined;
 		const registration = {
+			flushExecution: async (execution: string) => {
+				const binding = bindings.get(execution);
+				if (!binding) return false;
+				await binding.flush();
+				return true;
+			},
 			bind: async (identity: Omit<FlowExecutionIdentity, "scope">, workRevision: number) => {
 				if (closed || this.closed) throw new FlowLedgerError("stale", "Wait producer registration is closed.");
 				const captured = {
@@ -138,6 +154,42 @@ export class FlowWaitProducerRegistry {
 		};
 		this.producers.set(namespace, registration);
 		return registration;
+	}
+
+	/** Reconcile retained pending executions before the branch admits another request. */
+	async restorePending(): Promise<{ restored: number; missing: string[] }> {
+		if (this.closed) throw new FlowLedgerError("stale", "Wait producer registry is closed.");
+		if (this.updating) throw new FlowLedgerError("busy", "Producer subscriptions are changing.");
+		this.restoring = true;
+		try {
+			const authority = await this.store.authoritySnapshot();
+			const pending = authority.executions.filter((execution) =>
+				execution.predicates.some((predicate) => predicate.state === "pending"),
+			);
+			const missing = [
+				...new Set(
+					pending.filter((execution) => !this.producers.has(execution.producer)).map((execution) => execution.producer),
+				),
+			];
+			let restored = 0;
+			for (const execution of pending) {
+				if (this.closed) throw new FlowLedgerError("stale", "Wait producer registry is closed.");
+				const producer = this.producers.get(execution.producer);
+				if (!producer || (await producer.flushExecution(execution.execution))) continue;
+				const work = authority.work.find((work) => work.id === execution.workId);
+				if (!work) throw new FlowLedgerError("identity", "Retained execution has no owning work.");
+				await producer.bind(
+					{ workId: execution.workId, handle: execution.handle, execution: execution.execution },
+					work.revision,
+				);
+				restored++;
+			}
+			if (this.closed) throw new FlowLedgerError("stale", "Wait producer registry is closed.");
+			return { restored, missing };
+		} finally {
+			this.restoring = false;
+			this.notifyChanged();
+		}
 	}
 
 	async close(): Promise<void> {
