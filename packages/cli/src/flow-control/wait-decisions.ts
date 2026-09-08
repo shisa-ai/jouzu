@@ -61,8 +61,37 @@ async function deliveredNativeDecisions(waits: FlowWaitState[], evidence: Native
 	const delivered = new Set<string>();
 	if (!expected.size) return delivered;
 	const [submissions, requests] = await Promise.all([evidence.submissions.snapshot(), evidence.requests.snapshot()]);
+	const acknowledge = (message: { customType?: unknown; content?: unknown } | undefined) => {
+		if (message?.customType !== "jouzu-wait-context" || typeof message.content !== "string") return;
+		let items: unknown;
+		try {
+			items = JSON.parse(message.content).waitDecisions;
+		} catch {
+			return;
+		}
+		if (!Array.isArray(items)) return;
+		for (const item of items) {
+			if (
+				item?.kind === "wait" &&
+				item.revision === "1" &&
+				typeof item.id === "string" &&
+				typeof item.text === "string" &&
+				expected.get(item.id) === item.text
+			)
+				delivered.add(item.id);
+		}
+	};
 	for (const request of requests) {
 		if (request.outcome !== "success") continue;
+		for (const [offset, projection] of (request.projectionCapture?.members ?? []).entries()) {
+			if (
+				request.projectionCapture?.model?.members[offset]?.status === "converted" &&
+				request.payload?.projections?.some(
+					(item) => item.sourceIndex === projection.index && item.disposition === "included",
+				)
+			)
+				acknowledge(projection.message);
+		}
 		for (const source of request.sourceCapture?.members ?? []) {
 			if (
 				!source.prompt ||
@@ -73,24 +102,7 @@ async function deliveredNativeDecisions(waits: FlowWaitState[], evidence: Native
 			const input = submission?.dispatch?.inputs?.[source.prompt.inputIndex];
 			if (input?.kind !== "context" || source.prompt.messageIndex !== 0) continue;
 			const message = input.args[0] as { customType?: unknown; content?: unknown } | undefined;
-			if (message?.customType !== "jouzu-wait-context" || typeof message.content !== "string") continue;
-			let items: unknown;
-			try {
-				items = JSON.parse(message.content).waitDecisions;
-			} catch {
-				continue;
-			}
-			if (!Array.isArray(items)) continue;
-			for (const item of items) {
-				if (
-					item?.kind === "wait" &&
-					item.revision === "1" &&
-					typeof item.id === "string" &&
-					typeof item.text === "string" &&
-					expected.get(item.id) === item.text
-				)
-					delivered.add(item.id);
-			}
+			acknowledge(message);
 		}
 	}
 	return delivered;

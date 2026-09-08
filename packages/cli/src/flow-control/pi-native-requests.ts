@@ -2,6 +2,11 @@ import { createHash } from "node:crypto";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { AssistantMessage } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
+import {
+	captureNativeProjections,
+	convertNativeProjections,
+	type NativeProjectionCapture,
+} from "./native-context-projections.js";
 import { NativePayloadSources } from "./native-payload-sources.js";
 import type {
 	FlowNativeRequestStore,
@@ -17,7 +22,7 @@ export type NativeContextDecorator = (
 	messages: AgentMessage[],
 	sources: NativeRequestSource[],
 	signal?: AbortSignal,
-) => Promise<AgentMessage[]>;
+) => Promise<AgentMessage[] | { messages: AgentMessage[]; projections: AgentMessage[] }>;
 
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 const attached = new WeakSet<AgentSession>();
@@ -31,10 +36,11 @@ export class PiNativeRequests {
 		this.assertActive();
 		return this.store.blocksQueueing(this.executing ?? this.pending);
 	}
-	private prepared?: { modelHash: string; capture?: NativeSourceCapture };
+	private prepared?: { modelHash: string; capture?: NativeSourceCapture; projections?: NativeProjectionCapture };
 	private active = 0;
 	private closed = false;
 	private capture?: NativeSourceCapture;
+	private projections?: NativeProjectionCapture;
 	private references?: AgentMessage[];
 	private cloneSourceHash?: string;
 	private converting?: AgentMessage[];
@@ -60,6 +66,7 @@ export class PiNativeRequests {
 				this.assertActive();
 				this.active++;
 				this.capture = undefined;
+				this.projections = undefined;
 				this.references = undefined;
 				try {
 					let sourceHash = hash(messages),
@@ -113,7 +120,10 @@ export class PiNativeRequests {
 								? [{ ...member, index }]
 								: [];
 						});
-						result = await decorateContext(result, structuredClone(intact), signal);
+						const decorated = await decorateContext(result, structuredClone(intact), signal);
+						result = Array.isArray(decorated) ? decorated : decorated.messages;
+						if (!Array.isArray(decorated) && decorated.projections.length)
+							this.projections = captureNativeProjections(result, decorated.projections);
 					}
 					this.cloneSourceHash = undefined;
 					const contextReferences = this.references;
@@ -198,6 +208,7 @@ export class PiNativeRequests {
 							return { sourceIndex: member.index, status, index: matches[0], messageHash };
 						}),
 					};
+					if (this.projections) convertNativeProjections(this.projections, result, this.conversion);
 					return result;
 				} finally {
 					this.converting = undefined;
@@ -324,6 +335,7 @@ export class PiNativeRequests {
 							modelHash: hash(input.modelMessages),
 							systemHash: hash(input.systemPrompt),
 							...(this.capture ? { sourceCapture: this.capture } : {}),
+							...(this.projections ? { projectionCapture: this.projections } : {}),
 						},
 						enforceRequiredSources,
 						await consumedSources?.(),
@@ -332,6 +344,7 @@ export class PiNativeRequests {
 					this.prepared = {
 						modelHash: hash(input.modelMessages),
 						capture: this.capture ? structuredClone(this.capture) : undefined,
+						projections: this.projections ? structuredClone(this.projections) : undefined,
 					};
 				} finally {
 					this.capture = undefined;
@@ -350,6 +363,7 @@ export class PiNativeRequests {
 			const prepared = this.prepared;
 			this.prepared = undefined;
 			const sources = new NativePayloadSources(context.messages, prepared?.capture);
+			const projections = new NativePayloadSources(context.messages, prepared?.projections);
 			this.active++;
 			let handedOff = false;
 			let admitting = false;
@@ -376,7 +390,10 @@ export class PiNativeRequests {
 								"transition",
 								"Native provider source mapping arrived after payload admission.",
 							);
-						if (model.api === "openai-completions") sources.observe(source, output);
+						if (model.api === "openai-completions") {
+							sources.observe(source, output);
+							projections.observe(source, output);
+						}
 						options?.onMessageConverted?.(source, output);
 					},
 					onPayload: async (payload, requestModel) => {
@@ -406,6 +423,15 @@ export class PiNativeRequests {
 							provider: model.provider,
 							model: model.id,
 							...(membership ? { sources: membership } : {}),
+							...(prepared.projections
+								? {
+										projections: projections.inspect(
+											model.api,
+											replacement === undefined ? payload : replacement,
+											owned,
+										),
+									}
+								: {}),
 						});
 						if (!admitted)
 							throw new FlowLedgerError(
@@ -481,6 +507,7 @@ export class PiNativeRequests {
 		this.pending = undefined;
 		this.prepared = undefined;
 		this.capture = undefined;
+		this.projections = undefined;
 		this.references = undefined;
 		this.closed = true;
 		this.hooks.close();

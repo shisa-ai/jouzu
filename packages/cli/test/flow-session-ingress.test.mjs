@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -2594,5 +2595,103 @@ for (const streamingBehavior of ["steer", "followUp"]) {
 		);
 		await f.ingress.dispose();
 		assert.deepEqual(errors, []);
+	});
+}
+
+for (const lane of ["steer", "followUp"]) {
+	test(`terminal wait decisions join a consumed ${lane} user turn and stay acknowledged after reopen`, async (t) => {
+		const f = await fixture(t, { provider: true, admit: null });
+		await f.session.prompt("initial request");
+		const branch = f.ingress.branch();
+		await f.session[lane]("queued terminal status");
+		const wait = await declareIngressWait(branch);
+		await branch.attachment.waits.declare(
+			{ ...wait, token: "other-wait", workId: "other-work" },
+			wait.observations.map((observation) => ({ ...observation, workId: "other-work" })),
+			0,
+			100,
+		);
+		await branch.attachment.waits.expireDue(100);
+		await f.session.agent.continue();
+		assert.equal(f.sent.length, 2);
+		const [request] = (await branch.attachment.nativeRequests.snapshot()).filter(
+			(request) => request.projectionCapture,
+		);
+		assert.ok(request, f.session.agent.state.errorMessage);
+		assert.equal(request.outcome, "success");
+		assert.equal(request.projectionCapture.members.length, 1);
+		assert.equal(request.projectionCapture.model.members[0].status, "converted");
+		assert.equal(request.payload.projections[0].disposition, "included");
+		const snapshot = JSON.parse(request.projectionCapture.members[0].message.content);
+		assert.equal(snapshot.waitDecisions.length, 2);
+		assert.ok(snapshot.waitDecisions.every((item) => JSON.parse(item.text).wait.state === "expired"));
+		const forged = structuredClone(request);
+		forged.id = "forged-projection";
+		forged.projectionCapture.members[0].message.content = "different context";
+		forged.projectionCapture.members[0].messageHash = createHash("sha256")
+			.update(JSON.stringify(forged.projectionCapture.members[0].message))
+			.digest("hex");
+		await assert.rejects(branch.attachment.nativeRequests.begin(forged), { code: "identity" });
+		assert.ok(JSON.stringify(f.sent[1]).includes("waitDecisions"));
+		assert.equal(
+			f.session.agent.state.messages.filter((message) => message.customType === "jouzu-wait-context").length,
+			0,
+		);
+		const decisions = createFlowWaitDecisionProducer(branch.attachment.waits, {
+			submissions: branch.attachment.submissions,
+			requests: branch.attachment.nativeRequests,
+		});
+		assert.deepEqual(await decisions.snapshot(new AbortController().signal), []);
+		await f.ingress.dispose();
+		const next = await fixture(t, {
+			root: f.root,
+			provider: true,
+			admit: null,
+			manager: SessionManager.open(f.session.sessionManager.getSessionFile()),
+		});
+		const restored = next.ingress.branch().attachment;
+		assert.deepEqual(
+			await createFlowWaitDecisionProducer(restored.waits, {
+				submissions: restored.submissions,
+				requests: restored.nativeRequests,
+			}).snapshot(new AbortController().signal),
+			[],
+		);
+		assert.equal(next.sent.length, 0);
+	});
+}
+
+for (const change of ["alter", "drop", "copy"]) {
+	test(`projected terminal context cannot acknowledge its decision after payload change: ${change}`, async (t) => {
+		const f = await fixture(t, { provider: true, admit: null });
+		await f.session.prompt("initial request");
+		const branch = f.ingress.branch();
+		await f.session.followUp("queued status with a payload change");
+		await declareIngressWait(branch);
+		await branch.attachment.waits.expireDue(100);
+		const stream = f.session.agent.streamFunction;
+		f.session.agent.streamFunction = (model, context, options) =>
+			stream(model, context, {
+				...options,
+				onPayload: async (payload, model) => {
+					const index = payload.messages.findIndex((message) => JSON.stringify(message).includes("waitDecisions"));
+					assert.ok(index >= 0);
+					if (change === "alter") payload.messages[index].content = "changed decision text";
+					if (change === "drop") payload.messages.splice(index, 1);
+					if (change === "copy") payload.messages[index] = structuredClone(payload.messages[index]);
+					return (await options.onPayload?.(payload, model)) ?? payload;
+				},
+			});
+		await f.session.agent.continue();
+		const [request] = (await branch.attachment.nativeRequests.snapshot()).filter(
+			(request) => request.projectionCapture,
+		);
+		assert.ok(request, f.session.agent.state.errorMessage);
+		assert.equal(request.payload.projections[0].disposition, change === "alter" ? "changed" : "unresolved");
+		const decisions = createFlowWaitDecisionProducer(branch.attachment.waits, {
+			submissions: branch.attachment.submissions,
+			requests: branch.attachment.nativeRequests,
+		});
+		assert.equal((await decisions.snapshot(new AbortController().signal)).length, 1);
 	});
 }

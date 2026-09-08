@@ -98,14 +98,21 @@ export class PiSessionFlowIngress implements Ingress {
 						);
 					});
 					if (!user) return messages;
-					const content = await this.userWaitContext(branch, false, true);
+					const content = await this.userWaitContext(branch, true, true);
 					if (content === undefined) return messages;
 					signal?.throwIfAborted();
 					if (this.branch() !== branch) throw new FlowLedgerError("stale", "Queued user context branch changed.");
-					return [
-						...messages,
-						{ role: "custom", customType: "jouzu-wait-context", content, display: false, timestamp: 0 },
-					];
+					const projection = {
+						role: "custom" as const,
+						customType: "jouzu-wait-context",
+						content,
+						display: false,
+						timestamp: 0,
+					};
+					return {
+						messages: [...messages, projection],
+						projections: JSON.parse(content).waitDecisions.length ? [projection] : [],
+					};
 				},
 				admitNativeQueue: (record, input) =>
 					this.track(async () => {

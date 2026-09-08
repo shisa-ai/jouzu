@@ -1,4 +1,5 @@
 import { BACKGROUND_CONTEXT, type Session, setValue, value } from "@earendil-works/pi-agent-core";
+import { type NativeProjectionCapture, validateNativeProjections } from "./native-context-projections.js";
 import type { FlowOwnership } from "./ownership.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 
@@ -10,6 +11,7 @@ export interface NativeRequest {
 	modelHash: string;
 	systemHash: string;
 	sourceCapture?: NativeSourceCapture;
+	projectionCapture?: NativeProjectionCapture;
 	requiredSources?: number[];
 	cancelledSources?: number[];
 	retryOf?: string;
@@ -22,6 +24,7 @@ export interface NativeRequest {
 		model: string;
 		provider: string;
 		sources?: NativePayloadSource[];
+		projections?: NativePayloadSource[];
 	};
 	outcome?: "success" | "failure" | "aborted" | "withheld";
 }
@@ -147,6 +150,13 @@ export class FlowNativeRequestStore {
 			)
 				throw new FlowLedgerError("identity", "Invalid cancelled native source positions.");
 			const payload = record.payload ?? record.withheldPayload;
+			validateNativeProjections(record.projectionCapture, record.transformedHash, record.modelHash, payload);
+			if (
+				record.projectionCapture &&
+				(record.projectionCapture.count !== record.sourceCapture?.context?.count ||
+					record.projectionCapture.model?.count !== record.sourceCapture?.model?.count)
+			)
+				throw new FlowLedgerError("identity", "Projection and native conversion capture different contexts.");
 			if (
 				record.withheldPayload !== undefined &&
 				(!record.requiredSources?.length || record.payload || record.outcome !== "withheld")
@@ -429,6 +439,7 @@ export class FlowNativeRequestStore {
 			modelHash: input.modelHash,
 			systemHash: input.systemHash,
 			...(input.sourceCapture !== undefined ? { sourceCapture: structuredClone(input.sourceCapture) } : {}),
+			...(input.projectionCapture !== undefined ? { projectionCapture: structuredClone(input.projectionCapture) } : {}),
 		};
 		return this.transact((records) => {
 			if (records.some((record) => record.id === captured.id))

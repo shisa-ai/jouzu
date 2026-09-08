@@ -24,7 +24,7 @@ export class NativePayloadSources {
 	private readonly links = new Map<number, { output: unknown; contentHash?: string; changed: boolean } | null>();
 	constructor(
 		messages: Message[],
-		private readonly capture?: NativeSourceCapture,
+		private readonly capture?: { members: { index: number }[]; model?: NativeSourceCapture["model"] },
 	) {
 		for (const [index, message] of messages.entries()) {
 			const positions = this.sources.get(message) ?? [];
