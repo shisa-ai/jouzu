@@ -6,7 +6,7 @@ import { bindPiFlowBranch, completePiFlowNavigation } from "./pi-branch-binding.
 import { PiControllerHost, type PiControllerHostOptions } from "./pi-controller-host.js";
 import { recoverPiHistory } from "./pi-history-recovery.js";
 import { PiNativeDispatch } from "./pi-native-dispatch.js";
-import { PiNativeRequests } from "./pi-native-requests.js";
+import { type NativeContextDecorator, PiNativeRequests } from "./pi-native-requests.js";
 import { PiFlowSessionRegistry } from "./pi-session-registry.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import type { FlowNativeInput, RetainedSubmission } from "./submission-store.js";
@@ -17,6 +17,7 @@ export interface PiFlowSessionOptions {
 	maxInputBytes: number;
 	maxResultBytes: number;
 	host: Omit<PiControllerHostOptions, "results">;
+	decorateNativeContext?: NativeContextDecorator;
 	admitNativeQueue?(record: RetainedSubmission, input: FlowNativeInput): Promise<boolean>;
 	policy(): Omit<FlowAdmissionGates, "hostReady">;
 }
@@ -107,6 +108,7 @@ export class PiFlowSessionService {
 				(messages) => native.sources(messages),
 				true,
 				() => native.consumedSources(),
+				this.options.decorateNativeContext,
 			);
 			this.opening.requests = requests;
 			const host = new PiControllerHost(

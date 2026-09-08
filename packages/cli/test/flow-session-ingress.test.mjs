@@ -2463,3 +2463,77 @@ test("oversized live wait context reports remaining count without truncating the
 	assert.equal((await branch.attachment.waits.snapshot())[1].reason, "長".repeat(4000));
 	assert.equal(f.sent.length, 1);
 });
+
+for (const lane of ["steer", "followUp"]) {
+	test(`queued ${lane} user input receives live wait state at consumption without a context append`, async (t) => {
+		const clock = ingressWaitClock(),
+			errors = [];
+		const f = await fixture(t, {
+			provider: true,
+			autoRelease: { clock, onError: (error) => errors.push(error) },
+			admit: async (_submission, _branch, phase) => {
+				if (phase === "queue") clock.advance(40);
+				return true;
+			},
+		});
+		await f.session.prompt("start queue consumption");
+		const branch = f.ingress.branch();
+		clock.advance(10);
+		await f.session[lane]("queued status 日本語\nkeep original bytes");
+		await declareIngressWait(branch);
+		await f.session.agent.continue();
+		const payload = f.sent.find((messages) => JSON.stringify(messages).includes("queued status"));
+		assert.ok(payload);
+		const text = JSON.stringify(payload);
+		assert.ok(text.includes('\\"capturedAt\\":40'));
+		assert.ok(text.includes('\\"elapsedMs\\":40'));
+		assert.ok(text.includes('\\"expiresAt\\":100'));
+		assert.ok(text.includes('\\"token\\":\\"wait\\"'));
+		assert.equal(
+			f.session.agent.state.messages.filter((message) => message.customType === "jouzu-wait-context").length,
+			0,
+		);
+		assert.equal((await branch.attachment.waits.snapshot())[0].expiresAt, 100);
+		const records = await branch.attachment.submissions.snapshot();
+		const queued = records.find((record) => record.submission.api === lane);
+		assert.equal(queued.submission.args[0], "queued status 日本語\nkeep original bytes");
+		const requests = await branch.attachment.nativeRequests.snapshot();
+		assert.ok(
+			requests.some(
+				(request) =>
+					request.outcome === "success" &&
+					request.sourceCapture?.members.some(
+						(member) =>
+							member.operationId === queued.dispatch.operationId &&
+							member.queue &&
+							request.payload?.sources.some(
+								(source) => source.sourceIndex === member.index && source.disposition === "included",
+							),
+					),
+			),
+		);
+		await f.ingress.dispose();
+		assert.deepEqual(errors, []);
+	});
+}
+
+test("queued user context clears a wait cancelled during queue admission", async (t) => {
+	const f = await fixture(t, {
+		provider: true,
+		admit: async (_submission, branch, phase) => {
+			if (phase === "queue") await branch.attachment.waits.cancel("wait", "redirected", 20);
+			return true;
+		},
+	});
+	await f.session.prompt("start queue consumption");
+	await declareIngressWait(f.ingress.branch());
+	await f.session.followUp("cancelled wait status");
+	await f.session.agent.continue();
+	const payload = f.sent.find((messages) => JSON.stringify(messages).includes("cancelled wait status"));
+	assert.ok(payload);
+	const text = JSON.stringify(payload);
+	assert.ok(text.includes('\\"liveWaits\\":[]'));
+	assert.ok(text.includes('\\"remainingLiveWaits\\":0'));
+	assert.equal(f.sent.length, 2);
+	await f.ingress.dispose();
+});

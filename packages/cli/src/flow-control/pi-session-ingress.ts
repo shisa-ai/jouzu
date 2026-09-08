@@ -14,7 +14,7 @@ import { createFlowWaitDecisionProducer } from "./wait-decisions.js";
 
 type Ingress = NonNullable<CreateAgentSessionOptions["flowIngress"]>;
 type Submission = Parameters<Ingress["submit"]>[0];
-export interface PiFlowIngressOptions extends Omit<PiFlowSessionOptions, "admitNativeQueue"> {
+export interface PiFlowIngressOptions extends Omit<PiFlowSessionOptions, "admitNativeQueue" | "decorateNativeContext"> {
 	/** Opt in to host-boundary release; failures require visible host reporting. */
 	autoRelease?: { onError(error: unknown): void; clock?: FlowWaitClock };
 	/** Semantic admission override; omission uses conservative unadapted-send admission. */
@@ -75,6 +75,32 @@ export class PiSessionFlowIngress implements Ingress {
 						...policy,
 						userPending: policy.userPending || this.activeUserInput > 0 || this.retainedUserInput.size > 0,
 					};
+				},
+				decorateNativeContext: async (messages, sources, signal) => {
+					const branch = this.branch();
+					// Queue receipts identify consumed user input; text and delivery lanes do not.
+					if (messages.at(-1)?.role !== "user" || !sources.some((source) => source.queue)) return messages;
+					const records = await branch.attachment.submissions.snapshot();
+					const user = sources.some((source) => {
+						if (!source.queue || source.index !== messages.length - 1) return false;
+						const record = records.find((record) => record.dispatch?.operationId === source.operationId);
+						return (
+							record &&
+							isNativeUserInput(record.submission) &&
+							record.dispatch?.inputs?.some(
+								(input) => input.queue?.id === source.queue?.id && input.queue?.revision === source.queue?.revision,
+							)
+						);
+					});
+					if (!user) return messages;
+					const content = await this.userWaitContext(branch, false, true);
+					if (content === undefined) return messages;
+					signal?.throwIfAborted();
+					if (this.branch() !== branch) throw new FlowLedgerError("stale", "Queued user context branch changed.");
+					return [
+						...messages,
+						{ role: "custom", customType: "jouzu-wait-context", content, display: false, timestamp: 0 },
+					];
 				},
 				admitNativeQueue: (record, input) =>
 					this.track(async () => {
@@ -392,9 +418,12 @@ export class PiSessionFlowIngress implements Ingress {
 			if (user) this.activeUserInput--;
 		});
 	}
-	private async appendUserWaitContext(branch: PiFlowBranchResources): Promise<boolean> {
-		const session = this.session;
-		if (!session?.isIdle || session.isStreaming || session.isRetrying || session.isCompacting) return false;
+	private async userWaitContext(
+		branch: PiFlowBranchResources,
+		includeDecisions = true,
+		forceEmpty = false,
+	): Promise<string | undefined> {
+		const session = this.session!;
 		const signal = new AbortController().signal;
 		const capturedAt = this.options.autoRelease?.clock?.now() ?? Date.now();
 		if (!Number.isSafeInteger(capturedAt) || capturedAt < 0)
@@ -424,7 +453,7 @@ export class PiSessionFlowIngress implements Ingress {
 		const ledger = await branch.attachment.ledger.snapshot();
 		const candidates = (await source.snapshot(signal)).filter((intent) => !retainedByReceipt(intent, ledger));
 		let clearPrevious = false;
-		if (!candidates.length && !live.length) {
+		if ((!forceEmpty || !waits.length) && !candidates.length && !live.length) {
 			for (const message of [...session.agent.state.messages].reverse()) {
 				if (
 					message.role !== "custom" ||
@@ -442,7 +471,7 @@ export class PiSessionFlowIngress implements Ingress {
 				}
 				break;
 			}
-			if (!clearPrevious) return false;
+			if (!clearPrevious) return undefined;
 		}
 		const selected: FlowInputItem[] = [];
 		const selectedLive: typeof live = [];
@@ -461,7 +490,7 @@ export class PiSessionFlowIngress implements Ingress {
 			if (Buffer.byteLength(encode(selected, [...selectedLive, wait])) <= this.options.maxInputBytes)
 				selectedLive.push(wait);
 		}
-		for (const intent of candidates) {
+		for (const intent of includeDecisions ? candidates : []) {
 			if (this.branch() !== branch) throw new FlowLedgerError("stale", "User wait context branch changed.");
 			const item = await source.build(intent, signal);
 			if (Buffer.byteLength(encode([...selected, item])) <= this.options.maxInputBytes) selected.push(item);
@@ -470,6 +499,13 @@ export class PiSessionFlowIngress implements Ingress {
 		if (Buffer.byteLength(content) > this.options.maxInputBytes)
 			throw new FlowLedgerError("capacity", "Wait context summary exceeds the input limit.");
 		if (this.branch() !== branch) throw new FlowLedgerError("stale", "User wait context branch changed.");
+		return content;
+	}
+	private async appendUserWaitContext(branch: PiFlowBranchResources): Promise<boolean> {
+		const session = this.session;
+		if (!session?.isIdle || session.isStreaming || session.isRetrying || session.isCompacting) return false;
+		const content = await this.userWaitContext(branch);
+		if (content === undefined) return false;
 		const id = randomUUID();
 		const message = { customType: "jouzu-wait-context", content, display: false, details: { waitContextId: id } };
 		const options = { triggerTurn: false };

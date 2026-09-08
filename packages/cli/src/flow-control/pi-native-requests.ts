@@ -13,6 +13,12 @@ import { nativeCancelledSources, nativeSourceKey } from "./native-request-store.
 import { PiHostHooks } from "./pi-host-hooks.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
+export type NativeContextDecorator = (
+	messages: AgentMessage[],
+	sources: NativeRequestSource[],
+	signal?: AbortSignal,
+) => Promise<AgentMessage[]>;
+
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 const attached = new WeakSet<AgentSession>();
 
@@ -35,6 +41,7 @@ export class PiNativeRequests {
 		identifySources?: (messages: AgentMessage[]) => Promise<NativeRequestSource[]>,
 		enforceRequiredSources = false,
 		consumedSources?: () => Promise<NativeSourceClaim[]>,
+		decorateContext?: NativeContextDecorator,
 	) {
 		if (!Number.isSafeInteger(maxBytes) || maxBytes < 1)
 			throw new FlowLedgerError("capacity", "Invalid native payload limit.");
@@ -92,7 +99,17 @@ export class PiNativeRequests {
 					};
 					this.references = references;
 					this.cloneSourceHash = sourceHash;
-					const result = transform ? await transform(messages, signal) : messages;
+					let result = transform ? await transform(messages, signal) : messages;
+					if (decorateContext) {
+						const intact = members.flatMap((member) => {
+							const reference = this.references![member.index];
+							const index = result.indexOf(reference);
+							return index >= 0 && result.lastIndexOf(reference) === index && hash(reference) === member.messageHash
+								? [{ ...member, index }]
+								: [];
+						});
+						result = await decorateContext(result, structuredClone(intact), signal);
+					}
 					this.cloneSourceHash = undefined;
 					const contextReferences = this.references;
 					this.assertActive();
