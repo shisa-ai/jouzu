@@ -272,7 +272,10 @@ export class PiSessionFlowIngress implements Ingress {
 		this.branch();
 		const service = this.service;
 		if (!service) return Promise.reject(new FlowLedgerError("stale", "Flow management has no attached session."));
-		return this.track(() => run(service));
+		return this.track(() => run(service)).then((result) => {
+			this.queueRelease(true);
+			return result;
+		});
 	}
 	cancelNativeQueue(id: string, revision: number): Promise<void> {
 		return this.manage(async (service) => {

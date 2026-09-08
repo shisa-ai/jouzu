@@ -2774,3 +2774,70 @@ test("legacy optional projection receipts remain readable without gaining acknow
 	});
 	assert.equal((await decisions.snapshot(new AbortController().signal)).length, 1);
 });
+
+for (const action of ["retry", "retry-with-new-user", "cancel"]) {
+	test(`automatic scheduling after native repair preserves user priority: ${action}`, async (t) => {
+		const clock = ingressWaitClock(),
+			errors = [];
+		const f = await fixture(t, {
+			provider: true,
+			admit: null,
+			autoRelease: { clock, onError: (error) => errors.push(error) },
+		});
+		await f.session.prompt("seed");
+		const branch = f.ingress.branch();
+		await f.session.followUp("held user status 日本語");
+		await declareIngressWait(branch);
+		await branch.attachment.waits.expireDue(100);
+		const stream = f.session.agent.streamFunction;
+		let reject = true;
+		f.session.agent.streamFunction = (model, context, options) =>
+			stream(model, context, {
+				...options,
+				onPayload: async (payload, model) => {
+					if (reject) {
+						const index = payload.messages.findIndex((message) => JSON.stringify(message).includes("waitDecisions"));
+						if (index >= 0) payload.messages.splice(index, 1);
+					}
+					return (await options.onPayload?.(payload, model)) ?? payload;
+				},
+			});
+		await f.session.agent.continue();
+		const prior = await branch.attachment.nativeRequests.snapshot();
+		const held = prior.find((request) => request.outcome === "withheld");
+		assert.ok(held, f.session.agent.state.errorMessage);
+		assert.equal(f.sent.length, 1);
+		reject = false;
+		if (action === "retry-with-new-user") {
+			await f.session.prompt("newer user instruction");
+			assert.equal(f.sent.length, 1);
+		}
+		if (action === "cancel")
+			await f.ingress.cancelNativeSources(held.id, held.withheldPayload.hash, held.requiredSources);
+		else await f.ingress.retryNativeRequest(held.id, held.withheldPayload.hash);
+		await waitForFlow(async () =>
+			(await branch.attachment.nativeRequests.snapshot()).some(
+				(request) =>
+					!prior.some((previous) => previous.id === request.id) &&
+					request.outcome === "success" &&
+					(action === "cancel" || request.retryOf === held.id),
+			),
+		);
+		assert.equal(f.sent.length, 2);
+		assert.equal(JSON.stringify(f.sent[1]).includes("held user status 日本語"), action !== "cancel");
+		if (action === "retry-with-new-user") assert.ok(JSON.stringify(f.sent[1]).includes("newer user instruction"));
+		assert.ok(JSON.stringify(f.sent[1]).includes("expired"));
+		const requests = await branch.attachment.nativeRequests.snapshot();
+		const retry = action === "cancel" ? requests.at(-1) : requests.find((request) => request.retryOf === held.id);
+		if (action !== "cancel") assert.ok(retry.requiredSources.length > 0);
+		assert.ok(
+			retry.requiredSources.every((index) =>
+				retry.payload.sources.some((source) => source.sourceIndex === index && source.disposition === "included"),
+			),
+		);
+		await f.ingress.wakeProducers();
+		assert.equal(f.sent.length, 2);
+		await f.ingress.dispose();
+		assert.deepEqual(errors, []);
+	});
+}
