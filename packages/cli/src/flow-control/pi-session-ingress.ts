@@ -1,5 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import type { AgentSession, CreateAgentSessionOptions } from "@earendil-works/pi-coding-agent";
+import { decideNativeAdmission } from "./native-admission.js";
 import { type PiFlowBranchResources, type PiFlowSessionOptions, PiFlowSessionService } from "./pi-session-service.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowNativeInput } from "./submission-store.js";
@@ -7,8 +8,8 @@ import type { FlowNativeInput } from "./submission-store.js";
 type Ingress = NonNullable<CreateAgentSessionOptions["flowIngress"]>;
 type Submission = Parameters<Ingress["submit"]>[0];
 export interface PiFlowIngressOptions extends Omit<PiFlowSessionOptions, "admitNativeQueue"> {
-	/** Host policy must establish source authority, lane order, wait gates, and independence. */
-	admit(
+	/** Semantic admission override; omission uses conservative unadapted-send admission. */
+	admit?(
 		submission: Submission,
 		branch: PiFlowBranchResources,
 		phase: "submission" | "queue",
@@ -27,6 +28,8 @@ interface Pending {
 export class PiSessionFlowIngress implements Ingress {
 	readonly version = 1 as const;
 	private service?: PiFlowSessionService;
+	private session?: AgentSession;
+	private readonly holds = new Map<string, string>();
 	private opening?: Promise<void>;
 	private closing?: Promise<void>;
 	private disposed = false;
@@ -39,6 +42,7 @@ export class PiSessionFlowIngress implements Ingress {
 	attach(session: AgentSession): Promise<void> {
 		if (this.disposed || this.opening || this.service)
 			return Promise.reject(new FlowLedgerError("stale", "Flow ingress is already attached or closed."));
+		this.session = session;
 		this.opening = (async () => {
 			const service = await PiFlowSessionService.open(session, {
 				...this.options,
@@ -46,7 +50,7 @@ export class PiSessionFlowIngress implements Ingress {
 					this.track(async () => {
 						const branch = this.branch();
 						if (branch.attachment.nativeRequests.recoveryBlocked) return false;
-						const allowed = await this.options.admit(
+						const allowed = await this.admit(
 							structuredClone(record.submission),
 							branch,
 							"queue",
@@ -61,6 +65,42 @@ export class PiSessionFlowIngress implements Ingress {
 		})();
 		return this.opening;
 	}
+	/** Live admission reasons; durable receipts remain available through branch inspection. */
+	heldInputs(): { id: string; reason: string }[] {
+		return [...this.holds].map(([id, reason]) => ({ id, reason }));
+	}
+	private async admit(
+		submission: Submission,
+		branch: PiFlowBranchResources,
+		phase: "submission" | "queue",
+		input?: FlowNativeInput,
+	): Promise<boolean> {
+		if (this.options.admit) return this.options.admit(submission, branch, phase, input);
+		if (!this.session) throw new FlowLedgerError("stale", "Flow ingress has no host session.");
+		const records = await branch.attachment.submissions.snapshot();
+		const state = await branch.attachment.ledger.snapshot();
+		const policy = this.options.policy();
+		const decision = decideNativeAdmission(
+			submission,
+			records,
+			{
+				...policy,
+				recoveryBlocked:
+					policy.recoveryBlocked ||
+					branch.attachment.nativeRequests.recoveryBlocked ||
+					branch.recovery.unresolved > 0 ||
+					branch.sourceRecovery.unresolved > 0 ||
+					state.attempts.some((attempt) => attempt.phase === "uncertain"),
+			},
+			this.session,
+			phase,
+			input,
+		);
+		if (decision.allowed) this.holds.delete(submission.id);
+		else this.holds.set(submission.id, decision.reason);
+		return decision.allowed;
+	}
+
 	branch(): PiFlowBranchResources {
 		if (this.disposed || this.fenced || !this.service)
 			throw new FlowLedgerError("stale", "Flow ingress is not attached to an active branch.");
@@ -106,7 +146,7 @@ export class PiSessionFlowIngress implements Ingress {
 		if (pending.running) return pending.running;
 		const run = this.track(async () => {
 			if (branch.attachment.nativeRequests.recoveryBlocked) return false;
-			if (!(await this.options.admit(structuredClone(pending.submission), branch, "submission"))) return false;
+			if (!(await this.admit(structuredClone(pending.submission), branch, "submission"))) return false;
 			if (this.branch() !== branch || this.pending.get(id) !== pending)
 				throw new FlowLedgerError("stale", "Retained send changed during admission.");
 			if (branch.attachment.nativeRequests.recoveryBlocked) return false;
@@ -131,6 +171,7 @@ export class PiSessionFlowIngress implements Ingress {
 		this.fenced = true;
 		await Promise.allSettled([...this.active]);
 		this.pending.clear();
+		this.holds.clear();
 		await service?.beforeBranchChange();
 	}
 	async branchChanged(): Promise<void> {
@@ -150,6 +191,7 @@ export class PiSessionFlowIngress implements Ingress {
 			await this.opening?.catch(() => {});
 			await Promise.allSettled([...this.active]);
 			this.pending.clear();
+			this.holds.clear();
 			await this.service?.close();
 		})();
 		return this.closing;

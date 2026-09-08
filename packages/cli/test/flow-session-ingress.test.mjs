@@ -7,14 +7,14 @@ import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js";
 
-async function fixture(t, { root: supplied, admit = async () => true, manager } = {}) {
+async function fixture(t, { root: supplied, admit = async () => true, policy, manager } = {}) {
 	const root = supplied ?? (await mkdtemp(join(tmpdir(), "jouzu-ingress-owner-")));
 	const ingress = new PiSessionFlowIngress({
 		root,
 		maxInputBytes: 4096,
 		maxResultBytes: 4096,
 		host: { projections: new Map(), maxPayloadBytes: 100000, containsUserInput: () => true },
-		policy: () => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: [] }),
+		policy: policy ?? (() => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: [] })),
 		admit,
 	});
 	const sent = [];
@@ -406,4 +406,53 @@ test("queue policy receives the reconciled native revision and edited content", 
 	const [request] = await f.ingress.branch().attachment.nativeRequests.snapshot();
 	assert.equal(request.sourceCapture.members[0].queue.revision, 2);
 	assert.equal(request.payload.sources[0].disposition, "included");
+});
+
+test("default ingress holds opaque automation during waits while user input proceeds", async (t) => {
+	let waiting = true;
+	const f = await fixture(t, {
+		admit: null,
+		policy: () => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: waiting ? ["campaign"] : [] }),
+	});
+	await f.session.sendUserMessage("opaque instruction with urgent user labels");
+	const [held] = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.equal(f.sent.length, 0);
+	assert.match(f.ingress.heldInputs()[0].reason, /independence/);
+	await f.session.prompt("manual status");
+	assert.equal(f.sent.length, 1);
+	assert.ok(!JSON.stringify(f.sent).includes("opaque instruction"));
+	waiting = false;
+	assert.equal(await f.ingress.release(held.id, held.revision), true);
+	assert.equal(f.sent.length, 2);
+	assert.ok(JSON.stringify(f.sent[1]).includes("opaque instruction"));
+	assert.deepEqual(f.ingress.heldInputs(), []);
+});
+
+test("default ingress preserves opaque lane order on explicit release", async (t) => {
+	let waiting = true;
+	const f = await fixture(t, {
+		admit: null,
+		policy: () => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: waiting ? ["campaign"] : [] }),
+	});
+	await f.session.sendUserMessage("first");
+	await f.session.sendUserMessage("second");
+	const [first, second] = await f.ingress.branch().attachment.submissions.snapshot();
+	waiting = false;
+	assert.equal(await f.ingress.release(second.id, second.revision), false);
+	assert.match(f.ingress.heldInputs().find((item) => item.id === second.id).reason, /earlier/);
+	assert.equal(await f.ingress.release(first.id, first.revision), true);
+	assert.equal(await f.ingress.release(second.id, second.revision), true);
+	assert.equal(f.sent.length, 2);
+	assert.ok(!JSON.stringify(f.sent[0]).includes("second"));
+});
+
+test("default ingress keeps deferred custom context held without an implicit wake", async (t) => {
+	const f = await fixture(t, { admit: null });
+	await f.session.sendCustomMessage(
+		{ customType: "status", content: "context", display: true },
+		{ triggerTurn: false },
+	);
+	assert.equal(f.sent.length, 0);
+	assert.match(f.ingress.heldInputs()[0].reason, /persistence receipt/);
+	assert.ok(!JSON.stringify(f.session.agent.state.messages).includes("context"));
 });
