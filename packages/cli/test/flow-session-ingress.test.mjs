@@ -1684,3 +1684,73 @@ test("semantic producer request completes through installed ingress and provider
 	assert.equal(recovered.attempts.length, 1);
 	assert.equal(recovered.attempts[0].outcome, "success");
 });
+
+test("ingress producer scheduling releases retained user work before semantic work", async (t) => {
+	let allow = false;
+	const f = await fixture(t, { provider: true, admit: async () => allow });
+	await f.session.prompt("retained user first");
+	const handle = f.ingress.registerProducer({
+		version: 1,
+		namespace: "owned-producer",
+		snapshot: async () => [
+			{
+				id: "work",
+				revision: "1",
+				producer: "owned-producer",
+				sequence: 1,
+				rank: 4,
+				workId: "work",
+				workRevision: "1",
+				independent: true,
+				runnable: true,
+			},
+		],
+		build: async () => ({ id: "work", revision: "1", kind: "work", text: "semantic follows user" }),
+	});
+	await handle.changed();
+	assert.equal(f.sent.length, 0);
+	allow = true;
+	await Promise.all([handle.changed(), handle.changed()]);
+	assert.equal(f.sent.length, 2);
+	assert.ok(JSON.stringify(f.sent[0]).includes("retained user first"));
+	assert.ok(!JSON.stringify(f.sent[0]).includes("semantic follows user"));
+	assert.ok(JSON.stringify(f.sent[1]).includes("semantic follows user"));
+	handle.dispose();
+	await assert.rejects(handle.changed(), { code: "stale" });
+});
+
+test("ingress disposal drains producer scheduling before closing its branch", async (t) => {
+	let release = false;
+	const entered = deferred(),
+		proceed = deferred();
+	const f = await fixture(t, {
+		provider: true,
+		admit: async () => {
+			if (!release) return false;
+			entered.resolve();
+			await proceed.promise;
+			return true;
+		},
+	});
+	await f.session.prompt("pending user");
+	let builds = 0;
+	const handle = f.ingress.registerProducer({
+		version: 1,
+		namespace: "closing-producer",
+		snapshot: async () => [],
+		build: async () => {
+			builds++;
+			throw new Error("unexpected build");
+		},
+	});
+	release = true;
+	const changed = handle.changed();
+	await entered.promise;
+	const rejected = assert.rejects(changed, { code: "stale" });
+	const closing = f.ingress.dispose();
+	proceed.resolve();
+	await Promise.all([closing, rejected]);
+	assert.equal(builds, 0);
+	assert.equal(f.sent.length, 0);
+	assert.throws(() => f.ingress.wakeProducers(), { code: "stale" });
+});

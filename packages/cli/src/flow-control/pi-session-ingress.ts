@@ -1,5 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import type { AgentSession, CreateAgentSessionOptions } from "@earendil-works/pi-coding-agent";
+import type { FlowProducer } from "./controller.js";
 import { awaitingNativeInput, decideNativeAdmission, isNativeUserInput } from "./native-admission.js";
 import { type PiFlowBranchResources, type PiFlowSessionOptions, PiFlowSessionService } from "./pi-session-service.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
@@ -39,6 +40,8 @@ export class PiSessionFlowIngress implements Ingress {
 	private readonly pending = new Map<string, Pending>();
 	private readonly frames = new AsyncLocalStorage<{ active: boolean; id?: string }>();
 	private readonly active = new Set<Promise<unknown>>();
+	private producerWake?: Promise<void>;
+	private producerWakeRequested = false;
 	private activeUserInput = 0;
 	private retainedUserInput = new Set<string>();
 	private unsubscribeIdle?: () => void;
@@ -82,6 +85,47 @@ export class PiSessionFlowIngress implements Ingress {
 		})();
 		return this.opening;
 	}
+	/** Register with this branch's controller; notifications return through the ingress owner. */
+	registerProducer(producer: FlowProducer) {
+		const branch = this.branch();
+		return branch.controller.register(producer, () => {
+			if (this.branch() !== branch)
+				return Promise.reject(new FlowLedgerError("stale", "Producer belongs to another flow branch."));
+			return this.wakeProducers();
+		});
+	}
+	/** Join producer changes, releasing retained user callbacks before semantic selection. */
+	wakeProducers(): Promise<void> {
+		const branch = this.branch();
+		if (this.frames.getStore()?.active)
+			return Promise.reject(new FlowLedgerError("busy", "Producer scheduling cannot join its own ingress operation."));
+		this.producerWakeRequested = true;
+		if (this.producerWake) return this.producerWake;
+		const run = this.track(async () => {
+			do {
+				this.producerWakeRequested = false;
+				if (this.branch() !== branch) throw new FlowLedgerError("stale", "Producer scheduling branch changed.");
+				const users = [...this.pending.entries()].filter(
+					([, pending]) => pending.branch === branch && isNativeUserInput(pending.submission),
+				);
+				for (const [id, pending] of users) {
+					if (this.pending.get(id) !== pending) continue;
+					if (!(await this.release(id, pending.revision))) break;
+				}
+				if (this.branch() !== branch) throw new FlowLedgerError("stale", "Producer scheduling branch changed.");
+				await this.refreshUserInput();
+				await branch.controller.wake();
+			} while (this.producerWakeRequested);
+		});
+		this.producerWake = run;
+		void run
+			.finally(() => {
+				if (this.producerWake === run) this.producerWake = undefined;
+			})
+			.catch(() => {});
+		return run;
+	}
+
 	private async refreshUserInput(): Promise<void> {
 		const records = await this.branch().attachment.submissions.snapshot();
 		this.retainedUserInput = new Set(
