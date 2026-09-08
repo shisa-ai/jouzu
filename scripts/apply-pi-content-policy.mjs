@@ -48,6 +48,23 @@ export async function applyContentPolicy(packageRoot, checkOnly = false) {
 		if (checkOnly || installed !== undefined) throw new Error("Pi content-policy installed types mismatch");
 		writes.push([typesPath, types]);
 	}
+	for (const [key, source, destination] of [
+		["flowIngress", "flow-ingress.js", "dist/core/jouzu-flow-ingress.js"],
+		["flowIngressTypes", "flow-ingress.d.ts", "dist/core/jouzu-flow-ingress.d.ts"],
+	]) {
+		const content = await readFile(join(root, "upstream/pi-content-policy", source), "utf8");
+		if (sha(content) !== lock[key]) throw new Error(`Pi flow ingress source hash mismatch: ${source}`);
+		const target = join(packageRoot, destination);
+		const existing = await readFile(target, "utf8").catch((error) => {
+			if (error.code === "ENOENT") return undefined;
+			throw error;
+		});
+		if (existing !== content) {
+			if (checkOnly || existing !== undefined)
+				throw new Error(`Pi flow ingress installed hash mismatch: ${destination}`);
+			writes.push([target, content]);
+		}
+	}
 	// Verify every input and output before changing any installed dependency file.
 	for (const [path, text] of writes) await writeFile(path, text);
 	return writes.length;

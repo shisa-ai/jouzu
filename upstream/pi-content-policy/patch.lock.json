@@ -21,15 +21,23 @@
 		},
 		"dist/core/sdk.js": {
 			"before": "6969bd56ba8e1628cd033bb15cb15fe38299f00b5ad84f4f8ef37a33a98681c9",
-			"after": "daf1dc1ec8c2c86f8bd6cd604900f58eeeccde4b813c8fce63f4573c5be82c91"
+			"after": "f94ba292a1eb27c42a74c60fe94692b1d19b7f3951f7fd087f5f8c24a362e977"
 		},
 		"dist/core/sdk.d.ts": {
 			"before": "fbb34394c71e113b1f1fb5dd2e3d1da8d559580b339daace88826cd1a666cc4c",
-			"after": "2c724e1e5eb66e8875be7777f2f645f866562d01bf476467f999bcd424322395"
+			"after": "a33ba141c3063a607ca771ac4de411f24e83851efa11ff7229e6c86658743f05"
 		},
 		"dist/core/agent-session.js": {
 			"before": "fb8a3981c20c8c0bbd42231b1c99a10335fb3858b659056b341954de9cfa467f",
-			"after": "4b672563d046b914677500107ec3bc76ff6d55301c03ffa7006c2faefecaa270"
+			"after": "323b88c14dfab6578b038b38304c38b11fdc29f2adf9d70337d1529d15ecf673"
+		},
+		"dist/core/agent-session.d.ts": {
+			"before": "db3bfd2ae08eda4936d8807656f06120e6e62672d6a7798bccba486a0dc994ea",
+			"after": "7d7134314bd343918eb36b27f07612fe79dc7b39c190ecf555f884ed827b247b"
+		},
+		"dist/core/extensions/loader.js": {
+			"before": "a1393de916487a2c47107ac7239f3139dcdb938705f88ba1ea5a954b3c8bb483",
+			"after": "c622b243e3b3240226b99008479ebace42305968d8a81ff4ff2f395c1b14e5cd"
 		},
 		"dist/core/skills.js": {
 			"before": "3b7cc3997c630553eb88931de978e0db623ce51fbf7356e0ab922183885e208c",
@@ -40,5 +48,7 @@
 			"after": "ee73c560e8bbc55bb5590b6edf1a13d417b29c52c6b0716ba286a7798ade752d"
 		}
 	},
-	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863"
+	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863",
+	"flowIngress": "4417b14eb79b3c97e620db515b6e677166716363e5d70dc4e5e08911e02f0b96",
+	"flowIngressTypes": "a7cf916429c87fcbed76ef8a6052f969af93763267580dad84e13a4cbf002da9"
 }

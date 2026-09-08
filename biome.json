@@ -8,6 +8,7 @@
 			"*.json",
 			"packages/*/*.json",
 			"upstream/*.json",
+			"upstream/pi-content-policy/flow-ingress.js",
 			"!package-lock.json",
 			"!!**/node_modules",
 			"!!**/dist"

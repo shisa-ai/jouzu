@@ -98,6 +98,10 @@ export function transform(path, source) {
 		);
 	} else if (path === "dist/core/sdk.js") {
 		change(
+			"        customTools: options.customTools,",
+			"        customTools: options.customTools,\n        flowIngress: options.flowIngress,",
+		);
+		change(
 			"        convertToLlm: convertToLlmWithBlockImages,",
 			"        convertToLlm: convertToLlmWithBlockImages,\n        flowCheckpoints: options.flowCheckpoints,",
 		);
@@ -126,12 +130,42 @@ export function transform(path, source) {
         },`,
 		);
 	} else if (path === "dist/core/sdk.d.ts") {
-		text = `import type { ContentPolicy } from "./jouzu-content-policy.js";\nimport type { FlowCheckpoints } from "@earendil-works/pi-agent-core";\n${text}`;
+		text = `import type { ContentPolicy } from "./jouzu-content-policy.js";\nimport type { FlowCheckpoints } from "@earendil-works/pi-agent-core";\nimport type { FlowIngress } from "./jouzu-flow-ingress.js";\nexport type { FlowIngress, FlowSubmission } from "./jouzu-flow-ingress.js";\n${text}`;
 		change(
 			"export interface CreateAgentSessionOptions {",
-			"export interface CreateAgentSessionOptions {\n    contentPolicy?: ContentPolicy;\n    flowCheckpoints?: FlowCheckpoints;",
+			"export interface CreateAgentSessionOptions {\n    contentPolicy?: ContentPolicy;\n    flowCheckpoints?: FlowCheckpoints;\n    flowIngress?: FlowIngress;",
 		);
 	} else if (path === "dist/core/agent-session.js") {
+		text = `import { FlowIngressBinding } from "./jouzu-flow-ingress.js";\n${text}`;
+		change(
+			"        this._buildRuntime({\n            activeToolNames: this._initialActiveToolNames,",
+			"        this._flowBinding = FlowIngressBinding.install(this, config.flowIngress);\n        this._buildRuntime({\n            activeToolNames: this._initialActiveToolNames,",
+		);
+		change("    dispose() {", "    dispose() {\n        this._flowBinding?.dispose();");
+		change(
+			"    async _runAgentPrompt(messages) {",
+			"    async _runAgentPrompt(messages) {\n        this._flowBinding?.assertActive();",
+		);
+		change(
+			"            await command.handler(args, ctx);",
+			"            if (this._flowBinding) await this._flowBinding.withCommand(command, () => command.handler(args, ctx));\n            else await command.handler(args, ctx);",
+		);
+		change(
+			"            sendMessage: (message, options) => {\n                this.sendCustomMessage(message, options).catch((err) => {",
+			'            sendMessage: (message, options, extensionPath) => {\n                const send = () => this.sendCustomMessage(message, options);\n                (this._flowBinding ? this._flowBinding.fromExtension(extensionPath ?? "<runtime>", send) : send()).catch((err) => {',
+		);
+		change(
+			"            sendUserMessage: (content, options) => {\n                this.sendUserMessage(content, options).catch((err) => {",
+			'            sendUserMessage: (content, options, extensionPath) => {\n                const send = () => this.sendUserMessage(content, options);\n                (this._flowBinding ? this._flowBinding.fromExtension(extensionPath ?? "<runtime>", send) : send()).catch((err) => {',
+		);
+		change(
+			"            // Switch leaf (with or without summary)",
+			"            this._flowBinding?.beforeBranchChange();\n            // Switch leaf (with or without summary)",
+		);
+		change(
+			"            // Emit session_tree event",
+			"            this._flowBinding?.branchChanged();\n            // Emit session_tree event",
+		);
 		change(
 			"    // =========================================================================\n    // Compaction\n    // =========================================================================\n    /** Generate Pi's built-in compaction summary for manual and automatic compaction. */",
 			`    // =========================================================================
@@ -271,6 +305,25 @@ export function transform(path, source) {
         if (event.type === "tool_execution_end" && this.resourceLoader.contentPolicy) {
             event = { ...event, result: { content: event.result.content, details: event.result.details, usage: event.result.usage, terminate: event.result.terminate } };
         }`,
+		);
+	} else if (path === "dist/core/agent-session.d.ts") {
+		text = `import type { FlowIngress } from "./jouzu-flow-ingress.js";\n${text}`;
+		change(
+			"export interface AgentSessionConfig {",
+			"export interface AgentSessionConfig {\n    flowIngress?: FlowIngress;",
+		);
+	} else if (path === "dist/core/extensions/loader.js") {
+		change(
+			"            runtime.sendMessage(message, options);",
+			"            runtime.sendMessage(message, options, extension.path);",
+		);
+		change(
+			"            runtime.sendUserMessage(content, options);",
+			"            runtime.sendUserMessage(content, options, extension.path);",
+		);
+		change(
+			"                name,\n                sourceInfo: extension.sourceInfo,\n                ...options,",
+			"                name,\n                sourceInfo: extension.sourceInfo,\n                ...options,\n                flowExtensionPath: extension.path,",
 		);
 	} else if (path === "dist/core/skills.js") {
 		change(
@@ -807,6 +860,8 @@ export const paths = [
 	"dist/core/sdk.js",
 	"dist/core/sdk.d.ts",
 	"dist/core/agent-session.js",
+	"dist/core/agent-session.d.ts",
+	"dist/core/extensions/loader.js",
 	"dist/core/skills.js",
 	"dist/core/skills.d.ts",
 ];
