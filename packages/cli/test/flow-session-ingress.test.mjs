@@ -2029,3 +2029,104 @@ test("a preempted wait decision retries its retained identity without repeating 
 	await branch.controller.wake();
 	assert.equal(f.sent.length, 1);
 });
+
+function ingressWaitClock(now = 0) {
+	const timers = new Set();
+	return {
+		timers,
+		now: () => now,
+		after(delay, callback) {
+			const timer = { at: now + delay, callback };
+			timers.add(timer);
+			return () => timers.delete(timer);
+		},
+		advance(next) {
+			now = next;
+			for (const timer of [...timers])
+				if (timer.at <= now) {
+					timers.delete(timer);
+					timer.callback();
+				}
+		},
+	};
+}
+async function waitForFlow(predicate) {
+	for (let i = 0; i < 200; i++) {
+		if (await predicate()) return;
+		await new Promise((resolve) => setTimeout(resolve, 5));
+	}
+	assert.fail("automatic flow scheduling did not settle");
+}
+
+test("automatic deadline expiry delivers once without host activity or explicit wake", async (t) => {
+	const clock = ingressWaitClock(),
+		errors = [];
+	const f = await fixture(t, {
+		provider: true,
+		admit: null,
+		autoRelease: { clock, onError: (error) => errors.push(error) },
+	});
+	const branch = f.ingress.branch();
+	await declareIngressWait(branch);
+	await waitForFlow(() => clock.timers.size === 1);
+	clock.advance(99);
+	await new Promise((resolve) => setTimeout(resolve, 20));
+	assert.equal(f.sent.length, 0);
+	clock.advance(100);
+	await waitForFlow(async () => (await branch.attachment.ledger.snapshot()).attempts[0]?.phase === "settled");
+	assert.equal(f.sent.length, 1);
+	await branch.attachment.waits.expireDue(200);
+	await new Promise((resolve) => setTimeout(resolve, 50));
+	assert.equal(f.sent.length, 1);
+	assert.equal(clock.timers.size, 0);
+	assert.deepEqual(errors, []);
+});
+
+test("automatic reattachment delivers an offline deadline and detach clears timers", async (t) => {
+	const clock = ingressWaitClock(),
+		errors = [];
+	const autoRelease = { clock, onError: (error) => errors.push(error) };
+	const f = await fixture(t, { provider: true, admit: null, autoRelease });
+	await declareIngressWait(f.ingress.branch());
+	await waitForFlow(() => clock.timers.size === 1);
+	const callback = [...clock.timers][0].callback;
+	await f.ingress.dispose();
+	assert.equal(clock.timers.size, 0);
+	clock.advance(150);
+	callback();
+	const next = await fixture(t, {
+		root: f.root,
+		provider: true,
+		admit: null,
+		autoRelease,
+		manager: SessionManager.open(f.session.sessionManager.getSessionFile()),
+	});
+	await waitForFlow(
+		async () => (await next.ingress.branch().attachment.ledger.snapshot()).attempts[0]?.phase === "settled",
+	);
+	assert.equal(next.sent.length, 1);
+	assert.equal(f.sent.length, 0);
+	assert.deepEqual(errors, []);
+});
+
+test("committed resolution schedules a decision before its original deadline", async (t) => {
+	const clock = ingressWaitClock(),
+		errors = [];
+	const f = await fixture(t, {
+		provider: true,
+		admit: null,
+		autoRelease: { clock, onError: (error) => errors.push(error) },
+	});
+	const branch = f.ingress.branch(),
+		wait = await declareIngressWait(branch);
+	await waitForFlow(() => clock.timers.size === 1);
+	await branch.attachment.waits.reconcile(
+		"wait",
+		wait.observations.map((item) => ({ ...item, state: "satisfied" })),
+		20,
+	);
+	await waitForFlow(async () => (await branch.attachment.ledger.snapshot()).attempts[0]?.phase === "settled");
+	assert.equal(f.sent.length, 1);
+	assert.equal(clock.timers.size, 0);
+	assert.deepEqual(errors, []);
+});

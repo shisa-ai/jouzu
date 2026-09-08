@@ -48,6 +48,28 @@ export class FlowWaitStore {
 	private initialized = false;
 	private waitingWorkIds: string[] = [];
 	private mutations = 0;
+	private readonly listeners = new Set<{ changed(): void; onError(error: unknown): void }>();
+
+	/** Notifications follow committed changes; unsubscribe suppresses callbacks already queued. */
+	onChanged(changed: () => void, onError: (error: unknown) => void): () => void {
+		this.ownership.assertActive();
+		const listener = { changed, onError };
+		this.listeners.add(listener);
+		return () => {
+			this.listeners.delete(listener);
+		};
+	}
+	private notifyChanged(): void {
+		for (const listener of this.listeners)
+			queueMicrotask(() => {
+				if (!this.listeners.has(listener)) return;
+				try {
+					listener.changed();
+				} catch (error) {
+					listener.onError(error);
+				}
+			});
+	}
 
 	/** Synchronous admission view, published only after a successful durable commit. */
 	gate(): { waitingWorkIds: string[]; updating: boolean } {
@@ -74,6 +96,7 @@ export class FlowWaitStore {
 
 	async stopDeadlines(): Promise<void> {
 		this.schedulingClosed = true;
+		this.listeners.clear();
 		const deadlines = this.deadlines;
 		this.deadlines = undefined;
 		await deadlines?.stop();
@@ -134,7 +157,10 @@ export class FlowWaitStore {
 					return structuredClone(result);
 				}, BACKGROUND_CONTEXT),
 			);
-			if (changed) this.deadlines?.changed();
+			if (changed) {
+				this.deadlines?.changed();
+				this.notifyChanged();
+			}
 			return result;
 		} finally {
 			this.mutations--;

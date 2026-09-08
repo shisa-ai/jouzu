@@ -335,3 +335,26 @@ test("admission gates retain committed waits and block while an atomic mutation 
 	await reopened.cancel("token", "cancel gate", 10);
 	assert.deepEqual(reopened.gate(), { waitingWorkIds: [], updating: false });
 });
+
+test("wait notifications follow changed commits and stop after unsubscribe", async (t) => {
+	const f = await fixture(t),
+		store = f.attachment.waits;
+	let notifications = 0;
+	const stop = store.onChanged(() => {
+		notifications++;
+	}, assert.ifError);
+	await assert.rejects(store.declare(request(), [], 0, 100));
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(notifications, 0);
+	await store.declare(request(), observations(), 0, 100);
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(notifications, 1);
+	await store.expireDue(50);
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(notifications, 1);
+	const cancelling = store.cancel("token", "cancel", 60);
+	stop();
+	await cancelling;
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(notifications, 1);
+});

@@ -7,11 +7,13 @@ import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowNativeInput } from "./submission-store.js";
 import { activeAdmissionHolds } from "./submission-view.js";
 
+import type { FlowWaitClock } from "./wait-deadlines.js";
+
 type Ingress = NonNullable<CreateAgentSessionOptions["flowIngress"]>;
 type Submission = Parameters<Ingress["submit"]>[0];
 export interface PiFlowIngressOptions extends Omit<PiFlowSessionOptions, "admitNativeQueue"> {
 	/** Opt in to host-boundary release; failures require visible host reporting. */
-	autoRelease?: { onError(error: unknown): void };
+	autoRelease?: { onError(error: unknown): void; clock?: FlowWaitClock };
 	/** Semantic admission override; omission uses conservative unadapted-send admission. */
 	admit?(
 		submission: Submission,
@@ -45,6 +47,7 @@ export class PiSessionFlowIngress implements Ingress {
 	private activeUserInput = 0;
 	private retainedUserInput = new Set<string>();
 	private unsubscribeIdle?: () => void;
+	private unsubscribeWaits?: () => void;
 	private scheduledRelease?: ReturnType<typeof setImmediate>;
 	private releaseRequested = false;
 	private semanticReleaseRequested = false;
@@ -82,7 +85,7 @@ export class PiSessionFlowIngress implements Ingress {
 			});
 			this.service = service;
 			await this.refreshUserInput();
-			this.subscribeIdle();
+			await this.startScheduling();
 		})();
 		return this.opening;
 	}
@@ -136,12 +139,21 @@ export class PiSessionFlowIngress implements Ingress {
 		);
 	}
 
-	private subscribeIdle(): void {
-		this.unsubscribeIdle?.();
-		this.unsubscribeIdle = this.options.autoRelease
-			? this.branch().host.onIdle((cause) => this.queueRelease(cause === "operation"))
-			: undefined;
+	private async startScheduling(): Promise<void> {
+		const automatic = this.options.autoRelease;
+		if (!automatic) return;
+		const branch = this.branch();
+		let ready = false;
+		this.unsubscribeIdle = branch.host.onIdle((cause) => this.queueRelease(cause === "operation"));
+		this.unsubscribeWaits = branch.attachment.waits.onChanged(() => {
+			if (ready) this.queueRelease(true);
+		}, automatic.onError);
+		await branch.attachment.waits.startDeadlines(automatic.onError, automatic.clock);
+		ready = true;
+		// Recovered terminal decisions may predate subscription and need no new producer callback.
+		this.queueRelease(true);
 	}
+
 	/** Policy changes and drained host operations use one deferred scheduling entry point. */
 	requestRelease(): void {
 		this.queueRelease(true);
@@ -183,6 +195,8 @@ export class PiSessionFlowIngress implements Ingress {
 		this.semanticReleaseRequested = false;
 		this.unsubscribeIdle?.();
 		this.unsubscribeIdle = undefined;
+		this.unsubscribeWaits?.();
+		this.unsubscribeWaits = undefined;
 		if (this.scheduledRelease) clearImmediate(this.scheduledRelease);
 		this.scheduledRelease = undefined;
 	}
@@ -446,7 +460,7 @@ export class PiSessionFlowIngress implements Ingress {
 		if (!this.disposed) {
 			this.fenced = false;
 			await this.refreshUserInput();
-			this.subscribeIdle();
+			await this.startScheduling();
 		}
 	}
 	dispose(): Promise<void> {
