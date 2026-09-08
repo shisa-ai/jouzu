@@ -2130,3 +2130,71 @@ test("committed resolution schedules a decision before its original deadline", a
 	assert.equal(clock.timers.size, 0);
 	assert.deepEqual(errors, []);
 });
+
+for (const withUser of [false, true])
+	test(`automatic expiry precedes retained automation${withUser ? " after user input" : ""}`, async (t) => {
+		const clock = ingressWaitClock(),
+			errors = [];
+		let allow = false;
+		const f = await fixture(t, {
+			provider: true,
+			autoRelease: { clock, onError: (error) => errors.push(error) },
+			admit: async () => allow,
+		});
+		const branch = f.ingress.branch();
+		await declareIngressWait(branch);
+		await f.session.sendUserMessage("retained automation marker");
+		if (withUser) await f.session.prompt("user priority marker");
+		await waitForFlow(() => clock.timers.size === 1);
+		assert.equal(f.sent.length, 0);
+		allow = true;
+		clock.advance(100);
+		const expected = withUser ? 3 : 2;
+		await waitForFlow(() => f.sent.length === expected);
+		if (withUser) {
+			assert.ok(JSON.stringify(f.sent[0]).includes("user priority marker"));
+			assert.ok(!JSON.stringify(f.sent[0]).includes("retained automation marker"));
+		}
+		const decision = JSON.stringify(f.sent[withUser ? 1 : 0]);
+		assert.ok(decision.includes("expired"));
+		assert.ok(!decision.includes("retained automation marker"));
+		assert.ok(JSON.stringify(f.sent.at(-1)).includes("retained automation marker"));
+		await f.ingress.dispose();
+		assert.deepEqual(errors, []);
+	});
+
+test("expiry during awaited callback admission defers the callback for a fresh semantic pass", async (t) => {
+	const clock = ingressWaitClock(),
+		errors = [],
+		entered = deferred(),
+		proceed = deferred();
+	let allow = false,
+		first = true;
+	const f = await fixture(t, {
+		provider: true,
+		autoRelease: { clock, onError: (error) => errors.push(error) },
+		admit: async () => {
+			if (allow && first) {
+				first = false;
+				entered.resolve();
+				await proceed.promise;
+			}
+			return allow;
+		},
+	});
+	await declareIngressWait(f.ingress.branch());
+	await f.session.sendUserMessage("callback during expiry");
+	await waitForFlow(() => clock.timers.size === 1);
+	allow = true;
+	f.ingress.requestRelease();
+	await entered.promise;
+	clock.advance(100);
+	await waitForFlow(async () => (await f.ingress.branch().attachment.waits.snapshot())[0].state === "expired");
+	proceed.resolve();
+	await waitForFlow(() => f.sent.length === 2);
+	assert.ok(JSON.stringify(f.sent[0]).includes("expired"));
+	assert.ok(!JSON.stringify(f.sent[0]).includes("callback during expiry"));
+	assert.ok(JSON.stringify(f.sent[1]).includes("callback during expiry"));
+	await f.ingress.dispose();
+	assert.deepEqual(errors, []);
+});

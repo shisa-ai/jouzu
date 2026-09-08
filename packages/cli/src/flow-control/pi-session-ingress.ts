@@ -173,11 +173,16 @@ export class PiSessionFlowIngress implements Ingress {
 				this.automaticReleaseRunning = true;
 				const joinedExisting = !!this.releasing;
 				void Promise.resolve()
-					.then(() => this.releaseReady())
-					.then(async (result) => {
-						if (joinedExisting || (result.released.length && result.held.length)) this.releaseRequested = true;
+					.then(async () => {
+						// Drain an already admitted native pass before considering another dispatch.
+						await this.releasing;
 						if (wakeSemantic && !this.disposed && !this.fenced && this.branch().controller.view().producers.length)
 							await this.wakeProducers();
+						// Producer scheduling releases retained users first, then applies semantic rank ordering.
+						return this.releaseReady();
+					})
+					.then((result) => {
+						if (joinedExisting || (result.released.length && result.held.length)) this.releaseRequested = true;
 					})
 					.finally(() => {
 						this.automaticReleaseRunning = false;
@@ -296,6 +301,8 @@ export class PiSessionFlowIngress implements Ingress {
 		}
 		// A boolean host override supplies no authority to bypass a durable dependency wait.
 		const durableWaitDecision = () => {
+			if (this.automaticReleaseRunning && this.semanticReleaseRequested && !isNativeUserInput(submission))
+				return { allowed: false, reason: "Input is waiting for updated semantic admission." } as const;
 			const currentWaits = branch.attachment.waits.gate();
 			if (!currentWaits.updating && currentWaits.waitingWorkIds.length === 0) return { allowed: true } as const;
 			return decideNativeAdmission(
