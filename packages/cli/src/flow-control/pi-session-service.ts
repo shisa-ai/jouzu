@@ -95,10 +95,15 @@ export class PiFlowSessionService {
 				recovery.unresolved > 0 ||
 				state.attempts.some((attempt) => attempt.phase === "uncertain") ||
 				requestsState.some((request) => request.outcome === undefined);
-			const requests = new PiNativeRequests(this.session, attachment.nativeRequests, this.options.host.maxPayloadBytes);
-			this.opening.requests = requests;
 			const native = new PiNativeDispatch(this.session, attachment.submissions);
 			this.opening.native = native;
+			const requests = new PiNativeRequests(
+				this.session,
+				attachment.nativeRequests,
+				this.options.host.maxPayloadBytes,
+				(messages) => native.sources(messages),
+			);
+			this.opening.requests = requests;
 			const host = new PiControllerHost(
 				this.session,
 				attachment.ledger,
@@ -123,13 +128,13 @@ export class PiFlowSessionService {
 		const branch = this.current;
 		if (branch) {
 			await branch.controller.close();
-			await branch.native.close();
 			await branch.requests.close();
+			await branch.native.close();
 			await branch.attachment.close();
 		} else if (this.opening) {
 			await this.opening.host?.close();
-			await this.opening.native?.close();
 			await this.opening.requests?.close();
+			await this.opening.native?.close();
 			await this.opening.attachment.close();
 		}
 		this.current = undefined;

@@ -9,8 +9,21 @@ export interface NativeRequest {
 	transformedHash: string;
 	modelHash: string;
 	systemHash: string;
+	sourceCapture?: NativeSourceCapture;
 	payload?: { hash: string; bytes: number; api: string; model: string; provider: string };
 	outcome?: "success" | "failure" | "aborted" | "withheld";
+}
+export interface NativeRequestSource {
+	index: number;
+	operationId: string;
+	messageHash: string;
+	prompt?: { inputIndex: number; messageIndex: number };
+	queue?: { id: string; revision: number };
+}
+export interface NativeSourceCapture {
+	hash: string;
+	count: number;
+	members: NativeRequestSource[];
 }
 interface Header {
 	version: 1;
@@ -57,6 +70,47 @@ export class FlowNativeRequestStore {
 				(record.outcome !== undefined && record.outcome !== "withheld" && !record.payload)
 			)
 				throw new FlowLedgerError("schema", "Invalid native request receipt.");
+			const capture = record.sourceCapture;
+			if (capture !== undefined) {
+				if (
+					!capture ||
+					!hash(capture.hash) ||
+					!Number.isSafeInteger(capture.count) ||
+					capture.count < 0 ||
+					!Array.isArray(capture.members) ||
+					capture.members.length > 1024
+				)
+					throw new FlowLedgerError("schema", "Invalid native source capture.");
+				const positions = new Set<number>();
+				const sources = new Set<string>();
+				for (const member of capture.members) {
+					if (
+						!member ||
+						!Number.isSafeInteger(member.index) ||
+						member.index < 0 ||
+						member.index >= capture.count ||
+						positions.has(member.index) ||
+						!identity(member.operationId) ||
+						!hash(member.messageHash) ||
+						(member.prompt === undefined) === (member.queue === undefined) ||
+						(member.prompt !== undefined &&
+							(!member.prompt ||
+								![member.prompt.inputIndex, member.prompt.messageIndex].every(
+									(n) => Number.isSafeInteger(n) && n >= 0,
+								))) ||
+						(member.queue !== undefined &&
+							(!member.queue ||
+								!identity(member.queue.id) ||
+								!Number.isSafeInteger(member.queue.revision) ||
+								member.queue.revision < 1))
+					)
+						throw new FlowLedgerError("identity", "Invalid native source message identity.");
+					const key = JSON.stringify([member.operationId, member.prompt, member.queue]);
+					if (sources.has(key)) throw new FlowLedgerError("identity", "Native source message was repeated.");
+					positions.add(member.index);
+					sources.add(key);
+				}
+			}
 		}
 	}
 	private transact<T>(update: (records: NativeRequest[]) => T): Promise<T> {
@@ -110,6 +164,7 @@ export class FlowNativeRequestStore {
 			transformedHash: input.transformedHash,
 			modelHash: input.modelHash,
 			systemHash: input.systemHash,
+			...(input.sourceCapture !== undefined ? { sourceCapture: structuredClone(input.sourceCapture) } : {}),
 		};
 		return this.transact((records) => {
 			if (records.some((record) => record.id === captured.id))

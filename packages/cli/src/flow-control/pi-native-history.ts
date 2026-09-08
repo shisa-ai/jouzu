@@ -1,7 +1,9 @@
+import { createHash } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { ImageContent } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
+import type { NativeRequestSource } from "./native-request-store.js";
 import { verifyPiHistoryEntry } from "./pi-history-receipts.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowSubmissionStore } from "./submission-store.js";
@@ -23,6 +25,7 @@ export class PiNativeHistory {
 	private readonly claimed: Claimed[] = [];
 	private readonly prompts: Claimed[] = [];
 	private readonly starting = new WeakMap<object, Claimed>();
+	private readonly sources = new WeakMap<object, Omit<NativeRequestSource, "index">[]>();
 	private readonly unsubscribe: () => void;
 	constructor(session: AgentSession, store: FlowSubmissionStore) {
 		this.unsubscribe = session.agent.subscribe(async (event) => {
@@ -43,6 +46,22 @@ export class PiNativeHistory {
 					throw new FlowLedgerError("identity", "Native consumed message differs from its observed input.");
 				this.starting.set(event.message, input);
 				if (input.prompt && input.operationId) await store.recordPromptClaim(input.operationId, input.prompt);
+				if (input.operationId) {
+					let reference: Pick<NativeRequestSource, "prompt" | "queue">;
+					if (input.prompt) reference = { prompt: { ...input.prompt } };
+					else {
+						if (!input.id || input.revision === undefined)
+							throw new FlowLedgerError("identity", "Native source has no queue identity.");
+						reference = { queue: { id: input.id, revision: input.revision } };
+					}
+					const sources = this.sources.get(event.message) ?? [];
+					sources.push({
+						operationId: input.operationId,
+						messageHash: createHash("sha256").update(JSON.stringify(event.message)).digest("hex"),
+						...reference,
+					});
+					this.sources.set(event.message, sources);
+				}
 			}
 			if (event.type !== "message_end") return;
 			const input = this.starting.get(event.message);
@@ -77,6 +96,34 @@ export class PiNativeHistory {
 	}
 	accept(inputs: Claimed[]): void {
 		this.claimed.push(...structuredClone(inputs));
+	}
+	identify(messages: AgentMessage[]): NativeRequestSource[] {
+		const counts = new Map<object, number>();
+		for (const message of messages) counts.set(message, (counts.get(message) ?? 0) + 1);
+		const occurrences = new Map<object, number>();
+		return messages.flatMap((message, index) => {
+			const sources = this.sources.get(message);
+			const occurrence = occurrences.get(message) ?? 0;
+			occurrences.set(message, occurrence + 1);
+			// A surviving alias cannot identify which original occurrence was removed.
+			const source = sources?.length === counts.get(message) ? sources?.[occurrence] : undefined;
+			return source ? [{ ...structuredClone(source), index }] : [];
+		});
+	}
+	async validateSources(members: NativeRequestSource[], store: FlowSubmissionStore): Promise<void> {
+		const records = await store.snapshot();
+		for (const member of members) {
+			const dispatch = records.find((record) => record.dispatch?.operationId === member.operationId)?.dispatch;
+			const claimed = member.prompt
+				? dispatch?.promptClaims?.some(
+						(claim) =>
+							claim.inputIndex === member.prompt?.inputIndex && claim.messageIndex === member.prompt.messageIndex,
+					)
+				: dispatch?.queueClaims?.some(
+						(claim) => claim.id === member.queue?.id && claim.revision === member.queue.revision && claim.consumed,
+					);
+			if (!claimed) throw new FlowLedgerError("identity", "Native source has no retained consumption receipt.");
+		}
 	}
 	observePrompt(
 		operationId: string,

@@ -25,6 +25,148 @@ test("native receipts hash the final real-provider payload after transforms", as
 	await assert.rejects(f.store.finish(record.id, "failure"), { code: "transition" });
 });
 
+test("native source capture distinguishes duplicate input by operation before context filtering", async (t) => {
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		contextTransform: async (messages) => structuredClone(messages).slice(1),
+	});
+	await f.session.followUp("same");
+	await f.session.followUp("same");
+	f.session.agent.followUpMode = "all";
+	await f.session.continueQueued();
+	const records = await f.attachment.submissions.snapshot();
+	const [request] = await f.store.snapshot();
+	assert.equal(request.outcome, "success");
+	assert.equal(request.sourceCapture.count, 2);
+	assert.equal(request.sourceCapture.members.length, 2);
+	assert.deepEqual(
+		request.sourceCapture.members.map((member) => member.operationId),
+		records.map((record) => record.dispatch.operationId),
+	);
+	assert.deepEqual(
+		request.sourceCapture.members.map((member) => member.index),
+		[0, 1],
+	);
+	assert.deepEqual(
+		request.sourceCapture.members.map((member) => member.queue),
+		records.map((record) => record.dispatch.inputs[0].queue),
+	);
+	assert.notEqual(request.sourceHash, request.transformedHash);
+	assert.equal(f.sent[0].messages.filter((message) => message.role === "user").length, 1);
+	assert.equal(request.inclusion, undefined);
+	assert.deepEqual(await f.dispatch.sources(structuredClone(f.session.agent.state.messages)), []);
+});
+
+test("native prompt source positions survive request-store reopen", async (t) => {
+	const f = await nativeRequests(t, { retainInputs: true });
+	await f.session.prompt("source", { images: [{ type: "image", data: "YQ==", mimeType: "image/png" }] });
+	const [submission] = await f.attachment.submissions.snapshot();
+	const [request] = await f.store.snapshot();
+	assert.deepEqual(
+		request.sourceCapture.members.map(({ operationId, prompt, index }) => ({ operationId, prompt, index })),
+		[{ operationId: submission.dispatch.operationId, prompt: { inputIndex: 0, messageIndex: 0 }, index: 0 }],
+	);
+	const entry = f.session.sessionManager.getEntry(submission.dispatch.promptHistory[0].entryId);
+	assert.equal(
+		request.sourceCapture.members[0].messageHash,
+		createHash("sha256").update(JSON.stringify(entry.message)).digest("hex"),
+	);
+	await f.bridge.close();
+	await f.dispatch.close();
+	await f.attachment.close();
+	const reopened = await PiFlowAttachment.open(join(f.root, "receipts"), f.scope);
+	try {
+		assert.deepEqual((await reopened.nativeRequests.snapshot())[0], request);
+	} finally {
+		await reopened.close();
+	}
+});
+
+test("repeated native message objects preserve both prompt positions without guessing a surviving alias", async (t) => {
+	const f = await nativeRequests(t, { retainInputs: true });
+	await f.session.prompt("seed");
+	const [seed] = await f.attachment.submissions.snapshot();
+	const saved = await f.attachment.submissions.retain({ ...seed.submission, id: "aliases" });
+	const message = { role: "user", content: [{ type: "text", text: "alias" }], timestamp: 1 };
+	await f.dispatch.dispatch(saved.id, saved.revision, "aliases-operation", () =>
+		f.session.agent.prompt([message, message]),
+	);
+	const request = (await f.store.snapshot())[1];
+	const members = request.sourceCapture.members.filter((member) => member.operationId === "aliases-operation");
+	assert.deepEqual(
+		members.map((member) => member.prompt),
+		[
+			{ inputIndex: 0, messageIndex: 0 },
+			{ inputIndex: 0, messageIndex: 1 },
+		],
+	);
+	const aliases = f.session.agent.state.messages.filter(
+		(item) => item.role === "user" && item.content[0].text === "alias",
+	);
+	assert.equal(aliases[0], aliases[1]);
+	assert.deepEqual(await f.dispatch.sources([aliases[0]]), []);
+});
+
+test("native source capture rejects mutation while identity validation is pending", async (t) => {
+	const f = await nativeRequests(t, {
+		identifySources: async (messages) => {
+			messages[0].content[0].text = "changed";
+			return [];
+		},
+	});
+	await f.session.prompt("original");
+	assert.equal(f.sent.length, 0);
+	assert.deepEqual(await f.store.snapshot(), []);
+	assert.match(f.session.agent.state.errorMessage, /changed during identity capture/);
+});
+
+test("native source links require retained consumption receipts", async (t) => {
+	const f = await nativeRequests(t, { retainInputs: true });
+	t.mock.method(f.attachment.submissions, "snapshot", async () => []);
+	await f.session.prompt("unverified source");
+	assert.equal(f.sent.length, 0);
+	assert.deepEqual(await f.store.snapshot(), []);
+	assert.match(f.session.agent.state.errorMessage, /no retained consumption receipt/);
+});
+
+test("native source capture drains before attachment close", async (t) => {
+	const entered = deferred(),
+		release = deferred();
+	const f = await nativeRequests(t, {
+		identifySources: async () => {
+			entered.resolve();
+			await release.promise;
+			return [];
+		},
+	});
+	const running = f.session.prompt("capture");
+	await entered.promise;
+	await assert.rejects(f.bridge.close(), { code: "busy" });
+	release.resolve();
+	await running;
+	assert.equal((await f.store.snapshot())[0].sourceCapture.count, 1);
+});
+
+test("native request source schema rejects duplicate and invalid positions", async (t) => {
+	const f = await nativeRequests(t, { retainInputs: true });
+	await f.session.prompt("schema");
+	const [request] = await f.store.snapshot();
+	const member = request.sourceCapture.members[0];
+	for (const members of [
+		[{ ...member, index: -1 }],
+		[{ ...member, index: 1 }],
+		[member, member],
+		[{ ...member, queue: { id: "queue", revision: 1 } }],
+		[{ ...member, messageHash: "bad" }],
+	]) {
+		await assert.rejects(
+			f.store.begin({ ...request, id: "bad-source", sourceCapture: { ...request.sourceCapture, members } }),
+			{ code: "identity" },
+		);
+	}
+	assert.equal((await f.store.snapshot()).length, 1);
+});
+
 test("native handoff persistence blocks fetch and receipts survive reopen", async (t) => {
 	const f = await nativeRequests(t);
 	const entered = deferred(),
@@ -183,6 +325,9 @@ for (const phase of ["prepared", "handoff", "outcome"])
 		await exited;
 		attachment = await PiFlowAttachment.open(join(root, "receipts"), saved.scope);
 		const [record] = await attachment.nativeRequests.snapshot();
+		const [submission] = await attachment.submissions.snapshot();
+		assert.equal(record.sourceCapture.members[0].operationId, submission.dispatch.operationId);
+		assert.deepEqual(record.sourceCapture.members[0].prompt, { inputIndex: 0, messageIndex: 0 });
 		assert.equal(!!record.payload, phase !== "prepared");
 		assert.equal(record.outcome, undefined);
 		await assert.rejects(attachment.nativeRequests.begin({ ...record, id: "replay" }), { code: "busy" });

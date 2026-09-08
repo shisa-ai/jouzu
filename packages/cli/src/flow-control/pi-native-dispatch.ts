@@ -2,6 +2,7 @@ import { AsyncLocalStorage } from "node:async_hooks";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { ImageContent } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
+import type { NativeRequestSource } from "./native-request-store.js";
 import { PiHostHooks } from "./pi-host-hooks.js";
 import { PiNativeHistory } from "./pi-native-history.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
@@ -136,6 +137,13 @@ export class PiNativeDispatch {
 	private assertActive(): void {
 		if (this.closed || this.session.sessionId !== this.sessionId)
 			throw new FlowLedgerError("stale", "Native dispatch observation is closed or replaced.");
+	}
+	async sources(messages: AgentMessage[]): Promise<NativeRequestSource[]> {
+		this.assertActive();
+		const members = this.history.identify(messages);
+		await this.history.validateSources(members, this.store);
+		this.assertActive();
+		return members;
 	}
 	heldInputs(): { id: string; revision: number; reason: string }[] {
 		const queued = this.session.agent.inspectQueuedMessages();

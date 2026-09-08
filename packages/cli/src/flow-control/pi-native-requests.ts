@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto";
+import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { AssistantMessage } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
-import type { FlowNativeRequestStore } from "./native-request-store.js";
+import type { FlowNativeRequestStore, NativeRequestSource, NativeSourceCapture } from "./native-request-store.js";
 import { PiHostHooks } from "./pi-host-hooks.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
@@ -14,10 +15,12 @@ export class PiNativeRequests {
 	private pending?: string;
 	private active = 0;
 	private closed = false;
+	private capture?: NativeSourceCapture;
 	constructor(
 		private readonly session: AgentSession,
 		private readonly store: FlowNativeRequestStore,
 		maxBytes: number,
+		identifySources?: (messages: AgentMessage[]) => Promise<NativeRequestSource[]>,
 	) {
 		if (!Number.isSafeInteger(maxBytes) || maxBytes < 1)
 			throw new FlowLedgerError("capacity", "Invalid native payload limit.");
@@ -25,6 +28,35 @@ export class PiNativeRequests {
 			throw new FlowLedgerError("scope", "Native request storage belongs to another session.");
 		if (attached.has(session)) throw new FlowLedgerError("identity", "Pi session already has native request receipts.");
 		attached.add(session);
+		if (identifySources) {
+			const transform = session.agent.transformContext;
+			this.hooks.set(session.agent, "transformContext", async (messages, signal) => {
+				this.assertActive();
+				this.active++;
+				this.capture = undefined;
+				try {
+					const sourceHash = hash(messages),
+						references = [...messages];
+					const members = await identifySources(messages);
+					this.assertActive();
+					signal?.throwIfAborted();
+					if (
+						messages.length !== references.length ||
+						messages.some((message, index) => message !== references[index]) ||
+						hash(messages) !== sourceHash
+					)
+						throw new FlowLedgerError("stale", "Native source context changed during identity capture.");
+					const capture = { hash: sourceHash, count: messages.length, members: structuredClone(members) };
+					const result = transform ? await transform(messages, signal) : messages;
+					this.assertActive();
+					signal?.throwIfAborted();
+					this.capture = capture;
+					return result;
+				} finally {
+					this.active--;
+				}
+			});
+		}
 		const previous = session.agent.flowCheckpoints;
 		this.hooks.set(session.agent, "flowCheckpoints", {
 			...previous,
@@ -37,15 +69,19 @@ export class PiNativeRequests {
 					signal?.throwIfAborted();
 					if (this.pending) await store.finish(this.pending, "withheld");
 					this.pending = undefined;
+					if (identifySources && !this.capture)
+						throw new FlowLedgerError("identity", "Native request has no source context checkpoint.");
 					await store.begin({
 						id: input.requestId,
 						sourceHash: hash(input.sourceMessages),
 						transformedHash: hash(input.transformedMessages),
 						modelHash: hash(input.modelMessages),
 						systemHash: hash(input.systemPrompt),
+						...(this.capture ? { sourceCapture: this.capture } : {}),
 					});
 					this.pending = input.requestId;
 				} finally {
+					this.capture = undefined;
 					this.active--;
 				}
 			},
@@ -165,6 +201,7 @@ export class PiNativeRequests {
 		if (this.active) throw new FlowLedgerError("busy", "Native provider execution must settle before close.");
 		if (this.pending) await this.store.finish(this.pending, "withheld");
 		this.pending = undefined;
+		this.capture = undefined;
 		this.closed = true;
 		this.hooks.close();
 		attached.delete(this.session);

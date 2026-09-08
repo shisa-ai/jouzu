@@ -1,7 +1,7 @@
 import { nativeRequests } from "./native-requests.mjs";
 
 const [root, phase] = process.argv.slice(2);
-const f = await nativeRequests({ after() {} }, { root });
+const f = await nativeRequests({ after() {} }, { root, retainInputs: true });
 const method = phase === "prepared" ? "begin" : phase === "handoff" ? "handoff" : "finish";
 const original = f.store[method].bind(f.store);
 f.store[method] = async (...args) => {

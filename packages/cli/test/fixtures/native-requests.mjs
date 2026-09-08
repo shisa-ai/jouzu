@@ -4,17 +4,41 @@ import { join } from "node:path";
 import { stream } from "@earendil-works/pi-ai/api/openai-completions";
 import { createFlowSession } from "../../../../scripts/fixtures/pi-flow-session.mjs";
 import { PiFlowAttachment } from "../../dist/flow-control/pi-attachment.js";
+import { PiNativeDispatch } from "../../dist/flow-control/pi-native-dispatch.js";
 import { PiNativeRequests } from "../../dist/flow-control/pi-native-requests.js";
 
-export async function nativeRequests(t, { root: supplied, maxBytes = 100000, transform, native } = {}) {
+export async function nativeRequests(
+	t,
+	{
+		root: supplied,
+		maxBytes = 100000,
+		transform,
+		native,
+		retainInputs = false,
+		contextTransform,
+		identifySources,
+	} = {},
+) {
 	const root = supplied ?? (await mkdtemp(join(tmpdir(), "jouzu-native-requests-")));
+	let attachment, dispatch;
 	const { session } = await createFlowSession(t, {
 		root: join(root, "host"),
 		persist: true,
 		extensions: transform ? [(pi) => pi.on("before_provider_request", transform)] : [],
+		ingress: retainInputs
+			? {
+					version: 1,
+					async submit(input, run) {
+						const saved = await attachment.submissions.retain(input);
+						await dispatch.dispatch(saved.id, saved.revision, input.id, run);
+					},
+				}
+			: undefined,
 	});
 	const scope = { sessionId: session.sessionId, branchId: "main" };
-	const attachment = await PiFlowAttachment.open(join(root, "receipts"), scope);
+	attachment = await PiFlowAttachment.open(join(root, "receipts"), scope);
+	if (contextTransform) session.agent.transformContext = contextTransform;
+	if (retainInputs) dispatch = new PiNativeDispatch(session, attachment.submissions);
 	const sent = [];
 	session.agent.streamFunction =
 		native ??
@@ -31,11 +55,17 @@ export async function nativeRequests(t, { root: supplied, maxBytes = 100000, tra
 					);
 				},
 			}));
-	const bridge = new PiNativeRequests(session, attachment.nativeRequests, maxBytes);
+	const bridge = new PiNativeRequests(
+		session,
+		attachment.nativeRequests,
+		maxBytes,
+		identifySources ?? (dispatch ? (messages) => dispatch.sources(messages) : undefined),
+	);
 	t.after(async () => {
 		await bridge.close();
+		await dispatch?.close();
 		await attachment.close();
 		await rm(root, { recursive: true, force: true });
 	});
-	return { root, scope, session, attachment, store: attachment.nativeRequests, bridge, sent };
+	return { root, scope, session, attachment, store: attachment.nativeRequests, bridge, dispatch, sent };
 }
