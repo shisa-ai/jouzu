@@ -1152,3 +1152,117 @@ test("retry handoff persistence failure retains a new hold", async (t) => {
 	await f.store.authorizeRetry(retry.id, retry.modelHash);
 	assert.equal(f.store.recoveryBlocked, false);
 });
+
+test("cancelled held input stays in history and is excluded from unrelated requests", async (t) => {
+	let reject = true;
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		enforceRequiredSources: true,
+		transform: ({ payload }) => (reject ? structuredClone(payload) : payload),
+	});
+	await f.session.prompt("cancel this instruction");
+	const [held] = await f.store.snapshot();
+	await assert.rejects(f.store.cancelSources(held.id, held.withheldPayload.hash, [99]), { code: "identity" });
+	await f.store.cancelSources(held.id, held.withheldPayload.hash, [0]);
+	assert.equal(f.store.recoveryBlocked, false);
+	assert.equal(f.sent.length, 0);
+	reject = false;
+	await f.session.prompt("unrelated work");
+	await f.session.prompt("more work");
+	assert.equal(f.sent.length, 2);
+	assert.ok(f.sent.every((payload) => !JSON.stringify(payload).includes("cancel this instruction")));
+	const requests = await f.store.snapshot();
+	assert.deepEqual(requests[0].withheldPayload, held.withheldPayload);
+	assert.equal(requests[0].payload, undefined);
+	assert.deepEqual(requests[0].cancelledSources, [0]);
+	assert.equal(requests[1].sourceCapture.members.length, 1);
+	const view = (await f.attachment.submissionViews())[0];
+	assert.equal(view.nativeRequests[0].sources[0].cancelled, true);
+	assert.equal(view.nativeRequests[0].hold, undefined);
+	assert.ok(
+		f.session.sessionManager
+			.getBranch()
+			.some((entry) => entry.type === "message" && JSON.stringify(entry.message).includes("cancel this instruction")),
+	);
+	await assert.rejects(f.store.authorizeRetry(held.id, held.withheldPayload.hash), { code: "stale" });
+});
+
+test("partial cancellation preserves duplicate instruction identity and remaining hold", async (t) => {
+	let reject = true;
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		enforceRequiredSources: true,
+		transform: ({ payload }) => (reject ? structuredClone(payload) : payload),
+	});
+	await f.session.followUp("same instruction");
+	await f.session.followUp("same instruction");
+	f.session.agent.followUpMode = "all";
+	await f.session.continueQueued();
+	const [held] = await f.store.snapshot();
+	await f.store.cancelSources(held.id, held.withheldPayload.hash, [0]);
+	assert.equal(f.store.recoveryBlocked, true);
+	await f.store.authorizeRetry(held.id, held.withheldPayload.hash);
+	reject = false;
+	await f.session.prompt("resume remaining instruction");
+	assert.equal(f.sent.length, 1);
+	assert.equal(
+		f.sent[0].messages.filter((message) => JSON.stringify(message.content).includes("same instruction")).length,
+		1,
+	);
+	const retry = (await f.store.snapshot())[1];
+	assert.equal(retry.retryOf, held.id);
+	assert.equal(retry.payload.sources[0].disposition, "included");
+	assert.equal(retry.sourceCapture.members[0].operationId, held.sourceCapture.members[1].operationId);
+});
+
+test("cancellation cannot use an old hold after its retry starts", async (t) => {
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		enforceRequiredSources: true,
+		transform: ({ payload }) => structuredClone(payload),
+	});
+	await f.session.prompt("held");
+	const [held] = await f.store.snapshot();
+	await f.store.authorizeRetry(held.id, held.withheldPayload.hash);
+	await f.session.prompt("retry");
+	await assert.rejects(f.store.cancelSources(held.id, held.withheldPayload.hash, [0]), { code: "busy" });
+	assert.equal(f.store.recoveryBlocked, true);
+});
+
+test("cancelled input is excluded before extension context handlers", async (t) => {
+	let clone = false;
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		enforceRequiredSources: true,
+		transform: ({ payload }) => (clone ? payload : structuredClone(payload)),
+		contextHandler: ({ messages }) => {
+			if (clone) assert.ok(messages.every((message) => !JSON.stringify(message).includes("held")));
+			return { messages };
+		},
+	});
+	await f.session.prompt("held");
+	const [held] = await f.store.snapshot();
+	await f.store.cancelSources(held.id, held.withheldPayload.hash, [0]);
+	clone = true;
+	await f.session.prompt("unrelated");
+	assert.equal(f.sent.length, 1);
+});
+
+test("missing cancelled-source identity requires reconciliation before new work", async (t) => {
+	let missing = false;
+	let identify;
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		enforceRequiredSources: true,
+		identifySources: async (messages) => (missing ? [] : identify(messages)),
+		transform: ({ payload }) => structuredClone(payload),
+	});
+	identify = (messages) => f.dispatch.sources(messages);
+	await f.session.prompt("held");
+	const [held] = await f.store.snapshot();
+	await f.store.cancelSources(held.id, held.withheldPayload.hash, [0]);
+	missing = true;
+	await f.session.prompt("other");
+	assert.equal(f.sent.length, 0);
+	assert.match(f.session.agent.state.errorMessage, /Cancelled native input requires source reconciliation/);
+});

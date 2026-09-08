@@ -150,6 +150,18 @@ export class PiFlowSessionService {
 		});
 	}
 
+	cancelNativeSources(id: string, expectedHash: string, indices: number[]): Promise<void> {
+		const selected = [...indices];
+		return this.registry.run(async () => {
+			const branch = this.branch();
+			const result = await branch.host.atIdle(async () => {
+				if (this.branch() !== branch) throw new FlowLedgerError("stale", "Native cancellation branch changed.");
+				await branch.attachment.nativeRequests.cancelSources(id, expectedHash, selected);
+			});
+			if (result.kind === "busy") throw new FlowLedgerError("busy", "Native cancellation requires an idle session.");
+		});
+	}
+
 	private async closeBranch(): Promise<void> {
 		const branch = this.current;
 		if (branch) {

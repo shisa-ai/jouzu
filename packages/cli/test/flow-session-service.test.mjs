@@ -241,3 +241,27 @@ test("session service reports busy retry without granting permission", async (t)
 	assert.equal((await branch.attachment.nativeRequests.snapshot())[0].retryAuthorization, undefined);
 	assert.equal(branch.host.gate().recoveryBlocked, true);
 });
+
+test("cancelled native input remains excluded after session-service reopen", async (t) => {
+	const first = await fixture(t, { retainInputs: true });
+	await first.session.prompt("cancelled original");
+	const [held] = await first.service.branch().attachment.nativeRequests.snapshot();
+	await first.service.cancelNativeSources(held.id, held.withheldPayload.hash, [0]);
+	assert.equal(first.service.branch().host.gate().recoveryBlocked, false);
+	assert.equal(first.requests.length, 0);
+	await first.service.close();
+	const next = await fixture(t, {
+		root: first.root,
+		manager: SessionManager.open(first.session.sessionManager.getSessionFile()),
+		retainInputs: true,
+		providerReceipts: () => true,
+	});
+	assert.equal(next.service.branch().host.gate().recoveryBlocked, false);
+	await next.session.prompt("independent request");
+	assert.equal(next.requests.length, 1);
+	assert.ok(!JSON.stringify(next.requests).includes("cancelled original"));
+	const [original, request] = await next.service.branch().attachment.nativeRequests.snapshot();
+	assert.deepEqual(original.cancelledSources, [0]);
+	assert.equal(original.payload, undefined);
+	assert.equal(request.outcome, "success");
+});

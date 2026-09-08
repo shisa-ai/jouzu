@@ -4,7 +4,7 @@ import type {
 	NativeRequestSource,
 	NativeSourceDisposition,
 } from "./native-request-store.js";
-import { nativeHoldHash, nativeRequestHeld } from "./native-request-store.js";
+import { nativeHoldHash, nativeHoldPending } from "./native-request-store.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { RetainedSubmission } from "./submission-store.js";
 
@@ -20,6 +20,7 @@ export interface NativeSubmissionRequestView {
 	sources: {
 		identity: NativeRequestSource;
 		consumed: true;
+		cancelled?: true;
 		history?: { entryId: string; entryHash: string };
 		context?: NativeSourceDisposition["members"][number];
 		model?: NativeSourceDisposition["members"][number];
@@ -82,7 +83,7 @@ export function projectNativeSubmissionRequests(
 				outcome: request.outcome ?? "unknown",
 				...(request.payload ? { payloadHash: request.payload.hash } : {}),
 				...(request.withheldPayload ? { withheldPayloadHash: request.withheldPayload.hash } : {}),
-				...(nativeRequestHeld(request) && !request.retryAuthorization?.requestId
+				...(nativeHoldPending(request) && !request.retryAuthorization?.requestId
 					? { hold: { hash: nativeHoldHash(request), reason: "required-input" as const } }
 					: {}),
 				...(request.retryOf ? { retryOf: request.retryOf } : {}),
@@ -93,6 +94,7 @@ export function projectNativeSubmissionRequests(
 				structuredClone({
 					identity: source,
 					consumed: true as const,
+					...(request.cancelledSources?.includes(source.index) ? { cancelled: true as const } : {}),
 					...(history ? { history: { entryId: history.entryId, entryHash: history.entryHash } } : {}),
 					...(context ? { context } : {}),
 					...(model ? { model } : {}),

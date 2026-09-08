@@ -9,6 +9,7 @@ import type {
 	NativeSourceCapture,
 	NativeSourceClaim,
 } from "./native-request-store.js";
+import { nativeCancelledSources, nativeSourceKey } from "./native-request-store.js";
 import { PiHostHooks } from "./pi-host-hooks.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
@@ -49,9 +50,9 @@ export class PiNativeRequests {
 				this.capture = undefined;
 				this.references = undefined;
 				try {
-					const sourceHash = hash(messages),
+					let sourceHash = hash(messages),
 						references = [...messages];
-					const members = await identifySources(messages);
+					let members = await identifySources(messages);
 					this.assertActive();
 					signal?.throwIfAborted();
 					if (
@@ -60,6 +61,30 @@ export class PiNativeRequests {
 						hash(messages) !== sourceHash
 					)
 						throw new FlowLedgerError("stale", "Native source context changed during identity capture.");
+					const cancelled = nativeCancelledSources(await store.snapshot());
+					if (cancelled.length) {
+						if (hash(messages) !== sourceHash || messages.some((message, index) => message !== references[index]))
+							throw new FlowLedgerError("stale", "Native context changed during cancellation lookup.");
+						const excluded = new Set<number>();
+						for (const source of cancelled) {
+							const member = members.find((item) => nativeSourceKey(item) === nativeSourceKey(source));
+							if (!member)
+								throw new FlowLedgerError("identity", "Cancelled native input requires source reconciliation.");
+							excluded.add(member.index);
+						}
+						const positions = new Map<number, number>();
+						messages = messages.filter((_message, index) => {
+							if (excluded.has(index)) return false;
+							positions.set(index, positions.size);
+							return true;
+						});
+						members = members.flatMap((member) => {
+							const index = positions.get(member.index);
+							return index === undefined ? [] : [{ ...member, index }];
+						});
+						sourceHash = hash(messages);
+						references = [...messages];
+					}
 					const capture: NativeSourceCapture = {
 						hash: sourceHash,
 						count: messages.length,
