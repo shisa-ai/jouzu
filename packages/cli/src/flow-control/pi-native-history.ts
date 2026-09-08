@@ -5,7 +5,7 @@ import type { ImageContent } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
 import type { NativeRequestSource } from "./native-request-store.js";
 import { verifyPiHistoryEntry } from "./pi-history-receipts.js";
-import { recoverNativeSources } from "./pi-native-source-recovery.js";
+import { recoverNativeSources, retainMemorySource } from "./pi-native-source-recovery.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowSubmissionStore } from "./submission-store.js";
 
@@ -84,7 +84,21 @@ export class PiNativeHistory {
 				throw new FlowLedgerError("identity", "Native transcript entry differs from its consumed message.");
 			manager.flush();
 			const evidence = await verifyPiHistoryEntry(manager, entry.id);
-			if (evidence.kind === "memory") return;
+			if (evidence.kind === "memory") {
+				let reference: Pick<NativeRequestSource, "prompt" | "queue">;
+				if (input.prompt) reference = { prompt: input.prompt };
+				else {
+					if (!input.id || input.revision === undefined)
+						throw new FlowLedgerError("identity", "Native history has no queue identity.");
+					reference = { queue: { id: input.id, revision: input.revision } };
+				}
+				retainMemorySource(manager, {
+					operationId: input.operationId,
+					entryId: entry.id,
+					...reference,
+				});
+				return;
+			}
 			if (evidence.kind !== "persisted")
 				throw new FlowLedgerError("identity", "Native transcript entry was not persisted.");
 			const history = { entryId: entry.id, entryHash: evidence.entryHash };
@@ -130,6 +144,7 @@ export class PiNativeHistory {
 		if (evidence.kind === "persisted")
 			await store.recordPromptHistory(operationId, { ...prompt, entryId, entryHash: evidence.entryHash });
 		assertContent();
+		if (evidence.kind === "memory") retainMemorySource(manager, { operationId, prompt, entryId });
 		this.sources.set(message, [
 			{ operationId, prompt, messageHash: createHash("sha256").update(JSON.stringify(message)).digest("hex") },
 		]);

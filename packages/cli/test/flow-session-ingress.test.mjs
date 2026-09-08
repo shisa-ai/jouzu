@@ -810,7 +810,7 @@ test("memory-only context has live source identity without a persisted history r
 	assert.ok(JSON.stringify(f.sent).includes("memory context"));
 });
 
-test("reattached memory-only context remains unresolved without durable history", async (t) => {
+test("reattached memory-only context restores ownership from the same live manager", async (t) => {
 	const manager = SessionManager.inMemory();
 	const first = await fixture(t, { manager, admit: null });
 	await first.session.sendCustomMessage(
@@ -819,10 +819,49 @@ test("reattached memory-only context remains unresolved without durable history"
 	);
 	await first.ingress.dispose();
 	const next = await fixture(t, { root: first.root, manager, admit: null });
-	assert.equal(next.ingress.branch().sourceRecovery.unresolved, 1);
-	await next.session.prompt("held request");
-	assert.equal(next.sent.length, 0);
-	assert.match((await next.ingress.heldInputs())[0].reason, /recovery/);
+	assert.deepEqual(next.ingress.branch().sourceRecovery, { recovered: 1, unresolved: 0 });
+	assert.equal((await next.ingress.branch().native.sources(next.session.agent.state.messages)).length, 1);
+	const [record] = await next.ingress.branch().attachment.submissions.snapshot();
+	assert.equal(record.dispatch.promptHistory, undefined);
+	await next.session.prompt("use retained context");
+	assert.equal(next.sent.length, 1);
+});
+
+test("memory source recovery separates duplicate next-turn inputs from their consuming prompt", async (t) => {
+	const manager = SessionManager.inMemory();
+	const first = await fixture(t, { manager, admit: null });
+	for (let i = 0; i < 2; i++)
+		await first.session.sendCustomMessage(
+			{ customType: "note", content: "duplicate memory context", display: true },
+			{ deliverAs: "nextTurn" },
+		);
+	await first.session.prompt("consume memory context");
+	const records = await first.ingress.branch().attachment.submissions.snapshot();
+	await first.ingress.dispose();
+	const next = await fixture(t, { root: first.root, manager, admit: null });
+	assert.deepEqual(next.ingress.branch().sourceRecovery, { recovered: 3, unresolved: 0 });
+	const sources = await next.ingress.branch().native.sources(next.session.agent.state.messages);
+	assert.deepEqual(
+		sources.map((source) => source.operationId).sort(),
+		records.map((record) => record.dispatch.operationId).sort(),
+	);
+	assert.ok(records.every((record) => record.dispatch.promptHistory === undefined));
+	await next.session.prompt("continue memory session");
+	assert.equal(next.sent.length, 1);
+});
+
+test("changed memory entry cannot inherit its retained source receipt", async (t) => {
+	const manager = SessionManager.inMemory();
+	const first = await fixture(t, { manager, admit: null });
+	await first.session.sendCustomMessage(
+		{ customType: "note", content: "original memory context", display: true },
+		{ triggerTurn: false },
+	);
+	await first.ingress.dispose();
+	const entry = manager.getBranch().find((entry) => entry.type === "custom_message");
+	entry.content = "changed memory context";
+	await assert.rejects(fixture(t, { root: first.root, manager, admit: null }), /differs from its retained receipt/);
+	assert.equal(first.sent.length, 0);
 });
 
 test("next-turn context keeps duplicate submissions distinct from the consuming prompt", async (t) => {

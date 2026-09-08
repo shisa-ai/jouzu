@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { ImageContent } from "@earendil-works/pi-ai";
-import { type AgentSession, sessionEntryToContextMessages } from "@earendil-works/pi-coding-agent";
+import { type AgentSession, type SessionManager, sessionEntryToContextMessages } from "@earendil-works/pi-coding-agent";
 import type { NativeRequestSource } from "./native-request-store.js";
 import { verifyPiHistoryEntry } from "./pi-history-receipts.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
@@ -10,6 +10,29 @@ import type { FlowNativeInput, FlowSubmissionStore } from "./submission-store.js
 
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 type Source = Omit<NativeRequestSource, "index">;
+interface MemoryReceipt {
+	operationId: string;
+	entryId: string;
+	entryHash: string;
+	prompt?: { inputIndex: number; messageIndex: number };
+	queue?: { id: string; revision: number };
+}
+const memoryHistory = new WeakMap<SessionManager, { sessionId: string; receipts: MemoryReceipt[] }>();
+
+/** Entry ownership survives attachment disposal only within this exact live manager. */
+export function retainMemorySource(manager: SessionManager, receipt: Omit<MemoryReceipt, "entryHash">): void {
+	if (manager.isPersisted()) throw new FlowLedgerError("identity", "Memory source requires a memory-only session.");
+	const entry = manager.getEntry(receipt.entryId);
+	if (!entry) throw new FlowLedgerError("identity", "Memory source has no transcript entry.");
+	let history = memoryHistory.get(manager);
+	if (!history || history.sessionId !== manager.getSessionId()) {
+		history = { sessionId: manager.getSessionId(), receipts: [] };
+		memoryHistory.set(manager, history);
+	}
+	if (history.receipts.some((item) => item.entryId === receipt.entryId))
+		throw new FlowLedgerError("identity", "Memory entry already has source ownership.");
+	history.receipts.push({ ...structuredClone(receipt), entryHash: hash(entry) });
+}
 
 function observed(input: FlowNativeInput, position: number): { message: AgentMessage; nativeTimestamp: boolean } {
 	const value = input.args[0];
@@ -64,6 +87,8 @@ export async function recoverNativeSources(
 	const messages = projected.map((item) => item.message);
 	if (!isDeepStrictEqual(messages, live))
 		throw new FlowLedgerError("identity", "Live context differs from Pi's transcript reconstruction.");
+	const memory = memoryHistory.get(manager);
+	const memoryReceipts = !manager.isPersisted() && memory?.sessionId === manager.getSessionId() ? memory.receipts : [];
 	const records = await store.snapshot();
 	assertCurrent();
 	const bindings = new WeakMap<object, Source[]>();
@@ -80,13 +105,18 @@ export async function recoverNativeSources(
 				!dispatch.contextCancellations?.some((item) => item.inputIndex === index && item.removed),
 		).length;
 		const receipts = [
+			...memoryReceipts
+				.filter((receipt) => receipt.operationId === dispatch.operationId)
+				.map((receipt) => ({ ...receipt, memory: true })),
 			...(dispatch.queueHistory ?? []).map((receipt) => ({
 				...receipt,
+				memory: false,
 				queue: { id: receipt.id, revision: receipt.revision },
 				prompt: undefined,
 			})),
 			...(dispatch.promptHistory ?? []).map((receipt) => ({
 				...receipt,
+				memory: false,
 				prompt: { inputIndex: receipt.inputIndex, messageIndex: receipt.messageIndex },
 				queue: undefined,
 			})),
@@ -94,12 +124,13 @@ export async function recoverNativeSources(
 		unresolved += (dispatch.queueClaims ?? []).filter(
 			(claim) =>
 				claim.consumed &&
-				!dispatch.queueHistory?.some((receipt) => receipt.id === claim.id && receipt.revision === claim.revision),
+				!receipts.some((receipt) => receipt.queue?.id === claim.id && receipt.queue.revision === claim.revision),
 		).length;
 		unresolved += (dispatch.promptClaims ?? []).filter(
 			(claim) =>
-				!dispatch.promptHistory?.some(
-					(receipt) => receipt.inputIndex === claim.inputIndex && receipt.messageIndex === claim.messageIndex,
+				!receipts.some(
+					(receipt) =>
+						receipt.prompt?.inputIndex === claim.inputIndex && receipt.prompt.messageIndex === claim.messageIndex,
 				),
 		).length;
 		for (const receipt of receipts) {
@@ -110,12 +141,17 @@ export async function recoverNativeSources(
 			entries.add(receipt.entryId);
 			const evidence = await verifyPiHistoryEntry(manager, receipt.entryId);
 			assertCurrent();
-			if (evidence.kind !== "persisted" || evidence.entryHash !== receipt.entryHash)
+			if (
+				receipt.memory
+					? evidence.kind !== "memory" || hash(manager.getEntry(receipt.entryId)) !== receipt.entryHash
+					: evidence.kind !== "persisted" || evidence.entryHash !== receipt.entryHash
+			)
 				throw new FlowLedgerError("identity", "Native source history differs from its retained receipt.");
 			const input = receipt.prompt
 				? dispatch.inputs?.[receipt.prompt.inputIndex]
 				: dispatch.inputs?.find(
-						(input) => input.queue?.id === receipt.queue?.id && input.queue.revision === receipt.queue.revision,
+						(input) =>
+							receipt.queue && input.queue?.id === receipt.queue.id && input.queue.revision === receipt.queue.revision,
 					);
 			if (!input) throw new FlowLedgerError("identity", "Native history has no observed input.");
 			const expected = observed(input, receipt.prompt?.messageIndex ?? 0);
