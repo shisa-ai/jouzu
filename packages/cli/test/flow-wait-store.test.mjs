@@ -317,3 +317,21 @@ test("detach drains an awaited scan and never arms its stale snapshot", async (t
 	await Promise.all([starting, closing]);
 	assert.equal(clock.timers.size, 0);
 });
+
+test("admission gates retain committed waits and block while an atomic mutation is pending", async (t) => {
+	const f = await fixture(t),
+		store = f.attachment.waits;
+	assert.deepEqual(store.gate(), { waitingWorkIds: [], updating: false });
+	const declaring = store.declare(request(), observations(), 0, 100);
+	assert.equal(store.gate().updating, true);
+	await declaring;
+	assert.deepEqual(store.gate(), { waitingWorkIds: ["work"], updating: false });
+	store.gate().waitingWorkIds.length = 0;
+	assert.deepEqual(store.gate().waitingWorkIds, ["work"]);
+	await assert.rejects(store.declare(request("invalid"), [], 1, 100, "token"));
+	assert.deepEqual(store.gate(), { waitingWorkIds: ["work"], updating: false });
+	const reopened = await f.reopen();
+	assert.deepEqual(reopened.gate(), { waitingWorkIds: ["work"], updating: false });
+	await reopened.cancel("token", "cancel gate", 10);
+	assert.deepEqual(reopened.gate(), { waitingWorkIds: [], updating: false });
+});

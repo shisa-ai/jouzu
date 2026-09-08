@@ -1810,3 +1810,129 @@ for (const trigger of ["policy", "operation"])
 		assert.equal(snapshots, settled);
 		assert.deepEqual(failures, []);
 	});
+
+async function declareIngressWait(branch, workId = "work") {
+	const handle = { producer: "bg", handle: "job", execution: "exec", until: "exit" };
+	return branch.attachment.waits.declare(
+		{ token: "wait", scope: branch.scope, workId, reason: "dependency", mode: "all", on: [handle], expiresAt: 100 },
+		[{ ...handle, scope: branch.scope, workId, state: "pending" }],
+		0,
+		100,
+	);
+}
+
+test("durable waits hold semantic work across reopen and allow independent work", async (t) => {
+	const f = await fixture(t, { provider: true, admit: null });
+	await declareIngressWait(f.ingress.branch());
+	await f.ingress.dispose();
+	const next = await fixture(t, {
+		root: f.root,
+		provider: true,
+		admit: null,
+		manager: SessionManager.open(f.session.sessionManager.getSessionFile()),
+	});
+	const branch = next.ingress.branch(),
+		built = [];
+	branch.controller.register({
+		version: 1,
+		namespace: "wait-test",
+		snapshot: async () =>
+			["work", "independent"].map((id, index) => ({
+				id,
+				revision: "1",
+				producer: "wait-test",
+				sequence: index,
+				rank: 4,
+				workId: id,
+				workRevision: "1",
+				independent: true,
+				runnable: true,
+			})),
+		build: async (intent) => {
+			built.push(intent.id);
+			return { id: intent.id, revision: "1", kind: "work", text: `execute ${intent.id}` };
+		},
+	});
+	await branch.controller.wake();
+	assert.deepEqual(built, ["independent"]);
+	assert.equal(next.sent.length, 1);
+	await branch.attachment.waits.cancel("wait", "dependency no longer required", 20);
+	await branch.controller.wake();
+	assert.deepEqual(built, ["independent", "work"]);
+	assert.equal(next.sent.length, 2);
+});
+
+test("durable wait permits user status input and holds unclassified automated input", async (t) => {
+	const f = await fixture(t, { provider: true, admit: null });
+	const branch = f.ingress.branch();
+	await declareIngressWait(branch);
+	await f.session.sendUserMessage("automated continuation");
+	assert.equal(f.sent.length, 0);
+	await f.session.prompt("status please");
+	assert.equal(f.sent.length, 1);
+	assert.equal((await branch.attachment.waits.snapshot())[0].expiresAt, 100);
+	assert.deepEqual(branch.host.gate().waitingWorkIds, ["work"]);
+});
+
+test("a wait declared after semantic enqueue prevents native consumption", async (t) => {
+	const f = await fixture(t, { provider: true, admit: null });
+	const branch = f.ingress.branch(),
+		queued = deferred(),
+		proceed = deferred();
+	const run = branch.host.run.bind(branch.host);
+	t.mock.method(branch.host, "run", async () => {
+		queued.resolve();
+		await proceed.promise;
+		await run();
+	});
+	branch.controller.register({
+		version: 1,
+		namespace: "wait-preemption",
+		snapshot: async () => [
+			{
+				id: "work",
+				revision: "1",
+				producer: "wait-preemption",
+				sequence: 1,
+				rank: 4,
+				workId: "work",
+				workRevision: "1",
+				independent: true,
+				runnable: true,
+			},
+		],
+		build: async () => ({ id: "work", revision: "1", kind: "work", text: "work before wait" }),
+	});
+	const waking = branch.controller.wake();
+	await queued.promise;
+	await declareIngressWait(branch);
+	proceed.resolve();
+	await waking;
+	assert.equal(f.sent.length, 0);
+	assert.equal(f.session.agent.inspectQueuedMessages().length, 0);
+	const [attempt] = (await branch.attachment.ledger.snapshot()).attempts;
+	assert.equal(attempt.phase, "cancelled");
+	assert.equal(attempt.consumed, false);
+	assert.equal(attempt.requests.length, 0);
+});
+
+test("host admission override cannot bypass a wait declared while the override is awaited", async (t) => {
+	const entered = deferred(),
+		proceed = deferred();
+	const f = await fixture(t, {
+		provider: true,
+		admit: async () => {
+			entered.resolve();
+			await proceed.promise;
+			return true;
+		},
+	});
+	const sending = f.session.sendUserMessage("automated callback");
+	await entered.promise;
+	await declareIngressWait(f.ingress.branch());
+	proceed.resolve();
+	await sending;
+	assert.equal(f.sent.length, 0);
+	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.equal(record.dispatch, undefined);
+});

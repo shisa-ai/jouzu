@@ -46,6 +46,14 @@ function validateWait(wait: FlowWaitState): void {
 /** Atomic wait transitions under the existing branch writer lease; no producer callbacks run in a transaction. */
 export class FlowWaitStore {
 	private initialized = false;
+	private waitingWorkIds: string[] = [];
+	private mutations = 0;
+
+	/** Synchronous admission view, published only after a successful durable commit. */
+	gate(): { waitingWorkIds: string[]; updating: boolean } {
+		this.ownership.assertActive();
+		return { waitingWorkIds: [...this.waitingWorkIds], updating: !this.initialized || this.mutations > 0 };
+	}
 	private deadlines?: FlowWaitDeadlines;
 	private schedulingClosed = false;
 
@@ -111,20 +119,26 @@ export class FlowWaitStore {
 		return structuredClone(state);
 	}
 	private async update<T>(change: (state: State) => T): Promise<T> {
-		let changed = false;
-		const result = await this.ownership.run(() =>
-			this.session.mutate(async (mutation, context) => {
-				const state = await this.read(mutation);
-				const before = structuredClone(state);
-				const result = change(state);
-				changed = !isDeepStrictEqual(before, state);
-				this.validate(state);
-				if (changed || !this.initialized) await mutation.commit([setValue(address, state)], context);
-				return structuredClone(result);
-			}, BACKGROUND_CONTEXT),
-		);
-		if (changed) this.deadlines?.changed();
-		return result;
+		this.mutations++;
+		try {
+			let changed = false;
+			const result = await this.ownership.run(() =>
+				this.session.mutate(async (mutation, context) => {
+					const state = await this.read(mutation);
+					const before = structuredClone(state);
+					const result = change(state);
+					changed = !isDeepStrictEqual(before, state);
+					this.validate(state);
+					if (changed || !this.initialized) await mutation.commit([setValue(address, state)], context);
+					this.waitingWorkIds = state.waits.filter((wait) => wait.state === "waiting").map((wait) => wait.workId);
+					return structuredClone(result);
+				}, BACKGROUND_CONTEXT),
+			);
+			if (changed) this.deadlines?.changed();
+			return result;
+		} finally {
+			this.mutations--;
+		}
 	}
 	snapshot(): Promise<FlowWaitState[]> {
 		return this.ownership.run(() =>

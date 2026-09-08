@@ -114,9 +114,12 @@ export class PiFlowSessionService {
 				{ ...this.options.host, results: attachment.results },
 				() => {
 					const policy = this.options.policy();
+					const waits = attachment.waits.gate();
 					return {
 						...policy,
-						recoveryBlocked: recoveryBlocked || attachment.nativeRequests.recoveryBlocked || policy.recoveryBlocked,
+						waitingWorkIds: [...new Set([...policy.waitingWorkIds, ...waits.waitingWorkIds])],
+						recoveryBlocked:
+							waits.updating || recoveryBlocked || attachment.nativeRequests.recoveryBlocked || policy.recoveryBlocked,
 					};
 				},
 			);

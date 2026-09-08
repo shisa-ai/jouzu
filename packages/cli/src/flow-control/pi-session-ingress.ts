@@ -232,10 +232,13 @@ export class PiSessionFlowIngress implements Ingress {
 		input?: FlowNativeInput,
 	): Promise<boolean> {
 		if (!this.session) throw new FlowLedgerError("stale", "Flow ingress has no host session.");
+		const session = this.session;
 		const records = await branch.attachment.submissions.snapshot();
 		const state = await branch.attachment.ledger.snapshot();
 		const policy = this.options.policy();
+		const waits = branch.attachment.waits.gate();
 		const recoveryBlocked =
+			waits.updating ||
 			policy.recoveryBlocked ||
 			branch.attachment.nativeRequests.recoveryBlocked ||
 			branch.recovery.unresolved > 0 ||
@@ -246,6 +249,7 @@ export class PiSessionFlowIngress implements Ingress {
 			records,
 			{
 				...policy,
+				waitingWorkIds: [...new Set([...policy.waitingWorkIds, ...waits.waitingWorkIds])],
 				recoveryBlocked,
 			},
 			this.session,
@@ -272,6 +276,21 @@ export class PiSessionFlowIngress implements Ingress {
 				throw error;
 			}
 		}
+		// A boolean host override supplies no authority to bypass a durable dependency wait.
+		const durableWaitDecision = () => {
+			const currentWaits = branch.attachment.waits.gate();
+			if (!currentWaits.updating && currentWaits.waitingWorkIds.length === 0) return { allowed: true } as const;
+			return decideNativeAdmission(
+				submission,
+				records,
+				{ userPending: false, recoveryBlocked: currentWaits.updating, waitingWorkIds: currentWaits.waitingWorkIds },
+				session,
+				phase,
+				input,
+			);
+		};
+		const waitDecision = durableWaitDecision();
+		if (!waitDecision.allowed) decision = waitDecision;
 		if (branch.attachment.nativeRequests.recoveryBlocked)
 			decision = { allowed: false, reason: "Input is waiting for recovery reconciliation." };
 		const current = records.find((record) => record.id === submission.id);
@@ -284,7 +303,7 @@ export class PiSessionFlowIngress implements Ingress {
 		);
 		if (!saved && phase === "submission")
 			throw new FlowLedgerError("stale", "Retained input changed during admission.");
-		return saved && decision.allowed;
+		return saved && decision.allowed && durableWaitDecision().allowed;
 	}
 
 	branch(): PiFlowBranchResources {
