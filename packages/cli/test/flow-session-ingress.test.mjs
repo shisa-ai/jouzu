@@ -7,7 +7,7 @@ import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js";
 
-async function fixture(t, { root: supplied, admit = async () => true, policy, manager } = {}) {
+async function fixture(t, { root: supplied, admit = async () => true, policy, manager, nextTurnObserver } = {}) {
 	const root = supplied ?? (await mkdtemp(join(tmpdir(), "jouzu-ingress-owner-")));
 	const ingress = new PiSessionFlowIngress({
 		root,
@@ -25,6 +25,7 @@ async function fixture(t, { root: supplied, admit = async () => true, policy, ma
 		ingress: {
 			version: 1,
 			async attach(session) {
+				session.flowNextTurn = nextTurnObserver;
 				session.agent.streamFunction = async (model, context, options) => {
 					for (const message of context.messages)
 						if (message.role === "user") options.onMessageConverted(message, message);
@@ -453,15 +454,24 @@ test("default ingress preserves opaque lane order on explicit release", async (t
 	assert.ok(!JSON.stringify(f.sent[0]).includes("second"));
 });
 
-test("default ingress keeps next-turn custom context held without an implicit wake", async (t) => {
-	const f = await fixture(t, { admit: null });
+test("next-turn custom context can wait alongside a live wait without an implicit wake", async (t) => {
+	const f = await fixture(t, {
+		admit: null,
+		policy: () => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: ["work"] }),
+	});
 	await f.session.sendCustomMessage(
 		{ customType: "status", content: "context", display: true },
 		{ triggerTurn: false, deliverAs: "nextTurn" },
 	);
 	assert.equal(f.sent.length, 0);
-	assert.match((await f.ingress.heldInputs())[0].reason, /persistence receipt/);
+	assert.deepEqual(await f.ingress.heldInputs(), []);
+	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.equal(record.dispatch.inputs[0].kind, "context");
+	assert.equal(record.dispatch.promptClaims, undefined);
 	assert.ok(!JSON.stringify(f.session.agent.state.messages).includes("context"));
+	await f.session.prompt("manual status");
+	assert.equal(f.sent.length, 1);
+	assert.ok(JSON.stringify(f.sent).includes("context"));
 });
 
 test("failed diagnostic persistence cannot release an admitted input", async (t) => {
@@ -813,4 +823,155 @@ test("reattached memory-only context remains unresolved without durable history"
 	await next.session.prompt("held request");
 	assert.equal(next.sent.length, 0);
 	assert.match((await next.ingress.heldInputs())[0].reason, /recovery/);
+});
+
+test("next-turn context keeps duplicate submissions distinct from the consuming prompt", async (t) => {
+	const f = await fixture(t, { admit: null });
+	for (let i = 0; i < 2; i++)
+		await f.session.sendCustomMessage(
+			{ customType: "note", content: "same context", display: true },
+			{ deliverAs: "nextTurn" },
+		);
+	const before = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.equal(f.sent.length, 0);
+	assert.ok(before.every((record) => record.dispatch.inputs[0].kind === "context" && !record.dispatch.promptClaims));
+	assert.equal(f.session.sessionManager.getBranch().filter((entry) => entry.type === "custom_message").length, 0);
+	await f.session.prompt("use both notes");
+	assert.equal(f.sent.length, 1);
+	const after = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.ok(
+		after.every((record) => record.dispatch.promptClaims.length === 1 && record.dispatch.promptHistory.length === 1),
+	);
+	assert.equal(after[2].dispatch.inputs[0].args[0].length, 1);
+	const sources = await f.ingress.branch().native.sources(f.session.agent.state.messages);
+	assert.deepEqual(
+		sources.map((source) => source.operationId),
+		[after[2].dispatch.operationId, ...before.map((record) => record.dispatch.operationId)],
+	);
+	assert.equal(new Set(after.map((record) => record.dispatch.promptHistory[0].entryId)).size, 3);
+});
+
+test("next-turn context joins an independently admitted automated turn without creating a wake", async (t) => {
+	const f = await fixture(t, { admit: null });
+	await f.session.sendCustomMessage(
+		{ customType: "note", content: "context", display: false },
+		{ deliverAs: "nextTurn" },
+	);
+	assert.equal(f.sent.length, 0);
+	await f.session.sendUserMessage("independent instruction");
+	assert.equal(f.sent.length, 1);
+	assert.ok(JSON.stringify(f.sent).includes("context"));
+});
+
+test("consumed next-turn sources restore from persisted history", async (t) => {
+	const first = await fixture(t, { admit: null });
+	await first.session.sendCustomMessage(
+		{ customType: "note", content: "restore", display: true },
+		{ deliverAs: "nextTurn" },
+	);
+	await first.session.prompt("consume");
+	await first.ingress.dispose();
+	const next = await fixture(t, {
+		root: first.root,
+		manager: SessionManager.open(first.session.sessionManager.getSessionFile()),
+		admit: null,
+	});
+	assert.deepEqual(next.ingress.branch().sourceRecovery, { recovered: 2, unresolved: 0 });
+	assert.equal((await next.ingress.branch().native.sources(next.session.agent.state.messages)).length, 2);
+	await next.session.prompt("later");
+	assert.equal(next.sent.length, 1);
+});
+
+test("unconsumed next-turn context stays unresolved across reopen", async (t) => {
+	const first = await fixture(t, { admit: null });
+	await first.session.sendCustomMessage(
+		{ customType: "note", content: "pending", display: true },
+		{ deliverAs: "nextTurn" },
+	);
+	await first.ingress.dispose();
+	const next = await fixture(t, {
+		root: first.root,
+		manager: SessionManager.open(first.session.sessionManager.getSessionFile()),
+		admit: null,
+	});
+	assert.equal(next.ingress.branch().sourceRecovery.unresolved, 1);
+	await next.session.prompt("held");
+	assert.equal(next.sent.length, 0);
+});
+
+test("next-turn observation failure prevents Pi from retaining the message", async (t) => {
+	const f = await fixture(t, {
+		admit: null,
+		nextTurnObserver: async () => {
+			throw new Error("observation failed");
+		},
+	});
+	await assert.rejects(
+		f.session.sendCustomMessage({ customType: "note", content: "rejected", display: true }, { deliverAs: "nextTurn" }),
+		/observation failed/,
+	);
+	await f.session.prompt("later");
+	assert.equal(f.sent.length, 1);
+	assert.ok(!JSON.stringify(f.sent).includes("rejected"));
+	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.equal(record.dispatch.phase, "failed");
+	assert.equal(record.dispatch.promptClaims, undefined);
+});
+
+test("mutated next-turn context cannot acquire another submission's history receipt", async (t) => {
+	let message;
+	const f = await fixture(t, {
+		admit: null,
+		nextTurnObserver: async (value) => {
+			message = value;
+		},
+	});
+	await f.session.sendCustomMessage(
+		{ customType: "note", content: "original", display: true },
+		{ deliverAs: "nextTurn" },
+	);
+	message.content = "changed";
+	await assert.rejects(f.session.prompt("consume"), /Deferred context changed/);
+	assert.equal(f.sent.length, 0);
+	const records = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.ok(records.every((record) => !record.dispatch.promptClaims && !record.dispatch.promptHistory));
+});
+
+test("prompt-array mutation during observation cannot swap identical deferred source identities", async (t) => {
+	const f = await fixture(t, { admit: null });
+	for (let i = 0; i < 2; i++)
+		await f.session.sendCustomMessage(
+			{ customType: "note", content: "same", display: true },
+			{ deliverAs: "nextTurn" },
+		);
+	const store = f.ingress.branch().attachment.submissions;
+	const records = await store.snapshot();
+	const prompt = f.session.agent.prompt.bind(f.session.agent);
+	let batch;
+	t.mock.method(f.session.agent, "prompt", (input, ...args) => {
+		batch = input;
+		return prompt(input, ...args);
+	});
+	const dispatch = store.dispatch.bind(store);
+	t.mock.method(store, "dispatch", (id, revision, operation, run) =>
+		dispatch(id, revision, operation, (observer, submission) =>
+			run(
+				{
+					observe: async (input) => {
+						const index = await observer.observe(input);
+						if (input.kind === "prompt") [batch[1], batch[2]] = [batch[2], batch[1]];
+						return index;
+					},
+				},
+				submission,
+			),
+		),
+	);
+	await f.session.prompt("consume");
+	assert.equal(f.sent.length, 1);
+	const sources = await f.ingress.branch().native.sources(f.session.agent.state.messages);
+	assert.deepEqual(
+		sources.slice(1).map((source) => source.operationId),
+		records.map((record) => record.dispatch.operationId),
+	);
 });

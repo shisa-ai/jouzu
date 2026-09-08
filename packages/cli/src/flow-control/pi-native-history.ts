@@ -25,6 +25,7 @@ const matchesInput = (input: Claimed, message: AgentMessage) =>
 export class PiNativeHistory {
 	private readonly claimed: Claimed[] = [];
 	private readonly prompts: Claimed[] = [];
+	private readonly deferred = new WeakMap<object, Claimed>();
 	private readonly starting = new WeakMap<object, Claimed>();
 	private sources = new WeakMap<object, Omit<NativeRequestSource, "index">[]>();
 	private readonly unsubscribe: () => void;
@@ -175,11 +176,27 @@ export class PiNativeHistory {
 			if (!claimed) throw new FlowLedgerError("identity", "Native source has no retained consumption receipt.");
 		}
 	}
+	observeNextTurn(operationId: string, inputIndex: number, message: AgentMessage): void {
+		if (this.deferred.has(message)) throw new FlowLedgerError("identity", "Deferred context is already identified.");
+		this.deferred.set(message, {
+			message: structuredClone({ ...message, timestamp: 0 }),
+			operationId,
+			prompt: { inputIndex, messageIndex: 0 },
+			nativeTimestamp: true,
+		});
+	}
+	/** Only this dispatch's input is retained under its operation; deferred messages retain their own source. */
+	promptInput(input: string | AgentMessage | AgentMessage[]): string | AgentMessage | AgentMessage[] {
+		if (typeof input === "string") return input;
+		if (!Array.isArray(input)) return this.deferred.has(input) ? [] : input;
+		return input.filter((message) => !this.deferred.has(message));
+	}
 	observePrompt(
 		operationId: string,
 		inputIndex: number,
 		input: string | AgentMessage | AgentMessage[],
 		images?: ImageContent[],
+		original?: string | AgentMessage | AgentMessage[],
 	): () => void {
 		if (this.prompts.length) throw new FlowLedgerError("busy", "Native prompt history is already awaiting input.");
 		const nativeTimestamp = typeof input === "string";
@@ -189,12 +206,23 @@ export class PiNativeHistory {
 				: Array.isArray(input)
 					? input
 					: [input];
-		const captured = messages.map((message, messageIndex) => ({
-			message: structuredClone(message),
-			operationId,
-			prompt: { inputIndex, messageIndex },
-			nativeTimestamp,
-		}));
+		const originalMessages =
+			typeof original === "string" || original === undefined ? [] : Array.isArray(original) ? original : [original];
+		let messageIndex = 0;
+		const captured = messages.map((message, index) => {
+			const deferred = this.deferred.get(originalMessages[index]);
+			if (deferred) {
+				if (!matchesInput(deferred, message))
+					throw new FlowLedgerError("identity", "Deferred context changed before native consumption.");
+				return structuredClone(deferred);
+			}
+			return {
+				message: structuredClone(message),
+				operationId,
+				prompt: { inputIndex, messageIndex: messageIndex++ },
+				nativeTimestamp,
+			};
+		});
 		this.prompts.push(...captured);
 		return () => {
 			for (const item of captured) {

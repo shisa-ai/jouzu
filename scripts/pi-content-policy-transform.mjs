@@ -228,6 +228,10 @@ export function transform(path, source) {
 			"        this._buildRuntime({\n            activeToolNames: this._initialActiveToolNames,",
 			"        this._flowBinding = FlowIngressBinding.install(this, config.flowIngress);\n        this._buildRuntime({\n            activeToolNames: this._initialActiveToolNames,",
 		);
+		change(
+			'        if (options?.deliverAs === "nextTurn") {\n            this._pendingNextTurnMessages.push(appMessage);',
+			'        if (options?.deliverAs === "nextTurn") {\n            if (this.flowNextTurn) await this.flowNextTurn(appMessage);\n            this._flowBinding?.assertActive();\n            this._pendingNextTurnMessages.push(appMessage);',
+		);
 		change("    dispose() {", "    dispose() {\n        const flowClosing = this._flowBinding?.dispose();");
 		change(
 			"        this._disconnectFromAgent();\n        this._eventListeners = [];\n        cleanupSessionResources(this.sessionId);",
@@ -420,6 +424,10 @@ export function transform(path, source) {
 		);
 	} else if (path === "dist/core/agent-session.d.ts") {
 		change("    dispose(): void;", "    dispose(): Promise<void>;");
+		change(
+			"export declare class AgentSession {",
+			"export declare class AgentSession {\n    /** Observe exact native next-turn input before Pi retains it. Failure prevents enqueue. */\n    flowNextTurn?: (message: AgentMessage) => Promise<void>;",
+		);
 		text = `import type { FlowIngress } from "./jouzu-flow-ingress.js";\n${text}`;
 		change(
 			"    private _runAgentPrompt;",

@@ -12,6 +12,7 @@ function userInput(submission: FlowSubmission): boolean {
 function lane(submission: FlowSubmission): string {
 	const options = submission.args[1] as { deliverAs?: string; streamingBehavior?: string } | undefined;
 	if (submission.api === "steer" || submission.api === "followUp") return submission.api;
+	if (submission.api === "sendCustomMessage" && options?.deliverAs === "nextTurn") return "context";
 	if (!submission.hostState?.streaming) return "prompt";
 	return options?.deliverAs ?? options?.streamingBehavior ?? "prompt";
 }
@@ -51,8 +52,8 @@ export function decideNativeAdmission(
 	if (submission.api === "sendCustomMessage") {
 		const options = submission.args[1] as { deliverAs?: string; triggerTurn?: boolean } | undefined;
 		const wakes = options?.triggerTurn ?? submission.hostState?.streaming;
-		if (options?.deliverAs === "nextTurn" || wakes === undefined)
-			return hold("Deferred context requires a persistence receipt before release.");
+		if (options?.deliverAs === "nextTurn") return { allowed: true };
+		if (wakes === undefined) return hold("Deferred context requires a persistence receipt before release.");
 		if (wakes === false)
 			return host.isIdle && !host.isStreaming
 				? { allowed: true }

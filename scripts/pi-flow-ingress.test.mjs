@@ -714,3 +714,62 @@ test("branch callbacks reject self-disposal instead of waiting on themselves", a
 	await assert.rejects(session.navigateTree(target), /cannot join its own disposal/);
 	await session.dispose();
 });
+
+for (const rejects of [false, true]) {
+	test(`next-turn observer runs before native retention and can reject: ${rejects}`, async (t) => {
+		const { session, requests } = await createFlowSession(t, { persist: true });
+		const entered = deferred(),
+			release = deferred();
+		t.after(() => release.resolve());
+		let observed;
+		session.flowNextTurn = async (message) => {
+			observed = message;
+			entered.resolve();
+			await release.promise;
+			if (rejects) throw new Error("context rejected");
+		};
+		const sending = session.sendCustomMessage(
+			{ customType: "note", content: "deferred", display: true },
+			{ deliverAs: "nextTurn" },
+		);
+		const result = rejects ? assert.rejects(sending, /context rejected/) : sending;
+		await entered.promise;
+		await session.prompt("before retention");
+		assert.ok(!JSON.stringify(requests).includes("deferred"));
+		release.resolve();
+		await result;
+		await session.prompt("after retention");
+		assert.equal(JSON.stringify(requests).includes("deferred"), !rejects);
+		assert.equal(observed.role, "custom");
+	});
+}
+
+test("disposal during next-turn observation prevents delayed native retention", async (t) => {
+	const entered = deferred(),
+		release = deferred();
+	t.after(() => release.resolve());
+	const { session } = await createFlowSession(t, { ingress: { version: 1, submit: (_input, dispatch) => dispatch() } });
+	session.flowNextTurn = async () => {
+		entered.resolve();
+		await release.promise;
+	};
+	const sending = assert.rejects(
+		session.sendCustomMessage({ customType: "note", content: "late", display: true }, { deliverAs: "nextTurn" }),
+		/closed/,
+	);
+	await entered.promise;
+	const closing = session.dispose();
+	release.resolve();
+	await Promise.all([sending, closing]);
+	assert.equal(session._pendingNextTurnMessages.length, 0);
+});
+
+test("without an observer next-turn retention keeps Pi's synchronous enqueue timing", async (t) => {
+	const { session } = await createFlowSession(t);
+	const sending = session.sendCustomMessage(
+		{ customType: "note", content: "immediate retention", display: true },
+		{ deliverAs: "nextTurn" },
+	);
+	assert.equal(session._pendingNextTurnMessages.length, 1);
+	await sending;
+});

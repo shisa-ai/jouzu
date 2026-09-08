@@ -20,6 +20,8 @@ interface Frame {
 	observer: FlowNativeObserver;
 	writes: Promise<unknown>[];
 	context: boolean;
+	nextTurn: boolean;
+	nextTurnObserved?: boolean;
 	contextInput?: { index: number; message: AgentMessage };
 }
 const attached = new WeakSet<AgentSession>();
@@ -55,13 +57,15 @@ export class PiNativeDispatch {
 		this.hooks.set(agent, "prompt", async (input: string | AgentMessage | AgentMessage[], images?: ImageContent[]) => {
 			const frame = this.frame();
 			if (!frame) return typeof input === "string" ? prompt(input, images) : prompt(input);
-			const [captured, capturedImages] = structuredClone([input, images] as const);
-			const inputIndex = await frame.observer.observe({ kind: "prompt", args: [captured, capturedImages] });
+			const original = Array.isArray(input) ? [...input] : input;
+			const [captured, capturedImages] = structuredClone([original, images] as const);
+			const observedInput = structuredClone(this.history.promptInput(original));
+			const inputIndex = await frame.observer.observe({ kind: "prompt", args: [observedInput, capturedImages] });
 			this.frame();
 			// Let Pi reject concurrent execution without attaching input to the running prompt.
 			if (agent.state.isStreaming)
 				return typeof captured === "string" ? prompt(captured, capturedImages) : prompt(captured);
-			const release = this.history.observePrompt(frame.operationId, inputIndex, captured, capturedImages);
+			const release = this.history.observePrompt(frame.operationId, inputIndex, captured, capturedImages, original);
 			try {
 				return await (typeof captured === "string" ? prompt(captured, capturedImages) : prompt(captured));
 			} finally {
@@ -88,6 +92,21 @@ export class PiNativeDispatch {
 				return queue;
 			});
 		}
+		const nextTurn = session.flowNextTurn;
+		this.hooks.set(session, "flowNextTurn", async (message) => {
+			const frame = this.frame();
+			if (!frame) return nextTurn?.(message);
+			if (!frame.nextTurn || frame.nextTurnObserved)
+				throw new FlowLedgerError("identity", "Unexpected deferred context in native dispatch.");
+			const captured = structuredClone(message);
+			const index = await frame.observer.observe({ kind: "context", args: [{ ...captured, timestamp: 0 }] });
+			await nextTurn?.(message);
+			this.frame();
+			if (!isDeepStrictEqual(message, captured))
+				throw new FlowLedgerError("identity", "Deferred context changed during observation.");
+			this.history.observeNextTurn(frame.operationId, index, message);
+			frame.nextTurnObserved = true;
+		});
 		const manager = session.sessionManager;
 		const append = manager.appendCustomMessageEntry.bind(manager);
 		this.hooks.set(manager, "appendCustomMessageEntry", (customType, content, display, details) => {
@@ -397,7 +416,14 @@ export class PiNativeDispatch {
 					(!this.session.isIdle || this.session.isStreaming || this.session.isRetrying || this.session.isCompacting)
 				)
 					throw new FlowLedgerError("busy", "Non-waking context requires an idle append boundary.");
-				const frame: Frame = { active: true, operationId, observer, writes: [], context };
+				const frame: Frame = {
+					active: true,
+					operationId,
+					observer,
+					writes: [],
+					context,
+					nextTurn: submission.api === "sendCustomMessage" && options?.deliverAs === "nextTurn",
+				};
 				return this.frames.run(frame, async () => {
 					try {
 						if (context) {
@@ -426,6 +452,8 @@ export class PiNativeDispatch {
 								throw new FlowLedgerError("busy", "Non-waking append boundary changed.");
 						}
 						const result = await run();
+						if (frame.nextTurn && !frame.nextTurnObserved)
+							throw new FlowLedgerError("identity", "Deferred context has no native observation.");
 						if (frame.contextInput)
 							throw new FlowLedgerError("identity", "Non-waking input has no native append receipt.");
 						frame.active = false;
