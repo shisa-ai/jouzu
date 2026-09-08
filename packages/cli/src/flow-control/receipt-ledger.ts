@@ -472,6 +472,17 @@ export class FlowReceiptLedger {
 		});
 	}
 
+	/** Host abort-and-join proves inactivity, but not the missing external outcome. */
+	uncertain(id: string, reason: string): Promise<void> {
+		requireIdentity(reason);
+		return this.mutate((state) => {
+			const attempt = this.attempt(state, id, ["handed-off"]);
+			attempt.phase = "uncertain";
+			attempt.reason = reason;
+			delete state.activeAttemptId;
+		});
+	}
+
 	/** Called only after host run settlement or abort-and-join, including native retries and tools. */
 	settle(id: string, outcome: FlowOutcome): Promise<void> {
 		return this.mutate((state) => {

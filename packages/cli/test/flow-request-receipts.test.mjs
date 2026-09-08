@@ -4,6 +4,7 @@ import { BACKGROUND_CONTEXT as context, MemorySessionRepo } from "@earendil-work
 import { stream } from "@earendil-works/pi-ai/api/openai-completions";
 import { assistant, createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { FlowModelInput } from "../dist/flow-control/model-input.js";
+import { PiHostBoundary } from "../dist/flow-control/pi-host-boundary.js";
 import { createPiLedgerStore } from "../dist/flow-control/pi-ledger-store.js";
 import { PiQueueReceipts } from "../dist/flow-control/pi-queue-receipts.js";
 import { PiRequestReceipts } from "../dist/flow-control/pi-request-receipts.js";
@@ -43,7 +44,9 @@ async function fixture(t, { transform, fetch, projections, native, reversed = fa
 		containsUserInput: () => false,
 	});
 	queue ??= new PiQueueReceipts(session.agent, ledger);
+	const boundary = new PiHostBoundary(session);
 	t.after(async () => {
+		boundary.close();
 		bridge.close();
 		queue.close();
 		await repo.close(context);
@@ -61,7 +64,7 @@ async function fixture(t, { transform, fetch, projections, native, reversed = fa
 	await queue.enqueue("attempt", () =>
 		session.agent.followUp({ role: "user", content: composition.content, timestamp: 1 }),
 	);
-	return { session, ledger, bridge, queue, sent, composition, store };
+	return { session, ledger, bridge, queue, sent, composition, store, boundary };
 }
 
 test("native request joins model admission, final payload, handoff, and outcome without settling the run", async (t) => {
@@ -209,7 +212,7 @@ for (const afterHandoff of [false, true])
 
 test("AgentSession automatic retry retains the attempt across native runs", async (t) => {
 	let calls = 0;
-	const { session, ledger, sent } = await fixture(t, {
+	const { session, ledger, sent, boundary } = await fixture(t, {
 		fetch: () => {
 			calls++;
 			return calls === 2
@@ -222,8 +225,12 @@ test("AgentSession automatic retry retains the attempt across native runs", asyn
 	});
 	session.settingsManager.applyOverrides({ retry: { enabled: true, maxRetries: 1, baseDelayMs: 1 } });
 	const retryStates = [];
+	const retryBoundaries = [];
 	session.subscribe((event) => {
-		if (event.type === "auto_retry_start") retryStates.push(ledger.snapshot());
+		if (event.type === "auto_retry_start") {
+			retryStates.push(ledger.snapshot());
+			retryBoundaries.push(boundary.reconcile(ledger, "attempt"));
+		}
 	});
 	await session.prompt("User starts work");
 	const state = await ledger.snapshot();
@@ -236,6 +243,9 @@ test("AgentSession automatic retry retains the attempt across native runs", asyn
 		["failure", "success"],
 	);
 	assert.equal(session.isIdle, true);
+	assert.equal((await retryBoundaries[0]).kind, "busy");
+	assert.equal((await boundary.reconcile(ledger, "attempt")).value.kind, "settled");
+	assert.equal((await ledger.snapshot()).activeAttemptId, undefined);
 });
 
 test("concurrent sessions and reversed attachment order keep distinct request receipts", async (t) => {
