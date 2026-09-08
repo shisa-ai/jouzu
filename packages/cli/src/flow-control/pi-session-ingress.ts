@@ -1,13 +1,16 @@
 import { AsyncLocalStorage } from "node:async_hooks";
+import { randomUUID } from "node:crypto";
+import { isDeepStrictEqual } from "node:util";
 import type { AgentSession, CreateAgentSessionOptions } from "@earendil-works/pi-coding-agent";
-import type { FlowProducer } from "./controller.js";
+import { type FlowProducer, retainedByReceipt } from "./controller.js";
+import type { FlowInputItem } from "./model-input.js";
 import { awaitingNativeInput, decideNativeAdmission, isNativeUserInput } from "./native-admission.js";
 import { type PiFlowBranchResources, type PiFlowSessionOptions, PiFlowSessionService } from "./pi-session-service.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowNativeInput } from "./submission-store.js";
 import { activeAdmissionHolds } from "./submission-view.js";
-
 import type { FlowWaitClock } from "./wait-deadlines.js";
+import { createFlowWaitDecisionProducer } from "./wait-decisions.js";
 
 type Ingress = NonNullable<CreateAgentSessionOptions["flowIngress"]>;
 type Submission = Parameters<Ingress["submit"]>[0];
@@ -40,6 +43,10 @@ export class PiSessionFlowIngress implements Ingress {
 	private disposed = false;
 	private fenced = false;
 	private readonly pending = new Map<string, Pending>();
+	private readonly waitContexts = new Map<
+		string,
+		{ branch: PiFlowBranchResources; args: unknown[]; used: boolean; completed: boolean }
+	>();
 	private readonly frames = new AsyncLocalStorage<{ active: boolean; id?: string }>();
 	private readonly active = new Set<Promise<unknown>>();
 	private producerWake?: Promise<void>;
@@ -357,6 +364,21 @@ export class PiSessionFlowIngress implements Ingress {
 			const saved = await branch.attachment.submissions.retain(captured);
 			if (this.branch() !== branch) throw new FlowLedgerError("stale", "Flow submission branch changed.");
 			if (saved.duplicate || saved.status === "cancelled") return;
+			const contextId = (captured.args[0] as { details?: { waitContextId?: string } } | undefined)?.details
+				?.waitContextId;
+			const context = contextId ? this.waitContexts.get(contextId) : undefined;
+			if (
+				context &&
+				captured.api === "sendCustomMessage" &&
+				context.branch === branch &&
+				isDeepStrictEqual(context.args, captured.args)
+			) {
+				if (context.used) throw new FlowLedgerError("stale", "Wait context callback was already used.");
+				context.used = true;
+				await branch.native.dispatch(saved.id, saved.revision, captured.id, dispatch);
+				context.completed = true;
+				return;
+			}
 			if (user) this.retainedUserInput.add(saved.id);
 			this.pending.set(saved.id, { branch, submission: captured, revision: saved.revision, dispatch });
 			try {
@@ -370,6 +392,43 @@ export class PiSessionFlowIngress implements Ingress {
 			if (user) this.activeUserInput--;
 		});
 	}
+	private async appendUserWaitContext(branch: PiFlowBranchResources): Promise<boolean> {
+		const session = this.session;
+		if (!session?.isIdle || session.isStreaming || session.isRetrying || session.isCompacting) return false;
+		const signal = new AbortController().signal;
+		const source = createFlowWaitDecisionProducer(branch.attachment.waits, {
+			submissions: branch.attachment.submissions,
+			requests: branch.attachment.nativeRequests,
+		});
+		const ledger = await branch.attachment.ledger.snapshot();
+		const candidates = (await source.snapshot(signal)).filter((intent) => !retainedByReceipt(intent, ledger));
+		if (!candidates.length) return false;
+		const selected: FlowInputItem[] = [];
+		const encode = (items: FlowInputItem[]) =>
+			JSON.stringify({ waitDecisions: items, remainingWaitDecisions: candidates.length - items.length });
+		for (const intent of candidates) {
+			if (this.branch() !== branch) throw new FlowLedgerError("stale", "User wait context branch changed.");
+			const item = await source.build(intent, signal);
+			if (Buffer.byteLength(encode([...selected, item])) <= this.options.maxInputBytes) selected.push(item);
+		}
+		const content = encode(selected);
+		if (Buffer.byteLength(content) > this.options.maxInputBytes)
+			throw new FlowLedgerError("capacity", "Wait context summary exceeds the input limit.");
+		if (this.branch() !== branch) throw new FlowLedgerError("stale", "User wait context branch changed.");
+		const id = randomUUID();
+		const message = { customType: "jouzu-wait-context", content, display: false, details: { waitContextId: id } };
+		const options = { triggerTurn: false };
+		const context = { branch, args: structuredClone([message, options]), used: false, completed: false };
+		this.waitContexts.set(id, context);
+		try {
+			await session.sendCustomMessage(message, options);
+			if (!context.completed) throw new FlowLedgerError("identity", "Wait context lacks a completed native append.");
+			return true;
+		} finally {
+			this.waitContexts.delete(id);
+		}
+	}
+
 	/** Release only a live retained callback after the host's ordinary admission policy succeeds. */
 	release(id: string, revision: number): Promise<boolean> {
 		const branch = this.branch();
@@ -386,6 +445,11 @@ export class PiSessionFlowIngress implements Ingress {
 			if (branch.attachment.nativeRequests.recoveryBlocked) return false;
 			// Remove before dispatch so a reentrant release cannot consume the callback twice.
 			const user = isNativeUserInput(pending.submission);
+			if (user && pending.submission.api === "prompt" && (await this.appendUserWaitContext(branch))) {
+				if (!(await this.admit(structuredClone(pending.submission), branch, "submission"))) return false;
+			}
+			if (this.branch() !== branch || this.pending.get(id) !== pending)
+				throw new FlowLedgerError("stale", "User dispatch changed during context preparation.");
 			if (user) this.activeUserInput++;
 			this.pending.delete(id);
 			try {

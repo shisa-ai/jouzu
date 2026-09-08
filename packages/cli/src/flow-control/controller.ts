@@ -62,7 +62,7 @@ async function cancellable<T>(signal: AbortSignal, run: () => Promise<T>): Promi
 }
 
 /** Consumed input never becomes an automatic replay merely because a producer repeats its descriptor. */
-function retainedByReceipt(intent: FlowIntent, state: FlowLedgerState): boolean {
+export function retainedByReceipt(intent: FlowIntent, state: FlowLedgerState): boolean {
 	return state.attempts.some((attempt) => {
 		if (attempt.phase === "cancelled" && attempt.consumed === false) return false;
 		const selected = attempt.admission?.choice.intent;

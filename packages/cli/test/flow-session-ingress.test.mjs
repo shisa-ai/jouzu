@@ -2150,13 +2150,13 @@ for (const withUser of [false, true])
 		assert.equal(f.sent.length, 0);
 		allow = true;
 		clock.advance(100);
-		const expected = withUser ? 3 : 2;
+		const expected = 2;
 		await waitForFlow(() => f.sent.length === expected);
 		if (withUser) {
 			assert.ok(JSON.stringify(f.sent[0]).includes("user priority marker"));
 			assert.ok(!JSON.stringify(f.sent[0]).includes("retained automation marker"));
 		}
-		const decision = JSON.stringify(f.sent[withUser ? 1 : 0]);
+		const decision = JSON.stringify(f.sent[0]);
 		assert.ok(decision.includes("expired"));
 		assert.ok(!decision.includes("retained automation marker"));
 		assert.ok(JSON.stringify(f.sent.at(-1)).includes("retained automation marker"));
@@ -2312,7 +2312,7 @@ test("multiple terminal waits and eligible work share one request with separate 
 });
 
 for (const intact of [true, false])
-	test(`native user context ${intact ? "acknowledges exact" : "does not acknowledge altered"} terminal decision text`, async (t) => {
+	test(`native context ${intact ? "acknowledges exact" : "does not acknowledge altered"} terminal decision text`, async (t) => {
 		const f = await fixture(t, { provider: true, admit: null }),
 			branch = f.ingress.branch();
 		await declareIngressWait(branch);
@@ -2327,7 +2327,7 @@ for (const intact of [true, false])
 			{ triggerTurn: false },
 		);
 		assert.equal(f.sent.length, 0);
-		await f.session.prompt("user requests next step");
+		await f.session.sendUserMessage("native request next step");
 		assert.equal(f.sent.length, 1);
 		await branch.controller.wake();
 		assert.equal(f.sent.length, intact ? 1 : 2);
@@ -2344,3 +2344,55 @@ for (const intact of [true, false])
 			assert.equal(next.sent.length, 0);
 		}
 	});
+
+test("idle user prompt automatically includes terminal decisions without changing user text", async (t) => {
+	const admitted = [];
+	const f = await fixture(t, {
+		provider: true,
+		admit: async (submission) => {
+			admitted.push(submission.api);
+			return submission.api === "prompt";
+		},
+	});
+	const branch = f.ingress.branch();
+	await declareIngressWait(branch);
+	await branch.attachment.waits.expireDue(100);
+	const text = "次の手順を確認して。\nPreserve this user input exactly.";
+	await f.session.prompt(text);
+	assert.equal(f.sent.length, 1);
+	const records = await branch.attachment.submissions.snapshot();
+	const user = records.find((record) => record.submission.api === "prompt");
+	assert.equal(user.submission.args[0], text);
+	assert.ok(JSON.stringify(f.sent[0]).includes("expired"));
+	assert.ok(
+		records.some((record) => record.submission.api === "sendCustomMessage" && record.dispatch?.phase === "returned"),
+	);
+	assert.ok(admitted.every((api) => api === "prompt"));
+	await branch.controller.wake();
+	assert.equal(f.sent.length, 1);
+	await f.ingress.dispose();
+	const next = await fixture(t, {
+		root: f.root,
+		provider: true,
+		admit: null,
+		manager: SessionManager.open(f.session.sessionManager.getSessionFile()),
+	});
+	await next.ingress.branch().controller.wake();
+	assert.equal(next.sent.length, 0);
+});
+
+test("an external wait-context label does not bypass host admission", async (t) => {
+	const f = await fixture(t, { provider: true, admit: async () => false });
+	await f.session.sendCustomMessage(
+		{
+			customType: "jouzu-wait-context",
+			content: "external",
+			display: false,
+			details: { waitContextId: "external-id" },
+		},
+		{ triggerTurn: false },
+	);
+	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.equal(record.dispatch, undefined);
+	assert.equal(f.sent.length, 0);
+});
