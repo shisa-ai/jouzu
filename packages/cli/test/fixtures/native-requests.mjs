@@ -17,6 +17,7 @@ export async function nativeRequests(
 		retainInputs = false,
 		contextTransform,
 		identifySources,
+		manager,
 	} = {},
 ) {
 	const root = supplied ?? (await mkdtemp(join(tmpdir(), "jouzu-native-requests-")));
@@ -24,6 +25,7 @@ export async function nativeRequests(
 	const { session } = await createFlowSession(t, {
 		root: join(root, "host"),
 		persist: true,
+		sessionManager: manager,
 		extensions: transform ? [(pi) => pi.on("before_provider_request", transform)] : [],
 		ingress: retainInputs
 			? {

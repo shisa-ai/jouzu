@@ -145,6 +145,17 @@ export class PiNativeDispatch {
 		this.assertActive();
 		return members;
 	}
+	async recoverSources(): Promise<{ recovered: number; unresolved: number }> {
+		this.assertActive();
+		if (this.active) throw new FlowLedgerError("busy", "Native source recovery requires drained dispatch.");
+		this.active++;
+		try {
+			return await this.history.recover(this.session, this.store, () => this.assertActive());
+		} finally {
+			this.active--;
+			if (!this.active) this.drained?.();
+		}
+	}
 	heldInputs(): { id: string; revision: number; reason: string }[] {
 		const queued = this.session.agent.inspectQueuedMessages();
 		for (const id of this.held.keys()) if (!queued.some((item) => item.id === id)) this.held.delete(id);

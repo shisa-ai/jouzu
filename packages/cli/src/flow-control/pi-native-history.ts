@@ -5,6 +5,7 @@ import type { ImageContent } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
 import type { NativeRequestSource } from "./native-request-store.js";
 import { verifyPiHistoryEntry } from "./pi-history-receipts.js";
+import { recoverNativeSources } from "./pi-native-source-recovery.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowSubmissionStore } from "./submission-store.js";
 
@@ -25,7 +26,7 @@ export class PiNativeHistory {
 	private readonly claimed: Claimed[] = [];
 	private readonly prompts: Claimed[] = [];
 	private readonly starting = new WeakMap<object, Claimed>();
-	private readonly sources = new WeakMap<object, Omit<NativeRequestSource, "index">[]>();
+	private sources = new WeakMap<object, Omit<NativeRequestSource, "index">[]>();
 	private readonly unsubscribe: () => void;
 	constructor(session: AgentSession, store: FlowSubmissionStore) {
 		this.unsubscribe = session.agent.subscribe(async (event) => {
@@ -109,6 +110,16 @@ export class PiNativeHistory {
 			const source = sources?.length === counts.get(message) ? sources?.[occurrence] : undefined;
 			return source ? [{ ...structuredClone(source), index }] : [];
 		});
+	}
+	async recover(
+		session: AgentSession,
+		store: FlowSubmissionStore,
+		assertActive: () => void,
+	): Promise<{ recovered: number; unresolved: number }> {
+		const recovery = await recoverNativeSources(session, store);
+		assertActive();
+		this.sources = recovery.apply();
+		return { recovered: recovery.recovered, unresolved: recovery.unresolved };
 	}
 	async validateSources(members: NativeRequestSource[], store: FlowSubmissionStore): Promise<void> {
 		const records = await store.snapshot();

@@ -25,6 +25,7 @@ export interface PiFlowBranchResources {
 	native: PiNativeDispatch;
 	requests: PiNativeRequests;
 	recovery: { recovered: number; unresolved: number };
+	sourceRecovery: { recovered: number; unresolved: number };
 }
 
 /** Own session storage and each branch controller across awaited Pi lifecycle callbacks. */
@@ -91,12 +92,14 @@ export class PiFlowSessionService {
 			const recovery = await recoverPiHistory(this.session.sessionManager, attachment.ledger);
 			const state = await attachment.ledger.snapshot();
 			const requestsState = await attachment.nativeRequests.snapshot();
-			const recoveryBlocked =
+			let recoveryBlocked =
 				recovery.unresolved > 0 ||
 				state.attempts.some((attempt) => attempt.phase === "uncertain") ||
 				requestsState.some((request) => request.outcome === undefined);
 			const native = new PiNativeDispatch(this.session, attachment.submissions);
 			this.opening.native = native;
+			const sourceRecovery = await native.recoverSources();
+			recoveryBlocked ||= sourceRecovery.unresolved > 0;
 			const requests = new PiNativeRequests(
 				this.session,
 				attachment.nativeRequests,
@@ -115,7 +118,16 @@ export class PiFlowSessionService {
 			);
 			this.opening.host = host;
 			const controller = new SessionFlowController(host, this.options.maxInputBytes, this.options.maxResultBytes);
-			this.current = { scope: Object.freeze({ ...scope }), attachment, host, controller, native, requests, recovery };
+			this.current = {
+				scope: Object.freeze({ ...scope }),
+				attachment,
+				host,
+				controller,
+				native,
+				requests,
+				recovery,
+				sourceRecovery,
+			};
 			this.opening = undefined;
 		} catch (error) {
 			// A failed host close must retain its storage ownership.

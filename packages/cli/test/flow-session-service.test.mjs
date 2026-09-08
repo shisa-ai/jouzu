@@ -26,7 +26,12 @@ async function fixture(t, config = {}) {
 		sessionManager: config.manager,
 		ingress: {
 			version: 1,
-			submit: (_submission, dispatch) => dispatch(),
+			submit: async (submission, dispatch) => {
+				if (!config.retainInputs) return dispatch();
+				const branch = service.branch();
+				const saved = await branch.attachment.submissions.retain(submission);
+				return branch.native.dispatch(saved.id, saved.revision, submission.id, dispatch);
+			},
 			beforeBranchChange: () => service.beforeBranchChange(),
 			branchChanged: () => service.branchChanged(),
 			dispose: () => service?.close(),
@@ -167,6 +172,21 @@ test("unsettled native requests hold automation after session-service reopen", a
 	await next.session.prompt("must reconcile");
 	assert.equal(next.requests.length, 0);
 	assert.match(next.session.agent.state.errorMessage, /requires reconciliation/);
+});
+
+test("missing source history holds session-service automation after reopen", async (t) => {
+	const first = await fixture(t, { retainInputs: true });
+	t.mock.method(first.service.branch().attachment.submissions, "recordPromptHistory", async () => {});
+	await first.session.prompt("source missing history");
+	await first.service.close();
+	const next = await fixture(t, {
+		root: first.root,
+		manager: SessionManager.open(first.session.sessionManager.getSessionFile()),
+		retainInputs: true,
+	});
+	assert.deepEqual(next.service.branch().sourceRecovery, { recovered: 0, unresolved: 1 });
+	assert.equal(next.service.branch().host.gate().recoveryBlocked, true);
+	assert.equal(next.requests.length, 0);
 });
 
 test("failed navigation stays held on reopen and failed attachment releases its session lease", async (t) => {
