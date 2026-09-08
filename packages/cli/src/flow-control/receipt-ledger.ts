@@ -46,7 +46,7 @@ export interface FlowAttempt {
 	phase: FlowAttemptPhase;
 	members: FlowMember[];
 	queue?: { id: string; revision: number };
-	history: { id: string; revision: string; entryId: string }[];
+	history: { id: string; revision: string; entryId: string; entryHash?: string }[];
 	requests: FlowRequest[];
 	outcome?: FlowOutcome;
 	reason?: string;
@@ -202,6 +202,8 @@ export class FlowReceiptLedger {
 				)
 					throw new FlowLedgerError("schema", "Invalid persisted history membership.");
 				requireIdentity(receipt.entryId);
+				if (receipt.entryHash !== undefined && !/^[a-f0-9]{64}$/.test(receipt.entryHash))
+					throw new FlowLedgerError("identity", "Invalid history content hash.");
 				histories.add(memberKey(receipt));
 			}
 			for (const request of attempt.requests) {
@@ -331,12 +333,21 @@ export class FlowReceiptLedger {
 			const attempt = this.attempt(state, id, ["claimed", "prepared", "handed-off", "running", "settled", "withheld"]);
 			for (const receipt of captured) {
 				requireIdentity(receipt.entryId);
+				if (receipt.entryHash !== undefined && !/^[a-f0-9]{64}$/.test(receipt.entryHash))
+					throw new FlowLedgerError("identity", "Invalid history content hash.");
 				if (!attempt.members.some((member) => memberKey(member) === memberKey(receipt)))
 					throw new FlowLedgerError("identity", "History receipt has unknown membership.");
 				const previous = attempt.history.find((item) => memberKey(item) === memberKey(receipt));
-				if (previous && previous.entryId !== receipt.entryId)
+				if (
+					previous &&
+					(previous.entryId !== receipt.entryId ||
+						(previous.entryHash !== undefined &&
+							receipt.entryHash !== undefined &&
+							previous.entryHash !== receipt.entryHash))
+				)
 					throw new FlowLedgerError("identity", "History receipt identity changed.");
 				if (!previous) attempt.history.push(receipt);
+				else if (receipt.entryHash !== undefined) previous.entryHash = receipt.entryHash;
 			}
 		});
 	}
