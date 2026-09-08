@@ -1,18 +1,12 @@
 import { createHash } from "node:crypto";
 import { BACKGROUND_CONTEXT, type Session, type SessionReader, setValue, value } from "@earendil-works/pi-agent-core";
+import { type FlowResultReference, normalizeFlowResults } from "./result-types.js";
+
+export type { FlowResultReference } from "./result-types.js";
+
 import type { FlowOwnership } from "./ownership.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 
-export interface FlowResultReference {
-	id: string;
-	producer: string;
-	execution: string;
-	revision: string;
-	status: "success" | "failure" | "cancelled";
-	title: string;
-	reference: string;
-	warnings: string[];
-}
 interface Manifest {
 	version: 1;
 	scope: FlowScope;
@@ -43,46 +37,12 @@ const hash = (data: unknown) => createHash("sha256").update(JSON.stringify(data)
 const bytes = (data: unknown) => Buffer.byteLength(JSON.stringify(data));
 const key = (member: FlowResultReference) =>
 	JSON.stringify([member.producer, member.id, member.execution, member.revision]);
-const idValid = (id: unknown) => typeof id === "string" && id.length > 0 && id.length <= 512;
 const sameScope = (a: FlowScope, b: FlowScope) => a?.sessionId === b.sessionId && a?.branchId === b.branchId;
 const referenceFor = (id: string) => `flow-results:${id}`;
 function referenceId(reference: string): string {
 	if (typeof reference !== "string" || !/^flow-results:[a-f0-9]{64}$/.test(reference))
 		throw new FlowLedgerError("identity", "Invalid result manifest reference.");
 	return reference.slice(13);
-}
-function normalize(members: FlowResultReference[], maxMembers: number): FlowResultReference[] {
-	if (!Array.isArray(members) || members.length < 1 || members.length > maxMembers)
-		throw new FlowLedgerError("capacity", "Invalid result manifest member count.");
-	const seen = new Set<string>();
-	return members
-		.map((member) => {
-			if (
-				!member ||
-				![member.id, member.producer, member.execution, member.revision, member.reference].every(idValid) ||
-				!["success", "failure", "cancelled"].includes(member.status) ||
-				typeof member.title !== "string" ||
-				Buffer.byteLength(member.title) > 4096 ||
-				!Array.isArray(member.warnings) ||
-				member.warnings.length > 16 ||
-				member.warnings.some((warning) => typeof warning !== "string" || Buffer.byteLength(warning) > 4096)
-			)
-				throw new FlowLedgerError("schema", "Invalid retained result metadata.");
-			const identity = key(member);
-			if (seen.has(identity)) throw new FlowLedgerError("identity", "Duplicate result manifest member.");
-			seen.add(identity);
-			return {
-				id: member.id,
-				producer: member.producer,
-				execution: member.execution,
-				revision: member.revision,
-				status: member.status,
-				title: member.title,
-				reference: member.reference,
-				warnings: [...member.warnings],
-			};
-		})
-		.sort((a, b) => (key(a) < key(b) ? -1 : key(a) > key(b) ? 1 : 0));
 }
 
 /** Retain metadata and retrieval references only. Reads never acknowledge output or delivery. */
@@ -141,7 +101,7 @@ export class FlowResultManifestStore {
 			hash(record) !== entry.id
 		)
 			throw new FlowLedgerError("identity", "Result manifest content is missing or changed.");
-		const members = normalize(record.members, this.limits.maxMembers);
+		const members = normalizeFlowResults(record.members, this.limits.maxMembers);
 		if (JSON.stringify(members) !== JSON.stringify(record.members))
 			throw new FlowLedgerError("schema", "Result manifest members are not canonical.");
 		return structuredClone(record);
@@ -150,7 +110,7 @@ export class FlowResultManifestStore {
 		const record: Manifest = {
 			version: 1,
 			scope: this.ownership.scope,
-			members: normalize(members, this.limits.maxMembers),
+			members: normalizeFlowResults(members, this.limits.maxMembers),
 		};
 		const id = hash(record);
 		return this.ownership.run(() =>

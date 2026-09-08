@@ -7,6 +7,7 @@ import { assistant, createFlowSession } from "../../../scripts/fixtures/pi-flow-
 import { FlowModelInput, prepareFlowModelInput, validateFlowToolOrder } from "../dist/flow-control/model-input.js";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { PiQueueReceipts } from "../dist/flow-control/pi-queue-receipts.js";
+import { buildFlowResultEnvelope } from "../dist/flow-control/result-envelope.js";
 
 const item = (id, kind = "result", text = "same") => ({ id, revision: "1", kind, text });
 const user = (content) => ({ role: "user", content, timestamp: 1 });
@@ -244,4 +245,45 @@ test("aggregate membership cannot duplicate a result or relabel required work as
 	assert.throws(() => FlowModelInput.compose("attempt", [{ ...item("batch"), resultManifest }, item("first")], 4096), {
 		code: "identity",
 	});
+});
+
+test("context transformation cannot send an aggregate with altered mandatory counts", async (t) => {
+	const { item: aggregate } = await buildFlowResultEnvelope({
+		attemptId: "attempt",
+		id: "batch",
+		revision: "1",
+		maxBytes: 4096,
+		producerOrder: ["worker"],
+		members: [
+			{
+				id: "result",
+				producer: "worker",
+				execution: "exec",
+				revision: "1",
+				status: "failure",
+				title: "Failed",
+				reference: "result:1",
+				warnings: [],
+			},
+		],
+		retain: async () => `flow-results:${"a".repeat(64)}`,
+	});
+	const { requests, state } = await fixture(t, [item("work", "work", "Do work"), aggregate], (messages) =>
+		messages.map((message) => {
+			if (message.role !== "custom") return message;
+			const content = structuredClone(message.content);
+			const frame = JSON.parse(content[1].text);
+			const body = JSON.parse(frame.content);
+			body.counts.failure = 0;
+			frame.content = JSON.stringify(body);
+			content[1].text = JSON.stringify(frame);
+			return { ...message, content };
+		}),
+	);
+	assert.equal(requests.length, 0);
+	assert.equal(state.attempts[0].phase, "withheld");
+	assert.deepEqual(
+		state.attempts[0].requests[0].inclusion.map((item) => item.disposition),
+		["included", "replaced"],
+	);
 });

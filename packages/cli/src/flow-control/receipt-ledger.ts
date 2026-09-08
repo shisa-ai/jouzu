@@ -18,7 +18,7 @@ export interface FlowMember {
 	required: boolean;
 	contentHash: string;
 	sourceSubmission?: { id: string; revision: number };
-	inputFrame?: { id: string; revision: string; parts: number };
+	inputFrame?: { id: string; revision: string; parts: number; intact?: boolean };
 }
 
 export interface FlowInclusion {
@@ -123,7 +123,11 @@ function validateMembers(members: FlowMember[]): void {
 		if (member.inputFrame !== undefined) {
 			requireIdentity(member.inputFrame?.id);
 			requireIdentity(member.inputFrame.revision);
-			if (!Number.isSafeInteger(member.inputFrame.parts) || member.inputFrame.parts < 1)
+			if (
+				!Number.isSafeInteger(member.inputFrame.parts) ||
+				member.inputFrame.parts < 1 ||
+				(member.inputFrame.intact !== undefined && typeof member.inputFrame.intact !== "boolean")
+			)
 				throw new FlowLedgerError("identity", "Invalid persisted input frame.");
 		}
 		if (!/^[a-f0-9]{64}$/.test(member.contentHash))
@@ -476,12 +480,19 @@ export class FlowReceiptLedger {
 			attempt.requests.push({ id: requestId, inclusion: captured, containsUserInput, handedOff: false });
 			const rejected = attempt.members.some(
 				(member) =>
-					member.required && captured.find((item) => memberKey(item) === memberKey(member))?.disposition !== "included",
+					(member.required &&
+						captured.find((item) => memberKey(item) === memberKey(member))?.disposition !== "included") ||
+					(member.inputFrame?.intact &&
+						captured.some(
+							(item) => memberKey(item) === memberKey(member) && ["replaced", "rejected"].includes(item.disposition),
+						)),
 			);
 			const empty = !captured.some((item) => item.disposition === "included");
 			attempt.phase = rejected || empty ? "withheld" : "prepared";
 			if (attempt.phase === "withheld") {
-				attempt.reason = rejected ? "Required input was filtered." : "No composed input survived filtering.";
+				attempt.reason = rejected
+					? "Required input or intact aggregate metadata was filtered."
+					: "No composed input survived filtering.";
 				if (attempt.requests.some((request) => request.handedOff)) attempt.phase = "running";
 				else delete state.activeAttemptId;
 			}
@@ -502,8 +513,14 @@ export class FlowReceiptLedger {
 				captured.inclusion.some((item) => item.disposition === "included") &&
 				attempt.members.every(
 					(member) =>
-						!member.required ||
-						captured.inclusion.some((item) => memberKey(item) === memberKey(member) && item.disposition === "included"),
+						(!member.required ||
+							captured.inclusion.some(
+								(item) => memberKey(item) === memberKey(member) && item.disposition === "included",
+							)) &&
+						(!member.inputFrame?.intact ||
+							!captured.inclusion.some(
+								(item) => memberKey(item) === memberKey(member) && ["replaced", "rejected"].includes(item.disposition),
+							)),
 				);
 			if (admitted && attempt.admission && !attempt.admission.charged) {
 				const { choice } = attempt.admission;

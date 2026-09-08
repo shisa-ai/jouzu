@@ -10,13 +10,14 @@ import { PiQueueReceipts } from "../dist/flow-control/pi-queue-receipts.js";
 import { PiRequestReceipts } from "../dist/flow-control/pi-request-receipts.js";
 import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
 import { FlowReceiptLedger } from "../dist/flow-control/receipt-ledger.js";
+import { buildFlowResultEnvelope } from "../dist/flow-control/result-envelope.js";
 
 const answer = (tool = false) =>
 	new Response(
 		`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta: tool ? { tool_calls: [{ index: 0, id: "call", type: "function", function: { name: "probe", arguments: "{}" } }] } : { content: "Done" }, finish_reason: null }] })}\n\ndata: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta: {}, finish_reason: tool ? "tool_calls" : "stop" }] })}\n\ndata: [DONE]\n\n`,
 		{ headers: { "Content-Type": "text/event-stream" } },
 	);
-async function fixture(t, { transform, fetch, projections, native, reversed = false } = {}) {
+async function fixture(t, { transform, fetch, projections, native, reversed = false, inputs } = {}) {
 	const { session } = await createFlowSession(t, {
 		extensions: transform ? [(pi) => pi.on("before_provider_request", transform)] : [],
 	});
@@ -53,7 +54,7 @@ async function fixture(t, { transform, fetch, projections, native, reversed = fa
 	});
 	const composition = FlowModelInput.compose(
 		"attempt",
-		[
+		inputs ?? [
 			{ id: "work", revision: "1", kind: "work", text: "Do work" },
 			{ id: "result", revision: "1", kind: "result", text: "Completed" },
 		],
@@ -301,3 +302,48 @@ test("a pending provider response cannot become a successful receipt", async (t)
 	assert.equal(state.attempts[0].phase, "handed-off");
 	assert.equal(state.attempts[0].requests[0].outcome, undefined);
 });
+
+for (const field of ["counts", "manifest", "warningResults", "reviewNote", "removed"])
+	test(`final provider aggregate ${field} preserves transport eligibility and per-item evidence`, async (t) => {
+		const { item } = await buildFlowResultEnvelope({
+			attemptId: "attempt",
+			id: "batch",
+			revision: "1",
+			maxBytes: 4096,
+			producerOrder: ["worker"],
+			members: ["a", "b"].map((id) => ({
+				id,
+				producer: "worker",
+				execution: `exec-${id}`,
+				revision: "1",
+				status: "success",
+				title: id,
+				reference: `result:${id}`,
+				warnings: ["Review required"],
+			})),
+			retain: async () => `flow-results:${"a".repeat(64)}`,
+		});
+		const { session, ledger, sent } = await fixture(t, {
+			inputs: [{ id: "work", revision: "1", kind: "work", text: "Do work" }, item],
+			transform: ({ payload }) => {
+				const input = payload.messages.findLast((message) => message.role === "user");
+				if (field === "removed") {
+					input.content.splice(1, 1);
+					return payload;
+				}
+				const frame = JSON.parse(input.content[1].text);
+				const envelope = JSON.parse(frame.content);
+				delete envelope[field];
+				frame.content = JSON.stringify(envelope);
+				input.content[1].text = JSON.stringify(frame);
+				return payload;
+			},
+		});
+		await session.agent.continue();
+		assert.equal(sent.length, field === "removed" ? 1 : 0);
+		assert.equal((await ledger.snapshot()).attempts[0].phase, field === "removed" ? "running" : "withheld");
+		assert.deepEqual(
+			(await ledger.snapshot()).attempts[0].requests[0].payload.inclusion.map((member) => member.disposition),
+			["included", field === "removed" ? "omitted" : "replaced", field === "removed" ? "omitted" : "replaced"],
+		);
+	});

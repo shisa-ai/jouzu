@@ -107,7 +107,12 @@ export class FlowModelInput {
 					kind: item.kind,
 					required: item.kind !== "result",
 					contentHash: hash,
-					inputFrame: { id: item.id, revision: item.revision, parts: parts.length },
+					inputFrame: {
+						id: item.id,
+						revision: item.revision,
+						parts: parts.length,
+						...(item.resultManifest ? { intact: true } : {}),
+					},
 					...(item.sourceSubmission ? { sourceSubmission: structuredClone(item.sourceSubmission) } : {}),
 				})),
 				marker,
@@ -210,6 +215,7 @@ export async function prepareFlowModelInput(
 				member.inputFrame?.id !== expected[index].inputFrame?.id ||
 				member.inputFrame?.revision !== expected[index].inputFrame?.revision ||
 				member.inputFrame?.parts !== expected[index].inputFrame?.parts ||
+				member.inputFrame?.intact !== expected[index].inputFrame?.intact ||
 				member.sourceSubmission?.id !== expected[index].sourceSubmission?.id ||
 				member.sourceSubmission?.revision !== expected[index].sourceSubmission?.revision ||
 				(["id", "revision", "kind", "required", "contentHash"] as const).some(
