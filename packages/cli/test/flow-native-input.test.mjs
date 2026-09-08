@@ -6,6 +6,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { createFlowSession, deferred, tick } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { PiNativeDispatch } from "../dist/flow-control/pi-native-dispatch.js";
@@ -625,3 +626,65 @@ test("native close retains an edited pending revision before removing its live q
 	);
 	assert.equal(saved.dispatch.queueHistory, undefined);
 });
+
+for (const phase of [
+	"context-observed",
+	"context-claim-before",
+	"context-claim-after",
+	"context-history-before",
+	"context-history-after",
+]) {
+	test(`process interruption at ${phase} preserves context ownership without replay`, { timeout: 20000 }, async (t) => {
+		const root = await mkdtemp(join(tmpdir(), "jouzu-context-kill-"));
+		let attachment, native;
+		const child = fork(new URL("./fixtures/flow-native-claim-crash.mjs", import.meta.url), [root, phase], {
+			stdio: ["ignore", "ignore", "pipe", "ipc"],
+		});
+		const exited = once(child, "exit");
+		t.after(async () => {
+			if (child.exitCode === null && child.signalCode === null) {
+				child.kill("SIGKILL");
+				await exited;
+			}
+			await native?.close();
+			await attachment?.close();
+			await rm(root, { recursive: true, force: true });
+		});
+		const [saved] = await Promise.race([
+			once(child, "message"),
+			exited.then(() => {
+				throw new Error("Context fixture exited before checkpoint");
+			}),
+		]);
+		assert.equal(saved.requests, 0);
+		assert.equal(saved.queued, 0);
+		child.kill("SIGKILL");
+		await exited;
+		attachment = await PiFlowAttachment.open(join(root, "receipts"), saved.scope);
+		const [record] = await attachment.submissions.snapshot();
+		assert.equal(record.submission.args[0].content, "one retained context");
+		assert.equal(record.dispatch.inputs[0].kind, "context");
+		assert.equal(record.dispatch.phase, "started");
+		assert.equal(!!record.dispatch.promptClaims?.length, !["context-observed", "context-claim-before"].includes(phase));
+		assert.equal(!!record.dispatch.promptHistory?.length, phase === "context-history-after");
+		let replayed = false;
+		await assert.rejects(
+			attachment.submissions.dispatch(record.id, record.revision, "replay", async () => {
+				replayed = true;
+			}),
+			{ code: "transition" },
+		);
+		assert.equal(replayed, false);
+		const { session, requests } = await createFlowSession(t, {
+			persist: true,
+			sessionManager: SessionManager.open(saved.sessionFile),
+		});
+		native = new PiNativeDispatch(session, attachment.submissions);
+		const recovery = await native.recoverSources();
+		assert.deepEqual(
+			recovery,
+			phase === "context-history-after" ? { recovered: 1, unresolved: 0 } : { recovered: 0, unresolved: 1 },
+		);
+		assert.equal(requests.length, 0);
+	});
+}

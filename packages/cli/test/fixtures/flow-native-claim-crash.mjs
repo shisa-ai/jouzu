@@ -22,21 +22,54 @@ const { session, requests } = await createFlowSession(
 const scope = { sessionId: session.sessionId, branchId: "main" };
 attachment = await PiFlowAttachment.open(join(root, "receipts"), scope);
 native = new PiNativeDispatch(session, attachment.submissions);
-if (!phase.startsWith("prompt-")) await session.followUp("one native input");
-const method = phase.startsWith("prompt-claim-")
-	? "recordPromptClaim"
-	: phase.startsWith("prompt-")
-		? "recordPromptHistory"
-		: phase.startsWith("history-")
-			? "recordQueueHistory"
-			: "recordQueueClaim";
-const record = attachment.submissions[method].bind(attachment.submissions);
-attachment.submissions[method] = async (...args) => {
-	if (phase.endsWith("after")) await record(...args);
-	process.send({ scope, requests: requests.length, queued: session.agent.inspectQueuedMessages().length });
+const context = phase.startsWith("context-");
+if (context) session.sessionManager.flush();
+if (!phase.startsWith("prompt-") && !context) await session.followUp("one native input");
+const checkpoint = async () => {
+	process.send({
+		scope,
+		sessionFile: session.sessionManager.getSessionFile(),
+		requests: requests.length,
+		queued: session.agent.inspectQueuedMessages().length,
+	});
 	await new Promise(() => {
 		setInterval(() => {}, 1000);
 	});
 };
-if (phase.startsWith("prompt-")) await session.prompt("one native prompt");
+if (phase === "context-observed") {
+	const dispatch = attachment.submissions.dispatch.bind(attachment.submissions);
+	attachment.submissions.dispatch = (id, revision, operation, run) =>
+		dispatch(id, revision, operation, (observer, submission) =>
+			run(
+				{
+					observe: async (input) => {
+						const index = await observer.observe(input);
+						await checkpoint();
+						return index;
+					},
+				},
+				submission,
+			),
+		);
+}
+const method =
+	phase.startsWith("context-claim-") || phase.startsWith("prompt-claim-")
+		? "recordPromptClaim"
+		: phase.startsWith("context-history-") || phase.startsWith("prompt-")
+			? "recordPromptHistory"
+			: phase.startsWith("history-")
+				? "recordQueueHistory"
+				: "recordQueueClaim";
+const record = attachment.submissions[method].bind(attachment.submissions);
+if (phase !== "context-observed")
+	attachment.submissions[method] = async (...args) => {
+		if (phase.endsWith("after")) await record(...args);
+		await checkpoint();
+	};
+if (context)
+	await session.sendCustomMessage(
+		{ customType: "note", content: "one retained context", display: true },
+		{ triggerTurn: false },
+	);
+else if (phase.startsWith("prompt-")) await session.prompt("one native prompt");
 else await session.continueQueued();
