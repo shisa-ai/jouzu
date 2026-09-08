@@ -7,6 +7,7 @@ import { FlowReceiptLedger, type FlowScope } from "./receipt-ledger.js";
 import { FlowResultManifestStore } from "./result-manifest.js";
 import { FlowSubmissionStore } from "./submission-store.js";
 import { type FlowSubmissionView, projectFlowSubmissions } from "./submission-view.js";
+import { FlowWaitStore } from "./wait-store.js";
 
 /** Own the Pi receipt session from open through its final close. */
 export class PiFlowAttachment {
@@ -17,6 +18,7 @@ export class PiFlowAttachment {
 		readonly submissions: FlowSubmissionStore,
 		readonly results: FlowResultManifestStore,
 		readonly nativeRequests: FlowNativeRequestStore,
+		readonly waits: FlowWaitStore,
 	) {}
 
 	/** The opener must use the owned directory and return an exclusively owned session. */
@@ -40,7 +42,8 @@ export class PiFlowAttachment {
 			const submissions = await FlowSubmissionStore.attach(session, ownership);
 			const results = await FlowResultManifestStore.attach(session, ownership);
 			const nativeRequests = await FlowNativeRequestStore.attach(session, ownership);
-			return new PiFlowAttachment(ownership, session, ledger, submissions, results, nativeRequests);
+			const waits = await FlowWaitStore.attach(session, ownership);
+			return new PiFlowAttachment(ownership, session, ledger, submissions, results, nativeRequests, waits);
 		} catch (error) {
 			try {
 				await ownership.close(() => session?.close(BACKGROUND_CONTEXT));
