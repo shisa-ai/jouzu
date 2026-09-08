@@ -16,6 +16,9 @@ export class PiHostBoundary {
 	private readonly frames = new AsyncLocalStorage<Frame>();
 	private active = 0;
 	private closed = false;
+	private stopping = false;
+	private stoppingPromise?: Promise<void>;
+	private drained?: () => void;
 	private navigated = false;
 	private barrier?: Promise<void>;
 	private readonly sessionId: string;
@@ -46,7 +49,7 @@ export class PiHostBoundary {
 		for (const name of ["steer", "followUp"] as const) {
 			const enqueue = agent[name].bind(agent);
 			agent[name] = (message) => {
-				this.assertActive();
+				this.assertWritable();
 				if (this.barrier) throw new FlowLedgerError("busy", "Native queue mutation must wait for idle reconciliation.");
 				return enqueue(message);
 			};
@@ -61,8 +64,33 @@ export class PiHostBoundary {
 		if (this.closed || this.session.sessionId !== this.sessionId)
 			throw new FlowLedgerError("stale", "Host boundary is closed or its session was replaced.");
 	}
-	private async operation<T>(run: () => Promise<T>): Promise<T> {
+	private assertWritable(): void {
 		this.assertActive();
+		if (this.stopping) throw new FlowLedgerError("stale", "Host boundary is stopping.");
+	}
+	private notifyDrained(): void {
+		if (this.active === 0 && !this.barrier) this.drained?.();
+	}
+	/** Fence new host writes, abort native execution, and join preflight and idle transactions. */
+	abortAndJoin(): Promise<void> {
+		if (this.frames.getStore()?.active)
+			return Promise.reject(new FlowLedgerError("busy", "Host shutdown cannot join its own active callback."));
+		this.stopping = true;
+		this.stoppingPromise ??= (async () => {
+			try {
+				await this.session.abort();
+			} finally {
+				if (this.active || this.barrier)
+					await new Promise<void>((resolve) => {
+						this.drained = resolve;
+					});
+				this.drained = undefined;
+			}
+		})();
+		return this.stoppingPromise;
+	}
+	private async operation<T>(run: () => Promise<T>): Promise<T> {
+		this.assertWritable();
 		const parent = this.frames.getStore();
 		if (parent?.kind === "boundary")
 			throw new FlowLedgerError("busy", "Idle reconciliation cannot start a host operation.");
@@ -72,10 +100,11 @@ export class PiHostBoundary {
 				return await run();
 			} finally {
 				this.active--;
+				this.notifyDrained();
 			}
 		}
 		while (this.barrier) await this.barrier;
-		this.assertActive();
+		this.assertWritable();
 		const frame: Frame = { kind: "operation", active: true };
 		this.active++;
 		try {
@@ -83,6 +112,7 @@ export class PiHostBoundary {
 		} finally {
 			frame.active = false;
 			this.active--;
+			this.notifyDrained();
 		}
 	}
 	private idle(): boolean {
@@ -117,6 +147,7 @@ export class PiHostBoundary {
 			frame.active = false;
 			this.barrier = undefined;
 			release();
+			this.notifyDrained();
 		}
 	}
 	/** Reconcile one expected attempt only after native execution and post-run work are inactive. */

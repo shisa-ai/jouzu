@@ -68,6 +68,7 @@ async function fixture(t, native, options = {}) {
 				apiKey: "fixture",
 				maxRetries: 0,
 				fetch: async (_url, init) => {
+					if (options.fetch) return options.fetch(_url, init);
 					const body = JSON.parse(init.body);
 					payloads.push(body);
 					const content = body.messages.findLast((item) => item.role === "user").content;
@@ -435,4 +436,37 @@ test("Pi: changed inactive frames reintroduced by a transform withhold the next 
 	assert.deepEqual(calls, []);
 	assert.equal((await ledger.snapshot()).attempts.length, 2);
 	assert.ok((await ledger.snapshot()).attempts.every((item) => item.consumed));
+});
+
+test("Pi: controller disposal aborts and joins an ordinary user run before closing receipts", async (t) => {
+	const entered = deferred(),
+		aborted = deferred(),
+		release = deferred();
+	const { controller, session, ledger } = await fixture(t, true, {
+		fetch: async (_url, init) => {
+			entered.resolve();
+			await new Promise((resolve) => {
+				if (init.signal.aborted) resolve();
+				else init.signal.addEventListener("abort", resolve, { once: true });
+			});
+			aborted.resolve();
+			await release.promise;
+			throw init.signal.reason;
+		},
+	});
+	const running = session.prompt("ordinary user request");
+	await entered.promise;
+	let closed = false;
+	const closing = controller.close().then(() => {
+		closed = true;
+	});
+	await aborted.promise;
+	assert.equal(closed, false);
+	await assert.rejects(session.prompt("late user input"), { code: "stale" });
+	release.resolve();
+	await Promise.all([running, closing]);
+	assert.equal(session.isIdle, true);
+	assert.equal(session.messages.at(-1).stopReason, "aborted");
+	assert.deepEqual((await ledger.snapshot()).attempts, []);
+	await controller.close();
 });

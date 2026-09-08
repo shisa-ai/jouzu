@@ -181,7 +181,7 @@ export class PiControllerHost implements FlowControllerHost {
 		}
 	}
 	async abort(): Promise<void> {
-		if (this.pending) await this.session.abort();
+		await this.boundary.abortAndJoin();
 	}
 	async close(): Promise<void> {
 		if (this.closed) return;

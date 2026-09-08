@@ -190,3 +190,62 @@ test("nested host operations remain busy after their parent stops awaiting them"
 	await modelChange;
 	assert.equal((await boundary.atIdle(async () => {})).kind, "idle");
 });
+
+test("shutdown joins delayed user preflight and fences its eventual native run", async (t) => {
+	const { session, boundary, requests } = await fixture(t);
+	const entered = deferred(),
+		release = deferred();
+	session.modelRuntime.hasConfiguredAuth = () => false;
+	session.modelRuntime.checkAuth = async () => {
+		entered.resolve();
+		await release.promise;
+		return "fixture-key";
+	};
+	const running = assert.rejects(session.prompt("user input"), { code: "stale" });
+	await entered.promise;
+	let closed = false;
+	const closing = boundary.abortAndJoin().then(() => {
+		closed = true;
+	});
+	await tick();
+	assert.equal(closed, false);
+	await assert.rejects(session.prompt("new input"), { code: "stale" });
+	assert.throws(() => session.agent.followUp({ role: "user", content: "new queued input", timestamp: 1 }), {
+		code: "stale",
+	});
+	release.resolve();
+	await Promise.all([running, closing]);
+	assert.equal(closed, true);
+	assert.deepEqual(requests, []);
+});
+
+test("shutdown joins an idle transaction and rejects operations already waiting behind it", async (t) => {
+	const { session, boundary, requests } = await fixture(t);
+	const entered = deferred(),
+		release = deferred();
+	const transaction = boundary.atIdle(async () => {
+		entered.resolve();
+		await release.promise;
+	});
+	await entered.promise;
+	const waiting = assert.rejects(session.prompt("waiting user"), { code: "stale" });
+	let closed = false;
+	const closing = boundary.abortAndJoin().then(() => {
+		closed = true;
+	});
+	await tick();
+	assert.equal(closed, false);
+	release.resolve();
+	await Promise.all([transaction, waiting, closing]);
+	assert.deepEqual(requests, []);
+	await boundary.abortAndJoin();
+});
+
+test("shutdown refuses to join its own idle callback without fencing the session", async (t) => {
+	const { session, boundary, requests } = await fixture(t);
+	await boundary.atIdle(async () => {
+		await assert.rejects(boundary.abortAndJoin(), { code: "busy" });
+	});
+	await session.prompt("still usable");
+	assert.equal(requests.length, 1);
+});
