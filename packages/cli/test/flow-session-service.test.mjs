@@ -33,6 +33,11 @@ async function fixture(t, config = {}) {
 		},
 		extensions: [(pi) => pi.on("session_tree", () => treeScopes.push(service.branch().scope))],
 	});
+	const native = session.agent.streamFunction;
+	session.agent.streamFunction = async (model, context, options) => {
+		await options?.onPayload?.({ messages: context.messages }, model);
+		return native(model, context, options);
+	};
 	service = await PiFlowSessionService.open(session, options(root));
 	t.after(async () => {
 		await service.close();
@@ -141,6 +146,27 @@ test("session ownership remains held until the branch controller drains", async 
 	await closing;
 	const successor = await PiFlowSessionService.open(session, options(root));
 	await successor.close();
+});
+
+test("unsettled native requests hold automation after session-service reopen", async (t) => {
+	const first = await fixture(t);
+	const store = first.service.branch().attachment.nativeRequests;
+	await store.begin({
+		id: "unsettled",
+		sourceHash: "a".repeat(64),
+		transformedHash: "b".repeat(64),
+		modelHash: "c".repeat(64),
+		systemHash: "d".repeat(64),
+	});
+	await first.service.close();
+	const next = await fixture(t, {
+		root: first.root,
+		manager: SessionManager.open(first.session.sessionManager.getSessionFile()),
+	});
+	assert.equal(next.service.branch().host.gate().recoveryBlocked, true);
+	await next.session.prompt("must reconcile");
+	assert.equal(next.requests.length, 0);
+	assert.match(next.session.agent.state.errorMessage, /requires reconciliation/);
 });
 
 test("failed navigation stays held on reopen and failed attachment releases its session lease", async (t) => {
