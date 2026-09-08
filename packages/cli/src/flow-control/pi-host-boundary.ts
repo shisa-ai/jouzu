@@ -96,6 +96,10 @@ export class PiHostBoundary {
 			this.session.pendingMessageCount === 0
 		);
 	}
+	assertAttachedBranch(): void {
+		this.assertActive();
+		if (this.navigated) throw new FlowLedgerError("scope", "Branch navigation requires a new flow attachment.");
+	}
 	/** The callback may mutate durable state, but must not start host operations or wait for new input. */
 	async atIdle<T>(run: () => Promise<T>): Promise<PiBoundaryResult<T>> {
 		this.assertActive();
