@@ -1,6 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import type { Agent, AgentMessage, FlowQueueClaim, FlowQueuedMessage } from "@earendil-works/pi-agent-core";
 import type { ImageContent } from "@earendil-works/pi-ai";
+import { PiHostHooks } from "./pi-host-hooks.js";
 import { FlowLedgerError, type FlowReceiptLedger } from "./receipt-ledger.js";
 
 interface Dispatch {
@@ -12,6 +13,7 @@ interface Dispatch {
 
 /** Joins controller-selected attempts to native queue removal; does not select or execute work. */
 export class PiQueueReceipts {
+	private readonly hooks = new PiHostHooks();
 	private readonly dispatches = new AsyncLocalStorage<Dispatch>();
 	private readonly items = new Map<string, Dispatch>();
 	private closed = false;
@@ -22,7 +24,7 @@ export class PiQueueReceipts {
 	) {
 		for (const method of ["steer", "followUp"] as const) {
 			const native = agent[method].bind(agent);
-			agent[method] = (message) => {
+			this.hooks.set(agent, method, (message) => {
 				const dispatch = this.dispatches.getStore();
 				if (!dispatch) return native(message);
 				if (!dispatch.active) throw new FlowLedgerError("stale", "Native enqueue outlived its dispatch permit.");
@@ -36,28 +38,28 @@ export class PiQueueReceipts {
 					agent.cancelQueuedMessage(item.id, item.revision);
 				});
 				return item;
-			};
+			});
 		}
 		const prompt = agent.prompt.bind(agent);
-		agent.prompt = (input: string | AgentMessage | AgentMessage[], images?: ImageContent[]) => {
+		this.hooks.set(agent, "prompt", (input: string | AgentMessage | AgentMessage[], images?: ImageContent[]) => {
 			if (this.dispatches.getStore())
 				throw new FlowLedgerError("identity", "Queue dispatch cannot start a direct native run.");
 			return typeof input === "string" ? prompt(input, images) : prompt(input);
-		};
+		});
 		const continueRun = agent.continue.bind(agent);
-		agent.continue = (...args) => {
+		this.hooks.set(agent, "continue", (...args) => {
 			if (this.dispatches.getStore())
 				throw new FlowLedgerError("identity", "Queue dispatch cannot start a direct native run.");
 			return continueRun(...args);
-		};
+		});
 		const continueQueued = agent.continueQueued.bind(agent);
-		agent.continueQueued = () => {
+		this.hooks.set(agent, "continueQueued", () => {
 			if (this.dispatches.getStore())
 				throw new FlowLedgerError("identity", "Queue dispatch cannot start a direct native run.");
 			return continueQueued();
-		};
+		});
 		const previous = agent.flowCheckpoints;
-		agent.flowCheckpoints = {
+		this.hooks.set(agent, "flowCheckpoints", {
 			...previous,
 			beforeQueueClaim: async (items, signal) => {
 				this.assertActive();
@@ -77,7 +79,7 @@ export class PiQueueReceipts {
 				await previous?.afterQueueClaim?.(receipt, signal);
 				this.assertActive();
 			},
-		};
+		});
 	}
 
 	private assertActive(): void {
@@ -127,5 +129,6 @@ export class PiQueueReceipts {
 
 	close(): void {
 		this.closed = true;
+		this.hooks.close();
 	}
 }

@@ -5,6 +5,7 @@ import type { FlowControllerHost } from "./controller.js";
 import { type FlowModelInput, inspectPersistedFlowInput } from "./model-input.js";
 import { PiHistoryReceipts } from "./pi-history-receipts.js";
 import { PiHostBoundary } from "./pi-host-boundary.js";
+import { PiHostHooks } from "./pi-host-hooks.js";
 import { PiQueueReceipts } from "./pi-queue-receipts.js";
 import { type PiRequestReceiptOptions, PiRequestReceipts } from "./pi-request-receipts.js";
 import { FlowLedgerError, type FlowLedgerState, type FlowReceiptLedger } from "./receipt-ledger.js";
@@ -74,6 +75,7 @@ function quarantine(messages: AgentMessage[], state: FlowLedgerState): AgentMess
 
 /** One Pi bridge joins queue, history, provider receipts, and native run settlement. */
 export class PiControllerHost implements FlowControllerHost {
+	private readonly hooks = new PiHostHooks();
 	readonly retainResults?: (members: FlowResultReference[]) => Promise<string>;
 	private readonly queue: PiQueueReceipts;
 	private readonly history: PiHistoryReceipts;
@@ -81,6 +83,7 @@ export class PiControllerHost implements FlowControllerHost {
 	private readonly boundary: PiHostBoundary;
 	private pending?: Pending;
 	private closed = false;
+	private closing?: Promise<void>;
 
 	constructor(
 		private readonly session: AgentSession,
@@ -100,16 +103,16 @@ export class PiControllerHost implements FlowControllerHost {
 		this.requests = new PiRequestReceipts(session, ledger, options);
 		this.boundary = new PiHostBoundary(session);
 		const transform = session.agent.transformContext;
-		session.agent.transformContext = async (messages, signal) => {
+		this.hooks.set(session.agent, "transformContext", async (messages, signal) => {
 			this.assertActive();
 			const state = await ledger.snapshot();
 			const admitted = quarantine(messages, state);
 			const result = transform ? await transform(admitted, signal) : admitted;
 			this.assertActive();
 			return quarantine(result, state);
-		};
+		});
 		const previous = session.agent.flowCheckpoints;
-		session.agent.flowCheckpoints = {
+		this.hooks.set(session.agent, "flowCheckpoints", {
 			...previous,
 			beforeQueueClaim: async (items, signal) => {
 				this.assertActive();
@@ -126,7 +129,7 @@ export class PiControllerHost implements FlowControllerHost {
 				this.assertActive();
 				return accepted;
 			},
-		};
+		});
 	}
 	private assertActive(): void {
 		if (this.closed || this.session.sessionId !== this.ledger.scope.sessionId)
@@ -189,15 +192,20 @@ export class PiControllerHost implements FlowControllerHost {
 	async abort(): Promise<void> {
 		await this.boundary.abortAndJoin();
 	}
-	async close(): Promise<void> {
+	close(): Promise<void> {
+		this.closing ??= this.detach();
+		return this.closing;
+	}
+	private async detach(): Promise<void> {
 		if (this.closed) return;
-		if (!this.session.isIdle || this.session.agent.state.isStreaming)
-			throw new FlowLedgerError("busy", "Pi controller host must settle before close.");
+		await this.boundary.abortAndJoin();
 		if (this.pending) await this.reconcile(this.pending.input.attemptId);
 		this.closed = true;
-		this.history.close();
-		this.requests.close();
-		this.queue.close();
+		this.hooks.close();
 		this.boundary.close();
+		this.requests.close();
+		this.history.close();
+		this.queue.close();
+		attached.delete(this.session);
 	}
 }

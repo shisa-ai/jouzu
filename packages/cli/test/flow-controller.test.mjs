@@ -798,3 +798,52 @@ test("Pi: changed retained terminal metadata cancels the aggregate at native cla
 	assert.deepEqual(calls, []);
 	assert.equal((await ledger.snapshot()).attempts[0].consumed, false);
 });
+
+for (const navigate of [false, true]) {
+	test(`Pi: a drained host can be replaced on the same AgentSession${navigate ? " after branch navigation" : ""}`, async (t) => {
+		const first = await fixture(t, true);
+		first.controller.register(producer("alpha"));
+		await first.controller.wake();
+		const stalePrompt = first.session.prompt.bind(first.session);
+		const staleClaim = first.session.agent.flowCheckpoints.beforeQueueClaim;
+		const before = await first.ledger.snapshot();
+		if (navigate) {
+			const user = first.session.sessionManager
+				.getBranch()
+				.find((entry) => entry.type === "message" && entry.message.role === "user");
+			await first.session.navigateTree(user.id);
+		}
+		await first.controller.close();
+		await assert.rejects(stalePrompt("stale input"), { code: "stale" });
+		await assert.rejects(staleClaim([], new AbortController().signal), { code: "stale" });
+		const root = await mkdtemp(join(tmpdir(), "jouzu-controller-replace-"));
+		const attachment = await PiFlowAttachment.open(root, {
+			sessionId: first.session.sessionId,
+			branchId: navigate ? "other" : "main",
+		});
+		const host = new PiControllerHost(
+			first.session,
+			attachment.ledger,
+			{
+				projections: new Map([["openai-completions", openAIFlowPayload("openai-completions")]]),
+				maxPayloadBytes: 100000,
+				containsUserInput: () => false,
+			},
+			() => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: [] }),
+		);
+		const second = new SessionFlowController(host, 4096);
+		t.after(async () => {
+			await second.close();
+			await attachment.close();
+			await rm(root, { recursive: true, force: true });
+		});
+		second.register(producer("beta"));
+		await second.wake();
+		assert.deepEqual(first.calls, ["alpha", "beta"]);
+		const state = await attachment.ledger.snapshot();
+		assert.equal(state.attempts.length, 1);
+		assert.equal(state.attempts[0].phase, "settled");
+		assert.equal(state.attempts[0].requests[0].payload.inclusion[0].disposition, "included");
+		assert.deepEqual(await first.ledger.snapshot(), before);
+	});
+}

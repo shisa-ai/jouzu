@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { type FileHandle, open, stat } from "node:fs/promises";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { AgentSession, SessionManager } from "@earendil-works/pi-coding-agent";
+import { PiHostHooks } from "./pi-host-hooks.js";
 import { type FlowAttempt, FlowLedgerError, type FlowReceiptLedger } from "./receipt-ledger.js";
 
 const hash = (text: string) => createHash("sha256").update(text).digest("hex");
@@ -122,6 +123,7 @@ interface PendingHistory {
 
 /** Install after queue receipts and after AgentSession's own awaited persistence listener. */
 export class PiHistoryReceipts {
+	private readonly hooks = new PiHostHooks();
 	private closed = false;
 	private readonly claimed: ClaimedInput[] = [];
 	private readonly starting = new WeakMap<object, ClaimedInput>();
@@ -133,7 +135,7 @@ export class PiHistoryReceipts {
 		private readonly ledger: FlowReceiptLedger,
 	) {
 		const previous = session.agent.flowCheckpoints;
-		session.agent.flowCheckpoints = {
+		this.hooks.set(session.agent, "flowCheckpoints", {
 			...previous,
 			afterQueueClaim: async (receipt, signal) => {
 				this.assertActive();
@@ -155,7 +157,7 @@ export class PiHistoryReceipts {
 					});
 				}
 			},
-		};
+		});
 		this.unsubscribe = session.agent.subscribe(async (event) => {
 			this.assertActive();
 			if (
@@ -209,6 +211,7 @@ export class PiHistoryReceipts {
 	}
 	close(): void {
 		this.closed = true;
+		this.hooks.close();
 		this.unsubscribe();
 		this.claimed.length = 0;
 		this.pending.clear();

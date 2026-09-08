@@ -249,3 +249,55 @@ test("shutdown refuses to join its own idle callback without fencing the session
 	await session.prompt("still usable");
 	assert.equal(requests.length, 1);
 });
+
+test("detached boundary restores native methods while retained wrappers remain fenced", async (t) => {
+	const { session, requests } = await createFlowSession(t);
+	const nativePrompt = session.prompt;
+	const nativeQueue = session.agent.followUp;
+	const boundary = new PiHostBoundary(session);
+	const oldPrompt = session.prompt.bind(session);
+	const oldQueue = session.agent.followUp.bind(session.agent);
+	await boundary.abortAndJoin();
+	boundary.close();
+	assert.equal(session.prompt, nativePrompt);
+	assert.equal(session.agent.followUp, nativeQueue);
+	await assert.rejects(oldPrompt("stale"), { code: "stale" });
+	assert.throws(() => oldQueue({ role: "user", content: "stale", timestamp: 1 }), { code: "stale" });
+	await session.prompt("fresh");
+	assert.equal(requests.length, 1);
+});
+
+test("detaching preserves methods installed by another owner", async (t) => {
+	const { session } = await createFlowSession(t);
+	const boundary = new PiHostBoundary(session);
+	const replacement = async () => {};
+	session.prompt = replacement;
+	await boundary.abortAndJoin();
+	boundary.close();
+	assert.equal(session.prompt, replacement);
+	boundary.close();
+	assert.equal(session.prompt, replacement);
+});
+
+test("close retains the fence until active preflight exits before restoring methods", async (t) => {
+	const { session, requests } = await createFlowSession(t);
+	const nativePrompt = session.prompt;
+	const boundary = new PiHostBoundary(session);
+	const entered = deferred(),
+		release = deferred();
+	session.modelRuntime.hasConfiguredAuth = () => false;
+	session.modelRuntime.checkAuth = async () => {
+		entered.resolve();
+		await release.promise;
+		return "fixture-key";
+	};
+	const running = assert.rejects(session.prompt("late"), { code: "stale" });
+	await entered.promise;
+	boundary.close();
+	assert.notEqual(session.prompt, nativePrompt);
+	await assert.rejects(session.prompt("new while draining"), { code: "stale" });
+	release.resolve();
+	await running;
+	assert.equal(session.prompt, nativePrompt);
+	assert.deepEqual(requests, []);
+});

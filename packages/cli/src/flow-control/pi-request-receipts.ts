@@ -2,6 +2,7 @@ import type { FlowRequestInput } from "@earendil-works/pi-agent-core";
 import type { AssistantMessage } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
 import { type FlowModelInput, prepareFlowModelInput } from "./model-input.js";
+import { PiHostHooks } from "./pi-host-hooks.js";
 import { admitFlowPayload, type FlowPayloadProjection } from "./provider-payload.js";
 import { FlowLedgerError, type FlowOutcome, type FlowReceiptLedger } from "./receipt-ledger.js";
 
@@ -21,6 +22,7 @@ export interface PiRequestReceiptOptions {
 
 /** Native request receipts. Host settlement remains separate from response and agent_end events. */
 export class PiRequestReceipts {
+	private readonly hooks = new PiHostHooks();
 	private closed = false;
 	private readonly compositions = new Map<string, FlowModelInput>();
 	private pending?: RequestBinding;
@@ -34,7 +36,7 @@ export class PiRequestReceipts {
 			throw new FlowLedgerError("capacity", "Invalid provider payload byte limit.");
 		const projections = new Map(options.projections);
 		const previous = session.agent.flowCheckpoints;
-		session.agent.flowCheckpoints = {
+		this.hooks.set(session.agent, "flowCheckpoints", {
 			...previous,
 			beforeRequest: async (input, signal) => {
 				this.assertActive();
@@ -58,9 +60,9 @@ export class PiRequestReceipts {
 				}
 				this.pending = request;
 			},
-		};
+		});
 		const native = session.agent.streamFunction;
-		session.agent.streamFunction = async (model, context, streamOptions) => {
+		this.hooks.set(session.agent, "streamFunction", async (model, context, streamOptions) => {
 			this.assertActive();
 			const request = this.pending;
 			this.pending = undefined;
@@ -129,7 +131,7 @@ export class PiRequestReceipts {
 				await this.withhold(request);
 				throw error;
 			}
-		};
+		});
 	}
 
 	private assertActive(signal?: AbortSignal): void {
@@ -159,6 +161,7 @@ export class PiRequestReceipts {
 	}
 	close(): void {
 		this.closed = true;
+		this.hooks.close();
 		this.compositions.clear();
 		this.pending = undefined;
 	}

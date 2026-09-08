@@ -2,6 +2,7 @@ import { AsyncLocalStorage } from "node:async_hooks";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { ImageContent } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
+import { PiHostHooks } from "./pi-host-hooks.js";
 import { FlowLedgerError, type FlowOutcome, type FlowReceiptLedger } from "./receipt-ledger.js";
 
 interface Frame {
@@ -13,6 +14,7 @@ export type PiSettlement = { kind: "inactive" | "waiting" | "cancelled" | "uncer
 
 /** Serialize idle reconciliation with supported Pi execution and context-changing entry points. */
 export class PiHostBoundary {
+	private readonly hooks = new PiHostHooks();
 	private readonly frames = new AsyncLocalStorage<Frame>();
 	private active = 0;
 	private closed = false;
@@ -26,36 +28,41 @@ export class PiHostBoundary {
 		this.sessionId = session.sessionId;
 		const agent = session.agent;
 		const prompt = agent.prompt.bind(agent);
-		agent.prompt = (input: string | AgentMessage | AgentMessage[], images?: ImageContent[]) =>
-			this.operation(() => (typeof input === "string" ? prompt(input, images) : prompt(input)));
-		agent.continue = this.wrap(agent.continue.bind(agent));
-		agent.continueQueued = this.wrap(agent.continueQueued.bind(agent));
-		session.prompt = this.wrap(session.prompt.bind(session));
-		session.continueQueued = this.wrap(session.continueQueued.bind(session));
-		session.steer = this.wrap(session.steer.bind(session));
-		session.followUp = this.wrap(session.followUp.bind(session));
-		session.sendUserMessage = this.wrap(session.sendUserMessage.bind(session));
-		session.sendCustomMessage = this.wrap(session.sendCustomMessage.bind(session));
-		session.compact = this.wrap(session.compact.bind(session));
+		this.hooks.set(agent, "prompt", (input: string | AgentMessage | AgentMessage[], images?: ImageContent[]) =>
+			this.operation(() => (typeof input === "string" ? prompt(input, images) : prompt(input))),
+		);
+		this.hooks.set(agent, "continue", this.wrap(agent.continue.bind(agent)));
+		this.hooks.set(agent, "continueQueued", this.wrap(agent.continueQueued.bind(agent)));
+		this.hooks.set(session, "prompt", this.wrap(session.prompt.bind(session)));
+		this.hooks.set(session, "continueQueued", this.wrap(session.continueQueued.bind(session)));
+		this.hooks.set(session, "steer", this.wrap(session.steer.bind(session)));
+		this.hooks.set(session, "followUp", this.wrap(session.followUp.bind(session)));
+		this.hooks.set(session, "sendUserMessage", this.wrap(session.sendUserMessage.bind(session)));
+		this.hooks.set(session, "sendCustomMessage", this.wrap(session.sendCustomMessage.bind(session)));
+		this.hooks.set(session, "compact", this.wrap(session.compact.bind(session)));
 		const navigate = session.navigateTree.bind(session);
-		session.navigateTree = this.wrap(async (...args: Parameters<AgentSession["navigateTree"]>) => {
-			const leaf = session.sessionManager.getLeafId();
-			try {
-				return await navigate(...args);
-			} finally {
-				if (session.sessionManager.getLeafId() !== leaf) this.navigated = true;
-			}
-		});
+		this.hooks.set(
+			session,
+			"navigateTree",
+			this.wrap(async (...args: Parameters<AgentSession["navigateTree"]>) => {
+				const leaf = session.sessionManager.getLeafId();
+				try {
+					return await navigate(...args);
+				} finally {
+					if (session.sessionManager.getLeafId() !== leaf) this.navigated = true;
+				}
+			}),
+		);
 		for (const name of ["steer", "followUp"] as const) {
 			const enqueue = agent[name].bind(agent);
-			agent[name] = (message) => {
+			this.hooks.set(agent, name, (message) => {
 				this.assertWritable();
 				if (this.barrier) throw new FlowLedgerError("busy", "Native queue mutation must wait for idle reconciliation.");
 				return enqueue(message);
-			};
+			});
 		}
-		session.setModel = this.wrap(session.setModel.bind(session));
-		session.cycleModel = this.wrap(session.cycleModel.bind(session));
+		this.hooks.set(session, "setModel", this.wrap(session.setModel.bind(session)));
+		this.hooks.set(session, "cycleModel", this.wrap(session.cycleModel.bind(session)));
 	}
 	private wrap<A extends unknown[], R>(fn: (...args: A) => Promise<R>): (...args: A) => Promise<R> {
 		return (...args) => this.operation(() => fn(...args));
@@ -69,7 +76,10 @@ export class PiHostBoundary {
 		if (this.stopping) throw new FlowLedgerError("stale", "Host boundary is stopping.");
 	}
 	private notifyDrained(): void {
-		if (this.active === 0 && !this.barrier) this.drained?.();
+		if (this.active === 0 && !this.barrier) {
+			if (this.closed) this.hooks.close();
+			this.drained?.();
+		}
 	}
 	/** Fence new host writes, abort native execution, and join preflight and idle transactions. */
 	abortAndJoin(): Promise<void> {
@@ -191,5 +201,6 @@ export class PiHostBoundary {
 	}
 	close(): void {
 		this.closed = true;
+		this.notifyDrained();
 	}
 }
