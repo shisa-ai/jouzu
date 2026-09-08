@@ -64,6 +64,10 @@ export class PiFlowAttachment {
 
 	/** Drain admitted writes, close Pi storage, then release process ownership. */
 	close(): Promise<void> {
-		return this.ownership.close(() => this.session.close(BACKGROUND_CONTEXT));
+		const stopped = this.waits.stopDeadlines();
+		return this.ownership.close(async () => {
+			await stopped;
+			await this.session.close(BACKGROUND_CONTEXT);
+		});
 	}
 }

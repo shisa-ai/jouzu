@@ -159,3 +159,161 @@ test("cancellation at hard expiry retains expiry as the winning transition", asy
 	assert.deepEqual(await store.expireDue(100), []);
 	assert.deepEqual((await (await f.reopen()).snapshot())[0], cancelled);
 });
+
+function fakeClock(now = 0) {
+	const timers = new Set();
+	return {
+		timers,
+		now: () => now,
+		after(delay, callback) {
+			const timer = { at: now + delay, callback };
+			timers.add(timer);
+			return () => timers.delete(timer);
+		},
+		advance(next) {
+			now = next;
+			for (const timer of [...timers]) {
+				if (timer.at <= now) {
+					timers.delete(timer);
+					timer.callback();
+				}
+			}
+		},
+	};
+}
+async function settledUntil(predicate) {
+	for (let i = 0; i < 100; i++) {
+		if (await predicate()) return;
+		await new Promise((resolve) => setTimeout(resolve, 5));
+	}
+	assert.fail("deadline scheduler did not settle");
+}
+
+test("attachment deadlines rearm for earlier waits and stop after all terminal transitions", async (t) => {
+	const f = await fixture(t),
+		store = f.attachment.waits,
+		clock = fakeClock(),
+		errors = [];
+	await store.startDeadlines((error) => errors.push(error), clock);
+	assert.equal(clock.timers.size, 0);
+	await store.declare(request(), observations(), 0, 100);
+	await settledUntil(() => [...clock.timers][0]?.at === 100);
+	await store.declare(request("early", "early-work"), observations("pending", "early-work"), 0, 50);
+	await settledUntil(() => [...clock.timers][0]?.at === 50);
+	clock.advance(50);
+	await settledUntil(async () => (await store.snapshot())[1].state === "expired" && [...clock.timers][0]?.at === 100);
+	await store.reconcile("token", observations("satisfied"), 60);
+	await settledUntil(() => clock.timers.size === 0);
+	assert.deepEqual(errors, []);
+});
+
+test("deadline startup reconciles offline expiry and detach suppresses captured callbacks", async (t) => {
+	const f = await fixture(t),
+		clock = fakeClock(),
+		errors = [];
+	await f.attachment.waits.declare(request(), observations(), 0, 100);
+	await f.attachment.waits.startDeadlines((error) => errors.push(error), clock);
+	const callback = [...clock.timers][0].callback;
+	await f.attachment.close();
+	assert.equal(clock.timers.size, 0);
+	clock.advance(150);
+	callback();
+	const store = await f.reopen();
+	assert.equal((await store.snapshot())[0].state, "waiting");
+	await store.startDeadlines((error) => errors.push(error), clock);
+	assert.equal((await store.snapshot())[0].state, "expired");
+	assert.equal(clock.timers.size, 0);
+	assert.deepEqual(errors, []);
+});
+
+test("long deadline timers use bounded segments without renewing the expiry", async (t) => {
+	const f = await fixture(t),
+		store = f.attachment.waits,
+		clock = fakeClock();
+	const expiry = 3_000_000_000;
+	await store.declare({ ...request(), expiresAt: expiry }, observations(), 0, expiry);
+	await store.startDeadlines(assert.ifError, clock);
+	assert.equal([...clock.timers][0].at, 2_147_483_647);
+	clock.advance(2_147_483_647);
+	await settledUntil(() => [...clock.timers][0]?.at === expiry);
+	assert.equal((await store.snapshot())[0].state, "waiting");
+	clock.advance(expiry);
+	await settledUntil(async () => (await store.snapshot())[0].state === "expired");
+	assert.equal((await store.snapshot())[0].expiresAt, expiry);
+});
+
+test("deadline startup failure permits retry and duplicate ownership is rejected", async (t) => {
+	const f = await fixture(t),
+		store = f.attachment.waits,
+		clock = fakeClock();
+	await assert.rejects(store.startDeadlines(assert.ifError, { ...clock, now: () => NaN }), /Invalid wait clock/);
+	await store.startDeadlines(assert.ifError, clock);
+	await assert.rejects(store.startDeadlines(assert.ifError, clock), /already scheduled/);
+	await f.attachment.close();
+	await assert.rejects(store.startDeadlines(assert.ifError, clock), /closed/);
+});
+
+test("a declaration during an awaited deadline snapshot cannot strand the earlier wait", async (t) => {
+	const f = await fixture(t),
+		store = f.attachment.waits,
+		clock = fakeClock();
+	await store.declare(request(), observations(), 0, 100);
+	const snapshot = store.snapshot.bind(store);
+	let release, entered;
+	const blocked = new Promise((resolve) => {
+		entered = resolve;
+	});
+	const gate = new Promise((resolve) => {
+		release = resolve;
+	});
+	let first = true;
+	t.mock.method(store, "snapshot", async () => {
+		const saved = await snapshot();
+		if (first) {
+			first = false;
+			entered();
+			await gate;
+		}
+		return saved;
+	});
+	const starting = store.startDeadlines(assert.ifError, clock);
+	await blocked;
+	await store.declare(request("early", "early-work"), observations("pending", "early-work"), 0, 50);
+	release();
+	await starting;
+	assert.equal(clock.timers.size, 1);
+	assert.equal([...clock.timers][0].at, 50);
+});
+
+test("detach drains an awaited scan and never arms its stale snapshot", async (t) => {
+	const f = await fixture(t),
+		store = f.attachment.waits,
+		clock = fakeClock();
+	await store.declare(request(), observations(), 0, 100);
+	const snapshot = store.snapshot.bind(store);
+	let release, entered;
+	const blocked = new Promise((resolve) => {
+		entered = resolve;
+	});
+	const gate = new Promise((resolve) => {
+		release = resolve;
+	});
+	t.mock.method(store, "snapshot", async () => {
+		const saved = await snapshot();
+		entered();
+		await gate;
+		return saved;
+	});
+	const starting = store.startDeadlines(assert.ifError, clock);
+	await blocked;
+	let closed = false;
+	const closing = f.attachment.close().then(() => {
+		closed = true;
+	});
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(closed, false);
+	await assert.rejects(store.cancel("token", "closing", 1), /closed/);
+	release();
+	await Promise.all([starting, closing]);
+	assert.equal(clock.timers.size, 0);
+});

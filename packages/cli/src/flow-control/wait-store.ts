@@ -2,6 +2,7 @@ import { isDeepStrictEqual } from "node:util";
 import { BACKGROUND_CONTEXT, type Session, type SessionReader, setValue, value } from "@earendil-works/pi-agent-core";
 import type { FlowOwnership } from "./ownership.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
+import { type FlowWaitClock, FlowWaitDeadlines, systemWaitClock } from "./wait-deadlines.js";
 import {
 	cancelFlowWait,
 	createFlowWait,
@@ -45,6 +46,30 @@ function validateWait(wait: FlowWaitState): void {
 /** Atomic wait transitions under the existing branch writer lease; no producer callbacks run in a transaction. */
 export class FlowWaitStore {
 	private initialized = false;
+	private deadlines?: FlowWaitDeadlines;
+	private schedulingClosed = false;
+
+	async startDeadlines(onError: (error: unknown) => void, clock: FlowWaitClock = systemWaitClock): Promise<void> {
+		this.ownership.assertActive();
+		if (this.schedulingClosed) throw new FlowLedgerError("transition", "Wait deadline scheduling is closed.");
+		if (this.deadlines) throw new FlowLedgerError("transition", "Wait deadlines are already scheduled.");
+		const deadlines = new FlowWaitDeadlines(this, clock, onError);
+		this.deadlines = deadlines;
+		try {
+			await deadlines.refresh();
+		} catch (error) {
+			await deadlines.stop().catch(() => undefined);
+			if (this.deadlines === deadlines) this.deadlines = undefined;
+			throw error;
+		}
+	}
+
+	async stopDeadlines(): Promise<void> {
+		this.schedulingClosed = true;
+		const deadlines = this.deadlines;
+		this.deadlines = undefined;
+		await deadlines?.stop();
+	}
 	private constructor(
 		private readonly session: Session,
 		private readonly ownership: FlowOwnership,
@@ -85,16 +110,21 @@ export class FlowWaitStore {
 		this.validate(state);
 		return structuredClone(state);
 	}
-	private update<T>(change: (state: State) => T): Promise<T> {
-		return this.ownership.run(() =>
+	private async update<T>(change: (state: State) => T): Promise<T> {
+		let changed = false;
+		const result = await this.ownership.run(() =>
 			this.session.mutate(async (mutation, context) => {
 				const state = await this.read(mutation);
+				const before = structuredClone(state);
 				const result = change(state);
+				changed = !isDeepStrictEqual(before, state);
 				this.validate(state);
-				await mutation.commit([setValue(address, state)], context);
+				if (changed || !this.initialized) await mutation.commit([setValue(address, state)], context);
 				return structuredClone(result);
 			}, BACKGROUND_CONTEXT),
 		);
+		if (changed) this.deadlines?.changed();
+		return result;
 	}
 	snapshot(): Promise<FlowWaitState[]> {
 		return this.ownership.run(() =>
