@@ -2396,3 +2396,70 @@ test("an external wait-context label does not bypass host admission", async (t) 
 	assert.equal(record.dispatch, undefined);
 	assert.equal(f.sent.length, 0);
 });
+
+test("status prompts retain live wait identity and deadline and cancellation clears the next snapshot", async (t) => {
+	const clock = ingressWaitClock(),
+		errors = [];
+	const f = await fixture(t, {
+		provider: true,
+		admit: null,
+		autoRelease: { clock, onError: (error) => errors.push(error) },
+	});
+	const branch = f.ingress.branch();
+	await declareIngressWait(branch);
+	const contexts = () =>
+		f.session.agent.state.messages.filter(
+			(message) => message.role === "custom" && message.customType === "jouzu-wait-context",
+		);
+	clock.advance(20);
+	await f.session.prompt("status one");
+	let snapshot = JSON.parse(contexts().at(-1).content);
+	assert.equal(snapshot.liveWaits[0].token, "wait");
+	assert.equal(snapshot.liveWaits[0].expiresAt, 100);
+	assert.equal(snapshot.liveWaits[0].elapsedMs, 20);
+	assert.equal(snapshot.liveWaits[0].health, "deadline-only");
+	assert.equal(snapshot.liveWaits[0].unmet[0].execution, "exec");
+	clock.advance(40);
+	await f.session.prompt("status two");
+	snapshot = JSON.parse(contexts().at(-1).content);
+	assert.equal(snapshot.liveWaits[0].elapsedMs, 40);
+	assert.equal(snapshot.liveWaits[0].expiresAt, 100);
+	assert.equal((await branch.attachment.waits.snapshot()).length, 1);
+	assert.equal((await branch.attachment.waits.snapshot())[0].state, "waiting");
+	clock.advance(60);
+	await branch.attachment.waits.cancel("wait", "user redirected work", 60);
+	await f.session.prompt("status after cancellation");
+	snapshot = JSON.parse(contexts().at(-1).content);
+	assert.deepEqual(snapshot.liveWaits, []);
+	assert.equal(snapshot.remainingLiveWaits, 0);
+	assert.equal(snapshot.capturedAt, 60);
+	const count = contexts().length;
+	await f.session.prompt("another question");
+	assert.equal(contexts().length, count);
+	assert.equal(f.sent.length, 4);
+	await f.ingress.dispose();
+	assert.deepEqual(errors, []);
+});
+
+test("oversized live wait context reports remaining count without truncating the reason", async (t) => {
+	const f = await fixture(t, { provider: true, admit: null }),
+		branch = f.ingress.branch();
+	const wait = await declareIngressWait(branch);
+	await branch.attachment.waits.declare(
+		{ ...wait, token: "replacement", reason: "長".repeat(4000) },
+		wait.observations,
+		10,
+		100,
+		"wait",
+	);
+	await f.session.prompt("status with large dependency");
+	const message = f.session.agent.state.messages.findLast(
+		(item) => item.role === "custom" && item.customType === "jouzu-wait-context",
+	);
+	const snapshot = JSON.parse(message.content);
+	assert.deepEqual(snapshot.liveWaits, []);
+	assert.equal(snapshot.remainingLiveWaits, 1);
+	assert.ok(Buffer.byteLength(message.content) <= 4096);
+	assert.equal((await branch.attachment.waits.snapshot())[1].reason, "長".repeat(4000));
+	assert.equal(f.sent.length, 1);
+});

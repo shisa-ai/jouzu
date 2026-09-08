@@ -396,16 +396,71 @@ export class PiSessionFlowIngress implements Ingress {
 		const session = this.session;
 		if (!session?.isIdle || session.isStreaming || session.isRetrying || session.isCompacting) return false;
 		const signal = new AbortController().signal;
-		const source = createFlowWaitDecisionProducer(branch.attachment.waits, {
-			submissions: branch.attachment.submissions,
-			requests: branch.attachment.nativeRequests,
-		});
+		const capturedAt = this.options.autoRelease?.clock?.now() ?? Date.now();
+		if (!Number.isSafeInteger(capturedAt) || capturedAt < 0)
+			throw new FlowLedgerError("schema", "Invalid wait context time.");
+		const waits = await branch.attachment.waits.snapshot();
+		const live = waits
+			.filter((wait) => wait.state === "waiting")
+			.map((wait) => ({
+				token: wait.token,
+				work: wait.workId,
+				reason: wait.reason,
+				mode: wait.mode,
+				on: wait.on,
+				unmet: wait.unmet,
+				createdAt: wait.createdAt,
+				expiresAt: wait.expiresAt,
+				elapsedMs: Math.max(0, capturedAt - wait.createdAt),
+				health: "deadline-only",
+			}));
+		const source = createFlowWaitDecisionProducer(
+			{ snapshot: async () => structuredClone(waits) },
+			{
+				submissions: branch.attachment.submissions,
+				requests: branch.attachment.nativeRequests,
+			},
+		);
 		const ledger = await branch.attachment.ledger.snapshot();
 		const candidates = (await source.snapshot(signal)).filter((intent) => !retainedByReceipt(intent, ledger));
-		if (!candidates.length) return false;
+		let clearPrevious = false;
+		if (!candidates.length && !live.length) {
+			for (const message of [...session.agent.state.messages].reverse()) {
+				if (
+					message.role !== "custom" ||
+					message.customType !== "jouzu-wait-context" ||
+					typeof message.content !== "string"
+				)
+					continue;
+				try {
+					const prior = JSON.parse(message.content);
+					clearPrevious =
+						(Array.isArray(prior.liveWaits) && prior.liveWaits.length > 0) ||
+						(Number.isSafeInteger(prior.remainingLiveWaits) && prior.remainingLiveWaits > 0);
+				} catch {
+					/* Ordinary context is not a wait snapshot. */
+				}
+				break;
+			}
+			if (!clearPrevious) return false;
+		}
 		const selected: FlowInputItem[] = [];
-		const encode = (items: FlowInputItem[]) =>
-			JSON.stringify({ waitDecisions: items, remainingWaitDecisions: candidates.length - items.length });
+		const selectedLive: typeof live = [];
+		const encode = (items: FlowInputItem[], liveItems = selectedLive) =>
+			JSON.stringify({
+				capturedAt,
+				scope: branch.scope,
+				guidance:
+					"Use the latest wait snapshot for this branch. Status questions do not renew deadlines. Continue only work independent of live dependencies.",
+				liveWaits: liveItems,
+				remainingLiveWaits: live.length - liveItems.length,
+				waitDecisions: items,
+				remainingWaitDecisions: candidates.length - items.length,
+			});
+		for (const wait of live) {
+			if (Buffer.byteLength(encode(selected, [...selectedLive, wait])) <= this.options.maxInputBytes)
+				selectedLive.push(wait);
+		}
 		for (const intent of candidates) {
 			if (this.branch() !== branch) throw new FlowLedgerError("stale", "User wait context branch changed.");
 			const item = await source.build(intent, signal);
