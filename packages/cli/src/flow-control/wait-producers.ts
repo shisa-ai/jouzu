@@ -20,6 +20,7 @@ export interface FlowWaitExecutionSource {
 	/** Install the local listener synchronously, before snapshot inspection starts. */
 	subscribe(identity: FlowExecutionIdentity, changed: (evidence: FlowExecutionEvidence) => void): () => void;
 	snapshot(identity: FlowExecutionIdentity, signal: AbortSignal): Promise<FlowExecutionEvidence>;
+	close?(): void | Promise<void>;
 }
 
 /** One namespace registration per attachment; each execution has one subscription owner. */
@@ -63,6 +64,7 @@ export class FlowWaitProducerRegistry {
 			!/^[a-z][a-z0-9-]{0,63}$/.test(source.namespace) ||
 			typeof source.subscribe !== "function" ||
 			typeof source.snapshot !== "function" ||
+			(source.close !== undefined && typeof source.close !== "function") ||
 			typeof onError !== "function"
 		)
 			throw new FlowLedgerError("schema", "Unsupported wait producer registration.");
@@ -70,9 +72,11 @@ export class FlowWaitProducerRegistry {
 		const namespace = source.namespace;
 		if (this.producers.has(namespace)) throw new FlowLedgerError("identity", "Wait producer is already registered.");
 		const subscribe = source.subscribe.bind(source),
-			snapshot = source.snapshot.bind(source);
+			snapshot = source.snapshot.bind(source),
+			closeSource = source.close?.bind(source);
 		const bindings = new Map<string, ExecutionBinding>();
 		let closed = false;
+		let closing: Promise<void> | undefined;
 		const registration = {
 			bind: async (identity: Omit<FlowExecutionIdentity, "scope">, workRevision: number) => {
 				if (closed || this.closed) throw new FlowLedgerError("stale", "Wait producer registration is closed.");
@@ -121,11 +125,15 @@ export class FlowWaitProducerRegistry {
 					this.notifyChanged();
 				}
 			},
-			close: async () => {
-				closed = true;
-				await Promise.all([...bindings.values()].map((binding) => binding.close()));
-				bindings.clear();
-				if (this.producers.get(namespace) === registration) this.producers.delete(namespace);
+			close: () => {
+				closing ??= (async () => {
+					closed = true;
+					await Promise.all([...bindings.values()].map((binding) => binding.close()));
+					await closeSource?.();
+					bindings.clear();
+					if (this.producers.get(namespace) === registration) this.producers.delete(namespace);
+				})();
+				return closing;
 			},
 		};
 		this.producers.set(namespace, registration);

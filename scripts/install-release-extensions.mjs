@@ -3,6 +3,7 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { applyInstalledBackgroundFlow } from "./apply-background-flow.mjs";
 import { assertStandaloneMcpBoundary } from "./webaio-package-boundary.mjs";
 
 const root = resolve(import.meta.dirname, "..");
@@ -98,4 +99,5 @@ if (!sourceOnly && !existsSync(bundledTypeboxTarget)) {
 	renameSync(bundledTypeboxSource, bundledTypeboxTarget);
 }
 rmSync(resolve(cli, "node_modules", "pi-skill-dollar", "README.md"), { force: true });
+await applyInstalledBackgroundFlow();
 console.log("installed the exact release-owned extension bundle without lifecycle scripts");
