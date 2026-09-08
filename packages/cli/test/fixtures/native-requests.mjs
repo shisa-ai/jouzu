@@ -1,7 +1,7 @@
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { stream } from "@earendil-works/pi-ai/api/openai-completions";
+import { stream, streamSimple } from "@earendil-works/pi-ai/api/openai-completions";
 import { createFlowSession } from "../../../../scripts/fixtures/pi-flow-session.mjs";
 import { PiFlowAttachment } from "../../dist/flow-control/pi-attachment.js";
 import { PiNativeDispatch } from "../../dist/flow-control/pi-native-dispatch.js";
@@ -14,6 +14,7 @@ export async function nativeRequests(
 		maxBytes = 100000,
 		transform,
 		native,
+		simple = false,
 		retainInputs = false,
 		contextTransform,
 		contextHandler,
@@ -60,7 +61,7 @@ export async function nativeRequests(
 	session.agent.streamFunction =
 		native ??
 		((model, context, options) =>
-			stream({ ...model, baseUrl: "https://fixture.invalid/v1" }, context, {
+			(simple ? streamSimple : stream)({ ...model, baseUrl: "https://fixture.invalid/v1" }, context, {
 				...options,
 				apiKey: "fixture",
 				maxRetries: 0,

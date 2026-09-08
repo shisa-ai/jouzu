@@ -10,8 +10,21 @@ export interface NativeRequest {
 	modelHash: string;
 	systemHash: string;
 	sourceCapture?: NativeSourceCapture;
-	payload?: { hash: string; bytes: number; api: string; model: string; provider: string };
+	payload?: {
+		hash: string;
+		bytes: number;
+		api: string;
+		model: string;
+		provider: string;
+		sources?: NativePayloadSource[];
+	};
 	outcome?: "success" | "failure" | "aborted" | "withheld";
+}
+export interface NativePayloadSource {
+	sourceIndex: number;
+	disposition: "included" | "changed" | "unresolved";
+	index?: number;
+	contentHash?: string;
 }
 export interface NativeRequestSource {
 	index: number;
@@ -82,6 +95,34 @@ export class FlowNativeRequestStore {
 				(record.outcome !== undefined && record.outcome !== "withheld" && !record.payload)
 			)
 				throw new FlowLedgerError("schema", "Invalid native request receipt.");
+			if (record.payload?.sources !== undefined) {
+				const sources = record.payload.sources,
+					capture = record.sourceCapture;
+				if (!capture || !Array.isArray(sources) || sources.length !== capture.members.length)
+					throw new FlowLedgerError("schema", "Invalid native payload source receipts.");
+				const positions = new Set<number>();
+				for (const [offset, source] of sources.entries()) {
+					if (
+						!source ||
+						source.sourceIndex !== capture.members[offset]?.index ||
+						!["included", "changed", "unresolved"].includes(source.disposition) ||
+						(source.index !== undefined &&
+							(!Number.isSafeInteger(source.index) ||
+								source.index < 0 ||
+								source.index >= record.payload.bytes ||
+								positions.has(source.index))) ||
+						(source.contentHash !== undefined && !hash(source.contentHash)) ||
+						(source.index === undefined) !== (source.contentHash === undefined) ||
+						(source.disposition === "unresolved" && source.index !== undefined) ||
+						(source.disposition === "included" &&
+							(record.payload.api !== "openai-completions" ||
+								source.index === undefined ||
+								!["intact", "converted"].includes(capture.model?.members[offset]?.status ?? "")))
+					)
+						throw new FlowLedgerError("identity", "Invalid native payload source membership.");
+					if (source.index !== undefined) positions.add(source.index);
+				}
+			}
 			const capture = record.sourceCapture;
 			if (capture !== undefined) {
 				if (

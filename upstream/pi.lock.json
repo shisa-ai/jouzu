@@ -24,6 +24,10 @@
 		{
 			"path": "upstream/pi-flow-control/patch.lock.json",
 			"sha256": "4838555311ae2074a55dfafd77ed3cd996722100e69b2474c106134209421a2e"
+		},
+		{
+			"path": "upstream/pi-provider-receipts/patch.lock.json",
+			"sha256": "649db48df4019852b9c9e55b6a01019e43a45d0184a13cada35fba027cda4ec3"
 		}
 	]
 }

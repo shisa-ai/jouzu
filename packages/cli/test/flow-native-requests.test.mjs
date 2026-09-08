@@ -329,6 +329,7 @@ for (const phase of ["prepared", "handoff", "outcome"])
 		assert.equal(record.sourceCapture.members[0].operationId, submission.dispatch.operationId);
 		assert.deepEqual(record.sourceCapture.members[0].prompt, { inputIndex: 0, messageIndex: 0 });
 		assert.equal(!!record.payload, phase !== "prepared");
+		if (record.payload) assert.equal(record.payload.sources[0].disposition, "included");
 		assert.equal(record.outcome, undefined);
 		await assert.rejects(attachment.nativeRequests.begin({ ...record, id: "replay" }), { code: "busy" });
 		await assert.rejects(attachment.nativeRequests.finish(record.id, "success"), { code: "stale" });
@@ -497,6 +498,7 @@ test("native custom conversion retains host-mapped model provenance", async (t) 
 	assert.ok(offset >= 0);
 	assert.equal(request.sourceCapture.context.members[offset].status, "intact");
 	assert.equal(request.sourceCapture.model.members[offset].status, "converted");
+	assert.equal(request.payload.sources[offset].disposition, "included");
 	assert.ok(f.sent[1].messages.some((message) => JSON.stringify(message).includes("custom instruction")));
 });
 
@@ -750,4 +752,122 @@ test("native converted receipts require content hashes and cannot erase changed 
 		}
 		await assert.rejects(f.store.begin({ ...request, id: mode, sourceCapture }), { code: "identity" });
 	}
+});
+
+for (const mode of ["retain", "reorder", "remove", "clone", "edit", "duplicate"])
+	test(`native final payload membership distinguishes duplicate sources through ${mode}`, async (t) => {
+		const f = await nativeRequests(t, {
+			retainInputs: true,
+			transform: ({ payload }) => {
+				const users = payload.messages.filter((message) => message.role === "user");
+				const other = payload.messages.filter((message) => message.role !== "user");
+				if (mode === "reorder") return { ...payload, messages: [...other, ...users.reverse()] };
+				if (mode === "remove") return { ...payload, messages: [...other, ...users.slice(1)] };
+				if (mode === "clone") return structuredClone(payload);
+				if (mode === "edit") users[0].content[0].text = "changed";
+				if (mode === "duplicate") return { ...payload, messages: [...payload.messages, users[0]] };
+				return payload;
+			},
+		});
+		await f.session.followUp("same");
+		await f.session.followUp("same");
+		f.session.agent.followUpMode = "all";
+		await f.session.continueQueued();
+		const [request] = await f.store.snapshot();
+		assert.equal(request.outcome, "success");
+		assert.deepEqual(
+			request.payload.sources.map((source) => source.disposition),
+			{
+				retain: ["included", "included"],
+				reorder: ["included", "included"],
+				remove: ["unresolved", "included"],
+				clone: ["unresolved", "unresolved"],
+				edit: ["changed", "included"],
+				duplicate: ["unresolved", "included"],
+			}[mode],
+		);
+		if (mode === "reorder") assert.ok(request.payload.sources[0].index > request.payload.sources[1].index);
+		for (const source of request.payload.sources)
+			if (source.disposition === "included") {
+				assert.equal(f.sent[0].messages[source.index].role, "user");
+				assert.match(source.contentHash, /^[a-f0-9]{64}$/);
+			}
+	});
+
+test("provider image downgrade retains changed membership without attributing intact input", async (t) => {
+	const f = await nativeRequests(t, { retainInputs: true });
+	f.session.agent.state.model = { ...f.session.agent.state.model, input: ["text"] };
+	await f.session.prompt("image", { images: [{ type: "image", mimeType: "image/png", data: "YQ==" }] });
+	const [request] = await f.store.snapshot();
+	assert.equal(request.payload.sources[0].disposition, "changed");
+	assert.ok(JSON.stringify(f.sent[0]).includes("model does not support images"));
+});
+
+test("provider-native surrogate sanitation records changed source content", async (t) => {
+	const f = await nativeRequests(t, { retainInputs: true });
+	await f.session.prompt(`broken ${String.fromCharCode(0xd800)}`);
+	const [request] = await f.store.snapshot();
+	assert.equal(request.payload.sources[0].disposition, "changed");
+});
+
+test("provider receipt omission leaves final source membership unresolved", async (t) => {
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		native: async (model, context, options) => {
+			await options.onPayload({ messages: context.messages }, model);
+			return { async *[Symbol.asyncIterator]() {}, result: async () => assistant() };
+		},
+	});
+	await f.session.prompt("source");
+	assert.equal((await f.store.snapshot())[0].payload.sources[0].disposition, "unresolved");
+});
+
+test("native payload source schema rejects malformed and unqualified membership", async (t) => {
+	const f = await nativeRequests(t, { retainInputs: true });
+	await f.session.prompt("schema");
+	const [request] = await f.store.snapshot();
+	const source = request.payload.sources[0];
+	const bad = [
+		{ sources: [] },
+		{ sources: [{ ...source, sourceIndex: 99 }] },
+		{ sources: [{ ...source, disposition: "delivered" }] },
+		{ sources: [{ ...source, index: -1 }] },
+		{ sources: [{ ...source, index: request.payload.bytes }] },
+		{ sources: [{ ...source, contentHash: "bad" }] },
+		{ sources: [{ ...source, contentHash: undefined }] },
+		{ sources: [{ ...source, disposition: "unresolved" }] },
+		{ api: "unqualified" },
+	];
+	for (const [index, change] of bad.entries()) {
+		const id = `bad-payload-${index}`;
+		await f.store.begin({ ...request, id });
+		await assert.rejects(f.store.handoff(id, { ...request.payload, ...change }));
+		assert.equal((await f.store.snapshot()).at(-1).payload, undefined);
+		await f.store.finish(id, "withheld");
+	}
+});
+
+test("provider mutation before its source observer cannot redefine original content", async (t) => {
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		native: async (model, context, options) => {
+			const source = context.messages.find((message) => message.role === "user");
+			source.content[0].text = "changed before conversion";
+			const output = { role: "user", content: source.content };
+			options.onMessageConverted(source, output);
+			await options.onPayload({ messages: [output] }, model);
+			return { async *[Symbol.asyncIterator]() {}, result: async () => assistant() };
+		},
+	});
+	await f.session.prompt("original");
+	assert.equal((await f.store.snapshot())[0].payload.sources[0].disposition, "changed");
+});
+
+test("Pi simplified provider streaming preserves source conversion receipts", async (t) => {
+	const f = await nativeRequests(t, { retainInputs: true, simple: true });
+	await f.session.prompt("source");
+	const [request] = await f.store.snapshot();
+	assert.equal(request.outcome, "success");
+	assert.equal(request.payload.sources[0].disposition, "included");
+	assert.equal(f.sent.length, 1);
 });

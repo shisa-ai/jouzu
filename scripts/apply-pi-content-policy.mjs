@@ -4,6 +4,7 @@ import { readFile, realpath, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { applyFlowControl } from "./apply-pi-flow-control.mjs";
+import { applyProviderReceipts } from "./apply-pi-provider-receipts.mjs";
 import { paths, transform } from "./pi-content-policy-transform.mjs";
 
 const root = resolve(import.meta.dirname, "..");
@@ -84,9 +85,11 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
 	for (const packageRoot of roots) {
 		count += await applyContentPolicy(packageRoot, process.argv.includes("--check"));
 		count += await applyFlowControl(packageRoot, process.argv.includes("--check"));
+		count += await applyProviderReceipts(packageRoot, process.argv.includes("--check"));
 	}
 	for (const base of [root, join(root, "packages/cli")]) {
 		count += await applyFlowControl(base, process.argv.includes("--check"));
+		count += await applyProviderReceipts(base, process.argv.includes("--check"));
 	}
 	console.log(`Pi content-policy patch verified (${roots.size} package trees, ${count} files written)`);
 }

@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { AssistantMessage } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
+import { NativePayloadSources } from "./native-payload-sources.js";
 import type { FlowNativeRequestStore, NativeRequestSource, NativeSourceCapture } from "./native-request-store.js";
 import { PiHostHooks } from "./pi-host-hooks.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
@@ -13,6 +14,7 @@ const attached = new WeakSet<AgentSession>();
 export class PiNativeRequests {
 	private readonly hooks = new PiHostHooks();
 	private pending?: string;
+	private prepared?: { modelHash: string; capture?: NativeSourceCapture };
 	private active = 0;
 	private closed = false;
 	private capture?: NativeSourceCapture;
@@ -269,6 +271,10 @@ export class PiNativeRequests {
 						...(this.capture ? { sourceCapture: this.capture } : {}),
 					});
 					this.pending = input.requestId;
+					this.prepared = {
+						modelHash: hash(input.modelMessages),
+						capture: this.capture ? structuredClone(this.capture) : undefined,
+					};
 				} finally {
 					this.capture = undefined;
 					this.references = undefined;
@@ -282,6 +288,9 @@ export class PiNativeRequests {
 			const id = this.pending;
 			this.pending = undefined;
 			if (!id) throw new FlowLedgerError("identity", "Native provider call has no request checkpoint.");
+			const prepared = this.prepared;
+			this.prepared = undefined;
+			const sources = new NativePayloadSources(context.messages, prepared?.capture);
 			this.active++;
 			let handedOff = false;
 			let admitting = false;
@@ -296,8 +305,20 @@ export class PiNativeRequests {
 				if (!handedOff) await store.finish(id, "withheld");
 			};
 			try {
+				if (!prepared || hash(context.messages) !== prepared.modelHash)
+					throw new FlowLedgerError("stale", "Native provider context differs from its checkpoint.");
 				const response = await native(model, context, {
 					...options,
+					onMessageConverted: (source, output) => {
+						this.assertActive();
+						if (admitting || finished)
+							throw new FlowLedgerError(
+								"transition",
+								"Native provider source mapping arrived after payload admission.",
+							);
+						if (model.api === "openai-completions") sources.observe(source, output);
+						options?.onMessageConverted?.(source, output);
+					},
 					onPayload: async (payload, requestModel) => {
 						this.assertActive();
 						options?.signal?.throwIfAborted();
@@ -317,12 +338,14 @@ export class PiNativeRequests {
 						if (serialized === undefined || Buffer.byteLength(serialized) > maxBytes)
 							throw new FlowLedgerError("capacity", "Native provider payload exceeds its byte limit.");
 						const owned = JSON.parse(serialized);
+						const membership = sources.inspect(model.api, replacement === undefined ? payload : replacement, owned);
 						await store.handoff(id, {
 							hash: createHash("sha256").update(serialized).digest("hex"),
 							bytes: Buffer.byteLength(serialized),
 							api: model.api,
 							provider: model.provider,
 							model: model.id,
+							...(membership ? { sources: membership } : {}),
 						});
 						handedOff = true;
 						this.assertActive();
@@ -391,6 +414,7 @@ export class PiNativeRequests {
 		if (this.active) throw new FlowLedgerError("busy", "Native provider execution must settle before close.");
 		if (this.pending) await this.store.finish(this.pending, "withheld");
 		this.pending = undefined;
+		this.prepared = undefined;
 		this.capture = undefined;
 		this.references = undefined;
 		this.closed = true;
