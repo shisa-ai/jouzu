@@ -633,6 +633,12 @@ for (const phase of [
 	"context-claim-after",
 	"context-history-before",
 	"context-history-after",
+	"nextturn-observed",
+	"nextturn-queued",
+	"nextturn-claim-before",
+	"nextturn-claim-after",
+	"nextturn-history-before",
+	"nextturn-history-after",
 ]) {
 	test(`process interruption at ${phase} preserves context ownership without replay`, { timeout: 20000 }, async (t) => {
 		const root = await mkdtemp(join(tmpdir(), "jouzu-context-kill-"));
@@ -658,15 +664,28 @@ for (const phase of [
 		]);
 		assert.equal(saved.requests, 0);
 		assert.equal(saved.queued, 0);
+		assert.equal(saved.deferred, phase === "nextturn-queued" ? 1 : 0);
+		await assert.rejects(PiFlowAttachment.open(join(root, "receipts"), saved.scope), { code: "busy" });
 		child.kill("SIGKILL");
 		await exited;
 		attachment = await PiFlowAttachment.open(join(root, "receipts"), saved.scope);
 		const [record] = await attachment.submissions.snapshot();
 		assert.equal(record.submission.args[0].content, "one retained context");
 		assert.equal(record.dispatch.inputs[0].kind, "context");
-		assert.equal(record.dispatch.phase, "started");
-		assert.equal(!!record.dispatch.promptClaims?.length, !["context-observed", "context-claim-before"].includes(phase));
-		assert.equal(!!record.dispatch.promptHistory?.length, phase === "context-history-after");
+		const nextTurn = phase.startsWith("nextturn-");
+		const beforeConsumption = phase.endsWith("-observed") || phase.endsWith("-queued");
+		const hasClaim = !beforeConsumption && !phase.endsWith("-claim-before");
+		const hasHistory = phase.endsWith("-history-after");
+		assert.equal(record.dispatch.phase, nextTurn && !phase.endsWith("-observed") ? "returned" : "started");
+		assert.equal(!!record.dispatch.promptClaims?.length, hasClaim);
+		assert.equal(!!record.dispatch.promptHistory?.length, hasHistory);
+		const records = await attachment.submissions.snapshot();
+		assert.equal(records.length, nextTurn && !beforeConsumption ? 2 : 1);
+		if (records.length === 2) {
+			assert.equal(records[1].submission.args[0], "one consuming prompt");
+			assert.equal(records[1].dispatch.inputs[0].args[0].length, 1);
+			assert.equal(records[1].dispatch.promptHistory.length, 1);
+		}
 		let replayed = false;
 		await assert.rejects(
 			attachment.submissions.dispatch(record.id, record.revision, "replay", async () => {
@@ -681,9 +700,14 @@ for (const phase of [
 		});
 		native = new PiNativeDispatch(session, attachment.submissions);
 		const recovery = await native.recoverSources();
-		assert.deepEqual(
-			recovery,
-			phase === "context-history-after" ? { recovered: 1, unresolved: 0 } : { recovered: 0, unresolved: 1 },
+		assert.deepEqual(recovery, {
+			recovered: (hasHistory ? 1 : 0) + (nextTurn && !beforeConsumption ? 1 : 0),
+			unresolved: hasHistory ? 0 : 1,
+		});
+		const sources = await native.sources(session.agent.state.messages);
+		assert.equal(
+			sources.filter((source) => source.operationId === record.dispatch.operationId).length,
+			hasHistory ? 1 : 0,
 		);
 		assert.equal(requests.length, 0);
 	});
