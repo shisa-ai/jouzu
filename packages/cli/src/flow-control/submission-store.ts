@@ -42,6 +42,7 @@ export interface FlowSubmissionDispatch {
 	ownerId: string;
 	phase: "started" | "returned" | "failed";
 	inputs?: FlowNativeInput[];
+	queueCancellations?: { id: string; revision: number }[];
 	queueClaims?: { id: string; revision: number; consumed: boolean }[];
 	queueHistory?: FlowNativeQueueHistory[];
 	promptHistory?: FlowNativePromptHistory[];
@@ -295,6 +296,29 @@ export class FlowSubmissionStore {
 					if (claim.consumed) consumedIds.add(claim.id);
 				}
 			}
+			const cancellations = record.dispatch?.queueCancellations;
+			if (cancellations !== undefined) {
+				if (
+					!Array.isArray(cancellations) ||
+					cancellations.length > 64 ||
+					new Set(cancellations.map((item) => item?.id)).size !== cancellations.length
+				)
+					throw new FlowLedgerError("schema", "Invalid native queue cancellations.");
+				for (const item of cancellations) {
+					if (
+						!item ||
+						!identity(item.id) ||
+						!Number.isSafeInteger(item.revision) ||
+						item.revision < 1 ||
+						!(inputs ?? []).some((entry) => {
+							const input = decode(entry.payload) as FlowNativeInput;
+							return input.queue?.id === item.id && input.queue.revision === item.revision;
+						})
+					)
+						throw new FlowLedgerError("identity", "Queue cancellation does not identify retained input.");
+				}
+			}
+
 			const history = record.dispatch?.queueHistory;
 			if (history !== undefined) {
 				if (!Array.isArray(history) || history.length > 64)
@@ -491,6 +515,7 @@ export class FlowSubmissionStore {
 								ownerId: dispatch.ownerId,
 								phase: dispatch.phase,
 								...(dispatch.queueClaims ? { queueClaims: dispatch.queueClaims } : {}),
+								...(dispatch.queueCancellations ? { queueCancellations: dispatch.queueCancellations } : {}),
 								...(dispatch.queueHistory ? { queueHistory: dispatch.queueHistory } : {}),
 								...(dispatch.promptHistory ? { promptHistory: dispatch.promptHistory } : {}),
 								...(dispatch.promptClaims ? { promptClaims: dispatch.promptClaims } : {}),
@@ -504,6 +529,27 @@ export class FlowSubmissionStore {
 			})),
 		}));
 	}
+	/** Persist cancellation intent before removing the native queue item. */
+	cancelQueue(operationId: string, queue: { id: string; revision: number }): Promise<void> {
+		const captured = { ...queue };
+		return this.transact((state) => {
+			const dispatch = state.records.find((record) => record.dispatch?.operationId === operationId)?.dispatch;
+			if (!dispatch || dispatch.ownerId !== this.ownership.token)
+				throw new FlowLedgerError("stale", "Queue cancellation belongs to another attachment.");
+			if (dispatch.queueClaims?.some((claim) => claim.id === captured.id && claim.consumed))
+				throw new FlowLedgerError("transition", "Consumed queue input requires request cancellation.");
+			const previous = dispatch.queueCancellations?.find((item) => item.id === captured.id);
+			if (previous) {
+				if (previous.revision !== captured.revision)
+					throw new FlowLedgerError("stale", "Queue cancellation revision changed.");
+				return { changed: false, result: undefined };
+			}
+			dispatch.queueCancellations ??= [];
+			dispatch.queueCancellations.push(captured);
+			return { changed: true, result: undefined };
+		});
+	}
+
 	/** Record a host's exact post-removal queue receipt; absence or return alone is never consumption proof. */
 	recordQueueClaim(operationId: string, queue: { id: string; revision: number }, consumed: boolean): Promise<void> {
 		const receipt = { ...queue, consumed };
@@ -549,6 +595,8 @@ export class FlowSubmissionStore {
 			const dispatch = record?.dispatch;
 			if (record?.status !== "retained" || !dispatch || dispatch.ownerId !== this.ownership.token)
 				throw new FlowLedgerError("stale", "Native edit belongs to another or cancelled dispatch.");
+			if (dispatch.queueCancellations?.some((item) => item.id === queue.id))
+				throw new FlowLedgerError("transition", "Cancelled queue input cannot be edited.");
 			const inputs = dispatch.inputs ?? [];
 			const revisions = inputs
 				.map((item) => ({ item, input: decode(item.payload) as FlowNativeInput }))

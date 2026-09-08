@@ -173,6 +173,15 @@ export class PiFlowSessionService {
 		});
 	}
 
+	cancelNativeQueue(id: string, revision: number): Promise<void> {
+		return this.registry.run(async () => {
+			const branch = this.branch();
+			const result = await branch.host.atQueueMaintenance(() => branch.native.cancelQueue(id, revision));
+			if (result.kind === "busy")
+				throw new FlowLedgerError("busy", "Native queue cancellation requires an idle session.");
+		});
+	}
+
 	private async closeBranch(): Promise<void> {
 		const branch = this.current;
 		if (branch) {

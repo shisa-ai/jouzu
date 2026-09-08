@@ -317,3 +317,96 @@ test("queue maintenance fences edits and cancellation while retaining the review
 	await f.session.continueQueued();
 	assert.equal(f.requests.length, 1);
 });
+
+test("native queue cancellation preserves duplicate input identity and unrelated work", async (t) => {
+	const f = await fixture(t, { retainInputs: true, providerReceipts: () => true });
+	await f.session.followUp("duplicate");
+	await f.session.followUp("duplicate");
+	const [first, second] = f.session.agent.inspectQueuedMessages();
+	await f.service.cancelNativeQueue(first.id, first.revision);
+	await f.service.cancelNativeQueue(first.id, first.revision);
+	assert.deepEqual(
+		f.session.agent.inspectQueuedMessages().map((item) => item.id),
+		[second.id],
+	);
+	assert.equal(f.requests.length, 0);
+	const [cancelled] = await f.service.branch().attachment.submissions.snapshot();
+	assert.deepEqual(cancelled.dispatch.queueCancellations, [{ id: first.id, revision: 1 }]);
+	assert.deepEqual(cancelled.dispatch.queueClaims, [{ id: first.id, revision: 1, consumed: false }]);
+	await f.session.continueQueued();
+	assert.equal(f.requests.length, 1);
+	const records = await f.service.branch().attachment.submissions.snapshot();
+	assert.equal(records[0].dispatch.queueHistory, undefined);
+	assert.equal(records[1].dispatch.queueHistory.length, 1);
+});
+
+test("native cancellation retains the edited revision and rejects stale controls", async (t) => {
+	const f = await fixture(t, { retainInputs: true, providerReceipts: () => true });
+	await f.session.followUp("original");
+	const [item] = f.session.agent.inspectQueuedMessages();
+	f.session.agent.editQueuedMessage(item.id, 1, { role: "user", content: "edited", timestamp: 1 });
+	await assert.rejects(f.service.cancelNativeQueue(item.id, 1), { code: "stale" });
+	await f.service.cancelNativeQueue(item.id, 2);
+	const [record] = await f.service.branch().attachment.submissions.snapshot();
+	assert.equal(record.dispatch.inputs[1].args[0].content, "edited");
+	assert.deepEqual(record.dispatch.queueCancellations, [{ id: item.id, revision: 2 }]);
+	assert.deepEqual(
+		record.dispatch.queueClaims.map((item) => item.consumed),
+		[false, false],
+	);
+	assert.equal(f.requests.length, 0);
+});
+
+test("failed cancellation persistence preserves the live queue for retry", async (t) => {
+	const f = await fixture(t, { retainInputs: true, providerReceipts: () => true });
+	await f.session.followUp("preserved");
+	const [item] = f.session.agent.inspectQueuedMessages();
+	const store = f.service.branch().attachment.submissions;
+	const mock = t.mock.method(store, "cancelQueue", async () => {
+		throw new Error("write failure");
+	});
+	await assert.rejects(f.service.cancelNativeQueue(item.id, 1), /write failure/);
+	assert.equal(f.session.agent.inspectQueuedMessages().length, 1);
+	assert.equal((await store.snapshot())[0].dispatch.queueCancellations, undefined);
+	mock.mock.restore();
+	await f.service.cancelNativeQueue(item.id, 1);
+	assert.equal(f.session.agent.inspectQueuedMessages().length, 0);
+	assert.equal(f.requests.length, 0);
+});
+
+test("persisted cancellation blocks consumption after native removal fails", async (t) => {
+	const f = await fixture(t, { retainInputs: true, providerReceipts: () => true });
+	await f.session.followUp("must not run");
+	const [item] = f.session.agent.inspectQueuedMessages();
+	const mock = t.mock.method(f.session.agent, "cancelQueuedMessage", () => {
+		throw new Error("removal failed");
+	});
+	await assert.rejects(f.service.cancelNativeQueue(item.id, 1), /removal failed/);
+	mock.mock.restore();
+	await f.session.continueQueued();
+	assert.equal(f.requests.length, 0);
+	assert.equal(f.session.agent.inspectQueuedMessages().length, 1);
+	await f.service.cancelNativeQueue(item.id, 1);
+	assert.equal(f.session.agent.inspectQueuedMessages().length, 0);
+});
+
+test("native queue cancellation evidence survives session-service reopen", async (t) => {
+	const first = await fixture(t, { retainInputs: true, providerReceipts: () => true });
+	await first.session.followUp("cancelled");
+	const [item] = first.session.agent.inspectQueuedMessages();
+	await first.service.cancelNativeQueue(item.id, 1);
+	await first.service.close();
+	const next = await fixture(t, {
+		root: first.root,
+		manager: SessionManager.open(first.session.sessionManager.getSessionFile()),
+		retainInputs: true,
+		providerReceipts: () => true,
+	});
+	await next.service.cancelNativeQueue(item.id, 1);
+	await next.session.prompt("new user input");
+	assert.equal(next.requests.length, 1);
+	assert.ok(!JSON.stringify(next.requests).includes("cancelled"));
+	const [record] = await next.service.branch().attachment.submissions.snapshot();
+	assert.equal(record.dispatch.queueCancellations[0].id, item.id);
+	assert.equal(record.dispatch.queueClaims[0].consumed, false);
+});

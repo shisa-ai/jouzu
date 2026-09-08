@@ -123,7 +123,12 @@ export class PiNativeDispatch {
 					const input = record?.dispatch?.inputs?.find(
 						(input) => input.queue?.id === item.id && input.queue.revision === item.revision,
 					);
-					if (record?.status !== "retained" || !input) return false;
+					if (
+						record?.status !== "retained" ||
+						!input ||
+						record.dispatch?.queueCancellations?.some((cancelled) => cancelled.id === item.id)
+					)
+						return false;
 					if (this.admitQueued) {
 						let allowed: boolean;
 						try {
@@ -154,7 +159,13 @@ export class PiNativeDispatch {
 				this.assertActive();
 				signal?.throwIfAborted();
 				return [...selected].every(([id, revision]) =>
-					current.some((record) => record.id === id && record.revision === revision && record.status === "retained"),
+					current.some(
+						(record) =>
+							record.id === id &&
+							record.revision === revision &&
+							record.status === "retained" &&
+							!record.dispatch?.queueCancellations?.some((cancelled) => items.some((item) => item.id === cancelled.id)),
+					),
 				);
 			},
 			afterQueueClaim: async (receipt, signal) => {
@@ -177,7 +188,10 @@ export class PiNativeDispatch {
 					if (
 						observed &&
 						!records.some(
-							(record) => record.dispatch?.operationId === observed.operationId && record.status === "retained",
+							(record) =>
+								record.dispatch?.operationId === observed.operationId &&
+								record.status === "retained" &&
+								!record.dispatch.queueCancellations?.some((cancelled) => cancelled.id === item.id),
 						)
 					)
 						throw new FlowLedgerError("stale", "Native input was cancelled during queue consumption.");
@@ -267,6 +281,48 @@ export class PiNativeDispatch {
 			if (!this.active) this.drained?.();
 		}
 	}
+	/** Run under the session queue-maintenance boundary; persist intent before native removal. */
+	async cancelQueue(id: string, revision: number): Promise<void> {
+		this.assertActive();
+		const item = this.session.agent
+			.inspectQueuedMessages()
+			.find((item) => item.id === id && item.revision === revision);
+		const observed = this.queued.get(id);
+		if (!item || !observed) {
+			const records = await this.store.snapshot();
+			this.assertActive();
+			if (
+				!item &&
+				records.some(
+					(record) =>
+						record.dispatch?.queueCancellations?.some(
+							(cancelled) => cancelled.id === id && cancelled.revision === revision,
+						) &&
+						record.dispatch.queueClaims?.some(
+							(claim) => claim.id === id && claim.revision === revision && !claim.consumed,
+						),
+				)
+			)
+				return;
+			throw new FlowLedgerError("stale", "Queue cancellation has no matching live input.");
+		}
+		this.active++;
+		try {
+			await observed.write;
+			if (observed.revision !== revision) await this.reconcileQueueEdit(id, revision);
+			await this.store.cancelQueue(observed.operationId, { id, revision });
+			this.assertActive();
+			const result = this.session.agent.cancelQueuedMessage(id, revision);
+			if (result.kind !== "cancelled") throw new FlowLedgerError("stale", "Native queue changed during cancellation.");
+			await this.store.recordQueueClaim(observed.operationId, { id, revision }, false);
+			this.queued.delete(id);
+			this.held.delete(id);
+		} finally {
+			this.active--;
+			if (!this.active) this.drained?.();
+		}
+	}
+
 	heldInputs(): { id: string; revision: number; reason: string }[] {
 		const queued = this.session.agent.inspectQueuedMessages();
 		for (const id of this.held.keys()) if (!queued.some((item) => item.id === id)) this.held.delete(id);
