@@ -230,7 +230,7 @@ export function transform(path, source) {
 		);
 		change(
 			'        if (options?.deliverAs === "nextTurn") {\n            this._pendingNextTurnMessages.push(appMessage);',
-			'        if (options?.deliverAs === "nextTurn") {\n            if (this.flowNextTurn) await this.flowNextTurn(appMessage);\n            this._flowBinding?.assertActive();\n            this._pendingNextTurnMessages.push(appMessage);',
+			'        if (options?.deliverAs === "nextTurn") {\n            if (this.flowNextTurn) {\n                const sessionId = this.sessionId;\n                await this.flowNextTurn(appMessage, () => {\n                    if (this.sessionId !== sessionId) return false;\n                    const index = this._pendingNextTurnMessages.indexOf(appMessage);\n                    if (index < 0) return false;\n                    this._pendingNextTurnMessages.splice(index, 1);\n                    return true;\n                });\n            }\n            this._flowBinding?.assertActive();\n            this._pendingNextTurnMessages.push(appMessage);',
 		);
 		change("    dispose() {", "    dispose() {\n        const flowClosing = this._flowBinding?.dispose();");
 		change(
@@ -426,7 +426,7 @@ export function transform(path, source) {
 		change("    dispose(): void;", "    dispose(): Promise<void>;");
 		change(
 			"export declare class AgentSession {",
-			"export declare class AgentSession {\n    /** Observe exact native next-turn input before Pi retains it. Failure prevents enqueue. */\n    flowNextTurn?: (message: AgentMessage) => Promise<void>;",
+			"export declare class AgentSession {\n    /** Observe exact native next-turn input before Pi retains it. Failure prevents enqueue. */\n    flowNextTurn?: (message: AgentMessage, cancel: () => boolean) => Promise<void>;",
 		);
 		text = `import type { FlowIngress } from "./jouzu-flow-ingress.js";\n${text}`;
 		change(

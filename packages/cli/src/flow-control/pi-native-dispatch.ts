@@ -31,6 +31,7 @@ export class PiNativeDispatch {
 	private readonly hooks = new PiHostHooks();
 	private readonly frames = new AsyncLocalStorage<Frame>();
 	private readonly queued = new Map<string, { operationId: string; revision: number; write: Promise<unknown> }>();
+	private readonly deferred = new Map<string, { inputIndex: number; cancel: () => boolean }>();
 	private readonly held = new Map<string, { id: string; revision: number; reason: string }>();
 	private readonly sessionId: string;
 	private readonly contextWrites = new Set<Promise<void>>();
@@ -93,18 +94,19 @@ export class PiNativeDispatch {
 			});
 		}
 		const nextTurn = session.flowNextTurn;
-		this.hooks.set(session, "flowNextTurn", async (message) => {
+		this.hooks.set(session, "flowNextTurn", async (message, cancel) => {
 			const frame = this.frame();
-			if (!frame) return nextTurn?.(message);
+			if (!frame) return nextTurn?.(message, cancel);
 			if (!frame.nextTurn || frame.nextTurnObserved)
 				throw new FlowLedgerError("identity", "Unexpected deferred context in native dispatch.");
 			const captured = structuredClone(message);
 			const index = await frame.observer.observe({ kind: "context", args: [{ ...captured, timestamp: 0 }] });
-			await nextTurn?.(message);
+			await nextTurn?.(message, cancel);
 			this.frame();
 			if (!isDeepStrictEqual(message, captured))
 				throw new FlowLedgerError("identity", "Deferred context changed during observation.");
 			this.history.observeNextTurn(frame.operationId, index, message);
+			this.deferred.set(frame.operationId, { inputIndex: index, cancel });
 			frame.nextTurnObserved = true;
 		});
 		const manager = session.sessionManager;
@@ -387,6 +389,29 @@ export class PiNativeDispatch {
 		}
 	}
 
+	async cancelContext(id: string, revision: number, inputIndex: number): Promise<void> {
+		this.assertActive();
+		this.active++;
+		try {
+			const record = (await this.store.snapshot()).find((record) => record.id === id && record.revision === revision);
+			this.assertActive();
+			if (!record?.dispatch) throw new FlowLedgerError("stale", "Deferred cancellation has no matching submission.");
+			if (record.dispatch.contextCancellations?.some((item) => item.inputIndex === inputIndex && item.removed)) return;
+			const pending = this.deferred.get(record.dispatch.operationId);
+			if (!pending || pending.inputIndex !== inputIndex)
+				throw new FlowLedgerError("stale", "Deferred cancellation has no matching live input.");
+			await this.store.cancelContext(record.dispatch.operationId, inputIndex);
+			this.assertActive();
+			if (!pending.cancel())
+				throw new FlowLedgerError("stale", "Deferred cancellation requires removal reconciliation.");
+			await this.store.confirmContextCancellation(record.dispatch.operationId, inputIndex);
+			this.deferred.delete(record.dispatch.operationId);
+		} finally {
+			this.active--;
+			if (!this.active) this.drained?.();
+		}
+	}
+
 	heldInputs(): { id: string; revision: number; reason: string }[] {
 		const queued = this.session.agent.inspectQueuedMessages();
 		for (const id of this.held.keys()) if (!queued.some((item) => item.id === id)) this.held.delete(id);
@@ -509,6 +534,7 @@ export class PiNativeDispatch {
 			this.hooks.close();
 			this.history.close();
 			this.queued.clear();
+			this.deferred.clear();
 			this.held.clear();
 			attached.delete(this.session);
 		});

@@ -182,6 +182,14 @@ export class PiFlowSessionService {
 		});
 	}
 
+	cancelNativeContext(id: string, revision: number, inputIndex: number): Promise<void> {
+		return this.registry.run(async () => {
+			const branch = this.branch();
+			const result = await branch.host.atQueueMaintenance(() => branch.native.cancelContext(id, revision, inputIndex));
+			if (result.kind === "busy") throw new FlowLedgerError("busy", "Deferred cancellation requires an idle session.");
+		});
+	}
+
 	private async closeBranch(): Promise<void> {
 		const branch = this.current;
 		if (branch) {

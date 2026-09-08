@@ -74,7 +74,10 @@ export async function recoverNativeSources(
 		const dispatch = record.dispatch;
 		if (!dispatch) continue;
 		unresolved += (dispatch.inputs ?? []).filter(
-			(input, index) => input.kind === "context" && !dispatch.promptClaims?.some((claim) => claim.inputIndex === index),
+			(input, index) =>
+				input.kind === "context" &&
+				!dispatch.promptClaims?.some((claim) => claim.inputIndex === index) &&
+				!dispatch.contextCancellations?.some((item) => item.inputIndex === index && item.removed),
 		).length;
 		const receipts = [
 			...(dispatch.queueHistory ?? []).map((receipt) => ({

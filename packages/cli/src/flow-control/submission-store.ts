@@ -43,6 +43,7 @@ export interface FlowSubmissionDispatch {
 	phase: "started" | "returned" | "failed";
 	inputs?: FlowNativeInput[];
 	queueCancellations?: { id: string; revision: number }[];
+	contextCancellations?: { inputIndex: number; removed: boolean }[];
 	queueClaims?: { id: string; revision: number; consumed: boolean }[];
 	queueHistory?: FlowNativeQueueHistory[];
 	promptHistory?: FlowNativePromptHistory[];
@@ -319,6 +320,34 @@ export class FlowSubmissionStore {
 				}
 			}
 
+			const contextCancellations = record.dispatch?.contextCancellations;
+			if (contextCancellations !== undefined) {
+				if (
+					!Array.isArray(contextCancellations) ||
+					contextCancellations.length > 64 ||
+					new Set(contextCancellations.map((item) => item?.inputIndex)).size !== contextCancellations.length
+				)
+					throw new FlowLedgerError("schema", "Invalid deferred context cancellations.");
+				for (const cancellation of contextCancellations) {
+					const stored = inputs?.[cancellation?.inputIndex];
+					if (
+						!cancellation ||
+						!Number.isSafeInteger(cancellation.inputIndex) ||
+						cancellation.inputIndex < 0 ||
+						typeof cancellation.removed !== "boolean" ||
+						!stored ||
+						(decode(stored.payload) as FlowNativeInput).kind !== "context" ||
+						submission.api !== "sendCustomMessage" ||
+						(submission.args[1] as { deliverAs?: string } | undefined)?.deliverAs !== "nextTurn" ||
+						record.dispatch?.promptClaims?.some((claim) => claim.inputIndex === cancellation.inputIndex)
+					)
+						throw new FlowLedgerError(
+							"identity",
+							"Deferred cancellation does not identify unconsumed next-turn context.",
+						);
+				}
+			}
+
 			const history = record.dispatch?.queueHistory;
 			if (history !== undefined) {
 				if (!Array.isArray(history) || history.length > 64)
@@ -517,6 +546,7 @@ export class FlowSubmissionStore {
 								phase: dispatch.phase,
 								...(dispatch.queueClaims ? { queueClaims: dispatch.queueClaims } : {}),
 								...(dispatch.queueCancellations ? { queueCancellations: dispatch.queueCancellations } : {}),
+								...(dispatch.contextCancellations ? { contextCancellations: dispatch.contextCancellations } : {}),
 								...(dispatch.queueHistory ? { queueHistory: dispatch.queueHistory } : {}),
 								...(dispatch.promptHistory ? { promptHistory: dispatch.promptHistory } : {}),
 								...(dispatch.promptClaims ? { promptClaims: dispatch.promptClaims } : {}),
@@ -547,6 +577,34 @@ export class FlowSubmissionStore {
 			}
 			dispatch.queueCancellations ??= [];
 			dispatch.queueCancellations.push(captured);
+			return { changed: true, result: undefined };
+		});
+	}
+
+	/** Retain cancellation intent before native removal. Confirmation requires that retained intent. */
+	cancelContext(operationId: string, inputIndex: number): Promise<void> {
+		return this.contextCancellation(operationId, inputIndex, false);
+	}
+	confirmContextCancellation(operationId: string, inputIndex: number): Promise<void> {
+		return this.contextCancellation(operationId, inputIndex, true);
+	}
+	private contextCancellation(operationId: string, inputIndex: number, removed: boolean): Promise<void> {
+		return this.transact((state) => {
+			const dispatch = state.records.find((record) => record.dispatch?.operationId === operationId)?.dispatch;
+			if (!dispatch || dispatch.ownerId !== this.ownership.token)
+				throw new FlowLedgerError("stale", "Deferred cancellation belongs to another attachment.");
+			if (dispatch.promptClaims?.some((claim) => claim.inputIndex === inputIndex))
+				throw new FlowLedgerError("transition", "Consumed context requires request cancellation.");
+			const previous = dispatch.contextCancellations?.find((item) => item.inputIndex === inputIndex);
+			if (removed && !previous)
+				throw new FlowLedgerError("transition", "Deferred cancellation has no retained intent.");
+			if (previous) {
+				if (!removed || previous.removed) return { changed: false, result: undefined };
+				previous.removed = true;
+			} else {
+				dispatch.contextCancellations ??= [];
+				dispatch.contextCancellations.push({ inputIndex, removed: false });
+			}
 			return { changed: true, result: undefined };
 		});
 	}
@@ -653,6 +711,8 @@ export class FlowSubmissionStore {
 			const dispatch = state.records.find((record) => record.dispatch?.operationId === operationId)?.dispatch;
 			if (!dispatch || dispatch.ownerId !== this.ownership.token)
 				throw new FlowLedgerError("stale", "Native prompt claim belongs to another attachment.");
+			if (dispatch.contextCancellations?.some((item) => item.inputIndex === receipt.inputIndex))
+				throw new FlowLedgerError("transition", "Deferred context has a retained cancellation.");
 			if (
 				dispatch.promptClaims?.some(
 					(item) => item.inputIndex === receipt.inputIndex && item.messageIndex === receipt.messageIndex,

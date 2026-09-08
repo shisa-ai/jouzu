@@ -10,6 +10,7 @@ export interface FlowSubmissionView {
 	delivery: "none" | "consumed" | "history" | "partial" | "included" | "uncertain";
 	attemptIds: string[];
 	nativeRequests?: NativeSubmissionRequestView[];
+	nativeContextCancellations?: { inputIndex: number; removal: "confirmed" | "unconfirmed" }[];
 	nativeQueueCancellations?: { id: string; revision: number; removal: "confirmed" | "unconfirmed" | "consumed" }[];
 	reason?: string;
 }
@@ -77,11 +78,13 @@ export function projectFlowSubmissions(
 		const unconsumedNative =
 			!!record.dispatch?.inputs?.length &&
 			record.dispatch.inputs.every(
-				(input) =>
-					!!input.queue &&
-					claims.some(
-						(claim) => claim.id === input.queue?.id && claim.revision === input.queue.revision && !claim.consumed,
-					),
+				(input, index) =>
+					(input.kind === "context" &&
+						!!record.dispatch?.contextCancellations?.some((item) => item.inputIndex === index && item.removed)) ||
+					(!!input.queue &&
+						claims.some(
+							(claim) => claim.id === input.queue?.id && claim.revision === input.queue.revision && !claim.consumed,
+						)),
 			);
 		const ambiguous =
 			attempts.length === 0 && (unlinkedConsumption || (!!record.dispatch && !consumedNative && !unconsumedNative));
@@ -134,14 +137,21 @@ export function projectFlowSubmissions(
 				removal: claim ? (claim.consumed ? ("consumed" as const) : ("confirmed" as const)) : ("unconfirmed" as const),
 			};
 		});
+		const nativeContextCancellations = record.dispatch?.contextCancellations?.map((item) => ({
+			inputIndex: item.inputIndex,
+			removal: item.removed ? ("confirmed" as const) : ("unconfirmed" as const),
+		}));
 		const fullyCancelled =
 			delivery === "none" &&
 			attempts.length === 0 &&
 			unconsumedNative &&
-			record.dispatch?.inputs?.every((input) =>
-				nativeQueueCancellations?.some(
-					(cancelled) => cancelled.id === input.queue?.id && cancelled.removal === "confirmed",
-				),
+			record.dispatch?.inputs?.every(
+				(input, index) =>
+					(input.kind === "context" &&
+						nativeContextCancellations?.some((item) => item.inputIndex === index && item.removal === "confirmed")) ||
+					nativeQueueCancellations?.some(
+						(cancelled) => cancelled.id === input.queue?.id && cancelled.removal === "confirmed",
+					),
 			);
 
 		const reserved = attempts.some((attempt) => attempt.id === ledger.activeAttemptId);
@@ -155,9 +165,13 @@ export function projectFlowSubmissions(
 			attemptIds: attempts.map((attempt) => attempt.id),
 			...(native ? { nativeRequests: native.get(record.id) ?? [] } : {}),
 			...(nativeQueueCancellations?.length ? { nativeQueueCancellations } : {}),
+			...(nativeContextCancellations?.length ? { nativeContextCancellations } : {}),
 			...(admission === "held"
 				? {
 						reason:
+							(nativeContextCancellations?.some((item) => item.removal === "unconfirmed")
+								? "Deferred context cancellation requires removal reconciliation."
+								: undefined) ??
 							(nativeQueueCancellations?.some((item) => item.removal === "unconfirmed")
 								? "Queue cancellation requires removal reconciliation."
 								: undefined) ??

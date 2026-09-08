@@ -773,3 +773,20 @@ test("without an observer next-turn retention keeps Pi's synchronous enqueue tim
 	assert.equal(session._pendingNextTurnMessages.length, 1);
 	await sending;
 });
+
+test("next-turn cancellation handles remove exact objects and expire after consumption", async (t) => {
+	const { session, requests } = await createFlowSession(t);
+	const handles = [];
+	session.flowNextTurn = async (_message, cancel) => {
+		handles.push(cancel);
+		assert.equal(cancel(), false);
+	};
+	for (let i = 0; i < 2; i++)
+		await session.sendCustomMessage({ customType: "note", content: "same", display: true }, { deliverAs: "nextTurn" });
+	assert.equal(handles[0](), true);
+	assert.equal(handles[0](), false);
+	await session.prompt("consume remaining");
+	assert.equal(handles[1](), false);
+	assert.equal(requests.length, 1);
+	assert.equal(session.sessionManager.getBranch().filter((entry) => entry.type === "custom_message").length, 1);
+});

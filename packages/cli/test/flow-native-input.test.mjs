@@ -639,6 +639,10 @@ for (const phase of [
 	"nextturn-claim-after",
 	"nextturn-history-before",
 	"nextturn-history-after",
+	"nextturn-cancel-intent-before",
+	"nextturn-cancel-intent-after",
+	"nextturn-cancel-confirm-before",
+	"nextturn-cancel-confirm-after",
 ]) {
 	test(`process interruption at ${phase} preserves context ownership without replay`, { timeout: 20000 }, async (t) => {
 		const root = await mkdtemp(join(tmpdir(), "jouzu-context-kill-"));
@@ -664,7 +668,7 @@ for (const phase of [
 		]);
 		assert.equal(saved.requests, 0);
 		assert.equal(saved.queued, 0);
-		assert.equal(saved.deferred, phase === "nextturn-queued" ? 1 : 0);
+		assert.equal(saved.deferred, phase === "nextturn-queued" || phase.includes("-cancel-intent-") ? 1 : 0);
 		await assert.rejects(PiFlowAttachment.open(join(root, "receipts"), saved.scope), { code: "busy" });
 		child.kill("SIGKILL");
 		await exited;
@@ -673,7 +677,14 @@ for (const phase of [
 		assert.equal(record.submission.args[0].content, "one retained context");
 		assert.equal(record.dispatch.inputs[0].kind, "context");
 		const nextTurn = phase.startsWith("nextturn-");
-		const beforeConsumption = phase.endsWith("-observed") || phase.endsWith("-queued");
+		const cancellation = phase.includes("-cancel-");
+		const confirmedCancellation = phase === "nextturn-cancel-confirm-after";
+		const beforeConsumption = cancellation || phase.endsWith("-observed") || phase.endsWith("-queued");
+		if (cancellation)
+			assert.deepEqual(
+				record.dispatch.contextCancellations,
+				phase === "nextturn-cancel-intent-before" ? undefined : [{ inputIndex: 0, removed: confirmedCancellation }],
+			);
 		const hasClaim = !beforeConsumption && !phase.endsWith("-claim-before");
 		const hasHistory = phase.endsWith("-history-after");
 		assert.equal(record.dispatch.phase, nextTurn && !phase.endsWith("-observed") ? "returned" : "started");
@@ -702,8 +713,9 @@ for (const phase of [
 		const recovery = await native.recoverSources();
 		assert.deepEqual(recovery, {
 			recovered: (hasHistory ? 1 : 0) + (nextTurn && !beforeConsumption ? 1 : 0),
-			unresolved: hasHistory ? 0 : 1,
+			unresolved: hasHistory || confirmedCancellation ? 0 : 1,
 		});
+		if (confirmedCancellation) await native.cancelContext(record.id, record.revision, 0);
 		const sources = await native.sources(session.agent.state.messages);
 		assert.equal(
 			sources.filter((source) => source.operationId === record.dispatch.operationId).length,

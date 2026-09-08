@@ -90,6 +90,9 @@ export class PiSessionFlowIngress implements Ingress {
 	cancelNativeQueue(id: string, revision: number): Promise<void> {
 		return this.manage((service) => service.cancelNativeQueue(id, revision));
 	}
+	cancelNativeContext(id: string, revision: number, inputIndex: number): Promise<void> {
+		return this.manage((service) => service.cancelNativeContext(id, revision, inputIndex));
+	}
 	reconcileNativeQueueEdit(id: string, revision: number): Promise<void> {
 		return this.manage((service) => service.reconcileNativeQueueEdit(id, revision));
 	}

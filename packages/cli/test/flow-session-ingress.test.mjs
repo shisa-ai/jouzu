@@ -975,3 +975,174 @@ test("prompt-array mutation during observation cannot swap identical deferred so
 		records.map((record) => record.dispatch.operationId),
 	);
 });
+
+test("next-turn cancellation removes only the selected duplicate and preserves the other source", async (t) => {
+	const f = await fixture(t, { admit: null });
+	for (let i = 0; i < 2; i++)
+		await f.session.sendCustomMessage(
+			{ customType: "note", content: "same", display: true },
+			{ deliverAs: "nextTurn" },
+		);
+	const records = await f.ingress.branch().attachment.submissions.snapshot();
+	await assert.rejects(f.ingress.cancelNativeContext(records[0].id, 2, 0), { code: "stale" });
+	await assert.rejects(f.ingress.cancelNativeContext(records[0].id, 1, 1), { code: "stale" });
+	await f.ingress.cancelNativeContext(records[0].id, 1, 0);
+	await f.ingress.cancelNativeContext(records[0].id, 1, 0);
+	const view = (await f.ingress.inspect()).submissions[0];
+	assert.equal(view.admission, "cancelled");
+	assert.equal(view.delivery, "none");
+	assert.deepEqual(view.nativeContextCancellations, [{ inputIndex: 0, removal: "confirmed" }]);
+	assert.equal(f.sent.length, 0);
+	await f.session.prompt("consume survivor");
+	assert.equal(f.sent.length, 1);
+	const sources = await f.ingress.branch().native.sources(f.session.agent.state.messages);
+	assert.equal(sources.filter((source) => source.operationId === records[0].dispatch.operationId).length, 0);
+	assert.equal(sources.filter((source) => source.operationId === records[1].dispatch.operationId).length, 1);
+	await assert.rejects(f.ingress.cancelNativeContext(records[1].id, 1, 0), { code: "transition" });
+});
+
+test("confirmed next-turn cancellation survives reopen without a source-recovery hold", async (t) => {
+	const first = await fixture(t, { admit: null });
+	await first.session.sendCustomMessage(
+		{ customType: "note", content: "cancel me", display: true },
+		{ deliverAs: "nextTurn" },
+	);
+	const [record] = await first.ingress.branch().attachment.submissions.snapshot();
+	await first.ingress.cancelNativeContext(record.id, 1, 0);
+	await first.ingress.dispose();
+	const next = await fixture(t, {
+		root: first.root,
+		manager: SessionManager.open(first.session.sessionManager.getSessionFile()),
+		admit: null,
+	});
+	assert.deepEqual(next.ingress.branch().sourceRecovery, { recovered: 0, unresolved: 0 });
+	await next.ingress.cancelNativeContext(record.id, 1, 0);
+	assert.equal((await next.ingress.inspect()).submissions[0].admission, "cancelled");
+	await next.session.prompt("continue");
+	assert.equal(next.sent.length, 1);
+	assert.ok(!JSON.stringify(next.sent).includes("cancel me"));
+});
+
+test("failed cancellation-intent write preserves next-turn delivery", async (t) => {
+	const f = await fixture(t, { admit: null });
+	await f.session.sendCustomMessage(
+		{ customType: "note", content: "preserved", display: true },
+		{ deliverAs: "nextTurn" },
+	);
+	const store = f.ingress.branch().attachment.submissions;
+	const [record] = await store.snapshot();
+	t.mock.method(store, "cancelContext", async () => {
+		throw new Error("intent failed");
+	});
+	await assert.rejects(f.ingress.cancelNativeContext(record.id, 1, 0), /intent failed/);
+	await f.session.prompt("consume");
+	assert.equal(f.sent.length, 1);
+	assert.ok(JSON.stringify(f.sent).includes("preserved"));
+	assert.equal((await store.snapshot())[0].dispatch.contextCancellations, undefined);
+});
+
+test("failed removal confirmation remains unresolved after restart", async (t) => {
+	const first = await fixture(t, { admit: null });
+	await first.session.sendCustomMessage(
+		{ customType: "note", content: "removed", display: true },
+		{ deliverAs: "nextTurn" },
+	);
+	const store = first.ingress.branch().attachment.submissions;
+	const [record] = await store.snapshot();
+	t.mock.method(store, "confirmContextCancellation", async () => {
+		throw new Error("confirmation failed");
+	});
+	await assert.rejects(first.ingress.cancelNativeContext(record.id, 1, 0), /confirmation failed/);
+	const view = (await first.ingress.inspect()).submissions[0];
+	assert.equal(view.admission, "held");
+	assert.deepEqual(view.nativeContextCancellations, [{ inputIndex: 0, removal: "unconfirmed" }]);
+	assert.match(view.reason, /removal reconciliation/);
+	await assert.rejects(
+		store.recordPromptClaim(record.dispatch.operationId, { inputIndex: 0, messageIndex: 0 }),
+		/retained cancellation/,
+	);
+	await first.ingress.dispose();
+	const next = await fixture(t, {
+		root: first.root,
+		manager: SessionManager.open(first.session.sessionManager.getSessionFile()),
+		admit: null,
+	});
+	assert.equal(next.ingress.branch().sourceRecovery.unresolved, 1);
+	await assert.rejects(next.ingress.cancelNativeContext(record.id, 1, 0), /matching live input/);
+	await next.session.prompt("held for reconciliation");
+	assert.equal(next.sent.length, 0);
+});
+
+test("absent live next-turn input cannot be reported as confirmed removal", async (t) => {
+	let remove;
+	const f = await fixture(t, {
+		admit: null,
+		nextTurnObserver: async (_message, cancel) => {
+			remove = cancel;
+		},
+	});
+	await f.session.sendCustomMessage(
+		{ customType: "note", content: "missing", display: true },
+		{ deliverAs: "nextTurn" },
+	);
+	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.equal(remove(), true);
+	await assert.rejects(f.ingress.cancelNativeContext(record.id, 1, 0), /removal reconciliation/);
+	assert.deepEqual((await f.ingress.inspect()).submissions[0].nativeContextCancellations, [
+		{ inputIndex: 0, removal: "unconfirmed" },
+	]);
+});
+
+test("next-turn cancellation holds the host boundary through its intent write", async (t) => {
+	const f = await fixture(t, { admit: null });
+	await f.session.sendCustomMessage(
+		{ customType: "note", content: "cancel before prompt", display: true },
+		{ deliverAs: "nextTurn" },
+	);
+	const store = f.ingress.branch().attachment.submissions;
+	const [record] = await store.snapshot();
+	const entered = deferred(),
+		release = deferred();
+	t.after(() => release.resolve());
+	const cancel = store.cancelContext.bind(store);
+	t.mock.method(store, "cancelContext", async (...args) => {
+		entered.resolve();
+		await release.promise;
+		return cancel(...args);
+	});
+	const cancelling = f.ingress.cancelNativeContext(record.id, 1, 0);
+	await entered.promise;
+	let started = false;
+	const prompt = f.session.prompt("racing prompt").then(() => {
+		started = true;
+	});
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(started, false);
+	assert.equal(f.sent.length, 0);
+	release.resolve();
+	await Promise.all([cancelling, prompt]);
+	assert.equal(f.sent.length, 1);
+	assert.ok(!JSON.stringify(f.sent).includes("cancel before prompt"));
+});
+
+test("context cancellation requires a retained next-turn position and prior removal intent", async (t) => {
+	const f = await fixture(t, { admit: null });
+	await f.session.sendCustomMessage(
+		{ customType: "note", content: "pending", display: true },
+		{ deliverAs: "nextTurn" },
+	);
+	const store = f.ingress.branch().attachment.submissions;
+	const [record] = await store.snapshot();
+	const operation = record.dispatch.operationId;
+	await assert.rejects(store.confirmContextCancellation(operation, 0), /no retained intent/);
+	for (const index of [-1, 1, 0.5, NaN])
+		await assert.rejects(store.cancelContext(operation, index), { code: "identity" });
+	assert.equal((await store.snapshot())[0].dispatch.contextCancellations, undefined);
+	await f.ingress.cancelNativeContext(record.id, 1, 0);
+	await store.cancelContext(operation, 0);
+	assert.deepEqual((await store.snapshot())[0].dispatch.contextCancellations, [{ inputIndex: 0, removed: true }]);
+	await assert.rejects(store.recordPromptClaim(operation, { inputIndex: 0, messageIndex: 0 }), /retained cancellation/);
+	await f.session.sendCustomMessage({ customType: "note", content: "appended", display: true }, { triggerTurn: false });
+	const last = (await store.snapshot()).at(-1);
+	await assert.rejects(store.cancelContext(last.dispatch.operationId, 0), /Consumed context/);
+});

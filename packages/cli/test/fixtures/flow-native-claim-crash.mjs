@@ -24,6 +24,7 @@ const scope = { sessionId: session.sessionId, branchId: "main" };
 attachment = await PiFlowAttachment.open(join(root, "receipts"), scope);
 native = new PiNativeDispatch(session, attachment.submissions);
 const nextTurn = phase.startsWith("nextturn-");
+const cancellation = phase.startsWith("nextturn-cancel-");
 const context = phase.startsWith("context-") || nextTurn;
 if (context) session.sessionManager.flush();
 if (!phase.startsWith("prompt-") && !context) await session.followUp("one native input");
@@ -64,7 +65,7 @@ const method =
 				? "recordQueueHistory"
 				: "recordQueueClaim";
 const record = attachment.submissions[method].bind(attachment.submissions);
-if (!phase.endsWith("-observed") && !phase.endsWith("-queued"))
+if (!phase.endsWith("-observed") && !phase.endsWith("-queued") && !cancellation)
 	attachment.submissions[method] = async (...args) => {
 		if (nextTurn && args[0] !== contextOperation) return record(...args);
 		if (phase.endsWith("after")) await record(...args);
@@ -78,5 +79,14 @@ if (context)
 else if (phase.startsWith("prompt-")) await session.prompt("one native prompt");
 else await session.continueQueued();
 
-if (phase === "nextturn-queued") await checkpoint();
+if (cancellation) {
+	const method = phase.includes("-intent-") ? "cancelContext" : "confirmContextCancellation";
+	const original = attachment.submissions[method].bind(attachment.submissions);
+	attachment.submissions[method] = async (...args) => {
+		if (phase.endsWith("-after")) await original(...args);
+		await checkpoint();
+	};
+	const [record] = await attachment.submissions.snapshot();
+	await native.cancelContext(record.id, record.revision, 0);
+} else if (phase === "nextturn-queued") await checkpoint();
 else if (nextTurn) await session.prompt("one consuming prompt");
