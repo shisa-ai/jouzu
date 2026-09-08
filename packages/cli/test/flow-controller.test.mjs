@@ -470,3 +470,124 @@ test("Pi: controller disposal aborts and joins an ordinary user run before closi
 	assert.deepEqual((await ledger.snapshot()).attempts, []);
 	await controller.close();
 });
+
+for (const native of [false, true]) {
+	const label = native ? "Pi" : "synthetic";
+	test(`${label}: one requested work turn carries results from two producers during another work wait`, async (t) => {
+		const { controller, ledger, policy } = await fixture(t, native);
+		policy.waitingWorkIds = ["blocked"];
+		controller.register(producer("work", [{ ...descriptor("work"), independent: true }]));
+		controller.register(producer("alpha", [descriptor("alpha", "result-a", 6)]));
+		controller.register(producer("beta", [descriptor("beta", "result-b", 6)]));
+		await controller.wake();
+		const state = await ledger.snapshot();
+		assert.equal(state.attempts.length, 1);
+		assert.deepEqual(
+			state.attempts[0].members.map((item) => item.id),
+			["work", "result-a", "result-b"],
+		);
+		assert.equal(state.attempts[0].phase, "settled");
+		assert.equal(state.admission.revision, 1);
+	});
+
+	test(`${label}: result backlog is bounded and does not create automatic pagination turns`, async (t) => {
+		const { controller, ledger } = await fixture(t, native, { maxInputBytes: 450 });
+		controller.register(
+			producer(
+				"alpha",
+				Array.from({ length: 10 }, (_, i) => descriptor("alpha", `alpha-${i}`, 6, i)),
+			),
+		);
+		controller.register(producer("beta", [descriptor("beta", "beta", 6)]));
+		await controller.wake();
+		const state = await ledger.snapshot();
+		assert.equal(state.attempts.length, 1);
+		assert.deepEqual(
+			state.attempts[0].members.map((item) => item.id),
+			["alpha-0", "beta"],
+		);
+		assert.ok(controller.view().deferredResults.some((item) => item.id === "alpha-1"));
+		await controller.wake();
+		assert.equal((await ledger.snapshot()).attempts.length, 1);
+		controller.register(producer("work"));
+		await controller.wake();
+		const later = await ledger.snapshot();
+		assert.equal(later.attempts.length, 2);
+		assert.deepEqual(
+			later.attempts[1].members.map((item) => item.id),
+			["work", "alpha-1"],
+		);
+	});
+
+	test(`${label}: a failing result builder does not discard selected work or other results`, async (t) => {
+		const { controller, ledger } = await fixture(t, native);
+		controller.register(producer("work"));
+		controller.register(
+			producer("broken", [descriptor("broken", "bad", 6)], () => {
+				throw new Error("result unavailable");
+			}),
+		);
+		controller.register(producer("beta", [descriptor("beta", "good", 6)]));
+		await controller.wake();
+		const state = await ledger.snapshot();
+		assert.equal(state.attempts.length, 1);
+		assert.deepEqual(
+			state.attempts[0].members.map((item) => item.id),
+			["work", "good"],
+		);
+		assert.equal(controller.view().held[0].producer, "broken");
+	});
+
+	test(`${label}: work consumption does not coalesce a later result for that work`, async (t) => {
+		const { controller, ledger } = await fixture(t, native);
+		controller.register(producer("work"));
+		await controller.wake();
+		controller.register(producer("result", [{ ...descriptor("result", "result", 6), workId: "work" }]));
+		await controller.wake();
+		assert.equal((await ledger.snapshot()).attempts.length, 2);
+	});
+}
+
+test("Pi: result revision changing at native claim cancels the entire unconsumed composition", async (t) => {
+	const entered = deferred(),
+		release = deferred();
+	const { controller, ledger, calls } = await fixture(t, true, {
+		checkpoints: {
+			beforeQueueClaim: async () => {
+				entered.resolve();
+				await release.promise;
+				return true;
+			},
+		},
+	});
+	controller.register(producer("work"));
+	const result = producer("result", [descriptor("result", "result", 6)]);
+	controller.register(result);
+	const running = controller.wake();
+	await entered.promise;
+	result.items[0].revision = "2";
+	release.resolve();
+	await running;
+	assert.deepEqual(calls, []);
+	assert.equal((await ledger.snapshot()).attempts[0].consumed, false);
+});
+
+test("Pi: deferred result backlog survives reopen without authorizing another pagination wake", async (t) => {
+	const first = await fixture(t, true, { maxInputBytes: 250 });
+	const results = [descriptor("results", "first", 6), descriptor("results", "second", 6, 1)];
+	first.controller.register(producer("results", results));
+	await first.controller.wake();
+	assert.equal((await first.ledger.snapshot()).attempts[0].members.length, 1);
+	const history = first.session.sessionFile;
+	await first.controller.close();
+	await first.attachment.close();
+	const second = await fixture(t, true, {
+		storageRoot: first.storageRoot,
+		sessionManager: SessionManager.open(history),
+		maxInputBytes: 250,
+	});
+	second.controller.register(producer("results", results));
+	await second.controller.wake();
+	assert.deepEqual(second.calls, []);
+	assert.equal((await second.ledger.snapshot()).attempts.length, 1);
+});

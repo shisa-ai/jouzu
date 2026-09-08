@@ -27,6 +27,7 @@ export interface FlowControllerView {
 	state: "idle" | "running" | "closed";
 	producers: string[];
 	held: { producer: string; reason: string }[];
+	deferredResults: { id: string; producer: string; reason: string }[];
 }
 const same = (a: FlowIntent, b: FlowIntent) =>
 	a.id === b.id &&
@@ -61,7 +62,13 @@ function retainedByReceipt(intent: FlowIntent, state: FlowLedgerState): boolean 
 		const selected = attempt.admission?.choice.intent;
 		return (
 			attempt.members.some((member) => member.id === intent.id && member.revision === intent.revision) ||
-			!!(selected?.workId && intent.workId === selected.workId && intent.workRevision === selected.workRevision)
+			!!(
+				(intent.rank === 4 || intent.rank === 5) &&
+				(selected?.rank === 4 || selected?.rank === 5) &&
+				selected.workId &&
+				intent.workId === selected.workId &&
+				intent.workRevision === selected.workRevision
+			)
 		);
 	});
 }
@@ -70,6 +77,7 @@ function retainedByReceipt(intent: FlowIntent, state: FlowLedgerState): boolean 
 export class SessionFlowController {
 	private readonly producers = new Map<string, FlowProducer>();
 	private readonly held = new Map<string, string>();
+	private deferredResults: FlowControllerView["deferredResults"] = [];
 	private revision = 0;
 	private closed = false;
 	private dirty = false;
@@ -135,6 +143,7 @@ export class SessionFlowController {
 			state: this.closed ? "closed" : this.running ? "running" : "idle",
 			producers: [...this.producers.keys()].sort(),
 			held: [...this.held].map(([producer, reason]) => ({ producer, reason })),
+			deferredResults: structuredClone(this.deferredResults),
 		};
 	}
 	private assertActive(): void {
@@ -201,12 +210,24 @@ export class SessionFlowController {
 			if (this.closed || revision !== this.revision) return;
 			const choice = chooseFlowIntent(
 				admission,
-				items.filter((item) => !retainedByReceipt(item, state)),
+				items.filter(
+					(item) =>
+						!retainedByReceipt(item, state) &&
+						(item.rank !== 6 ||
+							!state.attempts.some(
+								(attempt) =>
+									attempt.consumed !== false &&
+									attempt.admission?.choice.resultSnapshot?.some(
+										(sample) => sample.id === item.id && sample.revision === item.revision,
+									),
+							)),
+				),
 				this.host.gate(),
 			);
 			if (!choice) return;
 			const producer = this.producers.get(choice.intent.producer);
 			if (!producer) return;
+			const selectedResults: { intent: FlowIntent; producer: FlowProducer }[] = [];
 			const valid = async () => {
 				if (this.closed || revision !== this.revision || this.producers.get(producer.namespace) !== producer)
 					return false;
@@ -221,6 +242,21 @@ export class SessionFlowController {
 					throw error;
 				}
 				const current = latest.find((item) => same(item, choice.intent));
+				const byProducer = new Map([[producer.namespace, latest]]);
+				try {
+					for (const result of selectedResults) {
+						if (this.producers.get(result.producer.namespace) !== result.producer) return false;
+						let descriptors = byProducer.get(result.producer.namespace);
+						if (!descriptors) {
+							descriptors = await this.descriptors(result.producer, signal);
+							byProducer.set(result.producer.namespace, descriptors);
+						}
+						if (!descriptors.some((item) => same(item, result.intent) && item.runnable)) return false;
+					}
+				} catch (error) {
+					if (signal.aborted) return false;
+					throw error;
+				}
 				return (
 					!this.closed &&
 					revision === this.revision &&
@@ -237,7 +273,58 @@ export class SessionFlowController {
 					item.kind !== ({ 2: "alert", 3: "wait", 4: "work", 5: "work", 6: "result" } as const)[choice.intent.rank]
 				)
 					throw new FlowLedgerError("identity", "Built input differs from the selected descriptor.");
-				input = FlowModelInput.compose(randomUUID(), [item], this.maxInputBytes);
+				const attemptId = randomUUID();
+				const built = [item];
+				this.deferredResults = [];
+				input = FlowModelInput.compose(attemptId, built, this.maxInputBytes);
+				// One oldest result per producer per pass prevents a large producer from owning the batch.
+				const results = new Map<string, FlowIntent[]>();
+				for (const result of items
+					.filter(
+						(candidate) =>
+							candidate.rank === 6 &&
+							candidate.runnable &&
+							candidate.id !== choice.intent.id &&
+							!retainedByReceipt(candidate, state),
+					)
+					.sort((a, b) => a.sequence - b.sequence || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))) {
+					const group = results.get(result.producer) ?? [];
+					group.push(result);
+					results.set(result.producer, group);
+				}
+				if (choice.intent.rank === 6) {
+					const own = results.get(producer.namespace);
+					if (own) {
+						results.delete(producer.namespace);
+						results.set(producer.namespace, own);
+					}
+				}
+				while (results.size) {
+					for (const [namespace, group] of results) {
+						const result = group.shift();
+						if (!group.length) results.delete(namespace);
+						const owner = this.producers.get(namespace);
+						if (!result || !owner || this.held.has(namespace)) continue;
+						try {
+							const content = await cancellable(signal, () => owner.build(structuredClone(result), signal));
+							if (content.id !== result.id || content.revision !== result.revision || content.kind !== "result")
+								throw new FlowLedgerError("identity", "Built result differs from its descriptor.");
+							const composed = FlowModelInput.compose(attemptId, [...built, content], this.maxInputBytes);
+							built.push(content);
+							selectedResults.push({ intent: result, producer: owner });
+							input = composed;
+						} catch (error) {
+							if (signal.aborted) return;
+							if (error instanceof FlowLedgerError && error.code === "capacity")
+								this.deferredResults.push({
+									id: result.id,
+									producer: namespace,
+									reason: "Result exceeds the remaining composed-input capacity.",
+								});
+							else this.held.set(namespace, error instanceof Error ? error.message : "Result input unavailable.");
+						}
+					}
+				}
 				if (!(await valid())) return;
 			} catch (error) {
 				if (signal.aborted) return;
@@ -245,6 +332,9 @@ export class SessionFlowController {
 				skipped = true;
 				return;
 			}
+			choice.resultSnapshot = items
+				.filter((item) => item.rank === 6 && item.runnable && !retainedByReceipt(item, state))
+				.map(({ id, revision }) => ({ id, revision }));
 			await this.host.ledger.select(input.attemptId, input.members, choice);
 			selected = { input, valid };
 		});

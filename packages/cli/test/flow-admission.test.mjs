@@ -3,7 +3,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { chooseFlowIntent, initialFlowAdmission } from "../dist/flow-control/admission.js";
+import { chooseFlowIntent, initialFlowAdmission, validateFlowChoice } from "../dist/flow-control/admission.js";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 
 const gates = { hostReady: true, userPending: false, recoveryBlocked: false, waitingWorkIds: [] };
@@ -232,4 +232,20 @@ test("filtering the selected optional trigger does not charge another included r
 	assert.equal(state.admission.revision, 0);
 	assert.equal(state.attempts[0].admission.charged, false);
 	assert.equal(state.attempts[0].requests[0].handedOff, true);
+});
+
+test("result boundary snapshots accept legacy absence and reject corrupt or repeated identities", () => {
+	const choice = choose(initialFlowAdmission(), [intent("work")]);
+	validateFlowChoice(choice);
+	validateFlowChoice({ ...choice, resultSnapshot: [{ id: "result", revision: "1" }] });
+	for (const resultSnapshot of [
+		null,
+		{},
+		[{ id: "", revision: "1" }],
+		[
+			{ id: "a", revision: "1" },
+			{ id: "a", revision: "2" },
+		],
+	])
+		assert.throws(() => validateFlowChoice({ ...choice, resultSnapshot }), { code: "schema" });
 });

@@ -26,6 +26,8 @@ export interface FlowAdmissionChoice {
 	revision: number;
 	intent: FlowIntent;
 	coalescedIds: string[];
+	/** Results considered at this boundary; deferred members do not authorize pagination wakes. */
+	resultSnapshot?: { id: string; revision: string }[];
 	next: FlowAdmissionState;
 }
 export class FlowAdmissionError extends Error {
@@ -83,6 +85,14 @@ function validateIntent(intent: FlowIntent): void {
 export function validateFlowChoice(choice: FlowAdmissionChoice): void {
 	validateIntent(choice.intent);
 	validateFlowAdmission(choice.next);
+	if (
+		choice.resultSnapshot !== undefined &&
+		(!Array.isArray(choice.resultSnapshot) ||
+			choice.resultSnapshot.length > 1024 ||
+			choice.resultSnapshot.some((item) => !item || !identity(item.id) || !identity(item.revision)) ||
+			new Set(choice.resultSnapshot.map((item) => item.id)).size !== choice.resultSnapshot.length)
+	)
+		throw new FlowAdmissionError("schema", "Invalid result boundary snapshot.");
 	if (
 		!Number.isSafeInteger(choice.revision) ||
 		choice.revision < 0 ||
