@@ -1754,3 +1754,59 @@ test("ingress disposal drains producer scheduling before closing its branch", as
 	assert.equal(f.sent.length, 0);
 	assert.throws(() => f.ingress.wakeProducers(), { code: "stale" });
 });
+
+for (const trigger of ["policy", "operation"])
+	test(`semantic work resumes on ${trigger} notification without empty wake loops`, async (t) => {
+		let waiting = true;
+		let snapshots = 0;
+		const built = deferred();
+		const failures = [];
+		const f = await fixture(t, {
+			provider: true,
+			admit: null,
+			autoRelease: { onError: (error) => failures.push(error) },
+			policy: () => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: waiting ? ["work"] : [] }),
+		});
+		const handle = f.ingress.registerProducer({
+			version: 1,
+			namespace: "idle-producer",
+			snapshot: async () => {
+				snapshots++;
+				return [
+					{
+						id: "work",
+						revision: "1",
+						producer: "idle-producer",
+						sequence: 1,
+						rank: 4,
+						workId: "work",
+						workRevision: "1",
+						independent: false,
+						runnable: true,
+					},
+				];
+			},
+			build: async () => {
+				built.resolve();
+				return { id: "work", revision: "1", kind: "work", text: "resumed semantic work" };
+			},
+		});
+		await handle.changed();
+		assert.equal(f.sent.length, 0);
+		waiting = false;
+		if (trigger === "policy") f.ingress.requestRelease();
+		else
+			await f.session.sendCustomMessage(
+				{ customType: "note", content: "host operation", display: true },
+				{ triggerTurn: false },
+			);
+		await built.promise;
+		await f.ingress.wakeProducers();
+		assert.equal(f.sent.length, 1);
+		// Wait for deferred owner notifications and their durable reads to settle.
+		await new Promise((resolve) => setTimeout(resolve, 50));
+		const settled = snapshots;
+		await new Promise((resolve) => setTimeout(resolve, 50));
+		assert.equal(snapshots, settled);
+		assert.deepEqual(failures, []);
+	});

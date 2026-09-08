@@ -25,8 +25,9 @@ export class PiHostBoundary {
 	private navigationReleased = false;
 	private barrier?: Promise<void>;
 	private readonly sessionId: string;
-	private readonly idleListeners = new Set<() => void>();
+	private readonly idleListeners = new Set<(cause: "operation" | "maintenance") => void>();
 	private idleNotification?: ReturnType<typeof setImmediate>;
+	private operationDrained = false;
 	constructor(private readonly session: AgentSession) {
 		this.sessionId = session.sessionId;
 		const agent = session.agent;
@@ -92,18 +93,21 @@ export class PiHostBoundary {
 		if (this.stopping) throw new FlowLedgerError("stale", "Host boundary is stopping.");
 	}
 	/** Deferred notification; listeners must revalidate admission before starting work. */
-	onIdle(listener: () => void): () => void {
+	onIdle(listener: (cause: "operation" | "maintenance") => void): () => void {
 		this.assertWritable();
 		this.idleListeners.add(listener);
 		return () => this.idleListeners.delete(listener);
 	}
-	private notifyDrained(): void {
+	private notifyDrained(operation = false): void {
+		this.operationDrained ||= operation;
 		if (this.active === 0 && !this.barrier) {
 			if (this.closed) this.hooks.close();
 			this.drained?.();
 			if (!this.closed && !this.stopping && this.idleListeners.size && !this.idleNotification) {
 				this.idleNotification = setImmediate(() => {
 					this.idleNotification = undefined;
+					const cause = this.operationDrained ? "operation" : "maintenance";
+					this.operationDrained = false;
 					if (
 						this.closed ||
 						this.stopping ||
@@ -113,7 +117,7 @@ export class PiHostBoundary {
 						!this.idle(true)
 					)
 						return;
-					for (const listener of this.idleListeners) listener();
+					for (const listener of this.idleListeners) listener(cause);
 				});
 			}
 		}
@@ -173,7 +177,7 @@ export class PiHostBoundary {
 				return await run();
 			} finally {
 				this.active--;
-				this.notifyDrained();
+				this.notifyDrained(true);
 			}
 		}
 		while (this.barrier) await this.barrier;
@@ -187,7 +191,7 @@ export class PiHostBoundary {
 				frame.active = false;
 				this.active--;
 			}
-			this.notifyDrained();
+			this.notifyDrained(true);
 		}
 	}
 	private idle(allowQueued = false): boolean {

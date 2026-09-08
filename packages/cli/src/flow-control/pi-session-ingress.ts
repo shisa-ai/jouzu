@@ -47,6 +47,7 @@ export class PiSessionFlowIngress implements Ingress {
 	private unsubscribeIdle?: () => void;
 	private scheduledRelease?: ReturnType<typeof setImmediate>;
 	private releaseRequested = false;
+	private semanticReleaseRequested = false;
 	private automaticReleaseRunning = false;
 	private releasing?: Promise<{ released: string[]; held: string[] }>;
 	constructor(private readonly options: PiFlowIngressOptions) {}
@@ -138,29 +139,36 @@ export class PiSessionFlowIngress implements Ingress {
 	private subscribeIdle(): void {
 		this.unsubscribeIdle?.();
 		this.unsubscribeIdle = this.options.autoRelease
-			? this.branch().host.onIdle(() => this.requestRelease())
+			? this.branch().host.onIdle((cause) => this.queueRelease(cause === "operation"))
 			: undefined;
 	}
 	/** Policy changes and drained host operations use one deferred scheduling entry point. */
 	requestRelease(): void {
+		this.queueRelease(true);
+	}
+	private queueRelease(semantic: boolean): void {
 		if (!this.options.autoRelease || this.disposed || this.fenced) return;
 		this.releaseRequested = true;
+		this.semanticReleaseRequested ||= semantic;
 		if (this.scheduledRelease || this.automaticReleaseRunning) return;
 		this.scheduledRelease = this.frames.exit(() =>
 			setImmediate(() => {
 				this.scheduledRelease = undefined;
 				if (this.disposed || this.fenced) return;
 				this.releaseRequested = false;
+				const wakeSemantic = this.semanticReleaseRequested;
+				this.semanticReleaseRequested = false;
 				this.automaticReleaseRunning = true;
 				const joinedExisting = !!this.releasing;
 				void Promise.resolve()
 					.then(() => this.releaseReady())
-					.then((result) => {
+					.then(async (result) => {
 						if (joinedExisting || (result.released.length && result.held.length)) this.releaseRequested = true;
+						if (wakeSemantic && this.branch().controller.view().producers.length) await this.wakeProducers();
 					})
 					.finally(() => {
 						this.automaticReleaseRunning = false;
-						if (this.releaseRequested) this.requestRelease();
+						if (this.releaseRequested) this.queueRelease(false);
 					})
 					.catch((error: unknown) => this.options.autoRelease?.onError(error));
 			}),
@@ -168,6 +176,7 @@ export class PiSessionFlowIngress implements Ingress {
 	}
 	private stopReleaseNotifications(): void {
 		this.releaseRequested = false;
+		this.semanticReleaseRequested = false;
 		this.unsubscribeIdle?.();
 		this.unsubscribeIdle = undefined;
 		if (this.scheduledRelease) clearImmediate(this.scheduledRelease);
