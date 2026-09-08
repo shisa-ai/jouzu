@@ -197,7 +197,7 @@ test("registered extension normalizes startup, switches, and restored session ef
 		};
 		await create(manager, "off");
 		await session.prompt("Can you finish the assigned edit?");
-		assert.match(delivered[0], /Carry authorized work through implementation/);
+		assert.match(delivered[0], /carry authorized work through implementation/);
 		assert.equal(session.thinkingLevel, "low");
 		assert.deepEqual(getSupportedThinkingLevels(session.model), ["low", "medium", "high", "xhigh", "max"]);
 		for (const effort of ["low", "medium", "high", "xhigh", "max"]) {

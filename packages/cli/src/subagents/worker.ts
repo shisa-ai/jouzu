@@ -9,6 +9,7 @@ import {
 	SessionManager,
 	SettingsManager,
 } from "@earendil-works/pi-coding-agent";
+import { buildModelGuidance } from "../model-guidance.js";
 import { TextGuardRuntime } from "../textguard-runtime.js";
 import type { WorkerCommand, WorkerEvent, WorkerLaunch } from "./protocol.js";
 
@@ -34,7 +35,8 @@ export function childResourceLoader(
 		getAgentsFiles: () => ({ agentsFiles: entries }),
 		getSystemPrompt: () => undefined,
 		getSystemPromptSource: () => undefined,
-		getAppendSystemPrompt: () => [launch.role.instructions],
+		getAppendSystemPrompt: () =>
+			[launch.role.instructions, buildModelGuidance(launch.model.id, launch.role.tools)].filter(Boolean),
 		getAppendSystemPromptSources: () => [],
 		extendResources: async () => {},
 		reload: async () => {},
