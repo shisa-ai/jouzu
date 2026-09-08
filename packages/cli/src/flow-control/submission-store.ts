@@ -14,11 +14,17 @@ type Encoded =
 	| ["undefined"]
 	| ["array", Encoded[]]
 	| ["object", [string, Encoded][]];
+export interface FlowAdmissionHold {
+	phase: "submission" | "queue";
+	reason: string;
+	queue?: { id: string; revision: number };
+}
 interface RecordData {
 	id: string;
 	revision: number;
 	status: "retained" | "cancelled";
 	acceptedAt: number;
+	holds?: FlowAdmissionHold[];
 	digest: string;
 	payload: Encoded;
 	dispatch?: Omit<FlowSubmissionDispatch, "inputs"> & { inputs?: { payload: Encoded; digest: string }[] };
@@ -64,6 +70,7 @@ export interface RetainedSubmission {
 	revision: number;
 	status: "retained" | "cancelled";
 	acceptedAt: number;
+	holds?: FlowAdmissionHold[];
 	submission: Submission;
 	dispatch?: FlowSubmissionDispatch;
 }
@@ -72,6 +79,25 @@ const address = value<Header>("jouzu.flow.submissions", "v1");
 const recordAddress = (id: string) => value<RecordData>("jouzu.flow.submission", id);
 const digest = (payload: Encoded) => createHash("sha256").update(JSON.stringify(payload)).digest("hex");
 const identity = (id: unknown) => typeof id === "string" && id.length > 0 && id.length <= 512;
+function validateHold(hold: FlowAdmissionHold): void {
+	if (
+		!hold ||
+		!["submission", "queue"].includes(hold.phase) ||
+		typeof hold.reason !== "string" ||
+		!hold.reason.trim() ||
+		Buffer.byteLength(hold.reason) > 1024 ||
+		(hold.phase === "submission"
+			? hold.queue !== undefined
+			: !hold.queue ||
+				!identity(hold.queue.id) ||
+				!Number.isSafeInteger(hold.queue.revision) ||
+				hold.queue.revision < 1)
+	)
+		throw new FlowLedgerError("schema", "Invalid native admission hold.");
+}
+const holdKey = (hold: Pick<FlowAdmissionHold, "phase" | "queue">) =>
+	JSON.stringify([hold.phase, hold.queue?.id, hold.queue?.revision]);
+
 function validateNativeInput(input: FlowNativeInput): void {
 	if (
 		!input ||
@@ -329,6 +355,26 @@ export class FlowSubmissionStore {
 					if ("entryId" in receipt) entries.add(receipt.entryId as string);
 				}
 			}
+			if (record.holds !== undefined) {
+				if (!Array.isArray(record.holds) || record.holds.length > 65)
+					throw new FlowLedgerError("capacity", "Native admission hold limit exceeded.");
+				const keys = new Set<string>();
+				for (const hold of record.holds) {
+					validateHold(hold);
+					const key = holdKey(hold);
+					if (
+						keys.has(key) ||
+						(hold.queue &&
+							!(inputs ?? []).some((item) => {
+								const input = decode(item.payload) as FlowNativeInput;
+								return input.queue?.id === hold.queue?.id && input.queue?.revision === hold.queue?.revision;
+							}))
+					)
+						throw new FlowLedgerError("identity", "Admission hold does not identify one retained input.");
+					keys.add(key);
+				}
+			}
+
 			validateSubmission(submission, this.ownership.scope);
 			if (submission.id !== record.id) throw new FlowLedgerError("identity", "Stored submission identity changed.");
 		}
@@ -402,6 +448,37 @@ export class FlowSubmissionStore {
 			};
 		});
 	}
+	/** Replace one bounded diagnostic. Clearing it never grants dispatch or replay permission. */
+	recordAdmission(
+		id: string,
+		revision: number,
+		target: Pick<FlowAdmissionHold, "phase" | "queue">,
+		reason?: string,
+	): Promise<boolean> {
+		const captured = structuredClone({ ...target, reason: reason ?? "Admission revalidated." });
+		validateHold(captured);
+		return this.transact((state) => {
+			const record = state.records.find((record) => record.id === id);
+			if (!record || record.revision !== revision || record.status !== "retained")
+				return { changed: false, result: false };
+			if (captured.queue && (!record.dispatch || record.dispatch.ownerId !== this.ownership.token))
+				throw new FlowLedgerError("stale", "Queue admission belongs to another attachment.");
+			const holds = record.holds ?? [];
+			const index = holds.findIndex((hold) => holdKey(hold) === holdKey(captured));
+			if (reason === undefined) {
+				if (index < 0) return { changed: false, result: true };
+				holds.splice(index, 1);
+			} else {
+				if (index >= 0 && holds[index].reason === reason) return { changed: false, result: true };
+				if (index < 0) holds.push(captured);
+				else holds[index] = captured;
+			}
+			if (holds.length) record.holds = holds;
+			else delete record.holds;
+			return { changed: true, result: true };
+		});
+	}
+
 	snapshot(): Promise<RetainedSubmission[]> {
 		return this.transact((state) => ({
 			changed: false,

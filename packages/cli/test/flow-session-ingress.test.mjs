@@ -157,6 +157,9 @@ test("reopened ingress retains work without reconstructing a dispatch callback",
 		manager: SessionManager.open(first.session.sessionManager.getSessionFile()),
 	});
 	assert.equal((await next.ingress.branch().attachment.submissions.snapshot())[0].id, record.id);
+	assert.deepEqual(await next.ingress.heldInputs(), [
+		{ id: record.id, reason: "Input is held by host admission policy." },
+	]);
 	await assert.rejects(next.ingress.release(record.id, record.revision), { code: "stale" });
 	assert.equal(next.sent.length, 0);
 });
@@ -417,7 +420,7 @@ test("default ingress holds opaque automation during waits while user input proc
 	await f.session.sendUserMessage("opaque instruction with urgent user labels");
 	const [held] = await f.ingress.branch().attachment.submissions.snapshot();
 	assert.equal(f.sent.length, 0);
-	assert.match(f.ingress.heldInputs()[0].reason, /independence/);
+	assert.match((await f.ingress.heldInputs())[0].reason, /independence/);
 	await f.session.prompt("manual status");
 	assert.equal(f.sent.length, 1);
 	assert.ok(!JSON.stringify(f.sent).includes("opaque instruction"));
@@ -425,7 +428,8 @@ test("default ingress holds opaque automation during waits while user input proc
 	assert.equal(await f.ingress.release(held.id, held.revision), true);
 	assert.equal(f.sent.length, 2);
 	assert.ok(JSON.stringify(f.sent[1]).includes("opaque instruction"));
-	assert.deepEqual(f.ingress.heldInputs(), []);
+	assert.equal((await f.ingress.branch().attachment.submissions.snapshot())[0].holds, undefined);
+	assert.deepEqual(await f.ingress.heldInputs(), []);
 });
 
 test("default ingress preserves opaque lane order on explicit release", async (t) => {
@@ -439,7 +443,7 @@ test("default ingress preserves opaque lane order on explicit release", async (t
 	const [first, second] = await f.ingress.branch().attachment.submissions.snapshot();
 	waiting = false;
 	assert.equal(await f.ingress.release(second.id, second.revision), false);
-	assert.match(f.ingress.heldInputs().find((item) => item.id === second.id).reason, /earlier/);
+	assert.match((await f.ingress.heldInputs()).find((item) => item.id === second.id).reason, /earlier/);
 	assert.equal(await f.ingress.release(first.id, first.revision), true);
 	assert.equal(await f.ingress.release(second.id, second.revision), true);
 	assert.equal(f.sent.length, 2);
@@ -453,6 +457,96 @@ test("default ingress keeps deferred custom context held without an implicit wak
 		{ triggerTurn: false },
 	);
 	assert.equal(f.sent.length, 0);
-	assert.match(f.ingress.heldInputs()[0].reason, /persistence receipt/);
+	assert.match((await f.ingress.heldInputs())[0].reason, /persistence receipt/);
 	assert.ok(!JSON.stringify(f.session.agent.state.messages).includes("context"));
+});
+
+test("failed diagnostic persistence cannot release an admitted input", async (t) => {
+	let allowed = false;
+	const f = await fixture(t, { admit: async () => allowed });
+	await f.session.prompt("held");
+	const store = f.ingress.branch().attachment.submissions;
+	const [record] = await store.snapshot();
+	allowed = true;
+	t.mock.method(store, "recordAdmission", async () => {
+		throw new Error("write failure");
+	});
+	await assert.rejects(f.ingress.release(record.id, record.revision), /write failure/);
+	assert.equal(f.sent.length, 0);
+	assert.equal((await store.snapshot())[0].holds[0].reason, "Input is held by host admission policy.");
+});
+
+test("queue policy failures retain a bounded diagnostic without persisting exception text", async (t) => {
+	const f = await fixture(t, {
+		admit: async (_submission, _branch, phase) => {
+			if (phase === "queue") throw new Error("private exception details");
+			return true;
+		},
+	});
+	await f.session.followUp("queued instruction");
+	await f.session.continueQueued();
+	assert.equal(f.sent.length, 0);
+	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.equal(record.holds[0].phase, "queue");
+	assert.equal(record.holds[0].queue.revision, 1);
+	assert.match((await f.ingress.heldInputs())[0].reason, /policy failed/);
+	assert.ok(!JSON.stringify(record).includes("private exception"));
+});
+
+test("cancelled retained inputs no longer present active admission holds", async (t) => {
+	const f = await fixture(t, { admit: async () => false });
+	await f.session.prompt("held");
+	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+	await f.ingress.branch().attachment.submissions.cancel(record.id, record.revision);
+	assert.deepEqual(await f.ingress.heldInputs(), []);
+	const [view] = await f.ingress.branch().attachment.submissionViews();
+	assert.equal(view.admission, "cancelled");
+	assert.equal(view.reason, undefined);
+});
+
+test("edited queue admission keeps revision diagnostics separate and retires superseded holds", async (t) => {
+	let allowed = false;
+	const f = await fixture(t, { admit: async (_submission, _branch, phase) => phase === "submission" || allowed });
+	await f.session.followUp("original");
+	await f.session.continueQueued();
+	const [queued] = f.session.agent.inspectQueuedMessages();
+	f.session.agent.editQueuedMessage(queued.id, 1, {
+		role: "user",
+		content: [{ type: "text", text: "edited" }],
+		timestamp: 1,
+	});
+	await f.ingress.branch().native.reconcileQueueEdit(queued.id, 2);
+	assert.deepEqual(await f.ingress.heldInputs(), []);
+	await f.session.continueQueued();
+	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.deepEqual(
+		record.holds.map((hold) => hold.queue.revision),
+		[1, 2],
+	);
+	assert.equal((await f.ingress.heldInputs()).length, 1);
+	allowed = true;
+	await f.session.continueQueued();
+	assert.equal(f.sent.length, 1);
+	assert.deepEqual(await f.ingress.heldInputs(), []);
+	assert.ok(!JSON.stringify(f.sent).includes("original"));
+});
+
+test("policy argument mutation cannot redirect the durable hold identity", async (t) => {
+	const f = await fixture(t, {
+		admit: async (submission, _branch, phase, input) => {
+			if (phase === "queue") {
+				submission.id = "another input";
+				input.queue.id = "another queue";
+				return false;
+			}
+			return true;
+		},
+	});
+	await f.session.followUp("original");
+	const [queued] = f.session.agent.inspectQueuedMessages();
+	await f.session.continueQueued();
+	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.equal(record.holds[0].queue.id, queued.id);
+	assert.equal((await f.ingress.heldInputs())[0].id, record.id);
+	assert.equal(f.sent.length, 0);
 });

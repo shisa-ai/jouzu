@@ -4,6 +4,7 @@ import { decideNativeAdmission } from "./native-admission.js";
 import { type PiFlowBranchResources, type PiFlowSessionOptions, PiFlowSessionService } from "./pi-session-service.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowNativeInput } from "./submission-store.js";
+import { activeAdmissionHolds } from "./submission-view.js";
 
 type Ingress = NonNullable<CreateAgentSessionOptions["flowIngress"]>;
 type Submission = Parameters<Ingress["submit"]>[0];
@@ -29,7 +30,6 @@ export class PiSessionFlowIngress implements Ingress {
 	readonly version = 1 as const;
 	private service?: PiFlowSessionService;
 	private session?: AgentSession;
-	private readonly holds = new Map<string, string>();
 	private opening?: Promise<void>;
 	private closing?: Promise<void>;
 	private disposed = false;
@@ -49,7 +49,6 @@ export class PiSessionFlowIngress implements Ingress {
 				admitNativeQueue: (record, input) =>
 					this.track(async () => {
 						const branch = this.branch();
-						if (branch.attachment.nativeRequests.recoveryBlocked) return false;
 						const allowed = await this.admit(
 							structuredClone(record.submission),
 							branch,
@@ -65,40 +64,74 @@ export class PiSessionFlowIngress implements Ingress {
 		})();
 		return this.opening;
 	}
-	/** Live admission reasons; durable receipts remain available through branch inspection. */
-	heldInputs(): { id: string; reason: string }[] {
-		return [...this.holds].map(([id, reason]) => ({ id, reason }));
+	/** Read persisted admission reasons; inspection cannot reconstruct an executable send. */
+	async heldInputs(): Promise<{ id: string; reason: string }[]> {
+		const records = await this.branch().attachment.submissions.snapshot();
+		return records.flatMap((record) =>
+			activeAdmissionHolds(record).map((hold) => ({ id: record.id, reason: hold.reason })),
+		);
 	}
+
 	private async admit(
 		submission: Submission,
 		branch: PiFlowBranchResources,
 		phase: "submission" | "queue",
 		input?: FlowNativeInput,
 	): Promise<boolean> {
-		if (this.options.admit) return this.options.admit(submission, branch, phase, input);
 		if (!this.session) throw new FlowLedgerError("stale", "Flow ingress has no host session.");
 		const records = await branch.attachment.submissions.snapshot();
 		const state = await branch.attachment.ledger.snapshot();
 		const policy = this.options.policy();
-		const decision = decideNativeAdmission(
+		const recoveryBlocked =
+			policy.recoveryBlocked ||
+			branch.attachment.nativeRequests.recoveryBlocked ||
+			branch.recovery.unresolved > 0 ||
+			branch.sourceRecovery.unresolved > 0 ||
+			state.attempts.some((attempt) => attempt.phase === "uncertain");
+		let decision = decideNativeAdmission(
 			submission,
 			records,
 			{
 				...policy,
-				recoveryBlocked:
-					policy.recoveryBlocked ||
-					branch.attachment.nativeRequests.recoveryBlocked ||
-					branch.recovery.unresolved > 0 ||
-					branch.sourceRecovery.unresolved > 0 ||
-					state.attempts.some((attempt) => attempt.phase === "uncertain"),
+				recoveryBlocked,
 			},
 			this.session,
 			phase,
 			input,
 		);
-		if (decision.allowed) this.holds.delete(submission.id);
-		else this.holds.set(submission.id, decision.reason);
-		return decision.allowed;
+		if (this.options.admit && !recoveryBlocked) {
+			try {
+				decision = (await this.options.admit(
+					structuredClone(submission),
+					branch,
+					phase,
+					input ? structuredClone(input) : undefined,
+				))
+					? { allowed: true }
+					: { allowed: false, reason: "Input is held by host admission policy." };
+			} catch (error) {
+				await branch.attachment.submissions.recordAdmission(
+					submission.id,
+					records.find((record) => record.id === submission.id)?.revision ?? 0,
+					{ phase, ...(input?.queue ? { queue: input.queue } : {}) },
+					"Host admission policy failed; review input before retry.",
+				);
+				throw error;
+			}
+		}
+		if (branch.attachment.nativeRequests.recoveryBlocked)
+			decision = { allowed: false, reason: "Input is waiting for recovery reconciliation." };
+		const current = records.find((record) => record.id === submission.id);
+		if (!current) return false;
+		const saved = await branch.attachment.submissions.recordAdmission(
+			submission.id,
+			current.revision,
+			{ phase, ...(input?.queue ? { queue: input.queue } : {}) },
+			decision.allowed ? undefined : decision.reason,
+		);
+		if (!saved && phase === "submission")
+			throw new FlowLedgerError("stale", "Retained input changed during admission.");
+		return saved && decision.allowed;
 	}
 
 	branch(): PiFlowBranchResources {
@@ -145,7 +178,6 @@ export class PiSessionFlowIngress implements Ingress {
 			return Promise.reject(new FlowLedgerError("busy", "Flow admission cannot release its own pending send."));
 		if (pending.running) return pending.running;
 		const run = this.track(async () => {
-			if (branch.attachment.nativeRequests.recoveryBlocked) return false;
 			if (!(await this.admit(structuredClone(pending.submission), branch, "submission"))) return false;
 			if (this.branch() !== branch || this.pending.get(id) !== pending)
 				throw new FlowLedgerError("stale", "Retained send changed during admission.");
@@ -171,7 +203,6 @@ export class PiSessionFlowIngress implements Ingress {
 		this.fenced = true;
 		await Promise.allSettled([...this.active]);
 		this.pending.clear();
-		this.holds.clear();
 		await service?.beforeBranchChange();
 	}
 	async branchChanged(): Promise<void> {
@@ -191,7 +222,6 @@ export class PiSessionFlowIngress implements Ingress {
 			await this.opening?.catch(() => {});
 			await Promise.allSettled([...this.active]);
 			this.pending.clear();
-			this.holds.clear();
 			await this.service?.close();
 		})();
 		return this.closing;

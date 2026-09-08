@@ -365,3 +365,46 @@ test("manifest/content mismatch refuses reattachment without replacing authorita
 	await assert.rejects(FlowSubmissionStore.attach(session, owner), /missing content/);
 	assert.deepEqual((await session.getValue(address, context)).value, { id: "different" });
 });
+
+test("admission diagnostics persist without changing source revisions or authorizing replay", async (t) => {
+	const root = await rootFor(t);
+	let attachment = await PiFlowAttachment.open(root, scope);
+	t.after(() => attachment.close());
+	await attachment.submissions.retain(submission());
+	const target = { phase: "submission" };
+	assert.equal(await attachment.submissions.recordAdmission("item", 1, target, "Waiting for work."), true);
+	assert.equal(await attachment.submissions.recordAdmission("item", 1, target, "Waiting for work."), true);
+	let [saved] = await attachment.submissions.snapshot();
+	assert.equal(saved.revision, 1);
+	assert.equal(saved.holds.length, 1);
+	assert.deepEqual(saved.submission, submission());
+	await attachment.close();
+	attachment = await PiFlowAttachment.open(root, scope);
+	[saved] = await attachment.submissions.snapshot();
+	assert.equal(saved.holds[0].reason, "Waiting for work.");
+	assert.equal(saved.dispatch, undefined);
+	assert.equal(await attachment.submissions.recordAdmission("item", 1, target), true);
+	assert.equal((await attachment.submissions.snapshot())[0].holds, undefined);
+	await attachment.submissions.cancel("item", 1);
+	assert.equal(await attachment.submissions.recordAdmission("item", 1, target, "stale update"), false);
+});
+
+test("admission diagnostics reject oversized reasons and invented queue identities", async (t) => {
+	const root = await rootFor(t);
+	const attachment = await PiFlowAttachment.open(root, scope);
+	t.after(() => attachment.close());
+	await attachment.submissions.retain(submission());
+	assert.throws(() => attachment.submissions.recordAdmission("item", 1, { phase: "submission" }, "あ".repeat(342)), {
+		code: "schema",
+	});
+	await assert.rejects(
+		attachment.submissions.recordAdmission(
+			"item",
+			1,
+			{ phase: "queue", queue: { id: "invented", revision: 1 } },
+			"held",
+		),
+		{ code: "stale" },
+	);
+	assert.equal((await attachment.submissions.snapshot())[0].holds, undefined);
+});

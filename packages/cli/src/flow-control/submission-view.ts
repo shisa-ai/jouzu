@@ -13,6 +13,18 @@ export interface FlowSubmissionView {
 	reason?: string;
 }
 
+/** Keep historical diagnostics in storage, but expose only holds on unconsumed live revisions. */
+export function activeAdmissionHolds(record: RetainedSubmission) {
+	if (record.status === "cancelled") return [];
+	return (record.holds ?? []).filter((hold) =>
+		hold.phase === "submission"
+			? !record.dispatch
+			: !record.dispatch?.queueClaims?.some(
+					(claim) => claim.id === hold.queue?.id && claim.revision === hold.queue?.revision,
+				),
+	);
+}
+
 /** Derive durable dispositions without rewriting ingress or acknowledging work completion.
  * Call under the controller's serialized boundary; this snapshot is not a dispatch permit.
  */
@@ -79,7 +91,8 @@ export function projectFlowSubmissions(
 				: consumedNative
 					? "consumed"
 					: "none";
-		let held = ambiguous || !!record.dispatch;
+		const admissionHolds = activeAdmissionHolds(record);
+		let held = ambiguous || !!record.dispatch || admissionHolds.length > 0;
 		for (const attempt of attempts) {
 			const members = attempt.members.filter((member) => member.sourceSubmission?.id === record.id);
 			const matches = (item: { id: string; revision: string }) =>
@@ -124,9 +137,11 @@ export function projectFlowSubmissions(
 			...(native ? { nativeRequests: native.get(record.id) ?? [] } : {}),
 			...(admission === "held"
 				? {
-						reason: record.dispatch
-							? "Native dispatch requires reconciliation before replay."
-							: "Consumed or withheld input requires reconciliation before another dispatch.",
+						reason:
+							admissionHolds[0]?.reason ??
+							(record.dispatch
+								? "Native dispatch requires reconciliation before replay."
+								: "Consumed or withheld input requires reconciliation before another dispatch."),
 					}
 				: {}),
 		};
