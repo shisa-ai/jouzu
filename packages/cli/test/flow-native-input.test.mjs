@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { fork } from "node:child_process";
+import { createHash } from "node:crypto";
 import { once } from "node:events";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -10,7 +11,7 @@ import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { PiNativeDispatch } from "../dist/flow-control/pi-native-dispatch.js";
 import { projectFlowSubmissions } from "../dist/flow-control/submission-view.js";
 
-async function fixture(t, extensions = []) {
+async function fixture(t, extensions = [], beforeNative) {
 	const root = await mkdtemp(join(tmpdir(), "jouzu-native-input-"));
 	let attachment, native;
 	const { session, requests } = await createFlowSession(t, {
@@ -26,6 +27,7 @@ async function fixture(t, extensions = []) {
 	});
 	const scope = { sessionId: session.sessionId, branchId: "main" };
 	attachment = await PiFlowAttachment.open(root, scope);
+	beforeNative?.(session);
 	native = new PiNativeDispatch(session, attachment.submissions);
 	t.after(async () => {
 		session.agent.clearAllQueues();
@@ -104,7 +106,7 @@ test("native queue consumption waits for its exact input observation", async (t)
 	assert.equal(record.dispatch.inputs[0].args[0].content[0].text, "queued");
 	assert.deepEqual(record.dispatch.queueClaims, [{ id: item.id, revision: item.revision, consumed: true }]);
 	const [view] = projectFlowSubmissions([record], await f.attachment.ledger.snapshot());
-	assert.equal(view.delivery, "consumed");
+	assert.equal(view.delivery, "history");
 	assert.equal(view.admission, "held");
 });
 
@@ -218,7 +220,7 @@ test("native consumption is retained before model execution and survives reopen"
 	assert.equal(f.requests.length, 1);
 });
 
-for (const phase of ["before", "after"])
+for (const phase of ["before", "after", "history-before", "history-after"])
 	test(`process death ${phase} the native queue receipt cannot authorize replay`, async (t) => {
 		const root = await mkdtemp(join(tmpdir(), "jouzu-native-claim-kill-"));
 		let attachment;
@@ -246,7 +248,8 @@ for (const phase of ["before", "after"])
 		await exited;
 		attachment = await PiFlowAttachment.open(join(root, "receipts"), saved.scope);
 		const [record] = await attachment.submissions.snapshot();
-		assert.equal(record.dispatch.queueClaims?.[0]?.consumed, phase === "after" ? true : undefined);
+		assert.equal(record.dispatch.queueClaims?.[0]?.consumed, phase === "before" ? undefined : true);
+		assert.equal(!!record.dispatch.queueHistory?.length, phase === "history-after");
 		await assert.rejects(
 			attachment.submissions.dispatch(record.id, record.revision, "retry", async () => {
 				throw new Error("replayed");
@@ -255,6 +258,110 @@ for (const phase of ["before", "after"])
 		);
 		assert.equal(
 			projectFlowSubmissions([record], await attachment.ledger.snapshot())[0].delivery,
-			phase === "after" ? "consumed" : "uncertain",
+			phase === "history-after" ? "history" : phase === "before" ? "uncertain" : "consumed",
 		);
 	});
+
+test("native queue history is durable before the provider and rejects conflicting receipts", async (t) => {
+	const f = await fixture(t);
+	await f.session.followUp("history receipt");
+	const entered = deferred(),
+		release = deferred();
+	const recordHistory = f.attachment.submissions.recordQueueHistory.bind(f.attachment.submissions);
+	t.mock.method(f.attachment.submissions, "recordQueueHistory", async (...args) => {
+		entered.resolve();
+		await release.promise;
+		return recordHistory(...args);
+	});
+	const running = f.session.continueQueued();
+	await entered.promise;
+	assert.equal(f.requests.length, 0);
+	const [consumed] = await f.attachment.submissions.snapshot();
+	assert.equal(consumed.dispatch.queueClaims[0].consumed, true);
+	assert.equal(consumed.dispatch.queueHistory, undefined);
+	release.resolve();
+	await running;
+	const [saved] = await f.attachment.submissions.snapshot();
+	const [receipt] = saved.dispatch.queueHistory;
+	const entry = f.session.sessionManager.getEntry(receipt.entryId);
+	assert.equal(entry.message.content[0].text, "history receipt");
+	assert.equal(receipt.entryHash, createHash("sha256").update(JSON.stringify(entry)).digest("hex"));
+	await recordHistory(saved.dispatch.operationId, receipt);
+	await assert.rejects(recordHistory(saved.dispatch.operationId, { ...receipt, entryHash: "a".repeat(64) }), {
+		code: "identity",
+	});
+	await assert.rejects(recordHistory(saved.dispatch.operationId, { ...receipt, id: "foreign" }), { code: "identity" });
+	assert.equal(projectFlowSubmissions([saved], await f.attachment.ledger.snapshot())[0].delivery, "history");
+	await f.native.close();
+	await f.attachment.close();
+	const reopened = await PiFlowAttachment.open(f.root, f.scope);
+	try {
+		assert.deepEqual((await reopened.submissions.snapshot())[0].dispatch.queueHistory, saved.dispatch.queueHistory);
+		await assert.rejects(reopened.submissions.recordQueueHistory(saved.dispatch.operationId, receipt), {
+			code: "stale",
+		});
+	} finally {
+		await reopened.close();
+	}
+});
+
+test("duplicate native messages and an unowned queue entry retain distinct history identities", async (t) => {
+	const f = await fixture(t);
+	const images = [{ type: "image", data: "YQ==", mimeType: "image/png" }];
+	await f.session.followUp("same", images);
+	f.session.agent.followUp({ role: "user", content: [{ type: "text", text: "unowned" }], timestamp: 1 });
+	await f.session.followUp("same", images);
+	await f.session.continueQueued();
+	const records = await f.attachment.submissions.snapshot();
+	assert.equal(records.length, 2);
+	const receipts = records.map((record) => record.dispatch.queueHistory[0]);
+	assert.notEqual(receipts[0].id, receipts[1].id);
+	assert.notEqual(receipts[0].entryId, receipts[1].entryId);
+	for (const receipt of receipts) {
+		const entry = f.session.sessionManager.getEntry(receipt.entryId);
+		assert.equal(entry.message.content[0].text, "same");
+		assert.deepEqual(entry.message.content[1], images[0]);
+	}
+});
+
+test("native history write failure prevents provider execution without replay authority", async (t) => {
+	const f = await fixture(t);
+	await f.session.followUp("must persist");
+	t.mock.method(f.attachment.submissions, "recordQueueHistory", async () => {
+		throw new Error("receipt unavailable");
+	});
+	await f.session.continueQueued();
+	assert.match(f.session.agent.state.errorMessage, /receipt unavailable/);
+	assert.equal(f.requests.length, 0);
+	const [saved] = await f.attachment.submissions.snapshot();
+	assert.equal(saved.dispatch.queueClaims[0].consumed, true);
+	assert.equal(saved.dispatch.queueHistory, undefined);
+	await assert.rejects(
+		f.native.dispatch(saved.id, saved.revision, "replay", async () => {}),
+		{ code: "transition" },
+	);
+});
+
+test("native history does not acknowledge a message changed after message_start", async (t) => {
+	const f = await fixture(t, [], (session) => {
+		session.agent.subscribe((event) => {
+			if (event.type === "message_end" && event.message.role === "user") event.message.content[0].text = "changed";
+		});
+	});
+	await f.session.followUp("original");
+	await f.session.continueQueued();
+	assert.equal(f.requests.length, 0);
+	assert.match(f.session.agent.state.errorMessage, /changed before history persistence/);
+	const [saved] = await f.attachment.submissions.snapshot();
+	assert.equal(saved.dispatch.queueHistory, undefined);
+});
+
+test("buffered transcript input cannot become a native history receipt", async (t) => {
+	const f = await fixture(t);
+	t.mock.method(f.session.sessionManager, "flush", () => {});
+	await f.session.followUp("buffered");
+	await f.session.continueQueued();
+	assert.equal(f.requests.length, 0);
+	assert.match(f.session.agent.state.errorMessage, /was not persisted/);
+	assert.equal((await f.attachment.submissions.snapshot())[0].dispatch.queueHistory, undefined);
+});

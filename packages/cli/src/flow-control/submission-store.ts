@@ -37,6 +37,13 @@ export interface FlowSubmissionDispatch {
 	phase: "started" | "returned" | "failed";
 	inputs?: FlowNativeInput[];
 	queueClaims?: { id: string; revision: number; consumed: boolean }[];
+	queueHistory?: FlowNativeQueueHistory[];
+}
+export interface FlowNativeQueueHistory {
+	id: string;
+	revision: number;
+	entryId: string;
+	entryHash: string;
 }
 interface State {
 	version: 1;
@@ -251,6 +258,27 @@ export class FlowSubmissionStore {
 					claimed.add(claim.id);
 				}
 			}
+			const history = record.dispatch?.queueHistory;
+			if (history !== undefined) {
+				if (!Array.isArray(history) || history.length > 64)
+					throw new FlowLedgerError("schema", "Invalid native queue history receipts.");
+				const queues = new Set<string>();
+				const entries = new Set<string>();
+				for (const receipt of history) {
+					if (
+						!receipt ||
+						!identity(receipt.entryId) ||
+						typeof receipt.entryHash !== "string" ||
+						!/^[a-f0-9]{64}$/.test(receipt.entryHash) ||
+						queues.has(receipt.id) ||
+						entries.has(receipt.entryId) ||
+						!claims?.some((claim) => claim.id === receipt.id && claim.revision === receipt.revision && claim.consumed)
+					)
+						throw new FlowLedgerError("identity", "Native history does not identify one consumed queue input.");
+					queues.add(receipt.id);
+					entries.add(receipt.entryId);
+				}
+			}
 			validateSubmission(submission, this.ownership.scope);
 			if (submission.id !== record.id) throw new FlowLedgerError("identity", "Stored submission identity changed.");
 		}
@@ -336,6 +364,7 @@ export class FlowSubmissionStore {
 								ownerId: dispatch.ownerId,
 								phase: dispatch.phase,
 								...(dispatch.queueClaims ? { queueClaims: dispatch.queueClaims } : {}),
+								...(dispatch.queueHistory ? { queueHistory: dispatch.queueHistory } : {}),
 								...(dispatch.inputs
 									? { inputs: dispatch.inputs.map((input) => decode(input.payload) as FlowNativeInput) }
 									: {}),
@@ -361,6 +390,28 @@ export class FlowSubmissionStore {
 			}
 			dispatch.queueClaims ??= [];
 			dispatch.queueClaims.push(receipt);
+			return { changed: true, result: undefined };
+		});
+	}
+	/** Retain a verified native transcript entry separately from final provider inclusion. */
+	recordQueueHistory(operationId: string, input: FlowNativeQueueHistory): Promise<void> {
+		const receipt = { ...input };
+		return this.transact((state) => {
+			const dispatch = state.records.find((record) => record.dispatch?.operationId === operationId)?.dispatch;
+			if (!dispatch || dispatch.ownerId !== this.ownership.token)
+				throw new FlowLedgerError("stale", "Native history receipt belongs to another attachment.");
+			const previous = dispatch.queueHistory?.find((item) => item.id === receipt.id);
+			if (previous) {
+				if (
+					previous.revision !== receipt.revision ||
+					previous.entryId !== receipt.entryId ||
+					previous.entryHash !== receipt.entryHash
+				)
+					throw new FlowLedgerError("identity", "Native history receipt conflicts with retained evidence.");
+				return { changed: false, result: undefined };
+			}
+			dispatch.queueHistory ??= [];
+			dispatch.queueHistory.push(receipt);
 			return { changed: true, result: undefined };
 		});
 	}

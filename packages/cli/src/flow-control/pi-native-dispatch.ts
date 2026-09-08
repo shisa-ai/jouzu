@@ -3,6 +3,7 @@ import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { ImageContent } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
 import { PiHostHooks } from "./pi-host-hooks.js";
+import { PiNativeQueueHistory } from "./pi-native-queue-history.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowNativeObserver, FlowSubmissionStore } from "./submission-store.js";
 
@@ -25,6 +26,7 @@ export class PiNativeDispatch {
 	private closed = false;
 	private drained?: () => void;
 	private closing?: Promise<void>;
+	private readonly history: PiNativeQueueHistory;
 	constructor(
 		private readonly session: AgentSession,
 		private readonly store: FlowSubmissionStore,
@@ -35,6 +37,7 @@ export class PiNativeDispatch {
 			throw new FlowLedgerError("identity", "Pi session already has native dispatch observation.");
 		attached.add(session);
 		this.sessionId = session.sessionId;
+		this.history = new PiNativeQueueHistory(session, store);
 		const agent = session.agent;
 		const prompt = agent.prompt.bind(agent);
 		this.hooks.set(agent, "prompt", async (input: string | AgentMessage | AgentMessage[], images?: ImageContent[]) => {
@@ -111,6 +114,12 @@ export class PiNativeDispatch {
 				}
 				await previous?.afterQueueClaim?.(receipt, signal);
 				this.assertActive();
+				this.history.accept(
+					receipt.claimed.map((item) => ({
+						...item,
+						operationId: this.queued.get(item.id)?.operationId,
+					})),
+				);
 				for (const item of receipt.candidates)
 					if (!agent.inspectQueuedMessages().some((queued) => queued.id === item.id)) this.queued.delete(item.id);
 			},
@@ -180,6 +189,7 @@ export class PiNativeDispatch {
 				await this.store.recordQueueClaim(observed.operationId, { id: item.id, revision: item.revision }, false);
 			}
 			this.hooks.close();
+			this.history.close();
 			this.queued.clear();
 			this.held.clear();
 			attached.delete(this.session);

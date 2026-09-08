@@ -23,9 +23,10 @@ const scope = { sessionId: session.sessionId, branchId: "main" };
 attachment = await PiFlowAttachment.open(join(root, "receipts"), scope);
 native = new PiNativeDispatch(session, attachment.submissions);
 await session.followUp("one native input");
-const record = attachment.submissions.recordQueueClaim.bind(attachment.submissions);
-attachment.submissions.recordQueueClaim = async (...args) => {
-	if (phase === "after") await record(...args);
+const method = phase.startsWith("history-") ? "recordQueueHistory" : "recordQueueClaim";
+const record = attachment.submissions[method].bind(attachment.submissions);
+attachment.submissions[method] = async (...args) => {
+	if (phase.endsWith("after")) await record(...args);
 	process.send({ scope, requests: requests.length, queued: session.agent.inspectQueuedMessages().length });
 	await new Promise(() => {
 		setInterval(() => {}, 1000);
