@@ -27,6 +27,8 @@ export interface FlowRequestInput {
 
 /** Optional host checkpoints. Throws withhold consumption or a transport call. */
 export interface FlowCheckpoints {
+	/** Reports the host-created clone before extension handlers; references are identity evidence only. */
+	afterContextClone?: (source: readonly AgentMessage[], cloned: readonly AgentMessage[], signal?: AbortSignal) => void | Promise<void>;
 	/** True permits the candidate revisions; false retains them in their native queue. */
 	beforeQueueClaim?: (items: FlowQueuedMessage[], signal?: AbortSignal) => boolean | Promise<boolean>;
 	/** Reports exact removal after synchronous revision revalidation; awaited before history/model work. */

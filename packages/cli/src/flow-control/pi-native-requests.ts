@@ -17,6 +17,7 @@ export class PiNativeRequests {
 	private closed = false;
 	private capture?: NativeSourceCapture;
 	private references?: AgentMessage[];
+	private cloneSourceHash?: string;
 	constructor(
 		private readonly session: AgentSession,
 		private readonly store: FlowNativeRequestStore,
@@ -53,11 +54,15 @@ export class PiNativeRequests {
 						count: messages.length,
 						members: structuredClone(members),
 					};
+					this.references = references;
+					this.cloneSourceHash = sourceHash;
 					const result = transform ? await transform(messages, signal) : messages;
+					this.cloneSourceHash = undefined;
+					const contextReferences = this.references;
 					this.assertActive();
 					signal?.throwIfAborted();
 					const occurrences = new Map<AgentMessage, number>();
-					for (const message of references) occurrences.set(message, (occurrences.get(message) ?? 0) + 1);
+					for (const message of contextReferences) occurrences.set(message, (occurrences.get(message) ?? 0) + 1);
 					const positions = new Map<AgentMessage, number[]>();
 					for (const [index, message] of result.entries()) {
 						const existing = positions.get(message) ?? [];
@@ -68,7 +73,7 @@ export class PiNativeRequests {
 						hash: hash(result),
 						count: result.length,
 						members: capture.members.map((member) => {
-							const original = references[member.index];
+							const original = contextReferences[member.index];
 							const matches = positions.get(original) ?? [];
 							// Repeated references cannot distinguish an occurrence after a filter.
 							if (matches.length !== 1 || occurrences.get(original) !== 1)
@@ -81,9 +86,9 @@ export class PiNativeRequests {
 						}),
 					};
 					this.capture = capture;
-					this.references = references;
 					return result;
 				} finally {
+					this.cloneSourceHash = undefined;
 					this.active--;
 				}
 			});
@@ -130,6 +135,37 @@ export class PiNativeRequests {
 		const previous = session.agent.flowCheckpoints;
 		this.hooks.set(session.agent, "flowCheckpoints", {
 			...previous,
+			afterContextClone: async (source, cloned, signal) => {
+				this.assertActive();
+				this.active++;
+				try {
+					if (!identifySources) {
+						await previous?.afterContextClone?.(source, cloned, signal);
+						return;
+					}
+					const references = this.references,
+						expectedHash = this.cloneSourceHash;
+					if (!references || !expectedHash)
+						throw new FlowLedgerError("identity", "Unexpected native context clone checkpoint.");
+					this.cloneSourceHash = undefined;
+					const clonedReferences = [...cloned];
+					await previous?.afterContextClone?.(source, cloned, signal);
+					this.assertActive();
+					signal?.throwIfAborted();
+					if (
+						source.length !== references.length ||
+						cloned.length !== references.length ||
+						source.some((message, index) => message !== references[index]) ||
+						cloned.some((message, index) => message !== clonedReferences[index]) ||
+						hash(source) !== expectedHash ||
+						hash(cloned) !== expectedHash
+					)
+						throw new FlowLedgerError("stale", "Native context clone changed during its checkpoint.");
+					this.references = clonedReferences;
+				} finally {
+					this.active--;
+				}
+			},
 			beforeRequest: async (input, signal) => {
 				this.assertActive();
 				this.active++;

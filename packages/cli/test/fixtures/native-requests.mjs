@@ -16,6 +16,8 @@ export async function nativeRequests(
 		native,
 		retainInputs = false,
 		contextTransform,
+		contextHandler,
+		cloneCheckpoint,
 		modelTransform,
 		identifySources,
 		manager,
@@ -27,7 +29,11 @@ export async function nativeRequests(
 		root: join(root, "host"),
 		persist: true,
 		sessionManager: manager,
-		extensions: transform ? [(pi) => pi.on("before_provider_request", transform)] : [],
+		extensions: [
+			...(transform ? [(pi) => pi.on("before_provider_request", transform)] : []),
+			...(contextHandler ? [(pi) => pi.on("context", contextHandler)] : []),
+		],
+		checkpoints: cloneCheckpoint ? { afterContextClone: cloneCheckpoint } : undefined,
 		ingress: retainInputs
 			? {
 					version: 1,

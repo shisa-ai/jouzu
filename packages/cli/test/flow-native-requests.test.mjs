@@ -543,12 +543,12 @@ test("native model schema cannot restore a source with unresolved context", asyn
 	);
 });
 
-test("Pi extension-runner cloning leaves model source provenance unresolved", async (t) => {
+test("Pi extension-runner clone checkpoint preserves model source provenance", async (t) => {
 	const f = await nativeRequests(t, { retainInputs: true });
 	await f.session.prompt("default pipeline");
 	const [request] = await f.store.snapshot();
-	assert.equal(request.sourceCapture.context.members[0].status, "unresolved");
-	assert.equal(request.sourceCapture.model.members[0].status, "unresolved");
+	assert.equal(request.sourceCapture.context.members[0].status, "intact");
+	assert.equal(request.sourceCapture.model.members[0].status, "intact");
 	assert.equal(request.outcome, "success");
 });
 
@@ -561,4 +561,85 @@ test("Pi blocked-image conversion cannot retain an intact source receipt", async
 	assert.equal(request.sourceCapture.model.members[0].status, "unresolved");
 	assert.ok(JSON.stringify(f.sent[0]).includes("Image reading is disabled."));
 	assert.ok(!JSON.stringify(f.sent[0]).includes("data:image/png"));
+});
+
+for (const mode of ["filter", "clone", "edit"])
+	test(`native source identities cross host cloning before extension ${mode}`, async (t) => {
+		const f = await nativeRequests(t, {
+			retainInputs: true,
+			contextHandler: ({ messages }) => {
+				if (mode === "filter") return { messages: messages.slice(1) };
+				if (mode === "clone") return { messages: structuredClone(messages) };
+				messages[0].content[0].text = "changed by extension";
+				return { messages };
+			},
+		});
+		await f.session.followUp("same");
+		await f.session.followUp("same");
+		f.session.agent.followUpMode = "all";
+		await f.session.continueQueued();
+		const [request] = await f.store.snapshot();
+		const expected = {
+			filter: ["unresolved", "intact"],
+			clone: ["unresolved", "unresolved"],
+			edit: ["changed", "intact"],
+		}[mode];
+		assert.deepEqual(
+			request.sourceCapture.context.members.map((member) => member.status),
+			expected,
+		);
+		assert.deepEqual(
+			request.sourceCapture.model.members.map((member) => member.status),
+			expected,
+		);
+		if (mode === "filter") assert.equal(request.sourceCapture.model.members[1].index, 0);
+		assert.equal(request.outcome, "success");
+	});
+
+for (const failure of ["throw", "mutate", "cancel"])
+	test(`native clone checkpoint ${failure} prevents handlers and provider execution`, async (t) => {
+		let handlers = 0,
+			f;
+		f = await nativeRequests(t, {
+			retainInputs: true,
+			contextHandler: () => {
+				handlers++;
+			},
+			cloneCheckpoint: (_source, cloned) => {
+				if (failure === "throw") throw new Error("clone evidence unavailable");
+				if (failure === "mutate") cloned[0].content[0].text = "changed";
+				if (failure === "cancel") f.session.agent.abort();
+			},
+		});
+		await f.session.prompt("original");
+		assert.equal(handlers, 0);
+		assert.equal(f.sent.length, 0);
+		assert.deepEqual(await f.store.snapshot(), []);
+	});
+
+test("native clone checkpoint waits before handlers and holds attachment ownership", async (t) => {
+	const entered = deferred(),
+		release = deferred();
+	let handlers = 0;
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		contextHandler: () => {
+			handlers++;
+		},
+		cloneCheckpoint: async (source, cloned) => {
+			assert.notEqual(source[0], cloned[0]);
+			assert.deepEqual(source, cloned);
+			entered.resolve();
+			await release.promise;
+		},
+	});
+	const running = f.session.prompt("original");
+	await entered.promise;
+	assert.equal(handlers, 0);
+	assert.equal(f.sent.length, 0);
+	await assert.rejects(f.bridge.close(), { code: "busy" });
+	release.resolve();
+	await running;
+	assert.equal(handlers, 1);
+	assert.equal((await f.store.snapshot())[0].sourceCapture.model.members[0].status, "intact");
 });

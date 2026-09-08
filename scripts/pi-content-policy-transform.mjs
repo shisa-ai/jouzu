@@ -161,7 +161,11 @@ export function transform(path, source) {
         },`,
 			`        transformContext: async (messages, signal) => {
             const runner = extensionRunnerRef.current;
-            const transformed = runner ? await runner.emitContext(messages) : messages;
+            const transformed = runner ? await runner.emitContext(messages, agent.flowCheckpoints?.afterContextClone ? async (source, cloned) => {
+                signal?.throwIfAborted();
+                await agent.flowCheckpoints?.afterContextClone?.(source, cloned, signal);
+                signal?.throwIfAborted();
+            } : undefined) : messages;
             if (!resourceLoader.contentPolicy) return transformed;
             try {
                 const admitted = await resourceLoader.contentPolicy.filterContext(transformed, signal);
@@ -171,6 +175,17 @@ export function transform(path, source) {
                 throw new Error("TextGuard could not check model context; request withheld.");
             }
         },`,
+		);
+	} else if (path === "dist/core/extensions/runner.js") {
+		change("    async emitContext(messages) {", "    async emitContext(messages, afterClone) {");
+		change(
+			"        let currentMessages = structuredClone(messages);",
+			"        let currentMessages = structuredClone(messages);\n        if (afterClone) await afterClone(messages, currentMessages);",
+		);
+	} else if (path === "dist/core/extensions/runner.d.ts") {
+		change(
+			"    emitContext(messages: AgentMessage[]): Promise<AgentMessage[]>;",
+			"    emitContext(messages: AgentMessage[], afterClone?: (source: readonly AgentMessage[], cloned: readonly AgentMessage[]) => void | Promise<void>): Promise<AgentMessage[]>;",
 		);
 	} else if (path === "dist/core/sdk.d.ts") {
 		text = `import type { ContentPolicy } from "./jouzu-content-policy.js";\nimport type { FlowCheckpoints } from "@earendil-works/pi-agent-core";\nimport type { FlowIngress } from "./jouzu-flow-ingress.js";\nexport type { FlowIngress, FlowSubmission } from "./jouzu-flow-ingress.js";\n${text}`;
@@ -950,6 +965,8 @@ export const paths = [
 	"dist/core/agent-session-services.d.ts",
 	"dist/core/agent-session-runtime.js",
 	"dist/core/extensions/loader.js",
+	"dist/core/extensions/runner.js",
+	"dist/core/extensions/runner.d.ts",
 	"dist/core/skills.js",
 	"dist/core/skills.d.ts",
 	"dist/core/session-manager.js",

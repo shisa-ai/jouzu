@@ -21,7 +21,7 @@
 		},
 		"dist/core/sdk.js": {
 			"before": "6969bd56ba8e1628cd033bb15cb15fe38299f00b5ad84f4f8ef37a33a98681c9",
-			"after": "ba0f7cdfcfbd4c5f5365cd38190ca0ab999d042ce966da71c6e85f0ed208692d"
+			"after": "68e23cf1bf2cb72712a38b61c73b77cf26c85d4cf493b7589388480e99c81140"
 		},
 		"dist/core/sdk.d.ts": {
 			"before": "fbb34394c71e113b1f1fb5dd2e3d1da8d559580b339daace88826cd1a666cc4c",
@@ -66,6 +66,14 @@
 		"dist/core/session-manager.d.ts": {
 			"before": "b349557f08b25c8655b041ee05d27ff824ffd7c805531ddb460d46b62e4445f7",
 			"after": "abde7203604705bc3db952114c1b7171c0810d6349d5d9a62cc1d90d46502623"
+		},
+		"dist/core/extensions/runner.js": {
+			"before": "0de12ed1275e02595f92476eec3f61ae1f2e54fd2225ced721ddc90af58a5e61",
+			"after": "48db2caf5d49fe253273f8d7f24f37997532a69e28d0ff5b796ec4f014927474"
+		},
+		"dist/core/extensions/runner.d.ts": {
+			"before": "5e6f5e8e5dffccc0f7e235964a75ac181d2c6e06b924e149370ad688a31d7193",
+			"after": "142aa0dbe4f6a5332a36eaacfcfa248e06f6fc02ada0c87e6c8eafd05ce823c1"
 		}
 	},
 	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863",
