@@ -98,6 +98,10 @@ export function transform(path, source) {
 		);
 	} else if (path === "dist/core/sdk.js") {
 		change(
+			"        convertToLlm: convertToLlmWithBlockImages,",
+			"        convertToLlm: convertToLlmWithBlockImages,\n        flowCheckpoints: options.flowCheckpoints,",
+		);
+		change(
 			"new DefaultResourceLoader({ cwd, agentDir, settingsManager })",
 			"new DefaultResourceLoader({ cwd, agentDir, settingsManager, contentPolicy: options.contentPolicy })",
 		);
@@ -122,10 +126,10 @@ export function transform(path, source) {
         },`,
 		);
 	} else if (path === "dist/core/sdk.d.ts") {
-		text = `import type { ContentPolicy } from "./jouzu-content-policy.js";\n${text}`;
+		text = `import type { ContentPolicy } from "./jouzu-content-policy.js";\nimport type { FlowCheckpoints } from "@earendil-works/pi-agent-core";\n${text}`;
 		change(
 			"export interface CreateAgentSessionOptions {",
-			"export interface CreateAgentSessionOptions {\n    contentPolicy?: ContentPolicy;",
+			"export interface CreateAgentSessionOptions {\n    contentPolicy?: ContentPolicy;\n    flowCheckpoints?: FlowCheckpoints;",
 		);
 	} else if (path === "dist/core/agent-session.js") {
 		change(

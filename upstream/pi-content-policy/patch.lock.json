@@ -21,11 +21,11 @@
 		},
 		"dist/core/sdk.js": {
 			"before": "6969bd56ba8e1628cd033bb15cb15fe38299f00b5ad84f4f8ef37a33a98681c9",
-			"after": "16a99c4216808d724f801c3a3bccce7fb6e26895af58d4a754ec8914f7acf69b"
+			"after": "daf1dc1ec8c2c86f8bd6cd604900f58eeeccde4b813c8fce63f4573c5be82c91"
 		},
 		"dist/core/sdk.d.ts": {
 			"before": "fbb34394c71e113b1f1fb5dd2e3d1da8d559580b339daace88826cd1a666cc4c",
-			"after": "aefb63790292d5d27c6b733b05a8cba753344fdfe06c963578d253decd49aed3"
+			"after": "2c724e1e5eb66e8875be7777f2f645f866562d01bf476467f999bcd424322395"
 		},
 		"dist/core/agent-session.js": {
 			"before": "fb8a3981c20c8c0bbd42231b1c99a10335fb3858b659056b341954de9cfa467f",

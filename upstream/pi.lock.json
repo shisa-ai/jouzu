@@ -14,12 +14,16 @@
 			"integrity": "sha512-3plYDUNFNBs5sRM590KGDAau5NvGIQbLquTruoDHAAAPLR9rUwwi6JG5eIy56bFHTbjlT9sn8rib0wjGaA0KJw=="
 		}
 	},
-	"reviewedAt": "2026-09-07",
+	"reviewedAt": "2026-09-08",
 	"compatibilityStatus": "qualified",
 	"deviations": [
 		{
 			"path": "upstream/pi-content-policy/patch.lock.json",
-			"sha256": "43b9a2908aa0edc686acdab93a2d1185b9a675ef510f52b221b3a0bda9c4eea3"
+			"sha256": "b9fd8c0713d7793b56cacd751ac6d0a8cf5aa8d7b5a1730a557aeb1637e66062"
+		},
+		{
+			"path": "upstream/pi-flow-control/patch.lock.json",
+			"sha256": "b96174b48d2382a9866cc288880b26e9c8898b6148d56f4e100301f6fd9b00c1"
 		}
 	]
 }
