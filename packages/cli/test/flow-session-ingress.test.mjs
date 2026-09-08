@@ -3,13 +3,15 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { stream } from "@earendil-works/pi-ai/api/openai-completions";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js";
+import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
 
 async function fixture(
 	t,
-	{ root: supplied, admit = async () => true, policy, manager, nextTurnObserver, autoRelease } = {},
+	{ root: supplied, admit = async () => true, policy, manager, nextTurnObserver, autoRelease, provider = false } = {},
 ) {
 	const root = supplied ?? (await mkdtemp(join(tmpdir(), "jouzu-ingress-owner-")));
 	const ingress = new PiSessionFlowIngress({
@@ -17,7 +19,11 @@ async function fixture(
 		autoRelease,
 		maxInputBytes: 4096,
 		maxResultBytes: 4096,
-		host: { projections: new Map(), maxPayloadBytes: 100000, containsUserInput: () => true },
+		host: {
+			projections: provider ? new Map([["openai-completions", openAIFlowPayload("openai-completions")]]) : new Map(),
+			maxPayloadBytes: 100000,
+			containsUserInput: () => !provider,
+		},
 		policy: policy ?? (() => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: [] })),
 		admit,
 	});
@@ -31,6 +37,19 @@ async function fixture(
 			async attach(session) {
 				session.flowNextTurn = nextTurnObserver;
 				session.agent.streamFunction = async (model, context, options) => {
+					if (provider)
+						return stream({ ...model, baseUrl: "https://fixture.invalid/v1" }, context, {
+							...options,
+							apiKey: "fixture",
+							maxRetries: 0,
+							fetch: async (_url, init) => {
+								sent.push(JSON.parse(init.body).messages);
+								return new Response(
+									`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta: { content: "Done" }, finish_reason: "stop" }] })}\n\ndata: [DONE]\n\n`,
+									{ headers: { "content-type": "text/event-stream" } },
+								);
+							},
+						});
 					for (const message of context.messages)
 						if (message.role === "user") options.onMessageConverted(message, message);
 					await options.onPayload({ messages: context.messages }, model);
@@ -1616,3 +1635,52 @@ for (const stage of ["enqueued", "eligibility"])
 		const [user] = await branch.attachment.submissions.snapshot();
 		assert.equal(user.dispatch, undefined);
 	});
+
+test("semantic producer request completes through installed ingress and provider conversion", async (t) => {
+	const f = await fixture(t, { provider: true, admit: null });
+	const branch = f.ingress.branch();
+	const producer = {
+		version: 1,
+		namespace: "provider-test",
+		snapshot: async () => [
+			{
+				id: "work",
+				revision: "1",
+				producer: "provider-test",
+				sequence: 1,
+				rank: 4,
+				workId: "work",
+				workRevision: "1",
+				independent: true,
+				runnable: true,
+			},
+		],
+		build: async () => ({ id: "work", revision: "1", kind: "work", text: "complete semantic work" }),
+	};
+	branch.controller.register(producer);
+	await branch.controller.wake();
+	assert.equal(f.sent.length, 1);
+	const state = await branch.attachment.ledger.snapshot();
+	assert.equal(state.attempts.length, 1);
+	assert.equal(state.attempts[0].phase, "settled");
+	assert.equal(state.attempts[0].outcome, "success");
+	assert.equal(state.attempts[0].requests[0].outcome, "success");
+	const requests = await branch.attachment.nativeRequests.snapshot();
+	assert.equal(requests.length, 1);
+	assert.equal(requests[0].outcome, "success");
+	await branch.controller.wake();
+	assert.equal(f.sent.length, 1);
+	await f.ingress.dispose();
+	const next = await fixture(t, {
+		root: f.root,
+		provider: true,
+		admit: null,
+		manager: SessionManager.open(f.session.sessionManager.getSessionFile()),
+	});
+	next.ingress.branch().controller.register(producer);
+	await next.ingress.branch().controller.wake();
+	assert.equal(next.sent.length, 0);
+	const recovered = await next.ingress.branch().attachment.ledger.snapshot();
+	assert.equal(recovered.attempts.length, 1);
+	assert.equal(recovered.attempts[0].outcome, "success");
+});
