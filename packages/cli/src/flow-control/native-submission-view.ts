@@ -4,6 +4,7 @@ import type {
 	NativeRequestSource,
 	NativeSourceDisposition,
 } from "./native-request-store.js";
+import { nativeHoldHash, nativeRequestHeld } from "./native-request-store.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { RetainedSubmission } from "./submission-store.js";
 
@@ -13,6 +14,9 @@ export interface NativeSubmissionRequestView {
 	outcome: NonNullable<NativeRequest["outcome"]> | "unknown";
 	payloadHash?: string;
 	withheldPayloadHash?: string;
+	hold?: { hash: string; reason: "required-input" };
+	retryOf?: string;
+	retryRequestId?: string;
 	sources: {
 		identity: NativeRequestSource;
 		consumed: true;
@@ -78,6 +82,11 @@ export function projectNativeSubmissionRequests(
 				outcome: request.outcome ?? "unknown",
 				...(request.payload ? { payloadHash: request.payload.hash } : {}),
 				...(request.withheldPayload ? { withheldPayloadHash: request.withheldPayload.hash } : {}),
+				...(nativeRequestHeld(request) && !request.retryAuthorization?.requestId
+					? { hold: { hash: nativeHoldHash(request), reason: "required-input" as const } }
+					: {}),
+				...(request.retryOf ? { retryOf: request.retryOf } : {}),
+				...(request.retryAuthorization?.requestId ? { retryRequestId: request.retryAuthorization.requestId } : {}),
 				sources: [],
 			};
 			view.sources.push(

@@ -11,6 +11,8 @@ export interface NativeRequest {
 	systemHash: string;
 	sourceCapture?: NativeSourceCapture;
 	requiredSources?: number[];
+	retryOf?: string;
+	retryAuthorization?: { ownerId: string; requestId?: string };
 	withheldPayload?: NativeRequest["payload"];
 	payload?: {
 		hash: string;
@@ -71,9 +73,17 @@ const sourceKey = (source: NativeSourceClaim) =>
 const identity = (id: unknown) => typeof id === "string" && id.length > 0 && id.length <= 512;
 const hash = (text: unknown) => typeof text === "string" && /^[a-f0-9]{64}$/.test(text);
 
+export const nativeRequestHeld = (record: NativeRequest): boolean =>
+	record.outcome === "withheld" && !!record.requiredSources?.length;
+export const nativeHoldHash = (record: NativeRequest): string => record.withheldPayload?.hash ?? record.modelHash;
+
 /** Request lifecycle facts only; payload hashes never establish per-source membership. */
 export class FlowNativeRequestStore {
 	private initialized = false;
+	private blocked = true;
+	get recoveryBlocked(): boolean {
+		return this.blocked;
+	}
 	get scope(): Readonly<FlowScope> {
 		return this.ownership.scope;
 	}
@@ -90,7 +100,32 @@ export class FlowNativeRequestStore {
 	private validate(records: NativeRequest[]): void {
 		if (records.length > 1024 || Buffer.byteLength(JSON.stringify(records)) > 1024 * 1024)
 			throw new FlowLedgerError("capacity", "Native request retention limit reached.");
-		for (const record of records) {
+		for (const [recordIndex, record] of records.entries()) {
+			if (
+				record.retryAuthorization !== undefined &&
+				(!nativeRequestHeld(record) ||
+					!record.retryAuthorization ||
+					!identity(record.retryAuthorization.ownerId) ||
+					(record.retryAuthorization.requestId !== undefined &&
+						!records
+							.slice(recordIndex + 1)
+							.some(
+								(candidate) => candidate.id === record.retryAuthorization?.requestId && candidate.retryOf === record.id,
+							)))
+			)
+				throw new FlowLedgerError("identity", "Invalid native retry authorization.");
+			if (
+				record.retryOf !== undefined &&
+				!records
+					.slice(0, recordIndex)
+					.some(
+						(parent) =>
+							parent.id === record.retryOf &&
+							parent.retryAuthorization?.requestId === record.id &&
+							parent.retryAuthorization.ownerId === record.ownerId,
+					)
+			)
+				throw new FlowLedgerError("identity", "Native retry has no matching authorization.");
 			const payload = record.payload ?? record.withheldPayload;
 			if (
 				record.withheldPayload !== undefined &&
@@ -194,7 +229,7 @@ export class FlowNativeRequestStore {
 								member.queue.revision < 1))
 					)
 						throw new FlowLedgerError("identity", "Invalid native source message identity.");
-					const key = JSON.stringify([member.operationId, member.prompt, member.queue]);
+					const key = sourceKey(member);
 					if (sources.has(key)) throw new FlowLedgerError("identity", "Native source message was repeated.");
 					positions.add(member.index);
 					sources.add(key);
@@ -297,15 +332,39 @@ export class FlowNativeRequestStore {
 						],
 						context,
 					);
+				this.blocked = this.requiresRecovery(records);
 				return result;
 			}, BACKGROUND_CONTEXT),
 		);
+	}
+	private requiresRecovery(records: NativeRequest[]): boolean {
+		return records.some(
+			(record) =>
+				record.outcome === undefined ||
+				(nativeRequestHeld(record) &&
+					!record.retryAuthorization?.requestId &&
+					record.retryAuthorization?.ownerId !== this.ownership.token),
+		);
+	}
+	/** Explicit host action only; authorizes one preparation without appending or sending input. */
+	authorizeRetry(id: string, expectedHash: string): Promise<void> {
+		return this.transact((records) => {
+			const record = records.find((item) => item.id === id);
+			if (!record || !nativeRequestHeld(record) || nativeHoldHash(record) !== expectedHash)
+				throw new FlowLedgerError("stale", "Native content hold changed or is unavailable.");
+			if (records.some((item) => item.outcome === undefined) || record.retryAuthorization?.requestId)
+				throw new FlowLedgerError("busy", "Native retry already has a request or requires reconciliation.");
+			record.retryAuthorization = { ownerId: this.ownership.token };
+		});
 	}
 	snapshot(): Promise<NativeRequest[]> {
 		return this.transact((records) => structuredClone(records));
 	}
 	begin(
-		input: Omit<NativeRequest, "ownerId" | "payload" | "withheldPayload" | "outcome" | "requiredSources">,
+		input: Omit<
+			NativeRequest,
+			"ownerId" | "payload" | "withheldPayload" | "outcome" | "requiredSources" | "retryOf" | "retryAuthorization"
+		>,
 		requireUnreceived = false,
 		consumedClaims?: NativeSourceClaim[],
 	): Promise<void> {
@@ -321,7 +380,7 @@ export class FlowNativeRequestStore {
 		return this.transact((records) => {
 			if (records.some((record) => record.id === captured.id))
 				throw new FlowLedgerError("identity", "Native request ID is already retained.");
-			if (records.some((record) => record.outcome === undefined || record.withheldPayload !== undefined))
+			if (this.requiresRecovery(records))
 				throw new FlowLedgerError("busy", "Native request requires reconciliation before another request.");
 			const received = new Set(
 				records.flatMap((request) =>
@@ -350,7 +409,30 @@ export class FlowNativeRequestStore {
 						.filter((source) => !received.has(sourceKey(source)))
 						.map((source) => source.index) ?? [])
 				: undefined;
-			records.push({ ...captured, ownerId: this.ownership.token, ...(requiredSources ? { requiredSources } : {}) });
+			const retry = records.find(
+				(record) =>
+					nativeRequestHeld(record) &&
+					!record.retryAuthorization?.requestId &&
+					record.retryAuthorization?.ownerId === this.ownership.token,
+			);
+			if (retry && !requireUnreceived)
+				throw new FlowLedgerError("identity", "Native retry requires input admission checks.");
+			if (retry) {
+				const capturedKeys = new Set(captured.sourceCapture?.members.map(sourceKey));
+				if (
+					retry.sourceCapture?.members.some(
+						(source) => retry.requiredSources?.includes(source.index) && !capturedKeys.has(sourceKey(source)),
+					)
+				)
+					throw new FlowLedgerError("identity", "Native retry is missing held input.");
+				retry.retryAuthorization = { ownerId: this.ownership.token, requestId: captured.id };
+			}
+			records.push({
+				...captured,
+				ownerId: this.ownership.token,
+				...(requiredSources ? { requiredSources } : {}),
+				...(retry ? { retryOf: retry.id } : {}),
+			});
 		});
 	}
 	private owned(records: NativeRequest[], id: string): NativeRequest {

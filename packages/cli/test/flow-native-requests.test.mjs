@@ -1024,3 +1024,131 @@ test("required admission requires a consumption inventory", async (t) => {
 	const [request] = await f.store.snapshot();
 	await assert.rejects(f.store.begin({ ...request, id: "missing-inventory" }, true), { code: "identity" });
 });
+
+test("explicit native retry keeps the held receipt and rechecks original input", async (t) => {
+	let reject = true;
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		enforceRequiredSources: true,
+		transform: ({ payload }) => (reject ? structuredClone(payload) : payload),
+	});
+	await f.session.prompt("original instruction");
+	const [held] = await f.store.snapshot();
+	assert.equal(f.store.recoveryBlocked, true);
+	await assert.rejects(f.store.authorizeRetry(held.id, "0".repeat(64)), { code: "stale" });
+	await f.store.authorizeRetry(held.id, held.withheldPayload.hash);
+	assert.equal(f.store.recoveryBlocked, false);
+	assert.equal(f.sent.length, 0);
+	reject = false;
+	await f.session.prompt("retry the held instruction");
+	const [original, retry] = await f.store.snapshot();
+	assert.deepEqual(original.withheldPayload, held.withheldPayload);
+	assert.equal(original.payload, undefined);
+	assert.equal((await f.attachment.submissionViews())[0].nativeRequests[0].hold, undefined);
+	assert.equal(original.retryAuthorization.requestId, retry.id);
+	assert.equal(retry.retryOf, held.id);
+	assert.equal(retry.outcome, "success");
+	assert.equal(retry.requiredSources.length, 2);
+	assert.equal(f.sent.length, 1);
+	const history = f.session.sessionManager
+		.getBranch()
+		.filter((entry) => entry.type === "message" && entry.message.role === "user");
+	assert.equal(history.length, 2);
+	assert.equal(history.filter((entry) => entry.message.content[0].text === "original instruction").length, 1);
+	const view = (await f.attachment.submissionViews())[0];
+	assert.equal(view.nativeRequests[0].retryRequestId, retry.id);
+	assert.equal(view.nativeRequests[1].retryOf, held.id);
+	await assert.rejects(f.store.authorizeRetry(held.id, held.withheldPayload.hash), { code: "busy" });
+	assert.equal(f.store.recoveryBlocked, false);
+});
+
+test("explicit retry permission cannot release a second content rejection", async (t) => {
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		enforceRequiredSources: true,
+		transform: ({ payload }) => structuredClone(payload),
+	});
+	await f.session.prompt("held");
+	const [held] = await f.store.snapshot();
+	await f.store.authorizeRetry(held.id, held.withheldPayload.hash);
+	await f.session.prompt("retry");
+	const [, retry] = await f.store.snapshot();
+	assert.equal(retry.outcome, "withheld");
+	assert.equal(retry.retryOf, held.id);
+	assert.equal(f.store.recoveryBlocked, true);
+	await f.session.prompt("ordinary new input");
+	assert.equal((await f.store.snapshot()).length, 2);
+	assert.equal(f.sent.length, 0);
+});
+
+test("unused retry permission expires with attachment ownership", async (t) => {
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		enforceRequiredSources: true,
+		transform: ({ payload }) => structuredClone(payload),
+	});
+	await f.session.prompt("held");
+	const [held] = await f.store.snapshot();
+	await f.store.authorizeRetry(held.id, held.withheldPayload.hash);
+	await f.bridge.close();
+	await f.dispatch.close();
+	await f.attachment.close();
+	const reopened = await PiFlowAttachment.open(join(f.root, "receipts"), f.scope);
+	try {
+		assert.equal(reopened.nativeRequests.recoveryBlocked, true);
+		await assert.rejects(f.store.authorizeRetry(held.id, held.withheldPayload.hash), { code: "closed" });
+		await reopened.nativeRequests.authorizeRetry(held.id, held.withheldPayload.hash);
+		assert.equal(reopened.nativeRequests.recoveryBlocked, false);
+	} finally {
+		await reopened.close();
+	}
+});
+
+test("retry cannot consume authorization without the held source", async (t) => {
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		enforceRequiredSources: true,
+		transform: ({ payload }) => structuredClone(payload),
+	});
+	await f.session.prompt("held");
+	const [held] = await f.store.snapshot();
+	await f.store.authorizeRetry(held.id, held.withheldPayload.hash);
+	await assert.rejects(
+		f.store.begin(
+			{ ...held, id: "missing", sourceCapture: { hash: held.sourceHash, count: 0, members: [] } },
+			true,
+			[],
+		),
+		{ code: "identity" },
+	);
+	assert.equal((await f.store.snapshot())[0].retryAuthorization.requestId, undefined);
+	assert.equal(f.sent.length, 0);
+});
+
+test("retry handoff persistence failure retains a new hold", async (t) => {
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		enforceRequiredSources: true,
+		transform: ({ payload }) => structuredClone(payload),
+	});
+	await f.session.prompt("held");
+	const [held] = await f.store.snapshot();
+	await f.store.authorizeRetry(held.id, held.withheldPayload.hash);
+	t.mock.method(f.store, "handoff", async () => {
+		throw new Error("fixture persistence failure");
+	});
+	await f.session.prompt("retry");
+	const [, retry] = await f.store.snapshot();
+	assert.equal(retry.outcome, "withheld");
+	assert.equal(retry.withheldPayload, undefined);
+	assert.deepEqual((await f.attachment.submissionViews())[0].nativeRequests.at(-1).hold, {
+		hash: retry.modelHash,
+		reason: "required-input",
+	});
+	assert.equal(f.store.recoveryBlocked, true);
+	await f.session.prompt("must not retry automatically");
+	assert.equal((await f.store.snapshot()).length, 2);
+	assert.equal(f.sent.length, 0);
+	await f.store.authorizeRetry(retry.id, retry.modelHash);
+	assert.equal(f.store.recoveryBlocked, false);
+});

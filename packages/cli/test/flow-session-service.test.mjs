@@ -40,6 +40,10 @@ async function fixture(t, config = {}) {
 	});
 	const native = session.agent.streamFunction;
 	session.agent.streamFunction = async (model, context, options) => {
+		if (config.providerReceipts?.()) {
+			for (const message of context.messages)
+				if (message.role === "user") options?.onMessageConverted?.(message, message);
+		}
 		await options?.onPayload?.({ messages: context.messages }, model);
 		return native(model, context, options);
 	};
@@ -204,4 +208,36 @@ test("failed navigation stays held on reopen and failed attachment releases its 
 	for (let attempt = 0; attempt < 2; attempt++) {
 		await assert.rejects(PiFlowSessionService.open(session, options(root)), { code: "transition" });
 	}
+});
+
+test("session service updates native recovery gates and authorizes one reviewed retry", async (t) => {
+	let receipts = false;
+	const f = await fixture(t, { retainInputs: true, providerReceipts: () => receipts });
+	const branch = f.service.branch();
+	assert.equal(branch.host.gate().recoveryBlocked, false);
+	await f.session.prompt("held input");
+	const [held] = await branch.attachment.nativeRequests.snapshot();
+	assert.equal(branch.host.gate().recoveryBlocked, true);
+	assert.equal(f.requests.length, 0);
+	await assert.rejects(f.service.retryNativeRequest(held.id, "0".repeat(64)), { code: "stale" });
+	assert.equal(branch.host.gate().recoveryBlocked, true);
+	await f.service.retryNativeRequest(held.id, held.withheldPayload.hash);
+	assert.equal(branch.host.gate().recoveryBlocked, false);
+	assert.equal(f.requests.length, 0);
+	receipts = true;
+	await f.session.prompt("retry");
+	assert.equal(f.requests.length, 1);
+	assert.equal(branch.host.gate().recoveryBlocked, false);
+	assert.equal((await branch.attachment.nativeRequests.snapshot())[1].retryOf, held.id);
+});
+
+test("session service reports busy retry without granting permission", async (t) => {
+	const f = await fixture(t, { retainInputs: true });
+	const branch = f.service.branch();
+	await f.session.prompt("held");
+	const [held] = await branch.attachment.nativeRequests.snapshot();
+	t.mock.method(branch.host, "atIdle", async () => ({ kind: "busy" }));
+	await assert.rejects(f.service.retryNativeRequest(held.id, held.withheldPayload.hash), { code: "busy" });
+	assert.equal((await branch.attachment.nativeRequests.snapshot())[0].retryAuthorization, undefined);
+	assert.equal(branch.host.gate().recoveryBlocked, true);
 });

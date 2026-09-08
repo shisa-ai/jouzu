@@ -91,11 +91,8 @@ export class PiFlowSessionService {
 		try {
 			const recovery = await recoverPiHistory(this.session.sessionManager, attachment.ledger);
 			const state = await attachment.ledger.snapshot();
-			const requestsState = await attachment.nativeRequests.snapshot();
-			let recoveryBlocked =
-				recovery.unresolved > 0 ||
-				state.attempts.some((attempt) => attempt.phase === "uncertain") ||
-				requestsState.some((request) => request.outcome === undefined || request.withheldPayload !== undefined);
+
+			let recoveryBlocked = recovery.unresolved > 0 || state.attempts.some((attempt) => attempt.phase === "uncertain");
 			const native = new PiNativeDispatch(this.session, attachment.submissions);
 			this.opening.native = native;
 			const sourceRecovery = await native.recoverSources();
@@ -115,7 +112,10 @@ export class PiFlowSessionService {
 				{ ...this.options.host, results: attachment.results },
 				() => {
 					const policy = this.options.policy();
-					return { ...policy, recoveryBlocked: recoveryBlocked || policy.recoveryBlocked };
+					return {
+						...policy,
+						recoveryBlocked: recoveryBlocked || attachment.nativeRequests.recoveryBlocked || policy.recoveryBlocked,
+					};
 				},
 			);
 			this.opening.host = host;
@@ -136,6 +136,18 @@ export class PiFlowSessionService {
 			await this.closeBranch();
 			throw error;
 		}
+	}
+
+	/** Called by an explicit repair action; the next admitted request still applies content policy. */
+	retryNativeRequest(id: string, expectedHash: string): Promise<void> {
+		return this.registry.run(async () => {
+			const branch = this.branch();
+			const result = await branch.host.atIdle(async () => {
+				if (this.branch() !== branch) throw new FlowLedgerError("stale", "Native retry branch changed.");
+				await branch.attachment.nativeRequests.authorizeRetry(id, expectedHash);
+			});
+			if (result.kind === "busy") throw new FlowLedgerError("busy", "Native retry requires an idle session.");
+		});
 	}
 
 	private async closeBranch(): Promise<void> {
