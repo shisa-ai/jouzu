@@ -2,6 +2,18 @@ import { isDeepStrictEqual } from "node:util";
 import { BACKGROUND_CONTEXT, type Session, type SessionReader, setValue, value } from "@earendil-works/pi-agent-core";
 import type { FlowOwnership } from "./ownership.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
+import {
+	authorityObservations,
+	emptyWaitAuthority,
+	type FlowAuthorityExecution,
+	type FlowWaitAuthority,
+	observeAuthorityExecution,
+	registerAuthorityExecution,
+	registerAuthorityWork,
+	requireAuthorityWork,
+	shareAuthorityWork,
+	validateWaitAuthority,
+} from "./wait-authority.js";
 import { type FlowWaitClock, FlowWaitDeadlines, systemWaitClock } from "./wait-deadlines.js";
 import {
 	cancelFlowWait,
@@ -17,6 +29,7 @@ interface State {
 	version: 1;
 	scope: FlowScope;
 	waits: FlowWaitState[];
+	authority?: FlowWaitAuthority;
 }
 const address = value<State>("jouzu.flow.waits", "v1");
 
@@ -120,10 +133,27 @@ export class FlowWaitStore {
 			Buffer.byteLength(JSON.stringify(state)) > 4 * 1024 * 1024
 		)
 			throw new FlowLedgerError("schema", "Invalid wait storage scope or capacity.");
+		if (state.authority !== undefined) {
+			validateWaitAuthority(state.authority);
+			if (
+				state.authority.waitTokens.some(
+					(token) =>
+						!state.waits.some(
+							(wait) => wait.token === token && state.authority?.work.some((work) => work.id === wait.workId),
+						),
+				)
+			)
+				throw new FlowLedgerError("identity", "Owned wait has no registered work.");
+		}
 		const tokens = new Set<string>(),
 			work = new Set<string>();
 		for (const wait of state.waits) {
 			validateWait(wait);
+			if (wait.state === "waiting" && state.authority?.waitTokens.includes(wait.token)) {
+				const observations = authorityObservations(state.authority, state.scope, wait.workId, wait.on);
+				if (!isDeepStrictEqual(wait, reconcileFlowWait(wait, observations, wait.createdAt)))
+					throw new FlowLedgerError("identity", "Live wait does not match registered execution evidence.");
+			}
 			if (
 				!isDeepStrictEqual(wait.scope, state.scope) ||
 				tokens.has(wait.token) ||
@@ -180,19 +210,119 @@ export class FlowWaitStore {
 	): Promise<FlowWaitState> {
 		const captured = structuredClone({ request, observations });
 		return this.update((state) => {
-			const next = createFlowWait(captured.request, captured.observations, now, maxDurationMs);
-			if (state.waits.some((wait) => wait.token === next.token))
-				throw new FlowLedgerError("identity", "Wait token is already registered.");
-			const active = state.waits.find((wait) => wait.workId === next.workId && wait.state === "waiting");
-			if (replaceToken !== undefined && (!active || active.token !== replaceToken))
-				throw new FlowLedgerError("stale", "Wait replacement requires the active token.");
-			if (active && replaceToken === undefined)
-				throw new FlowLedgerError("transition", "Work already has a live wait.");
-			if (active) state.waits[state.waits.indexOf(active)] = cancelFlowWait(active, "Replaced by a new wait.", now);
-			state.waits.push(next);
+			if (state.authority?.work.some((work) => work.id === captured.request.workId))
+				throw new FlowLedgerError("identity", "Registered work requires an owned wait declaration.");
+			return this.declareInState(state, captured.request, captured.observations, now, maxDurationMs, replaceToken);
+		});
+	}
+	private declareInState(
+		state: State,
+		request: Declaration,
+		observations: FlowWaitObservation[],
+		now: number,
+		maxDurationMs: number,
+		replaceToken?: string,
+	): FlowWaitState {
+		const next = createFlowWait(request, observations, now, maxDurationMs);
+		if (state.waits.some((wait) => wait.token === next.token))
+			throw new FlowLedgerError("identity", "Wait token is already registered.");
+		const active = state.waits.find((wait) => wait.workId === next.workId && wait.state === "waiting");
+		if (replaceToken !== undefined && (!active || active.token !== replaceToken))
+			throw new FlowLedgerError("stale", "Wait replacement requires the active token.");
+		if (active && replaceToken === undefined) throw new FlowLedgerError("transition", "Work already has a live wait.");
+		if (active) state.waits[state.waits.indexOf(active)] = cancelFlowWait(active, "Replaced by a new wait.", now);
+		state.waits.push(next);
+		return next;
+	}
+	private authorityChange<T>(now: number, change: (authority: FlowWaitAuthority, state: State) => T): Promise<T> {
+		if (!Number.isSafeInteger(now) || now < 0)
+			return Promise.reject(new FlowLedgerError("schema", "Invalid ownership update time."));
+		return this.update((state) => {
+			state.authority ??= emptyWaitAuthority();
+			const authority = state.authority;
+			const result = change(authority, state);
+			validateWaitAuthority(authority);
+			state.waits = state.waits.map((wait) =>
+				wait.state === "waiting" && authority.waitTokens.includes(wait.token)
+					? reconcileFlowWait(wait, authorityObservations(authority, state.scope, wait.workId, wait.on), now)
+					: wait,
+			);
+			return result;
+		});
+	}
+	registerWork(id: string, owner: string, now: number) {
+		return this.authorityChange(now, (authority, state) => {
+			if (!authority.work.some((work) => work.id === id) && state.waits.some((wait) => wait.workId === id))
+				throw new FlowLedgerError(
+					"identity",
+					"Existing waits require ownership reconciliation before registering work.",
+				);
+			return registerAuthorityWork(authority, id, owner, now);
+		});
+	}
+	shareWork(id: string, owner: string, workRevision: number, participant: string, now: number) {
+		return this.authorityChange(now, (authority) =>
+			shareAuthorityWork(authority, id, owner, workRevision, participant),
+		);
+	}
+	registerExecution(input: Omit<FlowAuthorityExecution, "observedAt">, workRevision: number, now: number) {
+		const captured = structuredClone(input);
+		return this.authorityChange(now, (authority) => registerAuthorityExecution(authority, captured, workRevision, now));
+	}
+	observeExecution(
+		handle: Omit<Declaration["on"][number], "until">,
+		revision: number,
+		predicates: FlowAuthorityExecution["predicates"],
+		now: number,
+	) {
+		const captured = structuredClone({ handle, predicates });
+		return this.authorityChange(now, (authority) =>
+			observeAuthorityExecution(authority, captured.handle, revision, captured.predicates, now),
+		);
+	}
+	declareOwned(
+		producer: string,
+		workRevision: number,
+		request: Declaration,
+		now: number,
+		maxDurationMs: number,
+		replaceToken?: string,
+	): Promise<FlowWaitState> {
+		const captured = structuredClone(request);
+		return this.update((state) => {
+			const authority = state.authority ?? emptyWaitAuthority();
+			requireAuthorityWork(authority, captured.workId, producer, workRevision);
+			const observations = authorityObservations(authority, state.scope, captured.workId, captured.on);
+			const next = this.declareInState(state, captured, observations, now, maxDurationMs, replaceToken);
+			authority.waitTokens.push(next.token);
 			return next;
 		});
 	}
+	cancelOwned(
+		producer: string,
+		workRevision: number,
+		token: string,
+		reason: string,
+		now: number,
+	): Promise<FlowWaitState> {
+		return this.update((state) => {
+			const authority = state.authority ?? emptyWaitAuthority();
+			const index = state.waits.findIndex((wait) => wait.token === token && authority.waitTokens.includes(token));
+			if (index < 0) throw new FlowLedgerError("identity", "Owned wait token is not registered.");
+			requireAuthorityWork(authority, state.waits[index].workId, producer, workRevision);
+			state.waits[index] = cancelFlowWait(state.waits[index], reason, now);
+			return state.waits[index];
+		});
+	}
+	async authoritySnapshot(): Promise<FlowWaitAuthority> {
+		return this.ownership.run(() =>
+			this.session.mutate(
+				async (reader) => (await this.read(reader)).authority ?? emptyWaitAuthority(),
+				BACKGROUND_CONTEXT,
+			),
+		);
+	}
+
 	/** Atomically retain every newly detected expiry, including deadlines elapsed while offline. */
 	expireDue(now: number): Promise<FlowWaitState[]> {
 		if (!Number.isSafeInteger(now) || now < 0)
@@ -218,6 +348,8 @@ export class FlowWaitStore {
 	}
 	private transition(token: string, change: (wait: FlowWaitState) => FlowWaitState): Promise<FlowWaitState> {
 		return this.update((state) => {
+			if (state.authority?.waitTokens.includes(token))
+				throw new FlowLedgerError("identity", "Owned waits require registered evidence or owner cancellation.");
 			const index = state.waits.findIndex((wait) => wait.token === token);
 			if (index < 0) throw new FlowLedgerError("stale", "Wait token is not registered.");
 			state.waits[index] = change(state.waits[index]);

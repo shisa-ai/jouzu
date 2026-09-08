@@ -358,3 +358,158 @@ test("wait notifications follow changed commits and stop after unsubscribe", asy
 	await new Promise((resolve) => setImmediate(resolve));
 	assert.equal(notifications, 1);
 });
+
+async function ownedFixture(t) {
+	const f = await fixture(t),
+		store = f.attachment.waits;
+	await store.registerWork("work", "lane", 0);
+	await store.shareWork("work", "lane", 1, "bg", 0);
+	await store.registerExecution(
+		{
+			producer: "bg",
+			handle: "display",
+			execution: "exec",
+			workId: "work",
+			revision: 1,
+			predicates: [{ until: "exit", state: "pending" }],
+		},
+		2,
+		0,
+	);
+	return { ...f, store };
+}
+
+test("owned waits require explicit work participants and exact execution predicates", async (t) => {
+	const { store } = await ownedFixture(t);
+	await assert.rejects(store.declareOwned("stranger", 2, request(), 10, 100), { code: "identity" });
+	await assert.rejects(store.declareOwned("lane", 1, request(), 10, 100), { code: "stale" });
+	for (const changed of [
+		{ execution: "new-exec" },
+		{ producer: "other" },
+		{ handle: "other" },
+		{ until: "unblocked" },
+	]) {
+		await assert.rejects(store.declareOwned("lane", 2, { ...request(), on: [{ ...handle, ...changed }] }, 10, 100), {
+			code: "identity",
+		});
+	}
+	await assert.rejects(
+		store.declareOwned("lane", 2, { ...request(), scope: { ...scope, branchId: "foreign" } }, 10, 100),
+		{ code: "identity" },
+	);
+	await assert.rejects(store.declare(request(), observations(), 10, 100), { code: "identity" });
+	assert.deepEqual(await store.snapshot(), []);
+	const wait = await store.declareOwned("lane", 2, request(), 10, 100);
+	assert.equal(wait.state, "waiting");
+	await assert.rejects(store.reconcile(wait.token, observations("satisfied"), 20), { code: "identity" });
+	await assert.rejects(store.cancel(wait.token, "unowned", 20), { code: "identity" });
+	assert.deepEqual(await store.snapshot(), [wait]);
+});
+
+for (const order of ["before", "after", "concurrent"]) {
+	test(`registered completion ${order} declaration cannot leave an owned wait parked`, async (t) => {
+		const f = await ownedFixture(t),
+			store = f.store;
+		const complete = () => store.observeExecution(handle, 2, [{ until: "exit", state: "satisfied" }], 20);
+		const declare = () => store.declareOwned("lane", 2, request(), 20, 100);
+		if (order === "before") {
+			await complete();
+			await declare();
+		}
+		if (order === "after") {
+			await declare();
+			await complete();
+		}
+		if (order === "concurrent") await Promise.all([declare(), complete()]);
+		const [wait] = await store.snapshot();
+		assert.equal(wait.state, "resolved");
+		assert.equal(wait.expiresAt, 100);
+		assert.deepEqual(store.gate().waitingWorkIds, []);
+		const restored = await f.reopen();
+		assert.deepEqual(await restored.snapshot(), [wait]);
+		assert.equal((await restored.authoritySnapshot()).executions[0].revision, 2);
+	});
+}
+
+test("execution revisions reject stale or terminal changes without altering the wait", async (t) => {
+	const { store } = await ownedFixture(t);
+	await store.declareOwned("lane", 2, request(), 10, 100);
+	await store.observeExecution(handle, 3, [{ until: "exit", state: "failed" }], 20);
+	const before = await store.authoritySnapshot(),
+		waits = await store.snapshot();
+	await assert.rejects(store.observeExecution(handle, 2, [{ until: "exit", state: "pending" }], 30), { code: "stale" });
+	await assert.rejects(store.observeExecution(handle, 3, [{ until: "exit", state: "satisfied" }], 30), {
+		code: "identity",
+	});
+	await assert.rejects(store.observeExecution(handle, 4, [{ until: "exit", state: "pending" }], 30), {
+		code: "transition",
+	});
+	await store.observeExecution(handle, 3, [{ until: "exit", state: "failed" }], 30);
+	assert.deepEqual(await store.authoritySnapshot(), before);
+	assert.deepEqual(await store.snapshot(), waits);
+	assert.equal(waits[0].state, "failed");
+});
+
+test("owned replacement and cancellation preserve execution evidence and reject ownership takeover", async (t) => {
+	const { store } = await ownedFixture(t);
+	await assert.rejects(store.registerWork("work", "other", 0), { code: "identity" });
+	await assert.rejects(store.shareWork("work", "bg", 2, "stranger", 0), { code: "identity" });
+	await store.shareWork("work", "lane", 2, "tasks", 0);
+	await store.declareOwned("tasks", 3, request(), 10, 100);
+	await assert.rejects(
+		store.declareOwned(
+			"lane",
+			3,
+			{ ...request("replacement"), on: [{ ...handle, execution: "unknown" }] },
+			20,
+			100,
+			"token",
+		),
+		{ code: "identity" },
+	);
+	assert.equal((await store.snapshot())[0].state, "waiting");
+	await store.declareOwned("lane", 3, request("replacement"), 20, 100, "token");
+	await store.cancelOwned("tasks", 3, "replacement", "redirected", 30);
+	await store.cancelOwned("tasks", 3, "replacement", "redirected", 40);
+	assert.deepEqual(
+		(await store.snapshot()).map((wait) => wait.state),
+		["cancelled", "cancelled"],
+	);
+	assert.equal((await store.authoritySnapshot()).executions[0].predicates[0].state, "pending");
+});
+
+test("a reused display handle never transfers completion or work ownership", async (t) => {
+	const { store } = await ownedFixture(t);
+	await store.declareOwned("lane", 2, request(), 10, 100);
+	await store.registerExecution(
+		{
+			producer: "bg",
+			handle: "display",
+			execution: "another-exec",
+			workId: "work",
+			revision: 1,
+			predicates: [{ until: "exit", state: "satisfied" }],
+		},
+		2,
+		20,
+	);
+	assert.equal((await store.snapshot())[0].state, "waiting");
+	await store.registerWork("other-work", "bg", 20);
+	await assert.rejects(
+		store.registerExecution(
+			{
+				producer: "bg",
+				handle: "display",
+				execution: "exec",
+				workId: "other-work",
+				revision: 1,
+				predicates: [{ until: "exit", state: "pending" }],
+			},
+			1,
+			20,
+		),
+		{ code: "identity" },
+	);
+	await assert.rejects(store.declareOwned("bg", 1, request("foreign", "other-work"), 20, 100), { code: "identity" });
+	assert.equal((await store.snapshot())[0].state, "waiting");
+});
