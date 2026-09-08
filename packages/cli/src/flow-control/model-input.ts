@@ -107,6 +107,7 @@ export class FlowModelInput {
 					kind: item.kind,
 					required: item.kind !== "result",
 					contentHash: hash,
+					inputFrame: { id: item.id, revision: item.revision, parts: parts.length },
 					...(item.sourceSubmission ? { sourceSubmission: structuredClone(item.sourceSubmission) } : {}),
 				})),
 				marker,
@@ -206,6 +207,9 @@ export async function prepareFlowModelInput(
 		attempt.members.length !== expected.length ||
 		attempt.members.some(
 			(member, index) =>
+				member.inputFrame?.id !== expected[index].inputFrame?.id ||
+				member.inputFrame?.revision !== expected[index].inputFrame?.revision ||
+				member.inputFrame?.parts !== expected[index].inputFrame?.parts ||
 				member.sourceSubmission?.id !== expected[index].sourceSubmission?.id ||
 				member.sourceSubmission?.revision !== expected[index].sourceSubmission?.revision ||
 				(["id", "revision", "kind", "required", "contentHash"] as const).some(
@@ -227,4 +231,36 @@ export async function prepareFlowModelInput(
 	const admitted = await ledger.prepare(composition.attemptId, input.requestId, inclusion, containsUserInput);
 	if (orderingFailure) throw orderingFailure;
 	if (!admitted) throw new FlowLedgerError("transition", "Composed model input was withheld after transformation.");
+}
+
+/** Match an original persisted composition frame; identity text alone is insufficient. */
+export function inspectPersistedFlowInput(attemptId: string, members: FlowMember[], content: Part[]): FlowInclusion[] {
+	const found = new Map<string, { index: number; count: number }>();
+	for (let index = 0; index < content.length; index++) {
+		const part = content[index];
+		if (part?.type !== "text") continue;
+		try {
+			const marker = JSON.stringify(JSON.parse(part.text)?.flowInput);
+			if (marker === undefined) continue;
+			const previous = found.get(marker);
+			found.set(marker, { index, count: (previous?.count ?? 0) + 1 });
+		} catch {
+			/* Ordinary transcript text. */
+		}
+	}
+	return members.map((member): FlowInclusion => {
+		const base = { id: member.id, revision: member.revision };
+		const frame = member.inputFrame;
+		if (!frame) return { ...base, disposition: "omitted" };
+		const match = found.get(JSON.stringify(["jouzu-flow", attemptId, frame.id, frame.revision]));
+		if (!match) return { ...base, disposition: "omitted" };
+		if (match.count !== 1) return { ...base, disposition: "rejected" };
+		try {
+			if (contentHash(content.slice(match.index, match.index + frame.parts)) === member.contentHash)
+				return { ...base, disposition: "included", contentHash: member.contentHash };
+		} catch {
+			/* Malformed content cannot prove history membership. */
+		}
+		return { ...base, disposition: "replaced" };
+	});
 }

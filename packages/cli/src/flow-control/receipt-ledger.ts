@@ -10,6 +10,7 @@ export interface FlowMember {
 	required: boolean;
 	contentHash: string;
 	sourceSubmission?: { id: string; revision: number };
+	inputFrame?: { id: string; revision: string; parts: number };
 }
 
 export interface FlowInclusion {
@@ -109,6 +110,12 @@ function validateMembers(members: FlowMember[]): void {
 			if (!Number.isSafeInteger(member.sourceSubmission.revision) || member.sourceSubmission.revision < 1)
 				throw new FlowLedgerError("identity", "Invalid source submission revision.");
 		}
+		if (member.inputFrame !== undefined) {
+			requireIdentity(member.inputFrame?.id);
+			requireIdentity(member.inputFrame.revision);
+			if (!Number.isSafeInteger(member.inputFrame.parts) || member.inputFrame.parts < 1)
+				throw new FlowLedgerError("identity", "Invalid persisted input frame.");
+		}
 		if (!/^[a-f0-9]{64}$/.test(member.contentHash))
 			throw new FlowLedgerError("identity", "Flow members require a SHA-256 content identity.");
 		if (!["work", "result", "wait", "user", "alert"].includes(member.kind) || typeof member.required !== "boolean")
@@ -117,6 +124,27 @@ function validateMembers(members: FlowMember[]): void {
 			throw new FlowLedgerError("identity", "Instructions and decisions must be required input.");
 		if (keys.has(memberKey(member))) throw new FlowLedgerError("identity", "Duplicate flow attempt member.");
 		keys.add(memberKey(member));
+	}
+}
+
+function appendHistory(attempt: FlowAttempt, captured: FlowAttempt["history"]): void {
+	for (const receipt of captured) {
+		requireIdentity(receipt.entryId);
+		if (receipt.entryHash !== undefined && !/^[a-f0-9]{64}$/.test(receipt.entryHash))
+			throw new FlowLedgerError("identity", "Invalid history content hash.");
+		if (!attempt.members.some((member) => memberKey(member) === memberKey(receipt)))
+			throw new FlowLedgerError("identity", "History receipt has unknown membership.");
+		const previous = attempt.history.find((item) => memberKey(item) === memberKey(receipt));
+		if (
+			previous &&
+			(previous.entryId !== receipt.entryId ||
+				(previous.entryHash !== undefined &&
+					receipt.entryHash !== undefined &&
+					previous.entryHash !== receipt.entryHash))
+		)
+			throw new FlowLedgerError("identity", "History receipt identity changed.");
+		if (!previous) attempt.history.push(receipt);
+		else if (receipt.entryHash !== undefined) previous.entryHash = receipt.entryHash;
 	}
 }
 
@@ -371,24 +399,21 @@ export class FlowReceiptLedger {
 		const captured = structuredClone(receipts);
 		return this.mutate((state) => {
 			const attempt = this.attempt(state, id, ["claimed", "prepared", "handed-off", "running", "settled", "withheld"]);
-			for (const receipt of captured) {
-				requireIdentity(receipt.entryId);
-				if (receipt.entryHash !== undefined && !/^[a-f0-9]{64}$/.test(receipt.entryHash))
-					throw new FlowLedgerError("identity", "Invalid history content hash.");
-				if (!attempt.members.some((member) => memberKey(member) === memberKey(receipt)))
-					throw new FlowLedgerError("identity", "History receipt has unknown membership.");
-				const previous = attempt.history.find((item) => memberKey(item) === memberKey(receipt));
-				if (
-					previous &&
-					(previous.entryId !== receipt.entryId ||
-						(previous.entryHash !== undefined &&
-							receipt.entryHash !== undefined &&
-							previous.entryHash !== receipt.entryHash))
-				)
-					throw new FlowLedgerError("identity", "History receipt identity changed.");
-				if (!previous) attempt.history.push(receipt);
-				else if (receipt.entryHash !== undefined) previous.entryHash = receipt.entryHash;
-			}
+			appendHistory(attempt, captured);
+		});
+	}
+
+	/** Add verified historical facts after reattachment without reopening dispatch ownership. */
+	recoverHistory(id: string, receipts: FlowAttempt["history"]): Promise<void> {
+		const captured = structuredClone(receipts);
+		return this.mutate((state) => {
+			if (state.activeAttemptId) throw new FlowLedgerError("busy", "History recovery requires an idle ledger.");
+			const attempt = state.attempts.find((item) => item.id === id);
+			if (!attempt || !terminal.has(attempt.phase) || attempt.consumed !== true)
+				throw new FlowLedgerError("transition", "History recovery requires an inactive consumed attempt.");
+			if (captured.some((receipt) => !receipt.entryHash))
+				throw new FlowLedgerError("identity", "Recovered history requires verified content hashes.");
+			appendHistory(attempt, captured);
 		});
 	}
 

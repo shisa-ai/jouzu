@@ -10,6 +10,7 @@ import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { PiHistoryReceipts, verifyPiHistoryEntry } from "../dist/flow-control/pi-history-receipts.js";
+import { recoverPiHistory } from "../dist/flow-control/pi-history-recovery.js";
 import { PiQueueReceipts } from "../dist/flow-control/pi-queue-receipts.js";
 import { projectFlowSubmissions } from "../dist/flow-control/submission-view.js";
 
@@ -221,6 +222,11 @@ for (const boundary of ["before-receipt", "after-receipt"]) {
 		assert.equal(retained.admission, "held");
 		assert.equal(retained.delivery, boundary === "after-receipt" ? "history" : "consumed");
 		assert.deepEqual(attempt.history, boundary === "after-receipt" ? [ready.receipt] : []);
+		const originalBytes = await readFile(ready.historyFile);
+		const restored = await recoverPiHistory(SessionManager.open(ready.historyFile), attachment.ledger);
+		assert.deepEqual(restored, { recovered: boundary === "before-receipt" ? 1 : 0, unresolved: 0 });
+		assert.deepEqual((await attachment.ledger.snapshot()).attempts[0].history, [ready.receipt]);
+		assert.deepEqual(await readFile(ready.historyFile), originalBytes);
 		const entries = (await readFile(ready.historyFile, "utf8"))
 			.trimEnd()
 			.split("\n")
