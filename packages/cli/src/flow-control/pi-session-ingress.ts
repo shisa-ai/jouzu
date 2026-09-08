@@ -293,6 +293,10 @@ export class PiSessionFlowIngress implements Ingress {
 		return this.manage((service) => service.cancelNativeSources(id, expectedHash, indices));
 	}
 
+	cancelNativeProjections(id: string, expectedHash: string, indices: number[]): Promise<void> {
+		return this.manage((service) => service.cancelNativeProjections(id, expectedHash, indices));
+	}
+
 	private nativeRecoveryBlocked(
 		submission: Submission,
 		branch: PiFlowBranchResources,

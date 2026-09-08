@@ -1,3 +1,4 @@
+import type { NativeProjectionCapture } from "./native-context-projections.js";
 import type {
 	NativePayloadSource,
 	NativeRequest,
@@ -14,9 +15,16 @@ export interface NativeSubmissionRequestView {
 	outcome: NonNullable<NativeRequest["outcome"]> | "unknown";
 	payloadHash?: string;
 	withheldPayloadHash?: string;
-	hold?: { hash: string; reason: "required-input" };
+	hold?: { hash: string; reason: "required-input" | "required-context" };
 	retryOf?: string;
 	retryRequestId?: string;
+	projections?: {
+		identity: NativeProjectionCapture["members"][number];
+		required: boolean;
+		cancelled?: true;
+		model?: NativeSourceDisposition["members"][number];
+		payload?: NativePayloadSource;
+	}[];
 	sources: {
 		identity: NativeRequestSource;
 		consumed: true;
@@ -84,10 +92,39 @@ export function projectNativeSubmissionRequests(
 				...(request.payload ? { payloadHash: request.payload.hash } : {}),
 				...(request.withheldPayload ? { withheldPayloadHash: request.withheldPayload.hash } : {}),
 				...(nativeHoldPending(request) && !request.retryAuthorization?.requestId
-					? { hold: { hash: nativeHoldHash(request), reason: "required-input" as const } }
+					? {
+							hold: {
+								hash: nativeHoldHash(request),
+								reason: request.requiredProjections?.some(
+									(index) =>
+										!(request.payload ?? request.withheldPayload)?.projections?.some(
+											(projection) => projection.sourceIndex === index && projection.disposition === "included",
+										),
+								)
+									? ("required-context" as const)
+									: ("required-input" as const),
+							},
+						}
 					: {}),
 				...(request.retryOf ? { retryOf: request.retryOf } : {}),
 				...(request.retryAuthorization?.requestId ? { retryRequestId: request.retryAuthorization.requestId } : {}),
+				...(request.projectionCapture?.members.length
+					? {
+							projections: request.projectionCapture.members.map((projection, index) =>
+								structuredClone({
+									identity: projection,
+									required: request.requiredProjections?.includes(projection.index) ?? false,
+									...(request.cancelledProjections?.includes(projection.index) ? { cancelled: true as const } : {}),
+									...(request.projectionCapture?.model?.members[index]
+										? { model: request.projectionCapture.model.members[index] }
+										: {}),
+									...((request.payload ?? request.withheldPayload)?.projections?.[index]
+										? { payload: (request.payload ?? request.withheldPayload)!.projections![index] }
+										: {}),
+								}),
+							),
+						}
+					: {}),
 				sources: [],
 			};
 			view.sources.push(

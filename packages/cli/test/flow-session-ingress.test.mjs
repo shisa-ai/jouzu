@@ -4,6 +4,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { BACKGROUND_CONTEXT, setValue, value } from "@earendil-works/pi-agent-core";
 import { stream } from "@earendil-works/pi-ai/api/openai-completions";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
@@ -2687,11 +2688,89 @@ for (const change of ["alter", "drop", "copy"]) {
 			(request) => request.projectionCapture,
 		);
 		assert.ok(request, f.session.agent.state.errorMessage);
-		assert.equal(request.payload.projections[0].disposition, change === "alter" ? "changed" : "unresolved");
+		assert.equal(request.outcome, "withheld");
+		assert.equal(request.payload, undefined);
+		assert.equal(f.sent.length, 1);
+		assert.equal(branch.attachment.nativeRequests.recoveryBlocked, true);
+		const view = (await branch.attachment.submissionViews())
+			.flatMap((submission) => submission.nativeRequests ?? [])
+			.find((item) => item.requestId === request.id);
+		assert.equal(view.hold.reason, "required-context");
+		assert.equal(view.projections[0].required, true);
+		assert.equal(view.projections[0].payload.disposition, change === "alter" ? "changed" : "unresolved");
+		assert.equal(request.withheldPayload.projections[0].disposition, change === "alter" ? "changed" : "unresolved");
 		const decisions = createFlowWaitDecisionProducer(branch.attachment.waits, {
 			submissions: branch.attachment.submissions,
 			requests: branch.attachment.nativeRequests,
 		});
 		assert.equal((await decisions.snapshot(new AbortController().signal)).length, 1);
+		f.session.agent.streamFunction = stream;
+		await assert.rejects(
+			f.ingress.cancelNativeProjections(request.id, request.withheldPayload.hash, [
+				request.projectionCapture.members[0].index,
+			]),
+			{ code: "identity" },
+		);
+		if (change === "alter") {
+			await f.ingress.retryNativeRequest(request.id, request.withheldPayload.hash);
+			await f.session.prompt("retry held input with current wait state");
+			const retry = (await branch.attachment.nativeRequests.snapshot()).find((item) => item.retryOf === request.id);
+			assert.equal(retry.outcome, "success");
+			assert.equal(f.sent.length, 2);
+			assert.deepEqual(await decisions.snapshot(new AbortController().signal), []);
+		} else {
+			await f.ingress.cancelNativeSources(request.id, request.withheldPayload.hash, request.requiredSources);
+			assert.equal(branch.attachment.nativeRequests.recoveryBlocked, false);
+			assert.equal((await decisions.snapshot(new AbortController().signal)).length, 1);
+			if (change === "copy") {
+				const input = structuredClone(request);
+				input.id = "projection-only";
+				input.sourceCapture.members = [];
+				input.sourceCapture.context.members = [];
+				input.sourceCapture.model.members = [];
+				await branch.attachment.nativeRequests.begin(input);
+				const payload = { ...request.withheldPayload, sources: [] };
+				assert.equal(await branch.attachment.nativeRequests.handoff(input.id, payload), false);
+				assert.equal(branch.attachment.nativeRequests.recoveryBlocked, true);
+				await assert.rejects(f.ingress.cancelNativeProjections(input.id, payload.hash, [999]), { code: "identity" });
+				await f.ingress.cancelNativeProjections(input.id, payload.hash, [request.projectionCapture.members[0].index]);
+				assert.equal(branch.attachment.nativeRequests.recoveryBlocked, false);
+				assert.equal((await decisions.snapshot(new AbortController().signal)).length, 1);
+			}
+		}
 	});
 }
+
+test("legacy optional projection receipts remain readable without gaining acknowledgement", async (t) => {
+	const f = await fixture(t, { provider: true, admit: null });
+	await f.session.prompt("seed");
+	const branch = f.ingress.branch();
+	await f.session.followUp("queued status");
+	await declareIngressWait(branch);
+	await branch.attachment.waits.expireDue(100);
+	await f.session.agent.continue();
+	const legacy = (await branch.attachment.nativeRequests.snapshot()).find((request) => request.projectionCapture);
+	delete legacy.requiredProjections;
+	legacy.payload.projections = legacy.payload.projections.map((source) => ({
+		sourceIndex: source.sourceIndex,
+		disposition: "unresolved",
+	}));
+	// Write the prior optional-projection schema through Pi storage to exercise reopen validation.
+	await branch.attachment.nativeRequests.session.mutate(async (mutation, context) => {
+		await mutation.commit([setValue(value("jouzu.flow.native-request", legacy.id), legacy)], context);
+	}, BACKGROUND_CONTEXT);
+	await f.ingress.dispose();
+	const next = await fixture(t, {
+		root: f.root,
+		provider: true,
+		admit: null,
+		manager: SessionManager.open(f.session.sessionManager.getSessionFile()),
+	});
+	const restored = next.ingress.branch().attachment;
+	assert.equal(restored.nativeRequests.recoveryBlocked, false);
+	const decisions = createFlowWaitDecisionProducer(restored.waits, {
+		submissions: restored.submissions,
+		requests: restored.nativeRequests,
+	});
+	assert.equal((await decisions.snapshot(new AbortController().signal)).length, 1);
+});

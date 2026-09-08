@@ -176,6 +176,19 @@ export class PiFlowSessionService {
 		});
 	}
 
+	cancelNativeProjections(id: string, expectedHash: string, indices: number[]): Promise<void> {
+		const selected = [...indices];
+		return this.registry.run(async () => {
+			const branch = this.branch();
+			const result = await branch.host.atIdle(async () => {
+				if (this.branch() !== branch) throw new FlowLedgerError("stale", "Projection cancellation branch changed.");
+				await branch.attachment.nativeRequests.cancelProjections(id, expectedHash, selected);
+			});
+			if (result.kind === "busy")
+				throw new FlowLedgerError("busy", "Projection cancellation requires an idle session.");
+		});
+	}
+
 	reconcileNativeQueueEdit(id: string, revision: number): Promise<void> {
 		return this.registry.run(async () => {
 			const branch = this.branch();

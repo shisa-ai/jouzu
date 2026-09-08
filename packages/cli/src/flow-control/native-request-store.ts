@@ -13,7 +13,9 @@ export interface NativeRequest {
 	sourceCapture?: NativeSourceCapture;
 	projectionCapture?: NativeProjectionCapture;
 	requiredSources?: number[];
+	requiredProjections?: number[];
 	cancelledSources?: number[];
+	cancelledProjections?: number[];
 	retryOf?: string;
 	retryAuthorization?: { ownerId: string; requestId?: string };
 	withheldPayload?: NativeRequest["payload"];
@@ -78,9 +80,12 @@ const identity = (id: unknown) => typeof id === "string" && id.length > 0 && id.
 const hash = (text: unknown) => typeof text === "string" && /^[a-f0-9]{64}$/.test(text);
 
 export const nativeRequestHeld = (record: NativeRequest): boolean =>
-	record.outcome === "withheld" && !!record.requiredSources?.length;
+	record.outcome === "withheld" && (!!record.requiredSources?.length || !!record.requiredProjections?.length);
 export const nativeHoldPending = (record: NativeRequest): boolean =>
-	nativeRequestHeld(record) && !!record.requiredSources?.some((index) => !record.cancelledSources?.includes(index));
+	nativeRequestHeld(record) &&
+	(record.requiredSources?.length
+		? record.requiredSources.some((index) => !record.cancelledSources?.includes(index))
+		: !!record.requiredProjections?.some((index) => !record.cancelledProjections?.includes(index)));
 export const nativeCancelledSources = (records: NativeRequest[]): NativeRequestSource[] =>
 	records.flatMap((record) =>
 		(record.sourceCapture?.members ?? []).filter((source) => record.cancelledSources?.includes(source.index)),
@@ -149,6 +154,25 @@ export class FlowNativeRequestStore {
 					record.cancelledSources.some((index) => !record.requiredSources?.includes(index)))
 			)
 				throw new FlowLedgerError("identity", "Invalid cancelled native source positions.");
+			if (
+				record.requiredProjections !== undefined &&
+				(!Array.isArray(record.requiredProjections) ||
+					new Set(record.requiredProjections).size !== record.requiredProjections.length ||
+					record.requiredProjections.some(
+						(index) => !record.projectionCapture?.members.some((member) => member.index === index),
+					))
+			)
+				throw new FlowLedgerError("identity", "Invalid required projection positions.");
+			if (
+				record.cancelledProjections !== undefined &&
+				(!nativeRequestHeld(record) ||
+					record.requiredSources?.length ||
+					!Array.isArray(record.cancelledProjections) ||
+					!record.cancelledProjections.length ||
+					new Set(record.cancelledProjections).size !== record.cancelledProjections.length ||
+					record.cancelledProjections.some((index) => !record.requiredProjections?.includes(index)))
+			)
+				throw new FlowLedgerError("identity", "Invalid cancelled projection positions.");
 			const payload = record.payload ?? record.withheldPayload;
 			validateNativeProjections(record.projectionCapture, record.transformedHash, record.modelHash, payload);
 			if (
@@ -157,10 +181,7 @@ export class FlowNativeRequestStore {
 					record.projectionCapture.model?.count !== record.sourceCapture?.model?.count)
 			)
 				throw new FlowLedgerError("identity", "Projection and native conversion capture different contexts.");
-			if (
-				record.withheldPayload !== undefined &&
-				(!record.requiredSources?.length || record.payload || record.outcome !== "withheld")
-			)
+			if (record.withheldPayload !== undefined && (!nativeRequestHeld(record) || record.payload))
 				throw new FlowLedgerError("schema", "Invalid withheld native payload.");
 			if (
 				!identity(record.id) ||
@@ -224,6 +245,16 @@ export class FlowNativeRequestStore {
 				)
 			)
 				throw new FlowLedgerError("identity", "Native handoff omits required source content.");
+			if (
+				record.payload &&
+				record.requiredProjections?.some(
+					(index) =>
+						!record.payload?.projections?.some(
+							(source) => source.sourceIndex === index && source.disposition === "included",
+						),
+				)
+			)
+				throw new FlowLedgerError("identity", "Native handoff omits required projection content.");
 			const capture = record.sourceCapture;
 			if (capture !== undefined) {
 				if (
@@ -413,6 +444,27 @@ export class FlowNativeRequestStore {
 			delete record.retryAuthorization;
 		});
 	}
+	/** Cancel a projection-only request hold; this does not acknowledge its producer events. */
+	cancelProjections(id: string, expectedHash: string, indices: number[]): Promise<void> {
+		const selected = [...indices];
+		return this.transact((records) => {
+			const record = records.find((item) => item.id === id);
+			if (!record || !nativeRequestHeld(record) || nativeHoldHash(record) !== expectedHash)
+				throw new FlowLedgerError("stale", "Native projection hold changed or is unavailable.");
+			if (record.requiredSources?.length)
+				throw new FlowLedgerError("identity", "Cancel the required native input that owns this projection hold.");
+			if (records.some((item) => item.outcome === undefined) || record.retryAuthorization?.requestId)
+				throw new FlowLedgerError("busy", "Projection cancellation requires an unconsumed hold.");
+			if (
+				!selected.length ||
+				new Set(selected).size !== selected.length ||
+				selected.some((index) => !record.requiredProjections?.includes(index))
+			)
+				throw new FlowLedgerError("identity", "Cancellation must identify held projection positions.");
+			record.cancelledProjections = [...new Set([...(record.cancelledProjections ?? []), ...selected])];
+			delete record.retryAuthorization;
+		});
+	}
 	snapshot(): Promise<NativeRequest[]> {
 		return this.transact((records) => structuredClone(records));
 	}
@@ -424,9 +476,11 @@ export class FlowNativeRequestStore {
 			| "withheldPayload"
 			| "outcome"
 			| "requiredSources"
+			| "requiredProjections"
 			| "retryOf"
 			| "retryAuthorization"
 			| "cancelledSources"
+			| "cancelledProjections"
 		>,
 		requireUnreceived = false,
 		consumedClaims?: NativeSourceClaim[],
@@ -504,6 +558,9 @@ export class FlowNativeRequestStore {
 				...captured,
 				ownerId: this.ownership.token,
 				...(requiredSources ? { requiredSources } : {}),
+				...(captured.projectionCapture
+					? { requiredProjections: captured.projectionCapture.members.map((member) => member.index) }
+					: {}),
 				...(retry ? { retryOf: retry.id } : {}),
 			});
 		});
@@ -529,11 +586,15 @@ export class FlowNativeRequestStore {
 				)
 			)
 				throw new FlowLedgerError("identity", "Cancelled native input reached the provider payload.");
-			const missing = record.requiredSources?.some(
+			const missingSource = record.requiredSources?.some(
 				(index) =>
 					!captured.sources?.some((source) => source.sourceIndex === index && source.disposition === "included"),
 			);
-			if (missing) {
+			const missingProjection = record.requiredProjections?.some(
+				(index) =>
+					!captured.projections?.some((source) => source.sourceIndex === index && source.disposition === "included"),
+			);
+			if (missingSource || missingProjection) {
 				record.withheldPayload = captured;
 				record.outcome = "withheld";
 				return false;

@@ -83,11 +83,12 @@ export function validateNativeProjections(
 	modelHash: string,
 	payload?: { api: string; bytes: number; projections?: NativePayloadSource[]; sources?: NativePayloadSource[] },
 ): void {
-	if (!capture) {
+	if (capture === undefined) {
 		if (payload?.projections !== undefined) throw new FlowLedgerError("identity", "Projection payload has no capture.");
 		return;
 	}
 	if (
+		!capture ||
 		!hash(capture.hash) ||
 		capture.hash !== transformedHash ||
 		!Number.isSafeInteger(capture.count) ||
