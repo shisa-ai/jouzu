@@ -95,6 +95,44 @@ export class PiNativeHistory {
 			}
 		});
 	}
+	/** The v1 prompt locator addresses direct input positions, including non-waking context. */
+	async recordContext(
+		session: AgentSession,
+		store: FlowSubmissionStore,
+		operationId: string,
+		inputIndex: number,
+		message: AgentMessage,
+		entryId: string,
+	): Promise<void> {
+		const prompt = { inputIndex, messageIndex: 0 };
+		const captured = structuredClone(message);
+		const assertContent = () => {
+			const entry = session.sessionManager.getEntry(entryId);
+			if (
+				captured.role !== "custom" ||
+				!isDeepStrictEqual(captured, message) ||
+				entry?.type !== "custom_message" ||
+				entry.customType !== captured.customType ||
+				!isDeepStrictEqual(entry.content, captured.content) ||
+				entry.display !== captured.display ||
+				!isDeepStrictEqual(entry.details, captured.details)
+			)
+				throw new FlowLedgerError("identity", "Non-waking history differs from its retained source.");
+		};
+		assertContent();
+		await store.recordPromptClaim(operationId, prompt);
+		const manager = session.sessionManager;
+		manager.flush();
+		const evidence = await verifyPiHistoryEntry(manager, entryId);
+		if (evidence.kind !== "persisted") throw new FlowLedgerError("identity", "Non-waking context was not persisted.");
+		assertContent();
+		await store.recordPromptHistory(operationId, { ...prompt, entryId, entryHash: evidence.entryHash });
+		assertContent();
+		this.sources.set(message, [
+			{ operationId, prompt, messageHash: createHash("sha256").update(JSON.stringify(message)).digest("hex") },
+		]);
+	}
+
 	accept(inputs: Claimed[]): void {
 		this.claimed.push(...structuredClone(inputs));
 	}

@@ -453,11 +453,11 @@ test("default ingress preserves opaque lane order on explicit release", async (t
 	assert.ok(!JSON.stringify(f.sent[0]).includes("second"));
 });
 
-test("default ingress keeps deferred custom context held without an implicit wake", async (t) => {
+test("default ingress keeps next-turn custom context held without an implicit wake", async (t) => {
 	const f = await fixture(t, { admit: null });
 	await f.session.sendCustomMessage(
 		{ customType: "status", content: "context", display: true },
-		{ triggerTurn: false },
+		{ triggerTurn: false, deliverAs: "nextTurn" },
 	);
 	assert.equal(f.sent.length, 0);
 	assert.match((await f.ingress.heldInputs())[0].reason, /persistence receipt/);
@@ -648,4 +648,134 @@ test("ingress management inspects and cancels an edited native queue without a m
 	await f.ingress.dispose();
 	await assert.rejects(f.ingress.inspect(), { code: "stale" });
 	assert.throws(() => f.ingress.cancelNativeQueue(item.id, 2), { code: "stale" });
+});
+
+test("idle non-waking custom context persists with native source identity and no model call", async (t) => {
+	const f = await fixture(t, { admit: null });
+	await f.session.sendCustomMessage(
+		{ customType: "note", content: "remember this", display: true, details: { marker: 1 } },
+		{ triggerTurn: false },
+	);
+	assert.equal(f.sent.length, 0);
+	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.equal(record.dispatch.inputs[0].kind, "context");
+	assert.equal(record.dispatch.promptClaims.length, 1);
+	assert.equal(record.dispatch.promptHistory.length, 1);
+	const members = await f.ingress.branch().native.sources(f.session.agent.state.messages);
+	assert.equal(members.length, 1);
+	assert.equal(members[0].operationId, record.dispatch.operationId);
+	await f.session.prompt("use the note");
+	assert.equal(f.sent.length, 1);
+	assert.ok(JSON.stringify(f.sent).includes("remember this"));
+});
+
+test("non-waking context restores its source identity after reopen", async (t) => {
+	const first = await fixture(t, { admit: null });
+	await first.session.sendCustomMessage(
+		{ customType: "note", content: "persist me", display: true },
+		{ triggerTurn: false },
+	);
+	await first.ingress.dispose();
+	const next = await fixture(t, {
+		root: first.root,
+		manager: SessionManager.open(first.session.sessionManager.getSessionFile()),
+		admit: null,
+	});
+	assert.equal(next.ingress.branch().sourceRecovery.recovered, 1);
+	const sources = await next.ingress.branch().native.sources(next.session.agent.state.messages);
+	assert.equal(sources.length, 1);
+	assert.equal(next.sent.length, 0);
+	await next.session.prompt("continue");
+	assert.equal(next.sent.length, 1);
+});
+
+test("failed non-waking append cannot leave unattributed context available to a request", async (t) => {
+	const f = await fixture(t, { admit: null });
+	const mock = t.mock.method(f.session.sessionManager, "appendCustomMessageEntry", () => {
+		throw new Error("append failed");
+	});
+	await assert.rejects(
+		f.session.sendCustomMessage(
+			{ customType: "note", content: "must reconcile", display: true },
+			{ triggerTurn: false },
+		),
+		/append failed/,
+	);
+	mock.mock.restore();
+	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.equal(record.dispatch.inputs[0].kind, "context");
+	assert.equal(record.dispatch.phase, "failed");
+	await assert.rejects(f.ingress.branch().native.sources(f.session.agent.state.messages), /receipt reconciliation/);
+	await f.session.prompt("later request");
+	assert.equal(f.sent.length, 0);
+});
+
+test("non-waking receipt failure preserves the instruction and blocks later requests", async (t) => {
+	const f = await fixture(t, { admit: null });
+	const store = f.ingress.branch().attachment.submissions;
+	t.mock.method(store, "recordPromptHistory", async () => {
+		throw new Error("receipt failed");
+	});
+	await assert.rejects(
+		f.session.sendCustomMessage({ customType: "note", content: "retained", display: true }, { triggerTurn: false }),
+		/receipt failed/,
+	);
+	const [record] = await store.snapshot();
+	assert.equal(record.dispatch.promptClaims.length, 1);
+	assert.equal(record.dispatch.promptHistory, undefined);
+	await assert.rejects(f.ingress.branch().native.sources(f.session.agent.state.messages));
+	assert.equal(f.sent.length, 0);
+	await f.ingress.dispose();
+	const next = await fixture(t, {
+		root: f.root,
+		manager: SessionManager.open(f.session.sessionManager.getSessionFile()),
+		admit: null,
+	});
+	assert.equal(next.ingress.branch().sourceRecovery.unresolved, 1);
+	await next.session.prompt("held until repaired");
+	assert.equal(next.sent.length, 0);
+	assert.match((await next.ingress.heldInputs())[0].reason, /recovery/);
+});
+
+test("deliberate idle context can join a live wait without waking the model", async (t) => {
+	const f = await fixture(t, {
+		admit: null,
+		policy: () => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: ["work"] }),
+	});
+	await f.session.sendCustomMessage(
+		{ customType: "note", content: "decision context", display: true },
+		{ triggerTurn: false },
+	);
+	assert.equal(f.sent.length, 0);
+	assert.equal((await f.ingress.branch().attachment.submissions.snapshot())[0].dispatch.promptHistory.length, 1);
+});
+
+test("a following request waits for a non-waking context receipt", async (t) => {
+	const f = await fixture(t, { admit: null });
+	const entered = deferred(),
+		release = deferred();
+	const store = f.ingress.branch().attachment.submissions;
+	const record = store.recordPromptHistory.bind(store);
+	let first = true;
+	t.mock.method(store, "recordPromptHistory", async (...args) => {
+		if (first) {
+			first = false;
+			entered.resolve();
+			await release.promise;
+		}
+		return record(...args);
+	});
+	const appending = f.session.sendCustomMessage(
+		{ customType: "note", content: "context before user", display: true },
+		{ triggerTurn: false },
+	);
+	await entered.promise;
+	const prompting = f.session.prompt("user instruction");
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(f.sent.length, 0);
+	release.resolve();
+	await Promise.all([appending, prompting]);
+	assert.equal(f.sent.length, 1);
+	const sources = await f.ingress.branch().native.sources(f.session.agent.state.messages);
+	assert.equal(sources.length, 2);
 });

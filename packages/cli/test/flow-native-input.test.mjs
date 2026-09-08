@@ -96,14 +96,17 @@ test("native queue consumption waits for its exact input observation", async (t)
 		release = deferred();
 	const dispatch = f.attachment.submissions.dispatch.bind(f.attachment.submissions);
 	t.mock.method(f.attachment.submissions, "dispatch", (id, revision, operation, run) =>
-		dispatch(id, revision, operation, (observer) =>
-			run({
-				observe: async (input) => {
-					entered.resolve();
-					await release.promise;
-					return observer.observe(input);
+		dispatch(id, revision, operation, (observer, submission) =>
+			run(
+				{
+					observe: async (input) => {
+						entered.resolve();
+						await release.promise;
+						return observer.observe(input);
+					},
 				},
-			}),
+				submission,
+			),
 		),
 	);
 	const enqueuing = f.session.followUp("queued");
@@ -129,12 +132,15 @@ for (const kind of ["prompt", "followUp"])
 		const f = await fixture(t);
 		const dispatch = f.attachment.submissions.dispatch.bind(f.attachment.submissions);
 		t.mock.method(f.attachment.submissions, "dispatch", (id, revision, operation, run) =>
-			dispatch(id, revision, operation, () =>
-				run({
-					observe: async () => {
-						throw new Error("observation storage failed");
+			dispatch(id, revision, operation, (_observer, submission) =>
+				run(
+					{
+						observe: async () => {
+							throw new Error("observation storage failed");
+						},
 					},
-				}),
+					submission,
+				),
 			),
 		);
 		await assert.rejects(f.session[kind]("must not run"), /observation storage failed/);
@@ -160,14 +166,17 @@ test("a failed write holds a concurrently edited queue entry without a retry loo
 		release = deferred();
 	const dispatch = f.attachment.submissions.dispatch.bind(f.attachment.submissions);
 	t.mock.method(f.attachment.submissions, "dispatch", (id, revision, operation, run) =>
-		dispatch(id, revision, operation, () =>
-			run({
-				observe: async () => {
-					entered.resolve();
-					await release.promise;
-					throw new Error("write failed");
+		dispatch(id, revision, operation, (_observer, submission) =>
+			run(
+				{
+					observe: async () => {
+						entered.resolve();
+						await release.promise;
+						throw new Error("write failed");
+					},
 				},
-			}),
+				submission,
+			),
 		),
 	);
 	const enqueuing = assert.rejects(f.session.followUp("original"), /write failed/);

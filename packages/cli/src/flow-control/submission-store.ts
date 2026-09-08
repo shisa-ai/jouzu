@@ -30,7 +30,7 @@ interface RecordData {
 	dispatch?: Omit<FlowSubmissionDispatch, "inputs"> & { inputs?: { payload: Encoded; digest: string }[] };
 }
 export interface FlowNativeInput {
-	kind: "prompt" | "steer" | "followUp";
+	kind: "prompt" | "context" | "steer" | "followUp";
 	args: unknown[];
 	queue?: { id: string; revision: number };
 }
@@ -102,9 +102,9 @@ const holdKey = (hold: Pick<FlowAdmissionHold, "phase" | "queue">) =>
 function validateNativeInput(input: FlowNativeInput): void {
 	if (
 		!input ||
-		!["prompt", "steer", "followUp"].includes(input.kind) ||
+		!["prompt", "context", "steer", "followUp"].includes(input.kind) ||
 		!Array.isArray(input.args) ||
-		(input.kind === "prompt"
+		(["prompt", "context"].includes(input.kind)
 			? input.queue !== undefined
 			: !input.queue ||
 				!identity(input.queue.id) ||
@@ -358,7 +358,8 @@ export class FlowSubmissionStore {
 						!receipt ||
 						!Number.isSafeInteger(receipt.inputIndex) ||
 						receipt.inputIndex < 0 ||
-						input?.kind !== "prompt" ||
+						!input ||
+						!["prompt", "context"].includes(input.kind) ||
 						!Number.isSafeInteger(receipt.messageIndex) ||
 						receipt.messageIndex < 0 ||
 						receipt.messageIndex >= count ||
@@ -687,11 +688,11 @@ export class FlowSubmissionStore {
 		id: string,
 		revision: number,
 		operationId: string,
-		run: (observer: FlowNativeObserver) => Promise<T>,
+		run: (observer: FlowNativeObserver, submission: Submission) => Promise<T>,
 	): Promise<T> {
 		if (!identity(operationId)) return Promise.reject(new FlowLedgerError("identity", "Invalid native operation ID."));
 		return this.ownership.run(async () => {
-			await this.transact((state) => {
+			const submission = await this.transact((state) => {
 				const record = state.records.find((item) => item.id === id);
 				if (!record || record.revision !== revision || record.status !== "retained")
 					throw new FlowLedgerError("stale", "Submission changed before native dispatch.");
@@ -700,7 +701,7 @@ export class FlowSubmissionStore {
 				if (state.records.some((item) => item.dispatch?.operationId === operationId))
 					throw new FlowLedgerError("identity", "Native operation ID is already assigned.");
 				record.dispatch = { operationId, ownerId: this.ownership.token, phase: "started" };
-				return { changed: true, result: undefined };
+				return { changed: true, result: decode(record.payload) as Submission };
 			});
 			const finish = (phase: "returned" | "failed") =>
 				this.transact((state) => {
@@ -745,7 +746,7 @@ export class FlowSubmissionStore {
 			};
 			let result: T;
 			try {
-				result = await run(observer);
+				result = await run(observer, submission);
 				observing = false;
 				await Promise.all(pending);
 			} catch (error) {

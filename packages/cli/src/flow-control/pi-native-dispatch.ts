@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks";
+import { isDeepStrictEqual } from "node:util";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { ImageContent } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
@@ -18,6 +19,8 @@ interface Frame {
 	operationId: string;
 	observer: FlowNativeObserver;
 	writes: Promise<unknown>[];
+	context: boolean;
+	contextInput?: { index: number; message: AgentMessage };
 }
 const attached = new WeakSet<AgentSession>();
 
@@ -28,6 +31,8 @@ export class PiNativeDispatch {
 	private readonly queued = new Map<string, { operationId: string; revision: number; write: Promise<unknown> }>();
 	private readonly held = new Map<string, { id: string; revision: number; reason: string }>();
 	private readonly sessionId: string;
+	private readonly contextWrites = new Set<Promise<void>>();
+	private contextFailure = false;
 	private active = 0;
 	private closed = false;
 	private drained?: () => void;
@@ -83,6 +88,38 @@ export class PiNativeDispatch {
 				return queue;
 			});
 		}
+		const manager = session.sessionManager;
+		const append = manager.appendCustomMessageEntry.bind(manager);
+		this.hooks.set(manager, "appendCustomMessageEntry", (customType, content, display, details) => {
+			const frame = this.frame();
+			if (!frame?.context) return append(customType, content, display, details);
+			const message = session.agent.state.messages.at(-1);
+			if (
+				message?.role !== "custom" ||
+				message.customType !== customType ||
+				message.content !== content ||
+				message.display !== display ||
+				!isDeepStrictEqual(message.details, details)
+			)
+				throw new FlowLedgerError("identity", "Non-waking context differs from its native append.");
+			const observed = frame.contextInput;
+			if (!observed || !isDeepStrictEqual({ ...message, timestamp: 0 }, observed.message))
+				throw new FlowLedgerError("identity", "Non-waking context differs from its retained input.");
+			frame.contextInput = undefined;
+			const entryId = append(customType, content, display, details);
+			const write = this.history.recordContext(session, store, frame.operationId, observed.index, message, entryId);
+			this.contextWrites.add(write);
+			frame.writes.push(write);
+			void write.then(
+				() => this.contextWrites.delete(write),
+				() => {
+					this.contextWrites.delete(write);
+					this.contextFailure = true;
+				},
+			);
+			return entryId;
+		});
+
 		const previous = agent.flowCheckpoints;
 		this.hooks.set(agent, "flowCheckpoints", {
 			...previous,
@@ -211,8 +248,15 @@ export class PiNativeDispatch {
 		if (this.closed || this.session.sessionId !== this.sessionId)
 			throw new FlowLedgerError("stale", "Native dispatch observation is closed or replaced.");
 	}
+	private async drainContext(): Promise<void> {
+		await Promise.all([...this.contextWrites]);
+		if (this.contextFailure)
+			throw new FlowLedgerError("identity", "Non-waking context requires receipt reconciliation.");
+	}
+
 	async consumedSources() {
 		this.assertActive();
+		await this.drainContext();
 		const records = await this.store.snapshot();
 		this.assertActive();
 		return records.flatMap(({ dispatch }) =>
@@ -228,6 +272,7 @@ export class PiNativeDispatch {
 	}
 	async sources(messages: AgentMessage[]): Promise<NativeRequestSource[]> {
 		this.assertActive();
+		await this.drainContext();
 		const members = this.history.identify(messages);
 		await this.history.validateSources(members, this.store);
 		this.assertActive();
@@ -340,14 +385,55 @@ export class PiNativeDispatch {
 		for (const id of this.queued.keys()) if (!pending.some((item) => item.id === id)) this.queued.delete(id);
 		this.active++;
 		return this.store
-			.dispatch(id, revision, operationId, (observer) => {
-				const frame: Frame = { active: true, operationId, observer, writes: [] };
+			.dispatch(id, revision, operationId, (observer, submission) => {
+				const options = submission.args[1] as { triggerTurn?: boolean; deliverAs?: string } | undefined;
+				const context =
+					submission.api === "sendCustomMessage" &&
+					options?.deliverAs !== "nextTurn" &&
+					(options?.triggerTurn === false ||
+						(options?.triggerTurn === undefined && submission.hostState?.streaming === false));
+				if (
+					context &&
+					(!this.session.isIdle || this.session.isStreaming || this.session.isRetrying || this.session.isCompacting)
+				)
+					throw new FlowLedgerError("busy", "Non-waking context requires an idle append boundary.");
+				const frame: Frame = { active: true, operationId, observer, writes: [], context };
 				return this.frames.run(frame, async () => {
 					try {
+						if (context) {
+							const raw = submission.args[0] as {
+								customType: string;
+								content?: unknown;
+								display: boolean;
+								details?: unknown;
+							};
+							const message = {
+								role: "custom" as const,
+								customType: raw.customType,
+								content: raw.content ?? [],
+								display: raw.display,
+								details: raw.details,
+								timestamp: 0,
+							} as AgentMessage;
+							const index = await observer.observe({ kind: "context", args: [message] });
+							frame.contextInput = { index, message };
+							if (
+								!this.session.isIdle ||
+								this.session.isStreaming ||
+								this.session.isRetrying ||
+								this.session.isCompacting
+							)
+								throw new FlowLedgerError("busy", "Non-waking append boundary changed.");
+						}
 						const result = await run();
+						if (frame.contextInput)
+							throw new FlowLedgerError("identity", "Non-waking input has no native append receipt.");
 						frame.active = false;
 						await Promise.all(frame.writes);
 						return result;
+					} catch (error) {
+						if (context) this.contextFailure = true;
+						throw error;
 					} finally {
 						frame.active = false;
 						await Promise.allSettled(frame.writes);

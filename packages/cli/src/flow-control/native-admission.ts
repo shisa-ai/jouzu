@@ -51,8 +51,12 @@ export function decideNativeAdmission(
 	if (submission.api === "sendCustomMessage") {
 		const options = submission.args[1] as { deliverAs?: string; triggerTurn?: boolean } | undefined;
 		const wakes = options?.triggerTurn ?? submission.hostState?.streaming;
-		if (options?.deliverAs === "nextTurn" || wakes !== true)
+		if (options?.deliverAs === "nextTurn" || wakes === undefined)
 			return hold("Deferred context requires a persistence receipt before release.");
+		if (wakes === false)
+			return host.isIdle && !host.isStreaming
+				? { allowed: true }
+				: hold("Non-waking context is waiting for an idle append boundary.");
 	}
 	if (gates.waitingWorkIds.length) return hold("Unclassified input cannot establish independence from a live wait.");
 	if (gates.userPending || records.some((record) => userInput(record.submission) && awaitingInput(record)))

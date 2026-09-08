@@ -24,7 +24,7 @@ function observed(input: FlowNativeInput, position: number): { message: AgentMes
 		};
 	return {
 		message: (input.kind === "prompt" && Array.isArray(value) ? value[position] : value) as AgentMessage,
-		nativeTimestamp: false,
+		nativeTimestamp: input.kind === "context",
 	};
 }
 
@@ -73,6 +73,9 @@ export async function recoverNativeSources(
 	for (const record of records) {
 		const dispatch = record.dispatch;
 		if (!dispatch) continue;
+		unresolved += (dispatch.inputs ?? []).filter(
+			(input, index) => input.kind === "context" && !dispatch.promptClaims?.some((claim) => claim.inputIndex === index),
+		).length;
 		const receipts = [
 			...(dispatch.queueHistory ?? []).map((receipt) => ({
 				...receipt,
