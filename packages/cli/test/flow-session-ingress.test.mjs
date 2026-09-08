@@ -2537,3 +2537,62 @@ test("queued user context clears a wait cancelled during queue admission", async
 	assert.equal(f.sent.length, 2);
 	await f.ingress.dispose();
 });
+
+for (const streamingBehavior of ["steer", "followUp"]) {
+	test(`a user prompt enters the ${streamingBehavior} queue during an owned native request`, async (t) => {
+		const clock = ingressWaitClock(),
+			errors = [];
+		const f = await fixture(t, {
+			provider: true,
+			admit: null,
+			autoRelease: { clock, onError: (error) => errors.push(error) },
+		});
+		const started = deferred(),
+			proceed = deferred();
+		const stream = f.session.agent.streamFunction;
+		let calls = 0;
+		f.session.agent.streamFunction = async (...args) => {
+			if (++calls === 1) {
+				started.resolve();
+				await proceed.promise;
+			}
+			return stream(...args);
+		};
+		const running = f.session.prompt("initial request");
+		await started.promise;
+		try {
+			await declareIngressWait(f.ingress.branch());
+			await waitForFlow(() => clock.timers.size === 1 && !f.ingress.branch().attachment.waits.gate().updating);
+			clock.advance(10);
+			await f.session.prompt("streaming queued status 日本語\nunchanged", { streamingBehavior });
+			assert.equal(f.session.agent.inspectQueuedMessages().length, 1);
+			assert.equal(f.sent.length, 0);
+			assert.equal(f.ingress.branch().attachment.nativeRequests.recoveryBlocked, true);
+			assert.equal(f.ingress.branch().requests.queueingBlocked, false);
+			await f.session.sendUserMessage("automated input", { deliverAs: "followUp" });
+			await f.session.prompt("user prompt without a queue lane");
+			assert.equal(f.session.agent.inspectQueuedMessages().length, 1);
+			const records = await f.ingress.branch().attachment.submissions.snapshot();
+			for (const text of ["automated input", "user prompt without a queue lane"]) {
+				const held = records.find((record) => record.submission.args[0] === text);
+				assert.equal(held.dispatch, undefined);
+				await f.ingress.cancelRetained(held.id, held.revision);
+			}
+			clock.advance(40);
+		} finally {
+			proceed.resolve();
+		}
+		await running;
+		assert.equal(f.sent.length, 2);
+		const text = JSON.stringify(f.sent[1]);
+		assert.ok(text.includes("streaming queued status"));
+		assert.ok(text.includes('\\"capturedAt\\":40'));
+		assert.ok(text.includes('\\"expiresAt\\":100'));
+		assert.equal(
+			f.session.agent.state.messages.filter((message) => message.customType === "jouzu-wait-context").length,
+			0,
+		);
+		await f.ingress.dispose();
+		assert.deepEqual(errors, []);
+	});
+}

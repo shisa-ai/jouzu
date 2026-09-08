@@ -9,6 +9,20 @@ export type NativeAdmissionDecision = { allowed: true } | { allowed: false; reas
 export function isNativeUserInput(submission: FlowSubmission): boolean {
 	return submission.origin.kind === "host" && ["prompt", "steer", "followUp"].includes(submission.api);
 }
+
+/** Only these user operations insert a queue item while the host is streaming. */
+export function isNativeUserQueueSubmission(
+	submission: FlowSubmission,
+	host: Pick<AgentSession, "isStreaming" | "isRetrying" | "isCompacting">,
+): boolean {
+	if (!isNativeUserInput(submission) || !host.isStreaming || host.isRetrying || host.isCompacting) return false;
+	if (submission.api === "steer" || submission.api === "followUp") return true;
+	const options = submission.args[1] as { streamingBehavior?: unknown } | undefined;
+	return (
+		submission.hostState?.streaming === true &&
+		(options?.streamingBehavior === "steer" || options?.streamingBehavior === "followUp")
+	);
+}
 function lane(submission: FlowSubmission): string {
 	const options = submission.args[1] as { deliverAs?: string; streamingBehavior?: string } | undefined;
 	if (submission.api === "steer" || submission.api === "followUp") return submission.api;

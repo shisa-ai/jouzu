@@ -4,7 +4,12 @@ import { isDeepStrictEqual } from "node:util";
 import type { AgentSession, CreateAgentSessionOptions } from "@earendil-works/pi-coding-agent";
 import { type FlowProducer, retainedByReceipt } from "./controller.js";
 import type { FlowInputItem } from "./model-input.js";
-import { awaitingNativeInput, decideNativeAdmission, isNativeUserInput } from "./native-admission.js";
+import {
+	awaitingNativeInput,
+	decideNativeAdmission,
+	isNativeUserInput,
+	isNativeUserQueueSubmission,
+} from "./native-admission.js";
 import { type PiFlowBranchResources, type PiFlowSessionOptions, PiFlowSessionService } from "./pi-session-service.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowNativeInput } from "./submission-store.js";
@@ -281,6 +286,15 @@ export class PiSessionFlowIngress implements Ingress {
 		return this.manage((service) => service.cancelNativeSources(id, expectedHash, indices));
 	}
 
+	private nativeRecoveryBlocked(
+		submission: Submission,
+		branch: PiFlowBranchResources,
+		phase: "submission" | "queue",
+	): boolean {
+		return phase === "submission" && this.session && isNativeUserQueueSubmission(submission, this.session)
+			? branch.requests.queueingBlocked
+			: branch.attachment.nativeRequests.recoveryBlocked;
+	}
 	private async admit(
 		submission: Submission,
 		branch: PiFlowBranchResources,
@@ -296,7 +310,7 @@ export class PiSessionFlowIngress implements Ingress {
 		const recoveryBlocked =
 			waits.updating ||
 			policy.recoveryBlocked ||
-			branch.attachment.nativeRequests.recoveryBlocked ||
+			this.nativeRecoveryBlocked(submission, branch, phase) ||
 			branch.recovery.unresolved > 0 ||
 			branch.sourceRecovery.unresolved > 0 ||
 			state.attempts.some((attempt) => attempt.phase === "uncertain");
@@ -349,7 +363,7 @@ export class PiSessionFlowIngress implements Ingress {
 		};
 		const waitDecision = durableWaitDecision();
 		if (!waitDecision.allowed) decision = waitDecision;
-		if (branch.attachment.nativeRequests.recoveryBlocked)
+		if (this.nativeRecoveryBlocked(submission, branch, phase))
 			decision = { allowed: false, reason: "Input is waiting for recovery reconciliation." };
 		const current = records.find((record) => record.id === submission.id);
 		if (!current) return false;
@@ -361,7 +375,12 @@ export class PiSessionFlowIngress implements Ingress {
 		);
 		if (!saved && phase === "submission")
 			throw new FlowLedgerError("stale", "Retained input changed during admission.");
-		return saved && decision.allowed && durableWaitDecision().allowed;
+		return (
+			saved &&
+			decision.allowed &&
+			durableWaitDecision().allowed &&
+			!this.nativeRecoveryBlocked(submission, branch, phase)
+		);
 	}
 
 	branch(): PiFlowBranchResources {
@@ -533,7 +552,7 @@ export class PiSessionFlowIngress implements Ingress {
 			if (!(await this.admit(structuredClone(pending.submission), branch, "submission"))) return false;
 			if (this.branch() !== branch || this.pending.get(id) !== pending)
 				throw new FlowLedgerError("stale", "Retained send changed during admission.");
-			if (branch.attachment.nativeRequests.recoveryBlocked) return false;
+			if (this.nativeRecoveryBlocked(pending.submission, branch, "submission")) return false;
 			// Remove before dispatch so a reentrant release cannot consume the callback twice.
 			const user = isNativeUserInput(pending.submission);
 			if (user && pending.submission.api === "prompt" && (await this.appendUserWaitContext(branch))) {

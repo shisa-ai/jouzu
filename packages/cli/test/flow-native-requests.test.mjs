@@ -1266,3 +1266,49 @@ test("missing cancelled-source identity requires reconciliation before new work"
 	assert.equal(f.sent.length, 0);
 	assert.match(f.session.agent.state.errorMessage, /Cancelled native input requires source reconciliation/);
 });
+
+test("queue allowance follows the live bridge request and disappears after a withheld outcome", async (t) => {
+	const entered = deferred(),
+		release = deferred();
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		enforceRequiredSources: true,
+		native: async () => {
+			entered.resolve();
+			await release.promise;
+			throw new Error("provider preparation failed");
+		},
+	});
+	const running = f.session.prompt("required user input");
+	await entered.promise;
+	try {
+		const [request] = await f.store.snapshot();
+		assert.equal(f.store.recoveryBlocked, true);
+		assert.equal(f.bridge.queueingBlocked, false);
+		assert.equal(f.store.blocksQueueing("another-request"), true);
+		assert.equal(f.store.blocksQueueing(), true);
+		await assert.rejects(f.store.begin({ ...request, id: "concurrent" }), { code: "busy" });
+	} finally {
+		release.resolve();
+	}
+	await running;
+	const [request] = await f.store.snapshot();
+	assert.equal(request.outcome, "withheld");
+	assert.equal(f.bridge.queueingBlocked, true);
+	assert.equal(f.store.blocksQueueing(request.id), true);
+});
+
+test("reattachment cannot claim an unresolved request as live queue authority", async (t) => {
+	const f = await nativeRequests(t);
+	await f.session.prompt("seed");
+	const [request] = await f.store.snapshot();
+	await f.store.begin({ ...request, id: "orphan" });
+	assert.equal(f.store.blocksQueueing("orphan"), false);
+	assert.equal(f.bridge.queueingBlocked, true);
+	await f.bridge.close();
+	await f.attachment.close();
+	const reopened = await PiFlowAttachment.open(join(f.root, "receipts"), f.scope);
+	t.after(() => reopened.close());
+	assert.equal(reopened.nativeRequests.blocksQueueing("orphan"), true);
+	assert.equal(reopened.nativeRequests.recoveryBlocked, true);
+});

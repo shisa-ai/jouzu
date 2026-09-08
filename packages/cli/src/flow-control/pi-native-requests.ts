@@ -26,6 +26,11 @@ const attached = new WeakSet<AgentSession>();
 export class PiNativeRequests {
 	private readonly hooks = new PiHostHooks();
 	private pending?: string;
+	private executing?: string;
+	get queueingBlocked(): boolean {
+		this.assertActive();
+		return this.store.blocksQueueing(this.executing ?? this.pending);
+	}
 	private prepared?: { modelHash: string; capture?: NativeSourceCapture };
 	private active = 0;
 	private closed = false;
@@ -341,6 +346,7 @@ export class PiNativeRequests {
 			const id = this.pending;
 			this.pending = undefined;
 			if (!id) throw new FlowLedgerError("identity", "Native provider call has no request checkpoint.");
+			this.executing = id;
 			const prepared = this.prepared;
 			this.prepared = undefined;
 			const sources = new NativePayloadSources(context.messages, prepared?.capture);
@@ -351,6 +357,7 @@ export class PiNativeRequests {
 			const settle = () => {
 				if (!finished) {
 					finished = true;
+					if (this.executing === id) this.executing = undefined;
 					this.active--;
 				}
 			};

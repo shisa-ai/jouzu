@@ -88,8 +88,13 @@ export const nativeHoldHash = (record: NativeRequest): string => record.withheld
 export class FlowNativeRequestStore {
 	private initialized = false;
 	private blocked = true;
+	private queueableRequest?: string;
 	get recoveryBlocked(): boolean {
 		return this.blocked;
+	}
+	/** Queue insertion may coexist with the one unresolved request owned by this attachment. */
+	blocksQueueing(activeRequestId?: string): boolean {
+		return this.blocked && (!activeRequestId || this.queueableRequest !== activeRequestId);
 	}
 	get scope(): Readonly<FlowScope> {
 		return this.ownership.scope;
@@ -348,6 +353,13 @@ export class FlowNativeRequestStore {
 						context,
 					);
 				this.blocked = this.requiresRecovery(records);
+				const unresolved = records.filter((record) => record.outcome === undefined);
+				const candidate = unresolved.length === 1 ? unresolved[0] : undefined;
+				this.queueableRequest =
+					candidate?.ownerId === this.ownership.token &&
+					!this.requiresRecovery(records.filter((record) => record !== candidate))
+						? candidate.id
+						: undefined;
 				return result;
 			}, BACKGROUND_CONTEXT),
 		);
