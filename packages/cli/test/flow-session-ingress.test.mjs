@@ -1558,3 +1558,61 @@ test("native user queue cancellation clears retained semantic priority", async (
 	assert.equal(f.ingress.branch().host.gate().userPending, false);
 	assert.equal(f.sent.length, 0);
 });
+
+for (const stage of ["enqueued", "eligibility"])
+	test(`user arriving during semantic ${stage} preempts native consumption`, async (t) => {
+		const f = await fixture(t, { admit: async () => false });
+		const branch = f.ingress.branch();
+		const queued = deferred(),
+			proceed = deferred();
+		let consuming = false;
+		const run = branch.host.run.bind(branch.host);
+		t.mock.method(branch.host, "run", async () => {
+			if (stage === "enqueued") {
+				queued.resolve();
+				await proceed.promise;
+			}
+			consuming = true;
+			await run();
+		});
+		branch.controller.register({
+			version: 1,
+			namespace: "preemption-test",
+			snapshot: async () => {
+				if (stage === "eligibility" && consuming) {
+					queued.resolve();
+					await proceed.promise;
+				}
+				return [
+					{
+						id: "work",
+						revision: "1",
+						producer: "preemption-test",
+						sequence: 1,
+						rank: 4,
+						workId: "work",
+						workRevision: "1",
+						independent: true,
+						runnable: true,
+					},
+				];
+			},
+			build: async () => ({ id: "work", revision: "1", kind: "work", text: "automated work" }),
+		});
+		const waking = branch.controller.wake();
+		await queued.promise;
+		assert.equal(f.session.agent.inspectQueuedMessages().length, 1);
+		await f.session.prompt("user arrives before consumption");
+		assert.equal(branch.host.gate().userPending, true);
+		proceed.resolve();
+		await waking;
+		assert.equal(f.sent.length, 0);
+		assert.equal(f.session.agent.inspectQueuedMessages().length, 0);
+		const state = await branch.attachment.ledger.snapshot();
+		assert.equal(state.attempts.length, 1);
+		assert.equal(state.attempts[0].phase, "cancelled");
+		assert.equal(state.attempts[0].consumed, false);
+		assert.equal(state.attempts[0].requests.length, 0);
+		const [user] = await branch.attachment.submissions.snapshot();
+		assert.equal(user.dispatch, undefined);
+	});
