@@ -58,6 +58,14 @@
 		"dist/core/skills.d.ts": {
 			"before": "8230b7f16b693ce3fbdf814d537105b3539ce7c07ba6cfef9605bf35695cdf58",
 			"after": "ee73c560e8bbc55bb5590b6edf1a13d417b29c52c6b0716ba286a7798ade752d"
+		},
+		"dist/core/session-manager.js": {
+			"before": "ccace64949db25379a43971ecea750c1b7ec6344e1bc31b9d5fe596ac2f1c9f3",
+			"after": "5f3f0fa2dcddad98cdf0dab36c4c2f6d4e1bebe318ec331eb662ea9e20c499b8"
+		},
+		"dist/core/session-manager.d.ts": {
+			"before": "b349557f08b25c8655b041ee05d27ff824ffd7c805531ddb460d46b62e4445f7",
+			"after": "abde7203604705bc3db952114c1b7171c0810d6349d5d9a62cc1d90d46502623"
 		}
 	},
 	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863",

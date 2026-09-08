@@ -5,11 +5,16 @@ import { openLocalFlowSession } from "./local-storage.js";
 import { FlowOwnership } from "./ownership.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 
+export interface FlowBranchPosition {
+	entryId: string;
+	entryHash: string;
+}
 export interface FlowBranchRecord {
 	id: string;
 	enteredAtLeafId: string | null;
 	fromBranchId?: string;
 	transitionId?: string;
+	position?: FlowBranchPosition;
 }
 export interface FlowBranchTransition {
 	id: string;
@@ -28,6 +33,13 @@ export interface FlowSessionRegistryState {
 const address = value<FlowSessionRegistryState>("jouzu.flow.session", "v1");
 const identity = (id: unknown): id is string => typeof id === "string" && id.length > 0 && id.length <= 512;
 const leaf = (id: unknown) => id === null || identity(id);
+const validPosition = (position: FlowBranchPosition) =>
+	position &&
+	identity(position.entryId) &&
+	typeof position.entryHash === "string" &&
+	/^[a-f0-9]{64}$/.test(position.entryHash);
+const samePosition = (a?: FlowBranchPosition, b?: FlowBranchPosition) =>
+	a?.entryId === b?.entryId && a?.entryHash === b?.entryHash;
 
 /** Session-wide writer reservation and branch identities in Pi storage. Reads grant no dispatch authority. */
 export class PiFlowSessionRegistry {
@@ -81,6 +93,7 @@ export class PiFlowSessionRegistry {
 				!identity(branch.id) ||
 				ids.has(branch.id) ||
 				!leaf(branch.enteredAtLeafId) ||
+				(branch.position !== undefined && !validPosition(branch.position)) ||
 				(index === 0
 					? branch.fromBranchId !== undefined || branch.transitionId !== undefined
 					: branch.fromBranchId !== state.branches[index - 1].id ||
@@ -137,12 +150,31 @@ export class PiFlowSessionRegistry {
 	snapshot(): Promise<FlowSessionRegistryState> {
 		return this.transact((state) => ({ result: state, changed: false }));
 	}
+	/** Keep session ownership through host transcript operations and their registry receipts. */
+	run<T>(operation: () => Promise<T>): Promise<T> {
+		return this.ownership.run(operation);
+	}
 	/** Host transcript identity must be reconciled separately before opening or dispatching this branch. */
 	currentScope(): Promise<FlowScope> {
 		return this.transact((state) => {
 			if (state.transition)
 				throw new FlowLedgerError("transition", "Unfinished branch navigation requires reconciliation.");
 			return { result: { sessionId: state.sessionId, branchId: state.activeBranchId }, changed: false };
+		});
+	}
+	/** Bind the initial branch to verified durable transcript metadata once. */
+	bindInitialPosition(expectedRevision: number, position: FlowBranchPosition): Promise<void> {
+		if (!validPosition(position))
+			return Promise.reject(new FlowLedgerError("identity", "Invalid branch position evidence."));
+		return this.transact((state) => {
+			if (state.revision !== expectedRevision || state.transition || state.branches.length !== 1)
+				throw new FlowLedgerError("stale", "Initial branch binding changed.");
+			const branch = state.branches[0];
+			if (branch.position && !samePosition(branch.position, position))
+				throw new FlowLedgerError("identity", "Initial branch position is already bound.");
+			const changed = !branch.position;
+			branch.position = structuredClone(position);
+			return { result: undefined, changed };
 		});
 	}
 	/** Persist before detaching the old controller or mutating the host transcript. */
@@ -164,16 +196,31 @@ export class PiFlowSessionRegistry {
 		});
 	}
 	/** Call after native branch mutation and durable transcript-position evidence. This creates no delivery permission. */
-	finishNavigation(transitionId: string, enteredAtLeafId: string | null): Promise<FlowScope> {
-		if (!identity(transitionId) || !leaf(enteredAtLeafId))
+	finishNavigation(
+		transitionId: string,
+		enteredAtLeafId: string | null,
+		position?: FlowBranchPosition,
+	): Promise<FlowScope> {
+		if (!identity(transitionId) || !leaf(enteredAtLeafId) || (position !== undefined && !validPosition(position)))
 			return Promise.reject(new FlowLedgerError("identity", "Invalid branch transition identity."));
 		return this.transact((state) => {
 			const last = state.branches.at(-1);
-			if (!state.transition && last?.transitionId === transitionId && last.enteredAtLeafId === enteredAtLeafId)
+			if (
+				!state.transition &&
+				last?.transitionId === transitionId &&
+				last.enteredAtLeafId === enteredAtLeafId &&
+				samePosition(last.position, position)
+			)
 				return { result: { sessionId: state.sessionId, branchId: state.activeBranchId }, changed: false };
 			if (state.transition?.id !== transitionId) throw new FlowLedgerError("stale", "Branch transition changed.");
 			const { branchId, fromBranchId } = state.transition;
-			state.branches.push({ id: branchId, fromBranchId, transitionId, enteredAtLeafId });
+			state.branches.push({
+				id: branchId,
+				fromBranchId,
+				transitionId,
+				enteredAtLeafId,
+				...(position ? { position: structuredClone(position) } : {}),
+			});
 			state.activeBranchId = branchId;
 			delete state.transition;
 			return { result: { sessionId: state.sessionId, branchId }, changed: true };

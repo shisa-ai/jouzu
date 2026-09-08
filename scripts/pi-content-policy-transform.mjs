@@ -9,7 +9,18 @@ export function transform(path, source) {
 	const change = (before, after, count) => {
 		text = replace(text, before, after, count);
 	};
-	if (path === "dist/main.js") {
+	if (path === "dist/core/session-manager.js") {
+		change(
+			"    _persist(entry) {",
+			"    flush() {\n        if (!this.persist || !this.sessionFile || this.flushed) return;\n        this._persist(this.fileEntries[this.fileEntries.length - 1], true);\n    }\n    _persist(entry, force = false) {",
+		);
+		change("        if (!hasAssistant) {", "        if (!hasAssistant && !force) {");
+	} else if (path === "dist/core/session-manager.d.ts") {
+		change(
+			"    _persist(entry: SessionEntry): void;",
+			"    /** Persist buffered entries without requiring an assistant turn; never overwrite an existing file. */\n    flush(): void;\n    _persist(entry: SessionEntry): void;",
+		);
+	} else if (path === "dist/main.js") {
 		change(
 			"            customTools: sessionOptions.customTools,",
 			"            customTools: sessionOptions.customTools,\n            flowIngress: await options?.flowIngressFactory?.({ cwd, sessionManager }),",
@@ -941,4 +952,6 @@ export const paths = [
 	"dist/core/extensions/loader.js",
 	"dist/core/skills.js",
 	"dist/core/skills.d.ts",
+	"dist/core/session-manager.js",
+	"dist/core/session-manager.d.ts",
 ];
