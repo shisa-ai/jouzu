@@ -2,7 +2,9 @@ import { createHash } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 import type { FlowIntent } from "./admission.js";
 import type { FlowProducer } from "./controller.js";
+import type { FlowNativeRequestStore } from "./native-request-store.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
+import type { FlowSubmissionStore } from "./submission-store.js";
 import type { FlowWaitState } from "./wait-state.js";
 import type { FlowWaitStore } from "./wait-store.js";
 
@@ -26,18 +28,90 @@ function descriptor(wait: FlowWaitState): FlowIntent | undefined {
 	};
 }
 
+function decisionText(wait: FlowWaitState): string {
+	return JSON.stringify({
+		wait: {
+			token: wait.token,
+			work: wait.workId,
+			state: wait.state,
+			reason: wait.reason,
+			mode: wait.mode,
+			createdAt: wait.createdAt,
+			expiresAt: wait.expiresAt,
+			endedAt: wait.endedAt,
+			unmet: wait.unmet,
+			observations: wait.observations,
+		},
+	});
+}
+
+interface NativeWaitEvidence {
+	submissions: Pick<FlowSubmissionStore, "snapshot">;
+	requests: Pick<FlowNativeRequestStore, "snapshot">;
+}
+
+/** Only an exact retained context source included in a successful request acknowledges these decisions. */
+async function deliveredNativeDecisions(waits: FlowWaitState[], evidence: NativeWaitEvidence): Promise<Set<string>> {
+	const expected = new Map(
+		waits.flatMap((wait) => {
+			const intent = descriptor(wait);
+			return intent ? [[intent.id, decisionText(wait)] as const] : [];
+		}),
+	);
+	const delivered = new Set<string>();
+	if (!expected.size) return delivered;
+	const [submissions, requests] = await Promise.all([evidence.submissions.snapshot(), evidence.requests.snapshot()]);
+	for (const request of requests) {
+		if (request.outcome !== "success") continue;
+		for (const source of request.sourceCapture?.members ?? []) {
+			if (
+				!source.prompt ||
+				!request.payload?.sources?.some((item) => item.sourceIndex === source.index && item.disposition === "included")
+			)
+				continue;
+			const submission = submissions.find((item) => item.dispatch?.operationId === source.operationId);
+			const input = submission?.dispatch?.inputs?.[source.prompt.inputIndex];
+			if (input?.kind !== "context" || source.prompt.messageIndex !== 0) continue;
+			const message = input.args[0] as { customType?: unknown; content?: unknown } | undefined;
+			if (message?.customType !== "jouzu-wait-context" || typeof message.content !== "string") continue;
+			let items: unknown;
+			try {
+				items = JSON.parse(message.content).waitDecisions;
+			} catch {
+				continue;
+			}
+			if (!Array.isArray(items)) continue;
+			for (const item of items) {
+				if (
+					item?.kind === "wait" &&
+					item.revision === "1" &&
+					typeof item.id === "string" &&
+					typeof item.text === "string" &&
+					expected.get(item.id) === item.text
+				)
+					delivered.add(item.id);
+			}
+		}
+	}
+	return delivered;
+}
+
 /** Terminal wait state is the durable event; existing input receipts own its delivery and recovery. */
-export function createFlowWaitDecisionProducer(store: Pick<FlowWaitStore, "snapshot">): FlowProducer {
+export function createFlowWaitDecisionProducer(
+	store: Pick<FlowWaitStore, "snapshot">,
+	native?: NativeWaitEvidence,
+): FlowProducer {
 	return {
 		version: 1,
 		namespace,
 		async snapshot(signal) {
 			signal.throwIfAborted();
 			const waits = await store.snapshot();
+			const delivered = native ? await deliveredNativeDecisions(waits, native) : new Set<string>();
 			signal.throwIfAborted();
 			return waits.flatMap((wait) => {
 				const intent = descriptor(wait);
-				return intent ? [intent] : [];
+				return intent && !delivered.has(intent.id) ? [intent] : [];
 			});
 		},
 		async build(intent, signal) {
@@ -50,20 +124,7 @@ export function createFlowWaitDecisionProducer(store: Pick<FlowWaitStore, "snaps
 				id: intent.id,
 				revision: intent.revision,
 				kind: "wait",
-				text: JSON.stringify({
-					wait: {
-						token: wait.token,
-						work: wait.workId,
-						state: wait.state,
-						reason: wait.reason,
-						mode: wait.mode,
-						createdAt: wait.createdAt,
-						expiresAt: wait.expiresAt,
-						endedAt: wait.endedAt,
-						unmet: wait.unmet,
-						observations: wait.observations,
-					},
-				}),
+				text: decisionText(wait),
 			};
 		},
 	};

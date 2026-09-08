@@ -8,6 +8,7 @@ import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js";
 import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
+import { createFlowWaitDecisionProducer } from "../dist/flow-control/wait-decisions.js";
 
 async function fixture(
 	t,
@@ -2309,3 +2310,37 @@ test("multiple terminal waits and eligible work share one request with separate 
 	await next.ingress.branch().controller.wake();
 	assert.equal(next.sent.length, 0);
 });
+
+for (const intact of [true, false])
+	test(`native user context ${intact ? "acknowledges exact" : "does not acknowledge altered"} terminal decision text`, async (t) => {
+		const f = await fixture(t, { provider: true, admit: null }),
+			branch = f.ingress.branch();
+		await declareIngressWait(branch);
+		await branch.attachment.waits.expireDue(100);
+		const source = createFlowWaitDecisionProducer(branch.attachment.waits),
+			signal = new AbortController().signal;
+		const [intent] = await source.snapshot(signal),
+			item = await source.build(intent, signal);
+		if (!intact) item.text = item.text.replace("expired", "resolved");
+		await f.session.sendCustomMessage(
+			{ customType: "jouzu-wait-context", display: false, content: JSON.stringify({ waitDecisions: [item] }) },
+			{ triggerTurn: false },
+		);
+		assert.equal(f.sent.length, 0);
+		await f.session.prompt("user requests next step");
+		assert.equal(f.sent.length, 1);
+		await branch.controller.wake();
+		assert.equal(f.sent.length, intact ? 1 : 2);
+		if (intact) {
+			assert.deepEqual((await branch.attachment.ledger.snapshot()).attempts, []);
+			await f.ingress.dispose();
+			const next = await fixture(t, {
+				root: f.root,
+				provider: true,
+				admit: null,
+				manager: SessionManager.open(f.session.sessionManager.getSessionFile()),
+			});
+			await next.ingress.branch().controller.wake();
+			assert.equal(next.sent.length, 0);
+		}
+	});

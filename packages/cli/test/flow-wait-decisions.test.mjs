@@ -47,3 +47,54 @@ test("cancelled producer reads cannot return decision input after storage resume
 	});
 	await assert.rejects(producer.snapshot(controller.signal), /branch detached/);
 });
+
+for (const variant of ["success", "failure", "changed", "wrong-operation", "wrong-input", "wrong-message"])
+	test(`native decision evidence requires successful exact source inclusion: ${variant}`, async () => {
+		const wait = terminal(),
+			store = { snapshot: async () => [wait] };
+		const source = createFlowWaitDecisionProducer(store);
+		const [intent] = await source.snapshot(signal()),
+			item = await source.build(intent, signal());
+		const operationId = "operation";
+		const submissions = [
+			{
+				dispatch: {
+					operationId,
+					inputs: [
+						{
+							kind: "context",
+							args: [
+								{
+									customType: "jouzu-wait-context",
+									content: JSON.stringify({ waitDecisions: [item] }),
+								},
+							],
+						},
+					],
+				},
+			},
+		];
+		const requests = [
+			{
+				outcome: variant === "failure" ? "failure" : "success",
+				sourceCapture: {
+					members: [
+						{
+							index: 0,
+							operationId: variant === "wrong-operation" ? "other" : operationId,
+							prompt: {
+								inputIndex: variant === "wrong-input" ? 1 : 0,
+								messageIndex: variant === "wrong-message" ? 1 : 0,
+							},
+						},
+					],
+				},
+				payload: { sources: [{ sourceIndex: 0, disposition: variant === "changed" ? "changed" : "included" }] },
+			},
+		];
+		const producer = createFlowWaitDecisionProducer(store, {
+			submissions: { snapshot: async () => submissions },
+			requests: { snapshot: async () => requests },
+		});
+		assert.equal((await producer.snapshot(signal())).length, variant === "success" ? 0 : 1);
+	});

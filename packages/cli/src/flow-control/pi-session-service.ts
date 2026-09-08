@@ -126,7 +126,12 @@ export class PiFlowSessionService {
 			);
 			this.opening.host = host;
 			const controller = new SessionFlowController(host, this.options.maxInputBytes, this.options.maxResultBytes);
-			controller.register(createFlowWaitDecisionProducer(attachment.waits));
+			controller.register(
+				createFlowWaitDecisionProducer(attachment.waits, {
+					submissions: attachment.submissions,
+					requests: attachment.nativeRequests,
+				}),
+			);
 			this.current = {
 				scope: Object.freeze({ ...scope }),
 				attachment,
