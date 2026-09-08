@@ -78,11 +78,29 @@ test("actual AgentSession capture commits before acceptance and leaves the nativ
 		{ customType: "context", content: "aside", display: false },
 		{ deliverAs: "nextTurn" },
 	);
-	assert.equal((await attachment.submissions.snapshot()).length, 2);
+	const records = await attachment.submissions.snapshot();
+	assert.equal(records.length, 2);
+	assert.ok(records.every((record) => record.submission.hostState.streaming === false));
 	assert.equal(requests.length, 0);
 	assert.deepEqual(session.agent.inspectQueuedMessages(), []);
 	await attachment.close();
 	await assert.rejects(session.prompt("late"), /closed/);
+});
+
+test("capture state survives reopen while earlier records remain distinguishable", async (t) => {
+	const root = await rootFor(t);
+	let attachment = await PiFlowAttachment.open(root, scope);
+	t.after(() => attachment.close());
+	await attachment.submissions.retain(submission("earlier"));
+	await attachment.submissions.retain({ ...submission("streaming"), hostState: { streaming: true } });
+	assert.throws(() => attachment.submissions.retain({ ...submission("invalid"), hostState: { streaming: "false" } }), {
+		code: "schema",
+	});
+	await attachment.close();
+	attachment = await PiFlowAttachment.open(root, scope);
+	const records = await attachment.submissions.snapshot();
+	assert.equal(records.find((record) => record.id === "earlier").submission.hostState, undefined);
+	assert.deepEqual(records.find((record) => record.id === "streaming").submission.hostState, { streaming: true });
 });
 
 test("concurrent duplicate retention is idempotent and changed identities are rejected", async (t) => {

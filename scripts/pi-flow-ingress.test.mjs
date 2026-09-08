@@ -21,6 +21,56 @@ function inbox(submit) {
 	};
 }
 
+for (const capturedStreaming of [false, true]) {
+	for (const triggerTurn of [undefined, false, true]) {
+		for (const deliverAs of [undefined, "followUp", "nextTurn"]) {
+			test(`retained custom wake follows capture state: streaming=${capturedStreaming}, trigger=${triggerTurn}, lane=${deliverAs}`, async (t) => {
+				const entered = deferred(),
+					release = deferred();
+				t.after(() => release.resolve());
+				const held = inbox((input, dispatch) => (input.api === "prompt" ? dispatch() : undefined));
+				const { session, requests } = await createFlowSession(t, { ingress: held.handler, persist: true });
+				const native = session.agent.streamFunction;
+				let calls = 0;
+				session.agent.streamFunction = async (...args) => {
+					if (++calls === 1) {
+						entered.resolve();
+						await release.promise;
+					}
+					return native(...args);
+				};
+				const custom = { customType: "retained", content: "context", display: true, details: { source: "fixture" } };
+				const options = { ...(triggerTurn === undefined ? {} : { triggerTurn }), ...(deliverAs ? { deliverAs } : {}) };
+				if (!capturedStreaming) await session.sendCustomMessage(custom, options);
+				const running = session.prompt("busy");
+				await entered.promise;
+				if (capturedStreaming) await session.sendCustomMessage(custom, options);
+				const retained = held.entries.find((entry) => entry.input.api === "sendCustomMessage");
+				assert.deepEqual(retained.input.args, [custom, options]);
+				assert.deepEqual(retained.input.hostState, { streaming: capturedStreaming });
+				retained.input.hostState.streaming = !capturedStreaming;
+				if (capturedStreaming) {
+					release.resolve();
+					await running;
+				}
+				await retained.dispatch();
+				if (!capturedStreaming) {
+					release.resolve();
+					await running;
+				}
+				const wakes = deliverAs !== "nextTurn" && (capturedStreaming ? triggerTurn !== false : triggerTurn === true);
+				assert.equal(requests.length, wakes ? 2 : 1);
+				if (deliverAs === "nextTurn") await session.prompt("next turn");
+				const entry = session.sessionManager.getBranch().find((item) => item.type === "custom_message");
+				assert.equal(entry.customType, custom.customType);
+				assert.deepEqual(entry.content, custom.content);
+				assert.equal(entry.display, custom.display);
+				assert.deepEqual(entry.details, custom.details);
+			});
+		}
+	}
+}
+
 test("SDK attachment completes before returning and cleanup is awaited once", async (t) => {
 	const entered = deferred(),
 		release = deferred(),

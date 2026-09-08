@@ -190,6 +190,7 @@ export class FlowIngressBinding {
 			id: randomUUID(),
 			api,
 			origin: { ...origin },
+			hostState: { streaming: this.#session.isStreaming },
 			scope: {
 				sessionId: this.#session.sessionManager.getSessionId(),
 				leafId: this.#session.sessionManager.getLeafId(),
@@ -218,6 +219,14 @@ export class FlowIngressBinding {
 			if (started) throw new Error("Flow submission was already dispatched.");
 			started = true;
 			const captured = structuredClone(snapshot);
+			if (api === "sendCustomMessage") {
+				// Pi's omitted triggerTurn defaults to waking only while streaming.
+				// Retention must not change that decision when dispatch runs later.
+				const triggerTurn = submission.hostState.streaming
+					? captured[1]?.triggerTurn !== false
+					: !!captured[1]?.triggerTurn;
+				captured[1] = { ...captured[1], triggerTurn };
+			}
 			if (preflight) captured[1] = { ...captured[1], preflightResult: notify };
 			this.#dispatches++;
 			try {

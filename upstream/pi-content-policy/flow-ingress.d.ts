@@ -5,6 +5,8 @@ export interface FlowSubmission {
 	id: string;
 	api: "prompt" | "steer" | "followUp" | "sendCustomMessage" | "sendUserMessage";
 	origin: { kind: "host" | "sdk" | "extension"; id: string };
+	/** Capture-time native state. Earlier v1 records may omit it; absence cannot establish an implicit wake. */
+	hostState?: { streaming: boolean };
 	/** leafId is a transcript position, not a durable campaign/branch identity. */
 	scope: { sessionId: string; leafId: string | null; attachmentId: string };
 	args: unknown[];

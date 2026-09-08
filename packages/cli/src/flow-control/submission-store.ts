@@ -107,6 +107,7 @@ function validateSubmission(input: Submission, scope: FlowScope): void {
 		!input.origin ||
 		!["host", "sdk", "extension"].includes(input.origin.kind) ||
 		!identity(input.origin.id) ||
+		(input.hostState !== undefined && (!input.hostState || typeof input.hostState.streaming !== "boolean")) ||
 		!input.scope ||
 		input.scope.sessionId !== scope.sessionId ||
 		!identity(input.scope.attachmentId) ||
