@@ -147,6 +147,11 @@ export class PiControllerHost implements FlowControllerHost {
 			hostReady: this.session.isIdle && !this.session.agent.state.isStreaming && !this.session.isRetrying,
 		};
 	}
+	onIdle(listener: () => void): () => void {
+		this.assertActive();
+		return this.boundary.onIdle(listener);
+	}
+
 	atIdle<T>(run: () => Promise<T>) {
 		this.boundary.assertAttachedBranch();
 		return this.boundary.atIdle(run);

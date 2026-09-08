@@ -25,6 +25,8 @@ export class PiHostBoundary {
 	private navigationReleased = false;
 	private barrier?: Promise<void>;
 	private readonly sessionId: string;
+	private readonly idleListeners = new Set<() => void>();
+	private idleNotification?: ReturnType<typeof setImmediate>;
 	constructor(private readonly session: AgentSession) {
 		this.sessionId = session.sessionId;
 		const agent = session.agent;
@@ -89,10 +91,31 @@ export class PiHostBoundary {
 		this.assertActive();
 		if (this.stopping) throw new FlowLedgerError("stale", "Host boundary is stopping.");
 	}
+	/** Deferred notification; listeners must revalidate admission before starting work. */
+	onIdle(listener: () => void): () => void {
+		this.assertWritable();
+		this.idleListeners.add(listener);
+		return () => this.idleListeners.delete(listener);
+	}
 	private notifyDrained(): void {
 		if (this.active === 0 && !this.barrier) {
 			if (this.closed) this.hooks.close();
 			this.drained?.();
+			if (!this.closed && !this.stopping && this.idleListeners.size && !this.idleNotification) {
+				this.idleNotification = setImmediate(() => {
+					this.idleNotification = undefined;
+					if (
+						this.closed ||
+						this.stopping ||
+						this.navigated ||
+						this.session.sessionId !== this.sessionId ||
+						this.barrier ||
+						!this.idle(true)
+					)
+						return;
+					for (const listener of this.idleListeners) listener();
+				});
+			}
 		}
 	}
 	/** Call only from ingress beforeBranchChange, after Pi has finished preparing navigation. */
@@ -248,6 +271,9 @@ export class PiHostBoundary {
 		});
 	}
 	close(): void {
+		this.idleListeners.clear();
+		if (this.idleNotification) clearImmediate(this.idleNotification);
+		this.idleNotification = undefined;
 		this.closed = true;
 		this.notifyDrained();
 	}

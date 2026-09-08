@@ -9,6 +9,8 @@ import { activeAdmissionHolds } from "./submission-view.js";
 type Ingress = NonNullable<CreateAgentSessionOptions["flowIngress"]>;
 type Submission = Parameters<Ingress["submit"]>[0];
 export interface PiFlowIngressOptions extends Omit<PiFlowSessionOptions, "admitNativeQueue"> {
+	/** Opt in to host-boundary release; failures require visible host reporting. */
+	autoRelease?: { onError(error: unknown): void };
 	/** Semantic admission override; omission uses conservative unadapted-send admission. */
 	admit?(
 		submission: Submission,
@@ -37,6 +39,8 @@ export class PiSessionFlowIngress implements Ingress {
 	private readonly pending = new Map<string, Pending>();
 	private readonly frames = new AsyncLocalStorage<{ active: boolean; id?: string }>();
 	private readonly active = new Set<Promise<unknown>>();
+	private unsubscribeIdle?: () => void;
+	private scheduledRelease?: ReturnType<typeof setImmediate>;
 	private releasing?: Promise<{ released: string[]; held: string[] }>;
 	constructor(private readonly options: PiFlowIngressOptions) {}
 
@@ -62,9 +66,39 @@ export class PiSessionFlowIngress implements Ingress {
 					}, record.id),
 			});
 			this.service = service;
+			this.subscribeIdle();
 		})();
 		return this.opening;
 	}
+	private subscribeIdle(): void {
+		this.unsubscribeIdle?.();
+		this.unsubscribeIdle = this.options.autoRelease
+			? this.branch().host.onIdle(() => this.requestRelease())
+			: undefined;
+	}
+	/** Policy changes and drained host operations use one deferred scheduling entry point. */
+	requestRelease(): void {
+		if (!this.options.autoRelease || this.disposed || this.fenced || this.scheduledRelease) return;
+		this.scheduledRelease = this.frames.exit(() =>
+			setImmediate(() => {
+				this.scheduledRelease = undefined;
+				if (this.disposed || this.fenced) return;
+				void Promise.resolve()
+					.then(() => this.releaseReady())
+					.then((result) => {
+						if (result.released.length && result.held.length) this.requestRelease();
+					})
+					.catch((error: unknown) => this.options.autoRelease?.onError(error));
+			}),
+		);
+	}
+	private stopReleaseNotifications(): void {
+		this.unsubscribeIdle?.();
+		this.unsubscribeIdle = undefined;
+		if (this.scheduledRelease) clearImmediate(this.scheduledRelease);
+		this.scheduledRelease = undefined;
+	}
+
 	/** Read persisted admission reasons; inspection cannot reconstruct an executable send. */
 	async heldInputs(): Promise<{ id: string; reason: string }[]> {
 		const records = await this.branch().attachment.submissions.snapshot();
@@ -277,6 +311,7 @@ export class PiSessionFlowIngress implements Ingress {
 		const service = this.service;
 		this.branch();
 		this.fenced = true;
+		this.stopReleaseNotifications();
 		await Promise.allSettled([...this.active]);
 		this.pending.clear();
 		await service?.beforeBranchChange();
@@ -285,7 +320,10 @@ export class PiSessionFlowIngress implements Ingress {
 		if (this.disposed || !this.fenced || !this.service)
 			throw new FlowLedgerError("stale", "Flow branch change is not prepared.");
 		await this.service.branchChanged();
-		if (!this.disposed) this.fenced = false;
+		if (!this.disposed) {
+			this.fenced = false;
+			this.subscribeIdle();
+		}
 	}
 	dispose(): Promise<void> {
 		if (this.frames.getStore()?.active)
@@ -294,6 +332,7 @@ export class PiSessionFlowIngress implements Ingress {
 			);
 		this.disposed = true;
 		this.fenced = true;
+		this.stopReleaseNotifications();
 		this.closing ??= (async () => {
 			await this.opening?.catch(() => {});
 			await Promise.allSettled([...this.active]);

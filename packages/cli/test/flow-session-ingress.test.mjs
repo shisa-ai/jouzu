@@ -7,10 +7,14 @@ import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js";
 
-async function fixture(t, { root: supplied, admit = async () => true, policy, manager, nextTurnObserver } = {}) {
+async function fixture(
+	t,
+	{ root: supplied, admit = async () => true, policy, manager, nextTurnObserver, autoRelease } = {},
+) {
 	const root = supplied ?? (await mkdtemp(join(tmpdir(), "jouzu-ingress-owner-")));
 	const ingress = new PiSessionFlowIngress({
 		root,
+		autoRelease,
 		maxInputBytes: 4096,
 		maxResultBytes: 4096,
 		host: { projections: new Map(), maxPayloadBytes: 100000, containsUserInput: () => true },
@@ -1318,4 +1322,94 @@ test("disposal fences a release pass before dispatch and drains it", async (t) =
 	await Promise.all([closing, rejected]);
 	assert.equal(f.sent.length, 0);
 	assert.throws(() => f.ingress.releaseReady(), { code: "stale" });
+});
+
+test("automatic release resumes held inputs after a host operation drains", async (t) => {
+	let ready = false;
+	const delivered = deferred();
+	const failures = [];
+	const f = await fixture(t, {
+		autoRelease: { onError: (error) => failures.push(error) },
+		admit: async (submission) => {
+			if (ready && submission.args[0] === "held second") delivered.resolve();
+			return ready;
+		},
+	});
+	await f.session.prompt("held first");
+	await f.session.prompt("held second");
+	ready = true;
+	await f.session.sendCustomMessage(
+		{ customType: "signal", content: "context", display: true },
+		{ triggerTurn: false },
+	);
+	await delivered.promise;
+	// Join the running release, including native execution and receipts.
+	await f.ingress.releaseReady();
+	assert.equal(f.sent.length, 2);
+	assert.deepEqual(failures, []);
+});
+
+test("policy notification releases held input and disposal cancels scheduled notifications", async (t) => {
+	let ready = false;
+	const admitted = deferred();
+	const failures = [];
+	const f = await fixture(t, {
+		autoRelease: { onError: (error) => failures.push(error) },
+		admit: async () => {
+			if (ready) admitted.resolve();
+			return ready;
+		},
+	});
+	await f.session.prompt("held");
+	ready = true;
+	f.ingress.requestRelease();
+	await admitted.promise;
+	await f.ingress.releaseReady();
+	assert.equal(f.sent.length, 1);
+	ready = false;
+	await f.session.prompt("discard live callback on close");
+	ready = true;
+	f.ingress.requestRelease();
+	await f.ingress.dispose();
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(f.sent.length, 1);
+	assert.deepEqual(failures, []);
+});
+
+test("automatic release reports admission failure without dispatching or spinning", async (t) => {
+	let fail = false;
+	const reported = deferred();
+	let reports = 0;
+	const f = await fixture(t, {
+		autoRelease: {
+			onError: (error) => {
+				reports++;
+				reported.resolve(error);
+			},
+		},
+		admit: async () => {
+			if (fail) throw new Error("policy unavailable");
+			return false;
+		},
+	});
+	await f.session.prompt("held after failed policy");
+	fail = true;
+	f.ingress.requestRelease();
+	assert.match((await reported.promise).message, /policy unavailable/);
+	await new Promise((resolve) => setImmediate(resolve));
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(reports, 1);
+	assert.equal(f.sent.length, 0);
+	assert.equal((await f.ingress.heldInputs()).length, 1);
+});
+
+test("automatic release reports synchronous lifecycle failure", async (t) => {
+	const reported = deferred();
+	const f = await fixture(t, { autoRelease: { onError: (error) => reported.resolve(error) } });
+	t.mock.method(f.ingress, "releaseReady", () => {
+		throw new Error("attachment changed");
+	});
+	f.ingress.requestRelease();
+	assert.match((await reported.promise).message, /attachment changed/);
+	assert.equal(f.sent.length, 0);
 });

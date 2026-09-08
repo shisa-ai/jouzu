@@ -344,3 +344,41 @@ test("navigation handoff preserves a concurrent model operation and refuses earl
 	await changing;
 	assert.equal((await boundary.atIdle(async () => {})).kind, "idle");
 });
+
+test("idle listeners run after maintenance exits and are removed on close", async (t) => {
+	const { boundary } = await fixture(t);
+	let inside = false;
+	const notified = deferred();
+	let calls = 0;
+	boundary.onIdle(() => {
+		assert.equal(inside, false);
+		calls++;
+		notified.resolve();
+	});
+	await boundary.atQueueMaintenance(async () => {
+		inside = true;
+		await new Promise((resolve) => setImmediate(resolve));
+		assert.equal(calls, 0);
+		inside = false;
+	});
+	await notified.promise;
+	assert.equal(calls, 1);
+	await boundary.atQueueMaintenance(async () => {});
+	boundary.close();
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(calls, 1);
+});
+
+test("idle listeners recheck streaming state before notification", async (t) => {
+	const { boundary, session } = await fixture(t);
+	let calls = 0;
+	boundary.onIdle(() => calls++);
+	await boundary.atQueueMaintenance(async () => {});
+	session.agent.state.isStreaming = true;
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(calls, 0);
+	session.agent.state.isStreaming = false;
+	await boundary.atQueueMaintenance(async () => {});
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(calls, 1);
+});
