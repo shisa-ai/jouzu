@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { BACKGROUND_CONTEXT as context, MemorySessionRepo, setValue, value } from "@earendil-works/pi-agent-core";
-import { createFlowSession } from "../../../scripts/fixtures/pi-flow-session.mjs";
+import { createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { FlowOwnership } from "../dist/flow-control/ownership.js";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { FlowSubmissionStore } from "../dist/flow-control/submission-store.js";
@@ -25,6 +25,144 @@ const submission = (id = "item") => ({
 		],
 		undefined,
 	],
+});
+
+test("native dispatch is recorded before execution and cannot repeat after reopen", async (t) => {
+	const root = await rootFor(t);
+	let attachment = await PiFlowAttachment.open(root, scope);
+	t.after(() => attachment.close());
+	await attachment.submissions.retain(submission());
+	let calls = 0;
+	const results = await Promise.allSettled([
+		attachment.submissions.dispatch("item", 1, "operation", async () => {
+			assert.equal((await attachment.submissions.snapshot())[0].dispatch.phase, "started");
+			calls++;
+		}),
+		attachment.submissions.dispatch("item", 1, "competing", async () => {
+			calls++;
+		}),
+	]);
+	assert.equal(results.filter((result) => result.status === "fulfilled").length, 1);
+	assert.equal(results.find((result) => result.status === "rejected").reason.code, "transition");
+	assert.equal((await attachment.submissions.snapshot())[0].dispatch.phase, "returned");
+	await attachment.close();
+	attachment = await PiFlowAttachment.open(root, scope);
+	await assert.rejects(
+		attachment.submissions.dispatch("item", 1, "other", async () => {
+			calls++;
+		}),
+		{ code: "transition" },
+	);
+	assert.equal(calls, 1);
+});
+
+test("process death after a native effect preserves the dispatch hold without repeating the effect", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "jouzu-native-dispatch-kill-"));
+	let attachment;
+	const child = fork(new URL("./fixtures/flow-submission-crash.mjs", import.meta.url), [root, "dispatch"], {
+		stdio: ["ignore", "ignore", "pipe", "ipc"],
+	});
+	const exited = once(child, "exit");
+	t.after(async () => {
+		if (child.exitCode === null && child.signalCode === null) {
+			child.kill("SIGKILL");
+			await exited;
+		}
+		await attachment?.close();
+		await rm(root, { recursive: true, force: true });
+	});
+	await Promise.race([
+		once(child, "message"),
+		exited.then(() => {
+			throw new Error("Native fixture exited before its effect");
+		}),
+	]);
+	child.kill("SIGKILL");
+	await exited;
+	attachment = await PiFlowAttachment.open(root, scope);
+	assert.equal((await attachment.submissions.snapshot())[0].dispatch.phase, "started");
+	await assert.rejects(
+		attachment.submissions.dispatch("durable", 1, "retry", async () => {
+			await writeFile(join(root, "native-effect"), "repeated");
+		}),
+		{ code: "transition" },
+	);
+	assert.equal(await readFile(join(root, "native-effect"), "utf8"), "once\n");
+});
+
+test("native failure and cancellation preserve dispatch uncertainty without allowing replay", async (t) => {
+	const root = await rootFor(t);
+	const attachment = await PiFlowAttachment.open(root, scope);
+	t.after(() => attachment.close());
+	await attachment.submissions.retain(submission());
+	await assert.rejects(
+		attachment.submissions.dispatch("item", 1, "operation", async () => {
+			await attachment.submissions.cancel("item", 1);
+			throw new Error("native failed after an effect");
+		}),
+		/native failed after an effect/,
+	);
+	const record = (await attachment.submissions.snapshot())[0];
+	assert.equal(record.status, "cancelled");
+	assert.equal(record.dispatch.phase, "failed");
+	await assert.rejects(
+		attachment.submissions.dispatch("item", 2, "retry", async () => {}),
+		{ code: "stale" },
+	);
+});
+
+test("closing storage drains native dispatch and keeps its writer reservation", async (t) => {
+	const root = await rootFor(t);
+	const attachment = await PiFlowAttachment.open(root, scope);
+	const entered = deferred(),
+		release = deferred();
+	await attachment.submissions.retain(submission());
+	const dispatch = assert.rejects(
+		attachment.submissions.dispatch("item", 1, "operation", async () => {
+			entered.resolve();
+			await release.promise;
+		}),
+		{ code: "closed" },
+	);
+	await entered.promise;
+	const closing = attachment.close();
+	await assert.rejects(PiFlowAttachment.open(root, scope), { code: "busy" });
+	release.resolve();
+	await Promise.all([dispatch, closing]);
+	const next = await PiFlowAttachment.open(root, scope);
+	t.after(() => next.close());
+	assert.equal((await next.submissions.snapshot())[0].dispatch.phase, "started");
+});
+
+test("one native dispatch retains original input and runs Pi input transformation once", async (t) => {
+	const root = await rootFor(t);
+	let attachment,
+		transformations = 0;
+	const { session, requests } = await createFlowSession(t, {
+		ingress: {
+			version: 1,
+			async submit(input, dispatch) {
+				const record = await attachment.submissions.retain(input);
+				await attachment.submissions.dispatch(record.id, record.revision, "operation", dispatch);
+			},
+		},
+		extensions: [
+			(pi) =>
+				pi.on("input", () => {
+					transformations++;
+					return { action: "transform", text: "native normalized input" };
+				}),
+		],
+	});
+	attachment = await PiFlowAttachment.open(root, { sessionId: session.sessionId, branchId: "main" });
+	t.after(() => attachment.close());
+	await session.prompt("original input");
+	const [record] = await attachment.submissions.snapshot();
+	assert.equal(record.submission.args[0], "original input");
+	assert.equal(record.dispatch.phase, "returned");
+	assert.equal(transformations, 1);
+	assert.equal(requests.length, 1);
+	assert.equal(requests[0][0].content[0].text, "native normalized input");
 });
 async function rootFor(t) {
 	const root = await mkdtemp(join(tmpdir(), "jouzu-flow-submissions-"));

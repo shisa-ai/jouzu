@@ -1,3 +1,5 @@
+import { appendFileSync } from "node:fs";
+import { join } from "node:path";
 import { PiFlowAttachment } from "../../dist/flow-control/pi-attachment.js";
 
 const attachment = await PiFlowAttachment.open(process.argv[2], { sessionId: "parent", branchId: "main" });
@@ -9,5 +11,15 @@ await attachment.submissions.retain({
 	scope: { sessionId: "parent", attachmentId: "first", leafId: null },
 	args: ["survives process death", undefined],
 });
-process.send({ saved: true });
-setInterval(() => {}, 1000);
+if (process.argv[3] === "dispatch") {
+	await attachment.submissions.dispatch("durable", 1, "operation", async () => {
+		appendFileSync(join(process.argv[2], "native-effect"), "once\n");
+		process.send({ saved: true });
+		await new Promise(() => {
+			setInterval(() => {}, 1000);
+		});
+	});
+} else {
+	process.send({ saved: true });
+	setInterval(() => {}, 1000);
+}

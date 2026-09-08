@@ -46,6 +46,17 @@ async function fixture(t, kind = "work") {
 async function select(f) {
 	await f.attachment.ledger.select("attempt", f.composition.members);
 }
+
+test("a returned native operation without receipts stays held and uncertain", async (t) => {
+	const f = await fixture(t);
+	await f.attachment.submissions.dispatch("source", 1, "operation", async () => {});
+	const view = await f.view();
+	assert.equal(view.admission, "held");
+	assert.equal(view.delivery, "uncertain");
+	assert.deepEqual(view.attemptIds, []);
+	await f.reopen();
+	assert.deepEqual(await f.view(), view);
+});
 async function queue(f) {
 	await select(f);
 	await f.attachment.ledger.queued("attempt", { id: "queue", revision: 1 });

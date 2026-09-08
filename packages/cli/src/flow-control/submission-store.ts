@@ -21,6 +21,12 @@ interface RecordData {
 	acceptedAt: number;
 	digest: string;
 	payload: Encoded;
+	dispatch?: FlowSubmissionDispatch;
+}
+export interface FlowSubmissionDispatch {
+	operationId: string;
+	ownerId: string;
+	phase: "started" | "returned" | "failed";
 }
 interface State {
 	version: 1;
@@ -34,6 +40,7 @@ export interface RetainedSubmission {
 	status: "retained" | "cancelled";
 	acceptedAt: number;
 	submission: Submission;
+	dispatch?: FlowSubmissionDispatch;
 }
 type Header = Omit<State, "records"> & { recordIds: string[] };
 const address = value<Header>("jouzu.flow.submissions", "v1");
@@ -159,6 +166,7 @@ export class FlowSubmissionStore {
 		)
 			throw new FlowLedgerError("capacity", "Submission retention limit reached; admission is held.");
 		const ids = new Set();
+		const operationIds = new Set();
 		for (const record of state.records) {
 			if (
 				!record ||
@@ -173,6 +181,16 @@ export class FlowSubmissionStore {
 			)
 				throw new FlowLedgerError("schema", "Invalid retained submission record.");
 			ids.add(record.id);
+			if (
+				record.dispatch !== undefined &&
+				(!record.dispatch ||
+					!identity(record.dispatch.operationId) ||
+					!identity(record.dispatch.ownerId) ||
+					operationIds.has(record.dispatch.operationId) ||
+					!["started", "returned", "failed"].includes(record.dispatch.phase))
+			)
+				throw new FlowLedgerError("schema", "Invalid retained dispatch state.");
+			if (record.dispatch) operationIds.add(record.dispatch.operationId);
 			const submission = decode(record.payload) as Submission;
 			validateSubmission(submission, this.ownership.scope);
 			if (submission.id !== record.id) throw new FlowLedgerError("identity", "Stored submission identity changed.");
@@ -255,6 +273,53 @@ export class FlowSubmissionStore {
 				submission: decode(payload) as Submission,
 			})),
 		}));
+	}
+	/** Persist native-operation intent before executing once. Return is not a delivery or completion receipt. */
+	dispatch<T>(id: string, revision: number, operationId: string, run: () => Promise<T>): Promise<T> {
+		if (!identity(operationId)) return Promise.reject(new FlowLedgerError("identity", "Invalid native operation ID."));
+		return this.ownership.run(async () => {
+			await this.transact((state) => {
+				const record = state.records.find((item) => item.id === id);
+				if (!record || record.revision !== revision || record.status !== "retained")
+					throw new FlowLedgerError("stale", "Submission changed before native dispatch.");
+				if (record.dispatch)
+					throw new FlowLedgerError("transition", "Submission already has a native dispatch intent.");
+				if (state.records.some((item) => item.dispatch?.operationId === operationId))
+					throw new FlowLedgerError("identity", "Native operation ID is already assigned.");
+				record.dispatch = { operationId, ownerId: this.ownership.token, phase: "started" };
+				return { changed: true, result: undefined };
+			});
+			const finish = (phase: "returned" | "failed") =>
+				this.transact((state) => {
+					const dispatch = state.records.find((item) => item.id === id)?.dispatch;
+					if (
+						!dispatch ||
+						dispatch.operationId !== operationId ||
+						dispatch.ownerId !== this.ownership.token ||
+						dispatch.phase !== "started"
+					)
+						throw new FlowLedgerError("stale", "Native dispatch ownership changed before its outcome.");
+					dispatch.phase = phase;
+					return { changed: true, result: undefined };
+				});
+			this.ownership.assertActive();
+			let result: T;
+			try {
+				result = await run();
+			} catch (error) {
+				try {
+					await finish("failed");
+				} catch (receiptError) {
+					throw new AggregateError(
+						[error, receiptError],
+						"Native dispatch failed and its outcome could not be retained.",
+					);
+				}
+				throw error;
+			}
+			await finish("returned");
+			return result;
+		});
 	}
 	cancel(id: string, revision: number): Promise<{ kind: "cancelled" | "conflict" | "not-found"; revision?: number }> {
 		return this.transact<{ kind: "cancelled" | "conflict" | "not-found"; revision?: number }>((state) => {

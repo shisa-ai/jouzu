@@ -49,9 +49,9 @@ export function projectFlowSubmissions(records: RetainedSubmission[], ledger: Fl
 		if (record.submission.scope.sessionId !== ledger.scope.sessionId)
 			throw new FlowLedgerError("scope", "Retained submission belongs to another session.");
 		const attempts = links.get(record.id) ?? [];
-		const ambiguous = attempts.length === 0 && unlinkedConsumption;
+		const ambiguous = attempts.length === 0 && (unlinkedConsumption || !!record.dispatch);
 		let delivery: FlowSubmissionView["delivery"] = ambiguous ? "uncertain" : "none";
-		let held = ambiguous;
+		let held = ambiguous || !!record.dispatch;
 		for (const attempt of attempts) {
 			const members = attempt.members.filter((member) => member.sourceSubmission?.id === record.id);
 			const matches = (item: { id: string; revision: string }) =>
@@ -94,7 +94,11 @@ export function projectFlowSubmissions(records: RetainedSubmission[], ledger: Fl
 			delivery,
 			attemptIds: attempts.map((attempt) => attempt.id),
 			...(admission === "held"
-				? { reason: "Consumed or withheld input requires reconciliation before another dispatch." }
+				? {
+						reason: record.dispatch
+							? "Native dispatch requires reconciliation before replay."
+							: "Consumed or withheld input requires reconciliation before another dispatch.",
+					}
 				: {}),
 		};
 	});
