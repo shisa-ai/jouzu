@@ -5,7 +5,7 @@
 	"files": {
 		"dist/agent.js": {
 			"before": "d84351e451b9fef40fe2532c446aca90d26a4be9038b2d77d3d45dd6eab21d41",
-			"after": "0fd3fe5b013275b8ea3a5f7feb581059ac2a79bab24fbc53f34a915fae386a86"
+			"after": "ec5fce9c57c0e9af79f74792e1b2d28dde5c8279b64ae72696c6d51a94207d58"
 		},
 		"dist/agent-loop.js": {
 			"before": "6732a1c65c09577d2ffcb716b48e4f4673e57e3e333f10ebfce5132d82e4d7a2",
@@ -13,7 +13,7 @@
 		},
 		"dist/agent.d.ts": {
 			"before": "7caf774e58b6ceab9e4629bde58b9ab332a30278142af5a3e99b316be26030a9",
-			"after": "54ba1dc77df50446232ae3a1152d3a804258c4163930b935b93594c5fab98544"
+			"after": "0ba242005bd9fbaaee490d8682f6dd2075467c047e54b216a10f6d090b49188b"
 		},
 		"dist/types.d.ts": {
 			"before": "2ae8602b59de73435b6d9bd7d4c9dd1b344b7f1d1214866bc08feb04fc490061",

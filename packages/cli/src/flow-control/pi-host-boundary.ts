@@ -26,7 +26,9 @@ export class PiHostBoundary {
 		agent.prompt = (input: string | AgentMessage | AgentMessage[], images?: ImageContent[]) =>
 			this.operation(() => (typeof input === "string" ? prompt(input, images) : prompt(input)));
 		agent.continue = this.wrap(agent.continue.bind(agent));
+		agent.continueQueued = this.wrap(agent.continueQueued.bind(agent));
 		session.prompt = this.wrap(session.prompt.bind(session));
+		session.continueQueued = this.wrap(session.continueQueued.bind(session));
 		session.steer = this.wrap(session.steer.bind(session));
 		session.followUp = this.wrap(session.followUp.bind(session));
 		session.sendUserMessage = this.wrap(session.sendUserMessage.bind(session));

@@ -132,18 +132,24 @@ export function transform(path, source) {
         }`,
 			`        if (lastMessage.role === "assistant") {
             if (!this.hasQueuedMessages()) throw new Error("Cannot continue from message role: assistant");
-            // Own the run before awaiting queue admission; another prompt must
-            // not start between removing a queue item and starting execution.
-            await this.runWithLifecycle(async (signal) => {
-                const steering = await this.steeringQueue.drain(signal);
-                const prompts = steering.length > 0 ? steering : await this.followUpQueue.drain(signal);
-                if (prompts.length === 0) return;
-                await runAgentLoop(prompts, this.createContextSnapshot(),
-                    this.createLoopConfig({ skipInitialSteeringPoll: steering.length > 0 }),
-                    (event) => this.processEvents(event), signal, this.streamFunction);
-            });
+            await this.continueQueued();
             return;
         }`,
+		);
+		change(
+			"    normalizePromptInput(input, images) {",
+			`    async continueQueued() {
+        // Own the run before awaiting queue admission, including an empty transcript.
+        await this.runWithLifecycle(async (signal) => {
+            const steering = await this.steeringQueue.drain(signal);
+            const prompts = steering.length > 0 ? steering : await this.followUpQueue.drain(signal);
+            if (prompts.length === 0) return;
+            await runAgentLoop(prompts, this.createContextSnapshot(),
+                this.createLoopConfig({ skipInitialSteeringPoll: steering.length > 0 }),
+                (event) => this.processEvents(event), signal, this.streamFunction);
+        });
+    }
+    normalizePromptInput(input, images) {`,
 		);
 		change(
 			"            convertToLlm: this.convertToLlm,",
@@ -174,6 +180,7 @@ export function transform(path, source) {
     const response = await streamFunction(config.model, llmContext, {`,
 		);
 	} else if (path === "dist/agent.d.ts") {
+		change("    continue(): Promise<void>;", "    continue(): Promise<void>;\n    continueQueued(): Promise<void>;");
 		text = `import type { FlowCheckpoints, FlowQueuedMessage, FlowQueueChange } from "./jouzu-flow.js";\nexport type { FlowCheckpoints, FlowQueuedMessage, FlowQueueChange, FlowRequestInput, FlowQueueClaim } from "./jouzu-flow.js";\n${text}`;
 		change(
 			"export interface AgentOptions {",

@@ -144,7 +144,21 @@ export function transform(path, source) {
 		change("    dispose() {", "    dispose() {\n        this._flowBinding?.dispose();");
 		change(
 			"    async _runAgentPrompt(messages) {",
-			"    async _runAgentPrompt(messages) {\n        this._flowBinding?.assertActive();",
+			`    async continueQueued() {
+        this._flowBinding?.assertActive();
+        if (!this.isIdle || this.agent.state.isStreaming || this.isCompacting || this.isRetrying) {
+            throw new Error("Queued flow execution requires an idle session.");
+        }
+        if (!this.agent.hasQueuedMessages()) return false;
+        await this._runAgentPrompt(undefined, true);
+        return true;
+    }
+    async _runAgentPrompt(messages, fromQueue = false) {
+        this._flowBinding?.assertActive();`,
+		);
+		change(
+			"            await this.agent.prompt(messages);",
+			"            if (fromQueue) await this.agent.continueQueued();\n            else await this.agent.prompt(messages);",
 		);
 		change(
 			"            await command.handler(args, ctx);",
@@ -308,6 +322,10 @@ export function transform(path, source) {
 		);
 	} else if (path === "dist/core/agent-session.d.ts") {
 		text = `import type { FlowIngress } from "./jouzu-flow-ingress.js";\n${text}`;
+		change(
+			"    private _runAgentPrompt;",
+			"    /** Drain queued input through native retries, compaction, and settlement without appending a prompt. */\n    continueQueued(): Promise<boolean>;\n    private _runAgentPrompt;",
+		);
 		change(
 			"export interface AgentSessionConfig {",
 			"export interface AgentSessionConfig {\n    flowIngress?: FlowIngress;",

@@ -210,12 +210,12 @@ for (const afterHandoff of [false, true])
 		if (afterHandoff) assert.equal(attempt.requests[0].outcome, "aborted");
 	});
 
-test("AgentSession automatic retry retains the attempt across native runs", async (t) => {
+test("queued AgentSession execution retries without an unrelated user prompt", async (t) => {
 	let calls = 0;
 	const { session, ledger, sent, boundary } = await fixture(t, {
 		fetch: () => {
 			calls++;
-			return calls === 2
+			return calls === 1
 				? new Response(JSON.stringify({ error: { message: "Service unavailable", type: "server_error" } }), {
 						status: 503,
 						headers: { "content-type": "application/json" },
@@ -232,9 +232,9 @@ test("AgentSession automatic retry retains the attempt across native runs", asyn
 			retryBoundaries.push(boundary.reconcile(ledger, "attempt"));
 		}
 	});
-	await session.prompt("User starts work");
+	assert.equal(await session.continueQueued(), true);
 	const state = await ledger.snapshot();
-	assert.equal(sent.length, 3);
+	assert.equal(sent.length, 2);
 	assert.equal(retryStates.length, 1);
 	assert.equal((await retryStates[0]).activeAttemptId, "attempt");
 	assert.equal(state.activeAttemptId, "attempt");

@@ -29,11 +29,11 @@
 		},
 		"dist/core/agent-session.js": {
 			"before": "fb8a3981c20c8c0bbd42231b1c99a10335fb3858b659056b341954de9cfa467f",
-			"after": "323b88c14dfab6578b038b38304c38b11fdc29f2adf9d70337d1529d15ecf673"
+			"after": "8f0b7d0bd49e1fd4cfa13a74979b2a409dfce734da3380d28dcc2585fe39b0dc"
 		},
 		"dist/core/agent-session.d.ts": {
 			"before": "db3bfd2ae08eda4936d8807656f06120e6e62672d6a7798bccba486a0dc994ea",
-			"after": "7d7134314bd343918eb36b27f07612fe79dc7b39c190ecf555f884ed827b247b"
+			"after": "e566838983fce960d37594b1117d2ad79196330d1916a0f1dc9a72dd4d72a205"
 		},
 		"dist/core/extensions/loader.js": {
 			"before": "a1393de916487a2c47107ac7239f3139dcdb938705f88ba1ea5a954b3c8bb483",

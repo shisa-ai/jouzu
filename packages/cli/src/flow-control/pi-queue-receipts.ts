@@ -50,6 +50,12 @@ export class PiQueueReceipts {
 				throw new FlowLedgerError("identity", "Queue dispatch cannot start a direct native run.");
 			return continueRun(...args);
 		};
+		const continueQueued = agent.continueQueued.bind(agent);
+		agent.continueQueued = () => {
+			if (this.dispatches.getStore())
+				throw new FlowLedgerError("identity", "Queue dispatch cannot start a direct native run.");
+			return continueQueued();
+		};
 		const previous = agent.flowCheckpoints;
 		agent.flowCheckpoints = {
 			...previous,
