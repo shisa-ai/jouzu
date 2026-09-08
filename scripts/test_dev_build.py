@@ -70,7 +70,10 @@ class DevBuildTests(unittest.TestCase):
         (path / "packages" / "cli").mkdir(parents=True)
         (path / "scripts").mkdir()
         (path / "package-lock.json").write_text("{}\n", encoding="utf-8")
-        (path / "packages" / "cli" / "package.json").write_text("{}\n", encoding="utf-8")
+        (path / "packages" / "cli" / "package.json").write_text(
+            '{"dependencies":{"fixture-dependency":"1.0.0","fixture-bundle":"1.0.0"},'
+            '"bundleDependencies":["fixture-bundle"]}\n', encoding="utf-8"
+        )
         (path / "packages" / "cli" / "package-lock.json").write_text(
             "{}\n", encoding="utf-8"
         )
@@ -175,6 +178,11 @@ class DevBuildTests(unittest.TestCase):
                 \tmkdir -p "$prefix/node_modules/.bin"
                 \tprintf '#!/usr/bin/env bash\\nexit 0\\n' >"$prefix/node_modules/.bin/tsc"
                 \tchmod 0755 "$prefix/node_modules/.bin/tsc"
+                \tmkdir -p "$prefix/node_modules/fixture-dependency"
+                \tprintf '%s\\n' '{"name":"fixture-dependency","version":"1.0.0"}' >"$prefix/node_modules/fixture-dependency/package.json"
+                \tif [[ -n "${DEV_BUILD_TEST_CI_INCOMPLETE:-}" ]]; then
+                \t\tprintf '%s\\n' '{}' >"$prefix/node_modules/fixture-dependency/package.json"
+                \tfi
                 fi
                 if [[ "$is_build_dev" == true ]]; then
                 \tmkdir -p "$prefix/packages/cli/dist"
@@ -265,6 +273,28 @@ class DevBuildTests(unittest.TestCase):
         finally:
             os.close(master)
         return process.wait(timeout=5), output.decode(errors="replace")
+
+    def test_incomplete_install_does_not_record_receipt(self) -> None:
+        sibling = self.root / "jouzu"
+        self._create_jouzu_repo(sibling)
+        result = self._run(env={**self.env, "DEV_BUILD_TEST_CI_INCOMPLETE": "1"})
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("dependency bootstrap left required packages unavailable", result.stderr)
+        self.assertFalse((sibling / "node_modules/.dev-build-receipt").exists())
+        self.assertNotIn("\trun\tcheck\t", self.log.read_text())
+
+    def test_matching_receipt_repairs_empty_dependency_directory(self) -> None:
+        sibling = self.root / "jouzu"
+        self._create_jouzu_repo(sibling)
+        first = self._run()
+        self.assertEqual(first.returncode, 0, first.stdout + first.stderr)
+        package = sibling / "node_modules/fixture-dependency/package.json"
+        package.unlink()
+        second = self._run()
+        self.assertEqual(second.returncode, 0, second.stdout + second.stderr)
+        self.assertIn("missing installed dependency fixture-dependency", second.stderr)
+        self.assertTrue(package.is_file())
+        self.assertEqual(self.log.read_text().count("\tci\t"), 2)
 
     def test_fresh_sibling_checkout_installs_dependencies_once(self) -> None:
         sibling = self.root / "jouzu"

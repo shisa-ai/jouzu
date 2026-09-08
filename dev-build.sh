@@ -109,6 +109,43 @@ dependency_receipt_matches_inputs() {
 	[[ "$current_fingerprint" == "$(<"$receipt_path")" ]]
 }
 
+direct_dependencies_available() {
+	node --input-type=module - "$JOUZU_REPO" <<'NODE'
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+const root = process.argv[2];
+for (const relative of ["", "packages/cli", "packages/session-ui"]) {
+	const base = join(root, relative);
+	const manifestPath = join(base, "package.json");
+	if (!existsSync(manifestPath)) continue;
+	const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+	// The CLI build installs its release bundle separately after type checking.
+	const bundled = new Set(Array.isArray(manifest.bundleDependencies) ? manifest.bundleDependencies : []);
+	for (const name of Object.keys({ ...manifest.dependencies, ...manifest.devDependencies })) {
+		if (bundled.has(name)) continue;
+		let directory = base;
+		let found = false;
+		while (true) {
+			const installed = join(directory, "node_modules", name, "package.json");
+			if (existsSync(installed)) {
+				try {
+					found = JSON.parse(readFileSync(installed, "utf8")).name === name;
+				} catch {}
+				break;
+			}
+			const parent = dirname(directory);
+			if (parent === directory) break;
+			directory = parent;
+		}
+		if (!found) {
+			console.error(`dev-build: missing installed dependency ${name} for ${relative || "root"}`);
+			process.exit(1);
+		}
+	}
+}
+NODE
+}
+
 write_dependency_receipt() {
 	local receipt_path temp
 	receipt_path="$(dependency_receipt_path)"
@@ -127,7 +164,7 @@ bootstrap_dependencies() {
 		echo "dev-build: missing Jouzu lockfile: $JOUZU_REPO/package-lock.json" >&2
 		return 1
 	fi
-	if typescript_available && dependency_receipt_matches_inputs; then
+	if typescript_available && dependency_receipt_matches_inputs && direct_dependencies_available; then
 		return
 	fi
 
@@ -146,6 +183,11 @@ bootstrap_dependencies() {
 	fi
 	if ! typescript_available; then
 		echo "dev-build: dependency bootstrap did not install TypeScript under $JOUZU_REPO/node_modules" >&2
+		return 1
+	fi
+
+	if ! direct_dependencies_available; then
+		echo "dev-build: dependency bootstrap left required packages unavailable" >&2
 		return 1
 	fi
 
