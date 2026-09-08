@@ -1,5 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks";
-import type { Agent, FlowQueueClaim, FlowQueuedMessage } from "@earendil-works/pi-agent-core";
+import type { Agent, AgentMessage, FlowQueueClaim, FlowQueuedMessage } from "@earendil-works/pi-agent-core";
+import type { ImageContent } from "@earendil-works/pi-ai";
 import { FlowLedgerError, type FlowReceiptLedger } from "./receipt-ledger.js";
 
 interface Dispatch {
@@ -37,6 +38,18 @@ export class PiQueueReceipts {
 				return item;
 			};
 		}
+		const prompt = agent.prompt.bind(agent);
+		agent.prompt = (input: string | AgentMessage | AgentMessage[], images?: ImageContent[]) => {
+			if (this.dispatches.getStore())
+				throw new FlowLedgerError("identity", "Queue dispatch cannot start a direct native run.");
+			return typeof input === "string" ? prompt(input, images) : prompt(input);
+		};
+		const continueRun = agent.continue.bind(agent);
+		agent.continue = (...args) => {
+			if (this.dispatches.getStore())
+				throw new FlowLedgerError("identity", "Queue dispatch cannot start a direct native run.");
+			return continueRun(...args);
+		};
 		const previous = agent.flowCheckpoints;
 		agent.flowCheckpoints = {
 			...previous,

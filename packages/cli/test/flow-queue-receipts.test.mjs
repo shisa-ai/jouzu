@@ -178,3 +178,23 @@ test("retained ingress identity is the member of its native queue receipt", asyn
 	assert.deepEqual(attempt.queue, queue);
 	assert.equal(attempt.members[0].id, (await attachment.submissions.snapshot())[0].id);
 });
+
+test("an idle custom send cannot start a direct provider run under a queue permit", async (t) => {
+	const { session, requests, attachment, receipts } = await fixture(t);
+	await assert.rejects(
+		receipts.enqueue("attempt", () =>
+			session.sendCustomMessage(
+				{ customType: "flow", content: "instruction", display: false },
+				{ triggerTurn: true, deliverAs: "followUp" },
+			),
+		),
+		/cannot start a direct native run/,
+	);
+	assert.equal(requests.length, 0);
+	assert.equal((await attachment.ledger.snapshot()).attempts[0].phase, "selected");
+	await assert.rejects(
+		receipts.enqueue("attempt", () => session.agent.continue()),
+		/cannot start a direct native run/,
+	);
+	assert.equal(requests.length, 0);
+});
