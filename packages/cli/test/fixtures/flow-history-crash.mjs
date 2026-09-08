@@ -15,9 +15,25 @@ const queue = new PiQueueReceipts(host.session.agent, attachment.ledger);
 new PiHistoryReceipts(host.session, attachment.ledger);
 await host.session.prompt("initial");
 host.requests.length = 0;
+await attachment.submissions.retain({
+	version: 1,
+	id: "source",
+	api: "followUp",
+	origin: { kind: "host", id: "followUp" },
+	scope: { sessionId: scope.sessionId, attachmentId: "fixture", leafId: host.session.sessionManager.getLeafId() },
+	args: ["owned instruction"],
+});
 const composition = FlowModelInput.compose(
 	"attempt",
-	[{ id: "work", revision: "1", kind: "work", text: "owned instruction" }],
+	[
+		{
+			id: "work",
+			revision: "1",
+			kind: "work",
+			text: "owned instruction",
+			sourceSubmission: { id: "source", revision: 1 },
+		},
+	],
 	4096,
 );
 await attachment.ledger.select("attempt", composition.members);

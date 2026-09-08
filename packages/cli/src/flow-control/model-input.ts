@@ -8,6 +8,7 @@ export interface FlowInputItem {
 	id: string;
 	revision: string;
 	kind: FlowMember["kind"];
+	sourceSubmission?: FlowMember["sourceSubmission"];
 	text: string;
 	images?: ImageContent[];
 	/** One bounded summary can represent a retained result manifest without inline IDs. */
@@ -106,6 +107,7 @@ export class FlowModelInput {
 					kind: item.kind,
 					required: item.kind !== "result",
 					contentHash: hash,
+					...(item.sourceSubmission ? { sourceSubmission: structuredClone(item.sourceSubmission) } : {}),
 				})),
 				marker,
 				parts,
@@ -202,10 +204,13 @@ export async function prepareFlowModelInput(
 	if (
 		!attempt ||
 		attempt.members.length !== expected.length ||
-		attempt.members.some((member, index) =>
-			(["id", "revision", "kind", "required", "contentHash"] as const).some(
-				(key) => member[key] !== expected[index][key],
-			),
+		attempt.members.some(
+			(member, index) =>
+				member.sourceSubmission?.id !== expected[index].sourceSubmission?.id ||
+				member.sourceSubmission?.revision !== expected[index].sourceSubmission?.revision ||
+				(["id", "revision", "kind", "required", "contentHash"] as const).some(
+					(key) => member[key] !== expected[index][key],
+				),
 		)
 	)
 		throw new FlowLedgerError("identity", "Model composition does not match selected membership.");

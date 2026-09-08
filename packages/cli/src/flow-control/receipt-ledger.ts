@@ -9,6 +9,7 @@ export interface FlowMember {
 	kind: "work" | "result" | "wait" | "user" | "alert";
 	required: boolean;
 	contentHash: string;
+	sourceSubmission?: { id: string; revision: number };
 }
 
 export interface FlowInclusion {
@@ -52,6 +53,7 @@ export interface FlowAttempt {
 	id: string;
 	generation: number;
 	phase: FlowAttemptPhase;
+	consumed?: boolean;
 	members: FlowMember[];
 	queue?: { id: string; revision: number };
 	history: { id: string; revision: string; entryId: string; entryHash?: string }[];
@@ -102,6 +104,11 @@ function validateMembers(members: FlowMember[]): void {
 		if (!member || typeof member !== "object") throw new FlowLedgerError("schema", "Invalid flow member.");
 		requireIdentity(member.id);
 		requireIdentity(member.revision);
+		if (member.sourceSubmission !== undefined) {
+			requireIdentity(member.sourceSubmission?.id);
+			if (!Number.isSafeInteger(member.sourceSubmission.revision) || member.sourceSubmission.revision < 1)
+				throw new FlowLedgerError("identity", "Invalid source submission revision.");
+		}
 		if (!/^[a-f0-9]{64}$/.test(member.contentHash))
 			throw new FlowLedgerError("identity", "Flow members require a SHA-256 content identity.");
 		if (!["work", "result", "wait", "user", "alert"].includes(member.kind) || typeof member.required !== "boolean")
@@ -264,6 +271,15 @@ export class FlowReceiptLedger {
 				!["success", "transient-failure", "failure", "aborted"].includes(attempt.outcome)
 			)
 				throw new FlowLedgerError("schema", "Invalid run outcome.");
+			if (attempt.consumed !== undefined && typeof attempt.consumed !== "boolean")
+				throw new FlowLedgerError("schema", "Invalid native consumption fact.");
+			if (
+				attempt.consumed === false &&
+				(attempt.history.length ||
+					attempt.requests.length ||
+					["claimed", "prepared", "handed-off", "running", "settled"].includes(attempt.phase))
+			)
+				throw new FlowLedgerError("schema", "Native consumption fact contradicts request receipts.");
 			const last = attempt.requests.at(-1);
 			if (
 				(attempt.phase === "handed-off" && (!last?.handedOff || last.outcome !== undefined)) ||
@@ -319,6 +335,7 @@ export class FlowReceiptLedger {
 				id,
 				generation: this.generation,
 				phase: "selected",
+				consumed: false,
 				members: captured,
 				history: [],
 				requests: [],
@@ -346,6 +363,7 @@ export class FlowReceiptLedger {
 			if (attempt.queue?.id !== captured.id || attempt.queue.revision !== captured.revision)
 				throw new FlowLedgerError("stale", "Queue item changed before claim.");
 			attempt.phase = "claimed";
+			attempt.consumed = true;
 		});
 	}
 

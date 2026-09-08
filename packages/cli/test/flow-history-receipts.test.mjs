@@ -11,6 +11,7 @@ import { assistant, createFlowSession, deferred } from "../../../scripts/fixture
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { PiHistoryReceipts, verifyPiHistoryEntry } from "../dist/flow-control/pi-history-receipts.js";
 import { PiQueueReceipts } from "../dist/flow-control/pi-queue-receipts.js";
+import { projectFlowSubmissions } from "../dist/flow-control/submission-view.js";
 
 const user = (text) => ({ role: "user", content: [{ type: "text", text }], timestamp: 1 });
 const member = { id: "work", revision: "1", kind: "work", required: true, contentHash: "a".repeat(64) };
@@ -212,6 +213,13 @@ for (const boundary of ["before-receipt", "after-receipt"]) {
 		attachment = await PiFlowAttachment.open(join(root, "receipts"), ready.scope);
 		const [attempt] = (await attachment.ledger.snapshot()).attempts;
 		assert.equal(attempt.phase, "cancelled");
+		assert.equal(attempt.consumed, true);
+		const [retained] = projectFlowSubmissions(
+			await attachment.submissions.snapshot(),
+			await attachment.ledger.snapshot(),
+		);
+		assert.equal(retained.admission, "held");
+		assert.equal(retained.delivery, boundary === "after-receipt" ? "history" : "consumed");
 		assert.deepEqual(attempt.history, boundary === "after-receipt" ? [ready.receipt] : []);
 		const entries = (await readFile(ready.historyFile, "utf8"))
 			.trimEnd()
