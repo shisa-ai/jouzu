@@ -2252,3 +2252,60 @@ test("terminal wait and eligible owning work share one request and survive reope
 	await next.ingress.branch().controller.wake();
 	assert.equal(next.sent.length, 0);
 });
+
+test("multiple terminal waits and eligible work share one request with separate required receipts", async (t) => {
+	const f = await fixture(t, { provider: true, admit: null }),
+		branch = f.ingress.branch();
+	for (let i = 0; i < 3; i++) {
+		const handle = { producer: "bg", handle: `job-${i}`, execution: `exec-${i}`, until: "exit" };
+		await branch.attachment.waits.declare(
+			{
+				token: `wait-${i}`,
+				scope: branch.scope,
+				workId: `work-${i}`,
+				reason: `dependency-${i}`,
+				mode: "all",
+				on: [handle],
+				expiresAt: 100,
+			},
+			[{ ...handle, scope: branch.scope, workId: `work-${i}`, state: "pending" }],
+			0,
+			100,
+		);
+	}
+	await branch.attachment.waits.expireDue(100);
+	branch.controller.register({
+		version: 1,
+		namespace: "batch-work",
+		snapshot: async () => [
+			{
+				id: "batch-work",
+				producer: "batch-work",
+				revision: "1",
+				sequence: 1,
+				rank: 4,
+				workId: "work-0",
+				workRevision: "1",
+				independent: false,
+				runnable: true,
+			},
+		],
+		build: async () => ({ id: "batch-work", revision: "1", kind: "work", text: "decide next measurement" }),
+	});
+	await branch.controller.wake();
+	assert.equal(f.sent.length, 1);
+	const [attempt] = (await branch.attachment.ledger.snapshot()).attempts;
+	assert.equal(attempt.members.filter((member) => member.kind === "wait").length, 3);
+	assert.equal(attempt.members.filter((member) => member.kind === "work").length, 1);
+	assert.ok(attempt.members.every((member) => member.required));
+	for (let i = 0; i < 3; i++) assert.ok(JSON.stringify(f.sent[0]).includes(`dependency-${i}`));
+	await f.ingress.dispose();
+	const next = await fixture(t, {
+		root: f.root,
+		provider: true,
+		admit: null,
+		manager: SessionManager.open(f.session.sessionManager.getSessionFile()),
+	});
+	await next.ingress.branch().controller.wake();
+	assert.equal(next.sent.length, 0);
+});

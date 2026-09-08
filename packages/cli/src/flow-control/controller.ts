@@ -33,6 +33,7 @@ export interface FlowControllerView {
 	producers: string[];
 	held: { producer: string; reason: string }[];
 	deferredResults: { id: string; producer: string; reason: string }[];
+	deferredDecisions: { id: string; producer: string; reason: string }[];
 }
 const same = (a: FlowIntent, b: FlowIntent) =>
 	a.id === b.id &&
@@ -83,6 +84,7 @@ export class SessionFlowController {
 	private readonly producers = new Map<string, FlowProducer>();
 	private readonly held = new Map<string, string>();
 	private deferredResults: FlowControllerView["deferredResults"] = [];
+	private deferredDecisions: FlowControllerView["deferredDecisions"] = [];
 	private revision = 0;
 	private closed = false;
 	private dirty = false;
@@ -164,6 +166,7 @@ export class SessionFlowController {
 			producers: [...this.producers.keys()].sort(),
 			held: [...this.held].map(([producer, reason]) => ({ producer, reason })),
 			deferredResults: structuredClone(this.deferredResults),
+			deferredDecisions: structuredClone(this.deferredDecisions),
 		};
 	}
 	private assertActive(): void {
@@ -284,6 +287,7 @@ export class SessionFlowController {
 				resultCandidates.length > 0 &&
 				resultCandidates.every((item) => this.producers.get(item.producer)?.describeResult);
 			const selectedResults: { intent: FlowIntent; producer: FlowProducer; metadata?: FlowResultReference }[] = [];
+			const additionalDecisions: { intent: FlowIntent; producer: FlowProducer }[] = [];
 			const valid = async () => {
 				if (this.closed || revision !== this.revision || this.producers.get(producer.namespace) !== producer)
 					return false;
@@ -306,6 +310,13 @@ export class SessionFlowController {
 							byProducer.get(decisionProducer.namespace) ?? (await this.descriptors(decisionProducer, signal));
 						byProducer.set(decisionProducer.namespace, descriptors);
 						if (!descriptors.some((item) => same(item, decision) && item.runnable)) return false;
+					}
+					for (const extra of additionalDecisions) {
+						if (this.producers.get(extra.producer.namespace) !== extra.producer) return false;
+						const descriptors =
+							byProducer.get(extra.producer.namespace) ?? (await this.descriptors(extra.producer, signal));
+						byProducer.set(extra.producer.namespace, descriptors);
+						if (!descriptors.some((item) => same(item, extra.intent) && item.runnable)) return false;
 					}
 					for (const result of selectedResults) {
 						if (this.producers.get(result.producer.namespace) !== result.producer) return false;
@@ -353,6 +364,37 @@ export class SessionFlowController {
 					if (outcome.id !== decision.id || outcome.revision !== decision.revision || outcome.kind !== "wait")
 						throw new FlowLedgerError("identity", "Built wait decision differs from its descriptor.");
 					built.unshift(outcome);
+				}
+				this.deferredDecisions = [];
+				// Required trigger/work must fit before additional terminal outcomes consume capacity.
+				if (built.length) FlowModelInput.compose(attemptId, built, this.maxInputBytes);
+				for (const extra of items
+					.filter(
+						(candidate) =>
+							candidate.rank === 3 &&
+							candidate.runnable &&
+							candidate.id !== choice.intent.id &&
+							candidate.id !== decision?.id &&
+							!retainedByReceipt(candidate, state),
+					)
+					.sort((a, b) => a.sequence - b.sequence || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))) {
+					const owner = this.producers.get(extra.producer);
+					if (!owner) return;
+					try {
+						const outcome = await cancellable(signal, () => owner.build(structuredClone(extra), signal));
+						if (outcome.id !== extra.id || outcome.revision !== extra.revision || outcome.kind !== "wait")
+							throw new FlowLedgerError("identity", "Built wait decision differs from its descriptor.");
+						FlowModelInput.compose(attemptId, [...built, outcome], this.maxInputBytes);
+						built.push(outcome);
+						additionalDecisions.push({ intent: extra, producer: owner });
+					} catch (error) {
+						if (signal.aborted) return;
+						this.deferredDecisions.push({
+							id: extra.id,
+							producer: extra.producer,
+							reason: error instanceof Error ? error.message : "Wait decision input unavailable.",
+						});
+					}
 				}
 				this.deferredResults = [];
 				if (aggregate && retainResults) {

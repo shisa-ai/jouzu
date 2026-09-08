@@ -1042,3 +1042,48 @@ test("oversized owning instructions stay held while the terminal decision can be
 		["wait"],
 	);
 });
+
+test("additional decisions that exceed capacity remain visible without excluding later fitting decisions", async (t) => {
+	const f = await fixture(t, false);
+	const decisions = producer(
+		"decisions",
+		["first", "huge", "last"].map((id, i) => descriptor("decisions", id, 3, i)),
+		(item) => ({
+			id: item.id,
+			revision: item.revision,
+			kind: "wait",
+			text: item.id === "huge" ? "x".repeat(100_000) : item.id,
+		}),
+	);
+	f.controller.register(decisions);
+	let deferred;
+	const run = f.host.run.bind(f.host);
+	t.mock.method(f.host, "run", async () => {
+		deferred = f.controller.view().deferredDecisions;
+		await run();
+	});
+	await f.controller.wake();
+	assert.deepEqual(f.calls, ["first"]);
+	assert.deepEqual(
+		(await f.ledger.snapshot()).attempts[0].members.map((member) => member.id),
+		["first", "last"],
+	);
+	assert.equal(deferred[0].id, "huge");
+	assert.ok(f.controller.view().held.some((item) => item.producer === "decisions"));
+});
+
+test("an additional decision withdrawn during composition prevents the combined request", async (t) => {
+	const f = await fixture(t, false);
+	const decisions = producer(
+		"decisions",
+		["first", "second"].map((id, i) => descriptor("decisions", id, 3, i)),
+		(item) => {
+			if (item.id === "second") decisions.items = decisions.items.filter((item) => item.id !== "second");
+			return { id: item.id, revision: item.revision, kind: "wait", text: item.id };
+		},
+	);
+	f.controller.register(decisions);
+	await f.controller.wake();
+	assert.deepEqual(f.calls, []);
+	assert.deepEqual((await f.ledger.snapshot()).attempts, []);
+});
