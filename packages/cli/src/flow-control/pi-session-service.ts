@@ -95,7 +95,7 @@ export class PiFlowSessionService {
 			let recoveryBlocked =
 				recovery.unresolved > 0 ||
 				state.attempts.some((attempt) => attempt.phase === "uncertain") ||
-				requestsState.some((request) => request.outcome === undefined);
+				requestsState.some((request) => request.outcome === undefined || request.withheldPayload !== undefined);
 			const native = new PiNativeDispatch(this.session, attachment.submissions);
 			this.opening.native = native;
 			const sourceRecovery = await native.recoverSources();
@@ -105,6 +105,8 @@ export class PiFlowSessionService {
 				attachment.nativeRequests,
 				this.options.host.maxPayloadBytes,
 				(messages) => native.sources(messages),
+				true,
+				() => native.consumedSources(),
 			);
 			this.opening.requests = requests;
 			const host = new PiControllerHost(

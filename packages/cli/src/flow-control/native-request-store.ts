@@ -10,6 +10,8 @@ export interface NativeRequest {
 	modelHash: string;
 	systemHash: string;
 	sourceCapture?: NativeSourceCapture;
+	requiredSources?: number[];
+	withheldPayload?: NativeRequest["payload"];
 	payload?: {
 		hash: string;
 		bytes: number;
@@ -26,6 +28,7 @@ export interface NativePayloadSource {
 	index?: number;
 	contentHash?: string;
 }
+export type NativeSourceClaim = Pick<NativeRequestSource, "operationId" | "prompt" | "queue">;
 export interface NativeRequestSource {
 	index: number;
 	operationId: string;
@@ -57,6 +60,14 @@ interface Header {
 }
 const headerAddress = value<Header>("jouzu.flow.native-requests", "v1");
 const address = (id: string) => value<NativeRequest>("jouzu.flow.native-request", id);
+const sourceKey = (source: NativeSourceClaim) =>
+	JSON.stringify([
+		source.operationId,
+		source.prompt?.inputIndex,
+		source.prompt?.messageIndex,
+		source.queue?.id,
+		source.queue?.revision,
+	]);
 const identity = (id: unknown) => typeof id === "string" && id.length > 0 && id.length <= 512;
 const hash = (text: unknown) => typeof text === "string" && /^[a-f0-9]{64}$/.test(text);
 
@@ -80,23 +91,29 @@ export class FlowNativeRequestStore {
 		if (records.length > 1024 || Buffer.byteLength(JSON.stringify(records)) > 1024 * 1024)
 			throw new FlowLedgerError("capacity", "Native request retention limit reached.");
 		for (const record of records) {
+			const payload = record.payload ?? record.withheldPayload;
+			if (
+				record.withheldPayload !== undefined &&
+				(!record.requiredSources?.length || record.payload || record.outcome !== "withheld")
+			)
+				throw new FlowLedgerError("schema", "Invalid withheld native payload.");
 			if (
 				!identity(record.id) ||
 				!identity(record.ownerId) ||
 				![record.sourceHash, record.transformedHash, record.modelHash, record.systemHash].every(hash) ||
 				(record.outcome !== undefined && !["success", "failure", "aborted", "withheld"].includes(record.outcome)) ||
-				(record.payload !== undefined &&
-					(!record.payload ||
-						!hash(record.payload.hash) ||
-						!Number.isSafeInteger(record.payload.bytes) ||
-						record.payload.bytes < 1 ||
-						![record.payload.api, record.payload.model, record.payload.provider].every(identity))) ||
+				(payload !== undefined &&
+					(!payload ||
+						!hash(payload.hash) ||
+						!Number.isSafeInteger(payload.bytes) ||
+						payload.bytes < 1 ||
+						![payload.api, payload.model, payload.provider].every(identity))) ||
 				(record.outcome === "withheld" && record.payload !== undefined) ||
 				(record.outcome !== undefined && record.outcome !== "withheld" && !record.payload)
 			)
 				throw new FlowLedgerError("schema", "Invalid native request receipt.");
-			if (record.payload?.sources !== undefined) {
-				const sources = record.payload.sources,
+			if (payload?.sources !== undefined) {
+				const sources = payload.sources,
 					capture = record.sourceCapture;
 				if (!capture || !Array.isArray(sources) || sources.length !== capture.members.length)
 					throw new FlowLedgerError("schema", "Invalid native payload source receipts.");
@@ -109,13 +126,13 @@ export class FlowNativeRequestStore {
 						(source.index !== undefined &&
 							(!Number.isSafeInteger(source.index) ||
 								source.index < 0 ||
-								source.index >= record.payload.bytes ||
+								source.index >= payload.bytes ||
 								positions.has(source.index))) ||
 						(source.contentHash !== undefined && !hash(source.contentHash)) ||
 						(source.index === undefined) !== (source.contentHash === undefined) ||
 						(source.disposition === "unresolved" && source.index !== undefined) ||
 						(source.disposition === "included" &&
-							(record.payload.api !== "openai-completions" ||
+							(payload.api !== "openai-completions" ||
 								source.index === undefined ||
 								!["intact", "converted"].includes(capture.model?.members[offset]?.status ?? "")))
 					)
@@ -123,6 +140,25 @@ export class FlowNativeRequestStore {
 					if (source.index !== undefined) positions.add(source.index);
 				}
 			}
+			if (
+				record.requiredSources !== undefined &&
+				(!Array.isArray(record.requiredSources) ||
+					new Set(record.requiredSources).size !== record.requiredSources.length ||
+					record.requiredSources.some(
+						(index) => !record.sourceCapture?.members.some((source) => source.index === index),
+					))
+			)
+				throw new FlowLedgerError("identity", "Invalid required native source positions.");
+			if (
+				record.payload &&
+				record.requiredSources?.some(
+					(index) =>
+						!record.payload?.sources?.some(
+							(source) => source.sourceIndex === index && source.disposition === "included",
+						),
+				)
+			)
+				throw new FlowLedgerError("identity", "Native handoff omits required source content.");
 			const capture = record.sourceCapture;
 			if (capture !== undefined) {
 				if (
@@ -268,7 +304,12 @@ export class FlowNativeRequestStore {
 	snapshot(): Promise<NativeRequest[]> {
 		return this.transact((records) => structuredClone(records));
 	}
-	begin(input: Omit<NativeRequest, "ownerId" | "payload" | "outcome">): Promise<void> {
+	begin(
+		input: Omit<NativeRequest, "ownerId" | "payload" | "withheldPayload" | "outcome" | "requiredSources">,
+		requireUnreceived = false,
+		consumedClaims?: NativeSourceClaim[],
+	): Promise<void> {
+		const claims = consumedClaims === undefined ? undefined : structuredClone(consumedClaims);
 		const captured = {
 			id: input.id,
 			sourceHash: input.sourceHash,
@@ -280,9 +321,36 @@ export class FlowNativeRequestStore {
 		return this.transact((records) => {
 			if (records.some((record) => record.id === captured.id))
 				throw new FlowLedgerError("identity", "Native request ID is already retained.");
-			if (records.some((record) => record.outcome === undefined))
+			if (records.some((record) => record.outcome === undefined || record.withheldPayload !== undefined))
 				throw new FlowLedgerError("busy", "Native request requires reconciliation before another request.");
-			records.push({ ...captured, ownerId: this.ownership.token });
+			const received = new Set(
+				records.flatMap((request) =>
+					(request.sourceCapture?.members ?? [])
+						.filter((source) =>
+							request.payload?.sources?.some(
+								(item) => item.sourceIndex === source.index && item.disposition === "included",
+							),
+						)
+						.map(sourceKey),
+				),
+			);
+			if (requireUnreceived) {
+				if (!claims || !captured.sourceCapture)
+					throw new FlowLedgerError("identity", "Required native input has no consumption inventory.");
+				const capturedKeys = new Set(captured.sourceCapture.members.map(sourceKey));
+				const claimKeys = new Set(claims.map(sourceKey));
+				if (
+					captured.sourceCapture.members.some((source) => !claimKeys.has(sourceKey(source))) ||
+					claims.some((claim) => !received.has(sourceKey(claim)) && !capturedKeys.has(sourceKey(claim)))
+				)
+					throw new FlowLedgerError("identity", "Consumed native input requires source reconciliation.");
+			}
+			const requiredSources = requireUnreceived
+				? (captured.sourceCapture?.members
+						.filter((source) => !received.has(sourceKey(source)))
+						.map((source) => source.index) ?? [])
+				: undefined;
+			records.push({ ...captured, ownerId: this.ownership.token, ...(requiredSources ? { requiredSources } : {}) });
 		});
 	}
 	private owned(records: NativeRequest[], id: string): NativeRequest {
@@ -291,13 +359,23 @@ export class FlowNativeRequestStore {
 			throw new FlowLedgerError("stale", "Native request belongs to another attachment.");
 		return record;
 	}
-	handoff(id: string, payload: NonNullable<NativeRequest["payload"]>): Promise<void> {
+	handoff(id: string, payload: NonNullable<NativeRequest["payload"]>): Promise<boolean> {
 		const captured = structuredClone(payload);
 		return this.transact((records) => {
 			const record = this.owned(records, id);
 			if (record.payload || record.outcome)
 				throw new FlowLedgerError("transition", "Native request already has a disposition.");
+			const missing = record.requiredSources?.some(
+				(index) =>
+					!captured.sources?.some((source) => source.sourceIndex === index && source.disposition === "included"),
+			);
+			if (missing) {
+				record.withheldPayload = captured;
+				record.outcome = "withheld";
+				return false;
+			}
 			record.payload = captured;
+			return true;
 		});
 	}
 	finish(id: string, outcome: NonNullable<NativeRequest["outcome"]>): Promise<void> {

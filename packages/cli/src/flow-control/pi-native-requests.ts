@@ -3,7 +3,12 @@ import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { AssistantMessage } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
 import { NativePayloadSources } from "./native-payload-sources.js";
-import type { FlowNativeRequestStore, NativeRequestSource, NativeSourceCapture } from "./native-request-store.js";
+import type {
+	FlowNativeRequestStore,
+	NativeRequestSource,
+	NativeSourceCapture,
+	NativeSourceClaim,
+} from "./native-request-store.js";
 import { PiHostHooks } from "./pi-host-hooks.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
@@ -27,6 +32,8 @@ export class PiNativeRequests {
 		private readonly store: FlowNativeRequestStore,
 		maxBytes: number,
 		identifySources?: (messages: AgentMessage[]) => Promise<NativeRequestSource[]>,
+		enforceRequiredSources = false,
+		consumedSources?: () => Promise<NativeSourceClaim[]>,
 	) {
 		if (!Number.isSafeInteger(maxBytes) || maxBytes < 1)
 			throw new FlowLedgerError("capacity", "Invalid native payload limit.");
@@ -262,14 +269,18 @@ export class PiNativeRequests {
 						throw new FlowLedgerError("identity", "Native request has no model conversion checkpoint.");
 					if (this.capture?.model && this.capture.model.hash !== hash(input.modelMessages))
 						throw new FlowLedgerError("stale", "Native model input changed after source disposition capture.");
-					await store.begin({
-						id: input.requestId,
-						sourceHash: hash(input.sourceMessages),
-						transformedHash: hash(input.transformedMessages),
-						modelHash: hash(input.modelMessages),
-						systemHash: hash(input.systemPrompt),
-						...(this.capture ? { sourceCapture: this.capture } : {}),
-					});
+					await store.begin(
+						{
+							id: input.requestId,
+							sourceHash: hash(input.sourceMessages),
+							transformedHash: hash(input.transformedMessages),
+							modelHash: hash(input.modelMessages),
+							systemHash: hash(input.systemPrompt),
+							...(this.capture ? { sourceCapture: this.capture } : {}),
+						},
+						enforceRequiredSources,
+						await consumedSources?.(),
+					);
 					this.pending = input.requestId;
 					this.prepared = {
 						modelHash: hash(input.modelMessages),
@@ -339,7 +350,7 @@ export class PiNativeRequests {
 							throw new FlowLedgerError("capacity", "Native provider payload exceeds its byte limit.");
 						const owned = JSON.parse(serialized);
 						const membership = sources.inspect(model.api, replacement === undefined ? payload : replacement, owned);
-						await store.handoff(id, {
+						const admitted = await store.handoff(id, {
 							hash: createHash("sha256").update(serialized).digest("hex"),
 							bytes: Buffer.byteLength(serialized),
 							api: model.api,
@@ -347,6 +358,11 @@ export class PiNativeRequests {
 							model: model.id,
 							...(membership ? { sources: membership } : {}),
 						});
+						if (!admitted)
+							throw new FlowLedgerError(
+								"transition",
+								"Native request withheld because required input was changed or unresolved.",
+							);
 						handedOff = true;
 						this.assertActive();
 						options?.signal?.throwIfAborted();

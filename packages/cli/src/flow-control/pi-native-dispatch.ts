@@ -138,6 +138,21 @@ export class PiNativeDispatch {
 		if (this.closed || this.session.sessionId !== this.sessionId)
 			throw new FlowLedgerError("stale", "Native dispatch observation is closed or replaced.");
 	}
+	async consumedSources() {
+		this.assertActive();
+		const records = await this.store.snapshot();
+		this.assertActive();
+		return records.flatMap(({ dispatch }) =>
+			dispatch
+				? [
+						...(dispatch.promptClaims ?? []).map((prompt) => ({ operationId: dispatch.operationId, prompt })),
+						...(dispatch.queueClaims ?? [])
+							.filter((claim) => claim.consumed)
+							.map(({ id, revision }) => ({ operationId: dispatch.operationId, queue: { id, revision } })),
+					]
+				: [],
+		);
+	}
 	async sources(messages: AgentMessage[]): Promise<NativeRequestSource[]> {
 		this.assertActive();
 		const members = this.history.identify(messages);

@@ -871,3 +871,156 @@ test("Pi simplified provider streaming preserves source conversion receipts", as
 	assert.equal(request.payload.sources[0].disposition, "included");
 	assert.equal(f.sent.length, 1);
 });
+
+for (const stage of ["context", "payload"])
+	for (const mode of ["retain", "remove", "edit", "clone"])
+		test(`required native input admission checks ${stage} ${mode}`, async (t) => {
+			const transform = (messages) => {
+				if (mode === "remove") return messages.slice(1);
+				if (mode === "clone") return structuredClone(messages);
+				if (mode === "edit") messages[0].content[0].text = "changed";
+				return messages;
+			};
+			const f = await nativeRequests(t, {
+				retainInputs: true,
+				enforceRequiredSources: true,
+				...(stage === "context"
+					? { contextHandler: ({ messages }) => ({ messages: transform(messages) }) }
+					: {
+							transform: ({ payload }) => ({
+								...payload,
+								messages: [
+									...payload.messages.filter((message) => message.role !== "user"),
+									...transform(payload.messages.filter((message) => message.role === "user")),
+								],
+							}),
+						}),
+			});
+			await f.session.followUp("same");
+			await f.session.followUp("same");
+			f.session.agent.followUpMode = "all";
+			await f.session.continueQueued();
+			const [request] = await f.store.snapshot();
+			assert.deepEqual(request.requiredSources, [0, 1]);
+			assert.equal(f.sent.length, mode === "retain" ? 1 : 0);
+			assert.equal(request.outcome, mode === "retain" ? "success" : "withheld");
+			const views = await f.attachment.submissionViews();
+			if (mode !== "retain") {
+				assert.equal(request.payload, undefined);
+				assert.ok(request.withheldPayload);
+				assert.ok(
+					views.every((view) =>
+						view.nativeRequests.every(
+							(item) => item.withheldPayloadHash === request.withheldPayload.hash && item.payloadHash === undefined,
+						),
+					),
+				);
+				await f.session.prompt("new input cannot release a content hold");
+				assert.equal(f.sent.length, 0);
+				assert.equal((await f.store.snapshot()).length, 1);
+			}
+			assert.ok(
+				(await f.attachment.submissions.snapshot())
+					.slice(0, 2)
+					.every((record) => record.dispatch.queueHistory.length === 1),
+			);
+		});
+
+test("required admission permits filtering previously included history", async (t) => {
+	let filter = false;
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		enforceRequiredSources: true,
+		contextHandler: ({ messages }) => ({ messages: filter ? messages.slice(1) : messages }),
+	});
+	await f.session.prompt("old");
+	filter = true;
+	await f.session.prompt("new");
+	assert.equal(f.sent.length, 2);
+	const requests = await f.store.snapshot();
+	assert.equal(requests[1].requiredSources.length, 1);
+	assert.equal(requests[1].payload.sources[0].disposition, "unresolved");
+	assert.equal(requests[1].payload.sources[1].disposition, "included");
+});
+
+test("required admission rejects missing source capture for a consumed prompt", async (t) => {
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		enforceRequiredSources: true,
+		identifySources: async () => [],
+	});
+	await f.session.prompt("must remain required");
+	assert.equal(f.sent.length, 0);
+	assert.deepEqual(await f.store.snapshot(), []);
+	assert.equal((await f.attachment.submissions.snapshot())[0].dispatch.promptClaims.length, 1);
+});
+
+test("required admission holds a provider without source conversion receipts", async (t) => {
+	let fetched = false;
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		enforceRequiredSources: true,
+		native: async (model, context, options) => {
+			await options.onPayload({ messages: context.messages }, model);
+			fetched = true;
+			return { async *[Symbol.asyncIterator]() {}, result: async () => assistant() };
+		},
+	});
+	await f.session.prompt("required");
+	assert.equal(fetched, false);
+	const [request] = await f.store.snapshot();
+	assert.equal(request.outcome, "withheld");
+	assert.equal(request.withheldPayload.sources[0].disposition, "unresolved");
+});
+
+test("content holds survive attachment reopen and refuse automatic request retry", async (t) => {
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		enforceRequiredSources: true,
+		transform: ({ payload }) => structuredClone(payload),
+	});
+	await f.session.prompt("held");
+	const [request] = await f.store.snapshot();
+	const claims = await f.dispatch.consumedSources();
+	await f.bridge.close();
+	await f.dispatch.close();
+	await f.attachment.close();
+	const reopened = await PiFlowAttachment.open(join(f.root, "receipts"), f.scope);
+	try {
+		assert.deepEqual(await reopened.nativeRequests.snapshot(), [request]);
+		await assert.rejects(reopened.nativeRequests.begin({ ...request, id: "retry" }, true, claims), { code: "busy" });
+	} finally {
+		await reopened.close();
+	}
+});
+
+test("required admission does not confuse failed outcome with missing inclusion", async (t) => {
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		enforceRequiredSources: true,
+		native: async (model, context, options) => {
+			const source = context.messages.find((message) => message.role === "user");
+			const output = { role: "user", content: source.content };
+			options.onMessageConverted(source, output);
+			await options.onPayload({ messages: [output] }, model);
+			return {
+				async *[Symbol.asyncIterator]() {},
+				result: async () => ({ ...assistant(), stopReason: "error", errorMessage: "fixture failure" }),
+			};
+		},
+	});
+	await f.session.prompt("received content");
+	const [request] = await f.store.snapshot();
+	assert.equal(request.outcome, "failure");
+	assert.equal(request.payload.sources[0].disposition, "included");
+	await f.store.begin({ ...request, id: "next" }, true, await f.dispatch.consumedSources());
+	assert.deepEqual((await f.store.snapshot()).at(-1).requiredSources, []);
+	await f.store.finish("next", "withheld");
+});
+
+test("required admission requires a consumption inventory", async (t) => {
+	const f = await nativeRequests(t, { retainInputs: true });
+	await f.session.prompt("inventory");
+	const [request] = await f.store.snapshot();
+	await assert.rejects(f.store.begin({ ...request, id: "missing-inventory" }, true), { code: "identity" });
+});

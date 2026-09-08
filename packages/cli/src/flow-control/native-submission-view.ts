@@ -12,6 +12,7 @@ export interface NativeSubmissionRequestView {
 	operationId: string;
 	outcome: NonNullable<NativeRequest["outcome"]> | "unknown";
 	payloadHash?: string;
+	withheldPayloadHash?: string;
 	sources: {
 		identity: NativeRequestSource;
 		consumed: true;
@@ -68,7 +69,7 @@ export function projectNativeSubmissionRequests(
 					);
 			const context = request.sourceCapture?.context?.members[offset];
 			const model = request.sourceCapture?.model?.members[offset];
-			const payload = request.payload?.sources?.[offset];
+			const payload = (request.payload ?? request.withheldPayload)?.sources?.[offset];
 			if ([context, model, payload].some((item) => item && item.sourceIndex !== source.index))
 				throw new FlowLedgerError("identity", "Native request source disposition has a conflicting position.");
 			const view = grouped.get(record.id) ?? {
@@ -76,6 +77,7 @@ export function projectNativeSubmissionRequests(
 				operationId: source.operationId,
 				outcome: request.outcome ?? "unknown",
 				...(request.payload ? { payloadHash: request.payload.hash } : {}),
+				...(request.withheldPayload ? { withheldPayloadHash: request.withheldPayload.hash } : {}),
 				sources: [],
 			};
 			view.sources.push(

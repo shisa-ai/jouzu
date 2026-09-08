@@ -16,6 +16,7 @@ export async function nativeRequests(
 		native,
 		simple = false,
 		retainInputs = false,
+		enforceRequiredSources = false,
 		contextTransform,
 		contextHandler,
 		cloneCheckpoint,
@@ -78,6 +79,8 @@ export async function nativeRequests(
 		attachment.nativeRequests,
 		maxBytes,
 		identifySources ?? (dispatch ? (messages) => dispatch.sources(messages) : undefined),
+		enforceRequiredSources,
+		dispatch ? () => dispatch.consumedSources() : undefined,
 	);
 	t.after(async () => {
 		await bridge.close();
