@@ -217,11 +217,11 @@ export function transform(path, source) {
 		);
 		change(
 			"            // Switch leaf (with or without summary)",
-			"            this._flowBinding?.beforeBranchChange();\n            // Switch leaf (with or without summary)",
+			"            await this._flowBinding?.beforeBranchChange();\n            // Switch leaf (with or without summary)",
 		);
 		change(
 			"            // Emit session_tree event",
-			"            this._flowBinding?.branchChanged();\n            // Emit session_tree event",
+			"            await this._flowBinding?.branchChanged();\n            // Emit session_tree event",
 		);
 		change(
 			"    // =========================================================================\n    // Compaction\n    // =========================================================================\n    /** Generate Pi's built-in compaction summary for manual and automatic compaction. */",

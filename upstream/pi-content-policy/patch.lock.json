@@ -29,7 +29,7 @@
 		},
 		"dist/core/agent-session.js": {
 			"before": "fb8a3981c20c8c0bbd42231b1c99a10335fb3858b659056b341954de9cfa467f",
-			"after": "021a12a97f28dd9736338edd175e04e5e15638b12861a65a0d5e5c187b054283"
+			"after": "1be26eaceb5ec55626a8ace2b2629ff25dce76cf08ff972b2c512c68ff09d5cd"
 		},
 		"dist/core/agent-session.d.ts": {
 			"before": "db3bfd2ae08eda4936d8807656f06120e6e62672d6a7798bccba486a0dc994ea",
@@ -61,6 +61,6 @@
 		}
 	},
 	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863",
-	"flowIngress": "7d0552b27392fbf61059cbeae3d1d34e88d8590a085f3e487ee039cad7fe8d2b",
-	"flowIngressTypes": "dedf1ecb8c3d5e236f5853ff7f9e823b9da02d2bda33e08822692a7b14c406e1"
+	"flowIngress": "a75be70ace4751442e2c91ad3c7f04e4a025ba8ba5ef98f681c11085b2c8e00d",
+	"flowIngressTypes": "ffe3ae80a90a2dcbed6b41e2adc61eb9200c05a4899d258d987c37aaa1aa9ec7"
 }

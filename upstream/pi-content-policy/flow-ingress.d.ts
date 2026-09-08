@@ -17,6 +17,10 @@ export interface FlowIngress {
 	attach?(session: AgentSession): void | Promise<void>;
 	/** Release resources after ingress is fenced. Session disposal awaits this callback. */
 	dispose?(): void | Promise<void>;
+	/** Drain old branch resources with ingress fenced, before Pi changes its transcript position. Do not await session disposal here. */
+	beforeBranchChange?(previous: FlowSubmission["scope"]): void | Promise<void>;
+	/** Attach new branch resources before session_tree handlers run. Failure keeps ingress fenced. Do not await session disposal here. */
+	branchChanged?(current: FlowSubmission["scope"]): void | Promise<void>;
 	/** Retain before returning, dispatch once, or throw to reject. */
 	submit(submission: FlowSubmission, dispatch: () => Promise<void>): void | Promise<void>;
 }

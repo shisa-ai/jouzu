@@ -503,3 +503,161 @@ test("invalid preflight callback rejects before submission", async (t) => {
 	assert.equal(held.entries.length, 0);
 	assert.equal(requests.length, 0);
 });
+
+test("branch callbacks drain and attach before tree events while sends remain fenced", async (t) => {
+	const before = deferred(),
+		releaseBefore = deferred(),
+		after = deferred(),
+		releaseAfter = deferred();
+	const seen = [];
+	const held = inbox();
+	held.handler.beforeBranchChange = async (scope) => {
+		seen.push(["before", scope]);
+		before.resolve();
+		await releaseBefore.promise;
+	};
+	held.handler.branchChanged = async (scope) => {
+		seen.push(["after", scope]);
+		after.resolve();
+		await releaseAfter.promise;
+	};
+	const { session } = await createFlowSession(t, {
+		ingress: held.handler,
+		extensions: [
+			(pi) =>
+				pi.on("session_tree", () => {
+					seen.push(["event"]);
+				}),
+		],
+	});
+	const target = session.sessionManager.appendMessage(message("target"));
+	session.sessionManager.appendMessage(assistant());
+	const oldLeaf = session.sessionManager.getLeafId();
+	await session.sendUserMessage("old");
+	const navigation = session.navigateTree(target);
+	await before.promise;
+	assert.equal(session.sessionManager.getLeafId(), oldLeaf);
+	await assert.rejects(session.prompt("during detach"), /transition/);
+	await assert.rejects(held.entries[0].dispatch(), /transition/);
+	releaseBefore.resolve();
+	await after.promise;
+	assert.notEqual(session.sessionManager.getLeafId(), oldLeaf);
+	assert.deepEqual(
+		seen.map((item) => item[0]),
+		["before", "after"],
+	);
+	await assert.rejects(session.prompt("during attach"), /transition/);
+	releaseAfter.resolve();
+	await navigation;
+	assert.deepEqual(
+		seen.map((item) => item[0]),
+		["before", "after", "event"],
+	);
+	assert.equal(seen[0][1].attachmentId, held.entries[0].input.scope.attachmentId);
+	assert.notEqual(seen[1][1].attachmentId, seen[0][1].attachmentId);
+	await assert.rejects(held.entries[0].dispatch(), /replaced attachment/);
+	await session.prompt("new");
+	assert.deepEqual(held.entries[1].input.scope, seen[1][1]);
+});
+
+for (const phase of ["beforeBranchChange", "branchChanged"]) {
+	test(`failed ${phase} keeps ingress fenced and prevents tree notification`, async (t) => {
+		const held = inbox();
+		held.handler[phase] = async () => {
+			throw new Error("branch storage failed");
+		};
+		let events = 0;
+		const { session } = await createFlowSession(t, {
+			ingress: held.handler,
+			extensions: [
+				(pi) =>
+					pi.on("session_tree", () => {
+						events++;
+					}),
+			],
+		});
+		const target = session.sessionManager.appendMessage(message("target"));
+		session.sessionManager.appendMessage(assistant());
+		const oldLeaf = session.sessionManager.getLeafId();
+		await assert.rejects(session.navigateTree(target), /branch storage failed/);
+		assert.equal(session.sessionManager.getLeafId() === oldLeaf, phase === "beforeBranchChange");
+		await assert.rejects(session.prompt("unsafe continuation"), /transition/);
+		assert.equal(events, 0);
+	});
+	test(`disposal during ${phase} prevents transition completion`, async (t) => {
+		const entered = deferred(),
+			release = deferred();
+		const held = inbox();
+		let cleaned = false;
+		held.handler.dispose = () => {
+			cleaned = true;
+		};
+		held.handler[phase] = async () => {
+			entered.resolve();
+			await release.promise;
+		};
+		const { session } = await createFlowSession(t, { ingress: held.handler });
+		const target = session.sessionManager.appendMessage(message("target"));
+		session.sessionManager.appendMessage(assistant());
+		const oldLeaf = session.sessionManager.getLeafId();
+		const navigation = assert.rejects(session.navigateTree(target), /closed/);
+		await entered.promise;
+		const disposing = session.dispose();
+		await tick();
+		assert.equal(cleaned, false);
+		release.resolve();
+		await Promise.all([navigation, disposing]);
+		assert.equal(cleaned, true);
+		assert.equal(session.sessionManager.getLeafId() === oldLeaf, phase === "beforeBranchChange");
+	});
+}
+
+test("cancelled and no-op tree navigation do not detach branch state", async (t) => {
+	const held = inbox();
+	let transitions = 0;
+	held.handler.beforeBranchChange = () => {
+		transitions++;
+	};
+	held.handler.branchChanged = () => {
+		transitions++;
+	};
+	const { session } = await createFlowSession(t, {
+		ingress: held.handler,
+		extensions: [(pi) => pi.on("session_before_tree", () => ({ cancel: true }))],
+	});
+	const target = session.sessionManager.appendMessage(message("target"));
+	const leaf = session.sessionManager.appendMessage(assistant());
+	await session.navigateTree(leaf);
+	assert.equal((await session.navigateTree(target)).cancelled, true);
+	assert.equal(transitions, 0);
+	await session.prompt("still attached");
+	assert.equal(held.entries.length, 1);
+});
+
+test("native queue mutation during branch drainage prevents transcript mutation", async (t) => {
+	const held = inbox();
+	let session;
+	held.handler.beforeBranchChange = () => {
+		session.agent.followUp(message("late"));
+	};
+	({ session } = await createFlowSession(t, { ingress: held.handler }));
+	const target = session.sessionManager.appendMessage(message("target"));
+	const leaf = session.sessionManager.appendMessage(assistant());
+	await assert.rejects(session.navigateTree(target), /must settle or be cancelled/);
+	assert.equal(session.sessionManager.getLeafId(), leaf);
+	await assert.rejects(session.prompt("fenced"), /transition/);
+	session.clearQueue();
+});
+
+test("branch callbacks reject self-disposal instead of waiting on themselves", async (t) => {
+	const held = inbox();
+	let session;
+	held.handler.beforeBranchChange = async () => {
+		await session.dispose();
+	};
+	({ session } = await createFlowSession(t, { ingress: held.handler }));
+	const target = session.sessionManager.appendMessage(message("target"));
+	session.sessionManager.appendMessage(assistant());
+	await assert.rejects(session.navigateTree(target), /cannot join its own disposal/);
+	await session.dispose();
+});

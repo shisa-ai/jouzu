@@ -8,8 +8,11 @@ export class FlowIngressBinding {
 	#source = new AsyncLocalStorage();
 	#dispatch = new AsyncLocalStorage();
 	#command = new AsyncLocalStorage();
+	#branchCallback = new AsyncLocalStorage();
 	#attachmentId = randomUUID();
 	#closed = false;
+	#changingBranch = false;
+	#branchWork;
 	#closing;
 	#dispatches = 0;
 	#session;
@@ -21,6 +24,8 @@ export class FlowIngressBinding {
 			handler?.version !== 1 ||
 			typeof handler.submit !== "function" ||
 			(handler.attach !== undefined && typeof handler.attach !== "function") ||
+			(handler.beforeBranchChange !== undefined && typeof handler.beforeBranchChange !== "function") ||
+			(handler.branchChanged !== undefined && typeof handler.branchChanged !== "function") ||
 			(handler.dispose !== undefined && typeof handler.dispose !== "function")
 		)
 			throw new Error("Unsupported flow ingress protocol.");
@@ -56,6 +61,7 @@ export class FlowIngressBinding {
 
 	assertActive() {
 		if (this.#closed) throw new Error("Flow attachment is closed.");
+		if (this.#changingBranch) throw new Error("Flow branch transition has not completed.");
 		const scope = this.#dispatch.getStore()?.submission.scope;
 		if (
 			scope &&
@@ -83,8 +89,15 @@ export class FlowIngressBinding {
 		}
 	}
 
-	beforeBranchChange() {
-		this.assertActive();
+	#scope() {
+		return {
+			sessionId: this.#session.sessionManager.getSessionId(),
+			leafId: this.#session.sessionManager.getLeafId(),
+			attachmentId: this.#attachmentId,
+		};
+	}
+
+	#assertBranchIdle() {
 		if (
 			this.#dispatches > 0 ||
 			this.#session.agent.hasQueuedMessages() ||
@@ -93,13 +106,45 @@ export class FlowIngressBinding {
 			throw new Error("Flow submissions must settle or be cancelled before branch navigation.");
 	}
 
-	branchChanged() {
+	#runBranch(run) {
+		const frame = { active: true };
+		return this.#branchCallback.run(frame, async () => {
+			try {
+				return await run(this.#scope());
+			} finally {
+				frame.active = false;
+			}
+		});
+	}
+
+	async beforeBranchChange() {
+		this.assertActive();
+		this.#assertBranchIdle();
+		this.#changingBranch = true;
+		this.#branchWork = this.#runBranch((scope) => this.#handler.beforeBranchChange?.(scope));
+		await this.#branchWork;
+		if (this.#closed) throw new Error("Flow attachment is closed.");
+		this.#assertBranchIdle();
+	}
+
+	async branchChanged() {
+		if (this.#closed) throw new Error("Flow attachment is closed.");
+		if (!this.#changingBranch) throw new Error("Flow branch transition was not started.");
 		this.#attachmentId = randomUUID();
+		this.#branchWork = this.#runBranch((scope) => this.#handler.branchChanged?.(scope));
+		await this.#branchWork;
+		if (this.#closed) throw new Error("Flow attachment is closed.");
+		this.#assertBranchIdle();
+		this.#changingBranch = false;
 	}
 
 	dispose() {
+		if (this.#branchCallback.getStore()?.active) throw new Error("Flow branch callback cannot join its own disposal.");
 		this.#closed = true;
-		this.#closing ??= Promise.resolve().then(() => this.#handler.dispose?.());
+		this.#closing ??= Promise.resolve().then(async () => {
+			await this.#branchWork?.catch(() => {});
+			await this.#handler.dispose?.();
+		});
 		return this.#closing;
 	}
 
