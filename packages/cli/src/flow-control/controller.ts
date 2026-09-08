@@ -101,7 +101,7 @@ export class SessionFlowController {
 		attached.add(host);
 	}
 
-	register(producer: FlowProducer): { changed(): Promise<void>; dispose(): void } {
+	register(producer: FlowProducer, schedule?: () => Promise<void>): { changed(): Promise<void>; dispose(): void } {
 		this.assertActive();
 		if (
 			producer?.version !== 1 ||
@@ -130,6 +130,18 @@ export class SessionFlowController {
 			changed: () => {
 				if (disposed) return Promise.reject(new FlowLedgerError("stale", "Flow producer registration is disposed."));
 				this.held.delete(namespace);
+				if (schedule) {
+					this.assertActive();
+					this.revision++;
+					this.interruption.abort();
+					this.interruption = new AbortController();
+					this.host.invalidate();
+					return Promise.resolve().then(() => {
+						this.assertActive();
+						if (disposed) throw new FlowLedgerError("stale", "Flow producer registration is disposed.");
+						return schedule();
+					});
+				}
 				return this.wake();
 			},
 			dispose: () => {

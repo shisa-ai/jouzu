@@ -933,3 +933,52 @@ for (const summarize of [false, "extension", "native"]) {
 		await second.close();
 	});
 }
+
+test("producer changes can await owner scheduling before admission", async (t) => {
+	const { controller, calls } = await fixture(t, false);
+	const item = producer("owned");
+	const entered = deferred(),
+		proceed = deferred();
+	const handle = controller.register(item, async () => {
+		entered.resolve();
+		await proceed.promise;
+		await controller.wake();
+	});
+	const changed = handle.changed();
+	await entered.promise;
+	assert.equal(item.builds.length, 0);
+	assert.equal(calls.length, 0);
+	proceed.resolve();
+	await changed;
+	assert.equal(item.builds.length, 1);
+	assert.equal(calls.length, 1);
+});
+
+test("owner scheduler failure preserves producer work for a later notification", async (t) => {
+	const { controller, calls } = await fixture(t, false);
+	let fail = true;
+	const item = producer("retry-owner");
+	const handle = controller.register(item, () => {
+		if (fail) throw new Error("scheduler unavailable");
+		return controller.wake();
+	});
+	await assert.rejects(handle.changed(), /scheduler unavailable/);
+	assert.equal(item.builds.length, 0);
+	fail = false;
+	await handle.changed();
+	assert.equal(calls.length, 1);
+	handle.dispose();
+	await assert.rejects(handle.changed(), { code: "stale" });
+});
+
+test("disposed registration cannot notify an owner scheduler on the deferred callback", async (t) => {
+	const { controller } = await fixture(t, false);
+	let notifications = 0;
+	const handle = controller.register(producer("disposed-owner"), async () => {
+		notifications++;
+	});
+	const changed = handle.changed();
+	handle.dispose();
+	await assert.rejects(changed, { code: "stale" });
+	assert.equal(notifications, 0);
+});
