@@ -50,8 +50,9 @@ export function projectFlowSubmissions(records: RetainedSubmission[], ledger: Fl
 			throw new FlowLedgerError("scope", "Retained submission belongs to another session.");
 		const attempts = links.get(record.id) ?? [];
 		const claims = record.dispatch?.queueClaims ?? [];
-		const nativeHistory = !!record.dispatch?.queueHistory?.length;
-		const consumedNative = claims.some((claim) => claim.consumed);
+		const nativeHistory = !!record.dispatch?.queueHistory?.length || !!record.dispatch?.promptHistory?.length;
+		const consumedNative =
+			nativeHistory || !!record.dispatch?.promptClaims?.length || claims.some((claim) => claim.consumed);
 		const unconsumedNative =
 			!!record.dispatch?.inputs?.length &&
 			record.dispatch.inputs.every(

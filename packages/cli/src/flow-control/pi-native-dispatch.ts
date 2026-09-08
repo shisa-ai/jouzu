@@ -3,7 +3,7 @@ import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { ImageContent } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
 import { PiHostHooks } from "./pi-host-hooks.js";
-import { PiNativeQueueHistory } from "./pi-native-queue-history.js";
+import { PiNativeHistory } from "./pi-native-history.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowNativeObserver, FlowSubmissionStore } from "./submission-store.js";
 
@@ -11,7 +11,7 @@ interface Frame {
 	active: boolean;
 	operationId: string;
 	observer: FlowNativeObserver;
-	writes: Promise<void>[];
+	writes: Promise<unknown>[];
 }
 const attached = new WeakSet<AgentSession>();
 
@@ -19,14 +19,14 @@ const attached = new WeakSet<AgentSession>();
 export class PiNativeDispatch {
 	private readonly hooks = new PiHostHooks();
 	private readonly frames = new AsyncLocalStorage<Frame>();
-	private readonly queued = new Map<string, { operationId: string; revision: number; write: Promise<void> }>();
+	private readonly queued = new Map<string, { operationId: string; revision: number; write: Promise<unknown> }>();
 	private readonly held = new Map<string, { id: string; revision: number; reason: string }>();
 	private readonly sessionId: string;
 	private active = 0;
 	private closed = false;
 	private drained?: () => void;
 	private closing?: Promise<void>;
-	private readonly history: PiNativeQueueHistory;
+	private readonly history: PiNativeHistory;
 	constructor(
 		private readonly session: AgentSession,
 		private readonly store: FlowSubmissionStore,
@@ -37,16 +37,24 @@ export class PiNativeDispatch {
 			throw new FlowLedgerError("identity", "Pi session already has native dispatch observation.");
 		attached.add(session);
 		this.sessionId = session.sessionId;
-		this.history = new PiNativeQueueHistory(session, store);
+		this.history = new PiNativeHistory(session, store);
 		const agent = session.agent;
 		const prompt = agent.prompt.bind(agent);
 		this.hooks.set(agent, "prompt", async (input: string | AgentMessage | AgentMessage[], images?: ImageContent[]) => {
 			const frame = this.frame();
 			if (!frame) return typeof input === "string" ? prompt(input, images) : prompt(input);
 			const [captured, capturedImages] = structuredClone([input, images] as const);
-			await frame.observer.observe({ kind: "prompt", args: [captured, capturedImages] });
+			const inputIndex = await frame.observer.observe({ kind: "prompt", args: [captured, capturedImages] });
 			this.frame();
-			return typeof captured === "string" ? prompt(captured, capturedImages) : prompt(captured);
+			// Let Pi reject concurrent execution without attaching input to the running prompt.
+			if (agent.state.isStreaming)
+				return typeof captured === "string" ? prompt(captured, capturedImages) : prompt(captured);
+			const release = this.history.observePrompt(frame.operationId, inputIndex, captured, capturedImages);
+			try {
+				return await (typeof captured === "string" ? prompt(captured, capturedImages) : prompt(captured));
+			} finally {
+				release();
+			}
 		});
 		for (const kind of ["steer", "followUp"] as const) {
 			const enqueue = agent[kind].bind(agent);
@@ -55,7 +63,7 @@ export class PiNativeDispatch {
 				if (!frame) return enqueue(message);
 				const args = structuredClone([message]);
 				const queue = enqueue(structuredClone(message));
-				let write: Promise<void>;
+				let write: Promise<unknown>;
 				try {
 					write = frame.observer.observe({ kind, args, queue });
 				} catch (error) {

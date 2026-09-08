@@ -59,8 +59,10 @@ for (const handled of [false, true])
 		assert.equal(record.submission.args[0], "original");
 		assert.equal(record.dispatch.phase, "returned");
 		assert.equal(f.requests.length, handled ? 0 : 1);
-		if (handled) assert.equal(record.dispatch.inputs, undefined);
-		else {
+		if (handled) {
+			assert.equal(record.dispatch.inputs, undefined);
+			assert.equal(record.dispatch.promptHistory, undefined);
+		} else {
 			assert.equal(record.dispatch.inputs.length, 1);
 			const input = record.dispatch.inputs[0];
 			assert.equal(input.kind, "prompt");
@@ -68,10 +70,22 @@ for (const handled of [false, true])
 			assert.deepEqual(input.args[0][0].content[1], images[0]);
 			assert.equal(input.args[0][1].customType, "context");
 			assert.deepEqual(input.args[0][1].details, { n: 1 });
+			assert.deepEqual(
+				record.dispatch.promptHistory.map(({ inputIndex, messageIndex }) => ({ inputIndex, messageIndex })),
+				[
+					{ inputIndex: 0, messageIndex: 0 },
+					{ inputIndex: 0, messageIndex: 1 },
+				],
+			);
+			assert.notEqual(record.dispatch.promptHistory[0].entryId, record.dispatch.promptHistory[1].entryId);
 			await f.native.close();
 			await f.attachment.close();
 			const reopened = await PiFlowAttachment.open(f.root, f.scope);
 			assert.deepEqual((await reopened.submissions.snapshot())[0].dispatch.inputs, record.dispatch.inputs);
+			assert.deepEqual(
+				(await reopened.submissions.snapshot())[0].dispatch.promptHistory,
+				record.dispatch.promptHistory,
+			);
 			await reopened.close();
 		}
 	});
@@ -220,8 +234,17 @@ test("native consumption is retained before model execution and survives reopen"
 	assert.equal(f.requests.length, 1);
 });
 
-for (const phase of ["before", "after", "history-before", "history-after"])
-	test(`process death ${phase} the native queue receipt cannot authorize replay`, async (t) => {
+for (const phase of [
+	"before",
+	"after",
+	"history-before",
+	"history-after",
+	"prompt-before",
+	"prompt-after",
+	"prompt-claim-before",
+	"prompt-claim-after",
+])
+	test(`process death at native receipt checkpoint ${phase} cannot authorize replay`, async (t) => {
 		const root = await mkdtemp(join(tmpdir(), "jouzu-native-claim-kill-"));
 		let attachment;
 		const child = fork(new URL("./fixtures/flow-native-claim-crash.mjs", import.meta.url), [root, phase], {
@@ -248,8 +271,16 @@ for (const phase of ["before", "after", "history-before", "history-after"])
 		await exited;
 		attachment = await PiFlowAttachment.open(join(root, "receipts"), saved.scope);
 		const [record] = await attachment.submissions.snapshot();
-		assert.equal(record.dispatch.queueClaims?.[0]?.consumed, phase === "before" ? undefined : true);
+		assert.equal(
+			record.dispatch.queueClaims?.[0]?.consumed,
+			phase === "before" || phase.startsWith("prompt-") ? undefined : true,
+		);
 		assert.equal(!!record.dispatch.queueHistory?.length, phase === "history-after");
+		assert.equal(!!record.dispatch.promptHistory?.length, phase === "prompt-after");
+		assert.equal(
+			!!record.dispatch.promptClaims?.length,
+			phase.startsWith("prompt-") && phase !== "prompt-claim-before",
+		);
 		await assert.rejects(
 			attachment.submissions.dispatch(record.id, record.revision, "retry", async () => {
 				throw new Error("replayed");
@@ -258,7 +289,11 @@ for (const phase of ["before", "after", "history-before", "history-after"])
 		);
 		assert.equal(
 			projectFlowSubmissions([record], await attachment.ledger.snapshot())[0].delivery,
-			phase === "history-after" ? "history" : phase === "before" ? "uncertain" : "consumed",
+			["history-after", "prompt-after"].includes(phase)
+				? "history"
+				: ["before", "prompt-claim-before"].includes(phase)
+					? "uncertain"
+					: "consumed",
 		);
 	});
 
@@ -364,4 +399,122 @@ test("buffered transcript input cannot become a native history receipt", async (
 	assert.equal(f.requests.length, 0);
 	assert.match(f.session.agent.state.errorMessage, /was not persisted/);
 	assert.equal((await f.attachment.submissions.snapshot())[0].dispatch.queueHistory, undefined);
+});
+
+test("direct prompt history waits before provider execution and validates exact batch positions", async (t) => {
+	const f = await fixture(t);
+	const entered = deferred(),
+		release = deferred();
+	const write = f.attachment.submissions.recordPromptHistory.bind(f.attachment.submissions);
+	t.mock.method(f.attachment.submissions, "recordPromptHistory", async (...args) => {
+		entered.resolve();
+		await release.promise;
+		return write(...args);
+	});
+	const running = f.session.prompt("direct");
+	await entered.promise;
+	assert.equal(f.requests.length, 0);
+	assert.equal((await f.attachment.submissions.snapshot())[0].dispatch.promptHistory, undefined);
+	assert.deepEqual((await f.attachment.submissions.snapshot())[0].dispatch.promptClaims, [
+		{ inputIndex: 0, messageIndex: 0 },
+	]);
+	release.resolve();
+	await running;
+	const [saved] = await f.attachment.submissions.snapshot();
+	const [receipt] = saved.dispatch.promptHistory;
+	const entry = f.session.sessionManager.getEntry(receipt.entryId);
+	assert.equal(receipt.entryHash, createHash("sha256").update(JSON.stringify(entry)).digest("hex"));
+	await write(saved.dispatch.operationId, receipt);
+	await f.attachment.submissions.recordPromptClaim(saved.dispatch.operationId, receipt);
+	await assert.rejects(
+		f.attachment.submissions.recordPromptClaim(saved.dispatch.operationId, { inputIndex: 0, messageIndex: 10 }),
+		{ code: "identity" },
+	);
+	for (const change of [
+		{ inputIndex: -1 },
+		{ inputIndex: 1 },
+		{ messageIndex: 1 },
+		{ entryHash: "bad" },
+		{ entryId: "different" },
+	])
+		await assert.rejects(write(saved.dispatch.operationId, { ...receipt, ...change }), { code: "identity" });
+	assert.equal(projectFlowSubmissions([saved], await f.attachment.ledger.snapshot())[0].delivery, "history");
+	await f.native.close();
+	await f.attachment.close();
+	const reopened = await PiFlowAttachment.open(f.root, f.scope);
+	try {
+		assert.deepEqual((await reopened.submissions.snapshot())[0].dispatch.promptHistory, saved.dispatch.promptHistory);
+		await assert.rejects(reopened.submissions.recordPromptHistory(saved.dispatch.operationId, receipt), {
+			code: "stale",
+		});
+	} finally {
+		await reopened.close();
+	}
+});
+
+test("failed direct prompt history stops the provider and a later prompt gets its own receipt", async (t) => {
+	const f = await fixture(t);
+	const write = f.attachment.submissions.recordPromptHistory.bind(f.attachment.submissions);
+	let fail = true;
+	t.mock.method(f.attachment.submissions, "recordPromptHistory", (...args) => {
+		if (fail) throw new Error("prompt history unavailable");
+		return write(...args);
+	});
+	await f.session.prompt("failed");
+	assert.equal(f.requests.length, 0);
+	assert.match(f.session.agent.state.errorMessage, /prompt history unavailable/);
+	fail = false;
+	await f.session.prompt("later");
+	const [failed, later] = await f.attachment.submissions.snapshot();
+	assert.equal(failed.dispatch.promptHistory, undefined);
+	assert.equal(later.dispatch.promptHistory.length, 1);
+	assert.equal(
+		f.session.sessionManager.getEntry(later.dispatch.promptHistory[0].entryId).message.content[0].text,
+		"later",
+	);
+	assert.equal(f.requests.length, 1);
+});
+
+test("native string prompts preserve Pi normalization and image history", async (t) => {
+	const f = await fixture(t);
+	await f.session.prompt("seed");
+	const [seed] = await f.attachment.submissions.snapshot();
+	const saved = await f.attachment.submissions.retain({ ...seed.submission, id: "string-prompt" });
+	const images = [{ type: "image", data: "YQ==", mimeType: "image/png" }];
+	await f.native.dispatch(saved.id, saved.revision, "string-operation", () => f.session.agent.prompt("string", images));
+	const record = (await f.attachment.submissions.snapshot())[1];
+	const entry = f.session.sessionManager.getEntry(record.dispatch.promptHistory[0].entryId);
+	assert.deepEqual(entry.message.content, [{ type: "text", text: "string" }, ...images]);
+	assert.ok(entry.message.timestamp > 0);
+});
+
+test("a rejected concurrent native prompt cannot acquire the active prompt's history", async (t) => {
+	const f = await fixture(t);
+	const entered = deferred(),
+		release = deferred();
+	const stream = f.session.agent.streamFunction;
+	f.session.agent.streamFunction = async (...args) => {
+		entered.resolve();
+		await release.promise;
+		return stream(...args);
+	};
+	const running = f.session.prompt("active");
+	await entered.promise;
+	const [active] = await f.attachment.submissions.snapshot();
+	const rejected = await f.attachment.submissions.retain({ ...active.submission, id: "concurrent" });
+	await assert.rejects(
+		f.native.dispatch(rejected.id, rejected.revision, "concurrent-operation", () =>
+			f.session.agent.prompt("concurrent"),
+		),
+		/already processing/,
+	);
+	release.resolve();
+	await running;
+	await f.session.prompt("later");
+	const records = await f.attachment.submissions.snapshot();
+	assert.equal(records[0].dispatch.promptHistory.length, 1);
+	assert.equal(records[1].dispatch.promptClaims, undefined);
+	assert.equal(records[1].dispatch.promptHistory, undefined);
+	assert.equal(records[2].dispatch.promptHistory.length, 1);
+	assert.equal(f.requests.length, 2);
 });

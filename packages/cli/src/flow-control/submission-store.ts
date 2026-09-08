@@ -29,7 +29,7 @@ export interface FlowNativeInput {
 	queue?: { id: string; revision: number };
 }
 export interface FlowNativeObserver {
-	observe(input: FlowNativeInput): Promise<void>;
+	observe(input: FlowNativeInput): Promise<number>;
 }
 export interface FlowSubmissionDispatch {
 	operationId: string;
@@ -38,6 +38,14 @@ export interface FlowSubmissionDispatch {
 	inputs?: FlowNativeInput[];
 	queueClaims?: { id: string; revision: number; consumed: boolean }[];
 	queueHistory?: FlowNativeQueueHistory[];
+	promptHistory?: FlowNativePromptHistory[];
+	promptClaims?: { inputIndex: number; messageIndex: number }[];
+}
+export interface FlowNativePromptHistory {
+	inputIndex: number;
+	messageIndex: number;
+	entryId: string;
+	entryHash: string;
 }
 export interface FlowNativeQueueHistory {
 	id: string;
@@ -279,6 +287,45 @@ export class FlowSubmissionStore {
 					entries.add(receipt.entryId);
 				}
 			}
+			for (const [prompts, isHistory] of [
+				[record.dispatch?.promptClaims, false],
+				[record.dispatch?.promptHistory, true],
+			] as const) {
+				if (prompts === undefined) continue;
+				if (!Array.isArray(prompts) || prompts.length > 1024)
+					throw new FlowLedgerError("capacity", "Native prompt history limit exceeded.");
+				const positions = new Set<string>();
+				const entries = new Set<string>();
+				for (const receipt of prompts) {
+					const stored = inputs?.[receipt?.inputIndex];
+					const input = stored ? (decode(stored.payload) as FlowNativeInput) : undefined;
+					const count = Array.isArray(input?.args[0]) ? input.args[0].length : 1;
+					const key = `${receipt?.inputIndex}:${receipt?.messageIndex}`;
+					if (
+						!receipt ||
+						!Number.isSafeInteger(receipt.inputIndex) ||
+						receipt.inputIndex < 0 ||
+						input?.kind !== "prompt" ||
+						!Number.isSafeInteger(receipt.messageIndex) ||
+						receipt.messageIndex < 0 ||
+						receipt.messageIndex >= count ||
+						positions.has(key) ||
+						(isHistory &&
+							(!("entryId" in receipt) ||
+								!identity(receipt.entryId) ||
+								!("entryHash" in receipt) ||
+								typeof receipt.entryHash !== "string" ||
+								!/^[a-f0-9]{64}$/.test(receipt.entryHash) ||
+								entries.has(receipt.entryId as string) ||
+								!record.dispatch?.promptClaims?.some(
+									(claim) => claim.inputIndex === receipt.inputIndex && claim.messageIndex === receipt.messageIndex,
+								)))
+					)
+						throw new FlowLedgerError("identity", "Native prompt history does not identify one observed message.");
+					positions.add(key);
+					if ("entryId" in receipt) entries.add(receipt.entryId as string);
+				}
+			}
 			validateSubmission(submission, this.ownership.scope);
 			if (submission.id !== record.id) throw new FlowLedgerError("identity", "Stored submission identity changed.");
 		}
@@ -365,6 +412,8 @@ export class FlowSubmissionStore {
 								phase: dispatch.phase,
 								...(dispatch.queueClaims ? { queueClaims: dispatch.queueClaims } : {}),
 								...(dispatch.queueHistory ? { queueHistory: dispatch.queueHistory } : {}),
+								...(dispatch.promptHistory ? { promptHistory: dispatch.promptHistory } : {}),
+								...(dispatch.promptClaims ? { promptClaims: dispatch.promptClaims } : {}),
 								...(dispatch.inputs
 									? { inputs: dispatch.inputs.map((input) => decode(input.payload) as FlowNativeInput) }
 									: {}),
@@ -415,6 +464,42 @@ export class FlowSubmissionStore {
 			return { changed: true, result: undefined };
 		});
 	}
+	recordPromptClaim(operationId: string, input: { inputIndex: number; messageIndex: number }): Promise<void> {
+		const receipt = { inputIndex: input.inputIndex, messageIndex: input.messageIndex };
+		return this.transact((state) => {
+			const dispatch = state.records.find((record) => record.dispatch?.operationId === operationId)?.dispatch;
+			if (!dispatch || dispatch.ownerId !== this.ownership.token)
+				throw new FlowLedgerError("stale", "Native prompt claim belongs to another attachment.");
+			if (
+				dispatch.promptClaims?.some(
+					(item) => item.inputIndex === receipt.inputIndex && item.messageIndex === receipt.messageIndex,
+				)
+			)
+				return { changed: false, result: undefined };
+			dispatch.promptClaims ??= [];
+			dispatch.promptClaims.push(receipt);
+			return { changed: true, result: undefined };
+		});
+	}
+	recordPromptHistory(operationId: string, input: FlowNativePromptHistory): Promise<void> {
+		const receipt = { ...input };
+		return this.transact((state) => {
+			const dispatch = state.records.find((record) => record.dispatch?.operationId === operationId)?.dispatch;
+			if (!dispatch || dispatch.ownerId !== this.ownership.token)
+				throw new FlowLedgerError("stale", "Native prompt history belongs to another attachment.");
+			const previous = dispatch.promptHistory?.find(
+				(item) => item.inputIndex === receipt.inputIndex && item.messageIndex === receipt.messageIndex,
+			);
+			if (previous) {
+				if (previous.entryId !== receipt.entryId || previous.entryHash !== receipt.entryHash)
+					throw new FlowLedgerError("identity", "Native prompt history conflicts with retained evidence.");
+				return { changed: false, result: undefined };
+			}
+			dispatch.promptHistory ??= [];
+			dispatch.promptHistory.push(receipt);
+			return { changed: true, result: undefined };
+		});
+	}
 	/** Persist native-operation intent before executing once. Return is not a delivery or completion receipt. */
 	dispatch<T>(
 		id: string,
@@ -450,7 +535,7 @@ export class FlowSubmissionStore {
 				});
 			this.ownership.assertActive();
 			let observing = true;
-			const pending: Promise<void>[] = [];
+			const pending: Promise<number>[] = [];
 			const observer: FlowNativeObserver = {
 				observe: (input) => {
 					if (!observing)
@@ -469,7 +554,7 @@ export class FlowSubmissionStore {
 							throw new FlowLedgerError("stale", "Native observation belongs to another dispatch.");
 						dispatch.inputs ??= [];
 						dispatch.inputs.push({ payload, digest: hash });
-						return { changed: true, result: undefined };
+						return { changed: true, result: dispatch.inputs.length - 1 };
 					});
 					write.catch(() => {});
 					pending.push(write);
