@@ -1449,3 +1449,112 @@ for (const manual of [false, true])
 		assert.equal(f.sent.length, 1);
 		assert.deepEqual(failures, []);
 	});
+
+test("retained user input blocks semantic producer selection until cancellation", async (t) => {
+	const f = await fixture(t, { admit: async () => false });
+	await f.session.prompt("user must go first");
+	const branch = f.ingress.branch();
+	assert.equal(branch.host.gate().userPending, true);
+	let builds = 0;
+	branch.controller.register({
+		version: 1,
+		namespace: "priority-test",
+		snapshot: async () => [
+			{
+				id: "work",
+				revision: "1",
+				producer: "priority-test",
+				sequence: 1,
+				rank: 4,
+				workId: "work",
+				workRevision: "1",
+				independent: true,
+				runnable: true,
+			},
+		],
+		build: async () => {
+			builds++;
+			throw new Error("must not build before user");
+		},
+	});
+	await branch.controller.wake();
+	assert.equal(builds, 0);
+	assert.equal(f.sent.length, 0);
+	const [record] = await branch.attachment.submissions.snapshot();
+	await f.ingress.cancelRetained(record.id, 1);
+	assert.equal(branch.host.gate().userPending, false);
+});
+
+test("user priority covers retention writes and failed admission remains retained", async (t) => {
+	const f = await fixture(t, {
+		admit: async () => {
+			throw new Error("admission failed");
+		},
+	});
+	const branch = f.ingress.branch();
+	const entered = deferred(),
+		proceed = deferred();
+	const store = branch.attachment.submissions;
+	const retain = store.retain.bind(store);
+	t.mock.method(store, "retain", async (...args) => {
+		entered.resolve();
+		await proceed.promise;
+		return retain(...args);
+	});
+	const submitting = f.session.prompt("retain before producer work");
+	const rejected = assert.rejects(submitting, /admission failed/);
+	await entered.promise;
+	assert.equal(branch.host.gate().userPending, true);
+	proceed.resolve();
+	await rejected;
+	assert.equal(branch.host.gate().userPending, true);
+	const [record] = await store.snapshot();
+	await f.ingress.cancelRetained(record.id, 1);
+	assert.equal(branch.host.gate().userPending, false);
+	assert.equal(f.sent.length, 0);
+});
+
+test("retained user priority survives reopening without recreating its callback", async (t) => {
+	const first = await fixture(t, { admit: async () => false });
+	await first.session.prompt("retained across reopen");
+	const [record] = await first.ingress.branch().attachment.submissions.snapshot();
+	await first.ingress.dispose();
+	const next = await fixture(t, {
+		root: first.root,
+		manager: SessionManager.open(first.session.sessionManager.getSessionFile()),
+	});
+	assert.equal(next.ingress.branch().host.gate().userPending, true);
+	await next.ingress.cancelRetained(record.id, 1);
+	assert.equal(next.ingress.branch().host.gate().userPending, false);
+	assert.equal(next.sent.length, 0);
+});
+
+test("consumed user queue no longer blocks semantic work after automated dispatch settles", async (t) => {
+	const f = await fixture(t);
+	await f.session.followUp("queued user instruction");
+	assert.equal(f.ingress.branch().host.gate().userPending, true);
+	await f.session.sendUserMessage("start native consumption");
+	assert.equal(f.ingress.branch().host.gate().userPending, false);
+	assert.ok(f.sent.length > 0);
+});
+
+test("duplicate consumed submission does not recreate a pending user gate", async (t) => {
+	const f = await fixture(t);
+	await f.session.prompt("consumed once");
+	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+	await f.ingress.submit(record.submission, async () => {
+		assert.fail("duplicate dispatch");
+	});
+	assert.equal(f.ingress.branch().host.gate().userPending, false);
+	assert.equal(f.sent.length, 1);
+});
+
+test("native user queue cancellation clears retained semantic priority", async (t) => {
+	const f = await fixture(t);
+	await f.session.followUp("cancel queued user");
+	assert.equal(f.ingress.branch().host.gate().userPending, true);
+	const [queued] = f.session.agent.inspectQueuedMessages();
+	await f.ingress.cancelNativeQueue(queued.id, queued.revision);
+	assert.equal(f.ingress.branch().host.gate().userPending, false);
+	assert.equal(f.sent.length, 0);
+});

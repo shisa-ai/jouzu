@@ -16,7 +16,7 @@ function lane(submission: FlowSubmission): string {
 	if (!submission.hostState?.streaming) return "prompt";
 	return options?.deliverAs ?? options?.streamingBehavior ?? "prompt";
 }
-function awaitingInput(record: RetainedSubmission): boolean {
+export function awaitingNativeInput(record: RetainedSubmission): boolean {
 	if (record.status === "cancelled") return false;
 	if (!record.dispatch) return true;
 	if (record.dispatch.promptClaims?.length || record.dispatch.promptHistory?.length) return false;
@@ -60,7 +60,10 @@ export function decideNativeAdmission(
 				: hold("Non-waking context is waiting for an idle append boundary.");
 	}
 	if (gates.waitingWorkIds.length) return hold("Unclassified input cannot establish independence from a live wait.");
-	if (gates.userPending || records.some((record) => isNativeUserInput(record.submission) && awaitingInput(record)))
+	if (
+		gates.userPending ||
+		records.some((record) => isNativeUserInput(record.submission) && awaitingNativeInput(record))
+	)
 		return hold("Input is waiting for queued user work.");
 	if (phase === "submission" && (!host.isIdle || host.isStreaming))
 		return hold("Automated input is waiting for an idle host boundary.");
@@ -70,7 +73,7 @@ export function decideNativeAdmission(
 			.some(
 				(record) =>
 					lane(record.submission) === lane(submission) &&
-					awaitingInput(record) &&
+					awaitingNativeInput(record) &&
 					(phase === "submission" || !record.dispatch?.inputs?.every((input) => !!input.queue)),
 			)
 	)

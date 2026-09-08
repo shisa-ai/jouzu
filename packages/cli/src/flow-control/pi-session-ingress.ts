@@ -1,6 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import type { AgentSession, CreateAgentSessionOptions } from "@earendil-works/pi-coding-agent";
-import { decideNativeAdmission, isNativeUserInput } from "./native-admission.js";
+import { awaitingNativeInput, decideNativeAdmission, isNativeUserInput } from "./native-admission.js";
 import { type PiFlowBranchResources, type PiFlowSessionOptions, PiFlowSessionService } from "./pi-session-service.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowNativeInput } from "./submission-store.js";
@@ -39,6 +39,8 @@ export class PiSessionFlowIngress implements Ingress {
 	private readonly pending = new Map<string, Pending>();
 	private readonly frames = new AsyncLocalStorage<{ active: boolean; id?: string }>();
 	private readonly active = new Set<Promise<unknown>>();
+	private activeUserInput = 0;
+	private retainedUserInput = new Set<string>();
 	private unsubscribeIdle?: () => void;
 	private scheduledRelease?: ReturnType<typeof setImmediate>;
 	private releaseRequested = false;
@@ -53,6 +55,13 @@ export class PiSessionFlowIngress implements Ingress {
 		this.opening = (async () => {
 			const service = await PiFlowSessionService.open(session, {
 				...this.options,
+				policy: () => {
+					const policy = this.options.policy();
+					return {
+						...policy,
+						userPending: policy.userPending || this.activeUserInput > 0 || this.retainedUserInput.size > 0,
+					};
+				},
 				admitNativeQueue: (record, input) =>
 					this.track(async () => {
 						const branch = this.branch();
@@ -68,10 +77,20 @@ export class PiSessionFlowIngress implements Ingress {
 					}, record.id),
 			});
 			this.service = service;
+			await this.refreshUserInput();
 			this.subscribeIdle();
 		})();
 		return this.opening;
 	}
+	private async refreshUserInput(): Promise<void> {
+		const records = await this.branch().attachment.submissions.snapshot();
+		this.retainedUserInput = new Set(
+			records
+				.filter((record) => isNativeUserInput(record.submission) && awaitingNativeInput(record))
+				.map((record) => record.id),
+		);
+	}
+
 	private subscribeIdle(): void {
 		this.unsubscribeIdle?.();
 		this.unsubscribeIdle = this.options.autoRelease
@@ -135,7 +154,10 @@ export class PiSessionFlowIngress implements Ingress {
 		return this.track(() => run(service));
 	}
 	cancelNativeQueue(id: string, revision: number): Promise<void> {
-		return this.manage((service) => service.cancelNativeQueue(id, revision));
+		return this.manage(async (service) => {
+			await service.cancelNativeQueue(id, revision);
+			await this.refreshUserInput();
+		});
 	}
 	cancelNativeContext(id: string, revision: number, inputIndex: number): Promise<void> {
 		return this.manage((service) => service.cancelNativeContext(id, revision, inputIndex));
@@ -231,11 +253,14 @@ export class PiSessionFlowIngress implements Ingress {
 	}
 	submit(submission: Submission, dispatch: () => Promise<void>): Promise<void> {
 		const captured = structuredClone(submission);
+		const user = isNativeUserInput(captured);
+		if (user) this.activeUserInput++;
 		return this.track(async () => {
 			const branch = this.branch();
 			const saved = await branch.attachment.submissions.retain(captured);
 			if (this.branch() !== branch) throw new FlowLedgerError("stale", "Flow submission branch changed.");
 			if (saved.duplicate || saved.status === "cancelled") return;
+			if (user) this.retainedUserInput.add(saved.id);
 			this.pending.set(saved.id, { branch, submission: captured, revision: saved.revision, dispatch });
 			try {
 				await this.release(saved.id, saved.revision);
@@ -244,6 +269,8 @@ export class PiSessionFlowIngress implements Ingress {
 				this.pending.delete(saved.id);
 				throw error;
 			}
+		}).finally(() => {
+			if (user) this.activeUserInput--;
 		});
 	}
 	/** Release only a live retained callback after the host's ordinary admission policy succeeds. */
@@ -261,9 +288,16 @@ export class PiSessionFlowIngress implements Ingress {
 				throw new FlowLedgerError("stale", "Retained send changed during admission.");
 			if (branch.attachment.nativeRequests.recoveryBlocked) return false;
 			// Remove before dispatch so a reentrant release cannot consume the callback twice.
+			const user = isNativeUserInput(pending.submission);
+			if (user) this.activeUserInput++;
 			this.pending.delete(id);
-			await branch.native.dispatch(id, revision, pending.submission.id, pending.dispatch);
-			return true;
+			try {
+				await branch.native.dispatch(id, revision, pending.submission.id, pending.dispatch);
+				await this.refreshUserInput();
+				return true;
+			} finally {
+				if (user) this.activeUserInput--;
+			}
 		}, id);
 		pending.running = run;
 		void run
@@ -310,6 +344,7 @@ export class PiSessionFlowIngress implements Ingress {
 		return this.track(async () => {
 			const result = await branch.attachment.submissions.cancelPending(id, revision);
 			if (result.kind === "cancelled") {
+				this.retainedUserInput.delete(id);
 				const pending = this.pending.get(id);
 				if (pending?.branch === branch) this.pending.delete(id);
 			}
@@ -334,6 +369,7 @@ export class PiSessionFlowIngress implements Ingress {
 		await this.service.branchChanged();
 		if (!this.disposed) {
 			this.fenced = false;
+			await this.refreshUserInput();
 			this.subscribeIdle();
 		}
 	}
