@@ -5,11 +5,11 @@
 	"files": {
 		"dist/main.js": {
 			"before": "f0b7e5a8419af8d149ffe367af2992c76ce70b73484c15492bd50787d4f4962a",
-			"after": "cdfd95d6d0dcb67b72623c39392d176424b0c2af0d1da25c5fc4b20c144f32a3"
+			"after": "f53fdf3b585ac468dc502fd9a1dab90e4423836437f95cbb23365f19bf04d402"
 		},
 		"dist/main.d.ts": {
 			"before": "cf197873ee07f73d5682fe2236e24989714d1f5c1acf8820264e570a5c17dadc",
-			"after": "efa02873c9cd908ecaf5474c6cbf51db41957d20aac9c7775898e32f88e8cdf9"
+			"after": "1d33000e4919c26247d36f2a838cb40e4194faf86994f87c55b135ce4068a081"
 		},
 		"dist/core/resource-loader.js": {
 			"before": "8e8a1bc1c5bc9e955f6a2314dd1db02071be56d48b1fea7b8b2cacb4fc9a0628",
@@ -21,7 +21,7 @@
 		},
 		"dist/core/sdk.js": {
 			"before": "6969bd56ba8e1628cd033bb15cb15fe38299f00b5ad84f4f8ef37a33a98681c9",
-			"after": "f94ba292a1eb27c42a74c60fe94692b1d19b7f3951f7fd087f5f8c24a362e977"
+			"after": "ba0f7cdfcfbd4c5f5365cd38190ca0ab999d042ce966da71c6e85f0ed208692d"
 		},
 		"dist/core/sdk.d.ts": {
 			"before": "fbb34394c71e113b1f1fb5dd2e3d1da8d559580b339daace88826cd1a666cc4c",
@@ -29,11 +29,23 @@
 		},
 		"dist/core/agent-session.js": {
 			"before": "fb8a3981c20c8c0bbd42231b1c99a10335fb3858b659056b341954de9cfa467f",
-			"after": "8f0b7d0bd49e1fd4cfa13a74979b2a409dfce734da3380d28dcc2585fe39b0dc"
+			"after": "021a12a97f28dd9736338edd175e04e5e15638b12861a65a0d5e5c187b054283"
 		},
 		"dist/core/agent-session.d.ts": {
 			"before": "db3bfd2ae08eda4936d8807656f06120e6e62672d6a7798bccba486a0dc994ea",
-			"after": "e566838983fce960d37594b1117d2ad79196330d1916a0f1dc9a72dd4d72a205"
+			"after": "396c2a3a0a2ca0a2ae6aa2e6c314bb7b0064eb34e95d695f4ed23068f550e3ce"
+		},
+		"dist/core/agent-session-services.js": {
+			"before": "3a4ee476b0596f346023398f52176381355f98dd621b8161f269c7ef3a57e28f",
+			"after": "b4fd468eb882696a6b28b2d7c7abcf47da9aa558a083e24773f0ba7acfaee8c4"
+		},
+		"dist/core/agent-session-services.d.ts": {
+			"before": "ab5dac8701f02587db54abc27d119ea44ebd3708f235d5daf8293abd7b2ea71e",
+			"after": "1102fea6f62342fa5a3daacad627df063aa60b694a1366245de8f740156d9b25"
+		},
+		"dist/core/agent-session-runtime.js": {
+			"before": "61375f59afc3395940c05832c3f992e8020139a2f4a53065cccacbc370b65f16",
+			"after": "ee6c5d8c1ea8be0207b1a843f44d8e4e2e0c8a39c2987fe8ec9fb3d681f8228d"
 		},
 		"dist/core/extensions/loader.js": {
 			"before": "a1393de916487a2c47107ac7239f3139dcdb938705f88ba1ea5a954b3c8bb483",
@@ -49,6 +61,6 @@
 		}
 	},
 	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863",
-	"flowIngress": "4417b14eb79b3c97e620db515b6e677166716363e5d70dc4e5e08911e02f0b96",
-	"flowIngressTypes": "a7cf916429c87fcbed76ef8a6052f969af93763267580dad84e13a4cbf002da9"
+	"flowIngress": "7d0552b27392fbf61059cbeae3d1d34e88d8590a085f3e487ee039cad7fe8d2b",
+	"flowIngressTypes": "dedf1ecb8c3d5e236f5853ff7f9e823b9da02d2bda33e08822692a7b14c406e1"
 }

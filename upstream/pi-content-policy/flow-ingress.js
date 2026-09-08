@@ -10,13 +10,19 @@ export class FlowIngressBinding {
 	#command = new AsyncLocalStorage();
 	#attachmentId = randomUUID();
 	#closed = false;
+	#closing;
 	#dispatches = 0;
 	#session;
 	#handler;
 
 	static install(session, handler) {
 		if (handler === undefined) return undefined;
-		if (handler?.version !== 1 || typeof handler.submit !== "function")
+		if (
+			handler?.version !== 1 ||
+			typeof handler.submit !== "function" ||
+			(handler.attach !== undefined && typeof handler.attach !== "function") ||
+			(handler.dispose !== undefined && typeof handler.dispose !== "function")
+		)
 			throw new Error("Unsupported flow ingress protocol.");
 		if (typeof session.agent.inspectQueuedMessages !== "function")
 			throw new Error("Flow host queue checkpoints are unavailable.");
@@ -93,6 +99,8 @@ export class FlowIngressBinding {
 
 	dispose() {
 		this.#closed = true;
+		this.#closing ??= Promise.resolve().then(() => this.#handler.dispose?.());
+		return this.#closing;
 	}
 
 	async #capture(api, args, native) {

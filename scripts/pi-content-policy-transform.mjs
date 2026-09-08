@@ -11,14 +11,35 @@ export function transform(path, source) {
 	};
 	if (path === "dist/main.js") {
 		change(
+			"            customTools: sessionOptions.customTools,",
+			"            customTools: sessionOptions.customTools,\n            flowIngress: await options?.flowIngressFactory?.({ cwd, sessionManager }),",
+		);
+		change(
 			"                extensionFactories,\n",
 			"                extensionFactories,\n                contentPolicy: await options?.contentPolicyFactory?.({ cwd, sessionId: sessionManager.getSessionId() }),\n",
 		);
+		const start = text.indexOf("    const { services, session, modelFallbackMessage } = runtime;");
+		const end = text.lastIndexOf("\n}");
+		if (start < 0 || end < start) throw new Error("Pi main flow lifecycle boundary is missing.");
+		let body = text.slice(start, end);
+		body = replace(
+			body,
+			"        process.exit(0);",
+			"        if (options?.flowIngressFactory) await runtime.session.dispose();\n        process.exit(0);",
+			2,
+		);
+		body = replace(
+			body,
+			"        process.exit(1);",
+			"        if (options?.flowIngressFactory) await runtime.session.dispose();\n        process.exit(1);",
+			3,
+		);
+		text = `${text.slice(0, start)}    try {\n${body}\n    } finally {\n        if (options?.flowIngressFactory) await runtime.session.dispose();\n    }${text.slice(end)}`;
 	} else if (path === "dist/main.d.ts") {
-		text = `import type { ContentPolicy } from "./core/jouzu-content-policy.js";\n${text}`;
+		text = `import type { ContentPolicy } from "./core/jouzu-content-policy.js";\nimport type { FlowIngress } from "./core/jouzu-flow-ingress.js";\n${text}`;
 		change(
 			"export interface MainOptions {",
-			"export interface MainOptions {\n    contentPolicyFactory?: (context: { cwd: string; sessionId: string }) => ContentPolicy | Promise<ContentPolicy>;",
+			"export interface MainOptions {\n    flowIngressFactory?: (context: { cwd: string; sessionManager: SessionManager }) => FlowIngress | Promise<FlowIngress>;\n    contentPolicyFactory?: (context: { cwd: string; sessionId: string }) => ContentPolicy | Promise<ContentPolicy>;",
 		);
 	} else if (path === "dist/core/resource-loader.js") {
 		change("    skillsOverride;", "    skillsOverride;\n    contentPolicy;\n    skillAdmissionGeneration = 0;");
@@ -98,6 +119,17 @@ export function transform(path, source) {
 		);
 	} else if (path === "dist/core/sdk.js") {
 		change(
+			"    const extensionsResult = resourceLoader.getExtensions();",
+			`    try {
+        await options.flowIngress?.attach?.(session);
+    } catch (error) {
+        try { await session.dispose(); }
+        catch (closeError) { throw new AggregateError([error, closeError], "Flow session attachment and cleanup failed."); }
+        throw error;
+    }
+    const extensionsResult = resourceLoader.getExtensions();`,
+		);
+		change(
 			"        customTools: options.customTools,",
 			"        customTools: options.customTools,\n        flowIngress: options.flowIngress,",
 		);
@@ -141,7 +173,18 @@ export function transform(path, source) {
 			"        this._buildRuntime({\n            activeToolNames: this._initialActiveToolNames,",
 			"        this._flowBinding = FlowIngressBinding.install(this, config.flowIngress);\n        this._buildRuntime({\n            activeToolNames: this._initialActiveToolNames,",
 		);
-		change("    dispose() {", "    dispose() {\n        this._flowBinding?.dispose();");
+		change("    dispose() {", "    dispose() {\n        const flowClosing = this._flowBinding?.dispose();");
+		change(
+			"        this._disconnectFromAgent();\n        this._eventListeners = [];\n        cleanupSessionResources(this.sessionId);",
+			`        const finish = () => {
+            this._disconnectFromAgent();
+            this._eventListeners = [];
+            cleanupSessionResources(this.sessionId);
+        };
+        if (flowClosing) return flowClosing.finally(finish);
+        finish();
+        return Promise.resolve();`,
+		);
 		change(
 			"    async _runAgentPrompt(messages) {",
 			`    async continueQueued() {
@@ -321,6 +364,7 @@ export function transform(path, source) {
         }`,
 		);
 	} else if (path === "dist/core/agent-session.d.ts") {
+		change("    dispose(): void;", "    dispose(): Promise<void>;");
 		text = `import type { FlowIngress } from "./jouzu-flow-ingress.js";\n${text}`;
 		change(
 			"    private _runAgentPrompt;",
@@ -330,6 +374,18 @@ export function transform(path, source) {
 			"export interface AgentSessionConfig {",
 			"export interface AgentSessionConfig {\n    flowIngress?: FlowIngress;",
 		);
+	} else if (path === "dist/core/agent-session-services.js") {
+		change(
+			"        customTools: options.customTools,",
+			"        customTools: options.customTools,\n        flowIngress: options.flowIngress,",
+		);
+	} else if (path === "dist/core/agent-session-services.d.ts") {
+		change(
+			"export interface CreateAgentSessionFromServicesOptions {",
+			'export interface CreateAgentSessionFromServicesOptions {\n    flowIngress?: CreateAgentSessionOptions["flowIngress"];',
+		);
+	} else if (path === "dist/core/agent-session-runtime.js") {
+		change("        this.session.dispose();", "        await this.session.dispose();", 2);
 	} else if (path === "dist/core/extensions/loader.js") {
 		change(
 			"            runtime.sendMessage(message, options);",
@@ -879,6 +935,9 @@ export const paths = [
 	"dist/core/sdk.d.ts",
 	"dist/core/agent-session.js",
 	"dist/core/agent-session.d.ts",
+	"dist/core/agent-session-services.js",
+	"dist/core/agent-session-services.d.ts",
+	"dist/core/agent-session-runtime.js",
 	"dist/core/extensions/loader.js",
 	"dist/core/skills.js",
 	"dist/core/skills.d.ts",

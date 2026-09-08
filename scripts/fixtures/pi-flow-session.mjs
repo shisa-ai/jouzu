@@ -55,7 +55,7 @@ export async function createFlowSession(
 	const root = fixtureRoot ?? (await mkdtemp(join(tmpdir(), "jouzu-flow-session-")));
 	let session;
 	t.after(async () => {
-		session?.dispose();
+		await session?.dispose();
 		await rm(root, { recursive: true, force: true });
 	});
 	const runtime = await ModelRuntime.create({

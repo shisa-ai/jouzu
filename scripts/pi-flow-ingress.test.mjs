@@ -1,5 +1,10 @@
 import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { test } from "node:test";
+import { AgentSessionRuntime, createAgentSessionFromServices } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, deferred, message, tick } from "./fixtures/pi-flow-session.mjs";
 
 function inbox(submit) {
@@ -15,6 +20,192 @@ function inbox(submit) {
 		},
 	};
 }
+
+test("SDK attachment completes before returning and cleanup is awaited once", async (t) => {
+	const entered = deferred(),
+		release = deferred(),
+		closing = deferred(),
+		closed = deferred();
+	let attached,
+		returned = false,
+		disposed = 0;
+	const creating = createFlowSession(t, {
+		ingress: {
+			version: 1,
+			async attach(session) {
+				attached = session;
+				entered.resolve();
+				await release.promise;
+			},
+			submit() {},
+			async dispose() {
+				disposed++;
+				closing.resolve();
+				await closed.promise;
+			},
+		},
+	}).then((result) => {
+		returned = true;
+		return result;
+	});
+	await entered.promise;
+	assert.equal(returned, false);
+	release.resolve();
+	const { session } = await creating;
+	assert.equal(session, attached);
+	let complete = false;
+	const disposal = session.dispose().then(() => {
+		complete = true;
+	});
+	await closing.promise;
+	assert.equal(complete, false);
+	await assert.rejects(session.prompt("after disposal"), /closed/);
+	const again = session.dispose();
+	closed.resolve();
+	await Promise.all([disposal, again]);
+	assert.equal(disposed, 1);
+});
+
+for (const cleanupFails of [false, true])
+	test(`attachment failure closes the partial session, cleanupFails=${cleanupFails}`, async (t) => {
+		let session,
+			disposed = 0;
+		const creating = createFlowSession(t, {
+			ingress: {
+				version: 1,
+				submit() {},
+				attach(value) {
+					session = value;
+					throw new Error("attach failed");
+				},
+				dispose() {
+					disposed++;
+					if (cleanupFails) throw new Error("cleanup failed");
+				},
+			},
+		});
+		await assert.rejects(creating, (error) =>
+			cleanupFails
+				? error instanceof AggregateError &&
+					error.errors.map((item) => item.message).join(",") === "attach failed,cleanup failed"
+				: error.message === "attach failed",
+		);
+		assert.equal(disposed, 1);
+		await assert.rejects(session.prompt("stale"), /closed/);
+	});
+
+test("runtime replacement waits for disposal and services forward the new ingress", async (t) => {
+	const closing = deferred(),
+		release = deferred();
+	const first = await createFlowSession(t, {
+		ingress: {
+			version: 1,
+			submit() {},
+			async dispose() {
+				closing.resolve();
+				await release.promise;
+			},
+		},
+	});
+	const services = {
+		cwd: first.session.sessionManager.getCwd(),
+		agentDir: first.session.sessionManager.getCwd(),
+		modelRuntime: first.session.modelRuntime,
+		resourceLoader: first.session.resourceLoader,
+		settingsManager: first.session.settingsManager,
+		diagnostics: [],
+	};
+	let factories = 0,
+		attachedId,
+		capturedId,
+		disposed = 0;
+	const runtime = new AgentSessionRuntime(first.session, services, async ({ sessionManager, sessionStartEvent }) => {
+		factories++;
+		const result = await createAgentSessionFromServices({
+			services,
+			sessionManager,
+			sessionStartEvent,
+			model: first.session.model,
+			flowIngress: {
+				version: 1,
+				attach(session) {
+					attachedId = session.sessionId;
+				},
+				submit(input) {
+					capturedId = input.scope.sessionId;
+				},
+				dispose() {
+					disposed++;
+				},
+			},
+		});
+		return { ...result, services, diagnostics: [] };
+	});
+	t.after(() => runtime.dispose());
+	const replacing = runtime.newSession();
+	await closing.promise;
+	assert.equal(factories, 0);
+	release.resolve();
+	await replacing;
+	assert.equal(factories, 1);
+	assert.notEqual(attachedId, first.session.sessionId);
+	await runtime.session.prompt("retained in replacement");
+	assert.equal(capturedId, attachedId);
+	await runtime.dispose();
+	assert.equal(disposed, 1);
+});
+
+for (const mode of ["help", "print"])
+	test(`CLI ${mode} awaits attachment and cleanup through the main factory`, async (t) => {
+		const root = await mkdtemp(join(tmpdir(), "jouzu-flow-main-"));
+		t.after(() => rm(root, { recursive: true, force: true }));
+		const log = join(root, "lifecycle.jsonl");
+		const module = new URL("../node_modules/@earendil-works/pi-coding-agent/dist/index.js", import.meta.url).href;
+		const args = [
+			"--offline",
+			"--no-session",
+			"--no-extensions",
+			"--no-skills",
+			"--no-prompt-templates",
+			"--no-themes",
+			"--no-context-files",
+			...(mode === "help"
+				? ["--help"]
+				: ["--mode", "json", "--provider", "openai", "--model", "gpt-4o-mini", "--api-key", "fixture", "held input"]),
+		];
+		const script = `
+import { appendFileSync } from 'node:fs';
+import { main } from ${JSON.stringify(module)};
+const record = (stage) => appendFileSync(${JSON.stringify(log)}, JSON.stringify(stage)+'\\n');
+await main(${JSON.stringify(args)}, {
+ flowIngressFactory({ sessionManager }) {
+  record('factory');
+  const id = sessionManager.getSessionId();
+  return { version: 1,
+   async attach(session) { if(session.sessionId !== id) throw new Error('scope mismatch'); await new Promise(r=>setTimeout(r,5)); record('attach'); },
+   submit() { record('submit'); },
+   async dispose() { await new Promise(r=>setTimeout(r,15)); record('dispose'); }
+  };
+ }
+});`;
+		await new Promise((resolve, reject) => {
+			const child = execFile(
+				process.execPath,
+				["--input-type=module", "-e", script],
+				{
+					cwd: root,
+					env: { ...process.env, PI_CODING_AGENT_DIR: join(root, "state"), PI_OFFLINE: "1" },
+					timeout: 30000,
+				},
+				(error) => (error ? reject(error) : resolve()),
+			);
+			child.stdin.end();
+		});
+		assert.deepEqual(
+			(await readFile(log, "utf8")).trim().split("\n").map(JSON.parse),
+			mode === "help" ? ["factory", "attach", "dispose"] : ["factory", "attach", "submit", "dispose"],
+		);
+	});
 
 test("every AgentSession send API can be retained without native queue, history, or provider writes", async (t) => {
 	const held = inbox();

@@ -100,7 +100,7 @@ async function runGuardedWorker(
 	if (modelFallbackMessage) throw new Error("Model: the requested model could not be restored.");
 	onSession(session);
 	if (!process.connected && process.send) {
-		session.dispose();
+		await session.dispose();
 		throw new Error("Parent disconnected.");
 	}
 	let turns = 0;
@@ -198,7 +198,7 @@ async function runGuardedWorker(
 		});
 	} finally {
 		unsubscribe();
-		session.dispose();
+		await session.dispose();
 	}
 }
 
