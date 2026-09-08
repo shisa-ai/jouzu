@@ -518,3 +518,101 @@ test("a rejected concurrent native prompt cannot acquire the active prompt's his
 	assert.equal(records[2].dispatch.promptHistory.length, 1);
 	assert.equal(f.requests.length, 2);
 });
+
+test("reconciled queue edits retain both revisions and consume only edited input", async (t) => {
+	const f = await fixture(t);
+	await f.session.followUp("original");
+	const [item] = f.session.agent.inspectQueuedMessages();
+	f.session.agent.editQueuedMessage(item.id, item.revision, { role: "user", content: "edited", timestamp: 1 });
+	await f.native.reconcileQueueEdit(item.id, 2);
+	await f.native.reconcileQueueEdit(item.id, 2);
+	const [before] = await f.attachment.submissions.snapshot();
+	assert.equal(before.dispatch.inputs.length, 2);
+	assert.equal(before.submission.args[0], "original");
+	assert.equal(before.dispatch.inputs[1].args[0].content, "edited");
+	assert.deepEqual(before.dispatch.queueClaims, [{ id: item.id, revision: 1, consumed: false }]);
+	assert.equal(f.requests.length, 0);
+	await f.session.continueQueued();
+	assert.equal(f.requests.length, 1);
+	assert.ok(JSON.stringify(f.requests).includes("edited"));
+	assert.ok(!JSON.stringify(f.requests).includes("original"));
+	const [after] = await f.attachment.submissions.snapshot();
+	assert.deepEqual(after.dispatch.queueClaims, [
+		{ id: item.id, revision: 1, consumed: false },
+		{ id: item.id, revision: 2, consumed: true },
+	]);
+	assert.equal(after.dispatch.queueHistory[0].revision, 2);
+	await assert.rejects(
+		f.attachment.submissions.recordQueueEdit(
+			after.dispatch.operationId,
+			{ id: item.id, revision: 2 },
+			{
+				kind: "followUp",
+				args: [{ role: "user", content: "after consumption", timestamp: 1 }],
+				queue: { id: item.id, revision: 3 },
+			},
+		),
+		{ code: "transition" },
+	);
+});
+
+test("a second edit during persistence stays held without overwriting either observation", async (t) => {
+	const f = await fixture(t);
+	await f.session.followUp("original");
+	const [item] = f.session.agent.inspectQueuedMessages();
+	f.session.agent.editQueuedMessage(item.id, 1, { role: "user", content: "second", timestamp: 1 });
+	const record = f.attachment.submissions.recordQueueEdit.bind(f.attachment.submissions);
+	let mutate = true;
+	t.mock.method(f.attachment.submissions, "recordQueueEdit", async (...args) => {
+		await record(...args);
+		if (mutate) f.session.agent.editQueuedMessage(item.id, 2, { role: "user", content: "third", timestamp: 1 });
+	});
+	await assert.rejects(f.native.reconcileQueueEdit(item.id, 2), { code: "stale" });
+	await f.session.continueQueued();
+	assert.equal(f.requests.length, 0);
+	mutate = false;
+	await f.native.reconcileQueueEdit(item.id, 3);
+	await f.session.continueQueued();
+	const [saved] = await f.attachment.submissions.snapshot();
+	assert.equal(saved.dispatch.inputs.length, 3);
+	assert.deepEqual(
+		saved.dispatch.queueClaims.map((claim) => claim.consumed),
+		[false, false, true],
+	);
+	assert.equal(saved.dispatch.queueHistory[0].revision, 3);
+	assert.ok(JSON.stringify(f.requests).includes("third"));
+});
+
+test("failed edit persistence cannot authorize queue consumption", async (t) => {
+	const f = await fixture(t);
+	await f.session.followUp("original");
+	const [item] = f.session.agent.inspectQueuedMessages();
+	f.session.agent.editQueuedMessage(item.id, 1, { role: "user", content: "edited", timestamp: 1 });
+	t.mock.method(f.attachment.submissions, "recordQueueEdit", async () => {
+		throw new Error("edit write failure");
+	});
+	await assert.rejects(f.native.reconcileQueueEdit(item.id, 2), /edit write failure/);
+	await f.session.continueQueued();
+	assert.equal(f.requests.length, 0);
+	assert.equal((await f.attachment.submissions.snapshot())[0].dispatch.inputs.length, 1);
+});
+
+test("native close retains an edited pending revision before removing its live queue entry", async (t) => {
+	const f = await fixture(t);
+	await f.session.followUp("original");
+	const [item] = f.session.agent.inspectQueuedMessages();
+	f.session.agent.editQueuedMessage(item.id, 1, { role: "user", content: "edited before exit", timestamp: 1 });
+	await f.native.close();
+	assert.equal(f.requests.length, 0);
+	assert.equal(f.session.agent.inspectQueuedMessages().length, 0);
+	const [saved] = await f.attachment.submissions.snapshot();
+	assert.equal(saved.dispatch.inputs[1].args[0].content, "edited before exit");
+	assert.deepEqual(
+		saved.dispatch.queueClaims.map((claim) => [claim.revision, claim.consumed]),
+		[
+			[1, false],
+			[2, false],
+		],
+	);
+	assert.equal(saved.dispatch.queueHistory, undefined);
+});

@@ -9,14 +9,14 @@ import { PiNativeDispatch } from "./pi-native-dispatch.js";
 import { PiNativeRequests } from "./pi-native-requests.js";
 import { PiFlowSessionRegistry } from "./pi-session-registry.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
-import type { RetainedSubmission } from "./submission-store.js";
+import type { FlowNativeInput, RetainedSubmission } from "./submission-store.js";
 
 export interface PiFlowSessionOptions {
 	root: string;
 	maxInputBytes: number;
 	maxResultBytes: number;
 	host: Omit<PiControllerHostOptions, "results">;
-	admitNativeQueue?(record: RetainedSubmission): Promise<boolean>;
+	admitNativeQueue?(record: RetainedSubmission, input: FlowNativeInput): Promise<boolean>;
 	policy(): Omit<FlowAdmissionGates, "hostReady">;
 }
 export interface PiFlowBranchResources {
@@ -161,6 +161,15 @@ export class PiFlowSessionService {
 				await branch.attachment.nativeRequests.cancelSources(id, expectedHash, selected);
 			});
 			if (result.kind === "busy") throw new FlowLedgerError("busy", "Native cancellation requires an idle session.");
+		});
+	}
+
+	reconcileNativeQueueEdit(id: string, revision: number): Promise<void> {
+		return this.registry.run(async () => {
+			const branch = this.branch();
+			const result = await branch.host.atQueueMaintenance(() => branch.native.reconcileQueueEdit(id, revision));
+			if (result.kind === "busy")
+				throw new FlowLedgerError("busy", "Native edit reconciliation requires an idle session.");
 		});
 	}
 

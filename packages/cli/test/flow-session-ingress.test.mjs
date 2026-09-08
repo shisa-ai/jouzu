@@ -381,3 +381,29 @@ test("queue edits during policy cannot consume the original observed revision", 
 	const [edited] = session.agent.inspectQueuedMessages();
 	session.agent.cancelQueuedMessage(edited.id, edited.revision);
 });
+
+test("queue policy receives the reconciled native revision and edited content", async (t) => {
+	let checked;
+	const f = await fixture(t, {
+		admit: async (_submission, _branch, phase, input) => {
+			if (phase === "queue") checked = structuredClone(input);
+			return true;
+		},
+	});
+	await f.session.followUp("original");
+	const [item] = f.session.agent.inspectQueuedMessages();
+	f.session.agent.editQueuedMessage(item.id, 1, {
+		role: "user",
+		content: [{ type: "text", text: "edited" }],
+		timestamp: 1,
+	});
+	await f.ingress.branch().native.reconcileQueueEdit(item.id, 2);
+	await f.session.continueQueued();
+	assert.equal(checked.queue.revision, 2);
+	assert.equal(checked.args[0].content[0].text, "edited");
+	assert.equal(f.sent.length, 1);
+	assert.ok(!JSON.stringify(f.sent).includes("original"));
+	const [request] = await f.ingress.branch().attachment.nativeRequests.snapshot();
+	assert.equal(request.sourceCapture.members[0].queue.revision, 2);
+	assert.equal(request.payload.sources[0].disposition, "included");
+});

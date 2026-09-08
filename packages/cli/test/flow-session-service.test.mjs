@@ -265,3 +265,55 @@ test("cancelled native input remains excluded after session-service reopen", asy
 	assert.equal(original.payload, undefined);
 	assert.equal(request.outcome, "success");
 });
+
+test("session service reconciles an idle queue edit without sending or duplicating history", async (t) => {
+	const f = await fixture(t, { retainInputs: true, providerReceipts: () => true });
+	await f.session.followUp("original");
+	const [item] = f.session.agent.inspectQueuedMessages();
+	f.session.agent.editQueuedMessage(item.id, 1, {
+		role: "user",
+		content: [{ type: "text", text: "edited" }],
+		timestamp: 1,
+	});
+	await f.service.reconcileNativeQueueEdit(item.id, 2);
+	assert.equal(f.requests.length, 0);
+	await f.session.continueQueued();
+	assert.equal(f.requests.length, 1);
+	assert.ok(JSON.stringify(f.requests).includes("edited"));
+	const [record] = await f.service.branch().attachment.submissions.snapshot();
+	assert.equal(record.dispatch.queueHistory.length, 1);
+	assert.equal(record.dispatch.queueHistory[0].revision, 2);
+});
+
+test("queue maintenance fences edits and cancellation while retaining the reviewed revision", async (t) => {
+	const f = await fixture(t, { retainInputs: true, providerReceipts: () => true });
+	await f.session.followUp("original");
+	const [item] = f.session.agent.inspectQueuedMessages();
+	f.session.agent.editQueuedMessage(item.id, 1, {
+		role: "user",
+		content: [{ type: "text", text: "edited" }],
+		timestamp: 1,
+	});
+	const entered = deferred(),
+		release = deferred();
+	const store = f.service.branch().attachment.submissions;
+	const write = store.recordQueueEdit.bind(store);
+	t.mock.method(store, "recordQueueEdit", async (...args) => {
+		entered.resolve();
+		await release.promise;
+		return write(...args);
+	});
+	const reconciling = f.service.reconcileNativeQueueEdit(item.id, 2);
+	await entered.promise;
+	assert.throws(
+		() => f.session.agent.editQueuedMessage(item.id, 2, { role: "user", content: "racing", timestamp: 1 }),
+		{ code: "busy" },
+	);
+	assert.throws(() => f.session.agent.cancelQueuedMessage(item.id, 2), { code: "busy" });
+	release.resolve();
+	await reconciling;
+	assert.equal(f.session.agent.inspectQueuedMessages()[0].revision, 2);
+	assert.equal(f.requests.length, 0);
+	await f.session.continueQueued();
+	assert.equal(f.requests.length, 1);
+});

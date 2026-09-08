@@ -249,6 +249,7 @@ export class FlowSubmissionStore {
 				if (!Array.isArray(claims) || claims.length > 64)
 					throw new FlowLedgerError("schema", "Invalid native queue claim receipts.");
 				const claimed = new Set<string>();
+				const consumedIds = new Set<string>();
 				for (const claim of claims) {
 					if (
 						!claim ||
@@ -256,14 +257,16 @@ export class FlowSubmissionStore {
 						!Number.isSafeInteger(claim.revision) ||
 						claim.revision < 1 ||
 						typeof claim.consumed !== "boolean" ||
-						claimed.has(claim.id) ||
+						claimed.has(JSON.stringify([claim.id, claim.revision])) ||
+						(claim.consumed && consumedIds.has(claim.id)) ||
 						(inputs ?? []).filter((input) => {
 							const queue = (decode(input.payload) as FlowNativeInput).queue;
 							return queue?.id === claim.id && queue.revision === claim.revision;
 						}).length !== 1
 					)
 						throw new FlowLedgerError("identity", "Native queue receipt does not identify one observed input.");
-					claimed.add(claim.id);
+					claimed.add(JSON.stringify([claim.id, claim.revision]));
+					if (claim.consumed) consumedIds.add(claim.id);
 				}
 			}
 			const history = record.dispatch?.queueHistory;
@@ -431,7 +434,9 @@ export class FlowSubmissionStore {
 			const dispatch = state.records.find((record) => record.dispatch?.operationId === operationId)?.dispatch;
 			if (!dispatch || dispatch.ownerId !== this.ownership.token)
 				throw new FlowLedgerError("stale", "Native queue receipt belongs to another attachment.");
-			const previous = dispatch.queueClaims?.find((claim) => claim.id === receipt.id);
+			const previous = dispatch.queueClaims?.find(
+				(claim) => claim.id === receipt.id && claim.revision === receipt.revision,
+			);
 			if (previous) {
 				if (previous.revision !== receipt.revision || previous.consumed !== receipt.consumed)
 					throw new FlowLedgerError("identity", "Native queue consumption receipt conflicts with retained evidence.");
@@ -439,6 +444,58 @@ export class FlowSubmissionStore {
 			}
 			dispatch.queueClaims ??= [];
 			dispatch.queueClaims.push(receipt);
+			return { changed: true, result: undefined };
+		});
+	}
+	/** Bind a newer live queue revision; the superseded revision remains explicitly unconsumed. */
+	recordQueueEdit(
+		operationId: string,
+		previous: { id: string; revision: number },
+		input: FlowNativeInput,
+	): Promise<void> {
+		const prior = { ...previous };
+		validateNativeInput(input);
+		const captured = structuredClone(input);
+		const queue = captured.queue;
+		if (
+			!Number.isSafeInteger(prior.revision) ||
+			prior.revision < 1 ||
+			!queue ||
+			queue.id !== prior.id ||
+			queue.revision <= prior.revision
+		)
+			return Promise.reject(new FlowLedgerError("identity", "Native edit must advance the same queue identity."));
+		const payload = encode(captured),
+			hash = digest(payload);
+		return this.transact((state) => {
+			const record = state.records.find((record) => record.dispatch?.operationId === operationId);
+			const dispatch = record?.dispatch;
+			if (record?.status !== "retained" || !dispatch || dispatch.ownerId !== this.ownership.token)
+				throw new FlowLedgerError("stale", "Native edit belongs to another or cancelled dispatch.");
+			const inputs = dispatch.inputs ?? [];
+			const revisions = inputs
+				.map((item) => ({ item, input: decode(item.payload) as FlowNativeInput }))
+				.filter(({ input }) => input.queue?.id === queue.id);
+			if (dispatch.queueClaims?.some((claim) => claim.id === queue.id && claim.consumed))
+				throw new FlowLedgerError("transition", "Consumed native input cannot be edited.");
+			const existing = revisions.find(({ input }) => input.queue?.revision === queue.revision);
+			if (existing) {
+				if (existing.item.digest !== hash)
+					throw new FlowLedgerError("identity", "Native edit revision has different content.");
+				return { changed: false, result: undefined };
+			}
+			const old = revisions.find(({ input }) => input.queue?.revision === prior.revision);
+			if (
+				!old ||
+				old.input.kind !== captured.kind ||
+				revisions.some(({ input }) => (input.queue?.revision ?? 0) > prior.revision)
+			)
+				throw new FlowLedgerError("stale", "Native edit does not follow the retained queue revision.");
+			dispatch.queueClaims ??= [];
+			if (!dispatch.queueClaims.some((claim) => claim.id === prior.id && claim.revision === prior.revision))
+				dispatch.queueClaims.push({ ...prior, consumed: false });
+			dispatch.inputs ??= [];
+			dispatch.inputs.push({ payload, digest: hash });
 			return { changed: true, result: undefined };
 		});
 	}

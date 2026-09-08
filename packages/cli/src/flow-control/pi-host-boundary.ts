@@ -62,6 +62,16 @@ export class PiHostBoundary {
 				return enqueue(message);
 			});
 		}
+		for (const name of ["editQueuedMessage", "cancelQueuedMessage"] as const) {
+			const change = agent[name].bind(agent);
+			this.hooks.set(agent, name, ((...args: Parameters<typeof change>) => {
+				if (name === "editQueuedMessage") this.assertWritable();
+				else this.assertActive();
+				if (this.barrier && !(this.frames.getStore()?.active && this.frames.getStore()?.kind === "boundary"))
+					throw new FlowLedgerError("busy", "Native queue mutation must wait for reconciliation.");
+				return (change as (...args: Parameters<typeof change>) => ReturnType<typeof change>)(...args);
+			}) as (typeof agent)[typeof name]);
+		}
 		this.hooks.set(session, "setModel", this.wrap(session.setModel.bind(session)));
 		this.hooks.set(session, "cycleModel", this.wrap(session.cycleModel.bind(session)));
 	}
@@ -157,15 +167,14 @@ export class PiHostBoundary {
 			this.notifyDrained();
 		}
 	}
-	private idle(): boolean {
+	private idle(allowQueued = false): boolean {
 		return (
 			this.active === 0 &&
 			this.session.isIdle &&
 			!this.session.agent.state.isStreaming &&
 			!this.session.isRetrying &&
 			!this.session.isCompacting &&
-			!this.session.agent.hasQueuedMessages() &&
-			this.session.pendingMessageCount === 0
+			(allowQueued || (!this.session.agent.hasQueuedMessages() && this.session.pendingMessageCount === 0))
 		);
 	}
 	assertAttachedBranch(): void {
@@ -173,9 +182,16 @@ export class PiHostBoundary {
 		if (this.navigated) throw new FlowLedgerError("scope", "Branch navigation requires a new flow attachment.");
 	}
 	/** The callback may mutate durable state, but must not start host operations or wait for new input. */
-	async atIdle<T>(run: () => Promise<T>): Promise<PiBoundaryResult<T>> {
+	atIdle<T>(run: () => Promise<T>): Promise<PiBoundaryResult<T>> {
+		return this.atRest(run, false);
+	}
+	/** Reconcile native queue records while host execution and queue mutation are fenced. */
+	atQueueMaintenance<T>(run: () => Promise<T>): Promise<PiBoundaryResult<T>> {
+		return this.atRest(run, true);
+	}
+	private async atRest<T>(run: () => Promise<T>, allowQueued: boolean): Promise<PiBoundaryResult<T>> {
 		this.assertActive();
-		if (this.barrier || !this.idle()) return { kind: "busy" };
+		if (this.barrier || !this.idle(allowQueued)) return { kind: "busy" };
 		let release!: () => void;
 		this.barrier = new Promise<void>((resolve) => {
 			release = resolve;

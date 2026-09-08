@@ -151,6 +151,10 @@ export class PiControllerHost implements FlowControllerHost {
 		this.boundary.assertAttachedBranch();
 		return this.boundary.atIdle(run);
 	}
+	atQueueMaintenance<T>(run: () => Promise<T>) {
+		this.boundary.assertAttachedBranch();
+		return this.boundary.atQueueMaintenance(run);
+	}
 	async enqueue(input: FlowModelInput, valid: () => Promise<boolean>): Promise<void> {
 		this.assertActive();
 		if (this.pending) throw new FlowLedgerError("busy", "A controller input is already pending.");

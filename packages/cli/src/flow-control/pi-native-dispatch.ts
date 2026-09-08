@@ -6,7 +6,12 @@ import type { NativeRequestSource } from "./native-request-store.js";
 import { PiHostHooks } from "./pi-host-hooks.js";
 import { PiNativeHistory } from "./pi-native-history.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
-import type { FlowNativeObserver, FlowSubmissionStore, RetainedSubmission } from "./submission-store.js";
+import type {
+	FlowNativeInput,
+	FlowNativeObserver,
+	FlowSubmissionStore,
+	RetainedSubmission,
+} from "./submission-store.js";
 
 interface Frame {
 	active: boolean;
@@ -31,7 +36,7 @@ export class PiNativeDispatch {
 	constructor(
 		private readonly session: AgentSession,
 		private readonly store: FlowSubmissionStore,
-		private readonly admitQueued?: (record: RetainedSubmission) => Promise<boolean>,
+		private readonly admitQueued?: (record: RetainedSubmission, input: FlowNativeInput) => Promise<boolean>,
 	) {
 		if (session.sessionId !== store.scope.sessionId)
 			throw new FlowLedgerError("scope", "Native observation requires matching session storage.");
@@ -115,18 +120,14 @@ export class PiNativeDispatch {
 					const observed = this.queued.get(item.id);
 					if (!observed) continue;
 					const record = records.find((record) => record.dispatch?.operationId === observed.operationId);
-					if (
-						record?.status !== "retained" ||
-						!record.dispatch?.inputs?.some(
-							(input) => input.queue?.id === item.id && input.queue.revision === item.revision,
-						)
-					)
-						return false;
-					if (selected.has(record.id)) continue;
+					const input = record?.dispatch?.inputs?.find(
+						(input) => input.queue?.id === item.id && input.queue.revision === item.revision,
+					);
+					if (record?.status !== "retained" || !input) return false;
 					if (this.admitQueued) {
 						let allowed: boolean;
 						try {
-							allowed = await this.admitQueued(structuredClone(record));
+							allowed = await this.admitQueued(structuredClone(record), structuredClone(input));
 						} catch {
 							this.assertActive();
 							signal?.throwIfAborted();
@@ -229,6 +230,43 @@ export class PiNativeDispatch {
 			if (!this.active) this.drained?.();
 		}
 	}
+	/** Re-observe the reviewed live revision without replacing Pi's queue entry or appending history. */
+	async reconcileQueueEdit(id: string, revision: number): Promise<void> {
+		this.assertActive();
+		const item = this.session.agent
+			.inspectQueuedMessages()
+			.find((item) => item.id === id && item.revision === revision);
+		const observed = this.queued.get(id);
+		if (!item || !observed) throw new FlowLedgerError("stale", "Native edit has no matching live queue observation.");
+		if (revision === observed.revision) return;
+		this.active++;
+		try {
+			await observed.write;
+			await this.store.recordQueueEdit(
+				observed.operationId,
+				{ id, revision: observed.revision },
+				{
+					kind: item.lane,
+					args: [item.message],
+					queue: { id, revision },
+				},
+			);
+			this.assertActive();
+			if (this.queued.get(id) !== observed)
+				throw new FlowLedgerError("stale", "Native edit observation changed during reconciliation.");
+			this.queued.set(id, { operationId: observed.operationId, revision, write: Promise.resolve() });
+			if (
+				!this.session.agent
+					.inspectQueuedMessages()
+					.some((current) => current.id === id && current.revision === revision)
+			)
+				throw new FlowLedgerError("stale", "Native queue changed while its edit was retained.");
+			this.held.delete(id);
+		} finally {
+			this.active--;
+			if (!this.active) this.drained?.();
+		}
+	}
 	heldInputs(): { id: string; revision: number; reason: string }[] {
 		const queued = this.session.agent.inspectQueuedMessages();
 		for (const id of this.held.keys()) if (!queued.some((item) => item.id === id)) this.held.delete(id);
@@ -279,11 +317,21 @@ export class PiNativeDispatch {
 				: Promise.resolve()
 		).then(async () => {
 			const pending = this.session.agent.inspectQueuedMessages().filter((item) => this.queued.has(item.id));
-			if (pending.some((item) => item.revision !== this.queued.get(item.id)?.revision))
-				throw new FlowLedgerError("busy", "Edited native queue entries require reconciliation before close.");
 			for (const item of pending) {
 				const observed = this.queued.get(item.id);
 				if (!observed) throw new FlowLedgerError("stale", "Native queue observation changed during close.");
+				if (item.revision !== observed.revision) {
+					await observed.write;
+					await this.store.recordQueueEdit(
+						observed.operationId,
+						{ id: item.id, revision: observed.revision },
+						{
+							kind: item.lane,
+							args: [item.message],
+							queue: { id: item.id, revision: item.revision },
+						},
+					);
+				}
 				const result = this.session.agent.cancelQueuedMessage(item.id, item.revision);
 				if (result.kind !== "cancelled") throw new FlowLedgerError("stale", "Native queue changed during close.");
 				await this.store.recordQueueClaim(observed.operationId, { id: item.id, revision: item.revision }, false);

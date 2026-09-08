@@ -2,12 +2,18 @@ import { AsyncLocalStorage } from "node:async_hooks";
 import type { AgentSession, CreateAgentSessionOptions } from "@earendil-works/pi-coding-agent";
 import { type PiFlowBranchResources, type PiFlowSessionOptions, PiFlowSessionService } from "./pi-session-service.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
+import type { FlowNativeInput } from "./submission-store.js";
 
 type Ingress = NonNullable<CreateAgentSessionOptions["flowIngress"]>;
 type Submission = Parameters<Ingress["submit"]>[0];
 export interface PiFlowIngressOptions extends Omit<PiFlowSessionOptions, "admitNativeQueue"> {
 	/** Host policy must establish source authority, lane order, wait gates, and independence. */
-	admit(submission: Submission, branch: PiFlowBranchResources, phase: "submission" | "queue"): Promise<boolean>;
+	admit(
+		submission: Submission,
+		branch: PiFlowBranchResources,
+		phase: "submission" | "queue",
+		input?: FlowNativeInput,
+	): Promise<boolean>;
 }
 interface Pending {
 	branch: PiFlowBranchResources;
@@ -36,11 +42,16 @@ export class PiSessionFlowIngress implements Ingress {
 		this.opening = (async () => {
 			const service = await PiFlowSessionService.open(session, {
 				...this.options,
-				admitNativeQueue: (record) =>
+				admitNativeQueue: (record, input) =>
 					this.track(async () => {
 						const branch = this.branch();
 						if (branch.attachment.nativeRequests.recoveryBlocked) return false;
-						const allowed = await this.options.admit(structuredClone(record.submission), branch, "queue");
+						const allowed = await this.options.admit(
+							structuredClone(record.submission),
+							branch,
+							"queue",
+							structuredClone(input),
+						);
 						if (this.branch() !== branch)
 							throw new FlowLedgerError("stale", "Queued input branch changed during admission.");
 						return allowed && !branch.attachment.nativeRequests.recoveryBlocked;
