@@ -2,7 +2,9 @@ import { randomUUID } from "node:crypto";
 import { chooseFlowIntent, type FlowAdmissionGates, type FlowIntent, initialFlowAdmission } from "./admission.js";
 import { type FlowInputItem, FlowModelInput } from "./model-input.js";
 import { FlowLedgerError, type FlowLedgerState, type FlowReceiptLedger } from "./receipt-ledger.js";
+import { buildFlowResultEnvelope } from "./result-envelope.js";
 import { orderFlowResultProducers } from "./result-order.js";
+import { type FlowResultReference, normalizeFlowResults } from "./result-types.js";
 
 export interface FlowProducer {
 	version: 1;
@@ -11,9 +13,11 @@ export interface FlowProducer {
 	snapshot(signal: AbortSignal): Promise<FlowIntent[]>;
 	/** Build only after selection. A new instruction needs a new descriptor revision. */
 	build(intent: FlowIntent, signal: AbortSignal): Promise<FlowInputItem>;
+	describeResult?(intent: FlowIntent, signal: AbortSignal): Promise<FlowResultReference>;
 }
 export interface FlowControllerHost {
 	readonly ledger: FlowReceiptLedger;
+	retainResults?(members: FlowResultReference[]): Promise<string>;
 	gate(): FlowAdmissionGates;
 	atIdle<T>(run: () => Promise<T>): Promise<{ kind: "busy" } | { kind: "idle"; value: T }>;
 	enqueue(input: FlowModelInput, valid: () => Promise<boolean>): Promise<void>;
@@ -89,8 +93,9 @@ export class SessionFlowController {
 	constructor(
 		private readonly host: FlowControllerHost,
 		private readonly maxInputBytes: number,
+		private readonly maxResultBytes: number = maxInputBytes,
 	) {
-		if (!Number.isSafeInteger(maxInputBytes) || maxInputBytes < 1)
+		if (![maxInputBytes, maxResultBytes].every((limit) => Number.isSafeInteger(limit) && limit > 0))
 			throw new FlowLedgerError("capacity", "Invalid controller input byte limit.");
 		if (attached.has(host)) throw new FlowLedgerError("identity", "Host already has a session flow controller.");
 		attached.add(host);
@@ -102,7 +107,8 @@ export class SessionFlowController {
 			producer?.version !== 1 ||
 			!/^[a-z][a-z0-9-]{0,63}$/.test(producer.namespace) ||
 			typeof producer.snapshot !== "function" ||
-			typeof producer.build !== "function"
+			typeof producer.build !== "function" ||
+			(producer.describeResult !== undefined && typeof producer.describeResult !== "function")
 		)
 			throw new FlowLedgerError("schema", "Unsupported flow producer registration.");
 		if (this.producers.has(producer.namespace))
@@ -115,6 +121,7 @@ export class SessionFlowController {
 				namespace,
 				snapshot: producer.snapshot.bind(producer),
 				build: producer.build.bind(producer),
+				describeResult: producer.describeResult?.bind(producer),
 			}),
 		);
 		this.revision++;
@@ -185,6 +192,21 @@ export class SessionFlowController {
 		});
 		return items;
 	}
+	private async resultMetadata(
+		producer: FlowProducer,
+		intent: FlowIntent,
+		signal: AbortSignal,
+	): Promise<FlowResultReference> {
+		if (!producer.describeResult) throw new FlowLedgerError("schema", "Producer has no result metadata callback.");
+		const callback = producer.describeResult;
+		const [metadata] = normalizeFlowResults(
+			[await cancellable(signal, () => callback(structuredClone(intent), signal))],
+			1,
+		);
+		if (metadata.id !== intent.id || metadata.revision !== intent.revision || metadata.producer !== producer.namespace)
+			throw new FlowLedgerError("identity", "Result metadata differs from its producer descriptor.");
+		return metadata;
+	}
 	private async step(): Promise<boolean> {
 		const active = (await this.host.ledger.snapshot()).activeAttemptId;
 		if (active) await this.host.reconcile(active);
@@ -228,7 +250,15 @@ export class SessionFlowController {
 			if (!choice) return;
 			const producer = this.producers.get(choice.intent.producer);
 			if (!producer) return;
-			const selectedResults: { intent: FlowIntent; producer: FlowProducer }[] = [];
+			const resultCandidates = items.filter(
+				(item) => item.rank === 6 && item.runnable && !retainedByReceipt(item, state),
+			);
+			const retainResults = this.host.retainResults?.bind(this.host);
+			const aggregate =
+				!!retainResults &&
+				resultCandidates.length > 0 &&
+				resultCandidates.every((item) => this.producers.get(item.producer)?.describeResult);
+			const selectedResults: { intent: FlowIntent; producer: FlowProducer; metadata?: FlowResultReference }[] = [];
 			const valid = async () => {
 				if (this.closed || revision !== this.revision || this.producers.get(producer.namespace) !== producer)
 					return false;
@@ -253,6 +283,12 @@ export class SessionFlowController {
 							byProducer.set(result.producer.namespace, descriptors);
 						}
 						if (!descriptors.some((item) => same(item, result.intent) && item.runnable)) return false;
+						if (
+							result.metadata &&
+							JSON.stringify(await this.resultMetadata(result.producer, result.intent, signal)) !==
+								JSON.stringify(result.metadata)
+						)
+							return false;
 					}
 				} catch (error) {
 					if (signal.aborted) return false;
@@ -267,74 +303,126 @@ export class SessionFlowController {
 			};
 			let input: FlowModelInput;
 			try {
-				const item = await cancellable(signal, () => producer.build(structuredClone(choice.intent), signal));
+				const item =
+					aggregate && choice.intent.rank === 6
+						? undefined
+						: await cancellable(signal, () => producer.build(structuredClone(choice.intent), signal));
 				if (
-					item.id !== choice.intent.id ||
-					item.revision !== choice.intent.revision ||
-					item.kind !== ({ 2: "alert", 3: "wait", 4: "work", 5: "work", 6: "result" } as const)[choice.intent.rank]
+					item &&
+					(item.id !== choice.intent.id ||
+						item.revision !== choice.intent.revision ||
+						item.kind !== ({ 2: "alert", 3: "wait", 4: "work", 5: "work", 6: "result" } as const)[choice.intent.rank])
 				)
 					throw new FlowLedgerError("identity", "Built input differs from the selected descriptor.");
 				const attemptId = randomUUID();
-				const built = [item];
+				const built: FlowInputItem[] = item ? [item] : [];
 				this.deferredResults = [];
-				input = FlowModelInput.compose(attemptId, built, this.maxInputBytes);
-				// One oldest result per producer per pass prevents a large producer from owning the batch.
-				const results = new Map<string, FlowIntent[]>();
-				for (const result of items
-					.filter(
-						(candidate) =>
-							candidate.rank === 6 &&
-							candidate.runnable &&
-							candidate.id !== choice.intent.id &&
-							!retainedByReceipt(candidate, state),
-					)
-					.sort((a, b) => a.sequence - b.sequence || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))) {
-					const group = results.get(result.producer) ?? [];
-					group.push(result);
-					results.set(result.producer, group);
-				}
-				const order = orderFlowResultProducers(
-					items.filter((item) => item.rank === 6 && item.runnable && !retainedByReceipt(item, state)),
-					state,
-				);
-				const ordered = new Map(
-					order.flatMap((namespace) => {
-						const group = results.get(namespace);
-						return group ? [[namespace, group] as const] : [];
-					}),
-				);
-				results.clear();
-				for (const [namespace, group] of ordered) results.set(namespace, group);
-				if (choice.intent.rank === 6) {
-					const own = results.get(producer.namespace);
-					if (own) {
-						results.delete(producer.namespace);
-						results.set(producer.namespace, own);
-					}
-				}
-				while (results.size) {
-					for (const [namespace, group] of results) {
-						const result = group.shift();
-						if (!group.length) results.delete(namespace);
-						const owner = this.producers.get(namespace);
-						if (!result || !owner || this.held.has(namespace)) continue;
+				if (aggregate && retainResults) {
+					const members: FlowResultReference[] = [];
+					for (const intent of resultCandidates) {
+						const owner = this.producers.get(intent.producer);
+						if (!owner) return;
 						try {
-							const content = await cancellable(signal, () => owner.build(structuredClone(result), signal));
-							if (content.id !== result.id || content.revision !== result.revision || content.kind !== "result")
-								throw new FlowLedgerError("identity", "Built result differs from its descriptor.");
-							const composed = FlowModelInput.compose(attemptId, [...built, content], this.maxInputBytes);
-							built.push(content);
-							selectedResults.push({ intent: result, producer: owner });
-							input = composed;
+							const metadata = await this.resultMetadata(owner, intent, signal);
+							members.push(metadata);
+							selectedResults.push({ intent, producer: owner, metadata });
 						} catch (error) {
 							if (signal.aborted) return;
-							if (error instanceof FlowLedgerError && error.code === "capacity")
-								this.deferredResults.push({
-									id: result.id,
-									producer: namespace,
-									reason: "Result exceeds the remaining composed-input capacity.",
-								});
-							else this.held.set(namespace, error instanceof Error ? error.message : "Result input unavailable.");
+							this.held.set(owner.namespace, error instanceof Error ? error.message : "Result metadata unavailable.");
+							if (intent.id === choice.intent.id) {
+								skipped = true;
+								return;
+							}
+						}
+					}
+					if (members.length) {
+						const available = built.length
+							? this.maxInputBytes - FlowModelInput.compose(attemptId, built, this.maxInputBytes).bytes + 1
+							: this.maxInputBytes;
+						try {
+							const envelope = await buildFlowResultEnvelope({
+								attemptId,
+								id: choice.intent.rank === 6 ? choice.intent.id : `results:${randomUUID()}`,
+								revision: choice.intent.rank === 6 ? choice.intent.revision : "1",
+								members,
+								producerOrder: orderFlowResultProducers(resultCandidates, state),
+								maxBytes: Math.min(this.maxResultBytes, available),
+								retain: retainResults,
+							});
+							built.push(envelope.item);
+							choice.resultSamples = envelope.envelope.sample.map(({ id, revision }) => ({ id, revision }));
+						} catch (error) {
+							if (!(error instanceof FlowLedgerError && error.code === "capacity") || !built.length) throw error;
+							this.deferredResults = members.map((member) => ({
+								id: member.id,
+								producer: member.producer,
+								reason: "Aggregate metadata exceeds available capacity.",
+							}));
+							selectedResults.length = 0;
+							choice.resultSamples = [];
+						}
+					}
+					input = FlowModelInput.compose(attemptId, built, this.maxInputBytes);
+				} else {
+					input = FlowModelInput.compose(attemptId, built, this.maxInputBytes);
+					// One oldest result per producer per pass prevents a large producer from owning the batch.
+					const results = new Map<string, FlowIntent[]>();
+					for (const result of items
+						.filter(
+							(candidate) =>
+								candidate.rank === 6 &&
+								candidate.runnable &&
+								candidate.id !== choice.intent.id &&
+								!retainedByReceipt(candidate, state),
+						)
+						.sort((a, b) => a.sequence - b.sequence || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))) {
+						const group = results.get(result.producer) ?? [];
+						group.push(result);
+						results.set(result.producer, group);
+					}
+					const order = orderFlowResultProducers(
+						items.filter((item) => item.rank === 6 && item.runnable && !retainedByReceipt(item, state)),
+						state,
+					);
+					const ordered = new Map(
+						order.flatMap((namespace) => {
+							const group = results.get(namespace);
+							return group ? [[namespace, group] as const] : [];
+						}),
+					);
+					results.clear();
+					for (const [namespace, group] of ordered) results.set(namespace, group);
+					if (choice.intent.rank === 6) {
+						const own = results.get(producer.namespace);
+						if (own) {
+							results.delete(producer.namespace);
+							results.set(producer.namespace, own);
+						}
+					}
+					while (results.size) {
+						for (const [namespace, group] of results) {
+							const result = group.shift();
+							if (!group.length) results.delete(namespace);
+							const owner = this.producers.get(namespace);
+							if (!result || !owner || this.held.has(namespace)) continue;
+							try {
+								const content = await cancellable(signal, () => owner.build(structuredClone(result), signal));
+								if (content.id !== result.id || content.revision !== result.revision || content.kind !== "result")
+									throw new FlowLedgerError("identity", "Built result differs from its descriptor.");
+								const composed = FlowModelInput.compose(attemptId, [...built, content], this.maxInputBytes);
+								built.push(content);
+								selectedResults.push({ intent: result, producer: owner });
+								input = composed;
+							} catch (error) {
+								if (signal.aborted) return;
+								if (error instanceof FlowLedgerError && error.code === "capacity")
+									this.deferredResults.push({
+										id: result.id,
+										producer: namespace,
+										reason: "Result exceeds the remaining composed-input capacity.",
+									});
+								else this.held.set(namespace, error instanceof Error ? error.message : "Result input unavailable.");
+							}
 						}
 					}
 				}

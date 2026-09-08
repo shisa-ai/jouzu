@@ -15,10 +15,13 @@ export function orderFlowResultProducers(intents: FlowIntent[], state: FlowLedge
 		const served = new Set<string>();
 		for (const member of attempt.members) {
 			if (member.kind !== "result") continue;
+			const samples = attempt.admission?.choice.resultSamples;
+			if (samples && !samples.some((sample) => sample.id === member.id && sample.revision === member.revision))
+				continue;
 			const producer = snapshot.find(
 				(item) =>
-					item.id === (member.inputFrame?.id ?? member.id) &&
-					item.revision === (member.inputFrame?.revision ?? member.revision),
+					item.id === (samples ? member.id : (member.inputFrame?.id ?? member.id)) &&
+					item.revision === (samples ? member.revision : (member.inputFrame?.revision ?? member.revision)),
 			)?.producer;
 			if (
 				producer &&

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -51,6 +52,7 @@ async function fixture(t, native, options = {}) {
 	const policy = { userPending: false, recoveryBlocked: false, waitingWorkIds: [] };
 	const calls = [];
 	const payloads = [];
+	const manifests = new Map();
 	let host, ledger, session, attachment, storageRoot;
 	if (native) {
 		({ session } = await createFlowSession(t, {
@@ -84,6 +86,7 @@ async function fixture(t, native, options = {}) {
 				projections: new Map([["openai-completions", openAIFlowPayload("openai-completions")]]),
 				maxPayloadBytes: 100000,
 				containsUserInput: () => false,
+				results: options.aggregate ? attachment.results : undefined,
 			},
 			() => policy,
 		);
@@ -157,9 +160,15 @@ async function fixture(t, native, options = {}) {
 			async close() {},
 		};
 	}
-	const controller = new SessionFlowController(host, options.maxInputBytes ?? 4096);
+	if (!native && options.aggregate)
+		host.retainResults = async (members) => {
+			const reference = `flow-results:${createHash("sha256").update(JSON.stringify(members)).digest("hex")}`;
+			manifests.set(reference, structuredClone(members));
+			return reference;
+		};
+	const controller = new SessionFlowController(host, options.maxInputBytes ?? 4096, options.maxResultBytes);
 	t.after(() => controller.close());
-	return { controller, host, ledger, calls, payloads, policy, session, attachment, storageRoot };
+	return { controller, host, ledger, calls, payloads, policy, session, attachment, storageRoot, manifests };
 }
 
 for (const native of [false, true]) {
@@ -667,4 +676,125 @@ test("Pi: producer sampling order survives a controller and storage reopen", asy
 		(await second.ledger.snapshot()).attempts[1].members.map((item) => item.id),
 		["work", "beta-result"],
 	);
+});
+
+function describedResults(namespace, ids) {
+	const p = producer(
+		namespace,
+		ids.map((id, sequence) => descriptor(namespace, id, 6, sequence)),
+	);
+	p.describeResult = async (intent) => ({
+		id: intent.id,
+		revision: intent.revision,
+		producer: namespace,
+		execution: `exec-${intent.id}`,
+		status: "failure",
+		title: `Failed ${intent.id}`,
+		reference: `result:${intent.id}`,
+		warnings: ["Review required"],
+	});
+	p.build = () => assert.fail("Aggregate results must use retained terminal metadata.");
+	return p;
+}
+for (const native of [false, true]) {
+	test(`${native ? "Pi" : "synthetic"}: controller combines work and a retained multi-producer aggregate`, async (t) => {
+		const { controller, ledger, attachment, manifests, policy, payloads } = await fixture(t, native, {
+			aggregate: true,
+			maxInputBytes: 4096,
+			maxResultBytes: 1600,
+		});
+		policy.waitingWorkIds = ["blocked"];
+		controller.register(producer("work", [{ ...descriptor("work"), independent: true }]));
+		controller.register(describedResults("alpha", ["alpha-0", "alpha-1", "alpha-2"]));
+		controller.register(describedResults("beta", ["beta-0"]));
+		await controller.wake();
+		const state = await ledger.snapshot();
+		assert.equal(state.attempts.length, 1);
+		const attempt = state.attempts[0];
+		assert.equal(attempt.members.length, 5);
+		assert.equal(attempt.phase, "settled");
+		assert.ok(attempt.admission.choice.resultSamples.length < 4);
+		assert.ok(attempt.members.filter((member) => member.kind === "result").every((member) => member.inputFrame.intact));
+		if (native) {
+			const content = payloads[0].messages.findLast((message) => message.role === "user").content;
+			const envelope = JSON.parse(JSON.parse(content.at(-1).text).content);
+			const page = await attachment.results.page(envelope.manifest, { limit: 10, maxBytes: 10000 });
+			assert.equal(page.total, 4);
+			assert.deepEqual(page.counts, { success: 0, failure: 4, cancelled: 0 });
+		} else assert.equal([...manifests.values()][0].length, 4);
+	});
+
+	test(`${native ? "Pi" : "synthetic"}: aggregate metadata overflow defers results without holding valid work`, async (t) => {
+		const { controller, ledger } = await fixture(t, native, { aggregate: true, maxResultBytes: 10 });
+		controller.register(producer("work"));
+		controller.register(describedResults("alpha", ["alpha-0"]));
+		await controller.wake();
+		const state = await ledger.snapshot();
+		assert.equal(state.attempts.length, 1);
+		assert.deepEqual(
+			state.attempts[0].members.map((item) => item.id),
+			["work"],
+		);
+		assert.deepEqual(controller.view().held, []);
+		assert.equal(controller.view().deferredResults[0].id, "alpha-0");
+	});
+}
+
+test("Pi: aggregate sample fairness survives reopen without charging unsampled manifest members", async (t) => {
+	const make = (namespace, id) => {
+		const p = describedResults(namespace, [id]);
+		const describe = p.describeResult;
+		p.describeResult = async (intent) => ({ ...(await describe(intent)), title: "Result ".repeat(70) });
+		return p;
+	};
+	const first = await fixture(t, true, { aggregate: true, maxResultBytes: 1600 });
+	first.controller.register(make("alpha", "alpha-0"));
+	first.controller.register(make("beta", "beta-0"));
+	await first.controller.wake();
+	const state = await first.ledger.snapshot();
+	assert.equal(state.attempts[0].members.length, 2);
+	assert.deepEqual(state.attempts[0].admission.choice.resultSamples, [{ id: "alpha-0", revision: "1" }]);
+	const history = first.session.sessionFile;
+	await first.controller.close();
+	await first.attachment.close();
+	const second = await fixture(t, true, {
+		aggregate: true,
+		maxResultBytes: 1600,
+		storageRoot: first.storageRoot,
+		sessionManager: SessionManager.open(history),
+	});
+	second.controller.register(producer("work"));
+	second.controller.register(make("alpha", "alpha-next"));
+	second.controller.register(make("beta", "beta-next"));
+	await second.controller.wake();
+	assert.deepEqual((await second.ledger.snapshot()).attempts[1].admission.choice.resultSamples, [
+		{ id: "beta-next", revision: "1" },
+	]);
+});
+
+test("Pi: changed retained terminal metadata cancels the aggregate at native claim", async (t) => {
+	const entered = deferred(),
+		release = deferred();
+	const { controller, ledger, calls } = await fixture(t, true, {
+		aggregate: true,
+		checkpoints: {
+			beforeQueueClaim: async () => {
+				entered.resolve();
+				await release.promise;
+				return true;
+			},
+		},
+	});
+	const p = describedResults("alpha", ["alpha-0"]);
+	p.warning = "Review required";
+	const describe = p.describeResult;
+	p.describeResult = async (intent) => ({ ...(await describe(intent)), warnings: [p.warning] });
+	controller.register(p);
+	const running = controller.wake();
+	await entered.promise;
+	p.warning = "Changed without a revision";
+	release.resolve();
+	await running;
+	assert.deepEqual(calls, []);
+	assert.equal((await ledger.snapshot()).attempts[0].consumed, false);
 });

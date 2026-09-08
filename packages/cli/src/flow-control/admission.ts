@@ -28,6 +28,7 @@ export interface FlowAdmissionChoice {
 	coalescedIds: string[];
 	/** Results considered at this boundary; deferred members do not authorize pagination wakes. */
 	resultSnapshot?: { id: string; revision: string; producer?: string }[];
+	resultSamples?: { id: string; revision: string }[];
 	next: FlowAdmissionState;
 }
 export class FlowAdmissionError extends Error {
@@ -99,6 +100,20 @@ export function validateFlowChoice(choice: FlowAdmissionChoice): void {
 			new Set(choice.resultSnapshot.map((item) => item.id)).size !== choice.resultSnapshot.length)
 	)
 		throw new FlowAdmissionError("schema", "Invalid result boundary snapshot.");
+	if (
+		choice.resultSamples !== undefined &&
+		(!Array.isArray(choice.resultSamples) ||
+			choice.resultSamples.length > 1024 ||
+			choice.resultSamples.some(
+				(item) =>
+					!item ||
+					!identity(item.id) ||
+					!identity(item.revision) ||
+					!choice.resultSnapshot?.some((candidate) => candidate.id === item.id && candidate.revision === item.revision),
+			) ||
+			new Set(choice.resultSamples.map((item) => item.id)).size !== choice.resultSamples.length)
+	)
+		throw new FlowAdmissionError("schema", "Invalid aggregate sample membership.");
 	if (
 		!Number.isSafeInteger(choice.revision) ||
 		choice.revision < 0 ||

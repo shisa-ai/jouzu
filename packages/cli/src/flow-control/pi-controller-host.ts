@@ -8,7 +8,11 @@ import { PiHostBoundary } from "./pi-host-boundary.js";
 import { PiQueueReceipts } from "./pi-queue-receipts.js";
 import { type PiRequestReceiptOptions, PiRequestReceipts } from "./pi-request-receipts.js";
 import { FlowLedgerError, type FlowLedgerState, type FlowReceiptLedger } from "./receipt-ledger.js";
+import type { FlowResultReference } from "./result-types.js";
 
+export interface PiControllerHostOptions extends PiRequestReceiptOptions {
+	results?: { retain(members: FlowResultReference[]): Promise<string> };
+}
 interface Pending {
 	input: FlowModelInput;
 	valid: () => Promise<boolean>;
@@ -70,6 +74,7 @@ function quarantine(messages: AgentMessage[], state: FlowLedgerState): AgentMess
 
 /** One Pi bridge joins queue, history, provider receipts, and native run settlement. */
 export class PiControllerHost implements FlowControllerHost {
+	readonly retainResults?: (members: FlowResultReference[]) => Promise<string>;
 	private readonly queue: PiQueueReceipts;
 	private readonly history: PiHistoryReceipts;
 	private readonly requests: PiRequestReceipts;
@@ -80,7 +85,7 @@ export class PiControllerHost implements FlowControllerHost {
 	constructor(
 		private readonly session: AgentSession,
 		readonly ledger: FlowReceiptLedger,
-		options: PiRequestReceiptOptions,
+		options: PiControllerHostOptions,
 		private readonly policy: () => Omit<FlowAdmissionGates, "hostReady">,
 	) {
 		if (attached.has(session)) throw new FlowLedgerError("identity", "Pi session already has a flow controller host.");
@@ -89,6 +94,7 @@ export class PiControllerHost implements FlowControllerHost {
 		if (session.sessionId !== ledger.scope.sessionId || !session.isIdle || session.agent.state.isStreaming)
 			throw new FlowLedgerError("scope", "Flow host requires the matching idle session.");
 		attached.add(session);
+		this.retainResults = options.results?.retain.bind(options.results);
 		this.queue = new PiQueueReceipts(session.agent, ledger);
 		this.history = new PiHistoryReceipts(session, ledger);
 		this.requests = new PiRequestReceipts(session, ledger, options);

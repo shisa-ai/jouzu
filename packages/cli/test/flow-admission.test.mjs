@@ -250,3 +250,21 @@ test("result boundary snapshots accept legacy absence and reject corrupt or repe
 	])
 		assert.throws(() => validateFlowChoice({ ...choice, resultSnapshot }), { code: "schema" });
 });
+
+test("aggregate sample membership must be unique and belong to the boundary snapshot", () => {
+	const choice = {
+		...choose(initialFlowAdmission(), [intent("work")]),
+		resultSnapshot: [{ id: "a", revision: "1", producer: "alpha" }],
+	};
+	validateFlowChoice({ ...choice, resultSamples: [] });
+	validateFlowChoice({ ...choice, resultSamples: [{ id: "a", revision: "1" }] });
+	for (const resultSamples of [
+		[{ id: "b", revision: "1" }],
+		[{ id: "a", revision: "2" }],
+		[
+			{ id: "a", revision: "1" },
+			{ id: "a", revision: "1" },
+		],
+	])
+		assert.throws(() => validateFlowChoice({ ...choice, resultSamples }), { code: "schema" });
+});
