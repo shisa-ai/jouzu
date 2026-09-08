@@ -24,6 +24,11 @@ export interface NativeSourceCapture {
 	hash: string;
 	count: number;
 	members: NativeRequestSource[];
+	context?: {
+		hash: string;
+		count: number;
+		members: { sourceIndex: number; status: "intact" | "changed" | "unresolved"; index?: number }[];
+	};
 }
 interface Header {
 	version: 1;
@@ -109,6 +114,36 @@ export class FlowNativeRequestStore {
 					if (sources.has(key)) throw new FlowLedgerError("identity", "Native source message was repeated.");
 					positions.add(member.index);
 					sources.add(key);
+				}
+				const context = capture.context;
+				if (context !== undefined) {
+					if (
+						!context ||
+						!hash(context.hash) ||
+						context.hash !== record.transformedHash ||
+						!Number.isSafeInteger(context.count) ||
+						context.count < 0 ||
+						!Array.isArray(context.members) ||
+						context.members.length !== capture.members.length
+					)
+						throw new FlowLedgerError("schema", "Invalid native context disposition.");
+					const mapped = new Set<number>();
+					for (const [offset, member] of context.members.entries()) {
+						if (
+							!member ||
+							member.sourceIndex !== capture.members[offset]?.index ||
+							!["intact", "changed", "unresolved"].includes(member.status) ||
+							(member.status === "unresolved"
+								? member.index !== undefined
+								: member.index === undefined ||
+									!Number.isSafeInteger(member.index) ||
+									member.index < 0 ||
+									member.index >= context.count ||
+									mapped.has(member.index))
+						)
+							throw new FlowLedgerError("identity", "Invalid native context source position.");
+						if (member.index !== undefined) mapped.add(member.index);
+					}
 				}
 			}
 		}

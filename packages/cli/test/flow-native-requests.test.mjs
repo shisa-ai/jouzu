@@ -333,3 +333,97 @@ for (const phase of ["prepared", "handoff", "outcome"])
 		await assert.rejects(attachment.nativeRequests.begin({ ...record, id: "replay" }), { code: "busy" });
 		await assert.rejects(attachment.nativeRequests.finish(record.id, "success"), { code: "stale" });
 	});
+
+for (const mode of ["reorder", "edit", "clone", "remove", "duplicate"])
+	test(`native context dispositions retain exact identity through ${mode}`, async (t) => {
+		const f = await nativeRequests(t, {
+			retainInputs: true,
+			contextTransform: async (messages) => {
+				if (mode === "reorder") return [...messages].reverse();
+				if (mode === "edit") {
+					messages[0].content[0].text = "edited";
+					return messages;
+				}
+				if (mode === "clone") return structuredClone(messages);
+				if (mode === "remove") return messages.slice(1);
+				return [messages[0], ...messages];
+			},
+		});
+		await f.session.followUp("same");
+		await f.session.followUp("same");
+		f.session.agent.followUpMode = "all";
+		await f.session.continueQueued();
+		const [request] = await f.store.snapshot();
+		const context = request.sourceCapture.context;
+		assert.equal(context.hash, request.transformedHash);
+		const expected = {
+			reorder: [
+				["intact", 1],
+				["intact", 0],
+			],
+			edit: [
+				["changed", 0],
+				["intact", 1],
+			],
+			clone: [
+				["unresolved", undefined],
+				["unresolved", undefined],
+			],
+			remove: [
+				["unresolved", undefined],
+				["intact", 0],
+			],
+			duplicate: [
+				["unresolved", undefined],
+				["intact", 2],
+			],
+		}[mode];
+		assert.deepEqual(
+			context.members.map(({ status, index }) => [status, index]),
+			expected,
+		);
+		assert.deepEqual(
+			context.members.map(({ sourceIndex }) => sourceIndex),
+			[0, 1],
+		);
+		assert.equal(request.inclusion, undefined);
+		assert.equal(request.outcome, "success");
+	});
+
+test("native context mutation during model conversion prevents provider execution", async (t) => {
+	const f = await nativeRequests(t, { retainInputs: true });
+	const convert = f.session.agent.convertToLlm;
+	f.session.agent.convertToLlm = (messages) => {
+		messages[0].content[0].text = "late mutation";
+		return convert(messages);
+	};
+	await f.session.prompt("original");
+	assert.equal(f.sent.length, 0);
+	assert.deepEqual(await f.store.snapshot(), []);
+	assert.match(f.session.agent.state.errorMessage, /changed after source disposition/);
+});
+
+test("native context receipt schema rejects foreign, conflicting, and incomplete positions", async (t) => {
+	const f = await nativeRequests(t, { retainInputs: true });
+	await f.session.prompt("schema");
+	const [request] = await f.store.snapshot();
+	const context = request.sourceCapture.context;
+	for (const change of [
+		{ hash: "0".repeat(64) },
+		{ count: -1 },
+		{ members: [] },
+		{ members: [{ sourceIndex: 9, status: "intact", index: 0 }] },
+		{ members: [{ sourceIndex: 0, status: "intact", index: 1 }] },
+		{ members: [{ sourceIndex: 0, status: "unresolved", index: 0 }] },
+		{ members: [{ sourceIndex: 0, status: "included", index: 0 }] },
+	]) {
+		await assert.rejects(
+			f.store.begin({
+				...request,
+				id: "invalid-context",
+				sourceCapture: { ...request.sourceCapture, context: { ...context, ...change } },
+			}),
+		);
+	}
+	assert.equal((await f.store.snapshot()).length, 1);
+});

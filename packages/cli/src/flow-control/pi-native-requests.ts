@@ -46,10 +46,38 @@ export class PiNativeRequests {
 						hash(messages) !== sourceHash
 					)
 						throw new FlowLedgerError("stale", "Native source context changed during identity capture.");
-					const capture = { hash: sourceHash, count: messages.length, members: structuredClone(members) };
+					const capture: NativeSourceCapture = {
+						hash: sourceHash,
+						count: messages.length,
+						members: structuredClone(members),
+					};
 					const result = transform ? await transform(messages, signal) : messages;
 					this.assertActive();
 					signal?.throwIfAborted();
+					const occurrences = new Map<AgentMessage, number>();
+					for (const message of references) occurrences.set(message, (occurrences.get(message) ?? 0) + 1);
+					const positions = new Map<AgentMessage, number[]>();
+					for (const [index, message] of result.entries()) {
+						const existing = positions.get(message) ?? [];
+						existing.push(index);
+						positions.set(message, existing);
+					}
+					capture.context = {
+						hash: hash(result),
+						count: result.length,
+						members: capture.members.map((member) => {
+							const original = references[member.index];
+							const matches = positions.get(original) ?? [];
+							// Repeated references cannot distinguish an occurrence after a filter.
+							if (matches.length !== 1 || occurrences.get(original) !== 1)
+								return { sourceIndex: member.index, status: "unresolved" };
+							return {
+								sourceIndex: member.index,
+								status: hash(original) === member.messageHash ? "intact" : "changed",
+								index: matches[0],
+							};
+						}),
+					};
 					this.capture = capture;
 					return result;
 				} finally {
@@ -71,6 +99,11 @@ export class PiNativeRequests {
 					this.pending = undefined;
 					if (identifySources && !this.capture)
 						throw new FlowLedgerError("identity", "Native request has no source context checkpoint.");
+					if (
+						this.capture?.context?.hash !== undefined &&
+						this.capture.context.hash !== hash(input.transformedMessages)
+					)
+						throw new FlowLedgerError("stale", "Native context changed after source disposition capture.");
 					await store.begin({
 						id: input.requestId,
 						sourceHash: hash(input.sourceMessages),
