@@ -21,12 +21,21 @@ interface RecordData {
 	acceptedAt: number;
 	digest: string;
 	payload: Encoded;
-	dispatch?: FlowSubmissionDispatch;
+	dispatch?: Omit<FlowSubmissionDispatch, "inputs"> & { inputs?: { payload: Encoded; digest: string }[] };
+}
+export interface FlowNativeInput {
+	kind: "prompt" | "steer" | "followUp";
+	args: unknown[];
+	queue?: { id: string; revision: number };
+}
+export interface FlowNativeObserver {
+	observe(input: FlowNativeInput): Promise<void>;
 }
 export interface FlowSubmissionDispatch {
 	operationId: string;
 	ownerId: string;
 	phase: "started" | "returned" | "failed";
+	inputs?: FlowNativeInput[];
 }
 interface State {
 	version: 1;
@@ -47,6 +56,20 @@ const address = value<Header>("jouzu.flow.submissions", "v1");
 const recordAddress = (id: string) => value<RecordData>("jouzu.flow.submission", id);
 const digest = (payload: Encoded) => createHash("sha256").update(JSON.stringify(payload)).digest("hex");
 const identity = (id: unknown) => typeof id === "string" && id.length > 0 && id.length <= 512;
+function validateNativeInput(input: FlowNativeInput): void {
+	if (
+		!input ||
+		!["prompt", "steer", "followUp"].includes(input.kind) ||
+		!Array.isArray(input.args) ||
+		(input.kind === "prompt"
+			? input.queue !== undefined
+			: !input.queue ||
+				!identity(input.queue.id) ||
+				!Number.isSafeInteger(input.queue.revision) ||
+				input.queue.revision < 1)
+	)
+		throw new FlowLedgerError("schema", "Invalid native input observation.");
+}
 
 function encode(input: unknown, ancestors = new Set<object>(), depth = 0): Encoded {
 	if (depth > 64) throw new FlowLedgerError("capacity", "Flow submission nesting exceeds 64 levels.");
@@ -131,6 +154,9 @@ function validateSubmission(input: Submission, scope: FlowScope): void {
 /** Durable opaque ingress only. Admission and executable queue ownership remain with the controller and Pi. */
 export class FlowSubmissionStore {
 	private initialized = false;
+	get scope(): Readonly<FlowScope> {
+		return this.ownership.scope;
+	}
 	static async attach(
 		session: Session,
 		ownership: FlowOwnership,
@@ -191,6 +217,16 @@ export class FlowSubmissionStore {
 			)
 				throw new FlowLedgerError("schema", "Invalid retained dispatch state.");
 			if (record.dispatch) operationIds.add(record.dispatch.operationId);
+			const inputs = record.dispatch?.inputs;
+			if (inputs !== undefined) {
+				if (!Array.isArray(inputs) || inputs.length > 64)
+					throw new FlowLedgerError("capacity", "Native input observation limit exceeded.");
+				for (const input of inputs) {
+					if (!input || input.digest !== digest(input.payload))
+						throw new FlowLedgerError("identity", "Native input observation changed.");
+					validateNativeInput(decode(input.payload) as FlowNativeInput);
+				}
+			}
 			const submission = decode(record.payload) as Submission;
 			validateSubmission(submission, this.ownership.scope);
 			if (submission.id !== record.id) throw new FlowLedgerError("identity", "Stored submission identity changed.");
@@ -268,14 +304,31 @@ export class FlowSubmissionStore {
 	snapshot(): Promise<RetainedSubmission[]> {
 		return this.transact((state) => ({
 			changed: false,
-			result: state.records.map(({ payload, digest: _digest, ...record }) => ({
+			result: state.records.map(({ payload, digest: _digest, dispatch, ...record }) => ({
 				...record,
+				...(dispatch
+					? {
+							dispatch: {
+								operationId: dispatch.operationId,
+								ownerId: dispatch.ownerId,
+								phase: dispatch.phase,
+								...(dispatch.inputs
+									? { inputs: dispatch.inputs.map((input) => decode(input.payload) as FlowNativeInput) }
+									: {}),
+							},
+						}
+					: {}),
 				submission: decode(payload) as Submission,
 			})),
 		}));
 	}
 	/** Persist native-operation intent before executing once. Return is not a delivery or completion receipt. */
-	dispatch<T>(id: string, revision: number, operationId: string, run: () => Promise<T>): Promise<T> {
+	dispatch<T>(
+		id: string,
+		revision: number,
+		operationId: string,
+		run: (observer: FlowNativeObserver) => Promise<T>,
+	): Promise<T> {
 		if (!identity(operationId)) return Promise.reject(new FlowLedgerError("identity", "Invalid native operation ID."));
 		return this.ownership.run(async () => {
 			await this.transact((state) => {
@@ -303,10 +356,41 @@ export class FlowSubmissionStore {
 					return { changed: true, result: undefined };
 				});
 			this.ownership.assertActive();
+			let observing = true;
+			const pending: Promise<void>[] = [];
+			const observer: FlowNativeObserver = {
+				observe: (input) => {
+					if (!observing)
+						return Promise.reject(new FlowLedgerError("stale", "Native observation outlived its dispatch."));
+					validateNativeInput(input);
+					if (pending.length >= 64) throw new FlowLedgerError("capacity", "Native input observation limit exceeded.");
+					const payload = encode(input);
+					const hash = digest(payload);
+					const write = this.transact((state) => {
+						const dispatch = state.records.find((item) => item.id === id)?.dispatch;
+						if (
+							dispatch?.operationId !== operationId ||
+							dispatch.ownerId !== this.ownership.token ||
+							dispatch.phase !== "started"
+						)
+							throw new FlowLedgerError("stale", "Native observation belongs to another dispatch.");
+						dispatch.inputs ??= [];
+						dispatch.inputs.push({ payload, digest: hash });
+						return { changed: true, result: undefined };
+					});
+					write.catch(() => {});
+					pending.push(write);
+					return write;
+				},
+			};
 			let result: T;
 			try {
-				result = await run();
+				result = await run(observer);
+				observing = false;
+				await Promise.all(pending);
 			} catch (error) {
+				observing = false;
+				await Promise.allSettled(pending);
 				try {
 					await finish("failed");
 				} catch (receiptError) {

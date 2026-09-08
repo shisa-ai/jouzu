@@ -5,6 +5,7 @@ import { PiFlowAttachment } from "./pi-attachment.js";
 import { bindPiFlowBranch, completePiFlowNavigation } from "./pi-branch-binding.js";
 import { PiControllerHost, type PiControllerHostOptions } from "./pi-controller-host.js";
 import { recoverPiHistory } from "./pi-history-recovery.js";
+import { PiNativeDispatch } from "./pi-native-dispatch.js";
 import { PiFlowSessionRegistry } from "./pi-session-registry.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 
@@ -20,13 +21,14 @@ export interface PiFlowBranchResources {
 	attachment: PiFlowAttachment;
 	host: PiControllerHost;
 	controller: SessionFlowController;
+	native: PiNativeDispatch;
 	recovery: { recovered: number; unresolved: number };
 }
 
 /** Own session storage and each branch controller across awaited Pi lifecycle callbacks. */
 export class PiFlowSessionService {
 	private current?: PiFlowBranchResources;
-	private opening?: { attachment: PiFlowAttachment; host?: PiControllerHost };
+	private opening?: { attachment: PiFlowAttachment; host?: PiControllerHost; native?: PiNativeDispatch };
 	private transitionId?: string;
 	private closing = false;
 	private constructor(
@@ -83,6 +85,8 @@ export class PiFlowSessionService {
 			const state = await attachment.ledger.snapshot();
 			const recoveryBlocked =
 				recovery.unresolved > 0 || state.attempts.some((attempt) => attempt.phase === "uncertain");
+			const native = new PiNativeDispatch(this.session, attachment.submissions);
+			this.opening.native = native;
 			const host = new PiControllerHost(
 				this.session,
 				attachment.ledger,
@@ -94,7 +98,7 @@ export class PiFlowSessionService {
 			);
 			this.opening.host = host;
 			const controller = new SessionFlowController(host, this.options.maxInputBytes, this.options.maxResultBytes);
-			this.current = { scope: Object.freeze({ ...scope }), attachment, host, controller, recovery };
+			this.current = { scope: Object.freeze({ ...scope }), attachment, host, controller, native, recovery };
 			this.opening = undefined;
 		} catch (error) {
 			// A failed host close must retain its storage ownership.
@@ -107,9 +111,11 @@ export class PiFlowSessionService {
 		const branch = this.current;
 		if (branch) {
 			await branch.controller.close();
+			await branch.native.close();
 			await branch.attachment.close();
 		} else if (this.opening) {
 			await this.opening.host?.close();
+			await this.opening.native?.close();
 			await this.opening.attachment.close();
 		}
 		this.current = undefined;
