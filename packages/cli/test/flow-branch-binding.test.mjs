@@ -10,14 +10,14 @@ import { deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { bindPiFlowBranch, completePiFlowNavigation } from "../dist/flow-control/pi-branch-binding.js";
 import { PiFlowSessionRegistry } from "../dist/flow-control/pi-session-registry.js";
 
-async function fixture(t) {
+async function fixture(t, { memory = false } = {}) {
 	const root = await mkdtemp(join(tmpdir(), "jouzu-branch-binding-"));
 	const registries = [];
 	t.after(async () => {
 		for (const registry of registries.reverse()) await registry.close();
 		await rm(root, { recursive: true, force: true });
 	});
-	const manager = SessionManager.create(root, join(root, "history"));
+	const manager = memory ? SessionManager.inMemory(root) : SessionManager.create(root, join(root, "history"));
 	const open = async (host = manager) => {
 		const registry = await PiFlowSessionRegistry.open(root, host.getSessionId(), host.getLeafId());
 		registries.push(registry);
@@ -186,4 +186,85 @@ test("closing the registry holds session ownership through in-flight transcript 
 	release.resolve();
 	await Promise.all([binding, closing]);
 	await open();
+});
+
+test("memory branch binding retains exclusive ownership and its live manager across reattachment", async (t) => {
+	const { manager, registry, open } = await fixture(t, { memory: true });
+	const scope = await bindPiFlowBranch(registry, manager);
+	assert.equal(manager.getSessionFile(), undefined);
+	assert.deepEqual(manager.buildSessionContext().messages, []);
+	const position = (await registry.snapshot()).branches[0].position;
+	assert.ok(position.memoryInstanceId);
+	await assert.rejects(open(), { code: "busy" });
+	await registry.close();
+	const next = await open();
+	assert.deepEqual(await bindPiFlowBranch(next, manager), scope);
+	assert.deepEqual((await next.snapshot()).branches[0].position, position);
+});
+
+test("copied memory transcript cannot inherit a live manager's branch binding", async (t) => {
+	const { root, manager, registry, open } = await fixture(t, { memory: true });
+	await bindPiFlowBranch(registry, manager);
+	const copied = SessionManager.inMemory(
+		root,
+		undefined,
+		structuredClone([manager.getHeader(), ...manager.getEntries()]),
+	);
+	assert.equal(copied.getSessionId(), manager.getSessionId());
+	await registry.close();
+	const next = await open(copied);
+	const before = await next.snapshot();
+	await assert.rejects(bindPiFlowBranch(next, copied), /another transcript lifetime/);
+	assert.deepEqual(await next.snapshot(), before);
+	assert.deepEqual(await bindPiFlowBranch(next, manager), await next.currentScope());
+});
+
+test("memory navigation records a distinct branch within the same live lifetime", async (t) => {
+	const { manager, registry, open } = await fixture(t, { memory: true });
+	const original = await bindPiFlowBranch(registry, manager);
+	const before = await registry.snapshot();
+	const transition = await registry.beginNavigation(before.revision, manager.getLeafId());
+	manager.resetLeaf();
+	const scope = await completePiFlowNavigation(registry, manager, transition.id);
+	assert.notEqual(scope.branchId, original.branchId);
+	const after = await registry.snapshot();
+	assert.equal(after.branches[1].position.memoryInstanceId, before.branches[0].position.memoryInstanceId);
+	await registry.close();
+	assert.deepEqual(await bindPiFlowBranch(await open(), manager), scope);
+	assert.equal(manager.getSessionFile(), undefined);
+});
+
+test("pending memory navigation cannot be reconciled by a copied session manager", async (t) => {
+	const { root, manager, registry, open } = await fixture(t, { memory: true });
+	await bindPiFlowBranch(registry, manager);
+	const transition = await registry.beginNavigation((await registry.snapshot()).revision, manager.getLeafId());
+	manager.resetLeaf();
+	manager.appendCustomEntry("jouzu-flow-branch", {
+		version: 1,
+		sessionId: manager.getSessionId(),
+		branchId: transition.branchId,
+		transitionId: transition.id,
+	});
+	const copied = SessionManager.inMemory(
+		root,
+		undefined,
+		structuredClone([manager.getHeader(), ...manager.getEntries()]),
+	);
+	await registry.close();
+	const next = await open(copied);
+	await assert.rejects(bindPiFlowBranch(next, copied), /another transcript lifetime/);
+	assert.equal((await next.snapshot()).transition.id, transition.id);
+	assert.equal((await bindPiFlowBranch(next, manager)).branchId, transition.branchId);
+});
+
+test("memory copies of durable transcripts cannot downgrade a persistent branch binding", async (t) => {
+	const { root, manager, registry, open } = await fixture(t);
+	await bindPiFlowBranch(registry, manager);
+	const copied = SessionManager.inMemory(
+		root,
+		undefined,
+		structuredClone([manager.getHeader(), ...manager.getEntries()]),
+	);
+	await registry.close();
+	await assert.rejects(bindPiFlowBranch(await open(copied), copied), /another transcript lifetime/);
 });

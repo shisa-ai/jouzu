@@ -8,6 +8,8 @@ import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 export interface FlowBranchPosition {
 	entryId: string;
 	entryHash: string;
+	/** Present only for a live, non-persistent Pi session manager. This is not a history receipt. */
+	memoryInstanceId?: string;
 }
 export interface FlowBranchRecord {
 	id: string;
@@ -37,9 +39,10 @@ const validPosition = (position: FlowBranchPosition) =>
 	position &&
 	identity(position.entryId) &&
 	typeof position.entryHash === "string" &&
-	/^[a-f0-9]{64}$/.test(position.entryHash);
+	/^[a-f0-9]{64}$/.test(position.entryHash) &&
+	(position.memoryInstanceId === undefined || identity(position.memoryInstanceId));
 const samePosition = (a?: FlowBranchPosition, b?: FlowBranchPosition) =>
-	a?.entryId === b?.entryId && a?.entryHash === b?.entryHash;
+	a?.entryId === b?.entryId && a?.entryHash === b?.entryHash && a?.memoryInstanceId === b?.memoryInstanceId;
 
 /** Session-wide writer reservation and branch identities in Pi storage. Reads grant no dispatch authority. */
 export class PiFlowSessionRegistry {
@@ -162,7 +165,7 @@ export class PiFlowSessionRegistry {
 			return { result: { sessionId: state.sessionId, branchId: state.activeBranchId }, changed: false };
 		});
 	}
-	/** Bind the initial branch to verified durable transcript metadata once. */
+	/** Bind the initial branch to verified transcript metadata once. */
 	bindInitialPosition(expectedRevision: number, position: FlowBranchPosition): Promise<void> {
 		if (!validPosition(position))
 			return Promise.reject(new FlowLedgerError("identity", "Invalid branch position evidence."));
@@ -195,7 +198,7 @@ export class PiFlowSessionRegistry {
 			return { result: state.transition, changed: true };
 		});
 	}
-	/** Call after native branch mutation and durable transcript-position evidence. This creates no delivery permission. */
+	/** Call after native branch mutation and verified transcript-position evidence. This creates no delivery permission. */
 	finishNavigation(
 		transitionId: string,
 		enteredAtLeafId: string | null,

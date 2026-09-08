@@ -779,3 +779,38 @@ test("a following request waits for a non-waking context receipt", async (t) => 
 	const sources = await f.ingress.branch().native.sources(f.session.agent.state.messages);
 	assert.equal(sources.length, 2);
 });
+
+test("memory-only context has live source identity without a persisted history receipt", async (t) => {
+	const manager = SessionManager.inMemory();
+	const f = await fixture(t, { manager, admit: null });
+	await f.session.sendCustomMessage(
+		{ customType: "note", content: "memory context", display: true },
+		{ triggerTurn: false },
+	);
+	assert.equal(f.sent.length, 0);
+	assert.equal(manager.getSessionFile(), undefined);
+	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.equal(record.dispatch.promptClaims.length, 1);
+	assert.equal(record.dispatch.promptHistory, undefined);
+	assert.equal((await f.ingress.branch().native.sources(f.session.agent.state.messages)).length, 1);
+	const [view] = (await f.ingress.inspect()).submissions;
+	assert.equal(view.delivery, "consumed");
+	await f.session.prompt("use memory context");
+	assert.equal(f.sent.length, 1);
+	assert.ok(JSON.stringify(f.sent).includes("memory context"));
+});
+
+test("reattached memory-only context remains unresolved without durable history", async (t) => {
+	const manager = SessionManager.inMemory();
+	const first = await fixture(t, { manager, admit: null });
+	await first.session.sendCustomMessage(
+		{ customType: "note", content: "memory context", display: true },
+		{ triggerTurn: false },
+	);
+	await first.ingress.dispose();
+	const next = await fixture(t, { root: first.root, manager, admit: null });
+	assert.equal(next.ingress.branch().sourceRecovery.unresolved, 1);
+	await next.session.prompt("held request");
+	assert.equal(next.sent.length, 0);
+	assert.match((await next.ingress.heldInputs())[0].reason, /recovery/);
+});

@@ -1,7 +1,19 @@
+import { createHash, randomUUID } from "node:crypto";
 import type { CustomEntry, SessionManager } from "@earendil-works/pi-coding-agent";
 import { verifyPiHistoryEntry } from "./pi-history-receipts.js";
 import type { FlowBranchPosition, FlowSessionRegistryState, PiFlowSessionRegistry } from "./pi-session-registry.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
+
+const memoryInstances = new WeakMap<SessionManager, { sessionId: string; id: string }>();
+function memoryInstance(manager: SessionManager): string {
+	const sessionId = manager.getSessionId();
+	let instance = memoryInstances.get(manager);
+	if (!instance || instance.sessionId !== sessionId) {
+		instance = { sessionId, id: randomUUID() };
+		memoryInstances.set(manager, instance);
+	}
+	return instance.id;
+}
 
 const customType = "jouzu-flow-branch";
 interface MarkerData {
@@ -30,11 +42,23 @@ function latestMarker(manager: SessionManager): Marker | undefined {
 function assertSession(state: FlowSessionRegistryState, manager: SessionManager): void {
 	if (state.sessionId !== manager.getSessionId())
 		throw new FlowLedgerError("scope", "Branch registry belongs to another Pi session.");
-	if (!manager.isPersisted())
-		throw new FlowLedgerError("scope", "Durable branch binding requires a persistent Pi transcript.");
+	const position = state.branches.at(-1)?.position;
+	if (position && position.memoryInstanceId !== (manager.isPersisted() ? undefined : memoryInstance(manager)))
+		throw new FlowLedgerError("identity", "Branch binding belongs to another transcript lifetime.");
+	if (!manager.isPersisted() && state.transition && !position?.memoryInstanceId)
+		throw new FlowLedgerError("transition", "Memory navigation has no bound session lifetime.");
 }
 async function evidence(manager: SessionManager, marker: Marker): Promise<FlowBranchPosition> {
+	const captured = JSON.stringify(marker);
 	const result = await verifyPiHistoryEntry(manager, marker.id);
+	if (JSON.stringify(manager.getEntry(marker.id)) !== captured)
+		throw new FlowLedgerError("stale", "Branch marker changed during verification.");
+	if (result.kind === "memory")
+		return {
+			entryId: marker.id,
+			entryHash: createHash("sha256").update(captured).digest("hex"),
+			memoryInstanceId: memoryInstance(manager),
+		};
 	if (result.kind !== "persisted")
 		throw new FlowLedgerError("transition", "Branch marker is not durably recorded in the Pi transcript.");
 	return { entryId: marker.id, entryHash: result.entryHash };
@@ -56,7 +80,7 @@ async function assertRegistry(registry: PiFlowSessionRegistry, scope: FlowScope,
 		throw new FlowLedgerError("stale", "Branch registry changed during transcript verification.");
 }
 
-/** Reconcile an owned registry with the active durable Pi transcript before attaching a controller. */
+/** Reconcile an owned registry with the active Pi transcript before attaching a controller. */
 export async function bindPiFlowBranch(registry: PiFlowSessionRegistry, manager: SessionManager): Promise<FlowScope> {
 	return registry.run(async () => {
 		const state = await registry.snapshot();
@@ -65,7 +89,7 @@ export async function bindPiFlowBranch(registry: PiFlowSessionRegistry, manager:
 		const pending = state.transition;
 		if (pending) {
 			if (!marker || marker.data.branchId !== pending.branchId || marker.data.transitionId !== pending.id)
-				throw new FlowLedgerError("transition", "Interrupted navigation has no matching durable branch marker.");
+				throw new FlowLedgerError("transition", "Interrupted navigation has no matching branch marker.");
 			const leafId = manager.getLeafId();
 			const position = await evidence(manager, marker);
 			const scope = await registry.finishNavigation(pending.id, marker.id, position);
@@ -82,8 +106,12 @@ export async function bindPiFlowBranch(registry: PiFlowSessionRegistry, manager:
 		const leafId = manager.getLeafId();
 		const position = await evidence(manager, marker);
 		if (branch.position) {
-			if (branch.position.entryId !== position.entryId || branch.position.entryHash !== position.entryHash)
-				throw new FlowLedgerError("identity", "Durable branch position differs from its registry binding.");
+			if (
+				branch.position.entryId !== position.entryId ||
+				branch.position.entryHash !== position.entryHash ||
+				branch.position.memoryInstanceId !== position.memoryInstanceId
+			)
+				throw new FlowLedgerError("identity", "Verified branch position differs from its registry binding.");
 		} else {
 			if (state.branches.length !== 1 || marker.parentId !== branch.enteredAtLeafId)
 				throw new FlowLedgerError("identity", "Unbound branch marker cannot establish initial ownership.");

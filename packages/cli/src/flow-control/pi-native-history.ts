@@ -124,9 +124,10 @@ export class PiNativeHistory {
 		const manager = session.sessionManager;
 		manager.flush();
 		const evidence = await verifyPiHistoryEntry(manager, entryId);
-		if (evidence.kind !== "persisted") throw new FlowLedgerError("identity", "Non-waking context was not persisted.");
+		if (evidence.kind === "buffered") throw new FlowLedgerError("identity", "Non-waking context was not persisted.");
 		assertContent();
-		await store.recordPromptHistory(operationId, { ...prompt, entryId, entryHash: evidence.entryHash });
+		if (evidence.kind === "persisted")
+			await store.recordPromptHistory(operationId, { ...prompt, entryId, entryHash: evidence.entryHash });
 		assertContent();
 		this.sources.set(message, [
 			{ operationId, prompt, messageHash: createHash("sha256").update(JSON.stringify(message)).digest("hex") },
