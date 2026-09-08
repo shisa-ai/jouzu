@@ -2959,3 +2959,62 @@ test("work pause survives restart and explicit resume schedules the retained con
 	assert.equal(reopened.sent.length, 1);
 	assert.deepEqual(errors, []);
 });
+
+for (const replay of [false, true]) {
+	test(`producer subscription synchronization gates semantic dispatch until snapshot is committed: ${replay ? "replay" : "new"}`, {
+		timeout: 10000,
+	}, async (t) => {
+		const errors = [],
+			entered = deferred(),
+			proceed = deferred(),
+			built = deferred();
+		const f = await fixture(t, { provider: true, autoRelease: { onError: (error) => errors.push(error) } });
+		const branch = f.ingress.branch();
+		await branch.attachment.waits.registerWork("work", "lane", 0);
+		if (replay)
+			await branch.attachment.waits.registerExecution(
+				{
+					producer: "lane",
+					workId: "work",
+					handle: "job",
+					execution: "execution",
+					revision: 1,
+					predicates: [{ until: "exit", state: "pending" }],
+				},
+				1,
+				0,
+			);
+		const source = branch.attachment.waitProducers.register(
+			{
+				version: 1,
+				namespace: "lane",
+				subscribe: () => () => {},
+				async snapshot(identity) {
+					entered.resolve();
+					await proceed.promise;
+					return { ...identity, revision: 1, predicates: [{ until: "exit", state: "pending" }] };
+				},
+			},
+			(error) => errors.push(error),
+		);
+		const binding = source.bind({ workId: "work", handle: "job", execution: "execution" }, 1);
+		await entered.promise;
+		let builds = 0;
+		const registration = f.ingress.registerProducer(
+			lifecycleProducer(async (item) => {
+				builds++;
+				built.resolve();
+				return { id: item.id, revision: item.revision, kind: "work", text: "after subscription" };
+			}),
+		);
+		await registration.changed();
+		assert.equal(builds, 0);
+		assert.equal(f.sent.length, 0);
+		proceed.resolve();
+		await binding;
+		await built.promise;
+		await f.ingress.wakeProducers();
+		assert.equal(f.sent.length, 1);
+		assert.deepEqual(errors, []);
+	});
+}

@@ -191,9 +191,15 @@ export class PiSessionFlowIngress implements Ingress {
 		const branch = this.branch();
 		let ready = false;
 		this.unsubscribeIdle = branch.host.onIdle((cause) => this.queueRelease(cause === "operation"));
-		this.unsubscribeWaits = branch.attachment.waits.onChanged(() => {
+		const changed = () => {
 			if (ready) this.queueRelease(true);
-		}, automatic.onError);
+		};
+		const unsubscribeWaits = branch.attachment.waits.onChanged(changed, automatic.onError);
+		const unsubscribeProducers = branch.attachment.waitProducers.onChanged(changed, automatic.onError);
+		this.unsubscribeWaits = () => {
+			unsubscribeWaits();
+			unsubscribeProducers();
+		};
 		await branch.attachment.waits.startDeadlines(automatic.onError, automatic.clock);
 		ready = true;
 		// Recovered terminal decisions may predate subscription and need no new producer callback.
@@ -329,6 +335,7 @@ export class PiSessionFlowIngress implements Ingress {
 		const waits = branch.attachment.waits.gate();
 		const recoveryBlocked =
 			waits.updating ||
+			branch.attachment.waitProducers.updating ||
 			policy.recoveryBlocked ||
 			this.nativeRecoveryBlocked(submission, branch, phase) ||
 			branch.recovery.unresolved > 0 ||
@@ -371,11 +378,20 @@ export class PiSessionFlowIngress implements Ingress {
 			if (this.automaticReleaseRunning && this.semanticReleaseRequested && !isNativeUserInput(submission))
 				return { allowed: false, reason: "Input is waiting for updated semantic admission." } as const;
 			const currentWaits = branch.attachment.waits.gate();
-			if (!currentWaits.updating && currentWaits.waitingWorkIds.length === 0) return { allowed: true } as const;
+			if (
+				!currentWaits.updating &&
+				!branch.attachment.waitProducers.updating &&
+				currentWaits.waitingWorkIds.length === 0
+			)
+				return { allowed: true } as const;
 			return decideNativeAdmission(
 				submission,
 				records,
-				{ userPending: false, recoveryBlocked: currentWaits.updating, waitingWorkIds: currentWaits.waitingWorkIds },
+				{
+					userPending: false,
+					recoveryBlocked: currentWaits.updating || branch.attachment.waitProducers.updating,
+					waitingWorkIds: currentWaits.waitingWorkIds,
+				},
 				session,
 				phase,
 				input,

@@ -124,7 +124,11 @@ export class PiFlowSessionService {
 						waitingWorkIds: [...new Set([...policy.waitingWorkIds, ...waits.waitingWorkIds])],
 						inactiveWorkIds: [...new Set([...(policy.inactiveWorkIds ?? []), ...waits.inactiveWorkIds])],
 						recoveryBlocked:
-							waits.updating || recoveryBlocked || attachment.nativeRequests.recoveryBlocked || policy.recoveryBlocked,
+							waits.updating ||
+							attachment.waitProducers.updating ||
+							recoveryBlocked ||
+							attachment.nativeRequests.recoveryBlocked ||
+							policy.recoveryBlocked,
 					};
 				},
 			);

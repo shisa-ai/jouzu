@@ -292,6 +292,20 @@ export class FlowWaitStore {
 		const captured = structuredClone(input);
 		return this.authorityChange(now, (authority) => registerAuthorityExecution(authority, captured, workRevision, now));
 	}
+	/** Reattachment snapshots may advance an existing exact execution, never replace its identity. */
+	synchronizeExecution(input: Omit<FlowAuthorityExecution, "observedAt">, workRevision: number, now: number) {
+		const captured = structuredClone(input);
+		return this.authorityChange(now, (authority) => {
+			requireAuthorityWork(authority, captured.workId, captured.producer, workRevision);
+			const existing = authority.executions.find(
+				(execution) => execution.producer === captured.producer && execution.execution === captured.execution,
+			);
+			if (!existing) return registerAuthorityExecution(authority, captured, workRevision, now);
+			if (existing.workId !== captured.workId || existing.handle !== captured.handle)
+				throw new FlowLedgerError("identity", "Execution snapshot changed registered ownership.");
+			return observeAuthorityExecution(authority, captured, captured.revision, captured.predicates, now);
+		});
+	}
 	observeExecution(
 		handle: Omit<Declaration["on"][number], "until">,
 		revision: number,
