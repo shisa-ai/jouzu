@@ -11,6 +11,7 @@ import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { PiControllerHost } from "../dist/flow-control/pi-controller-host.js";
 import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
 import { FlowReceiptLedger } from "../dist/flow-control/receipt-ledger.js";
+import { orderFlowResultProducers } from "../dist/flow-control/result-order.js";
 
 const descriptor = (producer, id = producer, rank = 4, sequence = 0) => ({
 	id,
@@ -590,4 +591,80 @@ test("Pi: deferred result backlog survives reopen without authorizing another pa
 	await second.controller.wake();
 	assert.deepEqual(second.calls, []);
 	assert.equal((await second.ledger.snapshot()).attempts.length, 1);
+});
+
+for (const native of [false, true]) {
+	test(`${native ? "Pi" : "synthetic"}: result sampling serves surviving producers before a busy producer's next result`, async (t) => {
+		const { controller, ledger } = await fixture(t, native, { maxInputBytes: 450 });
+		const work = producer("work");
+		controller.register(work);
+		const results = [
+			...Array.from({ length: 8 }, (_, i) => descriptor("alpha", `alpha-${i}`, 6, i)),
+			descriptor("beta", "beta-result", 6, 20),
+			descriptor("gamma", "gamma-result", 6, 30),
+		];
+		for (const namespace of ["alpha", "beta", "gamma"])
+			controller.register(
+				producer(
+					namespace,
+					results.filter((item) => item.producer === namespace),
+				),
+			);
+		for (let i = 1; i <= 3; i++) {
+			if (i === 2) controller.register(producer("delta", [descriptor("delta", "delta-new", 6, 0)]));
+			work.items[0] = { ...work.items[0], revision: String(i), workRevision: String(i) };
+			await controller.wake();
+		}
+		const state = await ledger.snapshot();
+		assert.deepEqual(
+			state.attempts.map((attempt) => attempt.members.filter((item) => item.kind === "result").map((item) => item.id)),
+			[["alpha-0"], ["beta-result"], ["gamma-result"]],
+		);
+		const first = structuredClone(state);
+		first.attempts = first.attempts.slice(0, 1);
+		assert.equal(orderFlowResultProducers(results, first)[0], "beta");
+		first.attempts[0].requests.forEach((request) => {
+			delete request.payload;
+		});
+		assert.equal(orderFlowResultProducers(results, first)[0], "alpha");
+	});
+}
+
+test("Pi: producer sampling order survives a controller and storage reopen", async (t) => {
+	const first = await fixture(t, true, { maxInputBytes: 450 });
+	const results = [
+		descriptor("alpha", "alpha-0", 6),
+		descriptor("alpha", "alpha-1", 6, 1),
+		descriptor("beta", "beta-result", 6, 2),
+	];
+	first.controller.register(producer("work"));
+	for (const namespace of ["alpha", "beta"])
+		first.controller.register(
+			producer(
+				namespace,
+				results.filter((item) => item.producer === namespace),
+			),
+		);
+	await first.controller.wake();
+	const history = first.session.sessionFile;
+	await first.controller.close();
+	await first.attachment.close();
+	const second = await fixture(t, true, {
+		maxInputBytes: 450,
+		storageRoot: first.storageRoot,
+		sessionManager: SessionManager.open(history),
+	});
+	second.controller.register(producer("work", [{ ...descriptor("work"), revision: "2", workRevision: "2" }]));
+	for (const namespace of ["alpha", "beta"])
+		second.controller.register(
+			producer(
+				namespace,
+				results.filter((item) => item.producer === namespace),
+			),
+		);
+	await second.controller.wake();
+	assert.deepEqual(
+		(await second.ledger.snapshot()).attempts[1].members.map((item) => item.id),
+		["work", "beta-result"],
+	);
 });

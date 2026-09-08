@@ -242,6 +242,7 @@ test("result boundary snapshots accept legacy absence and reject corrupt or repe
 		null,
 		{},
 		[{ id: "", revision: "1" }],
+		[{ id: "result", revision: "1", producer: "" }],
 		[
 			{ id: "a", revision: "1" },
 			{ id: "a", revision: "2" },

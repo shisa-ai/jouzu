@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { chooseFlowIntent, type FlowAdmissionGates, type FlowIntent, initialFlowAdmission } from "./admission.js";
 import { type FlowInputItem, FlowModelInput } from "./model-input.js";
 import { FlowLedgerError, type FlowLedgerState, type FlowReceiptLedger } from "./receipt-ledger.js";
+import { orderFlowResultProducers } from "./result-order.js";
 
 export interface FlowProducer {
 	version: 1;
@@ -292,6 +293,18 @@ export class SessionFlowController {
 					group.push(result);
 					results.set(result.producer, group);
 				}
+				const order = orderFlowResultProducers(
+					items.filter((item) => item.rank === 6 && item.runnable && !retainedByReceipt(item, state)),
+					state,
+				);
+				const ordered = new Map(
+					order.flatMap((namespace) => {
+						const group = results.get(namespace);
+						return group ? [[namespace, group] as const] : [];
+					}),
+				);
+				results.clear();
+				for (const [namespace, group] of ordered) results.set(namespace, group);
 				if (choice.intent.rank === 6) {
 					const own = results.get(producer.namespace);
 					if (own) {
@@ -334,7 +347,8 @@ export class SessionFlowController {
 			}
 			choice.resultSnapshot = items
 				.filter((item) => item.rank === 6 && item.runnable && !retainedByReceipt(item, state))
-				.map(({ id, revision }) => ({ id, revision }));
+				.sort((a, b) => a.sequence - b.sequence || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+				.map(({ id, revision, producer }) => ({ id, revision, producer }));
 			await this.host.ledger.select(input.attemptId, input.members, choice);
 			selected = { input, valid };
 		});
