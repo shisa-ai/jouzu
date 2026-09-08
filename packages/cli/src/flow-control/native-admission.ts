@@ -6,7 +6,7 @@ type FlowSubmission = RetainedSubmission["submission"];
 export type NativeAdmissionDecision = { allowed: true } | { allowed: false; reason: string };
 
 /** Origin is supplied by the installed host binding, never by message content. */
-function userInput(submission: FlowSubmission): boolean {
+export function isNativeUserInput(submission: FlowSubmission): boolean {
 	return submission.origin.kind === "host" && ["prompt", "steer", "followUp"].includes(submission.api);
 }
 function lane(submission: FlowSubmission): string {
@@ -48,7 +48,7 @@ export function decideNativeAdmission(
 	if (gates.recoveryBlocked) return hold("Input is waiting for recovery reconciliation.");
 	if (host.isRetrying || host.isCompacting) return hold("Input is waiting for host retry or compaction.");
 	if (phase === "queue" && !input?.queue) return hold("Input has no exact native queue revision.");
-	if (userInput(submission)) return { allowed: true };
+	if (isNativeUserInput(submission)) return { allowed: true };
 	if (submission.api === "sendCustomMessage") {
 		const options = submission.args[1] as { deliverAs?: string; triggerTurn?: boolean } | undefined;
 		const wakes = options?.triggerTurn ?? submission.hostState?.streaming;
@@ -60,7 +60,7 @@ export function decideNativeAdmission(
 				: hold("Non-waking context is waiting for an idle append boundary.");
 	}
 	if (gates.waitingWorkIds.length) return hold("Unclassified input cannot establish independence from a live wait.");
-	if (gates.userPending || records.some((record) => userInput(record.submission) && awaitingInput(record)))
+	if (gates.userPending || records.some((record) => isNativeUserInput(record.submission) && awaitingInput(record)))
 		return hold("Input is waiting for queued user work.");
 	if (phase === "submission" && (!host.isIdle || host.isStreaming))
 		return hold("Automated input is waiting for an idle host boundary.");

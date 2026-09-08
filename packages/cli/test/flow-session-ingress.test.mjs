@@ -1213,3 +1213,109 @@ test("context cancellation requires a retained next-turn position and prior remo
 	const last = (await store.snapshot()).at(-1);
 	await assert.rejects(store.cancelContext(last.dispatch.operationId, 0), /Consumed context/);
 });
+
+test("release passes coalesce and prioritize retained user input", async (t) => {
+	let allowed = false;
+	const entered = deferred(),
+		proceed = deferred();
+	let holdRelease = false;
+	const f = await fixture(t, {
+		admit: async () => {
+			if (holdRelease) {
+				entered.resolve();
+				await proceed.promise;
+			}
+			return allowed;
+		},
+	});
+	await f.session.sendUserMessage("automated input");
+	await f.session.prompt("user input");
+	const records = await f.ingress.branch().attachment.submissions.snapshot();
+	allowed = true;
+	holdRelease = true;
+	const first = f.ingress.releaseReady();
+	await entered.promise;
+	const second = f.ingress.releaseReady();
+	assert.equal(first, second);
+	proceed.resolve();
+	const result = await first;
+	assert.deepEqual(result, { released: [records[1].id], held: [records[0].id] });
+	assert.equal(f.sent.length, 1);
+	assert.ok(JSON.stringify(f.sent[0]).includes("user input"));
+	assert.ok(!JSON.stringify(f.sent[0]).includes("automated input"));
+	assert.deepEqual(await f.ingress.releaseReady(), { released: [records[0].id], held: [] });
+	assert.equal(f.sent.length, 2);
+	assert.deepEqual(await f.ingress.releaseReady(), { released: [], held: [] });
+});
+
+test("release pass retains denied callbacks and rejects reentrant scheduling", async (t) => {
+	let allow = false;
+	let ingress;
+	const f = await fixture(t, {
+		admit: async () => {
+			if (ingress) await assert.rejects(ingress.releaseReady(), { code: "busy" });
+			return allow;
+		},
+	});
+	ingress = f.ingress;
+	await f.session.prompt("retained");
+	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.deepEqual(await ingress.releaseReady(), { released: [], held: [record.id] });
+	assert.equal(f.sent.length, 0);
+	allow = true;
+	assert.deepEqual(await ingress.releaseReady(), { released: [record.id], held: [] });
+	assert.equal(f.sent.length, 1);
+});
+
+test("release pass skips cancelled members and defers new retained arrivals", async (t) => {
+	let ready = false;
+	const entered = deferred(),
+		proceed = deferred();
+	const f = await fixture(t, {
+		admit: async (submission) => {
+			if (!ready || submission.args[0] === "new arrival") return false;
+			if (submission.args[0] === "first") {
+				entered.resolve();
+				await proceed.promise;
+			}
+			return true;
+		},
+	});
+	await f.session.prompt("first");
+	await f.session.prompt("cancel before release");
+	const records = await f.ingress.branch().attachment.submissions.snapshot();
+	ready = true;
+	const pass = f.ingress.releaseReady();
+	await entered.promise;
+	await f.ingress.cancelRetained(records[1].id, 1);
+	await f.session.prompt("new arrival");
+	proceed.resolve();
+	assert.deepEqual(await pass, { released: [records[0].id], held: [] });
+	assert.equal(f.sent.length, 1);
+	const latest = (await f.ingress.branch().attachment.submissions.snapshot()).at(-1);
+	assert.deepEqual(await f.ingress.releaseReady(), { released: [], held: [latest.id] });
+});
+
+test("disposal fences a release pass before dispatch and drains it", async (t) => {
+	let ready = false;
+	const entered = deferred(),
+		proceed = deferred();
+	const f = await fixture(t, {
+		admit: async () => {
+			if (!ready) return false;
+			entered.resolve();
+			await proceed.promise;
+			return true;
+		},
+	});
+	await f.session.prompt("never dispatch");
+	ready = true;
+	const pass = f.ingress.releaseReady();
+	await entered.promise;
+	const rejected = assert.rejects(pass, { code: "stale" });
+	const closing = f.ingress.dispose();
+	proceed.resolve();
+	await Promise.all([closing, rejected]);
+	assert.equal(f.sent.length, 0);
+	assert.throws(() => f.ingress.releaseReady(), { code: "stale" });
+});

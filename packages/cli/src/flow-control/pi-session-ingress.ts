@@ -1,6 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import type { AgentSession, CreateAgentSessionOptions } from "@earendil-works/pi-coding-agent";
-import { decideNativeAdmission } from "./native-admission.js";
+import { decideNativeAdmission, isNativeUserInput } from "./native-admission.js";
 import { type PiFlowBranchResources, type PiFlowSessionOptions, PiFlowSessionService } from "./pi-session-service.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowNativeInput } from "./submission-store.js";
@@ -37,6 +37,7 @@ export class PiSessionFlowIngress implements Ingress {
 	private readonly pending = new Map<string, Pending>();
 	private readonly frames = new AsyncLocalStorage<{ active: boolean; id?: string }>();
 	private readonly active = new Set<Promise<unknown>>();
+	private releasing?: Promise<{ released: string[]; held: string[] }>;
 	constructor(private readonly options: PiFlowIngressOptions) {}
 
 	attach(session: AgentSession): Promise<void> {
@@ -226,6 +227,37 @@ export class PiSessionFlowIngress implements Ingress {
 			.catch(() => {});
 		return run;
 	}
+	/** Release at most one eligible live callback; new arrivals belong to a later pass. */
+	releaseReady(): Promise<{ released: string[]; held: string[] }> {
+		const branch = this.branch();
+		if (this.frames.getStore()?.active)
+			return Promise.reject(new FlowLedgerError("busy", "Flow release cannot run from its own admission or dispatch."));
+		if (this.releasing) return this.releasing;
+		const candidates = [...this.pending.entries()]
+			.filter(([, pending]) => pending.branch === branch)
+			.sort(([, a], [, b]) => Number(isNativeUserInput(b.submission)) - Number(isNativeUserInput(a.submission)));
+		const run = this.track(async () => {
+			const result: { released: string[]; held: string[] } = { released: [], held: [] };
+			for (const [id, pending] of candidates) {
+				if (this.branch() !== branch) throw new FlowLedgerError("stale", "Flow release branch changed.");
+				if (this.pending.get(id) !== pending) continue;
+				if (await this.release(id, pending.revision)) {
+					result.released.push(id);
+					break;
+				}
+			}
+			result.held = candidates.filter(([id, pending]) => this.pending.get(id) === pending).map(([id]) => id);
+			return result;
+		});
+		this.releasing = run;
+		void run
+			.finally(() => {
+				if (this.releasing === run) this.releasing = undefined;
+			})
+			.catch(() => {});
+		return run;
+	}
+
 	/** Retire an undispatched instruction and its live callback without starting host work. */
 	cancelRetained(id: string, revision: number) {
 		const branch = this.branch();
