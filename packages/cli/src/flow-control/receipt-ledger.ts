@@ -1,3 +1,11 @@
+import {
+	type FlowAdmissionChoice,
+	type FlowAdmissionState,
+	initialFlowAdmission,
+	validateFlowAdmission,
+	validateFlowChoice,
+} from "./admission.js";
+
 export interface FlowScope {
 	sessionId: string;
 	branchId: string;
@@ -55,6 +63,7 @@ export interface FlowAttempt {
 	generation: number;
 	phase: FlowAttemptPhase;
 	consumed?: boolean;
+	admission?: { choice: FlowAdmissionChoice; charged: boolean };
 	members: FlowMember[];
 	queue?: { id: string; revision: number };
 	history: { id: string; revision: string; entryId: string; entryHash?: string }[];
@@ -69,6 +78,7 @@ export interface FlowLedgerState {
 	generation: number;
 	revision: number;
 	activeAttemptId?: string;
+	admission?: FlowAdmissionState;
 	attempts: FlowAttempt[];
 }
 
@@ -169,8 +179,15 @@ export class FlowReceiptLedger {
 				throw new FlowLedgerError("capacity", "Invalid flow ledger limit.");
 		const captured = structuredClone(scope);
 		const generation = await store.transact((previous) => {
-			const state = previous ?? { schemaVersion: 1, scope: captured, generation: 0, revision: 0, attempts: [] };
+			const state: FlowLedgerState = previous ?? {
+				schemaVersion: 1,
+				scope: captured,
+				generation: 0,
+				revision: 0,
+				attempts: [],
+			};
 			FlowReceiptLedger.validate(state, captured, limits);
+			state.admission ??= initialFlowAdmission();
 			state.generation++;
 			state.revision++;
 			for (const attempt of state.attempts) {
@@ -189,6 +206,7 @@ export class FlowReceiptLedger {
 	}
 
 	private static validate(state: FlowLedgerState, scope: FlowScope, limits: { maxAttempts: number; maxBytes: number }) {
+		if (state.admission !== undefined) validateFlowAdmission(state.admission);
 		if (state.schemaVersion !== 1) throw new FlowLedgerError("schema", "Unsupported flow ledger schema.");
 		if (!state.scope || !sameScope(state.scope, scope))
 			throw new FlowLedgerError("scope", "Flow ledger belongs to another session or branch.");
@@ -299,6 +317,11 @@ export class FlowReceiptLedger {
 				!["success", "transient-failure", "failure", "aborted"].includes(attempt.outcome)
 			)
 				throw new FlowLedgerError("schema", "Invalid run outcome.");
+			if (attempt.admission !== undefined) {
+				validateFlowChoice(attempt.admission.choice);
+				if (typeof attempt.admission.charged !== "boolean")
+					throw new FlowLedgerError("schema", "Invalid admission charge receipt.");
+			}
 			if (attempt.consumed !== undefined && typeof attempt.consumed !== "boolean")
 				throw new FlowLedgerError("schema", "Invalid native consumption fact.");
 			if (
@@ -351,19 +374,30 @@ export class FlowReceiptLedger {
 		return attempt;
 	}
 
-	select(id: string, members: FlowMember[]): Promise<void> {
+	select(id: string, members: FlowMember[], choice?: FlowAdmissionChoice): Promise<void> {
 		requireIdentity(id);
 		const captured = structuredClone(members);
 		validateMembers(captured);
+		const admission = choice === undefined ? undefined : structuredClone(choice);
+		if (admission) validateFlowChoice(admission);
 		return this.mutate((state) => {
 			if (state.activeAttemptId) throw new FlowLedgerError("busy", "A flow handoff is already active.");
 			if (state.attempts.some((item) => item.id === id))
 				throw new FlowLedgerError("identity", "Flow attempt ID was already used.");
+			if (
+				admission &&
+				((state.admission ?? initialFlowAdmission()).revision !== admission.revision ||
+					!captured.some(
+						(member) => member.id === admission.intent.id && member.revision === admission.intent.revision,
+					))
+			)
+				throw new FlowLedgerError("stale", "Admission choice no longer matches policy or selected membership.");
 			state.attempts.push({
 				id,
 				generation: this.generation,
 				phase: "selected",
 				consumed: false,
+				...(admission ? { admission: { choice: admission, charged: false } } : {}),
 				members: captured,
 				history: [],
 				requests: [],
@@ -471,6 +505,22 @@ export class FlowReceiptLedger {
 						!member.required ||
 						captured.inclusion.some((item) => memberKey(item) === memberKey(member) && item.disposition === "included"),
 				);
+			if (admitted && attempt.admission && !attempt.admission.charged) {
+				const { choice } = attempt.admission;
+				if ((state.admission ?? initialFlowAdmission()).revision !== choice.revision)
+					throw new FlowLedgerError("stale", "Admission policy changed before final inclusion.");
+				if (
+					captured.inclusion.some(
+						(item) =>
+							item.id === choice.intent.id &&
+							item.revision === choice.intent.revision &&
+							item.disposition === "included",
+					)
+				) {
+					state.admission = structuredClone(choice.next);
+					attempt.admission.charged = true;
+				}
+			}
 			if (!admitted) {
 				attempt.reason = "Provider payload filtered composed input.";
 				attempt.phase = attempt.requests.some((item) => item.handedOff) ? "running" : "withheld";
