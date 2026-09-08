@@ -5,20 +5,20 @@
 	"files": {
 		"dist/agent.js": {
 			"before": "d84351e451b9fef40fe2532c446aca90d26a4be9038b2d77d3d45dd6eab21d41",
-			"after": "88018a6c7f15e25499ab453ec6339b0a5702e77e0fcb4316391a03b47af39b76"
+			"after": "0fd3fe5b013275b8ea3a5f7feb581059ac2a79bab24fbc53f34a915fae386a86"
 		},
 		"dist/agent-loop.js": {
 			"before": "6732a1c65c09577d2ffcb716b48e4f4673e57e3e333f10ebfce5132d82e4d7a2",
-			"after": "fda7b75b83aeb63c612c99ec81a6ba247f1fbb053c665df7a6c0b399e159ec14"
+			"after": "ea566e88661c27a334ee045cdccb8d25fc870aa964ec3f88bfa5be2adca1ec80"
 		},
 		"dist/agent.d.ts": {
 			"before": "7caf774e58b6ceab9e4629bde58b9ab332a30278142af5a3e99b316be26030a9",
-			"after": "57ef0f6937a837d294877c829d2cee7e70827c160e33821f401f05347f5e491a"
+			"after": "54ba1dc77df50446232ae3a1152d3a804258c4163930b935b93594c5fab98544"
 		},
 		"dist/types.d.ts": {
 			"before": "2ae8602b59de73435b6d9bd7d4c9dd1b344b7f1d1214866bc08feb04fc490061",
 			"after": "32df810a080708e8b2ac59f74dfa8d1308aa6e504de494be38be4adacf8b9a35"
 		}
 	},
-	"types": "b4e302567639d4d39a4e1ed9a5cc1c91b3459722abde46e11bb9acae88c95bb6"
+	"types": "a3c5bd7f8351aa46307e8204c5a3508d063ea4971301d542e2ef186c7cee9e26"
 }

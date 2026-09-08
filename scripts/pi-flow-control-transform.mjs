@@ -77,6 +77,8 @@ export function transform(path, source) {
             const claimed = candidates.filter((item) => current.has(item));
             const removed = new Set(claimed);
             this.messages = this.messages.filter((item) => !removed.has(item));
+            await this.checkpoints()?.afterQueueClaim?.({ candidates: structuredClone(candidates), claimed: structuredClone(claimed) }, signal);
+            if (signal?.aborted) throw new Error("Flow queue claim cancelled before execution.");
             return claimed.map((item) => item.message);
         } finally {
             this.claiming = false;
@@ -167,12 +169,12 @@ export function transform(path, source) {
             modelMessages: structuredClone(llmContext.messages),
             systemPrompt: llmContext.systemPrompt,
         }, signal);
-        if (signal?.aborted) throw new Error("Flow request cancelled before transport handoff.");
     }
+    if (signal?.aborted) throw new Error("Flow request cancelled before transport handoff.");
     const response = await streamFunction(config.model, llmContext, {`,
 		);
 	} else if (path === "dist/agent.d.ts") {
-		text = `import type { FlowCheckpoints, FlowQueuedMessage, FlowQueueChange } from "./jouzu-flow.js";\nexport type { FlowCheckpoints, FlowQueuedMessage, FlowQueueChange, FlowRequestInput } from "./jouzu-flow.js";\n${text}`;
+		text = `import type { FlowCheckpoints, FlowQueuedMessage, FlowQueueChange } from "./jouzu-flow.js";\nexport type { FlowCheckpoints, FlowQueuedMessage, FlowQueueChange, FlowRequestInput, FlowQueueClaim } from "./jouzu-flow.js";\n${text}`;
 		change(
 			"export interface AgentOptions {",
 			"export interface AgentOptions {\n    flowCheckpoints?: FlowCheckpoints;",

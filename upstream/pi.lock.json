@@ -23,7 +23,7 @@
 		},
 		{
 			"path": "upstream/pi-flow-control/patch.lock.json",
-			"sha256": "b96174b48d2382a9866cc288880b26e9c8898b6148d56f4e100301f6fd9b00c1"
+			"sha256": "a7da9d7179628d94049916f30fbbd5aad5569fd7945578fa23d5bceed5db3d71"
 		}
 	]
 }

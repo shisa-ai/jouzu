@@ -8,6 +8,11 @@ export interface FlowQueuedMessage {
 	message: AgentMessage;
 }
 
+export interface FlowQueueClaim {
+	candidates: FlowQueuedMessage[];
+	claimed: FlowQueuedMessage[];
+}
+
 export type FlowQueueChange =
 	| { kind: "cancelled" | "not-queued" }
 	| { kind: "edited" | "conflict"; revision: number };
@@ -24,6 +29,8 @@ export interface FlowRequestInput {
 export interface FlowCheckpoints {
 	/** True permits the candidate revisions; false retains them in their native queue. */
 	beforeQueueClaim?: (items: FlowQueuedMessage[], signal?: AbortSignal) => boolean | Promise<boolean>;
+	/** Reports exact removal after synchronous revision revalidation; awaited before history/model work. */
+	afterQueueClaim?: (receipt: FlowQueueClaim, signal?: AbortSignal) => void | Promise<void>;
 	/** Runs after conversion and auth resolution, immediately before the stream function. */
 	beforeRequest?: (input: FlowRequestInput, signal?: AbortSignal) => void | Promise<void>;
 }
