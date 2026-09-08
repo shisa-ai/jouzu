@@ -123,10 +123,17 @@ export function createFlowWait(
 	);
 }
 
+/** Expiry relies on the hard deadline and retained observations, never on a responsive producer. */
+export function expireFlowWait(wait: FlowWaitState, now: number): FlowWaitState {
+	if (!instant(now) || now < wait.createdAt) throw new FlowLedgerError("schema", "Invalid wait expiry time.");
+	if (wait.state !== "waiting" || now < wait.expiresAt) return structuredClone(wait);
+	return { ...structuredClone(wait), state: "expired", endedAt: now };
+}
+
 /** Cancels the gate only; this reducer has no producer-job cancellation operation. */
 export function cancelFlowWait(wait: FlowWaitState, reason: string, now: number): FlowWaitState {
 	if (!instant(now) || now < wait.createdAt || typeof reason !== "string" || !reason.trim() || reason.length > 4096)
 		throw new FlowLedgerError("schema", "Invalid wait cancellation.");
-	if (wait.state !== "waiting") return structuredClone(wait);
+	if (wait.state !== "waiting" || now >= wait.expiresAt) return expireFlowWait(wait, now);
 	return { ...structuredClone(wait), state: "cancelled", endedAt: now, cancellationReason: reason };
 }

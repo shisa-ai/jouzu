@@ -5,6 +5,7 @@ import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import {
 	cancelFlowWait,
 	createFlowWait,
+	expireFlowWait,
 	type FlowWaitObservation,
 	type FlowWaitState,
 	reconcileFlowWait,
@@ -122,6 +123,22 @@ export class FlowWaitStore {
 			return next;
 		});
 	}
+	/** Atomically retain every newly detected expiry, including deadlines elapsed while offline. */
+	expireDue(now: number): Promise<FlowWaitState[]> {
+		if (!Number.isSafeInteger(now) || now < 0)
+			return Promise.reject(new FlowLedgerError("schema", "Invalid wait expiry time."));
+		return this.update((state) => {
+			const expired: FlowWaitState[] = [];
+			state.waits = state.waits.map((wait) => {
+				if (wait.state !== "waiting" || now < wait.expiresAt) return wait;
+				const next = expireFlowWait(wait, now);
+				expired.push(next);
+				return next;
+			});
+			return expired;
+		});
+	}
+
 	reconcile(token: string, observations: FlowWaitObservation[], now: number): Promise<FlowWaitState> {
 		const captured = structuredClone(observations);
 		return this.transition(token, (wait) => reconcileFlowWait(wait, captured, now));

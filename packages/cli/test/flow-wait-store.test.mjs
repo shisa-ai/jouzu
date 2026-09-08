@@ -132,3 +132,30 @@ test("foreign declarations and writes through a closed attachment are rejected",
 	await f.attachment.close();
 	await assert.rejects(store.declare(request(), observations(), 0, 100));
 });
+
+test("offline expiry reconciles due waits once without producer observations", async (t) => {
+	const f = await fixture(t);
+	await f.attachment.waits.declare(request(), observations(), 0, 50);
+	await f.attachment.waits.declare(request("later", "later-work"), observations("pending", "later-work"), 0, 100);
+	const store = await f.reopen();
+	const expired = await store.expireDue(75);
+	assert.equal(expired.length, 1);
+	assert.equal(expired[0].token, "token");
+	assert.deepEqual(expired[0].unmet, [handle]);
+	assert.deepEqual(await store.expireDue(75), []);
+	assert.equal((await store.snapshot())[1].state, "waiting");
+	const reopened = await f.reopen();
+	assert.deepEqual(await reopened.expireDue(99), []);
+	assert.equal((await reopened.expireDue(100))[0].token, "later");
+	assert.deepEqual(await reopened.expireDue(200), []);
+});
+
+test("cancellation at hard expiry retains expiry as the winning transition", async (t) => {
+	const f = await fixture(t),
+		store = f.attachment.waits;
+	await store.declare(request(), observations(), 0, 100);
+	const cancelled = await store.cancel("token", "late cancellation", 100);
+	assert.equal(cancelled.state, "expired");
+	assert.deepEqual(await store.expireDue(100), []);
+	assert.deepEqual((await (await f.reopen()).snapshot())[0], cancelled);
+});

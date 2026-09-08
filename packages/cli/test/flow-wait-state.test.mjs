@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { cancelFlowWait, createFlowWait, reconcileFlowWait } from "../dist/flow-control/wait-state.js";
+import { cancelFlowWait, createFlowWait, expireFlowWait, reconcileFlowWait } from "../dist/flow-control/wait-state.js";
 
 const scope = { sessionId: "session", branchId: "branch" };
 const handles = ["a", "b"].map((handle) => ({ producer: "bg", handle, execution: `exec-${handle}`, until: "exit" }));
@@ -93,4 +93,15 @@ test("session policy caps the effective deadline returned by declaration", () =>
 	const wait = createFlowWait({ ...request(), expiresAt: 1000 }, observations("pending", "pending"), 10, 50);
 	assert.equal(wait.expiresAt, 60);
 	assert.equal(reconcileFlowWait(wait, observations("pending", "pending"), 60).state, "expired");
+});
+
+test("expiry needs no new observation and late cancellation cannot suppress it", () => {
+	const wait = waiting();
+	assert.equal(expireFlowWait(wait, 99).state, "waiting");
+	const expired = expireFlowWait(wait, 100);
+	assert.equal(expired.state, "expired");
+	assert.deepEqual(expired.observations, wait.observations);
+	assert.deepEqual(expired.unmet, wait.unmet);
+	assert.deepEqual(cancelFlowWait(wait, "too late", 100), expired);
+	assert.deepEqual(expireFlowWait(expired, 200), expired);
 });
