@@ -8,6 +8,7 @@ import type { FlowNativeObserver, FlowSubmissionStore } from "./submission-store
 
 interface Frame {
 	active: boolean;
+	operationId: string;
 	observer: FlowNativeObserver;
 	writes: Promise<void>[];
 }
@@ -17,7 +18,7 @@ const attached = new WeakSet<AgentSession>();
 export class PiNativeDispatch {
 	private readonly hooks = new PiHostHooks();
 	private readonly frames = new AsyncLocalStorage<Frame>();
-	private readonly queued = new Map<string, { revision: number; write: Promise<void> }>();
+	private readonly queued = new Map<string, { operationId: string; revision: number; write: Promise<void> }>();
 	private readonly held = new Map<string, { id: string; revision: number; reason: string }>();
 	private readonly sessionId: string;
 	private active = 0;
@@ -58,7 +59,7 @@ export class PiNativeDispatch {
 					agent.cancelQueuedMessage(queue.id, queue.revision);
 					throw error;
 				}
-				this.queued.set(queue.id, { revision: queue.revision, write });
+				this.queued.set(queue.id, { operationId: frame.operationId, revision: queue.revision, write });
 				write.catch(() => agent.cancelQueuedMessage(queue.id, queue.revision));
 				frame.writes.push(write);
 				return queue;
@@ -98,6 +99,16 @@ export class PiNativeDispatch {
 			},
 			afterQueueClaim: async (receipt, signal) => {
 				this.assertActive();
+				for (const item of receipt.candidates) {
+					const observed = this.queued.get(item.id);
+					if (!observed) continue;
+					await observed.write;
+					await this.store.recordQueueClaim(
+						observed.operationId,
+						{ id: item.id, revision: item.revision },
+						receipt.claimed.some((claimed) => claimed.id === item.id && claimed.revision === item.revision),
+					);
+				}
 				await previous?.afterQueueClaim?.(receipt, signal);
 				this.assertActive();
 				for (const item of receipt.candidates)
@@ -127,7 +138,7 @@ export class PiNativeDispatch {
 		this.active++;
 		return this.store
 			.dispatch(id, revision, operationId, (observer) => {
-				const frame: Frame = { active: true, observer, writes: [] };
+				const frame: Frame = { active: true, operationId, observer, writes: [] };
 				return this.frames.run(frame, async () => {
 					try {
 						const result = await run();
@@ -157,11 +168,17 @@ export class PiNativeDispatch {
 						this.drained = resolve;
 					})
 				: Promise.resolve()
-		).then(() => {
+		).then(async () => {
 			const pending = this.session.agent.inspectQueuedMessages().filter((item) => this.queued.has(item.id));
 			if (pending.some((item) => item.revision !== this.queued.get(item.id)?.revision))
 				throw new FlowLedgerError("busy", "Edited native queue entries require reconciliation before close.");
-			for (const item of pending) this.session.agent.cancelQueuedMessage(item.id, item.revision);
+			for (const item of pending) {
+				const observed = this.queued.get(item.id);
+				if (!observed) throw new FlowLedgerError("stale", "Native queue observation changed during close.");
+				const result = this.session.agent.cancelQueuedMessage(item.id, item.revision);
+				if (result.kind !== "cancelled") throw new FlowLedgerError("stale", "Native queue changed during close.");
+				await this.store.recordQueueClaim(observed.operationId, { id: item.id, revision: item.revision }, false);
+			}
 			this.hooks.close();
 			this.queued.clear();
 			this.held.clear();

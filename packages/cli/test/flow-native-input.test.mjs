@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { fork } from "node:child_process";
+import { once } from "node:events";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -6,6 +8,7 @@ import { test } from "node:test";
 import { createFlowSession, deferred, tick } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { PiNativeDispatch } from "../dist/flow-control/pi-native-dispatch.js";
+import { projectFlowSubmissions } from "../dist/flow-control/submission-view.js";
 
 async function fixture(t, extensions = []) {
 	const root = await mkdtemp(join(tmpdir(), "jouzu-native-input-"));
@@ -99,6 +102,10 @@ test("native queue consumption waits for its exact input observation", async (t)
 	const [record] = await f.attachment.submissions.snapshot();
 	assert.deepEqual(record.dispatch.inputs[0].queue, { id: item.id, revision: item.revision });
 	assert.equal(record.dispatch.inputs[0].args[0].content[0].text, "queued");
+	assert.deepEqual(record.dispatch.queueClaims, [{ id: item.id, revision: item.revision, consumed: true }]);
+	const [view] = projectFlowSubmissions([record], await f.attachment.ledger.snapshot());
+	assert.equal(view.delivery, "consumed");
+	assert.equal(view.admission, "held");
 });
 
 for (const kind of ["prompt", "followUp"])
@@ -165,6 +172,89 @@ test("close cancels unconsumed native input while preserving its observation", a
 	const [before] = await f.attachment.submissions.snapshot();
 	await f.native.close();
 	assert.deepEqual(f.session.agent.inspectQueuedMessages(), []);
-	assert.deepEqual((await f.attachment.submissions.snapshot())[0], before);
+	const [after] = await f.attachment.submissions.snapshot();
+	assert.deepEqual(after.submission, before.submission);
+	assert.deepEqual(after.dispatch.inputs, before.dispatch.inputs);
+	assert.deepEqual(after.dispatch.queueClaims, [{ ...before.dispatch.inputs[0].queue, consumed: false }]);
+	assert.equal(projectFlowSubmissions([after], await f.attachment.ledger.snapshot())[0].delivery, "none");
 	assert.equal(f.requests.length, 0);
 });
+
+test("native consumption is retained before model execution and survives reopen", async (t) => {
+	const f = await fixture(t);
+	await f.session.followUp("queue receipt");
+	const entered = deferred(),
+		release = deferred();
+	const recordClaim = f.attachment.submissions.recordQueueClaim.bind(f.attachment.submissions);
+	t.mock.method(f.attachment.submissions, "recordQueueClaim", async (...args) => {
+		entered.resolve();
+		await release.promise;
+		return recordClaim(...args);
+	});
+	const running = f.session.continueQueued();
+	await entered.promise;
+	assert.equal(f.requests.length, 0);
+	assert.deepEqual(f.session.agent.inspectQueuedMessages(), []);
+	release.resolve();
+	await running;
+	const [before] = await f.attachment.submissions.snapshot();
+	const [claim] = before.dispatch.queueClaims;
+	await recordClaim(before.dispatch.operationId, claim, true);
+	await assert.rejects(recordClaim(before.dispatch.operationId, claim, false), { code: "identity" });
+	await assert.rejects(recordClaim(before.dispatch.operationId, { id: "foreign", revision: 1 }, true), {
+		code: "identity",
+	});
+	await f.native.close();
+	await f.attachment.close();
+	const reopened = await PiFlowAttachment.open(f.root, f.scope);
+	try {
+		assert.deepEqual((await reopened.submissions.snapshot())[0].dispatch.queueClaims, before.dispatch.queueClaims);
+		await assert.rejects(reopened.submissions.recordQueueClaim(before.dispatch.operationId, claim, true), {
+			code: "stale",
+		});
+	} finally {
+		await reopened.close();
+	}
+	assert.equal(f.requests.length, 1);
+});
+
+for (const phase of ["before", "after"])
+	test(`process death ${phase} the native queue receipt cannot authorize replay`, async (t) => {
+		const root = await mkdtemp(join(tmpdir(), "jouzu-native-claim-kill-"));
+		let attachment;
+		const child = fork(new URL("./fixtures/flow-native-claim-crash.mjs", import.meta.url), [root, phase], {
+			stdio: ["ignore", "ignore", "pipe", "ipc"],
+		});
+		const exited = once(child, "exit");
+		t.after(async () => {
+			if (child.exitCode === null && child.signalCode === null) {
+				child.kill("SIGKILL");
+				await exited;
+			}
+			await attachment?.close();
+			await rm(root, { recursive: true, force: true });
+		});
+		const [saved] = await Promise.race([
+			once(child, "message"),
+			exited.then(() => {
+				throw new Error("Native claim fixture exited before checkpoint");
+			}),
+		]);
+		assert.equal(saved.requests, 0);
+		assert.equal(saved.queued, 0);
+		child.kill("SIGKILL");
+		await exited;
+		attachment = await PiFlowAttachment.open(join(root, "receipts"), saved.scope);
+		const [record] = await attachment.submissions.snapshot();
+		assert.equal(record.dispatch.queueClaims?.[0]?.consumed, phase === "after" ? true : undefined);
+		await assert.rejects(
+			attachment.submissions.dispatch(record.id, record.revision, "retry", async () => {
+				throw new Error("replayed");
+			}),
+			{ code: "transition" },
+		);
+		assert.equal(
+			projectFlowSubmissions([record], await attachment.ledger.snapshot())[0].delivery,
+			phase === "after" ? "consumed" : "uncertain",
+		);
+	});

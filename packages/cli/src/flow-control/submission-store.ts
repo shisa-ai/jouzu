@@ -36,6 +36,7 @@ export interface FlowSubmissionDispatch {
 	ownerId: string;
 	phase: "started" | "returned" | "failed";
 	inputs?: FlowNativeInput[];
+	queueClaims?: { id: string; revision: number; consumed: boolean }[];
 }
 interface State {
 	version: 1;
@@ -228,6 +229,28 @@ export class FlowSubmissionStore {
 				}
 			}
 			const submission = decode(record.payload) as Submission;
+			const claims = record.dispatch?.queueClaims;
+			if (claims !== undefined) {
+				if (!Array.isArray(claims) || claims.length > 64)
+					throw new FlowLedgerError("schema", "Invalid native queue claim receipts.");
+				const claimed = new Set<string>();
+				for (const claim of claims) {
+					if (
+						!claim ||
+						!identity(claim.id) ||
+						!Number.isSafeInteger(claim.revision) ||
+						claim.revision < 1 ||
+						typeof claim.consumed !== "boolean" ||
+						claimed.has(claim.id) ||
+						(inputs ?? []).filter((input) => {
+							const queue = (decode(input.payload) as FlowNativeInput).queue;
+							return queue?.id === claim.id && queue.revision === claim.revision;
+						}).length !== 1
+					)
+						throw new FlowLedgerError("identity", "Native queue receipt does not identify one observed input.");
+					claimed.add(claim.id);
+				}
+			}
 			validateSubmission(submission, this.ownership.scope);
 			if (submission.id !== record.id) throw new FlowLedgerError("identity", "Stored submission identity changed.");
 		}
@@ -312,6 +335,7 @@ export class FlowSubmissionStore {
 								operationId: dispatch.operationId,
 								ownerId: dispatch.ownerId,
 								phase: dispatch.phase,
+								...(dispatch.queueClaims ? { queueClaims: dispatch.queueClaims } : {}),
 								...(dispatch.inputs
 									? { inputs: dispatch.inputs.map((input) => decode(input.payload) as FlowNativeInput) }
 									: {}),
@@ -321,6 +345,24 @@ export class FlowSubmissionStore {
 				submission: decode(payload) as Submission,
 			})),
 		}));
+	}
+	/** Record a host's exact post-removal queue receipt; absence or return alone is never consumption proof. */
+	recordQueueClaim(operationId: string, queue: { id: string; revision: number }, consumed: boolean): Promise<void> {
+		const receipt = { ...queue, consumed };
+		return this.transact((state) => {
+			const dispatch = state.records.find((record) => record.dispatch?.operationId === operationId)?.dispatch;
+			if (!dispatch || dispatch.ownerId !== this.ownership.token)
+				throw new FlowLedgerError("stale", "Native queue receipt belongs to another attachment.");
+			const previous = dispatch.queueClaims?.find((claim) => claim.id === receipt.id);
+			if (previous) {
+				if (previous.revision !== receipt.revision || previous.consumed !== receipt.consumed)
+					throw new FlowLedgerError("identity", "Native queue consumption receipt conflicts with retained evidence.");
+				return { changed: false, result: undefined };
+			}
+			dispatch.queueClaims ??= [];
+			dispatch.queueClaims.push(receipt);
+			return { changed: true, result: undefined };
+		});
 	}
 	/** Persist native-operation intent before executing once. Return is not a delivery or completion receipt. */
 	dispatch<T>(

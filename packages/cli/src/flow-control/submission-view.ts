@@ -49,8 +49,20 @@ export function projectFlowSubmissions(records: RetainedSubmission[], ledger: Fl
 		if (record.submission.scope.sessionId !== ledger.scope.sessionId)
 			throw new FlowLedgerError("scope", "Retained submission belongs to another session.");
 		const attempts = links.get(record.id) ?? [];
-		const ambiguous = attempts.length === 0 && (unlinkedConsumption || !!record.dispatch);
-		let delivery: FlowSubmissionView["delivery"] = ambiguous ? "uncertain" : "none";
+		const claims = record.dispatch?.queueClaims ?? [];
+		const consumedNative = claims.some((claim) => claim.consumed);
+		const unconsumedNative =
+			!!record.dispatch?.inputs?.length &&
+			record.dispatch.inputs.every(
+				(input) =>
+					!!input.queue &&
+					claims.some(
+						(claim) => claim.id === input.queue?.id && claim.revision === input.queue.revision && !claim.consumed,
+					),
+			);
+		const ambiguous =
+			attempts.length === 0 && (unlinkedConsumption || (!!record.dispatch && !consumedNative && !unconsumedNative));
+		let delivery: FlowSubmissionView["delivery"] = ambiguous ? "uncertain" : consumedNative ? "consumed" : "none";
 		let held = ambiguous || !!record.dispatch;
 		for (const attempt of attempts) {
 			const members = attempt.members.filter((member) => member.sourceSubmission?.id === record.id);
