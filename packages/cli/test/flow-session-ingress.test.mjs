@@ -162,6 +162,9 @@ test("reopened ingress retains work without reconstructing a dispatch callback",
 	]);
 	await assert.rejects(next.ingress.release(record.id, record.revision), { code: "stale" });
 	assert.equal(next.sent.length, 0);
+	assert.equal((await next.ingress.cancelRetained(record.id, record.revision)).kind, "cancelled");
+	assert.deepEqual(await next.ingress.heldInputs(), []);
+	assert.equal(next.sent.length, 0);
 });
 
 test("branch navigation drops old callbacks before attaching new branch resources", async (t) => {
@@ -549,4 +552,76 @@ test("policy argument mutation cannot redirect the durable hold identity", async
 	assert.equal(record.holds[0].queue.id, queued.id);
 	assert.equal((await f.ingress.heldInputs())[0].id, record.id);
 	assert.equal(f.sent.length, 0);
+});
+
+test("retained cancellation removes the callback and permits the next instruction in its lane", async (t) => {
+	let waiting = true;
+	const f = await fixture(t, {
+		admit: null,
+		policy: () => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: waiting ? ["work"] : [] }),
+	});
+	await f.session.sendUserMessage("cancel me");
+	await f.session.sendUserMessage("keep me");
+	const [first, second] = await f.ingress.branch().attachment.submissions.snapshot();
+	assert.deepEqual(await f.ingress.cancelRetained(first.id, first.revision), { kind: "cancelled", revision: 2 });
+	assert.deepEqual(await f.ingress.cancelRetained(first.id, 2), { kind: "cancelled", revision: 2 });
+	await assert.rejects(f.ingress.release(first.id, first.revision), { code: "stale" });
+	assert.equal(f.sent.length, 0);
+	waiting = false;
+	assert.equal(await f.ingress.release(second.id, second.revision), true);
+	assert.equal(f.sent.length, 1);
+	assert.ok(!JSON.stringify(f.sent).includes("cancel me"));
+});
+
+test("retained cancellation wins during awaited admission without a provider request", async (t) => {
+	const entered = deferred(),
+		proceed = deferred();
+	let hold = true;
+	const f = await fixture(t, {
+		admit: async () => {
+			if (hold) return false;
+			entered.resolve();
+			await proceed.promise;
+			return true;
+		},
+	});
+	await f.session.prompt("held");
+	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+	hold = false;
+	const release = f.ingress.release(record.id, record.revision);
+	const rejected = assert.rejects(release, { code: "stale" });
+	await entered.promise;
+	assert.equal((await f.ingress.cancelRetained(record.id, record.revision)).kind, "cancelled");
+	proceed.resolve();
+	await rejected;
+	assert.equal(f.sent.length, 0);
+	assert.deepEqual(await f.ingress.heldInputs(), []);
+});
+
+test("failed or conflicting cancellation preserves the live retained callback", async (t) => {
+	let allowed = false;
+	const f = await fixture(t, { admit: async () => allowed });
+	await f.session.prompt("preserve");
+	const store = f.ingress.branch().attachment.submissions;
+	const [record] = await store.snapshot();
+	assert.equal((await f.ingress.cancelRetained(record.id, 99)).kind, "conflict");
+	const mocked = t.mock.method(store, "cancelPending", async () => {
+		throw new Error("storage failed");
+	});
+	await assert.rejects(f.ingress.cancelRetained(record.id, record.revision), /storage failed/);
+	mocked.mock.restore();
+	allowed = true;
+	assert.equal(await f.ingress.release(record.id, record.revision), true);
+	assert.equal(f.sent.length, 1);
+});
+
+test("retained cancellation refuses input already owned by the native queue", async (t) => {
+	const f = await fixture(t);
+	await f.session.followUp("queued");
+	const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+	await assert.rejects(f.ingress.cancelRetained(record.id, record.revision), { code: "transition" });
+	assert.equal((await f.ingress.branch().attachment.submissions.snapshot())[0].status, "retained");
+	assert.equal(f.session.agent.inspectQueuedMessages().length, 1);
+	await f.session.continueQueued();
+	assert.equal(f.sent.length, 1);
 });

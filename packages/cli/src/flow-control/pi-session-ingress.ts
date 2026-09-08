@@ -195,6 +195,19 @@ export class PiSessionFlowIngress implements Ingress {
 			.catch(() => {});
 		return run;
 	}
+	/** Retire an undispatched instruction and its live callback without starting host work. */
+	cancelRetained(id: string, revision: number) {
+		const branch = this.branch();
+		return this.track(async () => {
+			const result = await branch.attachment.submissions.cancelPending(id, revision);
+			if (result.kind === "cancelled") {
+				const pending = this.pending.get(id);
+				if (pending?.branch === branch) this.pending.delete(id);
+			}
+			return result;
+		});
+	}
+
 	async beforeBranchChange(): Promise<void> {
 		if (this.frames.getStore()?.active)
 			throw new FlowLedgerError("busy", "Flow ingress cannot navigate from its own admission or dispatch.");

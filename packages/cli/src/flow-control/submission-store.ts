@@ -717,12 +717,25 @@ export class FlowSubmissionStore {
 			return result;
 		});
 	}
-	cancel(id: string, revision: number): Promise<{ kind: "cancelled" | "conflict" | "not-found"; revision?: number }> {
+	/** Cancel only before native dispatch intent; the dispatch check and mutation share one transaction. */
+	cancelPending(id: string, revision: number) {
+		return this.cancelRecord(id, revision, true);
+	}
+	cancel(id: string, revision: number) {
+		return this.cancelRecord(id, revision, false);
+	}
+	private cancelRecord(
+		id: string,
+		revision: number,
+		pendingOnly: boolean,
+	): Promise<{ kind: "cancelled" | "conflict" | "not-found"; revision?: number }> {
 		return this.transact<{ kind: "cancelled" | "conflict" | "not-found"; revision?: number }>((state) => {
 			const record = state.records.find((item) => item.id === id);
 			if (!record) return { changed: false, result: { kind: "not-found" } };
 			if (record.revision !== revision)
 				return { changed: false, result: { kind: "conflict", revision: record.revision } };
+			if (pendingOnly && record.dispatch)
+				throw new FlowLedgerError("transition", "Dispatched input requires native queue or request cancellation.");
 			const changed = record.status !== "cancelled";
 			if (changed) {
 				record.status = "cancelled";

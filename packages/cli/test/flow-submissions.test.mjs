@@ -408,3 +408,24 @@ test("admission diagnostics reject oversized reasons and invented queue identiti
 	);
 	assert.equal((await attachment.submissions.snapshot())[0].holds, undefined);
 });
+
+test("pending cancellation cannot retire an active native dispatch intent", async (t) => {
+	const root = await rootFor(t);
+	const attachment = await PiFlowAttachment.open(root, scope);
+	t.after(() => attachment.close());
+	await attachment.submissions.retain(submission());
+	const entered = deferred(),
+		finish = deferred();
+	const dispatch = attachment.submissions.dispatch("item", 1, "operation", async () => {
+		entered.resolve();
+		await finish.promise;
+	});
+	await entered.promise;
+	try {
+		await assert.rejects(attachment.submissions.cancelPending("item", 1), { code: "transition" });
+		assert.equal((await attachment.submissions.snapshot())[0].status, "retained");
+	} finally {
+		finish.resolve();
+		await dispatch;
+	}
+});
