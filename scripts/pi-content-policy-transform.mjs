@@ -176,6 +176,35 @@ export function transform(path, source) {
             }
         },`,
 		);
+		change(
+			"        const converted = convertToLlm(messages);",
+			`        const observer = agent.flowCheckpoints?.afterModelConversion;
+        const sourceIndices = [];
+        const converted = convertToLlm(messages, observer ? (index, message) => {
+            if (message !== undefined) sourceIndices.push(index);
+        } : undefined);
+        const finish = (modelMessages) => {
+            if (!observer) return modelMessages;
+            return Promise.resolve(observer({
+                sourceMessages: messages, modelMessages, sourceIndices,
+                imageReplaced: modelMessages.map((message, index) => message !== converted[index]),
+            })).then(() => modelMessages);
+        };`,
+		);
+		change("            return converted;", "            return finish(converted);");
+		change("        return converted.map((msg) => {", "        return finish(converted.map((msg) => {");
+		change("            return msg;\n        });\n    };", "            return msg;\n        }));\n    };");
+	} else if (path === "dist/core/messages.js") {
+		change("export function convertToLlm(messages) {", "export function convertToLlm(messages, onConverted) {");
+		change(
+			".filter((m) => m !== undefined);",
+			".filter((m, index) => { onConverted?.(index, m); return m !== undefined; });",
+		);
+	} else if (path === "dist/core/messages.d.ts") {
+		change(
+			"export declare function convertToLlm(messages: AgentMessage[]): Message[];",
+			"export declare function convertToLlm(messages: AgentMessage[], onConverted?: (index: number, message: Message | undefined) => void): Message[];",
+		);
 	} else if (path === "dist/core/extensions/runner.js") {
 		change("    async emitContext(messages) {", "    async emitContext(messages, afterClone) {");
 		change(
@@ -959,6 +988,8 @@ export const paths = [
 	"dist/core/resource-loader.d.ts",
 	"dist/core/sdk.js",
 	"dist/core/sdk.d.ts",
+	"dist/core/messages.js",
+	"dist/core/messages.d.ts",
 	"dist/core/agent-session.js",
 	"dist/core/agent-session.d.ts",
 	"dist/core/agent-session-services.js",

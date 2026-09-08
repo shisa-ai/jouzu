@@ -21,7 +21,7 @@
 		},
 		"dist/core/sdk.js": {
 			"before": "6969bd56ba8e1628cd033bb15cb15fe38299f00b5ad84f4f8ef37a33a98681c9",
-			"after": "68e23cf1bf2cb72712a38b61c73b77cf26c85d4cf493b7589388480e99c81140"
+			"after": "ae0994f8142296a3f0934fa53d1f6dfd06dc76dadc6e5aa977af0077ae92d92d"
 		},
 		"dist/core/sdk.d.ts": {
 			"before": "fbb34394c71e113b1f1fb5dd2e3d1da8d559580b339daace88826cd1a666cc4c",
@@ -74,6 +74,14 @@
 		"dist/core/extensions/runner.d.ts": {
 			"before": "5e6f5e8e5dffccc0f7e235964a75ac181d2c6e06b924e149370ad688a31d7193",
 			"after": "142aa0dbe4f6a5332a36eaacfcfa248e06f6fc02ada0c87e6c8eafd05ce823c1"
+		},
+		"dist/core/messages.js": {
+			"before": "a4e4865e343bf87f8078f75ff179a2a77cd7c2700cf8473476bd4dc5ed36adb6",
+			"after": "fd565f8d90816225acd6b178de4e6679c3e47bb922d510190e04f449ccfa7546"
+		},
+		"dist/core/messages.d.ts": {
+			"before": "fdd51b8371984b68f2631f9f64f1259ac77f2d5153068ce75d6158bca27e7a66",
+			"after": "b3746474d2b20b87e8c169bc7d9960ac38298b8c82529b68e2aae0d2914bf37c"
 		}
 	},
 	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863",

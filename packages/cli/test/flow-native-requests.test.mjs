@@ -476,7 +476,7 @@ for (const mode of ["reorder", "clone", "remove", "duplicate"])
 		assert.equal(request.outcome, "success");
 	});
 
-test("native custom conversion records unresolved model provenance despite matching content", async (t) => {
+test("native custom conversion retains host-mapped model provenance", async (t) => {
 	const f = await nativeRequests(t, { retainInputs: true, contextTransform: (messages) => messages });
 	await f.session.prompt("seed");
 	const [seed] = await f.attachment.submissions.snapshot();
@@ -496,7 +496,7 @@ test("native custom conversion records unresolved model provenance despite match
 	const offset = request.sourceCapture.members.findIndex((member) => member.operationId === "custom-operation");
 	assert.ok(offset >= 0);
 	assert.equal(request.sourceCapture.context.members[offset].status, "intact");
-	assert.equal(request.sourceCapture.model.members[offset].status, "unresolved");
+	assert.equal(request.sourceCapture.model.members[offset].status, "converted");
 	assert.ok(f.sent[1].messages.some((message) => JSON.stringify(message).includes("custom instruction")));
 });
 
@@ -558,7 +558,7 @@ test("Pi blocked-image conversion cannot retain an intact source receipt", async
 	await f.session.prompt("image", { images: [{ type: "image", mimeType: "image/png", data: "YQ==" }] });
 	const [request] = await f.store.snapshot();
 	assert.equal(request.sourceCapture.context.members[0].status, "intact");
-	assert.equal(request.sourceCapture.model.members[0].status, "unresolved");
+	assert.equal(request.sourceCapture.model.members[0].status, "changed");
 	assert.ok(JSON.stringify(f.sent[0]).includes("Image reading is disabled."));
 	assert.ok(!JSON.stringify(f.sent[0]).includes("data:image/png"));
 });
@@ -642,4 +642,112 @@ test("native clone checkpoint waits before handlers and holds attachment ownersh
 	await running;
 	assert.equal(handlers, 1);
 	assert.equal((await f.store.snapshot())[0].sourceCapture.model.members[0].status, "intact");
+});
+
+for (const failure of ["throw", "mutate", "remap"])
+	test(`native conversion checkpoint ${failure} withholds provider execution`, async (t) => {
+		const f = await nativeRequests(t, {
+			retainInputs: true,
+			conversionCheckpoint: (input) => {
+				if (failure === "throw") throw new Error("conversion evidence unavailable");
+				if (failure === "mutate") input.modelMessages[0].content[0].text = "changed";
+				if (failure === "remap") input.sourceIndices[0] = 9;
+			},
+		});
+		await f.session.prompt("source");
+		assert.equal(f.sent.length, 0);
+		assert.deepEqual(await f.store.snapshot(), []);
+	});
+
+test("native conversion callback drains before close and receipts survive reopen", async (t) => {
+	const entered = deferred(),
+		release = deferred();
+	const f = await nativeRequests(t, {
+		retainInputs: true,
+		conversionCheckpoint: async () => {
+			entered.resolve();
+			await release.promise;
+		},
+	});
+	const running = f.session.prompt("source");
+	await entered.promise;
+	await assert.rejects(f.bridge.close(), { code: "busy" });
+	assert.equal(f.sent.length, 0);
+	release.resolve();
+	await running;
+	const [request] = await f.store.snapshot();
+	assert.match(request.sourceCapture.model.members[0].messageHash, /^[a-f0-9]{64}$/);
+	await f.bridge.close();
+	await f.dispatch.close();
+	await f.attachment.close();
+	const reopened = await PiFlowAttachment.open(join(f.root, "receipts"), f.scope);
+	try {
+		assert.deepEqual((await reopened.nativeRequests.snapshot())[0], request);
+	} finally {
+		await reopened.close();
+	}
+});
+
+for (const mode of ["identity", "clone", "edit", "images"])
+	test(`duplicate custom sources retain conversion identity under ${mode}`, async (t) => {
+		const f = await nativeRequests(t, {
+			retainInputs: true,
+			modelTransform: (messages) => {
+				if (mode === "clone") return structuredClone(messages);
+				if (mode === "edit") {
+					for (const message of messages) {
+						if (message.role === "user" && message.content[0]?.text === "same") message.content[0].text = "edited";
+					}
+				}
+				return messages;
+			},
+		});
+		await f.session.prompt("seed");
+		if (mode === "images") f.session.settingsManager.setBlockImages(true);
+		const [seed] = await f.attachment.submissions.snapshot();
+		const saved = await f.attachment.submissions.retain({ ...seed.submission, id: "custom-pair" });
+		const content =
+			mode === "images"
+				? [
+						{ type: "text", text: "same" },
+						{ type: "image", mimeType: "image/png", data: "YQ==" },
+					]
+				: "same";
+		await f.dispatch.dispatch(saved.id, saved.revision, "custom-pair-op", () =>
+			f.session.agent.prompt([
+				{ role: "custom", customType: "source", content, display: false, timestamp: 1 },
+				{ role: "custom", customType: "source", content: structuredClone(content), display: false, timestamp: 1 },
+			]),
+		);
+		const request = (await f.store.snapshot())[1];
+		const members = request.sourceCapture.members.flatMap((member, offset) =>
+			member.operationId === "custom-pair-op" ? [request.sourceCapture.model.members[offset]] : [],
+		);
+		assert.equal(members.length, 2);
+		assert.deepEqual(
+			members.map((member) => member.status),
+			Array(2).fill(mode === "clone" ? "unresolved" : mode === "edit" || mode === "images" ? "changed" : "converted"),
+		);
+		if (mode !== "clone") {
+			assert.notEqual(members[0].index, members[1].index);
+			assert.match(members[0].messageHash, /^[a-f0-9]{64}$/);
+		}
+		assert.equal(request.outcome, "success");
+	});
+
+test("native converted receipts require content hashes and cannot erase changed context", async (t) => {
+	const f = await nativeRequests(t, { retainInputs: true });
+	await f.session.prompt("source");
+	const [request] = await f.store.snapshot();
+	for (const mode of ["missing-hash", "changed-context", "wrong-intact-hash"]) {
+		const sourceCapture = structuredClone(request.sourceCapture);
+		sourceCapture.model.members[0].status = "converted";
+		if (mode === "missing-hash") delete sourceCapture.model.members[0].messageHash;
+		if (mode === "changed-context") sourceCapture.context.members[0].status = "changed";
+		if (mode === "wrong-intact-hash") {
+			sourceCapture.model.members[0].status = "intact";
+			sourceCapture.model.members[0].messageHash = "0".repeat(64);
+		}
+		await assert.rejects(f.store.begin({ ...request, id: mode, sourceCapture }), { code: "identity" });
+	}
 });

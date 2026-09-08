@@ -23,7 +23,12 @@ export interface NativeRequestSource {
 export interface NativeSourceDisposition {
 	hash: string;
 	count: number;
-	members: { sourceIndex: number; status: "intact" | "changed" | "unresolved"; index?: number }[];
+	members: {
+		sourceIndex: number;
+		status: "intact" | "converted" | "changed" | "unresolved";
+		index?: number;
+		messageHash?: string;
+	}[];
 }
 export interface NativeSourceCapture {
 	hash: string;
@@ -138,7 +143,13 @@ export class FlowNativeRequestStore {
 						if (
 							!member ||
 							member.sourceIndex !== capture.members[offset]?.index ||
-							!["intact", "changed", "unresolved"].includes(member.status) ||
+							!(
+								stage === "model"
+									? ["intact", "converted", "changed", "unresolved"]
+									: ["intact", "changed", "unresolved"]
+							).includes(member.status) ||
+							(member.messageHash !== undefined && (!hash(member.messageHash) || member.status === "unresolved")) ||
+							(member.status === "converted" && !hash(member.messageHash)) ||
 							(member.status === "unresolved"
 								? member.index !== undefined
 								: member.index === undefined ||
@@ -154,6 +165,18 @@ export class FlowNativeRequestStore {
 								(member.status !== "unresolved" && capture.context.members[offset]?.status === "unresolved"))
 						)
 							throw new FlowLedgerError("identity", "Native model source lacks context provenance.");
+						if (
+							stage === "model" &&
+							["intact", "converted"].includes(member.status) &&
+							capture.context?.members[offset]?.status !== "intact"
+						)
+							throw new FlowLedgerError("identity", "Native conversion cannot erase changed context.");
+						if (
+							member.status === "intact" &&
+							member.messageHash !== undefined &&
+							member.messageHash !== capture.members[offset].messageHash
+						)
+							throw new FlowLedgerError("identity", "Intact native model content differs from its source.");
 						if (member.index !== undefined) mapped.add(member.index);
 					}
 				}

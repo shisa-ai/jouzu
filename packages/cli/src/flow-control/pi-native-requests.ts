@@ -18,6 +18,8 @@ export class PiNativeRequests {
 	private capture?: NativeSourceCapture;
 	private references?: AgentMessage[];
 	private cloneSourceHash?: string;
+	private converting?: AgentMessage[];
+	private conversion?: { outputs: AgentMessage[]; hashes: string[]; sourceIndices: number[]; imageReplaced: boolean[] };
 	constructor(
 		private readonly session: AgentSession,
 		private readonly store: FlowNativeRequestStore,
@@ -103,6 +105,8 @@ export class PiNativeRequests {
 						throw new FlowLedgerError("identity", "Native model conversion lacks source context.");
 					if (hash(messages) !== capture.context.hash)
 						throw new FlowLedgerError("stale", "Native context changed before model conversion.");
+					this.converting = [...messages];
+					this.conversion = undefined;
 					const result = await convert(messages);
 					this.assertActive();
 					const positions = new Map<AgentMessage, number[]>();
@@ -115,19 +119,33 @@ export class PiNativeRequests {
 						hash: hash(result),
 						count: result.length,
 						members: capture.members.map((member, offset) => {
-							const original = references[member.index];
+							const context = capture.context?.members[offset];
+							const convertedIndex =
+								context?.index === undefined ? -1 : (this.conversion?.sourceIndices.indexOf(context.index) ?? -1);
+							const converted = convertedIndex < 0 ? undefined : this.conversion?.outputs[convertedIndex];
+							const original = converted ?? references[member.index];
 							const matches = positions.get(original) ?? [];
-							if (capture.context?.members[offset].status === "unresolved" || matches.length !== 1)
+							if (context?.status === "unresolved" || (this.conversion && convertedIndex < 0) || matches.length !== 1)
 								return { sourceIndex: member.index, status: "unresolved" };
-							return {
-								sourceIndex: member.index,
-								status: hash(original) === member.messageHash ? "intact" : "changed",
-								index: matches[0],
-							};
+							const messageHash = hash(original);
+							const status = converted
+								? context?.status === "changed" ||
+									this.conversion?.imageReplaced[convertedIndex] ||
+									messageHash !== this.conversion?.hashes[convertedIndex]
+									? "changed"
+									: messageHash === member.messageHash
+										? "intact"
+										: "converted"
+								: messageHash === member.messageHash
+									? "intact"
+									: "changed";
+							return { sourceIndex: member.index, status, index: matches[0], messageHash };
 						}),
 					};
 					return result;
 				} finally {
+					this.converting = undefined;
+					this.conversion = undefined;
 					this.active--;
 				}
 			});
@@ -135,6 +153,62 @@ export class PiNativeRequests {
 		const previous = session.agent.flowCheckpoints;
 		this.hooks.set(session.agent, "flowCheckpoints", {
 			...previous,
+			afterModelConversion: async (input) => {
+				this.assertActive();
+				this.active++;
+				try {
+					if (!identifySources) {
+						await previous?.afterModelConversion?.(input);
+						return;
+					}
+					const references = this.converting;
+					if (!references || this.conversion || !this.capture?.context)
+						throw new FlowLedgerError("identity", "Unexpected native model conversion mapping.");
+					const { sourceMessages, modelMessages, sourceIndices, imageReplaced } = input;
+					const outputs = [...modelMessages];
+					const sourceHash = hash(sourceMessages),
+						modelHash = hash(modelMessages);
+					const indices = [...sourceIndices],
+						replacements = [...imageReplaced];
+					if (
+						sourceHash !== this.capture.context.hash ||
+						sourceMessages.length !== references.length ||
+						sourceMessages.some((message, index) => message !== references[index]) ||
+						sourceIndices.length !== modelMessages.length ||
+						imageReplaced.length !== modelMessages.length ||
+						sourceIndices.some(
+							(index, offset) =>
+								!Number.isSafeInteger(index) ||
+								index < 0 ||
+								index >= references.length ||
+								(offset > 0 && index <= sourceIndices[offset - 1]),
+						) ||
+						imageReplaced.some((replaced) => typeof replaced !== "boolean")
+					)
+						throw new FlowLedgerError("identity", "Invalid native model conversion mapping.");
+					// Reserve before awaiting another observer so a repeated callback cannot replace this mapping.
+					const conversion = {
+						outputs,
+						hashes: outputs.map(hash),
+						sourceIndices: indices,
+						imageReplaced: replacements,
+					};
+					this.conversion = conversion;
+					await previous?.afterModelConversion?.(input);
+					this.assertActive();
+					if (
+						hash(sourceMessages) !== sourceHash ||
+						hash(modelMessages) !== modelHash ||
+						hash(sourceIndices) !== hash(indices) ||
+						hash(imageReplaced) !== hash(replacements) ||
+						sourceMessages.some((message, index) => message !== references[index]) ||
+						modelMessages.some((message, index) => message !== outputs[index])
+					)
+						throw new FlowLedgerError("stale", "Native model conversion changed during its checkpoint.");
+				} finally {
+					this.active--;
+				}
+			},
 			afterContextClone: async (source, cloned, signal) => {
 				this.assertActive();
 				this.active++;

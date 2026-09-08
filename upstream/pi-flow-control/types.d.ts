@@ -27,6 +27,13 @@ export interface FlowRequestInput {
 
 /** Optional host checkpoints. Throws withhold consumption or a transport call. */
 export interface FlowCheckpoints {
+	/** Reports Pi conversion and image-policy replacements before returning model input. */
+	afterModelConversion?: (input: {
+		sourceMessages: readonly AgentMessage[];
+		modelMessages: readonly Message[];
+		sourceIndices: readonly number[];
+		imageReplaced: readonly boolean[];
+	}) => void | Promise<void>;
 	/** Reports the host-created clone before extension handlers; references are identity evidence only. */
 	afterContextClone?: (source: readonly AgentMessage[], cloned: readonly AgentMessage[], signal?: AbortSignal) => void | Promise<void>;
 	/** True permits the candidate revisions; false retains them in their native queue. */
