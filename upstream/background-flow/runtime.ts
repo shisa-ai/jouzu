@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 
 type Scope = { sessionId: string; branchId: string };
+type Work = { id: string; revision: number };
 type Identity = { scope: Scope; workId: string; handle: string; execution: string };
 type Evidence = Identity & {
 	revision: number;
@@ -11,13 +12,13 @@ type Snapshot = {
 	sessionId?: string;
 	status: string;
 	terminationReason?: string;
-	flow?: { version: 1; execution: string; scope?: Scope };
+	flow?: { version: 1; execution: string; scope?: Scope; work?: Work };
 };
 const sameScope = (a: Scope | undefined, b: Scope) => a?.sessionId === b.sessionId && a?.branchId === b.branchId;
 
 /** Bind the existing task snapshot owner to Jouzu's execution subscription protocol. */
 export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
-	const scopes = new Map<string, { scope: Scope }>();
+	const scopes = new Map<string, { scope: Scope; currentWork(): Work }>();
 	const listeners = new Set<{ identity: Identity; changed(evidence: Evidence): void; signature?: string }>();
 	function evidence(task: Snapshot, identity: Identity): Evidence {
 		if (
@@ -25,9 +26,10 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 			!sameScope(task.flow?.scope, identity.scope) ||
 			task.id !== identity.handle ||
 			task.flow?.execution !== identity.execution ||
-			task.flow.version !== 1
+			task.flow.version !== 1 ||
+			task.flow.work?.id !== identity.workId
 		)
-			throw new Error("Background execution does not belong to this session and branch.");
+			throw new Error("Background execution does not belong to this session, branch, and work.");
 		const state =
 			task.status === "running"
 				? "pending"
@@ -49,15 +51,31 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 	}
 	return {
 		newExecution(sessionId: string | null) {
-			const scope = sessionId ? scopes.get(sessionId)?.scope : undefined;
-			return { version: 1 as const, execution: randomUUID(), ...(scope ? { scope: { ...scope } } : {}) };
+			const lease = sessionId ? scopes.get(sessionId) : undefined;
+			const work = lease?.currentWork();
+			if (
+				lease &&
+				(!work ||
+					typeof work.id !== "string" ||
+					!work.id ||
+					work.id.length > 512 ||
+					!Number.isSafeInteger(work.revision) ||
+					work.revision < 1)
+			)
+				throw new Error("Background execution requires a valid owning work revision.");
+			return {
+				version: 1 as const,
+				execution: randomUUID(),
+				...(lease && work ? { scope: { ...lease.scope }, work: { ...work } } : {}),
+			};
 		},
 		publish(task: Snapshot) {
 			for (const listener of listeners) {
 				if (
 					!sameScope(task.flow?.scope, listener.identity.scope) ||
 					task.id !== listener.identity.handle ||
-					task.flow?.execution !== listener.identity.execution
+					task.flow?.execution !== listener.identity.execution ||
+					task.flow.work?.id !== listener.identity.workId
 				)
 					continue;
 				const current = evidence(task, listener.identity),
@@ -67,7 +85,7 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 				listener.changed(current);
 			}
 		},
-		activate(scope: Scope) {
+		activate(scope: Scope, currentWork: () => Work) {
 			if (
 				![scope.sessionId, scope.branchId].every(
 					(value) => typeof value === "string" && value.length > 0 && value.length <= 512,
@@ -75,7 +93,8 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 			)
 				throw new Error("Invalid background flow scope.");
 			if (scopes.has(scope.sessionId)) throw new Error("Background flow session already has an active branch.");
-			const lease = { scope: { ...scope } };
+			if (typeof currentWork !== "function") throw new Error("Background flow requires a current work callback.");
+			const lease = { scope: { ...scope }, currentWork };
 			scopes.set(scope.sessionId, lease);
 			let closed = false;
 			const owned = new Set<{ identity: Identity; changed(evidence: Evidence): void; signature?: string }>();

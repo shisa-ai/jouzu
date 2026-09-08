@@ -16,11 +16,12 @@ export function transform(path, source) {
 			'import { spawn } from "node:child_process";',
 			'import { spawn } from "node:child_process";\nimport { backgroundFlowSource } from "./snapshot.js";',
 		);
-		return replace(
+		source = replace(
 			source,
-			"\t\tconst task: ManagedTask = {\n",
-			"\t\tconst task: ManagedTask = {\n\t\t\tflow: backgroundFlowSource.newExecution(activeSessionId),\n",
+			"\t\tconst child = spawn(spawnPlan.file, spawnPlan.args, {",
+			"\t\tconst flow = backgroundFlowSource.newExecution(activeSessionId);\n\t\tconst child = spawn(spawnPlan.file, spawnPlan.args, {",
 		);
+		return replace(source, "\t\tconst task: ManagedTask = {\n", "\t\tconst task: ManagedTask = {\n\t\t\tflow,\n");
 	}
 	if (path === paths[1]) {
 		source = replace(
@@ -43,7 +44,7 @@ export function transform(path, source) {
 		return replace(
 			source,
 			"export interface BackgroundTaskSnapshot {",
-			"export interface BackgroundTaskSnapshot {\n\tflow?: { version: 1; execution: string; scope?: { sessionId: string; branchId: string } };",
+			"export interface BackgroundTaskSnapshot {\n\tflow?: { version: 1; execution: string; scope?: { sessionId: string; branchId: string }; work?: { id: string; revision: number } };",
 		);
 	if (path === paths[3])
 		return replace(
@@ -55,7 +56,7 @@ export function transform(path, source) {
 		return replace(
 			source,
 			'\treturn { content: [{ type: "text", text }], details };',
-			'\tconst task = details.task as BackgroundTaskSnapshot | undefined;\n\tif (task?.flow?.scope) text += "\\nWait dependency: " + JSON.stringify({ producer: "bg", handle: task.id, execution: task.flow.execution, until: "exit", scope: task.flow.scope });\n\treturn { content: [{ type: "text", text }], details };',
+			'\tconst task = details.task as BackgroundTaskSnapshot | undefined;\n\tif (task?.flow?.scope) text += "\\nWait dependency: " + JSON.stringify({ producer: "bg", handle: task.id, execution: task.flow.execution, until: "exit", scope: task.flow.scope, work: task.flow.work });\n\treturn { content: [{ type: "text", text }], details };',
 		);
 	throw new Error(`Unknown background flow path: ${path}`);
 }

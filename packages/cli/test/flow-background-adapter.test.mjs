@@ -28,7 +28,7 @@ test("background patch rejects unknown source before writing any planned replace
 	}
 	const typesPath = join(temporary, "extensions/types.ts");
 	const original = (await readFile(typesPath, "utf8")).replace(
-		"\n\tflow?: { version: 1; execution: string; scope?: { sessionId: string; branchId: string } };",
+		"\n\tflow?: { version: 1; execution: string; scope?: { sessionId: string; branchId: string }; work?: { id: string; revision: number } };",
 		"",
 	);
 	await writeFile(typesPath, original);
@@ -92,9 +92,23 @@ for (const outcome of ["success", "failure", "stop"]) {
 		});
 		await attachment.waits.registerWork("work", "lane", 0);
 		await attachment.waits.shareWork("work", "lane", 1, "bg", 0);
-		const source = attachBackgroundWaitSource(attachment, background.backgroundFlowSource, (error) =>
-			failures.push(error),
+		let currentWork = { id: "work", revision: 2 };
+		const source = attachBackgroundWaitSource(
+			attachment,
+			background.backgroundFlowSource,
+			(error) => failures.push(error),
+			() => currentWork,
 		);
+		const marker = join(directory, "forbidden-launch");
+		const forbiddenCommand = "printf forbidden > '" + marker.replaceAll("'", "'\\''") + "'";
+		for (const invalid of [undefined, { id: "unknown", revision: 2 }, { id: "work", revision: 1 }]) {
+			currentWork = invalid;
+			await assert.rejects(
+				tools.get("bg_task").execute("invalid", { action: "spawn", command: forbiddenCommand, notifyOnExit: false }),
+				/work|revision/i,
+			);
+		}
+		currentWork = { id: "work", revision: 2 };
 		const result = await tools.get("bg_task").execute("spawn", {
 			action: "spawn",
 			command: outcome === "stop" ? "sleep 5" : outcome === "failure" ? "sleep 0.2; exit 7" : "sleep 0.2",
@@ -105,9 +119,14 @@ for (const outcome of ["success", "failure", "stop"]) {
 		const task = result.details.task;
 		assert.match(task.flow.execution, /^[0-9a-f-]{36}$/);
 		assert.deepEqual(task.flow.scope, scope);
+		assert.deepEqual(task.flow.work, { id: "work", revision: 2 });
 		assert.ok(result.content[0].text.includes(task.flow.execution));
 		assert.ok(result.content[0].text.includes('"until":"exit"'));
 		const identity = { workId: "work", handle: task.id, execution: task.flow.execution };
+		await attachment.waits.registerWork("other", "lane", 0);
+		await attachment.waits.shareWork("other", "lane", 1, "bg", 0);
+		await assert.rejects(source.bind({ ...identity, workId: "other" }, 2), /work/);
+		currentWork = { id: "other", revision: 2 };
 		await source.bind(identity, 2);
 		const expected = outcome === "success" ? "resolved" : "failed";
 		const completed = deferred();
@@ -141,15 +160,22 @@ for (const outcome of ["success", "failure", "stop"]) {
 		if (wait.state !== expected) await completed.promise;
 		unsubscribe();
 		assert.equal((await attachment.waits.snapshot())[0].state, expected);
+		await assert.rejects(readFile(marker), { code: "ENOENT" });
 		assert.deepEqual(requests, []);
 		assert.deepEqual(failures, []);
 		await attachment.close();
 		// The source lease closes with the attachment and can be reactivated for the same branch.
 		const reopened = await PiFlowAttachment.open(directory, scope);
 		try {
-			await attachBackgroundWaitSource(reopened, background.backgroundFlowSource, assert.ifError).bind(identity, 2);
+			await attachBackgroundWaitSource(reopened, background.backgroundFlowSource, assert.ifError, () => ({
+				id: "work",
+				revision: 2,
+			})).bind(identity, 2);
 			assert.equal((await reopened.waits.snapshot())[0].state, expected);
-			const foreign = background.backgroundFlowSource.activate({ sessionId: "foreign", branchId: scope.branchId });
+			const foreign = background.backgroundFlowSource.activate(
+				{ sessionId: "foreign", branchId: scope.branchId },
+				() => ({ id: "work", revision: 2 }),
+			);
 			await assert.rejects(
 				foreign.snapshot(
 					{ ...identity, scope: { sessionId: "foreign", branchId: scope.branchId } },

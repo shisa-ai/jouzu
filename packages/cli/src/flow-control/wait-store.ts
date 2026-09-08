@@ -7,6 +7,7 @@ import {
 	changeAuthorityWork,
 	emptyWaitAuthority,
 	type FlowAuthorityExecution,
+	type FlowAuthorityWork,
 	type FlowWaitAuthority,
 	type FlowWorkStatus,
 	observeAuthorityExecution,
@@ -64,6 +65,7 @@ export class FlowWaitStore {
 	private initialized = false;
 	private waitingWorkIds: string[] = [];
 	private inactiveWorkIds: string[] = [];
+	private work: FlowAuthorityWork[] = [];
 	private mutations = 0;
 	private readonly listeners = new Set<{ changed(): void; onError(error: unknown): void }>();
 
@@ -96,6 +98,20 @@ export class FlowWaitStore {
 			inactiveWorkIds: [...this.inactiveWorkIds],
 			updating: !this.initialized || this.mutations > 0,
 		};
+	}
+	/** Capture ownership synchronously immediately before a producer starts an execution. */
+	captureExecutionWork(id: string, revision: number, producer: string): { id: string; revision: number } {
+		this.ownership.assertActive();
+		if (!this.initialized || this.mutations > 0) throw new FlowLedgerError("busy", "Work ownership is changing.");
+		const work = requireAuthorityWork(
+			{ version: 1, work: this.work, executions: [], waitTokens: [] },
+			id,
+			producer,
+			revision,
+		);
+		if ((work.lifecycle?.state ?? "active") !== "active")
+			throw new FlowLedgerError("transition", "Inactive work cannot start another execution.");
+		return { id: work.id, revision: work.revision };
 	}
 	private deadlines?: FlowWaitDeadlines;
 	private schedulingClosed = false;
@@ -193,7 +209,8 @@ export class FlowWaitStore {
 					changed = !isDeepStrictEqual(before, state);
 					this.validate(state);
 					if (changed || !this.initialized) await mutation.commit([setValue(address, state)], context);
-					this.inactiveWorkIds = (state.authority?.work ?? [])
+					this.work = structuredClone(state.authority?.work ?? []);
+					this.inactiveWorkIds = this.work
 						.filter((work) => (work.lifecycle?.state ?? "active") !== "active")
 						.map((work) => work.id);
 					this.waitingWorkIds = state.waits.filter((wait) => wait.state === "waiting").map((wait) => wait.workId);

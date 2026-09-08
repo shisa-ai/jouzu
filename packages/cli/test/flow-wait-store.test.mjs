@@ -607,3 +607,23 @@ test("cancelling a wait keeps work active and a stop at expiry preserves the exp
 	assert.equal((await store.snapshot())[1].state, "expired");
 	assert.deepEqual(store.gate().inactiveWorkIds, ["work"]);
 });
+
+test("execution work capture uses committed participation and refuses changing, stale, or inactive ownership", async (t) => {
+	const f = await fixture(t),
+		store = f.attachment.waits;
+	await store.registerWork("work", "lane", 0);
+	const sharing = store.shareWork("work", "lane", 1, "bg", 1);
+	assert.throws(() => store.captureExecutionWork("work", 1, "lane"), { code: "busy" });
+	await sharing;
+	assert.deepEqual(store.captureExecutionWork("work", 2, "bg"), { id: "work", revision: 2 });
+	assert.throws(() => store.captureExecutionWork("work", 1, "bg"), { code: "stale" });
+	assert.throws(() => store.captureExecutionWork("work", 2, "other"), { code: "identity" });
+	await store.changeWork("work", "lane", 2, "paused", "pause", 2);
+	assert.throws(() => store.captureExecutionWork("work", 3, "bg"), { code: "transition" });
+	await store.changeWork("work", "lane", 3, "active", "resume", 3);
+	assert.deepEqual(store.captureExecutionWork("work", 4, "bg"), { id: "work", revision: 4 });
+	await store.changeWork("work", "lane", 4, "stopped", "stop", 4);
+	assert.throws(() => store.captureExecutionWork("work", 5, "bg"), { code: "transition" });
+	const restored = await f.reopen();
+	assert.throws(() => restored.captureExecutionWork("work", 5, "bg"), { code: "transition" });
+});

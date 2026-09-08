@@ -31,7 +31,7 @@
 		},
 		{
 			"path": "upstream/background-flow/patch.lock.json",
-			"sha256": "12dd351f1f0c9c7221f321823702dbd430a8a71c983a0a7ed35697342c8f1d9b"
+			"sha256": "265cc6226a5ab362479e002ee850940791ccd6e6a8cdf1fdce3b2c73cee9053f"
 		}
 	]
 }
