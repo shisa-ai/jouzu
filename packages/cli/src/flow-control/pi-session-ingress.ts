@@ -14,6 +14,7 @@ import { type PiFlowBranchResources, type PiFlowSessionOptions, PiFlowSessionSer
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowNativeInput } from "./submission-store.js";
 import { activeAdmissionHolds } from "./submission-view.js";
+import type { FlowWorkStatus } from "./wait-authority.js";
 import type { FlowWaitClock } from "./wait-deadlines.js";
 import { createFlowWaitDecisionProducer } from "./wait-decisions.js";
 
@@ -276,6 +277,11 @@ export class PiSessionFlowIngress implements Ingress {
 			this.queueRelease(true);
 			return result;
 		});
+	}
+	changeWork(id: string, owner: string, revision: number, status: FlowWorkStatus, reason: string) {
+		return this.manage((service) =>
+			service.changeWork(id, owner, revision, status, reason, this.options.autoRelease?.clock?.now() ?? Date.now()),
+		);
 	}
 	cancelNativeQueue(id: string, revision: number): Promise<void> {
 		return this.manage(async (service) => {

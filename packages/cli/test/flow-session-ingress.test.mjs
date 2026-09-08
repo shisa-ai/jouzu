@@ -14,7 +14,16 @@ import { createFlowWaitDecisionProducer } from "../dist/flow-control/wait-decisi
 
 async function fixture(
 	t,
-	{ root: supplied, admit = async () => true, policy, manager, nextTurnObserver, autoRelease, provider = false } = {},
+	{
+		root: supplied,
+		admit = async () => true,
+		policy,
+		manager,
+		nextTurnObserver,
+		autoRelease,
+		provider = false,
+		checkpoints,
+	} = {},
 ) {
 	const root = supplied ?? (await mkdtemp(join(tmpdir(), "jouzu-ingress-owner-")));
 	const ingress = new PiSessionFlowIngress({
@@ -34,6 +43,7 @@ async function fixture(
 	let wrapped;
 	const { session } = await createFlowSession(t, {
 		persist: true,
+		checkpoints,
 		sessionManager: manager,
 		ingress: {
 			version: 1,
@@ -2841,3 +2851,111 @@ for (const action of ["retry", "retry-with-new-user", "cancel"]) {
 		assert.deepEqual(errors, []);
 	});
 }
+
+function lifecycleProducer(
+	build = async (item) => ({ id: item.id, revision: item.revision, kind: "work", text: "owned continuation" }),
+) {
+	return {
+		version: 1,
+		namespace: "lane",
+		build,
+		snapshot: async () => [
+			{
+				id: "work",
+				revision: "1",
+				producer: "lane",
+				sequence: 1,
+				rank: 5,
+				workId: "work",
+				workRevision: "1",
+				independent: true,
+				runnable: true,
+			},
+		],
+	};
+}
+
+for (const boundary of ["build", "claim"]) {
+	test(`work stop during ${boundary} prevents native provider dispatch and repeated producer replay`, {
+		timeout: 10000,
+	}, async (t) => {
+		const entered = deferred(),
+			proceed = deferred();
+		const f = await fixture(t, {
+			provider: true,
+			checkpoints:
+				boundary === "claim"
+					? {
+							beforeQueueClaim: async () => {
+								entered.resolve();
+								await proceed.promise;
+								return true;
+							},
+						}
+					: undefined,
+		});
+		const waits = f.ingress.branch().attachment.waits;
+		await waits.registerWork("work", "lane", 0);
+		const registration = f.ingress.registerProducer(
+			lifecycleProducer(async (item) => {
+				if (boundary === "build") {
+					entered.resolve();
+					await proceed.promise;
+				}
+				return { id: item.id, revision: item.revision, kind: "work", text: "owned continuation" };
+			}),
+		);
+		const running = registration.changed();
+		await entered.promise;
+		await f.ingress.changeWork("work", "lane", 1, "stopped", "user stop");
+		proceed.resolve();
+		await running;
+		assert.equal(f.sent.length, 0);
+		await registration.changed();
+		assert.equal(f.sent.length, 0);
+		const attempts = (await f.ingress.branch().attachment.ledger.snapshot()).attempts;
+		assert.ok(attempts.every((attempt) => attempt.phase === "cancelled" && attempt.consumed === false));
+		await assert.rejects(f.ingress.changeWork("work", "lane", 2, "active", "replay"), { code: "transition" });
+		const manager = SessionManager.open(f.session.sessionManager.getSessionFile());
+		await f.ingress.dispose();
+		const reopened = await fixture(t, { root: f.root, provider: true, manager });
+		await reopened.ingress.registerProducer(lifecycleProducer()).changed();
+		assert.equal(reopened.sent.length, 0);
+	});
+}
+
+test("work pause survives restart and explicit resume schedules the retained continuation", {
+	timeout: 10000,
+}, async (t) => {
+	const f = await fixture(t, { provider: true });
+	await f.ingress.branch().attachment.waits.registerWork("work", "lane", 0);
+	await f.ingress.changeWork("work", "lane", 1, "paused", "user pause");
+	await f.ingress.registerProducer(lifecycleProducer()).changed();
+	assert.equal(f.sent.length, 0);
+	const manager = SessionManager.open(f.session.sessionManager.getSessionFile());
+	await f.ingress.dispose();
+	const errors = [],
+		built = deferred();
+	const reopened = await fixture(t, {
+		root: f.root,
+		provider: true,
+		manager,
+		autoRelease: { onError: (error) => errors.push(error) },
+	});
+	const registration = reopened.ingress.registerProducer(
+		lifecycleProducer(async (item) => {
+			built.resolve();
+			return { id: item.id, revision: item.revision, kind: "work", text: "resumed continuation" };
+		}),
+	);
+	await registration.changed();
+	assert.equal(reopened.sent.length, 0);
+	await reopened.ingress.changeWork("work", "lane", 2, "active", "user resume");
+	await built.promise;
+	await reopened.ingress.wakeProducers();
+	assert.equal(reopened.sent.length, 1);
+	assert.ok(JSON.stringify(reopened.sent).includes("resumed continuation"));
+	await registration.changed();
+	assert.equal(reopened.sent.length, 1);
+	assert.deepEqual(errors, []);
+});

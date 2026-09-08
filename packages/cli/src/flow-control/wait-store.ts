@@ -4,13 +4,16 @@ import type { FlowOwnership } from "./ownership.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import {
 	authorityObservations,
+	changeAuthorityWork,
 	emptyWaitAuthority,
 	type FlowAuthorityExecution,
 	type FlowWaitAuthority,
+	type FlowWorkStatus,
 	observeAuthorityExecution,
 	registerAuthorityExecution,
 	registerAuthorityWork,
 	requireAuthorityWork,
+	requireOpenAuthorityWork,
 	shareAuthorityWork,
 	validateWaitAuthority,
 } from "./wait-authority.js";
@@ -60,6 +63,7 @@ function validateWait(wait: FlowWaitState): void {
 export class FlowWaitStore {
 	private initialized = false;
 	private waitingWorkIds: string[] = [];
+	private inactiveWorkIds: string[] = [];
 	private mutations = 0;
 	private readonly listeners = new Set<{ changed(): void; onError(error: unknown): void }>();
 
@@ -85,9 +89,13 @@ export class FlowWaitStore {
 	}
 
 	/** Synchronous admission view, published only after a successful durable commit. */
-	gate(): { waitingWorkIds: string[]; updating: boolean } {
+	gate(): { waitingWorkIds: string[]; inactiveWorkIds: string[]; updating: boolean } {
 		this.ownership.assertActive();
-		return { waitingWorkIds: [...this.waitingWorkIds], updating: !this.initialized || this.mutations > 0 };
+		return {
+			waitingWorkIds: [...this.waitingWorkIds],
+			inactiveWorkIds: [...this.inactiveWorkIds],
+			updating: !this.initialized || this.mutations > 0,
+		};
 	}
 	private deadlines?: FlowWaitDeadlines;
 	private schedulingClosed = false;
@@ -150,6 +158,8 @@ export class FlowWaitStore {
 		for (const wait of state.waits) {
 			validateWait(wait);
 			if (wait.state === "waiting" && state.authority?.waitTokens.includes(wait.token)) {
+				const work = state.authority.work.find((work) => work.id === wait.workId);
+				if (work) requireOpenAuthorityWork(work);
 				const observations = authorityObservations(state.authority, state.scope, wait.workId, wait.on);
 				if (!isDeepStrictEqual(wait, reconcileFlowWait(wait, observations, wait.createdAt)))
 					throw new FlowLedgerError("identity", "Live wait does not match registered execution evidence.");
@@ -183,6 +193,9 @@ export class FlowWaitStore {
 					changed = !isDeepStrictEqual(before, state);
 					this.validate(state);
 					if (changed || !this.initialized) await mutation.commit([setValue(address, state)], context);
+					this.inactiveWorkIds = (state.authority?.work ?? [])
+						.filter((work) => (work.lifecycle?.state ?? "active") !== "active")
+						.map((work) => work.id);
 					this.waitingWorkIds = state.waits.filter((wait) => wait.state === "waiting").map((wait) => wait.workId);
 					return structuredClone(result);
 				}, BACKGROUND_CONTEXT),
@@ -260,6 +273,16 @@ export class FlowWaitStore {
 			return registerAuthorityWork(authority, id, owner, now);
 		});
 	}
+	changeWork(id: string, owner: string, workRevision: number, status: FlowWorkStatus, reason: string, now: number) {
+		return this.authorityChange(now, (authority, state) => {
+			const work = changeAuthorityWork(authority, id, owner, workRevision, status, reason, now);
+			if (status === "stopped" || status === "completed")
+				state.waits = state.waits.map((wait) =>
+					wait.workId === id && wait.state === "waiting" ? cancelFlowWait(wait, reason, now) : wait,
+				);
+			return work;
+		});
+	}
 	shareWork(id: string, owner: string, workRevision: number, participant: string, now: number) {
 		return this.authorityChange(now, (authority) =>
 			shareAuthorityWork(authority, id, owner, workRevision, participant),
@@ -291,7 +314,7 @@ export class FlowWaitStore {
 		const captured = structuredClone(request);
 		return this.update((state) => {
 			const authority = state.authority ?? emptyWaitAuthority();
-			requireAuthorityWork(authority, captured.workId, producer, workRevision);
+			requireOpenAuthorityWork(requireAuthorityWork(authority, captured.workId, producer, workRevision));
 			const observations = authorityObservations(authority, state.scope, captured.workId, captured.on);
 			const next = this.declareInState(state, captured, observations, now, maxDurationMs, replaceToken);
 			authority.waitTokens.push(next.token);

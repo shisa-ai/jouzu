@@ -2,12 +2,16 @@ import { isDeepStrictEqual } from "node:util";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import type { FlowWaitHandle, FlowWaitObservation } from "./wait-state.js";
 
+export type FlowWorkStatus = "active" | "paused" | "stopped" | "completed";
+
 export interface FlowAuthorityWork {
 	id: string;
 	owner: string;
 	participants: string[];
 	revision: number;
 	createdAt: number;
+	/** Omitted in legacy records, whose work remains active. */
+	lifecycle?: { state: FlowWorkStatus; changedAt: number; reason: string };
 }
 export interface FlowAuthorityExecution {
 	producer: string;
@@ -54,6 +58,14 @@ export function validateWaitAuthority(authority: FlowWaitAuthority): void {
 			!identity(work.owner) ||
 			!revision(work.revision) ||
 			!instant(work.createdAt) ||
+			(work.lifecycle !== undefined &&
+				(!work.lifecycle ||
+					!["active", "paused", "stopped", "completed"].includes(work.lifecycle.state) ||
+					!instant(work.lifecycle.changedAt) ||
+					work.lifecycle.changedAt < work.createdAt ||
+					typeof work.lifecycle.reason !== "string" ||
+					!work.lifecycle.reason.trim() ||
+					work.lifecycle.reason.length > 4096)) ||
 			!Array.isArray(work.participants) ||
 			work.participants.length > 64 ||
 			!work.participants.includes(work.owner) ||
@@ -96,6 +108,38 @@ export function requireAuthorityWork(
 	if (work.revision !== expectedRevision) throw new FlowLedgerError("stale", "Work ownership revision changed.");
 	return work;
 }
+export function requireOpenAuthorityWork(work: FlowAuthorityWork): void {
+	if (work.lifecycle?.state === "stopped" || work.lifecycle?.state === "completed")
+		throw new FlowLedgerError("transition", "Work is retired; create a new work identity for new instructions.");
+}
+
+export function changeAuthorityWork(
+	authority: FlowWaitAuthority,
+	id: string,
+	owner: string,
+	expectedRevision: number,
+	state: FlowWorkStatus,
+	reason: string,
+	now: number,
+): FlowAuthorityWork {
+	const work = requireAuthorityWork(authority, id, owner, expectedRevision);
+	if (work.owner !== owner) throw new FlowLedgerError("identity", "Only the work owner can change its lifecycle.");
+	if (
+		!["active", "paused", "stopped", "completed"].includes(state) ||
+		typeof reason !== "string" ||
+		!reason.trim() ||
+		reason.length > 4096 ||
+		!instant(now) ||
+		now < (work.lifecycle?.changedAt ?? work.createdAt)
+	)
+		throw new FlowLedgerError("schema", "Invalid work lifecycle transition.");
+	if ((work.lifecycle?.state ?? "active") === state) return work;
+	requireOpenAuthorityWork(work);
+	work.lifecycle = { state, reason, changedAt: now };
+	work.revision++;
+	return work;
+}
+
 export function registerAuthorityWork(
 	authority: FlowWaitAuthority,
 	id: string,
@@ -119,6 +163,7 @@ export function shareAuthorityWork(
 	participant: string,
 ): FlowAuthorityWork {
 	const work = requireAuthorityWork(authority, id, owner, expectedRevision);
+	requireOpenAuthorityWork(work);
 	if (work.owner !== owner)
 		throw new FlowLedgerError("identity", "Only the work owner can authorize another producer.");
 	if (!work.participants.includes(participant)) {
@@ -133,7 +178,7 @@ export function registerAuthorityExecution(
 	workRevision: number,
 	now: number,
 ): FlowAuthorityExecution {
-	requireAuthorityWork(authority, input.workId, input.producer, workRevision);
+	requireOpenAuthorityWork(requireAuthorityWork(authority, input.workId, input.producer, workRevision));
 	const existing = authority.executions.find(
 		(execution) => execution.producer === input.producer && execution.execution === input.execution,
 	);

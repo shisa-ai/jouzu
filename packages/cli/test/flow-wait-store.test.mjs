@@ -321,19 +321,19 @@ test("detach drains an awaited scan and never arms its stale snapshot", async (t
 test("admission gates retain committed waits and block while an atomic mutation is pending", async (t) => {
 	const f = await fixture(t),
 		store = f.attachment.waits;
-	assert.deepEqual(store.gate(), { waitingWorkIds: [], updating: false });
+	assert.deepEqual(store.gate(), { waitingWorkIds: [], inactiveWorkIds: [], updating: false });
 	const declaring = store.declare(request(), observations(), 0, 100);
 	assert.equal(store.gate().updating, true);
 	await declaring;
-	assert.deepEqual(store.gate(), { waitingWorkIds: ["work"], updating: false });
+	assert.deepEqual(store.gate(), { waitingWorkIds: ["work"], inactiveWorkIds: [], updating: false });
 	store.gate().waitingWorkIds.length = 0;
 	assert.deepEqual(store.gate().waitingWorkIds, ["work"]);
 	await assert.rejects(store.declare(request("invalid"), [], 1, 100, "token"));
-	assert.deepEqual(store.gate(), { waitingWorkIds: ["work"], updating: false });
+	assert.deepEqual(store.gate(), { waitingWorkIds: ["work"], inactiveWorkIds: [], updating: false });
 	const reopened = await f.reopen();
-	assert.deepEqual(reopened.gate(), { waitingWorkIds: ["work"], updating: false });
+	assert.deepEqual(reopened.gate(), { waitingWorkIds: ["work"], inactiveWorkIds: [], updating: false });
 	await reopened.cancel("token", "cancel gate", 10);
-	assert.deepEqual(reopened.gate(), { waitingWorkIds: [], updating: false });
+	assert.deepEqual(reopened.gate(), { waitingWorkIds: [], inactiveWorkIds: [], updating: false });
 });
 
 test("wait notifications follow changed commits and stop after unsubscribe", async (t) => {
@@ -512,4 +512,98 @@ test("a reused display handle never transfers completion or work ownership", asy
 	);
 	await assert.rejects(store.declareOwned("bg", 1, request("foreign", "other-work"), 20, 100), { code: "identity" });
 	assert.equal((await store.snapshot())[0].state, "waiting");
+});
+
+test("pausing and resuming work preserves the wait and its original deadline across reopening", async (t) => {
+	const f = await ownedFixture(t),
+		store = f.store;
+	const original = await store.declareOwned("lane", 2, request(), 10, 100);
+	const paused = await store.changeWork("work", "lane", 2, "paused", "user pause", 20);
+	assert.equal(paused.revision, 3);
+	assert.deepEqual(await store.snapshot(), [original]);
+	assert.deepEqual(store.gate().inactiveWorkIds, ["work"]);
+	const reopened = await f.reopen();
+	assert.deepEqual(reopened.gate().inactiveWorkIds, ["work"]);
+	await reopened.observeExecution(handle, 2, [{ until: "exit", state: "satisfied" }], 30);
+	assert.equal((await reopened.snapshot())[0].state, "resolved");
+	assert.deepEqual(reopened.gate().waitingWorkIds, []);
+	assert.deepEqual(reopened.gate().inactiveWorkIds, ["work"]);
+	const resumed = await reopened.changeWork("work", "lane", 3, "active", "user resume", 40);
+	assert.equal(resumed.revision, 4);
+	assert.deepEqual(reopened.gate().inactiveWorkIds, []);
+	assert.equal((await reopened.snapshot())[0].expiresAt, 100);
+});
+
+for (const status of ["stopped", "completed"]) {
+	test(`${status} work retires only its own wait and cannot be reopened by producer replay`, async (t) => {
+		const f = await ownedFixture(t),
+			store = f.store;
+		await store.declareOwned("lane", 2, request(), 10, 100);
+		await store.declare(request("independent", "independent"), observations("pending", "independent"), 10, 100);
+		const retired = await store.changeWork("work", "lane", 2, status, "user decision", 20);
+		assert.equal(retired.revision, 3);
+		assert.deepEqual(
+			(await store.snapshot()).map((wait) => wait.state),
+			["cancelled", "waiting"],
+		);
+		assert.equal((await store.authoritySnapshot()).executions[0].predicates[0].state, "pending");
+		assert.deepEqual(await store.changeWork("work", "lane", 3, status, "repeat", 30), retired);
+		assert.deepEqual(await store.registerWork("work", "lane", 40), retired);
+		await assert.rejects(store.changeWork("work", "lane", 3, "active", "resume", 40), { code: "transition" });
+		await assert.rejects(store.declareOwned("lane", 3, request("replayed"), 40, 100), { code: "transition" });
+		await assert.rejects(store.shareWork("work", "lane", 3, "another", 40), { code: "transition" });
+		await assert.rejects(
+			store.registerExecution(
+				{
+					producer: "bg",
+					handle: "display",
+					execution: "new",
+					workId: "work",
+					revision: 1,
+					predicates: [{ until: "exit", state: "pending" }],
+				},
+				3,
+				40,
+			),
+			{ code: "transition" },
+		);
+		await store.observeExecution(handle, 2, [{ until: "exit", state: "satisfied" }], 50);
+		assert.equal((await store.snapshot())[0].state, "cancelled");
+		const reopened = await f.reopen();
+		assert.deepEqual(reopened.gate().inactiveWorkIds, ["work"]);
+		assert.deepEqual(reopened.gate().waitingWorkIds, ["independent"]);
+		assert.equal((await reopened.authoritySnapshot()).work[0].lifecycle.state, status);
+	});
+}
+
+test("work lifecycle rejects shared participants, stale revisions, invalid time, and malformed transitions atomically", async (t) => {
+	const { store } = await ownedFixture(t);
+	await store.declareOwned("lane", 2, request(), 10, 100);
+	const before = await store.authoritySnapshot(),
+		waits = await store.snapshot();
+	for (const [owner, revision, status, reason, now, code] of [
+		["bg", 2, "stopped", "stop", 20, "identity"],
+		["lane", 1, "stopped", "stop", 20, "stale"],
+		["lane", 2, "unknown", "stop", 20, "schema"],
+		["lane", 2, "stopped", "", 20, "schema"],
+		["lane", 2, "stopped", "stop", 5, "schema"],
+	])
+		await assert.rejects(store.changeWork("work", owner, revision, status, reason, now), { code });
+	assert.deepEqual(await store.authoritySnapshot(), before);
+	assert.deepEqual(await store.snapshot(), waits);
+	assert.deepEqual(store.gate().inactiveWorkIds, []);
+	await store.changeWork("work", "lane", 2, "paused", "pause", 20);
+	await assert.rejects(store.changeWork("work", "lane", 3, "active", "resume", 19), { code: "schema" });
+});
+
+test("cancelling a wait keeps work active and a stop at expiry preserves the expiry outcome", async (t) => {
+	const { store } = await ownedFixture(t);
+	await store.declareOwned("lane", 2, request(), 10, 100);
+	await store.cancelOwned("lane", 2, "token", "change dependency", 20);
+	assert.deepEqual(store.gate().inactiveWorkIds, []);
+	assert.equal((await store.authoritySnapshot()).work[0].revision, 2);
+	await store.declareOwned("lane", 2, request("next"), 30, 100);
+	await store.changeWork("work", "lane", 2, "stopped", "stop", 100);
+	assert.equal((await store.snapshot())[1].state, "expired");
+	assert.deepEqual(store.gate().inactiveWorkIds, ["work"]);
 });

@@ -268,3 +268,28 @@ test("aggregate sample membership must be unique and belong to the boundary snap
 	])
 		assert.throws(() => validateFlowChoice({ ...choice, resultSamples }), { code: "schema" });
 });
+
+test("inactive work cannot request or continue, while independent work and retained outcomes remain eligible", () => {
+	for (const rank of [4, 5]) {
+		assert.equal(
+			choose(initialFlowAdmission(), [{ ...intent("retired", rank), independent: true }], {
+				inactiveWorkIds: ["retired"],
+			}),
+			undefined,
+		);
+	}
+	assert.equal(
+		choose(initialFlowAdmission(), [intent("retired"), intent("independent")], {
+			inactiveWorkIds: ["retired"],
+		}).intent.id,
+		"independent",
+	);
+	for (const rank of [2, 3, 6])
+		assert.equal(
+			choose(initialFlowAdmission(), [intent("retired", rank)], {
+				inactiveWorkIds: ["retired"],
+			}).intent.rank,
+			rank,
+		);
+	assert.throws(() => choose(initialFlowAdmission(), [intent("work")], { inactiveWorkIds: [42] }), { code: "schema" });
+});

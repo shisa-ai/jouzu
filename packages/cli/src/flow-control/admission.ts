@@ -21,6 +21,8 @@ export interface FlowAdmissionGates {
 	userPending: boolean;
 	recoveryBlocked: boolean;
 	waitingWorkIds: string[];
+	/** Explicitly paused, stopped, or completed work cannot request another turn. */
+	inactiveWorkIds?: string[];
 }
 export interface FlowAdmissionChoice {
 	revision: number;
@@ -147,17 +149,24 @@ export function chooseFlowIntent(
 		typeof gates.userPending !== "boolean" ||
 		typeof gates.recoveryBlocked !== "boolean" ||
 		!Array.isArray(gates.waitingWorkIds) ||
-		gates.waitingWorkIds.some((id) => !identity(id))
+		gates.waitingWorkIds.some((id) => !identity(id)) ||
+		(gates.inactiveWorkIds !== undefined &&
+			(!Array.isArray(gates.inactiveWorkIds) || gates.inactiveWorkIds.some((id) => !identity(id))))
 	)
 		throw new FlowAdmissionError("schema", "Invalid admission gates.");
 	if (!gates.hostReady || gates.userPending || gates.recoveryBlocked) return undefined;
 	const waits = new Set(gates.waitingWorkIds);
+	const inactive = new Set(gates.inactiveWorkIds);
 	const eligible = intents
 		.filter((intent) => {
 			if (!intent.runnable) return false;
 			if (intent.rank <= 3) return true;
 			if (intent.rank === 6) return waits.size === 0;
-			return !waits.has(intent.workId ?? "") && (waits.size === 0 || intent.independent);
+			return (
+				!inactive.has(intent.workId ?? "") &&
+				!waits.has(intent.workId ?? "") &&
+				(waits.size === 0 || intent.independent)
+			);
 		})
 		.sort((a, b) => a.rank - b.rank || a.sequence - b.sequence || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
 	const unique: FlowIntent[] = [];

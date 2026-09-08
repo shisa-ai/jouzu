@@ -10,6 +10,7 @@ import { type NativeContextDecorator, PiNativeRequests } from "./pi-native-reque
 import { PiFlowSessionRegistry } from "./pi-session-registry.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import type { FlowNativeInput, RetainedSubmission } from "./submission-store.js";
+import type { FlowWorkStatus } from "./wait-authority.js";
 import { createFlowWaitDecisionProducer } from "./wait-decisions.js";
 
 export interface PiFlowSessionOptions {
@@ -121,6 +122,7 @@ export class PiFlowSessionService {
 					return {
 						...policy,
 						waitingWorkIds: [...new Set([...policy.waitingWorkIds, ...waits.waitingWorkIds])],
+						inactiveWorkIds: [...new Set([...(policy.inactiveWorkIds ?? []), ...waits.inactiveWorkIds])],
 						recoveryBlocked:
 							waits.updating || recoveryBlocked || attachment.nativeRequests.recoveryBlocked || policy.recoveryBlocked,
 					};
@@ -150,6 +152,10 @@ export class PiFlowSessionService {
 			await this.closeBranch();
 			throw error;
 		}
+	}
+
+	changeWork(id: string, owner: string, revision: number, status: FlowWorkStatus, reason: string, now: number) {
+		return this.registry.run(() => this.branch().attachment.waits.changeWork(id, owner, revision, status, reason, now));
 	}
 
 	/** Called by an explicit repair action; the next admitted request still applies content policy. */
