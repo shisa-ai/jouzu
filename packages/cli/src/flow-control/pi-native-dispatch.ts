@@ -31,7 +31,7 @@ export class PiNativeDispatch {
 	private readonly hooks = new PiHostHooks();
 	private readonly frames = new AsyncLocalStorage<Frame>();
 	private readonly queued = new Map<string, { operationId: string; revision: number; write: Promise<unknown> }>();
-	private readonly deferred = new Map<string, { inputIndex: number; cancel: () => boolean }>();
+	private readonly deferred = new Map<string, { inputIndex: number; cancel: () => boolean; removed?: boolean }>();
 	private readonly held = new Map<string, { id: string; revision: number; reason: string }>();
 	private readonly sessionId: string;
 	private readonly contextWrites = new Set<Promise<void>>();
@@ -402,8 +402,11 @@ export class PiNativeDispatch {
 				throw new FlowLedgerError("stale", "Deferred cancellation has no matching live input.");
 			await this.store.cancelContext(record.dispatch.operationId, inputIndex);
 			this.assertActive();
-			if (!pending.cancel())
-				throw new FlowLedgerError("stale", "Deferred cancellation requires removal reconciliation.");
+			if (!pending.removed) {
+				if (!pending.cancel())
+					throw new FlowLedgerError("stale", "Deferred cancellation requires removal reconciliation.");
+				pending.removed = true;
+			}
 			await this.store.confirmContextCancellation(record.dispatch.operationId, inputIndex);
 			this.deferred.delete(record.dispatch.operationId);
 		} finally {

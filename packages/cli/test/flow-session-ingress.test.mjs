@@ -1041,6 +1041,34 @@ test("failed cancellation-intent write preserves next-turn delivery", async (t) 
 	assert.equal((await store.snapshot())[0].dispatch.contextCancellations, undefined);
 });
 
+test("live cancellation retries confirmation after successful native removal", async (t) => {
+	const f = await fixture(t, { admit: null });
+	await f.session.sendCustomMessage(
+		{ customType: "note", content: "removed on first attempt", display: true },
+		{ deliverAs: "nextTurn" },
+	);
+	const store = f.ingress.branch().attachment.submissions;
+	const [record] = await store.snapshot();
+	const confirmation = t.mock.method(store, "confirmContextCancellation", async () => {
+		throw new Error("confirmation failed");
+	});
+	await assert.rejects(f.ingress.cancelNativeContext(record.id, 1, 0), /confirmation failed/);
+	assert.deepEqual((await f.ingress.inspect()).submissions[0].nativeContextCancellations, [
+		{ inputIndex: 0, removal: "unconfirmed" },
+	]);
+	confirmation.mock.restore();
+	await f.ingress.cancelNativeContext(record.id, 1, 0);
+	await f.ingress.cancelNativeContext(record.id, 1, 0);
+	assert.equal((await f.ingress.inspect()).submissions[0].admission, "cancelled");
+	assert.deepEqual((await f.ingress.inspect()).submissions[0].nativeContextCancellations, [
+		{ inputIndex: 0, removal: "confirmed" },
+	]);
+	assert.equal(f.sent.length, 0);
+	await f.session.prompt("continue after cancellation");
+	assert.equal(f.sent.length, 1);
+	assert.ok(!JSON.stringify(f.sent).includes("removed on first attempt"));
+});
+
 test("failed removal confirmation remains unresolved after restart", async (t) => {
 	const first = await fixture(t, { admit: null });
 	await first.session.sendCustomMessage(
