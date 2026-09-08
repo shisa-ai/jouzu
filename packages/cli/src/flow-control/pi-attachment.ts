@@ -6,6 +6,7 @@ import { createPiLedgerStore } from "./pi-ledger-store.js";
 import { FlowReceiptLedger, type FlowScope } from "./receipt-ledger.js";
 import { FlowResultManifestStore } from "./result-manifest.js";
 import { FlowSubmissionStore } from "./submission-store.js";
+import { type FlowSubmissionView, projectFlowSubmissions } from "./submission-view.js";
 
 /** Own the Pi receipt session from open through its final close. */
 export class PiFlowAttachment {
@@ -48,6 +49,14 @@ export class PiFlowAttachment {
 			}
 			throw error;
 		}
+	}
+
+	/** Inspection only. Read request receipts before claims, which are persisted before requests. */
+	async submissionViews(): Promise<FlowSubmissionView[]> {
+		const requests = await this.nativeRequests.snapshot();
+		const records = await this.submissions.snapshot();
+		const ledger = await this.ledger.snapshot();
+		return projectFlowSubmissions(records, ledger, requests);
 	}
 
 	/** Drain admitted writes, close Pi storage, then release process ownership. */

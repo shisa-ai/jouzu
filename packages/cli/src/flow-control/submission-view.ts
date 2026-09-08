@@ -1,3 +1,5 @@
+import type { NativeRequest } from "./native-request-store.js";
+import { type NativeSubmissionRequestView, projectNativeSubmissionRequests } from "./native-submission-view.js";
 import { type FlowAttempt, FlowLedgerError, type FlowLedgerState } from "./receipt-ledger.js";
 import type { RetainedSubmission } from "./submission-store.js";
 
@@ -7,13 +9,19 @@ export interface FlowSubmissionView {
 	admission: "pending" | "reserved" | "held" | "cancelled";
 	delivery: "none" | "consumed" | "history" | "partial" | "included" | "uncertain";
 	attemptIds: string[];
+	nativeRequests?: NativeSubmissionRequestView[];
 	reason?: string;
 }
 
 /** Derive durable dispositions without rewriting ingress or acknowledging work completion.
  * Call under the controller's serialized boundary; this snapshot is not a dispatch permit.
  */
-export function projectFlowSubmissions(records: RetainedSubmission[], ledger: FlowLedgerState): FlowSubmissionView[] {
+export function projectFlowSubmissions(
+	records: RetainedSubmission[],
+	ledger: FlowLedgerState,
+	nativeRequests?: NativeRequest[],
+): FlowSubmissionView[] {
+	const native = nativeRequests ? projectNativeSubmissionRequests(records, nativeRequests) : undefined;
 	const byId = new Map(records.map((record) => [record.id, record]));
 	if (byId.size !== records.length) throw new FlowLedgerError("identity", "Duplicate retained submission identity.");
 	const links = new Map<string, FlowAttempt[]>();
@@ -113,6 +121,7 @@ export function projectFlowSubmissions(records: RetainedSubmission[], ledger: Fl
 			admission,
 			delivery,
 			attemptIds: attempts.map((attempt) => attempt.id),
+			...(native ? { nativeRequests: native.get(record.id) ?? [] } : {}),
 			...(admission === "held"
 				? {
 						reason: record.dispatch
