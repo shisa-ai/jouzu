@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/shisa-ai/textguard-go/internal/charclass"
 	"github.com/shisa-ai/textguard-go/internal/decode"
@@ -175,6 +176,12 @@ func detectSplitTokensBounded(text string, inDecodedText bool, runeTable charcla
 	for _, entry := range sortedSplitTokenEntries {
 		word := entry.word
 		for _, loc := range entry.pattern.FindAllStringIndex(text, -1) {
+			// Each keyword letter consumes one rune, so a match whose rune
+			// count equals the keyword's had zero separators. Plain prose
+			// words such as "system" are not split tokens.
+			if utf8.RuneCountInString(text[loc[0]:loc[1]]) == len(word) {
+				continue
+			}
 			if occupied == nil {
 				occupied = make([]bool, len(text))
 			}

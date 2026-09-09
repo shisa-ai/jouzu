@@ -78,7 +78,9 @@ func TestPythonParityRegressions(t *testing.T) {
 		{"spacing CCC", "a" + strings.Repeat("\u302e", 5), "a" + strings.Repeat("\u302e", 3), 2},
 		{"long combining", "a" + strings.Repeat("\u0301", 64), "á" + strings.Repeat("\u0301", 3), 61},
 		{"whitespace", "a\x1cb\x1dc\x1ed\x1fe", "a b c d e", 0},
-		{"partial URL", "%69gnore %QQ", "ignore %QQ", 2},
+		// Split tokens require a separator; the decoded plain word "ignore"
+		// yields only the url_decoded info finding.
+		{"partial URL", "%69gnore %QQ", "ignore %QQ", 1},
 		{"invalid URL UTF8", "%FF%E2%82x", "��x", 1},
 		{"surrogate URL", "%ED%A0%80", "���", 1},
 		{"invalid escapes", `\UFFFFFFFF \uD800`, `\UFFFFFFFF \uD800`, 0},
