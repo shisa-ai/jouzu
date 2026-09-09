@@ -6,12 +6,16 @@ import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import { MAX_RETIRED_FLOW_IDENTITIES, retiredIdentityHash, validRetiredIdentityHash } from "./retired-identities.js";
 import {
 	authorityObservations,
+	captureWorkBinding,
 	changeAuthorityWork,
 	emptyWaitAuthority,
 	type FlowAuthorityExecution,
 	type FlowAuthorityWork,
 	type FlowWaitAuthority,
+	type FlowWorkBinding,
 	type FlowWorkStatus,
+	findLiveBoundWork,
+	migrateWaitAuthority,
 	observeAuthorityExecution,
 	registerAuthorityExecution,
 	registerAuthorityWork,
@@ -139,6 +143,8 @@ export class FlowWaitStore {
 	}
 	private deadlines?: FlowWaitDeadlines;
 	private schedulingClosed = false;
+	/** Set when a read migrated persisted lane records; the next update commits the rewrite. */
+	private legacyBindings = false;
 
 	async startDeadlines(onError: (error: unknown) => void, clock: FlowWaitClock = systemWaitClock): Promise<void> {
 		this.ownership.assertActive();
@@ -263,7 +269,8 @@ export class FlowWaitStore {
 	private async read(reader: SessionReader): Promise<State> {
 		const saved = (await reader.getValue(address, BACKGROUND_CONTEXT))?.value;
 		if (!saved && this.initialized) throw new FlowLedgerError("schema", "Wait storage is missing.");
-		const state = saved ?? { version: 1, scope: this.ownership.scope, waits: [] };
+		const state: State = saved ?? { version: 1, scope: this.ownership.scope, waits: [] };
+		if (state.authority && migrateWaitAuthority(state.authority)) this.legacyBindings = true;
 		this.validate(state);
 		return structuredClone(state);
 	}
@@ -274,9 +281,11 @@ export class FlowWaitStore {
 			const result = await this.ownership.run(() =>
 				this.session.mutate(async (mutation, context) => {
 					const state = await this.read(mutation);
+					const migrated = this.legacyBindings;
+					this.legacyBindings = false;
 					const before = structuredClone(state);
 					const result = change(state);
-					changed = !isDeepStrictEqual(before, state);
+					changed = migrated || !isDeepStrictEqual(before, state);
 					this.validate(state);
 					if (changed || !this.initialized) await mutation.commit([setValue(address, state)], context);
 					this.work = structuredClone(state.authority?.work ?? []);
@@ -378,37 +387,28 @@ export class FlowWaitStore {
 			return work;
 		});
 	}
-	/** Trusted lane activation creates a new generation only after the previous campaign ends. */
-	activateMultiloop(lane: { lane: string; runTag: string }, now: number) {
-		const captured = { ...lane },
-			id = `multiloop-work:${randomUUID()}`;
+	/** Owner-scoped activation: a binding holds one live generation, and a new one starts only after the previous campaign ends. */
+	activateWorkBinding(binding: FlowWorkBinding, now: number, participants: readonly string[] = []) {
+		const shared = [...participants];
 		return this.authorityChange(now, (authority) => {
-			let work = authority.work.find(
-				(work) =>
-					isDeepStrictEqual(work.multiloop, captured) &&
-					!["stopped", "completed"].includes(work.lifecycle?.state ?? "active"),
-			);
+			const captured = captureWorkBinding(binding);
+			let work = findLiveBoundWork(authority, captured);
 			if (!work) {
-				work = registerAuthorityWork(authority, id, "multiloop", now);
-				work.multiloop = captured;
-				work.participants.push("bg");
+				work = registerAuthorityWork(authority, `${captured.producer}-work:${randomUUID()}`, captured.producer, now);
+				work.binding = structuredClone(captured);
+				for (const participant of shared)
+					if (!work.participants.includes(participant)) work.participants.push(participant);
 			} else if (work.lifecycle?.state === "paused") {
-				work = changeAuthorityWork(authority, work.id, work.owner, work.revision, "active", "Lane resumed", now);
+				work = changeAuthorityWork(authority, work.id, work.owner, work.revision, "active", "Binding resumed", now);
 			}
 			return work;
 		});
 	}
-	/** Read the committed lane binding without gaining or renewing work authority. */
-	multiloopWork(lane: { lane: string; runTag: string }): FlowAuthorityWork | undefined {
+	/** Read the committed live work bound to a producer key without gaining or renewing work authority. */
+	boundWork(binding: FlowWorkBinding): FlowAuthorityWork | undefined {
 		this.ownership.assertActive();
 		if (!this.initialized) throw new FlowLedgerError("busy", "Work ownership is not initialized.");
-		return structuredClone(
-			this.work.find(
-				(work) =>
-					isDeepStrictEqual(work.multiloop, lane) &&
-					!["stopped", "completed"].includes(work.lifecycle?.state ?? "active"),
-			),
-		);
+		return structuredClone(findLiveBoundWork({ version: 1, work: this.work, executions: [], waitTokens: [] }, binding));
 	}
 	shareWork(id: string, owner: string, workRevision: number, participant: string, now: number) {
 		return this.authorityChange(now, (authority) =>

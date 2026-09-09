@@ -5,7 +5,7 @@ import type { FlowProducer } from "./controller.js";
 import type { FlowInputItem } from "./model-input.js";
 import type { PiFlowAttachment } from "./pi-attachment.js";
 import { type FlowAttempt, FlowLedgerError } from "./receipt-ledger.js";
-import type { FlowAuthorityWork } from "./wait-authority.js";
+import type { FlowAuthorityWork, FlowWorkBinding } from "./wait-authority.js";
 
 export interface MultiloopLane {
 	lane: string;
@@ -31,6 +31,12 @@ function captureLane(lane: MultiloopLane): MultiloopLane {
 	)
 		throw new FlowLedgerError("schema", "Invalid multiloop lane identity.");
 	return { lane: lane.lane, runTag: lane.runTag };
+}
+
+/** Translate a lane identity into the host-neutral, owner-scoped work binding contract. */
+export function multiloopWorkBinding(lane: MultiloopLane): FlowWorkBinding {
+	const captured = captureLane(lane);
+	return { producer: "multiloop", key: [captured.lane, captured.runTag] };
 }
 
 /** Adapt lane continuations to the shared controller; the caller supplies durable campaign ownership. */

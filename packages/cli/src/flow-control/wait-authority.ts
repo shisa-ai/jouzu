@@ -4,6 +4,14 @@ import type { FlowWaitHandle, FlowWaitObservation } from "./wait-state.js";
 
 export type FlowWorkStatus = "active" | "paused" | "stopped" | "completed";
 
+/** Owner-scoped work binding: the producer namespace plus the key parts naming one campaign in it. */
+export interface FlowWorkBinding {
+	/** Owning producer namespace; a binding always belongs to its work's owner. */
+	producer: string;
+	/** Opaque key parts; their meaning belongs to the producer, not the host. */
+	key: string[];
+}
+
 export interface FlowAuthorityWork {
 	id: string;
 	owner: string;
@@ -12,8 +20,8 @@ export interface FlowAuthorityWork {
 	createdAt: number;
 	/** Exact host submissions underlying a user invocation or consumed batch. */
 	userInputs?: { id: string; revision: number }[];
-	/** Producer lane belonging to this campaign generation. */
-	multiloop?: { lane: string; runTag: string };
+	/** Campaign this work identity represents, named by its owning producer. */
+	binding?: FlowWorkBinding;
 	/** Omitted in legacy records, whose work remains active. */
 	lifecycle?: { state: FlowWorkStatus; changedAt: number; reason: string };
 }
@@ -39,6 +47,58 @@ const revision = (input: number) => Number.isSafeInteger(input) && input > 0;
 const instant = (input: number) => Number.isSafeInteger(input) && input >= 0;
 const states = new Set(["pending", "satisfied", "failed", "cancelled", "missing"]);
 
+/** Canonical owner-scoped identity of a binding; bindings of different producers never collide. */
+const workBindingKey = (binding: FlowWorkBinding): string => JSON.stringify([binding.producer, ...binding.key]);
+
+/** Validate a caller-supplied binding and copy it, so producers cannot alias stored records. */
+export function captureWorkBinding(binding: FlowWorkBinding): FlowWorkBinding {
+	if (
+		!binding ||
+		!identity(binding.producer) ||
+		!Array.isArray(binding.key) ||
+		binding.key.length < 1 ||
+		binding.key.length > 8 ||
+		binding.key.some((part) => !identity(part))
+	)
+		throw new FlowLedgerError("schema", "Invalid work binding.");
+	return { producer: binding.producer, key: [...binding.key] };
+}
+
+/** The live campaign bound to a binding, if this authority holds one. */
+export function findLiveBoundWork(
+	authority: FlowWaitAuthority,
+	binding: FlowWorkBinding,
+): FlowAuthorityWork | undefined {
+	const captured = captureWorkBinding(binding),
+		key = workBindingKey(captured);
+	return authority.work.find(
+		(work) =>
+			work.binding &&
+			workBindingKey(work.binding) === key &&
+			!["stopped", "completed"].includes(work.lifecycle?.state ?? "active"),
+	);
+}
+
+/** Persisted pre-binding lane shape; read only to migrate older records in place. */
+interface LegacyLaneWork {
+	multiloop?: { lane: string; runTag: string };
+}
+
+/** Rewrite persisted lane records into owner-scoped bindings, in place; reports whether anything changed. */
+export function migrateWaitAuthority(authority: FlowWaitAuthority): boolean {
+	let migrated = false;
+	for (const work of authority.work) {
+		const legacy = (work as LegacyLaneWork).multiloop;
+		if (!legacy) continue;
+		if (work.owner !== "multiloop" || !identity(legacy.lane) || !identity(legacy.runTag))
+			throw new FlowLedgerError("schema", "Invalid legacy multiloop lane record.");
+		work.binding = { producer: "multiloop", key: [legacy.lane, legacy.runTag] };
+		delete (work as LegacyLaneWork).multiloop;
+		migrated = true;
+	}
+	return migrated;
+}
+
 export function validateWaitAuthority(authority: FlowWaitAuthority): void {
 	if (
 		authority?.version !== 1 ||
@@ -52,7 +112,7 @@ export function validateWaitAuthority(authority: FlowWaitAuthority): void {
 		new Set(authority.waitTokens).size !== authority.waitTokens.length
 	)
 		throw new FlowLedgerError("schema", "Invalid wait ownership registry.");
-	const lanes = new Set<string>();
+	const bindings = new Set<string>();
 	const workIds = new Set<string>(),
 		executions = new Set<string>();
 	for (const work of authority.work) {
@@ -63,11 +123,14 @@ export function validateWaitAuthority(authority: FlowWaitAuthority): void {
 			!identity(work.owner) ||
 			!revision(work.revision) ||
 			!instant(work.createdAt) ||
-			(work.multiloop !== undefined &&
-				(!work.multiloop ||
-					work.owner !== "multiloop" ||
-					!identity(work.multiloop.lane) ||
-					!identity(work.multiloop.runTag))) ||
+			(work.binding !== undefined &&
+				(!work.binding ||
+					work.binding.producer !== work.owner ||
+					!identity(work.binding.producer) ||
+					!Array.isArray(work.binding.key) ||
+					work.binding.key.length < 1 ||
+					work.binding.key.length > 8 ||
+					work.binding.key.some((part) => !identity(part)))) ||
 			(work.userInputs !== undefined &&
 				(work.owner !== "host-user" ||
 					!Array.isArray(work.userInputs) ||
@@ -91,10 +154,10 @@ export function validateWaitAuthority(authority: FlowWaitAuthority): void {
 		)
 			throw new FlowLedgerError("identity", "Invalid work ownership record.");
 		workIds.add(work.id);
-		if (work.multiloop && !["stopped", "completed"].includes(work.lifecycle?.state ?? "active")) {
-			const lane = JSON.stringify([work.multiloop.lane, work.multiloop.runTag]);
-			if (lanes.has(lane)) throw new FlowLedgerError("identity", "Multiloop lane has multiple live campaigns.");
-			lanes.add(lane);
+		if (work.binding && !["stopped", "completed"].includes(work.lifecycle?.state ?? "active")) {
+			const key = workBindingKey(work.binding);
+			if (bindings.has(key)) throw new FlowLedgerError("identity", "Work binding has multiple live campaigns.");
+			bindings.add(key);
 		}
 	}
 	for (const execution of authority.executions) {

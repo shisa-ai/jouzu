@@ -6,6 +6,7 @@ import { test } from "node:test";
 import { BACKGROUND_CONTEXT, setValue, value } from "@earendil-works/pi-agent-core";
 import { chooseFlowIntent, initialFlowAdmission } from "../dist/flow-control/admission.js";
 import { openLocalFlowSession } from "../dist/flow-control/local-storage.js";
+import { multiloopWorkBinding } from "../dist/flow-control/multiloop-producer.js";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { MAX_RETIRED_FLOW_IDENTITIES, retiredIdentityHash } from "../dist/flow-control/retired-identities.js";
 
@@ -59,18 +60,18 @@ async function completed(store, id = "work") {
 test("multiloop campaign activation persists one live generation and never revives stopped work", async (t) => {
 	const f = await fixture(t),
 		lane = { lane: "lane", runTag: "run" };
-	const first = await f.store.activateMultiloop(lane, 1);
-	assert.deepEqual(await f.store.activateMultiloop(lane, 2), first);
+	const first = await f.store.activateWorkBinding(multiloopWorkBinding(lane), 1, ["bg"]);
+	assert.deepEqual(await f.store.activateWorkBinding(multiloopWorkBinding(lane), 2, ["bg"]), first);
 	assert.deepEqual(first.participants, ["multiloop", "bg"]);
 	await f.store.changeWork(first.id, first.owner, first.revision, "paused", "pause", 3);
 	await f.reopen();
-	assert.equal(f.store.multiloopWork(lane).lifecycle.state, "paused");
-	const resumed = await f.store.activateMultiloop(lane, 4);
+	assert.equal(f.store.boundWork(multiloopWorkBinding(lane)).lifecycle.state, "paused");
+	const resumed = await f.store.activateWorkBinding(multiloopWorkBinding(lane), 4);
 	assert.equal(resumed.id, first.id);
 	const stopped = await f.store.changeWork(resumed.id, resumed.owner, resumed.revision, "stopped", "stop", 5);
-	assert.equal(f.store.multiloopWork(lane), undefined);
+	assert.equal(f.store.boundWork(multiloopWorkBinding(lane)), undefined);
 	await f.reopen();
-	const next = await f.store.activateMultiloop(lane, 6);
+	const next = await f.store.activateWorkBinding(multiloopWorkBinding(lane), 6, ["bg"]);
 	assert.notEqual(next.id, first.id);
 	assert.deepEqual(
 		(await f.store.authoritySnapshot()).work.find((work) => work.id === first.id),
@@ -78,7 +79,7 @@ test("multiloop campaign activation persists one live generation and never reviv
 	);
 	await f.store.retire({ ...empty(), work: [stopped] });
 	await assert.rejects(f.store.registerWork(first.id, "multiloop", 7), { code: "stale" });
-	assert.equal(f.store.multiloopWork(lane).id, next.id);
+	assert.equal(f.store.boundWork(multiloopWorkBinding(lane)).id, next.id);
 });
 
 test("finished user retirement validates membership, lifecycle, and exact snapshots atomically", async (t) => {

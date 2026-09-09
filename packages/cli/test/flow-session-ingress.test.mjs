@@ -11,6 +11,7 @@ import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { createBackgroundControllerExtension } from "../dist/flow-control/background-extension.js";
 import { createMultiloopControllerExtension } from "../dist/flow-control/multiloop-extension.js";
+import { multiloopWorkBinding } from "../dist/flow-control/multiloop-producer.js";
 import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js";
 import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
 import { consumedUserWork, retainUserWork } from "../dist/flow-control/user-work.js";
@@ -3719,7 +3720,7 @@ for (const mode of ["normal", "reversed", "reopen", "model-tools", "shared-resul
 					undefined,
 					ctx,
 				);
-			const campaign = branch.attachment.waits.multiloopWork({ lane: "test", runTag: "run" });
+			const campaign = branch.attachment.waits.boundWork(multiloopWorkBinding({ lane: "test", runTag: "run" }));
 			await branch.workContext.run({ id: campaign.id, actor: "multiloop", revision: campaign.revision }, async () => {
 				const result = await tools.get("bg_task").execute("spawn", {
 					action: "spawn",

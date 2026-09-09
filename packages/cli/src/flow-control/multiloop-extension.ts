@@ -1,5 +1,5 @@
 import type { InlineExtension } from "@earendil-works/pi-coding-agent";
-import { MultiloopFlowProducer, type MultiloopLane } from "./multiloop-producer.js";
+import { MultiloopFlowProducer, type MultiloopLane, multiloopWorkBinding } from "./multiloop-producer.js";
 import type { PiSessionFlowIngress } from "./pi-session-ingress.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowAuthorityWork } from "./wait-authority.js";
@@ -59,13 +59,17 @@ export function createMultiloopControllerExtension(options: MultiloopControllerO
 						branch.attachment,
 						async (lane) => {
 							assertBranch();
-							const work = options.work ? await options.work(lane) : branch.attachment.waits.multiloopWork(lane);
+							const work = options.work
+								? await options.work(lane)
+								: branch.attachment.waits.boundWork(multiloopWorkBinding(lane));
 							assertBranch();
 							return work;
 						},
 						(lane) => {
 							assertBranch();
-							return options.waitingWork ? options.waitingWork(lane) : branch.attachment.waits.multiloopWork(lane)?.id;
+							return options.waitingWork
+								? options.waitingWork(lane)
+								: branch.attachment.waits.boundWork(multiloopWorkBinding(lane))?.id;
 						},
 						() => {
 							assertBranch();
@@ -84,12 +88,16 @@ export function createMultiloopControllerExtension(options: MultiloopControllerO
 						changed: next.lanesChanged.bind(next),
 						async transition(lane: MultiloopLane, status: "active" | "paused" | "stopped" | "completed") {
 							assertBranch();
+							// This adapter owns the producer-specific policy: lanes map to owner-scoped
+							// bindings, and a live campaign shares its work with the background producer.
 							if (status === "active") {
-								const work = await branch.attachment.waits.activateMultiloop(lane, Date.now());
+								const work = await branch.attachment.waits.activateWorkBinding(multiloopWorkBinding(lane), Date.now(), [
+									"bg",
+								]);
 								assertBranch();
 								await branch.workContext?.selectToolWork({ id: work.id, actor: "multiloop", revision: work.revision });
 							} else {
-								const work = branch.attachment.waits.multiloopWork(lane);
+								const work = branch.attachment.waits.boundWork(multiloopWorkBinding(lane));
 								if (work)
 									await branch.attachment.waits.changeWork(
 										work.id,

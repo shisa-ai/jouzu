@@ -15,7 +15,7 @@ const { createJiti } = await import(
 import { createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { SessionFlowController } from "../dist/flow-control/controller.js";
 import { createMultiloopControllerExtension } from "../dist/flow-control/multiloop-extension.js";
-import { MultiloopFlowProducer } from "../dist/flow-control/multiloop-producer.js";
+import { MultiloopFlowProducer, multiloopWorkBinding } from "../dist/flow-control/multiloop-producer.js";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { PiControllerHost } from "../dist/flow-control/pi-controller-host.js";
 import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
@@ -233,6 +233,78 @@ test("Pi multiloop adapter holds three continuations and accounts once at native
 	assert.equal(f.calls.length, 2);
 });
 
+test("a synthetic second producer drives one owner-scoped binding campaign through the shared controller", async (t) => {
+	const f = await fixture(t, true, {});
+	const binding = { producer: "sweep", key: ["nightly", "scan"] };
+	const campaign = await f.attachment.waits.activateWorkBinding(binding, Date.now(), ["bg"]);
+	assert.deepEqual(campaign.participants, ["sweep", "bg"], "a bound campaign shares work like a lane campaign");
+	const handle = { producer: "sweep", handle: "scan", execution: "exec-1" };
+	await f.attachment.waits.registerExecution(
+		{ ...handle, workId: campaign.id, revision: 1, predicates: [{ until: "done", state: "pending" }] },
+		campaign.revision,
+		Date.now(),
+	);
+	await f.attachment.waits.declareOwned(
+		"sweep",
+		campaign.revision,
+		{
+			scope: f.ledger.scope,
+			workId: campaign.id,
+			token: "sweep-wait",
+			reason: "scan done",
+			mode: "all",
+			on: [{ ...handle, until: "done" }],
+			expiresAt: Date.now() + 60000,
+		},
+		Date.now(),
+		60000,
+	);
+	let builds = 0;
+	const sweep = {
+		version: 1,
+		namespace: "sweep",
+		async snapshot() {
+			const work = f.attachment.waits.boundWork(binding);
+			return work
+				? [
+						{
+							id: `sweep:${work.id}`,
+							revision: "1",
+							producer: "sweep",
+							sequence: 0,
+							rank: 4,
+							workId: work.id,
+							workRevision: `${work.revision}:1`,
+							independent: false,
+							runnable: (work.lifecycle?.state ?? "active") === "active",
+						},
+					]
+				: [];
+		},
+		async build(intent) {
+			builds++;
+			return { id: intent.id, revision: intent.revision, kind: "work", text: "Continue the nightly sweep" };
+		},
+	};
+	f.controller.register(sweep);
+	f.policy.waitingWorkIds = [campaign.id];
+	await f.controller.wake();
+	assert.deepEqual(f.calls, [], "a live wait holds the campaign's intent");
+	assert.equal(builds, 0);
+	f.policy.waitingWorkIds = [];
+	await f.controller.wake();
+	assert.deepEqual(f.calls, [`sweep:${campaign.id}`]);
+	assert.equal(builds, 1);
+	await f.controller.wake();
+	assert.equal(builds, 1, "a settled descriptor revision does not replay");
+	// Stopping the campaign ends the binding, so the producer withdraws its intent for good.
+	await f.attachment.waits.changeWork(campaign.id, "sweep", campaign.revision, "stopped", "operator stop", Date.now());
+	assert.equal(f.attachment.waits.boundWork(binding), undefined);
+	await f.controller.wake();
+	assert.equal(builds, 1);
+	assert.equal((await f.ledger.snapshot()).attempts.length, 1);
+});
+
 test("Pi multiloop adapter preserves exhausted failure across reopen", async (t) => {
 	const first = await fixture(t, true, { fetch: async () => new Response("unavailable", { status: 400 }) });
 	await first.attachment.waits.registerWork("campaign", "multiloop", Date.now());
@@ -323,7 +395,7 @@ for (const reverse of [false, true])
 				ctx,
 			);
 		const lane = { lane: "test", runTag: "run" };
-		const campaign = f.attachment.waits.multiloopWork(lane);
+		const campaign = f.attachment.waits.boundWork(multiloopWorkBinding(lane));
 		assert.deepEqual(campaign.participants, ["multiloop", "bg"]);
 		const handle = { producer: "multiloop", handle: "job", execution: "execution" };
 		await f.attachment.waits.registerExecution(
@@ -362,11 +434,11 @@ for (const reverse of [false, true])
 		assert.deepEqual(sends, []);
 		const expiry = (await f.attachment.waits.snapshot())[0].expiresAt;
 		await tools.get("multiloop_pause").execute("pause", { target: "test/run" }, undefined, undefined, ctx);
-		assert.equal(f.attachment.waits.multiloopWork(lane).lifecycle.state, "paused");
+		assert.equal(f.attachment.waits.boundWork(multiloopWorkBinding(lane)).lifecycle.state, "paused");
 		await f.controller.wake();
 		assert.equal((await f.ledger.snapshot()).attempts.length, 0);
 		await tools.get("multiloop_resume").execute("resume", { target: "test/run" }, undefined, undefined, ctx);
-		assert.equal(f.attachment.waits.multiloopWork(lane).id, campaign.id);
+		assert.equal(f.attachment.waits.boundWork(multiloopWorkBinding(lane)).id, campaign.id);
 		assert.equal((await f.attachment.waits.snapshot())[0].expiresAt, expiry);
 		await f.session.prompt("status after resume");
 		await f.attachment.waits.observeExecution(handle, 2, [{ until: "exit", state: "satisfied" }], Date.now());
@@ -382,9 +454,9 @@ for (const reverse of [false, true])
 		assert.equal((await f.ledger.snapshot()).attempts.length, 1);
 		assert.deepEqual(sends, []);
 		await tools.get("multiloop_stop").execute("stop", { target: "test/run" }, undefined, undefined, ctx);
-		assert.equal(f.attachment.waits.multiloopWork(lane), undefined);
+		assert.equal(f.attachment.waits.boundWork(multiloopWorkBinding(lane)), undefined);
 		await tools.get("multiloop_resume").execute("new-generation", { target: "test/run" }, undefined, undefined, ctx);
-		assert.notEqual(f.attachment.waits.multiloopWork(lane).id, campaign.id);
+		assert.notEqual(f.attachment.waits.boundWork(multiloopWorkBinding(lane)).id, campaign.id);
 		assert.deepEqual(errors, []);
 	});
 
