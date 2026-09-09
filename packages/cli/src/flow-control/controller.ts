@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import { chooseFlowIntent, type FlowAdmissionGates, type FlowIntent, initialFlowAdmission } from "./admission.js";
+import { retiredByReceipt, retiredMemberHash, retiredWorkHash } from "./attempt-retention.js";
 import { type FlowInputItem, FlowModelInput } from "./model-input.js";
 import { FlowLedgerError, type FlowLedgerState, type FlowReceiptLedger } from "./receipt-ledger.js";
 import { buildFlowResultEnvelope } from "./result-envelope.js";
@@ -67,6 +68,17 @@ async function cancellable<T>(signal: AbortSignal, run: () => Promise<T>): Promi
 
 /** Consumed input never becomes an automatic replay merely because a producer repeats its descriptor. */
 export function retainedByReceipt(intent: FlowIntent, state: FlowLedgerState): boolean {
+	// Retired attempts keep only their fences; they must fence exactly what they fenced when stored.
+	if (
+		retiredByReceipt(
+			state.retiredAttempts,
+			retiredMemberHash(intent.id, intent.revision),
+			(intent.rank === 4 || intent.rank === 5) && intent.workId && intent.workRevision
+				? retiredWorkHash(intent.workId, intent.workRevision)
+				: undefined,
+		)
+	)
+		return true;
 	return state.attempts.some((attempt) => {
 		if (attempt.phase === "cancelled" && attempt.consumed === false) return false;
 		const selected = attempt.admission?.choice.intent;

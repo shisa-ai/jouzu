@@ -221,6 +221,21 @@ export class PiFlowSessionService {
 		});
 	}
 
+	/** Fold settled controller attempts into their carried fences, counters, and producer round. */
+	retireLedgerHistory(keep?: number) {
+		return this.registry.run(async () => {
+			const branch = this.branch();
+			const result = await branch.host.atIdle(async () => {
+				if (this.branch() !== branch) throw new FlowLedgerError("stale", "Ledger retirement branch changed.");
+				if ((await branch.attachment.ledger.snapshot()).activeAttemptId)
+					throw new FlowLedgerError("busy", "Ledger retirement requires settled controller work.");
+				return branch.attachment.ledger.retire(keep);
+			});
+			if (result.kind === "busy") throw new FlowLedgerError("busy", "Ledger retirement requires an idle session.");
+			return result.value;
+		});
+	}
+
 	/** Keep handled user source evidence available while freeing active submission capacity. */
 	archiveSubmissionHistory() {
 		return this.registry.run(async () => {

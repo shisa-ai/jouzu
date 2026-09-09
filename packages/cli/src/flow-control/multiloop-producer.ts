@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import type { FlowIntent } from "./admission.js";
+import { retiredSettledCount } from "./attempt-retention.js";
 import type { FlowProducer } from "./controller.js";
 import type { FlowInputItem } from "./model-input.js";
 import type { PiFlowAttachment } from "./pi-attachment.js";
@@ -111,7 +112,7 @@ export class MultiloopFlowProducer implements FlowProducer {
 					attempt.admission?.choice.intent.id === id && !(attempt.phase === "cancelled" && attempt.consumed === false),
 			);
 			const settled = attempts.filter((attempt) => attempt.phase === "settled" && attempt.outcome === "success");
-			entry.revision ??= String(settled.length + 1);
+			entry.revision ??= String(settled.length + retiredSettledCount(ledger.retiredAttempts, id) + 1);
 			const revision = entry.revision;
 			intents.push({
 				id,

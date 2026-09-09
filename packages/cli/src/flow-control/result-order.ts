@@ -3,7 +3,8 @@ import type { FlowLedgerState } from "./receipt-ledger.js";
 
 /** Replay producer rounds from final inclusion, never from builds or queued attempts. */
 export function orderFlowResultProducers(intents: FlowIntent[], state: FlowLedgerState): string[] {
-	let round: string[] = [];
+	// Seed from the round carried past retirement so pruning cannot restart a producer's turn.
+	let round: string[] = [...(state.retiredAttempts?.round ?? [])];
 	for (const attempt of state.attempts) {
 		const snapshot = attempt.admission?.choice.resultSnapshot;
 		if (!snapshot || attempt.consumed === false) continue;

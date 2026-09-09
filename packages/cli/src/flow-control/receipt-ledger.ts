@@ -5,6 +5,13 @@ import {
 	validateFlowAdmission,
 	validateFlowChoice,
 } from "./admission.js";
+import {
+	emptyRetiredAttempts,
+	type FlowRetiredAttempts,
+	foldRetiredAttempts,
+	retirableAttempts,
+	validateRetiredAttempts,
+} from "./attempt-retention.js";
 
 export interface FlowScope {
 	sessionId: string;
@@ -80,6 +87,8 @@ export interface FlowLedgerState {
 	activeAttemptId?: string;
 	admission?: FlowAdmissionState;
 	attempts: FlowAttempt[];
+	/** Carried forward for attempts no longer stored; absent until the first retirement. */
+	retiredAttempts?: FlowRetiredAttempts;
 }
 
 /** Transactions must serialize read/modify/write and commit before resolving. */
@@ -343,6 +352,12 @@ export class FlowReceiptLedger {
 			)
 				throw new FlowLedgerError("schema", "Inconsistent persisted request phase.");
 		}
+		if (state.retiredAttempts !== undefined)
+			try {
+				validateRetiredAttempts(state.retiredAttempts);
+			} catch (error) {
+				throw new FlowLedgerError("schema", error instanceof Error ? error.message : "Invalid retired attempts.");
+			}
 		if (
 			state.attempts.length > limits.maxAttempts ||
 			new TextEncoder().encode(JSON.stringify(state)).length > limits.maxBytes
@@ -600,6 +615,22 @@ export class FlowReceiptLedger {
 			attempt.outcome = outcome;
 			attempt.phase = "settled";
 			delete state.activeAttemptId;
+		});
+	}
+
+	/**
+	 * Drop settled and cancelled attempts, folding their replay fences, iteration counts, and
+	 * producer round into the carried summary. Keeps the most recent settled attempts addressable.
+	 */
+	retire(keep = 32): Promise<number> {
+		if (!Number.isSafeInteger(keep) || keep < 0) throw new FlowLedgerError("capacity", "Invalid retention window.");
+		return this.mutate((state) => {
+			const retiring = retirableAttempts(state, keep);
+			if (!retiring.length) return 0;
+			const ids = new Set(retiring.map((attempt) => attempt.id));
+			state.retiredAttempts = foldRetiredAttempts(state.retiredAttempts ?? emptyRetiredAttempts(), state, retiring);
+			state.attempts = state.attempts.filter((attempt) => !ids.has(attempt.id));
+			return retiring.length;
 		});
 	}
 
