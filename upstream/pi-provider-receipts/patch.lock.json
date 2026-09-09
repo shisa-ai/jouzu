@@ -62,6 +62,10 @@
 		"dist/api/google-vertex.js": {
 			"before": "6bb6641da11cc3a0c16a0f0d123075909499d51d275fc4a60e9d5770346e15eb",
 			"after": "6f902df430ca8d911f8c208e451220ea19968fcbed5364772034d9ca6f35eb56"
+		},
+		"dist/api/azure-openai-responses.js": {
+			"before": "fc7d58bd624ca581df785ce791edb1a42ec91711ecaf4f4c28c4a5304fd5d20c",
+			"after": "7e83c960ea0aab51c941513c8d926411f8854b5bdd2a2cf71cbd21435633b22a"
 		}
 	}
 }

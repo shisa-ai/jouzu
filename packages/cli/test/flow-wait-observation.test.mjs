@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { stream as streamAnthropic } from "@earendil-works/pi-ai/api/anthropic-messages";
+import { stream as streamAzure } from "@earendil-works/pi-ai/api/azure-openai-responses";
 import { stream as streamGoogle } from "@earendil-works/pi-ai/api/google-generative-ai";
 import { stream as streamVertex } from "@earendil-works/pi-ai/api/google-vertex";
 import { convertMessages, stream } from "@earendil-works/pi-ai/api/openai-completions";
@@ -96,7 +97,9 @@ async function fixture(
 						? googleFlowPayload
 						: api === "anthropic-messages"
 							? anthropicFlowPayload
-							: openAIFlowPayload(api === "openai-codex-responses" ? "openai-responses" : api),
+							: openAIFlowPayload(
+									["openai-codex-responses", "azure-openai-responses"].includes(api) ? "openai-responses" : api,
+								),
 				],
 			]),
 			maxPayloadBytes: 1000000,
@@ -147,6 +150,7 @@ async function fixture(
 				? { id: "gemini-3.1-pro-preview", provider: api === "google-vertex" ? "google-vertex" : "google" }
 				: {}),
 			...(api === "openai-codex-responses" ? { id: "gpt-5.4", provider: "openai-codex" } : {}),
+			...(api === "azure-openai-responses" ? { id: "gpt-4.1", provider: "azure-openai-responses" } : {}),
 		},
 		sessionManager: manager,
 		tools: ["agent_wait", "agent_wait_cancel"],
@@ -184,105 +188,107 @@ async function fixture(
 						});
 				} else
 					session.agent.streamFunction = (model, context, options) =>
-						(api === "anthropic-messages" ? streamAnthropic : api === "openai-responses" ? streamResponses : stream)(
-							{ ...model, baseUrl: "https://fixture.invalid/v1" },
-							context,
-							{
-								...options,
-								apiKey: "fixture",
-								maxRetries: 0,
-								fetch: async (_url, init) => {
-									sent.push(JSON.parse(init.body));
-									if (failure && sent.length === 2) return new Response("fixture unavailable", { status: 503 });
-									const tool = issueTool && sent.length === 1;
-									if (api === "anthropic-messages") {
-										const events = [
-											{
-												type: "message_start",
-												message: {
-													id: "fixture",
-													type: "message",
-													role: "assistant",
-													model: model.id,
-													content: [],
-													usage: { input_tokens: 1, output_tokens: 1 },
-												},
+						(api === "anthropic-messages"
+							? streamAnthropic
+							: api === "azure-openai-responses"
+								? streamAzure
+								: api === "openai-responses"
+									? streamResponses
+									: stream)({ ...model, baseUrl: "https://fixture.invalid/v1" }, context, {
+							...options,
+							apiKey: "fixture",
+							maxRetries: 0,
+							fetch: async (_url, init) => {
+								sent.push(JSON.parse(init.body));
+								if (failure && sent.length === 2) return new Response("fixture unavailable", { status: 503 });
+								const tool = issueTool && sent.length === 1;
+								if (api === "anthropic-messages") {
+									const events = [
+										{
+											type: "message_start",
+											message: {
+												id: "fixture",
+												type: "message",
+												role: "assistant",
+												model: model.id,
+												content: [],
+												usage: { input_tokens: 1, output_tokens: 1 },
 											},
-										];
-										for (let index = 0; index < (tool ? toolCount : 1); index++) {
+										},
+									];
+									for (let index = 0; index < (tool ? toolCount : 1); index++) {
+										events.push({
+											type: "content_block_start",
+											index,
+											content_block: tool
+												? { type: "tool_use", id: `wait_${index}`, name: "agent_wait", input: {} }
+												: { type: "text", text: "Done" },
+										});
+										if (tool)
 											events.push({
-												type: "content_block_start",
+												type: "content_block_delta",
 												index,
-												content_block: tool
-													? { type: "tool_use", id: `wait_${index}`, name: "agent_wait", input: {} }
-													: { type: "text", text: "Done" },
+												delta: { type: "input_json_delta", partial_json: JSON.stringify(args) },
 											});
-											if (tool)
-												events.push({
-													type: "content_block_delta",
-													index,
-													delta: { type: "input_json_delta", partial_json: JSON.stringify(args) },
-												});
-											events.push({ type: "content_block_stop", index });
-										}
-										events.push(
-											{
-												type: "message_delta",
-												delta: { stop_reason: tool ? "tool_use" : "end_turn", stop_sequence: null },
-												usage: { output_tokens: 1 },
-											},
-											{ type: "message_stop" },
-										);
-										return new Response(
-											events.map((event) => `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`).join(""),
-											{ headers: { "content-type": "text/event-stream" } },
-										);
+										events.push({ type: "content_block_stop", index });
 									}
-									if (api === "openai-responses") {
-										const item = tool
-											? {
-													type: "function_call",
-													id: "fc_wait",
-													call_id: "wait_call",
-													name: "agent_wait",
-													arguments: JSON.stringify(args),
-													status: "completed",
-												}
-											: {
-													type: "message",
-													id: "msg_done",
-													role: "assistant",
-													content: [{ type: "output_text", text: "Done", annotations: [] }],
-													status: "completed",
-												};
-										const events = [
-											{ type: "response.output_item.done", output_index: 0, item },
-											{ type: "response.completed", response: { id: "fixture", status: "completed", output: [item] } },
-										];
-										return new Response(
-											events.map((event) => `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`).join(""),
-											{ headers: { "content-type": "text/event-stream" } },
-										);
-									}
-									const delta = tool
-										? {
-												tool_calls: [
-													{
-														index: 0,
-														id: "wait|call$1",
-														type: "function",
-														function: { name: "agent_wait", arguments: JSON.stringify(args) },
-													},
-												],
-											}
-										: { content: "Done" };
+									events.push(
+										{
+											type: "message_delta",
+											delta: { stop_reason: tool ? "tool_use" : "end_turn", stop_sequence: null },
+											usage: { output_tokens: 1 },
+										},
+										{ type: "message_stop" },
+									);
 									return new Response(
-										`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta, finish_reason: tool ? "tool_calls" : "stop" }] })}\n\ndata: [DONE]\n\n`,
+										events.map((event) => `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`).join(""),
 										{ headers: { "content-type": "text/event-stream" } },
 									);
-								},
+								}
+								if (["openai-responses", "azure-openai-responses"].includes(api)) {
+									const item = tool
+										? {
+												type: "function_call",
+												id: "fc_wait",
+												call_id: "wait_call",
+												name: "agent_wait",
+												arguments: JSON.stringify(args),
+												status: "completed",
+											}
+										: {
+												type: "message",
+												id: "msg_done",
+												role: "assistant",
+												content: [{ type: "output_text", text: "Done", annotations: [] }],
+												status: "completed",
+											};
+									const events = [
+										{ type: "response.output_item.done", output_index: 0, item },
+										{ type: "response.completed", response: { id: "fixture", status: "completed", output: [item] } },
+									];
+									return new Response(
+										events.map((event) => `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`).join(""),
+										{ headers: { "content-type": "text/event-stream" } },
+									);
+								}
+								const delta = tool
+									? {
+											tool_calls: [
+												{
+													index: 0,
+													id: "wait|call$1",
+													type: "function",
+													function: { name: "agent_wait", arguments: JSON.stringify(args) },
+												},
+											],
+										}
+									: { content: "Done" };
+								return new Response(
+									`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta, finish_reason: tool ? "tool_calls" : "stop" }] })}\n\ndata: [DONE]\n\n`,
+									{ headers: { "content-type": "text/event-stream" } },
+								);
 							},
-						);
+						});
 				await ingress.attach(session);
 				wrapped = session.agent.streamFunction;
 			},
@@ -325,13 +331,21 @@ async function fixture(
 	};
 }
 
-for (const api of ["openai-completions", "openai-responses", "anthropic-messages", "openai-codex-responses"]) {
+for (const api of [
+	"openai-completions",
+	"openai-responses",
+	"anthropic-messages",
+	"openai-codex-responses",
+	"azure-openai-responses",
+]) {
 	const payloadRows = (payload) =>
-		payload[["openai-responses", "openai-codex-responses"].includes(api) ? "input" : "messages"];
+		payload[
+			["openai-responses", "openai-codex-responses", "azure-openai-responses"].includes(api) ? "input" : "messages"
+		];
 	const isTool = (message) =>
 		api === "anthropic-messages"
 			? message.type === "tool_result"
-			: ["openai-responses", "openai-codex-responses"].includes(api)
+			: ["openai-responses", "openai-codex-responses", "azure-openai-responses"].includes(api)
 				? message.type === "function_call_output"
 				: message.role === "tool";
 	const toolRows = (payload) =>
@@ -343,9 +357,9 @@ for (const api of ["openai-completions", "openai-responses", "anthropic-messages
 			for (const row of payloadRows(payload))
 				if (Array.isArray(row.content)) row.content = row.content.filter((block) => !isTool(block));
 		} else
-			payload[["openai-responses", "openai-codex-responses"].includes(api) ? "input" : "messages"] = payloadRows(
-				payload,
-			).filter((message) => !isTool(message));
+			payload[
+				["openai-responses", "openai-codex-responses", "azure-openai-responses"].includes(api) ? "input" : "messages"
+			] = payloadRows(payload).filter((message) => !isTool(message));
 	};
 	test(`${api}: successful tool observation absorbs immediate wait resolution without another wake and survives reopening`, async (t) => {
 		const f = await fixture(t, { automatic: true, api });
@@ -421,14 +435,18 @@ for (const api of ["openai-completions", "openai-responses", "anthropic-messages
 					if (mode === "changed")
 						row.content = [
 							{
-								type: ["openai-responses", "openai-codex-responses"].includes(api) ? "input_text" : "text",
+								type: ["openai-responses", "openai-codex-responses", "azure-openai-responses"].includes(api)
+									? "input_text"
+									: "text",
 								text: "replaced",
 							},
 						];
 					if (mode === "omitted")
-						payload[["openai-responses", "openai-codex-responses"].includes(api) ? "input" : "messages"] = payloadRows(
-							payload,
-						).filter((message) => message !== row);
+						payload[
+							["openai-responses", "openai-codex-responses", "azure-openai-responses"].includes(api)
+								? "input"
+								: "messages"
+						] = payloadRows(payload).filter((message) => message !== row);
 					if (mode === "cloned") return structuredClone(payload);
 				},
 			});
@@ -453,13 +471,16 @@ for (const api of ["openai-completions", "openai-responses", "anthropic-messages
 								const tool = toolRows(payload)[0];
 								if (!tool) return;
 								if (mode === "content")
-									tool[["openai-responses", "openai-codex-responses"].includes(api) ? "output" : "content"] +=
-										" altered";
+									tool[
+										["openai-responses", "openai-codex-responses", "azure-openai-responses"].includes(api)
+											? "output"
+											: "content"
+									] += " altered";
 								if (mode === "identity")
 									tool[
 										api === "anthropic-messages"
 											? "tool_use_id"
-											: ["openai-responses", "openai-codex-responses"].includes(api)
+											: ["openai-responses", "openai-codex-responses", "azure-openai-responses"].includes(api)
 												? "call_id"
 												: "tool_call_id"
 									] += "-other";

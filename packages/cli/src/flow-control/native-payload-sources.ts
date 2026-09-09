@@ -11,12 +11,15 @@ const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(valu
 type SourceAPI =
 	| "openai-completions"
 	| "openai-responses"
+	| "azure-openai-responses"
 	| "openai-codex-responses"
 	| "anthropic-messages"
 	| "google-generative-ai"
 	| "google-vertex";
-const responsesAPI = (api: SourceAPI): api is "openai-responses" | "openai-codex-responses" =>
-	api === "openai-responses" || api === "openai-codex-responses";
+const responsesAPI = (
+	api: SourceAPI,
+): api is "openai-responses" | "openai-codex-responses" | "azure-openai-responses" =>
+	api === "openai-responses" || api === "openai-codex-responses" || api === "azure-openai-responses";
 const googleAPI = (api: SourceAPI): api is "google-generative-ai" | "google-vertex" =>
 	api === "google-generative-ai" || api === "google-vertex";
 const toolIdentity = (message: unknown, api: SourceAPI) => {
@@ -116,7 +119,7 @@ const contentHash = (message: unknown, api: SourceAPI) => {
 			return undefined;
 		return hash(anthropicContent(message.content));
 	}
-	const [projected] = openAIFlowPayload(api === "openai-codex-responses" ? "openai-responses" : api)({
+	const [projected] = openAIFlowPayload(responsesAPI(api) ? "openai-responses" : api)({
 		[responsesAPI(api) ? "input" : "messages"]: [message],
 	});
 	return projected ? hash(projected.content) : undefined;

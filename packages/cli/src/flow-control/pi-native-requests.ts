@@ -369,6 +369,7 @@ export class PiNativeRequests {
 						"openai-completions",
 						"openai-responses",
 						"openai-codex-responses",
+						"azure-openai-responses",
 						"anthropic-messages",
 						"google-generative-ai",
 						"google-vertex",
@@ -406,6 +407,7 @@ export class PiNativeRequests {
 							model.api === "openai-completions" ||
 							model.api === "openai-responses" ||
 							model.api === "openai-codex-responses" ||
+							model.api === "azure-openai-responses" ||
 							model.api === "anthropic-messages" ||
 							model.api === "google-generative-ai" ||
 							model.api === "google-vertex"
