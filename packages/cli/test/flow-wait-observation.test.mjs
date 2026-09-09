@@ -8,6 +8,7 @@ import { convertMessages, stream } from "@earendil-works/pi-ai/api/openai-comple
 import { stream as streamResponses } from "@earendil-works/pi-ai/api/openai-responses";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, model, tick } from "../../../scripts/fixtures/pi-flow-session.mjs";
+import { anthropicFlowPayload } from "../dist/flow-control/anthropic-payload.js";
 import { validateNativeProjections } from "../dist/flow-control/native-context-projections.js";
 import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js";
 import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
@@ -31,36 +32,45 @@ async function fixture(
 		issueTool = true,
 		api = "openai-completions",
 		toolCount = 1,
+		pending = false,
 	} = {},
 ) {
 	const root = supplied ?? (await mkdtemp(join(tmpdir(), "jouzu-wait-observation-"))),
 		errors = [],
 		sent = [];
+	let sourceState = pending ? "pending" : "satisfied",
+		registration;
+	const listeners = new Set();
+	const evidence = (identity) => ({
+		...identity,
+		revision: sourceState === "pending" ? 1 : 2,
+		predicates: [{ until: "exit", state: sourceState }],
+	});
 	const ingress = new PiSessionFlowIngress({
 		root: join(root, "receipts"),
 		maxInputBytes: 8192,
 		maxResultBytes: 8192,
 		autoRelease: automatic ? { onError: (error) => errors.push(error) } : undefined,
 		host: {
-			projections: new Map(api === "anthropic-messages" ? [] : [[api, openAIFlowPayload(api)]]),
+			projections: new Map([[api, api === "anthropic-messages" ? anthropicFlowPayload : openAIFlowPayload(api)]]),
 			maxPayloadBytes: 1000000,
-			containsUserInput: () => true,
+			containsUserInput: () => false,
 		},
 		policy: () => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: [] }),
 		async attachWaitSources(attachment) {
 			const work = await attachment.waits.registerWork("work", "lane", Date.now());
 			if (!work.participants.includes("bg"))
 				await attachment.waits.shareWork("work", "lane", work.revision, "bg", Date.now());
-			attachment.waitProducers.register(
+			registration = attachment.waitProducers.register(
 				{
 					version: 1,
 					namespace: "bg",
-					subscribe: () => () => {},
-					snapshot: async (identity) => ({
-						...identity,
-						revision: 2,
-						predicates: [{ until: "exit", state: "satisfied" }],
-					}),
+					subscribe(identity, changed) {
+						const listener = { identity, changed };
+						listeners.add(listener);
+						return () => listeners.delete(listener);
+					},
+					snapshot: async (identity) => evidence(identity),
 				},
 				(error) => errors.push(error),
 			);
@@ -216,7 +226,20 @@ async function fixture(
 			requests: attachment.nativeRequests,
 		}).snapshot(new AbortController().signal);
 	};
-	return { root, session, ingress, sent, errors, decisions };
+	return {
+		root,
+		session,
+		ingress,
+		sent,
+		errors,
+		decisions,
+		async complete(wake = true) {
+			sourceState = "satisfied";
+			for (const listener of listeners) listener.changed(evidence(listener.identity));
+			await registration.flushExecution("exec-1");
+			if (wake) await ingress.wakeProducers();
+		},
+	};
 }
 
 for (const api of ["openai-completions", "openai-responses", "anthropic-messages"]) {
@@ -433,3 +456,99 @@ test("Anthropic grouped terminal waits retain distinct block receipts through re
 	assert.deepEqual(f.errors, []);
 	assert.deepEqual(next.errors, []);
 });
+
+for (const api of ["openai-completions", "openai-responses", "anthropic-messages"])
+	test(`${api}: later dependency completion dispatches one retained decision and survives reopening`, async (t) => {
+		const f = await fixture(t, { api, automatic: true, pending: true });
+		await f.session.prompt("wait until the process exits");
+		assert.equal(f.sent.length, 2);
+		assert.equal((await f.ingress.branch().attachment.waits.snapshot())[0].state, "waiting");
+		await f.ingress.wakeProducers();
+		await tick();
+		assert.equal(f.sent.length, 2);
+		await f.complete(false);
+		const deadline = Date.now() + 5000;
+		while (
+			!(await f.ingress.branch().attachment.ledger.snapshot()).attempts.some((attempt) => attempt.phase === "settled")
+		) {
+			assert.ok(Date.now() < deadline, "automatic dependency delivery did not settle");
+			await new Promise((resolve) => setTimeout(resolve, 10));
+		}
+		assert.equal(f.sent.length, 3);
+		const state = await f.ingress.branch().attachment.ledger.snapshot();
+		assert.equal(state.attempts.length, 1);
+		assert.equal(state.attempts[0].phase, "settled");
+		assert.equal(state.attempts[0].outcome, "success");
+		assert.equal(state.attempts[0].members[0].kind, "wait");
+		assert.equal(state.attempts[0].requests[0].payload.api, api);
+		assert.equal(state.attempts[0].requests[0].payload.inclusion[0].disposition, "included");
+		await f.ingress.wakeProducers();
+		await tick();
+		assert.equal(f.sent.length, 3);
+		await f.ingress.dispose();
+		const next = await fixture(t, {
+			api,
+			root: f.root,
+			manager: SessionManager.open(f.session.sessionManager.getSessionFile()),
+			automatic: true,
+			issueTool: false,
+		});
+		await next.ingress.wakeProducers();
+		await tick();
+		assert.deepEqual(next.sent, []);
+		await next.session.prompt("status");
+		assert.equal(next.sent.length, 1);
+		assert.equal((await next.ingress.branch().attachment.ledger.snapshot()).attempts.length, 1);
+		assert.deepEqual(f.errors, []);
+		assert.deepEqual(next.errors, []);
+	});
+
+for (const mode of ["replaced", "omitted", "tool-copy", "tool-gap"])
+	test(`Anthropic ${mode} decision payload is withheld without losing its wait obligation`, async (t) => {
+		const f = await fixture(t, {
+			api: "anthropic-messages",
+			pending: true,
+			change(payload) {
+				for (const [index, row] of payload.messages.entries()) {
+					if (row.role !== "user" || !Array.isArray(row.content)) continue;
+					const part = row.content.find(
+						(part) => part.type === "text" && part.text.includes('"flowInput"') && part.text.includes('"kind":"wait"'),
+					);
+					if (!part) continue;
+					if (mode === "replaced") {
+						const frame = JSON.parse(part.text);
+						frame.content = "changed";
+						part.text = JSON.stringify(frame);
+					}
+					if (mode === "omitted") row.content = row.content.filter((candidate) => candidate !== part);
+					if (mode === "tool-copy")
+						payload.messages.splice(
+							index,
+							1,
+							{ role: "assistant", content: [{ type: "tool_use", id: "copy", name: "read", input: {} }] },
+							{ role: "user", content: [{ type: "tool_result", tool_use_id: "copy", content: [part] }, part] },
+						);
+					if (mode === "tool-gap")
+						payload.messages.splice(index, 0, {
+							role: "assistant",
+							content: [{ type: "tool_use", id: "missing", name: "read", input: {} }],
+						});
+					break;
+				}
+			},
+		});
+		await f.session.prompt("wait");
+		await f.complete();
+		assert.equal(f.sent.length, 2);
+		const [attempt] = (await f.ingress.branch().attachment.ledger.snapshot()).attempts;
+		assert.equal(attempt.phase, "withheld");
+		assert.equal(attempt.requests[0].handedOff, false);
+		assert.equal(
+			attempt.requests[0].payload.inclusion[0].disposition,
+			mode === "replaced" ? "replaced" : mode === "tool-gap" ? "rejected" : "omitted",
+		);
+		assert.equal((await f.decisions()).length, 1);
+		await f.ingress.wakeProducers();
+		assert.equal(f.sent.length, 2);
+		assert.deepEqual(f.errors, []);
+	});

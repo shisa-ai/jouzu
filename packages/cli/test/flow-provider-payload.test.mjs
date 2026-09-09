@@ -2,8 +2,10 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { test } from "node:test";
 import { BACKGROUND_CONTEXT as context, MemorySessionRepo } from "@earendil-works/pi-agent-core";
+import { stream as streamAnthropic } from "@earendil-works/pi-ai/api/anthropic-messages";
 import { stream } from "@earendil-works/pi-ai/api/openai-completions";
 import { model } from "../../../scripts/fixtures/pi-flow-session.mjs";
+import { anthropicFlowPayload } from "../dist/flow-control/anthropic-payload.js";
 import { FlowModelInput } from "../dist/flow-control/model-input.js";
 import { createPiLedgerStore } from "../dist/flow-control/pi-ledger-store.js";
 import { admitFlowPayload, openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
@@ -40,70 +42,91 @@ async function fixture(t) {
 	return { ledger, composition };
 }
 
-for (const transform of [
-	"unchanged",
-	"optional-removed",
-	"required-changed",
-	"image-removed",
-	"role-changed",
-	"duplicate",
-	"oversized",
-]) {
-	test(`Pi HTTP conversion admits only verified payload: ${transform}`, async (t) => {
-		const { ledger, composition } = await fixture(t);
-		const sent = [];
-		let payload;
-		const result = await stream(
-			{ ...model, baseUrl: "https://fixture.invalid/v1" },
-			{ messages: [{ role: "user", content: composition.content, timestamp: 1 }] },
-			{
-				apiKey: "fixture",
-				maxRetries: 0,
-				onPayload: async (converted) => {
-					payload = converted;
-					const user = payload.messages.find((message) => message.role === "user");
-					if (transform === "optional-removed") user.content.pop();
-					if (transform === "required-changed") user.content[0].text = user.content[0].text.replace("Perform", "Skip");
-					if (transform === "image-removed") user.content.splice(1, 1);
-					if (transform === "role-changed") user.role = "assistant";
-					if (transform === "duplicate") payload.messages.push(structuredClone(user));
-					const owned = await admitFlowPayload(
-						ledger,
-						composition,
-						"request",
-						"openai-completions",
-						payload,
-						openAIFlowPayload("openai-completions"),
-						transform === "oversized" ? 1 : 100000,
-					);
-					await ledger.handoff("attempt", "request");
-					// Mutating the extension-owned payload after admission cannot change transport bytes.
-					user.content = [];
-					return owned;
+for (const api of ["openai-completions", "anthropic-messages"])
+	for (const transform of [
+		"unchanged",
+		"optional-removed",
+		"required-changed",
+		"image-removed",
+		"role-changed",
+		"duplicate",
+		"oversized",
+	]) {
+		test(`${api} HTTP conversion admits only verified payload: ${transform}`, async (t) => {
+			const { ledger, composition } = await fixture(t);
+			const sent = [];
+			let payload;
+			const result = await (api === "anthropic-messages" ? streamAnthropic : stream)(
+				{ ...model, api, baseUrl: "https://fixture.invalid/v1" },
+				{ messages: [{ role: "user", content: composition.content, timestamp: 1 }] },
+				{
+					apiKey: "fixture",
+					maxRetries: 0,
+					onPayload: async (converted) => {
+						payload = converted;
+						const user = payload.messages.find((message) => message.role === "user");
+						if (transform === "optional-removed") user.content.pop();
+						if (transform === "required-changed")
+							user.content[0].text = user.content[0].text.replace("Perform", "Skip");
+						if (transform === "image-removed") user.content.splice(1, 1);
+						if (transform === "role-changed") user.role = "assistant";
+						if (transform === "duplicate") payload.messages.push(structuredClone(user));
+						const owned = await admitFlowPayload(
+							ledger,
+							composition,
+							"request",
+							api,
+							payload,
+							api === "anthropic-messages" ? anthropicFlowPayload : openAIFlowPayload("openai-completions"),
+							transform === "oversized" ? 1 : 100000,
+						);
+						await ledger.handoff("attempt", "request");
+						// Mutating the extension-owned payload after admission cannot change transport bytes.
+						user.content = [];
+						return owned;
+					},
+					fetch: async (_url, init) => {
+						sent.push(JSON.parse(init.body));
+						if (api === "anthropic-messages") {
+							const events = [
+								{
+									type: "message_start",
+									message: { id: "fixture", model: model.id, usage: { input_tokens: 1, output_tokens: 1 } },
+								},
+								{ type: "content_block_start", index: 0, content_block: { type: "text", text: "Done" } },
+								{ type: "content_block_stop", index: 0 },
+								{ type: "message_delta", delta: { stop_reason: "end_turn" }, usage: { output_tokens: 1 } },
+								{ type: "message_stop" },
+							];
+							return new Response(
+								events.map((event) => `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`).join(""),
+								{ headers: { "content-type": "text/event-stream" } },
+							);
+						}
+						return new Response(
+							'data: {"id":"fixture","choices":[{"index":0,"delta":{"content":"Done"},"finish_reason":null}]}\n\ndata: {"id":"fixture","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}\n\ndata: [DONE]\n\n',
+							{ headers: { "Content-Type": "text/event-stream" } },
+						);
+					},
 				},
-				fetch: async (_url, init) => {
-					sent.push(JSON.parse(init.body));
-					return new Response(
-						'data: {"id":"fixture","choices":[{"index":0,"delta":{"content":"Done"},"finish_reason":null}]}\n\ndata: {"id":"fixture","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}\n\ndata: [DONE]\n\n',
-						{ headers: { "Content-Type": "text/event-stream" } },
-					);
-				},
-			},
-		).result();
-		const [attempt] = (await ledger.snapshot()).attempts;
-		const request = attempt.requests[0];
-		const allowed = ["unchanged", "optional-removed"].includes(transform);
-		assert.equal(sent.length, allowed ? 1 : 0);
-		assert.equal(request.handedOff, allowed);
-		assert.equal(result.stopReason, allowed ? "stop" : "error");
-		assert.equal(request.inclusion[0].disposition, "included");
-		if (allowed) {
-			assert.equal(request.payload.hash, createHash("sha256").update(JSON.stringify(sent[0])).digest("hex"));
-			assert.equal(request.payload.bytes, Buffer.byteLength(JSON.stringify(sent[0])));
-			assert.equal(request.payload.inclusion[1].disposition, transform === "optional-removed" ? "omitted" : "included");
-		} else assert.equal(attempt.phase, "withheld");
-	});
-}
+			).result();
+			const [attempt] = (await ledger.snapshot()).attempts;
+			const request = attempt.requests[0];
+			const allowed = ["unchanged", "optional-removed"].includes(transform);
+			assert.equal(sent.length, allowed ? 1 : 0);
+			assert.equal(request.handedOff, allowed);
+			assert.equal(result.stopReason, allowed ? "stop" : "error");
+			assert.equal(request.inclusion[0].disposition, "included");
+			if (allowed) {
+				assert.equal(request.payload.hash, createHash("sha256").update(JSON.stringify(sent[0])).digest("hex"));
+				assert.equal(request.payload.bytes, Buffer.byteLength(JSON.stringify(sent[0])));
+				assert.equal(
+					request.payload.inclusion[1].disposition,
+					transform === "optional-removed" ? "omitted" : "included",
+				);
+			} else assert.equal(attempt.phase, "withheld");
+		});
+	}
 
 test("Responses projection checks image bytes and excludes assistant and metadata copies", async (t) => {
 	const { ledger, composition } = await fixture(t);
@@ -227,4 +250,59 @@ test("cancellation during payload inspection cannot acquire a handoff", async (t
 		{ code: "transition" },
 	);
 	assert.equal((await ledger.snapshot()).attempts[0].requests[0].payload, undefined);
+});
+
+test("Anthropic excludes grouped output, displaced sibling text, assistant copies, and metadata", async (t) => {
+	const { composition } = await fixture(t);
+	const content = composition.content.map((part) =>
+		part.type === "text"
+			? part
+			: { type: "image", source: { type: "base64", media_type: part.mimeType, data: part.data } },
+	);
+	const call = { role: "assistant", content: [{ type: "tool_use", id: "call", name: "read", input: {} }] };
+	const result = { type: "tool_result", tool_use_id: "call", content };
+	const grouped = { role: "user", content: [result, ...content] };
+	const payload = { messages: [call, grouped, { role: "assistant", content }], metadata: { copy: content } };
+	assert.ok(composition.inspect(anthropicFlowPayload(payload)).every((item) => item.disposition === "omitted"));
+	payload.messages.push({ role: "user", content });
+	assert.ok(composition.inspect(anthropicFlowPayload(payload)).every((item) => item.disposition === "included"));
+});
+
+test("Anthropic validates grouped tool ordering and permits completed batches to reuse IDs", () => {
+	const call = {
+		role: "assistant",
+		content: [
+			{ type: "tool_use", id: "one", name: "read", input: {} },
+			{ type: "tool_use", id: "two", name: "read", input: {} },
+		],
+	};
+	const outputs = {
+		role: "user",
+		content: [
+			{ type: "tool_result", tool_use_id: "one", content: "a" },
+			{ type: "tool_result", tool_use_id: "two", content: "b" },
+		],
+	};
+	const user = { role: "user", content: "continue" };
+	const project = (messages) => anthropicFlowPayload({ messages });
+	assert.equal(project([call, outputs, call, outputs, user]).length, 1);
+	assert.equal(
+		project([{ role: "system", content: [], output_config: { effort: "high" } }, call, outputs, user]).length,
+		1,
+	);
+	for (const messages of [
+		[call],
+		[call, user],
+		[call, { ...outputs, content: outputs.content.slice(0, 1) }],
+		[call, { ...outputs, role: "assistant" }],
+		[outputs],
+		[call, { ...outputs, content: [outputs.content[0], outputs.content[0]] }],
+		[call, { ...outputs, content: [{ type: "text", text: "copy" }, ...outputs.content] }],
+		[call, { ...outputs, content: [...outputs.content, outputs.content[0]] }],
+		[{ ...call, content: [call.content[0], call.content[0]] }, outputs],
+		[call, { ...outputs, content: [{ ...outputs.content[0], tool_use_id: "wrong" }, outputs.content[1]] }],
+		[call, { ...outputs, content: [{ ...outputs.content[0], is_error: "false" }, outputs.content[1]] }],
+		[call, { role: "system", content: [] }, outputs],
+	])
+		assert.throws(() => project(messages), { code: "schema" });
 });
