@@ -5,5 +5,11 @@
 	"commit": "cffc0e58987249dd16d74f1b554623cd103d10d3",
 	"path": "skills/multiloop/SKILL.md",
 	"before": "c2bd39492531d74f7b127fa8b57773639c80c29309857f0ab24fb1a7b115df6e",
-	"after": "293eb455789a102808833bff0e9897e53aee4929c3e523d260345afc5804a691"
+	"after": "293eb455789a102808833bff0e9897e53aee4929c3e523d260345afc5804a691",
+	"extension": {
+		"path": "extensions/pi-multiloop/index.ts",
+		"before": "6d72fecfde2fcf39cc4a73e5aa95c9539d0fdbe685243b0440c0d84d5777e72d",
+		"after": "5016c730edcbbb122375f6dfddee61850301a51ef6a98a82317e128a0e5e8b92"
+	},
+	"runtime": "ff8e09a1d179ff3750b190223931ff4408b2ea06cbce947147bbec9360aa5198"
 }

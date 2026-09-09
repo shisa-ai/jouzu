@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { readFile, realpath, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+import { extensionPath, transformMultiloopFlow } from "./multiloop-flow-transform.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const sha = (value) => createHash("sha256").update(value).digest("hex");
@@ -29,12 +30,34 @@ export async function applyMultiloopWaitSkill(packageRoot, checkOnly = false) {
 		throw new Error("Multiloop wait skill package identity differs.");
 	const path = join(packageRoot, skillPath),
 		original = await readFile(path, "utf8");
-	if (sha(original) === lock.after) return 0;
-	if (checkOnly || sha(original) !== lock.before) throw new Error("Multiloop wait skill source hash differs.");
-	const changed = transformMultiloopWaitSkill(original);
-	if (sha(changed) !== lock.after) throw new Error("Multiloop wait skill transform differs.");
-	await writeFile(path, changed);
-	return 1;
+	const writes = [];
+	if (sha(original) !== lock.after) {
+		if (checkOnly || sha(original) !== lock.before) throw new Error("Multiloop wait skill source hash differs.");
+		const changed = transformMultiloopWaitSkill(original);
+		if (sha(changed) !== lock.after) throw new Error("Multiloop wait skill transform differs.");
+		writes.push([path, changed]);
+	}
+	const extension = await readFile(join(packageRoot, extensionPath), "utf8");
+	if (sha(extension) !== lock.extension.after) {
+		if (checkOnly || sha(extension) !== lock.extension.before)
+			throw new Error("Multiloop extension source hash differs.");
+		const changed = transformMultiloopFlow(extension);
+		if (sha(changed) !== lock.extension.after) throw new Error("Multiloop extension transform differs.");
+		writes.push([join(packageRoot, extensionPath), changed]);
+	}
+	const runtime = await readFile(join(root, "upstream/multiloop-wait-skill/runtime.ts"), "utf8");
+	if (sha(runtime) !== lock.runtime) throw new Error("Multiloop flow runtime hash differs.");
+	const destination = join(packageRoot, "extensions/pi-multiloop/jouzu-flow.ts");
+	const installed = await readFile(destination, "utf8").catch((error) => {
+		if (error.code === "ENOENT") return undefined;
+		throw error;
+	});
+	if (installed !== runtime) {
+		if (checkOnly || installed !== undefined) throw new Error("Multiloop installed runtime differs.");
+		writes.push([destination, runtime]);
+	}
+	for (const [destination, content] of writes) await writeFile(destination, content);
+	return writes.length;
 }
 export async function applyInstalledMultiloopWaitSkill(checkOnly = false) {
 	const packageRoot = await realpath(join(root, "packages/cli/node_modules/pi-multiloop"));
