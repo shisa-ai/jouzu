@@ -10,6 +10,7 @@ import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js";
 import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
+import { retainUserWork } from "../dist/flow-control/user-work.js";
 import { createFlowWaitDecisionProducer } from "../dist/flow-control/wait-decisions.js";
 
 async function fixture(
@@ -23,6 +24,7 @@ async function fixture(
 		autoRelease,
 		provider = false,
 		checkpoints,
+		onRequest,
 	} = {},
 ) {
 	const root = supplied ?? (await mkdtemp(join(tmpdir(), "jouzu-ingress-owner-")));
@@ -57,6 +59,7 @@ async function fixture(
 							maxRetries: 0,
 							fetch: async (_url, init) => {
 								sent.push(JSON.parse(init.body).messages);
+								await onRequest?.();
 								return new Response(
 									`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta: { content: "Done" }, finish_reason: "stop" }] })}\n\ndata: [DONE]\n\n`,
 									{ headers: { "content-type": "text/event-stream" } },
@@ -3046,4 +3049,64 @@ test("missing retained producer prevents native user dispatch after reopening", 
 	assert.deepEqual(reopened.ingress.branch().waitSourceRecovery, { restored: 0, missing: ["bg"] });
 	assert.equal((await reopened.ingress.heldInputs()).length, 1);
 	assert.deepEqual(reopened.sent, []);
+});
+
+test("idle user prompts bind distinct durable work identities across equal text and reopening", async (t) => {
+	const seen = [];
+	let authority;
+	const f = await fixture(t, {
+		provider: true,
+		onRequest() {
+			const context = f.ingress.branch().workContext;
+			const work = context.current();
+			seen.push(work);
+			authority = context.authorize(work.id);
+		},
+	});
+	await f.session.prompt("same instruction");
+	assert.throws(() => authority.assertActive(), { code: "stale" });
+	const firstAttachment = f.ingress.branch().attachment;
+	await firstAttachment.waits.shareWork(seen[0].id, "host-user", 1, "bg", Date.now());
+	await firstAttachment.waits.registerExecution(
+		{
+			producer: "bg",
+			handle: "bg-original",
+			execution: "original-execution",
+			workId: seen[0].id,
+			revision: 1,
+			predicates: [{ until: "exit", state: "pending" }],
+		},
+		2,
+		Date.now(),
+	);
+	await f.session.prompt("same instruction");
+	assert.equal(seen.length, 2);
+	assert.notEqual(seen[0].id, seen[1].id);
+	const branch = f.ingress.branch();
+	const records = await branch.attachment.submissions.snapshot();
+	const work = await retainUserWork(branch.attachment, records[0].id, records[0].revision);
+	assert.equal(work.id, seen[0].id);
+	assert.equal((await branch.attachment.waits.authoritySnapshot()).work.length, 2);
+	await f.ingress.dispose();
+	const next = await fixture(t, {
+		root: f.root,
+		provider: true,
+		manager: SessionManager.open(f.session.sessionManager.getSessionFile()),
+	});
+	assert.deepEqual(await retainUserWork(next.ingress.branch().attachment, records[0].id, records[0].revision), work);
+	assert.equal(next.sent.length, 0);
+	assert.equal((await next.ingress.branch().attachment.waits.authoritySnapshot()).executions[0].workId, seen[0].id);
+});
+
+test("user work rejects automated submissions, stale revisions, and cancelled input", async (t) => {
+	const f = await fixture(t, { admit: async () => false });
+	await f.session.sendUserMessage("automated instruction");
+	await f.session.prompt("user instruction");
+	const attachment = f.ingress.branch().attachment;
+	const [automated, user] = await attachment.submissions.snapshot();
+	await assert.rejects(retainUserWork(attachment, automated.id, automated.revision), { code: "identity" });
+	await assert.rejects(retainUserWork(attachment, user.id, user.revision + 1), { code: "stale" });
+	await attachment.submissions.cancel(user.id, user.revision);
+	await assert.rejects(retainUserWork(attachment, user.id, user.revision), { code: "stale" });
+	assert.deepEqual((await attachment.waits.authoritySnapshot()).work, []);
 });

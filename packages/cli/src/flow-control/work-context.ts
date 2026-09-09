@@ -1,6 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import type { PiFlowAttachment } from "./pi-attachment.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
+import { requireAuthorityWork } from "./wait-authority.js";
 
 interface Invocation {
 	attachment: PiFlowAttachment;
@@ -19,16 +20,18 @@ export class FlowWorkContext {
 	async run<T>(work: { id: string; actor: string; revision: number }, invoke: () => Promise<T>): Promise<T> {
 		if (this.active) throw new FlowLedgerError("busy", "Work invocation is already active.");
 		const invocation = { ...work, attachment: this.attachment(), active: true };
-		this.check(invocation);
 		this.active = invocation;
-		return this.invocations.run(invocation, async () => {
-			try {
-				return await invoke();
-			} finally {
-				invocation.active = false;
-				this.active = undefined;
-			}
-		});
+		try {
+			const authority = await invocation.attachment.waits.authoritySnapshot();
+			const registered = requireAuthorityWork(authority, invocation.id, invocation.actor, invocation.revision);
+			if ((registered.lifecycle?.state ?? "active") !== "active")
+				throw new FlowLedgerError("transition", "Inactive work cannot start another invocation.");
+			this.checkLifetime(invocation);
+			return await this.invocations.run(invocation, invoke);
+		} finally {
+			invocation.active = false;
+			this.active = undefined;
+		}
 	}
 
 	/** Bind a live controller attempt using its durable selection, never its rendered content. */

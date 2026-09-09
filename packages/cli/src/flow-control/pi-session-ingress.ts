@@ -14,6 +14,7 @@ import { type PiFlowBranchResources, type PiFlowSessionOptions, PiFlowSessionSer
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowNativeInput } from "./submission-store.js";
 import { activeAdmissionHolds } from "./submission-view.js";
+import { retainUserWork } from "./user-work.js";
 import type { FlowWorkStatus } from "./wait-authority.js";
 import type { FlowWaitClock } from "./wait-deadlines.js";
 import { createFlowWaitDecisionProducer } from "./wait-decisions.js";
@@ -601,10 +602,16 @@ export class PiSessionFlowIngress implements Ingress {
 			}
 			if (this.branch() !== branch || this.pending.get(id) !== pending)
 				throw new FlowLedgerError("stale", "User dispatch changed during context preparation.");
+			const work = user ? await retainUserWork(branch.attachment, id, revision) : undefined;
+			if (this.branch() !== branch || this.pending.get(id) !== pending)
+				throw new FlowLedgerError("stale", "User dispatch changed during work registration.");
 			if (user) this.activeUserInput++;
 			this.pending.delete(id);
 			try {
-				await branch.native.dispatch(id, revision, pending.submission.id, pending.dispatch);
+				const dispatch = () => branch.native.dispatch(id, revision, pending.submission.id, pending.dispatch);
+				if (work && pending.submission.api === "prompt" && this.session?.isIdle && !this.session.isStreaming)
+					await branch.workContext.run(work, dispatch);
+				else await dispatch();
 				await this.refreshUserInput();
 				return true;
 			} finally {
