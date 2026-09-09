@@ -12,7 +12,7 @@ export function createBackgroundControllerExtension(options: {
 	currentWork(): { id: string; revision: number } | undefined;
 	onError(error: unknown): void;
 }): InlineExtension & {
-	attach(attachment: PiFlowAttachment, sessionManager: SessionManager): void;
+	attach(attachment: PiFlowAttachment, sessionManager: SessionManager): "attached" | "unavailable";
 } {
 	let attached: PiFlowAttachment | undefined;
 	let results: BackgroundResultProducer | undefined;
@@ -60,8 +60,10 @@ export function createBackgroundControllerExtension(options: {
 				},
 			});
 			accepting = false;
+			// A rejected handshake is a real failure; no responder means the task extension is not loaded,
+			// which leaves background waits unavailable rather than blocking session creation.
 			if (failure) throw failure;
-			if (!source) throw new FlowLedgerError("identity", "Loaded background execution source is unavailable.");
+			if (!source) return "unavailable";
 			attachBackgroundWaitSource(attachment, source, options.onError, options.currentWork);
 			attached = attachment;
 			registration = undefined;
@@ -76,6 +78,7 @@ export function createBackgroundControllerExtension(options: {
 					},
 				);
 			}
+			return "attached";
 		},
 	};
 }

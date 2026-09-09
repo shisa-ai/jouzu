@@ -1,19 +1,8 @@
 import type { Api, Model } from "@earendil-works/pi-ai";
 import { ModelRuntime } from "@earendil-works/pi-coding-agent";
+import { isQualifiedFlowProvider } from "./provider-registry.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
-const qualified = new Set([
-	"openai-completions",
-	"openai-responses",
-	"openai-codex-responses",
-	"azure-openai-responses",
-	"anthropic-messages",
-	"google-generative-ai",
-	"google-vertex",
-	"mistral-conversations",
-	"pi-messages",
-	"bedrock-converse-stream",
-]);
 type Provider = NonNullable<ReturnType<ModelRuntime["getProvider"]>>;
 type RouteModel = Pick<Model<Api>, "api" | "provider" | "id">;
 
@@ -36,7 +25,7 @@ export function preparePiProviderRoute(runtime: ModelRuntime, model: RouteModel,
 		] as const)
 			if (runtime[key] !== ModelRuntime.prototype[key]) reject();
 		if (
-			!qualified.has(selected.api) ||
+			!isQualifiedFlowProvider(selected.api) ||
 			!runtime.isBuiltinApiProvider(selected.api) ||
 			runtime.getRegisteredNativeProvider(selected.provider) ||
 			runtime.getRegisteredProviderConfig(selected.provider)?.streamSimple

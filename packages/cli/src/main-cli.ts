@@ -318,10 +318,23 @@ export async function runMainCli(args: string[]): Promise<void> {
 		cachePath: join(paths.cacheDir, "textguard", "scans.json"),
 		files: parsed.options.textguardFiles,
 	});
+	// Opt-in until the first-candidate controls (blocked/withheld status, manual retry, health
+	// policy) are usable; see planning FLOW-CONTROL first-candidate checklist.
+	// Imported lazily so `doctor` and `--help` keep working when the Pi runtime is unavailable.
+	const flow =
+		process.env.JOUZU_FLOW_CONTROL === "1"
+			? (await import("./flow-control/flow-runtime.js")).createFlowControlRuntime({
+					root: join(paths.stateDir, "flow"),
+					onError: (error) =>
+						console.error(`Jouzu flow control: ${error instanceof Error ? error.message : String(error)}`),
+				})
+			: undefined;
 	const startPi = () =>
 		pi.main(piArgs, {
 			contentPolicyFactory: nativeTextguard.createPolicy,
+			...(flow ? { flowIngressFactory: flow.flowIngressFactory } : {}),
 			extensionFactories: [
+				...(flow ? flow.extensions : []),
 				{ name: "jouzu-textguard-review", factory: createTextGuardReviewExtension(nativeTextguard) },
 				presentation.createJouzuPresentationExtension(metadata, profile),
 				sessionUi,
@@ -344,7 +357,11 @@ export async function runMainCli(args: string[]): Promise<void> {
 		try {
 			await textguard?.dispose();
 		} finally {
-			await nativeTextguard.close();
+			try {
+				await nativeTextguard.close();
+			} finally {
+				await flow?.dispose();
+			}
 		}
 	}
 }
