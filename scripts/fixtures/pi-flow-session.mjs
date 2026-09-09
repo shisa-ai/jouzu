@@ -244,5 +244,8 @@ export async function createQualifiedFlowSession(
 	// Not inspected by the route guard, which checks provider and handler identity only.
 	runtime.hasConfiguredAuth = () => true;
 	runtime.checkAuth = async () => "fixture-key";
+	// The launcher emits this; extensions that connect their flow host on session_start, such as
+	// multiloop, stay unattached without it.
+	await session.extensionRunner.emit({ type: "session_start" });
 	return { session, runtime, root, bodies };
 }

@@ -83,17 +83,25 @@ test("a live wait blocks lane continuations and delivers its decision once", asy
 	assert.equal(f.bodies.length, settled, "a settled wait is not replayed");
 });
 
-test("wait resolution and the lane continuation compose one logical wake", {
-	todo: "the resolved wait and the multiloop continuation currently dispatch as two requests",
-}, async (t) => {
+test("wait resolution, the lane continuation, and the result compose one logical wake", async (t) => {
 	const f = await assembledSession(t, {
-		producerExtensions: await installedProducerExtensions(t),
+		producerExtensions: await installedProducerExtensions(),
 		script: blockedLaneScript([]),
 	});
 	await f.session.prompt("start the sweep and wait for it");
 	const blocked = f.bodies.length;
 	await idle(1800);
-	assert.equal(f.bodies.length - blocked, 1, "one composed wake carries both the decision and the continuation");
+	assert.equal(f.bodies.length - blocked, 1, "one composed wake, not a decision turn plus a continuation");
+	const { attempts } = await f.ingress.branch().attachment.ledger.snapshot();
+	const composed = attempts.filter((attempt) => attempt.admission);
+	assert.equal(composed.length, 1, "one controller attempt carries the wake");
+	assert.equal(composed[0].admission.choice.intent.producer, "multiloop", "the lane instruction is the selected work");
+	assert.deepEqual(
+		[...new Set(composed[0].members.map((member) => member.kind))].sort(),
+		["result", "wait", "work"],
+		"the decision, the lane instruction, and the background result share one turn",
+	);
+	assert.deepEqual(f.errors, []);
 });
 
 test("the assembly rejects a transport replaced after sealing", async (t) => {
