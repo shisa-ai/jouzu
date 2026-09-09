@@ -2,6 +2,7 @@ import { isDeepStrictEqual } from "node:util";
 import { BACKGROUND_CONTEXT, type Session, type SessionReader, setValue, value } from "@earendil-works/pi-agent-core";
 import type { FlowOwnership } from "./ownership.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
+import { MAX_RETIRED_FLOW_IDENTITIES, retiredIdentityHash, validRetiredIdentityHash } from "./retired-identities.js";
 import {
 	authorityObservations,
 	changeAuthorityWork,
@@ -30,6 +31,20 @@ import {
 
 import { type FlowWaitToolReceipt, waitToolContentHash, waitToolResponse } from "./wait-tool-response.js";
 
+export interface FlowWaitRetirement {
+	/** Exact terminal snapshots whose decision has been observed; cancellation needs no decision receipt. */
+	waits: FlowWaitState[];
+	/** Terminal executions whose producer output is safe to retire. */
+	executions: FlowAuthorityExecution[];
+	/** Completed/stopped work, after its executions and waits are retired. */
+	work: FlowAuthorityWork[];
+}
+interface RetiredIdentities {
+	work: string[];
+	executions: string[];
+	waits: string[];
+}
+
 type Declaration = Parameters<typeof createFlowWait>[0];
 interface State {
 	version: 1;
@@ -37,6 +52,7 @@ interface State {
 	waits: FlowWaitState[];
 	authority?: FlowWaitAuthority;
 	toolReceipts?: FlowWaitToolReceipt[];
+	retired?: RetiredIdentities;
 }
 const address = value<State>("jouzu.flow.waits", "v1");
 
@@ -68,6 +84,7 @@ export class FlowWaitStore {
 	private initialized = false;
 	private waitingWorkIds: string[] = [];
 	private inactiveWorkIds: string[] = [];
+	private retiredWorkHashes: string[] = [];
 	private work: FlowAuthorityWork[] = [];
 	private mutations = 0;
 	private readonly listeners = new Set<{ changed(): void; onError(error: unknown): void }>();
@@ -94,11 +111,12 @@ export class FlowWaitStore {
 	}
 
 	/** Synchronous admission view, published only after a successful durable commit. */
-	gate(): { waitingWorkIds: string[]; inactiveWorkIds: string[]; updating: boolean } {
+	gate(): { waitingWorkIds: string[]; inactiveWorkIds: string[]; retiredWorkHashes?: string[]; updating: boolean } {
 		this.ownership.assertActive();
 		return {
 			waitingWorkIds: [...this.waitingWorkIds],
 			inactiveWorkIds: [...this.inactiveWorkIds],
+			...(this.retiredWorkHashes.length ? { retiredWorkHashes: [...this.retiredWorkHashes] } : {}),
 			updating: !this.initialized || this.mutations > 0,
 		};
 	}
@@ -160,6 +178,30 @@ export class FlowWaitStore {
 			Buffer.byteLength(JSON.stringify(state)) > 4 * 1024 * 1024
 		)
 			throw new FlowLedgerError("schema", "Invalid wait storage scope or capacity.");
+		if (state.retired !== undefined) {
+			const retired = state.retired;
+			if (!retired || typeof retired !== "object")
+				throw new FlowLedgerError("schema", "Invalid retired identity index.");
+			const groups = [retired.work, retired.executions, retired.waits];
+			if (
+				groups.some(
+					(group) =>
+						!Array.isArray(group) ||
+						group.some((id) => !validRetiredIdentityHash(id)) ||
+						new Set(group).size !== group.length,
+				) ||
+				groups.reduce((count, group) => count + group.length, 0) > MAX_RETIRED_FLOW_IDENTITIES
+			)
+				throw new FlowLedgerError("capacity", "Invalid retired identity index or capacity.");
+			if (
+				state.waits.some((wait) => retired.waits.includes(retiredIdentityHash(wait.token))) ||
+				state.authority?.work.some((work) => retired.work.includes(retiredIdentityHash(work.id))) ||
+				state.authority?.executions.some((execution) =>
+					retired.executions.includes(retiredIdentityHash(execution.producer, execution.execution)),
+				)
+			)
+				throw new FlowLedgerError("identity", "Retired identity is still registered.");
+		}
 		if (state.toolReceipts !== undefined) {
 			if (!Array.isArray(state.toolReceipts) || state.toolReceipts.length > 256)
 				throw new FlowLedgerError("capacity", "Invalid wait tool receipt count.");
@@ -235,6 +277,7 @@ export class FlowWaitStore {
 					this.validate(state);
 					if (changed || !this.initialized) await mutation.commit([setValue(address, state)], context);
 					this.work = structuredClone(state.authority?.work ?? []);
+					this.retiredWorkHashes = [...(state.retired?.work ?? [])];
 					this.inactiveWorkIds = this.work
 						.filter((work) => (work.lifecycle?.state ?? "active") !== "active")
 						.map((work) => work.id);
@@ -278,6 +321,10 @@ export class FlowWaitStore {
 		maxDurationMs: number,
 		replaceToken?: string,
 	): FlowWaitState {
+		if (state.retired?.work.includes(retiredIdentityHash(request.workId)))
+			throw new FlowLedgerError("stale", "Work identity has been retired.");
+		if (state.retired?.waits.includes(retiredIdentityHash(request.token)))
+			throw new FlowLedgerError("stale", "Wait token has been retired.");
 		const next = createFlowWait(request, observations, now, maxDurationMs);
 		if (state.waits.some((wait) => wait.token === next.token))
 			throw new FlowLedgerError("identity", "Wait token is already registered.");
@@ -307,6 +354,8 @@ export class FlowWaitStore {
 	}
 	registerWork(id: string, owner: string, now: number) {
 		return this.authorityChange(now, (authority, state) => {
+			if (state.retired?.work.includes(retiredIdentityHash(id)))
+				throw new FlowLedgerError("stale", "Work identity has been retired.");
 			if (!authority.work.some((work) => work.id === id) && state.waits.some((wait) => wait.workId === id))
 				throw new FlowLedgerError(
 					"identity",
@@ -332,12 +381,16 @@ export class FlowWaitStore {
 	}
 	registerExecution(input: Omit<FlowAuthorityExecution, "observedAt">, workRevision: number, now: number) {
 		const captured = structuredClone(input);
-		return this.authorityChange(now, (authority) => registerAuthorityExecution(authority, captured, workRevision, now));
+		return this.authorityChange(now, (authority, state) => {
+			this.requireUnretiredExecution(state, captured);
+			return registerAuthorityExecution(authority, captured, workRevision, now);
+		});
 	}
 	/** Reattachment snapshots may advance an existing exact execution, never replace its identity. */
 	synchronizeExecution(input: Omit<FlowAuthorityExecution, "observedAt">, workRevision: number, now: number) {
 		const captured = structuredClone(input);
-		return this.authorityChange(now, (authority) => {
+		return this.authorityChange(now, (authority, state) => {
+			this.requireUnretiredExecution(state, captured);
 			requireAuthorityWork(authority, captured.workId, captured.producer, workRevision);
 			const existing = authority.executions.find(
 				(execution) => execution.producer === captured.producer && execution.execution === captured.execution,
@@ -428,6 +481,107 @@ export class FlowWaitStore {
 				BACKGROUND_CONTEXT,
 			),
 		);
+	}
+
+	private requireUnretiredExecution(state: State, execution: { producer: string; execution: string }): void {
+		if (state.retired?.executions.includes(retiredIdentityHash(execution.producer, execution.execution)))
+			throw new FlowLedgerError("stale", "Execution identity has been retired.");
+	}
+
+	/** Host retention coordinator supplies exact, observed snapshots under its idle reservation. */
+	retire(request: FlowWaitRetirement): Promise<{ work: number; executions: number; waits: number }> {
+		const captured = structuredClone(request);
+		return this.update((state) => {
+			if (
+				!captured ||
+				!Array.isArray(captured.work) ||
+				!Array.isArray(captured.executions) ||
+				!Array.isArray(captured.waits) ||
+				captured.work.length > 256 ||
+				captured.executions.length > 1024 ||
+				captured.waits.length > 128
+			)
+				throw new FlowLedgerError("schema", "Invalid wait retirement selection.");
+			state.retired ??= { work: [], executions: [], waits: [] };
+			const retired = state.retired;
+			const select = <T>(
+				requested: T[],
+				records: T[],
+				category: keyof RetiredIdentities,
+				key: (item: T) => string,
+			): T[] => {
+				const selected: T[] = [];
+				const seen = new Set<string>();
+				for (const item of requested) {
+					const id = key(item);
+					if (seen.has(id)) throw new FlowLedgerError("identity", "Retirement repeats an identity.");
+					seen.add(id);
+					const stored = records.find((record) => key(record) === id);
+					if (!stored && retired[category].includes(id)) continue;
+					if (!stored || !isDeepStrictEqual(stored, item))
+						throw new FlowLedgerError("stale", "Retirement snapshot changed.");
+					selected.push(stored);
+				}
+				return selected;
+			};
+			const waits = select(captured.waits, state.waits, "waits", (wait) => retiredIdentityHash(wait.token));
+			if (waits.some((wait) => wait.state === "waiting"))
+				throw new FlowLedgerError("busy", "Live waits cannot be retired.");
+			const remainingWaits = state.waits.filter((wait) => !waits.includes(wait));
+			const authority = state.authority;
+			const executions = select(captured.executions, authority?.executions ?? [], "executions", (execution) =>
+				retiredIdentityHash(execution.producer, execution.execution),
+			);
+			if (
+				executions.some(
+					(execution) =>
+						execution.predicates.some((predicate) => predicate.state === "pending") ||
+						remainingWaits.some((wait) =>
+							wait.on.some(
+								(handle) => handle.producer === execution.producer && handle.execution === execution.execution,
+							),
+						),
+				)
+			)
+				throw new FlowLedgerError("busy", "Referenced or pending executions cannot be retired.");
+			const remainingExecutions = (authority?.executions ?? []).filter((execution) => !executions.includes(execution));
+			const work = select(captured.work, authority?.work ?? [], "work", (work) => retiredIdentityHash(work.id));
+			if (
+				work.some(
+					(work) =>
+						!["stopped", "completed"].includes(work.lifecycle?.state ?? "active") ||
+						remainingWaits.some((wait) => wait.workId === work.id) ||
+						remainingExecutions.some((execution) => execution.workId === work.id),
+				)
+			)
+				throw new FlowLedgerError("busy", "Active or referenced work cannot be retired.");
+			if (
+				retired.work.length +
+					retired.executions.length +
+					retired.waits.length +
+					work.length +
+					executions.length +
+					waits.length >
+				MAX_RETIRED_FLOW_IDENTITIES
+			)
+				throw new FlowLedgerError("capacity", "Retired identity history is full; no records were removed.");
+			retired.work.push(...work.map((work) => retiredIdentityHash(work.id)));
+			retired.executions.push(
+				...executions.map((execution) => retiredIdentityHash(execution.producer, execution.execution)),
+			);
+			retired.waits.push(...waits.map((wait) => retiredIdentityHash(wait.token)));
+			state.waits = remainingWaits;
+			if (state.toolReceipts)
+				state.toolReceipts = state.toolReceipts.filter(
+					(receipt) => !waits.some((wait) => wait.token === receipt.token),
+				);
+			if (authority) {
+				authority.waitTokens = authority.waitTokens.filter((token) => !waits.some((wait) => wait.token === token));
+				authority.executions = remainingExecutions;
+				authority.work = authority.work.filter((item) => !work.includes(item));
+			}
+			return { work: work.length, executions: executions.length, waits: waits.length };
+		});
 	}
 
 	/** Atomically retain every newly detected expiry, including deadlines elapsed while offline. */

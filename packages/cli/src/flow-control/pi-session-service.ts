@@ -13,7 +13,7 @@ import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import type { FlowNativeInput, RetainedSubmission } from "./submission-store.js";
 import { captureUserWorkParticipants, consumedUserWork } from "./user-work.js";
 import type { FlowWorkStatus } from "./wait-authority.js";
-import { createFlowWaitDecisionProducer } from "./wait-decisions.js";
+import { createFlowWaitDecisionProducer, observedFlowWaits } from "./wait-decisions.js";
 
 import { FlowWorkContext } from "./work-context.js";
 
@@ -155,6 +155,7 @@ export class PiFlowSessionService {
 						...policy,
 						waitingWorkIds: [...new Set([...policy.waitingWorkIds, ...waits.waitingWorkIds])],
 						inactiveWorkIds: [...new Set([...(policy.inactiveWorkIds ?? []), ...waits.inactiveWorkIds])],
+						retiredWorkHashes: [...new Set([...(policy.retiredWorkHashes ?? []), ...(waits.retiredWorkHashes ?? [])])],
 						recoveryBlocked:
 							waits.updating ||
 							attachment.waitProducers.updating ||
@@ -193,6 +194,32 @@ export class PiFlowSessionService {
 			await this.closeBranch();
 			throw error;
 		}
+	}
+
+	/** Retire observed wait history while native execution and queue mutation are fenced. */
+	retireWaitHistory() {
+		return this.registry.run(async () => {
+			const branch = this.branch();
+			const result = await branch.host.atIdle(async () => {
+				if (this.branch() !== branch) throw new FlowLedgerError("stale", "Wait retirement branch changed.");
+				const attachment = branch.attachment;
+				const ledger = await attachment.ledger.snapshot();
+				if (ledger.activeAttemptId || attachment.waitProducers.updating)
+					throw new FlowLedgerError("busy", "Wait retirement requires settled work and producer evidence.");
+				const waits = await observedFlowWaits(
+					await attachment.waits.snapshot(),
+					{
+						submissions: attachment.submissions,
+						requests: attachment.nativeRequests,
+					},
+					await attachment.waits.toolReceipts(),
+					ledger,
+				);
+				return attachment.waits.retire({ waits, work: [], executions: [] });
+			});
+			if (result.kind === "busy") throw new FlowLedgerError("busy", "Wait retirement requires an idle session.");
+			return result.value;
+		});
 	}
 
 	changeWork(id: string, owner: string, revision: number, status: FlowWorkStatus, reason: string, now: number) {

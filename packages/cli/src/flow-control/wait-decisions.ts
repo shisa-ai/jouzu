@@ -2,8 +2,9 @@ import { createHash } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 import type { FlowIntent } from "./admission.js";
 import type { FlowProducer } from "./controller.js";
+import { FlowModelInput } from "./model-input.js";
 import type { FlowNativeRequestStore } from "./native-request-store.js";
-import { FlowLedgerError } from "./receipt-ledger.js";
+import { FlowLedgerError, type FlowLedgerState } from "./receipt-ledger.js";
 import type { FlowSubmissionStore } from "./submission-store.js";
 import type { FlowWaitState } from "./wait-state.js";
 import type { FlowWaitStore } from "./wait-store.js";
@@ -117,6 +118,45 @@ async function deliveredNativeDecisions(
 		}
 	}
 	return delivered;
+}
+
+/** Select only cancelled or exactly observed terminal waits for host-owned retention. */
+export async function observedFlowWaits(
+	waits: FlowWaitState[],
+	native: NativeWaitEvidence,
+	toolReceipts: FlowWaitToolReceipt[],
+	ledger: FlowLedgerState,
+): Promise<FlowWaitState[]> {
+	const delivered = await deliveredNativeDecisions(waits, native, toolReceipts);
+	return waits.filter((wait) => {
+		if (wait.state === "cancelled") return true;
+		const intent = descriptor(wait);
+		if (!intent) return false;
+		if (delivered.has(intent.id)) return true;
+		return ledger.attempts.some((attempt) => {
+			if (attempt.phase !== "settled" || attempt.outcome !== "success") return false;
+			const expected = FlowModelInput.compose(
+				attempt.id,
+				[{ id: intent.id, revision: intent.revision, kind: "wait", text: decisionText(wait) }],
+				Number.MAX_SAFE_INTEGER,
+			).members[0];
+			return (
+				attempt.members.some((member) => isDeepStrictEqual(member, expected)) &&
+				attempt.requests.some(
+					(request) =>
+						request.handedOff &&
+						request.outcome === "success" &&
+						request.payload?.inclusion.some(
+							(item) =>
+								item.id === expected.id &&
+								item.revision === expected.revision &&
+								item.disposition === "included" &&
+								item.contentHash === expected.contentHash,
+						),
+				)
+			);
+		});
+	});
 }
 
 /** Terminal wait state is the durable event; existing input receipts own its delivery and recovery. */

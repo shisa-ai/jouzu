@@ -2927,6 +2927,11 @@ for (const boundary of ["build", "claim"]) {
 		const attempts = (await f.ingress.branch().attachment.ledger.snapshot()).attempts;
 		assert.ok(attempts.every((attempt) => attempt.phase === "cancelled" && attempt.consumed === false));
 		await assert.rejects(f.ingress.changeWork("work", "lane", 2, "active", "replay"), { code: "transition" });
+		const retired = (await waits.authoritySnapshot()).work;
+		await waits.retire({ work: retired, waits: [], executions: [] });
+		await registration.changed();
+		assert.equal(f.sent.length, 0);
+		await assert.rejects(waits.registerWork("work", "lane", Date.now()), { code: "stale" });
 		const manager = SessionManager.open(f.session.sessionManager.getSessionFile());
 		await f.ingress.dispose();
 		const reopened = await fixture(t, { root: f.root, provider: true, manager });

@@ -294,6 +294,10 @@ export class PiSessionFlowIngress implements Ingress {
 			return result;
 		});
 	}
+	retireWaitHistory() {
+		return this.manage((service) => service.retireWaitHistory());
+	}
+
 	changeWork(id: string, owner: string, revision: number, status: FlowWorkStatus, reason: string) {
 		return this.manage((service) =>
 			service.changeWork(id, owner, revision, status, reason, this.options.autoRelease?.clock?.now() ?? Date.now()),

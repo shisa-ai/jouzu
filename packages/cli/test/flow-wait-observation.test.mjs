@@ -953,3 +953,30 @@ for (const credentialFailureAt of [0, 2])
 		}
 		assert.deepEqual(f.errors, []);
 	});
+
+for (const observed of [true, false])
+	test(`host wait retirement preserves unobserved decisions: observed=${observed}`, async (t) => {
+		const f = await fixture(t, { failure: !observed });
+		await f.session.prompt("wait");
+		const original = (await f.ingress.branch().attachment.waits.snapshot())[0];
+		assert.equal(original.state, "resolved");
+		const result = await f.ingress.retireWaitHistory();
+		assert.equal(result.waits, observed ? 1 : 0);
+		assert.equal((await f.ingress.branch().attachment.waits.snapshot()).length, observed ? 0 : 1);
+		assert.equal((await f.decisions()).length, observed ? 0 : 1);
+		if (observed) assert.deepEqual(await f.ingress.retireWaitHistory(), { waits: 0, work: 0, executions: 0 });
+		assert.deepEqual(f.errors, []);
+	});
+
+test("host wait retirement recognizes a settled composed decision", async (t) => {
+	const f = await fixture(t, { automatic: true, pending: true });
+	await f.session.prompt("wait");
+	assert.equal((await f.ingress.branch().attachment.waits.snapshot())[0].state, "waiting");
+	assert.equal((await f.ingress.retireWaitHistory()).waits, 0);
+	await f.complete();
+	for (let i = 0; i < 10; i++) await tick();
+	assert.equal(f.sent.length, 3);
+	assert.equal((await f.ingress.retireWaitHistory()).waits, 1);
+	assert.deepEqual(await f.ingress.branch().attachment.waits.snapshot(), []);
+	assert.deepEqual(f.errors, []);
+});

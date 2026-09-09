@@ -1,3 +1,4 @@
+import { MAX_RETIRED_FLOW_IDENTITIES, retiredIdentityHash, validRetiredIdentityHash } from "./retired-identities.js";
 export type FlowRank = 2 | 3 | 4 | 5 | 6;
 export interface FlowAdmissionState {
 	version: 1;
@@ -23,6 +24,7 @@ export interface FlowAdmissionGates {
 	waitingWorkIds: string[];
 	/** Explicitly paused, stopped, or completed work cannot request another turn. */
 	inactiveWorkIds?: string[];
+	retiredWorkHashes?: string[];
 }
 export interface FlowAdmissionChoice {
 	revision: number;
@@ -150,6 +152,10 @@ export function chooseFlowIntent(
 		typeof gates.recoveryBlocked !== "boolean" ||
 		!Array.isArray(gates.waitingWorkIds) ||
 		gates.waitingWorkIds.some((id) => !identity(id)) ||
+		(gates.retiredWorkHashes !== undefined &&
+			(!Array.isArray(gates.retiredWorkHashes) ||
+				gates.retiredWorkHashes.length > MAX_RETIRED_FLOW_IDENTITIES ||
+				gates.retiredWorkHashes.some((hash) => !validRetiredIdentityHash(hash)))) ||
 		(gates.inactiveWorkIds !== undefined &&
 			(!Array.isArray(gates.inactiveWorkIds) || gates.inactiveWorkIds.some((id) => !identity(id))))
 	)
@@ -157,6 +163,7 @@ export function chooseFlowIntent(
 	if (!gates.hostReady || gates.userPending || gates.recoveryBlocked) return undefined;
 	const waits = new Set(gates.waitingWorkIds);
 	const inactive = new Set(gates.inactiveWorkIds);
+	const retired = new Set(gates.retiredWorkHashes);
 	const eligible = intents
 		.filter((intent) => {
 			if (!intent.runnable) return false;
@@ -164,6 +171,7 @@ export function chooseFlowIntent(
 			if (intent.rank === 6) return waits.size === 0;
 			return (
 				!inactive.has(intent.workId ?? "") &&
+				!retired.has(retiredIdentityHash(intent.workId ?? "")) &&
 				!waits.has(intent.workId ?? "") &&
 				(waits.size === 0 || intent.independent)
 			);
