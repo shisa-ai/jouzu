@@ -24,7 +24,7 @@ type Ingress = NonNullable<CreateAgentSessionOptions["flowIngress"]>;
 type Submission = Parameters<Ingress["submit"]>[0];
 export interface PiFlowIngressOptions extends Omit<PiFlowSessionOptions, "admitNativeQueue" | "decorateNativeContext"> {
 	/** Opt in to host-boundary release; failures require visible host reporting. */
-	autoRelease?: { onError(error: unknown): void; clock?: FlowWaitClock };
+	autoRelease?: { onError(error: unknown): void; clock?: FlowWaitClock; retireHistory?: boolean };
 	/** Semantic admission override; omission uses conservative unadapted-send admission. */
 	admit?(
 		submission: Submission,
@@ -238,6 +238,15 @@ export class PiSessionFlowIngress implements Ingress {
 					.then(async () => {
 						// Drain an already admitted native pass before considering another dispatch.
 						await this.releasing;
+						if (wakeSemantic && this.options.autoRelease?.retireHistory && !this.disposed && !this.fenced) {
+							try {
+								await this.service?.retireWaitHistory(true);
+							} catch (error) {
+								if (error instanceof FlowLedgerError && error.code === "capacity")
+									this.options.autoRelease.onError(error);
+								else if (!(error instanceof FlowLedgerError) || !["busy", "stale"].includes(error.code)) throw error;
+							}
+						}
 						if (wakeSemantic && !this.disposed && !this.fenced && this.branch().controller.view().producers.length)
 							await this.wakeProducers();
 						// Producer scheduling releases retained users first, then applies semantic rank ordering.
@@ -294,8 +303,8 @@ export class PiSessionFlowIngress implements Ingress {
 			return result;
 		});
 	}
-	retireWaitHistory() {
-		return this.manage((service) => service.retireWaitHistory());
+	retireWaitHistory(includeUserWork = false) {
+		return this.manage((service) => service.retireWaitHistory(includeUserWork));
 	}
 
 	changeWork(id: string, owner: string, revision: number, status: FlowWorkStatus, reason: string) {

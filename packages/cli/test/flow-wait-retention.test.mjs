@@ -55,6 +55,22 @@ async function completed(store, id = "work") {
 	const work = await store.registerWork(id, "bg", 1);
 	return store.changeWork(id, "bg", work.revision, "completed", "Finished", 2);
 }
+
+test("finished user retirement validates membership, lifecycle, and exact snapshots atomically", async (t) => {
+	const f = await fixture(t);
+	const inputs = [{ id: "input", revision: 1 }];
+	const work = await f.store.registerWork("user", "host-user", 1, inputs);
+	inputs[0].revision = 2;
+	assert.equal(work.userInputs[0].revision, 1);
+	await assert.rejects(f.store.registerWork("user", "host-user", 1, inputs), { code: "identity" });
+	await assert.rejects(f.store.retire({ ...empty(), finishedUserWork: [null] }), { code: "identity" });
+	await assert.rejects(f.store.retire({ ...empty(), finishedUserWork: [work, work] }), { code: "identity" });
+	const paused = await f.store.changeWork(work.id, work.owner, 1, "paused", "pause", 2);
+	await assert.rejects(f.store.retire({ ...empty(), finishedUserWork: [work] }), { code: "stale" });
+	await assert.rejects(f.store.retire({ ...empty(), finishedUserWork: [paused] }), { code: "identity" });
+	await f.reopen();
+	assert.deepEqual((await f.store.authoritySnapshot()).work, [paused]);
+});
 async function dependency(store, { id = "work", token = "wait", state = "pending" } = {}) {
 	const work = await store.registerWork(id, "bg", 1);
 	const execution = await store.registerExecution(

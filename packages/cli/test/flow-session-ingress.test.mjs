@@ -11,6 +11,7 @@ import { assistant, createFlowSession, deferred } from "../../../scripts/fixture
 import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js";
 import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
 import { consumedUserWork, retainUserWork } from "../dist/flow-control/user-work.js";
+import { finishedUserWork } from "../dist/flow-control/user-work-retention.js";
 import { createFlowWaitDecisionProducer } from "../dist/flow-control/wait-decisions.js";
 
 async function fixture(
@@ -97,6 +98,147 @@ async function fixture(
 	});
 	return { root, session, ingress, sent };
 }
+
+test("user history retirement observes native input and fences replay after reopen", async (t) => {
+	const f = await fixture(t, { provider: true });
+	await f.session.prompt("finish this input");
+	const attachment = f.ingress.branch().attachment;
+	const [record] = await attachment.submissions.snapshot();
+	const [work] = (await attachment.waits.authoritySnapshot()).work;
+	assert.deepEqual(work.userInputs, [{ id: record.id, revision: record.revision }]);
+	assert.deepEqual(await f.ingress.retireWaitHistory(true), { work: 1, waits: 0, executions: 0 });
+	assert.deepEqual(await f.ingress.retireWaitHistory(true), { work: 0, waits: 0, executions: 0 });
+	await f.ingress.dispose();
+	const next = await fixture(t, {
+		root: f.root,
+		provider: true,
+		manager: SessionManager.open(f.session.sessionManager.getSessionFile()),
+	});
+	await assert.rejects(retainUserWork(next.ingress.branch().attachment, record.id, record.revision), { code: "stale" });
+	await next.session.prompt("new input");
+	assert.equal(next.sent.length, 1);
+	assert.equal((await next.ingress.branch().attachment.waits.authoritySnapshot()).work.length, 1);
+});
+
+test("user retirement preserves pause, execution references, and unobserved source claims", async (t) => {
+	const f = await fixture(t, { provider: true });
+	await f.session.prompt("finished");
+	const attachment = f.ingress.branch().attachment;
+	const [work] = (await attachment.waits.authoritySnapshot()).work;
+	const records = await attachment.submissions.snapshot();
+	const requests = await attachment.nativeRequests.snapshot();
+	assert.deepEqual(finishedUserWork([work], records, requests, new Set()), [work]);
+	for (const mutate of [
+		({ records }) => {
+			records[0].dispatch.phase = "failed";
+		},
+		({ requests }) => {
+			requests[0].outcome = "failure";
+		},
+		({ requests }) => {
+			requests[0].outcome = "withheld";
+		},
+		({ requests }) => {
+			delete requests[0].payload;
+		},
+		({ requests }) => {
+			requests[0].payload.sources[0].disposition = "removed";
+		},
+		({ records }) => {
+			records[0].dispatch.promptClaims.push({ inputIndex: 0, messageIndex: 99 });
+		},
+		({ work }) => {
+			work.userInputs[0].revision += 1;
+		},
+		({ work }) => {
+			delete work.userInputs;
+		},
+	]) {
+		const copy = structuredClone({ work, records, requests });
+		mutate(copy);
+		assert.deepEqual(finishedUserWork([copy.work], copy.records, copy.requests, new Set()), []);
+	}
+	const failedThenStatus = structuredClone(requests);
+	failedThenStatus[0].outcome = "failure";
+	failedThenStatus.push({ ...requests[0], id: "later-successful-status" });
+	assert.deepEqual(finishedUserWork([work], records, failedThenStatus, new Set()), []);
+	assert.deepEqual(finishedUserWork([work], records, requests, new Set([work.id])), []);
+	await attachment.waits.changeWork(work.id, work.owner, work.revision, "paused", "User pause", Date.now());
+	assert.equal((await f.ingress.retireWaitHistory(true)).work, 0);
+	const resumed = await attachment.waits.changeWork(work.id, work.owner, 2, "active", "User resume", Date.now());
+	await attachment.waits.registerExecution(
+		{
+			producer: "host-user",
+			handle: "job",
+			execution: "execution",
+			workId: work.id,
+			revision: 1,
+			predicates: [{ until: "exit", state: "satisfied" }],
+		},
+		resumed.revision,
+		Date.now(),
+	);
+	assert.equal((await f.ingress.retireWaitHistory(true)).work, 0);
+});
+
+test("automatic user history cleanup runs once after settled host input", async (t) => {
+	const errors = [];
+	const f = await fixture(t, {
+		provider: true,
+		autoRelease: { retireHistory: true, onError: (error) => errors.push(error) },
+	});
+	await f.session.prompt("first");
+	for (let i = 0; i < 100 && (await f.ingress.branch().attachment.waits.authoritySnapshot()).work.length; i++)
+		await new Promise((resolve) => setTimeout(resolve, 10));
+	assert.equal((await f.ingress.branch().attachment.waits.authoritySnapshot()).work.length, 0);
+	await f.session.prompt("second");
+	for (let i = 0; i < 100 && (await f.ingress.branch().attachment.waits.authoritySnapshot()).work.length; i++)
+		await new Promise((resolve) => setTimeout(resolve, 10));
+	assert.equal((await f.ingress.branch().attachment.waits.authoritySnapshot()).work.length, 0);
+	assert.equal(f.sent.length, 2);
+	assert.deepEqual(errors, []);
+});
+
+test("user retirement retains dormant producer work and rejects changed snapshots", async (t) => {
+	const f = await fixture(t, { provider: true });
+	await f.session.prompt("producer-owned follow-through");
+	const branch = f.ingress.branch();
+	const [work] = (await branch.attachment.waits.authoritySnapshot()).work;
+	let items = [
+		{
+			id: "intent",
+			revision: "1",
+			producer: "loop",
+			sequence: 0,
+			rank: 4,
+			workId: work.id,
+			workRevision: String(work.revision),
+			independent: false,
+			runnable: false,
+		},
+	];
+	const registration = branch.controller.register(
+		{
+			version: 1,
+			namespace: "loop",
+			snapshot: async () => items,
+			build: async () => assert.fail("retention must not build"),
+		},
+		async () => {},
+	);
+	assert.equal((await f.ingress.retireWaitHistory(true)).work, 0);
+	items = [];
+	const retire = branch.attachment.waits.retire.bind(branch.attachment.waits);
+	t.mock.method(branch.attachment.waits, "retire", async (...args) => {
+		await registration.changed();
+		return retire(...args);
+	});
+	await assert.rejects(f.ingress.retireWaitHistory(true), { code: "stale" });
+	assert.equal((await branch.attachment.waits.authoritySnapshot()).work.length, 1);
+	t.mock.restoreAll();
+	assert.equal((await f.ingress.retireWaitHistory(true)).work, 1);
+	assert.equal(f.sent.length, 1);
+});
 
 test("session ingress retains original input before policy and native dispatch", async (t) => {
 	let seen;

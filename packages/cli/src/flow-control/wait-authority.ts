@@ -10,6 +10,8 @@ export interface FlowAuthorityWork {
 	participants: string[];
 	revision: number;
 	createdAt: number;
+	/** Exact host submissions underlying a user invocation or consumed batch. */
+	userInputs?: { id: string; revision: number }[];
 	/** Omitted in legacy records, whose work remains active. */
 	lifecycle?: { state: FlowWorkStatus; changedAt: number; reason: string };
 }
@@ -58,6 +60,13 @@ export function validateWaitAuthority(authority: FlowWaitAuthority): void {
 			!identity(work.owner) ||
 			!revision(work.revision) ||
 			!instant(work.createdAt) ||
+			(work.userInputs !== undefined &&
+				(work.owner !== "host-user" ||
+					!Array.isArray(work.userInputs) ||
+					!work.userInputs.length ||
+					work.userInputs.length > 1024 ||
+					work.userInputs.some((input) => !input || !identity(input.id) || !revision(input.revision)) ||
+					new Set(work.userInputs.map((input) => input.id)).size !== work.userInputs.length)) ||
 			(work.lifecycle !== undefined &&
 				(!work.lifecycle ||
 					!["active", "paused", "stopped", "completed"].includes(work.lifecycle.state) ||
@@ -145,13 +154,26 @@ export function registerAuthorityWork(
 	id: string,
 	owner: string,
 	now: number,
+	userInputs?: FlowAuthorityWork["userInputs"],
 ): FlowAuthorityWork {
 	const existing = authority.work.find((work) => work.id === id);
 	if (existing) {
 		if (existing.owner !== owner) throw new FlowLedgerError("identity", "Work already belongs to another owner.");
+		if (userInputs !== undefined) {
+			if (existing.userInputs !== undefined && !isDeepStrictEqual(existing.userInputs, userInputs))
+				throw new FlowLedgerError("identity", "User work source membership changed.");
+			existing.userInputs ??= structuredClone(userInputs);
+		}
 		return existing;
 	}
-	const work = { id, owner, participants: [owner], revision: 1, createdAt: now };
+	const work: FlowAuthorityWork = {
+		id,
+		owner,
+		participants: [owner],
+		revision: 1,
+		createdAt: now,
+		...(userInputs ? { userInputs: structuredClone(userInputs) } : {}),
+	};
 	authority.work.push(work);
 	return work;
 }

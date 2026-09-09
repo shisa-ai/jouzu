@@ -12,6 +12,7 @@ import { PiWorkTools } from "./pi-work-tools.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import type { FlowNativeInput, RetainedSubmission } from "./submission-store.js";
 import { captureUserWorkParticipants, consumedUserWork } from "./user-work.js";
+import { finishedUserWork } from "./user-work-retention.js";
 import type { FlowWorkStatus } from "./wait-authority.js";
 import { createFlowWaitDecisionProducer, observedFlowWaits } from "./wait-decisions.js";
 
@@ -197,7 +198,7 @@ export class PiFlowSessionService {
 	}
 
 	/** Retire observed wait history while native execution and queue mutation are fenced. */
-	retireWaitHistory() {
+	retireWaitHistory(includeUserWork = false) {
 		return this.registry.run(async () => {
 			const branch = this.branch();
 			const result = await branch.host.atIdle(async () => {
@@ -215,7 +216,27 @@ export class PiFlowSessionService {
 					await attachment.waits.toolReceipts(),
 					ledger,
 				);
-				return attachment.waits.retire({ waits, work: [], executions: [] });
+				const references = includeUserWork ? await branch.controller.retentionReferences() : undefined;
+				const authority = await attachment.waits.authoritySnapshot();
+				const referenced = references?.workIds ?? new Set<string>();
+				for (const execution of authority.executions) referenced.add(execution.workId);
+				for (const wait of await attachment.waits.snapshot())
+					if (!waits.some((selected) => selected.token === wait.token && selected.workId === wait.workId))
+						referenced.add(wait.workId);
+				const finished = includeUserWork
+					? finishedUserWork(
+							authority.work,
+							await attachment.submissions.snapshot(),
+							await attachment.nativeRequests.snapshot(),
+							referenced,
+						)
+					: [];
+				if (!waits.length && !finished.length) return { work: 0, executions: 0, waits: 0 };
+				return attachment.waits.retire({ waits, work: [], executions: [], finishedUserWork: finished }, () => {
+					references?.assertCurrent();
+					if (attachment.waitProducers.updating)
+						throw new FlowLedgerError("busy", "Producer evidence changed during retention.");
+				});
 			});
 			if (result.kind === "busy") throw new FlowLedgerError("busy", "Wait retirement requires an idle session.");
 			return result.value;

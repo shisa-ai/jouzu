@@ -34,7 +34,9 @@ export async function retainUserWork(
 	const key = createHash("sha256")
 		.update(JSON.stringify(["user-work-v1", scope.sessionId, scope.branchId, record.id, record.revision]))
 		.digest("hex");
-	let work = await attachment.waits.registerWork(`user:${key}`, "host-user", record.acceptedAt);
+	let work = await attachment.waits.registerWork(`user:${key}`, "host-user", record.acceptedAt, [
+		{ id: record.id, revision: record.revision },
+	]);
 	for (const participant of participants)
 		if (!work.participants.includes(participant))
 			work = await attachment.waits.shareWork(work.id, "host-user", work.revision, participant, record.acceptedAt);
@@ -51,6 +53,7 @@ export async function consumedUserWork(
 	if (!claimed.length) return undefined;
 	const records = await attachment.submissions.snapshot();
 	const work = [];
+	const inputs: { id: string; revision: number }[] = [];
 	for (const item of claimed) {
 		const matches = records.filter(
 			(record) =>
@@ -63,13 +66,14 @@ export async function consumedUserWork(
 				),
 		);
 		if (matches.length !== 1 || !isNativeUserInput(matches[0].submission)) return undefined;
+		inputs.push({ id: matches[0].id, revision: matches[0].revision });
 		work.push(await retainUserWork(attachment, matches[0].id, matches[0].revision, participants));
 	}
 	if (work.length === 1) return work[0];
 	const key = createHash("sha256")
 		.update(JSON.stringify(["user-batch-v1", work.map((item) => item.id)]))
 		.digest("hex");
-	let batch = await attachment.waits.registerWork(`user-batch:${key}`, "host-user", Date.now());
+	let batch = await attachment.waits.registerWork(`user-batch:${key}`, "host-user", Date.now(), inputs);
 	for (const participant of participants)
 		if (!batch.participants.includes(participant))
 			batch = await attachment.waits.shareWork(batch.id, "host-user", batch.revision, participant, Date.now());

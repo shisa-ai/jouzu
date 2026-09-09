@@ -207,6 +207,24 @@ export class SessionFlowController {
 		});
 		return items;
 	}
+	/** Read producer work references without dispatch; callers must recheck before committing retirement. */
+	async retentionReferences(): Promise<{ workIds: Set<string>; assertCurrent(): void }> {
+		this.assertActive();
+		const revision = this.revision,
+			signal = this.interruption.signal;
+		const workIds = new Set<string>();
+		for (const producer of this.producers.values()) {
+			for (const intent of await this.descriptors(producer, signal)) if (intent.workId) workIds.add(intent.workId);
+		}
+		const assertCurrent = () => {
+			this.assertActive();
+			if (signal.aborted || revision !== this.revision)
+				throw new FlowLedgerError("stale", "Producer state changed during retention.");
+		};
+		assertCurrent();
+		return { workIds, assertCurrent };
+	}
+
 	private async resultMetadata(
 		producer: FlowProducer,
 		intent: FlowIntent,

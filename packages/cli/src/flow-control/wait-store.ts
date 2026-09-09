@@ -38,6 +38,8 @@ export interface FlowWaitRetirement {
 	executions: FlowAuthorityExecution[];
 	/** Completed/stopped work, after its executions and waits are retired. */
 	work: FlowAuthorityWork[];
+	/** User input proven handled by the idle host, with no remaining producer obligation. */
+	finishedUserWork?: FlowAuthorityWork[];
 }
 interface RetiredIdentities {
 	work: string[];
@@ -352,7 +354,8 @@ export class FlowWaitStore {
 			return result;
 		});
 	}
-	registerWork(id: string, owner: string, now: number) {
+	registerWork(id: string, owner: string, now: number, userInputs?: FlowAuthorityWork["userInputs"]) {
+		const inputs = userInputs ? structuredClone(userInputs) : userInputs;
 		return this.authorityChange(now, (authority, state) => {
 			if (state.retired?.work.includes(retiredIdentityHash(id)))
 				throw new FlowLedgerError("stale", "Work identity has been retired.");
@@ -361,7 +364,7 @@ export class FlowWaitStore {
 					"identity",
 					"Existing waits require ownership reconciliation before registering work.",
 				);
-			return registerAuthorityWork(authority, id, owner, now);
+			return registerAuthorityWork(authority, id, owner, now, inputs);
 		});
 	}
 	changeWork(id: string, owner: string, workRevision: number, status: FlowWorkStatus, reason: string, now: number) {
@@ -489,14 +492,20 @@ export class FlowWaitStore {
 	}
 
 	/** Host retention coordinator supplies exact, observed snapshots under its idle reservation. */
-	retire(request: FlowWaitRetirement): Promise<{ work: number; executions: number; waits: number }> {
+	retire(
+		request: FlowWaitRetirement,
+		assertCurrent?: () => void,
+	): Promise<{ work: number; executions: number; waits: number }> {
 		const captured = structuredClone(request);
 		return this.update((state) => {
+			assertCurrent?.();
 			if (
 				!captured ||
 				!Array.isArray(captured.work) ||
 				!Array.isArray(captured.executions) ||
 				!Array.isArray(captured.waits) ||
+				(captured.finishedUserWork !== undefined &&
+					(!Array.isArray(captured.finishedUserWork) || captured.finishedUserWork.length > 256)) ||
 				captured.work.length > 256 ||
 				captured.executions.length > 1024 ||
 				captured.waits.length > 128
@@ -545,11 +554,24 @@ export class FlowWaitStore {
 			)
 				throw new FlowLedgerError("busy", "Referenced or pending executions cannot be retired.");
 			const remainingExecutions = (authority?.executions ?? []).filter((execution) => !executions.includes(execution));
-			const work = select(captured.work, authority?.work ?? [], "work", (work) => retiredIdentityHash(work.id));
+			const finished = captured.finishedUserWork ?? [];
+			if (
+				finished.some(
+					(work) => work?.owner !== "host-user" || !work.userInputs?.length || work.lifecycle?.state === "paused",
+				)
+			)
+				throw new FlowLedgerError(
+					"identity",
+					"Finished user work requires source membership and an unpaused lifecycle.",
+				);
+			const work = select([...captured.work, ...finished], authority?.work ?? [], "work", (work) =>
+				retiredIdentityHash(work.id),
+			);
+			const finishedIds = new Set(finished.map((work) => work.id));
 			if (
 				work.some(
 					(work) =>
-						!["stopped", "completed"].includes(work.lifecycle?.state ?? "active") ||
+						(!finishedIds.has(work.id) && !["stopped", "completed"].includes(work.lifecycle?.state ?? "active")) ||
 						remainingWaits.some((wait) => wait.workId === work.id) ||
 						remainingExecutions.some((execution) => execution.workId === work.id),
 				)
