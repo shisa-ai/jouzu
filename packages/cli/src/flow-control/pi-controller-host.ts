@@ -13,6 +13,7 @@ import type { FlowResultReference } from "./result-types.js";
 
 export interface PiControllerHostOptions extends PiRequestReceiptOptions {
 	results?: { retain(members: FlowResultReference[]): Promise<string> };
+	invokeOperation?<T>(invoke: () => Promise<T>): Promise<T>;
 	revokeWork?(): void;
 	consumeWork?(claimed: { id: string; revision: number }[]): Promise<void>;
 	invokeWork?(attemptId: string, invoke: () => Promise<void>): Promise<void>;
@@ -106,7 +107,7 @@ export class PiControllerHost implements FlowControllerHost {
 		this.queue = new PiQueueReceipts(session.agent, ledger);
 		this.history = new PiHistoryReceipts(session, ledger);
 		this.requests = new PiRequestReceipts(session, ledger, options);
-		this.boundary = new PiHostBoundary(session);
+		this.boundary = new PiHostBoundary(session, options.invokeOperation);
 		const transform = session.agent.transformContext;
 		this.hooks.set(session.agent, "transformContext", async (messages, signal) => {
 			this.assertActive();

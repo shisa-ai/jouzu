@@ -3,11 +3,14 @@ import type { PiFlowAttachment } from "./pi-attachment.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import { requireAuthorityWork } from "./wait-authority.js";
 
-interface Invocation {
-	attachment: PiFlowAttachment;
+interface WorkIdentity {
 	id: string;
 	actor: string;
 	revision: number;
+}
+interface Invocation {
+	attachment: PiFlowAttachment;
+	work?: WorkIdentity;
 	active: boolean;
 	operation: { active: boolean };
 	parent?: Invocation;
@@ -20,15 +23,27 @@ export class FlowWorkContext {
 	private readonly invocations = new AsyncLocalStorage<Invocation | undefined>();
 	constructor(private readonly attachment: () => PiFlowAttachment) {}
 
-	async run<T>(work: { id: string; actor: string; revision: number }, invoke: () => Promise<T>): Promise<T> {
+	async run<T>(work: WorkIdentity | undefined, invoke: () => Promise<T>): Promise<T> {
 		if (this.active) throw new FlowLedgerError("busy", "Work invocation is already active.");
-		const invocation = { ...work, attachment: this.attachment(), active: true, operation: { active: true } };
+		const invocation = {
+			work: work ? { ...work } : undefined,
+			attachment: this.attachment(),
+			active: true,
+			operation: { active: true },
+		};
 		this.active = invocation;
 		try {
-			const authority = await invocation.attachment.waits.authoritySnapshot();
-			const registered = requireAuthorityWork(authority, invocation.id, invocation.actor, invocation.revision);
-			if ((registered.lifecycle?.state ?? "active") !== "active")
-				throw new FlowLedgerError("transition", "Inactive work cannot start another invocation.");
+			if (invocation.work) {
+				const authority = await invocation.attachment.waits.authoritySnapshot();
+				const registered = requireAuthorityWork(
+					authority,
+					invocation.work.id,
+					invocation.work.actor,
+					invocation.work.revision,
+				);
+				if ((registered.lifecycle?.state ?? "active") !== "active")
+					throw new FlowLedgerError("transition", "Inactive work cannot start another invocation.");
+			}
 			this.checkLifetime(invocation);
 			return await this.invocations.run(invocation, invoke);
 		} finally {
@@ -37,6 +52,13 @@ export class FlowWorkContext {
 			this.selected = undefined;
 			this.active = undefined;
 		}
+	}
+
+	/** Native execution without selected work still owns a lifetime for later consumed input. */
+	withOperation<T>(invoke: () => Promise<T>): Promise<T> {
+		const current = this.invocations.getStore();
+		if (current && current === this.active && current.operation.active) return invoke();
+		return this.run(undefined, invoke);
 	}
 
 	/** Bind a live controller attempt using its durable selection, never its rendered content. */
@@ -48,12 +70,12 @@ export class FlowWorkContext {
 		if (state.activeAttemptId !== attemptId || !attempt || attempt.phase !== "queued")
 			throw new FlowLedgerError("stale", "Work invocation requires the active queued attempt.");
 		const intent = attempt.admission?.choice.intent;
-		if (!intent || ![4, 5].includes(intent.rank)) return invoke();
-		if (!intent.workId) return invoke();
+		if (!intent || ![4, 5].includes(intent.rank)) return this.run(undefined, invoke);
+		if (!intent.workId) return this.run(undefined, invoke);
 		const authority = await attachment.waits.authoritySnapshot();
 		const work = authority.work.find((item) => item.id === intent.workId);
 		// Unclassified work retains ordinary admission but gains no execution authority.
-		if (!work) return invoke();
+		if (!work) return this.run(undefined, invoke);
 		if (!work.participants.includes(intent.producer))
 			throw new FlowLedgerError("identity", "Selected producer does not own the requested work.");
 		if (this.attachment() !== attachment) throw new FlowLedgerError("stale", "Selected work branch changed.");
@@ -72,7 +94,7 @@ export class FlowWorkContext {
 		if (this.active !== root || !root.operation.active || this.attachment() !== attachment)
 			throw new FlowLedgerError("stale", "Queued work invocation changed.");
 		if (this.selected) this.selected.active = false;
-		this.selected = { ...work, attachment, active: true, operation: root.operation };
+		this.selected = { work: { ...work }, attachment, active: true, operation: root.operation };
 		return true;
 	}
 
@@ -85,7 +107,7 @@ export class FlowWorkContext {
 	async runTool<T>(invoke: () => Promise<T>): Promise<T> {
 		const current = this.invocations.getStore();
 		const parent = current === this.active && this.selected ? this.selected : current;
-		if (!parent?.active) return this.invocations.run(undefined, invoke);
+		if (!parent?.active || !parent.work) return this.invocations.run(undefined, invoke);
 		this.checkLifetime(parent);
 		const invocation = { ...parent, parent, active: true };
 		try {
@@ -109,24 +131,29 @@ export class FlowWorkContext {
 
 	private check(invocation: Invocation): void {
 		this.checkLifetime(invocation);
-		invocation.attachment.waits.captureExecutionWork(invocation.id, invocation.revision, invocation.actor);
+		if (invocation.work)
+			invocation.attachment.waits.captureExecutionWork(
+				invocation.work.id,
+				invocation.work.revision,
+				invocation.work.actor,
+			);
 	}
 
 	current(): { id: string; revision: number } | undefined {
 		const invocation = this.invocations.getStore();
 		if (!invocation) return undefined;
 		this.check(invocation);
-		return { id: invocation.id, revision: invocation.revision };
+		return invocation.work ? { id: invocation.work.id, revision: invocation.work.revision } : undefined;
 	}
 
 	authorize(workId: string): { actor: string; revision: number; assertActive(): void } {
 		const invocation = this.invocations.getStore();
-		if (!invocation || invocation.id !== workId)
+		if (!invocation?.work || invocation.work.id !== workId)
 			throw new FlowLedgerError("identity", "Requested work does not belong to this invocation.");
 		this.check(invocation);
 		return {
-			actor: invocation.actor,
-			revision: invocation.revision,
+			actor: invocation.work.actor,
+			revision: invocation.work.revision,
 			// Wait mutations validate the captured actor/revision inside their transaction.
 			assertActive: () => this.checkLifetime(invocation),
 		};

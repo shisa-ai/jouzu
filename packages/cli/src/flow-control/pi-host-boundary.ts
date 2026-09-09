@@ -28,15 +28,20 @@ export class PiHostBoundary {
 	private readonly idleListeners = new Set<(cause: "operation" | "maintenance") => void>();
 	private idleNotification?: ReturnType<typeof setImmediate>;
 	private operationDrained = false;
-	constructor(private readonly session: AgentSession) {
+	constructor(
+		private readonly session: AgentSession,
+		private readonly invokeScope?: <T>(invoke: () => Promise<T>) => Promise<T>,
+	) {
 		this.sessionId = session.sessionId;
 		const agent = session.agent;
 		const prompt = agent.prompt.bind(agent);
 		this.hooks.set(agent, "prompt", (input: string | AgentMessage | AgentMessage[], images?: ImageContent[]) =>
-			this.operation(() => (typeof input === "string" ? prompt(input, images) : prompt(input))),
+			this.execution(() => (typeof input === "string" ? prompt(input, images) : prompt(input))),
 		);
-		this.hooks.set(agent, "continue", this.wrap(agent.continue.bind(agent)));
-		this.hooks.set(agent, "continueQueued", this.wrap(agent.continueQueued.bind(agent)));
+		const resume = agent.continue.bind(agent),
+			resumeQueued = agent.continueQueued.bind(agent);
+		this.hooks.set(agent, "continue", () => this.execution(resume));
+		this.hooks.set(agent, "continueQueued", () => this.execution(resumeQueued));
 		this.hooks.set(session, "prompt", this.wrap(session.prompt.bind(session)));
 		this.hooks.set(session, "continueQueued", this.wrap(session.continueQueued.bind(session)));
 		this.hooks.set(session, "steer", this.wrap(session.steer.bind(session)));
@@ -77,6 +82,9 @@ export class PiHostBoundary {
 		}
 		this.hooks.set(session, "setModel", this.wrap(session.setModel.bind(session)));
 		this.hooks.set(session, "cycleModel", this.wrap(session.cycleModel.bind(session)));
+	}
+	private execution<T>(run: () => Promise<T>): Promise<T> {
+		return this.operation(() => (this.invokeScope ? this.invokeScope(run) : run()));
 	}
 	private wrap<A extends unknown[], R>(
 		fn: (...args: A) => Promise<R>,

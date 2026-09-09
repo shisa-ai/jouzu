@@ -3214,3 +3214,76 @@ for (const lane of ["steer", "followUp"])
 			);
 			assert.equal(request, lane === "followUp" ? 4 : 3);
 		});
+
+for (const lane of ["steer", "followUp"])
+	for (const cancel of [false, true])
+		test(`idle ${lane} queue drain owns a neutral operation before consumption: cancel=${cancel}`, async (t) => {
+			let request = 0,
+				observed,
+				authority;
+			const f = await fixture(t, {
+				provider: true,
+				tools: ["inspect_work"],
+				extensions: [
+					{
+						name: "inspect-work",
+						factory(pi) {
+							pi.registerTool({
+								name: "inspect_work",
+								label: "Inspect work",
+								description: "Inspect owning work",
+								parameters: { type: "object", properties: {}, additionalProperties: false },
+								async execute() {
+									const context = f.ingress.branch().workContext;
+									observed = context.current();
+									authority = context.authorize(observed.id);
+									return { content: [{ type: "text", text: observed.id }], details: {} };
+								},
+							});
+						},
+					},
+				],
+				response() {
+					request++;
+					const delta =
+						request === 1
+							? {
+									tool_calls: [
+										{ index: 0, id: "inspect", type: "function", function: { name: "inspect_work", arguments: "{}" } },
+									],
+								}
+							: { content: "Done" };
+					return new Response(
+						`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta, finish_reason: request === 1 ? "tool_calls" : "stop" }] })}\n\ndata: [DONE]\n\n`,
+						{ headers: { "content-type": "text/event-stream" } },
+					);
+				},
+			});
+			await f.session.bindExtensions({
+				onError: (error) => {
+					throw error;
+				},
+			});
+			await f.session[lane]("queued instruction");
+			assert.equal(f.sent.length, 0);
+			assert.equal(f.ingress.branch().workContext.current(), undefined);
+			const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+			const expected = await retainUserWork(f.ingress.branch().attachment, record.id, record.revision);
+			if (cancel) {
+				const [queued] = f.session.agent.inspectQueuedMessages();
+				await f.ingress.cancelNativeQueue(queued.id, queued.revision);
+			}
+			await f.session.continueQueued();
+			assert.equal(request, cancel ? 0 : 2);
+			if (!cancel) {
+				assert.equal(observed.id, expected.id);
+				assert.throws(() => authority.assertActive(), { code: "stale" });
+				assert.ok(
+					f.session.agent.state.messages
+						.filter((message) => message.role === "toolResult")
+						.every((message) => !message.isError),
+				);
+			}
+			await f.session.continueQueued();
+			assert.equal(request, cancel ? 0 : 2);
+		});

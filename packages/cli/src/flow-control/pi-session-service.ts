@@ -21,7 +21,7 @@ export interface PiFlowSessionOptions {
 	root: string;
 	maxInputBytes: number;
 	maxResultBytes: number;
-	host: Omit<PiControllerHostOptions, "results" | "invokeWork" | "revokeWork" | "consumeWork">;
+	host: Omit<PiControllerHostOptions, "results" | "invokeWork" | "revokeWork" | "consumeWork" | "invokeOperation">;
 	decorateNativeContext?: NativeContextDecorator;
 	admitNativeQueue?(record: RetainedSubmission, input: FlowNativeInput): Promise<boolean>;
 	policy(): Omit<FlowAdmissionGates, "hostReady">;
@@ -135,6 +135,7 @@ export class PiFlowSessionService {
 					...this.options.host,
 					results: attachment.results,
 					invokeWork: (id, invoke) => workContext.runSelected(id, invoke),
+					invokeOperation: (invoke) => workContext.withOperation(invoke),
 					revokeWork: () => workContext.revoke(),
 					consumeWork: async (claimed) => {
 						const work = await consumedUserWork(attachment, claimed);
