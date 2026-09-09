@@ -15,6 +15,7 @@ import { stream as streamPiMessages } from "@earendil-works/pi-ai/api/pi-message
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, model, tick } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { anthropicFlowPayload } from "../dist/flow-control/anthropic-payload.js";
+import { bedrockFlowPayload } from "../dist/flow-control/bedrock-payload.js";
 import { googleFlowPayload } from "../dist/flow-control/google-payload.js";
 import { mistralFlowPayload } from "../dist/flow-control/mistral-payload.js";
 import { validateNativeProjections } from "../dist/flow-control/native-context-projections.js";
@@ -23,6 +24,7 @@ import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js
 import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
 import { createFlowWaitDecisionProducer } from "../dist/flow-control/wait-decisions.js";
 import { createFlowWaitExtension } from "../dist/flow-control/wait-tools.js";
+import { bedrockTransport } from "./fixtures/bedrock-transport.mjs";
 import { codexTransport } from "./fixtures/codex-transport.mjs";
 
 const args = {
@@ -99,15 +101,17 @@ async function fixture(
 					api,
 					["google-generative-ai", "google-vertex"].includes(api)
 						? googleFlowPayload
-						: api === "pi-messages"
-							? piMessagesFlowPayload
-							: api === "mistral-conversations"
-								? mistralFlowPayload
-								: api === "anthropic-messages"
-									? anthropicFlowPayload
-									: openAIFlowPayload(
-											["openai-codex-responses", "azure-openai-responses"].includes(api) ? "openai-responses" : api,
-										),
+						: api === "bedrock-converse-stream"
+							? bedrockFlowPayload
+							: api === "pi-messages"
+								? piMessagesFlowPayload
+								: api === "mistral-conversations"
+									? mistralFlowPayload
+									: api === "anthropic-messages"
+										? anthropicFlowPayload
+										: openAIFlowPayload(
+												["openai-codex-responses", "azure-openai-responses"].includes(api) ? "openai-responses" : api,
+											),
 				],
 			]),
 			maxPayloadBytes: 1000000,
@@ -171,7 +175,36 @@ async function fixture(
 		ingress: {
 			version: 1,
 			async attach(session) {
-				if (codex) session.agent.streamFunction = codex.stream;
+				if (api === "bedrock-converse-stream")
+					session.agent.streamFunction = bedrockTransport(t, {
+						onRequest: (body) => sent.push(body),
+						failure: (count) => failure && count === 2,
+						reply(count) {
+							const tool = issueTool && count === 1;
+							const events = [["messageStart", { role: "assistant" }]];
+							for (let index = 0; index < (tool ? toolCount : 1); index++) {
+								if (tool)
+									events.push([
+										"contentBlockStart",
+										{
+											contentBlockIndex: index,
+											start: { toolUse: { toolUseId: `wait_${index}`, name: "agent_wait" } },
+										},
+									]);
+								events.push([
+									"contentBlockDelta",
+									{
+										contentBlockIndex: index,
+										delta: tool ? { toolUse: { input: JSON.stringify(args) } } : { text: "Done" },
+									},
+								]);
+								events.push(["contentBlockStop", { contentBlockIndex: index }]);
+							}
+							events.push(["messageStop", { stopReason: tool ? "tool_use" : "end_turn" }]);
+							return events;
+						},
+					});
+				else if (codex) session.agent.streamFunction = codex.stream;
 				else if (["google-generative-ai", "google-vertex"].includes(api)) {
 					t.mock.method(globalThis, "fetch", async (_url, init) => {
 						sent.push(JSON.parse(init.body));
@@ -372,6 +405,7 @@ for (const api of [
 	"azure-openai-responses",
 	"mistral-conversations",
 	"pi-messages",
+	"bedrock-converse-stream",
 ]) {
 	const container = (payload) => (api === "pi-messages" ? payload.context : payload);
 	const payloadRows = (payload) =>
@@ -379,19 +413,21 @@ for (const api of [
 			["openai-responses", "openai-codex-responses", "azure-openai-responses"].includes(api) ? "input" : "messages"
 		];
 	const isTool = (message) =>
-		api === "pi-messages"
-			? message.role === "toolResult"
-			: api === "anthropic-messages"
-				? message.type === "tool_result"
-				: ["openai-responses", "openai-codex-responses", "azure-openai-responses"].includes(api)
-					? message.type === "function_call_output"
-					: message.role === "tool";
+		api === "bedrock-converse-stream"
+			? !!message.toolResult
+			: api === "pi-messages"
+				? message.role === "toolResult"
+				: api === "anthropic-messages"
+					? message.type === "tool_result"
+					: ["openai-responses", "openai-codex-responses", "azure-openai-responses"].includes(api)
+						? message.type === "function_call_output"
+						: message.role === "tool";
 	const toolRows = (payload) =>
-		api === "anthropic-messages"
+		["anthropic-messages", "bedrock-converse-stream"].includes(api)
 			? payloadRows(payload).flatMap((row) => (Array.isArray(row.content) ? row.content.filter(isTool) : []))
 			: payloadRows(payload).filter(isTool);
 	const omitTools = (payload) => {
-		if (api === "anthropic-messages") {
+		if (["anthropic-messages", "bedrock-converse-stream"].includes(api)) {
 			for (const row of payloadRows(payload))
 				if (Array.isArray(row.content)) row.content = row.content.filter((block) => !isTool(block));
 		} else
@@ -507,7 +543,8 @@ for (const api of [
 					mode === "failed"
 						? undefined
 						: (payload) => {
-								const tool = toolRows(payload)[0];
+								const block = toolRows(payload)[0];
+								const tool = api === "bedrock-converse-stream" ? block?.toolResult : block;
 								if (!tool) return;
 								if (mode === "content")
 									tool[
@@ -517,13 +554,15 @@ for (const api of [
 									] += " altered";
 								if (mode === "identity")
 									tool[
-										api === "anthropic-messages"
-											? "tool_use_id"
-											: ["openai-responses", "openai-codex-responses", "azure-openai-responses"].includes(api)
-												? "call_id"
-												: ["mistral-conversations", "pi-messages"].includes(api)
-													? "toolCallId"
-													: "tool_call_id"
+										api === "bedrock-converse-stream"
+											? "toolUseId"
+											: api === "anthropic-messages"
+												? "tool_use_id"
+												: ["openai-responses", "openai-codex-responses", "azure-openai-responses"].includes(api)
+													? "call_id"
+													: ["mistral-conversations", "pi-messages"].includes(api)
+														? "toolCallId"
+														: "tool_call_id"
 									] += "-other";
 								if (mode === "omitted") omitTools(payload);
 							},

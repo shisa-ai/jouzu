@@ -372,6 +372,7 @@ export class PiNativeRequests {
 						"azure-openai-responses",
 						"mistral-conversations",
 						"pi-messages",
+						"bedrock-converse-stream",
 						"anthropic-messages",
 						"google-generative-ai",
 						"google-vertex",
@@ -412,6 +413,7 @@ export class PiNativeRequests {
 							model.api === "azure-openai-responses" ||
 							model.api === "mistral-conversations" ||
 							model.api === "pi-messages" ||
+							model.api === "bedrock-converse-stream" ||
 							model.api === "anthropic-messages" ||
 							model.api === "google-generative-ai" ||
 							model.api === "google-vertex"

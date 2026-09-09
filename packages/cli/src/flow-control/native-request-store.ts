@@ -232,6 +232,7 @@ export class FlowNativeRequestStore {
 								"azure-openai-responses",
 								"mistral-conversations",
 								"pi-messages",
+								"bedrock-converse-stream",
 								"anthropic-messages",
 								"google-generative-ai",
 								"google-vertex",

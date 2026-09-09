@@ -195,12 +195,15 @@ export function validateNativeProjections(
 					"azure-openai-responses",
 					"mistral-conversations",
 					"pi-messages",
+					"bedrock-converse-stream",
 					"anthropic-messages",
 					"google-generative-ai",
 					"google-vertex",
 				].includes(payload?.api ?? "") ||
 					wire.index === undefined ||
-					(["anthropic-messages", "google-generative-ai", "google-vertex"].includes(payload?.api ?? "") &&
+					(["anthropic-messages", "google-generative-ai", "google-vertex", "bedrock-converse-stream"].includes(
+						payload?.api ?? "",
+					) &&
 						message.role === "toolResult" &&
 						wire.blockIndex === undefined) ||
 					model.status !== "converted" ||

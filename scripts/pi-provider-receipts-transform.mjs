@@ -100,6 +100,33 @@ export function transform(path, source) {
 			"const messages = convertResponsesMessages(model, context, CODEX_TOOL_CALL_PROVIDERS, {",
 			"const messages = convertResponsesMessages(model, context, CODEX_TOOL_CALL_PROVIDERS, {\n        onMessageConverted: options?.onMessageConverted,",
 		);
+	} else if (path === "dist/api/bedrock-converse-stream.js") {
+		change(
+			"convertMessages(context, model, cacheRetention, options.env)",
+			"convertMessages(context, model, cacheRetention, options.env, options.onMessageConverted)",
+		);
+		change(
+			"function convertMessages(context, model, cacheRetention, env) {",
+			"function convertMessages(context, model, cacheRetention, env, onMessageConverted) {",
+		);
+		change(
+			"    const transformedMessages = transformMessages(context.messages, model, normalizeToolCallId);",
+			`    const sources = new Map();
+    const transformedMessages = transformMessages(context.messages, model, normalizeToolCallId,
+        onMessageConverted ? (source, transformed) => sources.set(transformed, source) : undefined);`,
+		);
+		change(
+			"                    content,\n                });\n                break;",
+			"                    content,\n                });\n                if (sources.has(m)) onMessageConverted?.(sources.get(m), result[result.length - 1]);\n                break;",
+		);
+		change(
+			"                // Look ahead for consecutive toolResult messages",
+			"                if (sources.has(m)) onMessageConverted?.(sources.get(m), toolResults[toolResults.length - 1]);\n                // Look ahead for consecutive toolResult messages",
+		);
+		change(
+			"                    j++;",
+			"                    if (sources.has(nextMsg)) onMessageConverted?.(sources.get(nextMsg), toolResults[toolResults.length - 1]);\n                    j++;",
+		);
 	} else if (path === "dist/api/pi-messages.js") {
 		change(
 			"            const nextPayload = await options?.onPayload?.(payload, model);",
@@ -198,6 +225,7 @@ export const paths = [
 	"dist/api/azure-openai-responses.js",
 	"dist/api/mistral-conversations.js",
 	"dist/api/pi-messages.js",
+	"dist/api/bedrock-converse-stream.js",
 	"dist/api/anthropic-messages.js",
 	"dist/api/google-generative-ai.js",
 	"dist/api/google-vertex.js",

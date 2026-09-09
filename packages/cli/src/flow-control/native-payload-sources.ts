@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import type { Message } from "@earendil-works/pi-ai";
 import { anthropicContent } from "./anthropic-content.js";
+import { bedrockContent, bedrockToolResult } from "./bedrock-content.js";
 import { googleContent, googleInputPreserved, googleToolResponse } from "./google-content.js";
 import { mistralContent } from "./mistral-payload.js";
 import type { NativePayloadSource, NativeSourceCapture } from "./native-request-store.js";
@@ -16,6 +17,7 @@ type SourceAPI =
 	| "azure-openai-responses"
 	| "mistral-conversations"
 	| "pi-messages"
+	| "bedrock-converse-stream"
 	| "openai-codex-responses"
 	| "anthropic-messages"
 	| "google-generative-ai"
@@ -27,6 +29,10 @@ const responsesAPI = (
 const googleAPI = (api: SourceAPI): api is "google-generative-ai" | "google-vertex" =>
 	api === "google-generative-ai" || api === "google-vertex";
 const toolIdentity = (message: unknown, api: SourceAPI) => {
+	if (api === "bedrock-converse-stream") {
+		const result = bedrockToolResult(message);
+		return result ? hash({ toolUseId: result.toolUseId, status: result.status }) : undefined;
+	}
 	if (!message || typeof message !== "object") return undefined;
 	if (api === "pi-messages") {
 		if (
@@ -111,6 +117,19 @@ const toolIdentity = (message: unknown, api: SourceAPI) => {
 	return hash({ role: "tool", toolCallId: message.tool_call_id, name: "name" in message ? message.name : undefined });
 };
 const contentHash = (message: unknown, api: SourceAPI) => {
+	if (api === "bedrock-converse-stream") {
+		const result = bedrockToolResult(message);
+		if (result) return hash(bedrockContent(result.content));
+		if (
+			!message ||
+			typeof message !== "object" ||
+			!("role" in message) ||
+			message.role !== "user" ||
+			!("content" in message)
+		)
+			return undefined;
+		return hash(bedrockContent(message.content, true));
+	}
 	if (api === "pi-messages") {
 		if (
 			!message ||
@@ -265,7 +284,7 @@ export class NativePayloadSources {
 			const link = this.links.get(model.index);
 			if (!link) return unresolved;
 			const blockResult =
-				["anthropic-messages", "google-generative-ai", "google-vertex"].includes(this.api) &&
+				["anthropic-messages", "google-generative-ai", "google-vertex", "bedrock-converse-stream"].includes(this.api) &&
 				link.toolIdentity !== undefined;
 			const blockKey = googleAPI(this.api) ? "parts" : "content";
 			const matches = finalRows.flatMap((row, index): { index: number; blockIndex?: number }[] => {
