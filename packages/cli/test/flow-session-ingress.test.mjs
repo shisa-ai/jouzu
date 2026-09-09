@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -8,11 +9,14 @@ import { BACKGROUND_CONTEXT, setValue, value } from "@earendil-works/pi-agent-co
 import { stream } from "@earendil-works/pi-ai/api/openai-completions";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
+import { createBackgroundControllerExtension } from "../dist/flow-control/background-extension.js";
+import { createMultiloopControllerExtension } from "../dist/flow-control/multiloop-extension.js";
 import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js";
 import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
 import { consumedUserWork, retainUserWork } from "../dist/flow-control/user-work.js";
 import { finishedUserWork } from "../dist/flow-control/user-work-retention.js";
 import { createFlowWaitDecisionProducer } from "../dist/flow-control/wait-decisions.js";
+import { createFlowWaitExtension } from "../dist/flow-control/wait-tools.js";
 
 async function fixture(
 	t,
@@ -24,6 +28,8 @@ async function fixture(
 		manager,
 		nextTurnObserver,
 		autoRelease,
+		attachWaitSources,
+		consumedAttempt,
 		provider = false,
 		checkpoints,
 		onRequest,
@@ -36,10 +42,12 @@ async function fixture(
 	const ingress = new PiSessionFlowIngress({
 		root,
 		autoRelease,
+		attachWaitSources,
 		userWorkParticipants,
 		maxInputBytes: 4096,
 		maxResultBytes: 4096,
 		host: {
+			consumedAttempt,
 			projections: provider ? new Map([["openai-completions", openAIFlowPayload("openai-completions")]]) : new Map(),
 			maxPayloadBytes: 100000,
 			containsUserInput: () => !provider,
@@ -3465,3 +3473,181 @@ for (const lane of ["steer", "followUp"])
 			await f.session.continueQueued();
 			assert.equal(request, cancel ? 0 : 2);
 		});
+
+for (const mode of ["normal", "reversed", "reopen"])
+	test(`loaded multiloop/background pair automatically composes after its wait (${mode})`, {
+		skip: process.platform === "win32",
+		timeout: 20000,
+	}, async (t) => {
+		const reverse = mode === "reversed";
+		const root = await mkdtemp(join(tmpdir(), "jouzu-loaded-background-"));
+		const manager = SessionManager.create(root, join(root, "history"));
+		const { createJiti } = await import(
+			createRequire(import.meta.resolve("@earendil-works/pi-coding-agent")).resolve("jiti")
+		);
+		const jiti = createJiti(import.meta.url, { moduleCache: false });
+		let loaded = await jiti.import(
+			join(import.meta.dirname, "../node_modules/@vanillagreen/pi-background-tasks/extensions/background-tasks.ts"),
+			{ default: true },
+		);
+		const loopFactory = await jiti.import(
+			join(import.meta.dirname, "../node_modules/pi-multiloop/extensions/pi-multiloop/index.ts"),
+			{ default: true },
+		);
+		const errors = [],
+			tools = new Map();
+		let f, ctx;
+		const loopBridge = createMultiloopControllerExtension({
+			ingress: () => f.ingress,
+			onError: (error) => errors.push(error),
+		});
+		const loop = {
+			name: "loaded-multiloop",
+			factory(pi) {
+				const proxy = Object.create(pi);
+				proxy.registerTool = (tool) => {
+					tools.set(tool.name, tool);
+					pi.registerTool(tool);
+				};
+				pi.on("session_start", (_event, context) => {
+					ctx = context;
+				});
+				loopFactory(proxy);
+			},
+		};
+		const bridge = createBackgroundControllerExtension({
+			currentWork: () => f.ingress.branch().workContext.current(),
+			onError: (error) => errors.push(error),
+		});
+		const background = {
+			name: "loaded-background",
+			factory(pi) {
+				const proxy = Object.create(pi);
+				proxy.registerTool = (tool) => {
+					tools.set(tool.name, tool);
+					pi.registerTool(tool);
+				};
+				loaded(proxy);
+			},
+		};
+		const wait = createFlowWaitExtension({
+			attachment: () => f.ingress.branch().attachment,
+			authorize: (work) => f.ingress.branch().workContext.authorize(work),
+			maxDurationMs: 10000,
+		});
+		f = await fixture(t, {
+			root,
+			manager,
+			provider: true,
+			admit: null,
+			autoRelease: { onError: (error) => errors.push(error) },
+			consumedAttempt: loopBridge.consumedAttempt,
+			attachWaitSources: async (attachment) => bridge.attach(attachment, manager),
+			extensions: [
+				...(reverse ? [background, loop, bridge, loopBridge] : [loopBridge, bridge, loop, background]),
+				{
+					name: "wait-capture",
+					factory(pi) {
+						const proxy = Object.create(pi);
+						proxy.registerTool = (tool) => {
+							tools.set(tool.name, tool);
+							pi.registerTool(tool);
+						};
+						wait.factory(proxy);
+					},
+				},
+			],
+		});
+		t.after(() => rm(root, { recursive: true, force: true }));
+		await f.session.bindExtensions({ onError: (error) => errors.push(error) });
+		const branch = f.ingress.branch();
+		await tools
+			.get("multiloop_start")
+			.execute(
+				"start",
+				{ lane: "test", runTag: "run", mode: "research", goal: "Wait for task" },
+				undefined,
+				undefined,
+				ctx,
+			);
+		const campaign = branch.attachment.waits.multiloopWork({ lane: "test", runTag: "run" });
+		let task, token;
+		const releaseFile = join(root, "release-task");
+		const command = `while test ! -e '${releaseFile.replaceAll("'", "'\\''")}'; do sleep 0.02; done`;
+		await branch.workContext.run({ id: campaign.id, actor: "multiloop", revision: campaign.revision }, async () => {
+			const result = await tools.get("bg_task").execute("spawn", {
+				action: "spawn",
+				command,
+				notifyOnExit: false,
+				notifyOnOutput: false,
+				timeoutSeconds: 5,
+			});
+			task = result.details.task;
+			assert.deepEqual(task.flow.scope, branch.scope);
+			assert.equal(task.flow.work.id, campaign.id);
+			await tools.get("agent_wait").execute(
+				"wait",
+				{
+					work: campaign.id,
+					reason: "Await installed task",
+					deadline: "10s",
+					on: [{ producer: "bg", handle: task.id, execution: task.flow.execution, until: "exit" }],
+				},
+				undefined,
+				undefined,
+				{ sessionManager: manager },
+			);
+			token = (await branch.attachment.waits.snapshot())[0].token;
+		});
+		for (let i = 0; i < 3; i++) await f.session.prompt("status?");
+		assert.equal((await branch.attachment.ledger.snapshot()).attempts.length, 0);
+		assert.equal(f.sent.length, 3);
+		if (mode === "reopen") {
+			const expiry = (await branch.attachment.waits.snapshot())[0].expiresAt;
+			await f.ingress.dispose();
+			await writeFile(releaseFile, "complete");
+			await waitForFlow(
+				async () =>
+					(await tools.get("bg_status").execute("status", { action: "list" })).details.tasks[0]?.status === "completed",
+			);
+			loaded = await createJiti(import.meta.url, { moduleCache: false }).import(
+				join(import.meta.dirname, "../node_modules/@vanillagreen/pi-background-tasks/extensions/background-tasks.ts"),
+				{ default: true },
+			);
+			const reopenedManager = SessionManager.open(manager.getSessionFile());
+			f = await fixture(t, {
+				root,
+				manager: reopenedManager,
+				provider: true,
+				admit: null,
+				attachWaitSources: async (attachment) => bridge.attach(attachment, reopenedManager),
+				extensions: [bridge, background],
+			});
+			const reopened = f.ingress.branch();
+			assert.deepEqual(reopened.waitSourceRecovery.missing, []);
+			assert.equal(reopened.waitSourceRecovery.restored, 1);
+			const restored = (await reopened.attachment.waits.snapshot())[0];
+			assert.equal(restored.token, token);
+			assert.equal(restored.expiresAt, expiry);
+			assert.equal(restored.state, "resolved");
+			assert.equal(f.sent.length, 0);
+			assert.deepEqual(errors, []);
+			await f.ingress.dispose();
+			return;
+		}
+		await writeFile(releaseFile, "complete");
+		for (let i = 0; i < 1000; i++) {
+			if ((await branch.attachment.ledger.snapshot()).attempts.some((a) => a.phase === "settled")) break;
+			await new Promise((resolve) => setTimeout(resolve, 10));
+		}
+		const attempts = (await branch.attachment.ledger.snapshot()).attempts;
+		assert.equal(attempts.length, 1);
+		assert.equal(attempts[0].outcome, "success");
+		assert.deepEqual(
+			attempts[0].members.map((member) => member.kind),
+			["wait", "work"],
+		);
+		assert.equal((await branch.attachment.waits.snapshot())[0].token, token);
+		assert.deepEqual(errors, []);
+		assert.equal(f.sent.length, 4);
+	});

@@ -21,7 +21,22 @@ export function transform(path, source) {
 			"\t\tconst child = spawn(spawnPlan.file, spawnPlan.args, {",
 			"\t\tconst flow = backgroundFlowSource.newExecution(activeSessionId);\n\t\tconst child = spawn(spawnPlan.file, spawnPlan.args, {",
 		);
-		return replace(source, "\t\tconst task: ManagedTask = {\n", "\t\tconst task: ManagedTask = {\n\t\t\tflow,\n");
+		source = replace(source, "\t\tconst task: ManagedTask = {\n", "\t\tconst task: ManagedTask = {\n\t\t\tflow,\n");
+		return replace(
+			source,
+			'\tpi.on("session_start", (_event, ctx) => {',
+			`
+	pi.events.on("jouzu:background-flow-source", (data) => {
+		const request = data as { version: number; context: ExtensionContext; sessionId: string; accept(source: typeof backgroundFlowSource): void; reject(error: unknown): void };
+		if (request?.version !== 1 || typeof request.accept !== "function" || typeof request.reject !== "function") return;
+		try {
+			if (request.context?.sessionManager.getSessionId() !== request.sessionId) throw new Error("Background source session differs from its controller.");
+			if (activeSessionId !== request.sessionId) restoreSnapshots(request.context);
+			request.accept(backgroundFlowSource);
+		} catch (error) { request.reject(error); }
+	});
+	pi.on("session_start", (_event, ctx) => {`,
+		);
 	}
 	if (path === paths[1]) {
 		source = replace(

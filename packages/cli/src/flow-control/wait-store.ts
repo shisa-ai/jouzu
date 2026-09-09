@@ -401,7 +401,7 @@ export class FlowWaitStore {
 	/** Read the committed lane binding without gaining or renewing work authority. */
 	multiloopWork(lane: { lane: string; runTag: string }): FlowAuthorityWork | undefined {
 		this.ownership.assertActive();
-		if (!this.initialized || this.mutations > 0) throw new FlowLedgerError("busy", "Work ownership is changing.");
+		if (!this.initialized) throw new FlowLedgerError("busy", "Work ownership is not initialized.");
 		return structuredClone(
 			this.work.find(
 				(work) =>
