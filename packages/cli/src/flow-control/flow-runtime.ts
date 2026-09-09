@@ -80,8 +80,8 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 				host: {
 					projections: flowProviderProjections(),
 					maxPayloadBytes: limits.maxPayloadBytes,
-					// Conservative until scoped no-reply (result gate 6) lands: recording every request as
-					// carrying user input withholds notification-only permission rather than granting it.
+					// Conservative until scoped no-reply support lands: recording every request as carrying
+					// user input withholds notification-only permission rather than granting it.
 					containsUserInput: () => true,
 					consumedAttempt: multiloop.consumedAttempt,
 				},

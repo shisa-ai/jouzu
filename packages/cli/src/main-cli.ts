@@ -318,8 +318,8 @@ export async function runMainCli(args: string[]): Promise<void> {
 		cachePath: join(paths.cacheDir, "textguard", "scans.json"),
 		files: parsed.options.textguardFiles,
 	});
-	// Opt-in until the first-candidate controls (blocked/withheld status, manual retry, health
-	// policy) are usable; see planning FLOW-CONTROL first-candidate checklist.
+	// Opt-in while session flow control is incomplete: it has no visible hold status, no manual
+	// retry, and no background health policy yet.
 	// Imported lazily so `doctor` and `--help` keep working when the Pi runtime is unavailable.
 	const flow =
 		process.env.JOUZU_FLOW_CONTROL === "1"

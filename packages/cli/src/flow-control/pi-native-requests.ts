@@ -43,6 +43,7 @@ export class PiNativeRequests {
 	private closed = false;
 	private guardedStream?: AgentSession["agent"]["streamFunction"];
 	private guardTransport = false;
+	private sealed = false;
 	private capture?: NativeSourceCapture;
 	private projections?: NativeProjectionCapture;
 	private references?: AgentMessage[];
@@ -538,10 +539,12 @@ export class PiNativeRequests {
 	/**
 	 * Re-capture the guarded transport once every flow wrapper is installed. Request receipts wrap
 	 * `streamFunction` after this object does, so the constructor's capture would otherwise compare
-	 * against a stale handler and hold every request. Only the session service calls this, and only
-	 * while it still owns construction, so no external replacement can be absorbed here.
+	 * against a stale handler and hold every request. One use only, called by the session service
+	 * while it still owns construction, so no later replacement can be absorbed here.
 	 */
 	sealTransport(): void {
+		if (this.sealed) throw new FlowLedgerError("transition", "Native request transport is already sealed.");
+		this.sealed = true;
 		if (this.guardTransport) this.guardedStream = this.session.agent.streamFunction;
 	}
 	private assertActive(): void {
