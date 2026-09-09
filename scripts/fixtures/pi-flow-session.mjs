@@ -59,6 +59,7 @@ export async function createFlowSession(
 		root: fixtureRoot,
 		sessionManager,
 		tools = [],
+		model: selectedModel = model,
 	} = {},
 ) {
 	const root = fixtureRoot ?? (await mkdtemp(join(tmpdir(), "jouzu-flow-session-")));
@@ -93,7 +94,7 @@ export async function createFlowSession(
 		agentDir: root,
 		resourceLoader: loader,
 		modelRuntime: runtime,
-		model,
+		model: selectedModel,
 		sessionManager:
 			sessionManager ?? (persist ? SessionManager.create(root, join(root, "history")) : SessionManager.inMemory(root)),
 		settingsManager: SettingsManager.inMemory({ retry: { enabled: false }, compaction: { enabled: false } }),

@@ -221,7 +221,7 @@ export class FlowNativeRequestStore {
 						(source.index === undefined) !== (source.contentHash === undefined) ||
 						(source.disposition === "unresolved" && source.index !== undefined) ||
 						(source.disposition === "included" &&
-							(payload.api !== "openai-completions" ||
+							(!["openai-completions", "openai-responses"].includes(payload.api) ||
 								source.index === undefined ||
 								!["intact", "converted"].includes(capture.model?.members[offset]?.status ?? "")))
 					)

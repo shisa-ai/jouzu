@@ -6,11 +6,20 @@ import { openAIFlowPayload } from "./provider-payload.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
-const project = openAIFlowPayload("openai-completions");
-const toolIdentity = (message: unknown) => {
+type SourceAPI = "openai-completions" | "openai-responses";
+const toolIdentity = (message: unknown, api: SourceAPI) => {
+	if (!message || typeof message !== "object") return undefined;
+	if (api === "openai-responses") {
+		if (
+			!("type" in message) ||
+			message.type !== "function_call_output" ||
+			!("call_id" in message) ||
+			typeof message.call_id !== "string"
+		)
+			return undefined;
+		return hash({ type: message.type, callId: message.call_id });
+	}
 	if (
-		!message ||
-		typeof message !== "object" ||
 		!("role" in message) ||
 		message.role !== "tool" ||
 		!("tool_call_id" in message) ||
@@ -19,22 +28,26 @@ const toolIdentity = (message: unknown) => {
 		return undefined;
 	return hash({ role: "tool", toolCallId: message.tool_call_id, name: "name" in message ? message.name : undefined });
 };
-const contentHash = (message: unknown) => {
-	if (
-		toolIdentity(message) &&
-		message &&
-		typeof message === "object" &&
-		"content" in message &&
-		typeof message.content === "string"
-	)
-		return hash([{ type: "text", text: message.content }]);
-	const [projected] = project({ messages: [message] });
+const contentHash = (message: unknown, api: SourceAPI) => {
+	if (toolIdentity(message, api) && message && typeof message === "object") {
+		const content =
+			api === "openai-responses"
+				? "output" in message
+					? message.output
+					: undefined
+				: "content" in message
+					? message.content
+					: undefined;
+		return typeof content === "string" ? hash([{ type: "text", text: content }]) : undefined;
+	}
+	const [projected] = openAIFlowPayload(api)({ [api === "openai-responses" ? "input" : "messages"]: [message] });
 	return projected ? hash(projected.content) : undefined;
 };
-const rows = (payload: unknown): unknown[] =>
-	payload && typeof payload === "object" && "messages" in payload && Array.isArray(payload.messages)
-		? payload.messages
-		: [];
+const rows = (payload: unknown, api: SourceAPI): unknown[] => {
+	const key = api === "openai-responses" ? "input" : "messages";
+	const result = payload && typeof payload === "object" ? (payload as Record<string, unknown>)[key] : undefined;
+	return Array.isArray(result) ? result : [];
+};
 
 /** Source-to-wire associations supplied by the provider, followed through final payload transforms. */
 export class NativePayloadSources {
@@ -48,6 +61,7 @@ export class NativePayloadSources {
 	constructor(
 		messages: Message[],
 		private readonly capture?: { members: { index: number }[]; model?: NativeSourceCapture["model"] },
+		private readonly api: SourceAPI = "openai-completions",
 	) {
 		for (const [index, message] of messages.entries()) {
 			const positions = this.sources.get(message) ?? [];
@@ -71,9 +85,9 @@ export class NativePayloadSources {
 		}
 		if (source.role !== "user" && source.role !== "toolResult")
 			throw new FlowLedgerError("identity", "Provider source mapping has an unsupported role.");
-		const convertedHash = contentHash(output);
+		const convertedHash = contentHash(output, this.api);
 		if (!convertedHash) throw new FlowLedgerError("identity", "Provider source mapping has no supported content.");
-		const identity = source.role === "toolResult" ? toolIdentity(output) : undefined;
+		const identity = source.role === "toolResult" ? toolIdentity(output, this.api) : undefined;
 		this.links.set(index, {
 			output,
 			contentHash: convertedHash,
@@ -83,13 +97,12 @@ export class NativePayloadSources {
 	}
 	inspect(api: string, payload: unknown, serialized: unknown): NativePayloadSource[] | undefined {
 		if (!this.capture) return undefined;
-		const finalRows = rows(payload),
-			ownedRows = rows(serialized);
+		const finalRows = rows(payload, this.api),
+			ownedRows = rows(serialized, this.api);
 		return this.capture.members.map((source, offset): NativePayloadSource => {
 			const model = this.capture?.model?.members[offset];
 			const unresolved: NativePayloadSource = { sourceIndex: source.index, disposition: "unresolved" };
-			if (api !== "openai-completions" || model?.index === undefined || model.status === "unresolved")
-				return unresolved;
+			if (api !== this.api || model?.index === undefined || model.status === "unresolved") return unresolved;
 			const link = this.links.get(model.index);
 			if (!link) return unresolved;
 			const matches = finalRows.flatMap((row, index) =>
@@ -98,14 +111,14 @@ export class NativePayloadSources {
 			if (matches.length !== 1) return unresolved;
 			const index = matches[0];
 			try {
-				const finalHash = contentHash(finalRows[index]),
-					ownedHash = contentHash(ownedRows[index]);
+				const finalHash = contentHash(finalRows[index], this.api),
+					ownedHash = contentHash(ownedRows[index], this.api);
 				if (
 					!finalHash ||
 					finalHash !== ownedHash ||
 					(link.toolIdentity &&
-						(toolIdentity(finalRows[index]) !== link.toolIdentity ||
-							toolIdentity(ownedRows[index]) !== link.toolIdentity))
+						(toolIdentity(finalRows[index], this.api) !== link.toolIdentity ||
+							toolIdentity(ownedRows[index], this.api) !== link.toolIdentity))
 				)
 					return { sourceIndex: source.index, disposition: "changed" };
 				return {

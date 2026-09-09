@@ -185,7 +185,7 @@ export function validateNativeProjections(
 			(wire.index === undefined) !== (wire.contentHash === undefined) ||
 			(wire.disposition === "unresolved" && wire.index !== undefined) ||
 			(wire.disposition === "included" &&
-				(payload?.api !== "openai-completions" ||
+				(!["openai-completions", "openai-responses"].includes(payload?.api ?? "") ||
 					wire.index === undefined ||
 					model.status !== "converted" ||
 					wire.contentHash !== digest(modelContent(message))))

@@ -26,6 +26,18 @@
 		"dist/api/simple-options.js": {
 			"before": "1caf860e028e22639578aba3ec8b79e5be9650c27bd3f19471c78502976555f3",
 			"after": "593be1dde4ba47353a48c9c35ee976cac21d9adaf82fcc7410d66422dc82d77c"
+		},
+		"dist/api/openai-responses.js": {
+			"before": "87085aa3c3c865fb51774bc13b669599461fd29e497fc6063bd6f5b9b5262d33",
+			"after": "c01038c18f58fe4c31aa4a600155ccd99fbd4c713da0b996aa915379f19aa2b9"
+		},
+		"dist/api/openai-responses-shared.js": {
+			"before": "b5d9f001e97bfafa8dfeef2e292f923c39f77fa8aef014132bf3530760f222e3",
+			"after": "2ddec65a7db9d1d10a6179a42658a0890f18fc3e0e1c7462c17fd65ea76e5008"
+		},
+		"dist/api/openai-responses-shared.d.ts": {
+			"before": "75bf0fe5d1744f1fe456227fcb3f2088bd2749d8a6e90582183a40320ef0ee87",
+			"after": "0f1f9699f0ab8fa9f406fbc580af799fc2b1d76010a7754acfbe7d4f4faf29e9"
 		}
 	}
 }

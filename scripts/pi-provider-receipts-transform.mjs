@@ -41,6 +41,32 @@ export function transform(path, source) {
 			"                params.push(toolResultMsg);",
 			"                params.push(toolResultMsg);\n                if (sources.has(toolMsg)) options?.onMessageConverted?.(sources.get(toolMsg), toolResultMsg);",
 		);
+	} else if (path === "dist/api/openai-responses.js") {
+		change(
+			"const messages = convertResponsesMessages(model, context, OPENAI_TOOL_CALL_PROVIDERS, {",
+			"const messages = convertResponsesMessages(model, context, OPENAI_TOOL_CALL_PROVIDERS, {\n        onMessageConverted: options?.onMessageConverted,",
+		);
+	} else if (path === "dist/api/openai-responses-shared.js") {
+		change(
+			"    const transformedMessages = transformMessages(context.messages, model, normalizeToolCallId);",
+			`    const sources = new Map();
+    const transformedMessages = transformMessages(context.messages, model, normalizeToolCallId,
+        options?.onMessageConverted ? (source, transformed) => sources.set(transformed, source) : undefined);`,
+		);
+		change(
+			'        }\n        else if (msg.role === "assistant") {',
+			'            options?.onMessageConverted?.(sources.get(msg), messages[messages.length - 1]);\n        }\n        else if (msg.role === "assistant") {',
+		);
+		change(
+			"            const deferredTools = [];",
+			"            if (sources.has(msg)) options?.onMessageConverted?.(sources.get(msg), messages[messages.length - 1]);\n            const deferredTools = [];",
+		);
+	} else if (path === "dist/api/openai-responses-shared.d.ts") {
+		text = `import type { Message } from "../types.js";\n${text}`;
+		change(
+			"export interface ConvertResponsesMessagesOptions {",
+			"export interface ConvertResponsesMessagesOptions {\n    onMessageConverted?: (source: Message, output: unknown) => void;",
+		);
 	} else if (path === "dist/api/openai-completions.d.ts") {
 		text = `import type { Message } from "../types.js";\n${text}`;
 		change(
@@ -65,6 +91,9 @@ export const paths = [
 	"dist/api/transform-messages.d.ts",
 	"dist/api/openai-completions.js",
 	"dist/api/openai-completions.d.ts",
+	"dist/api/openai-responses.js",
+	"dist/api/openai-responses-shared.js",
+	"dist/api/openai-responses-shared.d.ts",
 	"dist/types.d.ts",
 	"dist/api/simple-options.js",
 ];
