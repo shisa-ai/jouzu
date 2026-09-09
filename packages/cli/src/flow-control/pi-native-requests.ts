@@ -15,6 +15,7 @@ import type {
 	NativeSourceClaim,
 } from "./native-request-store.js";
 import { nativeCancelledSources, nativeSourceKey } from "./native-request-store.js";
+import { copyFlowPayload } from "./payload-copy.js";
 import { PiHostHooks } from "./pi-host-hooks.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
@@ -421,10 +422,9 @@ export class PiNativeRequests {
 						const replacement = await options?.onPayload?.(payload, requestModel);
 						this.assertActive();
 						options?.signal?.throwIfAborted();
-						const serialized = JSON.stringify(replacement === undefined ? payload : replacement);
+						const { serialized, owned } = copyFlowPayload(replacement === undefined ? payload : replacement, model.api);
 						if (serialized === undefined || Buffer.byteLength(serialized) > maxBytes)
 							throw new FlowLedgerError("capacity", "Native provider payload exceeds its byte limit.");
-						const owned = JSON.parse(serialized);
 						const membership = sources.inspect(model.api, replacement === undefined ? payload : replacement, owned);
 						const admitted = await store.handoff(id, {
 							hash: createHash("sha256").update(serialized).digest("hex"),

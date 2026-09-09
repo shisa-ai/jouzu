@@ -24,6 +24,7 @@ export async function nativeRequests(
 		modelTransform,
 		identifySources,
 		manager,
+		model,
 	} = {},
 ) {
 	const root = supplied ?? (await mkdtemp(join(tmpdir(), "jouzu-native-requests-")));
@@ -32,6 +33,7 @@ export async function nativeRequests(
 		root: join(root, "host"),
 		persist: true,
 		sessionManager: manager,
+		model,
 		extensions: [
 			...(transform ? [(pi) => pi.on("before_provider_request", transform)] : []),
 			...(contextHandler ? [(pi) => pi.on("context", contextHandler)] : []),

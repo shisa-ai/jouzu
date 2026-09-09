@@ -99,7 +99,7 @@ export async function admitFlowPayload(
 	if (!Number.isSafeInteger(maxBytes) || maxBytes < 1)
 		throw new FlowLedgerError("capacity", "Invalid provider payload byte limit.");
 	// Serialize before awaiting storage: later mutation of the caller's object cannot alter admission.
-	const { serialized, owned } = copyFlowPayload(payload);
+	const { serialized, owned } = copyFlowPayload(payload, api);
 	const bytes = Buffer.byteLength(serialized);
 	let failure: unknown;
 	let inclusion: FlowInclusion[];

@@ -26,8 +26,40 @@ export function payloadRowOrigin(value: unknown): unknown {
 	return object(value) ? (origins.get(value) ?? value) : value;
 }
 
-/** Serialize once and retain host-owned row-copy identity outside the payload. */
-export function copyFlowPayload(payload: unknown): { serialized: string; owned: unknown } {
+/** Google passes SDK parameters, including cancellation state, to its payload callback. */
+function googleCancellation(payload: unknown): { data: unknown; signal?: AbortSignal } {
+	if (!object(payload) || types.isProxy(payload)) return { data: payload };
+	const config = Object.getOwnPropertyDescriptor(payload, "config")?.value;
+	if (!object(config) || types.isProxy(config)) return { data: payload };
+	const descriptor = Object.getOwnPropertyDescriptor(config, "abortSignal");
+	if (!descriptor) return { data: payload };
+	if (!("value" in descriptor)) throw new FlowLedgerError("schema", "Google cancellation must be a data property.");
+	const signal = descriptor.value;
+	if (signal === undefined) return { data: payload };
+	try {
+		// Use the platform brand check; prototype lookalikes and proxies are not signals.
+		const aborted = Object.getOwnPropertyDescriptor(AbortSignal.prototype, "aborted")?.get;
+		if (!aborted || !object(signal) || types.isProxy(signal)) throw new Error("Invalid signal");
+		aborted.call(signal);
+	} catch {
+		throw new FlowLedgerError("schema", "Invalid Google cancellation signal.");
+	}
+	const configDescriptors = Object.getOwnPropertyDescriptors(config);
+	delete configDescriptors.abortSignal;
+	const copiedConfig = Object.create(Object.getPrototypeOf(config), configDescriptors);
+	const descriptors = Object.getOwnPropertyDescriptors(payload);
+	descriptors.config = { ...descriptors.config, value: copiedConfig };
+	const data = Object.create(Object.getPrototypeOf(payload), descriptors);
+	if (!plainData(data))
+		throw new FlowLedgerError("schema", "Google SDK parameters contain unsupported runtime values.");
+	return { data, signal: signal as AbortSignal };
+}
+
+/** Copy request data while retaining Google SDK cancellation outside the serialized receipt. */
+export function copyFlowPayload(payload: unknown, api?: string): { serialized: string; owned: unknown } {
+	const { data, signal } =
+		api === "google-generative-ai" || api === "google-vertex" ? googleCancellation(payload) : { data: payload };
+	payload = data;
 	const qualified = plainData(payload);
 	const serialized = JSON.stringify(payload);
 	if (serialized === undefined) throw new FlowLedgerError("schema", "Provider payload is not JSON.");
@@ -49,5 +81,6 @@ export function copyFlowPayload(payload: unknown): { serialized: string; owned: 
 			}
 		}
 	}
+	if (signal) (owned as { config: { abortSignal?: AbortSignal } }).config.abortSignal = signal;
 	return { serialized, owned };
 }
