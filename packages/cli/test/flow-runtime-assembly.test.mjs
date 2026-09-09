@@ -128,3 +128,68 @@ test("a qualified provider route records an exact final-input receipt through th
 		["identity"],
 	);
 });
+
+test("reversed extension load order reaches the same assembled controller", async (t) => {
+	const { flow, root } = await runtime(t);
+	const sessionManager = SessionManager.inMemory(root);
+	const ingress = await flow.flowIngressFactory({ cwd: root, sessionManager });
+	const { session, bodies } = await createQualifiedFlowSession(t, {
+		root,
+		sessionManager,
+		extensions: [...flow.extensions].reverse(),
+		ingress: {
+			version: 1,
+			attach: (target) => ingress.attach(target),
+			submit: (...args) => ingress.submit(...args),
+			beforeBranchChange: () => ingress.beforeBranchChange(),
+			branchChanged: () => ingress.branchChanged(),
+			dispose: () => ingress.dispose(),
+		},
+	});
+	await session.prompt("reversed order");
+	assert.equal(bodies.length, 1);
+	const requests = await ingress.branch().attachment.nativeRequests.snapshot();
+	assert.equal(requests.length, 1);
+	assert.equal(requests[0].outcome, "success");
+});
+
+test("two concurrent assemblies keep separate scopes and receipts", async (t) => {
+	const first = await runtime(t);
+	const second = await runtime(t);
+	assert.notEqual(first.root, second.root);
+	const sessions = [];
+	for (const { flow, root } of [first, second]) {
+		const sessionManager = SessionManager.inMemory(root);
+		const ingress = await flow.flowIngressFactory({ cwd: root, sessionManager });
+		const { session, bodies } = await createQualifiedFlowSession(t, {
+			root,
+			sessionManager,
+			extensions: flow.extensions,
+			ingress: {
+				version: 1,
+				attach: (target) => ingress.attach(target),
+				submit: (...args) => ingress.submit(...args),
+				beforeBranchChange: () => ingress.beforeBranchChange(),
+				branchChanged: () => ingress.branchChanged(),
+				dispose: () => ingress.dispose(),
+			},
+		});
+		sessions.push({ session, ingress, bodies });
+	}
+	const [a, b] = sessions;
+	assert.notEqual(a.session.sessionId, b.session.sessionId);
+	await Promise.all([a.session.prompt("first session"), b.session.prompt("second session")]);
+	for (const entry of sessions) {
+		const branch = entry.ingress.branch();
+		const requests = await branch.attachment.nativeRequests.snapshot();
+		assert.equal(requests.length, 1);
+		assert.equal(requests[0].outcome, "success");
+		assert.equal(entry.bodies.length, 1);
+		assert.equal(branch.scope.sessionId, entry.session.sessionId);
+	}
+	// Neither assembly observes the other's transmitted payload.
+	assert.ok(JSON.stringify(a.bodies).includes("first session"));
+	assert.ok(!JSON.stringify(a.bodies).includes("second session"));
+	assert.ok(JSON.stringify(b.bodies).includes("second session"));
+	assert.ok(!JSON.stringify(b.bodies).includes("first session"));
+});
