@@ -13,6 +13,7 @@ export interface MultiloopControllerOptions {
 /** Bind the actual loaded multiloop instance to this session's controller using Pi's event bus. */
 export function createMultiloopControllerExtension(options: MultiloopControllerOptions): InlineExtension & {
 	consumedAttempt: MultiloopFlowProducer["admitted"];
+	unboundLanes: MultiloopFlowProducer["unboundLanes"];
 } {
 	let producer: MultiloopFlowProducer | undefined;
 	let unregister: (() => void) | undefined;
@@ -25,6 +26,9 @@ export function createMultiloopControllerExtension(options: MultiloopControllerO
 	};
 	return {
 		name: "jouzu-multiloop-controller",
+		unboundLanes() {
+			return producer?.unboundLanes() ?? [];
+		},
 		consumedAttempt(attempt) {
 			if (!producer && attempt.admission?.choice.intent.producer === "multiloop")
 				throw new FlowLedgerError("stale", "Multiloop accounting attachment is unavailable.");

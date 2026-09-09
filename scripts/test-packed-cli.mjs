@@ -123,6 +123,7 @@ async function assertPackedFlowControl(temp, installedCli, probe, cwd, env, prof
 	const off = await probeFlowSurfaces(installedCli, probe, cwd, env, `${profile} flow=off`);
 	for (const tool of flowTools)
 		assert.equal(off.tools.includes(tool), false, `${profile} flow: ${tool} present while opt-out`);
+	assert.equal(off.commands.includes("flow"), false, `${profile} flow: /flow present while opt-out`);
 	const on = await probeFlowSurfaces(
 		installedCli,
 		probe,
@@ -131,6 +132,7 @@ async function assertPackedFlowControl(temp, installedCli, probe, cwd, env, prof
 		`${profile} flow=on`,
 	);
 	for (const tool of flowTools) assert.ok(on.tools.includes(tool), `${profile} flow: missing ${tool} when enabled`);
+	assert.ok(on.commands.includes("flow"), `${profile} flow: missing /flow when enabled`);
 	// A single resolved Pi tree is what makes the route guard's prototype identity check meaningful.
 	const trees = run("find", [resolve(temp, "node_modules"), "-type", "d", "-name", "pi-coding-agent"], { cwd, env })
 		.stdout.split("\n")

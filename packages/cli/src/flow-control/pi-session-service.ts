@@ -17,6 +17,7 @@ import { captureUserWorkParticipants, consumedUserWork, userWorkId } from "./use
 import { finishedUserWork } from "./user-work-retention.js";
 import type { FlowWorkStatus } from "./wait-authority.js";
 import { createFlowWaitDecisionProducer, observedFlowWaits } from "./wait-decisions.js";
+import type { FlowWaitState } from "./wait-state.js";
 
 import { FlowWorkContext } from "./work-context.js";
 
@@ -337,6 +338,22 @@ export class PiFlowSessionService {
 
 	changeWork(id: string, owner: string, revision: number, status: FlowWorkStatus, reason: string, now: number) {
 		return this.registry.run(() => this.branch().attachment.waits.changeWork(id, owner, revision, status, reason, now));
+	}
+
+	/**
+	 * Cancel a live wait on the user's behalf. The wait's own producer stays its owner, so the
+	 * owning work is looked up rather than supplied: a user cannot cancel a wait by guessing an
+	 * owner. This removes the dependency gate only; the underlying job keeps running.
+	 */
+	cancelWait(token: string, reason: string, now: number): Promise<FlowWaitState> {
+		return this.registry.run(async () => {
+			const waits = this.branch().attachment.waits;
+			const live = (await waits.snapshot()).find((wait) => wait.token === token);
+			if (!live || live.state !== "waiting") throw new FlowLedgerError("stale", "Wait token is not live.");
+			const work = (await waits.authoritySnapshot()).work.find((record) => record.id === live.workId);
+			if (!work) throw new FlowLedgerError("identity", "Wait has no registered owning work.");
+			return waits.cancelOwned(work.owner, work.revision, token, reason, now);
+		});
 	}
 
 	/** Called by an explicit repair action; the next admitted request still applies content policy. */

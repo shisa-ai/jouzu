@@ -1,5 +1,6 @@
 import type { InlineExtension, SessionManager } from "@earendil-works/pi-coding-agent";
 import { createBackgroundControllerExtension } from "./background-extension.js";
+import { createFlowStatusExtension } from "./flow-status-extension.js";
 import { createMultiloopControllerExtension } from "./multiloop-extension.js";
 import type { PiFlowAttachment } from "./pi-attachment.js";
 import { PiSessionFlowIngress } from "./pi-session-ingress.js";
@@ -65,8 +66,15 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 		authorize: (workId) => ingress().branch().workContext.authorize(workId),
 		maxDurationMs: limits.maxWaitDurationMs,
 	});
+	const status = createFlowStatusExtension({
+		ingress,
+		unaccountable: () =>
+			multiloop
+				.unboundLanes()
+				.map((lane) => ({ producer: "multiloop", description: `lane ${lane.lane} (${lane.runTag})` })),
+	});
 	return {
-		extensions: [multiloop, background, waitTools],
+		extensions: [multiloop, background, waitTools, status],
 		ingress,
 		async flowIngressFactory({ sessionManager }) {
 			if (attached) throw new FlowLedgerError("identity", "Flow control runtime serves one session.");

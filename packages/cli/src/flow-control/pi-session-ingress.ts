@@ -348,6 +348,11 @@ export class PiSessionFlowIngress implements Ingress {
 	retryNativeRequest(id: string, expectedHash: string): Promise<void> {
 		return this.manage((service) => service.retryNativeRequest(id, expectedHash));
 	}
+	cancelWait(token: string, reason: string) {
+		return this.manage((service) =>
+			service.cancelWait(token, reason, this.options.autoRelease?.clock?.now() ?? Date.now()),
+		);
+	}
 	cancelNativeSources(id: string, expectedHash: string, indices: number[]): Promise<void> {
 		return this.manage((service) => service.cancelNativeSources(id, expectedHash, indices));
 	}

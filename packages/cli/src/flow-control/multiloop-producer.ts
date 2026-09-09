@@ -39,6 +39,8 @@ export class MultiloopFlowProducer implements FlowProducer {
 	readonly namespace = "multiloop";
 	private readonly entries = new Map<string, Entry>();
 	private readonly admittedAttempts = new Set<string>();
+	/** Lanes named by the loaded extension that this session holds no campaign work for. */
+	private readonly unbound = new Set<string>();
 	private closed = false;
 	constructor(
 		private readonly attachment: PiFlowAttachment,
@@ -67,6 +69,13 @@ export class MultiloopFlowProducer implements FlowProducer {
 		});
 		this.changed();
 	}
+	/** Lane identities the loaded extension reports that this session cannot account for. */
+	unboundLanes(): MultiloopLane[] {
+		return [...this.unbound].map((id) => {
+			const [lane, runTag] = JSON.parse(id) as [string, string];
+			return { lane, runTag };
+		});
+	}
 	lanesChanged(lanes: MultiloopLane[]): void {
 		this.assertActive();
 		if (!Array.isArray(lanes) || lanes.length > 256)
@@ -74,7 +83,11 @@ export class MultiloopFlowProducer implements FlowProducer {
 		const captured = lanes.map(captureLane),
 			retained = new Set(captured.map(key));
 		if (retained.size !== captured.length) throw new FlowLedgerError("identity", "Repeated multiloop lane identity.");
-		for (const id of this.entries.keys()) if (!retained.has(id)) this.entries.delete(id);
+		for (const id of this.entries.keys())
+			if (!retained.has(id)) {
+				this.entries.delete(id);
+				this.unbound.delete(id);
+			}
 		for (const lane of captured) if (!this.entries.has(key(lane))) this.entries.set(key(lane), { lane });
 		this.changed();
 	}
@@ -97,7 +110,18 @@ export class MultiloopFlowProducer implements FlowProducer {
 			signal.throwIfAborted();
 			const work = await this.work({ ...entry.lane });
 			this.assertActive();
-			if (!work) throw new FlowLedgerError("identity", "Multiloop lane has no durable campaign binding.");
+			// The loaded multiloop instance outlives one session, so its inventory and its continuations
+			// can name a lane this session holds no active campaign work for: one started before a
+			// session switch, or one whose campaign has since stopped or completed. Such a lane is not
+			// this session's campaign. It contributes no intent and its continuation is dropped rather
+			// than admitted, because admitting it would send a continuation with no campaign authority.
+			// Failing the whole snapshot instead would stop every other lane in the session.
+			if (!work) {
+				this.unbound.add(key(entry.lane));
+				entry.continuation = undefined;
+				continue;
+			}
+			this.unbound.delete(key(entry.lane));
 			const authority = await this.attachment.waits.authoritySnapshot();
 			const current = authority.work.find((item) => item.id === work.id);
 			if (!current || current.revision !== work.revision)
