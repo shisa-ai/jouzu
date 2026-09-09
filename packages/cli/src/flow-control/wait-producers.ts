@@ -20,6 +20,8 @@ export interface FlowWaitExecutionSource {
 	/** Install the local listener synchronously, before snapshot inspection starts. */
 	subscribe(identity: FlowExecutionIdentity, changed: (evidence: FlowExecutionEvidence) => void): () => void;
 	snapshot(identity: FlowExecutionIdentity, signal: AbortSignal): Promise<FlowExecutionEvidence>;
+	/** True only when terminal output is observed or explicitly disposed in the producer's durable state. */
+	canRetireExecution?(identity: FlowExecutionIdentity): boolean;
 	close?(): void | Promise<void>;
 }
 
@@ -30,6 +32,7 @@ interface ProducerRegistration {
 	): Promise<{ flush(): Promise<void>; close(): Promise<void> }>;
 	flushExecution(execution: string): Promise<boolean>;
 	closeExecution(execution: string): Promise<boolean>;
+	canRetireExecution(identity: FlowExecutionIdentity): boolean;
 	close(): Promise<void>;
 }
 
@@ -75,6 +78,7 @@ export class FlowWaitProducerRegistry {
 			!/^[a-z][a-z0-9-]{0,63}$/.test(source.namespace) ||
 			typeof source.subscribe !== "function" ||
 			typeof source.snapshot !== "function" ||
+			(source.canRetireExecution !== undefined && typeof source.canRetireExecution !== "function") ||
 			(source.close !== undefined && typeof source.close !== "function") ||
 			typeof onError !== "function"
 		)
@@ -84,11 +88,14 @@ export class FlowWaitProducerRegistry {
 		if (this.producers.has(namespace)) throw new FlowLedgerError("identity", "Wait producer is already registered.");
 		const subscribe = source.subscribe.bind(source),
 			snapshot = source.snapshot.bind(source),
-			closeSource = source.close?.bind(source);
+			closeSource = source.close?.bind(source),
+			canRetire = source.canRetireExecution?.bind(source);
 		const bindings = new Map<string, ExecutionBinding>();
 		let closed = false;
 		let closing: Promise<void> | undefined;
 		const registration = {
+			canRetireExecution: (identity: FlowExecutionIdentity) =>
+				!closed && !this.closed && canRetire?.(structuredClone(identity)) === true,
 			closeExecution: async (execution: string) => {
 				const binding = bindings.get(execution);
 				if (!binding) return false;
@@ -204,6 +211,43 @@ export class FlowWaitProducerRegistry {
 		} finally {
 			this.pendingBindings--;
 		}
+	}
+
+	/** Producer output eligibility complements the store's exact wait/work dependency checks. */
+	retirementCandidates(records: readonly FlowAuthorityExecution[]): {
+		executions: FlowAuthorityExecution[];
+		assertCurrent(): void;
+	} {
+		if (this.closed) throw new FlowLedgerError("stale", "Wait producer registry is closed.");
+		if (this.updating) throw new FlowLedgerError("busy", "Producer subscriptions are changing.");
+		const selected = records.flatMap((execution) => {
+			if (execution.predicates.some((predicate) => predicate.state === "pending")) return [];
+			const producer = this.producers.get(execution.producer);
+			const identity = {
+				scope: { ...this.scope },
+				workId: execution.workId,
+				handle: execution.handle,
+				execution: execution.execution,
+			};
+			return producer?.canRetireExecution(identity)
+				? [{ execution: structuredClone(execution), producer, identity }]
+				: [];
+		});
+		return {
+			executions: selected.map((item) => item.execution),
+			assertCurrent: () => {
+				if (
+					this.closed ||
+					this.updating ||
+					selected.some(
+						(item) =>
+							this.producers.get(item.execution.producer) !== item.producer ||
+							!item.producer.canRetireExecution(item.identity),
+					)
+				)
+					throw new FlowLedgerError("stale", "Producer output retirement eligibility changed.");
+			},
+		};
 	}
 
 	/** Reconcile retained pending executions before the branch admits another request. */

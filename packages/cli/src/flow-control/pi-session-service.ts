@@ -237,13 +237,29 @@ export class PiFlowSessionService {
 					await attachment.waits.toolReceipts(),
 					ledger,
 				);
-				const references = includeUserWork ? await branch.controller.retentionReferences() : undefined;
+				const references = await branch.controller.retentionReferences();
 				const authority = await attachment.waits.authoritySnapshot();
-				const referenced = references?.workIds ?? new Set<string>();
-				for (const execution of authority.executions) referenced.add(execution.workId);
-				for (const wait of await attachment.waits.snapshot())
-					if (!waits.some((selected) => selected.token === wait.token && selected.workId === wait.workId))
-						referenced.add(wait.workId);
+				const producerRetirement = attachment.waitProducers.retirementCandidates(authority.executions);
+				const remainingWaits = (await attachment.waits.snapshot()).filter(
+					(wait) => !waits.some((selected) => selected.token === wait.token && selected.workId === wait.workId),
+				);
+				const candidates = producerRetirement.executions.filter(
+					(execution) =>
+						!remainingWaits.some((wait) =>
+							wait.on.some(
+								(handle) => handle.producer === execution.producer && handle.execution === execution.execution,
+							),
+						),
+				);
+				const referenced = references.workIds;
+				for (const execution of authority.executions)
+					if (
+						!candidates.some(
+							(candidate) => candidate.producer === execution.producer && candidate.execution === execution.execution,
+						)
+					)
+						referenced.add(execution.workId);
+				for (const wait of remainingWaits) referenced.add(wait.workId);
 				const finished = includeUserWork
 					? finishedUserWork(
 							authority.work,
@@ -252,11 +268,20 @@ export class PiFlowSessionService {
 							referenced,
 						)
 					: [];
-				if (!waits.length && !finished.length) return { work: 0, executions: 0, waits: 0 };
-				return attachment.waits.retire({ waits, work: [], executions: [], finishedUserWork: finished }, () => {
-					references?.assertCurrent();
-					if (attachment.waitProducers.updating)
-						throw new FlowLedgerError("busy", "Producer evidence changed during retention.");
+				const work = authority.work.filter(
+					(item) =>
+						!referenced.has(item.id) &&
+						["completed", "stopped"].includes(item.lifecycle?.state ?? "active") &&
+						!finished.some((user) => user.id === item.id),
+				);
+				const retiringWork = new Set([...work, ...finished].map((item) => item.id));
+				// Keep observed predicates available to future waits while their owning work is active.
+				const executions = candidates.filter((execution) => retiringWork.has(execution.workId));
+				if (!waits.length && !finished.length && !work.length && !executions.length)
+					return { work: 0, executions: 0, waits: 0 };
+				return attachment.waits.retire({ waits, work, executions, finishedUserWork: finished }, () => {
+					references.assertCurrent();
+					producerRetirement.assertCurrent();
 				});
 			});
 			if (result.kind === "busy") throw new FlowLedgerError("busy", "Wait retirement requires an idle session.");

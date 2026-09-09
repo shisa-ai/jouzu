@@ -11,6 +11,7 @@ export interface BackgroundTerminalResult {
 	metadata: { id: string; producer: string; execution: string; revision: string; status: "success" | "failure" | "cancelled"; title: string; reference: string; warnings: string[] };
 	delivered?: boolean;
 	observed?: boolean;
+	notify?: boolean;
 	reads?: { id: string; revision: string; toolCallId: string; toolName: string; contentHash: string }[];
 }
 type Snapshot = {
@@ -32,7 +33,7 @@ const sameScope = (a: Scope | undefined, b: Scope) => a?.sessionId === b.session
 export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 	const scopes = new Map<string, { scope: Scope; currentWork(): Work }>();
 	const deliveries = new Map<string, { scope: Scope; changed(): void }>();
-	const results = new Map<string, { scope: Scope; result: BackgroundTerminalResult }>();
+	const results = new Map<string, { scope: Scope; work?: Work; result: BackgroundTerminalResult }>();
 	const listeners = new Set<{ identity: Identity; changed(evidence: Evidence): void; signature?: string }>();
 	function evidence(task: Snapshot, identity: Identity): Evidence {
 		if (
@@ -69,10 +70,10 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 		},
 		prepareResult(task: Snapshot): void {
 			const flow = task.flow;
-			if (!flow?.scope || !flow.work || flow.result || !this.controls(task) || !task.notifyOnExit || task.exitNotified || task.status === "running") return;
+			if (!flow?.scope || !flow.work || flow.result || !this.controls(task) || task.status === "running") return;
 			const status = task.status === "completed" ? "success" : task.status === "stopped" ? "cancelled" : ["failed", "timed_out"].includes(task.status) ? "failure" : undefined;
 			if (!status || !task.logFile) throw new Error("Terminal background result is incomplete.");
-			flow.result = { metadata: {
+			flow.result = { notify: !!task.notifyOnExit && !task.exitNotified, metadata: {
 				id: `bg-result:${flow.execution}`, producer: "bg", execution: flow.execution, revision: "1", status,
 				title: `${(task.title || task.command || task.id).slice(0, 512)}: ${task.status} (exit ${task.exitCode ?? "unknown"})`,
 				reference: task.logFile, warnings: [],
@@ -100,7 +101,7 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 				const flow = task.flow;
 				if (!flow?.scope || !flow.result) continue;
 				const key = JSON.stringify([flow.scope.sessionId, flow.scope.branchId, flow.execution]);
-				const value = { scope: flow.scope, result: flow.result };
+				const value = { scope: flow.scope, work: flow.work, result: flow.result };
 				if (JSON.stringify(results.get(key)) === JSON.stringify(value)) continue;
 				results.set(key, structuredClone(value));
 				changed.add(flow.scope.sessionId);
@@ -112,13 +113,24 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 			const lease = { scope: { ...scope }, changed };
 			deliveries.set(scope.sessionId, lease);
 			return {
+				retainedWorkIds() {
+					if (deliveries.get(scope.sessionId) !== lease) throw new Error("Background result source is detached.");
+					const retained = new Set<string>();
+					for (const task of list()) {
+						if (!task.flow?.work || !sameScope(task.flow.scope, scope)) continue;
+						const saved = results.get(JSON.stringify([scope.sessionId, scope.branchId, task.flow.execution]));
+						if (task.status === "running" || !saved?.result.observed) retained.add(task.flow.work.id);
+					}
+					for (const saved of results.values()) if (sameScope(saved.scope, scope) && saved.work && !saved.result.observed) retained.add(saved.work.id);
+					return [...retained];
+				},
 				readReceipts() {
 					if (deliveries.get(scope.sessionId) !== lease) throw new Error("Background result source is detached.");
 					return structuredClone([...results.values()].filter(value => sameScope(value.scope, scope) && !value.result.observed).flatMap(value => value.result.reads ?? []));
 				},
 				snapshot() {
 					if (deliveries.get(scope.sessionId) !== lease) throw new Error("Background result source is detached.");
-					return structuredClone([...results.values()].filter(value => sameScope(value.scope, scope) && !value.result.delivered && !value.result.observed).map(value => value.result.metadata));
+					return structuredClone([...results.values()].filter(value => sameScope(value.scope, scope) && value.result.notify !== false && !value.result.delivered && !value.result.observed).map(value => value.result.metadata));
 				},
 			};
 		},
@@ -186,6 +198,13 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 						listeners.delete(listener);
 						owned.delete(listener);
 					};
+				},
+				canRetireExecution(identity: Identity): boolean {
+					assertIdentity(identity);
+					const task = [...list()].find(task => task.id === identity.handle && task.flow?.execution === identity.execution && sameScope(task.flow.scope, identity.scope));
+					if (!task || evidence(task, identity).predicates.some(predicate => predicate.state === "pending")) return false;
+					const saved = results.get(JSON.stringify([scope.sessionId, scope.branchId, identity.execution]));
+					return saved?.result.observed === true;
 				},
 				async snapshot(identity: Identity, signal: AbortSignal) {
 					signal.throwIfAborted();

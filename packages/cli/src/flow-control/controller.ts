@@ -14,6 +14,8 @@ export interface FlowProducer {
 	snapshot(signal: AbortSignal): Promise<FlowIntent[]>;
 	/** Build only after selection. A new instruction needs a new descriptor revision. */
 	build(intent: FlowIntent, signal: AbortSignal): Promise<FlowInputItem>;
+	/** Work still owned by producer activity or unread output, including executions without a wait. */
+	retainedWorkIds?(): readonly string[];
 	observationProjections?(messages: readonly AgentMessage[]): AgentMessage[];
 	describeResult?(intent: FlowIntent, signal: AbortSignal): Promise<FlowResultReference>;
 }
@@ -112,6 +114,7 @@ export class SessionFlowController {
 			!/^[a-z][a-z0-9-]{0,63}$/.test(producer.namespace) ||
 			typeof producer.snapshot !== "function" ||
 			typeof producer.build !== "function" ||
+			(producer.retainedWorkIds !== undefined && typeof producer.retainedWorkIds !== "function") ||
 			(producer.observationProjections !== undefined && typeof producer.observationProjections !== "function") ||
 			(producer.describeResult !== undefined && typeof producer.describeResult !== "function")
 		)
@@ -128,6 +131,7 @@ export class SessionFlowController {
 				build: producer.build.bind(producer),
 				describeResult: producer.describeResult?.bind(producer),
 				observationProjections: producer.observationProjections?.bind(producer),
+				retainedWorkIds: producer.retainedWorkIds?.bind(producer),
 			}),
 		);
 		this.revision++;
@@ -219,6 +223,14 @@ export class SessionFlowController {
 		const workIds = new Set<string>();
 		for (const producer of this.producers.values()) {
 			for (const intent of await this.descriptors(producer, signal)) if (intent.workId) workIds.add(intent.workId);
+			const retained = producer.retainedWorkIds?.() ?? [];
+			if (
+				!Array.isArray(retained) ||
+				retained.length > 1024 ||
+				retained.some((id) => typeof id !== "string" || !id || id.length > 512)
+			)
+				throw new FlowLedgerError("identity", "Invalid producer work retention references.");
+			for (const id of retained) workIds.add(id);
 		}
 		const assertCurrent = () => {
 			this.assertActive();

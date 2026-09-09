@@ -413,3 +413,26 @@ test("subscription cleanup preserves partially terminal executions", async (t) =
 	assert.equal(producer.listeners, 1);
 	assert.deepEqual(f.errors, []);
 });
+
+test("execution retirement rechecks producer eligibility and registration ownership", async (t) => {
+	const f = await fixture(t),
+		producer = source(async () => evidence(2, "satisfied"));
+	let eligible = false;
+	producer.canRetireExecution = (identity) => eligible && identity.execution === "exec-1";
+	const registry = f.attachment.waitProducers;
+	const registration = registry.register(producer, (error) => f.errors.push(error));
+	await registration.bind(identity, 2);
+	const records = (await f.attachment.waits.authoritySnapshot()).executions;
+	assert.equal(registry.retirementCandidates(records).executions.length, 0);
+	eligible = true;
+	const selection = registry.retirementCandidates(records);
+	assert.deepEqual(selection.executions, records);
+	selection.assertCurrent();
+	eligible = false;
+	assert.throws(selection.assertCurrent, { code: "stale" });
+	eligible = true;
+	await registration.close();
+	registry.register(producer, (error) => f.errors.push(error));
+	assert.throws(selection.assertCurrent, { code: "stale" });
+	assert.deepEqual((await f.attachment.waits.authoritySnapshot()).executions, records);
+});

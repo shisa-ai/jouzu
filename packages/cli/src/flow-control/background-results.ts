@@ -27,7 +27,7 @@ export interface BackgroundResultSourceAPI {
 	activateResults(
 		scope: FlowScope,
 		changed: () => void,
-	): { snapshot(): FlowResultReference[]; readReceipts?(): BackgroundReadReceipt[] };
+	): { snapshot(): FlowResultReference[]; readReceipts?(): BackgroundReadReceipt[]; retainedWorkIds?(): string[] };
 	acknowledgeResult(id: string, revision: string): void;
 	acknowledgeObservation?(id: string, revision: string): void;
 }
@@ -36,7 +36,11 @@ export interface BackgroundResultSourceAPI {
 export class BackgroundResultProducer implements FlowProducer {
 	readonly version = 1 as const;
 	readonly namespace = "bg";
-	private readonly source: { snapshot(): FlowResultReference[]; readReceipts?(): BackgroundReadReceipt[] };
+	private readonly source: {
+		snapshot(): FlowResultReference[];
+		readReceipts?(): BackgroundReadReceipt[];
+		retainedWorkIds?(): string[];
+	};
 	constructor(
 		private readonly attachment: PiFlowAttachment,
 		private readonly api: BackgroundResultSourceAPI,
@@ -47,6 +51,9 @@ export class BackgroundResultProducer implements FlowProducer {
 	private values(): FlowResultReference[] {
 		const results = this.source.snapshot();
 		return results.length ? normalizeFlowResults(results, 1024) : [];
+	}
+	retainedWorkIds(): string[] {
+		return this.source.retainedWorkIds?.() ?? [];
 	}
 	observationProjections(messages: readonly AgentMessage[]): AgentMessage[] {
 		const receipts = this.source.readReceipts?.() ?? [];

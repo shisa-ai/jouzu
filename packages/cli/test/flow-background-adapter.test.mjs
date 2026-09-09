@@ -44,7 +44,7 @@ async function loadBackground(t) {
 	const output = join(directory, "background.mjs");
 	await build({
 		stdin: {
-			contents: `export { default } from ${JSON.stringify(join(installed, "extensions/background-tasks.ts"))}; export { backgroundFlowSource, taskSnapshot, rememberSnapshot } from ${JSON.stringify(join(installed, "extensions/snapshot.ts"))};`,
+			contents: `export { default } from ${JSON.stringify(join(installed, "extensions/background-tasks.ts"))}; export { backgroundFlowSource, taskSnapshot, rememberSnapshot } from ${JSON.stringify(join(installed, "extensions/snapshot.ts"))}; export { createBackgroundFlowSource } from ${JSON.stringify(join(installed, "extensions/jouzu-flow.ts"))};`,
 			resolveDir: root,
 			loader: "ts",
 		},
@@ -397,4 +397,35 @@ test("background read receipts require terminal state, durable publication, and 
 	lease.close();
 	assert.equal(source.recordTerminalRead(task, "stale", "bg_task", content), false);
 	assert.throws(() => results.readReceipts(), /detached/);
+});
+
+test("background activity and unread output retain work without a declared wait", async (t) => {
+	const { createBackgroundFlowSource } = await loadBackground(t);
+	const scope = { sessionId: "unwaited", branchId: "branch" };
+	const task = {
+		id: "task",
+		sessionId: scope.sessionId,
+		status: "running",
+		notifyOnExit: false,
+		flow: { version: 1, execution: "execution", scope, work: { id: "work", revision: 1 } },
+		logFile: "/log",
+	};
+	const source = createBackgroundFlowSource(() => [task]);
+	const lease = source.activate(scope, () => ({ id: "work", revision: 1 }));
+	t.after(() => lease.close());
+	const results = source.activateResults(scope, () => {});
+	assert.deepEqual(results.retainedWorkIds(), ["work"]);
+	task.status = "completed";
+	source.prepareResult(task);
+	source.commitResults([task]);
+	assert.deepEqual(results.snapshot(), []);
+	assert.deepEqual(results.retainedWorkIds(), ["work"]);
+	task.flow.result.observed = true;
+	assert.deepEqual(results.retainedWorkIds(), ["work"]);
+	source.commitResults([task]);
+	assert.deepEqual(results.retainedWorkIds(), []);
+	task.status = "running";
+	assert.deepEqual(results.retainedWorkIds(), ["work"]);
+	lease.close();
+	assert.throws(() => results.retainedWorkIds(), /detached/);
 });
