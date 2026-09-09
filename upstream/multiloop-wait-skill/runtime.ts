@@ -15,6 +15,7 @@ export interface MultiloopFlowHost {
 	submit(continuation: FlowContinuation): void;
 	waiting(lane: FlowLane): boolean;
 	changed(lanes: FlowLane[]): void;
+	transition?(lane: FlowLane, status: "active" | "paused" | "stopped" | "completed"): Promise<void>;
 }
 
 const hosts = new Map<string, MultiloopFlowHost>();
@@ -29,6 +30,7 @@ export function attachMultiloopFlow(sessionId: string, host: MultiloopFlowHost):
 		submit: host.submit.bind(host),
 		waiting: host.waiting.bind(host),
 		changed: host.changed.bind(host),
+		transition: host.transition?.bind(host),
 	});
 	hosts.set(sessionId, captured);
 	return () => {

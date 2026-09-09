@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 import { BACKGROUND_CONTEXT, type Session, type SessionReader, setValue, value } from "@earendil-works/pi-agent-core";
 import type { FlowOwnership } from "./ownership.js";
@@ -376,6 +377,38 @@ export class FlowWaitStore {
 				);
 			return work;
 		});
+	}
+	/** Trusted lane activation creates a new generation only after the previous campaign ends. */
+	activateMultiloop(lane: { lane: string; runTag: string }, now: number) {
+		const captured = { ...lane },
+			id = `multiloop-work:${randomUUID()}`;
+		return this.authorityChange(now, (authority) => {
+			let work = authority.work.find(
+				(work) =>
+					isDeepStrictEqual(work.multiloop, captured) &&
+					!["stopped", "completed"].includes(work.lifecycle?.state ?? "active"),
+			);
+			if (!work) {
+				work = registerAuthorityWork(authority, id, "multiloop", now);
+				work.multiloop = captured;
+				work.participants.push("bg");
+			} else if (work.lifecycle?.state === "paused") {
+				work = changeAuthorityWork(authority, work.id, work.owner, work.revision, "active", "Lane resumed", now);
+			}
+			return work;
+		});
+	}
+	/** Read the committed lane binding without gaining or renewing work authority. */
+	multiloopWork(lane: { lane: string; runTag: string }): FlowAuthorityWork | undefined {
+		this.ownership.assertActive();
+		if (!this.initialized || this.mutations > 0) throw new FlowLedgerError("busy", "Work ownership is changing.");
+		return structuredClone(
+			this.work.find(
+				(work) =>
+					isDeepStrictEqual(work.multiloop, lane) &&
+					!["stopped", "completed"].includes(work.lifecycle?.state ?? "active"),
+			),
+		);
 	}
 	shareWork(id: string, owner: string, workRevision: number, participant: string, now: number) {
 		return this.authorityChange(now, (authority) =>

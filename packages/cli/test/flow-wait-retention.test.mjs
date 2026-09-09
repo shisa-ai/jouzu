@@ -56,6 +56,31 @@ async function completed(store, id = "work") {
 	return store.changeWork(id, "bg", work.revision, "completed", "Finished", 2);
 }
 
+test("multiloop campaign activation persists one live generation and never revives stopped work", async (t) => {
+	const f = await fixture(t),
+		lane = { lane: "lane", runTag: "run" };
+	const first = await f.store.activateMultiloop(lane, 1);
+	assert.deepEqual(await f.store.activateMultiloop(lane, 2), first);
+	assert.deepEqual(first.participants, ["multiloop", "bg"]);
+	await f.store.changeWork(first.id, first.owner, first.revision, "paused", "pause", 3);
+	await f.reopen();
+	assert.equal(f.store.multiloopWork(lane).lifecycle.state, "paused");
+	const resumed = await f.store.activateMultiloop(lane, 4);
+	assert.equal(resumed.id, first.id);
+	const stopped = await f.store.changeWork(resumed.id, resumed.owner, resumed.revision, "stopped", "stop", 5);
+	assert.equal(f.store.multiloopWork(lane), undefined);
+	await f.reopen();
+	const next = await f.store.activateMultiloop(lane, 6);
+	assert.notEqual(next.id, first.id);
+	assert.deepEqual(
+		(await f.store.authoritySnapshot()).work.find((work) => work.id === first.id),
+		stopped,
+	);
+	await f.store.retire({ ...empty(), work: [stopped] });
+	await assert.rejects(f.store.registerWork(first.id, "multiloop", 7), { code: "stale" });
+	assert.equal(f.store.multiloopWork(lane).id, next.id);
+});
+
 test("finished user retirement validates membership, lifecycle, and exact snapshots atomically", async (t) => {
 	const f = await fixture(t);
 	const inputs = [{ id: "input", revision: 1 }];

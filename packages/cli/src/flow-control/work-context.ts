@@ -85,14 +85,22 @@ export class FlowWorkContext {
 	/** Select fresh tool authority after exact native consumption; old scopes are never modified. */
 	async selectToolWork(work: { id: string; actor: string; revision: number }): Promise<boolean> {
 		const root = this.active;
-		if (!root || this.invocations.getStore() !== root || !root.operation.active) return false;
+		const caller = this.invocations.getStore();
+		if (!root || !caller || caller.operation !== root.operation || !root.operation.active) return false;
+		if (caller !== root) this.checkLifetime(caller);
 		const attachment = this.attachment();
 		const authority = await attachment.waits.authoritySnapshot();
 		const registered = requireAuthorityWork(authority, work.id, work.actor, work.revision);
 		if ((registered.lifecycle?.state ?? "active") !== "active")
 			throw new FlowLedgerError("transition", "Inactive work cannot authorize queued tools.");
-		if (this.active !== root || !root.operation.active || this.attachment() !== attachment)
+		if (
+			this.active !== root ||
+			!root.operation.active ||
+			(caller !== root && !caller.active) ||
+			this.attachment() !== attachment
+		)
 			throw new FlowLedgerError("stale", "Queued work invocation changed.");
+		if (caller !== root) this.checkLifetime(caller);
 		if (this.selected) this.selected.active = false;
 		this.selected = { work: { ...work }, attachment, active: true, operation: root.operation };
 		return true;

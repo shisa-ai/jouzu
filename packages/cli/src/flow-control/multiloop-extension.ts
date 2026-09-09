@@ -6,8 +6,8 @@ import type { FlowAuthorityWork } from "./wait-authority.js";
 
 export interface MultiloopControllerOptions {
 	ingress(): PiSessionFlowIngress;
-	work(lane: MultiloopLane): Promise<FlowAuthorityWork | undefined>;
-	waitingWork(lane: MultiloopLane): string | undefined;
+	work?(lane: MultiloopLane): Promise<FlowAuthorityWork | undefined>;
+	waitingWork?(lane: MultiloopLane): string | undefined;
 	onError(error: unknown): void;
 }
 /** Bind the actual loaded multiloop instance to this session's controller using Pi's event bus. */
@@ -55,13 +55,13 @@ export function createMultiloopControllerExtension(options: MultiloopControllerO
 						branch.attachment,
 						async (lane) => {
 							assertBranch();
-							const work = await options.work(lane);
+							const work = options.work ? await options.work(lane) : branch.attachment.waits.multiloopWork(lane);
 							assertBranch();
 							return work;
 						},
 						(lane) => {
 							assertBranch();
-							return options.waitingWork(lane);
+							return options.waitingWork ? options.waitingWork(lane) : branch.attachment.waits.multiloopWork(lane)?.id;
 						},
 						() => {
 							assertBranch();
@@ -78,6 +78,26 @@ export function createMultiloopControllerExtension(options: MultiloopControllerO
 						submit: next.submit.bind(next),
 						waiting: next.waiting.bind(next),
 						changed: next.lanesChanged.bind(next),
+						async transition(lane: MultiloopLane, status: "active" | "paused" | "stopped" | "completed") {
+							assertBranch();
+							if (status === "active") {
+								const work = await branch.attachment.waits.activateMultiloop(lane, Date.now());
+								assertBranch();
+								await branch.workContext?.selectToolWork({ id: work.id, actor: "multiloop", revision: work.revision });
+							} else {
+								const work = branch.attachment.waits.multiloopWork(lane);
+								if (work)
+									await branch.attachment.waits.changeWork(
+										work.id,
+										work.owner,
+										work.revision,
+										status,
+										`Lane ${status}`,
+										Date.now(),
+									);
+							}
+							assertBranch();
+						},
 					});
 				} catch (error) {
 					close();

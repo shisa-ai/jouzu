@@ -12,6 +12,8 @@ export interface FlowAuthorityWork {
 	createdAt: number;
 	/** Exact host submissions underlying a user invocation or consumed batch. */
 	userInputs?: { id: string; revision: number }[];
+	/** Producer lane belonging to this campaign generation. */
+	multiloop?: { lane: string; runTag: string };
 	/** Omitted in legacy records, whose work remains active. */
 	lifecycle?: { state: FlowWorkStatus; changedAt: number; reason: string };
 }
@@ -50,6 +52,7 @@ export function validateWaitAuthority(authority: FlowWaitAuthority): void {
 		new Set(authority.waitTokens).size !== authority.waitTokens.length
 	)
 		throw new FlowLedgerError("schema", "Invalid wait ownership registry.");
+	const lanes = new Set<string>();
 	const workIds = new Set<string>(),
 		executions = new Set<string>();
 	for (const work of authority.work) {
@@ -60,6 +63,11 @@ export function validateWaitAuthority(authority: FlowWaitAuthority): void {
 			!identity(work.owner) ||
 			!revision(work.revision) ||
 			!instant(work.createdAt) ||
+			(work.multiloop !== undefined &&
+				(!work.multiloop ||
+					work.owner !== "multiloop" ||
+					!identity(work.multiloop.lane) ||
+					!identity(work.multiloop.runTag))) ||
 			(work.userInputs !== undefined &&
 				(work.owner !== "host-user" ||
 					!Array.isArray(work.userInputs) ||
@@ -83,6 +91,11 @@ export function validateWaitAuthority(authority: FlowWaitAuthority): void {
 		)
 			throw new FlowLedgerError("identity", "Invalid work ownership record.");
 		workIds.add(work.id);
+		if (work.multiloop && !["stopped", "completed"].includes(work.lifecycle?.state ?? "active")) {
+			const lane = JSON.stringify([work.multiloop.lane, work.multiloop.runTag]);
+			if (lanes.has(lane)) throw new FlowLedgerError("identity", "Multiloop lane has multiple live campaigns.");
+			lanes.add(lane);
+		}
 	}
 	for (const execution of authority.executions) {
 		const key = JSON.stringify([execution?.producer, execution?.execution]);

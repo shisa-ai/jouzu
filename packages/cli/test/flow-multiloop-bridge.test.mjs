@@ -34,6 +34,7 @@ async function fixture(t) {
 	const module = await import(pathToFileURL(output).href);
 	const tools = new Map(),
 		handlers = new Map(),
+		commands = new Map(),
 		sends = [],
 		notifications = [];
 	const pi = {
@@ -45,7 +46,9 @@ async function fixture(t) {
 		registerTool(tool) {
 			tools.set(tool.name, tool);
 		},
-		registerCommand() {},
+		registerCommand(name, command) {
+			commands.set(name, command);
+		},
 		registerMessageRenderer() {},
 		sendMessage() {},
 		sendUserMessage(text) {
@@ -70,7 +73,15 @@ async function fixture(t) {
 		for (const fn of handlers.get(name) ?? []) await fn(event, ctx);
 	};
 	const execute = (name, args) => tools.get(name).execute("tool", args, undefined, undefined, ctx);
-	return { ...module, ctx, emit, execute, sends, notifications };
+	return {
+		...module,
+		ctx,
+		emit,
+		execute,
+		sends,
+		notifications,
+		command: (name, args) => commands.get(name).handler(args, ctx),
+	};
 }
 
 test("installed multiloop submits lazy per-lane continuations and preserves live waits on status turns", async (t) => {
@@ -164,5 +175,42 @@ test("installed multiloop suspends only waiting lanes and submits compaction int
 	await f.emit("agent_end");
 	assert.equal(intents.at(-1).reason, "compaction-resume");
 	assert.match(intents.at(-1).build(), /compacted/);
+	assert.deepEqual(f.sends, []);
+});
+
+test("installed commands await campaign transitions and route explicit resumes through admission", async (t) => {
+	const f = await fixture(t),
+		transitions = [],
+		intents = [];
+	const detach = f.attachMultiloopFlow("session", {
+		version: 1,
+		submit: (intent) => intents.push(intent),
+		waiting: () => true,
+		changed() {},
+		async transition(lane, status) {
+			transitions.push({ ...lane, status });
+		},
+	});
+	t.after(detach);
+	await f.execute("multiloop_start", { lane: "command", runTag: "run", mode: "research", goal: "Await result" });
+	await f.command("multiloop", "pause command/run");
+	await f.command("multiloop", "resume command/run");
+	assert.equal(intents.at(-1).reason, "explicit-resume");
+	assert.match(intents.at(-1).build(), /Await result/);
+	await f.command("multiloop", "archive command/run");
+	assert.deepEqual(
+		transitions.map((x) => x.status),
+		["active", "paused", "active", "stopped"],
+	);
+	await f.command("goal", "Test campaign commands");
+	assert.equal(intents.at(-1).reason, "goal-start");
+	await f.command("goal", "pause");
+	await f.command("goal", "resume");
+	assert.equal(intents.at(-1).reason, "goal-resume");
+	await f.command("goal", "clear");
+	assert.equal(transitions.at(-1).status, "paused");
+	const lane = transitions.at(-1);
+	await f.command("multiloop", `rm ${lane.lane}/${lane.runTag}`);
+	assert.equal(transitions.at(-1).status, "stopped");
 	assert.deepEqual(f.sends, []);
 });

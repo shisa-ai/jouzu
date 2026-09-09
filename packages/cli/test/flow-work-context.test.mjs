@@ -155,3 +155,52 @@ test("revocation preserves the invocation reservation until native execution ret
 	});
 	await context.run({ ...work, id: "other" }, async () => assert.equal(context.current().id, "other"));
 });
+
+const otherWork = { id: "other", actor: "lane", revision: 1 };
+test("a live tool selects work for following tools without replacing a parallel sibling identity", async (t) => {
+	const { context } = await fixture(t);
+	await context.run(work, async () => {
+		const started = deferred(),
+			finish = deferred();
+		const sibling = context.runTool(async () => {
+			started.resolve();
+			await finish.promise;
+			assert.equal(context.current().id, "work");
+		});
+		await started.promise;
+		await context.runTool(async () => {
+			assert.equal(await context.selectToolWork(otherWork), true);
+			assert.equal(context.current().id, "work");
+		});
+		await context.runTool(async () => assert.equal(context.current().id, "other"));
+		finish.resolve();
+		await sibling;
+	});
+});
+
+for (const duringRead of [false, true])
+	test(`revoked child cannot select new work${duringRead ? " across authority read" : ""}`, async (t) => {
+		const { context, attachment } = await fixture(t);
+		await context.run(work, async () => {
+			await context.runTool(async () => {
+				if (duringRead) {
+					const original = attachment.waits.authoritySnapshot.bind(attachment.waits);
+					attachment.waits.authoritySnapshot = async () => {
+						const snapshot = await original();
+						context.revoke();
+						return snapshot;
+					};
+				} else context.revoke();
+				await assert.rejects(context.selectToolWork(otherWork), { code: "stale" });
+			});
+		});
+	});
+
+test("native root may select consumed user work after revoking the old scope", async (t) => {
+	const { context } = await fixture(t);
+	await context.run(work, async () => {
+		context.revoke();
+		assert.equal(await context.selectToolWork(otherWork), true);
+		await context.runTool(async () => assert.equal(context.current().id, "other"));
+	});
+});

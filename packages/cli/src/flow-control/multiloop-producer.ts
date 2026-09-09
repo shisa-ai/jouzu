@@ -20,6 +20,7 @@ interface Entry {
 	lane: MultiloopLane;
 	continuation?: MultiloopContinuation;
 	revision?: string;
+	workId?: string;
 }
 const key = (lane: MultiloopLane) => JSON.stringify([lane.lane, lane.runTag]);
 function captureLane(lane: MultiloopLane): MultiloopLane {
@@ -81,10 +82,10 @@ export class MultiloopFlowProducer implements FlowProducer {
 		const id = this.waitingWork(captureLane(lane));
 		return id !== undefined && this.attachment.waits.gate().waitingWorkIds.includes(id);
 	}
-	private id(lane: MultiloopLane): string {
+	private id(lane: MultiloopLane, workId?: string): string {
 		const scope = this.attachment.ledger.scope;
 		return `multiloop:${createHash("sha256")
-			.update(JSON.stringify([scope.sessionId, scope.branchId, lane.lane, lane.runTag]))
+			.update(JSON.stringify([scope.sessionId, scope.branchId, lane.lane, lane.runTag, workId]))
 			.digest("hex")}`;
 	}
 	async snapshot(signal: AbortSignal): Promise<FlowIntent[]> {
@@ -102,7 +103,9 @@ export class MultiloopFlowProducer implements FlowProducer {
 				throw new FlowLedgerError("stale", "Multiloop campaign binding is no longer current.");
 			if (!work.participants.includes(this.namespace))
 				throw new FlowLedgerError("identity", "Multiloop is not authorized for this campaign.");
-			const id = this.id(entry.lane);
+			if (entry.workId !== work.id) entry.revision = undefined;
+			entry.workId = work.id;
+			const id = this.id(entry.lane, work.id);
 			const attempts = ledger.attempts.filter(
 				(attempt) =>
 					attempt.admission?.choice.intent.id === id && !(attempt.phase === "cancelled" && attempt.consumed === false),
@@ -132,7 +135,7 @@ export class MultiloopFlowProducer implements FlowProducer {
 		return intents;
 	}
 	async build(intent: FlowIntent, signal: AbortSignal): Promise<FlowInputItem> {
-		const entry = [...this.entries.values()].find((entry) => this.id(entry.lane) === intent.id);
+		const entry = [...this.entries.values()].find((entry) => this.id(entry.lane, entry.workId) === intent.id);
 		const current = (await this.snapshot(signal)).find((item) => item.id === intent.id);
 		if (
 			!entry?.continuation ||
@@ -153,7 +156,7 @@ export class MultiloopFlowProducer implements FlowProducer {
 		if (attempt.phase !== "claimed" || attempt.consumed !== true)
 			throw new FlowLedgerError("transition", "Multiloop accounting requires native consumption.");
 		if (this.admittedAttempts.has(attempt.id)) return;
-		const entry = [...this.entries.values()].find((entry) => this.id(entry.lane) === intent.id);
+		const entry = [...this.entries.values()].find((entry) => this.id(entry.lane, entry.workId) === intent.id);
 		if (!entry?.continuation) throw new FlowLedgerError("stale", "Consumed multiloop continuation is detached.");
 		entry.continuation.admitted();
 		this.admittedAttempts.add(attempt.id);

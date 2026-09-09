@@ -283,8 +283,6 @@ for (const reverse of [false, true])
 			sends = [];
 		const bridge = createMultiloopControllerExtension({
 			ingress: () => ({ branch: () => attachedBranch, requestRelease() {} }),
-			work: async () => (await f.attachment.waits.authoritySnapshot()).work.find((work) => work.id === "campaign"),
-			waitingWork: () => "campaign",
 			onError: (error) => errors.push(error),
 		});
 		const installed = {
@@ -313,7 +311,6 @@ for (const reverse of [false, true])
 			fetch: async () => answer(),
 		});
 		attachedBranch = { ...f, scope: f.ledger.scope };
-		await f.attachment.waits.registerWork("campaign", "multiloop", Date.now());
 		await f.session.bindExtensions({ onError: (error) => errors.push(error) });
 		assert.ok(f.controller.view().producers.includes("multiloop"));
 		await tools
@@ -325,9 +322,12 @@ for (const reverse of [false, true])
 				undefined,
 				ctx,
 			);
+		const lane = { lane: "test", runTag: "run" };
+		const campaign = f.attachment.waits.multiloopWork(lane);
+		assert.deepEqual(campaign.participants, ["multiloop", "bg"]);
 		const handle = { producer: "multiloop", handle: "job", execution: "execution" };
 		await f.attachment.waits.registerExecution(
-			{ ...handle, workId: "campaign", revision: 1, predicates: [{ until: "exit", state: "pending" }] },
+			{ ...handle, workId: campaign.id, revision: 1, predicates: [{ until: "exit", state: "pending" }] },
 			1,
 			Date.now(),
 		);
@@ -336,7 +336,7 @@ for (const reverse of [false, true])
 			1,
 			{
 				scope: f.ledger.scope,
-				workId: "campaign",
+				workId: campaign.id,
 				token: "wait",
 				reason: "job exit",
 				mode: "all",
@@ -347,6 +347,7 @@ for (const reverse of [false, true])
 			60000,
 		);
 		Object.defineProperty(f.policy, "waitingWorkIds", { get: () => f.attachment.waits.gate().waitingWorkIds });
+		Object.defineProperty(f.policy, "inactiveWorkIds", { get: () => f.attachment.waits.gate().inactiveWorkIds });
 		f.controller.register(
 			createFlowWaitDecisionProducer(f.attachment.waits, {
 				submissions: f.attachment.submissions,
@@ -359,6 +360,15 @@ for (const reverse of [false, true])
 		}
 		assert.equal((await f.ledger.snapshot()).attempts.length, 0);
 		assert.deepEqual(sends, []);
+		const expiry = (await f.attachment.waits.snapshot())[0].expiresAt;
+		await tools.get("multiloop_pause").execute("pause", { target: "test/run" }, undefined, undefined, ctx);
+		assert.equal(f.attachment.waits.multiloopWork(lane).lifecycle.state, "paused");
+		await f.controller.wake();
+		assert.equal((await f.ledger.snapshot()).attempts.length, 0);
+		await tools.get("multiloop_resume").execute("resume", { target: "test/run" }, undefined, undefined, ctx);
+		assert.equal(f.attachment.waits.multiloopWork(lane).id, campaign.id);
+		assert.equal((await f.attachment.waits.snapshot())[0].expiresAt, expiry);
+		await f.session.prompt("status after resume");
 		await f.attachment.waits.observeExecution(handle, 2, [{ until: "exit", state: "satisfied" }], Date.now());
 		await f.controller.wake();
 		const attempts = (await f.ledger.snapshot()).attempts;
@@ -371,6 +381,10 @@ for (const reverse of [false, true])
 		await f.controller.wake();
 		assert.equal((await f.ledger.snapshot()).attempts.length, 1);
 		assert.deepEqual(sends, []);
+		await tools.get("multiloop_stop").execute("stop", { target: "test/run" }, undefined, undefined, ctx);
+		assert.equal(f.attachment.waits.multiloopWork(lane), undefined);
+		await tools.get("multiloop_resume").execute("new-generation", { target: "test/run" }, undefined, undefined, ctx);
+		assert.notEqual(f.attachment.waits.multiloopWork(lane).id, campaign.id);
 		assert.deepEqual(errors, []);
 	});
 
