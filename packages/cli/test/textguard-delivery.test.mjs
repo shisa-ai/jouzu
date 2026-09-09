@@ -11,8 +11,33 @@ import {
 	SessionManager,
 	SettingsManager,
 } from "@earendil-works/pi-coding-agent";
+import { KeybindingsManager, stripTerminalSequences, TUI_KEYBINDINGS } from "@earendil-works/pi-tui";
 import { createTextGuardReviewExtension } from "../dist/textguard-review.js";
 import { TextGuardRuntime } from "../dist/textguard-runtime.js";
+
+const identityTheme = { fg: (_role, value) => value, bg: (_role, value) => value, bold: (value) => value };
+/** Drive the review overlay: open the item, then approve or cancel. */
+async function driveReview(factory, allow) {
+	let resolveDone;
+	const donePromise = new Promise((resolve) => (resolveDone = resolve));
+	const component = factory(
+		{ terminal: { rows: 30, columns: 80 } },
+		identityTheme,
+		new KeybindingsManager(TUI_KEYBINDINGS),
+		(result) => resolveDone(result),
+	);
+	const render = () => stripTerminalSequences(component.render(80).join("\n"));
+	component.handleInput("\r");
+	if (allow) {
+		for (let step = 0; step < 4 && !render().includes("> Allow for this session"); step++)
+			component.handleInput("\x1b[A");
+		if (render().includes("> Allow for this session")) component.handleInput("\r");
+	} else {
+		component.handleInput("\x1b");
+		component.handleInput("\x1b");
+	}
+	return donePromise;
+}
 
 test("registered review command releases checked skill bytes through reload to the provider", {
 	timeout: 15000,
@@ -116,11 +141,9 @@ test("registered review command releases checked skill bytes through reload to t
 			mode: "tui",
 			uiContext: {
 				notify() {},
-				select: async (title, options) => {
-					dialogs.push({ title, options });
-					return allow && options.includes("Allow this content for this session")
-						? "Allow this content for this session"
-						: options[0];
+				custom: async (factory) => {
+					dialogs.push({ allow });
+					return driveReview(factory, allow);
 				},
 			},
 			commandContextActions: {
@@ -158,7 +181,7 @@ test("registered review command releases checked skill bytes through reload to t
 		assert.equal(policy.reviews().length, 1);
 		await session.prompt("/skill:approval-fixture");
 		assert.doesNotMatch(JSON.stringify(contexts.at(-1)), /CHANGED_BODY/);
-		assert.equal(dialogs.filter((dialog) => dialog.options.includes("Allow this content for this session")).length, 2);
+		assert.equal(dialogs.length, 2);
 	} finally {
 		session?.dispose();
 		await guard.close();

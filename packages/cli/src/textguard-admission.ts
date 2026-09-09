@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
-import type { TextGuardApprovalStore } from "./textguard-approvals.js";
 import { MAX_SCAN_BYTES, type ScanEvidence, type TextScanner, unavailable } from "./textguard.js";
+import type { TextGuardApprovalStore } from "./textguard-approvals.js";
 import { type NativeEvidence, parseNativeEvidence } from "./textguard-native.js";
 
 export const ADMISSION_POLICY = "error-or-incomplete-v1";
@@ -12,6 +12,8 @@ interface IdentifiedScanner extends TextScanner {
 export interface ContentReview {
 	id: string;
 	source: string;
+	/** Display-ready source label: readable CJK, escaped controls. */
+	displaySource: string;
 	contentDigest: string;
 	scannerIdentity: string;
 	policy: string;
@@ -174,6 +176,7 @@ export class TextGuardAdmission {
 		const review: ContentReview = {
 			id,
 			source: reviewLabel(source),
+			displaySource: displayLabel(source.slice(0, MAX_SNAPSHOT_SOURCE)),
 			contentDigest,
 			scannerIdentity,
 			policy: ADMISSION_POLICY,

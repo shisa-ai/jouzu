@@ -1,5 +1,6 @@
-import type { ExtensionContext, ExtensionFactory } from "@earendil-works/pi-coding-agent";
-import { wrapTextWithAnsi } from "@earendil-works/pi-tui";
+import type { ExtensionContext, ExtensionFactory, KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
+import { type Component, type TUI, truncateToWidth, wrapTextWithAnsi } from "@earendil-works/pi-tui";
+import { formatEffectiveKeybinding } from "./keybinding-hints.js";
 import type { ScanEvidence, ScanFinding, UnavailableReason } from "./textguard.js";
 import { type ContentReview, type ContentSnapshot, displayLabel, escapeInvisible } from "./textguard-admission.js";
 import type { TextGuardRuntime } from "./textguard-runtime.js";
@@ -7,18 +8,10 @@ import type { TextGuardRuntime } from "./textguard-runtime.js";
 /** Native scans attach the offending code point; injected evidence may not. */
 type ReviewFinding = ScanFinding & { codepoint?: string };
 
-const KEEP = "Keep withheld";
-const ALLOW = "Allow this content for this session";
-const VIEW = "View flagged content";
-const MORE = "More details";
-const NEXT = "Next part";
+const ALLOW_SESSION = "Allow for this session";
+const ALLOW_ALWAYS = "Always allow this exact content";
+const DISMISS = "Dismiss report";
 const BACK = "Back";
-
-// 48-column terminals render selector text at 46 columns after padding.
-const WRAP_COLUMNS = 46;
-// The inherited selector spends 6 rows on chrome plus one row per choice.
-const SUMMARY_LINES = 10;
-const CONTENT_LINES = 9;
 
 const REASON_TEXT: Record<UnavailableReason, string> = {
 	"input-limit": "the content is larger than TextGuard can scan",
@@ -54,7 +47,7 @@ const KIND_TEXT: Record<string, [name: string, explanation: string]> = {
 	],
 	split_token: [
 		"split keyword",
-		'A protected keyword such as "system" or "instructions" appears split by invisible characters, a common way to hide prompt injection.',
+		'A protected keyword such as "system" or "instructions" appears split by separator characters, a common way to hide prompt injection.',
 	],
 	decoded: ["encoded text", "Part of the content was stored in an encoded form and was decoded before scanning."],
 	normalized: ["normalization change", "Part of the content was rewritten during normalization before scanning."],
@@ -66,11 +59,6 @@ const SEVERITY_LABEL = {
 	warn: "Warning",
 	info: "Information",
 } as const;
-
-/** Wrap a label at the selector width and return the rendered lines. */
-function wrap(text: string): string[] {
-	return wrapTextWithAnsi(text, WRAP_COLUMNS);
-}
 
 /** Human location for a finding offset, measured in the exact scanned text when it is retained. */
 function location(finding: ReviewFinding, body?: string): string {
@@ -94,8 +82,10 @@ function describeFinding(finding: ReviewFinding, body?: string): string[] {
 		entry = [`flagged pattern ${displayLabel(finding.kind)}`, "The scanner matched a pattern it considers suspicious."];
 	const [name, explanation] = entry;
 	const where = location(finding, body);
-	const head = `${SEVERITY_LABEL[finding.severity]}: ${name}${finding.codepoint ? ` ${finding.codepoint}` : ""}${where ? ` at ${where}` : ""}.`;
-	return [...wrap(head), ...wrap(explanation)];
+	return [
+		`${SEVERITY_LABEL[finding.severity]}: ${name}${finding.codepoint ? ` ${finding.codepoint}` : ""}${where ? ` at ${where}` : ""}.`,
+		explanation,
+	];
 }
 
 function countsLine(evidence: ScanEvidence): string {
@@ -118,40 +108,13 @@ function evidenceLines(review: ContentReview, body?: string): string[] {
 	const evidence = review.evidence;
 	if (evidence.status === "unavailable") {
 		const reason = REASON_TEXT[evidence.reason ?? "scanner"];
-		return [
-			...wrap(`The check did not finish: ${reason}.`),
-			...wrap("This content stays withheld unless you approve it."),
-		];
+		return [`The check did not finish: ${reason}.`, "This content stays withheld unless you approve it."];
 	}
-	const lines = wrap(countsLine(evidence));
+	const lines = [countsLine(evidence)];
 	for (const finding of evidence.findings) lines.push(...describeFinding(finding, body));
 	if (evidence.findingCount !== undefined && evidence.findingCount > evidence.findings.length)
-		lines.push(...wrap(`Showing the first ${evidence.findings.length} of ${evidence.findingCount} findings.`));
+		lines.push(`Showing the first ${evidence.findings.length} of ${evidence.findingCount} findings.`);
 	return lines;
-}
-
-/**
- * Readable review pages: the complete source label (never double-escaped or cut
- * short), the exact fingerprint, findings with explanations and locations, and
- * the honest limitation when the content itself was not retained.
- */
-export function summaryPages(review: ContentReview, snapshot?: ContentSnapshot): string[] {
-	const body = snapshot?.body;
-	const content = [
-		...wrap(`Source: ${snapshot ? displayLabel(snapshot.source) : review.source}`),
-		...wrap(`Content fingerprint (SHA-256): ${review.contentDigest}`),
-		...evidenceLines(review, body),
-		...(body === undefined ? wrap("The flagged content itself is not retained for viewing here.") : []),
-		...wrap("Scans reduce risk but cannot prove content is safe. You decide whether to allow it."),
-	];
-	const pages: string[] = [];
-	for (let start = 0; start < content.length || pages.length === 0; start += SUMMARY_LINES - 1) {
-		const slice = content.slice(start, start + SUMMARY_LINES - 1);
-		const header = pages.length === 0 ? "TextGuard review" : `TextGuard review (continued, part ${pages.length + 1})`;
-		pages.push([header, ...slice].join("\n"));
-		if (slice.length === 0) break;
-	}
-	return pages;
 }
 
 /** Escape scanned content for display: controls and invisible characters become visible escapes. */
@@ -162,37 +125,218 @@ function displayContent(text: string): string {
 		.join("\n");
 }
 
-/** Bounded viewer pages, each titled with the exact fingerprint of the reviewed content. */
-export function contentPages(contentDigest: string, body: string): string[] {
-	const lines = wrap(displayContent(body));
-	const parts = chunk(lines.some((line) => line !== "") ? lines : ["(the content is empty)"], CONTENT_LINES);
-	return parts.map((part, index) =>
-		[
-			`Flagged content, part ${index + 1} of ${parts.length}`,
-			...wrap(`Content fingerprint (SHA-256): ${contentDigest}`),
-			"",
-			...part,
-		].join("\n"),
-	);
+/**
+ * Logical (unwrapped) review lines: the complete source label, the exact
+ * fingerprint, findings with explanations and locations, and the escaped
+ * content when retained. The review component wraps these at render width.
+ */
+export function reviewLines(review: ContentReview, snapshot?: ContentSnapshot): string[] {
+	const body = snapshot?.body;
+	const lines = [
+		`Source: ${snapshot ? displayLabel(snapshot.source) : review.displaySource}`,
+		`Content fingerprint (SHA-256): ${review.contentDigest}`,
+		"",
+		...evidenceLines(review, body),
+		"",
+	];
+	if (body === undefined) lines.push("The flagged content itself is not retained for viewing here.");
+	else
+		lines.push(
+			"Flagged content (controls and invisible characters shown as escapes):",
+			...displayContent(body).split("\n"),
+		);
+	lines.push("", "Scans reduce risk but cannot prove content is safe. You decide whether to allow it.");
+	return lines;
 }
 
-export function summaryChoices(
-	snapshot: ContentSnapshot | undefined,
-	requiresApproval: boolean,
-	pageCount: number,
-): string[] {
-	const choices = [];
-	if (snapshot?.body !== undefined) choices.push(VIEW);
-	if (requiresApproval) choices.push(KEEP, ALLOW);
-	if (pageCount > 1) choices.push(MORE);
-	choices.push(BACK);
-	return choices;
+interface ReviewItem {
+	review: ContentReview;
+	withheld: boolean;
 }
 
-function chunk<T>(items: T[], size: number): T[][] {
-	const groups: T[][] = [];
-	for (let start = 0; start < items.length; start += size) groups.push(items.slice(start, start + size));
-	return groups;
+export interface ReviewOutcome {
+	approval?: { id: string; persist: boolean };
+}
+
+export interface ReviewComponentDeps {
+	tui: TUI;
+	theme: Theme;
+	keybindings: KeybindingsManager;
+	items: ReviewItem[];
+	snapshotFor: (id: string) => ContentSnapshot | undefined;
+	dismiss: (id: string) => void;
+	notices: number;
+	done: (outcome: ReviewOutcome) => void;
+}
+
+/**
+ * The /textguard overlay: a scrollable review view with the findings, the
+ * escaped content, and the decision actions on one screen. All keys resolve
+ * through the keybinding manager; cancellation returns to the list instead of
+ * discarding the session's review state.
+ */
+export function createReviewComponent(deps: ReviewComponentDeps): Component {
+	const { theme, keybindings } = deps;
+	const items = [...deps.items];
+	const outcome: ReviewOutcome = {};
+	let state: "list" | "detail" = "list";
+	let selected = 0;
+	let listScroll = 0;
+	let actionIndex = 0;
+	let bodyScroll = 0;
+	let detailLines: string[] = [];
+	let wrapCache: { width: number; lines: string[] } | undefined;
+
+	const hint = (action: Parameters<typeof formatEffectiveKeybinding>[1]) =>
+		formatEffectiveKeybinding(keybindings, action);
+	const actions = (item: ReviewItem): string[] =>
+		item.withheld ? [ALLOW_SESSION, ALLOW_ALWAYS, BACK] : [DISMISS, BACK];
+
+	const wrapDetail = (width: number): string[] => {
+		if (wrapCache?.width === width) return wrapCache.lines;
+		const lines = detailLines.flatMap((line) => (line === "" ? [""] : wrapTextWithAnsi(line, width)));
+		wrapCache = { width, lines };
+		return lines;
+	};
+
+	const enterDetail = () => {
+		const item = items[selected];
+		if (!item) return;
+		detailLines = reviewLines(item.review, deps.snapshotFor(item.review.id));
+		wrapCache = undefined;
+		// Default to denial: the cursor starts on the non-approving action.
+		const itemActions = actions(item);
+		actionIndex = item.withheld ? itemActions.length - 1 : 0;
+		bodyScroll = 0;
+		state = "detail";
+	};
+
+	const activate = () => {
+		const item = items[selected];
+		if (!item) return;
+		const action = actions(item)[actionIndex];
+		if (action === ALLOW_SESSION || action === ALLOW_ALWAYS) {
+			outcome.approval = { id: item.review.id, persist: action === ALLOW_ALWAYS };
+			deps.done(outcome);
+			return;
+		}
+		if (action === DISMISS) {
+			deps.dismiss(item.review.id);
+			items.splice(selected, 1);
+			if (items.length === 0) {
+				deps.done(outcome);
+				return;
+			}
+			selected = Math.min(selected, items.length - 1);
+			listScroll = Math.min(listScroll, Math.max(0, items.length - 1));
+		}
+		state = "list";
+	};
+
+	const renderList = (width: number, height: number): string[] => {
+		const withheld = items.filter((item) => item.withheld).length;
+		const header = theme.bold(theme.fg("accent", "TextGuard review"));
+		const summary = theme.fg(
+			"dim",
+			` ${withheld} withheld, ${items.length - withheld} report${items.length - withheld === 1 ? "" : "s"}`,
+		);
+		const lines = [truncateToWidth(`${header}${summary}`, width, ""), ""];
+		const hints =
+			`${hint("tui.select.up")}/${hint("tui.select.down")} select · ` +
+			`${hint("tui.select.confirm")} open · ${hint("tui.select.cancel")} close`;
+		const footer: string[] = [];
+		if (deps.notices > 0)
+			footer.push(
+				...wrapTextWithAnsi(
+					theme.fg(
+						"dim",
+						`${deps.notices} check${deps.notices === 1 ? "" : "s"} could not identify the complete content; that content cannot be approved.`,
+					),
+					width,
+				),
+			);
+		footer.push(theme.fg("dim", hints));
+		const budget = Math.max(1, height - lines.length - footer.length - 1);
+		listScroll = Math.max(0, Math.min(listScroll, items.length - budget));
+		if (selected < listScroll) listScroll = selected;
+		if (selected >= listScroll + budget) listScroll = selected - budget + 1;
+		const window = items.slice(listScroll, listScroll + budget);
+		for (const [index, item] of window.entries()) {
+			const current = listScroll + index === selected;
+			const status = item.withheld ? theme.fg("warning", "Withheld") : theme.fg("dim", "Report  ");
+			const label = item.review.displaySource;
+			lines.push(truncateToWidth(`${current ? theme.fg("accent", "> ") : "  "}${status} ${label}`, width, "…"));
+		}
+		if (items.length > budget) lines.push(theme.fg("dim", `  (${selected + 1}/${items.length})`));
+		lines.push("", ...footer);
+		return lines;
+	};
+
+	const renderDetail = (width: number, height: number): string[] => {
+		const item = items[selected];
+		if (!item) {
+			state = "list";
+			return renderList(width, height);
+		}
+		const header = theme.bold(
+			theme.fg("accent", item.withheld ? "TextGuard review — withheld content" : "TextGuard review — scan report"),
+		);
+		const itemActions = actions(item);
+		const hints =
+			`${hint("tui.select.up")}/${hint("tui.select.down")} action · ` +
+			`${hint("tui.select.pageUp")}/${hint("tui.select.pageDown")} scroll · ` +
+			`${hint("tui.select.confirm")} select · ${hint("tui.select.cancel")} back`;
+		const actionLines = itemActions.map((action, index) =>
+			truncateToWidth(index === actionIndex ? theme.fg("accent", `> ${action}`) : `  ${action}`, width, "…"),
+		);
+		const chrome = 1 + 1 + actionLines.length + 1 + 1;
+		const budget = Math.max(1, height - chrome);
+		const body = wrapDetail(width);
+		bodyScroll = Math.max(0, Math.min(bodyScroll, Math.max(0, body.length - budget)));
+		const window = body.slice(bodyScroll, bodyScroll + budget);
+		const lines = [truncateToWidth(header, width, ""), ...window];
+		if (body.length > budget)
+			lines.push(
+				theme.fg("dim", `  (lines ${bodyScroll + 1}-${Math.min(bodyScroll + budget, body.length)} of ${body.length})`),
+			);
+		lines.push("", ...actionLines, "", theme.fg("dim", truncateToWidth(hints, width, "…")));
+		return lines;
+	};
+
+	return {
+		render(width: number): string[] {
+			const columns = Math.max(12, width - 2);
+			const rows = Number(deps.tui.terminal?.rows ?? 24);
+			const height = Math.max(8, Math.min(rows - 6, 44));
+			const inner = state === "list" ? renderList(columns, height) : renderDetail(columns, height);
+			return inner.map((line) => ` ${line}`);
+		},
+		invalidate() {
+			wrapCache = undefined;
+		},
+		handleInput(data: string) {
+			if (keybindings.matches(data, "tui.select.cancel")) {
+				if (state === "detail") state = "list";
+				else deps.done(outcome);
+				return;
+			}
+			if (state === "list") {
+				if (keybindings.matches(data, "tui.select.up")) selected = Math.max(0, selected - 1);
+				else if (keybindings.matches(data, "tui.select.down")) selected = Math.min(items.length - 1, selected + 1);
+				else if (keybindings.matches(data, "tui.select.pageUp")) selected = Math.max(0, selected - 8);
+				else if (keybindings.matches(data, "tui.select.pageDown")) selected = Math.min(items.length - 1, selected + 8);
+				else if (keybindings.matches(data, "tui.select.confirm")) enterDetail();
+				return;
+			}
+			const itemActions = actions(items[selected]);
+			if (keybindings.matches(data, "tui.select.up")) actionIndex = Math.max(0, actionIndex - 1);
+			else if (keybindings.matches(data, "tui.select.down"))
+				actionIndex = Math.min(itemActions.length - 1, actionIndex + 1);
+			else if (keybindings.matches(data, "tui.select.pageUp")) bodyScroll = Math.max(0, bodyScroll - 8);
+			else if (keybindings.matches(data, "tui.select.pageDown")) bodyScroll += 8;
+			else if (keybindings.matches(data, "tui.select.confirm")) activate();
+		},
+	};
 }
 
 export function createTextGuardReviewExtension(
@@ -216,29 +360,24 @@ export function createTextGuardReviewExtension(
 		}));
 	return (pi) => {
 		let lastNotice = "";
-		const notify = (ctx: ExtensionContext, message: string) => {
-			if (ctx.mode === "tui" && ctx.hasUI) ctx.ui.notify(message, "warning");
+		const notify = (ctx: ExtensionContext, message: string, type: "info" | "warning" | "error" = "warning") => {
+			if (ctx.mode === "tui" && ctx.hasUI) ctx.ui.notify(message, type);
 			else writeDiagnostic(message);
 		};
 		const report = (_event: unknown, ctx: ExtensionContext) => {
 			const policy = runtime.forSession(ctx.sessionManager.getSessionId());
 			if (!policy) return;
 			const pending = policy.reviews();
-			const reports = policy.scanReports();
-			const notices = policy.scanNotices();
-			const identity = JSON.stringify([
-				ctx.sessionManager.getSessionId(),
-				pending.map((item) => item.id),
-				reports.map((item) => item.id),
-				notices,
-			]);
+			const identity = JSON.stringify([ctx.sessionManager.getSessionId(), pending.map((item) => item.id)]);
 			if (identity === lastNotice) return;
 			lastNotice = identity;
-			if (pending.length || reports.length || notices.length) {
-				const item = (count: number, noun: string) => `${count} ${noun}${count === 1 ? "" : "s"}`;
+			// Only content-blocking items notify. Non-blocking reports and identity-limited
+			// checks stay inspectable through /textguard without interrupting the session.
+			if (pending.length) {
+				const noun = pending.length === 1 ? "item" : "items";
 				notify(
 					ctx,
-					`TextGuard: ${item(pending.length, "item")} waiting for your review, ${item(reports.length, "scan report")}, and ${item(notices.length, "check")} without an exact content identity. ${ctx.mode === "tui" ? "Use /textguard to review." : "Content stays withheld where approval is required. Review with /textguard in an interactive session."}`,
+					`TextGuard: ${pending.length} ${noun} waiting for your review. ${ctx.mode === "tui" ? "Use /textguard to review." : "Content stays withheld. Review with /textguard in an interactive session."}`,
 				);
 			}
 		};
@@ -270,8 +409,14 @@ export function createTextGuardReviewExtension(
 				}
 				const pending = policy.reviews();
 				const pendingIds = new Set(pending.map((item) => item.id));
-				const reviews = [...pending, ...policy.scanReports().filter((item) => !pendingIds.has(item.id))];
-				if (!reviews.length) {
+				const items: ReviewItem[] = [
+					...pending.map((review) => ({ review, withheld: true })),
+					...policy
+						.scanReports()
+						.filter((item) => !pendingIds.has(item.id))
+						.map((review) => ({ review, withheld: false })),
+				];
+				if (!items.length) {
 					notify(
 						ctx,
 						policy.scanNotices().length
@@ -280,69 +425,44 @@ export function createTextGuardReviewExtension(
 					);
 					return;
 				}
-				const choices = reviews.map(
-					(item, index) =>
-						`${index + 1}. ${pendingIds.has(item.id) ? "Withheld" : "Scan report"} ${item.id.slice(0, 12)}`,
+				const outcome = await ctx.ui.custom<ReviewOutcome>(
+					(tui, theme, keybindings, done) =>
+						createReviewComponent({
+							tui,
+							theme,
+							keybindings,
+							items,
+							snapshotFor: (id) => policy.admission.snapshotFor(id),
+							dismiss: (id) => policy.dismissReport(id),
+							notices: policy.scanNotices().length,
+							done,
+						}),
+					{
+						overlay: true,
+						overlayOptions: { width: "90%", minWidth: 48, maxHeight: "85%", anchor: "center", margin: 1 },
+					},
 				);
-				while (true) {
-					let page = 0;
-					let index = -1;
-					while (index < 0) {
-						const items = choices.slice(page * 6, page * 6 + 6);
-						if (page > 0) items.push("Previous page");
-						if ((page + 1) * 6 < choices.length) items.push("Next page");
-						const selected = await ctx.ui.select(`TextGuard findings (page ${page + 1})`, items);
-						if (selected === "Next page" && items.includes(selected)) {
-							page++;
-							continue;
-						}
-						if (selected === "Previous page" && items.includes(selected)) {
-							page--;
-							continue;
-						}
-						index = selected !== undefined && items.includes(selected) ? choices.indexOf(selected) : -1;
-						if (index < 0) return;
-					}
-					const review = reviews[index];
-					const requiresApproval = pendingIds.has(review.id);
-					const snapshot = policy.contentSnapshot(review);
-					const pages = summaryPages(review, snapshot);
-					let detail = 0;
-					while (true) {
-						const action = await ctx.ui.select(pages[detail], summaryChoices(snapshot, requiresApproval, pages.length));
-						if (action === MORE) {
-							detail = Math.min(detail + 1, pages.length - 1);
-							continue;
-						}
-						if (action === BACK) break;
-						if (action === ALLOW && requiresApproval) {
-							const finalDimensions = terminal();
-							if (finalDimensions.dumb || finalDimensions.columns < 48 || finalDimensions.rows < 24) {
-								notify(ctx, "Terminal size changed. Content stays withheld; resize and retry /textguard.");
-								return;
-							}
-							if (!runtime.approve(policy, review.id)) {
-								notify(ctx, "This TextGuard review expired. Run /textguard again.");
-								return;
-							}
-							ctx.ui.notify("Content approved for this session. Retry the request after resources reload.", "info");
-							try {
-								await ctx.reload();
-							} catch {
-								notify(ctx, "Content approved, but resources could not reload. Run /reload before retrying.");
-							}
-							return;
-						}
-						// Viewing the content ends the command; Keep withheld and cancellation leave it withheld.
-						if (action === VIEW && snapshot?.body !== undefined) {
-							const parts = contentPages(review.contentDigest, snapshot.body);
-							for (let part = 0; part < parts.length; part++) {
-								const partChoices = part + 1 < parts.length ? [NEXT, BACK] : [BACK];
-								if ((await ctx.ui.select(parts[part], partChoices)) !== NEXT) break;
-							}
-						}
-						return;
-					}
+				if (!outcome?.approval) return;
+				const finalDimensions = terminal();
+				if (finalDimensions.dumb || finalDimensions.columns < 48 || finalDimensions.rows < 24) {
+					notify(ctx, "Terminal size changed. Content stays withheld; resize and retry /textguard.");
+					return;
+				}
+				if (!runtime.approve(policy, outcome.approval.id, outcome.approval.persist)) {
+					notify(ctx, "This TextGuard review expired. Run /textguard again.");
+					return;
+				}
+				notify(
+					ctx,
+					outcome.approval.persist
+						? "Content approved. Future sessions admit these exact bytes; any change requires a new review. Resources will reload."
+						: "Content approved for this session. Retry the request after resources reload.",
+					"info",
+				);
+				try {
+					await ctx.reload();
+				} catch {
+					notify(ctx, "Content approved, but resources could not reload. Run /reload before retrying.");
 				}
 			},
 		});

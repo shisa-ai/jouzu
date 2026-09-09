@@ -1,27 +1,26 @@
 import assert from "node:assert/strict";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { test } from "node:test";
-import { visibleWidth } from "@earendil-works/pi-tui";
-import {
-	contentPages,
-	createTextGuardReviewExtension,
-	summaryChoices,
-	summaryPages,
-} from "../dist/textguard-review.js";
+import { KeybindingsManager, stripTerminalSequences, TUI_KEYBINDINGS, visibleWidth } from "@earendil-works/pi-tui";
+import { createTextGuardReviewExtension, reviewLines } from "../dist/textguard-review.js";
 import { TextGuardRuntime } from "../dist/textguard-runtime.js";
 
-const piRoot = new URL("./", import.meta.resolve("@earendil-works/pi-coding-agent"));
-const { ExtensionSelectorComponent } = await import(
-	new URL("modes/interactive/components/extension-selector.js", piRoot)
-);
-const { initTheme } = await import(new URL("modes/interactive/theme/theme.js", piRoot));
-initTheme("dark");
-const VIEW = "View flagged content";
-const KEEP = "Keep withheld";
-const ALLOW = "Allow this content for this session";
-/** Wrapped pages break long tokens; match prose against newline-joined text. */
+const identityTheme = { fg: (_role, value) => value, bg: (_role, value) => value, bold: (value) => value };
+const UP = "\x1b[A";
+const DOWN = "\x1b[B";
+const ENTER = "\r";
+const ESC = "\x1b";
+const PGDN = "\x1b[6~";
+/** Wrapped lines break long tokens; match prose against newline-joined text. */
 const flat = (text) => text.replace(/\n/g, " ");
 /** Fingerprints wrap mid-token; match them against whitespace-stripped text. */
 const dense = (text) => text.replace(/\s/g, "");
+/** Renderer escapes (resets, cursor styles) are ours; strip them before content assertions. */
+const clean = (lines) => stripTerminalSequences(lines.join("\n"));
+/** Wrapped lines leave boundary spaces; collapse all whitespace for prose assertions. */
+const norm = (text) => text.replace(/\s+/g, " ");
 
 const evidence = {
 	status: "findings",
@@ -30,13 +29,23 @@ const evidence = {
 	severityCounts: { info: 0, warn: 0, error: 1 },
 	decodeReasons: [],
 };
+const infoEvidence = {
+	status: "findings",
+	findings: [{ kind: "ansi_escape", severity: "warn", offset: 3, codepoint: "" }],
+	findingCount: 1,
+	severityCounts: { info: 0, warn: 1, error: 0 },
+	decodeReasons: [],
+};
 const request = {
 	toolName: "web_fetch",
 	toolCallId: "1",
-	input: { url: "https://example.com/日\u202e\u001b[31m" },
+	input: { url: "https://example.com/日‮\u001b[31m" },
 	result: { content: [{ type: "text", text: "private source body" }], details: {} },
 };
-async function setup(t, scan = evidence) {
+
+async function setup(t, scan = evidence, options = {}) {
+	const dir = await mkdtemp(join(tmpdir(), "textguard-review-"));
+	t.after(() => rm(dir, { recursive: true, force: true }));
 	const runtime = new TextGuardRuntime({
 		scanner: {
 			async initialize() {
@@ -47,14 +56,15 @@ async function setup(t, scan = evidence) {
 			},
 			async close() {},
 		},
+		...(options.persist ? { approvalPath: join(dir, "approvals.json") } : {}),
 	});
 	t.after(() => runtime.close());
 	const policy = await runtime.createPolicy({ sessionId: "one", cwd: process.cwd() });
-	await policy.filterToolResult(request);
+	if (scan !== null) await policy.filterToolResult(request);
 	const commands = new Map(),
 		events = new Map(),
 		messages = [],
-		dialogs = [];
+		overlays = [];
 	let reloads = 0;
 	const dimensions = { columns: 48, rows: 24, dumb: false };
 	createTextGuardReviewExtension(runtime, {
@@ -70,130 +80,217 @@ async function setup(t, scan = evidence) {
 		sessionManager: { getSessionId: () => "one" },
 		ui: {
 			notify: (text) => messages.push(text),
-			select: async (title, choices) => {
-				dialogs.push({ title, choices });
-				// A user must act on every dialog; cancel instead of looping forever.
-				return dialogs.length <= 3 ? choices[0] : undefined;
+			custom: async (factory, overlayOptions) => {
+				let resolveDone;
+				const donePromise = new Promise((resolve) => (resolveDone = resolve));
+				const component = factory(
+					{ terminal: { rows: dimensions.rows, columns: dimensions.columns } },
+					identityTheme,
+					new KeybindingsManager(TUI_KEYBINDINGS),
+					(result) => resolveDone(result),
+				);
+				overlays.push({ component, options: overlayOptions });
+				return donePromise;
 			},
 		},
 		reload: async () => {
 			reloads++;
 		},
 	};
-	/** Select by exact label or unique prefix; cancel (undefined) when the script runs out. */
-	const pick = (labels, limit = 2) => {
-		let calls = 0;
-		ctx.ui.select = async (title, choices) => {
-			dialogs.push({ title, choices });
-			if (++calls > limit) return undefined;
-			for (const label of labels) {
-				const found = choices.find((choice) => choice === label || choice.startsWith(label));
-				if (found !== undefined) return found;
-			}
-			return choices[0];
-		};
-	};
 	return {
 		runtime,
 		policy,
 		ctx,
 		dimensions,
-		dialogs,
+		overlays,
 		messages,
 		events,
-		pick,
-		run: (args) => commands.get("textguard").handler(args ?? "", ctx),
+		dir,
 		reloads: () => reloads,
+		/** Start /textguard and return the overlay component, or undefined when no overlay opened. */
+		open: async (args = "") => {
+			const pending = commands.get("textguard").handler(args, ctx);
+			const overlay = overlays.at(-1);
+			if (!overlay) {
+				await pending;
+				return { pending, component: undefined };
+			}
+			return { pending, component: overlay.component };
+		},
 	};
 }
 
-test("review opens with the flagged content first and approval stays an explicit choice", async (t) => {
+/** In detail state, move the cursor to the named action and confirm. */
+function choose(component, label) {
+	const visible = () => clean(component.render(48)).includes(`> ${label}`);
+	for (let step = 0; step < 6 && !visible(); step++) component.handleInput(UP);
+	for (let step = 0; step < 6 && !visible(); step++) component.handleInput(DOWN);
+	if (!visible()) assert.fail(`action not reachable: ${label}`);
+	component.handleInput(ENTER);
+}
+
+test("the list shows source labels and status without leaking content", async (t) => {
 	const f = await setup(t);
-	await f.run();
+	const { pending, component } = await f.open();
+	const compact = clean(component.render(48));
+	assert.match(compact, /Withheld/);
+	assert.match(compact, /1 withheld, 0 reports/);
+	// Wide terminals show more of the label; CJK stays readable.
+	const wide = clean(component.render(80));
+	assert.match(wide, /https:\/\/example\.com\/日/);
+	for (const unsafe of ["\u202e", "private source body"]) assert.equal(wide.includes(unsafe), false);
+	component.handleInput(ESC);
+	await pending;
+	assert.equal(f.policy.reviews().length, 1);
 	assert.equal(f.reloads(), 0);
+});
+
+test("detail shows the fingerprint, findings, and escaped body; escape returns to the list", async (t) => {
+	const f = await setup(t);
+	const { pending, component } = await f.open();
+	component.handleInput(ENTER);
+	const detail = clean(component.render(48));
+	assert.match(dense(detail), /Contentfingerprint\(SHA-256\):[a-f0-9]{64}/);
+	assert.match(norm(detail), /Error \(blocks this content\): bidi control character U\+202E at line 1, column 1\./);
+	component.handleInput(PGDN);
+	component.handleInput(PGDN);
+	const scrolled = clean(component.render(48));
+	assert.match(dense(scrolled), /privatesourcebody/);
+	assert.match(scrolled, /> Back/);
+	// Escape returns to the list instead of discarding the review session.
+	component.handleInput(ESC);
+	assert.match(clean(component.render(48)), /1 withheld, 0 reports/);
+	component.handleInput(ESC);
+	await pending;
 	assert.equal(f.policy.reviews().length, 1);
-	assert.equal(f.dialogs[1].choices[0], VIEW);
-	assert.deepEqual(f.dialogs[1].choices.slice(0, 3), [VIEW, KEEP, ALLOW]);
-	assert.equal(f.dialogs[1].choices.at(-1), "Back");
-	const title = f.dialogs[1].title;
-	// The source identity is readable: CJK stays visible, controls and bidi stay escaped.
-	assert.match(title, /https:\/\/example\.com\/日/);
-	for (const unsafe of ["\u001b", "\u202e", "private source body"]) assert.equal(title.includes(unsafe), false);
-	// The exact fingerprint and a human finding location are on the pages.
-	assert.match(dense(title), /Contentfingerprint\(SHA-256\):[a-f0-9]{64}/);
-	const review = f.policy.reviews()[0];
-	assert.match(summaryPages(review, f.policy.contentSnapshot(review)).join("\n"), /at line 1, column 1/);
-	// Taking the defaults opens the viewer, never approves.
-	assert.equal(f.policy.reviews().length, 1);
-});
-
-test("viewing flagged content shows the exact escaped body bound to the reviewed fingerprint", async (t) => {
-	const withSecret = {
-		...request,
-		input: { url: "https://example.com/a" },
-		result: { content: [{ type: "text", text: "秘密計画\n\u001b[31mred\u202e" }], details: {} },
-	};
-	const f = await setup(t);
-	await f.policy.filterToolResult(withSecret);
-	f.pick(["2.", VIEW, "Back"], 3);
-	await f.run();
-	const review = f.policy.reviews().find((item) => item.source.includes("example.com/a"));
-	assert.ok(review);
-	const snapshot = f.policy.contentSnapshot(review);
-	assert.ok(snapshot.body.includes("秘密計画"));
-	const viewer = f.dialogs.find((dialog) => dialog.title.startsWith("Flagged content, part 1"));
-	assert.ok(viewer);
-	assert.match(dense(viewer.title), new RegExp(`Contentfingerprint\\(SHA-256\\):${review.contentDigest}`));
-	// CJK stays readable; control and bidi characters stay escaped even inside the body.
-	assert.match(dense(viewer.title), /秘密計画/);
-	for (const unsafe of ["\u001b", "\u202e"]) assert.equal(viewer.title.includes(unsafe), false);
-	// Access is bound to the exact review identity; a forged identity sees nothing.
-	assert.equal(f.policy.contentSnapshot({ ...review, id: "forged" }), undefined);
-});
-
-test("each review shows its own fingerprint and body, and a forged identity cannot view content", async (t) => {
-	const f = await setup(t);
-	await f.policy.filterToolResult({
-		...request,
-		toolCallId: "2",
-		input: { url: "https://example.com/b" },
-		result: { content: [{ type: "text", text: "second body" }], details: {} },
-	});
-	const [first, second] = f.policy.reviews();
-	const firstSnapshot = f.policy.contentSnapshot(first);
-	const secondSnapshot = f.policy.contentSnapshot(second);
-	assert.notEqual(firstSnapshot.body, secondSnapshot.body);
-	assert.ok(firstSnapshot.body.includes("private source body"));
-	assert.ok(secondSnapshot.body.includes("second body"));
-	assert.equal(f.policy.contentSnapshot({ ...first, id: `${first.id.slice(0, 63)}0` }), undefined);
-	const firstPages = summaryPages(first, firstSnapshot);
-	const secondPages = summaryPages(second, secondSnapshot);
-	assert.notEqual(firstPages[0], secondPages[0]);
-	// Reviews stay metadata-only; bodies never enter reports, logs, or JSON of records.
-	assert.equal(JSON.stringify(f.policy.reviews()).includes("private source body"), false);
-});
-
-test("default confirmation keeps content withheld; explicit choice approves and reloads", async (t) => {
-	const f = await setup(t);
-	f.pick([VIEW], 2);
-	await f.run();
 	assert.equal(f.reloads(), 0);
-	assert.equal(f.policy.reviews().length, 1);
-	f.pick([ALLOW]);
-	await f.run();
+});
+
+test("viewing and deciding are one flow: approve for the session after scrolling", async (t) => {
+	const f = await setup(t);
+	const { pending, component } = await f.open();
+	component.handleInput(ENTER);
+	component.handleInput(PGDN);
+	choose(component, "Allow for this session");
+	await pending;
 	assert.equal(f.reloads(), 1);
+	assert.match(f.messages.at(-1), /approved for this session/);
 	assert.equal((await f.policy.filterToolResult(request)).isError, false);
 });
 
-test("cancellation at either dialog never approves", async (t) => {
-	for (const cancelAt of [1, 2]) {
-		const f = await setup(t);
-		let calls = 0;
-		f.ctx.ui.select = async (_title, choices) => (++calls >= cancelAt ? undefined : choices[0]);
-		await f.run();
-		assert.equal(f.policy.reviews().length, 1);
-		assert.equal(f.reloads(), 0);
-	}
+test("always-allow persists across sessions for the exact bytes", async (t) => {
+	const f = await setup(t, evidence, { persist: true });
+	const { pending, component } = await f.open();
+	component.handleInput(ENTER);
+	choose(component, "Always allow this exact content");
+	await pending;
+	assert.equal(f.reloads(), 1);
+	assert.match(f.messages.at(-1), /Future sessions admit these exact bytes/);
+	await f.runtime.close();
+
+	const second = new TextGuardRuntime({
+		scanner: {
+			async initialize() {
+				return "a".repeat(64);
+			},
+			async scan() {
+				return evidence;
+			},
+			async close() {},
+		},
+		approvalPath: join(f.dir, "approvals.json"),
+	});
+	t.after(() => second.close());
+	const policy = await second.createPolicy({ sessionId: "two", cwd: process.cwd() });
+	const result = await policy.filterToolResult(request);
+	assert.equal(result.isError, false);
+	assert.equal(policy.reviews().length, 0);
+});
+
+test("cancellation at the list never approves", async (t) => {
+	const f = await setup(t);
+	const { pending, component } = await f.open();
+	component.handleInput(ESC);
+	await pending;
+	assert.equal(f.policy.reviews().length, 1);
+	assert.equal(f.reloads(), 0);
+});
+
+test("an accidental confirm lands on Back and withholds", async (t) => {
+	const f = await setup(t);
+	const { pending, component } = await f.open();
+	component.handleInput(ENTER);
+	component.handleInput(ENTER);
+	// Back was the default action: still in the overlay, still withheld.
+	assert.match(clean(component.render(48)), /1 withheld, 0 reports/);
+	component.handleInput(ESC);
+	await pending;
+	assert.equal(f.policy.reviews().length, 1);
+	assert.equal(f.reloads(), 0);
+});
+
+test("reports offer dismiss instead of approval and dismissal sticks", async (t) => {
+	const f = await setup(t, infoEvidence);
+	const { pending, component } = await f.open();
+	assert.match(clean(component.render(48)), /0 withheld, 1 report/);
+	component.handleInput(ENTER);
+	const detail = clean(component.render(48));
+	assert.match(detail, /No errors/);
+	assert.equal(detail.includes("Allow"), false);
+	choose(component, "Dismiss report");
+	await pending;
+	assert.equal(f.policy.scanReports().length, 0);
+});
+
+test("withheld items cannot be dismissed and keep their approval actions", async (t) => {
+	const f = await setup(t);
+	const { pending, component } = await f.open();
+	component.handleInput(ENTER);
+	const detail = clean(component.render(48));
+	assert.match(detail, /Allow for this session/);
+	assert.match(detail, /Always allow this exact content/);
+	assert.equal(detail.includes("Dismiss"), false);
+	component.handleInput(ESC);
+	component.handleInput(ESC);
+	await pending;
+	assert.equal(f.policy.reviews().length, 1);
+});
+
+test("notifications fire only for content-blocking items", async (t) => {
+	const clear = await setup(t, infoEvidence);
+	clear.events.get("session_start")({}, clear.ctx);
+	clear.events.get("agent_end")({}, clear.ctx);
+	assert.equal(clear.messages.length, 0);
+
+	const blocked = await setup(t);
+	blocked.events.get("session_start")({}, blocked.ctx);
+	assert.equal(blocked.messages.length, 1);
+	assert.match(blocked.messages[0], /1 item waiting for your review/);
+	assert.doesNotMatch(blocked.messages[0], /scan report|without an exact content identity/);
+	// Repeated events deduplicate.
+	blocked.events.get("agent_end")({}, blocked.ctx);
+	assert.equal(blocked.messages.length, 1);
+	assert.doesNotMatch(blocked.messages[0], /private source body|example\.com/);
+});
+
+test("identity-limited checks never notify but remain visible in the list footer", async (t) => {
+	const f = await setup(t);
+	// An unidentifiable payload produces a notice, not a review.
+	await f.policy.filterToolResult({
+		toolName: "web_fetch",
+		toolCallId: "surrogate",
+		input: { url: "https://example.com/s" },
+		result: { content: [{ type: "text", text: "broken \ud800 payload" }], details: {} },
+	});
+	assert.equal(f.policy.scanNotices().length, 1);
+	f.events.get("session_start")({}, f.ctx);
+	// Only the one pending item notifies; the notice adds no warning.
+	assert.equal(f.messages.length, 1);
+	assert.match(f.messages[0], /1 item waiting/);
+	const { pending, component } = await f.open();
+	assert.match(norm(clean(component.render(48))), /could not identify the complete content/);
+	component.handleInput(ESC);
+	await pending;
 });
 
 test("arguments and noninteractive or degraded terminals cannot approve", async (t) => {
@@ -204,92 +301,132 @@ test("arguments and noninteractive or degraded terminals cannot approve", async 
 		if (mode === "narrow") f.dimensions.columns = 47;
 		if (mode === "short") f.dimensions.rows = 23;
 		if (mode === "no-ui") f.ctx.hasUI = false;
-		await f.run(mode === "args" ? "approve all" : "");
-		assert.equal(f.dialogs.length, 0);
-		assert.equal(f.policy.reviews().length, 1);
-		assert.equal(f.reloads(), 0);
-		assert.ok(f.messages.length);
+		const { pending, component } = await f.open(mode === "args" ? "approve all" : "");
+		assert.equal(component, undefined, mode);
+		await pending;
+		assert.equal(f.policy.reviews().length, 1, mode);
+		assert.equal(f.reloads(), 0, mode);
+		assert.ok(f.messages.length, mode);
 	}
 });
 
 test("confirmation from a replaced session is rejected", async (t) => {
 	const f = await setup(t);
-	let calls = 0;
-	f.ctx.ui.select = async (_title, choices) => {
-		if (++calls === 2) {
+	const original = f.ctx.ui.custom;
+	f.ctx.ui.custom = async (factory, opts) => {
+		const resultPromise = original(factory, opts);
+		return resultPromise.then(async (outcome) => {
 			await f.runtime.createPolicy({ sessionId: "two", cwd: process.cwd() });
-			return choices[choices.indexOf(ALLOW)];
-		}
-		return calls === 1 ? choices[0] : undefined;
+			return outcome;
+		});
 	};
-	await f.run();
+	const { pending, component } = await f.open();
+	component.handleInput(ENTER);
+	choose(component, "Allow for this session");
+	await pending;
 	assert.equal(f.reloads(), 0);
 	assert.match(f.messages.at(-1), /expired/);
 });
 
-test("terminal shrink during confirmation leaves content withheld", async (t) => {
+test("terminal shrink after review leaves content withheld", async (t) => {
 	const f = await setup(t);
-	let calls = 0;
-	f.ctx.ui.select = async (_title, choices) => {
-		if (++calls === 2) {
+	const original = f.ctx.ui.custom;
+	f.ctx.ui.custom = async (factory, opts) => {
+		const resultPromise = original(factory, opts);
+		return resultPromise.then((outcome) => {
 			f.dimensions.rows = 10;
-			return choices[choices.indexOf(ALLOW)];
-		}
-		return calls === 1 ? choices[0] : undefined;
+			return outcome;
+		});
 	};
-	await f.run();
+	const { pending, component } = await f.open();
+	component.handleInput(ENTER);
+	choose(component, "Allow for this session");
+	await pending;
 	assert.equal(f.policy.reviews().length, 1);
 	assert.equal(f.reloads(), 0);
 	assert.match(f.messages.at(-1), /resize/);
 });
 
-test("incomplete scans explain the reason and still allow explicit approval", async (t) => {
-	const f = await setup(t, { status: "unavailable", findings: [], reason: "scanner" });
-	await f.run();
-	assert.match(flat(f.dialogs[1].title), /The check did not finish: the scanner could not run\./);
-	assert.equal(f.dialogs[1].choices.includes(ALLOW), true);
-	assert.equal(f.policy.reviews().length, 1);
+test("list and detail render inside 48x24 with hostile mixed-width content", async (t) => {
+	const hostile = {
+		...request,
+		input: { url: `https://example.com/${"日‮\u001b[31m".repeat(30)}/very/long/path` },
+		result: { content: [{ type: "text", text: `秘密\n\u001b[31m${"x".repeat(400)}` }], details: {} },
+	};
+	const f = await setup(t);
+	const blockedHostile = await f.policy.filterToolResult(hostile);
+	assert.equal(blockedHostile.isError, true);
+	const { pending, component } = await f.open();
+	const check = (lines) => {
+		assert.ok(lines.length <= 24, `height ${lines.length}`);
+		assert.ok(
+			lines.every((line) => visibleWidth(line) <= 48),
+			"width",
+		);
+	};
+	check(component.render(48));
+	// The second item carries the hostile body.
+	component.handleInput(DOWN);
+	component.handleInput(ENTER);
+	for (let page = 0; page < 3; page++) {
+		check(component.render(48));
+		component.handleInput(PGDN);
+	}
+	const detail = clean(component.render(48));
+	assert.match(dense(detail), /秘密/);
+	assert.match(dense(detail), /\\u001b/);
+	for (const unsafe of ["\u001b", "\u202e"]) assert.equal(detail.includes(unsafe), false);
+	// The complete source label is reachable through scrolling.
+	let scrolled = "";
+	component.handleInput(ESC);
+	component.handleInput(DOWN);
+	component.handleInput(ENTER);
+	for (let page = 0; page < 40; page++) {
+		scrolled += clean(component.render(48));
+		component.handleInput(PGDN);
+	}
+	const label = f.policy.admission.snapshotFor(f.policy.reviews()[1].id).source;
+	assert.ok(dense(scrolled).includes(label.slice(-12)), "source label tail is reachable");
+	component.handleInput(ESC);
+	component.handleInput(ESC);
+	await pending;
 });
 
-test("oversized content shows an honest limitation and keeps approval explicit", async (t) => {
+test("review lines state honest limits for content that was not retained", async (t) => {
 	const oversized = {
 		...request,
+		toolCallId: "big",
 		input: { url: "https://example.com/big" },
 		result: { content: [{ type: "text", text: "x".repeat(300 * 1024) }], details: {} },
 	};
 	const f = await setup(t);
-	const report = await f.policy.filterToolResult(oversized);
-	assert.equal(report.isError, true);
+	const result = await f.policy.filterToolResult(oversized);
+	assert.equal(result.isError, true);
 	const review = f.policy.reviews().find((item) => item.evidence.reason === "input-limit");
 	assert.ok(review);
-	const snapshot = f.policy.contentSnapshot(review);
-	assert.equal(snapshot.body, undefined);
-	const pages = summaryPages(review, snapshot);
-	assert.match(flat(pages.join("\n")), /The check did not finish: the content is larger than TextGuard can scan/);
-	assert.match(flat(pages.join("\n")), /not retained for viewing/);
-	const choices = summaryChoices(snapshot, true, pages.length);
-	assert.equal(choices.includes(VIEW), false);
-	assert.equal(choices.includes(ALLOW), true);
+	assert.equal(f.policy.admission.snapshotFor(review.id).body, undefined);
+	const text = flat(reviewLines(review, f.policy.admission.snapshotFor(review.id)).join("\n"));
+	assert.match(text, /The check did not finish: the content is larger than TextGuard can scan/);
+	assert.match(text, /not retained for viewing/);
+	// Access is bound to the exact review identity; a forged identity sees nothing.
+	assert.equal(f.policy.admission.snapshotFor("forged"), undefined);
 });
 
-test("informational reports have no approval action", async (t) => {
-	const f = await setup(t, {
-		...evidence,
-		findings: [{ ...evidence.findings[0], severity: "info" }],
-		severityCounts: { info: 1, warn: 0, error: 0 },
-	});
-	await f.run();
-	const report = f.dialogs[1];
-	assert.match(report.title, /No errors/);
-	assert.equal(report.choices.includes(VIEW), false);
-	assert.equal(report.choices.includes(KEEP), false);
-	assert.equal(report.choices.includes(ALLOW), false);
-	assert.equal(report.choices.at(-1), "Back");
-	assert.equal(f.reloads(), 0);
+test("incomplete scans explain the reason and offer approval", async (t) => {
+	const f = await setup(t, { status: "unavailable", findings: [], reason: "scanner" });
+	const { pending, component } = await f.open();
+	component.handleInput(ENTER);
+	const detail = clean(component.render(48));
+	assert.match(norm(detail), /The check did not finish: the scanner could not run\./);
+	assert.match(detail, /Allow for this session/);
+	component.handleInput(ESC);
+	component.handleInput(ESC);
+	await pending;
+	assert.equal(f.policy.reviews().length, 1);
 });
 
 test("warning counts state what blocks and what does not", async (t) => {
-	const f = await setup(t, {
+	const mixed = {
 		status: "findings",
 		findings: [
 			{ kind: "bidi_control", severity: "error", offset: 0, codepoint: "U+202E" },
@@ -300,147 +437,40 @@ test("warning counts state what blocks and what does not", async (t) => {
 		findingCount: 4,
 		severityCounts: { info: 0, warn: 2, error: 2 },
 		decodeReasons: [],
-	});
+	};
+	const f = await setup(t, mixed);
 	const review = f.policy.reviews()[0];
-	const text = flat(summaryPages(review, f.policy.contentSnapshot(review)).join("\n"));
+	const text = flat(reviewLines(review, f.policy.admission.snapshotFor(review.id)).join("\n"));
 	assert.match(text, /2 errors that block this content until you approve it; 2 warnings do not block it\./);
 	assert.match(text, /bundled detection rule \(command_injection\) match\./);
 	assert.match(text, /bundled detection rule matched a pattern/);
 });
 
-test("diagnostics contain counts rather than source bodies and deduplicate repeated events", async (t) => {
-	const f = await setup(t);
-	f.ctx.mode = "rpc";
-	f.events.get("session_start")({}, f.ctx);
-	f.events.get("agent_end")({}, f.ctx);
-	assert.equal(f.messages.length, 1);
-	assert.match(f.messages[0], /waiting for your review/);
-	assert.doesNotMatch(f.messages[0], /private source body|example\.com/);
-});
-
-test("review pagination bounds the inherited selector height", async (t) => {
-	const f = await setup(t);
-	for (let i = 0; i < 20; i++)
-		await f.policy.filterToolResult({ ...request, input: { url: `https://example.com/${i}` } });
-	let calls = 0;
-	f.ctx.ui.select = async (title, choices) => {
-		f.dialogs.push({ title, choices });
-		return ++calls === 1 ? "Next page" : undefined;
-	};
-	await f.run();
-	assert.equal(f.dialogs.length, 2);
-	for (const dialog of f.dialogs) {
-		const component = new ExtensionSelectorComponent(
-			dialog.title,
-			dialog.choices,
-			() => {},
-			() => {},
-		);
-		assert.ok(component.render(48).length <= 24);
-		component.dispose();
-	}
-});
-
-test("summary and content pages render at 48x24 with mixed-width text and safe escaping", async (t) => {
-	const hostile = {
-		...request,
-		input: { url: `https://example.com/${"日\u202e\u001b[31m".repeat(30)}/very/long/path` },
-		result: { content: [{ type: "text", text: `秘密\n\u001b[31m${"x".repeat(400)}` }], details: {} },
-	};
-	const f = await setup(t);
-	await f.policy.filterToolResult(hostile);
-	for (const review of f.policy.reviews()) {
-		const snapshot = f.policy.contentSnapshot(review);
-		const pages = summaryPages(review, snapshot);
-		const choices = summaryChoices(snapshot, true, pages.length);
-		for (const [index, page] of pages.entries()) {
-			const component = new ExtensionSelectorComponent(
-				page,
-				choices,
-				() => {},
-				() => {},
-			);
-			t.after(() => component.dispose());
-			const lines = component.render(48);
-			assert.ok(lines.length <= 24, `page ${index} height ${lines.length}`);
-			assert.ok(
-				lines.every((line) => visibleWidth(line) <= 48),
-				`page ${index} width`,
-			);
-			component.dispose();
-		}
-		for (const unsafe of ["\u001b", "\u202e"]) assert.equal(pages.join("\n").includes(unsafe), false);
-		assert.match(pages.join("\n"), /日/);
-		// The complete source label is shown across pages; nothing is cut short.
-		const label = snapshot ? snapshot.source : review.source;
-		const tail = label.slice(-12);
-		assert.ok(
-			pages.some((page) => page.includes(tail)),
-			"source label tail is reachable",
-		);
-		// The content viewer obeys the same bounds.
-		const body = snapshot.body;
-		assert.ok(typeof body === "string" && body.length > 0);
-		for (const page of contentPages(review.contentDigest, body)) {
-			const component = new ExtensionSelectorComponent(
-				page,
-				["Next part", "Back"],
-				() => {},
-				() => {},
-			);
-			t.after(() => component.dispose());
-			const lines = component.render(48);
-			assert.ok(lines.length <= 24, `viewer height ${lines.length}`);
-			assert.ok(
-				lines.every((line) => visibleWidth(line) <= 48),
-				"viewer width",
-			);
-			component.dispose();
-		}
-	}
-});
-
-test("inherited keys default to denial in the summary dialog", async (t) => {
-	const f = await setup(t);
-	const review = f.policy.reviews()[0];
-	const snapshot = f.policy.contentSnapshot(review);
-	const pages = summaryPages(review, snapshot);
-	const choices = summaryChoices(snapshot, true, pages.length);
-	let choice;
-	const component = new ExtensionSelectorComponent(
-		pages[0],
-		choices,
-		(value) => {
-			choice = value;
-		},
-		() => {
-			choice = "cancel";
-		},
-	);
-	t.after(() => component.dispose());
-	component.handleInput("\r");
-	assert.equal(choice, VIEW);
-	const move = (label) => {
-		const target = choices.indexOf(label);
-		for (let step = component.selectedIndex; step < target; step++) component.handleInput("\x1b[B");
-		for (let step = target; step < component.selectedIndex; step++) component.handleInput("\x1b[A");
-		component.handleInput("\r");
-	};
-	move(KEEP);
-	assert.equal(choice, KEEP);
-	move(ALLOW);
-	assert.equal(choice, ALLOW);
-	component.handleInput("\x1b");
-	assert.equal(choice, "cancel");
-});
-
 test("reload failure does not print exception details", async (t) => {
 	const f = await setup(t);
-	f.ctx.ui.select = async (_title, choices) => choices[choices.indexOf(ALLOW)] ?? choices[0];
 	f.ctx.reload = async () => {
 		throw new Error("secret exception");
 	};
-	await f.run();
+	const { pending, component } = await f.open();
+	component.handleInput(ENTER);
+	choose(component, "Allow for this session");
+	await pending;
 	assert.match(f.messages.at(-1), /Run \/reload/);
 	assert.doesNotMatch(f.messages.join("\n"), /secret exception/);
+});
+
+test("the component renders a bounded list for many items", async (t) => {
+	const f = await setup(t);
+	for (let i = 0; i < 20; i++)
+		await f.policy.filterToolResult({ ...request, toolCallId: `t${i}`, input: { url: `https://example.com/${i}` } });
+	const { pending, component } = await f.open();
+	const lines = component.render(48);
+	assert.ok(lines.length <= 24);
+	assert.match(clean(lines), /21 withheld, 0 reports/);
+	component.handleInput(PGDN);
+	component.handleInput(PGDN);
+	component.handleInput(PGDN);
+	assert.match(clean(component.render(48)), /\(\d+\/21\)/);
+	component.handleInput(ESC);
+	await pending;
 });
