@@ -89,7 +89,11 @@ test("the store retains no source text, paths, or labels", async (t) => {
 });
 
 test("corrupt, oversized, and mismatched stores never approve", async (t) => {
-	for (const content of ["not json", JSON.stringify({ version: 2, records: [] }), JSON.stringify({ records: [{ key: "x".repeat(64), checksum: "0".repeat(64) }] })]) {
+	for (const content of [
+		"not json",
+		JSON.stringify({ version: 2, records: [] }),
+		JSON.stringify({ records: [{ key: "x".repeat(64), checksum: "0".repeat(64) }] }),
+	]) {
 		const dir = await home(t);
 		await writeFile(join(dir, "approvals.json"), content);
 		const f = await session(t, dir);
@@ -140,7 +144,12 @@ test("report dismissal is session-scoped and cannot dismiss withheld items", asy
 		findings: [{ ...evidence.findings[0], severity: "info" }],
 		severityCounts: { info: 1, warn: 0, error: 0 },
 	};
-	const infoScanner = { ...scanner, async scan() { return info; } };
+	const infoScanner = {
+		...scanner,
+		async scan() {
+			return info;
+		},
+	};
 	const infoRuntime = new TextGuardRuntime({ scanner: infoScanner, approvalPath: join(dir, "other.json") });
 	t.after(() => infoRuntime.close());
 	const infoPolicy = await infoRuntime.createPolicy({ sessionId: "info", cwd: process.cwd() });

@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
 import { type MainOptions, type Skill, stripFrontmatter } from "@earendil-works/pi-coding-agent";
-import type { TextGuardApprovalStore } from "./textguard-approvals.js";
 import type { UnavailableReason } from "./textguard.js";
 import { type ContentReview, type ContentSnapshot, TextGuardAdmission } from "./textguard-admission.js";
+import type { TextGuardApprovalStore } from "./textguard-approvals.js";
 import { snapshotPayload } from "./textguard-payload.js";
 import { TextGuardSkills } from "./textguard-skills.js";
 
@@ -57,7 +57,9 @@ export class NativeContentPolicy implements Policy {
 	}
 	scanReports(): ContentReview[] {
 		return structuredClone(
-			[...this.skills.scanReports(), ...this.reports.values()].filter((item) => !this.dismissed.has(item.id)).slice(-LIMIT),
+			[...this.skills.scanReports(), ...this.reports.values()]
+				.filter((item) => !this.dismissed.has(item.id))
+				.slice(-LIMIT),
 		);
 	}
 	/** Acknowledge a non-blocking report for the rest of the session. Withheld items cannot be dismissed. */
