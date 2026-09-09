@@ -196,6 +196,56 @@ test("Core loads the selected release-owned tool, command, and skill surfaces", 
 	}
 });
 
+test("a prompt sent with flow control keeps its acceptance when input ends at once", () => {
+	const temp = mkdtempSync(join(tmpdir(), "jouzu-flow-rpc-shutdown-"));
+	try {
+		const probe = join(temp, "shutdown probe.js");
+		writeFileSync(
+			probe,
+			`export default function (pi) {
+				pi.registerCommand("jouzu-shutdown-probe", {
+					handler: async () => {
+						process.stderr.write("JOUZU_SHUTDOWN_PROBE=ran\\n");
+					},
+				});
+			}
+`,
+		);
+		// End-of-input starts shutdown. Admission adds latency the prompt has to survive, so with
+		// flow control installed the command must still run and report the same result as without it.
+		for (const flag of [undefined, "1"]) {
+			const result = run(
+				[
+					"--jouzu-home",
+					join(temp, `home-${flag ?? "off"}`),
+					"pi",
+					"--extension",
+					probe,
+					"--mode",
+					"rpc",
+					"--no-session",
+					"--no-context-files",
+				],
+				{
+					input: `${JSON.stringify({ id: "probe", type: "prompt", message: "/jouzu-shutdown-probe" })}\n`,
+					...(flag ? { env: { JOUZU_FLOW_CONTROL: flag } } : {}),
+				},
+			);
+			const label = `JOUZU_FLOW_CONTROL=${flag ?? "unset"}`;
+			assert.equal(result.status, 0, `${label}: ${result.stderr}`);
+			assert.ok(result.stderr.includes("JOUZU_SHUTDOWN_PROBE=ran"), `${label}: the command never ran`);
+			assert.deepEqual(rpcResponse(result.stdout, "probe"), {
+				id: "probe",
+				type: "response",
+				command: "prompt",
+				success: true,
+			});
+		}
+	} finally {
+		rmSync(temp, { recursive: true, force: true });
+	}
+});
+
 test("configured copies of release entrypoints are suppressed without changing settings", () => {
 	const temp = mkdtempSync(join(tmpdir(), "jouzu-release-conflict-policy-"));
 	try {

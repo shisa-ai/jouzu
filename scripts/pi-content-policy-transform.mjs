@@ -470,6 +470,72 @@ export function transform(path, source) {
 		);
 	} else if (path === "dist/core/agent-session-runtime.js") {
 		change("        this.session.dispose();", "        await this.session.dispose();", 2);
+	} else if (path === "dist/modes/rpc/rpc-mode.js") {
+		// End-of-input starts shutdown without waiting for commands already accepted, so a prompt
+		// still being admitted is disposed underneath and answered with a failure. Prompts are
+		// deliberately not awaited here: their authoritative response follows preflight, so
+		// end-of-input waits for that acceptance, not for the turn. SIGTERM and SIGHUP still exit
+		// immediately, and the extension shutdown path is unchanged.
+		change(
+			"    // Handle a single command\n    const handleCommand = async (command) => {",
+			"    /** Commands accepted before end-of-input; shutdown waits for these to settle. */\n" +
+				"    const inFlightCommands = new Set();\n" +
+				"    const trackUntilSettled = (work) => {\n" +
+				"        inFlightCommands.add(work);\n" +
+				"        void work.finally(() => inFlightCommands.delete(work));\n" +
+				"    };\n" +
+				"    // Handle a single command\n" +
+				"    const handleCommand = async (command) => {",
+		);
+		change(
+			"                let preflightSucceeded = false;\n                void session\n",
+			"                let preflightSucceeded = false;\n" +
+				"                let accept = () => { };\n" +
+				"                trackUntilSettled(new Promise((resolve) => {\n" +
+				"                    accept = resolve;\n" +
+				"                }));\n" +
+				"                void session\n",
+		);
+		change(
+			"                        if (didSucceed) {\n" +
+				"                            preflightSucceeded = true;\n" +
+				'                            output(success(id, "prompt"));\n' +
+				"                        }\n" +
+				"                    },\n",
+			"                        if (didSucceed) {\n" +
+				"                            preflightSucceeded = true;\n" +
+				'                            output(success(id, "prompt"));\n' +
+				"                        }\n" +
+				"                        accept();\n" +
+				"                    },\n",
+		);
+		change(
+			"                    if (!preflightSucceeded) {\n" +
+				'                        output(error(id, "prompt", e.message));\n' +
+				"                    }\n" +
+				"                });\n",
+			"                    if (!preflightSucceeded) {\n" +
+				'                        output(error(id, "prompt", e.message));\n' +
+				"                    }\n" +
+				"                })\n" +
+				"                    .finally(() => accept());\n",
+		);
+		change(
+			"    const onInputEnd = () => {\n        void shutdown();\n    };",
+			"    const onInputEnd = () => {\n" +
+				"        void (async () => {\n" +
+				"            while (inFlightCommands.size > 0)\n" +
+				"                await Promise.allSettled([...inFlightCommands]);\n" +
+				"            await shutdown();\n" +
+				"        })();\n" +
+				"    };",
+		);
+		change(
+			"        const detachJsonl = attachJsonlLineReader(process.stdin, (line) => {\n            void handleInputLine(line);\n        });",
+			"        const detachJsonl = attachJsonlLineReader(process.stdin, (line) => {\n" +
+				"            trackUntilSettled(handleInputLine(line));\n" +
+				"        });",
+		);
 	} else if (path === "dist/core/extensions/loader.js") {
 		change(
 			"            runtime.sendMessage(message, options);",
@@ -1024,6 +1090,7 @@ export const paths = [
 	"dist/core/agent-session-services.js",
 	"dist/core/agent-session-services.d.ts",
 	"dist/core/agent-session-runtime.js",
+	"dist/modes/rpc/rpc-mode.js",
 	"dist/core/extensions/loader.js",
 	"dist/core/extensions/runner.js",
 	"dist/core/extensions/runner.d.ts",

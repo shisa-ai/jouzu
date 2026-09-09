@@ -47,6 +47,10 @@
 			"before": "61375f59afc3395940c05832c3f992e8020139a2f4a53065cccacbc370b65f16",
 			"after": "ee6c5d8c1ea8be0207b1a843f44d8e4e2e0c8a39c2987fe8ec9fb3d681f8228d"
 		},
+		"dist/modes/rpc/rpc-mode.js": {
+			"before": "e7e4724aa55c5aac73cf36793653b26736200e5c59d58373990fc31028f86477",
+			"after": "2f638d475eb5dea2cac5d4489ad54ed030e0b618fd38c2c61a0420f6b830bd12"
+		},
 		"dist/core/extensions/loader.js": {
 			"before": "a1393de916487a2c47107ac7239f3139dcdb938705f88ba1ea5a954b3c8bb483",
 			"after": "c622b243e3b3240226b99008479ebace42305968d8a81ff4ff2f395c1b14e5cd"
