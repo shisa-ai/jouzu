@@ -3737,5 +3737,36 @@ for (const mode of ["normal", "reversed", "reopen", "model-tools", "shared-resul
 			assert.equal(recorded.flow.result.metadata.reference, task.logFile);
 			assert.match(await readFile(task.logFile, "utf8"), /flow-result-marker/);
 			assert.equal(f.sent.length, 8);
+			const reference = JSON.stringify(f.sent.at(-1)).match(/flow-results:[a-f0-9]{64}/)[0];
+			await f.ingress.dispose();
+			loaded = await createJiti(import.meta.url, { moduleCache: false }).import(
+				join(import.meta.dirname, "../node_modules/@vanillagreen/pi-background-tasks/extensions/background-tasks.ts"),
+				{ default: true },
+			);
+			const reopenedManager = SessionManager.open(manager.getSessionFile());
+			f = await fixture(t, {
+				root,
+				manager: reopenedManager,
+				provider: true,
+				admit: null,
+				tools: ["agent_results"],
+				autoRelease: { onError: (error) => errors.push(error) },
+				attachWaitSources: async (attachment) => bridge.attach(attachment, reopenedManager),
+				extensions: [bridge, background],
+			});
+			await f.session.bindExtensions({ onError: (error) => errors.push(error) });
+			const readResults = f.session.getToolDefinition("agent_results");
+			assert.ok(readResults);
+			const result = await readResults.execute("results", { reference, limit: 1 }, undefined, undefined, {
+				sessionManager: reopenedManager,
+			});
+			const page = JSON.parse(result.content[0].text);
+			assert.equal(page.total, 1);
+			assert.equal(page.members[0].execution, task.flow.execution);
+			assert.equal(page.members[0].reference, task.logFile);
+			await f.ingress.wakeProducers();
+			assert.equal(f.sent.length, 0);
+			assert.deepEqual(errors, []);
+			await f.ingress.dispose();
 		}
 	});

@@ -7,6 +7,7 @@ import { BACKGROUND_CONTEXT as context, MemorySessionRepo, setValue, value } fro
 import { FlowOwnership } from "../dist/flow-control/ownership.js";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { FlowResultManifestStore } from "../dist/flow-control/result-manifest.js";
+import { createFlowResultExtension } from "../dist/flow-control/result-tools.js";
 
 const scope = { sessionId: "parent", branchId: "main" };
 const member = (id = "result", status = "success") => ({
@@ -175,4 +176,38 @@ test("byte overflow preserves prior manifests and missing indexed content is an 
 		context,
 	);
 	await assert.rejects(store.page(`flow-results:${"a".repeat(64)}`, pageOptions), { code: "identity" });
+});
+
+test("result tool pages retained membership without acknowledgement and fences branch changes", async (t) => {
+	const root = await rootFor(t);
+	const attachment = await PiFlowAttachment.open(root, scope);
+	t.after(() => attachment.close());
+	const reference = await attachment.results.retain(Array.from({ length: 25 }, (_, index) => member(`item-${index}`)));
+	let active = attachment,
+		tool;
+	createFlowResultExtension({ attachment: () => active }).factory({
+		registerTool(value) {
+			tool = value;
+		},
+	});
+	const ctx = { sessionManager: { getSessionId: () => scope.sessionId } };
+	const invoke = (args, signal) => tool.execute("page", args, signal, undefined, ctx);
+	const before = await attachment.ledger.snapshot();
+	const first = JSON.parse((await invoke({ reference, limit: 20 })).content[0].text);
+	const second = JSON.parse((await invoke({ reference, cursor: first.next, limit: 20 })).content[0].text);
+	assert.equal(first.members.length, 20);
+	assert.equal(second.members.length, 5);
+	assert.equal(second.remaining, 0);
+	assert.deepEqual(await attachment.ledger.snapshot(), before);
+	await assert.rejects(invoke({ reference, limit: 21 }), { code: "schema" });
+	const abort = new AbortController();
+	abort.abort();
+	await assert.rejects(invoke({ reference }, abort.signal), { name: "AbortError" });
+	const page = attachment.results.page.bind(attachment.results);
+	attachment.results.page = async (...args) => {
+		const result = await page(...args);
+		active = undefined;
+		return result;
+	};
+	await assert.rejects(invoke({ reference }), { code: "scope" });
 });

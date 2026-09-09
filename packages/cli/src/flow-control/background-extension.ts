@@ -4,6 +4,7 @@ import { BackgroundResultProducer, type BackgroundResultSourceAPI } from "./back
 import type { PiFlowAttachment } from "./pi-attachment.js";
 import type { PiSessionFlowIngress } from "./pi-session-ingress.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
+import { createFlowResultExtension } from "./result-tools.js";
 
 /** Query the loaded task owner before restoring waits, independent of extension factory order. */
 export function createBackgroundControllerExtension(options: {
@@ -22,6 +23,8 @@ export function createBackgroundControllerExtension(options: {
 		name: "jouzu-background-controller",
 		factory(pi) {
 			events = pi.events;
+			const getIngress = options.ingress;
+			if (getIngress) createFlowResultExtension({ attachment: () => getIngress().branch().attachment }).factory(pi);
 			const install = () => {
 				if (!options.ingress || !results || !attached || installed === attached) return;
 				const ingress = options.ingress();
