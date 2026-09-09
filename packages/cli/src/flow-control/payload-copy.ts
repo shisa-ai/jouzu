@@ -38,7 +38,14 @@ export function copyFlowPayload(payload: unknown): { serialized: string; owned: 
 			const target = key in owned ? (owned as Record<string, unknown>)[key] : undefined;
 			if (!Array.isArray(source) || !Array.isArray(target) || source.length !== target.length) continue;
 			for (const [index, row] of source.entries()) {
-				if (object(row) && object(target[index])) origins.set(target[index], payloadRowOrigin(row) as object);
+				if (!object(row) || !object(target[index])) continue;
+				origins.set(target[index], payloadRowOrigin(row) as object);
+				const blocks = "content" in row ? row.content : undefined;
+				const copiedBlocks = "content" in target[index] ? target[index].content : undefined;
+				if (Array.isArray(blocks) && Array.isArray(copiedBlocks) && blocks.length === copiedBlocks.length)
+					for (const [blockIndex, block] of blocks.entries())
+						if (object(block) && object(copiedBlocks[blockIndex]))
+							origins.set(copiedBlocks[blockIndex], payloadRowOrigin(block) as object);
 			}
 		}
 	}

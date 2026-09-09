@@ -392,6 +392,7 @@ class ExecutionBinding {
 		this.ready = true;
 	}
 	async flush(): Promise<void> {
+		await this.starting;
 		await this.tail;
 		if (this.failure !== undefined) throw this.failure;
 	}

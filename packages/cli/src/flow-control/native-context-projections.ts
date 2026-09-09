@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
+import { nativePayloadOverlap, validNativeBlockPosition } from "./native-payload-position.js";
 import type { NativePayloadSource, NativeSourceDisposition } from "./native-request-store.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
@@ -139,7 +140,7 @@ export function validateNativeProjections(
 		throw new FlowLedgerError("schema", "Invalid native projection capture.");
 	const contexts = new Set<number>(),
 		models = new Set<number>(),
-		wires = new Set<number>();
+		wires: NativePayloadSource[] = [];
 	if (
 		payload?.projections !== undefined &&
 		(!Array.isArray(payload.projections) || payload.projections.length !== capture.members.length)
@@ -179,18 +180,21 @@ export function validateNativeProjections(
 			!["included", "changed", "unresolved"].includes(wire.disposition) ||
 			(wire.index !== undefined &&
 				(!position(wire.index, payload!.bytes) ||
-					wires.has(wire.index) ||
-					payload?.sources?.some((source) => source.index === wire.index))) ||
+					wires.some((prior) => nativePayloadOverlap(prior, wire)) ||
+					payload?.sources?.some((source) => nativePayloadOverlap(source, wire)))) ||
+			!validNativeBlockPosition(wire, payload?.api ?? "", payload?.bytes ?? 0) ||
+			(wire.blockIndex !== undefined && message.role !== "toolResult") ||
 			(wire.contentHash !== undefined && !hash(wire.contentHash)) ||
 			(wire.index === undefined) !== (wire.contentHash === undefined) ||
 			(wire.disposition === "unresolved" && wire.index !== undefined) ||
 			(wire.disposition === "included" &&
-				(!["openai-completions", "openai-responses"].includes(payload?.api ?? "") ||
+				(!["openai-completions", "openai-responses", "anthropic-messages"].includes(payload?.api ?? "") ||
 					wire.index === undefined ||
+					(payload?.api === "anthropic-messages" && message.role === "toolResult" && wire.blockIndex === undefined) ||
 					model.status !== "converted" ||
 					wire.contentHash !== digest(modelContent(message))))
 		)
 			throw new FlowLedgerError("identity", "Invalid native projection payload inclusion.");
-		if (wire.index !== undefined) wires.add(wire.index);
+		if (wire.index !== undefined) wires.push(wire);
 	}
 }

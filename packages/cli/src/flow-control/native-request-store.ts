@@ -1,5 +1,6 @@
 import { BACKGROUND_CONTEXT, type Session, setValue, value } from "@earendil-works/pi-agent-core";
 import { type NativeProjectionCapture, validateNativeProjections } from "./native-context-projections.js";
+import { nativePayloadOverlap, validNativeBlockPosition } from "./native-payload-position.js";
 import type { FlowOwnership } from "./ownership.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 
@@ -34,6 +35,8 @@ export interface NativePayloadSource {
 	sourceIndex: number;
 	disposition: "included" | "changed" | "unresolved";
 	index?: number;
+	/** Anthropic tool-result position within the user row. Omitted for whole-row receipts. */
+	blockIndex?: number;
 	contentHash?: string;
 }
 export type NativeSourceClaim = Pick<NativeRequestSource, "operationId" | "prompt" | "queue">;
@@ -206,7 +209,7 @@ export class FlowNativeRequestStore {
 					capture = record.sourceCapture;
 				if (!capture || !Array.isArray(sources) || sources.length !== capture.members.length)
 					throw new FlowLedgerError("schema", "Invalid native payload source receipts.");
-				const positions = new Set<number>();
+				const positions: NativePayloadSource[] = [];
 				for (const [offset, source] of sources.entries()) {
 					if (
 						!source ||
@@ -216,17 +219,18 @@ export class FlowNativeRequestStore {
 							(!Number.isSafeInteger(source.index) ||
 								source.index < 0 ||
 								source.index >= payload.bytes ||
-								positions.has(source.index))) ||
+								positions.some((prior) => nativePayloadOverlap(prior, source)))) ||
+						!validNativeBlockPosition(source, payload.api, payload.bytes) ||
 						(source.contentHash !== undefined && !hash(source.contentHash)) ||
 						(source.index === undefined) !== (source.contentHash === undefined) ||
 						(source.disposition === "unresolved" && source.index !== undefined) ||
 						(source.disposition === "included" &&
-							(!["openai-completions", "openai-responses"].includes(payload.api) ||
+							(!["openai-completions", "openai-responses", "anthropic-messages"].includes(payload.api) ||
 								source.index === undefined ||
 								!["intact", "converted"].includes(capture.model?.members[offset]?.status ?? "")))
 					)
 						throw new FlowLedgerError("identity", "Invalid native payload source membership.");
-					if (source.index !== undefined) positions.add(source.index);
+					if (source.index !== undefined) positions.push(source);
 				}
 			}
 			if (

@@ -1,14 +1,30 @@
 import { createHash } from "node:crypto";
 import type { Message } from "@earendil-works/pi-ai";
+import { anthropicContent } from "./anthropic-content.js";
 import type { NativePayloadSource, NativeSourceCapture } from "./native-request-store.js";
 import { payloadRowOrigin } from "./payload-copy.js";
 import { openAIFlowPayload } from "./provider-payload.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
-type SourceAPI = "openai-completions" | "openai-responses";
+type SourceAPI = "openai-completions" | "openai-responses" | "anthropic-messages";
 const toolIdentity = (message: unknown, api: SourceAPI) => {
 	if (!message || typeof message !== "object") return undefined;
+	if (api === "anthropic-messages") {
+		if (
+			!("type" in message) ||
+			message.type !== "tool_result" ||
+			!("tool_use_id" in message) ||
+			typeof message.tool_use_id !== "string" ||
+			("is_error" in message && typeof message.is_error !== "boolean")
+		)
+			return undefined;
+		return hash({
+			type: message.type,
+			toolUseId: message.tool_use_id,
+			isError: "is_error" in message ? message.is_error : false,
+		});
+	}
 	if (api === "openai-responses") {
 		if (
 			!("type" in message) ||
@@ -38,7 +54,22 @@ const contentHash = (message: unknown, api: SourceAPI) => {
 				: "content" in message
 					? message.content
 					: undefined;
-		return typeof content === "string" ? hash([{ type: "text", text: content }]) : undefined;
+		return api === "anthropic-messages"
+			? hash(anthropicContent(content))
+			: typeof content === "string"
+				? hash([{ type: "text", text: content }])
+				: undefined;
+	}
+	if (api === "anthropic-messages") {
+		if (
+			!message ||
+			typeof message !== "object" ||
+			!("role" in message) ||
+			message.role !== "user" ||
+			!("content" in message)
+		)
+			return undefined;
+		return hash(anthropicContent(message.content));
 	}
 	const [projected] = openAIFlowPayload(api)({ [api === "openai-responses" ? "input" : "messages"]: [message] });
 	return projected ? hash(projected.content) : undefined;
@@ -85,8 +116,16 @@ export class NativePayloadSources {
 		}
 		if (source.role !== "user" && source.role !== "toolResult")
 			throw new FlowLedgerError("identity", "Provider source mapping has an unsupported role.");
-		const convertedHash = contentHash(output, this.api);
-		if (!convertedHash) throw new FlowLedgerError("identity", "Provider source mapping has no supported content.");
+		let convertedHash: string | undefined;
+		try {
+			convertedHash = contentHash(output, this.api);
+		} catch {
+			/* Unsupported content has no receipt. */
+		}
+		if (!convertedHash) {
+			this.links.set(index, null);
+			return;
+		}
 		const identity = source.role === "toolResult" ? toolIdentity(output, this.api) : undefined;
 		this.links.set(index, {
 			output,
@@ -105,20 +144,42 @@ export class NativePayloadSources {
 			if (api !== this.api || model?.index === undefined || model.status === "unresolved") return unresolved;
 			const link = this.links.get(model.index);
 			if (!link) return unresolved;
-			const matches = finalRows.flatMap((row, index) =>
-				payloadRowOrigin(row) === payloadRowOrigin(link.output) ? [index] : [],
-			);
+			const blockResult = this.api === "anthropic-messages" && link.toolIdentity !== undefined;
+			const matches = finalRows.flatMap((row, index): { index: number; blockIndex?: number }[] => {
+				if (!blockResult) return payloadRowOrigin(row) === payloadRowOrigin(link.output) ? [{ index }] : [];
+				const blocks = row && typeof row === "object" && "content" in row ? row.content : undefined;
+				return Array.isArray(blocks)
+					? blocks.flatMap((block, blockIndex) =>
+							payloadRowOrigin(block) === payloadRowOrigin(link.output) ? [{ index, blockIndex }] : [],
+						)
+					: [];
+			});
 			if (matches.length !== 1) return unresolved;
-			const index = matches[0];
+			const { index, blockIndex } = matches[0];
 			try {
-				const finalHash = contentHash(finalRows[index], this.api),
-					ownedHash = contentHash(ownedRows[index], this.api);
+				const select = (row: unknown) => {
+					if (blockIndex === undefined) return row;
+					if (
+						!row ||
+						typeof row !== "object" ||
+						!("role" in row) ||
+						row.role !== "user" ||
+						!("content" in row) ||
+						!Array.isArray(row.content)
+					)
+						return undefined;
+					return row.content[blockIndex];
+				};
+				const final = select(finalRows[index]),
+					owned = select(ownedRows[index]);
+				const finalHash = contentHash(final, this.api),
+					ownedHash = contentHash(owned, this.api);
 				if (
 					!finalHash ||
 					finalHash !== ownedHash ||
 					(link.toolIdentity &&
-						(toolIdentity(finalRows[index], this.api) !== link.toolIdentity ||
-							toolIdentity(ownedRows[index], this.api) !== link.toolIdentity))
+						(toolIdentity(final, this.api) !== link.toolIdentity ||
+							toolIdentity(owned, this.api) !== link.toolIdentity))
 				)
 					return { sourceIndex: source.index, disposition: "changed" };
 				return {
@@ -126,6 +187,7 @@ export class NativePayloadSources {
 					disposition:
 						model.status === "changed" || link.changed || finalHash !== link.contentHash ? "changed" : "included",
 					index,
+					...(blockIndex !== undefined ? { blockIndex } : {}),
 					contentHash: finalHash,
 				};
 			} catch {

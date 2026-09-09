@@ -41,6 +41,33 @@ export function transform(path, source) {
 			"                params.push(toolResultMsg);",
 			"                params.push(toolResultMsg);\n                if (sources.has(toolMsg)) options?.onMessageConverted?.(sources.get(toolMsg), toolResultMsg);",
 		);
+	} else if (path === "dist/api/anthropic-messages.js") {
+		change(
+			"    const transformedMessages = transformMessages(context.messages, model, normalizeToolCallId);",
+			`    const sources = new Map();
+    const transformedMessages = transformMessages(context.messages, model, normalizeToolCallId,
+        options?.onMessageConverted ? (source, transformed) => sources.set(transformed, source) : undefined);`,
+		);
+		change(
+			"model.compat?.supportsMidConvoEffort === true ? model.provider : undefined);",
+			"model.compat?.supportsMidConvoEffort === true ? model.provider : undefined, (source, output) => { if (sources.has(source)) options?.onMessageConverted?.(sources.get(source), output); });",
+		);
+		change(
+			"normalizeToolName = (name) => name, managedProvider) {",
+			"normalizeToolName = (name) => name, managedProvider, onMessageConverted) {",
+		);
+		change(
+			"        const msg = transformedMessages[i];",
+			"        const msg = transformedMessages[i];\n        const rowCount = params.length;",
+		);
+		change(
+			'        }\n        else if (msg.role === "assistant") {',
+			'            if (params.length > rowCount) onMessageConverted?.(msg, params[params.length - 1]);\n        }\n        else if (msg.role === "assistant") {',
+		);
+		change(
+			"                toolResults.push(converted.toolResult);",
+			"                toolResults.push(converted.toolResult);\n                onMessageConverted?.(transformedMessages[j], converted.toolResult);",
+		);
 	} else if (path === "dist/api/openai-responses.js") {
 		change(
 			"const messages = convertResponsesMessages(model, context, OPENAI_TOOL_CALL_PROVIDERS, {",
@@ -92,6 +119,7 @@ export const paths = [
 	"dist/api/openai-completions.js",
 	"dist/api/openai-completions.d.ts",
 	"dist/api/openai-responses.js",
+	"dist/api/anthropic-messages.js",
 	"dist/api/openai-responses-shared.js",
 	"dist/api/openai-responses-shared.d.ts",
 	"dist/types.d.ts",

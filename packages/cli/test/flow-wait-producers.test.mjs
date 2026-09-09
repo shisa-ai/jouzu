@@ -336,3 +336,40 @@ test("restoration cannot count a failed live subscription as reconciled", async 
 	assert.equal(f.attachment.waitProducers.updating, false);
 	assert.equal(f.errors.length, 1);
 });
+
+for (const fails of [false, true])
+	test(`reusing a starting execution awaits ${fails ? "failed" : "committed"} snapshot evidence`, async (t) => {
+		const f = await fixture(t),
+			entered = deferred(),
+			proceed = deferred();
+		const producer = source(async () => {
+			entered.resolve();
+			await proceed.promise;
+			if (fails) throw new Error("snapshot failed");
+			return evidence(2, "satisfied");
+		});
+		const registration = f.attachment.waitProducers.register(producer, (error) => f.errors.push(error));
+		const starting = registration.bind(identity, 2);
+		await entered.promise;
+		let flushed = false;
+		const flushing = registration.flushExecution(identity.execution).then((value) => {
+			flushed = true;
+			return value;
+		});
+		await new Promise((resolve) => setImmediate(resolve));
+		assert.equal(flushed, false);
+		if (fails) {
+			const rejected = Promise.all([
+				assert.rejects(starting, /snapshot failed/),
+				assert.rejects(flushing, /snapshot failed/),
+			]);
+			proceed.resolve();
+			await rejected;
+			assert.deepEqual((await f.attachment.waits.authoritySnapshot()).executions, []);
+		} else {
+			proceed.resolve();
+			await starting;
+			assert.equal(await flushing, true);
+			assert.equal((await f.attachment.waits.authoritySnapshot()).executions[0].predicates[0].state, "satisfied");
+		}
+	});

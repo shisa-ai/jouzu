@@ -362,7 +362,12 @@ export class PiNativeRequests {
 			this.executing = id;
 			const prepared = this.prepared;
 			this.prepared = undefined;
-			const sourceAPI = model.api === "openai-responses" ? "openai-responses" : "openai-completions";
+			const sourceAPI =
+				model.api === "anthropic-messages"
+					? "anthropic-messages"
+					: model.api === "openai-responses"
+						? "openai-responses"
+						: "openai-completions";
 			const sources = new NativePayloadSources(context.messages, prepared?.capture, sourceAPI);
 			const projections = new NativePayloadSources(context.messages, prepared?.projections, sourceAPI);
 			this.active++;
@@ -391,7 +396,11 @@ export class PiNativeRequests {
 								"transition",
 								"Native provider source mapping arrived after payload admission.",
 							);
-						if (model.api === "openai-completions" || model.api === "openai-responses") {
+						if (
+							model.api === "openai-completions" ||
+							model.api === "openai-responses" ||
+							model.api === "anthropic-messages"
+						) {
 							sources.observe(source, output);
 							projections.observe(source, output);
 						}

@@ -38,6 +38,10 @@
 		"dist/api/openai-responses-shared.d.ts": {
 			"before": "75bf0fe5d1744f1fe456227fcb3f2088bd2749d8a6e90582183a40320ef0ee87",
 			"after": "0f1f9699f0ab8fa9f406fbc580af799fc2b1d76010a7754acfbe7d4f4faf29e9"
+		},
+		"dist/api/anthropic-messages.js": {
+			"before": "f748560c80fe91bb5736b62f6f34c5e2e2bfa224cd5eb959134ca903c226b604",
+			"after": "2c3c86407f86ea83a9dd965f620f7f21275e362956a490931e76ac75caa053f3"
 		}
 	}
 }

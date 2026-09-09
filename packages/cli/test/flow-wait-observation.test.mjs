@@ -3,10 +3,12 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { stream as streamAnthropic } from "@earendil-works/pi-ai/api/anthropic-messages";
 import { convertMessages, stream } from "@earendil-works/pi-ai/api/openai-completions";
 import { stream as streamResponses } from "@earendil-works/pi-ai/api/openai-responses";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, model, tick } from "../../../scripts/fixtures/pi-flow-session.mjs";
+import { validateNativeProjections } from "../dist/flow-control/native-context-projections.js";
 import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js";
 import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
 import { createFlowWaitDecisionProducer } from "../dist/flow-control/wait-decisions.js";
@@ -28,6 +30,7 @@ async function fixture(
 		automatic = false,
 		issueTool = true,
 		api = "openai-completions",
+		toolCount = 1,
 	} = {},
 ) {
 	const root = supplied ?? (await mkdtemp(join(tmpdir(), "jouzu-wait-observation-"))),
@@ -39,7 +42,7 @@ async function fixture(
 		maxResultBytes: 8192,
 		autoRelease: automatic ? { onError: (error) => errors.push(error) } : undefined,
 		host: {
-			projections: new Map([[api, openAIFlowPayload(api)]]),
+			projections: new Map(api === "anthropic-messages" ? [] : [[api, openAIFlowPayload(api)]]),
 			maxPayloadBytes: 1000000,
 			containsUserInput: () => true,
 		},
@@ -92,7 +95,7 @@ async function fixture(
 			version: 1,
 			async attach(session) {
 				session.agent.streamFunction = (model, context, options) =>
-					(api === "openai-responses" ? streamResponses : stream)(
+					(api === "anthropic-messages" ? streamAnthropic : api === "openai-responses" ? streamResponses : stream)(
 						{ ...model, baseUrl: "https://fixture.invalid/v1" },
 						context,
 						{
@@ -103,6 +106,49 @@ async function fixture(
 								sent.push(JSON.parse(init.body));
 								if (failure && sent.length === 2) return new Response("fixture unavailable", { status: 503 });
 								const tool = issueTool && sent.length === 1;
+								if (api === "anthropic-messages") {
+									const events = [
+										{
+											type: "message_start",
+											message: {
+												id: "fixture",
+												type: "message",
+												role: "assistant",
+												model: model.id,
+												content: [],
+												usage: { input_tokens: 1, output_tokens: 1 },
+											},
+										},
+									];
+									for (let index = 0; index < (tool ? toolCount : 1); index++) {
+										events.push({
+											type: "content_block_start",
+											index,
+											content_block: tool
+												? { type: "tool_use", id: `wait_${index}`, name: "agent_wait", input: {} }
+												: { type: "text", text: "Done" },
+										});
+										if (tool)
+											events.push({
+												type: "content_block_delta",
+												index,
+												delta: { type: "input_json_delta", partial_json: JSON.stringify(args) },
+											});
+										events.push({ type: "content_block_stop", index });
+									}
+									events.push(
+										{
+											type: "message_delta",
+											delta: { stop_reason: tool ? "tool_use" : "end_turn", stop_sequence: null },
+											usage: { output_tokens: 1 },
+										},
+										{ type: "message_stop" },
+									);
+									return new Response(
+										events.map((event) => `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`).join(""),
+										{ headers: { "content-type": "text/event-stream" } },
+									);
+								}
 								if (api === "openai-responses") {
 									const item = tool
 										? {
@@ -173,10 +219,27 @@ async function fixture(
 	return { root, session, ingress, sent, errors, decisions };
 }
 
-for (const api of ["openai-completions", "openai-responses"]) {
+for (const api of ["openai-completions", "openai-responses", "anthropic-messages"]) {
 	const payloadRows = (payload) => payload[api === "openai-responses" ? "input" : "messages"];
 	const isTool = (message) =>
-		api === "openai-responses" ? message.type === "function_call_output" : message.role === "tool";
+		api === "anthropic-messages"
+			? message.type === "tool_result"
+			: api === "openai-responses"
+				? message.type === "function_call_output"
+				: message.role === "tool";
+	const toolRows = (payload) =>
+		api === "anthropic-messages"
+			? payloadRows(payload).flatMap((row) => (Array.isArray(row.content) ? row.content.filter(isTool) : []))
+			: payloadRows(payload).filter(isTool);
+	const omitTools = (payload) => {
+		if (api === "anthropic-messages") {
+			for (const row of payloadRows(payload))
+				if (Array.isArray(row.content)) row.content = row.content.filter((block) => !isTool(block));
+		} else
+			payload[api === "openai-responses" ? "input" : "messages"] = payloadRows(payload).filter(
+				(message) => !isTool(message),
+			);
+	};
 	test(`${api}: successful tool observation absorbs immediate wait resolution without another wake and survives reopening`, async (t) => {
 		const f = await fixture(t, { automatic: true, api });
 		await f.session.prompt("wait for the finished process");
@@ -191,7 +254,7 @@ for (const api of ["openai-completions", "openai-responses"]) {
 		assert.equal(records[1].projectionCapture.members[0].message.role, "toolResult");
 		assert.deepEqual(records[1].requiredProjections, []);
 		assert.equal(records[1].payload.projections[0].disposition, "included");
-		assert.equal(payloadRows(f.sent[1]).filter(isTool).length, 1);
+		assert.equal(toolRows(f.sent[1]).length, 1);
 		assert.deepEqual(await f.decisions(), []);
 		assert.deepEqual(f.errors, []);
 		await f.ingress.dispose();
@@ -221,9 +284,7 @@ for (const api of ["openai-completions", "openai-responses"]) {
 		const f = await fixture(t, {
 			api,
 			change(payload) {
-				payload[api === "openai-responses" ? "input" : "messages"] = payloadRows(payload).filter(
-					(message) => !isTool(message),
-				);
+				omitTools(payload);
 			},
 		});
 		await f.session.prompt("wait");
@@ -273,14 +334,18 @@ for (const api of ["openai-completions", "openai-responses"]) {
 					mode === "failed"
 						? undefined
 						: (payload) => {
-								const tool = payloadRows(payload).find(isTool);
+								const tool = toolRows(payload)[0];
 								if (!tool) return;
 								if (mode === "content") tool[api === "openai-responses" ? "output" : "content"] += " altered";
-								if (mode === "identity") tool[api === "openai-responses" ? "call_id" : "tool_call_id"] += "-other";
-								if (mode === "omitted")
-									payload[api === "openai-responses" ? "input" : "messages"] = payloadRows(payload).filter(
-										(message) => message !== tool,
-									);
+								if (mode === "identity")
+									tool[
+										api === "anthropic-messages"
+											? "tool_use_id"
+											: api === "openai-responses"
+												? "call_id"
+												: "tool_call_id"
+									] += "-other";
+								if (mode === "omitted") omitTools(payload);
 							},
 			});
 			await f.session.prompt("wait");
@@ -314,4 +379,57 @@ test("provider maps retained tool results and leaves synthetic orphan results un
 	assert.equal(observed.length, 1);
 	assert.equal(observed[0].source, user);
 	assert.equal(observed[0].output.role, "user");
+});
+
+test("Anthropic grouped terminal waits retain distinct block receipts through reopening", async (t) => {
+	const api = "anthropic-messages";
+	const f = await fixture(t, { api, automatic: true, toolCount: 2 });
+	await f.session.prompt("wait for both");
+	await f.ingress.wakeProducers();
+	await tick();
+	assert.equal(f.sent.length, 2);
+	const [row] = f.sent[1].messages.filter(
+		(row) => Array.isArray(row.content) && row.content.some((block) => block.type === "tool_result"),
+	);
+	assert.equal(row.content.filter((block) => block.type === "tool_result").length, 2);
+	assert.ok(
+		row.content.every((block) => !block.is_error),
+		JSON.stringify(row.content),
+	);
+	const record = (await f.ingress.branch().attachment.nativeRequests.snapshot())[1];
+	assert.deepEqual(
+		record.payload.projections.map(({ index, blockIndex, disposition }) => ({ index, blockIndex, disposition })),
+		[
+			{ index: f.sent[1].messages.indexOf(row), blockIndex: 0, disposition: "included" },
+			{ index: f.sent[1].messages.indexOf(row), blockIndex: 1, disposition: "included" },
+		],
+	);
+	assert.deepEqual(await f.decisions(), []);
+	const validate = (payload) =>
+		validateNativeProjections(record.projectionCapture, record.transformedHash, record.modelHash, payload);
+	validate(record.payload);
+	for (const mode of ["duplicate", "negative", "fractional", "unqualified", "whole-row", "source-overlap"]) {
+		const payload = structuredClone(record.payload);
+		if (mode === "duplicate") payload.projections[1].blockIndex = 0;
+		if (mode === "negative") payload.projections[1].blockIndex = -1;
+		if (mode === "fractional") payload.projections[1].blockIndex = 0.5;
+		if (mode === "unqualified") payload.api = "openai-completions";
+		if (mode === "whole-row") delete payload.projections[1].blockIndex;
+		if (mode === "source-overlap") payload.sources = [{ ...payload.projections[0] }];
+		assert.throws(() => validate(payload), { code: "identity" }, mode);
+	}
+	await f.ingress.dispose();
+	const next = await fixture(t, {
+		api,
+		root: f.root,
+		manager: SessionManager.open(f.session.sessionManager.getSessionFile()),
+		automatic: true,
+		issueTool: false,
+	});
+	await next.ingress.wakeProducers();
+	await tick();
+	assert.deepEqual(next.sent, []);
+	assert.deepEqual(await next.decisions(), []);
+	assert.deepEqual(f.errors, []);
+	assert.deepEqual(next.errors, []);
 });
