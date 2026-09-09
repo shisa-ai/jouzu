@@ -10,7 +10,7 @@ import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js";
 import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
-import { retainUserWork } from "../dist/flow-control/user-work.js";
+import { consumedUserWork, retainUserWork } from "../dist/flow-control/user-work.js";
 import { createFlowWaitDecisionProducer } from "../dist/flow-control/wait-decisions.js";
 
 async function fixture(
@@ -25,6 +25,9 @@ async function fixture(
 		provider = false,
 		checkpoints,
 		onRequest,
+		response,
+		tools = [],
+		extensions = [],
 	} = {},
 ) {
 	const root = supplied ?? (await mkdtemp(join(tmpdir(), "jouzu-ingress-owner-")));
@@ -45,6 +48,8 @@ async function fixture(
 	let wrapped;
 	const { session } = await createFlowSession(t, {
 		persist: true,
+		tools,
+		extensions,
 		checkpoints,
 		sessionManager: manager,
 		ingress: {
@@ -60,6 +65,7 @@ async function fixture(
 							fetch: async (_url, init) => {
 								sent.push(JSON.parse(init.body).messages);
 								await onRequest?.();
+								if (response) return response();
 								return new Response(
 									`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta: { content: "Done" }, finish_reason: "stop" }] })}\n\ndata: [DONE]\n\n`,
 									{ headers: { "content-type": "text/event-stream" } },
@@ -3110,3 +3116,101 @@ test("user work rejects automated submissions, stale revisions, and cancelled in
 	await assert.rejects(retainUserWork(attachment, user.id, user.revision), { code: "stale" });
 	assert.deepEqual((await attachment.waits.authoritySnapshot()).work, []);
 });
+
+for (const lane of ["steer", "followUp"])
+	for (const count of [1, 2])
+		test(`consumed ${lane} user batch of ${count} selects fresh tool work without reviving older callbacks`, async (t) => {
+			const seen = [],
+				escaped = deferred();
+			let oldCheck,
+				oldContinuation,
+				request = 0;
+			const f = await fixture(t, {
+				provider: true,
+				tools: ["inspect_work"],
+				extensions: [
+					{
+						name: "inspect-work",
+						factory(pi) {
+							pi.registerTool({
+								name: "inspect_work",
+								label: "Inspect work",
+								description: "Inspect owning work",
+								parameters: { type: "object", properties: {}, additionalProperties: false },
+								async execute() {
+									const context = f.ingress.branch().workContext;
+									const current = context.current();
+									seen.push(current);
+									if (seen.length === 1) {
+										oldCheck = context.authorize(current.id);
+										oldContinuation = escaped.promise.then(() =>
+											assert.throws(() => context.current(), { code: "stale" }),
+										);
+										for (let i = 0; i < count; i++) await f.session.prompt(`queued ${i}`, { streamingBehavior: lane });
+										oldCheck.assertActive();
+									} else {
+										assert.notEqual(current.id, seen[0].id);
+										assert.throws(() => oldCheck.assertActive(), { code: "stale" });
+										escaped.resolve();
+										await oldContinuation;
+									}
+									return { content: [{ type: "text", text: current.id }], details: {} };
+								},
+							});
+						},
+					},
+				],
+				response() {
+					request++;
+					const callTool = request === 1 || request === (lane === "followUp" ? 3 : 2);
+					const delta = callTool
+						? {
+								tool_calls: [
+									{
+										index: 0,
+										id: `call-${request}`,
+										type: "function",
+										function: { name: "inspect_work", arguments: "{}" },
+									},
+								],
+							}
+						: { content: "Done" };
+					return new Response(
+						`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta, finish_reason: callTool ? "tool_calls" : "stop" }] })}\n\ndata: [DONE]\n\n`,
+						{ headers: { "content-type": "text/event-stream" } },
+					);
+				},
+			});
+			await f.session.bindExtensions({
+				onError: (error) => {
+					throw error;
+				},
+			});
+			f.session.setSteeringMode("all");
+			f.session.setFollowUpMode("all");
+			await f.session.prompt("initial instruction");
+			assert.ok(
+				f.session.agent.state.messages
+					.filter((message) => message.role === "toolResult")
+					.every((message) => !message.isError),
+			);
+			assert.equal(seen.length, 2);
+			const attachment = f.ingress.branch().attachment;
+			const records = await attachment.submissions.snapshot();
+			const queued = records.filter((record) => record.submission.args[0]?.startsWith?.("queued "));
+			assert.equal(queued.length, count);
+			if (count === 1)
+				assert.equal((await retainUserWork(attachment, queued[0].id, queued[0].revision)).id, seen[1].id);
+			else assert.match(seen[1].id, /^user-batch:/);
+			const claims = queued.flatMap((record) => record.dispatch.queueClaims.filter((claim) => claim.consumed));
+			assert.equal((await consumedUserWork(attachment, claims)).id, seen[1].id);
+			assert.equal(await consumedUserWork(attachment, [{ id: "unknown", revision: 1 }, ...claims]), undefined);
+			assert.equal(
+				await consumedUserWork(
+					attachment,
+					claims.map((claim) => ({ ...claim, revision: claim.revision + 1 })),
+				),
+				undefined,
+			);
+			assert.equal(request, lane === "followUp" ? 4 : 3);
+		});

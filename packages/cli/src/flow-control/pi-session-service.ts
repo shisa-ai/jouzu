@@ -11,6 +11,7 @@ import { PiFlowSessionRegistry } from "./pi-session-registry.js";
 import { PiWorkTools } from "./pi-work-tools.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import type { FlowNativeInput, RetainedSubmission } from "./submission-store.js";
+import { consumedUserWork } from "./user-work.js";
 import type { FlowWorkStatus } from "./wait-authority.js";
 import { createFlowWaitDecisionProducer } from "./wait-decisions.js";
 
@@ -20,7 +21,7 @@ export interface PiFlowSessionOptions {
 	root: string;
 	maxInputBytes: number;
 	maxResultBytes: number;
-	host: Omit<PiControllerHostOptions, "results" | "invokeWork" | "revokeWork">;
+	host: Omit<PiControllerHostOptions, "results" | "invokeWork" | "revokeWork" | "consumeWork">;
 	decorateNativeContext?: NativeContextDecorator;
 	admitNativeQueue?(record: RetainedSubmission, input: FlowNativeInput): Promise<boolean>;
 	policy(): Omit<FlowAdmissionGates, "hostReady">;
@@ -135,6 +136,10 @@ export class PiFlowSessionService {
 					results: attachment.results,
 					invokeWork: (id, invoke) => workContext.runSelected(id, invoke),
 					revokeWork: () => workContext.revoke(),
+					consumeWork: async (claimed) => {
+						const work = await consumedUserWork(attachment, claimed);
+						if (work) await workContext.selectToolWork(work);
+					},
 				},
 				() => {
 					const policy = this.options.policy();

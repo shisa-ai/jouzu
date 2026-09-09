@@ -14,6 +14,7 @@ import type { FlowResultReference } from "./result-types.js";
 export interface PiControllerHostOptions extends PiRequestReceiptOptions {
 	results?: { retain(members: FlowResultReference[]): Promise<string> };
 	revokeWork?(): void;
+	consumeWork?(claimed: { id: string; revision: number }[]): Promise<void>;
 	invokeWork?(attemptId: string, invoke: () => Promise<void>): Promise<void>;
 }
 interface Pending {
@@ -124,6 +125,8 @@ export class PiControllerHost implements FlowControllerHost {
 				if (receipt.claimed.some((item) => item.id !== owned?.id || item.revision !== owned.revision))
 					options.revokeWork?.();
 				await previous?.afterQueueClaim?.(receipt, signal);
+				this.assertActive();
+				await options.consumeWork?.(receipt.claimed.map(({ id, revision }) => ({ id, revision })));
 				this.assertActive();
 			},
 			beforeQueueClaim: async (items, signal) => {

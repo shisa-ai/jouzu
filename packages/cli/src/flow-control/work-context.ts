@@ -9,18 +9,20 @@ interface Invocation {
 	actor: string;
 	revision: number;
 	active: boolean;
+	operation: { active: boolean };
 	parent?: Invocation;
 }
 
 /** A trusted host supplies work before invocation; tool arguments never establish ownership. */
 export class FlowWorkContext {
 	private active?: Invocation;
+	private selected?: Invocation;
 	private readonly invocations = new AsyncLocalStorage<Invocation | undefined>();
 	constructor(private readonly attachment: () => PiFlowAttachment) {}
 
 	async run<T>(work: { id: string; actor: string; revision: number }, invoke: () => Promise<T>): Promise<T> {
 		if (this.active) throw new FlowLedgerError("busy", "Work invocation is already active.");
-		const invocation = { ...work, attachment: this.attachment(), active: true };
+		const invocation = { ...work, attachment: this.attachment(), active: true, operation: { active: true } };
 		this.active = invocation;
 		try {
 			const authority = await invocation.attachment.waits.authoritySnapshot();
@@ -31,6 +33,8 @@ export class FlowWorkContext {
 			return await this.invocations.run(invocation, invoke);
 		} finally {
 			invocation.active = false;
+			invocation.operation.active = false;
+			this.selected = undefined;
 			this.active = undefined;
 		}
 	}
@@ -56,6 +60,22 @@ export class FlowWorkContext {
 		return this.run({ id: work.id, actor: intent.producer, revision: work.revision }, invoke);
 	}
 
+	/** Select fresh tool authority after exact native consumption; old scopes are never modified. */
+	async selectToolWork(work: { id: string; actor: string; revision: number }): Promise<boolean> {
+		const root = this.active;
+		if (!root || this.invocations.getStore() !== root || !root.operation.active) return false;
+		const attachment = this.attachment();
+		const authority = await attachment.waits.authoritySnapshot();
+		const registered = requireAuthorityWork(authority, work.id, work.actor, work.revision);
+		if ((registered.lifecycle?.state ?? "active") !== "active")
+			throw new FlowLedgerError("transition", "Inactive work cannot authorize queued tools.");
+		if (this.active !== root || !root.operation.active || this.attachment() !== attachment)
+			throw new FlowLedgerError("stale", "Queued work invocation changed.");
+		if (this.selected) this.selected.active = false;
+		this.selected = { ...work, attachment, active: true, operation: root.operation };
+		return true;
+	}
+
 	captureInvocationCheck(): () => boolean {
 		const invocation = this.invocations.getStore();
 		return () => this.invocations.getStore() === invocation;
@@ -63,7 +83,8 @@ export class FlowWorkContext {
 
 	/** Parallel tools receive separate lifetimes while preserving the parent work identity. */
 	async runTool<T>(invoke: () => Promise<T>): Promise<T> {
-		const parent = this.invocations.getStore();
+		const current = this.invocations.getStore();
+		const parent = current === this.active && this.selected ? this.selected : current;
 		if (!parent?.active) return this.invocations.run(undefined, invoke);
 		this.checkLifetime(parent);
 		const invocation = { ...parent, parent, active: true };
@@ -77,11 +98,12 @@ export class FlowWorkContext {
 	/** A newly consumed input ends this work's authority without ending Pi's run. */
 	revoke(): void {
 		if (this.active) this.active.active = false;
+		if (this.selected) this.selected.active = false;
 	}
 
 	private checkLifetime(invocation: Invocation): void {
 		if (invocation.parent) this.checkLifetime(invocation.parent);
-		if (!invocation.active || this.attachment() !== invocation.attachment)
+		if (!invocation.active || !invocation.operation.active || this.attachment() !== invocation.attachment)
 			throw new FlowLedgerError("stale", "Work invocation is no longer active in this branch.");
 	}
 

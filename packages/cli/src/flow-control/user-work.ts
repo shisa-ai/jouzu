@@ -17,3 +17,30 @@ export async function retainUserWork(attachment: PiFlowAttachment, id: string, r
 	const work = await attachment.waits.registerWork(`user:${key}`, "host-user", record.acceptedAt);
 	return { id: work.id, actor: work.owner, revision: work.revision };
 }
+
+/** Consume only exact queue receipts already persisted by the native dispatch bridge. */
+export async function consumedUserWork(attachment: PiFlowAttachment, claimed: { id: string; revision: number }[]) {
+	if (!claimed.length) return undefined;
+	const records = await attachment.submissions.snapshot();
+	const work = [];
+	for (const item of claimed) {
+		const matches = records.filter(
+			(record) =>
+				record.status === "retained" &&
+				record.dispatch?.inputs?.some(
+					(input) => input.queue?.id === item.id && input.queue.revision === item.revision,
+				) &&
+				record.dispatch.queueClaims?.some(
+					(claim) => claim.id === item.id && claim.revision === item.revision && claim.consumed,
+				),
+		);
+		if (matches.length !== 1 || !isNativeUserInput(matches[0].submission)) return undefined;
+		work.push(await retainUserWork(attachment, matches[0].id, matches[0].revision));
+	}
+	if (work.length === 1) return work[0];
+	const key = createHash("sha256")
+		.update(JSON.stringify(["user-batch-v1", work.map((item) => item.id)]))
+		.digest("hex");
+	const batch = await attachment.waits.registerWork(`user-batch:${key}`, "host-user", Date.now());
+	return { id: batch.id, actor: batch.owner, revision: batch.revision };
+}
