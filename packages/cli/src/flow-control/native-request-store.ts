@@ -35,7 +35,7 @@ export interface NativePayloadSource {
 	sourceIndex: number;
 	disposition: "included" | "changed" | "unresolved";
 	index?: number;
-	/** Anthropic tool-result position within the user row. Omitted for whole-row receipts. */
+	/** Anthropic block or Google part position within the user row. Omitted for whole-row receipts. */
 	blockIndex?: number;
 	contentHash?: string;
 }
@@ -225,7 +225,9 @@ export class FlowNativeRequestStore {
 						(source.index === undefined) !== (source.contentHash === undefined) ||
 						(source.disposition === "unresolved" && source.index !== undefined) ||
 						(source.disposition === "included" &&
-							(!["openai-completions", "openai-responses", "anthropic-messages"].includes(payload.api) ||
+							(!["openai-completions", "openai-responses", "anthropic-messages", "google-generative-ai"].includes(
+								payload.api,
+							) ||
 								source.index === undefined ||
 								!["intact", "converted"].includes(capture.model?.members[offset]?.status ?? "")))
 					)

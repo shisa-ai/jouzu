@@ -42,6 +42,18 @@
 		"dist/api/anthropic-messages.js": {
 			"before": "f748560c80fe91bb5736b62f6f34c5e2e2bfa224cd5eb959134ca903c226b604",
 			"after": "2c3c86407f86ea83a9dd965f620f7f21275e362956a490931e76ac75caa053f3"
+		},
+		"dist/api/google-generative-ai.js": {
+			"before": "e056d59c2d2b6577d64be29f412b0dbc5377cffdaef3974d1a498b3c52177a45",
+			"after": "7a661162b52c1c31376d0610c01254fc68fc6eeb09bff48f90484bdf2971faaa"
+		},
+		"dist/api/google-shared.js": {
+			"before": "c06c0d8eb5f7727dc8b3cd5b48cd099508bfda668b25e3ca06dde244b11a3be8",
+			"after": "ef8d262164e0199b6c15f2eb8afedadc22221eb87b16725241fd096144ec0348"
+		},
+		"dist/api/google-shared.d.ts": {
+			"before": "db610796db8f0b86816c55837c310227aace08c72c909c71b966e3de34dbfc60",
+			"after": "3036f1810e7f5d4411025f1bdc62cb4aeb90041cc975467355f4e21392feacf4"
 		}
 	}
 }

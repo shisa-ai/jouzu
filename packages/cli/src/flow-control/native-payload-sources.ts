@@ -1,15 +1,33 @@
 import { createHash } from "node:crypto";
 import type { Message } from "@earendil-works/pi-ai";
 import { anthropicContent } from "./anthropic-content.js";
+import { googleContent, googleInputPreserved, googleToolResponse } from "./google-content.js";
 import type { NativePayloadSource, NativeSourceCapture } from "./native-request-store.js";
 import { payloadRowOrigin } from "./payload-copy.js";
 import { openAIFlowPayload } from "./provider-payload.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
-type SourceAPI = "openai-completions" | "openai-responses" | "anthropic-messages";
+type SourceAPI = "openai-completions" | "openai-responses" | "anthropic-messages" | "google-generative-ai";
 const toolIdentity = (message: unknown, api: SourceAPI) => {
 	if (!message || typeof message !== "object") return undefined;
+	if (api === "google-generative-ai") {
+		const result = googleToolResponse(message);
+		const response = result?.response;
+		if (
+			!result ||
+			typeof result.name !== "string" ||
+			!result.name.length ||
+			(result.id !== undefined && (typeof result.id !== "string" || !result.id.length)) ||
+			!response ||
+			typeof response !== "object" ||
+			Array.isArray(response)
+		)
+			return undefined;
+		const keys = Object.keys(response);
+		if (keys.length !== 1 || !["output", "error"].includes(keys[0])) return undefined;
+		return hash({ name: result.name, id: result.id, isError: keys[0] === "error" });
+	}
 	if (api === "anthropic-messages") {
 		if (
 			!("type" in message) ||
@@ -45,6 +63,24 @@ const toolIdentity = (message: unknown, api: SourceAPI) => {
 	return hash({ role: "tool", toolCallId: message.tool_call_id, name: "name" in message ? message.name : undefined });
 };
 const contentHash = (message: unknown, api: SourceAPI) => {
+	if (api === "google-generative-ai") {
+		const result = googleToolResponse(message);
+		if (result && toolIdentity(message, api)) {
+			const response = result.response as Record<string, unknown>;
+			const text = "output" in response ? response.output : response.error;
+			if (typeof text !== "string") return undefined;
+			return hash(googleContent([{ text }, ...(Array.isArray(result.parts) ? result.parts : [])]));
+		}
+		if (
+			!message ||
+			typeof message !== "object" ||
+			!("role" in message) ||
+			message.role !== "user" ||
+			!("parts" in message)
+		)
+			return undefined;
+		return hash(googleContent(message.parts));
+	}
 	if (toolIdentity(message, api) && message && typeof message === "object") {
 		const content =
 			api === "openai-responses"
@@ -75,7 +111,7 @@ const contentHash = (message: unknown, api: SourceAPI) => {
 	return projected ? hash(projected.content) : undefined;
 };
 const rows = (payload: unknown, api: SourceAPI): unknown[] => {
-	const key = api === "openai-responses" ? "input" : "messages";
+	const key = api === "google-generative-ai" ? "contents" : api === "openai-responses" ? "input" : "messages";
 	const result = payload && typeof payload === "object" ? (payload as Record<string, unknown>)[key] : undefined;
 	return Array.isArray(result) ? result : [];
 };
@@ -141,13 +177,21 @@ export class NativePayloadSources {
 		return this.capture.members.map((source, offset): NativePayloadSource => {
 			const model = this.capture?.model?.members[offset];
 			const unresolved: NativePayloadSource = { sourceIndex: source.index, disposition: "unresolved" };
-			if (api !== this.api || model?.index === undefined || model.status === "unresolved") return unresolved;
+			if (
+				api !== this.api ||
+				model?.index === undefined ||
+				model.status === "unresolved" ||
+				(this.api === "google-generative-ai" && (!googleInputPreserved(payload) || !googleInputPreserved(serialized)))
+			)
+				return unresolved;
 			const link = this.links.get(model.index);
 			if (!link) return unresolved;
-			const blockResult = this.api === "anthropic-messages" && link.toolIdentity !== undefined;
+			const blockResult =
+				["anthropic-messages", "google-generative-ai"].includes(this.api) && link.toolIdentity !== undefined;
+			const blockKey = this.api === "google-generative-ai" ? "parts" : "content";
 			const matches = finalRows.flatMap((row, index): { index: number; blockIndex?: number }[] => {
 				if (!blockResult) return payloadRowOrigin(row) === payloadRowOrigin(link.output) ? [{ index }] : [];
-				const blocks = row && typeof row === "object" && "content" in row ? row.content : undefined;
+				const blocks = row && typeof row === "object" ? (row as Record<string, unknown>)[blockKey] : undefined;
 				return Array.isArray(blocks)
 					? blocks.flatMap((block, blockIndex) =>
 							payloadRowOrigin(block) === payloadRowOrigin(link.output) ? [{ index, blockIndex }] : [],
@@ -164,11 +208,10 @@ export class NativePayloadSources {
 						typeof row !== "object" ||
 						!("role" in row) ||
 						row.role !== "user" ||
-						!("content" in row) ||
-						!Array.isArray(row.content)
+						!Array.isArray((row as Record<string, unknown>)[blockKey])
 					)
 						return undefined;
-					return row.content[blockIndex];
+					return ((row as Record<string, unknown>)[blockKey] as unknown[])[blockIndex];
 				};
 				const final = select(finalRows[index]),
 					owned = select(ownedRows[index]);

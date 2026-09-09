@@ -65,15 +65,16 @@ export function copyFlowPayload(payload: unknown, api?: string): { serialized: s
 	if (serialized === undefined) throw new FlowLedgerError("schema", "Provider payload is not JSON.");
 	const owned: unknown = JSON.parse(serialized);
 	if (qualified && object(payload) && object(owned)) {
-		for (const key of ["messages", "input"] as const) {
+		for (const key of ["messages", "input", "contents"] as const) {
 			const source = key in payload ? (payload as Record<string, unknown>)[key] : undefined;
 			const target = key in owned ? (owned as Record<string, unknown>)[key] : undefined;
 			if (!Array.isArray(source) || !Array.isArray(target) || source.length !== target.length) continue;
 			for (const [index, row] of source.entries()) {
 				if (!object(row) || !object(target[index])) continue;
 				origins.set(target[index], payloadRowOrigin(row) as object);
-				const blocks = "content" in row ? row.content : undefined;
-				const copiedBlocks = "content" in target[index] ? target[index].content : undefined;
+				const blockKey = key === "contents" ? "parts" : "content";
+				const blocks = (row as Record<string, unknown>)[blockKey];
+				const copiedBlocks = (target[index] as Record<string, unknown>)[blockKey];
 				if (Array.isArray(blocks) && Array.isArray(copiedBlocks) && blocks.length === copiedBlocks.length)
 					for (const [blockIndex, block] of blocks.entries())
 						if (object(block) && object(copiedBlocks[blockIndex]))

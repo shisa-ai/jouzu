@@ -68,6 +68,33 @@ export function transform(path, source) {
 			"                toolResults.push(converted.toolResult);",
 			"                toolResults.push(converted.toolResult);\n                onMessageConverted?.(transformedMessages[j], converted.toolResult);",
 		);
+	} else if (path === "dist/api/google-generative-ai.js") {
+		change("convertMessages(model, context);", "convertMessages(model, context, options?.onMessageConverted);");
+	} else if (path === "dist/api/google-shared.js") {
+		change(
+			"export function convertMessages(model, context) {",
+			"export function convertMessages(model, context, onMessageConverted) {",
+		);
+		change(
+			"    const transformedMessages = transformMessages(context.messages, model, normalizeToolCallId);",
+			`    const sources = new Map();
+    const transformedMessages = transformMessages(context.messages, model, normalizeToolCallId,
+        onMessageConverted ? (source, transformed) => sources.set(transformed, source) : undefined);`,
+		);
+		change(
+			'        }\n        else if (msg.role === "assistant") {',
+			'            onMessageConverted?.(sources.get(msg), contents[contents.length - 1]);\n        }\n        else if (msg.role === "assistant") {',
+		);
+		change(
+			"            // For Gemini < 3, add images in a separate user message",
+			"            if (sources.has(msg)) onMessageConverted?.(sources.get(msg), functionResponsePart);\n            // For Gemini < 3, add images in a separate user message",
+		);
+	} else if (path === "dist/api/google-shared.d.ts") {
+		text = `import type { Message } from "../types.js";\n${text}`;
+		change(
+			"context: Context): Content[];",
+			"context: Context, onMessageConverted?: (source: Message, output: unknown) => void): Content[];",
+		);
 	} else if (path === "dist/api/openai-responses.js") {
 		change(
 			"const messages = convertResponsesMessages(model, context, OPENAI_TOOL_CALL_PROVIDERS, {",
@@ -120,6 +147,9 @@ export const paths = [
 	"dist/api/openai-completions.d.ts",
 	"dist/api/openai-responses.js",
 	"dist/api/anthropic-messages.js",
+	"dist/api/google-generative-ai.js",
+	"dist/api/google-shared.js",
+	"dist/api/google-shared.d.ts",
 	"dist/api/openai-responses-shared.js",
 	"dist/api/openai-responses-shared.d.ts",
 	"dist/types.d.ts",

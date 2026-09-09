@@ -188,9 +188,13 @@ export function validateNativeProjections(
 			(wire.index === undefined) !== (wire.contentHash === undefined) ||
 			(wire.disposition === "unresolved" && wire.index !== undefined) ||
 			(wire.disposition === "included" &&
-				(!["openai-completions", "openai-responses", "anthropic-messages"].includes(payload?.api ?? "") ||
+				(!["openai-completions", "openai-responses", "anthropic-messages", "google-generative-ai"].includes(
+					payload?.api ?? "",
+				) ||
 					wire.index === undefined ||
-					(payload?.api === "anthropic-messages" && message.role === "toolResult" && wire.blockIndex === undefined) ||
+					(["anthropic-messages", "google-generative-ai"].includes(payload?.api ?? "") &&
+						message.role === "toolResult" &&
+						wire.blockIndex === undefined) ||
 					model.status !== "converted" ||
 					wire.contentHash !== digest(modelContent(message))))
 		)

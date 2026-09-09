@@ -3,9 +3,11 @@ import { createHash } from "node:crypto";
 import { test } from "node:test";
 import { BACKGROUND_CONTEXT as context, MemorySessionRepo } from "@earendil-works/pi-agent-core";
 import { stream as streamAnthropic } from "@earendil-works/pi-ai/api/anthropic-messages";
+import { stream as streamGoogle } from "@earendil-works/pi-ai/api/google-generative-ai";
 import { stream } from "@earendil-works/pi-ai/api/openai-completions";
 import { model } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { anthropicFlowPayload } from "../dist/flow-control/anthropic-payload.js";
+import { googleFlowPayload } from "../dist/flow-control/google-payload.js";
 import { FlowModelInput } from "../dist/flow-control/model-input.js";
 import { createPiLedgerStore } from "../dist/flow-control/pi-ledger-store.js";
 import { admitFlowPayload, openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
@@ -305,4 +307,100 @@ test("Anthropic validates grouped tool ordering and permits completed batches to
 		[call, { role: "system", content: [] }, outputs],
 	])
 		assert.throws(() => project(messages), { code: "schema" });
+});
+
+for (const transform of [
+	"unchanged",
+	"optional-removed",
+	"required-changed",
+	"image-removed",
+	"role-changed",
+	"duplicate",
+	"oversized",
+	"extra-body",
+	"tool-copy",
+	"tool-gap",
+])
+	test(`Google SDK composed admission: ${transform}`, async (t) => {
+		const { ledger, composition } = await fixture(t);
+		let sent, admitted;
+		t.mock.method(globalThis, "fetch", async (_url, init) => {
+			sent = JSON.parse(init.body);
+			return new Response(
+				`data: ${JSON.stringify({ candidates: [{ content: { role: "model", parts: [{ text: "Done" }] }, finishReason: "STOP" }] })}\n\n`,
+				{ headers: { "Content-Type": "text/event-stream" } },
+			);
+		});
+		const api = "google-generative-ai";
+		const result = await streamGoogle(
+			{ ...model, api, provider: "google", id: "gemini-3.1-pro-preview" },
+			{ messages: [{ role: "user", content: composition.content, timestamp: 1 }] },
+			{
+				apiKey: "fixture",
+				maxRetries: 0,
+				signal: new AbortController().signal,
+				async onPayload(payload) {
+					const user = payload.contents[0];
+					if (transform === "optional-removed") user.parts.pop();
+					if (transform === "required-changed") user.parts[0].text = user.parts[0].text.replace("Perform", "Skip");
+					if (transform === "image-removed") user.parts.splice(1, 1);
+					if (transform === "role-changed") user.role = "model";
+					if (transform === "duplicate") payload.contents.push(structuredClone(user));
+					if (transform === "extra-body") payload.config.httpOptions = { extraBody: { contents: [] } };
+					if (["tool-copy", "tool-gap"].includes(transform)) {
+						payload.contents.unshift({
+							role: "model",
+							parts: [{ functionCall: { name: "fixture", id: "one", args: {} } }],
+						});
+						if (transform === "tool-copy")
+							user.parts = [{ functionResponse: { name: "fixture", id: "one", response: { output: user.parts } } }];
+					}
+					admitted = await admitFlowPayload(
+						ledger,
+						composition,
+						"request",
+						api,
+						payload,
+						googleFlowPayload,
+						transform === "oversized" ? 1 : 100000,
+					);
+					await ledger.handoff("attempt", "request");
+					user.parts = [];
+					return admitted;
+				},
+			},
+		).result();
+		const [attempt] = (await ledger.snapshot()).attempts;
+		const request = attempt.requests[0];
+		const allowed = ["unchanged", "optional-removed"].includes(transform);
+		assert.equal(Boolean(sent), allowed);
+		assert.equal(result.stopReason, allowed ? "stop" : "error");
+		if (allowed) {
+			assert.deepEqual(sent.contents, admitted.contents);
+			assert.deepEqual(composition.inspect(googleFlowPayload(sent)), request.payload.inclusion);
+			assert.equal(request.payload.inclusion[0].disposition, "included");
+			assert.equal(request.payload.inclusion[1].disposition, transform === "optional-removed" ? "omitted" : "included");
+		} else assert.equal(attempt.phase, "withheld");
+	});
+
+test("Google composition respects ID-free function order and displaced tool images", () => {
+	const call = (name) => ({ functionCall: { name, args: {} } });
+	const result = (name) => ({ functionResponse: { name, response: { output: "done" } } });
+	const payload = {
+		contents: [
+			{ role: "model", parts: [call("one"), call("two")] },
+			{ role: "user", parts: [result("one")] },
+			{
+				role: "user",
+				parts: [{ text: "Tool result image:" }, { inlineData: { mimeType: "image/png", data: "YWJj" } }],
+			},
+			{ role: "user", parts: [result("two"), { text: "displaced sibling" }] },
+			{ role: "user", parts: [{ text: "next" }] },
+		],
+	};
+	assert.deepEqual(googleFlowPayload(payload), [
+		{ role: "user", content: [{ type: "text", text: "next" }], timestamp: 0 },
+	]);
+	payload.contents[1].parts[0] = result("two");
+	assert.throws(() => googleFlowPayload(payload), /unmatched function response/);
 });

@@ -4,11 +4,13 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { stream as streamAnthropic } from "@earendil-works/pi-ai/api/anthropic-messages";
+import { stream as streamGoogle } from "@earendil-works/pi-ai/api/google-generative-ai";
 import { convertMessages, stream } from "@earendil-works/pi-ai/api/openai-completions";
 import { stream as streamResponses } from "@earendil-works/pi-ai/api/openai-responses";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, model, tick } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { anthropicFlowPayload } from "../dist/flow-control/anthropic-payload.js";
+import { googleFlowPayload } from "../dist/flow-control/google-payload.js";
 import { validateNativeProjections } from "../dist/flow-control/native-context-projections.js";
 import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js";
 import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
@@ -52,7 +54,16 @@ async function fixture(
 		maxResultBytes: 8192,
 		autoRelease: automatic ? { onError: (error) => errors.push(error) } : undefined,
 		host: {
-			projections: new Map([[api, api === "anthropic-messages" ? anthropicFlowPayload : openAIFlowPayload(api)]]),
+			projections: new Map([
+				[
+					api,
+					api === "google-generative-ai"
+						? googleFlowPayload
+						: api === "anthropic-messages"
+							? anthropicFlowPayload
+							: openAIFlowPayload(api),
+				],
+			]),
 			maxPayloadBytes: 1000000,
 			containsUserInput: () => false,
 		},
@@ -94,7 +105,11 @@ async function fixture(
 	let wrapped;
 	const { session } = await createFlowSession(t, {
 		persist: true,
-		model: { ...model, api },
+		model: {
+			...model,
+			api,
+			...(api === "google-generative-ai" ? { id: "gemini-3.1-pro-preview", provider: "google" } : {}),
+		},
 		sessionManager: manager,
 		tools: ["agent_wait", "agent_wait_cancel"],
 		extensions: [
@@ -104,106 +119,124 @@ async function fixture(
 		ingress: {
 			version: 1,
 			async attach(session) {
-				session.agent.streamFunction = (model, context, options) =>
-					(api === "anthropic-messages" ? streamAnthropic : api === "openai-responses" ? streamResponses : stream)(
-						{ ...model, baseUrl: "https://fixture.invalid/v1" },
-						context,
-						{
-							...options,
-							apiKey: "fixture",
-							maxRetries: 0,
-							fetch: async (_url, init) => {
-								sent.push(JSON.parse(init.body));
-								if (failure && sent.length === 2) return new Response("fixture unavailable", { status: 503 });
-								const tool = issueTool && sent.length === 1;
-								if (api === "anthropic-messages") {
-									const events = [
-										{
-											type: "message_start",
-											message: {
-												id: "fixture",
-												type: "message",
-												role: "assistant",
-												model: model.id,
-												content: [],
-												usage: { input_tokens: 1, output_tokens: 1 },
-											},
-										},
-									];
-									for (let index = 0; index < (tool ? toolCount : 1); index++) {
-										events.push({
-											type: "content_block_start",
-											index,
-											content_block: tool
-												? { type: "tool_use", id: `wait_${index}`, name: "agent_wait", input: {} }
-												: { type: "text", text: "Done" },
-										});
-										if (tool)
-											events.push({
-												type: "content_block_delta",
-												index,
-												delta: { type: "input_json_delta", partial_json: JSON.stringify(args) },
-											});
-										events.push({ type: "content_block_stop", index });
-									}
-									events.push(
-										{
-											type: "message_delta",
-											delta: { stop_reason: tool ? "tool_use" : "end_turn", stop_sequence: null },
-											usage: { output_tokens: 1 },
-										},
-										{ type: "message_stop" },
-									);
-									return new Response(
-										events.map((event) => `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`).join(""),
-										{ headers: { "content-type": "text/event-stream" } },
-									);
-								}
-								if (api === "openai-responses") {
-									const item = tool
-										? {
-												type: "function_call",
-												id: "fc_wait",
-												call_id: "wait_call",
-												name: "agent_wait",
-												arguments: JSON.stringify(args),
-												status: "completed",
-											}
-										: {
-												type: "message",
-												id: "msg_done",
-												role: "assistant",
-												content: [{ type: "output_text", text: "Done", annotations: [] }],
-												status: "completed",
-											};
-									const events = [
-										{ type: "response.output_item.done", output_index: 0, item },
-										{ type: "response.completed", response: { id: "fixture", status: "completed", output: [item] } },
-									];
-									return new Response(
-										events.map((event) => `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`).join(""),
-										{ headers: { "content-type": "text/event-stream" } },
-									);
-								}
-								const delta = tool
-									? {
-											tool_calls: [
-												{
-													index: 0,
-													id: "wait|call$1",
-													type: "function",
-													function: { name: "agent_wait", arguments: JSON.stringify(args) },
+				if (api === "google-generative-ai") {
+					t.mock.method(globalThis, "fetch", async (_url, init) => {
+						sent.push(JSON.parse(init.body));
+						if (failure && sent.length === 2) return new Response("fixture unavailable", { status: 503 });
+						const parts =
+							issueTool && sent.length === 1
+								? Array.from({ length: toolCount }, (_, index) => ({
+										functionCall: { id: `wait_${index}`, name: "agent_wait", args },
+									}))
+								: [{ text: "Done" }];
+						return new Response(
+							`data: ${JSON.stringify({ candidates: [{ content: { role: "model", parts }, finishReason: "STOP" }] })}\n\n`,
+							{ headers: { "Content-Type": "text/event-stream" } },
+						);
+					});
+					session.agent.streamFunction = (model, context, options) =>
+						streamGoogle(model, context, { ...options, apiKey: "fixture", maxRetries: 0 });
+				} else
+					session.agent.streamFunction = (model, context, options) =>
+						(api === "anthropic-messages" ? streamAnthropic : api === "openai-responses" ? streamResponses : stream)(
+							{ ...model, baseUrl: "https://fixture.invalid/v1" },
+							context,
+							{
+								...options,
+								apiKey: "fixture",
+								maxRetries: 0,
+								fetch: async (_url, init) => {
+									sent.push(JSON.parse(init.body));
+									if (failure && sent.length === 2) return new Response("fixture unavailable", { status: 503 });
+									const tool = issueTool && sent.length === 1;
+									if (api === "anthropic-messages") {
+										const events = [
+											{
+												type: "message_start",
+												message: {
+													id: "fixture",
+													type: "message",
+													role: "assistant",
+													model: model.id,
+													content: [],
+													usage: { input_tokens: 1, output_tokens: 1 },
 												},
-											],
+											},
+										];
+										for (let index = 0; index < (tool ? toolCount : 1); index++) {
+											events.push({
+												type: "content_block_start",
+												index,
+												content_block: tool
+													? { type: "tool_use", id: `wait_${index}`, name: "agent_wait", input: {} }
+													: { type: "text", text: "Done" },
+											});
+											if (tool)
+												events.push({
+													type: "content_block_delta",
+													index,
+													delta: { type: "input_json_delta", partial_json: JSON.stringify(args) },
+												});
+											events.push({ type: "content_block_stop", index });
 										}
-									: { content: "Done" };
-								return new Response(
-									`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta, finish_reason: tool ? "tool_calls" : "stop" }] })}\n\ndata: [DONE]\n\n`,
-									{ headers: { "content-type": "text/event-stream" } },
-								);
+										events.push(
+											{
+												type: "message_delta",
+												delta: { stop_reason: tool ? "tool_use" : "end_turn", stop_sequence: null },
+												usage: { output_tokens: 1 },
+											},
+											{ type: "message_stop" },
+										);
+										return new Response(
+											events.map((event) => `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`).join(""),
+											{ headers: { "content-type": "text/event-stream" } },
+										);
+									}
+									if (api === "openai-responses") {
+										const item = tool
+											? {
+													type: "function_call",
+													id: "fc_wait",
+													call_id: "wait_call",
+													name: "agent_wait",
+													arguments: JSON.stringify(args),
+													status: "completed",
+												}
+											: {
+													type: "message",
+													id: "msg_done",
+													role: "assistant",
+													content: [{ type: "output_text", text: "Done", annotations: [] }],
+													status: "completed",
+												};
+										const events = [
+											{ type: "response.output_item.done", output_index: 0, item },
+											{ type: "response.completed", response: { id: "fixture", status: "completed", output: [item] } },
+										];
+										return new Response(
+											events.map((event) => `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`).join(""),
+											{ headers: { "content-type": "text/event-stream" } },
+										);
+									}
+									const delta = tool
+										? {
+												tool_calls: [
+													{
+														index: 0,
+														id: "wait|call$1",
+														type: "function",
+														function: { name: "agent_wait", arguments: JSON.stringify(args) },
+													},
+												],
+											}
+										: { content: "Done" };
+									return new Response(
+										`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta, finish_reason: tool ? "tool_calls" : "stop" }] })}\n\ndata: [DONE]\n\n`,
+										{ headers: { "content-type": "text/event-stream" } },
+									);
+								},
 							},
-						},
-					);
+						);
 				await ingress.attach(session);
 				wrapped = session.agent.streamFunction;
 			},
@@ -457,7 +490,7 @@ test("Anthropic grouped terminal waits retain distinct block receipts through re
 	assert.deepEqual(next.errors, []);
 });
 
-for (const api of ["openai-completions", "openai-responses", "anthropic-messages"])
+for (const api of ["openai-completions", "openai-responses", "anthropic-messages", "google-generative-ai"])
 	test(`${api}: later dependency completion dispatches one retained decision and survives reopening`, async (t) => {
 		const f = await fixture(t, { api, automatic: true, pending: true });
 		await f.session.prompt("wait until the process exits");
@@ -551,4 +584,112 @@ for (const mode of ["replaced", "omitted", "tool-copy", "tool-gap"])
 		await f.ingress.wakeProducers();
 		assert.equal(f.sent.length, 2);
 		assert.deepEqual(f.errors, []);
+	});
+
+for (const mode of ["intact", "content", "omitted", "failed"])
+	test(`Google grouped wait tool observation through SDK transport: ${mode}`, async (t) => {
+		const api = "google-generative-ai";
+		const f = await fixture(t, {
+			api,
+			toolCount: 2,
+			automatic: mode === "intact",
+			failure: mode === "failed",
+			change(payload) {
+				const row = payload.contents.find((row) => row.parts.some((part) => part.functionResponse));
+				if (!row) return;
+				if (mode === "content") row.parts[0].functionResponse.response.output += " changed";
+				if (mode === "omitted") row.parts.shift();
+			},
+		});
+		await f.session.prompt("wait for the finished process");
+		if (mode === "intact") {
+			await f.ingress.wakeProducers();
+			await tick();
+		}
+		assert.equal(f.sent.length, 2);
+		const attachment = f.ingress.branch().attachment;
+		const records = await attachment.nativeRequests.snapshot();
+		assert.deepEqual(
+			records[1].payload.projections.map((p) => p.disposition),
+			[mode === "content" ? "changed" : mode === "omitted" ? "unresolved" : "included", "included"],
+		);
+		assert.equal((await f.decisions()).length, mode === "intact" ? 0 : mode === "failed" ? 2 : 1);
+		assert.deepEqual(f.errors, []);
+		if (mode !== "intact") {
+			await f.session.prompt("report the wait status");
+			assert.deepEqual(await f.decisions(), []);
+			return;
+		}
+		assert.deepEqual(
+			records[1].payload.projections.map((p) => [p.index, p.blockIndex]),
+			[
+				[2, 0],
+				[2, 1],
+			],
+		);
+		for (const change of ["missing", "overlap", "unqualified"]) {
+			const payload = structuredClone(records[1].payload);
+			if (change === "missing") delete payload.projections[0].blockIndex;
+			if (change === "overlap") payload.projections[1].blockIndex = 0;
+			if (change === "unqualified") payload.api = "google-vertex";
+			assert.throws(() =>
+				validateNativeProjections(
+					records[1].projectionCapture,
+					records[1].transformedHash,
+					records[1].modelHash,
+					payload,
+				),
+			);
+		}
+		await f.ingress.dispose();
+		const next = await fixture(t, {
+			root: f.root,
+			api,
+			automatic: true,
+			issueTool: false,
+			manager: f.session.sessionManager,
+		});
+		await next.ingress.wakeProducers();
+		assert.deepEqual(next.sent, []);
+		assert.deepEqual(await next.decisions(), []);
+		await next.session.prompt("continue");
+		assert.equal(next.sent.length, 1);
+		assert.deepEqual(await next.decisions(), []);
+	});
+
+for (const mode of ["replaced", "omitted", "extra-body"])
+	test(`Google ${mode} decision is withheld and retained`, async (t) => {
+		const f = await fixture(t, {
+			api: "google-generative-ai",
+			pending: true,
+			change(payload) {
+				for (const row of payload.contents) {
+					const part = row.parts.find(
+						(part) =>
+							typeof part.text === "string" && part.text.includes('"flowInput"') && part.text.includes('"kind":"wait"'),
+					);
+					if (!part) continue;
+					if (mode === "replaced") {
+						const frame = JSON.parse(part.text);
+						frame.content = "changed";
+						part.text = JSON.stringify(frame);
+					}
+					if (mode === "omitted") row.parts = row.parts.filter((candidate) => candidate !== part);
+					if (mode === "extra-body") payload.config.httpOptions = { extraBody: { contents: [] } };
+				}
+			},
+		});
+		await f.session.prompt("wait");
+		await f.complete();
+		assert.equal(f.sent.length, 2);
+		const [attempt] = (await f.ingress.branch().attachment.ledger.snapshot()).attempts;
+		assert.equal(attempt.phase, "withheld");
+		assert.equal(attempt.requests[0].handedOff, false);
+		assert.equal(
+			attempt.requests[0].payload.inclusion[0].disposition,
+			mode === "replaced" ? "replaced" : mode === "omitted" ? "omitted" : "rejected",
+		);
+		assert.equal((await f.decisions()).length, 1);
+		await f.ingress.wakeProducers();
+		assert.equal(f.sent.length, 2);
 	});
