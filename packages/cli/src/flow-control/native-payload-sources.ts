@@ -8,20 +8,11 @@ import type { NativePayloadSource, NativeSourceCapture } from "./native-request-
 import { payloadRowOrigin } from "./payload-copy.js";
 import { piMessagesContent, piMessagesRows } from "./pi-messages-payload.js";
 import { openAIFlowPayload } from "./provider-payload.js";
+import type { FlowProviderAPI } from "./provider-registry.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
-type SourceAPI =
-	| "openai-completions"
-	| "openai-responses"
-	| "azure-openai-responses"
-	| "mistral-conversations"
-	| "pi-messages"
-	| "bedrock-converse-stream"
-	| "openai-codex-responses"
-	| "anthropic-messages"
-	| "google-generative-ai"
-	| "google-vertex";
+type SourceAPI = FlowProviderAPI;
 const responsesAPI = (
 	api: SourceAPI,
 ): api is "openai-responses" | "openai-codex-responses" | "azure-openai-responses" =>

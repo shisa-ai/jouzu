@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import { nativePayloadOverlap, validNativeBlockPosition } from "./native-payload-position.js";
 import type { NativePayloadSource, NativeSourceDisposition } from "./native-request-store.js";
+import { isBlockAddressedFlowProvider, isQualifiedFlowProvider } from "./provider-registry.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
 type CapturedMessage =
@@ -188,22 +189,9 @@ export function validateNativeProjections(
 			(wire.index === undefined) !== (wire.contentHash === undefined) ||
 			(wire.disposition === "unresolved" && wire.index !== undefined) ||
 			(wire.disposition === "included" &&
-				(![
-					"openai-completions",
-					"openai-responses",
-					"openai-codex-responses",
-					"azure-openai-responses",
-					"mistral-conversations",
-					"pi-messages",
-					"bedrock-converse-stream",
-					"anthropic-messages",
-					"google-generative-ai",
-					"google-vertex",
-				].includes(payload?.api ?? "") ||
+				(!isQualifiedFlowProvider(payload?.api ?? "") ||
 					wire.index === undefined ||
-					(["anthropic-messages", "google-generative-ai", "google-vertex", "bedrock-converse-stream"].includes(
-						payload?.api ?? "",
-					) &&
+					(isBlockAddressedFlowProvider(payload?.api ?? "") &&
 						message.role === "toolResult" &&
 						wire.blockIndex === undefined) ||
 					model.status !== "converted" ||
