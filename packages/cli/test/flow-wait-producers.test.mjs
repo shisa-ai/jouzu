@@ -373,3 +373,43 @@ for (const fails of [false, true])
 			assert.equal((await f.attachment.waits.authoritySnapshot()).executions[0].predicates[0].state, "satisfied");
 		}
 	});
+
+test("idle subscription cleanup retains terminal evidence and ignores late callbacks", async (t) => {
+	const f = await fixture(t);
+	const producer = source();
+	const registry = f.attachment.waitProducers;
+	const registration = registry.register(producer, (error) => f.errors.push(error));
+	const binding = await registration.bind(identity, 2);
+	await f.attachment.waits.declareOwned("lane", 2, waitRequest(), Date.now(), 100000);
+	assert.equal(await registry.closeTerminalSubscriptions(), 0);
+	assert.equal(producer.listeners, 1);
+	producer.emit(evidence(2, "satisfied"));
+	await binding.flush();
+	const before = await f.attachment.waits.authoritySnapshot();
+	assert.equal(await registry.closeTerminalSubscriptions(), 1);
+	assert.equal(producer.listeners, 0);
+	producer.late(evidence(3, "failed"));
+	await binding.flush();
+	assert.deepEqual(await f.attachment.waits.authoritySnapshot(), before);
+	assert.equal((await f.attachment.waits.snapshot())[0].state, "resolved");
+	assert.equal(await registry.closeTerminalSubscriptions(), 0);
+	await registry.bindForWait("bg", identity, 2);
+	assert.equal(producer.listeners, 0);
+	assert.deepEqual(f.errors, []);
+});
+
+test("subscription cleanup preserves partially terminal executions", async (t) => {
+	const f = await fixture(t);
+	const producer = source(async () => ({
+		...evidence(),
+		predicates: [
+			{ until: "exit", state: "satisfied" },
+			{ until: "output", state: "pending" },
+		],
+	}));
+	const registry = f.attachment.waitProducers;
+	await registry.register(producer, (error) => f.errors.push(error)).bind(identity, 2);
+	assert.equal(await registry.closeTerminalSubscriptions(), 0);
+	assert.equal(producer.listeners, 1);
+	assert.deepEqual(f.errors, []);
+});

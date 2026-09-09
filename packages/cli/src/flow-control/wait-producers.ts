@@ -29,6 +29,7 @@ interface ProducerRegistration {
 		workRevision: number,
 	): Promise<{ flush(): Promise<void>; close(): Promise<void> }>;
 	flushExecution(execution: string): Promise<boolean>;
+	closeExecution(execution: string): Promise<boolean>;
 	close(): Promise<void>;
 }
 
@@ -88,6 +89,13 @@ export class FlowWaitProducerRegistry {
 		let closed = false;
 		let closing: Promise<void> | undefined;
 		const registration = {
+			closeExecution: async (execution: string) => {
+				const binding = bindings.get(execution);
+				if (!binding) return false;
+				await binding.close();
+				if (bindings.get(execution) === binding) bindings.delete(execution);
+				return true;
+			},
 			flushExecution: async (execution: string) => {
 				const binding = bindings.get(execution);
 				if (!binding) return false;
@@ -177,6 +185,25 @@ export class FlowWaitProducerRegistry {
 		const producer = this.producers.get(namespace);
 		if (!producer) throw new FlowLedgerError("identity", "Wait producer is not attached.");
 		if (!(await producer.flushExecution(captured.execution))) await producer.bind(captured, workRevision);
+	}
+
+	/** Release listeners after every predicate is terminal; retain durable evidence and unread output. */
+	async closeTerminalSubscriptions(): Promise<number> {
+		if (this.closed) throw new FlowLedgerError("stale", "Wait producer registry is closed.");
+		if (this.updating) throw new FlowLedgerError("busy", "Producer subscriptions are changing.");
+		this.pendingBindings++;
+		try {
+			const authority = await this.store.authoritySnapshot();
+			let closed = 0;
+			for (const execution of authority.executions) {
+				if (this.closed) throw new FlowLedgerError("stale", "Wait producer registry is closed.");
+				if (execution.predicates.some((predicate) => predicate.state === "pending")) continue;
+				if (await this.producers.get(execution.producer)?.closeExecution(execution.execution)) closed++;
+			}
+			return closed;
+		} finally {
+			this.pendingBindings--;
+		}
 	}
 
 	/** Reconcile retained pending executions before the branch admits another request. */

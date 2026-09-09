@@ -227,6 +227,7 @@ export class PiFlowSessionService {
 				const ledger = await attachment.ledger.snapshot();
 				if (ledger.activeAttemptId || attachment.waitProducers.updating)
 					throw new FlowLedgerError("busy", "Wait retirement requires settled work and producer evidence.");
+				await attachment.waitProducers.closeTerminalSubscriptions();
 				const waits = await observedFlowWaits(
 					await attachment.waits.snapshot(),
 					{

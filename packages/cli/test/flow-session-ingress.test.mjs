@@ -153,6 +153,38 @@ test("automatic idle maintenance retires duplicate native receipts without anoth
 	assert.equal((await f.ingress.branch().attachment.submissionViews()).length, 2);
 });
 
+test("idle wait maintenance releases terminal producer listeners without removing evidence", async (t) => {
+	const f = await fixture(t);
+	const attachment = f.ingress.branch().attachment;
+	await attachment.waits.registerWork("background-work", "bg", 0);
+	let listeners = 0;
+	const registration = attachment.waitProducers.register(
+		{
+			version: 1,
+			namespace: "bg",
+			subscribe() {
+				listeners++;
+				return () => {
+					listeners--;
+				};
+			},
+			async snapshot(identity) {
+				return { ...identity, revision: 1, predicates: [{ until: "exit", state: "satisfied" }] };
+			},
+		},
+		(error) => {
+			throw error;
+		},
+	);
+	await registration.bind({ workId: "background-work", handle: "job", execution: "execution" }, 1);
+	assert.equal(listeners, 1);
+	const before = await attachment.waits.authoritySnapshot();
+	assert.deepEqual(await f.ingress.retireWaitHistory(), { work: 0, waits: 0, executions: 0 });
+	assert.equal(listeners, 0);
+	assert.deepEqual(await attachment.waits.authoritySnapshot(), before);
+	assert.equal(f.sent.length, 0);
+});
+
 test("user history retirement observes native input and fences replay after reopen", async (t) => {
 	const f = await fixture(t, { provider: true });
 	await f.session.prompt("finish this input");
