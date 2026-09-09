@@ -365,3 +365,36 @@ test("a native user prompt spawns background work and declares its wait from the
 	assert.equal((await attachment.waits.snapshot())[0].workId, dependency.work.id);
 	assert.deepEqual(errors, []);
 });
+
+test("background read receipts require terminal state, durable publication, and an active branch", async (t) => {
+	const { backgroundFlowSource: source } = await loadBackground(t);
+	const scope = { sessionId: "reads", branchId: "branch" };
+	const lease = source.activate(scope, () => ({ id: "work", revision: 1 }));
+	t.after(() => lease.close());
+	const results = source.activateResults(scope, () => {});
+	const task = {
+		id: "task",
+		sessionId: scope.sessionId,
+		status: "running",
+		notifyOnExit: true,
+		flow: { version: 1, execution: "execution", scope, work: { id: "work", revision: 1 } },
+		logFile: "/log",
+	};
+	const content = [{ type: "text", text: "task: completed\n\noutput" }];
+	assert.equal(source.recordTerminalRead(task, "running", "bg_task", content), false);
+	assert.deepEqual(results.readReceipts(), []);
+	task.status = "completed";
+	source.prepareResult(task);
+	source.commitResults([task]);
+	assert.equal(source.recordTerminalRead(task, "read", "bg_task", content), true);
+	assert.deepEqual(results.readReceipts(), []);
+	source.commitResults([task]);
+	assert.equal(results.readReceipts().length, 1);
+	assert.equal(source.recordTerminalRead(task, "read", "bg_task", content), false);
+	assert.throws(() => source.recordTerminalRead(task, "read", "bg_task", []), /identity changed/);
+	assert.throws(() => source.recordTerminalRead(task, "list", "bg_list", content), /Invalid terminal read/);
+	assert.equal(results.snapshot().length, 1);
+	lease.close();
+	assert.equal(source.recordTerminalRead(task, "stale", "bg_task", content), false);
+	assert.throws(() => results.readReceipts(), /detached/);
+});

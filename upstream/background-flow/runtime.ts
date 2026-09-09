@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 
 type Scope = { sessionId: string; branchId: string };
 type Work = { id: string; revision: number };
@@ -10,6 +10,8 @@ type Evidence = Identity & {
 export interface BackgroundTerminalResult {
 	metadata: { id: string; producer: string; execution: string; revision: string; status: "success" | "failure" | "cancelled"; title: string; reference: string; warnings: string[] };
 	delivered?: boolean;
+	observed?: boolean;
+	reads?: { id: string; revision: string; toolCallId: string; toolName: string; contentHash: string }[];
 }
 type Snapshot = {
 	id: string;
@@ -76,6 +78,22 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 				reference: task.logFile, warnings: [],
 			} };
 		},
+		recordTerminalRead(task: Snapshot, toolCallId: string, toolName: string, content: unknown): boolean {
+			const result = task.flow?.result;
+			if (!result || result.observed || task.status === "running" || !task.flow?.scope || !sameScope(deliveries.get(task.flow.scope.sessionId)?.scope, task.flow.scope)) return false;
+			if (!toolCallId || toolCallId.length > 512 || !["bg_task", "bg_status"].includes(toolName)) throw new Error("Invalid terminal read identity.");
+			const receipt = { id: result.metadata.id, revision: result.metadata.revision, toolCallId, toolName,
+				contentHash: createHash("sha256").update(JSON.stringify(content)).digest("hex") };
+			const reads = result.reads ?? [];
+			const prior = reads.find(read => read.toolCallId === toolCallId);
+			if (prior) {
+				if (JSON.stringify(prior) !== JSON.stringify(receipt)) throw new Error("Terminal read identity changed.");
+				return false;
+			}
+			if (reads.length >= 128) throw new Error("Terminal read receipt capacity reached.");
+			result.reads = [...reads, receipt];
+			return true;
+		},
 		commitResults(tasks: Iterable<Snapshot>): void {
 			const changed = new Set<string>();
 			for (const task of tasks) {
@@ -94,9 +112,13 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 			const lease = { scope: { ...scope }, changed };
 			deliveries.set(scope.sessionId, lease);
 			return {
+				readReceipts() {
+					if (deliveries.get(scope.sessionId) !== lease) throw new Error("Background result source is detached.");
+					return structuredClone([...results.values()].filter(value => sameScope(value.scope, scope) && !value.result.observed).flatMap(value => value.result.reads ?? []));
+				},
 				snapshot() {
 					if (deliveries.get(scope.sessionId) !== lease) throw new Error("Background result source is detached.");
-					return structuredClone([...results.values()].filter(value => sameScope(value.scope, scope) && !value.result.delivered).map(value => value.result.metadata));
+					return structuredClone([...results.values()].filter(value => sameScope(value.scope, scope) && !value.result.delivered && !value.result.observed).map(value => value.result.metadata));
 				},
 			};
 		},

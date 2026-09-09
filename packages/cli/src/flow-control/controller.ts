@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import { chooseFlowIntent, type FlowAdmissionGates, type FlowIntent, initialFlowAdmission } from "./admission.js";
 import { type FlowInputItem, FlowModelInput } from "./model-input.js";
 import { FlowLedgerError, type FlowLedgerState, type FlowReceiptLedger } from "./receipt-ledger.js";
@@ -13,6 +14,7 @@ export interface FlowProducer {
 	snapshot(signal: AbortSignal): Promise<FlowIntent[]>;
 	/** Build only after selection. A new instruction needs a new descriptor revision. */
 	build(intent: FlowIntent, signal: AbortSignal): Promise<FlowInputItem>;
+	observationProjections?(messages: readonly AgentMessage[]): AgentMessage[];
 	describeResult?(intent: FlowIntent, signal: AbortSignal): Promise<FlowResultReference>;
 }
 export interface FlowControllerHost {
@@ -110,6 +112,7 @@ export class SessionFlowController {
 			!/^[a-z][a-z0-9-]{0,63}$/.test(producer.namespace) ||
 			typeof producer.snapshot !== "function" ||
 			typeof producer.build !== "function" ||
+			(producer.observationProjections !== undefined && typeof producer.observationProjections !== "function") ||
 			(producer.describeResult !== undefined && typeof producer.describeResult !== "function")
 		)
 			throw new FlowLedgerError("schema", "Unsupported flow producer registration.");
@@ -124,6 +127,7 @@ export class SessionFlowController {
 				snapshot: producer.snapshot.bind(producer),
 				build: producer.build.bind(producer),
 				describeResult: producer.describeResult?.bind(producer),
+				observationProjections: producer.observationProjections?.bind(producer),
 			}),
 		);
 		this.revision++;
@@ -223,6 +227,20 @@ export class SessionFlowController {
 		};
 		assertCurrent();
 		return { workIds, assertCurrent };
+	}
+
+	/** Capture only producer-validated tool output already present in the final native context. */
+	observationProjections(messages: readonly AgentMessage[]): AgentMessage[] {
+		this.assertActive();
+		const selected = new Set<AgentMessage>();
+		for (const producer of this.producers.values()) {
+			for (const message of producer.observationProjections?.(messages) ?? []) {
+				if (!messages.includes(message))
+					throw new FlowLedgerError("identity", "Observation is outside native context.");
+				selected.add(message);
+			}
+		}
+		return [...selected];
 	}
 
 	private async resultMetadata(

@@ -4,6 +4,7 @@ export const paths = [
 	"extensions/types.ts",
 	"extensions/wake-events.ts",
 	"extensions/render.ts",
+	"extensions/registrations.ts",
 ];
 function replace(source, from, to) {
 	if (source.split(from).length !== 2) throw new Error("Background flow source anchor changed.");
@@ -37,18 +38,44 @@ export function transform(path, source) {
 			"pi, getActiveCtx: () => activeCtx, getTasks: () => tasks.values(), persist: () => persistenceLayer.persistSnapshots(),",
 			"pi, getActiveCtx: () => activeCtx, getTasks: () => [...tasks.values()].filter(task => !backgroundFlowSource.controls(task)), persist: persistSnapshots,",
 		);
+		source = replace(
+			source,
+			"\tregisterAll(pi, {",
+			`
+	registerAll(pi, {
+		recordTerminalRead(task, toolCallId, toolName, result) {
+			const prior = task.flow?.result?.reads;
+			if (!backgroundFlowSource.recordTerminalRead(task, toolCallId, toolName, result.content)) return;
+			try {
+				const saved = persistSnapshots();
+				if (!saved.sidecar && !(saved.appendEntry && saved.appendReason === "appended")) throw new Error("Terminal read receipt could not be persisted.");
+			} catch (error) { if (task.flow?.result) task.flow.result.reads = prior; throw error; }
+		},`,
+		);
 		return replace(
 			source,
 			'\tpi.on("session_start", (_event, ctx) => {',
 			`
 	pi.events.on("jouzu:background-flow-source", (data) => {
-		const request = data as { version: number; context: ExtensionContext; sessionId: string; accept(source: typeof backgroundFlowSource & { acknowledgeResult(id: string, revision: string): void }): void; reject(error: unknown): void };
+		const request = data as { version: number; context: ExtensionContext; sessionId: string; accept(source: typeof backgroundFlowSource & { acknowledgeResult(id: string, revision: string): void; acknowledgeObservation(id: string, revision: string): void }): void; reject(error: unknown): void };
 		if (request?.version !== 1 || typeof request.accept !== "function" || typeof request.reject !== "function") return;
 		try {
 			if (request.context?.sessionManager.getSessionId() !== request.sessionId) throw new Error("Background source session differs from its controller.");
 			if (activeSessionId !== request.sessionId) restoreSnapshots(request.context);
 			request.accept({
 				...backgroundFlowSource,
+				acknowledgeObservation(id: string, revision: string) {
+					const task = [...tasks.values()].find(task => task.flow?.result?.metadata.id === id && task.flow.result.metadata.revision === revision);
+					if (!task?.flow?.result) throw new Error("Exact background result is unavailable.");
+					if (task.flow.result.observed) return;
+					const prior = task.exitNotified;
+					task.flow.result.observed = true;
+					task.exitNotified = true;
+					try {
+						const saved = persistSnapshots();
+						if (!saved.sidecar && !(saved.appendEntry && saved.appendReason === "appended")) throw new Error("Background observation could not be persisted.");
+					} catch (error) { task.flow.result.observed = undefined; task.exitNotified = prior; throw error; }
+				},
 				acknowledgeResult(id: string, revision: string) {
 					const task = [...tasks.values()].find(task => task.flow?.result?.metadata.id === id && task.flow.result.metadata.revision === revision);
 					if (!task?.flow?.result) throw new Error("Exact background result is unavailable.");
@@ -106,5 +133,37 @@ export function transform(path, source) {
 			'\treturn { content: [{ type: "text", text }], details };',
 			'\tconst task = details.task as BackgroundTaskSnapshot | undefined;\n\tif (task?.flow?.scope) text += "\\nWait dependency: " + JSON.stringify({ producer: "bg", handle: task.id, execution: task.flow.execution, until: "exit", scope: task.flow.scope, work: task.flow.work });\n\treturn { content: [{ type: "text", text }], details };',
 		);
+	if (path === paths[5]) {
+		source = replace(
+			source,
+			"export interface RegistrationDeps {",
+			"export interface RegistrationDeps {\n\trecordTerminalRead?(task: ManagedTask, toolCallId: string, toolName: string, result: AgentToolResult<unknown>): void;",
+		);
+		source = replace(
+			source,
+			"function taskLogResult(deps: RegistrationDeps, task: ManagedTask):",
+			"function taskLogResult(deps: RegistrationDeps, task: ManagedTask, toolCallId: string, toolName: string):",
+		);
+		source = replace(
+			source,
+			"return makeToolResult(`${terminalSummary(task)}\\n\\n${formatTaskLog(output, task.logFile, cwd)}`, {",
+			"const result = makeToolResult(`${terminalSummary(task)}\\n\\n${formatTaskLog(output, task.logFile, cwd)}`, {",
+		);
+		source = replace(
+			source,
+			"\t});\n}\n\nfunction registerTools",
+			"\t});\n\tdeps.recordTerminalRead?.(task, toolCallId, toolName, result);\n\treturn result;\n}\n\nfunction registerTools",
+		);
+		const read = 'if (params.action === "log") return taskLogResult(deps, task);';
+		if (source.split(read).length !== 3) throw new Error("Background log tool anchors changed.");
+		source = source.replace(
+			read,
+			'if (params.action === "log") return taskLogResult(deps, task, _toolCallId, "bg_status");',
+		);
+		return source.replace(
+			read,
+			'if (params.action === "log") return taskLogResult(deps, task, _toolCallId, "bg_task");',
+		);
+	}
 	throw new Error(`Unknown background flow path: ${path}`);
 }

@@ -3850,3 +3850,137 @@ for (const mode of ["normal", "reversed", "reopen", "model-tools", "shared-resul
 			await f.ingress.dispose();
 		}
 	});
+
+for (const redacted of [false, true])
+	test(`installed background terminal log observation follows final provider content (redacted=${redacted})`, {
+		skip: process.platform === "win32",
+		timeout: 20000,
+	}, async (t) => {
+		const root = await mkdtemp(join(tmpdir(), "jouzu-bg-observation-"));
+		const manager = SessionManager.create(root, join(root, "history"));
+		const { createJiti } = await import(
+			createRequire(import.meta.resolve("@earendil-works/pi-coding-agent")).resolve("jiti")
+		);
+		let loaded = await createJiti(import.meta.url, { moduleCache: false }).import(
+			join(import.meta.dirname, "../node_modules/@vanillagreen/pi-background-tasks/extensions/background-tasks.ts"),
+			{ default: true },
+		);
+		const tools = new Map(),
+			errors = [];
+		let f,
+			stage = 0,
+			task;
+		const bridge = createBackgroundControllerExtension({
+			ingress: () => f.ingress,
+			currentWork: () => f.ingress.branch().workContext.current(),
+			onError: (error) => errors.push(error),
+		});
+		f = await fixture(t, {
+			root,
+			manager,
+			provider: true,
+			shutdownExtensions: true,
+			userWorkParticipants: ["bg"],
+			tools: ["bg_task"],
+			maxInputBytes: 8192,
+			attachWaitSources: async (attachment) => bridge.attach(attachment, manager),
+			extensions: [
+				bridge,
+				{
+					name: "background",
+					factory(pi) {
+						const proxy = Object.create(pi);
+						proxy.registerTool = (tool) => {
+							tools.set(tool.name, tool);
+							pi.registerTool(tool);
+						};
+						loaded(proxy);
+						if (redacted)
+							pi.on("context", (event) => ({
+								messages: event.messages.map((message) =>
+									message.role === "toolResult" && message.details?.action === "log"
+										? { ...message, content: [{ type: "text", text: "Removed" }] }
+										: message,
+								),
+							}));
+					},
+				},
+			],
+			response: async () => {
+				let args;
+				if (stage === 0) args = { action: "spawn", command: "printf 'terminal-log-proof\\n'", notifyOnExit: true };
+				if (stage === 1) {
+					await waitForFlow(async () => {
+						task = (await tools.get("bg_task").execute("inspect", { action: "list" })).details.tasks[0];
+						return task?.status === "completed";
+					});
+					args = { action: "log", id: task.id };
+				}
+				stage++;
+				const delta = args
+					? {
+							tool_calls: [
+								{
+									index: 0,
+									id: `read-${stage}`,
+									type: "function",
+									function: { name: "bg_task", arguments: JSON.stringify(args) },
+								},
+							],
+						}
+					: { content: "Done" };
+				return new Response(
+					`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta, finish_reason: args ? "tool_calls" : "stop" }] })}\n\ndata: [DONE]\n\n`,
+					{ headers: { "content-type": "text/event-stream" } },
+				);
+			},
+		});
+		t.after(() => rm(root, { recursive: true, force: true }));
+		await f.session.bindExtensions({ onError: (error) => errors.push(error) });
+		await f.session.prompt("Start the task and inspect its terminal output");
+		assert.equal(f.sent.length, 3);
+		const read = (await tools.get("bg_task").execute("inspect", { action: "list" })).details.tasks[0];
+		assert.equal(read.flow.result.reads.length, 1);
+		assert.equal(read.flow.result.observed, undefined);
+		await f.ingress.wakeProducers();
+		const settled = (await tools.get("bg_task").execute("inspect", { action: "list" })).details.tasks[0];
+		assert.equal(settled.flow.result.observed, redacted ? undefined : true);
+		assert.equal(settled.flow.result.delivered, redacted ? true : undefined);
+		assert.equal(f.sent.length, redacted ? 4 : 3);
+		assert.deepEqual(errors, []);
+		await f.ingress.dispose();
+		loaded = await createJiti(import.meta.url, { moduleCache: false }).import(
+			join(import.meta.dirname, "../node_modules/@vanillagreen/pi-background-tasks/extensions/background-tasks.ts"),
+			{ default: true },
+		);
+		const reopenedManager = SessionManager.open(manager.getSessionFile());
+		f = await fixture(t, {
+			root,
+			manager: reopenedManager,
+			provider: true,
+			shutdownExtensions: true,
+			attachWaitSources: async (attachment) => bridge.attach(attachment, reopenedManager),
+			extensions: [
+				bridge,
+				{
+					name: "background-reopened",
+					factory(pi) {
+						const proxy = Object.create(pi);
+						proxy.registerTool = (tool) => {
+							tools.set(tool.name, tool);
+							pi.registerTool(tool);
+						};
+						loaded(proxy);
+					},
+				},
+			],
+		});
+		await f.session.bindExtensions({ onError: (error) => errors.push(error) });
+		const reopened = (await tools.get("bg_task").execute("inspect", { action: "list" })).details.tasks[0];
+		assert.equal(reopened.flow.result.observed, redacted ? undefined : true);
+		assert.equal(reopened.flow.result.delivered, redacted ? true : undefined);
+		await f.ingress.wakeProducers();
+		assert.equal(f.sent.length, 0);
+		assert.deepEqual(errors, []);
+		await f.ingress.dispose();
+	});

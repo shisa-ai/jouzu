@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { test } from "node:test";
 import { BackgroundResultProducer } from "../dist/flow-control/background-results.js";
 
@@ -55,5 +56,60 @@ for (const variant of ["success", "history-only", "failure", "rejected", "change
 		const intents = await producer.snapshot(new AbortController().signal);
 		assert.equal(intents.length, variant === "success" ? 0 : 1);
 		assert.deepEqual(acknowledged, variant === "success" ? [[metadata.id, "1"]] : []);
+	});
+}
+
+for (const variant of ["success", "failure", "missing", "redacted", "error", "call", "tool", "uncaptured"]) {
+	test(`terminal observation requires exact tool and successful request: ${variant}`, async () => {
+		const content = [{ type: "text", text: "task: completed\n\noutput" }];
+		const receipt = {
+			id: metadata.id,
+			revision: "1",
+			toolCallId: "read",
+			toolName: "bg_task",
+			contentHash: createHash("sha256").update(JSON.stringify(content)).digest("hex"),
+		};
+		const message = {
+			role: "toolResult",
+			toolCallId: variant === "call" ? "foreign" : "read",
+			toolName: variant === "tool" ? "read" : "bg_task",
+			isError: variant === "error",
+			content,
+		};
+		const observations = [];
+		const producer = new BackgroundResultProducer(
+			{
+				ledger: { scope: {}, snapshot: async () => ({ attempts: [] }) },
+				nativeRequests: {
+					snapshot: async () => [
+						{
+							outcome: variant === "failure" ? "failure" : "success",
+							projectionCapture: { members: [{ index: 2, message }], model: { members: [{ status: "converted" }] } },
+							payload: {
+								projections:
+									variant === "missing"
+										? []
+										: [{ sourceIndex: 2, disposition: variant === "redacted" ? "rejected" : "included" }],
+							},
+						},
+					],
+				},
+			},
+			{
+				activateResults: () => ({
+					snapshot: () => (observations.length ? [] : [metadata]),
+					readReceipts: () => (variant === "uncaptured" ? [] : [receipt]),
+				}),
+				acknowledgeObservation: (...args) => observations.push(args),
+				acknowledgeResult: () => assert.fail("not summary delivery"),
+			},
+			() => {},
+		);
+		await producer.snapshot(new AbortController().signal);
+		assert.deepEqual(observations, variant === "success" ? [[metadata.id, "1"]] : []);
+		assert.equal(
+			producer.observationProjections([{ ...message, content: [{ type: "text", text: "changed" }] }]).length,
+			0,
+		);
 	});
 }

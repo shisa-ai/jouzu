@@ -1,19 +1,42 @@
+import { createHash } from "node:crypto";
+import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { FlowIntent } from "./admission.js";
 import type { FlowProducer } from "./controller.js";
 import type { PiFlowAttachment } from "./pi-attachment.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import { type FlowResultReference, normalizeFlowResults } from "./result-types.js";
 
+export interface BackgroundReadReceipt {
+	id: string;
+	revision: string;
+	toolCallId: string;
+	toolName: string;
+	contentHash: string;
+}
+const contentHash = (content: unknown) => createHash("sha256").update(JSON.stringify(content)).digest("hex");
+function matches(message: AgentMessage, receipt: BackgroundReadReceipt): boolean {
+	return (
+		message.role === "toolResult" &&
+		!message.isError &&
+		message.toolCallId === receipt.toolCallId &&
+		message.toolName === receipt.toolName &&
+		contentHash(message.content) === receipt.contentHash
+	);
+}
 export interface BackgroundResultSourceAPI {
-	activateResults(scope: FlowScope, changed: () => void): { snapshot(): FlowResultReference[] };
+	activateResults(
+		scope: FlowScope,
+		changed: () => void,
+	): { snapshot(): FlowResultReference[]; readReceipts?(): BackgroundReadReceipt[] };
 	acknowledgeResult(id: string, revision: string): void;
+	acknowledgeObservation?(id: string, revision: string): void;
 }
 
 /** The task store owns terminal metadata; only exact successful request receipts acknowledge delivery. */
 export class BackgroundResultProducer implements FlowProducer {
 	readonly version = 1 as const;
 	readonly namespace = "bg";
-	private readonly source: { snapshot(): FlowResultReference[] };
+	private readonly source: { snapshot(): FlowResultReference[]; readReceipts?(): BackgroundReadReceipt[] };
 	constructor(
 		private readonly attachment: PiFlowAttachment,
 		private readonly api: BackgroundResultSourceAPI,
@@ -25,7 +48,33 @@ export class BackgroundResultProducer implements FlowProducer {
 		const results = this.source.snapshot();
 		return results.length ? normalizeFlowResults(results, 1024) : [];
 	}
+	observationProjections(messages: readonly AgentMessage[]): AgentMessage[] {
+		const receipts = this.source.readReceipts?.() ?? [];
+		return messages.filter((message) => receipts.some((receipt) => matches(message, receipt)));
+	}
+	private async reconcileObservations(signal: AbortSignal): Promise<void> {
+		const receipts = this.source.readReceipts?.() ?? [];
+		if (!receipts.length || !this.api.acknowledgeObservation) return;
+		const requests = await this.attachment.nativeRequests.snapshot();
+		signal.throwIfAborted();
+		for (const receipt of receipts) {
+			const observed = requests.some(
+				(request) =>
+					request.outcome === "success" &&
+					request.projectionCapture?.members.some(
+						(projection, offset) =>
+							matches(projection.message, receipt) &&
+							request.projectionCapture?.model?.members[offset]?.status === "converted" &&
+							request.payload?.projections?.some(
+								(item) => item.sourceIndex === projection.index && item.disposition === "included",
+							),
+					),
+			);
+			if (observed) this.api.acknowledgeObservation(receipt.id, receipt.revision);
+		}
+	}
 	async snapshot(signal: AbortSignal): Promise<FlowIntent[]> {
+		await this.reconcileObservations(signal);
 		const ledger = await this.attachment.ledger.snapshot();
 		signal.throwIfAborted();
 		const result: FlowIntent[] = [];

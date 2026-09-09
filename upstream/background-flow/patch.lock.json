@@ -3,11 +3,11 @@
 	"package": "@vanillagreen/pi-background-tasks",
 	"version": "2.0.0",
 	"commit": "1c4e7a6b3469fa6bfd3337b36df45ddea6014eda",
-	"runtime": "1c886cffe81cbe4592957e95403be54299027f1e0723dec391c8b40d9fdd5aa9",
+	"runtime": "b0c20898da5676f2214303180126943cfa77e62e184f21cbf076a53d8835a27c",
 	"files": {
 		"extensions/background-tasks.ts": {
 			"before": "aa9384de228f2a99910278f14ee74e469f143e470d0af183cf0261b36bc6917d",
-			"after": "6a7d168bfb244578da968ebdc525b430771d3dded29151235479ef55eba429dc"
+			"after": "68aeda4662c0edbc36f56cababae5ec12fab5ab114794ec25053921f1563799e"
 		},
 		"extensions/snapshot.ts": {
 			"before": "46c74c0c86367bfb65be7e6435fbb8f08abfe8ca43c8ea99eace152da0f3126a",
@@ -24,6 +24,10 @@
 		"extensions/render.ts": {
 			"before": "c244941edde47723fd1491b763188d40c5963f7f03aa5a2228584c3aab13fd89",
 			"after": "243e6d7d877a2cac13dcb475b33af63a551a5dfa9f36e5c4f7b748f30b2a762a"
+		},
+		"extensions/registrations.ts": {
+			"before": "8026bba90932683c5b015a54d85cc3b250e69f7a0a3e1b44d077247e76f8d985",
+			"after": "1e67e46c56045ed49b6e8e3aa360b92e6a7b2ecc45a944f32c83c31c6b86dfdc"
 		}
 	}
 }

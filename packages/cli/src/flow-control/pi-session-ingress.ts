@@ -94,7 +94,12 @@ export class PiSessionFlowIngress implements Ingress {
 				decorateNativeContext: async (messages, sources, signal) => {
 					const branch = this.branch();
 					const receipts = await branch.attachment.waits.toolReceipts();
-					const observedTools = messages.filter((message) => observedWaitToolReceipt(message, receipts)).slice(-64);
+					const observedTools = [
+						...new Set([
+							...messages.filter((message) => observedWaitToolReceipt(message, receipts)),
+							...branch.controller.observationProjections(messages),
+						]),
+					].slice(-64);
 					const unchanged = () => (observedTools.length ? { messages, projections: observedTools } : messages);
 					// Queue receipts identify consumed user input; text and delivery lanes do not.
 					if (messages.at(-1)?.role !== "user" || !sources.some((source) => source.queue)) return unchanged();
