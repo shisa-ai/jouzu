@@ -429,3 +429,83 @@ test("pending cancellation cannot retire an active native dispatch intent", asyn
 		await dispatch;
 	}
 });
+
+async function consumeForArchive(store, id) {
+	await store.retain(submission(id));
+	await store.dispatch(id, 1, `operation-${id}`, async (observer) => {
+		await observer.observe({ kind: "prompt", args: [id] });
+		await store.recordPromptClaim(`operation-${id}`, { inputIndex: 0, messageIndex: 0 });
+	});
+}
+
+test("submission archive frees admission slots and preserves source order across reopen", async (t) => {
+	const root = await rootFor(t);
+	const owner = FlowOwnership.acquire(root, scope);
+	const repo = new MemorySessionRepo();
+	const session = await repo.create({}, context);
+	t.after(async () => {
+		await owner.close(() => session.close(context));
+		await repo.close(context);
+	});
+	let store = await FlowSubmissionStore.attach(session, owner, { maxRecords: 2, maxBytes: 8192 });
+	await consumeForArchive(store, "first");
+	await consumeForArchive(store, "second");
+	const before = await store.snapshot();
+	await assert.rejects(store.retain(submission("third")), { code: "capacity" });
+	assert.equal(await store.archiveHandled([{ id: "second", revision: 1 }]), 1);
+	assert.deepEqual(await store.snapshot(), before);
+	assert.deepEqual(
+		(await store.snapshot(false)).map((r) => r.id),
+		["first"],
+	);
+	await consumeForArchive(store, "third");
+	assert.equal(await store.archiveHandled([{ id: "first", revision: 1 }]), 1);
+	store = await FlowSubmissionStore.attach(session, owner, { maxRecords: 2, maxBytes: 8192 });
+	assert.deepEqual(
+		(await store.snapshot()).map((r) => r.id),
+		["first", "second", "third"],
+	);
+	assert.deepEqual((await store.snapshot()).slice(0, 2), before);
+	assert.equal(await store.archiveHandled([{ id: "first", revision: 1 }]), 0);
+	await assert.rejects(store.retain(submission("first")), { code: "stale" });
+	await store.retain(submission("fourth"));
+	let dispatched = false;
+	await assert.rejects(
+		store.dispatch("fourth", 1, "operation-first", async () => {
+			dispatched = true;
+		}),
+		{ code: "identity" },
+	);
+	assert.equal(dispatched, false);
+});
+
+test("archive rejects unconsumed submissions atomically and detects changed historical bodies", async (t) => {
+	const root = await rootFor(t);
+	const owner = FlowOwnership.acquire(root, scope);
+	const repo = new MemorySessionRepo();
+	const session = await repo.create({}, context);
+	t.after(async () => {
+		await owner.close(() => session.close(context));
+		await repo.close(context);
+	});
+	const store = await FlowSubmissionStore.attach(session, owner);
+	await consumeForArchive(store, "handled");
+	await store.retain(submission("pending"));
+	const before = await store.snapshot();
+	await assert.rejects(
+		store.archiveHandled([
+			{ id: "handled", revision: 1 },
+			{ id: "pending", revision: 1 },
+		]),
+		{ code: "busy" },
+	);
+	assert.deepEqual(await store.snapshot(false), before);
+	await store.archiveHandled([{ id: "handled", revision: 1 }]);
+	await session.mutate(async (mutation, ctx) => {
+		const address = value("jouzu.flow.submission", "handled");
+		const record = (await mutation.getValue(address, ctx)).value;
+		return mutation.commit([setValue(address, { ...record, acceptedAt: record.acceptedAt + 1 })], ctx);
+	}, context);
+	await assert.rejects(store.snapshot(), { code: "identity" });
+	await assert.rejects(FlowSubmissionStore.attach(session, owner), { code: "identity" });
+});

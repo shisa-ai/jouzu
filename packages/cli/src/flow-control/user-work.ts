@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { isNativeUserInput } from "./native-admission.js";
 import type { PiFlowAttachment } from "./pi-attachment.js";
-import { FlowLedgerError } from "./receipt-ledger.js";
+import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 
 export function captureUserWorkParticipants(participants: readonly string[] | undefined): string[] {
 	if (participants === undefined) return [];
@@ -15,6 +15,12 @@ export function captureUserWorkParticipants(participants: readonly string[] | un
 	)
 		throw new FlowLedgerError("schema", "Invalid user-work producer participants.");
 	return [...participants];
+}
+
+export function userWorkId(scope: FlowScope, id: string, revision: number): string {
+	return `user:${createHash("sha256")
+		.update(JSON.stringify(["user-work-v1", scope.sessionId, scope.branchId, id, revision]))
+		.digest("hex")}`;
 }
 
 /** Recoverable from the exact retained host submission; message text never selects existing work. */
@@ -31,12 +37,12 @@ export async function retainUserWork(
 	if (!isNativeUserInput(record.submission))
 		throw new FlowLedgerError("identity", "User work requires verified host input.");
 	const scope = attachment.ledger.scope;
-	const key = createHash("sha256")
-		.update(JSON.stringify(["user-work-v1", scope.sessionId, scope.branchId, record.id, record.revision]))
-		.digest("hex");
-	let work = await attachment.waits.registerWork(`user:${key}`, "host-user", record.acceptedAt, [
-		{ id: record.id, revision: record.revision },
-	]);
+	let work = await attachment.waits.registerWork(
+		userWorkId(scope, record.id, record.revision),
+		"host-user",
+		record.acceptedAt,
+		[{ id: record.id, revision: record.revision }],
+	);
 	for (const participant of participants)
 		if (!work.participants.includes(participant))
 			work = await attachment.waits.shareWork(work.id, "host-user", work.revision, participant, record.acceptedAt);

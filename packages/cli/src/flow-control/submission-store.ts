@@ -61,11 +61,22 @@ export interface FlowNativeQueueHistory {
 	entryId: string;
 	entryHash: string;
 }
+export const MAX_ARCHIVED_SUBMISSIONS = 16384;
+export const MAX_ARCHIVED_SUBMISSION_BYTES = 64 * 1024 * 1024;
+interface ArchivedSubmission {
+	id: string;
+	revision: number;
+	operationId: string;
+	bytes: number;
+	contentHash: string;
+}
 interface State {
 	version: 1;
 	scope: FlowScope;
 	revision: number;
 	records: RecordData[];
+	archived?: ArchivedSubmission[];
+	orderIds?: string[];
 }
 export interface RetainedSubmission {
 	id: string;
@@ -80,6 +91,7 @@ type Header = Omit<State, "records"> & { recordIds: string[] };
 const address = value<Header>("jouzu.flow.submissions", "v1");
 const recordAddress = (id: string) => value<RecordData>("jouzu.flow.submission", id);
 const digest = (payload: Encoded) => createHash("sha256").update(JSON.stringify(payload)).digest("hex");
+const recordHash = (record: RecordData) => createHash("sha256").update(JSON.stringify(record)).digest("hex");
 const identity = (id: unknown) => typeof id === "string" && id.length > 0 && id.length <= 512;
 function validateHold(hold: FlowAdmissionHold): void {
 	if (
@@ -209,6 +221,7 @@ export class FlowSubmissionStore {
 		const store = new FlowSubmissionStore(session, ownership, { ...limits });
 		await store.transact(() => ({ changed: true, result: undefined }));
 		store.initialized = true;
+		await store.snapshot();
 		return store;
 	}
 	private constructor(
@@ -232,11 +245,44 @@ export class FlowSubmissionStore {
 			throw new FlowLedgerError("schema", "Invalid retained submission state.");
 		if (
 			state.records.length > this.limits.maxRecords ||
-			Buffer.byteLength(JSON.stringify(state)) > this.limits.maxBytes
+			Buffer.byteLength(JSON.stringify({ ...state, archived: undefined, orderIds: undefined })) > this.limits.maxBytes
 		)
 			throw new FlowLedgerError("capacity", "Submission retention limit reached; admission is held.");
-		const ids = new Set();
-		const operationIds = new Set();
+		const archived = state.archived === undefined ? [] : state.archived;
+		if (
+			!Array.isArray(archived) ||
+			archived.length > MAX_ARCHIVED_SUBMISSIONS ||
+			archived.some(
+				(entry) =>
+					!entry ||
+					!identity(entry.id) ||
+					!identity(entry.operationId) ||
+					!Number.isSafeInteger(entry.revision) ||
+					entry.revision < 1 ||
+					!Number.isSafeInteger(entry.bytes) ||
+					entry.bytes < 1 ||
+					typeof entry.contentHash !== "string" ||
+					!/^[a-f0-9]{64}$/.test(entry.contentHash),
+			) ||
+			new Set(archived.map((entry) => entry.id)).size !== archived.length ||
+			new Set(archived.map((entry) => entry.operationId)).size !== archived.length ||
+			Buffer.byteLength(JSON.stringify([archived, state.orderIds])) +
+				archived.reduce((sum, entry) => sum + entry.bytes, 0) >
+				MAX_ARCHIVED_SUBMISSION_BYTES
+		)
+			throw new FlowLedgerError("capacity", "Invalid submission archive or archive retention limit reached.");
+		const allIds = [...archived.map((entry) => entry.id), ...state.records.map((record) => record?.id)];
+		if (
+			(archived.length && !state.orderIds) ||
+			(state.orderIds !== undefined &&
+				(!Array.isArray(state.orderIds) ||
+					state.orderIds.length !== allIds.length ||
+					new Set(state.orderIds).size !== allIds.length ||
+					state.orderIds.some((id) => !allIds.includes(id))))
+		)
+			throw new FlowLedgerError("identity", "Invalid submission history order.");
+		const ids = new Set(archived.map((entry) => entry.id));
+		const operationIds = new Set(archived.map((entry) => entry.operationId));
 		for (const record of state.records) {
 			if (
 				!record ||
@@ -433,7 +479,10 @@ export class FlowSubmissionStore {
 			if (submission.id !== record.id) throw new FlowLedgerError("identity", "Stored submission identity changed.");
 		}
 	}
-	private transact<T>(update: (state: State) => { result: T; changed: boolean }): Promise<T> {
+	private transact<T>(
+		update: (state: State, archived: RecordData[]) => { result: T; changed: boolean },
+		includeArchived = false,
+	): Promise<T> {
 		return this.ownership.run(() =>
 			this.session.mutate(async (mutation, context) => {
 				const header = (await mutation.getValue(address, context))?.value;
@@ -456,13 +505,40 @@ export class FlowSubmissionStore {
 				);
 				const state: State = structuredClone(
 					header
-						? { version: header.version, scope: header.scope, revision: header.revision, records }
+						? {
+								version: header.version,
+								scope: header.scope,
+								revision: header.revision,
+								records,
+								...(header.archived !== undefined ? { archived: header.archived } : {}),
+								...(header.orderIds !== undefined ? { orderIds: header.orderIds } : {}),
+							}
 						: { version: 1, scope: this.ownership.scope, revision: 0, records: [] },
 				);
 				this.validate(state);
-				const { result, changed } = update(state);
+				const archived = includeArchived
+					? await Promise.all(
+							(state.archived ?? []).map(async (entry) => {
+								const record = (await mutation.getValue(recordAddress(entry.id), context))?.value;
+								if (
+									!record ||
+									record.id !== entry.id ||
+									record.revision !== entry.revision ||
+									record.dispatch?.operationId !== entry.operationId ||
+									Buffer.byteLength(JSON.stringify(record)) !== entry.bytes ||
+									recordHash(record) !== entry.contentHash
+								)
+									throw new FlowLedgerError("identity", "Archived submission content is missing or changed.");
+								this.validate({ version: 1, scope: state.scope, revision: state.revision, records: [record] });
+								return structuredClone(record);
+							}),
+						)
+					: [];
+				const { result, changed } = update(state, archived);
 				if (changed) {
 					state.revision++;
+					if (state.orderIds)
+						for (const record of state.records) if (!state.orderIds.includes(record.id)) state.orderIds.push(record.id);
 					this.validate(state);
 					const { records: updated, ...metadata } = state;
 					const writes: Write[] = [setValue(address, { ...metadata, recordIds: updated.map((record) => record.id) })];
@@ -484,6 +560,8 @@ export class FlowSubmissionStore {
 		const payload = encode(submission);
 		const hash = digest(payload);
 		return this.transact((state) => {
+			if (state.archived?.some((record) => record.id === id))
+				throw new FlowLedgerError("stale", "Submission has been archived and cannot be replayed.");
 			const previous = state.records.find((record) => record.id === id);
 			if (previous && previous.digest !== hash)
 				throw new FlowLedgerError("identity", "Submission identity was reused with different content.");
@@ -533,33 +611,97 @@ export class FlowSubmissionStore {
 		});
 	}
 
-	snapshot(): Promise<RetainedSubmission[]> {
-		return this.transact((state) => ({
-			changed: false,
-			result: state.records.map(({ payload, digest: _digest, dispatch, ...record }) => ({
-				...record,
-				...(dispatch
-					? {
-							dispatch: {
-								operationId: dispatch.operationId,
-								ownerId: dispatch.ownerId,
-								phase: dispatch.phase,
-								...(dispatch.queueClaims ? { queueClaims: dispatch.queueClaims } : {}),
-								...(dispatch.queueCancellations ? { queueCancellations: dispatch.queueCancellations } : {}),
-								...(dispatch.contextCancellations ? { contextCancellations: dispatch.contextCancellations } : {}),
-								...(dispatch.queueHistory ? { queueHistory: dispatch.queueHistory } : {}),
-								...(dispatch.promptHistory ? { promptHistory: dispatch.promptHistory } : {}),
-								...(dispatch.promptClaims ? { promptClaims: dispatch.promptClaims } : {}),
-								...(dispatch.inputs
-									? { inputs: dispatch.inputs.map((input) => decode(input.payload) as FlowNativeInput) }
-									: {}),
-							},
-						}
-					: {}),
-				submission: decode(payload) as Submission,
-			})),
-		}));
+	snapshot(includeArchived = true): Promise<RetainedSubmission[]> {
+		return this.transact(
+			(state, archived) => ({
+				changed: false,
+				result: [...state.records, ...archived]
+					.sort((a, b) => (state.orderIds ? state.orderIds.indexOf(a.id) - state.orderIds.indexOf(b.id) : 0))
+					.map(({ payload, digest: _digest, dispatch, ...record }) => ({
+						...record,
+						...(dispatch
+							? {
+									dispatch: {
+										operationId: dispatch.operationId,
+										ownerId: dispatch.ownerId,
+										phase: dispatch.phase,
+										...(dispatch.queueClaims ? { queueClaims: dispatch.queueClaims } : {}),
+										...(dispatch.queueCancellations ? { queueCancellations: dispatch.queueCancellations } : {}),
+										...(dispatch.contextCancellations ? { contextCancellations: dispatch.contextCancellations } : {}),
+										...(dispatch.queueHistory ? { queueHistory: dispatch.queueHistory } : {}),
+										...(dispatch.promptHistory ? { promptHistory: dispatch.promptHistory } : {}),
+										...(dispatch.promptClaims ? { promptClaims: dispatch.promptClaims } : {}),
+										...(dispatch.inputs
+											? { inputs: dispatch.inputs.map((input) => decode(input.payload) as FlowNativeInput) }
+											: {}),
+									},
+								}
+							: {}),
+						submission: decode(payload) as Submission,
+					})),
+			}),
+			includeArchived,
+		);
 	}
+	/** Freeze handled submissions outside the active admission quota without discarding source receipts. */
+	archiveHandled(selected: readonly { id: string; revision: number }[], assertCurrent?: () => void): Promise<number> {
+		const captured = structuredClone(selected);
+		if (
+			!Array.isArray(captured) ||
+			captured.length > this.limits.maxRecords ||
+			new Set(captured.map((item) => item?.id)).size !== captured.length
+		)
+			return Promise.reject(new FlowLedgerError("identity", "Invalid submission archive selection."));
+		return this.transact((state) => {
+			assertCurrent?.();
+			const records = captured.flatMap((item) => {
+				if (!item || !identity(item.id) || !Number.isSafeInteger(item.revision) || item.revision < 1)
+					throw new FlowLedgerError("identity", "Invalid submission archive identity.");
+				if (state.archived?.some((entry) => entry.id === item.id && entry.revision === item.revision)) return [];
+				const record = state.records.find((record) => record.id === item.id && record.revision === item.revision);
+				const dispatch = record?.dispatch;
+				if (
+					!record ||
+					record.status !== "retained" ||
+					record.holds?.length ||
+					dispatch?.phase !== "returned" ||
+					!dispatch.inputs?.length ||
+					dispatch.inputs.some((entry, inputIndex) => {
+						const input = decode(entry.payload) as FlowNativeInput;
+						if (input.queue)
+							return !dispatch.queueClaims?.some(
+								(claim) => claim.id === input.queue?.id && claim.revision === input.queue.revision && claim.consumed,
+							);
+						const count = Array.isArray(input.args[0]) ? input.args[0].length : 1;
+						return Array.from({ length: count }, (_, messageIndex) => messageIndex).some(
+							(messageIndex) =>
+								!dispatch.promptClaims?.some(
+									(claim) => claim.inputIndex === inputIndex && claim.messageIndex === messageIndex,
+								),
+						);
+					})
+				)
+					throw new FlowLedgerError("busy", "Only fully consumed, returned submissions can be archived.");
+				return [record];
+			});
+			if (!records.length) return { changed: false, result: 0 };
+			state.orderIds ??= state.records.map((record) => record.id);
+			state.archived ??= [];
+			for (const record of records) {
+				if (!record.dispatch) throw new FlowLedgerError("identity", "Archived submission has no dispatch identity.");
+				state.archived.push({
+					id: record.id,
+					revision: record.revision,
+					operationId: record.dispatch.operationId,
+					bytes: Buffer.byteLength(JSON.stringify(record)),
+					contentHash: recordHash(record),
+				});
+			}
+			state.records = state.records.filter((record) => !records.includes(record));
+			return { changed: true, result: records.length };
+		});
+	}
+
 	/** Persist cancellation intent before removing the native queue item. */
 	cancelQueue(operationId: string, queue: { id: string; revision: number }): Promise<void> {
 		const captured = { ...queue };
@@ -758,7 +900,10 @@ export class FlowSubmissionStore {
 					throw new FlowLedgerError("stale", "Submission changed before native dispatch.");
 				if (record.dispatch)
 					throw new FlowLedgerError("transition", "Submission already has a native dispatch intent.");
-				if (state.records.some((item) => item.dispatch?.operationId === operationId))
+				if (
+					state.records.some((item) => item.dispatch?.operationId === operationId) ||
+					state.archived?.some((item) => item.operationId === operationId)
+				)
 					throw new FlowLedgerError("identity", "Native operation ID is already assigned.");
 				record.dispatch = { operationId, ownerId: this.ownership.token, phase: "started" };
 				return { changed: true, result: decode(record.payload) as Submission };

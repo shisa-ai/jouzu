@@ -1,6 +1,7 @@
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
 import type { FlowAdmissionGates } from "./admission.js";
 import { SessionFlowController } from "./controller.js";
+import { isNativeUserInput } from "./native-admission.js";
 import { PiFlowAttachment } from "./pi-attachment.js";
 import { bindPiFlowBranch, completePiFlowNavigation } from "./pi-branch-binding.js";
 import { PiControllerHost, type PiControllerHostOptions } from "./pi-controller-host.js";
@@ -10,8 +11,9 @@ import { type NativeContextDecorator, PiNativeRequests } from "./pi-native-reque
 import { PiFlowSessionRegistry } from "./pi-session-registry.js";
 import { PiWorkTools } from "./pi-work-tools.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
+import { retiredIdentityHash } from "./retired-identities.js";
 import type { FlowNativeInput, RetainedSubmission } from "./submission-store.js";
-import { captureUserWorkParticipants, consumedUserWork } from "./user-work.js";
+import { captureUserWorkParticipants, consumedUserWork, userWorkId } from "./user-work.js";
 import { finishedUserWork } from "./user-work-retention.js";
 import type { FlowWorkStatus } from "./wait-authority.js";
 import { createFlowWaitDecisionProducer, observedFlowWaits } from "./wait-decisions.js";
@@ -213,6 +215,33 @@ export class PiFlowSessionService {
 				return branch.attachment.nativeRequests.retireSuperseded();
 			});
 			if (result.kind === "busy") throw new FlowLedgerError("busy", "Request retirement requires an idle session.");
+			return result.value;
+		});
+	}
+
+	/** Keep handled user source evidence available while freeing active submission capacity. */
+	archiveSubmissionHistory() {
+		return this.registry.run(async () => {
+			const branch = this.branch();
+			const result = await branch.host.atIdle(async () => {
+				const attachment = branch.attachment;
+				if ((await attachment.ledger.snapshot()).activeAttemptId || attachment.nativeRequests.recoveryBlocked)
+					throw new FlowLedgerError("busy", "Submission archival requires settled requests.");
+				const retired = new Set(attachment.waits.gate().retiredWorkHashes ?? []);
+				const selected = (await attachment.submissions.snapshot(false)).filter(
+					(record) =>
+						isNativeUserInput(record.submission) &&
+						retired.has(retiredIdentityHash(userWorkId(branch.scope, record.id, record.revision))),
+				);
+				return attachment.submissions.archiveHandled(
+					selected.map(({ id, revision }) => ({ id, revision })),
+					() => {
+						if (this.branch() !== branch || attachment.waits.gate().updating)
+							throw new FlowLedgerError("stale", "Submission archival ownership changed.");
+					},
+				);
+			});
+			if (result.kind === "busy") throw new FlowLedgerError("busy", "Submission archival requires an idle session.");
 			return result.value;
 		});
 	}

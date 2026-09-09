@@ -4113,3 +4113,27 @@ test("idle execution retirement preserves unresolved wait decisions and unread s
 	observed.add("second");
 	assert.deepEqual(await f.ingress.retireWaitHistory(), { work: 1, executions: 2, waits: 0 });
 });
+
+test("archived user submissions retain native source evidence through later prompts and reopen", async (t) => {
+	const f = await fixture(t, { provider: true });
+	await f.session.prompt("first archived input");
+	const store = f.ingress.branch().attachment.submissions;
+	const before = await store.snapshot();
+	assert.equal(await f.ingress.archiveSubmissionHistory(), 0);
+	await f.ingress.retireWaitHistory(true);
+	assert.equal(await f.ingress.archiveSubmissionHistory(), 1);
+	assert.deepEqual(await store.snapshot(), before);
+	assert.deepEqual(await store.snapshot(false), []);
+	await f.session.prompt("second distinct input");
+	assert.equal(f.sent.length, 2);
+	await f.ingress.dispose();
+	const next = await fixture(t, {
+		root: f.root,
+		provider: true,
+		manager: SessionManager.open(f.session.sessionManager.getSessionFile()),
+	});
+	await next.session.prompt("third distinct input");
+	assert.equal(next.sent.length, 1);
+	assert.equal((await next.ingress.branch().attachment.submissionViews()).length, 3);
+	assert.equal((await next.ingress.branch().attachment.nativeRequests.snapshot()).at(-1).outcome, "success");
+});
