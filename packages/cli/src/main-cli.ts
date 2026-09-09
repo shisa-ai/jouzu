@@ -316,6 +316,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 	]);
 	const nativeTextguard = new TextGuardRuntime({
 		cachePath: join(paths.cacheDir, "textguard", "scans.json"),
+		approvalPath: join(paths.cacheDir, "textguard", "approvals.json"),
 		files: parsed.options.textguardFiles,
 	});
 	// Opt-in while session flow control is incomplete: it has no visible hold status, no manual

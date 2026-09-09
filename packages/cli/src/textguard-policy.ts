@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { type MainOptions, type Skill, stripFrontmatter } from "@earendil-works/pi-coding-agent";
+import type { TextGuardApprovalStore } from "./textguard-approvals.js";
 import type { UnavailableReason } from "./textguard.js";
 import { type ContentReview, type ContentSnapshot, TextGuardAdmission } from "./textguard-admission.js";
 import { snapshotPayload } from "./textguard-payload.js";
@@ -42,10 +43,11 @@ export class NativeContentPolicy implements Policy {
 	private requests = new Map<string, RequestSource>();
 	private expansions = new Map<string, number>();
 	private reports = new Map<string, ContentReview>();
+	private dismissed = new Set<string>();
 	private notices: PolicyNotice[] = [];
 	private generation = 0;
-	constructor(options: { cwd: string; scanner: Scanner; files?: boolean }) {
-		this.admission = new TextGuardAdmission(options.scanner);
+	constructor(options: { cwd: string; scanner: Scanner; files?: boolean; approvals?: TextGuardApprovalStore }) {
+		this.admission = new TextGuardAdmission(options.scanner, options.approvals);
 		this.skills = new TextGuardSkills(this.admission, options.cwd);
 		this.files = options.files === true;
 	}
@@ -54,7 +56,19 @@ export class NativeContentPolicy implements Policy {
 		return this.admission.reviews();
 	}
 	scanReports(): ContentReview[] {
-		return structuredClone([...this.skills.scanReports(), ...this.reports.values()].slice(-LIMIT));
+		return structuredClone(
+			[...this.skills.scanReports(), ...this.reports.values()].filter((item) => !this.dismissed.has(item.id)).slice(-LIMIT),
+		);
+	}
+	/** Acknowledge a non-blocking report for the rest of the session. Withheld items cannot be dismissed. */
+	dismissReport(id: string): boolean {
+		if (this.admission.reviews().some((item) => item.id === id)) return false;
+		const known = this.skills.scanReports().some((item) => item.id === id) || this.reports.has(id);
+		if (!known) return false;
+		this.reports.delete(id);
+		this.dismissed.add(id);
+		while (this.dismissed.size > LIMIT) this.dismissed.delete(this.dismissed.values().next().value as string);
+		return true;
 	}
 	scanNotices(): PolicyNotice[] {
 		return [...this.skills.scanNotices().map(({ reason }) => ({ reason })), ...structuredClone(this.notices)].slice(
@@ -71,6 +85,7 @@ export class NativeContentPolicy implements Policy {
 		this.requests.clear();
 		this.expansions.clear();
 		this.reports.clear();
+		this.dismissed.clear();
 		this.notices = [];
 	}
 	filterSkills(skills: Skill[]): Promise<Skill[]> {

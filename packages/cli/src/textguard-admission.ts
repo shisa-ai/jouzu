@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import type { TextGuardApprovalStore } from "./textguard-approvals.js";
 import { MAX_SCAN_BYTES, type ScanEvidence, type TextScanner, unavailable } from "./textguard.js";
 import { type NativeEvidence, parseNativeEvidence } from "./textguard-native.js";
 
@@ -60,16 +61,21 @@ export class TextGuardAdmission {
 	private approvals = new Set<string>();
 	private snapshots = new Map<string, ContentSnapshot>();
 	private generation = 0;
-	constructor(private scanner: IdentifiedScanner) {}
+	constructor(
+		private scanner: IdentifiedScanner,
+		private persistentApprovals?: TextGuardApprovalStore,
+	) {}
 
 	reviews(): ContentReview[] {
 		return structuredClone([...this.pending.values()]);
 	}
-	approve(id: string): boolean {
-		if (!this.pending.has(id)) return false;
+	approve(id: string, persist = false): boolean {
+		const review = this.pending.get(id);
+		if (!review) return false;
 		this.pending.delete(id);
 		this.approvals.add(id);
 		while (this.approvals.size > MAX_DECISIONS) this.approvals.delete(this.approvals.values().next().value as string);
+		if (persist) this.persistentApprovals?.add(review.contentDigest, review.scannerIdentity, review.policy);
 		return true;
 	}
 	clearApprovals(): void {
@@ -91,6 +97,11 @@ export class TextGuardAdmission {
 		let evidence: ScanEvidence = unavailable("scanner");
 		const contentDigest = digest(text);
 		const validUnicode = !/[\uD800-\uDFFF]/u.test(text);
+		try {
+			await this.persistentApprovals?.ready();
+		} catch {
+			/* A store failure never grants or denies coverage by itself. */
+		}
 		try {
 			const identity = await this.scanner.initialize();
 			scannerIdentity = identity && /^[a-f0-9]{64}$/.test(identity) ? identity : "unavailable";
@@ -136,6 +147,7 @@ export class TextGuardAdmission {
 		const generation = this.generation;
 		let scannerIdentity = "unavailable";
 		try {
+			await this.persistentApprovals?.ready();
 			const identity = await this.scanner.initialize();
 			if (identity && /^[a-f0-9]{64}$/.test(identity)) scannerIdentity = identity;
 		} catch {
@@ -177,7 +189,11 @@ export class TextGuardAdmission {
 			});
 			while (this.snapshots.size > MAX_SNAPSHOTS) this.snapshots.delete(this.snapshots.keys().next().value as string);
 		}
-		const approved = validUnicode && active && this.approvals.has(id);
+		const approved =
+			validUnicode &&
+			active &&
+			(this.approvals.has(id) ||
+				(this.persistentApprovals?.has(contentDigest, scannerIdentity, ADMISSION_POLICY) ?? false));
 		if (blocked && !approved && validUnicode && active) {
 			this.pending.delete(id);
 			this.pending.set(id, review);
