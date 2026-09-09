@@ -41,7 +41,7 @@ test("an unchanged descriptor is not admitted twice", async (t) => {
 	assert.equal(f.bodies.length, 2);
 });
 
-test("user input arriving during producer selection wins and returns the work to pending", async (t) => {
+test("user input arriving during producer selection preempts the attempt and is sent first", async (t) => {
 	const f = await assembledSession(t);
 	const synthetic = syntheticProducer();
 	const registration = f.ingress.registerProducer(synthetic.producer);
@@ -61,15 +61,27 @@ test("user input arriving during producer selection wins and returns the work to
 	await scheduling;
 	await prompted;
 	await settle();
-	const bodies = JSON.stringify(f.bodies);
-	assert.ok(bodies.includes("user wins"), "the user instruction reached the model");
+
+	// Request order, not mere presence: the user's turn must reach the model before the automated one.
+	const sent = f.bodies.map((body) => JSON.stringify(body.messages));
+	const user = sent.findIndex((body) => body.includes("user wins"));
+	const automated = sent.findIndex((body) => body.includes("work intent-1"));
+	assert.notEqual(user, -1, "the user instruction reached the model");
+	assert.notEqual(automated, -1, "the preempted work is re-admitted rather than dropped");
+	assert.ok(user < automated, "the user's request is sent first");
+	assert.equal(sent.filter((body) => body.includes("work intent-1")).length, 1, "and the work is sent once");
+
+	// The controller's own record of the preemption: the reserved attempt is cancelled, then retried.
+	const attempts = (await f.ingress.branch().attachment.ledger.snapshot()).attempts;
+	const preempted = attempts.find((attempt) => attempt.phase === "cancelled");
+	assert.ok(preempted, "the in-flight attempt is cancelled rather than dispatched behind the user");
+	assert.match(preempted.reason, /changed before enqueue/);
+	assert.ok(
+		attempts.some((attempt) => attempt.phase === "settled" && attempt.consumed),
+		"a later attempt carries the same work to the model",
+	);
 	const requests = await f.ingress.branch().attachment.nativeRequests.snapshot();
 	assert.ok(requests.every((request) => request.outcome !== "failure"));
-	// Whatever the interleaving, the producer's work is never lost: it is delivered or still offered.
-	const delivered = bodies.includes("work intent-1");
-	const pending = (await synthetic.producer.snapshot()).some((intent) => intent.id === "intent-1");
-	assert.ok(delivered || pending, "the automated work was neither dropped nor duplicated");
-	if (delivered) assert.equal(bodies.split("work intent-1").length - 1, 1);
 });
 
 test("a producer that fails to build does not bypass admission or block user work", async (t) => {

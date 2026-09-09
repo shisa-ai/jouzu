@@ -22,18 +22,31 @@ export async function assembledRuntime(t, { root: sharedRoot, ...overrides } = {
 /** Attach the assembly to a session whose provider route passes qualification. */
 export async function assembledSession(
 	t,
-	{ reverseExtensions = false, producerExtensions = [], script, ...overrides } = {},
+	{
+		reverseExtensions = false,
+		producerExtensions = [],
+		script,
+		persist = false,
+		sessionManager: supplied,
+		...overrides
+	} = {},
 ) {
 	const assembly = await assembledRuntime(t, overrides);
-	const sessionManager = SessionManager.inMemory(assembly.root);
+	// One manager for both the ingress factory and the session; a mismatch scopes them apart.
+	const sessionManager =
+		supplied ??
+		(persist
+			? SessionManager.create(assembly.root, join(assembly.root, "history"))
+			: SessionManager.inMemory(assembly.root));
 	const ingress = await assembly.flow.flowIngressFactory({ cwd: assembly.root, sessionManager });
 	// Producer extensions load first so their event listeners exist before the ingress attaches and
 	// the bridges run their handshakes.
 	const bridges = reverseExtensions ? [...assembly.flow.extensions].reverse() : assembly.flow.extensions;
 	const extensions = [...producerExtensions, ...bridges];
-	const { session, bodies, runtime } = await createQualifiedFlowSession(t, {
+	const { session, bodies, runtime, shutdown } = await createQualifiedFlowSession(t, {
 		root: assembly.root,
 		sessionManager,
+		persist,
 		extensions,
 		script,
 		ingress: {
@@ -45,7 +58,7 @@ export async function assembledSession(
 			dispose: () => ingress.dispose(),
 		},
 	});
-	return { ...assembly, ingress, session, sessionManager, bodies, runtime };
+	return { ...assembly, ingress, session, sessionManager, bodies, runtime, shutdown };
 }
 
 /**

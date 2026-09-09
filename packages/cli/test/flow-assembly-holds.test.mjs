@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { assistantToolCalls } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { assembledSession, installedProducerExtensions, syntheticProducer } from "./fixtures/flow-assembly.mjs";
+import { campaignScript, liveWait } from "./fixtures/flow-campaign.mjs";
 
 const settle = () => new Promise((resolve) => setImmediate(resolve));
 
-test("a cancelled queue item is not resurrected by a producer replaying its descriptor", async (t) => {
+test("a settled descriptor is fenced against replay, and the fence outlives its attempt", async (t) => {
 	const f = await assembledSession(t);
 	const synthetic = syntheticProducer();
 	const registration = f.ingress.registerProducer(synthetic.producer);
@@ -68,16 +68,30 @@ test("ledger retirement is refused while controller work is active", async (t) =
 });
 
 test("a blocked lane holds its continuation across idle maintenance", async (t) => {
-	const f = await assembledSession(t, { producerExtensions: await installedProducerExtensions() });
-	await f.session.prompt("start");
+	const f = await assembledSession(t, {
+		producerExtensions: await installedProducerExtensions(),
+		script: campaignScript({ goal: "Hold across maintenance" }),
+	});
+	await f.session.prompt("start the sweep and wait");
+	const wait = await liveWait(f.ingress, "the lane is blocked on one live wait");
 	const before = f.bodies.length;
-	// Idle maintenance runs the full retirement pass; it must not release held work.
+
+	// Idle maintenance runs the full retirement pass; it must not release held work or the wait.
 	await f.ingress.retireWaitHistory(true);
 	await f.ingress.archiveSubmissionHistory();
 	await f.ingress.retireRequestHistory();
 	await f.ingress.retireLedgerHistory();
 	await settle();
-	assert.equal(f.bodies.length, before, "maintenance sends nothing on its own");
+
+	assert.equal(f.bodies.length, before, "maintenance sends no continuation for the blocked lane");
+	const held = await liveWait(f.ingress, "the wait is still live after maintenance");
+	assert.equal(held.token, wait.token, "maintenance neither retires nor reissues the live wait");
+	assert.equal(held.expiresAt, wait.expiresAt, "and does not restart its deadline");
+	const work = (await f.ingress.branch().attachment.waits.authoritySnapshot()).work;
+	assert.ok(
+		work.some((record) => record.id === wait.workId && record.owner === "multiloop"),
+		"the campaign work it depends on is not retired underneath it",
+	);
 	assert.deepEqual(f.errors, []);
 });
 

@@ -171,7 +171,7 @@ function sseFor(reply) {
 
 export async function createQualifiedFlowSession(
 	t,
-	{ ingress, extensions = [], sessionManager, root: fixtureRoot, script } = {},
+	{ ingress, extensions = [], sessionManager, root: fixtureRoot, script, persist = false } = {},
 ) {
 	const root = fixtureRoot ?? (await mkdtemp(join(tmpdir(), "jouzu-flow-qualified-")));
 	const bodies = [];
@@ -195,8 +195,26 @@ export async function createQualifiedFlowSession(
 	});
 	await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
 	let session;
+	let shutdownCalled = false;
+	/**
+	 * The teardown `AgentSessionRuntime` performs, in its order: settle the active turn, tell
+	 * extensions the session is ending, then dispose (which disposes the flow ingress). Extensions
+	 * that own child processes, such as the background task runner, only stop them on this event.
+	 * Reason "resume" with a target file is the reopen path; "quit" is process exit.
+	 */
+	async function shutdown(reason = "quit", targetSessionFile) {
+		if (shutdownCalled || !session) return;
+		shutdownCalled = true;
+		await session.abort();
+		await session.extensionRunner.emit({
+			type: "session_shutdown",
+			reason,
+			...(targetSessionFile ? { targetSessionFile } : {}),
+		});
+		await session.dispose();
+	}
 	t.after(async () => {
-		await session?.dispose();
+		await shutdown("quit");
 		// Pi keeps its HTTP connections alive, so close() alone never resolves.
 		server.closeAllConnections?.();
 		await new Promise((resolve) => server.close(resolve));
@@ -239,7 +257,9 @@ export async function createQualifiedFlowSession(
 		resourceLoader: loader,
 		modelRuntime: runtime,
 		model: runtime.getModel("fixture", "fixture"),
-		sessionManager: sessionManager ?? cliPi.SessionManager.inMemory(root),
+		sessionManager:
+			sessionManager ??
+			(persist ? cliPi.SessionManager.create(root, join(root, "history")) : cliPi.SessionManager.inMemory(root)),
 		settingsManager: cliPi.SettingsManager.inMemory({ retry: { enabled: false }, compaction: { enabled: false } }),
 		flowIngress: ingress,
 	}));
@@ -249,5 +269,5 @@ export async function createQualifiedFlowSession(
 	// The launcher emits this; extensions that connect their flow host on session_start, such as
 	// multiloop, stay unattached without it.
 	await session.extensionRunner.emit({ type: "session_start" });
-	return { session, runtime, root, bodies };
+	return { session, runtime, root, bodies, shutdown };
 }
