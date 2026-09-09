@@ -1,0 +1,201 @@
+import assert from "node:assert/strict";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { test } from "node:test";
+import { BACKGROUND_CONTEXT, setValue, value } from "@earendil-works/pi-agent-core";
+import { openLocalFlowSession } from "../dist/flow-control/local-storage.js";
+import { supersededNativeRequests } from "../dist/flow-control/native-request-retention.js";
+import { MAX_RETIRED_NATIVE_REQUESTS } from "../dist/flow-control/native-request-store.js";
+import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
+import { retiredIdentityHash } from "../dist/flow-control/retired-identities.js";
+
+const scope = { sessionId: "session", branchId: "branch" };
+const hash = "a".repeat(64);
+function input(id, operations = ["input"]) {
+	const members = operations.map((operationId, index) => ({
+		index,
+		operationId,
+		messageHash: hash,
+		prompt: { inputIndex: 0, messageIndex: 0 },
+	}));
+	const positions = members.map(({ index }) => ({ sourceIndex: index, status: "intact", index, messageHash: hash }));
+	return {
+		id,
+		sourceHash: hash,
+		transformedHash: hash,
+		modelHash: hash,
+		systemHash: hash,
+		sourceCapture: {
+			hash,
+			count: members.length,
+			members,
+			context: { hash, count: members.length, members: structuredClone(positions) },
+			model: { hash, count: members.length, members: structuredClone(positions) },
+		},
+	};
+}
+const payload = (record, disposition = "included") => ({
+	hash,
+	bytes: 10000,
+	api: "openai-completions",
+	provider: "fixture",
+	model: "fixture",
+	sources: record.sourceCapture.members.map(({ index }) => ({
+		sourceIndex: index,
+		disposition,
+		index,
+		contentHash: hash,
+	})),
+});
+const successful = (id, operations) => {
+	const record = input(id, operations);
+	return { ...record, ownerId: "owner", outcome: "success", payload: payload(record) };
+};
+async function fixture(t, retiredCount = 0) {
+	const root = await mkdtemp(join(tmpdir(), "jouzu-request-retention-"));
+	let storage;
+	let attachment = await PiFlowAttachment.open(root, scope, async (directory) => {
+		storage = await openLocalFlowSession(directory);
+		if (retiredCount)
+			await storage.mutate(
+				(writer, context) =>
+					writer.commit(
+						[
+							setValue(value("jouzu.flow.native-requests", "v1"), {
+								version: 1,
+								scope,
+								ids: [],
+								retired: Array.from({ length: retiredCount }, (_, i) =>
+									retiredIdentityHash("native-request", `old-${i}`),
+								),
+							}),
+						],
+						context,
+					),
+				BACKGROUND_CONTEXT,
+			);
+		return storage;
+	});
+	t.after(async () => {
+		await attachment.close();
+		await rm(root, { recursive: true, force: true });
+	});
+	return {
+		get store() {
+			return attachment.nativeRequests;
+		},
+		get storage() {
+			return storage;
+		},
+		async reopen() {
+			await attachment.close();
+			attachment = await PiFlowAttachment.open(root, scope);
+		},
+	};
+}
+async function complete(store, id, operations = ["input"], outcome = "success", disposition = "included") {
+	const record = input(id, operations);
+	await store.begin(record);
+	await store.handoff(id, payload(record, disposition));
+	await store.finish(id, outcome);
+}
+
+test("retention preserves distinct input identities, unique observations, failures, and retry chains", () => {
+	const a = successful("a", ["first"]),
+		b = successful("b", ["second"]),
+		both = successful("both", ["first", "second"]);
+	assert.deepEqual(supersededNativeRequests([a, b]), []);
+	assert.deepEqual(supersededNativeRequests([a, b, both]), ["a", "b"]);
+	const failure = { ...a, outcome: "failure" };
+	const changed = structuredClone(a);
+	changed.payload.sources[0].disposition = "changed";
+	assert.deepEqual(supersededNativeRequests([failure, both]), []);
+	assert.deepEqual(supersededNativeRequests([changed, both]), []);
+	const parent = {
+		...a,
+		id: "parent",
+		outcome: "withheld",
+		retryAuthorization: { ownerId: "owner", requestId: "retry" },
+	};
+	const retry = { ...a, id: "retry", retryOf: "parent" };
+	assert.deepEqual(supersededNativeRequests([parent, retry, both]), []);
+	const held = { ...a, outcome: "withheld", cancelledSources: [0], requiredSources: [0] };
+	assert.deepEqual(supersededNativeRequests([held, both]), []);
+});
+
+test("only matching projection observation can supersede a terminal-output or wait receipt", () => {
+	const first = successful("first"),
+		later = successful("later");
+	first.projectionCapture = {
+		hash,
+		count: 2,
+		members: [
+			{
+				index: 1,
+				messageHash: "b".repeat(64),
+				message: { role: "custom", customType: "wait", content: "done", display: false, timestamp: 1 },
+			},
+		],
+		model: {
+			hash,
+			count: 2,
+			members: [{ sourceIndex: 1, status: "converted", index: 1, messageHash: "c".repeat(64) }],
+		},
+	};
+	first.payload.projections = [{ sourceIndex: 1, disposition: "included", index: 1, contentHash: "d".repeat(64) }];
+	assert.deepEqual(supersededNativeRequests([first, later]), []);
+	later.projectionCapture = structuredClone(first.projectionCapture);
+	later.payload.projections = structuredClone(first.payload.projections);
+	assert.deepEqual(supersededNativeRequests([first, later]), ["first"]);
+	later.payload.projections[0].contentHash = "e".repeat(64);
+	assert.deepEqual(supersededNativeRequests([first, later]), []);
+});
+
+test("retirement removes old values atomically and keeps request IDs reserved after reopen", async (t) => {
+	const f = await fixture(t);
+	await complete(f.store, "first");
+	await complete(f.store, "second");
+	assert.equal(await f.store.retireSuperseded(), 1);
+	assert.deepEqual(
+		(await f.store.snapshot()).map((item) => item.id),
+		["second"],
+	);
+	assert.equal(
+		(await f.storage.getValue(value("jouzu.flow.native-request", "first"), BACKGROUND_CONTEXT))?.value,
+		undefined,
+	);
+	assert.equal(await f.store.retireSuperseded(), 0);
+	await f.reopen();
+	await assert.rejects(f.store.begin(input("first")), { code: "stale" });
+	await complete(f.store, "third");
+	assert.equal(await f.store.retireSuperseded(), 1);
+});
+
+test("over 1024 repeated continuations retain one successful receipt and replay protection", async (t) => {
+	const f = await fixture(t);
+	for (let i = 0; i < 1030; i++) {
+		await complete(f.store, `request-${i}`);
+		assert.equal(await f.store.retireSuperseded(), i ? 1 : 0);
+	}
+	assert.equal((await f.store.snapshot()).length, 1);
+	await f.reopen();
+	await assert.rejects(f.store.begin(input("request-0")), { code: "stale" });
+	await assert.rejects(f.store.begin(input("request-1028")), { code: "stale" });
+	await complete(f.store, "after-reopen");
+	assert.equal(await f.store.retireSuperseded(), 1);
+});
+
+test("active requests and exhausted retirement quota preserve all receipts", async (t) => {
+	const f = await fixture(t, MAX_RETIRED_NATIVE_REQUESTS);
+	await complete(f.store, "first");
+	await complete(f.store, "second");
+	const before = await f.store.snapshot();
+	await assert.rejects(f.store.retireSuperseded(), { code: "capacity" });
+	assert.deepEqual(await f.store.snapshot(), before);
+	await f.store.begin(input("active"));
+	await assert.rejects(f.store.retireSuperseded(), { code: "busy" });
+	await f.store.finish("active", "withheld");
+	await f.reopen();
+	assert.equal((await f.store.snapshot()).length, 3);
+});

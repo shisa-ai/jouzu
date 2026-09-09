@@ -203,6 +203,20 @@ export class PiFlowSessionService {
 		}
 	}
 
+	retireRequestHistory() {
+		return this.registry.run(async () => {
+			const branch = this.branch();
+			const result = await branch.host.atIdle(async () => {
+				if (this.branch() !== branch) throw new FlowLedgerError("stale", "Request retirement branch changed.");
+				if ((await branch.attachment.ledger.snapshot()).activeAttemptId)
+					throw new FlowLedgerError("busy", "Request retirement requires settled controller work.");
+				return branch.attachment.nativeRequests.retireSuperseded();
+			});
+			if (result.kind === "busy") throw new FlowLedgerError("busy", "Request retirement requires an idle session.");
+			return result.value;
+		});
+	}
+
 	/** Retire observed wait history while native execution and queue mutation are fenced. */
 	retireWaitHistory(includeUserWork = false) {
 		return this.registry.run(async () => {

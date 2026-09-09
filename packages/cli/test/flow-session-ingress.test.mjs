@@ -110,6 +110,49 @@ async function fixture(
 	return { root, session, ingress, sent };
 }
 
+test("idle request retention preserves native input receipts and subsequent admission", async (t) => {
+	const f = await fixture(t, { provider: true });
+	await f.session.prompt("first");
+	await f.session.prompt("second");
+	const store = f.ingress.branch().attachment.nativeRequests;
+	const [first, second] = await store.snapshot();
+	const ledger = f.ingress.branch().attachment.ledger;
+	await ledger.select("pending", [
+		{ id: "work", revision: "1", kind: "work", required: true, contentHash: "a".repeat(64) },
+	]);
+	await assert.rejects(f.ingress.retireRequestHistory(), { code: "busy" });
+	assert.deepEqual(
+		(await store.snapshot()).map((record) => record.id),
+		[first.id, second.id],
+	);
+	await ledger.cancel("pending", "Cancelled before dispatch");
+	assert.equal(await f.ingress.retireRequestHistory(), 1);
+	assert.deepEqual(
+		(await store.snapshot()).map((record) => record.id),
+		[second.id],
+	);
+	assert.equal((await f.ingress.branch().attachment.submissionViews()).length, 2);
+	await f.session.prompt("third");
+	assert.equal(f.sent.length, 3);
+	assert.equal((await store.snapshot()).at(-1).outcome, "success");
+	await assert.rejects(store.begin(first), { code: "stale" });
+	assert.equal(await f.ingress.retireRequestHistory(), 1);
+});
+
+test("automatic idle maintenance retires duplicate native receipts without another request", async (t) => {
+	const errors = [];
+	const f = await fixture(t, {
+		provider: true,
+		autoRelease: { retireHistory: true, onError: (error) => errors.push(error) },
+	});
+	await f.session.prompt("first");
+	await f.session.prompt("second");
+	await waitForFlow(async () => (await f.ingress.branch().attachment.nativeRequests.snapshot()).length === 1);
+	assert.equal(f.sent.length, 2);
+	assert.deepEqual(errors, []);
+	assert.equal((await f.ingress.branch().attachment.submissionViews()).length, 2);
+});
+
 test("user history retirement observes native input and fences replay after reopen", async (t) => {
 	const f = await fixture(t, { provider: true });
 	await f.session.prompt("finish this input");

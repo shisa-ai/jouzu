@@ -1,8 +1,10 @@
-import { BACKGROUND_CONTEXT, type Session, setValue, value } from "@earendil-works/pi-agent-core";
+import { BACKGROUND_CONTEXT, deleteValue, type Session, setValue, value } from "@earendil-works/pi-agent-core";
 import { type NativeProjectionCapture, validateNativeProjections } from "./native-context-projections.js";
 import { nativePayloadOverlap, validNativeBlockPosition } from "./native-payload-position.js";
+import { supersededNativeRequests } from "./native-request-retention.js";
 import type { FlowOwnership } from "./ownership.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
+import { retiredIdentityHash } from "./retired-identities.js";
 
 export interface NativeRequest {
 	id: string;
@@ -68,7 +70,10 @@ interface Header {
 	version: 1;
 	scope: FlowScope;
 	ids: string[];
+	retired?: string[];
 }
+export const MAX_RETIRED_NATIVE_REQUESTS = 16384;
+const requestIdentity = (id: string) => retiredIdentityHash("native-request", id);
 const headerAddress = value<Header>("jouzu.flow.native-requests", "v1");
 const address = (id: string) => value<NativeRequest>("jouzu.flow.native-request", id);
 export const nativeSourceKey = (source: NativeSourceClaim) =>
@@ -374,12 +379,14 @@ export class FlowNativeRequestStore {
 			}
 		}
 	}
-	private transact<T>(update: (records: NativeRequest[]) => T): Promise<T> {
+	private transact<T>(update: (records: NativeRequest[], retired: string[]) => T): Promise<T> {
 		return this.ownership.run(() =>
 			this.session.mutate(async (mutation, context) => {
 				const saved = (await mutation.getValue(headerAddress, context))?.value;
 				if (!saved && this.initialized) throw new FlowLedgerError("schema", "Native request manifest is missing.");
-				const header = saved ?? { version: 1, scope: this.scope, ids: [] };
+				const header: Header = saved ?? { version: 1, scope: this.scope, ids: [] };
+				const retired = Array.isArray(header.retired) ? [...header.retired] : [];
+				const retiredIds = new Set(retired);
 				if (
 					header.version !== 1 ||
 					header.scope?.sessionId !== this.scope.sessionId ||
@@ -387,7 +394,12 @@ export class FlowNativeRequestStore {
 					!Array.isArray(header.ids) ||
 					header.ids.length > 1024 ||
 					!header.ids.every(identity) ||
-					new Set(header.ids).size !== header.ids.length
+					new Set(header.ids).size !== header.ids.length ||
+					(header.retired !== undefined && !Array.isArray(header.retired)) ||
+					retired.length > MAX_RETIRED_NATIVE_REQUESTS ||
+					!retired.every(hash) ||
+					retiredIds.size !== retired.length ||
+					header.ids.some((id) => retiredIds.has(requestIdentity(id)))
 				)
 					throw new FlowLedgerError("schema", "Invalid native request manifest.");
 				const records = await Promise.all(
@@ -400,14 +412,21 @@ export class FlowNativeRequestStore {
 				);
 				this.validate(records);
 				const previous = new Map(records.map((record) => [record.id, JSON.stringify(record)]));
-				const result = update(records);
+				const result = update(records, retired);
 				this.validate(records);
 				const changed = records.filter((record) => previous.get(record.id) !== JSON.stringify(record));
-				if (!saved || changed.length)
+				const removed = [...previous.keys()].filter((id) => !records.some((record) => record.id === id));
+				if (!saved || changed.length || removed.length || retired.length !== (header.retired?.length ?? 0))
 					await mutation.commit(
 						[
-							setValue(headerAddress, { version: 1, scope: this.scope, ids: records.map((record) => record.id) }),
+							setValue(headerAddress, {
+								version: 1,
+								scope: this.scope,
+								ids: records.map((record) => record.id),
+								...(retired.length ? { retired } : {}),
+							}),
 							...changed.map((record) => setValue(address(record.id), record)),
+							...removed.map((id) => deleteValue(address(id))),
 						],
 						context,
 					);
@@ -483,6 +502,20 @@ export class FlowNativeRequestStore {
 			delete record.retryAuthorization;
 		});
 	}
+	/** Retire only duplicate successful observations while preserving compact replay fences. */
+	retireSuperseded(): Promise<number> {
+		return this.transact((records, retired) => {
+			if (this.requiresRecovery(records) || records.some((record) => record.outcome === undefined))
+				throw new FlowLedgerError("busy", "Request history retirement requires settled requests.");
+			const selected = new Set(supersededNativeRequests(records));
+			if (retired.length + selected.size > MAX_RETIRED_NATIVE_REQUESTS)
+				throw new FlowLedgerError("capacity", "Retired request history is full; no receipts were removed.");
+			retired.push(...[...selected].map(requestIdentity));
+			const remaining = records.filter((record) => !selected.has(record.id));
+			records.splice(0, records.length, ...remaining);
+			return selected.size;
+		});
+	}
 	snapshot(): Promise<NativeRequest[]> {
 		return this.transact((records) => structuredClone(records));
 	}
@@ -513,7 +546,9 @@ export class FlowNativeRequestStore {
 			...(input.sourceCapture !== undefined ? { sourceCapture: structuredClone(input.sourceCapture) } : {}),
 			...(input.projectionCapture !== undefined ? { projectionCapture: structuredClone(input.projectionCapture) } : {}),
 		};
-		return this.transact((records) => {
+		return this.transact((records, retired) => {
+			if (retired.includes(requestIdentity(captured.id)))
+				throw new FlowLedgerError("stale", "Native request identity has been retired.");
 			if (records.some((record) => record.id === captured.id))
 				throw new FlowLedgerError("identity", "Native request ID is already retained.");
 			if (this.requiresRecovery(records))
