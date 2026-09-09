@@ -95,6 +95,11 @@ export function transform(path, source) {
 			"context: Context): Content[];",
 			"context: Context, onMessageConverted?: (source: Message, output: unknown) => void): Content[];",
 		);
+	} else if (path === "dist/api/openai-codex-responses.js") {
+		change(
+			"const messages = convertResponsesMessages(model, context, CODEX_TOOL_CALL_PROVIDERS, {",
+			"const messages = convertResponsesMessages(model, context, CODEX_TOOL_CALL_PROVIDERS, {\n        onMessageConverted: options?.onMessageConverted,",
+		);
 	} else if (path === "dist/api/openai-responses.js") {
 		change(
 			"const messages = convertResponsesMessages(model, context, OPENAI_TOOL_CALL_PROVIDERS, {",
@@ -146,6 +151,7 @@ export const paths = [
 	"dist/api/openai-completions.js",
 	"dist/api/openai-completions.d.ts",
 	"dist/api/openai-responses.js",
+	"dist/api/openai-codex-responses.js",
 	"dist/api/anthropic-messages.js",
 	"dist/api/google-generative-ai.js",
 	"dist/api/google-shared.js",

@@ -364,13 +364,15 @@ export class PiNativeRequests {
 			const prepared = this.prepared;
 			this.prepared = undefined;
 			const sourceAPI =
-				model.api === "google-generative-ai"
-					? "google-generative-ai"
-					: model.api === "anthropic-messages"
-						? "anthropic-messages"
-						: model.api === "openai-responses"
-							? "openai-responses"
-							: "openai-completions";
+				(
+					[
+						"openai-completions",
+						"openai-responses",
+						"openai-codex-responses",
+						"anthropic-messages",
+						"google-generative-ai",
+					] as const
+				).find((api) => api === model.api) ?? "openai-completions";
 			const sources = new NativePayloadSources(context.messages, prepared?.capture, sourceAPI);
 			const projections = new NativePayloadSources(context.messages, prepared?.projections, sourceAPI);
 			this.active++;
@@ -402,6 +404,7 @@ export class PiNativeRequests {
 						if (
 							model.api === "openai-completions" ||
 							model.api === "openai-responses" ||
+							model.api === "openai-codex-responses" ||
 							model.api === "anthropic-messages" ||
 							model.api === "google-generative-ai"
 						) {

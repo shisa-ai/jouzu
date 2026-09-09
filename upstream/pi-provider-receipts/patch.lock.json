@@ -54,6 +54,10 @@
 		"dist/api/google-shared.d.ts": {
 			"before": "db610796db8f0b86816c55837c310227aace08c72c909c71b966e3de34dbfc60",
 			"after": "3036f1810e7f5d4411025f1bdc62cb4aeb90041cc975467355f4e21392feacf4"
+		},
+		"dist/api/openai-codex-responses.js": {
+			"before": "f5705d45ae72102110238d6265a548df3aef50b777f654f1f91a32d563c91b3e",
+			"after": "96a06dcc5430f939332a9eecca418426b2364dbaa7a789729d4af13584ad59b4"
 		}
 	}
 }

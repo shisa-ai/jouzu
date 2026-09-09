@@ -27,7 +27,7 @@
 		},
 		{
 			"path": "upstream/pi-provider-receipts/patch.lock.json",
-			"sha256": "2ad6797b75bd8b8b28d9370d5fc1c4edd37c07e7feac1d0a90970c4b62050cc4"
+			"sha256": "5543aa120019cd1ae399a9bf1311302632ffe248b82112192607923a30d29c20"
 		},
 		{
 			"path": "upstream/background-flow/patch.lock.json",

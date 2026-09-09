@@ -16,6 +16,7 @@ import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js
 import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
 import { createFlowWaitDecisionProducer } from "../dist/flow-control/wait-decisions.js";
 import { createFlowWaitExtension } from "../dist/flow-control/wait-tools.js";
+import { codexTransport } from "./fixtures/codex-transport.mjs";
 
 const args = {
 	work: "work",
@@ -35,11 +36,31 @@ async function fixture(
 		api = "openai-completions",
 		toolCount = 1,
 		pending = false,
+		codexMode = "auto",
 	} = {},
 ) {
 	const root = supplied ?? (await mkdtemp(join(tmpdir(), "jouzu-wait-observation-"))),
 		errors = [],
 		sent = [];
+	const codex =
+		api === "openai-codex-responses"
+			? codexTransport(t, {
+					transport: codexMode,
+					onRequest: (request) => sent.push(request.body),
+					fail: (_request, count) => (failure && count === 2 ? "server_error" : undefined),
+					reply: (_request, count) =>
+						issueTool && count === 1
+							? Array.from({ length: toolCount }, (_, index) => ({
+									type: "function_call",
+									id: `fc_wait_${index}`,
+									call_id: `wait_${index}`,
+									name: "agent_wait",
+									arguments: JSON.stringify(args),
+									status: "completed",
+								}))
+							: undefined,
+				})
+			: undefined;
 	let sourceState = pending ? "pending" : "satisfied",
 		registration;
 	const listeners = new Set();
@@ -61,7 +82,7 @@ async function fixture(
 						? googleFlowPayload
 						: api === "anthropic-messages"
 							? anthropicFlowPayload
-							: openAIFlowPayload(api),
+							: openAIFlowPayload(api === "openai-codex-responses" ? "openai-responses" : api),
 				],
 			]),
 			maxPayloadBytes: 1000000,
@@ -109,6 +130,7 @@ async function fixture(
 			...model,
 			api,
 			...(api === "google-generative-ai" ? { id: "gemini-3.1-pro-preview", provider: "google" } : {}),
+			...(api === "openai-codex-responses" ? { id: "gpt-5.4", provider: "openai-codex" } : {}),
 		},
 		sessionManager: manager,
 		tools: ["agent_wait", "agent_wait_cancel"],
@@ -119,7 +141,8 @@ async function fixture(
 		ingress: {
 			version: 1,
 			async attach(session) {
-				if (api === "google-generative-ai") {
+				if (codex) session.agent.streamFunction = codex.stream;
+				else if (api === "google-generative-ai") {
 					t.mock.method(globalThis, "fetch", async (_url, init) => {
 						sent.push(JSON.parse(init.body));
 						if (failure && sent.length === 2) return new Response("fixture unavailable", { status: 503 });
@@ -266,6 +289,7 @@ async function fixture(
 		sent,
 		errors,
 		decisions,
+		codex,
 		async complete(wake = true) {
 			sourceState = "satisfied";
 			for (const listener of listeners) listener.changed(evidence(listener.identity));
@@ -275,12 +299,13 @@ async function fixture(
 	};
 }
 
-for (const api of ["openai-completions", "openai-responses", "anthropic-messages"]) {
-	const payloadRows = (payload) => payload[api === "openai-responses" ? "input" : "messages"];
+for (const api of ["openai-completions", "openai-responses", "anthropic-messages", "openai-codex-responses"]) {
+	const payloadRows = (payload) =>
+		payload[["openai-responses", "openai-codex-responses"].includes(api) ? "input" : "messages"];
 	const isTool = (message) =>
 		api === "anthropic-messages"
 			? message.type === "tool_result"
-			: api === "openai-responses"
+			: ["openai-responses", "openai-codex-responses"].includes(api)
 				? message.type === "function_call_output"
 				: message.role === "tool";
 	const toolRows = (payload) =>
@@ -292,9 +317,9 @@ for (const api of ["openai-completions", "openai-responses", "anthropic-messages
 			for (const row of payloadRows(payload))
 				if (Array.isArray(row.content)) row.content = row.content.filter((block) => !isTool(block));
 		} else
-			payload[api === "openai-responses" ? "input" : "messages"] = payloadRows(payload).filter(
-				(message) => !isTool(message),
-			);
+			payload[["openai-responses", "openai-codex-responses"].includes(api) ? "input" : "messages"] = payloadRows(
+				payload,
+			).filter((message) => !isTool(message));
 	};
 	test(`${api}: successful tool observation absorbs immediate wait resolution without another wake and survives reopening`, async (t) => {
 		const f = await fixture(t, { automatic: true, api });
@@ -311,6 +336,10 @@ for (const api of ["openai-completions", "openai-responses", "anthropic-messages
 		assert.deepEqual(records[1].requiredProjections, []);
 		assert.equal(records[1].payload.projections[0].disposition, "included");
 		assert.equal(toolRows(f.sent[1]).length, 1);
+		if (api === "openai-codex-responses") {
+			assert.equal(f.sent[0].type, "response.create");
+			assert.equal(f.sent[1].previous_response_id, "response_1");
+		}
 		assert.deepEqual(await f.decisions(), []);
 		assert.deepEqual(f.errors, []);
 		await f.ingress.dispose();
@@ -364,11 +393,16 @@ for (const api of ["openai-completions", "openai-responses", "anthropic-messages
 				change(payload) {
 					const row = payloadRows(payload).find((message) => message.role === "user");
 					if (mode === "changed")
-						row.content = [{ type: api === "openai-responses" ? "input_text" : "text", text: "replaced" }];
+						row.content = [
+							{
+								type: ["openai-responses", "openai-codex-responses"].includes(api) ? "input_text" : "text",
+								text: "replaced",
+							},
+						];
 					if (mode === "omitted")
-						payload[api === "openai-responses" ? "input" : "messages"] = payloadRows(payload).filter(
-							(message) => message !== row,
-						);
+						payload[["openai-responses", "openai-codex-responses"].includes(api) ? "input" : "messages"] = payloadRows(
+							payload,
+						).filter((message) => message !== row);
 					if (mode === "cloned") return structuredClone(payload);
 				},
 			});
@@ -392,12 +426,14 @@ for (const api of ["openai-completions", "openai-responses", "anthropic-messages
 						: (payload) => {
 								const tool = toolRows(payload)[0];
 								if (!tool) return;
-								if (mode === "content") tool[api === "openai-responses" ? "output" : "content"] += " altered";
+								if (mode === "content")
+									tool[["openai-responses", "openai-codex-responses"].includes(api) ? "output" : "content"] +=
+										" altered";
 								if (mode === "identity")
 									tool[
 										api === "anthropic-messages"
 											? "tool_use_id"
-											: api === "openai-responses"
+											: ["openai-responses", "openai-codex-responses"].includes(api)
 												? "call_id"
 												: "tool_call_id"
 									] += "-other";
@@ -490,7 +526,13 @@ test("Anthropic grouped terminal waits retain distinct block receipts through re
 	assert.deepEqual(next.errors, []);
 });
 
-for (const api of ["openai-completions", "openai-responses", "anthropic-messages", "google-generative-ai"])
+for (const api of [
+	"openai-completions",
+	"openai-responses",
+	"anthropic-messages",
+	"google-generative-ai",
+	"openai-codex-responses",
+])
 	test(`${api}: later dependency completion dispatches one retained decision and survives reopening`, async (t) => {
 		const f = await fixture(t, { api, automatic: true, pending: true });
 		await f.session.prompt("wait until the process exits");
@@ -515,6 +557,12 @@ for (const api of ["openai-completions", "openai-responses", "anthropic-messages
 		assert.equal(state.attempts[0].members[0].kind, "wait");
 		assert.equal(state.attempts[0].requests[0].payload.api, api);
 		assert.equal(state.attempts[0].requests[0].payload.inclusion[0].disposition, "included");
+		if (api === "openai-codex-responses")
+			assert.ok(
+				f.codex.requests[2].input.some(
+					(row) => row.role === "user" && row.content?.some((part) => part.text?.includes('"kind":"wait"')),
+				),
+			);
 		await f.ingress.wakeProducers();
 		await tick();
 		assert.equal(f.sent.length, 3);
@@ -689,6 +737,68 @@ for (const mode of ["replaced", "omitted", "extra-body"])
 			attempt.requests[0].payload.inclusion[0].disposition,
 			mode === "replaced" ? "replaced" : mode === "omitted" ? "omitted" : "rejected",
 		);
+		assert.equal((await f.decisions()).length, 1);
+		await f.ingress.wakeProducers();
+		assert.equal(f.sent.length, 2);
+	});
+
+for (const codexMode of ["sse", "websocket", "websocket-cached"])
+	for (const pending of [false, true])
+		test(`Codex ${codexMode} ${pending ? "later" : "immediate"} wait delivery`, async (t) => {
+			const f = await fixture(t, { api: "openai-codex-responses", codexMode, automatic: true, pending });
+			await f.session.prompt("wait");
+			if (pending) await f.complete();
+			await f.ingress.wakeProducers();
+			assert.equal(f.sent.length, pending ? 3 : 2);
+			if (!pending) assert.deepEqual(await f.decisions(), []);
+			else assert.equal((await f.ingress.branch().attachment.ledger.snapshot()).attempts[0].phase, "settled");
+			assert.equal(f.codex.requests[0].transport, codexMode === "sse" ? "sse" : "websocket");
+			assert.equal(f.sent[1].previous_response_id, codexMode === "websocket-cached" ? "response_1" : undefined);
+			assert.deepEqual(f.errors, []);
+		});
+
+for (const mode of ["replaced", "omitted", "tool-copy", "tool-gap"])
+	test(`Codex ${mode} decision is withheld before cached transport`, async (t) => {
+		const f = await fixture(t, {
+			api: "openai-codex-responses",
+			pending: true,
+			change(payload) {
+				for (const [index, row] of payload.input.entries()) {
+					if (row.role !== "user") continue;
+					const part = row.content.find(
+						(part) => part.text?.includes('"flowInput"') && part.text.includes('"kind":"wait"'),
+					);
+					if (!part) continue;
+					if (mode === "replaced") {
+						const frame = JSON.parse(part.text);
+						frame.content = "changed";
+						part.text = JSON.stringify(frame);
+					}
+					if (mode === "omitted") row.content = row.content.filter((candidate) => candidate !== part);
+					if (mode === "tool-copy")
+						payload.input.splice(
+							index,
+							1,
+							{ type: "function_call", name: "read", call_id: "copy", arguments: "{}" },
+							{ type: "function_call_output", call_id: "copy", output: part.text },
+						);
+					if (mode === "tool-gap")
+						payload.input.splice(index, 0, {
+							type: "function_call",
+							name: "read",
+							call_id: "missing",
+							arguments: "{}",
+						});
+					break;
+				}
+			},
+		});
+		await f.session.prompt("wait");
+		await f.complete();
+		assert.equal(f.sent.length, 2);
+		const [attempt] = (await f.ingress.branch().attachment.ledger.snapshot()).attempts;
+		assert.equal(attempt.phase, "withheld");
+		assert.equal(attempt.requests[0].handedOff, false);
 		assert.equal((await f.decisions()).length, 1);
 		await f.ingress.wakeProducers();
 		assert.equal(f.sent.length, 2);

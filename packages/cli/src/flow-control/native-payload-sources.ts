@@ -8,7 +8,14 @@ import { openAIFlowPayload } from "./provider-payload.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
-type SourceAPI = "openai-completions" | "openai-responses" | "anthropic-messages" | "google-generative-ai";
+type SourceAPI =
+	| "openai-completions"
+	| "openai-responses"
+	| "openai-codex-responses"
+	| "anthropic-messages"
+	| "google-generative-ai";
+const responsesAPI = (api: SourceAPI): api is "openai-responses" | "openai-codex-responses" =>
+	api === "openai-responses" || api === "openai-codex-responses";
 const toolIdentity = (message: unknown, api: SourceAPI) => {
 	if (!message || typeof message !== "object") return undefined;
 	if (api === "google-generative-ai") {
@@ -43,7 +50,7 @@ const toolIdentity = (message: unknown, api: SourceAPI) => {
 			isError: "is_error" in message ? message.is_error : false,
 		});
 	}
-	if (api === "openai-responses") {
+	if (responsesAPI(api)) {
 		if (
 			!("type" in message) ||
 			message.type !== "function_call_output" ||
@@ -82,14 +89,13 @@ const contentHash = (message: unknown, api: SourceAPI) => {
 		return hash(googleContent(message.parts));
 	}
 	if (toolIdentity(message, api) && message && typeof message === "object") {
-		const content =
-			api === "openai-responses"
-				? "output" in message
-					? message.output
-					: undefined
-				: "content" in message
-					? message.content
-					: undefined;
+		const content = responsesAPI(api)
+			? "output" in message
+				? message.output
+				: undefined
+			: "content" in message
+				? message.content
+				: undefined;
 		return api === "anthropic-messages"
 			? hash(anthropicContent(content))
 			: typeof content === "string"
@@ -107,11 +113,13 @@ const contentHash = (message: unknown, api: SourceAPI) => {
 			return undefined;
 		return hash(anthropicContent(message.content));
 	}
-	const [projected] = openAIFlowPayload(api)({ [api === "openai-responses" ? "input" : "messages"]: [message] });
+	const [projected] = openAIFlowPayload(api === "openai-codex-responses" ? "openai-responses" : api)({
+		[responsesAPI(api) ? "input" : "messages"]: [message],
+	});
 	return projected ? hash(projected.content) : undefined;
 };
 const rows = (payload: unknown, api: SourceAPI): unknown[] => {
-	const key = api === "google-generative-ai" ? "contents" : api === "openai-responses" ? "input" : "messages";
+	const key = api === "google-generative-ai" ? "contents" : responsesAPI(api) ? "input" : "messages";
 	const result = payload && typeof payload === "object" ? (payload as Record<string, unknown>)[key] : undefined;
 	return Array.isArray(result) ? result : [];
 };
