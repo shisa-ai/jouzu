@@ -14,7 +14,7 @@ import { type PiFlowBranchResources, type PiFlowSessionOptions, PiFlowSessionSer
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowNativeInput } from "./submission-store.js";
 import { activeAdmissionHolds } from "./submission-view.js";
-import { retainUserWork } from "./user-work.js";
+import { captureUserWorkParticipants, retainUserWork } from "./user-work.js";
 import type { FlowWorkStatus } from "./wait-authority.js";
 import type { FlowWaitClock } from "./wait-deadlines.js";
 import { createFlowWaitDecisionProducer } from "./wait-decisions.js";
@@ -68,7 +68,12 @@ export class PiSessionFlowIngress implements Ingress {
 	private semanticReleaseRequested = false;
 	private automaticReleaseRunning = false;
 	private releasing?: Promise<{ released: string[]; held: string[] }>;
-	constructor(private readonly options: PiFlowIngressOptions) {}
+	constructor(private readonly options: PiFlowIngressOptions) {
+		this.options = {
+			...options,
+			userWorkParticipants: captureUserWorkParticipants(options.userWorkParticipants),
+		};
+	}
 
 	attach(session: AgentSession): Promise<void> {
 		if (this.disposed || this.opening || this.service)
@@ -602,7 +607,9 @@ export class PiSessionFlowIngress implements Ingress {
 			}
 			if (this.branch() !== branch || this.pending.get(id) !== pending)
 				throw new FlowLedgerError("stale", "User dispatch changed during context preparation.");
-			const work = user ? await retainUserWork(branch.attachment, id, revision) : undefined;
+			const work = user
+				? await retainUserWork(branch.attachment, id, revision, this.options.userWorkParticipants)
+				: undefined;
 			if (this.branch() !== branch || this.pending.get(id) !== pending)
 				throw new FlowLedgerError("stale", "User dispatch changed during work registration.");
 			if (user) this.activeUserInput++;

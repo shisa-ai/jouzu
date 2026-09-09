@@ -17,6 +17,7 @@ async function fixture(
 	t,
 	{
 		root: supplied,
+		userWorkParticipants,
 		admit = async () => true,
 		policy,
 		manager,
@@ -34,6 +35,7 @@ async function fixture(
 	const ingress = new PiSessionFlowIngress({
 		root,
 		autoRelease,
+		userWorkParticipants,
 		maxInputBytes: 4096,
 		maxResultBytes: 4096,
 		host: {
@@ -3104,6 +3106,32 @@ test("idle user prompts bind distinct durable work identities across equal text 
 	assert.equal((await next.ingress.branch().attachment.waits.authoritySnapshot()).executions[0].workId, seen[0].id);
 });
 
+test("user-work participants reject invalid configuration before attachment", () => {
+	for (const userWorkParticipants of [
+		null,
+		"bg",
+		["bg", "bg"],
+		["Bad"],
+		[1],
+		new Array(1),
+		Array.from({ length: 64 }, (_, i) => `p${i}`),
+	])
+		assert.throws(() => new PiSessionFlowIngress({ userWorkParticipants }), { code: "schema" });
+});
+
+test("user-work producer grants capture host configuration and remain idempotent", async (t) => {
+	const participants = ["bg"];
+	const f = await fixture(t, { provider: true, userWorkParticipants: participants });
+	participants.push("foreign");
+	await f.session.prompt("instruction");
+	const attachment = f.ingress.branch().attachment;
+	const [record] = await attachment.submissions.snapshot();
+	const before = await attachment.waits.authoritySnapshot();
+	assert.deepEqual(before.work[0].participants, ["host-user", "bg"]);
+	await retainUserWork(attachment, record.id, record.revision, ["bg"]);
+	assert.deepEqual(await attachment.waits.authoritySnapshot(), before);
+});
+
 test("user work rejects automated submissions, stale revisions, and cancelled input", async (t) => {
 	const f = await fixture(t, { admit: async () => false });
 	await f.session.sendUserMessage("automated instruction");
@@ -3127,6 +3155,7 @@ for (const lane of ["steer", "followUp"])
 				request = 0;
 			const f = await fixture(t, {
 				provider: true,
+				userWorkParticipants: ["bg"],
 				tools: ["inspect_work"],
 				extensions: [
 					{
@@ -3196,6 +3225,8 @@ for (const lane of ["steer", "followUp"])
 			);
 			assert.equal(seen.length, 2);
 			const attachment = f.ingress.branch().attachment;
+			const authority = await attachment.waits.authoritySnapshot();
+			for (const item of authority.work) assert.deepEqual(item.participants, ["host-user", "bg"]);
 			const records = await attachment.submissions.snapshot();
 			const queued = records.filter((record) => record.submission.args[0]?.startsWith?.("queued "));
 			assert.equal(queued.length, count);

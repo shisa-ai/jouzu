@@ -100,6 +100,7 @@ for (const outcome of ["success", "failure", "stop"]) {
 			await attachment.close();
 			await rm(directory, { recursive: true, force: true });
 		});
+		await attachment.waits.registerWork("unshared", "host-user", 0);
 		await attachment.waits.registerWork("work", "lane", 0);
 		await attachment.waits.shareWork("work", "lane", 1, "bg", 0);
 		let currentWork = { id: "work", revision: 2 };
@@ -111,7 +112,12 @@ for (const outcome of ["success", "failure", "stop"]) {
 		);
 		const marker = join(directory, "forbidden-launch");
 		const forbiddenCommand = "printf forbidden > '" + marker.replaceAll("'", "'\\''") + "'";
-		for (const invalid of [undefined, { id: "unknown", revision: 2 }, { id: "work", revision: 1 }]) {
+		for (const invalid of [
+			undefined,
+			{ id: "unknown", revision: 2 },
+			{ id: "work", revision: 1 },
+			{ id: "unshared", revision: 1 },
+		]) {
 			currentWork = invalid;
 			await assert.rejects(
 				tools.get("bg_task").execute("invalid", { action: "spawn", command: forbiddenCommand, notifyOnExit: false }),
@@ -210,3 +216,152 @@ for (const outcome of ["success", "failure", "stop"]) {
 		}
 	});
 }
+
+test("a native user prompt spawns background work and declares its wait from the returned handle", {
+	timeout: 15000,
+	skip: process.platform === "win32",
+}, async (t) => {
+	const { stream } = await import("@earendil-works/pi-ai/api/openai-completions");
+	const { PiSessionFlowIngress } = await import("../dist/flow-control/pi-session-ingress.js");
+	const { openAIFlowPayload } = await import("../dist/flow-control/provider-payload.js");
+	const background = await loadBackground(t),
+		errors = [],
+		directory = await mkdtemp(join(tmpdir(), "jouzu-native-bg-wait-"));
+	let session,
+		wrapped,
+		dependency,
+		requests = 0;
+	const ingress = new PiSessionFlowIngress({
+		root: directory,
+		maxInputBytes: 100000,
+		maxResultBytes: 100000,
+		userWorkParticipants: ["bg"],
+		host: {
+			projections: new Map([["openai-completions", openAIFlowPayload("openai-completions")]]),
+			maxPayloadBytes: 1000000,
+			containsUserInput: () => true,
+		},
+		policy: () => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: [] }),
+		async attachWaitSources(attachment) {
+			attachBackgroundWaitSource(
+				attachment,
+				background.backgroundFlowSource,
+				(error) => errors.push(error),
+				() => ingress.branch().workContext.current(),
+			);
+		},
+	});
+	const created = await createFlowSession(t, {
+		persist: true,
+		tools: ["bg_task", "agent_wait"],
+		extensions: [
+			{ name: "background", factory: background.default },
+			createFlowWaitExtension({
+				attachment: () => ingress.branch().attachment,
+				authorize: (work) => ingress.branch().workContext.authorize(work),
+				maxDurationMs: 5000,
+			}),
+		],
+		ingress: {
+			version: 1,
+			async attach(attached) {
+				attached.agent.streamFunction = (model, context, options) =>
+					stream({ ...model, baseUrl: "https://fixture.invalid/v1" }, context, {
+						...options,
+						apiKey: "fixture",
+						maxRetries: 0,
+						fetch: async (_url, init) => {
+							requests++;
+							const body = JSON.parse(init.body);
+							let name, args;
+							if (requests === 1) {
+								name = "bg_task";
+								args = {
+									action: "spawn",
+									command: "sleep 0.3",
+									notifyOnExit: false,
+									notifyOnOutput: false,
+									timeoutSeconds: 5,
+								};
+							} else if (requests === 2) {
+								const result = body.messages.findLast((message) => message.role === "tool").content;
+								dependency = JSON.parse(result.split("Wait dependency: ")[1]);
+								name = "agent_wait";
+								args = {
+									work: dependency.work.id,
+									reason: "Wait for background exit",
+									deadline: "5s",
+									on: [
+										{
+											producer: dependency.producer,
+											handle: dependency.handle,
+											execution: dependency.execution,
+											until: dependency.until,
+										},
+									],
+								};
+							}
+							const delta = name
+								? {
+										tool_calls: [
+											{
+												index: 0,
+												id: `call-${requests}`,
+												type: "function",
+												function: { name, arguments: JSON.stringify(args) },
+											},
+										],
+									}
+								: { content: "Waiting for the process." };
+							return new Response(
+								`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta, finish_reason: name ? "tool_calls" : "stop" }] })}\n\ndata: [DONE]\n\n`,
+								{ headers: { "content-type": "text/event-stream" } },
+							);
+						},
+					});
+				await ingress.attach(attached);
+				wrapped = attached.agent.streamFunction;
+			},
+			submit: (...args) => ingress.submit(...args),
+			beforeBranchChange: () => ingress.beforeBranchChange(),
+			branchChanged: () => ingress.branchChanged(),
+			dispose: () => ingress.dispose(),
+		},
+	});
+	session = created.session;
+	session.agent.streamFunction = wrapped;
+	await session.bindExtensions({ onError: (error) => errors.push(error) });
+	t.after(async () => {
+		await ingress.dispose();
+		await rm(directory, { recursive: true, force: true });
+	});
+	await session.prompt("Run a short background process and wait for its exit.");
+	assert.equal(requests, 3);
+	assert.ok(
+		session.agent.state.messages
+			.filter((message) => message.role === "toolResult")
+			.every((message) => !message.isError),
+	);
+	assert.match(dependency.work.id, /^user:/);
+	const attachment = ingress.branch().attachment;
+	const authority = await attachment.waits.authoritySnapshot();
+	assert.deepEqual(authority.work[0].participants, ["host-user", "bg"]);
+	assert.equal(authority.executions[0].workId, dependency.work.id);
+	const completed = deferred();
+	const unsubscribe = attachment.waits.onChanged(
+		() => {
+			void attachment.waits.snapshot().then(
+				(waits) => {
+					if (waits[0]?.state === "resolved") completed.resolve();
+				},
+				(error) => errors.push(error),
+			);
+		},
+		(error) => errors.push(error),
+	);
+	if ((await attachment.waits.snapshot())[0].state !== "resolved") await completed.promise;
+	unsubscribe();
+	assert.equal(requests, 3);
+	assert.equal((await attachment.waits.snapshot())[0].workId, dependency.work.id);
+	assert.deepEqual(errors, []);
+});

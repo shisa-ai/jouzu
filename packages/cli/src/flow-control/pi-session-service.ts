@@ -11,7 +11,7 @@ import { PiFlowSessionRegistry } from "./pi-session-registry.js";
 import { PiWorkTools } from "./pi-work-tools.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import type { FlowNativeInput, RetainedSubmission } from "./submission-store.js";
-import { consumedUserWork } from "./user-work.js";
+import { captureUserWorkParticipants, consumedUserWork } from "./user-work.js";
 import type { FlowWorkStatus } from "./wait-authority.js";
 import { createFlowWaitDecisionProducer } from "./wait-decisions.js";
 
@@ -21,6 +21,8 @@ export interface PiFlowSessionOptions {
 	root: string;
 	maxInputBytes: number;
 	maxResultBytes: number;
+	/** Host-approved producer participants for work created from user input. */
+	userWorkParticipants?: readonly string[];
 	host: Omit<PiControllerHostOptions, "results" | "invokeWork" | "revokeWork" | "consumeWork" | "invokeOperation">;
 	decorateNativeContext?: NativeContextDecorator;
 	admitNativeQueue?(record: RetainedSubmission, input: FlowNativeInput): Promise<boolean>;
@@ -69,7 +71,11 @@ export class PiFlowSessionService {
 			throw new FlowLedgerError("capacity", "Invalid session flow limits.");
 		if (!session.isIdle || session.agent.state.isStreaming || session.isRetrying || session.isCompacting)
 			throw new FlowLedgerError("busy", "Session flow attachment requires an idle Pi session.");
-		const captured = { ...options, host: { ...options.host, projections: new Map(options.host.projections) } };
+		const captured = {
+			...options,
+			userWorkParticipants: captureUserWorkParticipants(options.userWorkParticipants),
+			host: { ...options.host, projections: new Map(options.host.projections) },
+		};
 		const registry = await PiFlowSessionRegistry.open(
 			options.root,
 			session.sessionId,
@@ -138,7 +144,7 @@ export class PiFlowSessionService {
 					invokeOperation: (invoke) => workContext.withOperation(invoke),
 					revokeWork: () => workContext.revoke(),
 					consumeWork: async (claimed) => {
-						const work = await consumedUserWork(attachment, claimed);
+						const work = await consumedUserWork(attachment, claimed, this.options.userWorkParticipants);
 						if (work) await workContext.selectToolWork(work);
 					},
 				},
