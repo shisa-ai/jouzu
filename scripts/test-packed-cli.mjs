@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
@@ -78,7 +78,67 @@ function writeInstalledPiPackage(agentDir, name, version, extensionSource) {
 	writeFileSync(resolve(root, "index.ts"), extensionSource);
 }
 
-function assertPackedSurfaces(installedCli, probe, cwd, env, profile) {
+/**
+ * Session flow control is opt-in. Prove the packed launcher installs the assembly when it is
+ * enabled, leaves the surface untouched when it is not, and resolves one Pi tree so the provider
+ * route guard's ModelRuntime.prototype comparison is unambiguous in a real install.
+ *
+ * Stdin stays open while the probe runs. Closing it starts RPC shutdown, and a prompt still in
+ * flight then fails against the disposed ingress; that shutdown race is tracked separately.
+ */
+async function probeFlowSurfaces(installedCli, probe, cwd, env, label) {
+	const child = spawn(
+		process.execPath,
+		[installedCli, "pi", "--extension", probe, "--mode", "rpc", "--no-session", "--no-context-files"],
+		{ cwd, env },
+	);
+	let stderr = "";
+	child.stderr.on("data", (chunk) => {
+		stderr += chunk;
+	});
+	child.stdout.on("data", () => {});
+	child.stdin.write(`${JSON.stringify({ id: "probe", type: "prompt", message: "/jouzu-surface-probe" })}\n`);
+	const marker = await new Promise((resolve, reject) => {
+		const timer = setTimeout(
+			() => reject(new Error(`${label}: probe timed out. stderr=${stderr.slice(0, 600)}`)),
+			90_000,
+		);
+		const check = () => {
+			const line = stderr.split("\n").find((entry) => entry.startsWith("JOUZU_SURFACE_PROBE="));
+			if (!line) return;
+			clearTimeout(timer);
+			clearInterval(poll);
+			resolve(line);
+		};
+		const poll = setInterval(check, 100);
+	});
+	child.stdin.end();
+	child.kill("SIGKILL");
+	assert.equal(stderr.includes("Jouzu flow control:"), false, `${label}: the launcher reported a flow-control failure`);
+	return JSON.parse(marker.slice("JOUZU_SURFACE_PROBE=".length));
+}
+
+async function assertPackedFlowControl(temp, installedCli, probe, cwd, env, profile) {
+	const flowTools = ["agent_wait", "agent_wait_cancel", "agent_results"];
+	const off = await probeFlowSurfaces(installedCli, probe, cwd, env, `${profile} flow=off`);
+	for (const tool of flowTools)
+		assert.equal(off.tools.includes(tool), false, `${profile} flow: ${tool} present while opt-out`);
+	const on = await probeFlowSurfaces(
+		installedCli,
+		probe,
+		cwd,
+		{ ...env, JOUZU_FLOW_CONTROL: "1" },
+		`${profile} flow=on`,
+	);
+	for (const tool of flowTools) assert.ok(on.tools.includes(tool), `${profile} flow: missing ${tool} when enabled`);
+	// A single resolved Pi tree is what makes the route guard's prototype identity check meaningful.
+	const trees = run("find", [resolve(temp, "node_modules"), "-type", "d", "-name", "pi-coding-agent"], { cwd, env })
+		.stdout.split("\n")
+		.filter(Boolean);
+	assert.equal(trees.length, 1, `${profile} flow: expected one packed Pi tree, found ${trees.join(", ")}`);
+}
+
+function probePackedSurfaces(installedCli, probe, cwd, env, profile) {
 	const result = run(
 		process.execPath,
 		[installedCli, "pi", "--extension", probe, "--mode", "rpc", "--no-session", "--no-context-files"],
@@ -90,7 +150,11 @@ function assertPackedSurfaces(installedCli, probe, cwd, env, profile) {
 	);
 	const marker = result.stderr.split("\n").find((line) => line.startsWith("JOUZU_SURFACE_PROBE="));
 	assert.ok(marker, `${profile}: ${result.stderr}`);
-	const surfaces = JSON.parse(marker.slice("JOUZU_SURFACE_PROBE=".length));
+	return { result, surfaces: JSON.parse(marker.slice("JOUZU_SURFACE_PROBE=".length)) };
+}
+
+function assertPackedSurfaces(installedCli, probe, cwd, env, profile) {
+	const { result, surfaces } = probePackedSurfaces(installedCli, probe, cwd, env, profile);
 	for (const tool of [
 		"TaskCreate",
 		"TaskList",
@@ -230,6 +294,7 @@ try {
 		assert.equal(secondPlan.profile, "core");
 		assert.deepEqual(secondPlan.actions, []);
 		assertPackedSurfaces(installedCli, probe, temp, env, "core");
+		await assertPackedFlowControl(temp, installedCli, probe, temp, env, "core");
 		assert.equal(
 			existsSync(resolve(consumer, "state", "camoufox-runtime")),
 			false,
