@@ -5,6 +5,7 @@ import { googleContent, googleInputPreserved, googleToolResponse } from "./googl
 import { mistralContent } from "./mistral-payload.js";
 import type { NativePayloadSource, NativeSourceCapture } from "./native-request-store.js";
 import { payloadRowOrigin } from "./payload-copy.js";
+import { piMessagesContent, piMessagesRows } from "./pi-messages-payload.js";
 import { openAIFlowPayload } from "./provider-payload.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
@@ -14,6 +15,7 @@ type SourceAPI =
 	| "openai-responses"
 	| "azure-openai-responses"
 	| "mistral-conversations"
+	| "pi-messages"
 	| "openai-codex-responses"
 	| "anthropic-messages"
 	| "google-generative-ai"
@@ -26,6 +28,25 @@ const googleAPI = (api: SourceAPI): api is "google-generative-ai" | "google-vert
 	api === "google-generative-ai" || api === "google-vertex";
 const toolIdentity = (message: unknown, api: SourceAPI) => {
 	if (!message || typeof message !== "object") return undefined;
+	if (api === "pi-messages") {
+		if (
+			!("role" in message) ||
+			message.role !== "toolResult" ||
+			!("toolCallId" in message) ||
+			typeof message.toolCallId !== "string" ||
+			!("toolName" in message) ||
+			typeof message.toolName !== "string" ||
+			!("isError" in message) ||
+			typeof message.isError !== "boolean"
+		)
+			return undefined;
+		return hash({
+			role: "toolResult",
+			toolCallId: message.toolCallId,
+			toolName: message.toolName,
+			isError: message.isError,
+		});
+	}
 	if (api === "mistral-conversations") {
 		if (
 			!("role" in message) ||
@@ -90,6 +111,17 @@ const toolIdentity = (message: unknown, api: SourceAPI) => {
 	return hash({ role: "tool", toolCallId: message.tool_call_id, name: "name" in message ? message.name : undefined });
 };
 const contentHash = (message: unknown, api: SourceAPI) => {
+	if (api === "pi-messages") {
+		if (
+			!message ||
+			typeof message !== "object" ||
+			!("role" in message) ||
+			!("content" in message) ||
+			(message.role !== "user" && !toolIdentity(message, api))
+		)
+			return undefined;
+		return hash(piMessagesContent(message.content));
+	}
 	if (api === "mistral-conversations") {
 		if (
 			!message ||
@@ -150,6 +182,13 @@ const contentHash = (message: unknown, api: SourceAPI) => {
 	return projected ? hash(projected.content) : undefined;
 };
 const rows = (payload: unknown, api: SourceAPI): unknown[] => {
+	if (api === "pi-messages") {
+		try {
+			return piMessagesRows(payload);
+		} catch {
+			return [];
+		}
+	}
 	const key = googleAPI(api) ? "contents" : responsesAPI(api) ? "input" : "messages";
 	const result = payload && typeof payload === "object" ? (payload as Record<string, unknown>)[key] : undefined;
 	return Array.isArray(result) ? result : [];

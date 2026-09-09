@@ -70,6 +70,10 @@
 		"dist/api/mistral-conversations.js": {
 			"before": "60c8a1589be1319dfa3a8d9fec4444a8aaa5c4015828e98312fc19a97ec1ab11",
 			"after": "bab4a7814eb0d154f5c5f4ecb138bbba51c380bdb6f4b2daca197a534b946142"
+		},
+		"dist/api/pi-messages.js": {
+			"before": "0c866c9f1518020fa4a1eeb29e002b2d8bffd3bc4ac947f21f9023210ed911da",
+			"after": "bef4ff4629e4c66c69a00a445254b9b3937c2a8dc449bfd6284f445f43c7db2c"
 		}
 	}
 }

@@ -100,6 +100,11 @@ export function transform(path, source) {
 			"const messages = convertResponsesMessages(model, context, CODEX_TOOL_CALL_PROVIDERS, {",
 			"const messages = convertResponsesMessages(model, context, CODEX_TOOL_CALL_PROVIDERS, {\n        onMessageConverted: options?.onMessageConverted,",
 		);
+	} else if (path === "dist/api/pi-messages.js") {
+		change(
+			"            const nextPayload = await options?.onPayload?.(payload, model);",
+			'            for (const message of context.messages) {\n                if (message.role === "user" || message.role === "toolResult") options?.onMessageConverted?.(message, message);\n            }\n            const nextPayload = await options?.onPayload?.(payload, model);',
+		);
 	} else if (path === "dist/api/mistral-conversations.js") {
 		change(
 			"const transformedMessages = transformMessages(context.messages, model, (id) => normalizeMistralToolCallId(id));",
@@ -192,6 +197,7 @@ export const paths = [
 	"dist/api/openai-codex-responses.js",
 	"dist/api/azure-openai-responses.js",
 	"dist/api/mistral-conversations.js",
+	"dist/api/pi-messages.js",
 	"dist/api/anthropic-messages.js",
 	"dist/api/google-generative-ai.js",
 	"dist/api/google-vertex.js",

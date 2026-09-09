@@ -231,6 +231,7 @@ export class FlowNativeRequestStore {
 								"openai-codex-responses",
 								"azure-openai-responses",
 								"mistral-conversations",
+								"pi-messages",
 								"anthropic-messages",
 								"google-generative-ai",
 								"google-vertex",
