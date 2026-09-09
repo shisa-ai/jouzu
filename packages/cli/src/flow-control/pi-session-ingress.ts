@@ -1,4 +1,4 @@
-import { AsyncLocalStorage } from "node:async_hooks";
+import { AsyncLocalStorage, AsyncResource } from "node:async_hooks";
 import { randomUUID } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 import type { AgentSession, CreateAgentSessionOptions } from "@earendil-works/pi-coding-agent";
@@ -56,6 +56,8 @@ export class PiSessionFlowIngress implements Ingress {
 		{ branch: PiFlowBranchResources; args: unknown[]; used: boolean; completed: boolean }
 	>();
 	private readonly frames = new AsyncLocalStorage<{ active: boolean; id?: string }>();
+	/** Created before branch adapters so producer wakes inherit no native invocation authority. */
+	private readonly scheduling = new AsyncResource("jouzu-flow-scheduling", { requireManualDestroy: true });
 	private readonly active = new Set<Promise<unknown>>();
 	private producerWake?: Promise<void>;
 	private producerWakeRequested = false;
@@ -161,22 +163,24 @@ export class PiSessionFlowIngress implements Ingress {
 			return Promise.reject(new FlowLedgerError("busy", "Producer scheduling cannot join its own ingress operation."));
 		this.producerWakeRequested = true;
 		if (this.producerWake) return this.producerWake;
-		const run = this.track(async () => {
-			do {
-				this.producerWakeRequested = false;
-				if (this.branch() !== branch) throw new FlowLedgerError("stale", "Producer scheduling branch changed.");
-				const users = [...this.pending.entries()].filter(
-					([, pending]) => pending.branch === branch && isNativeUserInput(pending.submission),
-				);
-				for (const [id, pending] of users) {
-					if (this.pending.get(id) !== pending) continue;
-					if (!(await this.release(id, pending.revision))) break;
-				}
-				if (this.branch() !== branch) throw new FlowLedgerError("stale", "Producer scheduling branch changed.");
-				await this.refreshUserInput();
-				await branch.controller.wake();
-			} while (this.producerWakeRequested);
-		});
+		const run = this.scheduling.runInAsyncScope(() =>
+			this.track(async () => {
+				do {
+					this.producerWakeRequested = false;
+					if (this.branch() !== branch) throw new FlowLedgerError("stale", "Producer scheduling branch changed.");
+					const users = [...this.pending.entries()].filter(
+						([, pending]) => pending.branch === branch && isNativeUserInput(pending.submission),
+					);
+					for (const [id, pending] of users) {
+						if (this.pending.get(id) !== pending) continue;
+						if (!(await this.release(id, pending.revision))) break;
+					}
+					if (this.branch() !== branch) throw new FlowLedgerError("stale", "Producer scheduling branch changed.");
+					await this.refreshUserInput();
+					await branch.controller.wake();
+				} while (this.producerWakeRequested);
+			}),
+		);
 		this.producerWake = run;
 		void run
 			.finally(() => {
@@ -225,7 +229,7 @@ export class PiSessionFlowIngress implements Ingress {
 		this.releaseRequested = true;
 		this.semanticReleaseRequested ||= semantic;
 		if (this.scheduledRelease || this.automaticReleaseRunning) return;
-		this.scheduledRelease = this.frames.exit(() =>
+		this.scheduledRelease = this.scheduling.runInAsyncScope(() =>
 			setImmediate(() => {
 				this.scheduledRelease = undefined;
 				if (this.disposed || this.fenced) return;
@@ -724,7 +728,11 @@ export class PiSessionFlowIngress implements Ingress {
 			await this.opening?.catch(() => {});
 			await Promise.allSettled([...this.active]);
 			this.pending.clear();
-			await this.service?.close();
+			try {
+				await this.service?.close();
+			} finally {
+				this.scheduling.emitDestroy();
+			}
 		})();
 		return this.closing;
 	}

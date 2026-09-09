@@ -3474,13 +3474,15 @@ for (const lane of ["steer", "followUp"])
 			assert.equal(request, cancel ? 0 : 2);
 		});
 
-for (const mode of ["normal", "reversed", "reopen"])
+for (const mode of ["normal", "reversed", "reopen", "model-tools"])
 	test(`loaded multiloop/background pair automatically composes after its wait (${mode})`, {
 		skip: process.platform === "win32",
 		timeout: 20000,
 	}, async (t) => {
 		const reverse = mode === "reversed";
 		const root = await mkdtemp(join(tmpdir(), "jouzu-loaded-background-"));
+		const releaseFile = join(root, "release-task");
+		const command = `while test ! -e '${releaseFile.replaceAll("'", "'\\''")}'; do sleep 0.02; done`;
 		const manager = SessionManager.create(root, join(root, "history"));
 		const { createJiti } = await import(
 			createRequire(import.meta.resolve("@earendil-works/pi-coding-agent")).resolve("jiti")
@@ -3496,7 +3498,8 @@ for (const mode of ["normal", "reversed", "reopen"])
 		);
 		const errors = [],
 			tools = new Map();
-		let f, ctx;
+		let f, ctx, task, token;
+		let modelStage = 0;
 		const loopBridge = createMultiloopControllerExtension({
 			ingress: () => f.ingress,
 			onError: (error) => errors.push(error),
@@ -3541,7 +3544,51 @@ for (const mode of ["normal", "reversed", "reopen"])
 			provider: true,
 			admit: null,
 			autoRelease: { onError: (error) => errors.push(error) },
+			tools: mode === "model-tools" ? ["multiloop_start", "bg_task", "agent_wait"] : [],
 			consumedAttempt: loopBridge.consumedAttempt,
+			response:
+				mode !== "model-tools"
+					? undefined
+					: () => {
+							let name, args;
+							if (modelStage === 0) {
+								name = "multiloop_start";
+								args = { lane: "test", runTag: "run", mode: "research", goal: "Wait for task" };
+							} else if (modelStage === 1) {
+								name = "bg_task";
+								args = { action: "spawn", command, notifyOnExit: false, notifyOnOutput: false, timeoutSeconds: 5 };
+							} else if (modelStage === 2) {
+								const result = f.session.agent.state.messages.findLast(
+									(message) => message.role === "toolResult" && message.toolName === "bg_task",
+								);
+								assert.equal(result.isError, false);
+								task = result.details.task;
+								name = "agent_wait";
+								args = {
+									work: task.flow.work.id,
+									reason: "Await installed task",
+									deadline: "10s",
+									on: [{ producer: "bg", handle: task.id, execution: task.flow.execution, until: "exit" }],
+								};
+							}
+							modelStage++;
+							const delta = name
+								? {
+										tool_calls: [
+											{
+												index: 0,
+												id: `call-${modelStage}`,
+												type: "function",
+												function: { name, arguments: JSON.stringify(args) },
+											},
+										],
+									}
+								: { content: "Done" };
+							return new Response(
+								`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta, finish_reason: name ? "tool_calls" : "stop" }] })}\n\ndata: [DONE]\n\n`,
+								{ headers: { "content-type": "text/event-stream" } },
+							);
+						},
 			attachWaitSources: async (attachment) => bridge.attach(attachment, manager),
 			extensions: [
 				...(reverse ? [background, loop, bridge, loopBridge] : [loopBridge, bridge, loop, background]),
@@ -3561,47 +3608,61 @@ for (const mode of ["normal", "reversed", "reopen"])
 		t.after(() => rm(root, { recursive: true, force: true }));
 		await f.session.bindExtensions({ onError: (error) => errors.push(error) });
 		const branch = f.ingress.branch();
-		await tools
-			.get("multiloop_start")
-			.execute(
-				"start",
-				{ lane: "test", runTag: "run", mode: "research", goal: "Wait for task" },
-				undefined,
-				undefined,
-				ctx,
-			);
-		const campaign = branch.attachment.waits.multiloopWork({ lane: "test", runTag: "run" });
-		let task, token;
-		const releaseFile = join(root, "release-task");
-		const command = `while test ! -e '${releaseFile.replaceAll("'", "'\\''")}'; do sleep 0.02; done`;
-		await branch.workContext.run({ id: campaign.id, actor: "multiloop", revision: campaign.revision }, async () => {
-			const result = await tools.get("bg_task").execute("spawn", {
-				action: "spawn",
-				command,
-				notifyOnExit: false,
-				notifyOnOutput: false,
-				timeoutSeconds: 5,
-			});
-			task = result.details.task;
-			assert.deepEqual(task.flow.scope, branch.scope);
-			assert.equal(task.flow.work.id, campaign.id);
-			await tools.get("agent_wait").execute(
-				"wait",
-				{
-					work: campaign.id,
-					reason: "Await installed task",
-					deadline: "10s",
-					on: [{ producer: "bg", handle: task.id, execution: task.flow.execution, until: "exit" }],
-				},
-				undefined,
-				undefined,
-				{ sessionManager: manager },
+		if (mode === "model-tools") {
+			f.session.setActiveToolsByName(["multiloop_start", "bg_task", "agent_wait"]);
+			assert.equal(f.session.agent.state.tools.length, 3, JSON.stringify(f.session.getAllTools()));
+			await f.session.prompt("Start the lane, spawn its background process, and wait for its exit.");
+			const results = f.session.agent.state.messages.filter((message) => message.role === "toolResult");
+			assert.deepEqual(
+				results.map((result) => [result.toolName, result.isError]),
+				[
+					["multiloop_start", false],
+					["bg_task", false],
+					["agent_wait", false],
+				],
+				JSON.stringify(results),
 			);
 			token = (await branch.attachment.waits.snapshot())[0].token;
-		});
+		} else {
+			await tools
+				.get("multiloop_start")
+				.execute(
+					"start",
+					{ lane: "test", runTag: "run", mode: "research", goal: "Wait for task" },
+					undefined,
+					undefined,
+					ctx,
+				);
+			const campaign = branch.attachment.waits.multiloopWork({ lane: "test", runTag: "run" });
+			await branch.workContext.run({ id: campaign.id, actor: "multiloop", revision: campaign.revision }, async () => {
+				const result = await tools.get("bg_task").execute("spawn", {
+					action: "spawn",
+					command,
+					notifyOnExit: false,
+					notifyOnOutput: false,
+					timeoutSeconds: 5,
+				});
+				task = result.details.task;
+				assert.deepEqual(task.flow.scope, branch.scope);
+				assert.equal(task.flow.work.id, campaign.id);
+				await tools.get("agent_wait").execute(
+					"wait",
+					{
+						work: campaign.id,
+						reason: "Await installed task",
+						deadline: "10s",
+						on: [{ producer: "bg", handle: task.id, execution: task.flow.execution, until: "exit" }],
+					},
+					undefined,
+					undefined,
+					{ sessionManager: manager },
+				);
+				token = (await branch.attachment.waits.snapshot())[0].token;
+			});
+		}
 		for (let i = 0; i < 3; i++) await f.session.prompt("status?");
 		assert.equal((await branch.attachment.ledger.snapshot()).attempts.length, 0);
-		assert.equal(f.sent.length, 3);
+		assert.equal(f.sent.length, mode === "model-tools" ? 7 : 3);
 		if (mode === "reopen") {
 			const expiry = (await branch.attachment.waits.snapshot())[0].expiresAt;
 			await f.ingress.dispose();
@@ -3642,12 +3703,16 @@ for (const mode of ["normal", "reversed", "reopen"])
 		}
 		const attempts = (await branch.attachment.ledger.snapshot()).attempts;
 		assert.equal(attempts.length, 1);
-		assert.equal(attempts[0].outcome, "success");
+		assert.equal(
+			attempts[0].outcome,
+			"success",
+			JSON.stringify({ attempts, errors: errors.map((error) => ({ message: error.message, stack: error.stack })) }),
+		);
 		assert.deepEqual(
 			attempts[0].members.map((member) => member.kind),
 			["wait", "work"],
 		);
 		assert.equal((await branch.attachment.waits.snapshot())[0].token, token);
 		assert.deepEqual(errors, []);
-		assert.equal(f.sent.length, 4);
+		assert.equal(f.sent.length, mode === "model-tools" ? 8 : 4);
 	});
