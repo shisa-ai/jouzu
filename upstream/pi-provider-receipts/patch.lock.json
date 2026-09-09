@@ -78,6 +78,14 @@
 		"dist/api/bedrock-converse-stream.js": {
 			"before": "13d6fec97d08f4303714aca50f3113ba0263706e961fc220ccb1cc023c520e6b",
 			"after": "bb12f09c309d45265f91a8ea4a654b48b725b541abeda3230b5f81afb520d4e2"
+		},
+		"dist/compat.js": {
+			"before": "cde63dcc0cd419767f6ac8b7c0d8fcb8446902cb1e1800c61aea343839c48999",
+			"after": "9cd80cfe9f892be8747b610d149455f8a3e1d16364a3829e6214d9443e4ff5e7"
+		},
+		"dist/compat.d.ts": {
+			"before": "0df7a1d7a084f17bae0497037bb1fb4f6a678b111d6202909427fd3d190c2491",
+			"after": "ea15eeeae803d5a0c2c2c89b3632f1761a36c5ec7ad6a6e45b041c2e02097062"
 		}
 	}
 }

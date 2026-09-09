@@ -8,7 +8,31 @@ export function transform(path, source) {
 	const change = (before, after) => {
 		text = replace(text, before, after);
 	};
-	if (path === "dist/api/transform-messages.js") {
+	if (path === "dist/compat.js") {
+		change(
+			"const builtinApiProviderInstances = new Map();",
+			`const builtinApiProviderInstances = new Map();
+const qualifiedApiProviders = new WeakMap();
+/** True only for an unchanged API registration created from the pinned builtin converters. */
+export function isBuiltinApiProvider(api) {
+    const provider = getApiProvider(api);
+    const qualified = provider && qualifiedApiProviders.get(provider);
+    return !!qualified && provider.api === api && provider.stream === qualified.stream &&
+        provider.streamSimple === qualified.streamSimple;
+}`,
+		);
+		change(
+			"            registerApiProvider({ api, stream: streams.stream, streamSimple: streams.streamSimple });",
+			`            registerApiProvider({ api, stream: streams.stream, streamSimple: streams.streamSimple });
+            const provider = getApiProvider(api);
+            qualifiedApiProviders.set(provider, { stream: provider.stream, streamSimple: provider.streamSimple });`,
+		);
+	} else if (path === "dist/compat.d.ts") {
+		change(
+			"export declare function getApiProvider(api: Api): ApiProviderInternal | undefined;",
+			"export declare function getApiProvider(api: Api): ApiProviderInternal | undefined;\n/** Whether the registry still contains the pinned builtin converter functions. */\nexport declare function isBuiltinApiProvider(api: Api): boolean;",
+		);
+	} else if (path === "dist/api/transform-messages.js") {
 		change(
 			"export function transformMessages(messages, model, normalizeToolCallId) {",
 			"export function transformMessages(messages, model, normalizeToolCallId, onTransformed) {",
@@ -235,4 +259,6 @@ export const paths = [
 	"dist/api/openai-responses-shared.d.ts",
 	"dist/types.d.ts",
 	"dist/api/simple-options.js",
+	"dist/compat.js",
+	"dist/compat.d.ts",
 ];

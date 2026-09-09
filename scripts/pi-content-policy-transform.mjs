@@ -10,6 +10,11 @@ export function transform(path, source) {
 		text = replace(text, before, after, count);
 	};
 	if (path === "dist/core/model-runtime.js") {
+		text = 'import { isBuiltinApiProvider } from "@earendil-works/pi-ai/compat";\n' + text;
+		change(
+			"    getRegisteredProviderConfig(providerId) {",
+			"    isBuiltinApiProvider(api) {\n        return isBuiltinApiProvider(api);\n    }\n    getRegisteredProviderConfig(providerId) {",
+		);
 		for (const method of ["stream", "streamSimple"]) {
 			change(
 				`            const prepared = await this.prepareRequest(model, options);
@@ -20,6 +25,11 @@ export function transform(path, source) {
             return prepared.provider.${method}(prepared.model, context, prepared.options);`,
 			);
 		}
+	} else if (path === "dist/core/model-runtime.d.ts") {
+		change(
+			"    getRegisteredProviderConfig(providerId: string): ProviderConfigInput | undefined;",
+			"    /** Check the API registry used by this runtime's provider dispatcher. */\n    isBuiltinApiProvider(api: Api): boolean;\n    getRegisteredProviderConfig(providerId: string): ProviderConfigInput | undefined;",
+		);
 	} else if (path === "dist/core/session-manager.js") {
 		change(
 			"    _persist(entry) {",
@@ -1022,4 +1032,5 @@ export const paths = [
 	"dist/core/session-manager.js",
 	"dist/core/session-manager.d.ts",
 	"dist/core/model-runtime.js",
+	"dist/core/model-runtime.d.ts",
 ];

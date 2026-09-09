@@ -1,9 +1,13 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { createServer } from "node:http";
+import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { pathToFileURL } from "node:url";
+
 import {
 	createAgentSession,
 	DefaultResourceLoader,
@@ -14,6 +18,15 @@ import {
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { PiNativeRequests } from "../dist/flow-control/pi-native-requests.js";
 import { preparePiProviderRoute } from "../dist/flow-control/pi-provider-route.js";
+
+// Resolve the registry from the runtime owner; installed package trees may contain another CLI copy.
+const runtimeRequire = createRequire(import.meta.resolve("@earendil-works/pi-coding-agent"));
+const apiRoot = runtimeRequire.resolve
+	.paths("@earendil-works/pi-ai")
+	.map((root) => join(root, "@earendil-works/pi-ai"))
+	.find((root) => existsSync(join(root, "package.json")));
+const { getApiProvider, isBuiltinApiProvider, registerApiProvider, registerBuiltInApiProviders, resetApiProviders } =
+	await import(pathToFileURL(join(apiRoot, "dist/compat.js")).href);
 
 async function fixture(t) {
 	const root = await mkdtemp(join(tmpdir(), "jouzu-route-"));
@@ -168,7 +181,7 @@ test("attachment change holds only that runtime and qualified routes can be sele
 	assert.equal(first.requests(), 1);
 });
 
-for (const scenario of ["qualified", "handler-replaced", "session-replaced"]) {
+for (const scenario of ["qualified", "handler-replaced", "session-replaced", "registry-replaced"]) {
 	test(`SDK native receipt guard: ${scenario}`, async (t) => {
 		const f = await fixture(t);
 		const loader = new DefaultResourceLoader({ cwd: f.root, agentDir: f.root, noExtensions: true, noSkills: true });
@@ -211,6 +224,10 @@ for (const scenario of ["qualified", "handler-replaced", "session-replaced"]) {
 		if (scenario === "handler-replaced")
 			f.runtime.registerProvider("fixture", { ...f.config, streamSimple: replacement });
 		if (scenario === "session-replaced") session.agent.streamFunction = replacement;
+		if (scenario === "registry-replaced") {
+			t.after(() => resetApiProviders());
+			registerApiProvider({ api: f.model.api, stream: replacement, streamSimple: replacement }, "sdk-route-test");
+		}
 		let failed;
 		try {
 			await session.prompt("hello");
@@ -227,7 +244,7 @@ for (const scenario of ["qualified", "handler-replaced", "session-replaced"]) {
 			assert.equal(f.requests(), 0);
 			assert.equal(unknown, 0);
 			assert.ok(session.agent.state.messages.some((message) => message.role === "user"));
-			if (scenario === "handler-replaced") assert.equal(records[0].outcome, "withheld");
+			if (["handler-replaced", "registry-replaced"].includes(scenario)) assert.equal(records[0].outcome, "withheld");
 			if (scenario === "session-replaced") {
 				await bridge.close();
 				assert.throws(
@@ -247,5 +264,74 @@ for (const scenario of ["qualified", "handler-replaced", "session-replaced"]) {
 				assert.equal(session.agent.streamFunction, replacement);
 			}
 		}
+	});
+}
+
+for (const replacement of ["registered", "mutated-stream", "mutated-simple", "mutated-api"]) {
+	test(`legacy API guard rejects ${replacement} and accepts builtin reset`, async (t) => {
+		const f = await fixture(t);
+		t.after(() => resetApiProviders());
+		let invoked = 0;
+		const stream = () => {
+			invoked++;
+			throw Error("must not invoke");
+		};
+		const api = f.model.api;
+		assert.equal(isBuiltinApiProvider(api), true);
+		if (replacement === "registered") registerApiProvider({ api, stream, streamSimple: stream }, "route-test");
+		if (replacement === "mutated-stream") getApiProvider(api).stream = stream;
+		if (replacement === "mutated-simple") getApiProvider(api).streamSimple = stream;
+		if (replacement === "mutated-api") getApiProvider(api).api = "unqualified-api";
+		assert.equal(isBuiltinApiProvider(api), false);
+		registerBuiltInApiProviders();
+		assert.equal(isBuiltinApiProvider(api), false, "registration refresh cannot qualify an override");
+		assert.throws(() => preparePiProviderRoute(f.runtime, f.model, () => {}), { code: "identity" });
+		assert.equal(invoked, 0);
+		assert.equal(f.requests(), 0);
+		resetApiProviders();
+		assert.equal(isBuiltinApiProvider(api), true);
+		const response = await f.runtime
+			.streamSimple(f.model, f.context, {
+				flowValidateProvider: preparePiProviderRoute(f.runtime, f.model, () => {}),
+			})
+			.result();
+		assert.notEqual(response.stopReason, "error", response.errorMessage);
+		assert.equal(f.requests(), 1);
+		assert.equal(invoked, 0);
+	});
+}
+
+for (const phase of ["auth", "headers"]) {
+	test(`legacy API replacement during ${phase} never reaches its handler`, async (t) => {
+		const f = await fixture(t);
+		t.after(() => resetApiProviders());
+		let invoked = 0;
+		const stream = () => {
+			invoked++;
+			throw Error("must not invoke");
+		};
+		const replace = () => registerApiProvider({ api: f.model.api, stream, streamSimple: stream }, "route-race");
+		const flowValidateProvider = preparePiProviderRoute(f.runtime, f.model, () => {});
+		if (phase === "auth") {
+			const getAuth = f.runtime.getAuth.bind(f.runtime);
+			f.runtime.getAuth = async (...args) => {
+				const result = await getAuth(...args);
+				replace();
+				return result;
+			};
+		}
+		const response = await f.runtime
+			.streamSimple(f.model, f.context, {
+				flowValidateProvider,
+				transformHeaders: async (headers) => {
+					if (phase === "headers") replace();
+					return headers;
+				},
+			})
+			.result();
+		assert.equal(response.stopReason, "error");
+		assert.match(response.errorMessage, /unsupported request handler/);
+		assert.equal(invoked, 0);
+		assert.equal(f.requests(), 0);
 	});
 }

@@ -85,7 +85,11 @@
 		},
 		"dist/core/model-runtime.js": {
 			"before": "32cd50599d9e6e001229090e3d0554b60e4addb8ab7b3165635a574feb660b74",
-			"after": "6a6717fedb00b6cb8454e34f9e4a03afe8cd2a2a74a036ac95837995c4f0c4e4"
+			"after": "fdbc1458daa60fe4012a9b84213a717c00541eb13328a804e59e0ce9a9f5d388"
+		},
+		"dist/core/model-runtime.d.ts": {
+			"before": "1eab731760756334e38beb22bea56a4ca96db380e2e5b91a633365b5449fe328",
+			"after": "b2dacb5a2b30f84648ec8987373508ffdef47671e3681744fd9e6dfd64efd2fb"
 		}
 	},
 	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863",

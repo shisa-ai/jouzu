@@ -56,6 +56,7 @@ export async function createFlowSession(
 		checkpoints,
 		policy,
 		persist = false,
+		shutdownExtensions = false,
 		root: fixtureRoot,
 		sessionManager,
 		tools = [],
@@ -65,6 +66,7 @@ export async function createFlowSession(
 	const root = fixtureRoot ?? (await mkdtemp(join(tmpdir(), "jouzu-flow-session-")));
 	let session;
 	t.after(async () => {
+		if (session && shutdownExtensions) await session.extensionRunner.emit({ type: "session_shutdown", reason: "quit" });
 		await session?.dispose();
 		await rm(root, { recursive: true, force: true });
 	});

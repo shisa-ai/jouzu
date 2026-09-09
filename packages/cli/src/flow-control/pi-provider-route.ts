@@ -29,6 +29,7 @@ export function preparePiProviderRoute(runtime: ModelRuntime, model: RouteModel,
 		checkAttachment();
 		for (const key of [
 			"streamSimple",
+			"isBuiltinApiProvider",
 			"getProvider",
 			"getRegisteredProviderConfig",
 			"getRegisteredNativeProvider",
@@ -36,6 +37,7 @@ export function preparePiProviderRoute(runtime: ModelRuntime, model: RouteModel,
 			if (runtime[key] !== ModelRuntime.prototype[key]) reject();
 		if (
 			!qualified.has(selected.api) ||
+			!runtime.isBuiltinApiProvider(selected.api) ||
 			runtime.getRegisteredNativeProvider(selected.provider) ||
 			runtime.getRegisteredProviderConfig(selected.provider)?.streamSimple
 		)
