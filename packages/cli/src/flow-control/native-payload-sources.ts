@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import type { Message } from "@earendil-works/pi-ai";
 import { anthropicContent } from "./anthropic-content.js";
 import { googleContent, googleInputPreserved, googleToolResponse } from "./google-content.js";
+import { mistralContent } from "./mistral-payload.js";
 import type { NativePayloadSource, NativeSourceCapture } from "./native-request-store.js";
 import { payloadRowOrigin } from "./payload-copy.js";
 import { openAIFlowPayload } from "./provider-payload.js";
@@ -12,6 +13,7 @@ type SourceAPI =
 	| "openai-completions"
 	| "openai-responses"
 	| "azure-openai-responses"
+	| "mistral-conversations"
 	| "openai-codex-responses"
 	| "anthropic-messages"
 	| "google-generative-ai"
@@ -24,6 +26,18 @@ const googleAPI = (api: SourceAPI): api is "google-generative-ai" | "google-vert
 	api === "google-generative-ai" || api === "google-vertex";
 const toolIdentity = (message: unknown, api: SourceAPI) => {
 	if (!message || typeof message !== "object") return undefined;
+	if (api === "mistral-conversations") {
+		if (
+			!("role" in message) ||
+			message.role !== "tool" ||
+			!("toolCallId" in message) ||
+			typeof message.toolCallId !== "string" ||
+			!("name" in message) ||
+			typeof message.name !== "string"
+		)
+			return undefined;
+		return hash({ role: "tool", toolCallId: message.toolCallId, name: message.name });
+	}
 	if (googleAPI(api)) {
 		const result = googleToolResponse(message);
 		const response = result?.response;
@@ -76,6 +90,17 @@ const toolIdentity = (message: unknown, api: SourceAPI) => {
 	return hash({ role: "tool", toolCallId: message.tool_call_id, name: "name" in message ? message.name : undefined });
 };
 const contentHash = (message: unknown, api: SourceAPI) => {
+	if (api === "mistral-conversations") {
+		if (
+			!message ||
+			typeof message !== "object" ||
+			!("role" in message) ||
+			!("content" in message) ||
+			(message.role !== "user" && !toolIdentity(message, api))
+		)
+			return undefined;
+		return hash(mistralContent(message.content));
+	}
 	if (googleAPI(api)) {
 		const result = googleToolResponse(message);
 		if (result && toolIdentity(message, api)) {

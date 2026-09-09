@@ -8,12 +8,14 @@ import { stream as streamAnthropic } from "@earendil-works/pi-ai/api/anthropic-m
 import { stream as streamAzure } from "@earendil-works/pi-ai/api/azure-openai-responses";
 import { stream as streamGoogle } from "@earendil-works/pi-ai/api/google-generative-ai";
 import { stream as streamVertex } from "@earendil-works/pi-ai/api/google-vertex";
+import { stream as streamMistral } from "@earendil-works/pi-ai/api/mistral-conversations";
 import { convertMessages, stream } from "@earendil-works/pi-ai/api/openai-completions";
 import { stream as streamResponses } from "@earendil-works/pi-ai/api/openai-responses";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, model, tick } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { anthropicFlowPayload } from "../dist/flow-control/anthropic-payload.js";
 import { googleFlowPayload } from "../dist/flow-control/google-payload.js";
+import { mistralFlowPayload } from "../dist/flow-control/mistral-payload.js";
 import { validateNativeProjections } from "../dist/flow-control/native-context-projections.js";
 import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js";
 import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
@@ -95,11 +97,13 @@ async function fixture(
 					api,
 					["google-generative-ai", "google-vertex"].includes(api)
 						? googleFlowPayload
-						: api === "anthropic-messages"
-							? anthropicFlowPayload
-							: openAIFlowPayload(
-									["openai-codex-responses", "azure-openai-responses"].includes(api) ? "openai-responses" : api,
-								),
+						: api === "mistral-conversations"
+							? mistralFlowPayload
+							: api === "anthropic-messages"
+								? anthropicFlowPayload
+								: openAIFlowPayload(
+										["openai-codex-responses", "azure-openai-responses"].includes(api) ? "openai-responses" : api,
+									),
 				],
 			]),
 			maxPayloadBytes: 1000000,
@@ -151,6 +155,7 @@ async function fixture(
 				: {}),
 			...(api === "openai-codex-responses" ? { id: "gpt-5.4", provider: "openai-codex" } : {}),
 			...(api === "azure-openai-responses" ? { id: "gpt-4.1", provider: "azure-openai-responses" } : {}),
+			...(api === "mistral-conversations" ? { id: "mistral-small-latest", provider: "mistral" } : {}),
 		},
 		sessionManager: manager,
 		tools: ["agent_wait", "agent_wait_cancel"],
@@ -188,13 +193,15 @@ async function fixture(
 						});
 				} else
 					session.agent.streamFunction = (model, context, options) =>
-						(api === "anthropic-messages"
-							? streamAnthropic
-							: api === "azure-openai-responses"
-								? streamAzure
-								: api === "openai-responses"
-									? streamResponses
-									: stream)({ ...model, baseUrl: "https://fixture.invalid/v1" }, context, {
+						(api === "mistral-conversations"
+							? streamMistral
+							: api === "anthropic-messages"
+								? streamAnthropic
+								: api === "azure-openai-responses"
+									? streamAzure
+									: api === "openai-responses"
+										? streamResponses
+										: stream)({ ...model, baseUrl: "https://fixture.invalid/v1" }, context, {
 							...options,
 							apiKey: "fixture",
 							maxRetries: 0,
@@ -337,6 +344,7 @@ for (const api of [
 	"anthropic-messages",
 	"openai-codex-responses",
 	"azure-openai-responses",
+	"mistral-conversations",
 ]) {
 	const payloadRows = (payload) =>
 		payload[
@@ -482,7 +490,9 @@ for (const api of [
 											? "tool_use_id"
 											: ["openai-responses", "openai-codex-responses", "azure-openai-responses"].includes(api)
 												? "call_id"
-												: "tool_call_id"
+												: api === "mistral-conversations"
+													? "toolCallId"
+													: "tool_call_id"
 									] += "-other";
 								if (mode === "omitted") omitTools(payload);
 							},

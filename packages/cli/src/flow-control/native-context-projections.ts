@@ -193,6 +193,7 @@ export function validateNativeProjections(
 					"openai-responses",
 					"openai-codex-responses",
 					"azure-openai-responses",
+					"mistral-conversations",
 					"anthropic-messages",
 					"google-generative-ai",
 					"google-vertex",

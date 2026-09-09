@@ -100,6 +100,39 @@ export function transform(path, source) {
 			"const messages = convertResponsesMessages(model, context, CODEX_TOOL_CALL_PROVIDERS, {",
 			"const messages = convertResponsesMessages(model, context, CODEX_TOOL_CALL_PROVIDERS, {\n        onMessageConverted: options?.onMessageConverted,",
 		);
+	} else if (path === "dist/api/mistral-conversations.js") {
+		change(
+			"const transformedMessages = transformMessages(context.messages, model, (id) => normalizeMistralToolCallId(id));",
+			`const sources = new Map();
+            const transformedMessages = transformMessages(context.messages, model, (id) => normalizeMistralToolCallId(id),
+                options?.onMessageConverted ? (source, transformed) => sources.set(transformed, source) : undefined);`,
+		);
+		change(
+			"buildChatPayload(model, context, transformedMessages, options);",
+			"buildChatPayload(model, context, transformedMessages, options, (source, output) => { if (sources.has(source)) options?.onMessageConverted?.(sources.get(source), output); });",
+		);
+		change(
+			"function buildChatPayload(model, context, messages, options) {",
+			"function buildChatPayload(model, context, messages, options, onMessageConverted) {",
+		);
+		change(
+			'toChatMessages(messages, model.input.includes("image"))',
+			'toChatMessages(messages, model.input.includes("image"), onMessageConverted)',
+		);
+		change(
+			"function toChatMessages(messages, supportsImages) {",
+			"function toChatMessages(messages, supportsImages, onMessageConverted) {",
+		);
+		for (const push of [
+			'result.push({ role: "user", content: sanitizeSurrogates(msg.content) });',
+			'result.push({ role: "user", content });',
+			'result.push({ role: "user", content: "(image omitted: model does not support images)" });',
+		])
+			change(push, `${push}\n                onMessageConverted?.(msg, result[result.length - 1]);`);
+		change(
+			"            content: toolContent,\n        });",
+			"            content: toolContent,\n        });\n        onMessageConverted?.(msg, result[result.length - 1]);",
+		);
 	} else if (path === "dist/api/azure-openai-responses.js") {
 		change(
 			"const messages = convertResponsesMessages(model, context, AZURE_TOOL_CALL_PROVIDERS, {",
@@ -158,6 +191,7 @@ export const paths = [
 	"dist/api/openai-responses.js",
 	"dist/api/openai-codex-responses.js",
 	"dist/api/azure-openai-responses.js",
+	"dist/api/mistral-conversations.js",
 	"dist/api/anthropic-messages.js",
 	"dist/api/google-generative-ai.js",
 	"dist/api/google-vertex.js",

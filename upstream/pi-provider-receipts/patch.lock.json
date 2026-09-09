@@ -66,6 +66,10 @@
 		"dist/api/azure-openai-responses.js": {
 			"before": "fc7d58bd624ca581df785ce791edb1a42ec91711ecaf4f4c28c4a5304fd5d20c",
 			"after": "7e83c960ea0aab51c941513c8d926411f8854b5bdd2a2cf71cbd21435633b22a"
+		},
+		"dist/api/mistral-conversations.js": {
+			"before": "60c8a1589be1319dfa3a8d9fec4444a8aaa5c4015828e98312fc19a97ec1ab11",
+			"after": "bab4a7814eb0d154f5c5f4ecb138bbba51c380bdb6f4b2daca197a534b946142"
 		}
 	}
 }
