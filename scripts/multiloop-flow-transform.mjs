@@ -4,7 +4,16 @@ function replace(source, from, to) {
 	return source.replace(from, to);
 }
 export function transformMultiloopFlow(source) {
-	source = replace(source, "import { Text }", 'import { multiloopFlow } from "./jouzu-flow.js";\nimport { Text }');
+	source = replace(
+		source,
+		"import { Text }",
+		'import { multiloopFlow, connectMultiloopFlow } from "./jouzu-flow.js";\nimport { Text }',
+	);
+	source = replace(
+		source,
+		'  pi.on("session_start", async (_event, ctx) => {\n    announceResumableLoops(pi, ctx);',
+		'  let detachFlow: (() => void) | undefined;\n  pi.on("session_shutdown", async () => { detachFlow?.(); detachFlow = undefined; });\n  pi.on("session_start", async (_event, ctx) => {\n    detachFlow?.();\n    detachFlow = connectMultiloopFlow(pi.events, ctx.sessionManager.getSessionId());\n    updateStatus(ctx);\n    announceResumableLoops(pi, ctx);',
+	);
 	for (const [name, parameters, reason, build, accounting] of [
 		[
 			"queueCompactionResume",

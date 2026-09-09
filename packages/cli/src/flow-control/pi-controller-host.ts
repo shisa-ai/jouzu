@@ -16,6 +16,8 @@ export interface PiControllerHostOptions extends PiRequestReceiptOptions {
 	invokeOperation?<T>(invoke: () => Promise<T>): Promise<T>;
 	revokeWork?(): void;
 	consumeWork?(claimed: { id: string; revision: number }[]): Promise<void>;
+	/** Exact controller queue consumption, after its durable claim and user-work preemption. */
+	consumedAttempt?(attempt: import("./receipt-ledger.js").FlowAttempt): void;
 	invokeWork?(attemptId: string, invoke: () => Promise<void>): Promise<void>;
 }
 interface Pending {
@@ -129,6 +131,19 @@ export class PiControllerHost implements FlowControllerHost {
 				this.assertActive();
 				await options.consumeWork?.(receipt.claimed.map(({ id, revision }) => ({ id, revision })));
 				this.assertActive();
+				if (
+					options.consumedAttempt &&
+					owned &&
+					receipt.claimed.some((item) => item.id === owned.id && item.revision === owned.revision)
+				) {
+					const state = await ledger.snapshot();
+					const attempt = state.attempts.find((attempt) => attempt.id === this.pending?.input.attemptId);
+					if (attempt?.phase !== "claimed" || !attempt.consumed)
+						throw new FlowLedgerError("identity", "Controller queue consumption has no durable claim.");
+					this.assertActive();
+					signal?.throwIfAborted();
+					options.consumedAttempt(structuredClone(attempt));
+				}
 			},
 			beforeQueueClaim: async (items, signal) => {
 				this.assertActive();

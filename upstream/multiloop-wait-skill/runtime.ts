@@ -39,3 +39,22 @@ export function attachMultiloopFlow(sessionId: string, host: MultiloopFlowHost):
 export function multiloopFlow(sessionId: string): MultiloopFlowHost | undefined {
 	return hosts.get(sessionId);
 }
+
+/** Exchange a host through Pi's event bus so the loaded extension supplies its own module instance. */
+export function connectMultiloopFlow(events: { emit(channel: string, data: unknown): void }, sessionId: string): () => void {
+	let detach: (() => void) | undefined;
+	let failure: unknown;
+	let accepting = true;
+	events.emit("jouzu:multiloop-flow", {
+		version: 1,
+		sessionId,
+		accept(host: MultiloopFlowHost) {
+			if (!accepting || detach) throw new Error("Multiloop host handshake is closed or already accepted.");
+			detach = attachMultiloopFlow(sessionId, host);
+		},
+		reject(error: unknown) { failure = error; },
+	});
+	accepting = false;
+	if (failure) { detach?.(); throw failure; }
+	return () => detach?.();
+}

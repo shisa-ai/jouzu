@@ -1,18 +1,27 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdtemp, rm } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { stream } from "@earendil-works/pi-ai/api/openai-completions";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
+
+const { createJiti } = await import(
+	createRequire(import.meta.resolve("@earendil-works/pi-coding-agent")).resolve("jiti")
+);
+
 import { createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { SessionFlowController } from "../dist/flow-control/controller.js";
+import { createMultiloopControllerExtension } from "../dist/flow-control/multiloop-extension.js";
+import { MultiloopFlowProducer } from "../dist/flow-control/multiloop-producer.js";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { PiControllerHost } from "../dist/flow-control/pi-controller-host.js";
 import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
 import { FlowReceiptLedger } from "../dist/flow-control/receipt-ledger.js";
 import { orderFlowResultProducers } from "../dist/flow-control/result-order.js";
+import { createFlowWaitDecisionProducer } from "../dist/flow-control/wait-decisions.js";
 
 const descriptor = (producer, id = producer, rank = 4, sequence = 0) => ({
 	id,
@@ -87,6 +96,7 @@ async function fixture(t, native, options = {}) {
 				projections: new Map([["openai-completions", openAIFlowPayload("openai-completions")]]),
 				maxPayloadBytes: 100000,
 				containsUserInput: () => false,
+				consumedAttempt: options.consumedAttempt,
 				results: options.aggregate ? attachment.results : undefined,
 			},
 			() => policy,
@@ -171,6 +181,198 @@ async function fixture(t, native, options = {}) {
 	t.after(() => controller.close());
 	return { controller, host, ledger, calls, payloads, policy, session, attachment, storageRoot, manifests };
 }
+
+test("Pi multiloop adapter holds three continuations and accounts once at native consumption", async (t) => {
+	let adapter,
+		admitted = 0,
+		builds = 0;
+	const f = await fixture(t, true, { consumedAttempt: (attempt) => adapter.admitted(attempt) });
+	const work = await f.attachment.waits.registerWork("campaign", "multiloop", Date.now());
+	const lane = { lane: "work", runTag: "run" };
+	adapter = new MultiloopFlowProducer(
+		f.attachment,
+		async () => work,
+		() => work.id,
+		() => {},
+	);
+	t.after(() => adapter.close());
+	f.controller.register(adapter);
+	const input = {
+		lane,
+		reason: "continue",
+		build() {
+			builds++;
+			return "Resume the campaign";
+		},
+		admitted() {
+			admitted++;
+		},
+	};
+	f.policy.waitingWorkIds = [work.id];
+	for (let i = 0; i < 3; i++) {
+		adapter.submit(input);
+		await f.controller.wake();
+	}
+	assert.deepEqual(f.calls, []);
+	assert.equal(builds, 0);
+	assert.equal(admitted, 0);
+	assert.equal((await adapter.snapshot(new AbortController().signal)).length, 1);
+	f.policy.waitingWorkIds = [];
+	await f.controller.wake();
+	assert.equal(f.calls.length, 1);
+	assert.equal(builds, 1);
+	assert.equal(admitted, 1);
+	await f.controller.wake();
+	assert.equal(f.calls.length, 1);
+	adapter.submit(input);
+	await f.controller.wake();
+	assert.equal(f.calls.length, 2);
+	assert.equal(admitted, 2);
+	adapter.lanesChanged([]);
+	await f.controller.wake();
+	assert.equal(f.calls.length, 2);
+});
+
+test("Pi multiloop adapter preserves exhausted failure across reopen", async (t) => {
+	const first = await fixture(t, true, { fetch: async () => new Response("unavailable", { status: 400 }) });
+	await first.attachment.waits.registerWork("campaign", "multiloop", Date.now());
+	const input = {
+		lane: { lane: "lane", runTag: "run" },
+		reason: "continue",
+		build: () => "Resume campaign",
+		admitted() {},
+	};
+	const make = (f) =>
+		new MultiloopFlowProducer(
+			f.attachment,
+			async () => (await f.attachment.waits.authoritySnapshot()).work[0],
+			() => "campaign",
+			() => {},
+		);
+	const adapter = make(first);
+	first.controller.register(adapter);
+	adapter.submit(input);
+	await first.controller.wake();
+	assert.equal((await first.ledger.snapshot()).attempts[0].outcome, "failure");
+	adapter.submit(input);
+	await first.controller.wake();
+	assert.equal((await first.ledger.snapshot()).attempts.length, 1);
+	const history = first.session.sessionFile;
+	adapter.close();
+	await first.controller.close();
+	await first.attachment.close();
+	const second = await fixture(t, true, {
+		storageRoot: first.storageRoot,
+		sessionManager: SessionManager.open(history),
+	});
+	const resumed = make(second);
+	t.after(() => resumed.close());
+	second.controller.register(resumed);
+	resumed.submit(input);
+	await second.controller.wake();
+	assert.equal((await second.ledger.snapshot()).attempts.length, 1);
+	assert.deepEqual(second.calls, []);
+	assert.equal((await resumed.snapshot(new AbortController().signal))[0].runnable, false);
+});
+
+for (const reverse of [false, true])
+	test(`Pi loaded multiloop attaches through its event bus: reversed=${reverse}`, async (t) => {
+		let f, ctx, attachedBranch;
+		const tools = new Map(),
+			errors = [],
+			sends = [];
+		const bridge = createMultiloopControllerExtension({
+			ingress: () => ({ branch: () => attachedBranch, requestRelease() {} }),
+			work: async () => (await f.attachment.waits.authoritySnapshot()).work.find((work) => work.id === "campaign"),
+			waitingWork: () => "campaign",
+			onError: (error) => errors.push(error),
+		});
+		const installed = {
+			name: "installed-multiloop",
+			async factory(pi) {
+				const factory = await createJiti(import.meta.url, { moduleCache: false }).import(
+					new URL("../node_modules/pi-multiloop/extensions/pi-multiloop/index.ts", import.meta.url).pathname,
+					{ default: true },
+				);
+				pi.on("session_start", (_event, context) => {
+					ctx = context;
+				});
+				factory({
+					...pi,
+					sendUserMessage: (text) => sends.push(text),
+					registerTool(tool) {
+						tools.set(tool.name, tool);
+						pi.registerTool(tool);
+					},
+				});
+			},
+		};
+		f = await fixture(t, true, {
+			extensions: reverse ? [installed, bridge] : [bridge, installed],
+			consumedAttempt: bridge.consumedAttempt,
+			fetch: async () => answer(),
+		});
+		attachedBranch = { ...f, scope: f.ledger.scope };
+		await f.attachment.waits.registerWork("campaign", "multiloop", Date.now());
+		await f.session.bindExtensions({ onError: (error) => errors.push(error) });
+		assert.ok(f.controller.view().producers.includes("multiloop"));
+		await tools
+			.get("multiloop_start")
+			.execute(
+				"start",
+				{ lane: "test", runTag: "run", mode: "research", goal: "Finish fixture" },
+				undefined,
+				undefined,
+				ctx,
+			);
+		const handle = { producer: "multiloop", handle: "job", execution: "execution" };
+		await f.attachment.waits.registerExecution(
+			{ ...handle, workId: "campaign", revision: 1, predicates: [{ until: "exit", state: "pending" }] },
+			1,
+			Date.now(),
+		);
+		await f.attachment.waits.declareOwned(
+			"multiloop",
+			1,
+			{
+				scope: f.ledger.scope,
+				workId: "campaign",
+				token: "wait",
+				reason: "job exit",
+				mode: "all",
+				on: [{ ...handle, until: "exit" }],
+				expiresAt: Date.now() + 60000,
+			},
+			Date.now(),
+			60000,
+		);
+		Object.defineProperty(f.policy, "waitingWorkIds", { get: () => f.attachment.waits.gate().waitingWorkIds });
+		f.controller.register(
+			createFlowWaitDecisionProducer(f.attachment.waits, {
+				submissions: f.attachment.submissions,
+				requests: f.attachment.nativeRequests,
+			}),
+		);
+		for (let i = 0; i < 3; i++) {
+			await f.session.prompt("status");
+			await f.controller.wake();
+		}
+		assert.equal((await f.ledger.snapshot()).attempts.length, 0);
+		assert.deepEqual(sends, []);
+		await f.attachment.waits.observeExecution(handle, 2, [{ until: "exit", state: "satisfied" }], Date.now());
+		await f.controller.wake();
+		const attempts = (await f.ledger.snapshot()).attempts;
+		assert.equal(attempts.length, 1);
+		assert.equal(attempts[0].outcome, "success");
+		assert.deepEqual(
+			attempts[0].members.map((member) => member.kind),
+			["wait", "work"],
+		);
+		await f.controller.wake();
+		assert.equal((await f.ledger.snapshot()).attempts.length, 1);
+		assert.deepEqual(sends, []);
+		assert.deepEqual(errors, []);
+	});
 
 for (const native of [false, true]) {
 	const label = native ? "Pi" : "synthetic";
