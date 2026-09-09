@@ -63,6 +63,12 @@ async function settledAttempt(ledger, attemptId, intentId, resultProducer) {
 	await ledger.queued(attemptId, queue);
 	await ledger.claim(attemptId, queue);
 	await ledger.prepare(attemptId, `request-${attemptId}`, items.map(included), false);
+	await ledger.payload(attemptId, `request-${attemptId}`, {
+		api: "fixture",
+		hash: hash(attemptId),
+		bytes: 1,
+		inclusion: items.map(included),
+	});
 	await ledger.handoff(attemptId, `request-${attemptId}`);
 	await ledger.requestOutcome(attemptId, `request-${attemptId}`, "success");
 	await ledger.settle(attemptId, "success");
@@ -154,6 +160,34 @@ test("an active attempt is never retired", async (t) => {
 		state.attempts.map((attempt) => attempt.id),
 		["live"],
 	);
+});
+
+test("a successful request with an omitted result retains its context exclusion evidence", async (t) => {
+	const ledger = await fixture(t);
+	const work = member("instruction"),
+		result = member("filtered-result", "result");
+	await ledger.select("filtered", [work, result], {
+		revision: 0,
+		intent: intent(work.id),
+		coalescedIds: [],
+		next: { ...initialFlowAdmission(), revision: 1 },
+	});
+	const queue = { id: "filtered-queue", revision: 1 };
+	await ledger.queued("filtered", queue);
+	await ledger.claim("filtered", queue);
+	const inclusion = [included(work), { id: result.id, revision: result.revision, disposition: "omitted" }];
+	await ledger.prepare("filtered", "filtered-request", inclusion, false);
+	await ledger.payload("filtered", "filtered-request", {
+		api: "fixture",
+		hash: hash("filtered"),
+		bytes: 1,
+		inclusion,
+	});
+	await ledger.handoff("filtered", "filtered-request");
+	await ledger.requestOutcome("filtered", "filtered-request", "success");
+	await ledger.settle("filtered", "success");
+	assert.equal(await ledger.retire(0), 0, "success does not establish inclusion of every composed member");
+	assert.equal((await ledger.snapshot()).attempts[0].members[1].id, result.id);
 });
 
 test("retirement rejects an invalid window", async (t) => {

@@ -3,10 +3,9 @@ import { orderFlowResultProducers } from "./result-order.js";
 import { MAX_RETIRED_FLOW_IDENTITIES, retiredIdentityHash, validRetiredIdentityHash } from "./retired-identities.js";
 
 /**
- * What the ledger must remember about attempts it no longer stores. Three consumers replay the
- * whole attempt list: replay fencing, multiloop iteration numbering, and result-producer fairness.
- * Retirement carries each forward so pruning cannot resurrect work, restart iteration counts, or
- * reset a producer's turn.
+ * Summary evidence retained after pruning: replay fences, multiloop iteration counts, and
+ * result-producer fairness. Context quarantine still requires full attempts, so attempts with
+ * unsuccessful or omitted input remain addressable.
  */
 export interface FlowRetiredAttempts {
 	version: 1;
@@ -68,15 +67,36 @@ export const retiredByReceipt = (retired: FlowRetiredAttempts | undefined, membe
 	!!retired && (retired.members.includes(member) || (work !== undefined && retired.work.includes(work)));
 
 /**
- * An attempt is eligible once it can no longer change and nothing pending refers to it. Cancelled
- * attempts that were never consumed carry no fence, matching `retainedByReceipt`.
+ * Select settled attempts that no longer need context quarantine. Callers must also reconcile
+ * producer delivery and wait observation before pruning. Unconsumed cancellations carry no fence.
  */
 export function retirableAttempts(state: FlowLedgerState, keep: number): FlowAttempt[] {
 	const settledOnly = state.attempts.filter(
 		(attempt) =>
 			attempt.id !== state.activeAttemptId &&
 			(attempt.phase === "settled" || attempt.phase === "cancelled") &&
-			!attempt.requests.some((request) => request.handedOff && request.outcome === undefined),
+			!attempt.requests.some((request) => request.handedOff && request.outcome === undefined) &&
+			// Persisted instructions without successful inclusion still need the full attempt for
+			// context quarantine. A replay fence alone cannot keep them out of later user requests.
+			!(
+				attempt.admission &&
+				attempt.consumed !== false &&
+				attempt.members.some(
+					(member) =>
+						!attempt.requests.some(
+							(request) =>
+								request.handedOff &&
+								request.outcome === "success" &&
+								request.payload?.inclusion.some(
+									(item) =>
+										item.id === member.id &&
+										item.revision === member.revision &&
+										item.disposition === "included" &&
+										item.contentHash === member.contentHash,
+								),
+						),
+				)
+			),
 	);
 	// Retire oldest first and keep the most recent settled attempts addressable for inspection.
 	return settledOnly.slice(0, Math.max(0, settledOnly.length - keep));
