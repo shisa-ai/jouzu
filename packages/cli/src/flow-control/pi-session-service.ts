@@ -13,11 +13,13 @@ import type { FlowNativeInput, RetainedSubmission } from "./submission-store.js"
 import type { FlowWorkStatus } from "./wait-authority.js";
 import { createFlowWaitDecisionProducer } from "./wait-decisions.js";
 
+import { FlowWorkContext } from "./work-context.js";
+
 export interface PiFlowSessionOptions {
 	root: string;
 	maxInputBytes: number;
 	maxResultBytes: number;
-	host: Omit<PiControllerHostOptions, "results">;
+	host: Omit<PiControllerHostOptions, "results" | "invokeWork">;
 	decorateNativeContext?: NativeContextDecorator;
 	admitNativeQueue?(record: RetainedSubmission, input: FlowNativeInput): Promise<boolean>;
 	policy(): Omit<FlowAdmissionGates, "hostReady">;
@@ -29,6 +31,7 @@ export interface PiFlowBranchResources {
 	attachment: PiFlowAttachment;
 	host: PiControllerHost;
 	controller: SessionFlowController;
+	workContext: FlowWorkContext;
 	native: PiNativeDispatch;
 	requests: PiNativeRequests;
 	recovery: { recovered: number; unresolved: number };
@@ -120,10 +123,15 @@ export class PiFlowSessionService {
 				this.options.decorateNativeContext,
 			);
 			this.opening.requests = requests;
+			const workContext = new FlowWorkContext(() => this.branch().attachment);
 			const host = new PiControllerHost(
 				this.session,
 				attachment.ledger,
-				{ ...this.options.host, results: attachment.results },
+				{
+					...this.options.host,
+					results: attachment.results,
+					invokeWork: (id, invoke) => workContext.runSelected(id, invoke),
+				},
 				() => {
 					const policy = this.options.policy();
 					const waits = attachment.waits.gate();
@@ -153,6 +161,7 @@ export class PiFlowSessionService {
 				attachment,
 				host,
 				controller,
+				workContext,
 				native,
 				requests,
 				recovery,

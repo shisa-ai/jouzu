@@ -7,6 +7,7 @@ import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { FlowModelInput } from "../dist/flow-control/model-input.js";
 import { PiFlowSessionService } from "../dist/flow-control/pi-session-service.js";
+import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
 
 function options(root) {
 	return {
@@ -45,9 +46,14 @@ async function fixture(t, config = {}) {
 				if (message.role === "user") options?.onMessageConverted?.(message, message);
 		}
 		await options?.onPayload?.({ messages: context.messages }, model);
+		await config.onRequest?.();
 		return native(model, context, options);
 	};
-	service = await PiFlowSessionService.open(session, { ...options(root), attachWaitSources: config.attachWaitSources });
+	service = await PiFlowSessionService.open(session, {
+		...options(root),
+		...(config.host ? { host: config.host } : {}),
+		attachWaitSources: config.attachWaitSources,
+	});
 	t.after(async () => {
 		await service.close();
 		if (!config.root) await rm(root, { recursive: true, force: true });
@@ -539,3 +545,58 @@ test("reopening reconciles retained executions before exposing the branch and ho
 	);
 	assert.deepEqual(restored.requests, []);
 });
+
+for (const ownership of ["owned", "foreign", "unclassified"])
+	test(`session controller binds ${ownership} selected work through native execution`, async (t) => {
+		let branch, observed, authority;
+		const f = await fixture(t, {
+			host: {
+				projections: new Map([["openai-completions", openAIFlowPayload("openai-completions")]]),
+				maxPayloadBytes: 100000,
+				containsUserInput: () => false,
+			},
+			onRequest() {
+				observed = branch.workContext.current();
+				if (observed) authority = branch.workContext.authorize(observed.id);
+			},
+		});
+		branch = f.service.branch();
+		if (ownership !== "unclassified")
+			await branch.attachment.waits.registerWork(
+				"selected-work",
+				ownership === "foreign" ? "another-owner" : "lane",
+				0,
+			);
+		branch.controller.register({
+			version: 1,
+			namespace: "lane",
+			async snapshot() {
+				return [
+					{
+						id: "instruction",
+						revision: "1",
+						producer: "lane",
+						sequence: 1,
+						rank: 4,
+						workId: "selected-work",
+						workRevision: "producer-revision",
+						independent: false,
+						runnable: true,
+					},
+				];
+			},
+			async build() {
+				return { id: "instruction", revision: "1", kind: "work", text: "Perform the selected work" };
+			},
+		});
+		if (ownership === "foreign") {
+			await assert.rejects(branch.controller.wake(), { code: "identity" });
+			assert.equal(f.requests.length, 0);
+		} else {
+			await branch.controller.wake();
+			assert.equal(f.requests.length, 1);
+			assert.deepEqual(observed, ownership === "owned" ? { id: "selected-work", revision: 1 } : undefined);
+		}
+		assert.equal(branch.workContext.current(), undefined);
+		if (authority) assert.throws(() => authority.assertActive(), { code: "stale" });
+	});

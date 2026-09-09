@@ -13,6 +13,7 @@ import type { FlowResultReference } from "./result-types.js";
 
 export interface PiControllerHostOptions extends PiRequestReceiptOptions {
 	results?: { retain(members: FlowResultReference[]): Promise<string> };
+	invokeWork?(attemptId: string, invoke: () => Promise<void>): Promise<void>;
 }
 interface Pending {
 	input: FlowModelInput;
@@ -82,6 +83,7 @@ export class PiControllerHost implements FlowControllerHost {
 	private readonly requests: PiRequestReceipts;
 	private readonly boundary: PiHostBoundary;
 	private pending?: Pending;
+	private readonly invokeWork?: PiControllerHostOptions["invokeWork"];
 	private closed = false;
 	private closing?: Promise<void>;
 
@@ -98,6 +100,7 @@ export class PiControllerHost implements FlowControllerHost {
 			throw new FlowLedgerError("scope", "Flow host requires the matching idle session.");
 		attached.add(session);
 		this.retainResults = options.results?.retain.bind(options.results);
+		this.invokeWork = options.invokeWork;
 		this.queue = new PiQueueReceipts(session.agent, ledger);
 		this.history = new PiHistoryReceipts(session, ledger);
 		this.requests = new PiRequestReceipts(session, ledger, options);
@@ -173,7 +176,12 @@ export class PiControllerHost implements FlowControllerHost {
 	}
 	async run(): Promise<void> {
 		this.assertActive();
-		await this.session.continueQueued();
+		const attemptId = this.pending?.input.attemptId;
+		if (this.invokeWork && attemptId)
+			await this.invokeWork(attemptId, async () => {
+				await this.session.continueQueued();
+			});
+		else await this.session.continueQueued();
 	}
 	invalidate(): void {
 		const pending = this.pending;
