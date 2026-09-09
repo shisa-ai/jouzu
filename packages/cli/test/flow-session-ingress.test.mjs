@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -30,6 +30,7 @@ async function fixture(
 		autoRelease,
 		attachWaitSources,
 		consumedAttempt,
+		maxInputBytes = 4096,
 		provider = false,
 		checkpoints,
 		onRequest,
@@ -44,7 +45,7 @@ async function fixture(
 		autoRelease,
 		attachWaitSources,
 		userWorkParticipants,
-		maxInputBytes: 4096,
+		maxInputBytes,
 		maxResultBytes: 4096,
 		host: {
 			consumedAttempt,
@@ -3474,7 +3475,7 @@ for (const lane of ["steer", "followUp"])
 			assert.equal(request, cancel ? 0 : 2);
 		});
 
-for (const mode of ["normal", "reversed", "reopen", "model-tools"])
+for (const mode of ["normal", "reversed", "reopen", "model-tools", "shared-results"])
 	test(`loaded multiloop/background pair automatically composes after its wait (${mode})`, {
 		skip: process.platform === "win32",
 		timeout: 20000,
@@ -3482,7 +3483,7 @@ for (const mode of ["normal", "reversed", "reopen", "model-tools"])
 		const reverse = mode === "reversed";
 		const root = await mkdtemp(join(tmpdir(), "jouzu-loaded-background-"));
 		const releaseFile = join(root, "release-task");
-		const command = `while test ! -e '${releaseFile.replaceAll("'", "'\\''")}'; do sleep 0.02; done`;
+		const command = `while test ! -e '${releaseFile.replaceAll("'", "'\\''")}'; do sleep 0.02; done; printf 'flow-result-marker\\n'`;
 		const manager = SessionManager.create(root, join(root, "history"));
 		const { createJiti } = await import(
 			createRequire(import.meta.resolve("@earendil-works/pi-coding-agent")).resolve("jiti")
@@ -3519,6 +3520,7 @@ for (const mode of ["normal", "reversed", "reopen", "model-tools"])
 			},
 		};
 		const bridge = createBackgroundControllerExtension({
+			ingress: mode === "shared-results" ? () => f.ingress : undefined,
 			currentWork: () => f.ingress.branch().workContext.current(),
 			onError: (error) => errors.push(error),
 		});
@@ -3542,53 +3544,59 @@ for (const mode of ["normal", "reversed", "reopen", "model-tools"])
 			root,
 			manager,
 			provider: true,
+			maxInputBytes: mode === "shared-results" ? 8192 : 4096,
 			admit: null,
 			autoRelease: { onError: (error) => errors.push(error) },
-			tools: mode === "model-tools" ? ["multiloop_start", "bg_task", "agent_wait"] : [],
+			tools: ["model-tools", "shared-results"].includes(mode) ? ["multiloop_start", "bg_task", "agent_wait"] : [],
 			consumedAttempt: loopBridge.consumedAttempt,
-			response:
-				mode !== "model-tools"
-					? undefined
-					: () => {
-							let name, args;
-							if (modelStage === 0) {
-								name = "multiloop_start";
-								args = { lane: "test", runTag: "run", mode: "research", goal: "Wait for task" };
-							} else if (modelStage === 1) {
-								name = "bg_task";
-								args = { action: "spawn", command, notifyOnExit: false, notifyOnOutput: false, timeoutSeconds: 5 };
-							} else if (modelStage === 2) {
-								const result = f.session.agent.state.messages.findLast(
-									(message) => message.role === "toolResult" && message.toolName === "bg_task",
-								);
-								assert.equal(result.isError, false);
-								task = result.details.task;
-								name = "agent_wait";
-								args = {
-									work: task.flow.work.id,
-									reason: "Await installed task",
-									deadline: "10s",
-									on: [{ producer: "bg", handle: task.id, execution: task.flow.execution, until: "exit" }],
-								};
-							}
-							modelStage++;
-							const delta = name
-								? {
-										tool_calls: [
-											{
-												index: 0,
-												id: `call-${modelStage}`,
-												type: "function",
-												function: { name, arguments: JSON.stringify(args) },
-											},
-										],
-									}
-								: { content: "Done" };
-							return new Response(
-								`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta, finish_reason: name ? "tool_calls" : "stop" }] })}\n\ndata: [DONE]\n\n`,
-								{ headers: { "content-type": "text/event-stream" } },
+			response: !["model-tools", "shared-results"].includes(mode)
+				? undefined
+				: () => {
+						let name, args;
+						if (modelStage === 0) {
+							name = "multiloop_start";
+							args = { lane: "test", runTag: "run", mode: "research", goal: "Wait for task" };
+						} else if (modelStage === 1) {
+							name = "bg_task";
+							args = {
+								action: "spawn",
+								command,
+								notifyOnExit: mode === "shared-results",
+								notifyOnOutput: false,
+								timeoutSeconds: 5,
+							};
+						} else if (modelStage === 2) {
+							const result = f.session.agent.state.messages.findLast(
+								(message) => message.role === "toolResult" && message.toolName === "bg_task",
 							);
-						},
+							assert.equal(result.isError, false);
+							task = result.details.task;
+							name = "agent_wait";
+							args = {
+								work: task.flow.work.id,
+								reason: "Await installed task",
+								deadline: "10s",
+								on: [{ producer: "bg", handle: task.id, execution: task.flow.execution, until: "exit" }],
+							};
+						}
+						modelStage++;
+						const delta = name
+							? {
+									tool_calls: [
+										{
+											index: 0,
+											id: `call-${modelStage}`,
+											type: "function",
+											function: { name, arguments: JSON.stringify(args) },
+										},
+									],
+								}
+							: { content: "Done" };
+						return new Response(
+							`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta, finish_reason: name ? "tool_calls" : "stop" }] })}\n\ndata: [DONE]\n\n`,
+							{ headers: { "content-type": "text/event-stream" } },
+						);
+					},
 			attachWaitSources: async (attachment) => bridge.attach(attachment, manager),
 			extensions: [
 				...(reverse ? [background, loop, bridge, loopBridge] : [loopBridge, bridge, loop, background]),
@@ -3608,7 +3616,7 @@ for (const mode of ["normal", "reversed", "reopen", "model-tools"])
 		t.after(() => rm(root, { recursive: true, force: true }));
 		await f.session.bindExtensions({ onError: (error) => errors.push(error) });
 		const branch = f.ingress.branch();
-		if (mode === "model-tools") {
+		if (["model-tools", "shared-results"].includes(mode)) {
 			f.session.setActiveToolsByName(["multiloop_start", "bg_task", "agent_wait"]);
 			assert.equal(f.session.agent.state.tools.length, 3, JSON.stringify(f.session.getAllTools()));
 			await f.session.prompt("Start the lane, spawn its background process, and wait for its exit.");
@@ -3638,7 +3646,7 @@ for (const mode of ["normal", "reversed", "reopen", "model-tools"])
 				const result = await tools.get("bg_task").execute("spawn", {
 					action: "spawn",
 					command,
-					notifyOnExit: false,
+					notifyOnExit: mode === "shared-results",
 					notifyOnOutput: false,
 					timeoutSeconds: 5,
 				});
@@ -3662,7 +3670,7 @@ for (const mode of ["normal", "reversed", "reopen", "model-tools"])
 		}
 		for (let i = 0; i < 3; i++) await f.session.prompt("status?");
 		assert.equal((await branch.attachment.ledger.snapshot()).attempts.length, 0);
-		assert.equal(f.sent.length, mode === "model-tools" ? 7 : 3);
+		assert.equal(f.sent.length, ["model-tools", "shared-results"].includes(mode) ? 7 : 3);
 		if (mode === "reopen") {
 			const expiry = (await branch.attachment.waits.snapshot())[0].expiresAt;
 			await f.ingress.dispose();
@@ -3710,9 +3718,24 @@ for (const mode of ["normal", "reversed", "reopen", "model-tools"])
 		);
 		assert.deepEqual(
 			attempts[0].members.map((member) => member.kind),
-			["wait", "work"],
+			mode === "shared-results" ? ["wait", "work", "result"] : ["wait", "work"],
 		);
 		assert.equal((await branch.attachment.waits.snapshot())[0].token, token);
 		assert.deepEqual(errors, []);
-		assert.equal(f.sent.length, mode === "model-tools" ? 8 : 4);
+		assert.equal(f.sent.length, ["model-tools", "shared-results"].includes(mode) ? 8 : 4);
+		if (mode === "shared-results") {
+			assert.match(JSON.stringify(f.sent.at(-1)), /flow-results:/);
+			assert.match(JSON.stringify(f.sent.at(-1)), /bg-result:/);
+			await waitForFlow(
+				async () =>
+					(await tools.get("bg_status").execute("status", { action: "list" })).details.tasks[0]?.flow?.result
+						?.delivered === true,
+			);
+			const recorded = (await tools.get("bg_status").execute("status", { action: "list" })).details.tasks[0];
+			assert.equal(recorded.exitNotified, true);
+			assert.equal(recorded.flow.result.metadata.execution, task.flow.execution);
+			assert.equal(recorded.flow.result.metadata.reference, task.logFile);
+			assert.match(await readFile(task.logFile, "utf8"), /flow-result-marker/);
+			assert.equal(f.sent.length, 8);
+		}
 	});

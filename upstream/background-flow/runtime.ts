@@ -7,18 +7,30 @@ type Evidence = Identity & {
 	revision: number;
 	predicates: { until: string; state: "pending" | "satisfied" | "failed" | "cancelled" | "missing" }[];
 };
+export interface BackgroundTerminalResult {
+	metadata: { id: string; producer: string; execution: string; revision: string; status: "success" | "failure" | "cancelled"; title: string; reference: string; warnings: string[] };
+	delivered?: boolean;
+}
 type Snapshot = {
 	id: string;
 	sessionId?: string;
 	status: string;
 	terminationReason?: string;
-	flow?: { version: 1; execution: string; scope?: Scope; work?: Work };
+	title?: string;
+	command?: string;
+	logFile?: string;
+	exitCode?: number | null;
+	notifyOnExit?: boolean;
+	exitNotified?: boolean;
+	flow?: { version: 1; execution: string; scope?: Scope; work?: Work; result?: BackgroundTerminalResult };
 };
 const sameScope = (a: Scope | undefined, b: Scope) => a?.sessionId === b.sessionId && a?.branchId === b.branchId;
 
 /** Bind the existing task snapshot owner to Jouzu's execution subscription protocol. */
 export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 	const scopes = new Map<string, { scope: Scope; currentWork(): Work }>();
+	const deliveries = new Map<string, { scope: Scope; changed(): void }>();
+	const results = new Map<string, { scope: Scope; result: BackgroundTerminalResult }>();
 	const listeners = new Set<{ identity: Identity; changed(evidence: Evidence): void; signature?: string }>();
 	function evidence(task: Snapshot, identity: Identity): Evidence {
 		if (
@@ -50,6 +62,44 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 		};
 	}
 	return {
+		controls(task: Snapshot): boolean {
+			return !!task.flow?.result || !!(task.flow?.scope && sameScope(deliveries.get(task.flow.scope.sessionId)?.scope, task.flow.scope));
+		},
+		prepareResult(task: Snapshot): void {
+			const flow = task.flow;
+			if (!flow?.scope || !flow.work || flow.result || !this.controls(task) || !task.notifyOnExit || task.exitNotified || task.status === "running") return;
+			const status = task.status === "completed" ? "success" : task.status === "stopped" ? "cancelled" : ["failed", "timed_out"].includes(task.status) ? "failure" : undefined;
+			if (!status || !task.logFile) throw new Error("Terminal background result is incomplete.");
+			flow.result = { metadata: {
+				id: `bg-result:${flow.execution}`, producer: "bg", execution: flow.execution, revision: "1", status,
+				title: `${(task.title || task.command || task.id).slice(0, 512)}: ${task.status} (exit ${task.exitCode ?? "unknown"})`,
+				reference: task.logFile, warnings: [],
+			} };
+		},
+		commitResults(tasks: Iterable<Snapshot>): void {
+			const changed = new Set<string>();
+			for (const task of tasks) {
+				const flow = task.flow;
+				if (!flow?.scope || !flow.result) continue;
+				const key = JSON.stringify([flow.scope.sessionId, flow.scope.branchId, flow.execution]);
+				const value = { scope: flow.scope, result: flow.result };
+				if (JSON.stringify(results.get(key)) === JSON.stringify(value)) continue;
+				results.set(key, structuredClone(value));
+				changed.add(flow.scope.sessionId);
+			}
+			for (const sessionId of changed) deliveries.get(sessionId)?.changed();
+		},
+		activateResults(scope: Scope, changed: () => void) {
+			if (!sameScope(scopes.get(scope.sessionId)?.scope, scope) || deliveries.has(scope.sessionId)) throw new Error("Background result delivery requires its active wait source.");
+			const lease = { scope: { ...scope }, changed };
+			deliveries.set(scope.sessionId, lease);
+			return {
+				snapshot() {
+					if (deliveries.get(scope.sessionId) !== lease) throw new Error("Background result source is detached.");
+					return structuredClone([...results.values()].filter(value => sameScope(value.scope, scope) && !value.result.delivered).map(value => value.result.metadata));
+				},
+			};
+		},
 		newExecution(sessionId: string | null) {
 			const lease = sessionId ? scopes.get(sessionId) : undefined;
 			const work = lease?.currentWork();
@@ -131,7 +181,10 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 					closed = true;
 					for (const listener of owned) listeners.delete(listener);
 					owned.clear();
-					if (scopes.get(lease.scope.sessionId) === lease) scopes.delete(lease.scope.sessionId);
+					if (scopes.get(lease.scope.sessionId) === lease) {
+						scopes.delete(lease.scope.sessionId);
+						deliveries.delete(lease.scope.sessionId);
+					}
 				},
 			};
 		},

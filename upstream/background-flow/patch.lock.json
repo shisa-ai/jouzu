@@ -3,11 +3,11 @@
 	"package": "@vanillagreen/pi-background-tasks",
 	"version": "2.0.0",
 	"commit": "1c4e7a6b3469fa6bfd3337b36df45ddea6014eda",
-	"runtime": "84ce2ec3f547e554ca20d7867efef466c49833c5f6bed4238467f16e37ce8e67",
+	"runtime": "1c886cffe81cbe4592957e95403be54299027f1e0723dec391c8b40d9fdd5aa9",
 	"files": {
 		"extensions/background-tasks.ts": {
 			"before": "aa9384de228f2a99910278f14ee74e469f143e470d0af183cf0261b36bc6917d",
-			"after": "2ef7e9ffdd5240107a39a92ec78394b60785ef98265a8bac1eccff886a958573"
+			"after": "6a7d168bfb244578da968ebdc525b430771d3dded29151235479ef55eba429dc"
 		},
 		"extensions/snapshot.ts": {
 			"before": "46c74c0c86367bfb65be7e6435fbb8f08abfe8ca43c8ea99eace152da0f3126a",
@@ -15,7 +15,7 @@
 		},
 		"extensions/types.ts": {
 			"before": "25df2c7e200d17d8339d8568d89b2bcd34f905da185178850d077b509cd0f4a2",
-			"after": "0d3a1187dc8563492e11e06684ca128ea5b5bbfadacf91bd725052e387f53a89"
+			"after": "9061d8760e9baaac2470d581f4a0baf8c6294ac540bc37432261c552c11b5de3"
 		},
 		"extensions/wake-events.ts": {
 			"before": "357b62143a798ef3e186d315fe3f29e5cc559082841952d14ec71fdfa040b375",

@@ -29,7 +29,7 @@ test("background patch rejects unknown source before writing any planned replace
 	}
 	const typesPath = join(temporary, "extensions/types.ts");
 	const original = (await readFile(typesPath, "utf8")).replace(
-		"\n\tflow?: { version: 1; execution: string; scope?: { sessionId: string; branchId: string }; work?: { id: string; revision: number } };",
+		"\n\tflow?: { version: 1; execution: string; scope?: { sessionId: string; branchId: string }; work?: { id: string; revision: number }; result?: import('./jouzu-flow.js').BackgroundTerminalResult };",
 		"",
 	);
 	await writeFile(typesPath, original);
