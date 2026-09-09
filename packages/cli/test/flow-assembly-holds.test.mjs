@@ -170,22 +170,20 @@ test("a provider retry holds automated work and the held work runs once afterwar
 	assert.deepEqual(synthetic.state.builds, ["intent-1"]);
 });
 
-// Compaction summarization calls the session stream function without a flow request checkpoint, so
-// the request guard refuses it and manual and automatic compaction both fail while flow control is
-// installed. This case states the behaviour the first candidate needs; see the plan's compaction item.
-test("compaction holds automated work and the held work runs once afterwards", { todo: true }, async (t) => {
+test("compaction holds automated work and the held work runs once afterwards", async (t) => {
 	let releaseSummary;
 	const summarizing = new Promise((resolve) => {
 		releaseSummary = resolve;
 	});
-	let summaryIndex;
+	const summaryIndexes = [];
 	const f = await assembledSession(t, {
 		// One recent entry is kept, so two turns are enough to give manual compaction something to do.
 		settings: { compaction: { enabled: false, keepRecentTokens: 1 } },
 		script: (body, index) => {
-			// Compaction issues its own summarization request; hold it open so isCompacting stays true.
-			if (JSON.stringify(body).includes("summar")) {
-				summaryIndex = index;
+			// Compaction issues its own summarization requests, which carry no tools and their own
+			// system prompt; hold the first open so isCompacting stays true.
+			if (!body.tools?.length && body.messages?.[0]?.content?.startsWith?.("You are a context summarization")) {
+				summaryIndexes.push(index);
 				return summarizing.then(() => ({ text: "summary" }));
 			}
 			return { text: `turn ${index}` };
@@ -202,11 +200,13 @@ test("compaction holds automated work and the held work runs once afterwards", {
 	await until(() => f.session.isCompacting, "the host to start compacting");
 	synthetic.offer([{ id: "intent-1", revision: "1" }]);
 	const scheduling = registration.changed();
-	while (f.session.isCompacting) {
+	// The summarization response is held open, so compaction stays in flight for this whole window.
+	for (let attempt = 0; attempt < 20; attempt++) {
+		assert.ok(f.session.isCompacting, "the held summarization keeps compaction in flight");
 		assert.equal(carrying(f.bodies, "work intent-1"), 0, "no producer work is sent while the host compacts");
-		await settle();
+		await new Promise((resolve) => setTimeout(resolve, 10));
 	}
-	assert.equal(summaryIndex, beforeCompaction, "compaction's own request is the only one it sends");
+	assert.deepEqual(summaryIndexes, [beforeCompaction], "compaction's own request is the only one it sends");
 
 	releaseSummary();
 	await compacted;
@@ -214,4 +214,30 @@ test("compaction holds automated work and the held work runs once afterwards", {
 	await until(() => carrying(f.bodies, "work intent-1") === 1, "the held producer work to run after compaction");
 	await settle();
 	assert.equal(carrying(f.bodies, "work intent-1"), 1, "and to run exactly once");
+
+	// Compaction is Pi's own request, so it is recorded without claiming any retained submission.
+	const requests = await f.ingress.branch().attachment.nativeRequests.snapshot();
+	const summary = requests.filter((request) => request.kind === "maintenance");
+	// This conversation splits a turn, so compaction summarizes twice; each call gets one receipt.
+	assert.equal(summary.length, summaryIndexes.length, "every summarization is recorded as a maintenance receipt");
+	assert.ok(summaryIndexes.length >= 1);
+	for (const record of summary) {
+		assert.equal(record.outcome, "success");
+		assert.ok(record.payload?.bytes > 0, "its exact final payload is observed");
+		assert.equal(record.sourceCapture, undefined, "and it establishes no source membership");
+	}
+});
+
+test("a provider call outside compaction is still refused without a request checkpoint", async (t) => {
+	const f = await assembledSession(t);
+	const before = f.bodies.length;
+	await assert.rejects(
+		f.session.agent.streamFunction(f.runtime.getModel("fixture", "fixture"), {
+			systemPrompt: "probe",
+			messages: [{ role: "user", content: [{ type: "text", text: "unchecked" }] }],
+			tools: [],
+		}),
+		(error) => error.code === "identity" && /no request checkpoint/.test(error.message),
+	);
+	assert.equal(f.bodies.length, before, "and the transport is never reached");
 });

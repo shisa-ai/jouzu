@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { AssistantMessage } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
@@ -362,11 +362,113 @@ export class PiNativeRequests {
 			},
 		});
 		const native = session.agent.streamFunction;
+		/**
+		 * Pi summarizes for compaction and branch summaries by calling the session stream function
+		 * directly, so those requests carry none of the checkpoints a controlled turn passes through:
+		 * their input is session history, not retained submissions. They are recorded as maintenance
+		 * receipts, which observe the exact final payload and its outcome but establish no source
+		 * membership. Any other unchecked call is still refused.
+		 */
+		const maintenance: typeof native = async (model, context, options) => {
+			if (!session.isCompacting)
+				throw new FlowLedgerError("identity", "Native provider call has no request checkpoint.");
+			const id = randomUUID();
+			const modelHash = hash(context.messages);
+			this.active++;
+			let handedOff = false;
+			let finished = false;
+			const settle = () => {
+				if (!finished) {
+					finished = true;
+					this.active--;
+				}
+			};
+			const withheld = async () => {
+				if (!handedOff) await store.finish(id, "withheld");
+			};
+			try {
+				await store.begin({
+					id,
+					kind: "maintenance",
+					sourceHash: modelHash,
+					transformedHash: modelHash,
+					modelHash,
+					systemHash: hash(context.systemPrompt),
+				});
+				const flowValidateProvider = trustedStream
+					? preparePiProviderRoute(session.modelRuntime, model, () => this.assertActive())
+					: undefined;
+				const response = await native(model, context, {
+					...options,
+					...(flowValidateProvider ? { flowValidateProvider } : {}),
+					onPayload: async (payload, requestModel) => {
+						this.assertActive();
+						options?.signal?.throwIfAborted();
+						if (handedOff || finished)
+							throw new FlowLedgerError(
+								"transition",
+								"Maintenance payload admission was repeated or outlived its request.",
+							);
+						if (
+							requestModel.api !== model.api ||
+							requestModel.provider !== model.provider ||
+							requestModel.id !== model.id
+						)
+							throw new FlowLedgerError("identity", "Native provider identity changed during conversion.");
+						const replacement = await options?.onPayload?.(payload, requestModel);
+						this.assertActive();
+						const { serialized, owned } = copyFlowPayload(replacement === undefined ? payload : replacement, model.api);
+						if (serialized === undefined || Buffer.byteLength(serialized) > maxBytes)
+							throw new FlowLedgerError("capacity", "Native provider payload exceeds its byte limit.");
+						await store.handoff(id, {
+							hash: createHash("sha256").update(serialized).digest("hex"),
+							bytes: Buffer.byteLength(serialized),
+							api: model.api,
+							provider: model.provider,
+							model: model.id,
+						});
+						handedOff = true;
+						return owned;
+					},
+				});
+				let recorded: Promise<AssistantMessage> | undefined;
+				const result = () =>
+					(recorded ??= (async () => {
+						try {
+							const message = await response.result();
+							this.assertActive();
+							if (!handedOff)
+								throw new FlowLedgerError("transition", "Maintenance provider returned without payload admission.");
+							await store.finish(
+								id,
+								message.stopReason === "error" ? "failure" : message.stopReason === "aborted" ? "aborted" : "success",
+							);
+							return message;
+						} catch (error) {
+							await withheld();
+							throw error;
+						} finally {
+							settle();
+						}
+					})());
+				return new Proxy(response, {
+					get(target, property) {
+						if (property === "result") return result;
+						const value = Reflect.get(target, property, target);
+						return typeof value === "function" ? value.bind(target) : value;
+					},
+				});
+			} catch (error) {
+				settle();
+				await withheld();
+				throw error;
+			}
+		};
 		this.hooks.set(session.agent, "streamFunction", async (model, context, options) => {
 			this.assertActive();
 			const id = this.pending;
 			this.pending = undefined;
-			if (!id) throw new FlowLedgerError("identity", "Native provider call has no request checkpoint.");
+			if (!id) return maintenance(model, context, options);
 			this.executing = id;
 			const prepared = this.prepared;
 			this.prepared = undefined;

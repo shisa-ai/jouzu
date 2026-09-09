@@ -9,6 +9,12 @@ import { retiredIdentityHash } from "./retired-identities.js";
 export interface NativeRequest {
 	id: string;
 	ownerId: string;
+	/**
+	 * Pi-owned requests whose input is session history rather than retained submissions, such as
+	 * compaction and branch summarization. They carry an observed payload and outcome, and never
+	 * source membership, so no consumer may read source evidence from them.
+	 */
+	kind?: "maintenance";
 	sourceHash: string;
 	transformedHash: string;
 	modelHash: string;
@@ -194,6 +200,16 @@ export class FlowNativeRequestStore {
 				throw new FlowLedgerError("identity", "Projection and native conversion capture different contexts.");
 			if (record.withheldPayload !== undefined && (!nativeRequestHeld(record) || record.payload))
 				throw new FlowLedgerError("schema", "Invalid withheld native payload.");
+			if (
+				record.kind !== undefined &&
+				(record.kind !== "maintenance" ||
+					record.sourceCapture !== undefined ||
+					record.projectionCapture !== undefined ||
+					record.requiredSources !== undefined ||
+					record.requiredProjections !== undefined ||
+					record.retryOf !== undefined)
+			)
+				throw new FlowLedgerError("schema", "Invalid maintenance native request.");
 			if (
 				!identity(record.id) ||
 				!identity(record.ownerId) ||
@@ -539,6 +555,7 @@ export class FlowNativeRequestStore {
 		const claims = consumedClaims === undefined ? undefined : structuredClone(consumedClaims);
 		const captured = {
 			id: input.id,
+			...(input.kind !== undefined ? { kind: input.kind } : {}),
 			sourceHash: input.sourceHash,
 			transformedHash: input.transformedHash,
 			modelHash: input.modelHash,
