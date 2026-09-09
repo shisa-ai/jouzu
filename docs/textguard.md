@@ -14,21 +14,45 @@ text scanner and require explicit approval.
 ## Review withheld content
 
 1. In an interactive session, run `/textguard` without arguments.
-2. Select a withheld item. The review shows an escaped, shortened source label,
-   the content's SHA-256 fingerprint, severity counts, and up to two finding
-   samples or the reason a check was incomplete.
-3. Keep **Keep withheld**, or choose **Allow this content for this session**.
-   Cancellation leaves the content withheld.
-4. After approval, resources reload. Retry the skill or web request.
+2. The review list shows each withheld item and non-blocking report with its
+   source label. Select an item to open its detail view.
+3. The detail view shows the escaped source label, the content's SHA-256
+   fingerprint, severity counts, finding explanations with locations, and the
+   flagged content with controls and invisible characters shown as escapes.
+   Page up and page down scroll the view.
+4. Choose an action:
+   - **Allow for this session** admits the content for the current session.
+   - **Always allow this exact content** also records a persistent approval
+     for the exact bytes, described below.
+   - **Back** keeps the content withheld.
+   Non-blocking reports offer **Dismiss report** instead, which removes them
+   from the list and notifications for the current session.
+5. After approval, resources reload. Retry the skill or web request.
 
-The review requires a terminal of at least 48 columns and 24 rows. It uses the
-normal selection and cancel keys. Print and RPC sessions do not grant approvals;
-their diagnostics direct you to interactive review.
+The cursor starts on the non-approving action; Escape returns to the list
+instead of closing the review. The review requires a terminal of at least 48
+columns and 24 rows and uses the normal selection and cancel keys. Print and RPC
+sessions do not grant approvals; their diagnostics direct you to interactive
+review.
 
-Approval applies to the exact content, source, scanner version, and policy in
-that session. Changed content needs another review. Reload preserves approval;
-replacing the session or closing Jouzu clears it. A dialog opened in a replaced
-session cannot approve content in its replacement.
+Only content-blocking items raise a session notification. Warning and
+informational reports stay inspectable through `/textguard` without
+interrupting the session.
+
+## Approvals and their scope
+
+A session approval applies to the exact content, source, scanner version, and
+policy in that session. Changed content needs another review. Reload preserves
+approval; replacing the session or closing Jouzu clears it. A dialog opened in
+a replaced session cannot approve content in its replacement.
+
+**Always allow this exact content** records a persistent approval keyed by the
+content's SHA-256 digest, the scanner identity, and the policy version. Any
+change to the content, a scanner update, or a policy change requires a new
+decision. Approvals are stored in the Jouzu cache under `textguard/approvals.json`
+(bounded to 128 records); the file holds no source text, paths, or labels.
+Delete that file to revoke all persistent approvals. Child agents do not share
+the store and cannot create approvals.
 
 Checks limited by input size, time, decoding, or scanner failure are incomplete,
 not clean. Scanning accepts up to 256 KiB of text per request; a serialized web
@@ -75,8 +99,9 @@ or custom rule directories.
 ## Limits
 
 The verdict cache holds up to 128 complete results and is bounded to 256 KiB on
-disk. It stores content hashes and scan evidence, not source bodies or approvals.
-Incomplete results are not cached as clean verdicts.
+disk. It stores content hashes and scan evidence, not source bodies. Incomplete
+results are not cached as clean verdicts. The persistent approval store holds
+up to 128 content-addressed records in a separate file.
 
 Scanning is a model-input check, not a sandbox. It does not block files being
 installed, extension code execution, or shell commands. It does not scan arbitrary
