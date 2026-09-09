@@ -9,7 +9,18 @@ export function transform(path, source) {
 	const change = (before, after, count) => {
 		text = replace(text, before, after, count);
 	};
-	if (path === "dist/core/session-manager.js") {
+	if (path === "dist/core/model-runtime.js") {
+		for (const method of ["stream", "streamSimple"]) {
+			change(
+				`            const prepared = await this.prepareRequest(model, options);
+            return prepared.provider.${method}(prepared.model, context, prepared.options);`,
+				`            const validateProvider = options?.flowValidateProvider;
+            const prepared = await this.prepareRequest(model, options);
+            validateProvider?.(prepared.model, prepared.provider);
+            return prepared.provider.${method}(prepared.model, context, prepared.options);`,
+			);
+		}
+	} else if (path === "dist/core/session-manager.js") {
 		change(
 			"    _persist(entry) {",
 			"    flush() {\n        if (!this.persist || !this.sessionFile || this.flushed) return;\n        this._persist(this.fileEntries[this.fileEntries.length - 1], true);\n    }\n    _persist(entry, force = false) {",
@@ -1010,4 +1021,5 @@ export const paths = [
 	"dist/core/skills.d.ts",
 	"dist/core/session-manager.js",
 	"dist/core/session-manager.d.ts",
+	"dist/core/model-runtime.js",
 ];

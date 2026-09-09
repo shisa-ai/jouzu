@@ -82,6 +82,10 @@
 		"dist/core/messages.d.ts": {
 			"before": "fdd51b8371984b68f2631f9f64f1259ac77f2d5153068ce75d6158bca27e7a66",
 			"after": "b3746474d2b20b87e8c169bc7d9960ac38298b8c82529b68e2aae0d2914bf37c"
+		},
+		"dist/core/model-runtime.js": {
+			"before": "32cd50599d9e6e001229090e3d0554b60e4addb8ab7b3165635a574feb660b74",
+			"after": "6a6717fedb00b6cb8454e34f9e4a03afe8cd2a2a74a036ac95837995c4f0c4e4"
 		}
 	},
 	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863",

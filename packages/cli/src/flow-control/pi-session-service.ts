@@ -19,6 +19,8 @@ import { createFlowWaitDecisionProducer, observedFlowWaits } from "./wait-decisi
 import { FlowWorkContext } from "./work-context.js";
 
 export interface PiFlowSessionOptions {
+	/** Set only when attaching at the SDK creation boundary, before extensions can replace the stream. */
+	qualifyProviderRoute?: boolean;
 	root: string;
 	maxInputBytes: number;
 	maxResultBytes: number;
@@ -57,11 +59,14 @@ export class PiFlowSessionService {
 	};
 	private transitionId?: string;
 	private closing = false;
+	private readonly trustedStream?: AgentSession["agent"]["streamFunction"];
 	private constructor(
 		private readonly session: AgentSession,
 		private readonly registry: PiFlowSessionRegistry,
 		private readonly options: PiFlowSessionOptions,
-	) {}
+	) {
+		this.trustedStream = options.qualifyProviderRoute ? session.agent.streamFunction : undefined;
+	}
 
 	static async open(session: AgentSession, options: PiFlowSessionOptions): Promise<PiFlowSessionService> {
 		if (
@@ -132,6 +137,7 @@ export class PiFlowSessionService {
 				true,
 				() => native.consumedSources(),
 				this.options.decorateNativeContext,
+				this.trustedStream,
 			);
 			this.opening.requests = requests;
 			const workContext = new FlowWorkContext(() => this.branch().attachment);

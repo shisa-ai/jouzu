@@ -17,6 +17,7 @@ import type {
 import { nativeCancelledSources, nativeSourceKey } from "./native-request-store.js";
 import { copyFlowPayload } from "./payload-copy.js";
 import { PiHostHooks } from "./pi-host-hooks.js";
+import { preparePiProviderRoute } from "./pi-provider-route.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
 export type NativeContextDecorator = (
@@ -40,6 +41,7 @@ export class PiNativeRequests {
 	private prepared?: { modelHash: string; capture?: NativeSourceCapture; projections?: NativeProjectionCapture };
 	private active = 0;
 	private closed = false;
+	private guardedStream?: AgentSession["agent"]["streamFunction"];
 	private capture?: NativeSourceCapture;
 	private projections?: NativeProjectionCapture;
 	private references?: AgentMessage[];
@@ -54,11 +56,14 @@ export class PiNativeRequests {
 		enforceRequiredSources = false,
 		consumedSources?: () => Promise<NativeSourceClaim[]>,
 		decorateContext?: NativeContextDecorator,
+		trustedStream?: AgentSession["agent"]["streamFunction"],
 	) {
 		if (!Number.isSafeInteger(maxBytes) || maxBytes < 1)
 			throw new FlowLedgerError("capacity", "Invalid native payload limit.");
 		if (session.sessionId !== store.scope.sessionId)
 			throw new FlowLedgerError("scope", "Native request storage belongs to another session.");
+		if (trustedStream && session.agent.streamFunction !== trustedStream)
+			throw new FlowLedgerError("identity", "Flow control cannot attach after the session request handler changed.");
 		if (attached.has(session)) throw new FlowLedgerError("identity", "Pi session already has native request receipts.");
 		attached.add(session);
 		if (identifySources) {
@@ -397,8 +402,12 @@ export class PiNativeRequests {
 			try {
 				if (!prepared || hash(context.messages) !== prepared.modelHash)
 					throw new FlowLedgerError("stale", "Native provider context differs from its checkpoint.");
+				const flowValidateProvider = trustedStream
+					? preparePiProviderRoute(session.modelRuntime, model, () => this.assertActive())
+					: undefined;
 				const response = await native(model, context, {
 					...options,
+					...(flowValidateProvider ? { flowValidateProvider } : {}),
 					onMessageConverted: (source, output) => {
 						this.assertActive();
 						if (admitting || finished)
@@ -521,8 +530,14 @@ export class PiNativeRequests {
 				throw error;
 			}
 		});
+		if (trustedStream) this.guardedStream = session.agent.streamFunction;
 	}
 	private assertActive(): void {
+		if (this.guardedStream && this.session.agent.streamFunction !== this.guardedStream)
+			throw new FlowLedgerError(
+				"identity",
+				"Flow control is holding this request because its session transport changed.",
+			);
 		if (this.closed || this.session.sessionId !== this.store.scope.sessionId)
 			throw new FlowLedgerError("stale", "Native request attachment is closed or replaced.");
 	}
