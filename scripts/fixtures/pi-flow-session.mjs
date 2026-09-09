@@ -1,6 +1,8 @@
 import { mkdtemp, rm } from "node:fs/promises";
+import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import {
 	createAgentSession,
 	DefaultResourceLoader,
@@ -118,4 +120,90 @@ export async function createFlowSession(
 		};
 	};
 	return { session, requests };
+}
+
+// The CLI bundle resolves its own Pi tree. The route guard compares runtime methods against
+// ModelRuntime.prototype, so the fixture must build its runtime from that same module instance.
+const cliPi = await import(
+	pathToFileURL(
+		join(import.meta.dirname, "../../packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/index.js"),
+	).href
+);
+
+/**
+ * A session whose provider route passes flow control's qualification: a real builtin
+ * openai-completions provider over a local server, with Pi's own stream left in place so
+ * `qualifyProviderRoute` observes the transport it captured at attach.
+ */
+export async function createQualifiedFlowSession(
+	t,
+	{ ingress, extensions = [], sessionManager, root: fixtureRoot } = {},
+) {
+	const root = fixtureRoot ?? (await mkdtemp(join(tmpdir(), "jouzu-flow-qualified-")));
+	const bodies = [];
+	const server = createServer((request, response) => {
+		let raw = "";
+		request.on("data", (chunk) => {
+			raw += chunk;
+		});
+		request.on("end", () => {
+			bodies.push(JSON.parse(raw));
+			response.writeHead(200, { "content-type": "text/event-stream" });
+			response.end(
+				'data: {"id":"fixture","choices":[{"index":0,"delta":{"content":"Done"},"finish_reason":"stop"}]}\n\ndata: [DONE]\n\n',
+			);
+		});
+	});
+	await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+	let session;
+	t.after(async () => {
+		await session?.dispose();
+		await new Promise((resolve) => server.close(resolve));
+		if (!fixtureRoot) await rm(root, { recursive: true, force: true });
+	});
+	const runtime = await cliPi.ModelRuntime.create({
+		modelsPath: null,
+		modelsStorePath: join(root, "models.json"),
+		authPath: join(root, "auth.json"),
+		refreshOnCreate: false,
+		allowModelNetwork: false,
+	});
+	runtime.registerProvider("fixture", {
+		api: "openai-completions",
+		apiKey: "fixture-key",
+		baseUrl: `http://127.0.0.1:${server.address().port}/v1`,
+		models: [
+			{
+				id: "fixture",
+				name: "fixture",
+				reasoning: false,
+				input: ["text", "image"],
+				contextWindow: 4096,
+				maxTokens: 256,
+				cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+			},
+		],
+	});
+	const loader = new cliPi.DefaultResourceLoader({
+		cwd: root,
+		agentDir: root,
+		noExtensions: true,
+		noSkills: true,
+		extensionFactories: extensions,
+	});
+	await loader.reload();
+	({ session } = await cliPi.createAgentSession({
+		cwd: root,
+		agentDir: root,
+		resourceLoader: loader,
+		modelRuntime: runtime,
+		model: runtime.getModel("fixture", "fixture"),
+		sessionManager: sessionManager ?? cliPi.SessionManager.inMemory(root),
+		settingsManager: cliPi.SettingsManager.inMemory({ retry: { enabled: false }, compaction: { enabled: false } }),
+		flowIngress: ingress,
+	}));
+	// Not inspected by the route guard, which checks provider and handler identity only.
+	runtime.hasConfiguredAuth = () => true;
+	runtime.checkAuth = async () => "fixture-key";
+	return { session, runtime, root, bodies };
 }

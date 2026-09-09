@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
-import { createFlowSession } from "../../../scripts/fixtures/pi-flow-session.mjs";
+import { createFlowSession, createQualifiedFlowSession } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { createFlowControlRuntime, defaultFlowControlLimits } from "../dist/flow-control/flow-runtime.js";
 
 async function runtime(t, overrides = {}) {
@@ -89,4 +89,42 @@ test("limits use documented defaults and accept overrides", async (t) => {
 	assert.equal(ingress.version, 1);
 	// Overrides must not mutate the shared default table.
 	assert.equal(defaultFlowControlLimits.maxWaitDurationMs, 8 * 60 * 60 * 1000);
+});
+
+test("a qualified provider route records an exact final-input receipt through the assembly", async (t) => {
+	const { flow, root, errors } = await runtime(t);
+	const sessionManager = SessionManager.inMemory(root);
+	const ingress = await flow.flowIngressFactory({ cwd: root, sessionManager });
+	const { session, bodies } = await createQualifiedFlowSession(t, {
+		root,
+		sessionManager,
+		extensions: flow.extensions,
+		ingress: {
+			version: 1,
+			attach: (target) => ingress.attach(target),
+			submit: (...args) => ingress.submit(...args),
+			beforeBranchChange: () => ingress.beforeBranchChange(),
+			branchChanged: () => ingress.branchChanged(),
+			dispose: () => ingress.dispose(),
+		},
+	});
+	await session.prompt("qualified hello");
+	assert.equal(bodies.length, 1);
+	assert.ok(
+		bodies[0].messages.some(
+			(message) => message.role === "user" && JSON.stringify(message.content).includes("qualified hello"),
+		),
+		"the transmitted payload carries the user instruction",
+	);
+	const branch = ingress.branch();
+	const requests = await branch.attachment.nativeRequests.snapshot();
+	assert.equal(requests.length, 1);
+	assert.equal(requests[0].outcome, "success");
+	assert.equal(requests[0].payload.api, "openai-completions");
+	// The route guard accepted the builtin provider, so the source is observed in the final request.
+	assert.ok(requests[0].payload.sources.some((source) => source.disposition === "included"));
+	assert.deepEqual(
+		errors.map((error) => error.code),
+		["identity"],
+	);
 });

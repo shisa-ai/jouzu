@@ -177,6 +177,8 @@ export class PiFlowSessionService {
 			this.opening.host = host;
 			const workTools = new PiWorkTools(this.session, workContext);
 			this.opening.workTools = workTools;
+			// Every flow wrapper is installed by this point, so the guarded transport is now stable.
+			requests.sealTransport();
 			const controller = new SessionFlowController(host, this.options.maxInputBytes, this.options.maxResultBytes);
 			controller.register(
 				createFlowWaitDecisionProducer(attachment.waits, {
