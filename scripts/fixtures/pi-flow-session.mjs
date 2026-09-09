@@ -135,23 +135,62 @@ const cliPi = await import(
  * openai-completions provider over a local server, with Pi's own stream left in place so
  * `qualifyProviderRoute` observes the transport it captured at attach.
  */
+/** One scripted assistant turn issuing the tool calls a model would otherwise choose. */
+export function assistantToolCalls(...calls) {
+	return { toolCalls: calls };
+}
+function sseFor(reply) {
+	const frames = [];
+	if (reply?.toolCalls?.length) {
+		frames.push({
+			id: "fixture",
+			choices: [
+				{
+					index: 0,
+					delta: {
+						tool_calls: reply.toolCalls.map((call, index) => ({
+							index,
+							id: call.id ?? `call-${index}`,
+							type: "function",
+							function: { name: call.name, arguments: JSON.stringify(call.arguments ?? {}) },
+						})),
+					},
+					finish_reason: null,
+				},
+			],
+		});
+		frames.push({ id: "fixture", choices: [{ index: 0, delta: {}, finish_reason: "tool_calls" }] });
+	} else {
+		frames.push({
+			id: "fixture",
+			choices: [{ index: 0, delta: { content: reply?.text ?? "Done" }, finish_reason: "stop" }],
+		});
+	}
+	return `${frames.map((frame) => `data: ${JSON.stringify(frame)}`).join("\n\n")}\n\ndata: [DONE]\n\n`;
+}
+
 export async function createQualifiedFlowSession(
 	t,
-	{ ingress, extensions = [], sessionManager, root: fixtureRoot } = {},
+	{ ingress, extensions = [], sessionManager, root: fixtureRoot, script } = {},
 ) {
 	const root = fixtureRoot ?? (await mkdtemp(join(tmpdir(), "jouzu-flow-qualified-")));
 	const bodies = [];
+	const replies = Array.isArray(script) ? [...script] : undefined;
 	const server = createServer((request, response) => {
 		let raw = "";
 		request.on("data", (chunk) => {
 			raw += chunk;
 		});
 		request.on("end", () => {
-			bodies.push(JSON.parse(raw));
+			const body = JSON.parse(raw);
+			bodies.push(body);
+			const reply = replies
+				? replies.shift()
+				: typeof script === "function"
+					? script(body, bodies.length - 1)
+					: undefined;
 			response.writeHead(200, { "content-type": "text/event-stream" });
-			response.end(
-				'data: {"id":"fixture","choices":[{"index":0,"delta":{"content":"Done"},"finish_reason":"stop"}]}\n\ndata: [DONE]\n\n',
-			);
+			response.end(sseFor(reply));
 		});
 	});
 	await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
