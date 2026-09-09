@@ -197,3 +197,72 @@ test("branch capacity failure preserves the current scope without creating a tra
 	assert.deepEqual(await registry.snapshot(), state);
 	assert.equal((await registry.currentScope()).branchId, state.activeBranchId);
 });
+
+/** Navigate `count` times so the registry holds a real ancestry chain. */
+async function navigate(registry, count) {
+	for (let step = 0; step < count; step++) {
+		const state = await registry.snapshot();
+		const transition = await registry.beginNavigation(state.revision, `leaf-${step}`);
+		await registry.finishNavigation(transition.id, `leaf-${step + 1}`);
+	}
+	return registry.snapshot();
+}
+
+test("branch retirement keeps the active branch, its ancestry link, and the navigated fact", async (t) => {
+	const { open } = await fixture(t);
+	const registry = await open();
+	const before = await navigate(registry, 5);
+	assert.equal(before.branches.length, 6);
+	assert.equal(before.retired, undefined);
+
+	assert.equal(await registry.retireBranchHistory(2), 4);
+	const after = await registry.snapshot();
+	assert.equal(after.branches.length, 2, "the newest records are kept");
+	assert.equal(after.activeBranchId, before.activeBranchId, "the active branch is never retired");
+	assert.deepEqual(after.branches, before.branches.slice(-2), "and the kept records are unchanged");
+	assert.deepEqual(after.retired, { count: 4, through: before.branches.at(-2).fromBranchId });
+	// The retained head still links to the newest retired record, so ancestry stays auditable.
+	assert.equal(after.branches[0].fromBranchId, before.branches[3].id);
+
+	// Retirement can leave one record behind, so record count alone no longer proves a first branch.
+	assert.equal(await registry.retireBranchHistory(1), 1);
+	const collapsed = await registry.snapshot();
+	assert.equal(collapsed.branches.length, 1);
+	assert.deepEqual(collapsed.retired, { count: 5, through: collapsed.branches[0].fromBranchId });
+	await assert.rejects(registry.bindInitialPosition(collapsed.revision, { entryId: "e", entryHash: "a".repeat(64) }), {
+		code: "stale",
+	});
+});
+
+test("retirement is a no-op below its keep size and is refused mid-navigation", async (t) => {
+	const { open } = await fixture(t);
+	const registry = await open();
+	const initial = await navigate(registry, 2);
+	assert.equal(await registry.retireBranchHistory(8), 0, "nothing is retired below the keep size");
+	assert.deepEqual(await registry.snapshot(), initial, "and the revision does not move");
+
+	const state = await registry.snapshot();
+	await registry.beginNavigation(state.revision, "old-leaf");
+	await assert.rejects(registry.retireBranchHistory(1), { code: "busy" });
+	for (const size of [0, -1, 1.5]) await assert.rejects(registry.retireBranchHistory(size), { code: "capacity" });
+});
+
+test("a retired ancestry survives reopen and keeps its records valid", async (t) => {
+	const { open } = await fixture(t);
+	const first = await open();
+	await navigate(first, 4);
+	await first.retireBranchHistory(2);
+	const before = await first.snapshot();
+	await first.close();
+
+	const second = await open("parent", "later-leaf");
+	assert.deepEqual(await second.snapshot(), before, "the retired count and its link are durable");
+	// A retired head is accepted on reload; the same record without one is not.
+	const state = await second.snapshot();
+	const transition = await second.beginNavigation(state.revision, "old-leaf");
+	const scope = await second.finishNavigation(transition.id, "new-leaf");
+	const grown = await second.snapshot();
+	assert.equal(grown.branches.length, 3);
+	assert.equal(grown.activeBranchId, scope.branchId);
+	assert.deepEqual(grown.retired, before.retired, "navigation after retirement does not change the retired record");
+});

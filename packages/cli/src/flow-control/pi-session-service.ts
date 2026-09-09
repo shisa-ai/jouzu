@@ -237,6 +237,25 @@ export class PiFlowSessionService {
 		});
 	}
 
+	/**
+	 * Free result and branch capacity. Both stores accumulate one record per composed result wake
+	 * and per branch navigation, and neither pruned anything, so a long session reached their limits
+	 * and held every later result. Retired manifests and branch records are history: the newest
+	 * remain readable, and the registry keeps proof that navigation happened.
+	 */
+	retireResultHistory(keepManifests?: number, keepBranches?: number) {
+		return this.registry.run(async () => {
+			const branch = this.branch();
+			const result = await branch.host.atIdle(async () => {
+				if (this.branch() !== branch) throw new FlowLedgerError("stale", "Result retirement branch changed.");
+				const manifests = await branch.attachment.results.retire(keepManifests);
+				return manifests + (await this.registry.retireBranchHistory(keepBranches));
+			});
+			if (result.kind === "busy") throw new FlowLedgerError("busy", "Result retirement requires an idle session.");
+			return result.value;
+		});
+	}
+
 	/** Keep handled user source evidence available while freeing active submission capacity. */
 	archiveSubmissionHistory() {
 		return this.registry.run(async () => {

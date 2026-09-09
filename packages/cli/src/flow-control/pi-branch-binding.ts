@@ -1,7 +1,12 @@
 import { createHash, randomUUID } from "node:crypto";
 import type { CustomEntry, SessionManager } from "@earendil-works/pi-coding-agent";
 import { verifyPiHistoryEntry } from "./pi-history-receipts.js";
-import type { FlowBranchPosition, FlowSessionRegistryState, PiFlowSessionRegistry } from "./pi-session-registry.js";
+import {
+	type FlowBranchPosition,
+	type FlowSessionRegistryState,
+	neverNavigated,
+	type PiFlowSessionRegistry,
+} from "./pi-session-registry.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 
 const memoryInstances = new WeakMap<SessionManager, { sessionId: string; id: string }>();
@@ -99,7 +104,7 @@ export async function bindPiFlowBranch(registry: PiFlowSessionRegistry, manager:
 		}
 		const branch = state.branches.at(-1);
 		if (!branch) throw new FlowLedgerError("schema", "Active branch record is missing.");
-		if (!marker && !branch.position && state.branches.length === 1 && manager.getLeafId() === branch.enteredAtLeafId)
+		if (!marker && !branch.position && neverNavigated(state) && manager.getLeafId() === branch.enteredAtLeafId)
 			marker = appendMarker(manager, { version: 1, sessionId: state.sessionId, branchId: branch.id });
 		if (!marker || marker.data.branchId !== branch.id || marker.data.transitionId !== branch.transitionId)
 			throw new FlowLedgerError("identity", "Active Pi branch differs from its flow registry.");
@@ -113,7 +118,7 @@ export async function bindPiFlowBranch(registry: PiFlowSessionRegistry, manager:
 			)
 				throw new FlowLedgerError("identity", "Verified branch position differs from its registry binding.");
 		} else {
-			if (state.branches.length !== 1 || marker.parentId !== branch.enteredAtLeafId)
+			if (!neverNavigated(state) || marker.parentId !== branch.enteredAtLeafId)
 				throw new FlowLedgerError("identity", "Unbound branch marker cannot establish initial ownership.");
 			await registry.bindInitialPosition(state.revision, position);
 		}

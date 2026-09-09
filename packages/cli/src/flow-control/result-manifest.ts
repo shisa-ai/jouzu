@@ -1,5 +1,12 @@
 import { createHash } from "node:crypto";
-import { BACKGROUND_CONTEXT, type Session, type SessionReader, setValue, value } from "@earendil-works/pi-agent-core";
+import {
+	BACKGROUND_CONTEXT,
+	deleteValue,
+	type Session,
+	type SessionReader,
+	setValue,
+	value,
+} from "@earendil-works/pi-agent-core";
 import { type FlowResultReference, normalizeFlowResults } from "./result-types.js";
 
 export type { FlowResultReference } from "./result-types.js";
@@ -16,6 +23,12 @@ interface Header {
 	version: 1;
 	scope: FlowScope;
 	manifests: { id: string; bytes: number }[];
+	/**
+	 * Manifests dropped by retirement. Their membership is no longer retrievable, so the reuse check
+	 * below covers retained manifests only: a later identity that contradicts a retired one is not a
+	 * contradiction any reader can still observe.
+	 */
+	retired?: number;
 }
 export interface FlowResultPage {
 	reference: string;
@@ -77,7 +90,7 @@ export class FlowResultManifestStore {
 	private async header(reader: SessionReader): Promise<Header> {
 		const saved = (await reader.getValue(headerAddress, BACKGROUND_CONTEXT))?.value;
 		if (!saved && this.initialized) throw new FlowLedgerError("schema", "Result manifest index is missing.");
-		const header = saved ?? { version: 1, scope: this.ownership.scope, manifests: [] };
+		const header: Header = saved ?? { version: 1, scope: this.ownership.scope, manifests: [] };
 		if (
 			header.version !== 1 ||
 			!sameScope(header.scope, this.ownership.scope) ||
@@ -87,6 +100,7 @@ export class FlowResultManifestStore {
 				(entry) => !entry || !/^[a-f0-9]{64}$/.test(entry.id) || !Number.isSafeInteger(entry.bytes) || entry.bytes < 1,
 			) ||
 			new Set(header.manifests.map((entry) => entry.id)).size !== header.manifests.length ||
+			(header.retired !== undefined && (!Number.isSafeInteger(header.retired) || header.retired < 1)) ||
 			bytes(header) + header.manifests.reduce((total, entry) => total + entry.bytes, 0) > this.limits.maxBytes
 		)
 			throw new FlowLedgerError("schema", "Invalid result manifest index.");
@@ -134,6 +148,29 @@ export class FlowResultManifestStore {
 					throw new FlowLedgerError("capacity", "Result manifest retention limit reached.");
 				await mutation.commit([setValue(address(id), record), setValue(headerAddress, header)], context);
 				return referenceFor(id);
+			}, BACKGROUND_CONTEXT),
+		);
+	}
+	/**
+	 * Drop the oldest manifests past `keep`, so a long session cannot reach the retention limit and
+	 * hold every later result. A page request for a retired reference fails the same way a foreign
+	 * one does, rather than returning partial membership. Returns how many were retired.
+	 */
+	retire(keep = 32): Promise<number> {
+		if (!Number.isSafeInteger(keep) || keep < 1)
+			return Promise.reject(new FlowLedgerError("capacity", "Invalid result manifest retention size."));
+		return this.ownership.run(() =>
+			this.session.mutate(async (mutation, context) => {
+				const header = await this.header(mutation);
+				const excess = header.manifests.length - keep;
+				if (excess < 1) return 0;
+				const dropped = header.manifests.splice(0, excess);
+				header.retired = (header.retired ?? 0) + dropped.length;
+				await mutation.commit(
+					[...dropped.map((entry) => deleteValue(address(entry.id))), setValue(headerAddress, header)],
+					context,
+				);
+				return dropped.length;
 			}, BACKGROUND_CONTEXT),
 		);
 	}

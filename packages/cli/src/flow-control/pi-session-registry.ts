@@ -30,8 +30,17 @@ export interface FlowSessionRegistryState {
 	revision: number;
 	activeBranchId: string;
 	branches: FlowBranchRecord[];
+	/** Ancestry dropped by retirement. Its presence is what still proves this session navigated. */
+	retired?: { count: number; through: string };
 	transition?: FlowBranchTransition;
 }
+
+/**
+ * Whether this session still sits on its first branch. Retirement can leave one record behind, so
+ * the record count alone stops proving it; a retired ancestor means navigation already happened.
+ */
+export const neverNavigated = (state: FlowSessionRegistryState): boolean =>
+	state.branches.length === 1 && state.retired === undefined;
 const address = value<FlowSessionRegistryState>("jouzu.flow.session", "v1");
 const identity = (id: unknown): id is string => typeof id === "string" && id.length > 0 && id.length <= 512;
 const leaf = (id: unknown) => id === null || identity(id);
@@ -88,6 +97,12 @@ export class PiFlowSessionRegistry {
 			throw new FlowLedgerError("schema", "Invalid session branch registry.");
 		if (state.branches.length > 1024 || Buffer.byteLength(JSON.stringify(state)) > 1024 * 1024)
 			throw new FlowLedgerError("capacity", "Session branch registry capacity reached.");
+		const retired = state.retired;
+		if (
+			retired !== undefined &&
+			(!retired || !Number.isSafeInteger(retired.count) || retired.count < 1 || !identity(retired.through))
+		)
+			throw new FlowLedgerError("schema", "Invalid retired branch ancestry.");
 		const ids = new Set<string>(),
 			transitions = new Set<string>();
 		for (const [index, branch] of state.branches.entries()) {
@@ -98,7 +113,9 @@ export class PiFlowSessionRegistry {
 				!leaf(branch.enteredAtLeafId) ||
 				(branch.position !== undefined && !validPosition(branch.position)) ||
 				(index === 0
-					? branch.fromBranchId !== undefined || branch.transitionId !== undefined
+					? retired
+						? branch.fromBranchId !== retired.through || !identity(branch.transitionId)
+						: branch.fromBranchId !== undefined || branch.transitionId !== undefined
 					: branch.fromBranchId !== state.branches[index - 1].id ||
 						!identity(branch.transitionId) ||
 						transitions.has(branch.transitionId))
@@ -170,7 +187,7 @@ export class PiFlowSessionRegistry {
 		if (!validPosition(position))
 			return Promise.reject(new FlowLedgerError("identity", "Invalid branch position evidence."));
 		return this.transact((state) => {
-			if (state.revision !== expectedRevision || state.transition || state.branches.length !== 1)
+			if (state.revision !== expectedRevision || state.transition || !neverNavigated(state))
 				throw new FlowLedgerError("stale", "Initial branch binding changed.");
 			const branch = state.branches[0];
 			if (branch.position && !samePosition(branch.position, position))
@@ -180,6 +197,29 @@ export class PiFlowSessionRegistry {
 			return { result: undefined, changed };
 		});
 	}
+	/**
+	 * Drop branch ancestry past `keep`, oldest first. Only the active branch and the newest records
+	 * carry position evidence a live attachment can still need; older records are history. The
+	 * active branch is never retired and retirement is refused while a navigation is unresolved, so
+	 * a reconciling attachment always finds its own ancestry. Returns how many were retired.
+	 */
+	retireBranchHistory(keep = 64): Promise<number> {
+		if (!Number.isSafeInteger(keep) || keep < 1)
+			return Promise.reject(new FlowLedgerError("capacity", "Invalid branch retention size."));
+		return this.transact((state) => {
+			if (state.transition) throw new FlowLedgerError("busy", "Branch retirement requires a settled navigation.");
+			const excess = state.branches.length - keep;
+			if (excess < 1) return { result: 0, changed: false };
+			const dropped = state.branches.splice(0, excess);
+			const head = state.branches[0];
+			const through = head?.fromBranchId;
+			if (!head?.transitionId || through === undefined || through !== dropped.at(-1)?.id)
+				throw new FlowLedgerError("identity", "Retained branch ancestry does not follow the retired records.");
+			state.retired = { count: (state.retired?.count ?? 0) + dropped.length, through };
+			return { result: dropped.length, changed: true };
+		});
+	}
+
 	/** Persist before detaching the old controller or mutating the host transcript. */
 	beginNavigation(expectedRevision: number, previousLeafId: string | null): Promise<FlowBranchTransition> {
 		if (!leaf(previousLeafId))

@@ -253,6 +253,7 @@ export class PiSessionFlowIngress implements Ingress {
 								await this.service?.archiveSubmissionHistory();
 								await this.service?.retireRequestHistory();
 								await this.service?.retireLedgerHistory();
+								await this.service?.retireResultHistory();
 							} catch (error) {
 								if (error instanceof FlowLedgerError && error.code === "capacity")
 									this.options.autoRelease.onError(error);
@@ -323,6 +324,9 @@ export class PiSessionFlowIngress implements Ingress {
 	}
 	retireLedgerHistory(keep?: number) {
 		return this.manage((service) => service.retireLedgerHistory(keep));
+	}
+	retireResultHistory(keepManifests?: number, keepBranches?: number) {
+		return this.manage((service) => service.retireResultHistory(keepManifests, keepBranches));
 	}
 	retireWaitHistory(includeUserWork = false) {
 		return this.manage((service) => service.retireWaitHistory(includeUserWork));

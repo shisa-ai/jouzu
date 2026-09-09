@@ -81,6 +81,7 @@ test("a blocked lane holds its continuation across idle maintenance", async (t) 
 	await f.ingress.archiveSubmissionHistory();
 	await f.ingress.retireRequestHistory();
 	await f.ingress.retireLedgerHistory();
+	await f.ingress.retireResultHistory();
 	await settle();
 
 	assert.equal(f.bodies.length, before, "maintenance sends no continuation for the blocked lane");

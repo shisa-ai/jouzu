@@ -211,3 +211,42 @@ test("result tool pages retained membership without acknowledgement and fences b
 	};
 	await assert.rejects(invoke({ reference }), { code: "scope" });
 });
+
+test("manifest retirement frees the limit and keeps the newest references readable", async (t) => {
+	const { store } = await memory(t, { maxManifests: 6, maxMembers: 32, maxBytes: 512 * 1024 });
+	const references = [];
+	for (let index = 0; index < 6; index++) references.push(await store.retain([member(`r${index}`)]));
+	await assert.rejects(store.retain([member("overflow")]), { code: "capacity" });
+
+	assert.equal(await store.retire(2), 4, "the oldest manifests are retired");
+	assert.equal(await store.retire(2), 0, "and retiring again does nothing");
+	for (const reference of references.slice(-2)) {
+		const page = await store.page(reference, pageOptions);
+		assert.equal(page.total, 1, "a kept manifest still pages its exact membership");
+	}
+	for (const reference of references.slice(0, 4))
+		await assert.rejects(store.page(reference, pageOptions), { code: "identity" });
+
+	// The freed slots accept new work, which is the point of retiring at all.
+	const later = await store.retain([member("after")]);
+	assert.equal((await store.page(later, pageOptions)).members[0].id, "after");
+});
+
+test("retirement rejects an invalid keep size and survives reopen", async (t) => {
+	const root = await rootFor(t);
+	let attachment = await PiFlowAttachment.open(root, scope);
+	t.after(() => attachment.close());
+	for (const size of [0, -1, 2.5]) await assert.rejects(attachment.results.retire(size), { code: "capacity" });
+
+	const first = await attachment.results.retain([member("first")]);
+	const second = await attachment.results.retain([member("second")]);
+	assert.equal(await attachment.results.retire(1), 1);
+	await attachment.close();
+
+	attachment = await PiFlowAttachment.open(root, scope);
+	await assert.rejects(attachment.results.page(first, pageOptions), { code: "identity" });
+	assert.equal((await attachment.results.page(second, pageOptions)).members[0].id, "second");
+	// A retired manifest's content can be retained again; retirement is not a permanent fence.
+	assert.equal(await attachment.results.retain([member("first")]), first);
+	assert.equal((await attachment.results.page(first, pageOptions)).members[0].id, "first");
+});
