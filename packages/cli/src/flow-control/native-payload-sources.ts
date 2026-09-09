@@ -13,12 +13,15 @@ type SourceAPI =
 	| "openai-responses"
 	| "openai-codex-responses"
 	| "anthropic-messages"
-	| "google-generative-ai";
+	| "google-generative-ai"
+	| "google-vertex";
 const responsesAPI = (api: SourceAPI): api is "openai-responses" | "openai-codex-responses" =>
 	api === "openai-responses" || api === "openai-codex-responses";
+const googleAPI = (api: SourceAPI): api is "google-generative-ai" | "google-vertex" =>
+	api === "google-generative-ai" || api === "google-vertex";
 const toolIdentity = (message: unknown, api: SourceAPI) => {
 	if (!message || typeof message !== "object") return undefined;
-	if (api === "google-generative-ai") {
+	if (googleAPI(api)) {
 		const result = googleToolResponse(message);
 		const response = result?.response;
 		if (
@@ -70,7 +73,7 @@ const toolIdentity = (message: unknown, api: SourceAPI) => {
 	return hash({ role: "tool", toolCallId: message.tool_call_id, name: "name" in message ? message.name : undefined });
 };
 const contentHash = (message: unknown, api: SourceAPI) => {
-	if (api === "google-generative-ai") {
+	if (googleAPI(api)) {
 		const result = googleToolResponse(message);
 		if (result && toolIdentity(message, api)) {
 			const response = result.response as Record<string, unknown>;
@@ -119,7 +122,7 @@ const contentHash = (message: unknown, api: SourceAPI) => {
 	return projected ? hash(projected.content) : undefined;
 };
 const rows = (payload: unknown, api: SourceAPI): unknown[] => {
-	const key = api === "google-generative-ai" ? "contents" : responsesAPI(api) ? "input" : "messages";
+	const key = googleAPI(api) ? "contents" : responsesAPI(api) ? "input" : "messages";
 	const result = payload && typeof payload === "object" ? (payload as Record<string, unknown>)[key] : undefined;
 	return Array.isArray(result) ? result : [];
 };
@@ -189,14 +192,15 @@ export class NativePayloadSources {
 				api !== this.api ||
 				model?.index === undefined ||
 				model.status === "unresolved" ||
-				(this.api === "google-generative-ai" && (!googleInputPreserved(payload) || !googleInputPreserved(serialized)))
+				(googleAPI(this.api) && (!googleInputPreserved(payload) || !googleInputPreserved(serialized)))
 			)
 				return unresolved;
 			const link = this.links.get(model.index);
 			if (!link) return unresolved;
 			const blockResult =
-				["anthropic-messages", "google-generative-ai"].includes(this.api) && link.toolIdentity !== undefined;
-			const blockKey = this.api === "google-generative-ai" ? "parts" : "content";
+				["anthropic-messages", "google-generative-ai", "google-vertex"].includes(this.api) &&
+				link.toolIdentity !== undefined;
+			const blockKey = googleAPI(this.api) ? "parts" : "content";
 			const matches = finalRows.flatMap((row, index): { index: number; blockIndex?: number }[] => {
 				if (!blockResult) return payloadRowOrigin(row) === payloadRowOrigin(link.output) ? [{ index }] : [];
 				const blocks = row && typeof row === "object" ? (row as Record<string, unknown>)[blockKey] : undefined;

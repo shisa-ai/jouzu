@@ -11,7 +11,7 @@ export function nativePayloadOverlap(a: NativePayloadSource, b: NativePayloadSou
 export function validNativeBlockPosition(source: NativePayloadSource, api: string, bytes: number): boolean {
 	return (
 		source.blockIndex === undefined ||
-		(["anthropic-messages", "google-generative-ai"].includes(api) &&
+		(["anthropic-messages", "google-generative-ai", "google-vertex"].includes(api) &&
 			source.index !== undefined &&
 			Number.isSafeInteger(source.blockIndex) &&
 			source.blockIndex >= 0 &&

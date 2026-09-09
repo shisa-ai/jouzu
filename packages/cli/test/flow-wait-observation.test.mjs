@@ -1,10 +1,12 @@
 import assert from "node:assert/strict";
 import { mkdtemp, rm } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { stream as streamAnthropic } from "@earendil-works/pi-ai/api/anthropic-messages";
 import { stream as streamGoogle } from "@earendil-works/pi-ai/api/google-generative-ai";
+import { stream as streamVertex } from "@earendil-works/pi-ai/api/google-vertex";
 import { convertMessages, stream } from "@earendil-works/pi-ai/api/openai-completions";
 import { stream as streamResponses } from "@earendil-works/pi-ai/api/openai-responses";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
@@ -37,6 +39,8 @@ async function fixture(
 		toolCount = 1,
 		pending = false,
 		codexMode = "auto",
+		vertexAuth = "key",
+		credentialFailureAt = 0,
 	} = {},
 ) {
 	const root = supplied ?? (await mkdtemp(join(tmpdir(), "jouzu-wait-observation-"))),
@@ -61,6 +65,16 @@ async function fixture(
 							: undefined,
 				})
 			: undefined;
+	let authRequests = 0;
+	if (api === "google-vertex" && vertexAuth === "adc") {
+		const providerRequire = createRequire(import.meta.resolve("@earendil-works/pi-ai/api/google-vertex"));
+		const { GoogleAuth } = createRequire(providerRequire.resolve("@google/genai"))("google-auth-library");
+		t.mock.method(GoogleAuth.prototype, "getRequestHeaders", async () => {
+			authRequests++;
+			if (authRequests === credentialFailureAt) throw new Error("fixture credentials unavailable");
+			return new Headers({ Authorization: "Bearer fixture" });
+		});
+	}
 	let sourceState = pending ? "pending" : "satisfied",
 		registration;
 	const listeners = new Set();
@@ -78,7 +92,7 @@ async function fixture(
 			projections: new Map([
 				[
 					api,
-					api === "google-generative-ai"
+					["google-generative-ai", "google-vertex"].includes(api)
 						? googleFlowPayload
 						: api === "anthropic-messages"
 							? anthropicFlowPayload
@@ -129,7 +143,9 @@ async function fixture(
 		model: {
 			...model,
 			api,
-			...(api === "google-generative-ai" ? { id: "gemini-3.1-pro-preview", provider: "google" } : {}),
+			...(["google-generative-ai", "google-vertex"].includes(api)
+				? { id: "gemini-3.1-pro-preview", provider: api === "google-vertex" ? "google-vertex" : "google" }
+				: {}),
 			...(api === "openai-codex-responses" ? { id: "gpt-5.4", provider: "openai-codex" } : {}),
 		},
 		sessionManager: manager,
@@ -142,7 +158,7 @@ async function fixture(
 			version: 1,
 			async attach(session) {
 				if (codex) session.agent.streamFunction = codex.stream;
-				else if (api === "google-generative-ai") {
+				else if (["google-generative-ai", "google-vertex"].includes(api)) {
 					t.mock.method(globalThis, "fetch", async (_url, init) => {
 						sent.push(JSON.parse(init.body));
 						if (failure && sent.length === 2) return new Response("fixture unavailable", { status: 503 });
@@ -158,7 +174,14 @@ async function fixture(
 						);
 					});
 					session.agent.streamFunction = (model, context, options) =>
-						streamGoogle(model, context, { ...options, apiKey: "fixture", maxRetries: 0 });
+						(api === "google-vertex" ? streamVertex : streamGoogle)(model, context, {
+							...options,
+							apiKey: api === "google-vertex" && vertexAuth === "adc" ? undefined : "fixture",
+							...(api === "google-vertex" && vertexAuth === "adc"
+								? { project: "fixture-project", location: "us-central1", env: {} }
+								: {}),
+							maxRetries: 0,
+						});
 				} else
 					session.agent.streamFunction = (model, context, options) =>
 						(api === "anthropic-messages" ? streamAnthropic : api === "openai-responses" ? streamResponses : stream)(
@@ -290,6 +313,9 @@ async function fixture(
 		errors,
 		decisions,
 		codex,
+		get authRequests() {
+			return authRequests;
+		},
 		async complete(wake = true) {
 			sourceState = "satisfied";
 			for (const listener of listeners) listener.changed(evidence(listener.identity));
@@ -531,6 +557,7 @@ for (const api of [
 	"openai-responses",
 	"anthropic-messages",
 	"google-generative-ai",
+	"google-vertex",
 	"openai-codex-responses",
 ])
 	test(`${api}: later dependency completion dispatches one retained decision and survives reopening`, async (t) => {
@@ -634,113 +661,116 @@ for (const mode of ["replaced", "omitted", "tool-copy", "tool-gap"])
 		assert.deepEqual(f.errors, []);
 	});
 
-for (const mode of ["intact", "content", "omitted", "failed"])
-	test(`Google grouped wait tool observation through SDK transport: ${mode}`, async (t) => {
-		const api = "google-generative-ai";
-		const f = await fixture(t, {
-			api,
-			toolCount: 2,
-			automatic: mode === "intact",
-			failure: mode === "failed",
-			change(payload) {
-				const row = payload.contents.find((row) => row.parts.some((part) => part.functionResponse));
-				if (!row) return;
-				if (mode === "content") row.parts[0].functionResponse.response.output += " changed";
-				if (mode === "omitted") row.parts.shift();
-			},
-		});
-		await f.session.prompt("wait for the finished process");
-		if (mode === "intact") {
-			await f.ingress.wakeProducers();
-			await tick();
-		}
-		assert.equal(f.sent.length, 2);
-		const attachment = f.ingress.branch().attachment;
-		const records = await attachment.nativeRequests.snapshot();
-		assert.deepEqual(
-			records[1].payload.projections.map((p) => p.disposition),
-			[mode === "content" ? "changed" : mode === "omitted" ? "unresolved" : "included", "included"],
-		);
-		assert.equal((await f.decisions()).length, mode === "intact" ? 0 : mode === "failed" ? 2 : 1);
-		assert.deepEqual(f.errors, []);
-		if (mode !== "intact") {
-			await f.session.prompt("report the wait status");
-			assert.deepEqual(await f.decisions(), []);
-			return;
-		}
-		assert.deepEqual(
-			records[1].payload.projections.map((p) => [p.index, p.blockIndex]),
-			[
-				[2, 0],
-				[2, 1],
-			],
-		);
-		for (const change of ["missing", "overlap", "unqualified"]) {
-			const payload = structuredClone(records[1].payload);
-			if (change === "missing") delete payload.projections[0].blockIndex;
-			if (change === "overlap") payload.projections[1].blockIndex = 0;
-			if (change === "unqualified") payload.api = "google-vertex";
-			assert.throws(() =>
-				validateNativeProjections(
-					records[1].projectionCapture,
-					records[1].transformedHash,
-					records[1].modelHash,
-					payload,
-				),
+for (const api of ["google-generative-ai", "google-vertex"])
+	for (const mode of ["intact", "content", "omitted", "failed"])
+		test(`${api} grouped wait tool observation through SDK transport: ${mode}`, async (t) => {
+			const f = await fixture(t, {
+				api,
+				toolCount: 2,
+				automatic: mode === "intact",
+				failure: mode === "failed",
+				change(payload) {
+					const row = payload.contents.find((row) => row.parts.some((part) => part.functionResponse));
+					if (!row) return;
+					if (mode === "content") row.parts[0].functionResponse.response.output += " changed";
+					if (mode === "omitted") row.parts.shift();
+				},
+			});
+			await f.session.prompt("wait for the finished process");
+			if (mode === "intact") {
+				await f.ingress.wakeProducers();
+				await tick();
+			}
+			assert.equal(f.sent.length, 2);
+			const attachment = f.ingress.branch().attachment;
+			const records = await attachment.nativeRequests.snapshot();
+			assert.deepEqual(
+				records[1].payload.projections.map((p) => p.disposition),
+				[mode === "content" ? "changed" : mode === "omitted" ? "unresolved" : "included", "included"],
 			);
-		}
-		await f.ingress.dispose();
-		const next = await fixture(t, {
-			root: f.root,
-			api,
-			automatic: true,
-			issueTool: false,
-			manager: f.session.sessionManager,
+			assert.equal((await f.decisions()).length, mode === "intact" ? 0 : mode === "failed" ? 2 : 1);
+			assert.deepEqual(f.errors, []);
+			if (mode !== "intact") {
+				await f.session.prompt("report the wait status");
+				assert.deepEqual(await f.decisions(), []);
+				return;
+			}
+			assert.deepEqual(
+				records[1].payload.projections.map((p) => [p.index, p.blockIndex]),
+				[
+					[2, 0],
+					[2, 1],
+				],
+			);
+			for (const change of ["missing", "overlap", "unqualified"]) {
+				const payload = structuredClone(records[1].payload);
+				if (change === "missing") delete payload.projections[0].blockIndex;
+				if (change === "overlap") payload.projections[1].blockIndex = 0;
+				if (change === "unqualified") payload.api = "pi-messages";
+				assert.throws(() =>
+					validateNativeProjections(
+						records[1].projectionCapture,
+						records[1].transformedHash,
+						records[1].modelHash,
+						payload,
+					),
+				);
+			}
+			await f.ingress.dispose();
+			const next = await fixture(t, {
+				root: f.root,
+				api,
+				automatic: true,
+				issueTool: false,
+				manager: f.session.sessionManager,
+			});
+			await next.ingress.wakeProducers();
+			assert.deepEqual(next.sent, []);
+			assert.deepEqual(await next.decisions(), []);
+			await next.session.prompt("continue");
+			assert.equal(next.sent.length, 1);
+			assert.deepEqual(await next.decisions(), []);
 		});
-		await next.ingress.wakeProducers();
-		assert.deepEqual(next.sent, []);
-		assert.deepEqual(await next.decisions(), []);
-		await next.session.prompt("continue");
-		assert.equal(next.sent.length, 1);
-		assert.deepEqual(await next.decisions(), []);
-	});
 
-for (const mode of ["replaced", "omitted", "extra-body"])
-	test(`Google ${mode} decision is withheld and retained`, async (t) => {
-		const f = await fixture(t, {
-			api: "google-generative-ai",
-			pending: true,
-			change(payload) {
-				for (const row of payload.contents) {
-					const part = row.parts.find(
-						(part) =>
-							typeof part.text === "string" && part.text.includes('"flowInput"') && part.text.includes('"kind":"wait"'),
-					);
-					if (!part) continue;
-					if (mode === "replaced") {
-						const frame = JSON.parse(part.text);
-						frame.content = "changed";
-						part.text = JSON.stringify(frame);
+for (const api of ["google-generative-ai", "google-vertex"])
+	for (const mode of ["replaced", "omitted", "extra-body"])
+		test(`${api} ${mode} decision is withheld and retained`, async (t) => {
+			const f = await fixture(t, {
+				api,
+				pending: true,
+				change(payload) {
+					for (const row of payload.contents) {
+						const part = row.parts.find(
+							(part) =>
+								typeof part.text === "string" &&
+								part.text.includes('"flowInput"') &&
+								part.text.includes('"kind":"wait"'),
+						);
+						if (!part) continue;
+						if (mode === "replaced") {
+							const frame = JSON.parse(part.text);
+							frame.content = "changed";
+							part.text = JSON.stringify(frame);
+						}
+						if (mode === "omitted") row.parts = row.parts.filter((candidate) => candidate !== part);
+						if (mode === "extra-body") payload.config.httpOptions = { extraBody: { contents: [] } };
 					}
-					if (mode === "omitted") row.parts = row.parts.filter((candidate) => candidate !== part);
-					if (mode === "extra-body") payload.config.httpOptions = { extraBody: { contents: [] } };
-				}
-			},
+				},
+			});
+			await f.session.prompt("wait");
+			await f.complete();
+			assert.equal(f.sent.length, 2);
+			const [attempt] = (await f.ingress.branch().attachment.ledger.snapshot()).attempts;
+			assert.equal(attempt.phase, "withheld");
+			assert.equal(attempt.requests[0].handedOff, false);
+			assert.equal(
+				attempt.requests[0].payload.inclusion[0].disposition,
+				mode === "replaced" ? "replaced" : mode === "omitted" ? "omitted" : "rejected",
+			);
+			assert.equal((await f.decisions()).length, 1);
+			await f.ingress.wakeProducers();
+			assert.equal(f.sent.length, 2);
 		});
-		await f.session.prompt("wait");
-		await f.complete();
-		assert.equal(f.sent.length, 2);
-		const [attempt] = (await f.ingress.branch().attachment.ledger.snapshot()).attempts;
-		assert.equal(attempt.phase, "withheld");
-		assert.equal(attempt.requests[0].handedOff, false);
-		assert.equal(
-			attempt.requests[0].payload.inclusion[0].disposition,
-			mode === "replaced" ? "replaced" : mode === "omitted" ? "omitted" : "rejected",
-		);
-		assert.equal((await f.decisions()).length, 1);
-		await f.ingress.wakeProducers();
-		assert.equal(f.sent.length, 2);
-	});
 
 for (const codexMode of ["sse", "websocket", "websocket-cached"])
 	for (const pending of [false, true])
@@ -802,4 +832,23 @@ for (const mode of ["replaced", "omitted", "tool-copy", "tool-gap"])
 		assert.equal((await f.decisions()).length, 1);
 		await f.ingress.wakeProducers();
 		assert.equal(f.sent.length, 2);
+	});
+
+for (const credentialFailureAt of [0, 2])
+	test(`Vertex ADC wait observation with credential failure at ${credentialFailureAt}`, async (t) => {
+		const f = await fixture(t, { api: "google-vertex", vertexAuth: "adc", credentialFailureAt });
+		await f.session.prompt("wait");
+		assert.equal(f.authRequests, 2);
+		assert.equal(f.sent.length, credentialFailureAt ? 1 : 2);
+		const records = await f.ingress.branch().attachment.nativeRequests.snapshot();
+		assert.equal(records[1].outcome, credentialFailureAt ? "failure" : "success");
+		assert.equal(records[1].payload.projections[0].disposition, "included");
+		assert.equal((await f.decisions()).length, credentialFailureAt ? 1 : 0);
+		if (credentialFailureAt) {
+			await f.session.prompt("report the wait status");
+			assert.equal(f.authRequests, 3);
+			assert.equal(f.sent.length, 2);
+			assert.deepEqual(await f.decisions(), []);
+		}
+		assert.deepEqual(f.errors, []);
 	});

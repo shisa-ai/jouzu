@@ -58,6 +58,10 @@
 		"dist/api/openai-codex-responses.js": {
 			"before": "f5705d45ae72102110238d6265a548df3aef50b777f654f1f91a32d563c91b3e",
 			"after": "96a06dcc5430f939332a9eecca418426b2364dbaa7a789729d4af13584ad59b4"
+		},
+		"dist/api/google-vertex.js": {
+			"before": "6bb6641da11cc3a0c16a0f0d123075909499d51d275fc4a60e9d5770346e15eb",
+			"after": "6f902df430ca8d911f8c208e451220ea19968fcbed5364772034d9ca6f35eb56"
 		}
 	}
 }

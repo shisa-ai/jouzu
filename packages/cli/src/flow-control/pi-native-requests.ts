@@ -371,6 +371,7 @@ export class PiNativeRequests {
 						"openai-codex-responses",
 						"anthropic-messages",
 						"google-generative-ai",
+						"google-vertex",
 					] as const
 				).find((api) => api === model.api) ?? "openai-completions";
 			const sources = new NativePayloadSources(context.messages, prepared?.capture, sourceAPI);
@@ -406,7 +407,8 @@ export class PiNativeRequests {
 							model.api === "openai-responses" ||
 							model.api === "openai-codex-responses" ||
 							model.api === "anthropic-messages" ||
-							model.api === "google-generative-ai"
+							model.api === "google-generative-ai" ||
+							model.api === "google-vertex"
 						) {
 							sources.observe(source, output);
 							projections.observe(source, output);

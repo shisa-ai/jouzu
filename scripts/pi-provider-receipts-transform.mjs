@@ -68,7 +68,7 @@ export function transform(path, source) {
 			"                toolResults.push(converted.toolResult);",
 			"                toolResults.push(converted.toolResult);\n                onMessageConverted?.(transformedMessages[j], converted.toolResult);",
 		);
-	} else if (path === "dist/api/google-generative-ai.js") {
+	} else if (path === "dist/api/google-generative-ai.js" || path === "dist/api/google-vertex.js") {
 		change("convertMessages(model, context);", "convertMessages(model, context, options?.onMessageConverted);");
 	} else if (path === "dist/api/google-shared.js") {
 		change(
@@ -154,6 +154,7 @@ export const paths = [
 	"dist/api/openai-codex-responses.js",
 	"dist/api/anthropic-messages.js",
 	"dist/api/google-generative-ai.js",
+	"dist/api/google-vertex.js",
 	"dist/api/google-shared.js",
 	"dist/api/google-shared.d.ts",
 	"dist/api/openai-responses-shared.js",

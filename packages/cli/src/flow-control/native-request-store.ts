@@ -231,6 +231,7 @@ export class FlowNativeRequestStore {
 								"openai-codex-responses",
 								"anthropic-messages",
 								"google-generative-ai",
+								"google-vertex",
 							].includes(payload.api) ||
 								source.index === undefined ||
 								!["intact", "converted"].includes(capture.model?.members[offset]?.status ?? "")))

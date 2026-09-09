@@ -194,9 +194,10 @@ export function validateNativeProjections(
 					"openai-codex-responses",
 					"anthropic-messages",
 					"google-generative-ai",
+					"google-vertex",
 				].includes(payload?.api ?? "") ||
 					wire.index === undefined ||
-					(["anthropic-messages", "google-generative-ai"].includes(payload?.api ?? "") &&
+					(["anthropic-messages", "google-generative-ai", "google-vertex"].includes(payload?.api ?? "") &&
 						message.role === "toolResult" &&
 						wire.blockIndex === undefined) ||
 					model.status !== "converted" ||
