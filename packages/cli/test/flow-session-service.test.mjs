@@ -600,3 +600,58 @@ for (const ownership of ["owned", "foreign", "unclassified"])
 		assert.equal(branch.workContext.current(), undefined);
 		if (authority) assert.throws(() => authority.assertActive(), { code: "stale" });
 	});
+
+for (const lane of ["steer", "followUp"])
+	test(`consumed ${lane} input revokes selected work authority during the same native run`, async (t) => {
+		let branch,
+			calls = 0,
+			authority;
+		const f = await fixture(t, {
+			retainInputs: true,
+			providerReceipts: () => true,
+			host: {
+				projections: new Map([["openai-completions", openAIFlowPayload("openai-completions")]]),
+				maxPayloadBytes: 100000,
+				containsUserInput: () => calls > 0,
+			},
+			async onRequest() {
+				calls++;
+				if (calls === 1) {
+					authority = branch.workContext.authorize("selected-work");
+					await f.session.prompt("New user instructions", { streamingBehavior: lane });
+					authority.assertActive();
+				} else {
+					assert.throws(() => authority.assertActive(), { code: "stale" });
+					assert.throws(() => branch.workContext.current(), { code: "stale" });
+				}
+			},
+		});
+		branch = f.service.branch();
+		await branch.attachment.waits.registerWork("selected-work", "lane", 0);
+		branch.controller.register({
+			version: 1,
+			namespace: "lane",
+			async snapshot() {
+				return [
+					{
+						id: "instruction",
+						revision: "1",
+						producer: "lane",
+						sequence: 1,
+						rank: 4,
+						workId: "selected-work",
+						workRevision: "1",
+						independent: false,
+						runnable: true,
+					},
+				];
+			},
+			async build() {
+				return { id: "instruction", revision: "1", kind: "work", text: "Perform selected work" };
+			},
+		});
+		await branch.controller.wake();
+		assert.equal(calls, 2);
+		assert.equal(f.requests.length, 2);
+		assert.throws(() => authority.assertActive(), { code: "stale" });
+	});

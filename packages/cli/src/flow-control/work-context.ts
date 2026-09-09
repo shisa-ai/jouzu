@@ -52,6 +52,11 @@ export class FlowWorkContext {
 		return this.run({ id: work.id, actor: intent.producer, revision: work.revision }, invoke);
 	}
 
+	/** A newly consumed input ends this work's authority without ending Pi's run. */
+	revoke(): void {
+		if (this.active) this.active.active = false;
+	}
+
 	private checkLifetime(invocation: Invocation): void {
 		if (!invocation.active || this.attachment() !== invocation.attachment)
 			throw new FlowLedgerError("stale", "Work invocation is no longer active in this branch.");

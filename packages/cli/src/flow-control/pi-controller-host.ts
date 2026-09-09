@@ -13,6 +13,7 @@ import type { FlowResultReference } from "./result-types.js";
 
 export interface PiControllerHostOptions extends PiRequestReceiptOptions {
 	results?: { retain(members: FlowResultReference[]): Promise<string> };
+	revokeWork?(): void;
 	invokeWork?(attemptId: string, invoke: () => Promise<void>): Promise<void>;
 }
 interface Pending {
@@ -117,6 +118,14 @@ export class PiControllerHost implements FlowControllerHost {
 		const previous = session.agent.flowCheckpoints;
 		this.hooks.set(session.agent, "flowCheckpoints", {
 			...previous,
+			afterQueueClaim: async (receipt, signal) => {
+				this.assertActive();
+				const owned = this.pending?.item;
+				if (receipt.claimed.some((item) => item.id !== owned?.id || item.revision !== owned.revision))
+					options.revokeWork?.();
+				await previous?.afterQueueClaim?.(receipt, signal);
+				this.assertActive();
+			},
 			beforeQueueClaim: async (items, signal) => {
 				this.assertActive();
 				const accepted = previous?.beforeQueueClaim ? await previous.beforeQueueClaim(items, signal) : true;

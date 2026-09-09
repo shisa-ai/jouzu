@@ -139,3 +139,19 @@ test("wait tools use host work authority and cannot claim another registered wor
 	assert.equal(wait.workId, "work");
 	assert.equal(wait.state, "waiting");
 });
+
+test("revocation preserves the invocation reservation until native execution returns", async (t) => {
+	const { context } = await fixture(t);
+	await context.run(work, async () => {
+		const authority = context.authorize("work");
+		context.revoke();
+		context.revoke();
+		assert.throws(() => authority.assertActive(), { code: "stale" });
+		assert.throws(() => context.current(), { code: "stale" });
+		await assert.rejects(
+			context.run({ ...work, id: "other" }, async () => {}),
+			{ code: "busy" },
+		);
+	});
+	await context.run({ ...work, id: "other" }, async () => assert.equal(context.current().id, "other"));
+});
