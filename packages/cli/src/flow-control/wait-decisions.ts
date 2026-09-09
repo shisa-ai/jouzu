@@ -7,6 +7,7 @@ import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowSubmissionStore } from "./submission-store.js";
 import type { FlowWaitState } from "./wait-state.js";
 import type { FlowWaitStore } from "./wait-store.js";
+import { type FlowWaitToolReceipt, observedWaitToolReceipt } from "./wait-tool-response.js";
 
 const namespace = "jouzu-wait-decisions";
 function descriptor(wait: FlowWaitState): FlowIntent | undefined {
@@ -51,7 +52,11 @@ interface NativeWaitEvidence {
 }
 
 /** Only an exact retained context source included in a successful request acknowledges these decisions. */
-async function deliveredNativeDecisions(waits: FlowWaitState[], evidence: NativeWaitEvidence): Promise<Set<string>> {
+async function deliveredNativeDecisions(
+	waits: FlowWaitState[],
+	evidence: NativeWaitEvidence,
+	toolReceipts: FlowWaitToolReceipt[],
+): Promise<Set<string>> {
 	const expected = new Map(
 		waits.flatMap((wait) => {
 			const intent = descriptor(wait);
@@ -89,8 +94,14 @@ async function deliveredNativeDecisions(waits: FlowWaitState[], evidence: Native
 				request.payload?.projections?.some(
 					(item) => item.sourceIndex === projection.index && item.disposition === "included",
 				)
-			)
-				acknowledge(projection.message);
+			) {
+				if (projection.message.role === "toolResult") {
+					const receipt = observedWaitToolReceipt(projection.message, toolReceipts);
+					const wait = receipt && waits.find((wait) => wait.token === receipt.token);
+					const intent = wait && descriptor(wait);
+					if (intent) delivered.add(intent.id);
+				} else acknowledge(projection.message);
+			}
 		}
 		for (const source of request.sourceCapture?.members ?? []) {
 			if (
@@ -110,7 +121,7 @@ async function deliveredNativeDecisions(waits: FlowWaitState[], evidence: Native
 
 /** Terminal wait state is the durable event; existing input receipts own its delivery and recovery. */
 export function createFlowWaitDecisionProducer(
-	store: Pick<FlowWaitStore, "snapshot">,
+	store: Pick<FlowWaitStore, "snapshot"> & Partial<Pick<FlowWaitStore, "toolReceipts">>,
 	native?: NativeWaitEvidence,
 ): FlowProducer {
 	return {
@@ -119,7 +130,9 @@ export function createFlowWaitDecisionProducer(
 		async snapshot(signal) {
 			signal.throwIfAborted();
 			const waits = await store.snapshot();
-			const delivered = native ? await deliveredNativeDecisions(waits, native) : new Set<string>();
+			const delivered = native
+				? await deliveredNativeDecisions(waits, native, (await store.toolReceipts?.()) ?? [])
+				: new Set<string>();
 			signal.throwIfAborted();
 			return waits.flatMap((wait) => {
 				const intent = descriptor(wait);

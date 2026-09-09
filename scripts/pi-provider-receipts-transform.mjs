@@ -37,6 +37,10 @@ export function transform(path, source) {
 			'        }\n        else if (msg.role === "assistant") {',
 			'            options?.onMessageConverted?.(sources.get(msg), params[params.length - 1]);\n        }\n        else if (msg.role === "assistant") {',
 		);
+		change(
+			"                params.push(toolResultMsg);",
+			"                params.push(toolResultMsg);\n                if (sources.has(toolMsg)) options?.onMessageConverted?.(sources.get(toolMsg), toolResultMsg);",
+		);
 	} else if (path === "dist/api/openai-completions.d.ts") {
 		text = `import type { Message } from "../types.js";\n${text}`;
 		change(

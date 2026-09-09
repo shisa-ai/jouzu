@@ -159,7 +159,10 @@ export class FlowNativeRequestStore {
 				(!Array.isArray(record.requiredProjections) ||
 					new Set(record.requiredProjections).size !== record.requiredProjections.length ||
 					record.requiredProjections.some(
-						(index) => !record.projectionCapture?.members.some((member) => member.index === index),
+						(index) =>
+							!record.projectionCapture?.members.some(
+								(member) => member.index === index && member.message.role === "custom",
+							),
 					))
 			)
 				throw new FlowLedgerError("identity", "Invalid required projection positions.");
@@ -559,7 +562,11 @@ export class FlowNativeRequestStore {
 				ownerId: this.ownership.token,
 				...(requiredSources ? { requiredSources } : {}),
 				...(captured.projectionCapture
-					? { requiredProjections: captured.projectionCapture.members.map((member) => member.index) }
+					? {
+							requiredProjections: captured.projectionCapture.members
+								.filter((member) => member.message.role === "custom")
+								.map((member) => member.index),
+						}
 					: {}),
 				...(retry ? { retryOf: retry.id } : {}),
 			});

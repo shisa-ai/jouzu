@@ -28,12 +28,15 @@ import {
 	reconcileFlowWait,
 } from "./wait-state.js";
 
+import { type FlowWaitToolReceipt, waitToolContentHash, waitToolResponse } from "./wait-tool-response.js";
+
 type Declaration = Parameters<typeof createFlowWait>[0];
 interface State {
 	version: 1;
 	scope: FlowScope;
 	waits: FlowWaitState[];
 	authority?: FlowWaitAuthority;
+	toolReceipts?: FlowWaitToolReceipt[];
 }
 const address = value<State>("jouzu.flow.waits", "v1");
 
@@ -157,6 +160,28 @@ export class FlowWaitStore {
 			Buffer.byteLength(JSON.stringify(state)) > 4 * 1024 * 1024
 		)
 			throw new FlowLedgerError("schema", "Invalid wait storage scope or capacity.");
+		if (state.toolReceipts !== undefined) {
+			if (!Array.isArray(state.toolReceipts) || state.toolReceipts.length > 256)
+				throw new FlowLedgerError("capacity", "Invalid wait tool receipt count.");
+			const keys = new Set<string>();
+			for (const receipt of state.toolReceipts) {
+				const wait = state.waits.find((wait) => wait.token === receipt?.token);
+				const key = JSON.stringify([receipt?.token, receipt?.toolCallId, receipt?.toolName]);
+				if (
+					!wait ||
+					!state.authority?.waitTokens.includes(wait.token) ||
+					["waiting", "cancelled"].includes(wait.state) ||
+					typeof receipt.toolCallId !== "string" ||
+					!receipt.toolCallId ||
+					receipt.toolCallId.length > 512 ||
+					!["agent_wait", "agent_wait_cancel"].includes(receipt.toolName) ||
+					keys.has(key) ||
+					receipt.contentHash !== waitToolContentHash(waitToolResponse(wait).content)
+				)
+					throw new FlowLedgerError("identity", "Invalid wait tool response receipt.");
+				keys.add(key);
+			}
+		}
 		if (state.authority !== undefined) {
 			validateWaitAuthority(state.authority);
 			if (
@@ -342,8 +367,10 @@ export class FlowWaitStore {
 		maxDurationMs: number,
 		replaceToken?: string,
 		assertActive?: () => void,
+		toolResponse?: Pick<FlowWaitToolReceipt, "toolCallId" | "toolName">,
 	): Promise<FlowWaitState> {
 		const captured = structuredClone(request);
+		const response = toolResponse ? { ...toolResponse } : undefined;
 		return this.update((state) => {
 			assertActive?.();
 			const authority = state.authority ?? emptyWaitAuthority();
@@ -351,6 +378,7 @@ export class FlowWaitStore {
 			const observations = authorityObservations(authority, state.scope, captured.workId, captured.on);
 			const next = this.declareInState(state, captured, observations, now, maxDurationMs, replaceToken);
 			authority.waitTokens.push(next.token);
+			this.recordToolResponse(state, next, response);
 			return next;
 		});
 	}
@@ -361,7 +389,9 @@ export class FlowWaitStore {
 		reason: string,
 		now: number,
 		assertActive?: () => void,
+		toolResponse?: Pick<FlowWaitToolReceipt, "toolCallId" | "toolName">,
 	): Promise<FlowWaitState> {
+		const response = toolResponse ? { ...toolResponse } : undefined;
 		return this.update((state) => {
 			assertActive?.();
 			const authority = state.authority ?? emptyWaitAuthority();
@@ -369,8 +399,27 @@ export class FlowWaitStore {
 			if (index < 0) throw new FlowLedgerError("identity", "Owned wait token is not registered.");
 			requireAuthorityWork(authority, state.waits[index].workId, producer, workRevision);
 			state.waits[index] = cancelFlowWait(state.waits[index], reason, now);
+			this.recordToolResponse(state, state.waits[index], response);
 			return state.waits[index];
 		});
+	}
+	private recordToolResponse(
+		state: State,
+		wait: FlowWaitState,
+		source?: Pick<FlowWaitToolReceipt, "toolCallId" | "toolName">,
+	): void {
+		if (!source || ["waiting", "cancelled"].includes(wait.state)) return;
+		const receipt = { token: wait.token, ...source, contentHash: waitToolContentHash(waitToolResponse(wait).content) };
+		state.toolReceipts ??= [];
+		if (!state.toolReceipts.some((prior) => isDeepStrictEqual(prior, receipt))) state.toolReceipts.push(receipt);
+	}
+	toolReceipts(): Promise<FlowWaitToolReceipt[]> {
+		return this.ownership.run(() =>
+			this.session.mutate(
+				async (reader) => structuredClone((await this.read(reader)).toolReceipts ?? []),
+				BACKGROUND_CONTEXT,
+			),
+		);
 	}
 	async authoritySnapshot(): Promise<FlowWaitAuthority> {
 		return this.ownership.run(() =>

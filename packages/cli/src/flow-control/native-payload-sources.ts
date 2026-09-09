@@ -7,7 +7,27 @@ import { FlowLedgerError } from "./receipt-ledger.js";
 
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 const project = openAIFlowPayload("openai-completions");
+const toolIdentity = (message: unknown) => {
+	if (
+		!message ||
+		typeof message !== "object" ||
+		!("role" in message) ||
+		message.role !== "tool" ||
+		!("tool_call_id" in message) ||
+		typeof message.tool_call_id !== "string"
+	)
+		return undefined;
+	return hash({ role: "tool", toolCallId: message.tool_call_id, name: "name" in message ? message.name : undefined });
+};
 const contentHash = (message: unknown) => {
+	if (
+		toolIdentity(message) &&
+		message &&
+		typeof message === "object" &&
+		"content" in message &&
+		typeof message.content === "string"
+	)
+		return hash([{ type: "text", text: message.content }]);
 	const [projected] = project({ messages: [message] });
 	return projected ? hash(projected.content) : undefined;
 };
@@ -21,7 +41,10 @@ export class NativePayloadSources {
 	private readonly sources = new Map<Message, number[]>();
 	private readonly tracked = new Set<number>();
 	private readonly expected = new Map<number, string>();
-	private readonly links = new Map<number, { output: unknown; contentHash?: string; changed: boolean } | null>();
+	private readonly links = new Map<
+		number,
+		{ output: unknown; contentHash?: string; changed: boolean; toolIdentity?: string } | null
+	>();
 	constructor(
 		messages: Message[],
 		private readonly capture?: { members: { index: number }[]; model?: NativeSourceCapture["model"] },
@@ -30,7 +53,7 @@ export class NativePayloadSources {
 			const positions = this.sources.get(message) ?? [];
 			positions.push(index);
 			this.sources.set(message, positions);
-			if (message.role === "user")
+			if (message.role === "user" || message.role === "toolResult")
 				this.expected.set(
 					index,
 					hash(typeof message.content === "string" ? [{ type: "text", text: message.content }] : message.content),
@@ -46,11 +69,17 @@ export class NativePayloadSources {
 			this.links.set(index, null);
 			return;
 		}
-		if (source.role !== "user")
+		if (source.role !== "user" && source.role !== "toolResult")
 			throw new FlowLedgerError("identity", "Provider source mapping has an unsupported role.");
 		const convertedHash = contentHash(output);
-		if (!convertedHash) throw new FlowLedgerError("identity", "Provider source mapping has no user content.");
-		this.links.set(index, { output, contentHash: convertedHash, changed: convertedHash !== this.expected.get(index) });
+		if (!convertedHash) throw new FlowLedgerError("identity", "Provider source mapping has no supported content.");
+		const identity = source.role === "toolResult" ? toolIdentity(output) : undefined;
+		this.links.set(index, {
+			output,
+			contentHash: convertedHash,
+			changed: convertedHash !== this.expected.get(index) || (source.role === "toolResult" && identity === undefined),
+			...(identity ? { toolIdentity: identity } : {}),
+		});
 	}
 	inspect(api: string, payload: unknown, serialized: unknown): NativePayloadSource[] | undefined {
 		if (!this.capture) return undefined;
@@ -71,7 +100,14 @@ export class NativePayloadSources {
 			try {
 				const finalHash = contentHash(finalRows[index]),
 					ownedHash = contentHash(ownedRows[index]);
-				if (!finalHash || finalHash !== ownedHash) return { sourceIndex: source.index, disposition: "changed" };
+				if (
+					!finalHash ||
+					finalHash !== ownedHash ||
+					(link.toolIdentity &&
+						(toolIdentity(finalRows[index]) !== link.toolIdentity ||
+							toolIdentity(ownedRows[index]) !== link.toolIdentity))
+				)
+					return { sourceIndex: source.index, disposition: "changed" };
 				return {
 					sourceIndex: source.index,
 					disposition:

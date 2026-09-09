@@ -3,19 +3,58 @@ import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { NativePayloadSource, NativeSourceDisposition } from "./native-request-store.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
+type CapturedMessage =
+	| { role: "custom"; customType: string; content: string; display: boolean; timestamp: number }
+	| {
+			role: "toolResult";
+			toolCallId: string;
+			toolName: string;
+			content: { type: "text"; text: string }[];
+			isError: false;
+			timestamp: number;
+	  };
 export interface NativeProjectionCapture {
 	hash: string;
 	count: number;
 	members: {
 		index: number;
 		messageHash: string;
-		message: { role: "custom"; customType: string; content: string; display: boolean; timestamp: number };
+		message: CapturedMessage;
 	}[];
 	model?: NativeSourceDisposition;
 }
 const digest = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 const hash = (value: unknown) => typeof value === "string" && /^[a-f0-9]{64}$/.test(value);
 const position = (value: number, count: number) => Number.isSafeInteger(value) && value >= 0 && value < count;
+
+function validMessage(message: CapturedMessage): boolean {
+	if (!message || !Number.isSafeInteger(message.timestamp) || message.timestamp < 0) return false;
+	if (message.role === "custom")
+		return (
+			typeof message.customType === "string" &&
+			message.customType.length > 0 &&
+			message.customType.length <= 512 &&
+			typeof message.content === "string" &&
+			typeof message.display === "boolean"
+		);
+	return (
+		message.role === "toolResult" &&
+		message.isError === false &&
+		[message.toolCallId, message.toolName].every(
+			(value) => typeof value === "string" && value.length > 0 && value.length <= 512,
+		) &&
+		Array.isArray(message.content) &&
+		message.content.length === 1 &&
+		message.content[0]?.type === "text" &&
+		typeof message.content[0].text === "string"
+	);
+}
+const modelMessage = (message: CapturedMessage) =>
+	message.role === "custom"
+		? { role: "user", content: [{ type: "text", text: message.content }], timestamp: message.timestamp }
+		: message;
+const modelContent = (message: CapturedMessage) =>
+	message.role === "custom" ? [{ type: "text", text: message.content }] : message.content;
 
 /** Capture only explicit decorator-owned references, without inventing native source coordinates. */
 export function captureNativeProjections(
@@ -29,10 +68,9 @@ export function captureNativeProjections(
 			index < 0 ||
 			messages.lastIndexOf(message) !== index ||
 			capture.members.some((member) => member.index === index) ||
-			message.role !== "custom" ||
-			typeof message.content !== "string"
+			!validMessage(message as CapturedMessage)
 		)
-			throw new FlowLedgerError("identity", "Context projection has no unique custom message reference.");
+			throw new FlowLedgerError("identity", "Context observation has no unique supported message reference.");
 		capture.members.push({
 			index,
 			messageHash: digest(message),
@@ -56,11 +94,7 @@ export function convertNativeProjections(
 			const index = output ? result.indexOf(output) : -1;
 			if (!output || index < 0 || result.lastIndexOf(output) !== index)
 				return { sourceIndex: member.index, status: "unresolved" };
-			const expected = {
-				role: "user",
-				content: [{ type: "text", text: member.message.content }],
-				timestamp: member.message.timestamp,
-			};
+			const expected = modelMessage(member.message);
 			const messageHash = digest(output);
 			return {
 				sourceIndex: member.index,
@@ -118,15 +152,7 @@ export function validateNativeProjections(
 			!member ||
 			!position(member.index, capture.count) ||
 			contexts.has(member.index) ||
-			!message ||
-			message.role !== "custom" ||
-			typeof message.customType !== "string" ||
-			!message.customType.length ||
-			message.customType.length > 512 ||
-			typeof message.content !== "string" ||
-			typeof message.display !== "boolean" ||
-			!Number.isSafeInteger(message.timestamp) ||
-			message.timestamp < 0 ||
+			!validMessage(message) ||
 			!hash(member.messageHash) ||
 			member.messageHash !== digest(message) ||
 			!model ||
@@ -140,11 +166,7 @@ export function validateNativeProjections(
 					!hash(model.messageHash))
 		)
 			throw new FlowLedgerError("identity", "Invalid native projection conversion evidence.");
-		if (
-			model.status === "converted" &&
-			model.messageHash !==
-				digest({ role: "user", content: [{ type: "text", text: message.content }], timestamp: message.timestamp })
-		)
+		if (model.status === "converted" && model.messageHash !== digest(modelMessage(message)))
 			throw new FlowLedgerError("identity", "Converted projection differs from its content.");
 		contexts.add(member.index);
 		if (model.index !== undefined) models.add(model.index);
@@ -166,7 +188,7 @@ export function validateNativeProjections(
 				(payload?.api !== "openai-completions" ||
 					wire.index === undefined ||
 					model.status !== "converted" ||
-					wire.contentHash !== digest([{ type: "text", text: message.content }])))
+					wire.contentHash !== digest(modelContent(message))))
 		)
 			throw new FlowLedgerError("identity", "Invalid native projection payload inclusion.");
 		if (wire.index !== undefined) wires.add(wire.index);

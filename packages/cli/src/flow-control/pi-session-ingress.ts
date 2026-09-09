@@ -17,6 +17,7 @@ import { activeAdmissionHolds } from "./submission-view.js";
 import type { FlowWorkStatus } from "./wait-authority.js";
 import type { FlowWaitClock } from "./wait-deadlines.js";
 import { createFlowWaitDecisionProducer } from "./wait-decisions.js";
+import { observedWaitToolReceipt } from "./wait-tool-response.js";
 
 type Ingress = NonNullable<CreateAgentSessionOptions["flowIngress"]>;
 type Submission = Parameters<Ingress["submit"]>[0];
@@ -84,8 +85,11 @@ export class PiSessionFlowIngress implements Ingress {
 				},
 				decorateNativeContext: async (messages, sources, signal) => {
 					const branch = this.branch();
+					const receipts = await branch.attachment.waits.toolReceipts();
+					const observedTools = messages.filter((message) => observedWaitToolReceipt(message, receipts)).slice(-64);
+					const unchanged = () => (observedTools.length ? { messages, projections: observedTools } : messages);
 					// Queue receipts identify consumed user input; text and delivery lanes do not.
-					if (messages.at(-1)?.role !== "user" || !sources.some((source) => source.queue)) return messages;
+					if (messages.at(-1)?.role !== "user" || !sources.some((source) => source.queue)) return unchanged();
 					const records = await branch.attachment.submissions.snapshot();
 					const user = sources.some((source) => {
 						if (!source.queue || source.index !== messages.length - 1) return false;
@@ -98,9 +102,9 @@ export class PiSessionFlowIngress implements Ingress {
 							)
 						);
 					});
-					if (!user) return messages;
+					if (!user) return unchanged();
 					const content = await this.userWaitContext(branch, true, true);
-					if (content === undefined) return messages;
+					if (content === undefined) return unchanged();
 					signal?.throwIfAborted();
 					if (this.branch() !== branch) throw new FlowLedgerError("stale", "Queued user context branch changed.");
 					const projection = {
@@ -112,7 +116,7 @@ export class PiSessionFlowIngress implements Ingress {
 					};
 					return {
 						messages: [...messages, projection],
-						projections: JSON.parse(content).waitDecisions.length ? [projection] : [],
+						projections: [...observedTools, ...(JSON.parse(content).waitDecisions.length ? [projection] : [])],
 					};
 				},
 				admitNativeQueue: (record, input) =>
@@ -500,7 +504,7 @@ export class PiSessionFlowIngress implements Ingress {
 				health: "deadline-only",
 			}));
 		const source = createFlowWaitDecisionProducer(
-			{ snapshot: async () => structuredClone(waits) },
+			{ snapshot: async () => structuredClone(waits), toolReceipts: () => branch.attachment.waits.toolReceipts() },
 			{
 				submissions: branch.attachment.submissions,
 				requests: branch.attachment.nativeRequests,

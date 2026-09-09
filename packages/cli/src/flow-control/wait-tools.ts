@@ -2,7 +2,8 @@ import { randomUUID } from "node:crypto";
 import type { InlineExtension, ToolDefinition } from "@earendil-works/pi-coding-agent";
 import type { PiFlowAttachment } from "./pi-attachment.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
-import type { FlowWaitHandle, FlowWaitState } from "./wait-state.js";
+import type { FlowWaitHandle } from "./wait-state.js";
+import { waitToolResponse } from "./wait-tool-response.js";
 
 export const FLOW_WAIT_GUIDANCE = [
 	"Continue useful work independent of live dependencies. Before ending a turn whose remaining work depends on asynchronous execution, call agent_wait with the owning work and exact producer handles returned by its tools.",
@@ -106,19 +107,6 @@ function parseWait(raw: unknown): WaitArguments {
 	}
 	return structuredClone(raw) as unknown as WaitArguments;
 }
-function result(wait: FlowWaitState) {
-	const details = {
-		token: wait.token,
-		scope: wait.scope,
-		work: wait.workId,
-		state: wait.state,
-		reason: wait.reason,
-		expiresAt: wait.expiresAt,
-		health: "deadline-only",
-		unmet: wait.unmet,
-	};
-	return { content: [{ type: "text" as const, text: JSON.stringify(details) }], details };
-}
 
 export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExtension {
 	if (!Number.isSafeInteger(options.maxDurationMs) || options.maxDurationMs < 1)
@@ -152,7 +140,7 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 				promptSnippet: "agent_wait: wait for exact asynchronous dependencies with a hard deadline.",
 				promptGuidelines: FLOW_WAIT_GUIDANCE,
 				parameters: waitSchema,
-				async execute(_id, raw, signal, _update, ctx) {
+				async execute(toolCallId, raw, signal, _update, ctx) {
 					const args = parseWait(raw),
 						attachment = options.attachment();
 					if (attachment.ledger.scope.sessionId !== ctx.sessionManager.getSessionId())
@@ -174,7 +162,7 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 						}
 						authority.check();
 					}
-					return result(
+					return waitToolResponse(
 						await attachment.waits.declareOwned(
 							authority.actor,
 							authority.revision,
@@ -191,6 +179,7 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 							maxDurationMs,
 							args.replaceToken,
 							authority.check,
+							{ toolCallId, toolName: "agent_wait" },
 						),
 					);
 				},
@@ -202,7 +191,7 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 					"Idempotently remove an authorized wait gate by token and reason. This leaves its process and requested work active.",
 				promptSnippet: "agent_wait_cancel: remove a dependency gate without stopping its job or completing its work.",
 				parameters: cancelSchema,
-				async execute(_id, raw, signal, _update, ctx) {
+				async execute(toolCallId, raw, signal, _update, ctx) {
 					fields(raw, ["token", "reason"]);
 					text(raw.token);
 					text(raw.reason, 4096);
@@ -213,7 +202,7 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 					const wait = (await attachment.waits.snapshot()).find((wait) => wait.token === args.token);
 					if (!wait) throw new FlowLedgerError("identity", "Wait token is not registered in this branch.");
 					const authority = access(attachment, wait.workId, signal);
-					return result(
+					return waitToolResponse(
 						await attachment.waits.cancelOwned(
 							authority.actor,
 							authority.revision,
@@ -221,6 +210,7 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 							args.reason,
 							now(),
 							authority.check,
+							{ toolCallId, toolName: "agent_wait_cancel" },
 						),
 					);
 				},
