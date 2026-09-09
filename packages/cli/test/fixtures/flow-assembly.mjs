@@ -1,3 +1,4 @@
+import { mkdtempSync, rmSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -7,13 +8,13 @@ import { createQualifiedFlowSession } from "../../../../scripts/fixtures/pi-flow
 import { createFlowControlRuntime } from "../../dist/flow-control/flow-runtime.js";
 
 /** Build the production assembly the launcher uses, without a host session yet. */
-export async function assembledRuntime(t, overrides = {}) {
-	const root = await mkdtemp(join(tmpdir(), "jouzu-flow-assembly-"));
+export async function assembledRuntime(t, { root: sharedRoot, ...overrides } = {}) {
+	const root = sharedRoot ?? (await mkdtemp(join(tmpdir(), "jouzu-flow-assembly-")));
 	const errors = [];
 	const flow = createFlowControlRuntime({ root, onError: (error) => errors.push(error), ...overrides });
 	t.after(async () => {
 		await flow.dispose();
-		await rm(root, { recursive: true, force: true });
+		if (!sharedRoot) await rm(root, { recursive: true, force: true });
 	});
 	return { flow, root, errors };
 }
@@ -82,6 +83,10 @@ export function syntheticProducer(namespace = "synthetic") {
 }
 
 const cliRoot = join(import.meta.dirname, "../../../..");
+// The task extension defaults to one shared /tmp directory, so suites would enumerate each other's
+// task logs and slow down as it grows. One directory per test process, left for OS temp cleanup:
+// removing it during teardown races the extension's own shutdown.
+process.env.PI_BG_TASK_DIR ??= mkdtempSync(join(tmpdir(), "jouzu-flow-tasks-"));
 const bundles = new Map();
 
 /** Bundle an installed extension's TypeScript entry so a real session can load it. */
@@ -101,6 +106,14 @@ async function bundleExtension(entry) {
 	});
 	const loaded = import(pathToFileURL(outfile).href).then((module) => ({ module, outputDir }));
 	bundles.set(entry, loaded);
+	// The cache outlives any one test, so clean the bundle directory when the process exits.
+	process.once("exit", () => {
+		try {
+			rmSync(outputDir, { recursive: true, force: true });
+		} catch {
+			// A leftover bundle directory is harmless; never fail a suite on cleanup.
+		}
+	});
 	return loaded;
 }
 

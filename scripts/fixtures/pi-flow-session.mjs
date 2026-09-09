@@ -197,6 +197,8 @@ export async function createQualifiedFlowSession(
 	let session;
 	t.after(async () => {
 		await session?.dispose();
+		// Pi keeps its HTTP connections alive, so close() alone never resolves.
+		server.closeAllConnections?.();
 		await new Promise((resolve) => server.close(resolve));
 		if (!fixtureRoot) await rm(root, { recursive: true, force: true });
 	});
