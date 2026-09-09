@@ -9,12 +9,13 @@ interface Invocation {
 	actor: string;
 	revision: number;
 	active: boolean;
+	parent?: Invocation;
 }
 
 /** A trusted host supplies work before invocation; tool arguments never establish ownership. */
 export class FlowWorkContext {
 	private active?: Invocation;
-	private readonly invocations = new AsyncLocalStorage<Invocation>();
+	private readonly invocations = new AsyncLocalStorage<Invocation | undefined>();
 	constructor(private readonly attachment: () => PiFlowAttachment) {}
 
 	async run<T>(work: { id: string; actor: string; revision: number }, invoke: () => Promise<T>): Promise<T> {
@@ -55,12 +56,31 @@ export class FlowWorkContext {
 		return this.run({ id: work.id, actor: intent.producer, revision: work.revision }, invoke);
 	}
 
+	captureInvocationCheck(): () => boolean {
+		const invocation = this.invocations.getStore();
+		return () => this.invocations.getStore() === invocation;
+	}
+
+	/** Parallel tools receive separate lifetimes while preserving the parent work identity. */
+	async runTool<T>(invoke: () => Promise<T>): Promise<T> {
+		const parent = this.invocations.getStore();
+		if (!parent?.active) return this.invocations.run(undefined, invoke);
+		this.checkLifetime(parent);
+		const invocation = { ...parent, parent, active: true };
+		try {
+			return await this.invocations.run(invocation, invoke);
+		} finally {
+			invocation.active = false;
+		}
+	}
+
 	/** A newly consumed input ends this work's authority without ending Pi's run. */
 	revoke(): void {
 		if (this.active) this.active.active = false;
 	}
 
 	private checkLifetime(invocation: Invocation): void {
+		if (invocation.parent) this.checkLifetime(invocation.parent);
 		if (!invocation.active || this.attachment() !== invocation.attachment)
 			throw new FlowLedgerError("stale", "Work invocation is no longer active in this branch.");
 	}

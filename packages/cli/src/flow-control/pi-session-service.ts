@@ -8,6 +8,7 @@ import { recoverPiHistory } from "./pi-history-recovery.js";
 import { PiNativeDispatch } from "./pi-native-dispatch.js";
 import { type NativeContextDecorator, PiNativeRequests } from "./pi-native-requests.js";
 import { PiFlowSessionRegistry } from "./pi-session-registry.js";
+import { PiWorkTools } from "./pi-work-tools.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import type { FlowNativeInput, RetainedSubmission } from "./submission-store.js";
 import type { FlowWorkStatus } from "./wait-authority.js";
@@ -32,6 +33,7 @@ export interface PiFlowBranchResources {
 	host: PiControllerHost;
 	controller: SessionFlowController;
 	workContext: FlowWorkContext;
+	workTools: PiWorkTools;
 	native: PiNativeDispatch;
 	requests: PiNativeRequests;
 	recovery: { recovered: number; unresolved: number };
@@ -47,6 +49,7 @@ export class PiFlowSessionService {
 		host?: PiControllerHost;
 		native?: PiNativeDispatch;
 		requests?: PiNativeRequests;
+		workTools?: PiWorkTools;
 	};
 	private transitionId?: string;
 	private closing = false;
@@ -150,6 +153,8 @@ export class PiFlowSessionService {
 				},
 			);
 			this.opening.host = host;
+			const workTools = new PiWorkTools(this.session, workContext);
+			this.opening.workTools = workTools;
 			const controller = new SessionFlowController(host, this.options.maxInputBytes, this.options.maxResultBytes);
 			controller.register(
 				createFlowWaitDecisionProducer(attachment.waits, {
@@ -163,6 +168,7 @@ export class PiFlowSessionService {
 				host,
 				controller,
 				workContext,
+				workTools,
 				native,
 				requests,
 				recovery,
@@ -248,11 +254,13 @@ export class PiFlowSessionService {
 		const branch = this.current;
 		if (branch) {
 			await branch.controller.close();
+			branch.workTools.close();
 			await branch.requests.close();
 			await branch.native.close();
 			await branch.attachment.close();
 		} else if (this.opening) {
 			await this.opening.host?.close();
+			this.opening.workTools?.close();
 			await this.opening.requests?.close();
 			await this.opening.native?.close();
 			await this.opening.attachment.close();
