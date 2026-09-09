@@ -171,7 +171,7 @@ function sseFor(reply) {
 
 export async function createQualifiedFlowSession(
 	t,
-	{ ingress, extensions = [], sessionManager, root: fixtureRoot, script, persist = false } = {},
+	{ ingress, extensions = [], sessionManager, root: fixtureRoot, script, persist = false, settings = {} } = {},
 ) {
 	const root = fixtureRoot ?? (await mkdtemp(join(tmpdir(), "jouzu-flow-qualified-")));
 	const bodies = [];
@@ -181,14 +181,22 @@ export async function createQualifiedFlowSession(
 		request.on("data", (chunk) => {
 			raw += chunk;
 		});
-		request.on("end", () => {
+		request.on("end", async () => {
 			const body = JSON.parse(raw);
 			bodies.push(body);
-			const reply = replies
+			// A script may return a promise, so a test can hold one request open and observe the
+			// session while it is retrying or compacting.
+			const reply = await (replies
 				? replies.shift()
 				: typeof script === "function"
 					? script(body, bodies.length - 1)
-					: undefined;
+					: undefined);
+			// `httpStatus` drives Pi's own retry path; every other reply is a normal stream.
+			if (reply?.httpStatus) {
+				response.writeHead(reply.httpStatus, { "content-type": "application/json" });
+				response.end(JSON.stringify({ error: { message: "fixture failure" } }));
+				return;
+			}
 			response.writeHead(200, { "content-type": "text/event-stream" });
 			response.end(sseFor(reply));
 		});
@@ -260,7 +268,11 @@ export async function createQualifiedFlowSession(
 		sessionManager:
 			sessionManager ??
 			(persist ? cliPi.SessionManager.create(root, join(root, "history")) : cliPi.SessionManager.inMemory(root)),
-		settingsManager: cliPi.SettingsManager.inMemory({ retry: { enabled: false }, compaction: { enabled: false } }),
+		settingsManager: cliPi.SettingsManager.inMemory({
+			retry: { enabled: false },
+			compaction: { enabled: false },
+			...settings,
+		}),
 		flowIngress: ingress,
 	}));
 	// Not inspected by the route guard, which checks provider and handler identity only.

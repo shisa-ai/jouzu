@@ -27,6 +27,7 @@ export async function assembledSession(
 		producerExtensions = [],
 		script,
 		persist = false,
+		settings,
 		sessionManager: supplied,
 		...overrides
 	} = {},
@@ -49,6 +50,7 @@ export async function assembledSession(
 		persist,
 		extensions,
 		script,
+		...(settings ? { settings } : {}),
 		ingress: {
 			version: 1,
 			attach: (target) => ingress.attach(target),

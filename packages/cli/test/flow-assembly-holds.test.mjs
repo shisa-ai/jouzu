@@ -115,3 +115,103 @@ test("a producer whose descriptor changes after retirement is admitted once", as
 	await settle();
 	assert.equal(f.bodies.length, 2);
 });
+
+const until = async (predicate, label, timeoutMs = 5000) => {
+	const deadline = Date.now() + timeoutMs;
+	while (Date.now() < deadline) {
+		if (predicate()) return;
+		await new Promise((resolve) => setTimeout(resolve, 10));
+	}
+	assert.fail(`timed out waiting for ${label}`);
+};
+const carrying = (bodies, text) => bodies.filter((body) => JSON.stringify(body.messages).includes(text)).length;
+
+test("a provider retry holds automated work and the held work runs once afterwards", async (t) => {
+	let failures = 0;
+	const f = await assembledSession(t, {
+		settings: { retry: { enabled: true, maxRetries: 3, baseDelayMs: 500 } },
+		script: (_body, index) => {
+			if (index === 0) {
+				failures++;
+				return { httpStatus: 503 };
+			}
+			return { text: `turn ${index}` };
+		},
+	});
+	const synthetic = syntheticProducer();
+	const registration = f.ingress.registerProducer(synthetic.producer);
+	t.after(() => registration.dispose());
+
+	const prompted = f.session.prompt("user work that fails once");
+	await until(() => f.session.isRetrying, "the host to enter its retry backoff");
+
+	// Both paths are offered mid-retry: a producer descriptor and an unadapted extension-style send.
+	synthetic.offer([{ id: "intent-1", revision: "1" }]);
+	const scheduling = registration.changed();
+	const note = f.session.sendCustomMessage("background note", { triggerTurn: true });
+	let heldSend = false;
+	while (f.session.isRetrying) {
+		assert.equal(carrying(f.bodies, "work intent-1"), 0, "no producer work is sent while the host retries");
+		assert.equal(carrying(f.bodies, "background note"), 0, "no unadapted send is dispatched while the host retries");
+		const records = await f.ingress.branch().attachment.submissions.snapshot();
+		const retained = records.find((record) => record.submission.api === "sendCustomMessage");
+		heldSend ||= Boolean(retained?.holds?.length);
+		await settle();
+	}
+	assert.ok(heldSend, "the unadapted send is retained under a recorded hold rather than dropped");
+
+	await prompted;
+	await scheduling;
+	await note;
+	assert.equal(failures, 1, "the fixture failed exactly once");
+	await until(() => carrying(f.bodies, "work intent-1") === 1, "the held producer work to run after the retry");
+	await settle();
+	assert.equal(carrying(f.bodies, "work intent-1"), 1, "and to run exactly once");
+	assert.deepEqual(synthetic.state.builds, ["intent-1"]);
+});
+
+// Compaction summarization calls the session stream function without a flow request checkpoint, so
+// the request guard refuses it and manual and automatic compaction both fail while flow control is
+// installed. This case states the behaviour the first candidate needs; see the plan's compaction item.
+test("compaction holds automated work and the held work runs once afterwards", { todo: true }, async (t) => {
+	let releaseSummary;
+	const summarizing = new Promise((resolve) => {
+		releaseSummary = resolve;
+	});
+	let summaryIndex;
+	const f = await assembledSession(t, {
+		// One recent entry is kept, so two turns are enough to give manual compaction something to do.
+		settings: { compaction: { enabled: false, keepRecentTokens: 1 } },
+		script: (body, index) => {
+			// Compaction issues its own summarization request; hold it open so isCompacting stays true.
+			if (JSON.stringify(body).includes("summar")) {
+				summaryIndex = index;
+				return summarizing.then(() => ({ text: "summary" }));
+			}
+			return { text: `turn ${index}` };
+		},
+	});
+	const synthetic = syntheticProducer();
+	const registration = f.ingress.registerProducer(synthetic.producer);
+	t.after(() => registration.dispose());
+	await f.session.prompt("first");
+	await f.session.prompt("second");
+	const beforeCompaction = f.bodies.length;
+
+	const compacted = f.session.compact();
+	await until(() => f.session.isCompacting, "the host to start compacting");
+	synthetic.offer([{ id: "intent-1", revision: "1" }]);
+	const scheduling = registration.changed();
+	while (f.session.isCompacting) {
+		assert.equal(carrying(f.bodies, "work intent-1"), 0, "no producer work is sent while the host compacts");
+		await settle();
+	}
+	assert.equal(summaryIndex, beforeCompaction, "compaction's own request is the only one it sends");
+
+	releaseSummary();
+	await compacted;
+	await scheduling;
+	await until(() => carrying(f.bodies, "work intent-1") === 1, "the held producer work to run after compaction");
+	await settle();
+	assert.equal(carrying(f.bodies, "work intent-1"), 1, "and to run exactly once");
+});
