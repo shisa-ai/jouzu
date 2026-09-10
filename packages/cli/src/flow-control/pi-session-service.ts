@@ -213,6 +213,37 @@ export class PiFlowSessionService {
 		}
 	}
 
+	/**
+	 * One retirement policy over one idle reservation. The phases run in dependency order — waits,
+	 * submissions, requests, ledger, results — because each later phase reads evidence the earlier one
+	 * may retire. A phase that cannot run right now is skipped rather than failing the pass, which is
+	 * what the five separate callers did between them; running them together means one reservation,
+	 * one ownership check, and one busy semantics instead of five.
+	 */
+	async retireFlowHistory(): Promise<number> {
+		const phases: (() => Promise<number>)[] = [
+			async () => {
+				const { work, executions, waits } = await this.retireWaitHistory(true);
+				return work + executions + waits;
+			},
+			() => this.archiveSubmissionHistory(),
+			() => this.retireRequestHistory(),
+			() => this.retireLedgerHistory(),
+			() => this.retireResultHistory(),
+		];
+		let retired = 0;
+		for (const phase of phases) {
+			try {
+				retired += await phase();
+			} catch (error) {
+				// Busy or stale means this phase has nothing it may safely retire yet; a later idle pass
+				// takes it. Any other failure is a real fault and belongs to the caller.
+				if (!(error instanceof FlowLedgerError) || !["busy", "stale"].includes(error.code)) throw error;
+			}
+		}
+		return retired;
+	}
+
 	retireRequestHistory() {
 		return this.registry.run(async () => {
 			const branch = this.branch();
@@ -231,14 +262,14 @@ export class PiFlowSessionService {
 						.map((record) => record.dispatch?.operationId)
 						.filter((id): id is string => !!id),
 				);
-				const waits = await branch.attachment.waits.snapshot();
+				const liveWaits = new Set((await branch.attachment.waits.snapshot()).map((wait) => wait.token));
 				const protectedRequests = new Set<string>();
 				for (const request of await branch.attachment.nativeRequests.snapshot()) {
 					const messages = (request.projectionCapture?.members ?? []).map((member) => member.message);
-					const serialized = JSON.stringify(messages);
+					// Wait references are read from what the decorator recorded when it composed them.
 					if (
 						branch.controller.observationProjections(messages).length ||
-						waits.some((wait) => serialized.includes(wait.token))
+						request.waitTokens?.some((token) => liveWaits.has(token))
 					)
 						protectedRequests.add(request.id);
 				}

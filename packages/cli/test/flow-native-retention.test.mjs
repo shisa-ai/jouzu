@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -311,4 +312,43 @@ test("a required source delivered at conversion is admitted", async (t) => {
 	await f.store.begin(intact, true, claims);
 	assert.equal(await f.store.handoff("intact", payload(intact)), true);
 	assert.equal((await f.store.snapshot())[0].payload.bytes, 10000);
+});
+
+test("a request carrying live wait context is kept by its recorded reference", async (t) => {
+	const f = await fixture(t);
+	const token = "wait-token";
+	const carrying = input("carrying");
+	const message = {
+		role: "custom",
+		customType: "jouzu-wait-context",
+		content: "{}",
+		display: false,
+		timestamp: 0,
+	};
+	const digest = (value) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
+	const converted = { role: "user", content: [{ type: "text", text: message.content }], timestamp: message.timestamp };
+	carrying.projectionCapture = {
+		hash: carrying.sourceCapture.context.hash,
+		count: carrying.sourceCapture.context.count,
+		members: [{ index: 0, messageHash: digest(message), message }],
+		model: {
+			hash: carrying.sourceCapture.model.hash,
+			count: carrying.sourceCapture.model.count,
+			members: [{ sourceIndex: 0, status: "converted", index: 0, messageHash: digest(converted) }],
+		},
+	};
+	carrying.waitTokens = [token];
+	await f.store.begin(carrying);
+	await f.store.handoff("carrying", payload(carrying));
+	await f.store.finish("carrying", "success");
+	const [record] = await f.store.snapshot();
+	// The reference is read from what the decorator recorded, not searched for in the content: the
+	// projection here carries no token text at all.
+	assert.deepEqual(record.waitTokens, [token]);
+	assert.equal(JSON.stringify(record.projectionCapture).includes(token), false);
+
+	// A record may only claim wait references alongside the projections that carried them.
+	const unbacked = input("unbacked");
+	unbacked.waitTokens = [token];
+	await assert.rejects(f.store.begin(unbacked), { code: "schema" });
 });

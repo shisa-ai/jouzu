@@ -130,9 +130,15 @@ export class PiSessionFlowIngress implements Ingress {
 						display: false,
 						timestamp: 0,
 					};
+					const composed = JSON.parse(content) as { waitDecisions: unknown[]; liveWaits?: { token?: unknown }[] };
 					return {
 						messages: [...messages, projection],
-						projections: [...observedTools, ...(JSON.parse(content).waitDecisions.length ? [projection] : [])],
+						projections: [...observedTools, ...(composed.waitDecisions.length ? [projection] : [])],
+						// Report the live tokens this context carries, so retention reads the relationship
+						// instead of searching the projection for one.
+						waitTokens: (composed.liveWaits ?? [])
+							.map((wait) => wait?.token)
+							.filter((token): token is string => typeof token === "string" && token.length > 0),
 					};
 				},
 				admitNativeQueue: (record, input) =>
@@ -275,11 +281,7 @@ export class PiSessionFlowIngress implements Ingress {
 						await this.releasing;
 						if (wakeSemantic && this.options.autoRelease?.retireHistory && !this.disposed && !this.fenced) {
 							try {
-								await this.service?.retireWaitHistory(true);
-								await this.service?.archiveSubmissionHistory();
-								await this.service?.retireRequestHistory();
-								await this.service?.retireLedgerHistory();
-								await this.service?.retireResultHistory();
+								await this.service?.retireFlowHistory();
 							} catch (error) {
 								if (error instanceof FlowLedgerError && error.code === "capacity")
 									this.options.autoRelease.onError(error);

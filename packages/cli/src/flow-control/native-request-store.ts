@@ -21,6 +21,12 @@ export interface NativeRequest {
 	systemHash: string;
 	sourceCapture?: NativeSourceCapture;
 	projectionCapture?: NativeProjectionCapture;
+	/**
+	 * Live wait tokens this request's projections carried, recorded by the decorator that composed
+	 * them. Retention reads this instead of searching the projection content for a token, so the
+	 * relationship is persisted where it is created rather than reconstructed afterwards.
+	 */
+	waitTokens?: string[];
 	requiredSources?: number[];
 	requiredProjections?: number[];
 	cancelledSources?: number[];
@@ -215,6 +221,15 @@ export class FlowNativeRequestStore {
 				(record.outcome !== undefined && record.outcome !== "withheld" && !record.payload)
 			)
 				throw new FlowLedgerError("schema", "Invalid native request receipt.");
+			if (
+				record.waitTokens !== undefined &&
+				(!Array.isArray(record.waitTokens) ||
+					record.waitTokens.length > 128 ||
+					new Set(record.waitTokens).size !== record.waitTokens.length ||
+					record.waitTokens.some((token) => !identity(token)) ||
+					record.projectionCapture === undefined)
+			)
+				throw new FlowLedgerError("schema", "Invalid native request wait references.");
 			if (
 				record.requiredSources !== undefined &&
 				(!Array.isArray(record.requiredSources) ||
@@ -524,6 +539,7 @@ export class FlowNativeRequestStore {
 			systemHash: input.systemHash,
 			...(input.sourceCapture !== undefined ? { sourceCapture: structuredClone(input.sourceCapture) } : {}),
 			...(input.projectionCapture !== undefined ? { projectionCapture: structuredClone(input.projectionCapture) } : {}),
+			...(input.waitTokens?.length ? { waitTokens: [...new Set(input.waitTokens)] } : {}),
 		};
 		return this.transact((records, retired) => {
 			if (retired.includes(requestIdentity(captured.id)))

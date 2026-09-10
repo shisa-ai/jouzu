@@ -23,7 +23,7 @@ export type NativeContextDecorator = (
 	messages: AgentMessage[],
 	sources: NativeRequestSource[],
 	signal?: AbortSignal,
-) => Promise<AgentMessage[] | { messages: AgentMessage[]; projections: AgentMessage[] }>;
+) => Promise<AgentMessage[] | { messages: AgentMessage[]; projections: AgentMessage[]; waitTokens?: string[] }>;
 
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 const attached = new WeakSet<AgentSession>();
@@ -45,6 +45,8 @@ export class PiNativeRequests {
 	private sealed = false;
 	private capture?: NativeSourceCapture;
 	private projections?: NativeProjectionCapture;
+	/** Wait tokens the decorator reported for this request's projections. */
+	private projectionWaitTokens?: string[];
 	private references?: AgentMessage[];
 	private cloneSourceHash?: string;
 	private converting?: AgentMessage[];
@@ -74,6 +76,7 @@ export class PiNativeRequests {
 				this.active++;
 				this.capture = undefined;
 				this.projections = undefined;
+				this.projectionWaitTokens = undefined;
 				this.references = undefined;
 				try {
 					let sourceHash = hash(messages),
@@ -129,8 +132,10 @@ export class PiNativeRequests {
 						});
 						const decorated = await decorateContext(result, structuredClone(intact), signal);
 						result = Array.isArray(decorated) ? decorated : decorated.messages;
-						if (!Array.isArray(decorated) && decorated.projections.length)
+						if (!Array.isArray(decorated) && decorated.projections.length) {
 							this.projections = captureNativeProjections(result, decorated.projections);
+							this.projectionWaitTokens = decorated.waitTokens?.length ? [...decorated.waitTokens] : undefined;
+						}
 					}
 					this.cloneSourceHash = undefined;
 					const contextReferences = this.references;
@@ -343,6 +348,7 @@ export class PiNativeRequests {
 							systemHash: hash(input.systemPrompt),
 							...(this.capture ? { sourceCapture: this.capture } : {}),
 							...(this.projections ? { projectionCapture: this.projections } : {}),
+							...(this.projections && this.projectionWaitTokens ? { waitTokens: this.projectionWaitTokens } : {}),
 						},
 						enforceRequiredSources,
 						await consumedSources?.(),
@@ -614,6 +620,7 @@ export class PiNativeRequests {
 		this.prepared = undefined;
 		this.capture = undefined;
 		this.projections = undefined;
+		this.projectionWaitTokens = undefined;
 		this.references = undefined;
 		this.closed = true;
 		this.hooks.close();
