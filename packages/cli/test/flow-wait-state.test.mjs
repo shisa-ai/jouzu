@@ -105,3 +105,87 @@ test("expiry needs no new observation and late cancellation cannot suppress it",
 	assert.deepEqual(cancelFlowWait(wait, "too late", 100), expired);
 	assert.deepEqual(expireFlowWait(expired, 200), expired);
 });
+
+const monitored = ["a", "b"].map((handle) => ({
+	producer: "bg",
+	handle,
+	execution: `exec-${handle}`,
+	until: "exit",
+	health: "sweep-progress-v1",
+}));
+const monitoredObservations = (...states) =>
+	states.map((state, index) => ({ ...monitored[index], scope, workId: "work", state }));
+const monitoredRequest = (mode = "all", overrides = {}) => ({
+	token: "wait",
+	scope,
+	workId: "work",
+	reason: "Wait for measurements",
+	mode,
+	on: monitored,
+	expiresAt: 100,
+	...overrides,
+});
+const monitoredWaiting = (mode = "all", overrides = {}) =>
+	createFlowWait(monitoredRequest(mode, overrides), monitoredObservations("pending", "pending"), 0, 100);
+
+test("a health decision ends the wait with its own outcome rather than a generic failure", () => {
+	// The distinction a decision turn needs: a job that failed, versus one that stopped proving it works.
+	assert.equal(
+		reconcileFlowWait(monitoredWaiting(), monitoredObservations("unhealthy", "pending"), 50).state,
+		"unhealthy",
+	);
+	assert.equal(
+		reconcileFlowWait(monitoredWaiting(), monitoredObservations("health-unknown", "pending"), 50).state,
+		"health-unknown",
+	);
+	assert.equal(reconcileFlowWait(monitoredWaiting(), monitoredObservations("failed", "pending"), 50).state, "failed");
+	// An explicit unhealthy report outranks an execution that merely stopped reporting.
+	assert.equal(
+		reconcileFlowWait(monitoredWaiting(), monitoredObservations("health-unknown", "unhealthy"), 50).state,
+		"unhealthy",
+	);
+	// Resolution and expiry still outrank any health decision.
+	assert.equal(
+		reconcileFlowWait(monitoredWaiting("any"), monitoredObservations("satisfied", "unhealthy"), 50).state,
+		"resolved",
+	);
+	assert.equal(
+		reconcileFlowWait(monitoredWaiting(), monitoredObservations("unhealthy", "pending"), 100).state,
+		"expired",
+	);
+});
+
+test("an any-mode wait keeps waiting while a healthy dependency is still pending", () => {
+	const wait = monitoredWaiting("any");
+	assert.equal(reconcileFlowWait(wait, monitoredObservations("unhealthy", "pending"), 50).state, "waiting");
+	assert.equal(reconcileFlowWait(wait, monitoredObservations("unhealthy", "failed"), 50).state, "unhealthy");
+	assert.equal(reconcileFlowWait(wait, monitoredObservations("health-unknown", "failed"), 50).state, "health-unknown");
+});
+
+test("a health decision requires the dependency to have requested a policy", () => {
+	// Deadline-only dependencies cannot be ended by a health state they never opted into.
+	for (const state of ["unhealthy", "health-unknown"])
+		assert.throws(() => reconcileFlowWait(waiting(), observations(state, "pending"), 50), { code: "identity" });
+});
+
+test("an expected check time must fall between now and the effective deadline", () => {
+	assert.equal(monitoredWaiting("all", { checkAt: 40 }).checkAt, 40);
+	for (const checkAt of [0, -1, 100, 101, 1.5])
+		assert.throws(() => monitoredWaiting("all", { checkAt }), { code: "schema" });
+	// The session cap lowers the effective deadline, so a check inside the requested one can still fail.
+	assert.throws(
+		() => createFlowWait(monitoredRequest("all", { checkAt: 80 }), monitoredObservations("pending", "pending"), 0, 50),
+		{ code: "schema" },
+	);
+	// Health requested with an unusable name is refused with the rest of the identity checks.
+	assert.throws(
+		() =>
+			createFlowWait(
+				{ ...monitoredRequest(), on: [{ ...monitored[0], health: "" }] },
+				[{ ...monitored[0], health: "", scope, workId: "work", state: "pending" }],
+				0,
+				100,
+			),
+		{ code: "schema" },
+	);
+});

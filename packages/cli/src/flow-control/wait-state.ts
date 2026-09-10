@@ -5,11 +5,23 @@ export interface FlowWaitHandle {
 	handle: string;
 	execution: string;
 	until: string;
+	/**
+	 * Health policy requested for this dependency, registered by its producer for this exact
+	 * execution. Absent means deadline-only: the dependency is judged by its terminal predicate and
+	 * the hard deadline alone. Not part of the dependency's identity, so requesting health does not
+	 * make a handle distinct from the same handle without it.
+	 */
+	health?: string;
 }
 export interface FlowWaitObservation extends FlowWaitHandle {
 	scope: FlowScope;
 	workId: string;
-	state: "pending" | "satisfied" | "failed" | "cancelled" | "missing";
+	/**
+	 * `unhealthy` and `health-unknown` are health decisions the producer's policy reached; they end
+	 * the wait with their own outcome rather than the generic failure a terminal predicate gives,
+	 * so a decision turn can tell a failed job from one that stopped proving it was working.
+	 */
+	state: "pending" | "satisfied" | "failed" | "cancelled" | "missing" | "unhealthy" | "health-unknown";
 }
 export interface FlowWaitState {
 	version: 1;
@@ -21,7 +33,9 @@ export interface FlowWaitState {
 	on: FlowWaitHandle[];
 	createdAt: number;
 	expiresAt: number;
-	state: "waiting" | "resolved" | "failed" | "expired" | "cancelled";
+	/** Optional expected-duration reconciliation, always before the hard deadline. */
+	checkAt?: number;
+	state: "waiting" | "resolved" | "failed" | "expired" | "cancelled" | "unhealthy" | "health-unknown";
 	unmet: FlowWaitHandle[];
 	observations: FlowWaitObservation[];
 	endedAt?: number;
@@ -32,6 +46,8 @@ const key = (handle: FlowWaitHandle) =>
 const identity = (value: unknown): value is string =>
 	typeof value === "string" && value.length > 0 && value.length <= 512;
 const instant = (value: number) => Number.isSafeInteger(value) && value >= 0;
+const terminal = (item: FlowWaitObservation) => !["pending", "satisfied"].includes(item.state);
+const unknownHealth = (item: FlowWaitObservation) => item.state === "health-unknown";
 
 /** The caller supplies one authoritative observation for every requested execution/predicate. */
 function observe(wait: FlowWaitState, observations: FlowWaitObservation[]) {
@@ -45,7 +61,12 @@ function observe(wait: FlowWaitState, observations: FlowWaitObservation[]) {
 			observation.workId !== wait.workId ||
 			!wait.on.some((handle) => key(handle) === key(observation)) ||
 			byHandle.has(key(observation)) ||
-			!["pending", "satisfied", "failed", "cancelled", "missing"].includes(observation.state)
+			!["pending", "satisfied", "failed", "cancelled", "missing", "unhealthy", "health-unknown"].includes(
+				observation.state,
+			) ||
+			// A health decision requires the dependency to have requested a policy.
+			(["unhealthy", "health-unknown"].includes(observation.state) &&
+				!wait.on.some((handle) => key(handle) === key(observation) && handle.health))
 		)
 			throw new FlowLedgerError("identity", "Wait observation has foreign or unsupported dependency identity.");
 		byHandle.set(key(observation), observation);
@@ -67,15 +88,14 @@ export function reconcileFlowWait(
 	next.unmet = wait.on
 		.filter((_handle, index) => current[index].state !== "satisfied")
 		.map((handle) => ({ ...handle }));
+	// A health decision names why the wait ended; an explicit unhealthy report outranks an execution
+	// that merely stopped reporting, which in turn outranks a generic terminal failure.
+	const ended = wait.mode === "all" ? current.some(terminal) : current.every((item) => item.state !== "pending");
+	const health = current.find((item) => item.state === "unhealthy") ?? current.find(unknownHealth);
 	if (now >= wait.expiresAt) next.state = "expired";
 	else if (wait.mode === "all" ? next.unmet.length === 0 : current.some((item) => item.state === "satisfied"))
 		next.state = "resolved";
-	else if (
-		wait.mode === "all"
-			? current.some((item) => !["pending", "satisfied"].includes(item.state))
-			: current.every((item) => item.state !== "pending")
-	)
-		next.state = "failed";
+	else if (ended) next.state = health ? (health.state as FlowWaitState["state"]) : "failed";
 	if (next.state !== "waiting") next.endedAt = now;
 	return next;
 }
@@ -105,13 +125,20 @@ export function createFlowWait(
 		maxDurationMs < 1 ||
 		!instant(request.expiresAt) ||
 		request.expiresAt <= now ||
-		"checkAt" in request
+		request.on.some((handle) => handle.health !== undefined && !identity(handle.health))
 	)
 		throw new FlowLedgerError("schema", "Invalid wait identity, dependencies, or deadline.");
+	const expiresAt = Math.min(request.expiresAt, now + maxDurationMs);
+	// A check at or past the effective expiry would never run, so it is refused rather than dropped.
+	if (
+		request.checkAt !== undefined &&
+		(!instant(request.checkAt) || request.checkAt <= now || request.checkAt >= expiresAt)
+	)
+		throw new FlowLedgerError("schema", "Wait check time must fall between now and the effective deadline.");
 	return reconcileFlowWait(
 		{
 			...structuredClone(request),
-			expiresAt: Math.min(request.expiresAt, now + maxDurationMs),
+			expiresAt,
 			version: 1,
 			createdAt: now,
 			state: "waiting",

@@ -64,10 +64,10 @@ interface State {
 const address = value<State>("jouzu.flow.waits", "v1");
 
 function validateWait(wait: FlowWaitState): void {
-	const { token, scope, workId, reason, mode, on, expiresAt, createdAt } = wait;
+	const { token, scope, workId, reason, mode, on, expiresAt, checkAt, createdAt } = wait;
 	const pending = wait.observations.map((item) => ({ ...item, state: "pending" as const }));
 	const initial = createFlowWait(
-		{ token, scope, workId, reason, mode, on, expiresAt },
+		{ token, scope, workId, reason, mode, on, expiresAt, ...(checkAt === undefined ? {} : { checkAt }) },
 		pending,
 		createdAt,
 		Number.MAX_SAFE_INTEGER,

@@ -627,3 +627,55 @@ test("execution work capture uses committed participation and refuses changing, 
 	const restored = await f.reopen();
 	assert.throws(() => restored.captureExecutionWork("work", 5, "bg"), { code: "transition" });
 });
+
+test("a monitored wait persists its policy and check time and still validates after reopen", async (t) => {
+	const f = await fixture(t);
+	const { store } = await (async () => ({ store: f.attachment.waits }))();
+	await store.registerWork("work", "lane", 0);
+	await store.shareWork("work", "lane", 1, "bg", 0);
+	await store.registerExecution(
+		{
+			producer: "bg",
+			handle: "display",
+			execution: "exec",
+			workId: "work",
+			revision: 1,
+			predicates: [{ until: "exit", state: "pending" }],
+		},
+		2,
+		0,
+	);
+	const monitored = { ...handle, health: "sweep-progress-v1" };
+	await store.declareOwned("lane", 2, { ...request(), on: [monitored], checkAt: 40 }, 10, 100);
+
+	// The store revalidates every retained wait by replaying its declaration, so a policy name and
+	// check time that survive reopen prove both are declared inputs rather than derived state.
+	const reopened = await f.reopen();
+	const [wait] = await reopened.snapshot();
+	assert.equal(wait.checkAt, 40);
+	assert.equal(wait.on[0].health, "sweep-progress-v1");
+	assert.equal(wait.state, "waiting");
+	assert.equal(wait.expiresAt, 100);
+
+	// A health decision reaches an owned wait as an execution predicate, the same path any other
+	// producer evidence takes, and ends the wait with its own outcome.
+	await reopened.observeExecution(
+		{ producer: "bg", handle: "display", execution: "exec" },
+		2,
+		[{ until: "exit", state: "health-unknown" }],
+		50,
+	);
+	const [decided] = await reopened.snapshot();
+	assert.equal(decided.state, "health-unknown");
+	assert.deepEqual((await (await f.reopen()).snapshot())[0], decided);
+	// A terminal predicate is not reopened or overwritten by a later probe.
+	await assert.rejects(
+		f.attachment.waits.observeExecution(
+			{ producer: "bg", handle: "display", execution: "exec" },
+			3,
+			[{ until: "exit", state: "satisfied" }],
+			60,
+		),
+		{ code: "transition" },
+	);
+});

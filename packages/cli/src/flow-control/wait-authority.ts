@@ -45,7 +45,10 @@ const identity = (input: unknown): input is string =>
 	typeof input === "string" && input.length > 0 && input.length <= 512;
 const revision = (input: number) => Number.isSafeInteger(input) && input > 0;
 const instant = (input: number) => Number.isSafeInteger(input) && input >= 0;
-const states = new Set(["pending", "satisfied", "failed", "cancelled", "missing"]);
+// `unhealthy` and `health-unknown` are terminal like any other non-pending predicate, so the
+// transition guard below already stops a late health probe from reopening a settled execution and
+// stops a health decision from overwriting a terminal result.
+const states = new Set(["pending", "satisfied", "failed", "cancelled", "missing", "unhealthy", "health-unknown"]);
 
 /** Canonical owner-scoped identity of a binding; bindings of different producers never collide. */
 const workBindingKey = (binding: FlowWorkBinding): string => JSON.stringify([binding.producer, ...binding.key]);
