@@ -11,7 +11,6 @@
 // variants npm already installed so all platforms are present in the packed
 // bundle. Run during the CLI build, before npm pack.
 
-import { spawnSync } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import {
 	existsSync,
@@ -29,6 +28,7 @@ import {
 	assertClipboardBindingDirectory,
 	clipboardBindingDirectoryIsComplete,
 	deriveClipboardBindingRequirements,
+	extractClipboardArchive,
 } from "./clipboard-bindings.mjs";
 
 const root = resolve(import.meta.dirname, "..");
@@ -65,16 +65,6 @@ function lockedVariant(requirement) {
 		);
 	}
 	return entry;
-}
-
-function extract(tarball, destination) {
-	const result = spawnSync("tar", ["-xzf", tarball, "-C", destination, "--strip-components=1"], {
-		encoding: "utf8",
-	});
-	if (result.error) throw result.error;
-	if (result.status !== 0) {
-		throw new Error(`tar extraction failed for ${tarball}: ${(result.stderr ?? "").trim()}`);
-	}
 }
 
 function pruneStaleVariants(expectedNames) {
@@ -114,7 +104,7 @@ try {
 		const staging = join(clipboardOrg, `.${requirement.packageName}.jouzu-stage-${randomUUID()}`);
 		mkdirSync(staging, { recursive: true });
 		try {
-			extract(tarball, staging);
+			extractClipboardArchive(tarball, staging);
 			assertClipboardBindingDirectory(staging, requirement);
 			rmSync(target, { recursive: true, force: true });
 			renameSync(staging, target);

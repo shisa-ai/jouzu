@@ -5,7 +5,8 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-export function smokeDevelopmentRuntime(entrypoint, { timeout = 15_000 } = {}) {
+// A fresh Windows runtime can spend over 15 seconds loading the bundled extensions.
+export function smokeDevelopmentRuntime(entrypoint, { timeout = process.platform === "win32" ? 60_000 : 15_000 } = {}) {
 	const temporary = mkdtempSync(join(tmpdir(), "jouzu-dev-smoke-"));
 	try {
 		const result = spawnSync(

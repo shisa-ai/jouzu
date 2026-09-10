@@ -322,7 +322,7 @@ Managed profile assets are UTF-8. Existing CP932/Shift-JIS profile targets produ
 
 ## Development
 
-From a source checkout, with Bash, Git, npm, and Node.js >=22.19.0 available:
+From a source checkout, with Bash, Git, npm, Node.js >=22.19.0, and Go available on `PATH`. The build selects the exact Go toolchain recorded in `upstream/textguard/source.lock.json` and downloads it if needed:
 
 ```bash
 npm run dev:setup                     # install locked dependencies, check, build, and smoke-test
@@ -330,7 +330,9 @@ node packages/cli/dist/cli.js         # run this local copy without changing glo
 npm run dev:link                      # optional: replace global jz/jouzu links with this checkout
 ```
 
-The helper installs dependencies with lifecycle scripts disabled and repeats installation when manifests or lockfiles change. Builds record UTC build time, Git commit, and dirty-worktree state. `--version` displays an identifier such as `0.1.7-dev.20260905-010203+g215b2188`; `.dirty` marks uncommitted files. The offline startup check uses isolated temporary state and a 15-second deadline. No provider key is required.
+The helper installs dependencies with lifecycle scripts disabled and repeats installation when manifests or lockfiles change. Builds record UTC build time, Git commit, and dirty-worktree state. `--version` displays an identifier such as `0.1.7-dev.20260905-010203+g215b2188`; `.dirty` marks uncommitted files. The offline startup check uses isolated temporary state with a 60-second deadline on Windows and 15 seconds elsewhere. No provider key is required.
+
+On Windows, close Jouzu sessions and test processes using this checkout before rebuilding: Windows locks loaded native modules, which prevents npm from replacing them. Archive extraction uses Windows' built-in `tar.exe`. The full `npm test` suite also requires `uv` and Python >=3.10.
 
 `dev:setup` does not change command links or install Git hooks. If global commands already point to this checkout, rebuilding updates the code they run. To opt in to automatic rebuilds after Git operations:
 
