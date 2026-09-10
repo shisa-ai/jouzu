@@ -1,6 +1,7 @@
 import type { InlineExtension } from "@earendil-works/pi-coding-agent";
 import { type FlowUnaccountableWork, formatFlowStatus, projectFlowStatus } from "./flow-status.js";
 import type { PiSessionFlowIngress } from "./pi-session-ingress.js";
+import { FlowLedgerError } from "./receipt-ledger.js";
 
 export interface FlowStatusOptions {
 	ingress(): PiSessionFlowIngress;
@@ -81,7 +82,14 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 						const lifecycle = { pause: "paused", resume: "active", stop: "stopped" } as const;
 						if (verb in lifecycle) {
 							const status = lifecycle[verb as keyof typeof lifecycle];
-							await ingress.changeWorkStatus(target, status, `Set ${status} from /flow.`);
+							try {
+								await ingress.changeWorkStatus(target, status, `Set ${status} from /flow.`);
+							} catch (error) {
+								// An unknown identity is a discovery problem, so answer it with where the ids are.
+								if (!(error instanceof FlowLedgerError) || error.code !== "identity") throw error;
+								notify(`No registered work ${target}. Run /flow to list active work.`, "error");
+								return;
+							}
 							notify(
 								status === "stopped"
 									? `Stopped ${target}. Its waits are cancelled and no further automated turn runs for it. Any job it started keeps running.`

@@ -152,7 +152,7 @@ test("held work is listed with the reason it was held, and finished work is not"
 		[
 			work("sweep", "paused", "Set paused from /flow."),
 			work("retired", "stopped", "Set stopped from /flow."),
-			// A completed campaign is finished, not held; an active one needs no mention.
+			// A completed campaign is finished rather than held, and it can take no further turn.
 			work("finished", "completed", "done"),
 			work("running"),
 		],
@@ -164,5 +164,54 @@ test("held work is listed with the reason it was held, and finished work is not"
 	const text = formatFlowStatus(status, 0);
 	assert.match(text, /Held work\n- multiloop sweep: paused \(Set paused from \/flow\.\)/);
 	assert.equal(text.includes("finished"), false);
-	assert.equal(text.includes("running"), false);
+	// Work that is neither held nor waiting still takes turns, so its identity stays listed.
+	assert.deepEqual(status.active, [{ id: "running", owner: "multiloop", waits: 0 }]);
+});
+
+test("active work is a nameable pause and stop target, waiting or not", () => {
+	const campaign = (id, lane, overrides = {}) => ({
+		id,
+		owner: "multiloop",
+		participants: ["multiloop"],
+		revision: 2,
+		createdAt: 0,
+		binding: { producer: "multiloop", key: [lane, "run-3"] },
+		...overrides,
+	});
+	const status = projectFlowStatus(
+		scope,
+		[],
+		[
+			wait({ workId: "gated" }),
+			wait({ token: "token-2", workId: "gated" }),
+			wait({ token: "token-3", state: "resolved", workId: "quiet" }),
+		],
+		[
+			campaign("gated", "sweep"),
+			campaign("quiet", "report"),
+			campaign("held", "stalled", { lifecycle: { state: "paused", changedAt: 10, reason: "Set paused from /flow." } }),
+			// One user turn's work identity is not a campaign, and a session accumulates one per turn.
+			{
+				id: "user:1",
+				owner: "host-user",
+				participants: ["host-user"],
+				revision: 1,
+				createdAt: 0,
+				userInputs: [{ id: "s1", revision: 1 }],
+			},
+		],
+	);
+	assert.deepEqual(status.active, [
+		{ id: "gated", owner: "multiloop", campaign: ["sweep", "run-3"], waits: 2 },
+		{ id: "quiet", owner: "multiloop", campaign: ["report", "run-3"], waits: 0 },
+	]);
+	const text = formatFlowStatus(status, 0);
+	// The campaign with no live wait is exactly the one the controls could not name before.
+	assert.match(text, /Active work\n- multiloop gated \(sweep run-3\): 2 live waits/);
+	assert.match(
+		text,
+		/- multiloop quiet \(report run-3\): no live wait\n {2}pause with: \/flow pause quiet\n {2}stop with: \/flow stop quiet/,
+	);
+	assert.equal(text.includes("user:1"), false);
+	assert.equal(text.includes("/flow pause held"), false);
 });

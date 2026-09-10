@@ -64,6 +64,21 @@ export async function assembledSession(
 }
 
 /**
+ * Record what commands print through `ctx.ui.notify`, so a command's user-visible answer can be
+ * asserted rather than inferred from stored state. The existing context is kept so extensions that
+ * use the rest of the UI surface keep working.
+ */
+export function capturedNotices(session) {
+	const notices = [];
+	const runner = session.extensionRunner;
+	runner.setUIContext({
+		...runner.getUIContext(),
+		notify: (text, level = "info") => notices.push({ text, level }),
+	});
+	return notices;
+}
+
+/**
  * A producer with no plugin-specific support in the controller, used to prove admission policy
  * does not branch on producer names and to drive automated work at exact points in a race.
  */

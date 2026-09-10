@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { assistantToolCalls } from "../../../scripts/fixtures/pi-flow-session.mjs";
-import { assembledSession, installedProducerExtensions } from "./fixtures/flow-assembly.mjs";
+import { assembledSession, capturedNotices, installedProducerExtensions } from "./fixtures/flow-assembly.mjs";
 import { campaignScript, liveWait } from "./fixtures/flow-campaign.mjs";
 
 const settle = () => new Promise((resolve) => setImmediate(resolve));
@@ -73,6 +73,57 @@ test("a lane from an earlier session in the same process does not break the next
 	const sent = next.bodies.map((body) => JSON.stringify(body.messages));
 	assert.equal(sent.length, 1, "and no continuation is sent for it");
 	assert.ok(sent[0].includes("hello"));
+});
+
+test("status names an active campaign, so pause and stop have a target without a wait", async (t) => {
+	const f = await assembledSession(t, {
+		producerExtensions: await installedProducerExtensions(),
+		script: campaignScript({ goal: "Name the target" }),
+	});
+	await f.session.prompt("start the sweep and wait");
+	const wait = await liveWait(f.ingress, "the campaign is live");
+
+	// Cancelling the gate leaves the campaign registered with no wait: the state in which its
+	// identity used to appear nowhere a user could read it.
+	await f.session.prompt(`/flow cancel ${wait.token}`);
+	await settle();
+	assert.deepEqual(
+		(await f.ingress.branch().attachment.waits.snapshot()).filter((record) => record.state === "waiting"),
+		[],
+		"no live wait remains to carry the work identity",
+	);
+
+	const notices = capturedNotices(f.session);
+	const requests = f.bodies.length;
+	await f.session.prompt("/flow");
+	await settle();
+	assert.equal(f.bodies.length, requests, "listing work still sends no request");
+	const listed = notices.map((notice) => notice.text).join("\n");
+	assert.match(listed, /Active work\n- multiloop /, "the campaign is listed with its owner");
+	assert.ok(listed.includes(wait.workId), "and with the identity the controls take");
+	const target = listed.match(/pause with: \/flow pause (\S+)$/m)?.[1];
+	assert.equal(target, wait.workId, "the printed control names that identity");
+
+	// The printed command is the one that works: copied verbatim, it holds the campaign.
+	await f.session.prompt(`/flow pause ${target}`);
+	await settle();
+	assert.equal(
+		(await f.ingress.branch().attachment.waits.authoritySnapshot()).work.find((record) => record.id === target)
+			?.lifecycle?.state,
+		"paused",
+	);
+	assert.deepEqual(f.errors, []);
+});
+
+test("a lifecycle control aimed at unknown work says where the identities are", async (t) => {
+	const f = await assembledSession(t, { producerExtensions: await installedProducerExtensions() });
+	const notices = capturedNotices(f.session);
+	await f.session.prompt("/flow stop no-such-work");
+	await settle();
+	assert.deepEqual(notices, [
+		{ text: "No registered work no-such-work. Run /flow to list active work.", level: "error" },
+	]);
+	assert.deepEqual(f.errors, []);
 });
 
 test("pausing a campaign holds its turns and resuming releases them", async (t) => {

@@ -40,20 +40,33 @@ export interface FlowSuspendedWork {
 	state: "paused" | "stopped";
 	reason: string;
 }
+/**
+ * Registered work that can still take automated turns, listed so its identity is the pause and stop
+ * target a user can name. A campaign is discoverable whether or not it currently holds a wait.
+ */
+export interface FlowActiveWork {
+	id: string;
+	owner: string;
+	/** Key parts naming the campaign, as its owning producer named them. Absent for unbound work. */
+	campaign?: string[];
+	/** Live waits this work owns, so a reader can connect it to the waits listed above. */
+	waits: number;
+}
 export interface FlowStatus {
 	version: 1;
 	scope: FlowScope;
 	held: FlowHeldInput[];
 	retryable: FlowRetryableRequest[];
 	waiting: FlowBlockedWait[];
+	active: FlowActiveWork[];
 	suspended: FlowSuspendedWork[];
 	unaccountable: FlowUnaccountableWork[];
 }
 
 /**
- * Project what a user needs to decide: what is held and why, what a retry may be aimed at, and
- * which work is blocked until when. Derived from retained state only, so reading it neither
- * releases work nor adds model context.
+ * Project what a user needs to decide: what is held and why, what a retry may be aimed at, which
+ * work is blocked until when, and which registered work can still take turns. Derived from retained
+ * state only, so reading it neither releases work nor adds model context.
  */
 export function projectFlowStatus(
 	scope: FlowScope,
@@ -89,6 +102,20 @@ export function projectFlowStatus(
 			expiresAt: wait.expiresAt,
 			unmet: wait.unmet.length,
 		}));
+	// Work with source submissions is one user turn's identity, not a campaign a user would pause,
+	// and a session accumulates one per turn. Only registered producer work is offered as a target.
+	const active = work.flatMap((record) =>
+		(record.lifecycle?.state ?? "active") === "active" && record.userInputs === undefined
+			? [
+					{
+						id: record.id,
+						owner: record.owner,
+						...(record.binding ? { campaign: [...record.binding.key] } : {}),
+						waits: waiting.filter((wait) => wait.workId === record.id).length,
+					},
+				]
+			: [],
+	);
 	// A completed campaign is finished rather than held, so only paused and stopped work is listed.
 	const suspended = work.flatMap((record) =>
 		record.lifecycle && ["paused", "stopped"].includes(record.lifecycle.state)
@@ -108,6 +135,7 @@ export function projectFlowStatus(
 		held,
 		retryable,
 		waiting,
+		active,
 		suspended,
 		unaccountable: [...unaccountable],
 	};
@@ -144,6 +172,18 @@ export function formatFlowStatus(status: FlowStatus, now: number): string {
 		for (const request of status.retryable) {
 			lines.push(`- ${request.requestId} (${request.reason})`);
 			lines.push(`  retry with: /flow retry ${request.requestId}`);
+		}
+	}
+	if (status.active.length) {
+		if (lines.length) lines.push("");
+		lines.push("Active work");
+		for (const item of status.active) {
+			const campaign = item.campaign?.length ? ` (${item.campaign.join(" ")})` : "";
+			const waits = item.waits === 0 ? "no live wait" : `${item.waits} live wait${item.waits === 1 ? "" : "s"}`;
+			lines.push(`- ${item.owner} ${item.id}${campaign}: ${waits}`);
+			// One command per line: a trailing separator would be copied along with the identity.
+			lines.push(`  pause with: /flow pause ${item.id}`);
+			lines.push(`  stop with: /flow stop ${item.id}`);
 		}
 	}
 	if (status.suspended.length) {
