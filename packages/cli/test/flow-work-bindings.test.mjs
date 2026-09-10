@@ -46,7 +46,7 @@ async function fixture(t, seed) {
 			return attachment;
 		},
 		/** Reopen, capturing the persisted bytes before the store reads them. */
-		async reopen() {
+		async reopen(inspect) {
 			await attachment.close();
 			let persisted;
 			attachment = await PiFlowAttachment.open(root, scope, async (directory) => {
@@ -57,6 +57,7 @@ async function fixture(t, seed) {
 						BACKGROUND_CONTEXT,
 					),
 				);
+				inspect?.(persisted);
 				return session;
 			});
 			return persisted;
@@ -257,6 +258,7 @@ test("corrupt legacy lane records fail closed on open", async (t) => {
 			multiloop: { lane: "sweep", runTag: "run-7" },
 			...overrides,
 		});
+	await assert.rejects(f.reseed(state([work({ multiloop: null })])), { code: "schema" });
 	await assert.rejects(f.reseed(state([work({ owner: "bg", id: "bg-work:1" })])), {
 		code: "schema",
 		message: /Invalid legacy multiloop lane record/,
@@ -265,6 +267,30 @@ test("corrupt legacy lane records fail closed on open", async (t) => {
 		code: "identity",
 		message: /multiple live campaigns/,
 	});
+});
+
+test("mixed legacy and current bindings fail closed without rewriting persisted records", async (t) => {
+	const f = await fixture(t);
+	for (const binding of [
+		{ producer: "foreign", key: ["other"] },
+		{ producer: "multiloop", key: ["different", "campaign"] },
+		{ producer: "multiloop", key: ["sweep", "run-7"] },
+	]) {
+		const seeded = legacyState();
+		seeded.authority.work[0].binding = binding;
+		await assert.rejects(
+			f.reseed(() => structuredClone(seeded)),
+			{ code: "schema" },
+		);
+		let persisted;
+		await assert.rejects(
+			f.reopen((state) => {
+				persisted = state;
+			}),
+			{ code: "schema" },
+		);
+		assert.deepEqual(persisted, seeded, "rejected migration preserves both identities and the original wait");
+	}
 });
 
 test("a legacy lane record with an unpaused hold still reports waiting work after migration", async (t) => {

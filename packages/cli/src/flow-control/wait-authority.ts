@@ -89,8 +89,14 @@ export function migrateWaitAuthority(authority: FlowWaitAuthority): boolean {
 	let migrated = false;
 	for (const work of authority.work) {
 		const legacy = (work as LegacyLaneWork).multiloop;
-		if (!legacy) continue;
-		if (work.owner !== "multiloop" || !identity(legacy.lane) || !identity(legacy.runTag))
+		if (legacy === undefined) continue;
+		if (
+			!legacy ||
+			work.binding !== undefined ||
+			work.owner !== "multiloop" ||
+			!identity(legacy.lane) ||
+			!identity(legacy.runTag)
+		)
 			throw new FlowLedgerError("schema", "Invalid legacy multiloop lane record.");
 		work.binding = { producer: "multiloop", key: [legacy.lane, legacy.runTag] };
 		delete (work as LegacyLaneWork).multiloop;
