@@ -100,15 +100,18 @@ async function complete(store, id, operations = ["input"], outcome = "success", 
 	await store.finish(id, outcome);
 }
 
-test("history retirement bounds unique successes while preserving live and incomplete evidence across reopen", async (t) => {
+test("history retirement bounds settled outcomes while preserving live and incomplete evidence across reopen", async (t) => {
 	const f = await fixture(t);
 	await complete(f.store, "live", ["live-operation"]);
 	await complete(f.store, "observed", ["observed-operation"]);
 	await complete(f.store, "failed", ["failed-operation"], "failure");
 	await complete(f.store, "omitted", ["omitted-operation"], "success", "unresolved");
 	for (let i = 0; i < 8; i++) await complete(f.store, `unique-${i}`, [`operation-${i}`]);
-	assert.equal(await f.store.retireHistory(2, new Set(["live-operation"]), new Set(["observed"])), 6);
-	const ids = ["live", "observed", "failed", "omitted", "unique-6", "unique-7"];
+	// A settled failure is retired by age like a success: nothing reads a retained failure record
+	// back for a decision, and the keep window still preserves the most recent ones. "omitted" stays
+	// because its evidence is incomplete, which is a different thing from having delivered nothing.
+	assert.equal(await f.store.retireHistory(2, new Set(["live-operation"]), new Set(["observed"])), 7);
+	const ids = ["live", "observed", "omitted", "unique-6", "unique-7"];
 	assert.deepEqual(
 		(await f.store.snapshot()).map((record) => record.id),
 		ids,
@@ -226,4 +229,44 @@ test("active requests and exhausted retirement quota preserve all receipts", asy
 	await f.store.finish("active", "withheld");
 	await f.reopen();
 	assert.equal((await f.store.snapshot()).length, 3);
+});
+
+test("settled failures are retired by age like successes", async (t) => {
+	const f = await fixture(t);
+	// Alternating outcomes, each with its own operation so no later success supersedes another.
+	for (let index = 0; index < 40; index++)
+		await complete(f.store, `r${index}`, [`op-${index}`], index % 2 === 0 ? "success" : "failure");
+	assert.equal(await f.store.retireSuperseded(), 0, "distinct inputs are never superseded");
+
+	// A failed request carries no delivery evidence to preserve: nothing was included, no retry is
+	// linked to it, and it holds no input. Keeping it forever walks the store to its record limit
+	// on any session that sees intermittent provider failures.
+	const retired = await f.store.retireHistory(10, new Set(), new Set());
+	const remaining = await f.store.snapshot();
+	assert.equal(remaining.length, 10, `retirement bounds every settled outcome: ${retired} retired`);
+	assert.ok(
+		remaining.some((record) => record.outcome === "failure"),
+		"the newest records are kept regardless of outcome, rather than successes being singled out",
+	);
+	// Every surviving record is still valid after reopen, and the fences stop replay of retired ids.
+	await f.reopen();
+	assert.equal((await f.store.snapshot()).length, 10);
+	await assert.rejects(f.store.begin(input("r0")), { code: "stale" });
+});
+
+test("a failure that a retry is built on is kept with its partner", async (t) => {
+	const f = await fixture(t);
+	for (let index = 0; index < 20; index++) await complete(f.store, `filler-${index}`, [`op-${index}`], "failure");
+	// A withheld request holding required input is authorized for retry, and neither end of that
+	// pair may be retired: the retry needs its parent's held evidence to be admissible.
+	const held = input("held", ["held-op"]);
+	await f.store.begin(held, true, [{ operationId: "held-op", prompt: { inputIndex: 0, messageIndex: 0 } }]);
+	await f.store.finish("held", "withheld");
+	await f.store.authorizeRetry("held", hash);
+	await f.store.retireHistory(1, new Set(), new Set());
+	const remaining = await f.store.snapshot();
+	assert.ok(
+		remaining.some((record) => record.id === "held"),
+		"a request awaiting its authorized retry is never retired",
+	);
 });

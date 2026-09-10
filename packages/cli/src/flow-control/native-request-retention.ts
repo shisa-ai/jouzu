@@ -79,6 +79,8 @@ export function supersededNativeRequests(records: readonly NativeRequest[]): str
  * dropping it cannot remove evidence something live still reads:
  *
  * - unresolved requests, and any request still held for input or context, stay;
+ * - a settled failure is retired like a success: it delivered nothing, so it holds no evidence a
+ *   later reader needs, and excluding it would leave a failure-prone session unbounded;
  * - a request linked to a retry, in either direction, stays with its partner;
  * - a request observing an operation that still owns a retained submission stays, so every live
  *   submission keeps a complete request view.
@@ -98,9 +100,13 @@ export function retirableNativeRequests(
 	);
 	const retirable = records.filter(
 		(record) =>
-			record.outcome === "success" &&
+			record.outcome !== undefined &&
 			!protectedRequestIds.has(record.id) &&
-			((!record.sourceCapture?.members.length && !record.projectionCapture?.members.length) ||
+			// A success is retired only once its delivery evidence is complete and verifiable. A
+			// request that never delivered has no such evidence to preserve, so keeping it forever
+			// would walk any session with intermittent provider failures to the record limit.
+			(record.outcome !== "success" ||
+				(!record.sourceCapture?.members.length && !record.projectionCapture?.members.length) ||
 				observations(record) !== undefined) &&
 			!nativeRequestHeld(record) &&
 			!record.retryOf &&
