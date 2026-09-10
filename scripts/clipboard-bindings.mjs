@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 import { existsSync, lstatSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -8,6 +9,20 @@ const KNOWN_PLACEHOLDERS = new Map([
 	["@mariozechner/clipboard-linux-arm64-musl", "0.3.9"],
 	["@mariozechner/clipboard-linux-x64-musl", "0.3.9"],
 ]);
+
+export function extractClipboardArchive(tarball, destination) {
+	// Git Bash's GNU tar treats Windows drive letters as remote archive hosts.
+	// Native Windows tar accepts the absolute paths produced by Node.
+	const tar =
+		process.platform === "win32" ? join(process.env.SystemRoot ?? "C:\\Windows", "System32", "tar.exe") : "tar";
+	const result = spawnSync(tar, ["-xzf", tarball, "-C", destination, "--strip-components=1"], {
+		encoding: "utf8",
+	});
+	if (result.error) throw result.error;
+	if (result.status !== 0) {
+		throw new Error(`tar extraction failed for ${tarball}: ${(result.stderr ?? "").trim()}`);
+	}
+}
 
 export function deriveClipboardBindingRequirements(clipboardPackageJson) {
 	const variants = Object.entries(clipboardPackageJson?.optionalDependencies ?? {});

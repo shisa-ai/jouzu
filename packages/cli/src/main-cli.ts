@@ -44,6 +44,7 @@ import {
 } from "./release-extensions.js";
 import { configurePiProcess, type ProfileSelection, resolveProfileSelection } from "./runtime.js";
 import { withJouzuOutput } from "./runtime-output.js";
+import { createShisaExtension } from "./shisa-link/extension.js";
 import { ensureQuietStartupDefault, suppressPiReleaseNotes } from "./startup-settings.js";
 import { JouzuUpdater } from "./updater.js";
 
@@ -328,6 +329,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 				modelPicker.extension,
 				modelPicker.workflowExtension,
 				createAstraCompatibilityExtension(),
+				createShisaExtension({ paths, jouzuVersion: metadata.jouzuVersion }),
 				voice,
 				help,
 				releaseDiagnostics,

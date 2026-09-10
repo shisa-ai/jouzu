@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 
-import { clipboardBindingDirectoryIsComplete } from "./clipboard-bindings.mjs";
+import { clipboardBindingDirectoryIsComplete, extractClipboardArchive } from "./clipboard-bindings.mjs";
 import {
 	configureReleasePacklists,
 	isPrunedDependencyMetadata,
@@ -23,6 +24,25 @@ import {
 	forbiddenPublicContent,
 	publicContentForScan,
 } from "./pack-check.mjs";
+
+test("clipboard archives extract from absolute paths containing spaces", () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu clipboard archive "));
+	try {
+		const source = join(root, "source");
+		const destination = join(root, "destination");
+		mkdirSync(join(source, "package"), { recursive: true });
+		mkdirSync(destination);
+		writeFileSync(join(source, "package", "binding.node"), "native fixture");
+		const archive = join(root, "binding archive.tgz");
+		const tar = process.platform === "win32" ? join(process.env.SystemRoot, "System32", "tar.exe") : "tar";
+		const packed = spawnSync(tar, ["-czf", archive, "-C", source, "package"], { encoding: "utf8" });
+		assert.equal(packed.status, 0, packed.error?.message ?? packed.stderr);
+		extractClipboardArchive(archive, destination);
+		assert.equal(readFileSync(join(destination, "binding.node"), "utf8"), "native fixture");
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
 
 function makeFixtureProfiles() {
 	const dir = mkdtempSync(join(tmpdir(), "pack-check-"));
