@@ -88,8 +88,9 @@ for (const variant of ["success", "failure", "changed", "wrong-operation", "wron
 							},
 						},
 					],
+					// Delivery is decided by what reached the provider adapter at model conversion.
+					model: { members: [{ sourceIndex: 0, status: variant === "changed" ? "changed" : "intact" }] },
 				},
-				payload: { sources: [{ sourceIndex: 0, disposition: variant === "changed" ? "changed" : "included" }] },
 			},
 		];
 		const producer = createFlowWaitDecisionProducer(store, {

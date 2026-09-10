@@ -1,5 +1,6 @@
 import type { FlowIntent } from "./admission.js";
 import type { FlowProducer } from "./controller.js";
+import { nativeProjectionDelivered } from "./native-inclusion.js";
 import { type FlowObservation, flowObservationOf } from "./observation.js";
 import type { PiFlowAttachment } from "./pi-attachment.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
@@ -71,10 +72,7 @@ export class BackgroundResultProducer implements FlowProducer {
 					request.projectionCapture?.members.some(
 						(projection, offset) =>
 							matches({ index: offset, ...flowObservationOf(projection.message) }, receipt) &&
-							request.projectionCapture?.model?.members[offset]?.status === "converted" &&
-							request.payload?.projections?.some(
-								(item) => item.sourceIndex === projection.index && item.disposition === "included",
-							),
+							nativeProjectionDelivered(request, projection.index),
 					),
 			);
 			if (observed) this.api.acknowledgeObservation(receipt.id, receipt.revision);
@@ -97,7 +95,8 @@ export class BackgroundResultProducer implements FlowProducer {
 						(request) =>
 							request.handedOff &&
 							request.outcome === "success" &&
-							request.payload?.inclusion.some(
+							// Inclusion recorded at model conversion, which is where the contract establishes it.
+							request.inclusion.some(
 								(included) =>
 									included.id === member.id &&
 									included.revision === member.revision &&

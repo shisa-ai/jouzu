@@ -3,6 +3,7 @@ import { isDeepStrictEqual } from "node:util";
 import type { FlowIntent } from "./admission.js";
 import type { FlowProducer } from "./controller.js";
 import { FlowModelInput } from "./model-input.js";
+import { nativeProjectionDelivered, nativeSourceDelivered } from "./native-inclusion.js";
 import type { FlowNativeRequestStore } from "./native-request-store.js";
 import { FlowLedgerError, type FlowLedgerState } from "./receipt-ledger.js";
 import type { FlowSubmissionStore } from "./submission-store.js";
@@ -61,7 +62,7 @@ interface NativeWaitEvidence {
 	requests: Pick<FlowNativeRequestStore, "snapshot">;
 }
 
-/** Only an exact retained context source included in a successful request acknowledges these decisions. */
+/** Only an exact retained context source delivered by a successful request acknowledges these decisions. */
 async function deliveredNativeDecisions(
 	waits: FlowWaitState[],
 	evidence: NativeWaitEvidence,
@@ -98,13 +99,8 @@ async function deliveredNativeDecisions(
 	};
 	for (const request of requests) {
 		if (request.outcome !== "success") continue;
-		for (const [offset, projection] of (request.projectionCapture?.members ?? []).entries()) {
-			if (
-				request.projectionCapture?.model?.members[offset]?.status === "converted" &&
-				request.payload?.projections?.some(
-					(item) => item.sourceIndex === projection.index && item.disposition === "included",
-				)
-			) {
+		for (const projection of request.projectionCapture?.members ?? []) {
+			if (nativeProjectionDelivered(request, projection.index)) {
 				if (projection.message.role === "toolResult") {
 					const receipt = observedWaitToolReceipt(projection.message, toolReceipts);
 					const wait = receipt && waits.find((wait) => wait.token === receipt.token);
@@ -114,11 +110,7 @@ async function deliveredNativeDecisions(
 			}
 		}
 		for (const source of request.sourceCapture?.members ?? []) {
-			if (
-				!source.prompt ||
-				!request.payload?.sources?.some((item) => item.sourceIndex === source.index && item.disposition === "included")
-			)
-				continue;
+			if (!source.prompt || !nativeSourceDelivered(request, source.index)) continue;
 			const submission = submissions.find((item) => item.dispatch?.operationId === source.operationId);
 			const input = submission?.dispatch?.inputs?.[source.prompt.inputIndex];
 			if (input?.kind !== "context" || source.prompt.messageIndex !== 0) continue;

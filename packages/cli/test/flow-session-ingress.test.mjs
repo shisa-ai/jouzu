@@ -2991,7 +2991,7 @@ for (const change of ["alter", "drop", "copy"]) {
 	});
 }
 
-test("legacy optional projection receipts remain readable without gaining acknowledgement", async (t) => {
+test("legacy optional projection receipts remain readable after reopen", async (t) => {
 	const f = await fixture(t, { provider: true, admit: null });
 	await f.session.prompt("seed");
 	const branch = f.ingress.branch();
@@ -3022,7 +3022,10 @@ test("legacy optional projection receipts remain readable without gaining acknow
 		submissions: restored.submissions,
 		requests: restored.nativeRequests,
 	});
-	assert.equal((await decisions.snapshot(new AbortController().signal)).length, 1);
+	// The legacy record still carries its model-conversion status, which is what decides delivery, so
+	// the decision it delivered is acknowledged. Only the wire receipt was downgraded here, and the
+	// contract no longer reads it.
+	assert.equal((await decisions.snapshot(new AbortController().signal)).length, 0);
 });
 
 for (const action of ["retry", "retry-with-new-user", "cancel"]) {

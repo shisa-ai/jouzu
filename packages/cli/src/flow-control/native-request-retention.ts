@@ -1,3 +1,4 @@
+import { nativeProjectionDelivered, nativeSourceDelivered } from "./native-inclusion.js";
 import { type NativeRequest, nativeRequestHeld } from "./native-request-store.js";
 
 /** Successful per-input evidence, independent of its position in a later request. */
@@ -8,14 +9,7 @@ function observations(request: NativeRequest): string[] | undefined {
 	for (const [offset, source] of request.sourceCapture.members.entries()) {
 		const context = request.sourceCapture.context?.members[offset];
 		const model = request.sourceCapture.model?.members[offset];
-		const payload = request.payload.sources?.[offset];
-		if (
-			context?.status !== "intact" ||
-			!model ||
-			!["intact", "converted"].includes(model.status) ||
-			payload?.disposition !== "included"
-		)
-			return;
+		if (context?.status !== "intact" || !model || !nativeSourceDelivered(request, source.index)) return;
 		keys.push(
 			JSON.stringify([
 				"source",
@@ -30,17 +24,13 @@ function observations(request: NativeRequest): string[] | undefined {
 				context.messageHash,
 				model.status,
 				model.messageHash,
-				payload.contentHash,
 			]),
 		);
 	}
 	for (const [offset, source] of (request.projectionCapture?.members ?? []).entries()) {
 		const model = request.projectionCapture?.model?.members[offset];
-		const payload = request.payload.projections?.[offset];
-		if (model?.status !== "converted" || payload?.disposition !== "included") return;
-		keys.push(
-			JSON.stringify(["projection", route, source.messageHash, model.status, model.messageHash, payload.contentHash]),
-		);
+		if (!model || !nativeProjectionDelivered(request, source.index)) return;
+		keys.push(JSON.stringify(["projection", route, source.messageHash, model.status, model.messageHash]));
 	}
 	return keys.length ? keys : undefined;
 }

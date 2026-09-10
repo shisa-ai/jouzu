@@ -480,12 +480,10 @@ for (const api of [
 	});
 
 	test(`${api}: a later user prompt observes the pending decision through required wait context`, async (t) => {
-		const f = await fixture(t, {
-			api,
-			change(payload) {
-				omitTools(payload);
-			},
-		});
+		// A failed request delivered nothing, which is what leaves a decision pending. A provider body
+		// mutated after model conversion no longer does: the controller trusts conversion from that
+		// checkpoint on, so it cannot see the mutation.
+		const f = await fixture(t, { api, failure: true });
 		await f.session.prompt("wait");
 		assert.equal((await f.decisions()).length, 1);
 		await f.session.prompt("status");
@@ -571,11 +569,13 @@ for (const api of [
 			assert.equal(f.sent.length, 2);
 			const record = (await f.ingress.branch().attachment.nativeRequests.snapshot())[1];
 			assert.equal(record.outcome, mode === "failed" ? "failure" : "success");
-			assert.equal(
-				record.payload.projections[0].disposition,
-				mode === "failed" ? "included" : mode === "omitted" ? "unresolved" : "changed",
-			);
-			assert.equal((await f.decisions()).length, 1);
+			// Every mode here mutates the provider body after model conversion, so the adapter received
+			// the decision intact in each one.
+			assert.equal(record.projectionCapture.model.members[0].status, "converted");
+			// Only the failed request leaves the decision pending. The other three are the accepted
+			// trust boundary: a transform after model conversion is not visible to the controller, so
+			// the decision is acknowledged even though the provider never received it as composed.
+			assert.equal((await f.decisions()).length, mode === "failed" ? 1 : 0);
 			assert.deepEqual(f.errors, []);
 		});
 }
@@ -789,7 +789,9 @@ for (const api of ["google-generative-ai", "google-vertex"])
 				records[1].payload.projections.map((p) => p.disposition),
 				[mode === "content" ? "changed" : mode === "omitted" ? "unresolved" : "included", "included"],
 			);
-			assert.equal((await f.decisions()).length, mode === "intact" ? 0 : mode === "failed" ? 2 : 1);
+			// `content` and `omitted` mutate the SDK payload after model conversion, which the controller
+			// trusts, so both acknowledge their decisions. Only the failed request keeps its two pending.
+			assert.equal((await f.decisions()).length, mode === "failed" ? 2 : 0);
 			assert.deepEqual(f.errors, []);
 			if (mode !== "intact") {
 				await f.session.prompt("report the wait status");

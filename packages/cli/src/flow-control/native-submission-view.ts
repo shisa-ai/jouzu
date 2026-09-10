@@ -95,6 +95,8 @@ export function projectNativeSubmissionRequests(
 					? {
 							hold: {
 								hash: nativeHoldHash(request),
+								// Still read from the wire receipt: this reason describes a hold the wire check
+								// produced, and both are removed together when that check is retired.
 								reason: request.requiredProjections?.some(
 									(index) =>
 										!(request.payload ?? request.withheldPayload)?.projections?.some(

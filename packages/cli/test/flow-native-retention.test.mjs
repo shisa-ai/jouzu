@@ -12,7 +12,7 @@ import { retiredIdentityHash } from "../dist/flow-control/retired-identities.js"
 
 const scope = { sessionId: "session", branchId: "branch" };
 const hash = "a".repeat(64);
-function input(id, operations = ["input"]) {
+function input(id, operations = ["input"], model = "intact") {
 	const members = operations.map((operationId, index) => ({
 		index,
 		operationId,
@@ -20,6 +20,15 @@ function input(id, operations = ["input"]) {
 		prompt: { inputIndex: 0, messageIndex: 0 },
 	}));
 	const positions = members.map(({ index }) => ({ sourceIndex: index, status: "intact", index, messageHash: hash }));
+	// The model-layer status is what decides delivery, so a record can be complete at conversion or
+	// incomplete there independently of the context capture above.
+	// The store rejects an unresolved member that still claims a converted position, so an
+	// unresolved status carries neither.
+	const converted = members.map(({ index }) =>
+		model === "unresolved"
+			? { sourceIndex: index, status: model }
+			: { sourceIndex: index, status: model, index, messageHash: hash },
+	);
 	return {
 		id,
 		sourceHash: hash,
@@ -31,7 +40,7 @@ function input(id, operations = ["input"]) {
 			count: members.length,
 			members,
 			context: { hash, count: members.length, members: structuredClone(positions) },
-			model: { hash, count: members.length, members: structuredClone(positions) },
+			model: { hash, count: members.length, members: converted },
 		},
 	};
 }
@@ -93,10 +102,12 @@ async function fixture(t, retiredCount = 0) {
 		},
 	};
 }
-async function complete(store, id, operations = ["input"], outcome = "success", disposition = "included") {
-	const record = input(id, operations);
+async function complete(store, id, operations = ["input"], outcome = "success", model = "intact") {
+	const record = input(id, operations, model);
 	await store.begin(record);
-	await store.handoff(id, payload(record, disposition));
+	// A record whose model status is not accepted carries no wire inclusion either; the store rejects
+	// that combination, so the payload receipt follows the model status.
+	await store.handoff(id, payload(record, model === "intact" ? "included" : model));
 	await store.finish(id, outcome);
 }
 
@@ -106,6 +117,7 @@ test("history retirement bounds settled outcomes while preserving live and incom
 	await complete(f.store, "observed", ["observed-operation"]);
 	await complete(f.store, "failed", ["failed-operation"], "failure");
 	await complete(f.store, "omitted", ["omitted-operation"], "success", "unresolved");
+	// "omitted" is unresolved at model conversion, so its evidence is incomplete.
 	for (let i = 0; i < 8; i++) await complete(f.store, `unique-${i}`, [`operation-${i}`]);
 	// A settled failure is retired by age like a success: nothing reads a retained failure record
 	// back for a decision, and the keep window still preserves the most recent ones. "omitted" stays
@@ -139,8 +151,10 @@ test("retention preserves distinct input identities, unique observations, failur
 	assert.deepEqual(supersededNativeRequests([a, b]), []);
 	assert.deepEqual(supersededNativeRequests([a, b, both]), ["a", "b"]);
 	const failure = { ...a, outcome: "failure" };
+	// Incomplete evidence is now a model-conversion status rather than a wire disposition.
 	const changed = structuredClone(a);
-	changed.payload.sources[0].disposition = "changed";
+	changed.sourceCapture.model.members[0].status = "changed";
+	changed.payload.sources[0] = { sourceIndex: 0, disposition: "changed" };
 	assert.deepEqual(supersededNativeRequests([failure, both]), []);
 	assert.deepEqual(supersededNativeRequests([changed, both]), []);
 	const parent = {
@@ -179,7 +193,9 @@ test("only matching projection observation can supersede a terminal-output or wa
 	later.projectionCapture = structuredClone(first.projectionCapture);
 	later.payload.projections = structuredClone(first.payload.projections);
 	assert.deepEqual(supersededNativeRequests([first, later]), ["first"]);
-	later.payload.projections[0].contentHash = "e".repeat(64);
+	// Evidence identity comes from what reached the adapter, so a differing converted message is
+	// what makes the later record cover something else.
+	later.projectionCapture.model.members[0].messageHash = "e".repeat(64);
 	assert.deepEqual(supersededNativeRequests([first, later]), []);
 });
 

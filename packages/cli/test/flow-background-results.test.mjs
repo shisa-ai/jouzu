@@ -17,19 +17,18 @@ const metadata = {
 for (const variant of ["success", "history-only", "failure", "rejected", "changed", "foreign", "unhanded"]) {
 	test(`background delivery acknowledgement requires exact successful payload: ${variant}`, async () => {
 		const member = { id: metadata.id, revision: "1", kind: "result", contentHash: "exact" };
+		// Inclusion is recorded at model conversion, which is where the contract establishes delivery.
 		const request = {
 			handedOff: variant !== "unhanded",
 			outcome: variant === "failure" ? "failure" : "success",
-			payload: {
-				inclusion: [
-					{
-						id: variant === "foreign" ? "other" : member.id,
-						revision: "1",
-						disposition: variant === "rejected" ? "rejected" : "included",
-						contentHash: variant === "changed" ? "changed" : "exact",
-					},
-				],
-			},
+			inclusion: [
+				{
+					id: variant === "foreign" ? "other" : member.id,
+					revision: "1",
+					disposition: variant === "rejected" ? "rejected" : "included",
+					contentHash: variant === "changed" ? "changed" : "exact",
+				},
+			],
 		};
 		const acknowledged = [];
 		const attachment = {
@@ -85,12 +84,19 @@ for (const variant of ["success", "failure", "missing", "redacted", "error", "ca
 					snapshot: async () => [
 						{
 							outcome: variant === "failure" ? "failure" : "success",
-							projectionCapture: { members: [{ index: 2, message }], model: { members: [{ status: "converted" }] } },
-							payload: {
-								projections:
-									variant === "missing"
-										? []
-										: [{ sourceIndex: 2, disposition: variant === "redacted" ? "rejected" : "included" }],
+							// Content policy and Pi's transforms run before model conversion, so a redaction
+							// or an unresolved projection is visible in the model-layer status. That is where
+							// the contract establishes delivery, and where these two variants belong.
+							projectionCapture: {
+								members: [{ index: 2, message }],
+								model: {
+									members: [
+										{
+											sourceIndex: 2,
+											status: variant === "redacted" ? "changed" : variant === "missing" ? "unresolved" : "converted",
+										},
+									],
+								},
 							},
 						},
 					],
