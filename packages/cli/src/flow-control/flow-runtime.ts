@@ -6,6 +6,7 @@ import type { PiFlowAttachment } from "./pi-attachment.js";
 import { PiSessionFlowIngress } from "./pi-session-ingress.js";
 import { flowProviderProjections } from "./provider-registry.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
+import { flowRunContainsUserInput } from "./run-input.js";
 import { createFlowWaitExtension } from "./wait-tools.js";
 
 export interface FlowControlLimits {
@@ -88,9 +89,11 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 				host: {
 					projections: flowProviderProjections(),
 					maxPayloadBytes: limits.maxPayloadBytes,
-					// Conservative until scoped no-reply support lands: recording every request as carrying
-					// user input withholds notification-only permission rather than granting it.
-					containsUserInput: () => true,
+					// Only the trailing block after the last assistant turn is this run's input, and a
+					// message there is instruction unless every part of it is flow-injected. Anything
+					// doubtful counts as user input, so a notification-only run is recognized without
+					// ever silencing a reply the user asked for.
+					containsUserInput: (input) => flowRunContainsUserInput(input.transformedMessages),
 					consumedAttempt: multiloop.consumedAttempt,
 				},
 				policy: () => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: [] }),

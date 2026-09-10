@@ -334,3 +334,33 @@ test("a result manifest is retired only once its reference leaves the model's co
 	);
 	assert.deepEqual(f.errors, []);
 });
+
+test("a composed wake is recorded as notification-only", async (t) => {
+	const f = await assembledSession(t, {
+		producerExtensions: await installedProducerExtensions(),
+		script: campaignScript({ command: "sleep 0.3 && echo swept" }),
+	});
+	await f.session.prompt("start the sweep and wait");
+	await until(
+		() => f.bodies.some((body) => JSON.stringify(body.messages).includes('kind\\":\\"wait')),
+		"the composed wake to be delivered",
+	);
+	const requests = await f.ingress.branch().attachment.nativeRequests.snapshot();
+	const ledger = await f.ingress.branch().attachment.ledger.snapshot();
+	const flagged = new Map(
+		ledger.attempts.flatMap((attempt) => attempt.requests.map((request) => [request.id, request.containsUserInput])),
+	);
+	assert.ok(flagged.size, "the ledger recorded per-request input evidence");
+
+	// Only controller-composed runs reach the ledger; a native user prompt dispatches without an
+	// attempt. Every composed run here is a wake carrying no instruction, so each must be recorded
+	// notification-only. The launcher previously recorded them all as carrying user input, which
+	// withholds no-reply permission unconditionally.
+	const recorded = requests.filter((request) => flagged.has(request.id));
+	assert.ok(recorded.length, "the composed wake reached the ledger");
+	assert.deepEqual(
+		recorded.map((request) => flagged.get(request.id)),
+		recorded.map(() => false),
+	);
+	assert.deepEqual(f.errors, []);
+});
