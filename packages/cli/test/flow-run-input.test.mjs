@@ -1,107 +1,79 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { FlowModelInput } from "../dist/flow-control/model-input.js";
 import { flowRunContainsUserInput } from "../dist/flow-control/run-input.js";
 
-const assistant = { role: "assistant", content: [{ type: "text", text: "done" }] };
-const user = (text) => ({ role: "user", content: [{ type: "text", text }] });
-const composed = (...kinds) =>
-	FlowModelInput.compose(
-		"a",
-		kinds.map((kind) => ({ id: kind, revision: "1", kind, text: "{}" })),
-		4096,
-	);
-const flowText = (composition, kind) =>
-	composition.content.find((part) => part.type === "text" && JSON.parse(part.text).kind === kind)?.text;
-const flow = (kind = "result", composition = composed(kind)) => ({
-	role: "user",
-	content: [{ type: "text", text: flowText(composition, kind) }],
+const assistant = { role: "assistant" };
+const user = { role: "user" };
+const hash = "a".repeat(64);
+/**
+ * One retained source per entry, placed at the model-input index the entry names. Controller-composed
+ * input is never a retained source, so it never appears here at all; `users()` names the operations
+ * the host verified as user submissions.
+ */
+function capture(sources) {
+	return {
+		hash,
+		count: sources.length,
+		members: sources.map((source, index) => ({
+			index,
+			operationId: source.operation,
+			messageHash: hash,
+			prompt: { inputIndex: 0, messageIndex: 0 },
+		})),
+		model: {
+			hash,
+			count: sources.length,
+			members: sources.map((source, index) =>
+				source.at === undefined
+					? { sourceIndex: index, status: "unresolved" }
+					: { sourceIndex: index, status: "intact", index: source.at, messageHash: hash },
+			),
+		},
+	};
+}
+const users = (...operations) => new Set(operations);
+
+test("only sources at or after the last assistant turn count as this run's input", () => {
+	// History replays on every request, so an answered question must not withhold permission.
+	const messages = [user, assistant, user];
+	assert.equal(flowRunContainsUserInput(messages, capture([{ operation: "old", at: 0 }]), users("old")), false);
+	assert.equal(flowRunContainsUserInput(messages, capture([{ operation: "new", at: 2 }]), users("new")), true);
+	// With no assistant turn yet, every source is this run's input.
+	assert.equal(flowRunContainsUserInput([user], capture([{ operation: "first", at: 0 }]), users("first")), true);
+	// A run whose only content is controller-composed carries no retained source at all.
+	assert.equal(flowRunContainsUserInput([assistant, user], capture([]), users("any")), false);
 });
 
-test("only the block after the last assistant turn counts as this run's input", () => {
-	const composition = composed("result");
-	// History is replayed on every request, so an answered question must not withhold permission.
-	assert.equal(
-		flowRunContainsUserInput([user("earlier question"), assistant, flow("result", composition)], composition),
-		false,
-	);
-	assert.equal(flowRunContainsUserInput([user("earlier"), assistant, user("new question")], composition), true);
-	// With no assistant turn yet, everything is this run's input.
-	assert.equal(flowRunContainsUserInput([user("first ever")], composition), true);
-	assert.equal(flowRunContainsUserInput([flow("result", composition)], composition), false);
-	assert.equal(flowRunContainsUserInput([], composition), false);
+test("a source the host did not mark as user cannot withhold permission", () => {
+	const messages = [assistant, user];
+	const carried = capture([{ operation: "extension", at: 1 }]);
+	// Origin is what the host assigned. An automated send inside this run's block is not instruction,
+	// and no label or marker in its content can change that.
+	assert.equal(flowRunContainsUserInput(messages, carried, users("someone-else")), false);
+	assert.equal(flowRunContainsUserInput(messages, carried, users("extension")), true);
 });
 
-test("user text joining a composed wake withholds permission", () => {
-	const composition = composed("wait", "result");
-	// The ordering that matters: the user typed while a wake was composing, either side of it.
-	assert.equal(
-		flowRunContainsUserInput([assistant, flow("result", composition), user("actually, stop")], composition),
-		true,
-	);
-	assert.equal(
-		flowRunContainsUserInput([assistant, user("actually, stop"), flow("result", composition)], composition),
-		true,
-	);
-	assert.equal(
-		flowRunContainsUserInput([assistant, flow("wait", composition), flow("result", composition)], composition),
-		false,
-	);
+test("user input joining a composed wake withholds permission from either side", () => {
+	const messages = [assistant, user, user, user];
+	assert.equal(flowRunContainsUserInput(messages, capture([{ operation: "typed", at: 3 }]), users("typed")), true);
+	assert.equal(flowRunContainsUserInput(messages, capture([{ operation: "typed", at: 1 }]), users("typed")), true);
 });
 
-test("anything not in the active composition counts as user input", () => {
-	const composition = composed("result");
-	// Wrongly granting silence loses a reply the user asked for, so every doubtful shape withholds.
-	for (const content of [
-		"plain string content",
-		[],
-		[{ type: "image", image: "x" }],
-		[{ type: "text", text: "not json" }],
-		[{ type: "text", text: "{}" }],
-		[{ type: "text", text: '{"flowInput":' }],
-		[{ type: "text", text: JSON.stringify({ other: 1 }) }],
-		[{ type: "text", text: JSON.stringify({ flowInput: 1 }) }],
-		undefined,
-	])
-		assert.equal(
-			flowRunContainsUserInput([assistant, { role: "user", content }], composition),
-			true,
-			JSON.stringify(content),
-		);
-	// A partly flow-injected message is still user input: one ordinary part is instruction.
-	assert.equal(
-		flowRunContainsUserInput(
-			[
-				assistant,
-				{ role: "user", content: [...flow("result", composition).content, { type: "text", text: "and also" }] },
-			],
-			composition,
-		),
-		true,
-	);
-	assert.equal(flowRunContainsUserInput("not a list", composition), true);
+test("missing or unplaceable evidence withholds permission", () => {
+	const messages = [assistant, user];
+	// No conversion record: nothing establishes where a source landed.
+	assert.equal(flowRunContainsUserInput(messages, { hash, count: 0, members: [] }, users("typed")), true);
+	assert.equal(flowRunContainsUserInput(messages, undefined, users("typed")), true);
+	// No resolved origins to compare against.
+	assert.equal(flowRunContainsUserInput(messages, capture([{ operation: "typed", at: 1 }]), undefined), true);
+	// A user source conversion could not place is treated as inside this run.
+	assert.equal(flowRunContainsUserInput(messages, capture([{ operation: "typed" }]), users("typed")), true);
+	assert.equal(flowRunContainsUserInput(undefined, capture([{ operation: "typed", at: 1 }]), users("typed")), true);
 });
 
-test("a marker from another attempt or composition does not authorize silence", () => {
-	const active = composed("result");
-	const otherAttempt = FlowModelInput.compose(
-		"other",
-		[{ id: "result", revision: "1", kind: "result", text: "{}" }],
-		4096,
-	);
-	const otherItem = composed("wait");
-	assert.equal(flowRunContainsUserInput([assistant, flow("result", otherAttempt)], active), true);
-	assert.equal(flowRunContainsUserInput([assistant, flow("wait", otherItem)], active), true);
-});
-
-test("non-user roles in the trailing block are ignored", () => {
-	const composition = composed("result");
-	// Tool results and system notices are not instruction and must not withhold permission.
-	assert.equal(
-		flowRunContainsUserInput(
-			[assistant, { role: "toolResult", content: [{ type: "text", text: "x" }] }, flow("result", composition)],
-			composition,
-		),
-		false,
-	);
+test("a mismatched conversion position cannot silence a user source", () => {
+	const carried = capture([{ operation: "typed", at: 0 }]);
+	// The model record must describe the member it sits beside; a mismatch is not evidence of place.
+	carried.model.members[0].sourceIndex = 99;
+	assert.equal(flowRunContainsUserInput([user, assistant], carried, users("typed")), true);
 });

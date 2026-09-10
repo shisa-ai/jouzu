@@ -19,6 +19,7 @@ import { PiHostHooks } from "./pi-host-hooks.js";
 import { preparePiProviderRoute } from "./pi-provider-route.js";
 import type { FlowCompositionRequest, PiRequestReceipts } from "./pi-request-receipts.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
+import { flowRunContainsUserInput } from "./run-input.js";
 
 export type NativeContextDecorator = (
 	messages: AgentMessage[],
@@ -64,6 +65,8 @@ export class PiNativeRequests {
 		consumedSources?: () => Promise<NativeSourceClaim[]>,
 		decorateContext?: NativeContextDecorator,
 		trustedStream?: AgentSession["agent"]["streamFunction"],
+		/** Operation IDs of host-verified user submissions, used to place user instruction in a run. */
+		userOperations?: () => Promise<ReadonlySet<string>>,
 	) {
 		if (!Number.isSafeInteger(maxBytes) || maxBytes < 1)
 			throw new FlowLedgerError("capacity", "Invalid native payload limit.");
@@ -359,8 +362,14 @@ export class PiNativeRequests {
 					);
 					this.pending = input.requestId;
 					// One checkpoint records both facts: the native request and, when this turn carries a
-					// controller composition, its ledger preparation.
-					this.composed = await this.composition?.prepare(input, signal);
+					// controller composition, its ledger preparation. Whether the run carries user
+					// instruction is decided from carried membership and recorded positions.
+					const carriesUserInput = flowRunContainsUserInput(
+						input.modelMessages,
+						this.capture,
+						await userOperations?.(),
+					);
+					this.composed = await this.composition?.prepare(input, signal, carriesUserInput);
 					this.prepared = {
 						modelHash: hash(input.modelMessages),
 						capture: this.capture ? structuredClone(this.capture) : undefined,

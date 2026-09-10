@@ -7,11 +7,11 @@ import { PiHistoryReceipts } from "./pi-history-receipts.js";
 import { PiHostBoundary } from "./pi-host-boundary.js";
 import { PiHostHooks } from "./pi-host-hooks.js";
 import { PiQueueReceipts } from "./pi-queue-receipts.js";
-import { type PiRequestReceiptOptions, PiRequestReceipts } from "./pi-request-receipts.js";
+import { PiRequestReceipts } from "./pi-request-receipts.js";
 import { FlowLedgerError, type FlowLedgerState, type FlowReceiptLedger } from "./receipt-ledger.js";
 import type { FlowResultReference } from "./result-types.js";
 
-export interface PiControllerHostOptions extends PiRequestReceiptOptions {
+export interface PiControllerHostOptions {
 	/** Byte bound on the transmitted body, enforced by the one observer that wraps the transport. */
 	maxPayloadBytes: number;
 	results?: { retain(members: FlowResultReference[]): Promise<string> };
@@ -112,7 +112,7 @@ export class PiControllerHost implements FlowControllerHost {
 		this.queue = new PiQueueReceipts(session.agent, ledger);
 		this.history = new PiHistoryReceipts(session, ledger);
 		// Records ledger facts only; PiNativeRequests owns the transport and drives it.
-		this.requests = new PiRequestReceipts(session, ledger, options);
+		this.requests = new PiRequestReceipts(session, ledger);
 		this.boundary = new PiHostBoundary(session, options.invokeOperation);
 		const transform = session.agent.transformContext;
 		this.hooks.set(session.agent, "transformContext", async (messages, signal) => {

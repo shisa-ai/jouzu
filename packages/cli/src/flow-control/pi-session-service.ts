@@ -145,6 +145,15 @@ export class PiFlowSessionService {
 				() => native.consumedSources(),
 				this.options.decorateNativeContext,
 				this.trustedStream,
+				// Host-assigned origin decides which operations are user instruction. Nothing here reads
+				// message content, so no label or marker can claim to be the user.
+				async () =>
+					new Set(
+						(await attachment.submissions.snapshot())
+							.filter((record) => isNativeUserInput(record.submission))
+							.map((record) => record.dispatch?.operationId)
+							.filter((id): id is string => !!id),
+					),
 			);
 			this.opening.requests = requests;
 			const workContext = new FlowWorkContext(() => this.branch().attachment);

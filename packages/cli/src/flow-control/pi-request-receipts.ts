@@ -10,10 +10,6 @@ export interface FlowCompositionRequest {
 	id: string;
 	handedOff: boolean;
 }
-export interface PiRequestReceiptOptions {
-	/** The ingress/controller owns user origin; never infer it from message prose. */
-	containsUserInput(input: FlowRequestInput, composition: FlowModelInput): boolean;
-}
 
 /**
  * Ledger bookkeeping for controller-composed requests.
@@ -31,7 +27,6 @@ export class PiRequestReceipts {
 	constructor(
 		private readonly session: AgentSession,
 		private readonly ledger: FlowReceiptLedger,
-		private readonly options: PiRequestReceiptOptions,
 	) {}
 
 	/**
@@ -39,7 +34,11 @@ export class PiRequestReceipts {
 	 * none. A claimed attempt without a registered composition is a fault: the controller registers
 	 * every composition it dispatches.
 	 */
-	async prepare(input: FlowRequestInput, signal?: AbortSignal): Promise<FlowCompositionRequest | undefined> {
+	async prepare(
+		input: FlowRequestInput,
+		signal: AbortSignal | undefined,
+		containsUserInput: boolean,
+	): Promise<FlowCompositionRequest | undefined> {
 		this.assertActive(signal);
 		const state = await this.ledger.snapshot();
 		const attempt = state.attempts.find((item) => item.id === state.activeAttemptId);
@@ -48,7 +47,7 @@ export class PiRequestReceipts {
 			throw new FlowLedgerError("transition", "Prior request requires reconciliation before another request.");
 		const composition = this.compositions.get(attempt.id);
 		if (!composition) throw new FlowLedgerError("identity", "Claimed attempt has no registered composition.");
-		await prepareFlowModelInput(this.ledger, composition, input, this.options.containsUserInput(input, composition));
+		await prepareFlowModelInput(this.ledger, composition, input, containsUserInput);
 		const request: FlowCompositionRequest = { composition, id: input.requestId, handedOff: false };
 		try {
 			this.assertActive(signal);
