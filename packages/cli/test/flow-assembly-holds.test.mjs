@@ -255,3 +255,82 @@ test("a provider call outside compaction is still refused without a request chec
 	);
 	assert.equal(f.bodies.length, before, "and the transport is never reached");
 });
+
+test("a result manifest is retired only once its reference leaves the model's context", async (t) => {
+	const f = await assembledSession(t, {
+		producerExtensions: await installedProducerExtensions(),
+		// One recent entry is kept, so compaction has something to drop after a few turns.
+		settings: { compaction: { enabled: false, keepRecentTokens: 1 } },
+		script: (body, index) =>
+			!body.tools?.length && body.messages?.[0]?.content?.startsWith?.("You are a context summarization")
+				? { text: "summary" }
+				: campaignScript({ command: "sleep 0.3 && echo swept" })(body, index),
+	});
+	await f.session.prompt("start the sweep and wait");
+	// The composed wake carries a result manifest, and its reference lands in the model's context.
+	await until(
+		() => f.bodies.some((body) => JSON.stringify(body.messages).includes("flow-results:")),
+		"a delivered result manifest reference",
+	);
+	// The idle boundary is contended right after a wake, so retire on the same terms the launcher
+	// does: retry briefly while the host reports busy rather than asserting on one attempt.
+	const retire = async () => {
+		const deadline = Date.now() + 5000;
+		for (;;) {
+			try {
+				return await f.ingress.retireResultHistory(1);
+			} catch (error) {
+				if (!["busy", "stale"].includes(error.code) || Date.now() >= deadline) throw error;
+				await new Promise((resolve) => setTimeout(resolve, 25));
+			}
+		}
+	};
+	const referenced = JSON.stringify(f.session.messages).match(/flow-results:[a-f0-9]{64}/g) ?? [];
+	assert.ok(referenced.length, "the manifest reference is in the live context, not only in a past request");
+	// Two manifests nothing names give the referenced one candidates beside it. The referenced one is
+	// the oldest, so a keep window of one would drop it first were it not protected.
+	const orphan = (id) =>
+		f.ingress.branch().attachment.results.retain([
+			{
+				id,
+				producer: "bg",
+				execution: `${id}-exec`,
+				revision: "1",
+				status: "success",
+				title: id,
+				reference: `bg-result:${id}`,
+				warnings: [],
+			},
+		]);
+	const first = await orphan("orphan-a");
+	await orphan("orphan-b");
+
+	// Retirement keeps it while the model could still page it with agent_results.
+	await retire();
+	assert.ok(
+		JSON.stringify(f.session.messages).includes(referenced[0]),
+		"the reference is still in context after maintenance",
+	);
+	const page = await f.ingress.branch().attachment.results.page(referenced[0], { limit: 8, maxBytes: 20_000 });
+	assert.ok(page.total > 0, "and the manifest it names is still readable");
+	// An unreferenced manifest went in that same pass, so the keep window is not what saved the other.
+	await assert.rejects(f.ingress.branch().attachment.results.page(first, { limit: 8, maxBytes: 20_000 }), {
+		code: "identity",
+	});
+
+	// Compaction drops the message carrying it, and only then may the manifest go.
+	await f.session.prompt("second");
+	await f.session.compact();
+	assert.equal(
+		JSON.stringify(f.session.messages).includes(referenced[0]),
+		false,
+		"compaction removed the reference from context",
+	);
+	await retire();
+	await assert.rejects(
+		f.ingress.branch().attachment.results.page(referenced[0], { limit: 8, maxBytes: 20_000 }),
+		{ code: "identity" },
+		"a manifest the model can no longer name is retired",
+	);
+	assert.deepEqual(f.errors, []);
+});
