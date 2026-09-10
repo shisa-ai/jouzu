@@ -305,3 +305,58 @@ test("a permission the run did not offer is refused and the turn continues", asy
 	assert.equal(last?.role, "assistant", "the model replied instead of going silent");
 	assert.deepEqual(f.errors, []);
 });
+
+test("an interrupted turn is listed and resolved from /flow", async (t) => {
+	const f = await assembledSession(t, { producerExtensions: await installedProducerExtensions() });
+	// Reproduce what a process kill leaves behind: a request handed to the provider whose outcome was
+	// never recorded. Driving the ledger is the only way to reach that state without killing the run.
+	const ledger = f.ingress.branch().attachment.ledger;
+	const member = { id: "work", revision: "1", kind: "work", required: true, contentHash: "a".repeat(64) };
+	await ledger.select("interrupted", [member]);
+	await ledger.queued("interrupted", { id: "queue", revision: 1 });
+	await ledger.claim("interrupted", { id: "queue", revision: 1 });
+	await ledger.prepare(
+		"interrupted",
+		"request",
+		[{ id: member.id, revision: member.revision, disposition: "included", contentHash: member.contentHash }],
+		false,
+	);
+	await ledger.handoff("interrupted", "request");
+	await ledger.uncertain("interrupted", "Host is inactive but the provider outcome is unknown.");
+
+	const notices = capturedNotices(f.session);
+	await f.session.prompt("/flow");
+	await settle();
+	const listed = notices.map((notice) => notice.text).join("\n");
+	assert.match(listed, /Interrupted, outcome unknown\n- interrupted: Host is inactive/);
+	const target = listed.match(/\/flow resolve (\S+) retry$/m)?.[1];
+	assert.equal(target, "interrupted", "the printed command names the interrupted turn");
+	assert.match(listed, /\/flow resolve interrupted discard/);
+
+	await f.session.prompt(`/flow resolve ${target} discard`);
+	await settle();
+	const resolved = (await ledger.snapshot()).attempts.find((attempt) => attempt.id === target);
+	assert.equal(resolved.phase, "settled");
+	assert.equal(resolved.outcome, "failure");
+	// Writing ledger state underneath a live controller races its own reconcile pass, which can report
+	// that the attempt it was about to cancel became uncertain first. That is an artifact of staging
+	// the state directly; no other error is tolerated.
+	assert.deepEqual(
+		f.errors.map((error) => error.message).filter((message) => message !== "Flow attempt is uncertain."),
+		[],
+	);
+});
+
+test("resolving an unknown turn says where the identities are", async (t) => {
+	const f = await assembledSession(t, { producerExtensions: await installedProducerExtensions() });
+	const notices = capturedNotices(f.session);
+	await f.session.prompt("/flow resolve no-such-attempt retry");
+	await settle();
+	assert.deepEqual(notices, [
+		{ text: "No interrupted turn no-such-attempt is waiting for a decision. Run /flow to list them.", level: "error" },
+	]);
+	await f.session.prompt("/flow resolve no-such-attempt sideways");
+	await settle();
+	assert.equal(notices.at(-1).level, "error", "an unknown resolution is refused with the usage text");
+	assert.deepEqual(f.errors, []);
+});

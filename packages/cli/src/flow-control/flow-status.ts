@@ -33,6 +33,14 @@ export interface FlowUnaccountableWork {
 	producer: string;
 	description: string;
 }
+/**
+ * A turn interrupted between transmission and its recorded outcome. Whether the provider answered it
+ * is not knowable locally, so it waits for the user rather than resolving itself.
+ */
+export interface FlowUncertainAttempt {
+	id: string;
+	reason: string;
+}
 /** Work a user has held or retired, which produces no automated turns until that changes. */
 export interface FlowSuspendedWork {
 	id: string;
@@ -58,6 +66,7 @@ export interface FlowStatus {
 	held: FlowHeldInput[];
 	retryable: FlowRetryableRequest[];
 	waiting: FlowBlockedWait[];
+	uncertain: FlowUncertainAttempt[];
 	active: FlowActiveWork[];
 	suspended: FlowSuspendedWork[];
 	unaccountable: FlowUnaccountableWork[];
@@ -74,6 +83,7 @@ export function projectFlowStatus(
 	waits: FlowWaitState[],
 	work: FlowAuthorityWork[],
 	unaccountable: FlowUnaccountableWork[] = [],
+	uncertain: FlowUncertainAttempt[] = [],
 ): FlowStatus {
 	const owners = new Map(work.map((record) => [record.id, record.owner]));
 	const held: FlowHeldInput[] = [];
@@ -135,6 +145,7 @@ export function projectFlowStatus(
 		held,
 		retryable,
 		waiting,
+		uncertain: uncertain.map((attempt) => ({ ...attempt })),
 		active,
 		suspended,
 		unaccountable: [...unaccountable],
@@ -174,6 +185,15 @@ export function formatFlowStatus(status: FlowStatus, now: number): string {
 			lines.push(`  retry with: /flow retry ${request.requestId}`);
 		}
 	}
+	if (status.uncertain.length) {
+		if (lines.length) lines.push("");
+		lines.push("Interrupted, outcome unknown");
+		for (const attempt of status.uncertain) {
+			lines.push(`- ${attempt.id}: ${attempt.reason}`);
+			lines.push(`  send it again with: /flow resolve ${attempt.id} retry`);
+			lines.push(`  accept it as spent with: /flow resolve ${attempt.id} discard`);
+		}
+	}
 	if (status.active.length) {
 		if (lines.length) lines.push("");
 		lines.push("Active work");
@@ -196,5 +216,5 @@ export function formatFlowStatus(status: FlowStatus, now: number): string {
 		lines.push("Not accounted for in this session");
 		for (const item of status.unaccountable) lines.push(`- ${item.producer}: ${item.description}`);
 	}
-	return lines.length ? lines.join("\n") : "Nothing is held, withheld, or waiting.";
+	return lines.length ? lines.join("\n") : "Nothing is held, withheld, waiting, or unresolved.";
 }

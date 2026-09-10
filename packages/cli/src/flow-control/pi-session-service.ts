@@ -25,6 +25,8 @@ export interface PiFlowSessionOptions {
 	/** Set only when attaching at the SDK creation boundary, before extensions can replace the stream. */
 	qualifyProviderRoute?: boolean;
 	root: string;
+	/** Reported once when state written under an earlier record shape is moved aside on open. */
+	onIsolatedState?(path: string): void;
 	maxInputBytes: number;
 	maxResultBytes: number;
 	/** Host-approved producer participants for work created from user input. */
@@ -116,7 +118,9 @@ export class PiFlowSessionService {
 	}
 
 	private async openBranch(scope: FlowScope): Promise<void> {
-		const attachment = await PiFlowAttachment.open(this.options.root, scope);
+		const attachment = await PiFlowAttachment.open(this.options.root, scope, undefined, (path) =>
+			this.options.onIsolatedState?.(path),
+		);
 		this.opening = { attachment };
 		try {
 			await this.options.attachWaitSources?.(attachment);
@@ -389,6 +393,28 @@ export class PiFlowSessionService {
 			});
 			if (result.kind === "busy") throw new FlowLedgerError("busy", "Wait retirement requires an idle session.");
 			return result.value;
+		});
+	}
+
+	/**
+	 * Resolve an uncertain attempt on the user's instruction, then release the recovery gate it holds.
+	 * The provider's receipt for such an attempt is unknowable locally, so this is the user's decision
+	 * and never an automatic one.
+	 */
+	resolveUncertainAttempt(id: string, resolution: "retry" | "discard") {
+		return this.registry.run(async () => {
+			const branch = this.branch();
+			const state = await branch.attachment.ledger.snapshot();
+			const attempt = state.attempts.find((item) => item.id === id);
+			if (!attempt || attempt.phase !== "uncertain")
+				throw new FlowLedgerError("identity", "No uncertain attempt has that identity.");
+			// The recovery gate is recomputed from ledger state on every admission decision, so resolving
+			// the attempt releases it without a separate call.
+			await branch.attachment.ledger.resolveUncertain(
+				id,
+				resolution,
+				resolution === "retry" ? "Resolved from /flow as undelivered." : "Resolved from /flow as spent.",
+			);
 		});
 	}
 

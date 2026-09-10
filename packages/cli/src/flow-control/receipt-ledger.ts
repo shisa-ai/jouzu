@@ -559,6 +559,32 @@ export class FlowReceiptLedger {
 		});
 	}
 
+	/**
+	 * Resolve an uncertain attempt on the user's instruction. A process kill between transmission and
+	 * a durable outcome leaves the provider's receipt unknown, and no local evidence can recover it:
+	 * `retry` treats the turn as undelivered and returns its work to ordinary admission, `discard`
+	 * accepts it as spent and settles the attempt so nothing re-runs. Leaving it unresolved is the
+	 * third choice and needs no transition.
+	 */
+	resolveUncertain(id: string, resolution: "retry" | "discard", reason: string): Promise<void> {
+		requireIdentity(reason);
+		if (resolution !== "retry" && resolution !== "discard")
+			throw new FlowLedgerError("schema", "Invalid uncertain resolution.");
+		return this.mutate((state) => {
+			const attempt = this.attempt(state, id, ["uncertain"]);
+			attempt.reason = reason;
+			if (resolution === "discard") {
+				attempt.outcome = "failure";
+				attempt.phase = "settled";
+			} else {
+				// The consumption fact is unchanged by the resolution: what changes is that this attempt
+				// is not a success, so its work becomes eligible for a fresh attempt.
+				attempt.phase = "cancelled";
+			}
+			delete state.activeAttemptId;
+		});
+	}
+
 	/** Called only after host run settlement or abort-and-join, including native retries and tools. */
 	settle(id: string, outcome: FlowOutcome): Promise<void> {
 		return this.mutate((state) => {

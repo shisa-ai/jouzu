@@ -98,6 +98,15 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 				},
 				policy: () => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: [] }),
 				autoRelease: { onError: options.onError, retireHistory: true },
+				// State from an earlier record shape is isolated rather than migrated, and the user is
+				// told where it went so nothing disappears silently.
+				onIsolatedState: (path) =>
+					options.onError(
+						new FlowLedgerError(
+							"schema",
+							`Flow state from an earlier version was moved aside to ${path}; this session starts with fresh state.`,
+						),
+					),
 				attachWaitSources: async (attachment: PiFlowAttachment) => {
 					if (background.attach(attachment, sessionManager) === "unavailable")
 						options.onError(

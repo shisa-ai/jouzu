@@ -129,7 +129,10 @@ test("the rendered status names the deadline and the retry command", () => {
 	assert.match(text, /\/flow retry r1/);
 	// A past deadline is stated rather than shown as negative time.
 	assert.match(formatFlowStatus(status, 3_600_000), /past its deadline/);
-	assert.equal(formatFlowStatus(projectFlowStatus(scope, [], [], []), 0), "Nothing is held, withheld, or waiting.");
+	assert.equal(
+		formatFlowStatus(projectFlowStatus(scope, [], [], []), 0),
+		"Nothing is held, withheld, waiting, or unresolved.",
+	);
 	// Work a producer still names but this session cannot run is stated rather than dropped silently.
 	const stranded = projectFlowStatus(scope, [], [], [], [{ producer: "multiloop", description: "lane sweep (run)" }]);
 	assert.deepEqual(stranded.unaccountable, [{ producer: "multiloop", description: "lane sweep (run)" }]);
@@ -214,4 +217,24 @@ test("active work is a nameable pause and stop target, waiting or not", () => {
 	);
 	assert.equal(text.includes("user:1"), false);
 	assert.equal(text.includes("/flow pause held"), false);
+});
+
+test("an interrupted turn is listed with both decisions the user can make", () => {
+	const status = projectFlowStatus(
+		scope,
+		[],
+		[],
+		[],
+		[],
+		[{ id: "attempt-1", reason: "Host is inactive but the provider outcome is unknown." }],
+	);
+	assert.deepEqual(status.uncertain, [
+		{ id: "attempt-1", reason: "Host is inactive but the provider outcome is unknown." },
+	]);
+	const text = formatFlowStatus(status, 0);
+	assert.match(text, /Interrupted, outcome unknown\n- attempt-1: Host is inactive/);
+	// Both resolutions are offered because neither is safe to choose automatically: retrying may
+	// repeat a turn the provider answered, and discarding may drop one it never received.
+	assert.match(text, /\/flow resolve attempt-1 retry/);
+	assert.match(text, /\/flow resolve attempt-1 discard/);
 });

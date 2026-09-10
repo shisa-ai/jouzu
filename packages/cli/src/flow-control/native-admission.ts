@@ -62,7 +62,11 @@ export function decideNativeAdmission(
 	if (gates.recoveryBlocked) return hold("Input is waiting for recovery reconciliation.");
 	if (host.isRetrying || host.isCompacting) return hold("Input is waiting for host retry or compaction.");
 	if (phase === "queue" && !input?.queue) return hold("Input has no exact native queue revision.");
+	// An unresolved outcome holds automated admission but never the user: resolving it is the user's
+	// decision, and the controls for it arrive as user input, so holding those would make the state
+	// unrecoverable. Host-verified origin is what passes here, never a caller-supplied label.
 	if (isNativeUserInput(submission)) return { allowed: true };
+	if (gates.outcomeUnresolved) return hold("Automated input is waiting for an interrupted turn to be resolved.");
 	if (submission.api === "sendCustomMessage") {
 		const options = submission.args[1] as { deliverAs?: string; triggerTurn?: boolean } | undefined;
 		const wakes = options?.triggerTurn ?? submission.hostState?.streaming;

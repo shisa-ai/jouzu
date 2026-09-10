@@ -89,3 +89,20 @@ test("delivery options cannot split the idle native prompt lane", () => {
 	const second = record("second", { args: ["second", { deliverAs: "followUp" }], hostState: { streaming: false } });
 	assert.equal(decide(second, [first, second]).allowed, false);
 });
+
+test("an unresolved outcome holds automated input while verified user input proceeds", () => {
+	// The two recovery gates differ in exactly one way: an unresolved outcome never holds the user,
+	// because the controls that resolve an interrupted turn arrive as user input. Incomplete
+	// reconciliation still holds every origin.
+	const automated = record("opaque");
+	const user = record("user", { api: "prompt", origin: { kind: "host" } });
+	const unresolved = { ...gates, outcomeUnresolved: true };
+	const held = decide(automated, [automated], unresolved);
+	assert.equal(held.allowed, false);
+	assert.match(held.reason, /interrupted turn/);
+	assert.equal(decide(user, [user], unresolved).allowed, true);
+	assert.equal(decide(user, [user], { ...gates, recoveryBlocked: true }).allowed, false);
+	// A caller-supplied label cannot borrow the exemption; origin is host-assigned.
+	const labelled = record("labelled", { api: "prompt", origin: { kind: "extension", id: "synthetic" } });
+	assert.equal(decide(labelled, [labelled], unresolved).allowed, false);
+});

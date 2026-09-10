@@ -20,7 +20,13 @@ export interface FlowIntent {
 export interface FlowAdmissionGates {
 	hostReady: boolean;
 	userPending: boolean;
+	/** Reconciliation is incomplete, so no submission of any origin may be admitted. */
 	recoveryBlocked: boolean;
+	/**
+	 * A turn was interrupted between transmission and its outcome. Automated admission waits for the
+	 * user's decision, but the user's own input proceeds: the controls that resolve it arrive that way.
+	 */
+	outcomeUnresolved?: boolean;
 	waitingWorkIds: string[];
 	/** Explicitly paused, stopped, or completed work cannot request another turn. */
 	inactiveWorkIds?: string[];

@@ -16,6 +16,7 @@ const USAGE = [
 	"/flow cancel <token> removes a wait's dependency gate without stopping its job.",
 	"/flow pause <work> holds a campaign's automated turns; /flow resume <work> releases it.",
 	"/flow stop <work> retires a campaign and ends its waits. None of these stop a running job.",
+	"/flow resolve <attempt> retry|discard decides an interrupted turn whose outcome is unknown.",
 ].join("\n");
 
 /**
@@ -30,7 +31,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 			pi.registerCommand("flow", {
 				description: "Show held, withheld, and waiting flow-control work, and repair a hold",
 				handler: async (args, ctx) => {
-					const [verb, target, ...rest] = args.trim().split(/\s+/).filter(Boolean);
+					const [verb, target, choice, ...rest] = args.trim().split(/\s+/).filter(Boolean);
 					const notify = (text: string, level: "info" | "error" = "info") => ctx.ui.notify(text, level);
 					try {
 						const ingress = options.ingress();
@@ -49,13 +50,33 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 										waits,
 										authority.work,
 										options.unaccountable?.() ?? [],
+										inspected.uncertain,
 									),
 									now(),
 								),
 							);
 							return;
 						}
-						if (rest.length || !target) {
+						if (verb === "resolve") {
+							if (rest.length || !target || (choice !== "retry" && choice !== "discard")) {
+								notify(USAGE, "error");
+								return;
+							}
+							try {
+								await ingress.resolveUncertainAttempt(target, choice);
+							} catch (error) {
+								if (!(error instanceof FlowLedgerError) || error.code !== "identity") throw error;
+								notify(`No interrupted turn ${target} is waiting for a decision. Run /flow to list them.`, "error");
+								return;
+							}
+							notify(
+								choice === "retry"
+									? `Resolved ${target} as undelivered. Its work is eligible again and may repeat a turn the provider already answered.`
+									: `Resolved ${target} as spent. Its work will not run again for this attempt.`,
+							);
+							return;
+						}
+						if (rest.length || choice || !target) {
 							notify(USAGE, "error");
 							return;
 						}

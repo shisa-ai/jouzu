@@ -1,5 +1,5 @@
 import { BACKGROUND_CONTEXT, type Session } from "@earendil-works/pi-agent-core";
-import { openLocalFlowSession } from "./local-storage.js";
+import { openLocalFlowSession, reconcileFlowStateVersion } from "./local-storage.js";
 import { FlowNativeRequestStore } from "./native-request-store.js";
 import { FlowOwnership } from "./ownership.js";
 import { createPiLedgerStore } from "./pi-ledger-store.js";
@@ -28,10 +28,14 @@ export class PiFlowAttachment {
 		root: string,
 		scope: FlowScope,
 		openSession: (directory: string) => Promise<Session> = openLocalFlowSession,
+		onIsolatedState?: (path: string) => void,
 	): Promise<PiFlowAttachment> {
 		const ownership = FlowOwnership.acquire(root, scope);
 		let session: Session | undefined;
 		try {
+			// State from an earlier record shape is moved aside before any store reads it.
+			const isolated = await ownership.run(() => reconcileFlowStateVersion(ownership.directory));
+			if (isolated) onIsolatedState?.(isolated);
 			session = await openSession(ownership.directory);
 			const store = createPiLedgerStore(session);
 			const ledger = await FlowReceiptLedger.attach(

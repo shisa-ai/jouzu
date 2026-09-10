@@ -334,7 +334,14 @@ export class PiSessionFlowIngress implements Ingress {
 			const branch = this.branch();
 			const submissions = await branch.attachment.submissionViews();
 			if (this.branch() !== branch) throw new FlowLedgerError("stale", "Flow inspection branch changed.");
-			return { version: 1 as const, scope: { ...branch.scope }, submissions };
+			const state = await branch.attachment.ledger.snapshot();
+			if (this.branch() !== branch) throw new FlowLedgerError("stale", "Flow inspection branch changed.");
+			// An attempt interrupted between transmission and its outcome needs the user's decision, so
+			// it is reported alongside what is held.
+			const uncertain = state.attempts
+				.filter((attempt) => attempt.phase === "uncertain")
+				.map((attempt) => ({ id: attempt.id, reason: attempt.reason ?? "Provider outcome is unknown." }));
+			return { version: 1 as const, scope: { ...branch.scope }, submissions, uncertain };
 		});
 	}
 	private manage<T>(run: (service: PiFlowSessionService) => Promise<T>): Promise<T> {
@@ -384,6 +391,10 @@ export class PiSessionFlowIngress implements Ingress {
 	reconcileNativeQueueEdit(id: string, revision: number): Promise<void> {
 		return this.manage((service) => service.reconcileNativeQueueEdit(id, revision));
 	}
+	resolveUncertainAttempt(id: string, resolution: "retry" | "discard") {
+		return this.manage((service) => service.resolveUncertainAttempt(id, resolution));
+	}
+
 	retryNativeRequest(id: string, expectedHash: string): Promise<void> {
 		return this.manage((service) => service.retryNativeRequest(id, expectedHash));
 	}
@@ -428,8 +439,8 @@ export class PiSessionFlowIngress implements Ingress {
 			this.nativeRecoveryBlocked(submission, branch, phase) ||
 			branch.recovery.unresolved > 0 ||
 			branch.sourceRecovery.unresolved > 0 ||
-			branch.waitSourceRecovery.missing.length > 0 ||
-			state.attempts.some((attempt) => attempt.phase === "uncertain");
+			branch.waitSourceRecovery.missing.length > 0;
+		const outcomeUnresolved = state.attempts.some((attempt) => attempt.phase === "uncertain");
 		let decision = decideNativeAdmission(
 			submission,
 			records,
@@ -437,12 +448,13 @@ export class PiSessionFlowIngress implements Ingress {
 				...policy,
 				waitingWorkIds: [...new Set([...policy.waitingWorkIds, ...waits.waitingWorkIds])],
 				recoveryBlocked,
+				outcomeUnresolved,
 			},
 			this.session,
 			phase,
 			input,
 		);
-		if (this.options.admit && !recoveryBlocked) {
+		if (this.options.admit && !recoveryBlocked && !outcomeUnresolved) {
 			try {
 				decision = (await this.options.admit(
 					structuredClone(submission),
