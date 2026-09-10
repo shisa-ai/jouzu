@@ -335,6 +335,64 @@ test("a result manifest is retired only once its reference leaves the model's co
 	assert.deepEqual(f.errors, []);
 });
 
+test("a manifest for results still pending with their producer is not retired unread", async (t) => {
+	const f = await assembledSession(t, { producerExtensions: await installedProducerExtensions() });
+	const synthetic = syntheticProducer();
+	const registration = f.ingress.registerProducer(synthetic.producer);
+	t.after(() => registration.dispose());
+	// The result is pending but not yet deliverable, so no wake has carried its reference into the
+	// model's context. Its manifest exists only in the store, which is exactly the shape whose
+	// retirement would make it unavailable to agent_results before anyone read it.
+	synthetic.offer([{ id: "intent", revision: "1", rank: 6, runnable: false }]);
+	await registration.changed();
+	const results = f.ingress.branch().attachment.results;
+	const reference = (id, producer) =>
+		results.retain([
+			{
+				id,
+				producer,
+				execution: `${id}-exec`,
+				revision: "1",
+				status: "success",
+				title: id,
+				reference: `${producer}-result:${id}`,
+				warnings: [],
+			},
+		]);
+	// The pending result's manifest is the oldest, so a keep window of one would drop it first were
+	// it not protected; the two orphans nothing names sit beside it as candidates.
+	const pending = await reference("intent", "synthetic");
+	const first = await reference("orphan-a", "synthetic");
+	await reference("orphan-b", "synthetic");
+	// The idle boundary is contended right after a producer change, so retire on the same terms
+	// the launcher does: retry briefly while the host reports busy.
+	const retire = async () => {
+		const deadline = Date.now() + 5000;
+		for (;;) {
+			try {
+				return await f.ingress.retireResultHistory(1);
+			} catch (error) {
+				if (!"busy".includes(error.code ?? "") || Date.now() >= deadline) throw error;
+				await settle();
+			}
+		}
+	};
+	await retire();
+	assert.equal(
+		(await results.page(pending, { limit: 8, maxBytes: 20_000 })).total,
+		1,
+		"the unread result keeps its manifest",
+	);
+	await assert.rejects(
+		results.page(first, { limit: 8, maxBytes: 20_000 }),
+		{
+			code: "identity",
+		},
+		"an unreferenced manifest with no pending result was retired in the same pass",
+	);
+	assert.deepEqual(f.errors, []);
+});
+
 test("a composed wake is recorded as notification-only", async (t) => {
 	const f = await assembledSession(t, {
 		producerExtensions: await installedProducerExtensions(),

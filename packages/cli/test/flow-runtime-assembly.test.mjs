@@ -22,7 +22,13 @@ test("the assembly registers the controller extensions the launcher passes to Pi
 	const { flow } = await runtime(t);
 	assert.deepEqual(
 		flow.extensions.map((extension) => extension.name),
-		["jouzu-multiloop-controller", "jouzu-background-controller", "jouzu-flow-waits", "jouzu-flow-status"],
+		[
+			"jouzu-multiloop-controller",
+			"jouzu-background-controller",
+			"jouzu-flow-waits",
+			"jouzu-flow-no-reply",
+			"jouzu-flow-status",
+		],
 	);
 	for (const extension of flow.extensions) assert.equal(typeof extension.factory, "function");
 });

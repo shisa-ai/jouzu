@@ -250,6 +250,8 @@ test("aggregate membership cannot duplicate a result or relabel required work as
 test("context transformation cannot send an aggregate with altered mandatory counts", async (t) => {
 	const { item: aggregate } = await buildFlowResultEnvelope({
 		attemptId: "attempt",
+		// The aggregate joins a run that already carries work, so no end-of-turn permission is offered.
+		runMembers: [{ kind: "work" }],
 		id: "batch",
 		revision: "1",
 		maxBytes: 4096,

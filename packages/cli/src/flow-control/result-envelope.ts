@@ -1,4 +1,5 @@
 import { type FlowInputItem, FlowModelInput } from "./model-input.js";
+import { flowNoReplyPermission } from "./no-reply.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import { type FlowResultReference, normalizeFlowResults } from "./result-types.js";
 
@@ -14,6 +15,8 @@ export interface FlowResultEnvelope {
 }
 export interface FlowResultEnvelopeOptions {
 	attemptId: string;
+	/** Members already composed into the run this envelope joins; a run owed a reply is offered none. */
+	runMembers: readonly Pick<FlowInputItem, "kind">[];
 	id: string;
 	revision: string;
 	members: FlowResultReference[];
@@ -28,7 +31,7 @@ export async function buildFlowResultEnvelope(options: FlowResultEnvelopeOptions
 	envelope: FlowResultEnvelope;
 	bytes: number;
 }> {
-	const { attemptId, id, revision, maxBytes } = options;
+	const { attemptId, id, revision, maxBytes, runMembers } = options;
 	const members = normalizeFlowResults(options.members, 1024);
 	const order = [...options.producerOrder];
 	if (
@@ -50,11 +53,19 @@ export async function buildFlowResultEnvelope(options: FlowResultEnvelopeOptions
 		warningResults,
 		...(warningResults ? { reviewNote: "Completion does not imply review approval." } : {}),
 	};
+	// Offered with the results themselves, so a run the model may end silently says so in the one
+	// place the model is already reading. The offer itself is withdrawn for a run that already
+	// carries work or a wait decision, because those are owed a reply; user input that joins after
+	// composition cannot be known here, so eligibility is re-decided when the tool runs.
+	const noReply = flowNoReplyPermission({
+		id: attemptId,
+		members: [...runMembers, { kind: "result" }],
+	});
 	const make = (body: FlowResultEnvelope): FlowInputItem => ({
 		id,
 		revision,
 		kind: "result",
-		text: JSON.stringify(body),
+		text: JSON.stringify(noReply ? { ...body, noReply } : body),
 		resultManifest: { reference: body.manifest, members: members.map(({ id, revision }) => ({ id, revision })) },
 	});
 	// Reserve mandatory counts, retrieval, warnings, and frame metadata before retaining or sampling.

@@ -307,6 +307,8 @@ for (const field of ["counts", "manifest", "warningResults", "reviewNote", "remo
 	test(`final provider aggregate ${field} preserves transport eligibility and per-item evidence`, async (t) => {
 		const { item } = await buildFlowResultEnvelope({
 			attemptId: "attempt",
+			// The aggregate joins a run that already carries the work item below.
+			runMembers: [{ kind: "work" }],
 			id: "batch",
 			revision: "1",
 			maxBytes: 4096,

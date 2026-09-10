@@ -1,12 +1,14 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { test } from "node:test";
-import { BACKGROUND_CONTEXT as context, MemorySessionRepo } from "@earendil-works/pi-agent-core";
+import { BACKGROUND_CONTEXT as context, MemorySessionRepo, setValue, value } from "@earendil-works/pi-agent-core";
 import { initialFlowAdmission } from "../dist/flow-control/admission.js";
+import { emptyRetiredAttempts, retiredMemberHash } from "../dist/flow-control/attempt-retention.js";
 import { retainedByReceipt } from "../dist/flow-control/controller.js";
 import { createPiLedgerStore } from "../dist/flow-control/pi-ledger-store.js";
 import { FlowReceiptLedger } from "../dist/flow-control/receipt-ledger.js";
 import { orderFlowResultProducers } from "../dist/flow-control/result-order.js";
+import { MAX_RETIRED_FLOW_IDENTITIES } from "../dist/flow-control/retired-identities.js";
 
 const scope = { sessionId: "parent", branchId: "branch-a" };
 const hash = (id) => createHash("sha256").update(`content:${id}`).digest("hex");
@@ -29,6 +31,34 @@ async function fixture(t) {
 	const session = await repo.create({}, context);
 	t.after(() => repo.close(context));
 	return FlowReceiptLedger.attach(createPiLedgerStore(session), scope);
+}
+
+/** A ledger whose replay-fence quota is nearly spent, with room for the state that implies. */
+async function fencedFixture(t, spent) {
+	const repo = new MemorySessionRepo();
+	const session = await repo.create({}, context);
+	t.after(() => repo.close(context));
+	await session.mutate(
+		(mutation, ctx) =>
+			mutation.commit(
+				[
+					setValue(value("jouzu.flow.receipts", "v1"), {
+						schemaVersion: 1,
+						scope,
+						generation: 0,
+						revision: 0,
+						attemptIds: [],
+						retiredAttempts: { ...emptyRetiredAttempts(), members: spent },
+					}),
+				],
+				ctx,
+			),
+		context,
+	);
+	return FlowReceiptLedger.attach(createPiLedgerStore(session), scope, {
+		maxAttempts: 1024,
+		maxBytes: 64 * 1024 * 1024,
+	});
 }
 
 const intent = (id, overrides = {}) => ({
@@ -199,5 +229,50 @@ test("retirement rejects an invalid window", async (t) => {
 	assert.throws(
 		() => ledger.retire(1.5),
 		(error) => error.code === "capacity",
+	);
+});
+
+test("the retired-identity fence budget holds retirement fail-closed at its limit", async (t) => {
+	// One slot short of the shared 16,384-identity safety budget: retiring both settled attempts
+	// below would need two. The budget is a fail-closed bound, not a claim of infinite retention.
+	const spent = Array.from({ length: MAX_RETIRED_FLOW_IDENTITIES - 1 }, (_, index) =>
+		retiredMemberHash(`spent-${index}`, "r1"),
+	);
+	const ledger = await fencedFixture(t, spent);
+	await settledAttempt(ledger, "one", "fence-one");
+	await settledAttempt(ledger, "two", "fence-two");
+	// A fold past the budget commits nothing, so the refusal is atomic: no attempt is dropped
+	// without its replay fence being recorded.
+	await assert.rejects(
+		() => ledger.retire(0),
+		(error) => ["schema", "capacity"].includes(error.code),
+	);
+	assert.deepEqual(
+		(await ledger.snapshot()).attempts.map((attempt) => attempt.id),
+		["one", "two"],
+		"no attempt was dropped by the refused retirement",
+	);
+	// The last free slot still retires one attempt, which keeps the budget a bound on history
+	// rather than a brick: the newest attempt stays addressable and its fence is recorded.
+	assert.equal(await ledger.retire(1), 1);
+	const after = await ledger.snapshot();
+	assert.deepEqual(
+		after.attempts.map((attempt) => attempt.id),
+		["two"],
+	);
+	assert.equal(after.retiredAttempts.members.length, MAX_RETIRED_FLOW_IDENTITIES);
+	// The budget is now spent, so retiring the survivor is refused the same fail-closed way.
+	await assert.rejects(
+		() => ledger.retire(0),
+		(error) => ["schema", "capacity"].includes(error.code),
+	);
+	assert.equal((await ledger.snapshot()).attempts.length, 1);
+	// The one recorded fence still blocks replay of the retired member.
+	assert.equal(
+		retainedByReceipt(
+			{ ...intent("fence-one"), rank: 6, workId: undefined, workRevision: undefined, revision: "r1" },
+			after,
+		),
+		true,
 	);
 });

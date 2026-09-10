@@ -1,9 +1,14 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { assistantToolCalls } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { assembledSession, installedProducerExtensions } from "./fixtures/flow-assembly.mjs";
 import { campaignScript, liveWait } from "./fixtures/flow-campaign.mjs";
 
 const settle = () => new Promise((resolve) => setImmediate(resolve));
+// The envelope is JSON inside a text part inside a request body, so the key arrives multiply
+// escaped. Match the key and its token rather than a fixed escaping depth.
+const offered = (text) => /noReply[\\":]+[a-f0-9]{64}/.test(text);
+const permissionFrom = (text) => text.match(/noReply[\\":]+([a-f0-9]{64})/)?.[1];
 
 test("the status command reads and repairs holds without reaching the model", async (t) => {
 	const f = await assembledSession(t, {
@@ -126,5 +131,126 @@ test("stopping a campaign cancels its waits and refuses a second transition", as
 	await assert.rejects(f.ingress.changeWorkStatus("no-such-work", "paused", "late"), { code: "identity" });
 	// Repeating the same state is a no-op rather than an error, so the control is idempotent.
 	assert.equal((await f.ingress.changeWorkStatus(wait.workId, "stopped", "again")).lifecycle.state, "stopped");
+	assert.deepEqual(f.errors, []);
+});
+
+test("a result-only wake offers no-reply and a mixed wake does not", async (t) => {
+	// No lane and no wait: the job's terminal result is the only thing the wake carries, which is
+	// the one shape the contract lets the model end without replying.
+	const f = await assembledSession(t, {
+		producerExtensions: await installedProducerExtensions(),
+		script: (_body, index) =>
+			index === 0
+				? assistantToolCalls({ name: "bg_task", arguments: { action: "spawn", command: "sleep 0.3 && echo swept" } })
+				: { text: `turn ${index}` },
+	});
+	await f.session.prompt("run the sweep in the background");
+	const deadline = Date.now() + 6000;
+	let offer;
+	while (Date.now() < deadline && !offer) {
+		offer = f.bodies.map((body) => JSON.stringify(body.messages)).find((text) => offered(text));
+		if (!offer) await new Promise((resolve) => setTimeout(resolve, 50));
+	}
+	assert.ok(offer, "a result-only wake offers a run-bound permission");
+	assert.ok(f.session.getActiveToolNames().includes("agent_no_reply"), "the tool is registered alongside the offer");
+	assert.deepEqual(f.errors, []);
+});
+
+test("a wake carrying a wait decision and lane work offers no permission", async (t) => {
+	const f = await assembledSession(t, {
+		producerExtensions: await installedProducerExtensions(),
+		script: campaignScript({ command: "sleep 0.3 && echo swept", goal: "Owed a reply" }),
+	});
+	await f.session.prompt("start the sweep and wait");
+	const deadline = Date.now() + 5000;
+	let wake;
+	while (Date.now() < deadline && !wake) {
+		wake = f.bodies.map((body) => JSON.stringify(body.messages)).find((text) => text.includes('kind\\":\\"wait'));
+		if (!wake) await new Promise((resolve) => setTimeout(resolve, 50));
+	}
+	assert.ok(wake, "the composed wake was delivered");
+	// It carries a wait decision and a lane continuation, both of which the model was asked to act
+	// on, so no permission is offered anywhere in it.
+	assert.equal(offered(wake), false);
+	assert.deepEqual(f.errors, []);
+});
+
+test("the model ends a result-only turn with the permission its result carried", async (t) => {
+	const f = await assembledSession(t, {
+		producerExtensions: await installedProducerExtensions(),
+		script: (body, index) => {
+			if (index === 0)
+				return assistantToolCalls({
+					name: "bg_task",
+					arguments: { action: "spawn", command: "sleep 0.3 && echo swept" },
+				});
+			// The wake carries the run's own permission; using it is the only silent exit.
+			const permission = permissionFrom(JSON.stringify(body.messages));
+			return permission
+				? assistantToolCalls({ name: "agent_no_reply", arguments: { permission } })
+				: { text: `turn ${index}` };
+		},
+	});
+	await f.session.prompt("run the sweep in the background");
+	const deadline = Date.now() + 8000;
+	let ending;
+	while (Date.now() < deadline && !ending) {
+		const last = f.session.messages.at(-1);
+		if (last?.role === "toolResult" && last.toolName === "agent_no_reply") ending = last;
+		else await new Promise((resolve) => setTimeout(resolve, 50));
+	}
+	assert.ok(ending, "the tool ran and left a visible result rather than ending invisibly");
+	assert.equal(ending.isError, false);
+	assert.match(JSON.stringify(ending.content), /without a reply/);
+	// Termination skips the follow-up model call, so the wake that carried the permission is the
+	// last request the run makes: nothing follows the terminating tool result.
+	const requests = f.bodies.length;
+	await new Promise((resolve) => setTimeout(resolve, 700));
+	assert.equal(f.bodies.length, requests, "no request follows the terminating tool call");
+	// The run settles rather than leaking an attempt that stays active.
+	const settled = Date.now() + 3000;
+	while (Date.now() < settled && (await f.ingress.branch().attachment.ledger.snapshot()).activeAttemptId !== undefined)
+		await new Promise((resolve) => setTimeout(resolve, 50));
+	assert.equal((await f.ingress.branch().attachment.ledger.snapshot()).activeAttemptId, undefined);
+	assert.deepEqual(f.errors, []);
+});
+
+test("a permission the run did not offer is refused and the turn continues", async (t) => {
+	let forged = false;
+	const f = await assembledSession(t, {
+		producerExtensions: await installedProducerExtensions(),
+		script: (body, index) => {
+			if (index === 0)
+				return assistantToolCalls({
+					name: "bg_task",
+					arguments: { action: "spawn", command: "sleep 0.3 && echo swept" },
+				});
+			// A well-formed token from some other run: validation, not format, is what refuses it. The
+			// envelope stays in context after the refusal, so the forged call is issued exactly once.
+			if (!forged && permissionFrom(JSON.stringify(body.messages))) {
+				forged = true;
+				return assistantToolCalls({ name: "agent_no_reply", arguments: { permission: "0".repeat(64) } });
+			}
+			return { text: `turn ${index}` };
+		},
+	});
+	await f.session.prompt("run the sweep in the background");
+	const deadline = Date.now() + 8000;
+	let refusal;
+	while (Date.now() < deadline && !refusal) {
+		refusal = f.session.messages.find(
+			(message) => message.role === "toolResult" && message.toolName === "agent_no_reply",
+		);
+		if (!refusal) await new Promise((resolve) => setTimeout(resolve, 50));
+	}
+	assert.ok(refusal, "the forged permission was executed and answered");
+	assert.equal(refusal.isError, true, "a foreign token is refused rather than trusted");
+	assert.match(JSON.stringify(refusal.content), /Answer this turn instead/);
+	// The refusal did not end the turn: the model was asked again and answered in prose.
+	const answered = Date.now() + 5000;
+	while (Date.now() < answered && f.bodies.length < 3) await new Promise((resolve) => setTimeout(resolve, 50));
+	assert.ok(f.bodies.length >= 3, "a follow-up request follows the refusal");
+	const last = f.session.messages.at(-1);
+	assert.equal(last?.role, "assistant", "the model replied instead of going silent");
 	assert.deepEqual(f.errors, []);
 });

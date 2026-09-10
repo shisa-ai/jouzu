@@ -500,6 +500,9 @@ export class SessionFlowController {
 						try {
 							const envelope = await buildFlowResultEnvelope({
 								attemptId,
+								// The wake the envelope joins may already carry a wait decision or work; such
+								// a run is owed a reply, so the envelope offers no end-of-turn permission.
+								runMembers: built.map(({ kind }) => ({ kind })),
 								id: choice.intent.rank === 6 ? choice.intent.id : `results:${randomUUID()}`,
 								revision: choice.intent.rank === 6 ? choice.intent.revision : "1",
 								members,

@@ -2,6 +2,7 @@ import type { InlineExtension, SessionManager } from "@earendil-works/pi-coding-
 import { createBackgroundControllerExtension } from "./background-extension.js";
 import { createFlowStatusExtension } from "./flow-status-extension.js";
 import { createMultiloopControllerExtension } from "./multiloop-extension.js";
+import { createFlowNoReplyExtension } from "./no-reply-tool.js";
 import type { PiFlowAttachment } from "./pi-attachment.js";
 import { PiSessionFlowIngress } from "./pi-session-ingress.js";
 import { flowProviderProjections } from "./provider-registry.js";
@@ -67,6 +68,7 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 		authorize: (workId) => ingress().branch().workContext.authorize(workId),
 		maxDurationMs: limits.maxWaitDurationMs,
 	});
+	const noReply = createFlowNoReplyExtension({ ingress });
 	const status = createFlowStatusExtension({
 		ingress,
 		unaccountable: () =>
@@ -75,7 +77,7 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 				.map((lane) => ({ producer: "multiloop", description: `lane ${lane.lane} (${lane.runTag})` })),
 	});
 	return {
-		extensions: [multiloop, background, waitTools, status],
+		extensions: [multiloop, background, waitTools, noReply, status],
 		ingress,
 		async flowIngressFactory({ sessionManager }) {
 			if (attached) throw new FlowLedgerError("identity", "Flow control runtime serves one session.");

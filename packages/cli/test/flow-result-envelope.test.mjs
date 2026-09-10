@@ -19,6 +19,9 @@ const member = (id, producer = "alpha", status = "success") => ({
 });
 const options = (members, maxBytes = 4096) => ({
 	attemptId: "attempt",
+	// The envelope is the run's only member in these cases, which is the one shape that earns an
+	// end-of-turn permission.
+	runMembers: [],
 	id: "batch",
 	revision: "1",
 	members,
@@ -47,6 +50,19 @@ test("aggregate samples failures first and rotates producers while preserving co
 	const input = FlowModelInput.compose("attempt", [item], 2200);
 	assert.equal(bytes, Buffer.byteLength(JSON.stringify(input.content)));
 	assert.equal(input.members.length, 22);
+});
+
+test("the end-of-turn permission is offered only to a run carrying results alone", async () => {
+	const solo = await buildFlowResultEnvelope(options([member("result")], 4096));
+	assert.match(JSON.parse(solo.item.text).noReply ?? "", /^[a-f0-9]{64}$/);
+	for (const kind of ["work", "wait", "alert", "user"])
+		assert.equal(
+			JSON.parse(
+				(await buildFlowResultEnvelope({ ...options([member("result")], 4096), runMembers: [{ kind }] })).item.text,
+			).noReply,
+			undefined,
+			kind,
+		);
 });
 
 test("mandatory metadata overflow fails before storing a manifest", async () => {
