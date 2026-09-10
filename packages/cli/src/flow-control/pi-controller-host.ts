@@ -12,6 +12,8 @@ import { FlowLedgerError, type FlowLedgerState, type FlowReceiptLedger } from ".
 import type { FlowResultReference } from "./result-types.js";
 
 export interface PiControllerHostOptions extends PiRequestReceiptOptions {
+	/** Byte bound on the transmitted body, enforced by the one observer that wraps the transport. */
+	maxPayloadBytes: number;
 	results?: { retain(members: FlowResultReference[]): Promise<string> };
 	invokeOperation?<T>(invoke: () => Promise<T>): Promise<T>;
 	revokeWork?(): void;
@@ -85,7 +87,8 @@ export class PiControllerHost implements FlowControllerHost {
 	readonly retainResults?: (members: FlowResultReference[]) => Promise<string>;
 	private readonly queue: PiQueueReceipts;
 	private readonly history: PiHistoryReceipts;
-	private readonly requests: PiRequestReceipts;
+	/** Ledger bookkeeping the request observer drives; the host owns its lifetime. */
+	readonly requests: PiRequestReceipts;
 	private readonly boundary: PiHostBoundary;
 	private pending?: Pending;
 	private readonly invokeWork?: PiControllerHostOptions["invokeWork"];
@@ -108,6 +111,7 @@ export class PiControllerHost implements FlowControllerHost {
 		this.invokeWork = options.invokeWork;
 		this.queue = new PiQueueReceipts(session.agent, ledger);
 		this.history = new PiHistoryReceipts(session, ledger);
+		// Records ledger facts only; PiNativeRequests owns the transport and drives it.
 		this.requests = new PiRequestReceipts(session, ledger, options);
 		this.boundary = new PiHostBoundary(session, options.invokeOperation);
 		const transform = session.agent.transformContext;

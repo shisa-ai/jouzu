@@ -18,6 +18,7 @@ import { createMultiloopControllerExtension } from "../dist/flow-control/multilo
 import { MultiloopFlowProducer, multiloopWorkBinding } from "../dist/flow-control/multiloop-producer.js";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { PiControllerHost } from "../dist/flow-control/pi-controller-host.js";
+import { PiNativeRequests } from "../dist/flow-control/pi-native-requests.js";
 import { FlowReceiptLedger } from "../dist/flow-control/receipt-ledger.js";
 import { orderFlowResultProducers } from "../dist/flow-control/result-order.js";
 import { createFlowWaitDecisionProducer } from "../dist/flow-control/wait-decisions.js";
@@ -61,7 +62,7 @@ async function fixture(t, native, options = {}) {
 	const calls = [];
 	const payloads = [];
 	const manifests = new Map();
-	let host, ledger, session, attachment, storageRoot;
+	let host, ledger, session, attachment, storageRoot, observer;
 	if (native) {
 		({ session } = await createFlowSession(t, {
 			persist: true,
@@ -88,6 +89,21 @@ async function fixture(t, native, options = {}) {
 					return answer();
 				},
 			});
+		// Production installs the one request observer before the host, so the host's checkpoints chain
+		// onto the observer's rather than the other way round. The recorder installs no hooks itself.
+		const observed = [];
+		observer = new PiNativeRequests(
+			session,
+			{
+				scope: { sessionId: session.sessionId, branchId: "main" },
+				blocksQueueing: () => false,
+				snapshot: async () => observed.map((record) => ({ ...record })),
+				begin: async (record) => void observed.push({ ...record }),
+				handoff: async () => true,
+				finish: async () => {},
+			},
+			100000,
+		);
 		host = new PiControllerHost(
 			session,
 			ledger,
@@ -99,7 +115,10 @@ async function fixture(t, native, options = {}) {
 			},
 			() => policy,
 		);
+		observer.attachComposition(host.requests);
+		observer.sealTransport();
 		t.after(async () => {
+			await observer.close();
 			await attachment.close();
 			await rm(root, { recursive: true, force: true });
 		});
@@ -171,7 +190,7 @@ async function fixture(t, native, options = {}) {
 		};
 	const controller = new SessionFlowController(host, options.maxInputBytes ?? 4096, options.maxResultBytes);
 	t.after(() => controller.close());
-	return { controller, host, ledger, calls, payloads, policy, session, attachment, storageRoot, manifests };
+	return { controller, host, observer, ledger, calls, payloads, policy, session, attachment, storageRoot, manifests };
 }
 
 test("Pi multiloop adapter holds three continuations and accounts once at native consumption", async (t) => {
@@ -1121,6 +1140,10 @@ for (const navigate of [false, true]) {
 			},
 			() => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: [] }),
 		);
+		// A replacement host brings its own recorder, so the one observer is repointed at it. The
+		// service does the same by building both per branch.
+		first.observer.detachComposition();
+		first.observer.attachComposition(host.requests);
 		const second = new SessionFlowController(host, 4096);
 		t.after(async () => {
 			await second.close();
@@ -1165,6 +1188,9 @@ for (const summarize of [false, "extension", "native"]) {
 					},
 					() => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: [] }),
 				);
+				// The next branch brings its own recorder; the one observer follows it.
+				first.observer.detachComposition();
+				first.observer.attachComposition(host.requests);
 				second = new SessionFlowController(host, 4096);
 				second.register(producer("beta"));
 				events.push("attached");

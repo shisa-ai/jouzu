@@ -17,6 +17,7 @@ import { nativeCancelledSources, nativeSourceKey } from "./native-request-store.
 import { copyFlowPayload } from "./payload-copy.js";
 import { PiHostHooks } from "./pi-host-hooks.js";
 import { preparePiProviderRoute } from "./pi-provider-route.js";
+import type { FlowCompositionRequest, PiRequestReceipts } from "./pi-request-receipts.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
 export type NativeContextDecorator = (
@@ -47,6 +48,9 @@ export class PiNativeRequests {
 	private projections?: NativeProjectionCapture;
 	/** Wait tokens the decorator reported for this request's projections. */
 	private projectionWaitTokens?: string[];
+	/** Ledger bookkeeping for controller-composed requests, driven from this one observer. */
+	private composition?: PiRequestReceipts;
+	private composed?: FlowCompositionRequest;
 	private references?: AgentMessage[];
 	private cloneSourceHash?: string;
 	private converting?: AgentMessage[];
@@ -354,6 +358,9 @@ export class PiNativeRequests {
 						await consumedSources?.(),
 					);
 					this.pending = input.requestId;
+					// One checkpoint records both facts: the native request and, when this turn carries a
+					// controller composition, its ledger preparation.
+					this.composed = await this.composition?.prepare(input, signal);
 					this.prepared = {
 						modelHash: hash(input.modelMessages),
 						capture: this.capture ? structuredClone(this.capture) : undefined,
@@ -488,8 +495,12 @@ export class PiNativeRequests {
 					this.active--;
 				}
 			};
+			const composed = this.composed;
+			this.composed = undefined;
 			const withheld = async () => {
-				if (!handedOff) await store.finish(id, "withheld");
+				if (handedOff) return;
+				await store.finish(id, "withheld");
+				if (composed) await this.composition?.withhold(composed);
 			};
 			try {
 				if (!prepared || hash(context.messages) !== prepared.modelHash)
@@ -532,6 +543,7 @@ export class PiNativeRequests {
 								"Native request withheld because required input was changed or unresolved at conversion.",
 							);
 						handedOff = true;
+						if (composed) await this.composition?.handedOff(composed, options?.signal);
 						this.assertActive();
 						options?.signal?.throwIfAborted();
 						return owned;
@@ -551,6 +563,7 @@ export class PiNativeRequests {
 								id,
 								message.stopReason === "error" ? "failure" : message.stopReason === "aborted" ? "aborted" : "success",
 							);
+							if (composed) await this.composition?.settled(composed, message);
 							return message;
 						} catch (error) {
 							await withheld();
@@ -598,6 +611,21 @@ export class PiNativeRequests {
 	 * against a stale handler and hold every request. One use only, called by the session service
 	 * while it still owns construction, so no later replacement can be absorbed here.
 	 */
+	/**
+	 * Attach the ledger bookkeeping for controller-composed requests. One observer wraps the transport
+	 * and drives both projections, so the two no longer depend on which installed first.
+	 */
+	attachComposition(receipts: PiRequestReceipts): void {
+		this.assertActive();
+		if (this.composition) throw new FlowLedgerError("identity", "Composition receipts are already attached.");
+		this.composition = receipts;
+	}
+
+	detachComposition(): void {
+		this.composition = undefined;
+		this.composed = undefined;
+	}
+
 	sealTransport(): void {
 		if (this.sealed) throw new FlowLedgerError("transition", "Native request transport is already sealed.");
 		this.sealed = true;

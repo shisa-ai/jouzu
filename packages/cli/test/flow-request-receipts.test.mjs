@@ -6,6 +6,7 @@ import { assistant, createFlowSession, deferred } from "../../../scripts/fixture
 import { FlowModelInput } from "../dist/flow-control/model-input.js";
 import { PiHostBoundary } from "../dist/flow-control/pi-host-boundary.js";
 import { createPiLedgerStore } from "../dist/flow-control/pi-ledger-store.js";
+import { PiNativeRequests } from "../dist/flow-control/pi-native-requests.js";
 import { PiQueueReceipts } from "../dist/flow-control/pi-queue-receipts.js";
 import { PiRequestReceipts } from "../dist/flow-control/pi-request-receipts.js";
 import { FlowReceiptLedger } from "../dist/flow-control/receipt-ledger.js";
@@ -38,14 +39,35 @@ async function fixture(t, { transform, fetch, native, reversed = false, inputs }
 				},
 			}));
 	let queue = reversed ? undefined : new PiQueueReceipts(session.agent, ledger);
-	const bridge = new PiRequestReceipts(session, ledger, {
-		maxPayloadBytes: 100000,
-		containsUserInput: () => false,
-	});
+	// One observer wraps the transport and drives both projections. The receipts recorder installs no
+	// hooks of its own, so these cases exercise the merged path rather than a second wrapper.
+	const bridge = new PiRequestReceipts(session, ledger, { containsUserInput: () => false });
+	const records = [];
+	const nativeStore = {
+		scope: { sessionId: session.sessionId, branchId: "main" },
+		blocksQueueing: () => false,
+		snapshot: async () => records.map((record) => ({ ...record })),
+		begin: async (record) => {
+			records.push({ ...record });
+		},
+		handoff: async (id, payload) => {
+			const record = records.find((item) => item.id === id);
+			record.payload = payload;
+			return true;
+		},
+		finish: async (id, outcome) => {
+			const record = records.find((item) => item.id === id);
+			record.outcome = outcome;
+		},
+	};
+	const observer = new PiNativeRequests(session, nativeStore, 100000);
+	observer.attachComposition(bridge);
+	observer.sealTransport();
 	queue ??= new PiQueueReceipts(session.agent, ledger);
 	const boundary = new PiHostBoundary(session);
 	t.after(async () => {
 		boundary.close();
+		await observer.close();
 		bridge.close();
 		queue.close();
 		await repo.close(context);
@@ -63,7 +85,7 @@ async function fixture(t, { transform, fetch, native, reversed = false, inputs }
 	await queue.enqueue("attempt", () =>
 		session.agent.followUp({ role: "user", content: composition.content, timestamp: 1 }),
 	);
-	return { session, ledger, bridge, queue, sent, composition, store, boundary };
+	return { session, ledger, bridge, observer, queue, sent, composition, store, boundary, records: nativeStore };
 }
 
 test("native request joins model admission, handoff, and outcome without settling the run", async (t) => {

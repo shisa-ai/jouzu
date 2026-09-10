@@ -2,141 +2,98 @@ import type { FlowRequestInput } from "@earendil-works/pi-agent-core";
 import type { AssistantMessage } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
 import { type FlowModelInput, prepareFlowModelInput } from "./model-input.js";
-import { copyFlowPayload } from "./payload-copy.js";
-import { PiHostHooks } from "./pi-host-hooks.js";
 import { FlowLedgerError, type FlowOutcome, type FlowReceiptLedger } from "./receipt-ledger.js";
 
-interface RequestBinding {
+/** One controller-composed request, bound to the attempt whose composition it carries. */
+export interface FlowCompositionRequest {
 	composition: FlowModelInput;
 	id: string;
-	signal?: AbortSignal;
 	handedOff: boolean;
 }
 export interface PiRequestReceiptOptions {
-	maxPayloadBytes: number;
 	/** The ingress/controller owns user origin; never infer it from message prose. */
 	containsUserInput(input: FlowRequestInput, composition: FlowModelInput): boolean;
 }
 
-/** Native request receipts. Host settlement remains separate from response and agent_end events. */
+/**
+ * Ledger bookkeeping for controller-composed requests.
+ *
+ * This records facts and installs no hooks. One observer owns the request lifecycle
+ * (`PiNativeRequests`) and drives this at the four points a composed attempt needs: prepared before
+ * the request, handed off once the body is admitted, settled with the provider's outcome, and
+ * withheld when the request ends before handoff. Two observers wrapping the same transport is what
+ * made their install order matter, so there is only one.
+ */
 export class PiRequestReceipts {
-	private readonly hooks = new PiHostHooks();
 	private closed = false;
 	private readonly compositions = new Map<string, FlowModelInput>();
-	private pending?: RequestBinding;
 
 	constructor(
 		private readonly session: AgentSession,
 		private readonly ledger: FlowReceiptLedger,
-		options: PiRequestReceiptOptions,
-	) {
-		if (!Number.isSafeInteger(options.maxPayloadBytes) || options.maxPayloadBytes < 1)
-			throw new FlowLedgerError("capacity", "Invalid provider payload byte limit.");
-		const previous = session.agent.flowCheckpoints;
-		this.hooks.set(session.agent, "flowCheckpoints", {
-			...previous,
-			beforeRequest: async (input, signal) => {
-				this.assertActive();
-				this.pending = undefined;
-				await previous?.beforeRequest?.(input, signal);
-				this.assertActive(signal);
-				const state = await ledger.snapshot();
-				const attempt = state.attempts.find((item) => item.id === state.activeAttemptId);
-				if (!attempt || ["selected", "queued"].includes(attempt.phase)) return;
-				if (!["claimed", "running"].includes(attempt.phase))
-					throw new FlowLedgerError("transition", "Prior request requires reconciliation before another request.");
-				const composition = this.compositions.get(attempt.id);
-				if (!composition) throw new FlowLedgerError("identity", "Claimed attempt has no registered composition.");
-				await prepareFlowModelInput(ledger, composition, input, options.containsUserInput(input, composition));
-				const request = { composition, id: input.requestId, signal, handedOff: false };
-				try {
-					this.assertActive(signal);
-				} catch (error) {
-					await this.withhold(request);
-					throw error;
-				}
-				this.pending = request;
-			},
-		});
-		const native = session.agent.streamFunction;
-		this.hooks.set(session.agent, "streamFunction", async (model, context, streamOptions) => {
-			this.assertActive();
-			const request = this.pending;
-			this.pending = undefined;
-			if (!request) return native(model, context, streamOptions);
-			try {
-				const response = await native(model, context, {
-					...streamOptions,
-					onPayload: async (payload, requestModel) => {
-						this.assertActive(request.signal);
-						if (request.handedOff) throw new FlowLedgerError("identity", "Provider repeated payload admission.");
-						if (
-							requestModel.api !== model.api ||
-							requestModel.id !== model.id ||
-							requestModel.provider !== model.provider
-						)
-							throw new FlowLedgerError("identity", "Provider identity changed during payload conversion.");
-						const replacement = await streamOptions?.onPayload?.(payload, requestModel);
-						this.assertActive(request.signal);
-						// Serialize to bound and identify the transmitted body. Membership was established at
-						// model conversion; the provider's own format is not decoded.
-						const { serialized, owned } = copyFlowPayload(replacement === undefined ? payload : replacement, model.api);
-						if (serialized === undefined || Buffer.byteLength(serialized) > options.maxPayloadBytes)
-							throw new FlowLedgerError("capacity", "Provider payload exceeds its byte limit.");
-						this.assertActive(request.signal);
-						await ledger.handoff(request.composition.attemptId, request.id);
-						request.handedOff = true;
-						this.assertActive(request.signal);
-						return owned;
-					},
-				});
-				let recorded: Promise<AssistantMessage> | undefined;
-				const result = () =>
-					(recorded ??= (async () => {
-						try {
-							const message = await response.result();
-							this.assertActive();
-							if (!request.handedOff) {
-								await this.withhold(request);
-								throw new FlowLedgerError("transition", "Provider request ended without an admitted payload.");
-							}
-							if (!["stop", "length", "toolUse", "error", "aborted"].includes(message.stopReason))
-								throw new FlowLedgerError("transition", "Provider response has no terminal outcome.");
-							const outcome: FlowOutcome =
-								message.stopReason === "aborted" ? "aborted" : message.stopReason === "error" ? "failure" : "success";
-							await ledger.requestOutcome(request.composition.attemptId, request.id, outcome);
-							return message;
-						} catch (error) {
-							await this.withhold(request);
-							throw error;
-						}
-					})());
-				return new Proxy(response, {
-					get(target, property) {
-						if (property === "result") return result;
-						const value = Reflect.get(target, property, target);
-						return typeof value === "function" ? value.bind(target) : value;
-					},
-				});
-			} catch (error) {
-				await this.withhold(request);
-				throw error;
-			}
-		});
+		private readonly options: PiRequestReceiptOptions,
+	) {}
+
+	/**
+	 * Record the composition for a request that is about to start, or report that this request carries
+	 * none. A claimed attempt without a registered composition is a fault: the controller registers
+	 * every composition it dispatches.
+	 */
+	async prepare(input: FlowRequestInput, signal?: AbortSignal): Promise<FlowCompositionRequest | undefined> {
+		this.assertActive(signal);
+		const state = await this.ledger.snapshot();
+		const attempt = state.attempts.find((item) => item.id === state.activeAttemptId);
+		if (!attempt || ["selected", "queued"].includes(attempt.phase)) return undefined;
+		if (!["claimed", "running"].includes(attempt.phase))
+			throw new FlowLedgerError("transition", "Prior request requires reconciliation before another request.");
+		const composition = this.compositions.get(attempt.id);
+		if (!composition) throw new FlowLedgerError("identity", "Claimed attempt has no registered composition.");
+		await prepareFlowModelInput(this.ledger, composition, input, this.options.containsUserInput(input, composition));
+		const request: FlowCompositionRequest = { composition, id: input.requestId, handedOff: false };
+		try {
+			this.assertActive(signal);
+		} catch (error) {
+			await this.withhold(request);
+			throw error;
+		}
+		return request;
 	}
 
-	private assertActive(signal?: AbortSignal): void {
-		if (this.closed || this.session.sessionId !== this.ledger.scope.sessionId)
-			throw new FlowLedgerError("stale", "Request receipt attachment is closed or replaced.");
-		if (signal?.aborted) throw new FlowLedgerError("transition", "Request was cancelled before handoff.");
+	/** The provider accepted the body; the composed attempt is now in flight. */
+	async handedOff(request: FlowCompositionRequest, signal?: AbortSignal): Promise<void> {
+		this.assertActive(signal);
+		await this.ledger.handoff(request.composition.attemptId, request.id);
+		request.handedOff = true;
 	}
-	private async withhold(request: RequestBinding): Promise<void> {
+
+	/** Record the provider's terminal outcome for a handed-off composed request. */
+	async settled(request: FlowCompositionRequest, message: AssistantMessage): Promise<void> {
+		this.assertActive();
+		if (!request.handedOff) {
+			await this.withhold(request);
+			throw new FlowLedgerError("transition", "Provider request ended without an admitted payload.");
+		}
+		if (!["stop", "length", "toolUse", "error", "aborted"].includes(message.stopReason))
+			throw new FlowLedgerError("transition", "Provider response has no terminal outcome.");
+		const outcome: FlowOutcome =
+			message.stopReason === "aborted" ? "aborted" : message.stopReason === "error" ? "failure" : "success";
+		await this.ledger.requestOutcome(request.composition.attemptId, request.id, outcome);
+	}
+
+	/** A request that never reached the provider leaves its attempt withheld, not settled. */
+	async withhold(request: FlowCompositionRequest): Promise<void> {
 		this.assertActive();
 		if (request.handedOff) return;
 		const state = await this.ledger.snapshot();
 		const attempt = state.attempts.find((item) => item.id === request.composition.attemptId);
 		if (attempt?.phase === "prepared")
 			await this.ledger.withholdRequest(attempt.id, request.id, "Provider request failed before handoff.");
+	}
+
+	private assertActive(signal?: AbortSignal): void {
+		if (this.closed || this.session.sessionId !== this.ledger.scope.sessionId)
+			throw new FlowLedgerError("stale", "Request receipt attachment is closed or replaced.");
+		if (signal?.aborted) throw new FlowLedgerError("transition", "Request was cancelled before handoff.");
 	}
 	register(composition: FlowModelInput): void {
 		this.assertActive();
@@ -152,8 +109,6 @@ export class PiRequestReceipts {
 	}
 	close(): void {
 		this.closed = true;
-		this.hooks.close();
 		this.compositions.clear();
-		this.pending = undefined;
 	}
 }
