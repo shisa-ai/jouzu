@@ -16,8 +16,10 @@ import type { FlowNativeInput } from "./submission-store.js";
 import { activeAdmissionHolds } from "./submission-view.js";
 import { captureUserWorkParticipants, retainUserWork } from "./user-work.js";
 import type { FlowWorkStatus } from "./wait-authority.js";
-import type { FlowWaitClock } from "./wait-deadlines.js";
+import { type FlowWaitClock, systemWaitClock } from "./wait-deadlines.js";
 import { createFlowWaitDecisionProducer } from "./wait-decisions.js";
+import { FlowWaitHealthMonitor } from "./wait-health-monitor.js";
+import type { FlowWaitHandle } from "./wait-state.js";
 import { observedWaitToolReceipt } from "./wait-tool-response.js";
 
 type Ingress = NonNullable<CreateAgentSessionOptions["flowIngress"]>;
@@ -65,6 +67,7 @@ export class PiSessionFlowIngress implements Ingress {
 	private retainedUserInput = new Set<string>();
 	private unsubscribeIdle?: () => void;
 	private unsubscribeWaits?: () => void;
+	private stopHealth?: () => Promise<void>;
 	private scheduledRelease?: ReturnType<typeof setImmediate>;
 	private releaseRequested = false;
 	private semanticReleaseRequested = false;
@@ -220,6 +223,27 @@ export class PiSessionFlowIngress implements Ingress {
 			unsubscribeProducers();
 		};
 		await branch.attachment.waits.startDeadlines(automatic.onError, automatic.clock);
+		// The monitor lives here rather than in the store because it needs the producer registry to
+		// resolve a requested policy, and the store must not depend on its own producers.
+		const health = new FlowWaitHealthMonitor({
+			store: branch.attachment.waits,
+			policy: (handle: FlowWaitHandle, workId: string) =>
+				branch.attachment.waitProducers.healthPolicy(
+					handle.producer,
+					{ workId, handle: handle.handle, execution: handle.execution },
+					handle.health as string,
+				),
+			clock: automatic.clock ?? systemWaitClock,
+			onError: automatic.onError,
+		});
+		this.stopHealth = () => health.stop();
+		const unsubscribeHealth = branch.attachment.waits.onChanged(health.changed, automatic.onError);
+		const stopWaits = this.unsubscribeWaits;
+		this.unsubscribeWaits = () => {
+			unsubscribeHealth();
+			stopWaits?.();
+		};
+		await health.refresh();
 		ready = true;
 		// Recovered terminal decisions may predate subscription and need no new producer callback.
 		this.queueRelease(true);
@@ -286,6 +310,10 @@ export class PiSessionFlowIngress implements Ingress {
 		this.unsubscribeIdle = undefined;
 		this.unsubscribeWaits?.();
 		this.unsubscribeWaits = undefined;
+		// Callbacks stop at once; the scan drains with the rest of the attachment's storage work.
+		const stopHealth = this.stopHealth;
+		this.stopHealth = undefined;
+		if (stopHealth) this.track(stopHealth).catch(() => undefined);
 		if (this.scheduledRelease) clearImmediate(this.scheduledRelease);
 		this.scheduledRelease = undefined;
 	}

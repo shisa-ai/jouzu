@@ -197,17 +197,27 @@ export class FlowWaitProducerRegistry {
 	 * name at all from a producer that declares none, fails here rather than parking a wait whose
 	 * health could never be evaluated.
 	 */
+	/** Non-throwing lookup for the monitor: a detached producer simply has no policy to apply. */
+	healthPolicy(
+		namespace: string,
+		identity: Omit<FlowExecutionIdentity, "scope">,
+		name: string,
+	): FlowHealthPolicy | undefined {
+		if (this.closed) return undefined;
+		return this.producers
+			.get(namespace)
+			?.healthPolicies({ ...structuredClone(identity), scope: { ...this.scope } })
+			.find((candidate) => candidate.name === name);
+	}
+
 	requireHealthPolicy(
 		namespace: string,
 		identity: Omit<FlowExecutionIdentity, "scope">,
 		name: string,
 	): FlowHealthPolicy {
 		if (this.closed) throw new FlowLedgerError("stale", "Wait producer registry is closed.");
-		const producer = this.producers.get(namespace);
-		if (!producer) throw new FlowLedgerError("identity", "Wait producer is not attached.");
-		const policy = producer
-			.healthPolicies({ ...structuredClone(identity), scope: { ...this.scope } })
-			.find((candidate) => candidate.name === name);
+		if (!this.producers.get(namespace)) throw new FlowLedgerError("identity", "Wait producer is not attached.");
+		const policy = this.healthPolicy(namespace, identity, name);
 		if (!policy)
 			throw new FlowLedgerError(
 				"identity",
