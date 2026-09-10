@@ -25,6 +25,7 @@ import {
 	validateWaitAuthority,
 } from "./wait-authority.js";
 import { type FlowWaitClock, FlowWaitDeadlines, systemWaitClock } from "./wait-deadlines.js";
+import { type FlowHealthEvidence, retainFlowHealthEvidence } from "./wait-health.js";
 import {
 	cancelFlowWait,
 	createFlowWait,
@@ -448,6 +449,29 @@ export class FlowWaitStore {
 			observeAuthorityExecution(authority, captured.handle, revision, captured.predicates, now),
 		);
 	}
+	/**
+	 * Retain one producer health observation for an execution. Monotonic by revision, so a replayed
+	 * or reordered report is dropped rather than refreshing health. `since` records when the host
+	 * began expecting evidence and is set once, so a restart does not restart the grace period.
+	 */
+	observeExecutionHealth(
+		handle: { producer: string; handle: string; execution: string },
+		evidence: FlowHealthEvidence,
+		now: number,
+	): Promise<FlowAuthorityExecution> {
+		const captured = structuredClone(evidence);
+		return this.authorityChange(now, (authority) => {
+			const execution = authority.executions.find(
+				(item) =>
+					item.producer === handle.producer && item.handle === handle.handle && item.execution === handle.execution,
+			);
+			if (!execution) throw new FlowLedgerError("identity", "Producer execution is not registered.");
+			execution.healthEvidence = retainFlowHealthEvidence(execution.healthEvidence, captured);
+			execution.healthSince ??= now;
+			return execution;
+		});
+	}
+
 	declareOwned(
 		producer: string,
 		workRevision: number,

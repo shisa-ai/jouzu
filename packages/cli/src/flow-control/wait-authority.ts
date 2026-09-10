@@ -1,5 +1,6 @@
 import { isDeepStrictEqual } from "node:util";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
+import type { FlowHealthEvidence } from "./wait-health.js";
 import type { FlowWaitHandle, FlowWaitObservation } from "./wait-state.js";
 
 export type FlowWorkStatus = "active" | "paused" | "stopped" | "completed";
@@ -33,6 +34,14 @@ export interface FlowAuthorityExecution {
 	revision: number;
 	observedAt: number;
 	predicates: { until: string; state: FlowWaitObservation["state"] }[];
+	/**
+	 * Latest health observation for this execution. Named distinctly from the policy name a wait
+	 * handle carries: that is what was requested, this is what was seen. Monotonic by revision, so a
+	 * replayed or reordered report cannot refresh health.
+	 */
+	healthEvidence?: FlowHealthEvidence;
+	/** When the host began expecting evidence, so a restart does not restart the grace period. */
+	healthSince?: number;
 }
 export interface FlowWaitAuthority {
 	version: 1;
@@ -48,6 +57,14 @@ const instant = (input: number) => Number.isSafeInteger(input) && input >= 0;
 // `unhealthy` and `health-unknown` are terminal like any other non-pending predicate, so the
 // transition guard below already stops a late health probe from reopening a settled execution and
 // stops a health decision from overwriting a terminal result.
+const validHealthEvidence = (evidence: FlowHealthEvidence): boolean =>
+	!!evidence &&
+	identity(evidence.policy) &&
+	instant(evidence.revision) &&
+	instant(evidence.observedAt) &&
+	["healthy", "unhealthy"].includes(evidence.state) &&
+	(evidence.marker === undefined || identity(evidence.marker)) &&
+	(evidence.detail === undefined || (typeof evidence.detail === "string" && evidence.detail.length <= 4096));
 const states = new Set(["pending", "satisfied", "failed", "cancelled", "missing", "unhealthy", "health-unknown"]);
 
 /** Canonical owner-scoped identity of a binding; bindings of different producers never collide. */
@@ -184,7 +201,9 @@ export function validateWaitAuthority(authority: FlowWaitAuthority): void {
 			execution.predicates.some(
 				(predicate) => !predicate || !identity(predicate.until) || !states.has(predicate.state),
 			) ||
-			new Set(execution.predicates.map((predicate) => predicate.until)).size !== execution.predicates.length
+			new Set(execution.predicates.map((predicate) => predicate.until)).size !== execution.predicates.length ||
+			(execution.healthSince !== undefined && !instant(execution.healthSince)) ||
+			(execution.healthEvidence !== undefined && !validHealthEvidence(execution.healthEvidence))
 		)
 			throw new FlowLedgerError("identity", "Invalid producer execution record.");
 		executions.add(key);
