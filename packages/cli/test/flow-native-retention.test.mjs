@@ -286,3 +286,29 @@ test("a failure that a retry is built on is kept with its partner", async (t) =>
 		"a request awaiting its authorized retry is never retired",
 	);
 });
+
+test("required content is judged at model conversion, not at the wire", async (t) => {
+	const f = await fixture(t);
+	// A required source that conversion left `changed` is not delivered, so the handoff is withheld
+	// and the request keeps its withheld payload for repair. This is the guarantee that used to be
+	// enforced by decoding the provider body.
+	const claims = [{ operationId: "operation", prompt: { inputIndex: 0, messageIndex: 0 } }];
+	const changed = input("changed", ["operation"], "changed");
+	await f.store.begin(changed, true, claims);
+	assert.equal(await f.store.handoff("changed", payload(changed, "changed")), false);
+	const [held] = await f.store.snapshot();
+	assert.equal(held.outcome, "withheld");
+	assert.equal(held.payload, undefined);
+	assert.ok(held.withheldPayload.bytes > 0);
+	// A withheld required input blocks the next request until the user repairs it.
+	await assert.rejects(f.store.begin(input("next", ["operation"]), true, claims), { code: "busy" });
+});
+
+test("a required source delivered at conversion is admitted", async (t) => {
+	const f = await fixture(t);
+	const claims = [{ operationId: "operation", prompt: { inputIndex: 0, messageIndex: 0 } }];
+	const intact = input("intact", ["operation"]);
+	await f.store.begin(intact, true, claims);
+	assert.equal(await f.store.handoff("intact", payload(intact)), true);
+	assert.equal((await f.store.snapshot())[0].payload.bytes, 10000);
+});

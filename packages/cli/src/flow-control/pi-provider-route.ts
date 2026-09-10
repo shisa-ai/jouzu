@@ -1,6 +1,5 @@
 import type { Api, Model } from "@earendil-works/pi-ai";
 import { ModelRuntime } from "@earendil-works/pi-coding-agent";
-import { isQualifiedFlowProvider } from "./provider-registry.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
 type Provider = NonNullable<ReturnType<ModelRuntime["getProvider"]>>;
@@ -24,8 +23,10 @@ export function preparePiProviderRoute(runtime: ModelRuntime, model: RouteModel,
 			"getRegisteredNativeProvider",
 		] as const)
 			if (runtime[key] !== ModelRuntime.prototype[key]) reject();
+		// API family is not a qualification criterion: the controller does not decode provider bodies.
+		// What must hold is that this transport is the one it wrapped, so its bound, cancellation and
+		// payload hook are known to run.
 		if (
-			!isQualifiedFlowProvider(selected.api) ||
 			!runtime.isBuiltinApiProvider(selected.api) ||
 			runtime.getRegisteredNativeProvider(selected.provider) ||
 			runtime.getRegisteredProviderConfig(selected.provider)?.streamSimple

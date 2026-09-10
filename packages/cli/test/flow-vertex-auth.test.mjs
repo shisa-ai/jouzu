@@ -60,7 +60,7 @@ for (const auth of ["key", "adc"])
 			const [record] = await f.store.snapshot();
 			assert.equal(record.outcome, cancel ? "aborted" : "success");
 			assert.equal(record.payload.api, model.api);
-			assert.equal(record.payload.sources[0].disposition, "included");
+			assert.equal(record.sourceCapture.model.members[0].status, "intact");
 		});
 
 test("Vertex credential failure cannot turn admission into successful delivery", async (t) => {
@@ -92,5 +92,5 @@ test("Vertex credential failure cannot turn admission into successful delivery",
 	assert.match(f.session.agent.state.messages.at(-1).errorMessage, /fixture credentials unavailable/);
 	const [record] = await f.store.snapshot();
 	assert.equal(record.outcome, "failure");
-	assert.equal(record.payload.sources[0].disposition, "included");
+	assert.equal(record.sourceCapture.model.members[0].status, "intact");
 });

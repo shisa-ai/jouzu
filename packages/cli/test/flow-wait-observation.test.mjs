@@ -14,14 +14,8 @@ import { stream as streamResponses } from "@earendil-works/pi-ai/api/openai-resp
 import { stream as streamPiMessages } from "@earendil-works/pi-ai/api/pi-messages";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, model, tick } from "../../../scripts/fixtures/pi-flow-session.mjs";
-import { anthropicFlowPayload } from "../dist/flow-control/anthropic-payload.js";
-import { bedrockFlowPayload } from "../dist/flow-control/bedrock-payload.js";
-import { googleFlowPayload } from "../dist/flow-control/google-payload.js";
-import { mistralFlowPayload } from "../dist/flow-control/mistral-payload.js";
 import { validateNativeProjections } from "../dist/flow-control/native-context-projections.js";
-import { piMessagesFlowPayload } from "../dist/flow-control/pi-messages-payload.js";
 import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js";
-import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
 import { createFlowWaitDecisionProducer } from "../dist/flow-control/wait-decisions.js";
 import { createFlowWaitExtension } from "../dist/flow-control/wait-tools.js";
 import { bedrockTransport } from "./fixtures/bedrock-transport.mjs";
@@ -96,24 +90,6 @@ async function fixture(
 		maxResultBytes: 8192,
 		autoRelease: automatic ? { onError: (error) => errors.push(error) } : undefined,
 		host: {
-			projections: new Map([
-				[
-					api,
-					["google-generative-ai", "google-vertex"].includes(api)
-						? googleFlowPayload
-						: api === "bedrock-converse-stream"
-							? bedrockFlowPayload
-							: api === "pi-messages"
-								? piMessagesFlowPayload
-								: api === "mistral-conversations"
-									? mistralFlowPayload
-									: api === "anthropic-messages"
-										? anthropicFlowPayload
-										: openAIFlowPayload(
-												["openai-codex-responses", "azure-openai-responses"].includes(api) ? "openai-responses" : api,
-											),
-				],
-			]),
 			maxPayloadBytes: 1000000,
 			containsUserInput: () => false,
 		},
@@ -373,6 +349,7 @@ async function fixture(
 	const decisions = () => {
 		const attachment = ingress.branch().attachment;
 		return createFlowWaitDecisionProducer(attachment.waits, {
+			ledger: attachment.ledger,
 			submissions: attachment.submissions,
 			requests: attachment.nativeRequests,
 		}).snapshot(new AbortController().signal);
@@ -448,7 +425,7 @@ for (const api of [
 		const records = await attachment.nativeRequests.snapshot();
 		assert.equal(records[1].projectionCapture.members[0].message.role, "toolResult");
 		assert.deepEqual(records[1].requiredProjections, []);
-		assert.equal(records[1].payload.projections[0].disposition, "included");
+		assert.equal(records[1].projectionCapture.model.members[0].status, "converted");
 		assert.equal(toolRows(f.sent[1]).length, 1);
 		if (api === "openai-codex-responses") {
 			assert.equal(f.sent[0].type, "response.create");
@@ -498,7 +475,7 @@ for (const api of [
 	});
 
 	for (const mode of ["changed", "omitted", "cloned"])
-		test(`${api}: ${mode} required user content is withheld before transport`, async (t) => {
+		test(`${api}: ${mode} required user content after conversion still transmits`, async (t) => {
 			const f = await fixture(t, {
 				api,
 				issueTool: false,
@@ -524,11 +501,15 @@ for (const api of [
 				},
 			});
 			await f.session.prompt("required user instruction");
-			assert.deepEqual(f.sent, []);
+			// The mutation happens after model conversion, which the controller trusts, so the request
+			// is transmitted and recorded rather than withheld. Required content is judged at
+			// conversion instead, where this instruction arrived intact.
+			assert.equal(f.sent.length, 1);
 			const [record] = await f.ingress.branch().attachment.nativeRequests.snapshot();
-			assert.equal(record.outcome, "withheld");
+			assert.equal(record.outcome, "success");
 			assert.ok(record.requiredSources.length > 0);
-			assert.equal(record.withheldPayload.sources[0].disposition, mode === "changed" ? "changed" : "unresolved");
+			assert.equal(record.sourceCapture.model.members[0].status, "intact");
+			assert.ok(record.payload.bytes > 0, "the transmitted body is still bounded and identified");
 			assert.deepEqual(f.errors, []);
 		});
 
@@ -616,27 +597,13 @@ test("Anthropic grouped terminal waits retain distinct block receipts through re
 		JSON.stringify(row.content),
 	);
 	const record = (await f.ingress.branch().attachment.nativeRequests.snapshot())[1];
+	// Both grouped decisions converted intact, which is what delivery means, and both are acknowledged.
 	assert.deepEqual(
-		record.payload.projections.map(({ index, blockIndex, disposition }) => ({ index, blockIndex, disposition })),
-		[
-			{ index: f.sent[1].messages.indexOf(row), blockIndex: 0, disposition: "included" },
-			{ index: f.sent[1].messages.indexOf(row), blockIndex: 1, disposition: "included" },
-		],
+		record.projectionCapture.model.members.map((member) => member.status),
+		["converted", "converted"],
 	);
 	assert.deepEqual(await f.decisions(), []);
-	const validate = (payload) =>
-		validateNativeProjections(record.projectionCapture, record.transformedHash, record.modelHash, payload);
-	validate(record.payload);
-	for (const mode of ["duplicate", "negative", "fractional", "unqualified", "whole-row", "source-overlap"]) {
-		const payload = structuredClone(record.payload);
-		if (mode === "duplicate") payload.projections[1].blockIndex = 0;
-		if (mode === "negative") payload.projections[1].blockIndex = -1;
-		if (mode === "fractional") payload.projections[1].blockIndex = 0.5;
-		if (mode === "unqualified") payload.api = "openai-completions";
-		if (mode === "whole-row") delete payload.projections[1].blockIndex;
-		if (mode === "source-overlap") payload.sources = [{ ...payload.projections[0] }];
-		assert.throws(() => validate(payload), { code: "identity" }, mode);
-	}
+	validateNativeProjections(record.projectionCapture, record.transformedHash, record.modelHash);
 	await f.ingress.dispose();
 	const next = await fixture(t, {
 		api,
@@ -683,8 +650,9 @@ for (const api of [
 		assert.equal(state.attempts[0].phase, "settled");
 		assert.equal(state.attempts[0].outcome, "success");
 		assert.equal(state.attempts[0].members[0].kind, "wait");
-		assert.equal(state.attempts[0].requests[0].payload.api, api);
-		assert.equal(state.attempts[0].requests[0].payload.inclusion[0].disposition, "included");
+		// Inclusion is the prepare-time record from model conversion; the ledger keeps no wire receipt.
+		assert.equal(state.attempts[0].requests[0].handedOff, true);
+		assert.equal(state.attempts[0].requests[0].inclusion[0].disposition, "included");
 		if (api === "openai-codex-responses")
 			assert.ok(
 				f.codex.requests[2].input.some(
@@ -713,7 +681,7 @@ for (const api of [
 	});
 
 for (const mode of ["replaced", "omitted", "tool-copy", "tool-gap"])
-	test(`Anthropic ${mode} decision payload is withheld without losing its wait obligation`, async (t) => {
+	test(`Anthropic ${mode} decision payload after conversion transmits and acknowledges`, async (t) => {
 		const f = await fixture(t, {
 			api: "anthropic-messages",
 			pending: true,
@@ -748,17 +716,18 @@ for (const mode of ["replaced", "omitted", "tool-copy", "tool-gap"])
 		});
 		await f.session.prompt("wait");
 		await f.complete();
-		assert.equal(f.sent.length, 2);
+		// The decision turn is transmitted now rather than withheld before transport, so the run makes
+		// one more request than it did when the wire check refused it.
+		assert.equal(f.sent.length, 3);
 		const [attempt] = (await f.ingress.branch().attachment.ledger.snapshot()).attempts;
-		assert.equal(attempt.phase, "withheld");
-		assert.equal(attempt.requests[0].handedOff, false);
-		assert.equal(
-			attempt.requests[0].payload.inclusion[0].disposition,
-			mode === "replaced" ? "replaced" : mode === "tool-gap" ? "rejected" : "omitted",
-		);
-		assert.equal((await f.decisions()).length, 1);
+		// Each mode edits the Anthropic body after model conversion. The composed decision reached the
+		// adapter, so the attempt is handed off and the decision is acknowledged; the edit is invisible.
+		assert.equal(attempt.phase, "settled");
+		assert.equal(attempt.requests[0].handedOff, true);
+		assert.equal(attempt.requests[0].inclusion[0].disposition, "included");
+		assert.equal((await f.decisions()).length, 0);
 		await f.ingress.wakeProducers();
-		assert.equal(f.sent.length, 2);
+		assert.equal(f.sent.length, 3, "an acknowledged decision creates no further wake");
 		assert.deepEqual(f.errors, []);
 	});
 
@@ -785,9 +754,10 @@ for (const api of ["google-generative-ai", "google-vertex"])
 			assert.equal(f.sent.length, 2);
 			const attachment = f.ingress.branch().attachment;
 			const records = await attachment.nativeRequests.snapshot();
+			// Every mode reaches the adapter converted; only the wire body differs, which is no longer read.
 			assert.deepEqual(
-				records[1].payload.projections.map((p) => p.disposition),
-				[mode === "content" ? "changed" : mode === "omitted" ? "unresolved" : "included", "included"],
+				records[1].projectionCapture.model.members.map((member) => member.status),
+				["converted", "converted"],
 			);
 			// `content` and `omitted` mutate the SDK payload after model conversion, which the controller
 			// trusts, so both acknowledge their decisions. Only the failed request keeps its two pending.
@@ -797,27 +767,6 @@ for (const api of ["google-generative-ai", "google-vertex"])
 				await f.session.prompt("report the wait status");
 				assert.deepEqual(await f.decisions(), []);
 				return;
-			}
-			assert.deepEqual(
-				records[1].payload.projections.map((p) => [p.index, p.blockIndex]),
-				[
-					[2, 0],
-					[2, 1],
-				],
-			);
-			for (const change of ["missing", "overlap", "unqualified"]) {
-				const payload = structuredClone(records[1].payload);
-				if (change === "missing") delete payload.projections[0].blockIndex;
-				if (change === "overlap") payload.projections[1].blockIndex = 0;
-				if (change === "unqualified") payload.api = "pi-messages";
-				assert.throws(() =>
-					validateNativeProjections(
-						records[1].projectionCapture,
-						records[1].transformedHash,
-						records[1].modelHash,
-						payload,
-					),
-				);
 			}
 			await f.ingress.dispose();
 			const next = await fixture(t, {
@@ -837,7 +786,7 @@ for (const api of ["google-generative-ai", "google-vertex"])
 
 for (const api of ["google-generative-ai", "google-vertex"])
 	for (const mode of ["replaced", "omitted", "extra-body"])
-		test(`${api} ${mode} decision is withheld and retained`, async (t) => {
+		test(`${api} ${mode} decision after conversion transmits and acknowledges`, async (t) => {
 			const f = await fixture(t, {
 				api,
 				pending: true,
@@ -862,17 +811,15 @@ for (const api of ["google-generative-ai", "google-vertex"])
 			});
 			await f.session.prompt("wait");
 			await f.complete();
-			assert.equal(f.sent.length, 2);
+			assert.equal(f.sent.length, 3, "the decision turn is transmitted rather than withheld");
 			const [attempt] = (await f.ingress.branch().attachment.ledger.snapshot()).attempts;
-			assert.equal(attempt.phase, "withheld");
-			assert.equal(attempt.requests[0].handedOff, false);
-			assert.equal(
-				attempt.requests[0].payload.inclusion[0].disposition,
-				mode === "replaced" ? "replaced" : mode === "omitted" ? "omitted" : "rejected",
-			);
-			assert.equal((await f.decisions()).length, 1);
+			// The SDK payload is edited after model conversion, which the controller trusts.
+			assert.equal(attempt.phase, "settled");
+			assert.equal(attempt.requests[0].handedOff, true);
+			assert.equal(attempt.requests[0].inclusion[0].disposition, "included");
+			assert.equal((await f.decisions()).length, 0);
 			await f.ingress.wakeProducers();
-			assert.equal(f.sent.length, 2);
+			assert.equal(f.sent.length, 3, "an acknowledged decision creates no further wake");
 		});
 
 for (const codexMode of ["sse", "websocket", "websocket-cached"])
@@ -891,7 +838,7 @@ for (const codexMode of ["sse", "websocket", "websocket-cached"])
 		});
 
 for (const mode of ["replaced", "omitted", "tool-copy", "tool-gap"])
-	test(`Codex ${mode} decision is withheld before cached transport`, async (t) => {
+	test(`Codex ${mode} decision after conversion transmits through cached transport`, async (t) => {
 		const f = await fixture(t, {
 			api: "openai-codex-responses",
 			pending: true,
@@ -928,13 +875,15 @@ for (const mode of ["replaced", "omitted", "tool-copy", "tool-gap"])
 		});
 		await f.session.prompt("wait");
 		await f.complete();
-		assert.equal(f.sent.length, 2);
+		// The Codex body is edited after model conversion, so the decision turn is transmitted and the
+		// composed decision is acknowledged from the ledger.
+		assert.equal(f.sent.length, 3);
 		const [attempt] = (await f.ingress.branch().attachment.ledger.snapshot()).attempts;
-		assert.equal(attempt.phase, "withheld");
-		assert.equal(attempt.requests[0].handedOff, false);
-		assert.equal((await f.decisions()).length, 1);
+		assert.equal(attempt.phase, "settled");
+		assert.equal(attempt.requests[0].handedOff, true);
+		assert.equal((await f.decisions()).length, 0);
 		await f.ingress.wakeProducers();
-		assert.equal(f.sent.length, 2);
+		assert.equal(f.sent.length, 3, "an acknowledged decision creates no further wake");
 	});
 
 for (const credentialFailureAt of [0, 2])
@@ -945,7 +894,7 @@ for (const credentialFailureAt of [0, 2])
 		assert.equal(f.sent.length, credentialFailureAt ? 1 : 2);
 		const records = await f.ingress.branch().attachment.nativeRequests.snapshot();
 		assert.equal(records[1].outcome, credentialFailureAt ? "failure" : "success");
-		assert.equal(records[1].payload.projections[0].disposition, "included");
+		assert.equal(records[1].projectionCapture.model.members[0].status, "converted");
 		assert.equal((await f.decisions()).length, credentialFailureAt ? 1 : 0);
 		if (credentialFailureAt) {
 			await f.session.prompt("report the wait status");

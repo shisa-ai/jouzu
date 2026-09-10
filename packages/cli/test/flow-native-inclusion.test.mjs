@@ -1,10 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import {
-	nativeInclusionDivergence,
-	nativeProjectionDelivered,
-	nativeSourceDelivered,
-} from "../dist/flow-control/native-inclusion.js";
+import { nativeProjectionDelivered, nativeSourceDelivered } from "../dist/flow-control/native-inclusion.js";
 import { assembledSession, installedProducerExtensions } from "./fixtures/flow-assembly.mjs";
 import { campaignScript, liveWait } from "./fixtures/flow-campaign.mjs";
 
@@ -55,37 +51,7 @@ const request = ({ sources = [], projections = [], wire = true, outcome = "succe
 				},
 			}
 		: {}),
-	...(wire
-		? {
-				payload: {
-					hash,
-					bytes: 1000,
-					api: "openai-completions",
-					provider: "fixture",
-					model: "fixture",
-					// The store only admits a wire-included receipt over an accepted model status, so the
-					// wire layer here mirrors that rule rather than inventing inclusions.
-					...(sources.length
-						? {
-								sources: sources.map((status, index) => ({
-									sourceIndex: index,
-									disposition: ["intact", "converted"].includes(status) ? "included" : status,
-									...(["intact", "converted"].includes(status) ? { index, contentHash: hash } : {}),
-								})),
-							}
-						: {}),
-					...(projections.length
-						? {
-								projections: projections.map((status, index) => ({
-									sourceIndex: index,
-									disposition: status === "converted" ? "included" : status,
-									...(status === "converted" ? { index, contentHash: hash } : {}),
-								})),
-							}
-						: {}),
-				},
-			}
-		: {}),
+	...(wire ? { payload: { hash, bytes: 1000, api: "openai-completions", provider: "fixture", model: "fixture" } } : {}),
 });
 
 test("only intact and converted sources acknowledge delivery", () => {
@@ -109,38 +75,6 @@ test("a projection acknowledges delivery only when it converted intact", () => {
 	assert.equal(nativeProjectionDelivered(record, 9), false);
 });
 
-test("the model layer agrees with the wire layer wherever the wire layer reports", () => {
-	// Every status combination the store admits, in one request.
-	const record = request({
-		sources: ["intact", "converted", "changed", "unresolved"],
-		projections: ["converted", "changed", "unresolved"],
-	});
-	assert.deepEqual(nativeInclusionDivergence(record), [], "the substitution preserves the existing decision");
-});
-
-test("the model layer answers where the wire layer cannot report at all", () => {
-	// A request with no payload receipt: the provider's body was never decoded, either because its
-	// API has no decoder or because the request was withheld before handoff. The wire layer reports
-	// nothing here, and this is the difference the reduction accepts.
-	const record = request({ sources: ["intact", "changed"], projections: ["converted"], wire: false });
-	assert.deepEqual(nativeInclusionDivergence(record), [
-		{ kind: "source", sourceIndex: 0, model: true, wire: false },
-		{ kind: "projection", sourceIndex: 0, model: true, wire: false },
-	]);
-	// The accepted difference only ever widens acknowledgment for content the adapter received
-	// intact. Changed content stays unacknowledged under both layers.
-	assert.equal(nativeSourceDelivered(record, 1), false);
-});
-
-test("no divergence can acknowledge delivery the wire layer refused", () => {
-	// The store rejects a wire-included receipt whose model status is not accepted, so this shape is
-	// unreachable through the ingress. Assert the predicate's own direction rather than trusting it.
-	const record = request({ sources: ["changed"] });
-	record.payload.sources = [{ sourceIndex: 0, disposition: "included", index: 0, contentHash: hash }];
-	assert.deepEqual(nativeInclusionDivergence(record), [{ kind: "source", sourceIndex: 0, model: false, wire: true }]);
-	assert.equal(nativeSourceDelivered(record, 0), false, "the model layer refuses replaced content either way");
-});
-
 test("the two layers agree on every request a real campaign produces", async (t) => {
 	const f = await assembledSession(t, {
 		producerExtensions: await installedProducerExtensions(),
@@ -153,8 +87,7 @@ test("the two layers agree on every request a real campaign produces", async (t)
 	const seen = new Map();
 	const deadline = Date.now() + 3000;
 	while (Date.now() < deadline) {
-		for (const request of await f.ingress.branch().attachment.nativeRequests.snapshot())
-			seen.set(request.id, request);
+		for (const request of await f.ingress.branch().attachment.nativeRequests.snapshot()) seen.set(request.id, request);
 		await new Promise((resolve) => setTimeout(resolve, 50));
 	}
 
@@ -167,14 +100,13 @@ test("the two layers agree on every request a real campaign produces", async (t)
 	// Projections are composed by the wait-decision context path rather than this campaign, so their
 	// real-fixture agreement is proven where that path already runs: the ingress, wait-observation,
 	// and background-results suites exercise it once their readers move to the model layer.
-	for (const request of requests) {
-		// Every request the qualified path produced decides delivery identically under both layers,
-		// which is what makes the wire layer safe to delete.
-		assert.deepEqual(
-			nativeInclusionDivergence(request),
-			[],
-			`request ${request.id} (${request.payload?.api ?? "no payload"}) decides differently between layers`,
-		);
-	}
+	// Every retained source in a successful request reached the adapter as composed.
+	for (const request of requests)
+		for (const member of request.sourceCapture?.members ?? [])
+			assert.equal(
+				nativeSourceDelivered(request, member.index),
+				request.outcome === "success",
+				`request ${request.id} source ${member.index}`,
+			);
 	assert.deepEqual(f.errors, []);
 });

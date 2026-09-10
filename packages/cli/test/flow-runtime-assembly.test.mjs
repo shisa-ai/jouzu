@@ -127,8 +127,8 @@ test("a qualified provider route records an exact final-input receipt through th
 	assert.equal(requests.length, 1);
 	assert.equal(requests[0].outcome, "success");
 	assert.equal(requests[0].payload.api, "openai-completions");
-	// The route guard accepted the builtin provider, so the source is observed in the final request.
-	assert.ok(requests[0].payload.sources.some((source) => source.disposition === "included"));
+	// The route guard accepted the builtin provider, so the source reached the adapter as composed.
+	assert.ok(requests[0].sourceCapture.model.members.some((member) => ["intact", "converted"].includes(member.status)));
 	assert.deepEqual(
 		errors.map((error) => error.code),
 		["identity"],

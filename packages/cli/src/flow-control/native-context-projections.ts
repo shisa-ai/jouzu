@@ -1,8 +1,6 @@
 import { createHash } from "node:crypto";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
-import { nativePayloadOverlap, validNativeBlockPosition } from "./native-payload-position.js";
-import type { NativePayloadSource, NativeSourceDisposition } from "./native-request-store.js";
-import { isBlockAddressedFlowProvider, isQualifiedFlowProvider } from "./provider-registry.js";
+import type { NativeSourceDisposition } from "./native-request-store.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
 type CapturedMessage =
@@ -55,8 +53,6 @@ const modelMessage = (message: CapturedMessage) =>
 	message.role === "custom"
 		? { role: "user", content: [{ type: "text", text: message.content }], timestamp: message.timestamp }
 		: message;
-const modelContent = (message: CapturedMessage) =>
-	message.role === "custom" ? [{ type: "text", text: message.content }] : message.content;
 
 /** Capture only explicit decorator-owned references, without inventing native source coordinates. */
 export function captureNativeProjections(
@@ -117,12 +113,8 @@ export function validateNativeProjections(
 	capture: NativeProjectionCapture | undefined,
 	transformedHash: string,
 	modelHash: string,
-	payload?: { api: string; bytes: number; projections?: NativePayloadSource[]; sources?: NativePayloadSource[] },
 ): void {
-	if (capture === undefined) {
-		if (payload?.projections !== undefined) throw new FlowLedgerError("identity", "Projection payload has no capture.");
-		return;
-	}
+	if (capture === undefined) return;
 	if (
 		!capture ||
 		!hash(capture.hash) ||
@@ -140,13 +132,7 @@ export function validateNativeProjections(
 	)
 		throw new FlowLedgerError("schema", "Invalid native projection capture.");
 	const contexts = new Set<number>(),
-		models = new Set<number>(),
-		wires: NativePayloadSource[] = [];
-	if (
-		payload?.projections !== undefined &&
-		(!Array.isArray(payload.projections) || payload.projections.length !== capture.members.length)
-	)
-		throw new FlowLedgerError("schema", "Invalid native projection payload receipts.");
+		models = new Set<number>();
 	for (const [offset, member] of capture.members.entries()) {
 		const message = member?.message,
 			model = capture.model.members[offset];
@@ -172,32 +158,5 @@ export function validateNativeProjections(
 			throw new FlowLedgerError("identity", "Converted projection differs from its content.");
 		contexts.add(member.index);
 		if (model.index !== undefined) models.add(model.index);
-		const wire = payload?.projections?.[offset];
-		if (!wire && payload?.projections !== undefined)
-			throw new FlowLedgerError("identity", "Missing projection payload receipt.");
-		if (!wire) continue;
-		if (
-			wire.sourceIndex !== member.index ||
-			!["included", "changed", "unresolved"].includes(wire.disposition) ||
-			(wire.index !== undefined &&
-				(!position(wire.index, payload!.bytes) ||
-					wires.some((prior) => nativePayloadOverlap(prior, wire)) ||
-					payload?.sources?.some((source) => nativePayloadOverlap(source, wire)))) ||
-			!validNativeBlockPosition(wire, payload?.api ?? "", payload?.bytes ?? 0) ||
-			(wire.blockIndex !== undefined && message.role !== "toolResult") ||
-			(wire.contentHash !== undefined && !hash(wire.contentHash)) ||
-			(wire.index === undefined) !== (wire.contentHash === undefined) ||
-			(wire.disposition === "unresolved" && wire.index !== undefined) ||
-			(wire.disposition === "included" &&
-				(!isQualifiedFlowProvider(payload?.api ?? "") ||
-					wire.index === undefined ||
-					(isBlockAddressedFlowProvider(payload?.api ?? "") &&
-						message.role === "toolResult" &&
-						wire.blockIndex === undefined) ||
-					model.status !== "converted" ||
-					wire.contentHash !== digest(modelContent(message))))
-		)
-			throw new FlowLedgerError("identity", "Invalid native projection payload inclusion.");
-		if (wire.index !== undefined) wires.push(wire);
 	}
 }

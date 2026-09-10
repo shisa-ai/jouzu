@@ -1,7 +1,6 @@
 import { types } from "node:util";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
-const origins = new WeakMap<object, object>();
 const object = (value: unknown): value is object => value !== null && typeof value === "object";
 
 /** Only plain data can establish a positional copy mapping; getters/toJSON may replace identities. */
@@ -20,10 +19,6 @@ function plainData(value: unknown, seen = new WeakSet<object>()): boolean {
 		if (key === "toJSON" || !("value" in descriptor) || !plainData(descriptor.value, seen)) return false;
 	}
 	return true;
-}
-
-export function payloadRowOrigin(value: unknown): unknown {
-	return object(value) ? (origins.get(value) ?? value) : value;
 }
 
 /** AWS consumes binary views; the receipt records their exact bytes as base64. */
@@ -71,7 +66,6 @@ function copyBedrockPayload(payload: unknown): { serialized: string; owned: unkn
 			Object.defineProperty(owned, key, { value: child.owned, enumerable: true, configurable: true, writable: true });
 		}
 		active.delete(value);
-		origins.set(owned, payloadRowOrigin(value) as object);
 		return { data, owned };
 	}
 	const result = copy(payload);
@@ -115,32 +109,9 @@ export function copyFlowPayload(payload: unknown, api?: string): { serialized: s
 	const { data, signal } =
 		api === "google-generative-ai" || api === "google-vertex" ? googleCancellation(payload) : { data: payload };
 	payload = data;
-	const qualified = plainData(payload);
 	const serialized = JSON.stringify(payload);
 	if (serialized === undefined) throw new FlowLedgerError("schema", "Provider payload is not JSON.");
 	const owned: unknown = JSON.parse(serialized);
-	if (qualified && object(payload) && object(owned)) {
-		const containers = [[payload, owned]];
-		if ("context" in payload && "context" in owned && object(payload.context) && object(owned.context))
-			containers.push([payload.context, owned.context]);
-		for (const [payload, owned] of containers)
-			for (const key of ["messages", "input", "contents"] as const) {
-				const source = key in payload ? (payload as Record<string, unknown>)[key] : undefined;
-				const target = key in owned ? (owned as Record<string, unknown>)[key] : undefined;
-				if (!Array.isArray(source) || !Array.isArray(target) || source.length !== target.length) continue;
-				for (const [index, row] of source.entries()) {
-					if (!object(row) || !object(target[index])) continue;
-					origins.set(target[index], payloadRowOrigin(row) as object);
-					const blockKey = key === "contents" ? "parts" : "content";
-					const blocks = (row as Record<string, unknown>)[blockKey];
-					const copiedBlocks = (target[index] as Record<string, unknown>)[blockKey];
-					if (Array.isArray(blocks) && Array.isArray(copiedBlocks) && blocks.length === copiedBlocks.length)
-						for (const [blockIndex, block] of blocks.entries())
-							if (object(block) && object(copiedBlocks[blockIndex]))
-								origins.set(copiedBlocks[blockIndex], payloadRowOrigin(block) as object);
-				}
-			}
-	}
 	if (signal) (owned as { config: { abortSignal?: AbortSignal } }).config.abortSignal = signal;
 	return { serialized, owned };
 }

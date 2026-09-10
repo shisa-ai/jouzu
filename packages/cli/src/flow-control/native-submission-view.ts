@@ -1,10 +1,6 @@
 import type { NativeProjectionCapture } from "./native-context-projections.js";
-import type {
-	NativePayloadSource,
-	NativeRequest,
-	NativeRequestSource,
-	NativeSourceDisposition,
-} from "./native-request-store.js";
+import { nativeProjectionDelivered } from "./native-inclusion.js";
+import type { NativeRequest, NativeRequestSource, NativeSourceDisposition } from "./native-request-store.js";
 import { nativeHoldHash, nativeHoldPending } from "./native-request-store.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { RetainedSubmission } from "./submission-store.js";
@@ -23,7 +19,6 @@ export interface NativeSubmissionRequestView {
 		required: boolean;
 		cancelled?: true;
 		model?: NativeSourceDisposition["members"][number];
-		payload?: NativePayloadSource;
 	}[];
 	sources: {
 		identity: NativeRequestSource;
@@ -32,7 +27,6 @@ export interface NativeSubmissionRequestView {
 		history?: { entryId: string; entryHash: string };
 		context?: NativeSourceDisposition["members"][number];
 		model?: NativeSourceDisposition["members"][number];
-		payload?: NativePayloadSource;
 	}[];
 }
 
@@ -82,8 +76,7 @@ export function projectNativeSubmissionRequests(
 					);
 			const context = request.sourceCapture?.context?.members[offset];
 			const model = request.sourceCapture?.model?.members[offset];
-			const payload = (request.payload ?? request.withheldPayload)?.sources?.[offset];
-			if ([context, model, payload].some((item) => item && item.sourceIndex !== source.index))
+			if ([context, model].some((item) => item && item.sourceIndex !== source.index))
 				throw new FlowLedgerError("identity", "Native request source disposition has a conflicting position.");
 			const view = grouped.get(record.id) ?? {
 				requestId: request.id,
@@ -95,14 +88,9 @@ export function projectNativeSubmissionRequests(
 					? {
 							hold: {
 								hash: nativeHoldHash(request),
-								// Still read from the wire receipt: this reason describes a hold the wire check
-								// produced, and both are removed together when that check is retired.
-								reason: request.requiredProjections?.some(
-									(index) =>
-										!(request.payload ?? request.withheldPayload)?.projections?.some(
-											(projection) => projection.sourceIndex === index && projection.disposition === "included",
-										),
-								)
+								// Which kind of required item conversion refused still separates these reasons: a
+								// required projection is host context, a required source is retained input.
+								reason: request.requiredProjections?.some((index) => !nativeProjectionDelivered(request, index))
 									? ("required-context" as const)
 									: ("required-input" as const),
 							},
@@ -120,9 +108,6 @@ export function projectNativeSubmissionRequests(
 									...(request.projectionCapture?.model?.members[index]
 										? { model: request.projectionCapture.model.members[index] }
 										: {}),
-									...((request.payload ?? request.withheldPayload)?.projections?.[index]
-										? { payload: (request.payload ?? request.withheldPayload)!.projections![index] }
-										: {}),
 								}),
 							),
 						}
@@ -137,7 +122,6 @@ export function projectNativeSubmissionRequests(
 					...(history ? { history: { entryId: history.entryId, entryHash: history.entryHash } } : {}),
 					...(context ? { context } : {}),
 					...(model ? { model } : {}),
-					...(payload ? { payload } : {}),
 				}),
 			);
 			grouped.set(record.id, view);

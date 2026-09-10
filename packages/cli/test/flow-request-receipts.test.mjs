@@ -8,7 +8,6 @@ import { PiHostBoundary } from "../dist/flow-control/pi-host-boundary.js";
 import { createPiLedgerStore } from "../dist/flow-control/pi-ledger-store.js";
 import { PiQueueReceipts } from "../dist/flow-control/pi-queue-receipts.js";
 import { PiRequestReceipts } from "../dist/flow-control/pi-request-receipts.js";
-import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
 import { FlowReceiptLedger } from "../dist/flow-control/receipt-ledger.js";
 import { buildFlowResultEnvelope } from "../dist/flow-control/result-envelope.js";
 
@@ -17,7 +16,7 @@ const answer = (tool = false) =>
 		`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta: tool ? { tool_calls: [{ index: 0, id: "call", type: "function", function: { name: "probe", arguments: "{}" } }] } : { content: "Done" }, finish_reason: null }] })}\n\ndata: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta: {}, finish_reason: tool ? "tool_calls" : "stop" }] })}\n\ndata: [DONE]\n\n`,
 		{ headers: { "Content-Type": "text/event-stream" } },
 	);
-async function fixture(t, { transform, fetch, projections, native, reversed = false, inputs } = {}) {
+async function fixture(t, { transform, fetch, native, reversed = false, inputs } = {}) {
 	const { session } = await createFlowSession(t, {
 		extensions: transform ? [(pi) => pi.on("before_provider_request", transform)] : [],
 	});
@@ -40,7 +39,6 @@ async function fixture(t, { transform, fetch, projections, native, reversed = fa
 			}));
 	let queue = reversed ? undefined : new PiQueueReceipts(session.agent, ledger);
 	const bridge = new PiRequestReceipts(session, ledger, {
-		projections: projections ?? new Map([["openai-completions", openAIFlowPayload("openai-completions")]]),
 		maxPayloadBytes: 100000,
 		containsUserInput: () => false,
 	});
@@ -68,7 +66,7 @@ async function fixture(t, { transform, fetch, projections, native, reversed = fa
 	return { session, ledger, bridge, queue, sent, composition, store, boundary };
 }
 
-test("native request joins model admission, final payload, handoff, and outcome without settling the run", async (t) => {
+test("native request joins model admission, handoff, and outcome without settling the run", async (t) => {
 	const { session, ledger, sent } = await fixture(t);
 	await session.agent.continue();
 	const state = await ledger.snapshot();
@@ -78,11 +76,13 @@ test("native request joins model admission, final payload, handoff, and outcome 
 	const [request] = state.attempts[0].requests;
 	assert.equal(request.handedOff, true);
 	assert.equal(request.outcome, "success");
-	assert.deepEqual(request.inclusion, request.payload.inclusion);
+	// One inclusion record, written at model conversion.
+	assert.ok(request.inclusion.length > 0);
+	assert.ok(request.inclusion.every((item) => item.disposition === "included"));
 });
 
 for (const optional of [true, false])
-	test(`AgentSession extension payload filtering runs before receipts, optional=${optional}`, async (t) => {
+	test(`AgentSession extension payload filtering after conversion transmits, optional=${optional}`, async (t) => {
 		const { session, ledger, sent } = await fixture(t, {
 			transform: ({ payload }) => {
 				const input = payload.messages.findLast((message) => message.role === "user");
@@ -92,33 +92,28 @@ for (const optional of [true, false])
 		});
 		await session.agent.continue();
 		const attempt = (await ledger.snapshot()).attempts[0];
-		assert.equal(sent.length, optional ? 1 : 0);
-		assert.equal(attempt.phase, optional ? "running" : "withheld");
-		assert.equal(attempt.requests[0].payload.inclusion[optional ? 1 : 0].disposition, "omitted");
+		// The extension edits the body after model conversion, which the controller trusts, so the
+		// request is transmitted either way and conversion's own inclusion is what stands.
+		assert.equal(sent.length, 1);
+		assert.equal(attempt.phase, "running");
 		assert.equal(attempt.requests[0].inclusion[0].disposition, "included");
 	});
 
-for (const mode of ["missing-projection", "pre-payload-error"])
-	test(`unsent native request is withheld: ${mode}`, async (t) => {
-		let calls = 0;
-		const { session, ledger, sent } = await fixture(
-			t,
-			mode === "missing-projection"
-				? { projections: new Map() }
-				: {
-						native: () => {
-							calls++;
-							throw new Error("provider setup failed");
-						},
-					},
-		);
-		await session.agent.continue();
-		const attempt = (await ledger.snapshot()).attempts[0];
-		assert.equal(calls, mode === "pre-payload-error" ? 1 : 0);
-		assert.equal(sent.length, 0);
-		assert.equal(attempt.phase, "withheld");
-		assert.equal(attempt.requests[0].handedOff, false);
+test("a request that fails before handoff is withheld", async (t) => {
+	let calls = 0;
+	const { session, ledger, sent } = await fixture(t, {
+		native: () => {
+			calls++;
+			throw new Error("provider setup failed");
+		},
 	});
+	await session.agent.continue();
+	const attempt = (await ledger.snapshot()).attempts[0];
+	assert.equal(calls, 1);
+	assert.equal(sent.length, 0);
+	assert.equal(attempt.phase, "withheld");
+	assert.equal(attempt.requests[0].handedOff, false);
+});
 
 test("native tool-loop requests share one reservation and record outcome before executing tools", async (t) => {
 	let ledger;
@@ -342,10 +337,14 @@ for (const field of ["counts", "manifest", "warningResults", "reviewNote", "remo
 			},
 		});
 		await session.agent.continue();
-		assert.equal(sent.length, field === "removed" ? 1 : 0);
-		assert.equal((await ledger.snapshot()).attempts[0].phase, field === "removed" ? "running" : "withheld");
+		// Editing aggregate metadata in the provider body happens after model conversion, so the
+		// controller neither sees it nor withholds for it. The conversion record is what stands, and
+		// the model-layer equivalent — a replaced intact aggregate frame at conversion — is asserted in
+		// the ledger case below.
+		assert.equal(sent.length, 1);
+		assert.equal((await ledger.snapshot()).attempts[0].phase, "running");
 		assert.deepEqual(
-			(await ledger.snapshot()).attempts[0].requests[0].payload.inclusion.map((member) => member.disposition),
-			["included", field === "removed" ? "omitted" : "replaced", field === "removed" ? "omitted" : "replaced"],
+			(await ledger.snapshot()).attempts[0].requests[0].inclusion.map((member) => member.disposition),
+			["included", "included", "included"],
 		);
 	});

@@ -13,7 +13,6 @@ import { createBackgroundControllerExtension } from "../dist/flow-control/backgr
 import { createMultiloopControllerExtension } from "../dist/flow-control/multiloop-extension.js";
 import { multiloopWorkBinding } from "../dist/flow-control/multiloop-producer.js";
 import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js";
-import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
 import { consumedUserWork, retainUserWork } from "../dist/flow-control/user-work.js";
 import { finishedUserWork } from "../dist/flow-control/user-work-retention.js";
 import { createFlowWaitDecisionProducer } from "../dist/flow-control/wait-decisions.js";
@@ -51,7 +50,6 @@ async function fixture(
 		maxResultBytes: 4096,
 		host: {
 			consumedAttempt,
-			projections: provider ? new Map([["openai-completions", openAIFlowPayload("openai-completions")]]) : new Map(),
 			maxPayloadBytes: 100000,
 			containsUserInput: () => !provider,
 		},
@@ -87,8 +85,10 @@ async function fixture(
 								);
 							},
 						});
+					// The controller no longer maps per-message conversion outputs, so this callback is
+					// optional the way Pi treats it.
 					for (const message of context.messages)
-						if (message.role === "user") options.onMessageConverted(message, message);
+						if (message.role === "user") options.onMessageConverted?.(message, message);
 					await options.onPayload({ messages: context.messages }, model);
 					sent.push(structuredClone(context.messages));
 					return { async *[Symbol.asyncIterator]() {}, result: async () => assistant() };
@@ -229,7 +229,7 @@ test("user retirement preserves pause, execution references, and unobserved sour
 			delete requests[0].payload;
 		},
 		({ requests }) => {
-			requests[0].payload.sources[0].disposition = "removed";
+			requests[0].sourceCapture.model.members[0].status = "removed";
 		},
 		({ records }) => {
 			records[0].dispatch.promptClaims.push({ inputIndex: 0, messageIndex: 99 });
@@ -688,7 +688,7 @@ test("queue policy receives the reconciled native revision and edited content", 
 	assert.ok(!JSON.stringify(f.sent).includes("original"));
 	const [request] = await f.ingress.branch().attachment.nativeRequests.snapshot();
 	assert.equal(request.sourceCapture.members[0].queue.revision, 2);
-	assert.equal(request.payload.sources[0].disposition, "included");
+	assert.equal(request.sourceCapture.model.members[0].status, "intact");
 });
 
 test("default ingress holds opaque automation during waits while user input proceeds", async (t) => {
@@ -2758,8 +2758,8 @@ for (const lane of ["steer", "followUp"]) {
 						(member) =>
 							member.operationId === queued.dispatch.operationId &&
 							member.queue &&
-							request.payload?.sources.some(
-								(source) => source.sourceIndex === member.index && source.disposition === "included",
+							request.sourceCapture?.model?.members.some(
+								(item) => item.sourceIndex === member.index && ["intact", "converted"].includes(item.status),
 							),
 					),
 			),
@@ -2872,7 +2872,6 @@ for (const lane of ["steer", "followUp"]) {
 		assert.equal(request.outcome, "success");
 		assert.equal(request.projectionCapture.members.length, 1);
 		assert.equal(request.projectionCapture.model.members[0].status, "converted");
-		assert.equal(request.payload.projections[0].disposition, "included");
 		const snapshot = JSON.parse(request.projectionCapture.members[0].message.content);
 		assert.equal(snapshot.waitDecisions.length, 2);
 		assert.ok(snapshot.waitDecisions.every((item) => JSON.parse(item.text).wait.state === "expired"));
@@ -2912,84 +2911,82 @@ for (const lane of ["steer", "followUp"]) {
 	});
 }
 
-for (const change of ["alter", "drop", "copy"]) {
-	test(`projected terminal context cannot acknowledge its decision after payload change: ${change}`, async (t) => {
-		const f = await fixture(t, { provider: true, admit: null });
-		await f.session.prompt("initial request");
-		const branch = f.ingress.branch();
-		await f.session.followUp("queued status with a payload change");
-		await declareIngressWait(branch);
-		await branch.attachment.waits.expireDue(100);
-		const stream = f.session.agent.streamFunction;
-		f.session.agent.streamFunction = (model, context, options) =>
-			stream(model, context, {
-				...options,
-				onPayload: async (payload, model) => {
-					const index = payload.messages.findIndex((message) => JSON.stringify(message).includes("waitDecisions"));
-					assert.ok(index >= 0);
-					if (change === "alter") payload.messages[index].content = "changed decision text";
-					if (change === "drop") payload.messages.splice(index, 1);
-					if (change === "copy") payload.messages[index] = structuredClone(payload.messages[index]);
-					return (await options.onPayload?.(payload, model)) ?? payload;
-				},
-			});
-		await f.session.agent.continue();
-		const [request] = (await branch.attachment.nativeRequests.snapshot()).filter(
-			(request) => request.projectionCapture,
-		);
-		assert.ok(request, f.session.agent.state.errorMessage);
-		assert.equal(request.outcome, "withheld");
-		assert.equal(request.payload, undefined);
-		assert.equal(f.sent.length, 1);
-		assert.equal(branch.attachment.nativeRequests.recoveryBlocked, true);
-		const view = (await branch.attachment.submissionViews())
-			.flatMap((submission) => submission.nativeRequests ?? [])
-			.find((item) => item.requestId === request.id);
-		assert.equal(view.hold.reason, "required-context");
-		assert.equal(view.projections[0].required, true);
-		assert.equal(view.projections[0].payload.disposition, change === "alter" ? "changed" : "unresolved");
-		assert.equal(request.withheldPayload.projections[0].disposition, change === "alter" ? "changed" : "unresolved");
-		const decisions = createFlowWaitDecisionProducer(branch.attachment.waits, {
-			submissions: branch.attachment.submissions,
-			requests: branch.attachment.nativeRequests,
+test("a wait context edited after conversion is transmitted and acknowledged", async (t) => {
+	// The controller verifies what it passed to the provider adapter. An edit to the body after that
+	// checkpoint is inside the trust boundary: the decision is delivered as far as the controller can
+	// establish, so it is acknowledged and no hold is created.
+	const f = await fixture(t, { provider: true, admit: null });
+	await f.session.prompt("initial request");
+	const branch = f.ingress.branch();
+	await f.session.followUp("queued status with a payload change");
+	await declareIngressWait(branch);
+	await branch.attachment.waits.expireDue(100);
+	const stream = f.session.agent.streamFunction;
+	f.session.agent.streamFunction = (model, context, options) =>
+		stream(model, context, {
+			...options,
+			onPayload: async (payload, model) => {
+				const index = payload.messages.findIndex((message) => JSON.stringify(message).includes("waitDecisions"));
+				assert.ok(index >= 0);
+				payload.messages.splice(index, 1);
+				return (await options.onPayload?.(payload, model)) ?? payload;
+			},
 		});
-		assert.equal((await decisions.snapshot(new AbortController().signal)).length, 1);
-		f.session.agent.streamFunction = stream;
-		await assert.rejects(
-			f.ingress.cancelNativeProjections(request.id, request.withheldPayload.hash, [
-				request.projectionCapture.members[0].index,
-			]),
-			{ code: "identity" },
-		);
-		if (change === "alter") {
-			await f.ingress.retryNativeRequest(request.id, request.withheldPayload.hash);
-			await f.session.prompt("retry held input with current wait state");
-			const retry = (await branch.attachment.nativeRequests.snapshot()).find((item) => item.retryOf === request.id);
-			assert.equal(retry.outcome, "success");
-			assert.equal(f.sent.length, 2);
-			assert.deepEqual(await decisions.snapshot(new AbortController().signal), []);
-		} else {
-			await f.ingress.cancelNativeSources(request.id, request.withheldPayload.hash, request.requiredSources);
-			assert.equal(branch.attachment.nativeRequests.recoveryBlocked, false);
-			assert.equal((await decisions.snapshot(new AbortController().signal)).length, 1);
-			if (change === "copy") {
-				const input = structuredClone(request);
-				input.id = "projection-only";
-				input.sourceCapture.members = [];
-				input.sourceCapture.context.members = [];
-				input.sourceCapture.model.members = [];
-				await branch.attachment.nativeRequests.begin(input);
-				const payload = { ...request.withheldPayload, sources: [] };
-				assert.equal(await branch.attachment.nativeRequests.handoff(input.id, payload), false);
-				assert.equal(branch.attachment.nativeRequests.recoveryBlocked, true);
-				await assert.rejects(f.ingress.cancelNativeProjections(input.id, payload.hash, [999]), { code: "identity" });
-				await f.ingress.cancelNativeProjections(input.id, payload.hash, [request.projectionCapture.members[0].index]);
-				assert.equal(branch.attachment.nativeRequests.recoveryBlocked, false);
-				assert.equal((await decisions.snapshot(new AbortController().signal)).length, 1);
-			}
-		}
+	await f.session.agent.continue();
+	const [request] = (await branch.attachment.nativeRequests.snapshot()).filter((item) => item.projectionCapture);
+	assert.ok(request, f.session.agent.state.errorMessage);
+	assert.equal(request.outcome, "success");
+	assert.equal(request.projectionCapture.model.members[0].status, "converted");
+	assert.equal(branch.attachment.nativeRequests.recoveryBlocked, false);
+	const decisions = createFlowWaitDecisionProducer(branch.attachment.waits, {
+		ledger: branch.attachment.ledger,
+		submissions: branch.attachment.submissions,
+		requests: branch.attachment.nativeRequests,
 	});
-}
+	assert.deepEqual(await decisions.snapshot(new AbortController().signal), []);
+});
+
+test("a required projection unresolved at conversion holds the request until it is cancelled", async (t) => {
+	const f = await fixture(t, { provider: true, admit: null });
+	await f.session.prompt("initial request");
+	const branch = f.ingress.branch();
+	await f.session.followUp("queued status");
+	await declareIngressWait(branch);
+	await branch.attachment.waits.expireDue(100);
+	await f.session.agent.continue();
+	const [delivered] = (await branch.attachment.nativeRequests.snapshot()).filter((item) => item.projectionCapture);
+	assert.ok(delivered, f.session.agent.state.errorMessage);
+
+	// A second request whose required projection conversion left `changed` cannot hand off, and its
+	// repair path is the projection cancellation the user reaches through /flow.
+	const input = structuredClone(delivered);
+	input.id = "projection-hold";
+	input.sourceCapture.members = [];
+	input.sourceCapture.context.members = [];
+	input.sourceCapture.model.members = [];
+	input.projectionCapture.model.members[0] = {
+		...input.projectionCapture.model.members[0],
+		status: "changed",
+	};
+	delete input.payload;
+	delete input.outcome;
+	await branch.attachment.nativeRequests.begin(input);
+	const payload = {
+		hash: "b".repeat(64),
+		bytes: 512,
+		api: "openai-completions",
+		provider: "fixture",
+		model: "fixture",
+	};
+	assert.equal(await branch.attachment.nativeRequests.handoff(input.id, payload), false);
+	assert.equal(branch.attachment.nativeRequests.recoveryBlocked, true);
+	const [held] = (await branch.attachment.nativeRequests.snapshot()).filter((item) => item.id === input.id);
+	assert.equal(held.outcome, "withheld");
+	assert.deepEqual(held.requiredProjections, [input.projectionCapture.members[0].index]);
+	await assert.rejects(f.ingress.cancelNativeProjections(input.id, payload.hash, [999]), { code: "identity" });
+	await f.ingress.cancelNativeProjections(input.id, payload.hash, [input.projectionCapture.members[0].index]);
+	assert.equal(branch.attachment.nativeRequests.recoveryBlocked, false);
+});
 
 test("legacy optional projection receipts remain readable after reopen", async (t) => {
 	const f = await fixture(t, { provider: true, admit: null });
@@ -3001,10 +2998,6 @@ test("legacy optional projection receipts remain readable after reopen", async (
 	await f.session.agent.continue();
 	const legacy = (await branch.attachment.nativeRequests.snapshot()).find((request) => request.projectionCapture);
 	delete legacy.requiredProjections;
-	legacy.payload.projections = legacy.payload.projections.map((source) => ({
-		sourceIndex: source.sourceIndex,
-		disposition: "unresolved",
-	}));
 	// Write the prior optional-projection schema through Pi storage to exercise reopen validation.
 	await branch.attachment.nativeRequests.session.mutate(async (mutation, context) => {
 		await mutation.commit([setValue(value("jouzu.flow.native-request", legacy.id), legacy)], context);
@@ -3032,29 +3025,27 @@ for (const action of ["retry", "retry-with-new-user", "cancel"]) {
 	test(`automatic scheduling after native repair preserves user priority: ${action}`, async (t) => {
 		const clock = ingressWaitClock(),
 			errors = [];
+		// The hold is created before model conversion, which is the checkpoint that decides required
+		// content. A later edit to the provider body would be inside the trust boundary and invisible.
+		let reject = true;
 		const f = await fixture(t, {
 			provider: true,
 			admit: null,
 			autoRelease: { clock, onError: (error) => errors.push(error) },
+			extensions: [
+				(pi) =>
+					pi.on("context", ({ messages }) => ({
+						messages: reject
+							? messages.filter((message) => !JSON.stringify(message).includes("held user status"))
+							: messages,
+					})),
+			],
 		});
 		await f.session.prompt("seed");
 		const branch = f.ingress.branch();
 		await f.session.followUp("held user status 日本語");
 		await declareIngressWait(branch);
 		await branch.attachment.waits.expireDue(100);
-		const stream = f.session.agent.streamFunction;
-		let reject = true;
-		f.session.agent.streamFunction = (model, context, options) =>
-			stream(model, context, {
-				...options,
-				onPayload: async (payload, model) => {
-					if (reject) {
-						const index = payload.messages.findIndex((message) => JSON.stringify(message).includes("waitDecisions"));
-						if (index >= 0) payload.messages.splice(index, 1);
-					}
-					return (await options.onPayload?.(payload, model)) ?? payload;
-				},
-			});
 		await f.session.agent.continue();
 		const prior = await branch.attachment.nativeRequests.snapshot();
 		const held = prior.find((request) => request.outcome === "withheld");
@@ -3083,9 +3074,12 @@ for (const action of ["retry", "retry-with-new-user", "cancel"]) {
 		const requests = await branch.attachment.nativeRequests.snapshot();
 		const retry = action === "cancel" ? requests.at(-1) : requests.find((request) => request.retryOf === held.id);
 		if (action !== "cancel") assert.ok(retry.requiredSources.length > 0);
+		// The repaired request delivered every required source, which conversion is what records.
 		assert.ok(
 			retry.requiredSources.every((index) =>
-				retry.payload.sources.some((source) => source.sourceIndex === index && source.disposition === "included"),
+				retry.sourceCapture.model.members.some(
+					(member) => member.sourceIndex === index && ["intact", "converted"].includes(member.status),
+				),
 			),
 		);
 		await f.ingress.wakeProducers();

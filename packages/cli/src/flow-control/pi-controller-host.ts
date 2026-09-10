@@ -43,7 +43,7 @@ function quarantine(messages: AgentMessage[], state: FlowLedgerState): AgentMess
 					!attempt.requests.some(
 						(request) =>
 							request.outcome === "success" &&
-							request.payload?.inclusion.some(
+							request.inclusion.some(
 								(item) => item.id === member.id && item.revision === member.revision && item.disposition === "included",
 							),
 					),

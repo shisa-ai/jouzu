@@ -329,7 +329,8 @@ for (const phase of ["prepared", "handoff", "outcome"])
 		assert.equal(record.sourceCapture.members[0].operationId, submission.dispatch.operationId);
 		assert.deepEqual(record.sourceCapture.members[0].prompt, { inputIndex: 0, messageIndex: 0 });
 		assert.equal(!!record.payload, phase !== "prepared");
-		if (record.payload) assert.equal(record.payload.sources[0].disposition, "included");
+		// The record identifies and bounds the transmitted body; membership came from conversion.
+		if (record.payload) assert.equal(record.sourceCapture.model.members[0].status, "intact");
 		assert.equal(record.outcome, undefined);
 		await assert.rejects(attachment.nativeRequests.begin({ ...record, id: "replay" }), { code: "busy" });
 		await assert.rejects(attachment.nativeRequests.finish(record.id, "success"), { code: "stale" });
@@ -498,7 +499,6 @@ test("native custom conversion retains host-mapped model provenance", async (t) 
 	assert.ok(offset >= 0);
 	assert.equal(request.sourceCapture.context.members[offset].status, "intact");
 	assert.equal(request.sourceCapture.model.members[offset].status, "converted");
-	assert.equal(request.payload.sources[offset].disposition, "included");
 	assert.ok(f.sent[1].messages.some((message) => JSON.stringify(message).includes("custom instruction")));
 });
 
@@ -754,121 +754,12 @@ test("native converted receipts require content hashes and cannot erase changed 
 	}
 });
 
-for (const mode of ["retain", "reorder", "remove", "clone", "edit", "duplicate"])
-	test(`native final payload membership distinguishes duplicate sources through ${mode}`, async (t) => {
-		const f = await nativeRequests(t, {
-			retainInputs: true,
-			transform: ({ payload }) => {
-				const users = payload.messages.filter((message) => message.role === "user");
-				const other = payload.messages.filter((message) => message.role !== "user");
-				if (mode === "reorder") return { ...payload, messages: [...other, ...users.reverse()] };
-				if (mode === "remove") return { ...payload, messages: [...other, ...users.slice(1)] };
-				if (mode === "clone") return structuredClone(payload);
-				if (mode === "edit") users[0].content[0].text = "changed";
-				if (mode === "duplicate") return { ...payload, messages: [...payload.messages, users[0]] };
-				return payload;
-			},
-		});
-		await f.session.followUp("same");
-		await f.session.followUp("same");
-		f.session.agent.followUpMode = "all";
-		await f.session.continueQueued();
-		const [request] = await f.store.snapshot();
-		assert.equal(request.outcome, "success");
-		assert.deepEqual(
-			request.payload.sources.map((source) => source.disposition),
-			{
-				retain: ["included", "included"],
-				reorder: ["included", "included"],
-				remove: ["unresolved", "included"],
-				clone: ["unresolved", "unresolved"],
-				edit: ["changed", "included"],
-				duplicate: ["unresolved", "included"],
-			}[mode],
-		);
-		if (mode === "reorder") assert.ok(request.payload.sources[0].index > request.payload.sources[1].index);
-		for (const source of request.payload.sources)
-			if (source.disposition === "included") {
-				assert.equal(f.sent[0].messages[source.index].role, "user");
-				assert.match(source.contentHash, /^[a-f0-9]{64}$/);
-			}
-	});
-
-test("provider image downgrade retains changed membership without attributing intact input", async (t) => {
-	const f = await nativeRequests(t, { retainInputs: true });
-	f.session.agent.state.model = { ...f.session.agent.state.model, input: ["text"] };
-	await f.session.prompt("image", { images: [{ type: "image", mimeType: "image/png", data: "YQ==" }] });
-	const [request] = await f.store.snapshot();
-	assert.equal(request.payload.sources[0].disposition, "changed");
-	assert.ok(JSON.stringify(f.sent[0]).includes("model does not support images"));
-});
-
-test("provider-native surrogate sanitation records changed source content", async (t) => {
-	const f = await nativeRequests(t, { retainInputs: true });
-	await f.session.prompt(`broken ${String.fromCharCode(0xd800)}`);
-	const [request] = await f.store.snapshot();
-	assert.equal(request.payload.sources[0].disposition, "changed");
-});
-
-test("provider receipt omission leaves final source membership unresolved", async (t) => {
-	const f = await nativeRequests(t, {
-		retainInputs: true,
-		native: async (model, context, options) => {
-			await options.onPayload({ messages: context.messages }, model);
-			return { async *[Symbol.asyncIterator]() {}, result: async () => assistant() };
-		},
-	});
-	await f.session.prompt("source");
-	assert.equal((await f.store.snapshot())[0].payload.sources[0].disposition, "unresolved");
-});
-
-test("native payload source schema rejects malformed and unqualified membership", async (t) => {
-	const f = await nativeRequests(t, { retainInputs: true });
-	await f.session.prompt("schema");
-	const [request] = await f.store.snapshot();
-	const source = request.payload.sources[0];
-	const bad = [
-		{ sources: [] },
-		{ sources: [{ ...source, sourceIndex: 99 }] },
-		{ sources: [{ ...source, disposition: "delivered" }] },
-		{ sources: [{ ...source, index: -1 }] },
-		{ sources: [{ ...source, index: request.payload.bytes }] },
-		{ sources: [{ ...source, contentHash: "bad" }] },
-		{ sources: [{ ...source, contentHash: undefined }] },
-		{ sources: [{ ...source, disposition: "unresolved" }] },
-		{ api: "unqualified" },
-	];
-	for (const [index, change] of bad.entries()) {
-		const id = `bad-payload-${index}`;
-		await f.store.begin({ ...request, id });
-		await assert.rejects(f.store.handoff(id, { ...request.payload, ...change }));
-		assert.equal((await f.store.snapshot()).at(-1).payload, undefined);
-		await f.store.finish(id, "withheld");
-	}
-});
-
-test("provider mutation before its source observer cannot redefine original content", async (t) => {
-	const f = await nativeRequests(t, {
-		retainInputs: true,
-		native: async (model, context, options) => {
-			const source = context.messages.find((message) => message.role === "user");
-			source.content[0].text = "changed before conversion";
-			const output = { role: "user", content: source.content };
-			options.onMessageConverted(source, output);
-			await options.onPayload({ messages: [output] }, model);
-			return { async *[Symbol.asyncIterator]() {}, result: async () => assistant() };
-		},
-	});
-	await f.session.prompt("original");
-	assert.equal((await f.store.snapshot())[0].payload.sources[0].disposition, "changed");
-});
-
 test("Pi simplified provider streaming preserves source conversion receipts", async (t) => {
 	const f = await nativeRequests(t, { retainInputs: true, simple: true });
 	await f.session.prompt("source");
 	const [request] = await f.store.snapshot();
 	assert.equal(request.outcome, "success");
-	assert.equal(request.payload.sources[0].disposition, "included");
+	assert.equal(request.sourceCapture.model.members[0].status, "intact");
 	assert.equal(f.sent.length, 1);
 });
 
@@ -902,10 +793,14 @@ for (const stage of ["context", "payload"])
 			await f.session.continueQueued();
 			const [request] = await f.store.snapshot();
 			assert.deepEqual(request.requiredSources, [0, 1]);
-			assert.equal(f.sent.length, mode === "retain" ? 1 : 0);
-			assert.equal(request.outcome, mode === "retain" ? "success" : "withheld");
+			// Required content is judged at model conversion. A `context` transform runs before that
+			// checkpoint and still withholds; a `payload` transform runs after it, inside the trust
+			// boundary, so the request is transmitted and the edit is not detected.
+			const withheld = stage === "context" && mode !== "retain";
+			assert.equal(f.sent.length, withheld ? 0 : 1);
+			assert.equal(request.outcome, withheld ? "withheld" : "success");
 			const views = await f.attachment.submissionViews();
-			if (mode !== "retain") {
+			if (withheld) {
 				assert.equal(request.payload, undefined);
 				assert.ok(request.withheldPayload);
 				assert.ok(
@@ -939,8 +834,10 @@ test("required admission permits filtering previously included history", async (
 	assert.equal(f.sent.length, 2);
 	const requests = await f.store.snapshot();
 	assert.equal(requests[1].requiredSources.length, 1);
-	assert.equal(requests[1].payload.sources[0].disposition, "unresolved");
-	assert.equal(requests[1].payload.sources[1].disposition, "included");
+	// The filtered history entry is unresolved at conversion; the newly required input is intact, so
+	// the request is admitted.
+	assert.equal(requests[1].sourceCapture.model.members[0].status, "unresolved");
+	assert.equal(requests[1].sourceCapture.model.members[1].status, "intact");
 });
 
 test("required admission rejects missing source capture for a consumed prompt", async (t) => {
@@ -955,7 +852,7 @@ test("required admission rejects missing source capture for a consumed prompt", 
 	assert.equal((await f.attachment.submissions.snapshot())[0].dispatch.promptClaims.length, 1);
 });
 
-test("required admission holds a provider without source conversion receipts", async (t) => {
+test("a provider that reports no per-message mapping still transmits", async (t) => {
 	let fetched = false;
 	const f = await nativeRequests(t, {
 		retainInputs: true,
@@ -967,17 +864,20 @@ test("required admission holds a provider without source conversion receipts", a
 		},
 	});
 	await f.session.prompt("required");
-	assert.equal(fetched, false);
+	// Membership comes from model conversion, which ran before this stand-in stream. A provider that
+	// reports no per-message mapping of its own no longer holds the request.
+	assert.equal(fetched, true);
 	const [request] = await f.store.snapshot();
-	assert.equal(request.outcome, "withheld");
-	assert.equal(request.withheldPayload.sources[0].disposition, "unresolved");
+	assert.equal(request.outcome, "success");
+	assert.equal(request.sourceCapture.model.members[0].status, "intact");
+	assert.ok(request.payload.bytes > 0);
 });
 
 test("content holds survive attachment reopen and refuse automatic request retry", async (t) => {
 	const f = await nativeRequests(t, {
 		retainInputs: true,
 		enforceRequiredSources: true,
-		transform: ({ payload }) => structuredClone(payload),
+		contextHandler: ({ messages }) => ({ messages: structuredClone(messages) }),
 	});
 	await f.session.prompt("held");
 	const [request] = await f.store.snapshot();
@@ -1001,7 +901,7 @@ test("required admission does not confuse failed outcome with missing inclusion"
 		native: async (model, context, options) => {
 			const source = context.messages.find((message) => message.role === "user");
 			const output = { role: "user", content: source.content };
-			options.onMessageConverted(source, output);
+			options.onMessageConverted?.(source, output);
 			await options.onPayload({ messages: [output] }, model);
 			return {
 				async *[Symbol.asyncIterator]() {},
@@ -1012,7 +912,8 @@ test("required admission does not confuse failed outcome with missing inclusion"
 	await f.session.prompt("received content");
 	const [request] = await f.store.snapshot();
 	assert.equal(request.outcome, "failure");
-	assert.equal(request.payload.sources[0].disposition, "included");
+	// A failed outcome is separate from inclusion: conversion recorded the source as delivered.
+	assert.equal(request.sourceCapture.model.members[0].status, "intact");
 	await f.store.begin({ ...request, id: "next" }, true, await f.dispatch.consumedSources());
 	assert.deepEqual((await f.store.snapshot()).at(-1).requiredSources, []);
 	await f.store.finish("next", "withheld");
@@ -1030,7 +931,7 @@ test("explicit native retry keeps the held receipt and rechecks original input",
 	const f = await nativeRequests(t, {
 		retainInputs: true,
 		enforceRequiredSources: true,
-		transform: ({ payload }) => (reject ? structuredClone(payload) : payload),
+		contextHandler: ({ messages }) => ({ messages: reject ? structuredClone(messages) : messages }),
 	});
 	await f.session.prompt("original instruction");
 	const [held] = await f.store.snapshot();
@@ -1066,7 +967,7 @@ test("explicit retry permission cannot release a second content rejection", asyn
 	const f = await nativeRequests(t, {
 		retainInputs: true,
 		enforceRequiredSources: true,
-		transform: ({ payload }) => structuredClone(payload),
+		contextHandler: ({ messages }) => ({ messages: structuredClone(messages) }),
 	});
 	await f.session.prompt("held");
 	const [held] = await f.store.snapshot();
@@ -1085,7 +986,7 @@ test("unused retry permission expires with attachment ownership", async (t) => {
 	const f = await nativeRequests(t, {
 		retainInputs: true,
 		enforceRequiredSources: true,
-		transform: ({ payload }) => structuredClone(payload),
+		contextHandler: ({ messages }) => ({ messages: structuredClone(messages) }),
 	});
 	await f.session.prompt("held");
 	const [held] = await f.store.snapshot();
@@ -1108,7 +1009,7 @@ test("retry cannot consume authorization without the held source", async (t) => 
 	const f = await nativeRequests(t, {
 		retainInputs: true,
 		enforceRequiredSources: true,
-		transform: ({ payload }) => structuredClone(payload),
+		contextHandler: ({ messages }) => ({ messages: structuredClone(messages) }),
 	});
 	await f.session.prompt("held");
 	const [held] = await f.store.snapshot();
@@ -1129,7 +1030,7 @@ test("retry handoff persistence failure retains a new hold", async (t) => {
 	const f = await nativeRequests(t, {
 		retainInputs: true,
 		enforceRequiredSources: true,
-		transform: ({ payload }) => structuredClone(payload),
+		contextHandler: ({ messages }) => ({ messages: structuredClone(messages) }),
 	});
 	await f.session.prompt("held");
 	const [held] = await f.store.snapshot();
@@ -1158,7 +1059,7 @@ test("cancelled held input stays in history and is excluded from unrelated reque
 	const f = await nativeRequests(t, {
 		retainInputs: true,
 		enforceRequiredSources: true,
-		transform: ({ payload }) => (reject ? structuredClone(payload) : payload),
+		contextHandler: ({ messages }) => ({ messages: reject ? structuredClone(messages) : messages }),
 	});
 	await f.session.prompt("cancel this instruction");
 	const [held] = await f.store.snapshot();
@@ -1192,7 +1093,7 @@ test("partial cancellation preserves duplicate instruction identity and remainin
 	const f = await nativeRequests(t, {
 		retainInputs: true,
 		enforceRequiredSources: true,
-		transform: ({ payload }) => (reject ? structuredClone(payload) : payload),
+		contextHandler: ({ messages }) => ({ messages: reject ? structuredClone(messages) : messages }),
 	});
 	await f.session.followUp("same instruction");
 	await f.session.followUp("same instruction");
@@ -1211,7 +1112,7 @@ test("partial cancellation preserves duplicate instruction identity and remainin
 	);
 	const retry = (await f.store.snapshot())[1];
 	assert.equal(retry.retryOf, held.id);
-	assert.equal(retry.payload.sources[0].disposition, "included");
+	assert.equal(retry.sourceCapture.model.members[0].status, "intact");
 	assert.equal(retry.sourceCapture.members[0].operationId, held.sourceCapture.members[1].operationId);
 });
 
@@ -1219,7 +1120,7 @@ test("cancellation cannot use an old hold after its retry starts", async (t) => 
 	const f = await nativeRequests(t, {
 		retainInputs: true,
 		enforceRequiredSources: true,
-		transform: ({ payload }) => structuredClone(payload),
+		contextHandler: ({ messages }) => ({ messages: structuredClone(messages) }),
 	});
 	await f.session.prompt("held");
 	const [held] = await f.store.snapshot();
@@ -1234,10 +1135,13 @@ test("cancelled input is excluded before extension context handlers", async (t) 
 	const f = await nativeRequests(t, {
 		retainInputs: true,
 		enforceRequiredSources: true,
-		transform: ({ payload }) => (clone ? payload : structuredClone(payload)),
 		contextHandler: ({ messages }) => {
-			if (clone) assert.ok(messages.every((message) => !JSON.stringify(message).includes("held")));
-			return { messages };
+			if (clone) {
+				assert.ok(messages.every((message) => !JSON.stringify(message).includes("held")));
+				return { messages };
+			}
+			// Cloning before conversion is what leaves the required source unresolved and holds it.
+			return { messages: structuredClone(messages) };
 		},
 	});
 	await f.session.prompt("held");
@@ -1255,7 +1159,7 @@ test("missing cancelled-source identity requires reconciliation before new work"
 		retainInputs: true,
 		enforceRequiredSources: true,
 		identifySources: async (messages) => (missing ? [] : identify(messages)),
-		transform: ({ payload }) => structuredClone(payload),
+		contextHandler: ({ messages }) => ({ messages: structuredClone(messages) }),
 	});
 	identify = (messages) => f.dispatch.sources(messages);
 	await f.session.prompt("held");

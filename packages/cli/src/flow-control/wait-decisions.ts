@@ -58,6 +58,8 @@ function decisionText(wait: FlowWaitState): string {
 }
 
 interface NativeWaitEvidence {
+	/** Composed decisions are visible only here, so a producer without it can re-offer a delivered one. */
+	ledger?: { snapshot(): Promise<FlowLedgerState> };
 	submissions: Pick<FlowSubmissionStore, "snapshot">;
 	requests: Pick<FlowNativeRequestStore, "snapshot">;
 }
@@ -121,6 +123,39 @@ async function deliveredNativeDecisions(
 	return delivered;
 }
 
+/**
+ * Whether a controller-composed decision was delivered as an attempt member. Such a decision reaches
+ * the model as composed input rather than as a retained context source, so the ledger is its only
+ * evidence.
+ */
+function deliveredComposedDecision(wait: FlowWaitState, ledger: FlowLedgerState): boolean {
+	const intent = descriptor(wait);
+	if (!intent) return false;
+	return ledger.attempts.some((attempt) => {
+		if (attempt.phase !== "settled" || attempt.outcome !== "success") return false;
+		const expected = FlowModelInput.compose(
+			attempt.id,
+			[{ id: intent.id, revision: intent.revision, kind: "wait", text: decisionText(wait) }],
+			Number.MAX_SAFE_INTEGER,
+		).members[0];
+		return (
+			attempt.members.some((member) => isDeepStrictEqual(member, expected)) &&
+			attempt.requests.some(
+				(request) =>
+					request.handedOff &&
+					request.outcome === "success" &&
+					request.inclusion.some(
+						(item) =>
+							item.id === expected.id &&
+							item.revision === expected.revision &&
+							item.disposition === "included" &&
+							item.contentHash === expected.contentHash,
+					),
+			)
+		);
+	});
+}
+
 /** Select only cancelled or exactly observed terminal waits for host-owned retention. */
 export async function observedFlowWaits(
 	waits: FlowWaitState[],
@@ -133,30 +168,7 @@ export async function observedFlowWaits(
 		if (wait.state === "cancelled") return true;
 		const intent = descriptor(wait);
 		if (!intent) return false;
-		if (delivered.has(intent.id)) return true;
-		return ledger.attempts.some((attempt) => {
-			if (attempt.phase !== "settled" || attempt.outcome !== "success") return false;
-			const expected = FlowModelInput.compose(
-				attempt.id,
-				[{ id: intent.id, revision: intent.revision, kind: "wait", text: decisionText(wait) }],
-				Number.MAX_SAFE_INTEGER,
-			).members[0];
-			return (
-				attempt.members.some((member) => isDeepStrictEqual(member, expected)) &&
-				attempt.requests.some(
-					(request) =>
-						request.handedOff &&
-						request.outcome === "success" &&
-						request.payload?.inclusion.some(
-							(item) =>
-								item.id === expected.id &&
-								item.revision === expected.revision &&
-								item.disposition === "included" &&
-								item.contentHash === expected.contentHash,
-						),
-				)
-			);
-		});
+		return delivered.has(intent.id) || deliveredComposedDecision(wait, ledger);
 	});
 }
 
@@ -174,10 +186,12 @@ export function createFlowWaitDecisionProducer(
 			const delivered = native
 				? await deliveredNativeDecisions(waits, native, (await store.toolReceipts?.()) ?? [])
 				: new Set<string>();
+			const ledger = await native?.ledger?.snapshot();
 			signal.throwIfAborted();
 			return waits.flatMap((wait) => {
 				const intent = descriptor(wait);
-				return intent && !delivered.has(intent.id) ? [intent] : [];
+				if (!intent || delivered.has(intent.id)) return [];
+				return ledger && deliveredComposedDecision(wait, ledger) ? [] : [intent];
 			});
 		},
 		async build(intent, signal) {

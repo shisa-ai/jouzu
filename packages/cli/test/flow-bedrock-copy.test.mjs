@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { BedrockRuntimeClient, ConverseStreamCommand } from "@aws-sdk/client-bedrock-runtime";
-import { copyFlowPayload, payloadRowOrigin } from "../dist/flow-control/payload-copy.js";
+import { copyFlowPayload } from "../dist/flow-control/payload-copy.js";
 
 const api = "bedrock-converse-stream";
 function fixture(bytes = new Uint8Array([97, 98, 99])) {
@@ -17,8 +17,6 @@ test("Bedrock copy preserves owned binary bytes through the AWS HTTP serializer"
 	const first = copyFlowPayload(original, api);
 	const second = copyFlowPayload(first.owned, api);
 	assert.equal(first.serialized, second.serialized);
-	assert.equal(payloadRowOrigin(second.owned.messages[0]), original.messages[0]);
-	assert.equal(payloadRowOrigin(second.owned.messages[0].content[0]), original.messages[0].content[0]);
 	backing.fill(0);
 	assert.deepEqual([...second.owned.messages[0].content[0].image.source.bytes], [97, 98, 99]);
 	let wire;
@@ -45,12 +43,10 @@ test("Bedrock copy preserves owned binary bytes through the AWS HTTP serializer"
 	assert.equal(first.owned.messages[0].content[0].image.source.bytes[0], 97);
 });
 
-test("Bedrock copy handles Buffer and excludes arbitrary clone provenance", () => {
+test("Bedrock copy handles Buffer and base64s it for the wire", () => {
 	const original = fixture(Buffer.from("abc"));
 	const cloned = structuredClone(original);
-	const copied = copyFlowPayload(cloned, api);
-	assert.equal(payloadRowOrigin(copied.owned.messages[0]), cloned.messages[0]);
-	assert.notEqual(payloadRowOrigin(copied.owned.messages[0]), original.messages[0]);
+	copyFlowPayload(cloned, api);
 	assert.equal(JSON.parse(copyFlowPayload(original, api).serialized).messages[0].content[0].image.source.bytes, "YWJj");
 });
 

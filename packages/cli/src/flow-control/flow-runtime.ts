@@ -5,7 +5,6 @@ import { createMultiloopControllerExtension } from "./multiloop-extension.js";
 import { createFlowNoReplyExtension } from "./no-reply-tool.js";
 import type { PiFlowAttachment } from "./pi-attachment.js";
 import { PiSessionFlowIngress } from "./pi-session-ingress.js";
-import { flowProviderProjections } from "./provider-registry.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import { flowRunContainsUserInput } from "./run-input.js";
 import { createFlowWaitExtension } from "./wait-tools.js";
@@ -89,7 +88,6 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 				maxResultBytes: limits.maxResultBytes,
 				userWorkParticipants: ["bg", "multiloop"],
 				host: {
-					projections: flowProviderProjections(),
 					maxPayloadBytes: limits.maxPayloadBytes,
 					// Only the trailing block after the last assistant turn is this run's input, and a
 					// message there is instruction unless every part of it is flow-injected. Anything

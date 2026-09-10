@@ -83,7 +83,7 @@ export class PiFlowSessionService {
 		const captured = {
 			...options,
 			userWorkParticipants: captureUserWorkParticipants(options.userWorkParticipants),
-			host: { ...options.host, projections: new Map(options.host.projections) },
+			host: { ...options.host },
 		};
 		const registry = await PiFlowSessionRegistry.open(
 			options.root,
@@ -183,6 +183,7 @@ export class PiFlowSessionService {
 			const controller = new SessionFlowController(host, this.options.maxInputBytes, this.options.maxResultBytes);
 			controller.register(
 				createFlowWaitDecisionProducer(attachment.waits, {
+					ledger: attachment.ledger,
 					submissions: attachment.submissions,
 					requests: attachment.nativeRequests,
 				}),

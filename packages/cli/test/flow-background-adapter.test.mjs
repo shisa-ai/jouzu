@@ -223,7 +223,6 @@ test("a native user prompt spawns background work and declares its wait from the
 }, async (t) => {
 	const { stream } = await import("@earendil-works/pi-ai/api/openai-completions");
 	const { PiSessionFlowIngress } = await import("../dist/flow-control/pi-session-ingress.js");
-	const { openAIFlowPayload } = await import("../dist/flow-control/provider-payload.js");
 	const background = await loadBackground(t),
 		errors = [],
 		directory = await mkdtemp(join(tmpdir(), "jouzu-native-bg-wait-"));
@@ -237,7 +236,6 @@ test("a native user prompt spawns background work and declares its wait from the
 		maxResultBytes: 100000,
 		userWorkParticipants: ["bg"],
 		host: {
-			projections: new Map([["openai-completions", openAIFlowPayload("openai-completions")]]),
 			maxPayloadBytes: 1000000,
 			containsUserInput: () => true,
 		},

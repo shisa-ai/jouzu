@@ -7,7 +7,6 @@ import {
 	convertNativeProjections,
 	type NativeProjectionCapture,
 } from "./native-context-projections.js";
-import { NativePayloadSources } from "./native-payload-sources.js";
 import type {
 	FlowNativeRequestStore,
 	NativeRequestSource,
@@ -472,23 +471,6 @@ export class PiNativeRequests {
 			this.executing = id;
 			const prepared = this.prepared;
 			this.prepared = undefined;
-			const sourceAPI =
-				(
-					[
-						"openai-completions",
-						"openai-responses",
-						"openai-codex-responses",
-						"azure-openai-responses",
-						"mistral-conversations",
-						"pi-messages",
-						"bedrock-converse-stream",
-						"anthropic-messages",
-						"google-generative-ai",
-						"google-vertex",
-					] as const
-				).find((api) => api === model.api) ?? "openai-completions";
-			const sources = new NativePayloadSources(context.messages, prepared?.capture, sourceAPI);
-			const projections = new NativePayloadSources(context.messages, prepared?.projections, sourceAPI);
 			this.active++;
 			let handedOff = false;
 			let admitting = false;
@@ -512,30 +494,6 @@ export class PiNativeRequests {
 				const response = await native(model, context, {
 					...options,
 					...(flowValidateProvider ? { flowValidateProvider } : {}),
-					onMessageConverted: (source, output) => {
-						this.assertActive();
-						if (admitting || finished)
-							throw new FlowLedgerError(
-								"transition",
-								"Native provider source mapping arrived after payload admission.",
-							);
-						if (
-							model.api === "openai-completions" ||
-							model.api === "openai-responses" ||
-							model.api === "openai-codex-responses" ||
-							model.api === "azure-openai-responses" ||
-							model.api === "mistral-conversations" ||
-							model.api === "pi-messages" ||
-							model.api === "bedrock-converse-stream" ||
-							model.api === "anthropic-messages" ||
-							model.api === "google-generative-ai" ||
-							model.api === "google-vertex"
-						) {
-							sources.observe(source, output);
-							projections.observe(source, output);
-						}
-						options?.onMessageConverted?.(source, output);
-					},
 					onPayload: async (payload, requestModel) => {
 						this.assertActive();
 						options?.signal?.throwIfAborted();
@@ -554,28 +512,18 @@ export class PiNativeRequests {
 						const { serialized, owned } = copyFlowPayload(replacement === undefined ? payload : replacement, model.api);
 						if (serialized === undefined || Buffer.byteLength(serialized) > maxBytes)
 							throw new FlowLedgerError("capacity", "Native provider payload exceeds its byte limit.");
-						const membership = sources.inspect(model.api, replacement === undefined ? payload : replacement, owned);
+						// The body is serialized to bound and identify it, never to locate membership inside it.
 						const admitted = await store.handoff(id, {
 							hash: createHash("sha256").update(serialized).digest("hex"),
 							bytes: Buffer.byteLength(serialized),
 							api: model.api,
 							provider: model.provider,
 							model: model.id,
-							...(membership ? { sources: membership } : {}),
-							...(prepared.projections
-								? {
-										projections: projections.inspect(
-											model.api,
-											replacement === undefined ? payload : replacement,
-											owned,
-										),
-									}
-								: {}),
 						});
 						if (!admitted)
 							throw new FlowLedgerError(
 								"transition",
-								"Native request withheld because required input was changed or unresolved.",
+								"Native request withheld because required input was changed or unresolved at conversion.",
 							);
 						handedOff = true;
 						this.assertActive();

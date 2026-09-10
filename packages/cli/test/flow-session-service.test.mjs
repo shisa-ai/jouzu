@@ -7,14 +7,13 @@ import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { FlowModelInput } from "../dist/flow-control/model-input.js";
 import { PiFlowSessionService } from "../dist/flow-control/pi-session-service.js";
-import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
 
 function options(root) {
 	return {
 		root,
 		maxInputBytes: 4096,
 		maxResultBytes: 4096,
-		host: { projections: new Map(), maxPayloadBytes: 100000, containsUserInput: () => true },
+		host: { maxPayloadBytes: 100000, containsUserInput: () => true },
 		policy: () => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: [] }),
 	};
 }
@@ -37,14 +36,22 @@ async function fixture(t, config = {}) {
 			branchChanged: () => service.branchChanged(),
 			dispose: () => service?.close(),
 		},
-		extensions: [(pi) => pi.on("session_tree", () => treeScopes.push(service.branch().scope))],
+		extensions: [
+			(pi) => pi.on("session_tree", () => treeScopes.push(service.branch().scope)),
+			// Cloning before model conversion leaves required input unresolved there, which is what
+			// holds a request now that provider bodies are not decoded.
+			...(config.holdInput
+				? [
+						(pi) =>
+							pi.on("context", ({ messages }) => ({
+								messages: config.holdInput() ? structuredClone(messages) : messages,
+							})),
+					]
+				: []),
+		],
 	});
 	const native = session.agent.streamFunction;
 	session.agent.streamFunction = async (model, context, options) => {
-		if (config.providerReceipts?.()) {
-			for (const message of context.messages)
-				if (message.role === "user") options?.onMessageConverted?.(message, message);
-		}
 		await options?.onPayload?.({ messages: context.messages }, model);
 		await config.onRequest?.();
 		return native(model, context, options);
@@ -218,7 +225,7 @@ test("failed navigation stays held on reopen and failed attachment releases its 
 
 test("session service updates native recovery gates and authorizes one reviewed retry", async (t) => {
 	let receipts = false;
-	const f = await fixture(t, { retainInputs: true, providerReceipts: () => receipts });
+	const f = await fixture(t, { retainInputs: true, holdInput: () => !receipts });
 	const branch = f.service.branch();
 	assert.equal(branch.host.gate().recoveryBlocked, false);
 	await f.session.prompt("held input");
@@ -238,7 +245,7 @@ test("session service updates native recovery gates and authorizes one reviewed 
 });
 
 test("session service reports busy retry without granting permission", async (t) => {
-	const f = await fixture(t, { retainInputs: true });
+	const f = await fixture(t, { retainInputs: true, holdInput: () => true });
 	const branch = f.service.branch();
 	await f.session.prompt("held");
 	const [held] = await branch.attachment.nativeRequests.snapshot();
@@ -249,7 +256,7 @@ test("session service reports busy retry without granting permission", async (t)
 });
 
 test("cancelled native input remains excluded after session-service reopen", async (t) => {
-	const first = await fixture(t, { retainInputs: true });
+	const first = await fixture(t, { retainInputs: true, holdInput: () => true });
 	await first.session.prompt("cancelled original");
 	const [held] = await first.service.branch().attachment.nativeRequests.snapshot();
 	await first.service.cancelNativeSources(held.id, held.withheldPayload.hash, [0]);
@@ -260,7 +267,6 @@ test("cancelled native input remains excluded after session-service reopen", asy
 		root: first.root,
 		manager: SessionManager.open(first.session.sessionManager.getSessionFile()),
 		retainInputs: true,
-		providerReceipts: () => true,
 	});
 	assert.equal(next.service.branch().host.gate().recoveryBlocked, false);
 	await next.session.prompt("independent request");
@@ -273,7 +279,7 @@ test("cancelled native input remains excluded after session-service reopen", asy
 });
 
 test("session service reconciles an idle queue edit without sending or duplicating history", async (t) => {
-	const f = await fixture(t, { retainInputs: true, providerReceipts: () => true });
+	const f = await fixture(t, { retainInputs: true });
 	await f.session.followUp("original");
 	const [item] = f.session.agent.inspectQueuedMessages();
 	f.session.agent.editQueuedMessage(item.id, 1, {
@@ -292,7 +298,7 @@ test("session service reconciles an idle queue edit without sending or duplicati
 });
 
 test("queue maintenance fences edits and cancellation while retaining the reviewed revision", async (t) => {
-	const f = await fixture(t, { retainInputs: true, providerReceipts: () => true });
+	const f = await fixture(t, { retainInputs: true });
 	await f.session.followUp("original");
 	const [item] = f.session.agent.inspectQueuedMessages();
 	f.session.agent.editQueuedMessage(item.id, 1, {
@@ -325,7 +331,7 @@ test("queue maintenance fences edits and cancellation while retaining the review
 });
 
 test("native queue cancellation preserves duplicate input identity and unrelated work", async (t) => {
-	const f = await fixture(t, { retainInputs: true, providerReceipts: () => true });
+	const f = await fixture(t, { retainInputs: true });
 	await f.session.followUp("duplicate");
 	await f.session.followUp("duplicate");
 	const [first, second] = f.session.agent.inspectQueuedMessages();
@@ -351,7 +357,7 @@ test("native queue cancellation preserves duplicate input identity and unrelated
 });
 
 test("native cancellation retains the edited revision and rejects stale controls", async (t) => {
-	const f = await fixture(t, { retainInputs: true, providerReceipts: () => true });
+	const f = await fixture(t, { retainInputs: true });
 	await f.session.followUp("original");
 	const [item] = f.session.agent.inspectQueuedMessages();
 	f.session.agent.editQueuedMessage(item.id, 1, { role: "user", content: "edited", timestamp: 1 });
@@ -368,7 +374,7 @@ test("native cancellation retains the edited revision and rejects stale controls
 });
 
 test("failed cancellation persistence preserves the live queue for retry", async (t) => {
-	const f = await fixture(t, { retainInputs: true, providerReceipts: () => true });
+	const f = await fixture(t, { retainInputs: true });
 	await f.session.followUp("preserved");
 	const [item] = f.session.agent.inspectQueuedMessages();
 	const store = f.service.branch().attachment.submissions;
@@ -385,7 +391,7 @@ test("failed cancellation persistence preserves the live queue for retry", async
 });
 
 test("persisted cancellation blocks consumption after native removal fails", async (t) => {
-	const f = await fixture(t, { retainInputs: true, providerReceipts: () => true });
+	const f = await fixture(t, { retainInputs: true });
 	await f.session.followUp("must not run");
 	const [item] = f.session.agent.inspectQueuedMessages();
 	const mock = t.mock.method(f.session.agent, "cancelQueuedMessage", () => {
@@ -414,7 +420,6 @@ test("native queue cancellation evidence survives session-service reopen", async
 		root: first.root,
 		manager: SessionManager.open(first.session.sessionManager.getSessionFile()),
 		retainInputs: true,
-		providerReceipts: () => true,
 	});
 	await next.service.cancelNativeQueue(item.id, 1);
 	await next.session.prompt("new user input");
@@ -551,7 +556,6 @@ for (const ownership of ["owned", "foreign", "unclassified"])
 		let branch, observed, authority;
 		const f = await fixture(t, {
 			host: {
-				projections: new Map([["openai-completions", openAIFlowPayload("openai-completions")]]),
 				maxPayloadBytes: 100000,
 				containsUserInput: () => false,
 			},
@@ -608,9 +612,7 @@ for (const lane of ["steer", "followUp"])
 			authority;
 		const f = await fixture(t, {
 			retainInputs: true,
-			providerReceipts: () => true,
 			host: {
-				projections: new Map([["openai-completions", openAIFlowPayload("openai-completions")]]),
 				maxPayloadBytes: 100000,
 				containsUserInput: () => calls > 0,
 			},

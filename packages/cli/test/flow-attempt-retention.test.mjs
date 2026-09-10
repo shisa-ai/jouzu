@@ -93,12 +93,6 @@ async function settledAttempt(ledger, attemptId, intentId, resultProducer) {
 	await ledger.queued(attemptId, queue);
 	await ledger.claim(attemptId, queue);
 	await ledger.prepare(attemptId, `request-${attemptId}`, items.map(included), false);
-	await ledger.payload(attemptId, `request-${attemptId}`, {
-		api: "fixture",
-		hash: hash(attemptId),
-		bytes: 1,
-		inclusion: items.map(included),
-	});
 	await ledger.handoff(attemptId, `request-${attemptId}`);
 	await ledger.requestOutcome(attemptId, `request-${attemptId}`, "success");
 	await ledger.settle(attemptId, "success");
@@ -207,12 +201,6 @@ test("a successful request with an omitted result retains its context exclusion 
 	await ledger.claim("filtered", queue);
 	const inclusion = [included(work), { id: result.id, revision: result.revision, disposition: "omitted" }];
 	await ledger.prepare("filtered", "filtered-request", inclusion, false);
-	await ledger.payload("filtered", "filtered-request", {
-		api: "fixture",
-		hash: hash("filtered"),
-		bytes: 1,
-		inclusion,
-	});
 	await ledger.handoff("filtered", "filtered-request");
 	await ledger.requestOutcome("filtered", "filtered-request", "success");
 	await ledger.settle("filtered", "success");

@@ -56,7 +56,11 @@ export function finishedUserWork(
 						view.outcome !== "success" ||
 						!view.payloadHash ||
 						view.hold ||
-						view.sources.some((source) => source.cancelled || source.payload?.disposition !== "included"),
+						// Delivery is what model conversion recorded, so an unaccepted status there is what
+						// leaves a source unreceived.
+						view.sources.some(
+							(source) => source.cancelled || !["intact", "converted"].includes(source.model?.status ?? ""),
+						),
 				)
 			)
 				return false;

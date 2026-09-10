@@ -25,12 +25,13 @@ test("native submission inspection joins duplicate sends by operation and surviv
 		assert.equal(request.sources[0].consumed, true);
 		assert.equal(request.sources[0].history.entryId, records[index].dispatch.queueHistory[0].entryId);
 		assert.deepEqual(request.sources[0].identity.queue, records[index].dispatch.inputs[0].queue);
-		assert.equal(request.sources[0].payload.disposition, "included");
+		assert.equal(request.sources[0].model.status, "intact");
 		assert.equal(request.outcome, "success");
 	}
+	// Two sends of the same content keep distinct source identities in the view.
 	assert.notEqual(
-		views[0].nativeRequests[0].sources[0].payload.index,
-		views[1].nativeRequests[0].sources[0].payload.index,
+		views[0].nativeRequests[0].sources[0].identity.operationId,
+		views[1].nativeRequests[0].sources[0].identity.operationId,
 	);
 	await f.bridge.close();
 	await f.dispatch.close();
@@ -43,12 +44,11 @@ test("native submission inspection joins duplicate sends by operation and surviv
 	}
 });
 
-test("native inspection retains per-message filtering instead of claiming whole-send inclusion", async (t) => {
+test("native inspection keeps per-message conversion status for each source", async (t) => {
 	const f = await nativeRequests(t, {
 		retainInputs: true,
-		transform: ({ payload }) => ({
-			...payload,
-			messages: payload.messages.filter((message) => message.role !== "user" || message.content[0]?.text !== "remove"),
+		contextHandler: ({ messages }) => ({
+			messages: messages.filter((message) => message.role !== "user" || message.content[0]?.text !== "remove"),
 		}),
 	});
 	await f.session.prompt("seed");
@@ -62,8 +62,8 @@ test("native inspection retains per-message filtering instead of claiming whole-
 	);
 	const view = (await f.attachment.submissionViews()).find((view) => view.id === "pair");
 	assert.deepEqual(
-		view.nativeRequests[0].sources.map((source) => source.payload.disposition),
-		["included", "unresolved"],
+		view.nativeRequests[0].sources.map((source) => source.model.status),
+		["intact", "unresolved"],
 	);
 	assert.equal(view.admission, "held");
 	assert.equal(view.delivery, "history");
@@ -75,7 +75,7 @@ test("native request failure keeps exact inclusion separate from outcome", async
 		native: async (model, context, options) => {
 			const source = context.messages[0],
 				output = { role: "user", content: source.content };
-			options.onMessageConverted(source, output);
+			options.onMessageConverted?.(source, output);
 			await options.onPayload({ messages: [output] }, model);
 			return { async *[Symbol.asyncIterator]() {}, result: async () => ({ ...assistant(), stopReason: "error" }) };
 		},
@@ -83,7 +83,7 @@ test("native request failure keeps exact inclusion separate from outcome", async
 	await f.session.prompt("source");
 	const [view] = await f.attachment.submissionViews();
 	assert.equal(view.nativeRequests[0].outcome, "failure");
-	assert.equal(view.nativeRequests[0].sources[0].payload.disposition, "included");
+	assert.equal(view.nativeRequests[0].sources[0].model.status, "intact");
 	assert.equal(view.admission, "held");
 });
 
@@ -101,7 +101,7 @@ test("native submission join rejects foreign claims and returns owned inspection
 			request.sourceCapture.members[0].prompt.messageIndex = 99;
 		},
 		(request) => {
-			request.payload.sources[0].sourceIndex = 99;
+			request.sourceCapture.model.members[0].sourceIndex = 99;
 		},
 	]) {
 		const changed = structuredClone(requests);

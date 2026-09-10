@@ -49,19 +49,11 @@ export type FlowAttemptPhase =
 
 export type FlowOutcome = "success" | "transient-failure" | "failure" | "aborted";
 
-export interface FlowPayloadReceipt {
-	api: string;
-	hash: string;
-	bytes: number;
-	inclusion: FlowInclusion[];
-}
-
 export interface FlowRequest {
 	id: string;
 	inclusion: FlowInclusion[];
 	containsUserInput: boolean;
 	handedOff: boolean;
-	payload?: FlowPayloadReceipt;
 	outcome?: FlowOutcome;
 }
 
@@ -291,19 +283,7 @@ export class FlowReceiptLedger {
 					!Array.isArray(request.inclusion)
 				)
 					throw new FlowLedgerError("schema", "Invalid persisted request state.");
-				if (request.payload !== undefined) {
-					if (!request.payload || typeof request.payload !== "object")
-						throw new FlowLedgerError("schema", "Invalid persisted payload receipt.");
-					requireIdentity(request.payload.api);
-					if (
-						!/^[a-f0-9]{64}$/.test(request.payload.hash) ||
-						!Number.isSafeInteger(request.payload.bytes) ||
-						request.payload.bytes < 1 ||
-						!Array.isArray(request.payload.inclusion)
-					)
-						throw new FlowLedgerError("schema", "Invalid persisted payload receipt.");
-				}
-				for (const inclusion of [request.inclusion, ...(request.payload ? [request.payload.inclusion] : [])]) {
+				for (const inclusion of [request.inclusion]) {
 					const members = new Set<string>();
 					for (const receipt of inclusion) {
 						const original = receipt && attempt.members.find((item) => memberKey(item) === memberKey(receipt));
@@ -504,45 +484,14 @@ export class FlowReceiptLedger {
 			);
 			const empty = !captured.some((item) => item.disposition === "included");
 			attempt.phase = rejected || empty ? "withheld" : "prepared";
-			if (attempt.phase === "withheld") {
-				attempt.reason = rejected
-					? "Required input or intact aggregate metadata was filtered."
-					: "No composed input survived filtering.";
-				if (attempt.requests.some((request) => request.handedOff)) attempt.phase = "running";
-				else delete state.activeAttemptId;
-			}
-			return attempt.phase === "prepared";
-		});
-	}
-
-	/** Final provider conversion evidence, separate from the earlier model-message snapshot. */
-	payload(id: string, requestId: string, receipt: FlowPayloadReceipt): Promise<boolean> {
-		const captured = structuredClone(receipt);
-		return this.mutate((state) => {
-			const attempt = this.attempt(state, id, ["prepared"]);
-			const request = attempt.requests.at(-1);
-			if (!request || request.id !== requestId || request.payload)
-				throw new FlowLedgerError("identity", "Payload request is unknown or already recorded.");
-			request.payload = captured;
-			const admitted =
-				captured.inclusion.some((item) => item.disposition === "included") &&
-				attempt.members.every(
-					(member) =>
-						(!member.required ||
-							captured.inclusion.some(
-								(item) => memberKey(item) === memberKey(member) && item.disposition === "included",
-							)) &&
-						(!member.inputFrame?.intact ||
-							!captured.inclusion.some(
-								(item) => memberKey(item) === memberKey(member) && ["replaced", "rejected"].includes(item.disposition),
-							)),
-				);
-			if (admitted && attempt.admission && !attempt.admission.charged) {
+			// Admission is charged from what model conversion included, which is where this contract
+			// establishes delivery.
+			if (attempt.phase === "prepared" && attempt.admission && !attempt.admission.charged) {
 				const { choice } = attempt.admission;
 				if ((state.admission ?? initialFlowAdmission()).revision !== choice.revision)
 					throw new FlowLedgerError("stale", "Admission policy changed before final inclusion.");
 				if (
-					captured.inclusion.some(
+					captured.some(
 						(item) =>
 							item.id === choice.intent.id &&
 							item.revision === choice.intent.revision &&
@@ -553,12 +502,14 @@ export class FlowReceiptLedger {
 					attempt.admission.charged = true;
 				}
 			}
-			if (!admitted) {
-				attempt.reason = "Provider payload filtered composed input.";
-				attempt.phase = attempt.requests.some((item) => item.handedOff) ? "running" : "withheld";
-				if (attempt.phase === "withheld") delete state.activeAttemptId;
+			if (attempt.phase === "withheld") {
+				attempt.reason = rejected
+					? "Required input or intact aggregate metadata was filtered."
+					: "No composed input survived filtering.";
+				if (attempt.requests.some((request) => request.handedOff)) attempt.phase = "running";
+				else delete state.activeAttemptId;
 			}
-			return admitted;
+			return attempt.phase === "prepared";
 		});
 	}
 

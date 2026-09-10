@@ -18,7 +18,6 @@ import { createMultiloopControllerExtension } from "../dist/flow-control/multilo
 import { MultiloopFlowProducer, multiloopWorkBinding } from "../dist/flow-control/multiloop-producer.js";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { PiControllerHost } from "../dist/flow-control/pi-controller-host.js";
-import { openAIFlowPayload } from "../dist/flow-control/provider-payload.js";
 import { FlowReceiptLedger } from "../dist/flow-control/receipt-ledger.js";
 import { orderFlowResultProducers } from "../dist/flow-control/result-order.js";
 import { createFlowWaitDecisionProducer } from "../dist/flow-control/wait-decisions.js";
@@ -93,7 +92,6 @@ async function fixture(t, native, options = {}) {
 			session,
 			ledger,
 			{
-				projections: new Map([["openai-completions", openAIFlowPayload("openai-completions")]]),
 				maxPayloadBytes: 100000,
 				containsUserInput: () => false,
 				consumedAttempt: options.consumedAttempt,
@@ -145,12 +143,6 @@ async function fixture(t, native, options = {}) {
 						disposition: "included",
 					}));
 					await ledger.prepare(input.attemptId, input.attemptId, inclusion, false);
-					await ledger.payload(input.attemptId, input.attemptId, {
-						api: "synthetic",
-						bytes: 1,
-						hash: "a".repeat(64),
-						inclusion,
-					});
 					await ledger.handoff(input.attemptId, input.attemptId);
 					calls.push(input.members[0].id);
 					await ledger.requestOutcome(input.attemptId, input.attemptId, "success");
@@ -619,7 +611,7 @@ test("Pi: a changed descriptor at claim is retained without consuming an iterati
 	assert.equal(state.admission.revision, 0);
 });
 
-test("Pi: final filtering withholds a revision and producer replay cannot resend it", async (t) => {
+test("Pi: a body filtered after conversion is transmitted, not withheld", async (t) => {
 	const { controller, calls, ledger } = await fixture(t, true, {
 		extensions: [
 			(pi) =>
@@ -635,8 +627,13 @@ test("Pi: final filtering withholds a revision and producer replay cannot resend
 	assert.deepEqual(calls, []);
 	const state = await ledger.snapshot();
 	assert.equal(state.attempts.length, 1);
-	assert.equal(state.attempts[0].phase, "withheld");
-	assert.equal(state.admission.revision, 0);
+	// `before_provider_request` edits the provider body after model conversion, which the controller
+	// trusts and does not decode. The attempt settles and its admission is charged from what
+	// conversion included. A content policy that removes content earlier is still caught, because it
+	// runs before conversion.
+	assert.equal(state.attempts[0].phase, "settled");
+	assert.equal(state.attempts[0].requests[0].inclusion[0].disposition, "included");
+	assert.equal(state.admission.revision, 1);
 });
 
 test("Pi: restart joins replayed producer revisions with durable receipts", async (t) => {
@@ -700,7 +697,10 @@ test("Pi: unrelated work excludes a rejected instruction and its image without r
 	assert.equal(JSON.stringify(payloads[0]).includes("withheld instruction"), false);
 	assert.equal(JSON.stringify(payloads[0]).includes("aGVsbG8="), false);
 	assert.equal(JSON.stringify(session.sessionManager.getBranch()).includes("withheld instruction"), true);
-	assert.equal((await ledger.snapshot()).attempts[0].phase, "withheld");
+	// The first body was filtered after model conversion, so the controller cannot see the loss and
+	// the attempt settles. The instruction and its image still never reached the wire, and history
+	// still holds them, which is what this case protects.
+	assert.equal((await ledger.snapshot()).attempts[0].phase, "settled");
 	assert.equal((await ledger.snapshot()).attempts[1].phase, "settled");
 });
 
@@ -921,8 +921,10 @@ for (const native of [false, true]) {
 		const first = structuredClone(state);
 		first.attempts = first.attempts.slice(0, 1);
 		assert.equal(orderFlowResultProducers(results, first)[0], "beta");
+		// Without delivery evidence the served producer is not deprioritized. That evidence is now the
+		// prepare-time inclusion, so withdrawing it means recording the member as not included.
 		first.attempts[0].requests.forEach((request) => {
-			delete request.payload;
+			request.inclusion = request.inclusion.map((item) => ({ ...item, disposition: "omitted" }));
 		});
 		assert.equal(orderFlowResultProducers(results, first)[0], "alpha");
 	});
@@ -1114,7 +1116,6 @@ for (const navigate of [false, true]) {
 			first.session,
 			attachment.ledger,
 			{
-				projections: new Map([["openai-completions", openAIFlowPayload("openai-completions")]]),
 				maxPayloadBytes: 100000,
 				containsUserInput: () => false,
 			},
@@ -1132,7 +1133,7 @@ for (const navigate of [false, true]) {
 		const state = await attachment.ledger.snapshot();
 		assert.equal(state.attempts.length, 1);
 		assert.equal(state.attempts[0].phase, "settled");
-		assert.equal(state.attempts[0].requests[0].payload.inclusion[0].disposition, "included");
+		assert.equal(state.attempts[0].requests[0].inclusion[0].disposition, "included");
 		assert.deepEqual(await first.ledger.snapshot(), before);
 	});
 }
@@ -1159,7 +1160,6 @@ for (const summarize of [false, "extension", "native"]) {
 					first.session,
 					nextAttachment.ledger,
 					{
-						projections: new Map([["openai-completions", openAIFlowPayload("openai-completions")]]),
 						maxPayloadBytes: 100000,
 						containsUserInput: () => false,
 					},

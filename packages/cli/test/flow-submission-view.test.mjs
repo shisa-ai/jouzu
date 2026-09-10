@@ -69,12 +69,6 @@ async function prepare(f) {
 	await claim(f);
 	const inclusion = f.composition.inspect([{ role: "user", content: f.composition.content, timestamp: 1 }]);
 	await f.attachment.ledger.prepare("attempt", "request", inclusion, false);
-	await f.attachment.ledger.payload("attempt", "request", {
-		api: "fixture",
-		bytes: 1,
-		hash: "a".repeat(64),
-		inclusion,
-	});
 }
 
 test("unconsumed cancellation returns retained input to pending after reopen", async (t) => {
@@ -174,7 +168,6 @@ test("partial optional input cannot acknowledge the whole retained submission", 
 	await ledger.claim("attempt", { id: "queue", revision: 1 });
 	const inclusion = composition.inspect([{ role: "user", content: composition.content.slice(0, 1), timestamp: 1 }]);
 	await ledger.prepare("attempt", "request", inclusion, false);
-	await ledger.payload("attempt", "request", { api: "fixture", hash: "a".repeat(64), bytes: 1, inclusion });
 	await ledger.handoff("attempt", "request");
 	await ledger.requestOutcome("attempt", "request", "success");
 	await ledger.settle("attempt", "success");

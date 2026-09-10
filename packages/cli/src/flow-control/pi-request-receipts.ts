@@ -2,8 +2,8 @@ import type { FlowRequestInput } from "@earendil-works/pi-agent-core";
 import type { AssistantMessage } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
 import { type FlowModelInput, prepareFlowModelInput } from "./model-input.js";
+import { copyFlowPayload } from "./payload-copy.js";
 import { PiHostHooks } from "./pi-host-hooks.js";
-import { admitFlowPayload, type FlowPayloadProjection } from "./provider-payload.js";
 import { FlowLedgerError, type FlowOutcome, type FlowReceiptLedger } from "./receipt-ledger.js";
 
 interface RequestBinding {
@@ -13,8 +13,6 @@ interface RequestBinding {
 	handedOff: boolean;
 }
 export interface PiRequestReceiptOptions {
-	/** Registry populated only with qualified provider projections. */
-	projections: ReadonlyMap<string, FlowPayloadProjection>;
 	maxPayloadBytes: number;
 	/** The ingress/controller owns user origin; never infer it from message prose. */
 	containsUserInput(input: FlowRequestInput, composition: FlowModelInput): boolean;
@@ -34,7 +32,6 @@ export class PiRequestReceipts {
 	) {
 		if (!Number.isSafeInteger(options.maxPayloadBytes) || options.maxPayloadBytes < 1)
 			throw new FlowLedgerError("capacity", "Invalid provider payload byte limit.");
-		const projections = new Map(options.projections);
 		const previous = session.agent.flowCheckpoints;
 		this.hooks.set(session.agent, "flowCheckpoints", {
 			...previous,
@@ -67,9 +64,7 @@ export class PiRequestReceipts {
 			const request = this.pending;
 			this.pending = undefined;
 			if (!request) return native(model, context, streamOptions);
-			const projection = projections.get(model.api);
 			try {
-				if (!projection) throw new FlowLedgerError("schema", "Provider API has no qualified payload projection.");
 				const response = await native(model, context, {
 					...streamOptions,
 					onPayload: async (payload, requestModel) => {
@@ -83,15 +78,11 @@ export class PiRequestReceipts {
 							throw new FlowLedgerError("identity", "Provider identity changed during payload conversion.");
 						const replacement = await streamOptions?.onPayload?.(payload, requestModel);
 						this.assertActive(request.signal);
-						const owned = await admitFlowPayload(
-							ledger,
-							request.composition,
-							request.id,
-							model.api,
-							replacement === undefined ? payload : replacement,
-							projection,
-							options.maxPayloadBytes,
-						);
+						// Serialize to bound and identify the transmitted body. Membership was established at
+						// model conversion; the provider's own format is not decoded.
+						const { serialized, owned } = copyFlowPayload(replacement === undefined ? payload : replacement, model.api);
+						if (serialized === undefined || Buffer.byteLength(serialized) > options.maxPayloadBytes)
+							throw new FlowLedgerError("capacity", "Provider payload exceeds its byte limit.");
 						this.assertActive(request.signal);
 						await ledger.handoff(request.composition.attemptId, request.id);
 						request.handedOff = true;

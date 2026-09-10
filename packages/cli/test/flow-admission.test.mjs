@@ -153,24 +153,17 @@ async function prepared(f, choice) {
 	await f.ledger.prepare("attempt", "request", included, false);
 }
 
-test("authoritative payload inclusion atomically charges once and survives reattachment", async (t) => {
+test("final inclusion at conversion atomically charges once and survives reattachment", async (t) => {
 	const f = await fixture(t);
 	const choice = choose((await f.ledger.snapshot()).admission, [intent("work"), intent("cadence", 5)]);
+	// Charging happens where inclusion is established, which is model conversion.
 	await prepared(f, choice);
-	assert.equal((await f.ledger.snapshot()).admission.cadenceDebt, 0);
-	await f.ledger.payload("attempt", "request", { api: "fixture", bytes: 1, hash: "a".repeat(64), inclusion: included });
 	let state = await f.ledger.snapshot();
 	assert.equal(state.admission.cadenceDebt, 1);
 	assert.equal(state.attempts[0].admission.charged, true);
 	await f.ledger.handoff("attempt", "request");
 	await f.ledger.requestOutcome("attempt", "request", "success");
 	await f.ledger.prepare("attempt", "tool-loop", included, false);
-	await f.ledger.payload("attempt", "tool-loop", {
-		api: "fixture",
-		bytes: 1,
-		hash: "a".repeat(64),
-		inclusion: included,
-	});
 	assert.equal((await f.ledger.snapshot()).admission.cadenceDebt, 1);
 	await f.reopen();
 	state = await f.ledger.snapshot();
@@ -178,16 +171,15 @@ test("authoritative payload inclusion atomically charges once and survives reatt
 	assert.equal(state.admission.revision, 1);
 });
 
-test("payload rejection preserves the persisted service counter", async (t) => {
+test("conversion rejection preserves the persisted service counter", async (t) => {
 	const f = await fixture(t);
 	const choice = choose((await f.ledger.snapshot()).admission, [intent("work"), intent("cadence", 5)]);
-	await prepared(f, choice);
-	await f.ledger.payload("attempt", "request", {
-		api: "fixture",
-		bytes: 1,
-		hash: "a".repeat(64),
-		inclusion: [{ id: "work", revision: "1", disposition: "omitted" }],
-	});
+	await f.ledger.select("attempt", [member], choice);
+	await f.ledger.queued("attempt", { id: "queue", revision: 1 });
+	await f.ledger.claim("attempt", { id: "queue", revision: 1 });
+	// The required member was filtered at conversion, so the attempt is withheld and nothing charges.
+	await f.ledger.prepare("attempt", "request", [{ id: "work", revision: "1", disposition: "omitted" }], false);
+	assert.equal((await f.ledger.snapshot()).attempts[0].phase, "withheld");
 	await f.reopen();
 	assert.equal((await f.ledger.snapshot()).admission.cadenceDebt, 0);
 	assert.equal((await f.ledger.snapshot()).admission.revision, 0);
@@ -219,13 +211,14 @@ test("filtering the selected optional trigger does not charge another included r
 	await f.ledger.select("attempt", members, choice);
 	await f.ledger.queued("attempt", { id: "queue", revision: 1 });
 	await f.ledger.claim("attempt", { id: "queue", revision: 1 });
-	await f.ledger.prepare("attempt", "request", receipts, false);
-	await f.ledger.payload("attempt", "request", {
-		api: "fixture",
-		bytes: 1,
-		hash: "a".repeat(64),
-		inclusion: [{ id: "work", revision: "1", disposition: "omitted" }, receipts[1]],
-	});
+	// The selected optional trigger is filtered at conversion; the other result survives, so the turn
+	// is still valid and nothing charges for a member the choice did not select.
+	await f.ledger.prepare(
+		"attempt",
+		"request",
+		[{ id: "work", revision: "1", disposition: "omitted" }, receipts[1]],
+		false,
+	);
 	await f.ledger.handoff("attempt", "request");
 	await f.reopen();
 	const state = await f.ledger.snapshot();

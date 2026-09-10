@@ -87,7 +87,7 @@ export function retirableAttempts(state: FlowLedgerState, keep: number): FlowAtt
 							(request) =>
 								request.handedOff &&
 								request.outcome === "success" &&
-								request.payload?.inclusion.some(
+								request.inclusion.some(
 									(item) =>
 										item.id === member.id &&
 										item.revision === member.revision &&

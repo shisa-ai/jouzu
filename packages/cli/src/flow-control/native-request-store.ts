@@ -1,6 +1,6 @@
 import { BACKGROUND_CONTEXT, deleteValue, type Session, setValue, value } from "@earendil-works/pi-agent-core";
 import { type NativeProjectionCapture, validateNativeProjections } from "./native-context-projections.js";
-import { nativePayloadOverlap, validNativeBlockPosition } from "./native-payload-position.js";
+import { nativeProjectionDelivered, nativeSourceDelivered } from "./native-inclusion.js";
 import { retirableNativeRequests, supersededNativeRequests } from "./native-request-retention.js";
 import type { FlowOwnership } from "./ownership.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
@@ -34,18 +34,8 @@ export interface NativeRequest {
 		api: string;
 		model: string;
 		provider: string;
-		sources?: NativePayloadSource[];
-		projections?: NativePayloadSource[];
 	};
 	outcome?: "success" | "failure" | "aborted" | "withheld";
-}
-export interface NativePayloadSource {
-	sourceIndex: number;
-	disposition: "included" | "changed" | "unresolved";
-	index?: number;
-	/** Anthropic block or Google part position within the user row. Omitted for whole-row receipts. */
-	blockIndex?: number;
-	contentHash?: string;
 }
 export type NativeSourceClaim = Pick<NativeRequestSource, "operationId" | "prompt" | "queue">;
 export interface NativeRequestSource {
@@ -190,8 +180,7 @@ export class FlowNativeRequestStore {
 					record.cancelledProjections.some((index) => !record.requiredProjections?.includes(index)))
 			)
 				throw new FlowLedgerError("identity", "Invalid cancelled projection positions.");
-			const payload = record.payload ?? record.withheldPayload;
-			validateNativeProjections(record.projectionCapture, record.transformedHash, record.modelHash, payload);
+			validateNativeProjections(record.projectionCapture, record.transformedHash, record.modelHash);
 			if (
 				record.projectionCapture &&
 				(record.projectionCapture.count !== record.sourceCapture?.context?.count ||
@@ -210,6 +199,7 @@ export class FlowNativeRequestStore {
 					record.retryOf !== undefined)
 			)
 				throw new FlowLedgerError("schema", "Invalid maintenance native request.");
+			const payload = record.payload ?? record.withheldPayload;
 			if (
 				!identity(record.id) ||
 				!identity(record.ownerId) ||
@@ -225,46 +215,6 @@ export class FlowNativeRequestStore {
 				(record.outcome !== undefined && record.outcome !== "withheld" && !record.payload)
 			)
 				throw new FlowLedgerError("schema", "Invalid native request receipt.");
-			if (payload?.sources !== undefined) {
-				const sources = payload.sources,
-					capture = record.sourceCapture;
-				if (!capture || !Array.isArray(sources) || sources.length !== capture.members.length)
-					throw new FlowLedgerError("schema", "Invalid native payload source receipts.");
-				const positions: NativePayloadSource[] = [];
-				for (const [offset, source] of sources.entries()) {
-					if (
-						!source ||
-						source.sourceIndex !== capture.members[offset]?.index ||
-						!["included", "changed", "unresolved"].includes(source.disposition) ||
-						(source.index !== undefined &&
-							(!Number.isSafeInteger(source.index) ||
-								source.index < 0 ||
-								source.index >= payload.bytes ||
-								positions.some((prior) => nativePayloadOverlap(prior, source)))) ||
-						!validNativeBlockPosition(source, payload.api, payload.bytes) ||
-						(source.contentHash !== undefined && !hash(source.contentHash)) ||
-						(source.index === undefined) !== (source.contentHash === undefined) ||
-						(source.disposition === "unresolved" && source.index !== undefined) ||
-						(source.disposition === "included" &&
-							(![
-								"openai-completions",
-								"openai-responses",
-								"openai-codex-responses",
-								"azure-openai-responses",
-								"mistral-conversations",
-								"pi-messages",
-								"bedrock-converse-stream",
-								"anthropic-messages",
-								"google-generative-ai",
-								"google-vertex",
-							].includes(payload.api) ||
-								source.index === undefined ||
-								!["intact", "converted"].includes(capture.model?.members[offset]?.status ?? "")))
-					)
-						throw new FlowLedgerError("identity", "Invalid native payload source membership.");
-					if (source.index !== undefined) positions.push(source);
-				}
-			}
 			if (
 				record.requiredSources !== undefined &&
 				(!Array.isArray(record.requiredSources) ||
@@ -274,25 +224,11 @@ export class FlowNativeRequestStore {
 					))
 			)
 				throw new FlowLedgerError("identity", "Invalid required native source positions.");
-			if (
-				record.payload &&
-				record.requiredSources?.some(
-					(index) =>
-						!record.payload?.sources?.some(
-							(source) => source.sourceIndex === index && source.disposition === "included",
-						),
-				)
-			)
+			// Required content is decided at model conversion, so a handed-off record must show every
+			// required source and projection delivered there.
+			if (record.payload && record.requiredSources?.some((index) => !nativeSourceDelivered(record, index)))
 				throw new FlowLedgerError("identity", "Native handoff omits required source content.");
-			if (
-				record.payload &&
-				record.requiredProjections?.some(
-					(index) =>
-						!record.payload?.projections?.some(
-							(source) => source.sourceIndex === index && source.disposition === "included",
-						),
-				)
-			)
+			if (record.payload && record.requiredProjections?.some((index) => !nativeProjectionDelivered(record, index)))
 				throw new FlowLedgerError("identity", "Native handoff omits required projection content.");
 			const capture = record.sourceCapture;
 			if (capture !== undefined) {
@@ -600,11 +536,7 @@ export class FlowNativeRequestStore {
 			const received = new Set(
 				records.flatMap((request) =>
 					(request.sourceCapture?.members ?? [])
-						.filter((source) =>
-							request.payload?.sources?.some(
-								(item) => item.sourceIndex === source.index && item.disposition === "included",
-							),
-						)
+						.filter((source) => nativeSourceDelivered(request, source.index))
 						.map(nativeSourceKey),
 				),
 			);
@@ -678,22 +610,16 @@ export class FlowNativeRequestStore {
 			if (record.payload || record.outcome)
 				throw new FlowLedgerError("transition", "Native request already has a disposition.");
 			const cancelled = new Set(nativeCancelledSources(records).map(nativeSourceKey));
+			// Both checks read model conversion, which is the checkpoint that decides what the provider
+			// adapter received. A cancelled input must not have reached it, and required content must.
 			if (
 				record.sourceCapture?.members.some(
-					(source) =>
-						cancelled.has(nativeSourceKey(source)) &&
-						captured.sources?.some((item) => item.sourceIndex === source.index && item.disposition !== "unresolved"),
+					(source) => cancelled.has(nativeSourceKey(source)) && nativeSourceDelivered(record, source.index),
 				)
 			)
-				throw new FlowLedgerError("identity", "Cancelled native input reached the provider payload.");
-			const missingSource = record.requiredSources?.some(
-				(index) =>
-					!captured.sources?.some((source) => source.sourceIndex === index && source.disposition === "included"),
-			);
-			const missingProjection = record.requiredProjections?.some(
-				(index) =>
-					!captured.projections?.some((source) => source.sourceIndex === index && source.disposition === "included"),
-			);
+				throw new FlowLedgerError("identity", "Cancelled native input reached the provider adapter.");
+			const missingSource = record.requiredSources?.some((index) => !nativeSourceDelivered(record, index));
+			const missingProjection = record.requiredProjections?.some((index) => !nativeProjectionDelivered(record, index));
 			if (missingSource || missingProjection) {
 				record.withheldPayload = captured;
 				record.outcome = "withheld";

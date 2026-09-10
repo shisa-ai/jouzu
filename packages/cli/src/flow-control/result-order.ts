@@ -27,7 +27,7 @@ export function orderFlowResultProducers(intents: FlowIntent[], state: FlowLedge
 			if (
 				producer &&
 				attempt.requests.some((request) =>
-					request.payload?.inclusion.some(
+					request.inclusion.some(
 						(item) => item.id === member.id && item.revision === member.revision && item.disposition === "included",
 					),
 				)
