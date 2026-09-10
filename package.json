@@ -17,7 +17,7 @@
 		"test:python": "uv run --project python/jouzu python -m unittest discover -s python/jouzu/tests -v",
 		"test:pack-check": "node --test scripts/pack-check.test.mjs scripts/dev-smoke.test.mjs scripts/textguard-artifact.test.mjs",
 		"test:dev-build": "python3 scripts/test_dev_build.py",
-		"test:release-metadata": "node --test scripts/check-release-metadata.test.mjs scripts/release-artifact.test.mjs scripts/smoke-phase.test.mjs",
+		"test:release-metadata": "node --test scripts/check-release-metadata.test.mjs scripts/release-artifact.test.mjs scripts/smoke-phase.test.mjs scripts/live-flow-smoke.test.mjs",
 		"test:packed": "node scripts/test-packed-cli.mjs",
 		"test:camoufox:packed": "node scripts/test-packed-camoufox.mjs",
 		"test:auto-update": "node scripts/test-auto-update.mjs",
