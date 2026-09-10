@@ -46,7 +46,7 @@ function clock(start = 0) {
 	};
 }
 
-async function fixture(t, { policyFor = () => policy } = {}) {
+async function fixture(t, { policyFor = () => policy, onProbe } = {}) {
 	const root = await mkdtemp(join(tmpdir(), "jouzu-health-monitor-"));
 	const attachment = await PiFlowAttachment.open(root, scope);
 	const errors = [];
@@ -81,9 +81,15 @@ async function fixture(t, { policyFor = () => policy } = {}) {
 		0,
 		10_000_000,
 	);
+	const probes = [];
 	const monitor = new FlowWaitHealthMonitor({
 		store,
 		policy: policyFor,
+		// The producer answers a probe by reporting fresh evidence, the way a real one would.
+		probe: async (handle) => {
+			probes.push(handle.execution);
+			await onProbe?.(store, time.now());
+		},
 		clock: time,
 		onError: (error) => errors.push(error),
 	});
@@ -92,7 +98,7 @@ async function fixture(t, { policyFor = () => policy } = {}) {
 		await attachment.close();
 		await rm(root, { recursive: true, force: true });
 	});
-	return { attachment, store, monitor, errors, time };
+	return { attachment, store, monitor, errors, time, probes };
 }
 const waitState = async (store) => (await store.snapshot())[0].state;
 
@@ -195,4 +201,51 @@ test("a detached producer leaves the wait on its deadline rather than deciding",
 	await f.time.advance(1_000_000);
 	assert.equal(await waitState(f.store), "waiting", "the hard deadline is the guarantee that never needs a producer");
 	assert.deepEqual(f.errors, []);
+});
+
+test("a quiet execution is probed before grace decides, and fresh evidence keeps it alive", async (t) => {
+	let reported = 1;
+	const f = await fixture(t, {
+		// A live but quiet task reports nothing on its own; asked directly, it answers.
+		onProbe: async (store, now) =>
+			store.observeExecutionHealth(
+				monitored,
+				{ policy: policy.name, revision: ++reported, observedAt: now, state: "healthy" },
+				now,
+			),
+	});
+	await f.store.observeExecutionHealth(
+		monitored,
+		{ policy: policy.name, revision: 1, observedAt: 0, state: "healthy" },
+		0,
+	);
+	await f.monitor.refresh();
+
+	// Evidence goes stale at 60s. Without a probe the wait would be called health-unknown at 75s.
+	await f.time.advance(60_000);
+	assert.deepEqual(f.probes, ["exec"], "the producer is asked exactly once for this stale window");
+	assert.equal(await waitState(f.store), "waiting");
+	await f.time.advance(30_000);
+	assert.equal(await waitState(f.store), "waiting", "the answer refreshed health rather than ending the wait");
+	assert.deepEqual(f.errors, []);
+});
+
+test("a producer that cannot answer its probe still ends the wait when grace runs out", async (t) => {
+	const f = await fixture(t, {
+		onProbe: async () => {
+			throw new Error("producer is gone");
+		},
+	});
+	await f.store.observeExecutionHealth(
+		monitored,
+		{ policy: policy.name, revision: 1, observedAt: 0, state: "healthy" },
+		0,
+	);
+	await f.monitor.refresh();
+	await f.time.advance(60_000);
+	assert.deepEqual(f.probes, ["exec"]);
+	// A throwing producer is reported, not swallowed, and grace still decides on its own schedule.
+	assert.equal(f.errors.length, 1);
+	await f.time.advance(15_000);
+	assert.equal(await waitState(f.store), "health-unknown");
 });

@@ -2,7 +2,7 @@ import { isDeepStrictEqual } from "node:util";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import { type FlowAuthorityExecution, requireAuthorityWork } from "./wait-authority.js";
 import { type FlowWaitClock, systemWaitClock } from "./wait-deadlines.js";
-import { type FlowHealthPolicy, validateFlowHealthPolicy } from "./wait-health.js";
+import { type FlowHealthEvidence, type FlowHealthPolicy, validateFlowHealthPolicy } from "./wait-health.js";
 import type { FlowWaitStore } from "./wait-store.js";
 
 export interface FlowExecutionIdentity {
@@ -14,6 +14,11 @@ export interface FlowExecutionIdentity {
 export interface FlowExecutionEvidence extends FlowExecutionIdentity {
 	revision: number;
 	predicates: FlowAuthorityExecution["predicates"];
+	/**
+	 * Optional liveness observation for a declared health policy. Producers that declare no policy
+	 * omit it, and their waits stay deadline-only.
+	 */
+	health?: FlowHealthEvidence;
 }
 export interface FlowWaitExecutionSource {
 	version: 1;
@@ -224,6 +229,18 @@ export class FlowWaitProducerRegistry {
 				`Health policy ${name} is not registered for this execution; declare a deadline-only wait instead.`,
 			);
 		return policy;
+	}
+
+	/**
+	 * Force one producer re-read for an execution. This is the bounded probe the health contract
+	 * requires: a quiet execution reports nothing on its own, so staleness alone cannot decide until
+	 * the producer has been asked directly.
+	 */
+	async probeExecution(namespace: string, execution: string): Promise<boolean> {
+		if (this.closed) return false;
+		const producer = this.producers.get(namespace);
+		if (!producer) return false;
+		return producer.flushExecution(execution);
 	}
 
 	async bindForWait(
@@ -444,12 +461,11 @@ class ExecutionBinding {
 	};
 	private async observe(evidence: FlowExecutionEvidence): Promise<void> {
 		if (this.closed || this.failure !== undefined) return;
-		await this.store.observeExecution(
-			{ producer: this.namespace, handle: this.identity.handle, execution: this.identity.execution },
-			evidence.revision,
-			evidence.predicates,
-			this.clock.now(),
-		);
+		const handle = { producer: this.namespace, handle: this.identity.handle, execution: this.identity.execution };
+		await this.store.observeExecution(handle, evidence.revision, evidence.predicates, this.clock.now());
+		// Health rides the same report. The store keeps the newer revision, so a producer that
+		// repeats an observation cannot refresh liveness it has not actually rechecked.
+		if (evidence.health) await this.store.observeExecutionHealth(handle, evidence.health, this.clock.now());
 	}
 
 	start(): Promise<void> {

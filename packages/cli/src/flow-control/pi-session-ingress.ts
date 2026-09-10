@@ -233,6 +233,8 @@ export class PiSessionFlowIngress implements Ingress {
 					{ workId, handle: handle.handle, execution: handle.execution },
 					handle.health as string,
 				),
+			probe: (handle: FlowWaitHandle) =>
+				branch.attachment.waitProducers.probeExecution(handle.producer, handle.execution),
 			clock: automatic.clock ?? systemWaitClock,
 			onError: automatic.onError,
 		});

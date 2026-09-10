@@ -8,7 +8,13 @@ import type { FlowWaitStore } from "./wait-store.js";
 export interface FlowHealthMonitorOptions {
 	store: Pick<FlowWaitStore, "snapshot" | "authoritySnapshot" | "observeExecution">;
 	/** Resolves the policy a wait requested, or undefined once its producer is gone. */
-	policy(handle: FlowWaitHandle): FlowHealthPolicy | undefined;
+	policy(handle: FlowWaitHandle, workId: string): FlowHealthPolicy | undefined;
+	/**
+	 * Force one producer re-read. A quiet execution reports nothing on its own, so the host asks
+	 * directly before treating stale evidence as a decision. Resolves when the producer has
+	 * reported, or is abandoned once the policy's probe timeout passes.
+	 */
+	probe(handle: FlowWaitHandle): Promise<unknown>;
 	clock: FlowWaitClock;
 	onError(error: unknown): void;
 }
@@ -30,7 +36,28 @@ export class FlowWaitHealthMonitor {
 	private running?: Promise<void>;
 	private cancelTimer?: () => void;
 	private timerRevision = 0;
+	/** Executions already asked in this stale window, so one probe is not repeated every scan. */
+	private readonly probed = new Set<string>();
 	constructor(private readonly options: FlowHealthMonitorOptions) {}
+
+	/**
+	 * One bounded probe. A producer that never answers must not hold the scan open, so the timeout
+	 * abandons the wait rather than the request: the grace period then decides on its own schedule.
+	 */
+	private async probeOnce(handle: FlowWaitHandle, timeoutMs: number): Promise<void> {
+		let release: (() => void) | undefined;
+		const bounded = new Promise<void>((resolve) => {
+			release = this.options.clock.after(timeoutMs, resolve);
+		});
+		try {
+			await Promise.race([this.options.probe(handle).then(() => undefined), bounded]);
+		} catch (error) {
+			// A producer that throws is evidence it cannot answer, which grace already handles.
+			this.options.onError(error);
+		} finally {
+			release?.();
+		}
+	}
 
 	private clearTimer(): void {
 		this.timerRevision++;
@@ -90,7 +117,7 @@ export class FlowWaitHealthMonitor {
 			if (this.stopped) return;
 			let next = Infinity;
 			for (const { wait, handle, execution } of this.monitored(waits, authority.executions)) {
-				const policy = this.options.policy(handle);
+				const policy = this.options.policy(handle, wait.workId);
 				// A producer that detached takes its policy with it. The wait keeps its hard deadline,
 				// which is the guarantee that never depends on a responsive producer.
 				if (!policy) continue;
@@ -102,6 +129,18 @@ export class FlowWaitHealthMonitor {
 					wait.expiresAt,
 				);
 				if (verdict.state === "healthy") {
+					// Evidence has gone stale when the next check is the end of grace rather than a
+					// cadence step. Ask the producer once, bounded, before that grace runs out.
+					const since = execution.healthSince ?? execution.observedAt;
+					const staleAt = Math.max(execution.healthEvidence?.observedAt ?? since, since) + policy.freshnessMs;
+					if (now >= staleAt && !this.probed.has(key(handle))) {
+						this.probed.add(key(handle));
+						await this.probeOnce(handle, policy.probeTimeoutMs);
+						if (this.stopped) return;
+						this.requested = true;
+						continue;
+					}
+					if (now < staleAt) this.probed.delete(key(handle));
 					if (verdict.nextCheckAt < wait.expiresAt) next = Math.min(next, verdict.nextCheckAt);
 					continue;
 				}
