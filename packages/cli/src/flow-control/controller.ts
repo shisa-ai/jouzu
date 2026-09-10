@@ -3,6 +3,7 @@ import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import { chooseFlowIntent, type FlowAdmissionGates, type FlowIntent, initialFlowAdmission } from "./admission.js";
 import { retiredByReceipt, retiredMemberHash, retiredWorkHash } from "./attempt-retention.js";
 import { type FlowInputItem, FlowModelInput } from "./model-input.js";
+import { type FlowObservation, flowObservations, selectedObservations } from "./observation.js";
 import { FlowLedgerError, type FlowLedgerState, type FlowReceiptLedger } from "./receipt-ledger.js";
 import { buildFlowResultEnvelope } from "./result-envelope.js";
 import { orderFlowResultProducers } from "./result-order.js";
@@ -17,7 +18,11 @@ export interface FlowProducer {
 	build(intent: FlowIntent, signal: AbortSignal): Promise<FlowInputItem>;
 	/** Work still owned by producer activity or unread output, including executions without a wait. */
 	retainedWorkIds?(): readonly string[];
-	observationProjections?(messages: readonly AgentMessage[]): AgentMessage[];
+	/**
+	 * Recognize this producer's own tool output among the host's offered observations, answering
+	 * with their indices. Producers never receive the host's message type.
+	 */
+	observationProjections?(observations: readonly FlowObservation[]): readonly number[];
 	describeResult?(intent: FlowIntent, signal: AbortSignal): Promise<FlowResultReference>;
 }
 export interface FlowControllerHost {
@@ -264,15 +269,20 @@ export class SessionFlowController {
 	/** Capture only producer-validated tool output already present in the final native context. */
 	observationProjections(messages: readonly AgentMessage[]): AgentMessage[] {
 		this.assertActive();
-		const selected = new Set<AgentMessage>();
+		const offered = flowObservations(messages);
+		const selected = new Set<number>();
 		for (const producer of this.producers.values()) {
-			for (const message of producer.observationProjections?.(messages) ?? []) {
-				if (!messages.includes(message))
-					throw new FlowLedgerError("identity", "Observation is outside native context.");
-				selected.add(message);
+			let indices: readonly number[];
+			try {
+				indices = selectedObservations(producer.observationProjections?.(offered) ?? [], offered.length);
+			} catch (error) {
+				// A producer naming something outside the offered context is an identity failure, the
+				// same as the object-identity check this replaced.
+				throw new FlowLedgerError("identity", (error as Error).message);
 			}
+			for (const index of indices) selected.add(index);
 		}
-		return [...selected];
+		return [...selected].sort((a, b) => a - b).map((index) => messages[index]);
 	}
 
 	private async resultMetadata(

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { test } from "node:test";
 import { BackgroundResultProducer } from "../dist/flow-control/background-results.js";
+import { flowObservations } from "../dist/flow-control/observation.js";
 
 const metadata = {
 	id: "bg-result:execution",
@@ -107,9 +108,13 @@ for (const variant of ["success", "failure", "missing", "redacted", "error", "ca
 		);
 		await producer.snapshot(new AbortController().signal);
 		assert.deepEqual(observations, variant === "success" ? [[metadata.id, "1"]] : []);
-		assert.equal(
-			producer.observationProjections([{ ...message, content: [{ type: "text", text: "changed" }] }]).length,
-			0,
-		);
+		// Recognition is by content hash, so an unchanged observation matches and a changed one does
+		// not. Both directions are asserted: only the negative would pass on any broken projection.
+		const offered = (content) => flowObservations([{ ...message, ...(content ? { content } : {}) }]);
+		// Only a message that still matches its receipt is recognized: a foreign call id, a different
+		// tool, an error result, or a missing receipt all disqualify it.
+		const recognizable = !["call", "tool", "error", "uncaptured"].includes(variant);
+		assert.deepEqual(producer.observationProjections(offered()), recognizable ? [0] : []);
+		assert.deepEqual(producer.observationProjections(offered([{ type: "text", text: "changed" }])), []);
 	});
 }

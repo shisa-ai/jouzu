@@ -1,7 +1,6 @@
-import { createHash } from "node:crypto";
-import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { FlowIntent } from "./admission.js";
 import type { FlowProducer } from "./controller.js";
+import { type FlowObservation, flowObservationOf } from "./observation.js";
 import type { PiFlowAttachment } from "./pi-attachment.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import { type FlowResultReference, normalizeFlowResults } from "./result-types.js";
@@ -13,14 +12,13 @@ export interface BackgroundReadReceipt {
 	toolName: string;
 	contentHash: string;
 }
-const contentHash = (content: unknown) => createHash("sha256").update(JSON.stringify(content)).digest("hex");
-function matches(message: AgentMessage, receipt: BackgroundReadReceipt): boolean {
+function matches(observation: FlowObservation, receipt: BackgroundReadReceipt): boolean {
 	return (
-		message.role === "toolResult" &&
-		!message.isError &&
-		message.toolCallId === receipt.toolCallId &&
-		message.toolName === receipt.toolName &&
-		contentHash(message.content) === receipt.contentHash
+		observation.kind === "toolResult" &&
+		!observation.failed &&
+		observation.toolCallId === receipt.toolCallId &&
+		observation.toolName === receipt.toolName &&
+		observation.contentHash === receipt.contentHash
 	);
 }
 export interface BackgroundResultSourceAPI {
@@ -55,9 +53,11 @@ export class BackgroundResultProducer implements FlowProducer {
 	retainedWorkIds(): string[] {
 		return this.source.retainedWorkIds?.() ?? [];
 	}
-	observationProjections(messages: readonly AgentMessage[]): AgentMessage[] {
+	observationProjections(observations: readonly FlowObservation[]): number[] {
 		const receipts = this.source.readReceipts?.() ?? [];
-		return messages.filter((message) => receipts.some((receipt) => matches(message, receipt)));
+		return observations
+			.filter((observation) => receipts.some((receipt) => matches(observation, receipt)))
+			.map((observation) => observation.index);
 	}
 	private async reconcileObservations(signal: AbortSignal): Promise<void> {
 		const receipts = this.source.readReceipts?.() ?? [];
@@ -70,7 +70,7 @@ export class BackgroundResultProducer implements FlowProducer {
 					request.outcome === "success" &&
 					request.projectionCapture?.members.some(
 						(projection, offset) =>
-							matches(projection.message, receipt) &&
+							matches({ index: offset, ...flowObservationOf(projection.message) }, receipt) &&
 							request.projectionCapture?.model?.members[offset]?.status === "converted" &&
 							request.payload?.projections?.some(
 								(item) => item.sourceIndex === projection.index && item.disposition === "included",
