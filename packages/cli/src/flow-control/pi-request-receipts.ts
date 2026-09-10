@@ -17,7 +17,7 @@ export interface PiRequestReceiptOptions {
 	projections: ReadonlyMap<string, FlowPayloadProjection>;
 	maxPayloadBytes: number;
 	/** The ingress/controller owns user origin; never infer it from message prose. */
-	containsUserInput(input: FlowRequestInput): boolean;
+	containsUserInput(input: FlowRequestInput, composition: FlowModelInput): boolean;
 }
 
 /** Native request receipts. Host settlement remains separate from response and agent_end events. */
@@ -50,7 +50,7 @@ export class PiRequestReceipts {
 					throw new FlowLedgerError("transition", "Prior request requires reconciliation before another request.");
 				const composition = this.compositions.get(attempt.id);
 				if (!composition) throw new FlowLedgerError("identity", "Claimed attempt has no registered composition.");
-				await prepareFlowModelInput(ledger, composition, input, options.containsUserInput(input));
+				await prepareFlowModelInput(ledger, composition, input, options.containsUserInput(input, composition));
 				const request = { composition, id: input.requestId, signal, handedOff: false };
 				try {
 					this.assertActive(signal);

@@ -95,7 +95,7 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 					// message there is instruction unless every part of it is flow-injected. Anything
 					// doubtful counts as user input, so a notification-only run is recognized without
 					// ever silencing a reply the user asked for.
-					containsUserInput: (input) => flowRunContainsUserInput(input.transformedMessages),
+					containsUserInput: (input, composition) => flowRunContainsUserInput(input.transformedMessages, composition),
 					consumedAttempt: multiloop.consumedAttempt,
 				},
 				policy: () => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: [] }),
