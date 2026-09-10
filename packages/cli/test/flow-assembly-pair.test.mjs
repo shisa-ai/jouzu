@@ -118,3 +118,94 @@ test("the assembly rejects a transport replaced after sealing", async (t) => {
 		.some((entry) => entry.type === "message" && /transport changed/.test(entry.message.errorMessage ?? ""));
 	assert.ok(held, "the request is held with a visible reason");
 });
+
+test("a running background task offers its liveness policy and a wait can use it", async (t) => {
+	const f = await assembledSession(t, {
+		producerExtensions: await installedProducerExtensions(),
+		script: (body, index) => {
+			if (index === 0)
+				return assistantToolCalls({
+					name: "multiloop_start",
+					arguments: { lane: "sweep", runTag: "run", mode: "research", goal: "Watch liveness" },
+				});
+			if (index === 1)
+				return assistantToolCalls({ name: "bg_task", arguments: { action: "spawn", command: "sleep 20" } });
+			if (index === 2) {
+				const dependency = waitDependencyFrom(body);
+				assert.ok(dependency, "the task tool result carries wait evidence");
+				return assistantToolCalls({
+					name: "agent_wait",
+					arguments: {
+						work: dependency.work.id,
+						reason: "the sweep must stay alive",
+						deadline: "30m",
+						// The policy the producer registers for a live process, requested by name.
+						on: [
+							{
+								producer: dependency.producer,
+								handle: dependency.handle,
+								execution: dependency.execution,
+								until: dependency.until,
+								health: "bg-process-alive-v1",
+							},
+						],
+					},
+				});
+			}
+			return { text: `turn ${index}` };
+		},
+	});
+	await f.session.prompt("start the sweep and watch it");
+
+	const [wait] = (await f.ingress.branch().attachment.waits.snapshot()).filter((item) => item.state === "waiting");
+	assert.ok(wait, "the monitored wait was accepted rather than refused");
+	assert.equal(wait.on[0].health, "bg-process-alive-v1");
+	// The producer reported liveness for the real spawned process alongside its predicates.
+	const [execution] = (await f.ingress.branch().attachment.waits.authoritySnapshot()).executions;
+	assert.equal(execution.healthEvidence?.policy, "bg-process-alive-v1");
+	assert.equal(execution.healthEvidence?.state, "healthy");
+	assert.match(execution.healthEvidence?.marker ?? "", /^[0-9]+$/, "the marker names the process it checked");
+	assert.deepEqual(f.errors, []);
+});
+
+test("a policy the background producer does not register is refused", async (t) => {
+	const f = await assembledSession(t, {
+		producerExtensions: await installedProducerExtensions(),
+		script: (body, index) => {
+			if (index === 0)
+				return assistantToolCalls({
+					name: "multiloop_start",
+					arguments: { lane: "sweep", runTag: "run", mode: "research", goal: "Refuse an invented policy" },
+				});
+			if (index === 1)
+				return assistantToolCalls({ name: "bg_task", arguments: { action: "spawn", command: "sleep 20" } });
+			if (index === 2) {
+				const dependency = waitDependencyFrom(body);
+				return assistantToolCalls({
+					name: "agent_wait",
+					arguments: {
+						work: dependency.work.id,
+						reason: "invented policy",
+						deadline: "30m",
+						on: [
+							{
+								producer: dependency.producer,
+								handle: dependency.handle,
+								execution: dependency.execution,
+								until: dependency.until,
+								health: "sweep-progress-v1",
+							},
+						],
+					},
+				});
+			}
+			return { text: `turn ${index}` };
+		},
+	});
+	await f.session.prompt("start the sweep and invent a policy");
+	// The model cannot install liveness semantics by naming them; no wait is parked.
+	assert.deepEqual(
+		(await f.ingress.branch().attachment.waits.snapshot()).filter((item) => item.state === "waiting"),
+		[],
+	);
+});

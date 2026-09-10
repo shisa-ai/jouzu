@@ -410,11 +410,24 @@ class ExecutionBinding {
 			new Set(evidence.predicates.map((predicate) => predicate.until)).size !== evidence.predicates.length
 		)
 			throw new FlowLedgerError("identity", "Execution observation has foreign or invalid evidence.");
+		// Rebuild rather than pass the producer's object through, so only known fields survive. Health
+		// is validated by the store's own retention rule, which drops anything it cannot accept.
+		const health = evidence.health
+			? {
+					policy: evidence.health.policy,
+					revision: evidence.health.revision,
+					observedAt: evidence.health.observedAt,
+					state: evidence.health.state,
+					...(evidence.health.marker === undefined ? {} : { marker: evidence.health.marker }),
+					...(evidence.health.detail === undefined ? {} : { detail: evidence.health.detail }),
+				}
+			: undefined;
 		return {
 			...this.identity,
 			scope: { ...this.identity.scope },
 			revision: evidence.revision,
 			predicates: evidence.predicates.map(({ until, state }) => ({ until, state })),
+			...(health ? { health } : {}),
 		};
 	}
 	private stopSubscription(): void {
@@ -528,6 +541,14 @@ class ExecutionBinding {
 				this.workRevision,
 				this.clock.now(),
 			);
+			// The first report carries liveness too; registration alone would drop it and leave the
+			// monitor judging a freshly bound execution as one that had never reported.
+			if (initial.health)
+				await this.store.observeExecutionHealth(
+					{ producer: this.namespace, handle: initial.handle, execution: initial.execution },
+					initial.health,
+					this.clock.now(),
+				);
 		} while (this.buffer.length);
 		this.abort.signal.throwIfAborted();
 		this.ready = true;

@@ -3,9 +3,18 @@ import { createHash, randomUUID } from "node:crypto";
 type Scope = { sessionId: string; branchId: string };
 type Work = { id: string; revision: number };
 type Identity = { scope: Scope; workId: string; handle: string; execution: string };
+type HealthEvidence = {
+	policy: string;
+	revision: number;
+	observedAt: number;
+	state: "healthy" | "unhealthy";
+	marker?: string;
+	detail?: string;
+};
 type Evidence = Identity & {
 	revision: number;
 	predicates: { until: string; state: "pending" | "satisfied" | "failed" | "cancelled" | "missing" }[];
+	health?: HealthEvidence;
 };
 export interface BackgroundTerminalResult {
 	metadata: { id: string; producer: string; execution: string; revision: string; status: "success" | "failure" | "cancelled"; title: string; reference: string; warnings: string[] };
@@ -18,6 +27,7 @@ type Snapshot = {
 	id: string;
 	sessionId?: string;
 	status: string;
+	pid?: number;
 	terminationReason?: string;
 	title?: string;
 	command?: string;
@@ -28,6 +38,45 @@ type Snapshot = {
 	flow?: { version: 1; execution: string; scope?: Scope; work?: Work; result?: BackgroundTerminalResult };
 };
 const sameScope = (a: Scope | undefined, b: Scope) => a?.sessionId === b.sessionId && a?.branchId === b.branchId;
+
+/**
+ * The one health policy this producer can support truthfully. A task's output stream proves only
+ * that it is emitting, and a quiet phase is not a fault, so nothing here claims progress: this
+ * reports whether the spawned process still exists. That is exactly what catches an exit this
+ * extension missed, and nothing more.
+ */
+const PROCESS_ALIVE = {
+	name: "bg-process-alive-v1",
+	evidence: "background task process id",
+	freshnessMs: 120_000,
+	probeTimeoutMs: 5_000,
+	graceMs: 30_000,
+	cadenceMs: 60_000,
+};
+const usablePid = (task: Snapshot) => Number.isSafeInteger(task.pid) && (task.pid as number) > 0;
+/** EPERM means the process exists and is not ours; only a missing process is evidence of death. */
+function processAlive(pid: number): boolean {
+	try {
+		process.kill(pid, 0);
+		return true;
+	} catch (error) {
+		return (error as NodeJS.ErrnoException)?.code === "EPERM";
+	}
+}
+function livenessEvidence(task: Snapshot, now: number): HealthEvidence | undefined {
+	if (task.status !== "running" || !usablePid(task)) return undefined;
+	const alive = processAlive(task.pid as number);
+	return {
+		policy: PROCESS_ALIVE.name,
+		// The check is the evidence, so its revision is when it ran. A repeated check reports again
+		// rather than replaying, which is what lets a probe refresh a quiet task's liveness.
+		revision: now,
+		observedAt: now,
+		state: alive ? "healthy" : "unhealthy",
+		marker: String(task.pid),
+		...(alive ? {} : { detail: `process ${task.pid} is gone while the task is still running` }),
+	};
+}
 
 /** Bind the existing task snapshot owner to Jouzu's execution subscription protocol. */
 export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
@@ -58,10 +107,12 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 								: "missing"
 							: undefined;
 		if (!state) throw new Error("Background execution has an unsupported status.");
+		const health = livenessEvidence(task, Date.now());
 		return {
 			...structuredClone(identity),
 			revision: state === "pending" ? 1 : 2,
 			predicates: [{ until: "exit", state }],
+			...(health ? { health } : {}),
 		};
 	}
 	return {
@@ -198,6 +249,13 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 						listeners.delete(listener);
 						owned.delete(listener);
 					};
+				},
+				healthPolicies(identity: Identity) {
+					assertIdentity(identity);
+					const task = [...list()].find(task => task.id === identity.handle && task.flow?.execution === identity.execution && sameScope(task.flow.scope, identity.scope));
+					// Only offer the policy where the check can actually run. A restored task with no
+					// usable process id would otherwise accept a policy it could never report on.
+					return task && task.status === "running" && usablePid(task) ? [{ ...PROCESS_ALIVE }] : [];
 				},
 				canRetireExecution(identity: Identity): boolean {
 					assertIdentity(identity);
