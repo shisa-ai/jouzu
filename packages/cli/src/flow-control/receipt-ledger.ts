@@ -622,10 +622,17 @@ export class FlowReceiptLedger {
 	 * Drop settled and cancelled attempts, folding their replay fences, iteration counts, and
 	 * producer round into the carried summary. Keeps the most recent settled attempts addressable.
 	 */
-	retire(keep = 32): Promise<number> {
+	retire(
+		keep = 32,
+		protectedMembers: ReadonlySet<string> = new Set(),
+		assertCurrent: () => void = () => {},
+	): Promise<number> {
 		if (!Number.isSafeInteger(keep) || keep < 0) throw new FlowLedgerError("capacity", "Invalid retention window.");
 		return this.mutate((state) => {
-			const retiring = retirableAttempts(state, keep);
+			const retiring = retirableAttempts(state, keep).filter(
+				(attempt) => !attempt.members.some((member) => protectedMembers.has(member.id)),
+			);
+			assertCurrent();
 			if (!retiring.length) return 0;
 			const ids = new Set(retiring.map((attempt) => attempt.id));
 			state.retiredAttempts = foldRetiredAttempts(state.retiredAttempts ?? emptyRetiredAttempts(), state, retiring);

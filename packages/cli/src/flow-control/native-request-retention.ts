@@ -1,4 +1,4 @@
-import type { NativeRequest } from "./native-request-store.js";
+import { type NativeRequest, nativeRequestHeld } from "./native-request-store.js";
 
 /** Successful per-input evidence, independent of its position in a later request. */
 function observations(request: NativeRequest): string[] | undefined {
@@ -69,4 +69,44 @@ export function supersededNativeRequests(records: readonly NativeRequest[]): str
 		}
 	}
 	return removed.reverse();
+}
+
+/**
+ * Bound evidence that no later success can supersede. A request whose input is unique is the only
+ * record that the input reached the model, so it is never redundant and `supersededNativeRequests`
+ * keeps it forever; a session whose turns each carry new input therefore walks to the store's
+ * record limit and holds all work. History past `keep` is retired oldest first, but only where
+ * dropping it cannot remove evidence something live still reads:
+ *
+ * - unresolved requests, and any request still held for input or context, stay;
+ * - a request linked to a retry, in either direction, stays with its partner;
+ * - a request observing an operation that still owns a retained submission stays, so every live
+ *   submission keeps a complete request view.
+ *
+ * The store records a compact identity fence for each retirement, so a retired id cannot be reused.
+ */
+export function retirableNativeRequests(
+	records: readonly NativeRequest[],
+	keep: number,
+	liveOperations: ReadonlySet<string>,
+	protectedRequestIds: ReadonlySet<string> = new Set(),
+): string[] {
+	const linked = new Set(
+		records.flatMap((record) =>
+			[record.retryOf, record.retryAuthorization?.requestId].filter((id): id is string => !!id),
+		),
+	);
+	const retirable = records.filter(
+		(record) =>
+			record.outcome === "success" &&
+			!protectedRequestIds.has(record.id) &&
+			((!record.sourceCapture?.members.length && !record.projectionCapture?.members.length) ||
+				observations(record) !== undefined) &&
+			!nativeRequestHeld(record) &&
+			!record.retryOf &&
+			!record.retryAuthorization &&
+			!linked.has(record.id) &&
+			!(record.sourceCapture?.members ?? []).some((source) => liveOperations.has(source.operationId)),
+	);
+	return retirable.slice(0, Math.max(0, retirable.length - keep)).map((record) => record.id);
 }

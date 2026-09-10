@@ -16,7 +16,7 @@ import type { FlowNativeInput, RetainedSubmission } from "./submission-store.js"
 import { captureUserWorkParticipants, consumedUserWork, userWorkId } from "./user-work.js";
 import { finishedUserWork } from "./user-work-retention.js";
 import type { FlowWorkStatus } from "./wait-authority.js";
-import { createFlowWaitDecisionProducer, observedFlowWaits } from "./wait-decisions.js";
+import { createFlowWaitDecisionProducer, observedFlowWaits, retainedWaitDecisionIds } from "./wait-decisions.js";
 import type { FlowWaitState } from "./wait-state.js";
 
 import { FlowWorkContext } from "./work-context.js";
@@ -215,7 +215,34 @@ export class PiFlowSessionService {
 				if (this.branch() !== branch) throw new FlowLedgerError("stale", "Request retirement branch changed.");
 				if ((await branch.attachment.ledger.snapshot()).activeAttemptId)
 					throw new FlowLedgerError("busy", "Request retirement requires settled controller work.");
-				return branch.attachment.nativeRequests.retireSuperseded();
+				// Snapshotting producers reconciles delivery and observation before receipt evidence is removed.
+				const references = await branch.controller.retentionReferences();
+				const superseded = await branch.attachment.nativeRequests.retireSuperseded();
+				// Evidence for input no later request repeats is never superseded, so bound it by age
+				// instead. Operations owning a retained submission are excluded, which keeps every
+				// live submission's request view complete.
+				const live = new Set(
+					(await branch.attachment.submissions.snapshot(false))
+						.map((record) => record.dispatch?.operationId)
+						.filter((id): id is string => !!id),
+				);
+				const waits = await branch.attachment.waits.snapshot();
+				const protectedRequests = new Set<string>();
+				for (const request of await branch.attachment.nativeRequests.snapshot()) {
+					const messages = (request.projectionCapture?.members ?? []).map((member) => member.message);
+					const serialized = JSON.stringify(messages);
+					if (
+						branch.controller.observationProjections(messages).length ||
+						waits.some((wait) => serialized.includes(wait.token))
+					)
+						protectedRequests.add(request.id);
+				}
+				return (
+					superseded +
+					(await branch.attachment.nativeRequests.retireHistory(undefined, live, protectedRequests, () =>
+						references.assertCurrent(),
+					))
+				);
 			});
 			if (result.kind === "busy") throw new FlowLedgerError("busy", "Request retirement requires an idle session.");
 			return result.value;
@@ -230,25 +257,34 @@ export class PiFlowSessionService {
 				if (this.branch() !== branch) throw new FlowLedgerError("stale", "Ledger retirement branch changed.");
 				if ((await branch.attachment.ledger.snapshot()).activeAttemptId)
 					throw new FlowLedgerError("busy", "Ledger retirement requires settled controller work.");
-				return branch.attachment.ledger.retire(keep);
+				const references = await branch.controller.retentionReferences();
+				const protectedMembers = retainedWaitDecisionIds(await branch.attachment.waits.snapshot());
+				for (const id of references.resultIds) protectedMembers.add(JSON.parse(id)[1]);
+				return branch.attachment.ledger.retire(keep, protectedMembers, () => references.assertCurrent());
 			});
 			if (result.kind === "busy") throw new FlowLedgerError("busy", "Ledger retirement requires an idle session.");
 			return result.value;
 		});
 	}
 
-	/**
-	 * Free result and branch capacity. Both stores accumulate one record per composed result wake
-	 * and per branch navigation, and neither pruned anything, so a long session reached their limits
-	 * and held every later result. Retired manifests and branch records are history: the newest
-	 * remain readable, and the registry keeps proof that navigation happened.
-	 */
+	/** Preserve live manifest references while retiring unreferenced result history and branch ancestry. */
 	retireResultHistory(keepManifests?: number, keepBranches?: number) {
 		return this.registry.run(async () => {
 			const branch = this.branch();
 			const result = await branch.host.atIdle(async () => {
 				if (this.branch() !== branch) throw new FlowLedgerError("stale", "Result retirement branch changed.");
-				const manifests = await branch.attachment.results.retire(keepManifests);
+				const references = await branch.controller.retentionReferences();
+				const retained = JSON.stringify([
+					this.session.messages,
+					await branch.attachment.ledger.snapshot(),
+					await branch.attachment.submissions.snapshot(),
+				]);
+				const manifests = await branch.attachment.results.retire(
+					keepManifests,
+					new Set(retained.match(/flow-results:[a-f0-9]{64}/g) ?? []),
+					references.resultIds,
+					() => references.assertCurrent(),
+				);
 				return manifests + (await this.registry.retireBranchHistory(keepBranches));
 			});
 			if (result.kind === "busy") throw new FlowLedgerError("busy", "Result retirement requires an idle session.");

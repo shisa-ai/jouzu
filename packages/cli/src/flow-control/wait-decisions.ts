@@ -30,6 +30,15 @@ function descriptor(wait: FlowWaitState): FlowIntent | undefined {
 	};
 }
 
+export function retainedWaitDecisionIds(waits: readonly FlowWaitState[]): Set<string> {
+	return new Set(
+		waits.flatMap((wait) => {
+			const intent = descriptor(wait);
+			return intent ? [intent.id] : [];
+		}),
+	);
+}
+
 function decisionText(wait: FlowWaitState): string {
 	return JSON.stringify({
 		wait: {

@@ -77,11 +77,24 @@ test("a blocked lane holds its continuation across idle maintenance", async (t) 
 	const before = f.bodies.length;
 
 	// Idle maintenance runs the full retirement pass; it must not release held work or the wait.
-	await f.ingress.retireWaitHistory(true);
-	await f.ingress.archiveSubmissionHistory();
-	await f.ingress.retireRequestHistory();
-	await f.ingress.retireLedgerHistory();
-	await f.ingress.retireResultHistory();
+	for (const retire of [
+		() => f.ingress.retireWaitHistory(true),
+		() => f.ingress.archiveSubmissionHistory(),
+		() => f.ingress.retireRequestHistory(),
+		() => f.ingress.retireLedgerHistory(),
+		() => f.ingress.retireResultHistory(),
+	]) {
+		const deadline = Date.now() + 5000;
+		for (;;) {
+			try {
+				await retire();
+				break;
+			} catch (error) {
+				if (!["stale", "busy"].includes(error.code) || Date.now() >= deadline) throw error;
+				await settle();
+			}
+		}
+	}
 	await settle();
 
 	assert.equal(f.bodies.length, before, "maintenance sends no continuation for the blocked lane");

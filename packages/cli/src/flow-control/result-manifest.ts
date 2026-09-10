@@ -151,20 +151,35 @@ export class FlowResultManifestStore {
 			}, BACKGROUND_CONTEXT),
 		);
 	}
-	/**
-	 * Drop the oldest manifests past `keep`, so a long session cannot reach the retention limit and
-	 * hold every later result. A page request for a retired reference fails the same way a foreign
-	 * one does, rather than returning partial membership. Returns how many were retired.
-	 */
-	retire(keep = 32): Promise<number> {
+	/** Retire unreferenced manifests past the history window; live references take priority over its size. */
+	retire(
+		keep = 32,
+		protectedReferences: ReadonlySet<string> = new Set(),
+		protectedResults: ReadonlySet<string> = new Set(),
+		assertCurrent: () => void = () => {},
+	): Promise<number> {
 		if (!Number.isSafeInteger(keep) || keep < 1)
 			return Promise.reject(new FlowLedgerError("capacity", "Invalid result manifest retention size."));
 		return this.ownership.run(() =>
 			this.session.mutate(async (mutation, context) => {
 				const header = await this.header(mutation);
-				const excess = header.manifests.length - keep;
-				if (excess < 1) return 0;
-				const dropped = header.manifests.splice(0, excess);
+				const candidates = [];
+				for (const entry of header.manifests) {
+					if (protectedReferences.has(referenceFor(entry.id))) continue;
+					const manifest = await this.read(mutation, entry);
+					if (
+						manifest.members.some((member) =>
+							protectedResults.has(JSON.stringify([member.producer, member.id, member.revision])),
+						)
+					)
+						continue;
+					candidates.push(entry);
+				}
+				const dropped = candidates.slice(0, Math.max(0, candidates.length - keep));
+				assertCurrent();
+				if (!dropped.length) return 0;
+				const ids = new Set(dropped.map((entry) => entry.id));
+				header.manifests = header.manifests.filter((entry) => !ids.has(entry.id));
 				header.retired = (header.retired ?? 0) + dropped.length;
 				await mutation.commit(
 					[...dropped.map((entry) => deleteValue(address(entry.id))), setValue(headerAddress, header)],

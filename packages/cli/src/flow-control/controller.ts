@@ -228,13 +228,21 @@ export class SessionFlowController {
 		return items;
 	}
 	/** Read producer work references without dispatch; callers must recheck before committing retirement. */
-	async retentionReferences(): Promise<{ workIds: Set<string>; assertCurrent(): void }> {
+	async retentionReferences(): Promise<{ workIds: Set<string>; resultIds: Set<string>; assertCurrent(): void }> {
 		this.assertActive();
 		const revision = this.revision,
 			signal = this.interruption.signal;
-		const workIds = new Set<string>();
+		const workIds = new Set<string>(),
+			resultIds = new Set<string>();
 		for (const producer of this.producers.values()) {
-			for (const intent of await this.descriptors(producer, signal)) if (intent.workId) workIds.add(intent.workId);
+			for (const intent of await this.descriptors(producer, signal).catch((error) => {
+				if (signal.aborted || revision !== this.revision)
+					throw new FlowLedgerError("stale", "Producer state changed during retention.");
+				throw error;
+			})) {
+				if (intent.workId) workIds.add(intent.workId);
+				if (intent.rank === 6) resultIds.add(JSON.stringify([intent.producer, intent.id, intent.revision]));
+			}
 			const retained = producer.retainedWorkIds?.() ?? [];
 			if (
 				!Array.isArray(retained) ||
@@ -250,7 +258,7 @@ export class SessionFlowController {
 				throw new FlowLedgerError("stale", "Producer state changed during retention.");
 		};
 		assertCurrent();
-		return { workIds, assertCurrent };
+		return { workIds, resultIds, assertCurrent };
 	}
 
 	/** Capture only producer-validated tool output already present in the final native context. */

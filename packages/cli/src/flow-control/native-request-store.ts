@@ -1,7 +1,7 @@
 import { BACKGROUND_CONTEXT, deleteValue, type Session, setValue, value } from "@earendil-works/pi-agent-core";
 import { type NativeProjectionCapture, validateNativeProjections } from "./native-context-projections.js";
 import { nativePayloadOverlap, validNativeBlockPosition } from "./native-payload-position.js";
-import { supersededNativeRequests } from "./native-request-retention.js";
+import { retirableNativeRequests, supersededNativeRequests } from "./native-request-retention.js";
 import type { FlowOwnership } from "./ownership.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import { retiredIdentityHash } from "./retired-identities.js";
@@ -524,6 +524,32 @@ export class FlowNativeRequestStore {
 			if (this.requiresRecovery(records) || records.some((record) => record.outcome === undefined))
 				throw new FlowLedgerError("busy", "Request history retirement requires settled requests.");
 			const selected = new Set(supersededNativeRequests(records));
+			if (retired.length + selected.size > MAX_RETIRED_NATIVE_REQUESTS)
+				throw new FlowLedgerError("capacity", "Retired request history is full; no receipts were removed.");
+			retired.push(...[...selected].map(requestIdentity));
+			const remaining = records.filter((record) => !selected.has(record.id));
+			records.splice(0, records.length, ...remaining);
+			return selected.size;
+		});
+	}
+	/**
+	 * Bound history that no later success supersedes. `liveOperations` names the operations that
+	 * still own a retained submission, whose request views must stay complete.
+	 */
+	retireHistory(
+		keep = 64,
+		liveOperations: ReadonlySet<string> = new Set(),
+		protectedRequestIds: ReadonlySet<string> = new Set(),
+		assertCurrent: () => void = () => {},
+	): Promise<number> {
+		if (!Number.isSafeInteger(keep) || keep < 1)
+			return Promise.reject(new FlowLedgerError("capacity", "Invalid native request retention size."));
+		return this.transact((records, retired) => {
+			if (this.requiresRecovery(records))
+				throw new FlowLedgerError("busy", "Request history retirement requires settled requests.");
+			const selected = new Set(retirableNativeRequests(records, keep, liveOperations, protectedRequestIds));
+			if (!selected.size) return 0;
+			assertCurrent();
 			if (retired.length + selected.size > MAX_RETIRED_NATIVE_REQUESTS)
 				throw new FlowLedgerError("capacity", "Retired request history is full; no receipts were removed.");
 			retired.push(...[...selected].map(requestIdentity));

@@ -44,8 +44,7 @@ const payload = (record, disposition = "included") => ({
 	sources: record.sourceCapture.members.map(({ index }) => ({
 		sourceIndex: index,
 		disposition,
-		index,
-		contentHash: hash,
+		...(disposition === "included" ? { index, contentHash: hash } : {}),
 	})),
 });
 const successful = (id, operations) => {
@@ -100,6 +99,35 @@ async function complete(store, id, operations = ["input"], outcome = "success", 
 	await store.handoff(id, payload(record, disposition));
 	await store.finish(id, outcome);
 }
+
+test("history retirement bounds unique successes while preserving live and incomplete evidence across reopen", async (t) => {
+	const f = await fixture(t);
+	await complete(f.store, "live", ["live-operation"]);
+	await complete(f.store, "observed", ["observed-operation"]);
+	await complete(f.store, "failed", ["failed-operation"], "failure");
+	await complete(f.store, "omitted", ["omitted-operation"], "success", "unresolved");
+	for (let i = 0; i < 8; i++) await complete(f.store, `unique-${i}`, [`operation-${i}`]);
+	assert.equal(await f.store.retireHistory(2, new Set(["live-operation"]), new Set(["observed"])), 6);
+	const ids = ["live", "observed", "failed", "omitted", "unique-6", "unique-7"];
+	assert.deepEqual(
+		(await f.store.snapshot()).map((record) => record.id),
+		ids,
+	);
+	await f.reopen();
+	assert.deepEqual(
+		(await f.store.snapshot()).map((record) => record.id),
+		ids,
+	);
+	await assert.rejects(f.store.begin(input("unique-0")), { code: "stale" });
+	const before = await f.store.snapshot();
+	await assert.rejects(
+		f.store.retireHistory(1, new Set(), new Set(), () => {
+			throw new Error("stale references");
+		}),
+		/stale references/,
+	);
+	assert.deepEqual(await f.store.snapshot(), before);
+});
 
 test("retention preserves distinct input identities, unique observations, failures, and retry chains", () => {
 	const a = successful("a", ["first"]),

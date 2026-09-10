@@ -212,6 +212,28 @@ test("result tool pages retained membership without acknowledgement and fences b
 	await assert.rejects(invoke({ reference }), { code: "scope" });
 });
 
+test("manifest retirement protects referenced and pending results and rejects stale retention snapshots", async (t) => {
+	const { store } = await memory(t);
+	const referenced = await store.retain([member("referenced")]);
+	const pending = await store.retain([member("pending")]);
+	const old = await store.retain([member("old")]);
+	const newest = await store.retain([member("newest")]);
+	const references = new Set([referenced]);
+	const results = new Set([JSON.stringify(["worker", "pending", "1"])]);
+	await assert.rejects(
+		store.retire(1, references, results, () => {
+			throw new Error("stale references");
+		}),
+		/stale references/,
+	);
+	assert.equal((await store.page(old, pageOptions)).members[0].id, "old");
+	assert.equal(await store.retire(1, references, results), 1);
+	for (const reference of [referenced, pending, newest])
+		assert.equal((await store.page(reference, pageOptions)).total, 1);
+	await assert.rejects(store.page(old, pageOptions), { code: "identity" });
+	assert.equal(await store.retire(1), 2, "released references become eligible for retirement");
+});
+
 test("manifest retirement frees the limit and keeps the newest references readable", async (t) => {
 	const { store } = await memory(t, { maxManifests: 6, maxMembers: 32, maxBytes: 512 * 1024 });
 	const references = [];
