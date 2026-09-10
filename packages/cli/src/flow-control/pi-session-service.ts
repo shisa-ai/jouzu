@@ -391,6 +391,24 @@ export class PiFlowSessionService {
 		});
 	}
 
+	/**
+	 * Change a campaign's lifecycle on the user's behalf. The owner and revision are looked up rather
+	 * than supplied, so a user cannot pause or stop work by guessing whose it is. Stopping also ends
+	 * that work's live waits, and neither control stops the underlying job.
+	 */
+	changeWorkStatus(id: string, status: FlowWorkStatus, reason: string, now: number) {
+		return this.registry.run(async () => {
+			const waits = this.branch().attachment.waits;
+			const work = (await waits.authoritySnapshot()).work.find((record) => record.id === id);
+			if (!work) throw new FlowLedgerError("identity", "No registered work has that identity.");
+			const current = work.lifecycle?.state ?? "active";
+			if (current === status) return work;
+			if (["stopped", "completed"].includes(current))
+				throw new FlowLedgerError("transition", `Work is already ${current} and cannot change again.`);
+			return waits.changeWork(id, work.owner, work.revision, status, reason, now);
+		});
+	}
+
 	changeWork(id: string, owner: string, revision: number, status: FlowWorkStatus, reason: string, now: number) {
 		return this.registry.run(() => this.branch().attachment.waits.changeWork(id, owner, revision, status, reason, now));
 	}

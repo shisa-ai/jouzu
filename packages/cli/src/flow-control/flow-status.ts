@@ -33,12 +33,20 @@ export interface FlowUnaccountableWork {
 	producer: string;
 	description: string;
 }
+/** Work a user has held or retired, which produces no automated turns until that changes. */
+export interface FlowSuspendedWork {
+	id: string;
+	owner: string;
+	state: "paused" | "stopped";
+	reason: string;
+}
 export interface FlowStatus {
 	version: 1;
 	scope: FlowScope;
 	held: FlowHeldInput[];
 	retryable: FlowRetryableRequest[];
 	waiting: FlowBlockedWait[];
+	suspended: FlowSuspendedWork[];
 	unaccountable: FlowUnaccountableWork[];
 }
 
@@ -81,7 +89,28 @@ export function projectFlowStatus(
 			expiresAt: wait.expiresAt,
 			unmet: wait.unmet.length,
 		}));
-	return { version: 1, scope: { ...scope }, held, retryable, waiting, unaccountable: [...unaccountable] };
+	// A completed campaign is finished rather than held, so only paused and stopped work is listed.
+	const suspended = work.flatMap((record) =>
+		record.lifecycle && ["paused", "stopped"].includes(record.lifecycle.state)
+			? [
+					{
+						id: record.id,
+						owner: record.owner,
+						state: record.lifecycle.state as FlowSuspendedWork["state"],
+						reason: record.lifecycle.reason,
+					},
+				]
+			: [],
+	);
+	return {
+		version: 1,
+		scope: { ...scope },
+		held,
+		retryable,
+		waiting,
+		suspended,
+		unaccountable: [...unaccountable],
+	};
 }
 
 const duration = (milliseconds: number): string => {
@@ -116,6 +145,11 @@ export function formatFlowStatus(status: FlowStatus, now: number): string {
 			lines.push(`- ${request.requestId} (${request.reason})`);
 			lines.push(`  retry with: /flow retry ${request.requestId}`);
 		}
+	}
+	if (status.suspended.length) {
+		if (lines.length) lines.push("");
+		lines.push("Held work");
+		for (const item of status.suspended) lines.push(`- ${item.owner} ${item.id}: ${item.state} (${item.reason})`);
 	}
 	if (status.unaccountable.length) {
 		if (lines.length) lines.push("");

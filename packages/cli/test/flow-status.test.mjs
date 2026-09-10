@@ -135,3 +135,34 @@ test("the rendered status names the deadline and the retry command", () => {
 	assert.deepEqual(stranded.unaccountable, [{ producer: "multiloop", description: "lane sweep (run)" }]);
 	assert.match(formatFlowStatus(stranded, 0), /Not accounted for in this session\n- multiloop: lane sweep \(run\)/);
 });
+
+test("held work is listed with the reason it was held, and finished work is not", () => {
+	const work = (id, state, reason) => ({
+		id,
+		owner: "multiloop",
+		participants: [],
+		revision: 2,
+		createdAt: 0,
+		...(state ? { lifecycle: { state, changedAt: 10, reason } } : {}),
+	});
+	const status = projectFlowStatus(
+		scope,
+		[],
+		[],
+		[
+			work("sweep", "paused", "Set paused from /flow."),
+			work("retired", "stopped", "Set stopped from /flow."),
+			// A completed campaign is finished, not held; an active one needs no mention.
+			work("finished", "completed", "done"),
+			work("running"),
+		],
+	);
+	assert.deepEqual(status.suspended, [
+		{ id: "sweep", owner: "multiloop", state: "paused", reason: "Set paused from /flow." },
+		{ id: "retired", owner: "multiloop", state: "stopped", reason: "Set stopped from /flow." },
+	]);
+	const text = formatFlowStatus(status, 0);
+	assert.match(text, /Held work\n- multiloop sweep: paused \(Set paused from \/flow\.\)/);
+	assert.equal(text.includes("finished"), false);
+	assert.equal(text.includes("running"), false);
+});

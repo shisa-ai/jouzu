@@ -69,3 +69,62 @@ test("a lane from an earlier session in the same process does not break the next
 	assert.equal(sent.length, 1, "and no continuation is sent for it");
 	assert.ok(sent[0].includes("hello"));
 });
+
+test("pausing a campaign holds its turns and resuming releases them", async (t) => {
+	const f = await assembledSession(t, {
+		producerExtensions: await installedProducerExtensions(),
+		script: campaignScript({ command: "sleep 0.3 && echo swept", goal: "Pause and resume" }),
+	});
+	await f.session.prompt("start the sweep and wait");
+	const wait = await liveWait(f.ingress, "the campaign is live");
+
+	await f.session.prompt(`/flow pause ${wait.workId}`);
+	await settle();
+	const paused = (await f.ingress.branch().attachment.waits.authoritySnapshot()).work.find(
+		(record) => record.id === wait.workId,
+	);
+	assert.equal(paused?.lifecycle?.state, "paused");
+	assert.match(paused.lifecycle.reason, /\/flow/);
+	// Pausing holds automated turns; it does not cancel the wait or stop the job.
+	assert.equal((await f.ingress.branch().attachment.waits.snapshot())[0].state, "waiting");
+	const held = f.bodies.length;
+	await new Promise((resolve) => setTimeout(resolve, 900));
+	assert.equal(f.bodies.length, held, "a paused campaign produces no automated turn when its job ends");
+
+	await f.session.prompt(`/flow resume ${wait.workId}`);
+	await settle();
+	assert.equal(
+		(await f.ingress.branch().attachment.waits.authoritySnapshot()).work.find((r) => r.id === wait.workId)?.lifecycle
+			?.state,
+		"active",
+	);
+	assert.deepEqual(f.errors, []);
+});
+
+test("stopping a campaign cancels its waits and refuses a second transition", async (t) => {
+	const f = await assembledSession(t, {
+		producerExtensions: await installedProducerExtensions(),
+		script: campaignScript({ goal: "Stop it" }),
+	});
+	await f.session.prompt("start the sweep and wait");
+	const wait = await liveWait(f.ingress, "the campaign is live");
+
+	await f.session.prompt(`/flow stop ${wait.workId}`);
+	await settle();
+	// Stopping cancels the work's live waits, and idle maintenance then retires the ended records, so
+	// the observable end state is that no gate remains for it.
+	assert.deepEqual(await f.ingress.branch().attachment.waits.snapshot(), [], "stopping work ends the gate it owns");
+	const stopped = (await f.ingress.branch().attachment.waits.authoritySnapshot()).work.find(
+		(record) => record.id === wait.workId,
+	);
+	assert.equal(stopped?.lifecycle?.state, "stopped");
+
+	// Stopped work is terminal: pausing or resuming it afterwards is refused rather than silently
+	// reopening a retired campaign.
+	await assert.rejects(f.ingress.changeWorkStatus(wait.workId, "paused", "late"), { code: "transition" });
+	await assert.rejects(f.ingress.changeWorkStatus(wait.workId, "active", "late"), { code: "transition" });
+	await assert.rejects(f.ingress.changeWorkStatus("no-such-work", "paused", "late"), { code: "identity" });
+	// Repeating the same state is a no-op rather than an error, so the control is idempotent.
+	assert.equal((await f.ingress.changeWorkStatus(wait.workId, "stopped", "again")).lifecycle.state, "stopped");
+	assert.deepEqual(f.errors, []);
+});
