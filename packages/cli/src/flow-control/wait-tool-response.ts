@@ -16,7 +16,11 @@ export function waitToolResponse(wait: FlowWaitState) {
 		state: wait.state,
 		reason: wait.reason,
 		expiresAt: wait.expiresAt,
-		health: "deadline-only",
+		...(wait.checkAt === undefined ? {} : { checkAt: wait.checkAt }),
+		// Named per dependency so a reader can tell which handles are monitored and which are not.
+		health: wait.on.some((handle) => handle.health)
+			? wait.on.map((handle) => ({ handle: handle.handle, policy: handle.health ?? "deadline-only" }))
+			: "deadline-only",
 		unmet: wait.unmet,
 	};
 	return { content: [{ type: "text" as const, text: JSON.stringify(details) }], details };

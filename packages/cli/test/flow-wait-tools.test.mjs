@@ -14,7 +14,15 @@ import { createFlowWaitExtension, FLOW_WAIT_GUIDANCE } from "../dist/flow-contro
 
 const handle = { producer: "bg", handle: "bg-1", execution: "exec-1", until: "exit" };
 const request = () => ({ work: "work", reason: "process must exit", deadline: "8h", on: [handle] });
-async function fixture(t, snapshot) {
+const policy = {
+	name: "sweep-progress-v1",
+	evidence: "sweep step counter",
+	freshnessMs: 60_000,
+	probeTimeoutMs: 5_000,
+	graceMs: 10_000,
+	cadenceMs: 30_000,
+};
+async function fixture(t, snapshot, healthPolicies) {
 	const root = await mkdtemp(join(tmpdir(), "jouzu-wait-tools-"));
 	let attachment,
 		active = true,
@@ -74,6 +82,7 @@ async function fixture(t, snapshot) {
 				await snapshot?.();
 				return { ...identity, revision: state === "pending" ? 1 : 2, predicates: [{ until: "exit", state }] };
 			},
+			...(healthPolicies ? { healthPolicies } : {}),
 		},
 		(error) => errors.push(error),
 	);
@@ -270,4 +279,61 @@ test("multiloop wait skill patch is pinned, idempotent, and rejects changed sour
 	await writeFile(join(directory, skillPath), `${content}\nchanged`);
 	await assert.rejects(applyMultiloopWaitSkill(directory), /hash differs/);
 	assert.equal(await readFile(join(directory, skillPath), "utf8"), `${content}\nchanged`);
+});
+
+test("a declared policy is accepted, reported per dependency, and bounds its expected check", async (t) => {
+	const f = await fixture(t, undefined, () => [policy]);
+	const monitored = { ...handle, health: "sweep-progress-v1" };
+	const result = await f.call("agent_wait", {
+		...request(),
+		deadline: "4s",
+		checkAfter: "1s",
+		on: [monitored],
+	});
+	assert.equal(result.details.state, "waiting");
+	assert.equal(result.details.checkAt, f.now + 1000);
+	// Health is named per dependency so a reader can tell which handles are monitored.
+	assert.deepEqual(result.details.health, [{ handle: "bg-1", policy: "sweep-progress-v1" }]);
+	const [wait] = await f.attachment.waits.snapshot();
+	assert.equal(wait.on[0].health, "sweep-progress-v1");
+	assert.equal(wait.checkAt, f.now + 1000);
+});
+
+test("an unregistered policy is refused before any producer subscription is parked", async (t) => {
+	const f = await fixture(t, undefined, () => [policy]);
+	await assert.rejects(f.call("agent_wait", { ...request(), on: [{ ...handle, health: "heartbeat-v1" }] }), {
+		code: "identity",
+		message: /not registered for this execution/,
+	});
+	// The contract requires an unsupported handle to fail without parking; a leaked subscription
+	// would otherwise outlive the refused declaration.
+	assert.equal(f.listeners.size, 0);
+	assert.deepEqual(await f.attachment.waits.snapshot(), []);
+});
+
+test("a producer that declares no policy keeps its waits deadline-only", async (t) => {
+	const f = await fixture(t);
+	await assert.rejects(f.call("agent_wait", { ...request(), on: [{ ...handle, health: "sweep-progress-v1" }] }), {
+		code: "identity",
+	});
+	// An expected check has nothing to reconcile without a monitored dependency.
+	await assert.rejects(f.call("agent_wait", { ...request(), deadline: "4s", checkAfter: "1s" }), {
+		code: "identity",
+		message: /expected check requires a dependency/,
+	});
+	const result = await f.call("agent_wait", request());
+	assert.equal(result.details.health, "deadline-only");
+	assert.equal(result.details.checkAt, undefined);
+});
+
+test("an invalid policy definition is rejected rather than trusted from the producer", async (t) => {
+	const f = await fixture(t, undefined, () => [{ ...policy, cadenceMs: 120_000 }]);
+	await assert.rejects(f.call("agent_wait", { ...request(), on: [{ ...handle, health: "sweep-progress-v1" }] }), {
+		code: "schema",
+	});
+	const duplicate = await fixture(t, undefined, () => [policy, { ...policy, evidence: "other" }]);
+	await assert.rejects(
+		duplicate.call("agent_wait", { ...request(), on: [{ ...handle, health: "sweep-progress-v1" }] }),
+		{ code: "identity" },
+	);
 });

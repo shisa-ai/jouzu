@@ -2,6 +2,7 @@ import { isDeepStrictEqual } from "node:util";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import { type FlowAuthorityExecution, requireAuthorityWork } from "./wait-authority.js";
 import { type FlowWaitClock, systemWaitClock } from "./wait-deadlines.js";
+import { type FlowHealthPolicy, validateFlowHealthPolicy } from "./wait-health.js";
 import type { FlowWaitStore } from "./wait-store.js";
 
 export interface FlowExecutionIdentity {
@@ -20,6 +21,12 @@ export interface FlowWaitExecutionSource {
 	/** Install the local listener synchronously, before snapshot inspection starts. */
 	subscribe(identity: FlowExecutionIdentity, changed: (evidence: FlowExecutionEvidence) => void): () => void;
 	snapshot(identity: FlowExecutionIdentity, signal: AbortSignal): Promise<FlowExecutionEvidence>;
+	/**
+	 * Health policies this producer supports for the given execution. Absent or empty means the
+	 * producer offers no liveness evidence, so waits on it are deadline-only. The host never invents
+	 * a policy: a wait may request only what is returned here for that exact execution.
+	 */
+	healthPolicies?(identity: FlowExecutionIdentity): FlowHealthPolicy[];
 	/** True only when terminal output is observed or explicitly disposed in the producer's durable state. */
 	canRetireExecution?(identity: FlowExecutionIdentity): boolean;
 	close?(): void | Promise<void>;
@@ -33,6 +40,7 @@ interface ProducerRegistration {
 	flushExecution(execution: string): Promise<boolean>;
 	closeExecution(execution: string): Promise<boolean>;
 	canRetireExecution(identity: FlowExecutionIdentity): boolean;
+	healthPolicies(identity: FlowExecutionIdentity): FlowHealthPolicy[];
 	close(): Promise<void>;
 }
 
@@ -79,6 +87,7 @@ export class FlowWaitProducerRegistry {
 			typeof source.subscribe !== "function" ||
 			typeof source.snapshot !== "function" ||
 			(source.canRetireExecution !== undefined && typeof source.canRetireExecution !== "function") ||
+			(source.healthPolicies !== undefined && typeof source.healthPolicies !== "function") ||
 			(source.close !== undefined && typeof source.close !== "function") ||
 			typeof onError !== "function"
 		)
@@ -89,11 +98,22 @@ export class FlowWaitProducerRegistry {
 		const subscribe = source.subscribe.bind(source),
 			snapshot = source.snapshot.bind(source),
 			closeSource = source.close?.bind(source),
-			canRetire = source.canRetireExecution?.bind(source);
+			canRetire = source.canRetireExecution?.bind(source),
+			policies = source.healthPolicies?.bind(source);
 		const bindings = new Map<string, ExecutionBinding>();
 		let closed = false;
 		let closing: Promise<void> | undefined;
 		const registration = {
+			healthPolicies: (identity: FlowExecutionIdentity) => {
+				const declared = policies?.(structuredClone(identity)) ?? [];
+				if (!Array.isArray(declared)) throw new FlowLedgerError("schema", "Health policies must be a list.");
+				if (declared.length > 16)
+					throw new FlowLedgerError("capacity", "An execution declares too many health policies.");
+				const validated = declared.map((policy) => validateFlowHealthPolicy(policy));
+				if (new Set(validated.map((policy) => policy.name)).size !== validated.length)
+					throw new FlowLedgerError("identity", "Health policy names must be unique for an execution.");
+				return validated;
+			},
 			canRetireExecution: (identity: FlowExecutionIdentity) =>
 				!closed && !this.closed && canRetire?.(structuredClone(identity)) === true,
 			closeExecution: async (execution: string) => {
@@ -172,6 +192,30 @@ export class FlowWaitProducerRegistry {
 	}
 
 	/** Bind an exact tool dependency or reuse its retained terminal evidence. */
+	/**
+	 * Resolve the policy a wait requests, or refuse the declaration. An unregistered name, or any
+	 * name at all from a producer that declares none, fails here rather than parking a wait whose
+	 * health could never be evaluated.
+	 */
+	requireHealthPolicy(
+		namespace: string,
+		identity: Omit<FlowExecutionIdentity, "scope">,
+		name: string,
+	): FlowHealthPolicy {
+		if (this.closed) throw new FlowLedgerError("stale", "Wait producer registry is closed.");
+		const producer = this.producers.get(namespace);
+		if (!producer) throw new FlowLedgerError("identity", "Wait producer is not attached.");
+		const policy = producer
+			.healthPolicies({ ...structuredClone(identity), scope: { ...this.scope } })
+			.find((candidate) => candidate.name === name);
+		if (!policy)
+			throw new FlowLedgerError(
+				"identity",
+				`Health policy ${name} is not registered for this execution; declare a deadline-only wait instead.`,
+			);
+		return policy;
+	}
+
 	async bindForWait(
 		namespace: string,
 		identity: Omit<FlowExecutionIdentity, "scope">,

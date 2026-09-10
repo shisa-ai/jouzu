@@ -7,7 +7,8 @@ import { waitToolResponse } from "./wait-tool-response.js";
 
 export const FLOW_WAIT_GUIDANCE = [
 	"Continue useful work independent of live dependencies. Before ending a turn whose remaining work depends on asynchronous execution, call agent_wait with the owning work and exact producer handles returned by its tools.",
-	"State the dependency in the reason and choose a mandatory hard deadline with bounded slack. Deadline-only waits accept no checkAfter or health policy. The returned expiresAt is the effective deadline after the session cap.",
+	"State the dependency in the reason and choose a mandatory hard deadline with bounded slack. The returned expiresAt is the effective deadline after the session cap.",
+	"Request health only with a policy name the dependency's own tool result offered for that execution; anything else is refused. A dependency without one is deadline-only, and checkAfter needs at least one monitored dependency. Health can end a wait early as unhealthy or health-unknown, and never extends the deadline.",
 	"After agent_wait returns waiting and no independent work remains, end the turn. Do not poll status, create extra continuations, or call unrelated tools to keep a goal, loop, or task active.",
 	"Use the latest supplied wait state after user input or context restoration. Status questions preserve the token and original expiry; do not redeclare or renew a wait for a status question.",
 	"When work changes, cancel or explicitly replace its affected wait and update the owning work before ending the turn. Replacement requires replaceToken. At expiry or dependency failure, decide whether to repair, stop, or explicitly declare a new wait.",
@@ -28,6 +29,7 @@ interface WaitArguments {
 	on: FlowWaitHandle[];
 	mode?: "all" | "any";
 	replaceToken?: string;
+	checkAfter?: string;
 }
 const string = { type: "string", minLength: 1, maxLength: 512 };
 const reason = { type: "string", minLength: 1, maxLength: 4096 };
@@ -39,6 +41,7 @@ const waitSchema = {
 		work: string,
 		reason,
 		deadline: { type: "string", pattern: "^[1-9][0-9]*(ms|s|m|h|d)$" },
+		checkAfter: { type: "string", pattern: "^[1-9][0-9]*(ms|s|m|h|d)$" },
 		mode: { type: "string", enum: ["all", "any"] },
 		replaceToken: string,
 		on: {
@@ -49,7 +52,7 @@ const waitSchema = {
 				type: "object",
 				additionalProperties: false,
 				required: ["producer", "handle", "execution", "until"],
-				properties: { producer: string, handle: string, execution: string, until: string },
+				properties: { producer: string, handle: string, execution: string, until: string, health: string },
 			},
 		},
 	},
@@ -70,7 +73,7 @@ function fields(value: unknown, allowed: string[]): asserts value is Record<stri
 	)
 		throw new FlowLedgerError(
 			"schema",
-			"Unsupported wait arguments. Use deadline-only dependencies without checkAfter or health policies.",
+			"Unsupported wait arguments. Use only the documented wait and dependency fields.",
 		);
 }
 function text(value: unknown, max = 512): asserts value is string {
@@ -88,19 +91,22 @@ function duration(value: unknown): number {
 	return result;
 }
 function parseWait(raw: unknown): WaitArguments {
-	fields(raw, ["work", "reason", "deadline", "on", "mode", "replaceToken"]);
+	fields(raw, ["work", "reason", "deadline", "checkAfter", "on", "mode", "replaceToken"]);
 	text(raw.work);
 	text(raw.reason, 4096);
 	duration(raw.deadline);
 	if (raw.mode !== undefined && !["all", "any"].includes(raw.mode as string))
 		throw new FlowLedgerError("schema", "Invalid wait mode.");
 	if (raw.replaceToken !== undefined) text(raw.replaceToken);
+	if (raw.checkAfter !== undefined && duration(raw.checkAfter) >= duration(raw.deadline))
+		throw new FlowLedgerError("schema", "An expected check must fall before the wait deadline.");
 	if (!Array.isArray(raw.on) || !raw.on.length || raw.on.length > 64)
 		throw new FlowLedgerError("schema", "A wait requires 1 to 64 exact dependencies.");
 	const seen = new Set<string>();
 	for (const handle of raw.on) {
-		fields(handle, ["producer", "handle", "execution", "until"]);
+		fields(handle, ["producer", "handle", "execution", "until", "health"]);
 		for (const name of ["producer", "handle", "execution", "until"]) text(handle[name]);
+		if (handle.health !== undefined) text(handle.health);
 		const key = JSON.stringify([handle.producer, handle.handle, handle.execution, handle.until]);
 		if (seen.has(key)) throw new FlowLedgerError("identity", "Wait dependencies must be unique.");
 		seen.add(key);
@@ -136,7 +142,7 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 				name: "agent_wait",
 				label: "Wait for dependencies",
 				description:
-					"Declare a durable deadline-only dependency wait for authorized work. Use exact producer/handle/execution/until values returned by producer tools. A successful waiting result gates that work until completion, failure, cancellation, or the capped hard deadline. Replacement requires replaceToken.",
+					"Declare a durable dependency wait for authorized work. Use exact producer/handle/execution/until values returned by producer tools, and a health policy only where that tool offered one. A successful waiting result gates that work until completion, failure, cancellation, a health decision, or the capped hard deadline. Replacement requires replaceToken.",
 				promptSnippet: "agent_wait: wait for exact asynchronous dependencies with a hard deadline.",
 				promptGuidelines: FLOW_WAIT_GUIDANCE,
 				parameters: waitSchema,
@@ -149,6 +155,25 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 					const expiresAt = now() + Math.min(duration(args.deadline), maxDurationMs);
 					if (!Number.isSafeInteger(expiresAt))
 						throw new FlowLedgerError("schema", "Wait expiry exceeds the supported time range.");
+					// Resolve every requested policy before binding anything: an unsupported policy must fail
+					// without parking a subscription the failed declaration would then leave behind.
+					const monitored = args.on.filter((handle) => handle.health !== undefined);
+					for (const handle of monitored) {
+						attachment.waitProducers.requireHealthPolicy(
+							handle.producer,
+							{ workId: args.work, handle: handle.handle, execution: handle.execution },
+							handle.health as string,
+						);
+						authority.check();
+					}
+					// An expected check exists to reconcile health early. With no monitored dependency there
+					// would be nothing to reconcile, and the wait is deadline-only by definition.
+					if (args.checkAfter !== undefined && !monitored.length)
+						throw new FlowLedgerError(
+							"identity",
+							"An expected check requires a dependency with a registered health policy.",
+						);
+					const checkAt = args.checkAfter === undefined ? undefined : now() + duration(args.checkAfter);
 					const bound = new Set<string>();
 					for (const handle of args.on) {
 						const key = JSON.stringify([handle.producer, handle.execution]);
@@ -173,6 +198,7 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 								reason: args.reason,
 								mode: args.mode ?? "all",
 								on: args.on,
+								...(checkAt === undefined ? {} : { checkAt }),
 								expiresAt,
 							},
 							now(),
