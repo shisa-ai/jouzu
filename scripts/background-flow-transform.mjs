@@ -131,7 +131,7 @@ export function transform(path, source) {
 		return replace(
 			source,
 			'\treturn { content: [{ type: "text", text }], details };',
-			'\tconst task = details.task as BackgroundTaskSnapshot | undefined;\n\tif (task?.flow?.scope) text += "\\nWait dependency: " + JSON.stringify({ producer: "bg", handle: task.id, execution: task.flow.execution, until: "exit", scope: task.flow.scope, work: task.flow.work });\n\treturn { content: [{ type: "text", text }], details };',
+			'\tconst task = details.task as BackgroundTaskSnapshot | undefined;\n\tif (task?.flow?.scope) {\n\t\tconst dependency: Record<string, unknown> = { producer: "bg", handle: task.id, execution: task.flow.execution, until: "exit", scope: task.flow.scope, work: task.flow.work };\n\t\tif (task.status === "running" && Number.isSafeInteger(task.pid) && task.pid > 0) dependency.health = "bg-process-alive-v1";\n\t\ttext += "\\nWait dependency: " + JSON.stringify(dependency);\n\t}\n\treturn { content: [{ type: "text", text }], details };',
 		);
 	if (path === paths[5]) {
 		source = replace(

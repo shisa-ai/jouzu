@@ -23,7 +23,7 @@
 		},
 		"extensions/render.ts": {
 			"before": "c244941edde47723fd1491b763188d40c5963f7f03aa5a2228584c3aab13fd89",
-			"after": "243e6d7d877a2cac13dcb475b33af63a551a5dfa9f36e5c4f7b748f30b2a762a"
+			"after": "145ee78214892ccbe004bc3ead52f264c6c30f789dde3c6962793a417bb32b95"
 		},
 		"extensions/registrations.ts": {
 			"before": "8026bba90932683c5b015a54d85cc3b250e69f7a0a3e1b44d077247e76f8d985",

@@ -133,6 +133,7 @@ test("a running background task offers its liveness policy and a wait can use it
 			if (index === 2) {
 				const dependency = waitDependencyFrom(body);
 				assert.ok(dependency, "the task tool result carries wait evidence");
+				assert.equal(dependency.health, "bg-process-alive-v1", "the result names the policy the model may request");
 				return assistantToolCalls({
 					name: "agent_wait",
 					arguments: {
@@ -146,7 +147,7 @@ test("a running background task offers its liveness policy and a wait can use it
 								handle: dependency.handle,
 								execution: dependency.execution,
 								until: dependency.until,
-								health: "bg-process-alive-v1",
+								health: dependency.health,
 							},
 						],
 					},
