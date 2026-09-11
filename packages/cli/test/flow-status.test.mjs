@@ -238,3 +238,17 @@ test("an interrupted turn is listed with both decisions the user can make", () =
 	assert.match(text, /\/flow resolve attempt-1 retry/);
 	assert.match(text, /\/flow resolve attempt-1 discard/);
 });
+
+test("inputs sharing one cause are listed under it once", () => {
+	const held = (id, reason) => ({ id, revision: 1, admission: "held", delivery: "none", attemptIds: [], reason });
+	const status = projectFlowStatus(
+		scope,
+		[held("s1", "Waiting for user work."), held("s2", "Waiting for user work."), held("s3", "Queue is revised.")],
+		[],
+		[],
+	);
+	const text = formatFlowStatus(status, 0);
+	// The cause is stated once and the identities stay whole beneath it, so a reader sees two problems
+	// rather than three lines of the same sentence.
+	assert.match(text, /Held input\n- Waiting for user work\.\n {2}2 inputs: s1, s2\n- s3: Queue is revised\./);
+});

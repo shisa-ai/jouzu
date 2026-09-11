@@ -157,6 +157,21 @@ export function projectFlowSubmissions(
 		const reserved = attempts.some((attempt) => attempt.id === ledger.activeAttemptId);
 		const admission =
 			record.status === "cancelled" || fullyCancelled ? "cancelled" : reserved ? "reserved" : held ? "held" : "pending";
+		// `held` covers every record that cannot be dispatched again, and input the model already
+		// received is most of them. Name a reason only when a reader can act on it: an unreconciled
+		// cancellation, a recorded admission hold, or a dispatch whose delivery is unknown. Spent input
+		// carries none, and a status reader lists only what carries one.
+		const reason =
+			admission !== "held"
+				? undefined
+				: ((nativeContextCancellations?.some((item) => item.removal === "unconfirmed")
+						? "Deferred context cancellation requires removal reconciliation."
+						: undefined) ??
+					(nativeQueueCancellations?.some((item) => item.removal === "unconfirmed")
+						? "Queue cancellation requires removal reconciliation."
+						: undefined) ??
+					admissionHolds[0]?.reason ??
+					(delivery === "uncertain" ? "Sent, but whether the model received it is not known." : undefined));
 		return {
 			id: record.id,
 			revision: record.revision,
@@ -166,21 +181,7 @@ export function projectFlowSubmissions(
 			...(native ? { nativeRequests: native.get(record.id) ?? [] } : {}),
 			...(nativeQueueCancellations?.length ? { nativeQueueCancellations } : {}),
 			...(nativeContextCancellations?.length ? { nativeContextCancellations } : {}),
-			...(admission === "held"
-				? {
-						reason:
-							(nativeContextCancellations?.some((item) => item.removal === "unconfirmed")
-								? "Deferred context cancellation requires removal reconciliation."
-								: undefined) ??
-							(nativeQueueCancellations?.some((item) => item.removal === "unconfirmed")
-								? "Queue cancellation requires removal reconciliation."
-								: undefined) ??
-							admissionHolds[0]?.reason ??
-							(record.dispatch
-								? "Native dispatch requires reconciliation before replay."
-								: "Consumed or withheld input requires reconciliation before another dispatch."),
-					}
-				: {}),
+			...(reason ? { reason } : {}),
 		};
 	});
 }

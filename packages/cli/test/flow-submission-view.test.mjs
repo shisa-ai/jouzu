@@ -216,3 +216,34 @@ test("a consumed claim cannot be reported as successful native cancellation", as
 	assert.equal(view.delivery, "consumed");
 	assert.deepEqual(view.nativeQueueCancellations, [{ id: "one", revision: 1, removal: "consumed" }]);
 });
+
+test("input the model received is held without a reason, and unknown delivery carries one", async (t) => {
+	// Every dispatched record is held, because none of it may be sent a second time. That is not a
+	// problem a reader can act on, so a status view must not offer it as one: only a hold whose cause
+	// is recorded, or a send whose delivery is unknown, states a reason.
+	const interrupted = await fixture(t);
+	await prepare(interrupted);
+	await interrupted.attachment.ledger.handoff("attempt", "request");
+	// Reopening drops the active attempt, so this is what a later reader sees: sent, outcome unknown.
+	await interrupted.reopen();
+	assert.equal((await interrupted.view()).reason, "Sent, but whether the model received it is not known.");
+
+	const delivered = await fixture(t);
+	await prepare(delivered);
+	await delivered.attachment.ledger.handoff("attempt", "request");
+	await delivered.attachment.ledger.requestOutcome("attempt", "request", "success");
+	await delivered.attachment.ledger.settle("attempt", "success");
+	await delivered.reopen();
+	const view = await delivered.view();
+	assert.equal(view.admission, "held");
+	assert.equal(view.delivery, "included");
+	assert.ok(!("reason" in view), "delivered input is spent, not a hold to report");
+});
+
+test("a recorded admission hold is still reported over the generic states", async (t) => {
+	const f = await fixture(t);
+	await f.attachment.submissions.recordAdmission("source", 1, { phase: "submission" }, "Waiting for user work.");
+	const view = await f.view();
+	assert.equal(view.admission, "held");
+	assert.equal(view.reason, "Waiting for user work.");
+});

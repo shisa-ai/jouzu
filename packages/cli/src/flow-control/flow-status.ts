@@ -175,7 +175,14 @@ export function formatFlowStatus(status: FlowStatus, now: number): string {
 	if (status.held.length) {
 		if (lines.length) lines.push("");
 		lines.push("Held input");
-		for (const input of status.held) lines.push(`- ${input.id}: ${input.reason}`);
+		// One cause holds several inputs at once, so state it once and keep the identities whole
+		// beneath it rather than repeating the same sentence per input.
+		const byReason = new Map<string, FlowHeldInput[]>();
+		for (const input of status.held) byReason.set(input.reason, [...(byReason.get(input.reason) ?? []), input]);
+		for (const [reason, inputs] of byReason) {
+			lines.push(inputs.length === 1 ? `- ${inputs[0].id}: ${reason}` : `- ${reason}`);
+			if (inputs.length > 1) lines.push(`  ${inputs.length} inputs: ${inputs.map((input) => input.id).join(", ")}`);
+		}
 	}
 	if (status.retryable.length) {
 		if (lines.length) lines.push("");
