@@ -8,6 +8,7 @@ import {
 	catalogSourceConflict,
 	catalogSourceCredentialAvailable,
 	catalogSourceCredentialName,
+	catalogSourceCredentialState,
 	isBuiltinCatalogSource,
 	isCodeOwnedCatalogSource,
 	resolveCatalogBearer,
@@ -93,6 +94,8 @@ export type CatalogSyncStatus =
 			lastError?: { code: string; message: string; at: string };
 			credentialName?: string;
 			credentialAvailable?: boolean;
+			credentialEnv?: boolean;
+			credentialStored?: boolean;
 			conflict?: string;
 			quarantined: number;
 	  };
@@ -299,7 +302,8 @@ export function getCatalogSourceStatus(
 	env: NodeJS.ProcessEnv = process.env,
 ): CatalogSyncStatus {
 	const credentialName = catalogSourceCredentialName(source);
-	const credentialAvailable = credentialName ? catalogSourceCredentialAvailable(source, env) : undefined;
+	const credential = credentialName ? catalogSourceCredentialState(source, env, paths) : undefined;
+	const credentialAvailable = credential ? credential.envSet || credential.stored : undefined;
 	const conflict = catalogSourceConflict(source);
 	try {
 		const origin = readOriginState(paths, source.url);
@@ -325,6 +329,7 @@ export function getCatalogSourceStatus(
 			...(offeringCount !== undefined ? { offeringCount } : {}),
 			...(account?.lastError ? { lastError: account.lastError } : {}),
 			...(credentialName ? { credentialName, credentialAvailable } : {}),
+			...(credential ? { credentialEnv: credential.envSet, credentialStored: credential.stored } : {}),
 			...(conflict ? { conflict } : {}),
 			quarantined: account?.quarantined.length ?? 0,
 		};
@@ -338,6 +343,7 @@ export function getCatalogSourceStatus(
 			enabled: source.enabled,
 			endpoint: publicEndpoint(source.url),
 			...(credentialName ? { credentialName, credentialAvailable } : {}),
+			...(credential ? { credentialEnv: credential.envSet, credentialStored: credential.stored } : {}),
 			...(conflict ? { conflict } : {}),
 			lastError: {
 				code: "invalid_cache",
@@ -465,7 +471,7 @@ export async function refreshCatalogSource(
 	const catalogStatus = () => getCatalogSourceStatus(paths, source, now, env);
 	let token: string | undefined;
 	try {
-		token = resolveCatalogBearer(source, env);
+		token = resolveCatalogBearer(source, env, paths);
 	} catch (error) {
 		return {
 			status: "error",
@@ -698,7 +704,7 @@ function automaticallySkipped(paths: JouzuPaths, source: CatalogSource, env: Nod
 	return (
 		isBuiltinCatalogSource(source) &&
 		isCodeOwnedCatalogSource(paths, source, env) &&
-		!catalogSourceCredentialAvailable(source, env)
+		!catalogSourceCredentialAvailable(source, env, paths)
 	);
 }
 
@@ -723,7 +729,9 @@ export async function refreshAvailableModelCatalogs(
 	options: Omit<RefreshCatalogOptions, "sourceId"> = {},
 ): Promise<CatalogRefreshAllResult | undefined> {
 	const env = options.env ?? process.env;
-	const sources = resolveCatalogSources(paths, env).filter((source) => catalogSourceCredentialAvailable(source, env));
+	const sources = resolveCatalogSources(paths, env).filter((source) =>
+		catalogSourceCredentialAvailable(source, env, paths),
+	);
 	if (sources.length === 0) return undefined;
 	return refreshSources(paths, sources, options);
 }

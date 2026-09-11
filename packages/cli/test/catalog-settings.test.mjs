@@ -10,7 +10,9 @@ import {
 	CatalogSourceStore,
 	catalogSourceRegistryPath,
 	discoverCatalogEndpoint,
+	getCatalogSourceToken,
 	loadCatalogSourceRegistry,
+	setCatalogSourceToken,
 } from "../dist/catalog-sources.js";
 import { parseAndValidateModelCatalog } from "../dist/model-catalog.js";
 import { loadActiveCatalogForSource, refreshCatalogSource } from "../dist/model-catalog-sync.js";
@@ -264,6 +266,167 @@ test("Catalogs settings shows complete bearer-token fields and process availabil
 		text = rendered.join("\n");
 		assert.match(text, /JOUZU_MODEL_CATALOG_TOKEN is set in this Jouzu process/u);
 		assert.doesNotMatch(text, /must-not-render/u);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("a bearer source saves with an unset token variable and warns instead of blocking", async () => {
+	const { root, paths, context } = setup();
+	try {
+		let discoveries = 0;
+		const component = new CatalogSettingsComponent({
+			context,
+			paths,
+			env: {},
+			discover: async () => {
+				discoveries += 1;
+				throw new Error("discovery must not run without a usable token");
+			},
+		});
+		component.handleInput("a");
+		for (const character of "Office pool") component.handleInput(character);
+		component.handleInput("down");
+		for (const character of "catalog.example") component.handleInput(character);
+		component.handleInput("down");
+		component.handleInput("\u001b[C");
+		component.handleInput("enter");
+		await new Promise((resolve) => setImmediate(resolve));
+
+		assert.equal(discoveries, 0, "no unauthenticated request is sent");
+		const saved = loadCatalogSourceRegistry(paths).sources;
+		assert.equal(saved.length, 1);
+		assert.equal(saved[0].label, "Office pool");
+		// No request means no conventional-path discovery: the exact URL is saved.
+		assert.equal(saved[0].url, "https://catalog.example/");
+		assert.equal(saved[0].auth.type, "bearer");
+		const text = component.render(84).join("\n");
+		assert.match(text, /Saved Office pool without checking the catalog/u);
+		assert.match(text, /JOUZU_MODEL_CATALOG_TOKEN is not set/u);
+		assert.match(text, /press R to refresh/u);
+		// The summary and the selected detail both carry the missing-token warning.
+		assert.match(text, /Office pool\s+JOUZU_MODEL_CATALOG_TOKEN not set/u);
+		assert.match(text, /Warning: token variable JOUZU_MODEL_CATALOG_TOKEN is not set/u);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("entering a token directly saves it masked and activates the catalog", async () => {
+	const { root, paths, context } = setup();
+	try {
+		let seenBearerToken;
+		const component = new CatalogSettingsComponent({
+			context,
+			paths,
+			env: {},
+			discover: async (_input, options) => {
+				seenBearerToken = options.bearerToken;
+				return {
+					url: "https://catalog.example/v1/jouzu/model-catalog",
+					document: fixture,
+					text: JSON.stringify(fixture),
+					attempts: [],
+				};
+			},
+		});
+		component.handleInput("a");
+		for (const character of "Office pool") component.handleInput(character);
+		component.handleInput("down");
+		for (const character of "catalog.example") component.handleInput(character);
+		component.handleInput("down");
+		component.handleInput("\u001b[C");
+		component.handleInput("down");
+		// Replace the default variable name: cursor to the end, clear, type the new one.
+		component.handleInput("\x05");
+		component.handleInput("\x15");
+		for (const character of "CODEX_POOL_CATALOG_TOKEN") component.handleInput(character);
+		component.handleInput("down");
+		for (const character of "sk-direct-entry") component.handleInput(character);
+		// The typed token never renders: the field shows bullets only.
+		assert.doesNotMatch(component.render(84).join("\n"), /sk-direct-entry/u);
+		assert.match(component.render(84).join("\n"), /\u2022{6,}/u);
+		component.handleInput("enter");
+		await new Promise((resolve) => setImmediate(resolve));
+
+		assert.equal(seenBearerToken, "sk-direct-entry");
+		assert.equal(getCatalogSourceToken(paths, "office-pool"), "sk-direct-entry");
+		assert.doesNotMatch(
+			readFileSync(join(paths.configDir, "catalogs.json"), "utf8"),
+			/sk-direct-entry/u,
+			"the registry never stores the token value",
+		);
+		const rendered = component.render(84).join("\n");
+		assert.doesNotMatch(rendered, /sk-direct-entry/u);
+		assert.match(rendered, /Saved Office pool with 1 model/u);
+		const wide = component.render(160).join("\n");
+		assert.ok(wide.includes("CODEX_POOL_CATALOG_TOKEN not set, saved token in use"), wide);
+		assert.equal(
+			loadActiveCatalogForSource(paths, loadCatalogSourceRegistry(paths).sources[0]).revision,
+			fixture.revision,
+		);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("a set environment variable takes precedence over an entered token", async () => {
+	const { root, paths, context } = setup();
+	try {
+		let seenBearerToken;
+		const component = new CatalogSettingsComponent({
+			context,
+			paths,
+			env: { JOUZU_MODEL_CATALOG_TOKEN: "sk-from-env" },
+			discover: async (_input, options) => {
+				seenBearerToken = options.bearerToken;
+				return {
+					url: "https://catalog.example/v1/jouzu/model-catalog",
+					document: fixture,
+					text: JSON.stringify(fixture),
+					attempts: [],
+				};
+			},
+		});
+		component.handleInput("a");
+		for (const character of "Office pool") component.handleInput(character);
+		component.handleInput("down");
+		for (const character of "catalog.example") component.handleInput(character);
+		component.handleInput("down");
+		component.handleInput("\u001b[C");
+		component.handleInput("down");
+		component.handleInput("down");
+		for (const character of "sk-direct-entry") component.handleInput(character);
+		component.handleInput("enter");
+		await new Promise((resolve) => setImmediate(resolve));
+
+		assert.equal(seenBearerToken, "sk-from-env");
+		assert.equal(getCatalogSourceToken(paths, "office-pool"), "sk-direct-entry");
+		const message = component.render(84).join("\n");
+		assert.match(message, /JOUZU_MODEL_CATALOG_TOKEN is set in this Jouzu/u);
+		assert.match(message, /takes precedence over the saved token/u);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("a saved token refreshes its source without the environment variable", async () => {
+	const { root, paths } = setup();
+	try {
+		const store = new CatalogSourceStore(paths, { env: {} });
+		const source = store.add({
+			label: "Office pool",
+			url: "https://catalog.example/v1/jouzu/model-catalog",
+			auth: { type: "bearer", credentialRef: "env:OFFICE_POOL_TOKEN" },
+		});
+		setCatalogSourceToken(paths, source.id, "sk-saved");
+		const result = await refreshCatalogSource(paths, source, {
+			env: {},
+			fetch: async () => response(fixture),
+		});
+		assert.equal(result.status, "activated");
+		assert.equal(result.catalogStatus.credentialStored, true);
+		assert.equal(result.catalogStatus.credentialEnv, false);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
@@ -524,7 +687,7 @@ test("Bearer form keeps the transport warning and footer inside the budget on a 
 		const component = new CatalogSettingsComponent({
 			context,
 			paths,
-			env: {},
+			env: { JOUZU_MODEL_CATALOG_TOKEN: "set" },
 			discover: async () => {
 				throw new Error(
 					"Catalog authentication failed (HTTP 401). Check that the token variable is exported before Jouzu starts and contains a valid bearer token.",
@@ -664,14 +827,14 @@ test("Expansion survives moving the selection and pages the sticky source by cap
 		let rendered = component.render(84);
 		assert.ok(rendered.length <= budget, "sticky expansion stays within the budget");
 		assert.ok(selectedLine(rendered)?.includes("Shisa API"), "selection moved to the built-in source");
-		assert.match(rendered.join("\n"), /1-5\/30/u, "sticky source keeps a paged window");
+		assert.match(rendered.join("\n"), /1-3\/30/u, "sticky source keeps a paged window");
 		assert.match(rendered.join("\n"), /Enter edit/u, "footer stays visible");
 
 		component.handleInput("pageDown");
 		rendered = component.render(84);
 		assert.ok(rendered.length <= budget);
-		assert.match(rendered.join("\n"), /6-10\/30/u, "sticky paging advances by the rendered capacity");
-		assert.doesNotMatch(rendered.join("\n"), /1-5\/30/u, "no overlapping re-show of the first window");
+		assert.match(rendered.join("\n"), /4-6\/30/u, "sticky paging advances by the rendered capacity");
+		assert.doesNotMatch(rendered.join("\n"), /1-3\/30/u, "no overlapping re-show of the first window");
 
 		component.handleInput("\u001b[D");
 		assert.doesNotMatch(component.render(84).join("\n"), /Example Model/u, "left collapses the expansion");
@@ -688,7 +851,7 @@ test("A long failure message keeps its status and pages every recovery line", as
 		const component = new CatalogSettingsComponent({
 			context,
 			paths,
-			env: {},
+			env: { JOUZU_MODEL_CATALOG_TOKEN: "set" },
 			discover: async () => {
 				throw new Error(`${detail} ${detail}`);
 			},
@@ -732,7 +895,7 @@ test("Short HTTP forms keep each focused field and page failures without clippin
 		const component = new CatalogSettingsComponent({
 			context,
 			paths,
-			env: {},
+			env: { JOUZU_MODEL_CATALOG_TOKEN: "set" },
 			discover: async () => {
 				throw new Error(`Authentication failed. ${"Detailed recovery instruction. ".repeat(20)}END-RECOVERY`);
 			},
@@ -744,7 +907,7 @@ test("Short HTTP forms keep each focused field and page failures without clippin
 		component.handleInput("\u001b[C");
 		component.handleInput("enter");
 		await new Promise((resolve) => setImmediate(resolve));
-		for (const field of ["Authentication", "Token variable", "Label", "URL or host"]) {
+		for (const field of ["Authentication", "Token variable", "Token", "Label", "URL or host"]) {
 			const lines = component.render(48);
 			assert.ok(lines.length <= overlayBudget(16), lines.join("\n"));
 			assert.match(selectedLine(lines) ?? "", new RegExp(field));

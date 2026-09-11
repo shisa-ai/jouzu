@@ -13,6 +13,8 @@ import { validatePrivateDirectory, writeFilePrivateAtomic } from "./private-fs.j
 
 const REGISTRY_MAX_BYTES = 256 * 1024;
 const OVERRIDES_MAX_BYTES = 64 * 1024;
+const CREDENTIALS_MAX_BYTES = 64 * 1024;
+const TOKEN_MAX_BYTES = 8 * 1024;
 const LABEL_MAX_BYTES = 256;
 const SOURCE_ID_PATTERN = /^[a-z0-9](?:[a-z0-9._-]{0,62}[a-z0-9])?$/u;
 const ENV_NAME_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/u;
@@ -66,9 +68,20 @@ interface CatalogSourceOverridesFile {
 	overrides: Record<string, CatalogSourceOverride>;
 }
 
+export interface CatalogSourceCredentialState {
+	/** Environment variable name the source's credential reference points at. */
+	name: string;
+	/** True when the variable holds a non-blank value in this process. */
+	envSet: boolean;
+	/** True when a token is saved in Jouzu's private credential store. */
+	stored: boolean;
+}
+
 export interface CatalogEndpointDiscoveryOptions {
 	auth: CatalogSourceAuth;
 	env?: NodeJS.ProcessEnv;
+	/** Bearer value to send instead of resolving the credential reference. */
+	bearerToken?: string;
 	fetch?: typeof globalThis.fetch;
 	signal?: AbortSignal;
 }
@@ -355,11 +368,113 @@ export function catalogSourceCredentialName(source: CatalogSource): string | und
 	return source.auth.type === "bearer" ? source.auth.credentialRef.slice(4) : undefined;
 }
 
-export function catalogSourceCredentialAvailable(source: CatalogSource, env: NodeJS.ProcessEnv): boolean {
-	const name = catalogSourceCredentialName(source);
-	if (!name) return true;
-	const value = env[name];
-	return typeof value === "string" && Boolean(value.trim());
+function envCredentialValue(source: CatalogSource, env: NodeJS.ProcessEnv): string | undefined {
+	if (source.auth.type === "none") return undefined;
+	const value = env[source.auth.credentialRef.slice(4)];
+	const trimmed = typeof value === "string" ? value.trim() : "";
+	return trimmed || undefined;
+}
+
+/**
+ * Where a bearer source's token can come from right now. The environment
+ * variable wins when set, so it stays the override for a saved token. A
+ * credential store that cannot be read reports no stored token rather than
+ * break status rendering; request-time resolution still fails loudly.
+ */
+export function catalogSourceCredentialState(
+	source: CatalogSource,
+	env: NodeJS.ProcessEnv,
+	paths?: JouzuPaths,
+): CatalogSourceCredentialState | undefined {
+	if (source.auth.type === "none") return undefined;
+	let stored = false;
+	if (paths) {
+		try {
+			stored = getCatalogSourceToken(paths, source.id) !== undefined;
+		} catch {
+			stored = false;
+		}
+	}
+	return { name: source.auth.credentialRef.slice(4), envSet: envCredentialValue(source, env) !== undefined, stored };
+}
+
+export function catalogSourceCredentialAvailable(
+	source: CatalogSource,
+	env: NodeJS.ProcessEnv,
+	paths?: JouzuPaths,
+): boolean {
+	const state = catalogSourceCredentialState(source, env, paths);
+	return !state || state.envSet || state.stored;
+}
+
+export function catalogSourceCredentialsPath(paths: JouzuPaths): string {
+	return join(configurationRoot(paths), "catalog-credentials.json");
+}
+
+/** Normalizes and validates a bearer token value before it is stored anywhere. */
+export function validateCatalogSourceToken(token: string): string {
+	return controlFree(token, "catalog token", TOKEN_MAX_BYTES);
+}
+
+function parseCredentialsFile(value: unknown): Record<string, string> {
+	if (!isRecord(value)) throw new CatalogSourceError("catalog credentials must be an object");
+	assertOnlyKeys(value, ["schemaVersion", "tokens"], "catalog credentials");
+	const tokenRecord = value.tokens;
+	if (value.schemaVersion !== 1 || !isRecord(tokenRecord)) {
+		throw new CatalogSourceError("catalog credentials require schemaVersion 1 and a tokens object");
+	}
+	const tokens: Record<string, string> = {};
+	for (const [id, token] of Object.entries(tokenRecord)) {
+		if (typeof token !== "string") throw new CatalogSourceError(`catalog token for ${id} must be a string`);
+		tokens[normalizeSourceId(id)] = controlFree(token, `catalog token for ${id}`, TOKEN_MAX_BYTES);
+	}
+	return tokens;
+}
+
+/** Saved bearer tokens keyed by catalog source id; never written to catalogs.json. */
+export function loadCatalogSourceTokens(paths: JouzuPaths): Record<string, string> {
+	const path = catalogSourceCredentialsPath(paths);
+	if (!existsSync(path)) return {};
+	validatePrivateDirectory(configurationRoot(paths));
+	const metadata = lstatSync(path);
+	if (!metadata.isFile() || metadata.isSymbolicLink() || metadata.size > CREDENTIALS_MAX_BYTES) {
+		throw new CatalogSourceError("catalog credentials must be a bounded regular file");
+	}
+	try {
+		return parseCredentialsFile(parseStrictJson(readFileSync(path, "utf8")));
+	} catch (error) {
+		if (error instanceof CatalogSourceError) throw error;
+		throw new CatalogSourceError(error instanceof Error ? error.message : String(error));
+	}
+}
+
+export function getCatalogSourceToken(paths: JouzuPaths, sourceId: string): string | undefined {
+	return loadCatalogSourceTokens(paths)[normalizeSourceId(sourceId)];
+}
+
+export function setCatalogSourceToken(paths: JouzuPaths, sourceId: string, token: string): void {
+	const id = normalizeSourceId(sourceId);
+	const value = validateCatalogSourceToken(token);
+	const tokens = loadCatalogSourceTokens(paths);
+	tokens[id] = value;
+	writeFilePrivateAtomic(
+		catalogSourceCredentialsPath(paths),
+		`${JSON.stringify({ schemaVersion: 1, tokens }, null, 2)}\n`,
+		configurationRoot(paths),
+	);
+}
+
+export function removeCatalogSourceToken(paths: JouzuPaths, sourceId: string): void {
+	const id = normalizeSourceId(sourceId);
+	const tokens = loadCatalogSourceTokens(paths);
+	if (!(id in tokens)) return;
+	delete tokens[id];
+	const path = catalogSourceCredentialsPath(paths);
+	if (Object.keys(tokens).length === 0) {
+		rmSync(path, { force: true });
+		return;
+	}
+	writeFilePrivateAtomic(path, `${JSON.stringify({ schemaVersion: 1, tokens }, null, 2)}\n`, configurationRoot(paths));
 }
 
 /** Sources from the user registry, or the single-source environment shorthand when no registry exists. */
@@ -477,6 +592,8 @@ export class CatalogSourceStore {
 		const source = parseSource({ ...input, id: normalizedId, enabled: input.enabled ?? sources[index].enabled }, index);
 		sources[index] = source;
 		this.save(sources, () => beforeSave?.(source));
+		// A source that no longer authenticates has no use for a saved token.
+		if (source.auth.type === "none") removeCatalogSourceToken(this.paths, normalizedId);
 		return source;
 	}
 
@@ -512,21 +629,28 @@ export class CatalogSourceStore {
 		}
 		const [removed] = sources.splice(index, 1);
 		this.save(sources);
+		// The saved token is scoped to this source id, so it goes with the source.
+		removeCatalogSourceToken(this.paths, removed.id);
 		return removed;
 	}
 }
 
-export function resolveCatalogBearer(source: CatalogSource, env: NodeJS.ProcessEnv = process.env): string | undefined {
+export function resolveCatalogBearer(
+	source: CatalogSource,
+	env: NodeJS.ProcessEnv = process.env,
+	paths?: JouzuPaths,
+): string | undefined {
 	if (source.auth.type === "none") return undefined;
 	const name = source.auth.credentialRef.slice(4);
-	const credential = env[name];
-	const value = typeof credential === "string" ? credential.trim() : "";
-	if (!value) {
-		throw new CatalogSourceError(
-			`Catalog token variable ${name} is not set in this Jouzu process. Export it before starting Jouzu, then retry.`,
-		);
+	const fromEnv = envCredentialValue(source, env);
+	if (fromEnv) return fromEnv;
+	if (paths) {
+		const stored = getCatalogSourceToken(paths, source.id);
+		if (stored) return stored;
 	}
-	return value;
+	throw new CatalogSourceError(
+		`Catalog token variable ${name} is not set in this Jouzu process${paths ? " and no token is saved for this source" : ""}. Export it before starting Jouzu or save a token in Settings / Catalogs, then retry.`,
+	);
 }
 
 export function catalogEndpointCandidates(input: string): string[] {
@@ -552,7 +676,8 @@ export async function discoverCatalogEndpoint(
 	const candidates = catalogEndpointCandidates(input);
 	const token =
 		options.auth.type === "bearer"
-			? resolveCatalogBearer(
+			? options.bearerToken?.trim() ||
+				resolveCatalogBearer(
 					{ id: "discovery", label: "Catalog", url: candidates[0], enabled: true, auth: options.auth },
 					options.env,
 				)
@@ -605,7 +730,7 @@ export async function discoverCatalogEndpoint(
 		if (options.auth.type === "bearer") {
 			const name = options.auth.credentialRef.slice(4);
 			throw new CatalogSourceError(
-				`${summary} (HTTP ${status}). Check that ${name} contains a bearer token accepted by the catalog.`,
+				`${summary} (HTTP ${status}). Check that ${name} or this source's saved token contains a bearer token accepted by the catalog.`,
 			);
 		}
 		throw new CatalogSourceError(

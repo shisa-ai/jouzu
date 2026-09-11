@@ -109,6 +109,8 @@ Authentication is a visible discrete choice, not a hidden mode toggle.
 - Show the token-variable field only when `Bearer token` is selected.
 - State that the field accepts an environment variable name rather than a token value.
 - Report whether the named variable is available to Jouzu without displaying its value.
+- Offer an optional direct-token field for `Bearer token`. Render its content masked, never echo a saved value back into the field, and say where the entered token is stored and that the variable takes precedence over it.
+- Allow saving a bearer source whose variable is unset. Warn like a transport warning — in the source list summary and in the selected item's detail — instead of blocking, and name the recovery: set the variable or save a token, then refresh.
 - Identify HTTP 401 as an authentication failure and HTTP 403 as denied access.
 
 ## Hints and explanatory text

@@ -40,6 +40,8 @@ test("built-in source without a key is visible and idle with no network work", (
 					endpoint: "https://api.shisa.ai/v1/jouzu/model-catalog",
 					credentialName: "SHISA_API_KEY",
 					credentialAvailable: false,
+					credentialEnv: false,
+					credentialStored: false,
 					quarantined: 0,
 				},
 			],
@@ -48,6 +50,7 @@ test("built-in source without a key is visible and idle with no network work", (
 		const text = formatCatalogStatus(status);
 		assert.match(text, /Shisa API \[shisa-api\]: empty/u);
 		assert.match(text, /Credential: environment variable SHISA_API_KEY \(not set\)/u);
+		assert.match(text, /Warning: token variable SHISA_API_KEY is not set/u);
 	} finally {
 		globalThis.fetch = originalFetch;
 	}

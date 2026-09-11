@@ -5,8 +5,10 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { ModelRegistry, ModelRuntime } from "@earendil-works/pi-coding-agent";
 
+import { setCatalogSourceToken } from "../dist/catalog-sources.js";
 import { parseAndValidateModelCatalog } from "../dist/model-catalog.js";
 import { CatalogProjectionController, projectCatalogProviders } from "../dist/model-catalog-projection.js";
+import { resolveJouzuPaths } from "../dist/paths.js";
 
 const fixture = () =>
 	parseAndValidateModelCatalog(
@@ -479,6 +481,47 @@ test("gateway model dispatch sends the catalog bearer and compatibility to the g
 	} finally {
 		server.closeAllConnections();
 		await new Promise((resolve) => server.close(resolve));
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("a saved source token serves the gateway when the environment has no value", async () => {
+	const { resolveCatalogModel } = await import("../dist/model-catalog-projection.js");
+	const root = mkdtempSync(join(tmpdir(), "jouzu-projection-saved-token-"));
+	try {
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "jouzu") });
+		const runtime = await ModelRuntime.create({
+			modelsPath: join(root, "models.json"),
+			authPath: join(root, "auth.json"),
+		});
+		const registry = new ModelRegistry(runtime);
+		const ctx = { modelRegistry: registry, scopedModels: [] };
+		const pi = {
+			registerProvider: (...args) => registry.registerProvider(...args),
+			unregisterProvider: (id) => registry.unregisterProvider(id),
+		};
+		const catalog = activeCatalog(fixture());
+		catalog.source.url = "https://pool.example.test/v1/jouzu/model-catalog";
+		catalog.source.auth = { type: "bearer", credentialRef: "env:GATEWAY_TOKEN" };
+		setCatalogSourceToken(paths, catalog.source.id, "saved-gateway-jwt");
+
+		const saved = new CatalogProjectionController({}, paths);
+		saved.sync(pi, ctx, [catalog]);
+		const reference = { provider: "ai.example.gateway", modelId: "example-model" };
+		const resolved = resolveCatalogModel(ctx, reference, [catalog]);
+		assert.ok(resolved, "the gateway projection registers the offering");
+		assert.equal((await runtime.prepareRequest(resolved)).options.apiKey, "saved-gateway-jwt");
+		saved.release(pi, ctx);
+
+		// The environment value still wins over the saved token.
+		const env = new CatalogProjectionController({ GATEWAY_TOKEN: "env-gateway-jwt" }, paths);
+		env.sync(pi, ctx, [catalog]);
+		assert.equal(
+			(await runtime.prepareRequest(resolveCatalogModel(ctx, reference, [catalog]))).options.apiKey,
+			"env-gateway-jwt",
+		);
+		env.release(pi, ctx);
+	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
 });

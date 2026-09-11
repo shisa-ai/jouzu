@@ -8,6 +8,10 @@ import {
 	CatalogSourceStore,
 	catalogInsecureTransportWarning,
 	discoverCatalogEndpoint,
+	getCatalogSourceToken,
+	normalizeCatalogSourceUrl,
+	setCatalogSourceToken,
+	validateCatalogSourceToken,
 } from "./catalog-sources.js";
 import { formatEffectiveKeybinding, formatEffectiveKeyPair } from "./keybinding-hints.js";
 import {
@@ -57,7 +61,7 @@ interface CatalogSettingsOptions {
 	onCatalogsChanged?: () => void;
 }
 
-type FormField = "label" | "url" | "auth" | "credential";
+type FormField = "label" | "url" | "auth" | "credential" | "token";
 
 interface SourceView {
 	source: CatalogSource;
@@ -72,6 +76,7 @@ interface SourceForm {
 	url: Input;
 	authType: "none" | "bearer";
 	credential: Input;
+	token: Input;
 	field: FormField;
 }
 
@@ -116,6 +121,46 @@ function transportWarningText(url: string): string | undefined {
 	return warning ? `  Warning: ${warning}` : undefined;
 }
 
+/** Plain-text warning for a bearer source with no usable token. */
+function credentialWarningText(status: CatalogSyncStatus): string | undefined {
+	if (!status.configured || !status.credentialName || status.credentialAvailable) return undefined;
+	return `  Warning: token variable ${status.credentialName} is not set and no token is saved for this source. Set it or save a token, then refresh.`;
+}
+
+/**
+ * Mask a rendered input line: every printable character becomes a bullet, so a
+ * pasted bearer token is never rendered. Control sequences (cursor marker,
+ * ANSI escapes) and spacing keep their width.
+ */
+function maskRenderedInput(rendered: string): string {
+	let masked = "";
+	let index = 0;
+	if (rendered.startsWith("> ")) {
+		masked = "> ";
+		index = 2;
+	}
+	while (index < rendered.length) {
+		if (rendered[index] === "\x1b") {
+			// Copy one control sequence verbatim: an SGR escape ends at "m", the
+			// cursor marker at the bell character.
+			const sgr = rendered.indexOf("m", index);
+			const marker = rendered.indexOf("\x07", index);
+			const end = marker >= 0 && (sgr < 0 || marker < sgr) ? marker : sgr;
+			if (end >= 0) {
+				masked += rendered.slice(index, end + 1);
+				index = end + 1;
+				continue;
+			}
+		}
+		const character = Array.from(rendered.slice(index, index + 2))[0] ?? rendered[index];
+		const codePoint = character.codePointAt(0) ?? 0;
+		const control = codePoint <= 0x1f || codePoint === 0x7f;
+		masked += control || character === " " ? character : "•";
+		index += character.length;
+	}
+	return masked;
+}
+
 export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	private readonly tui: TUI;
 	private readonly theme: Theme;
@@ -141,7 +186,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	private form?: SourceForm;
 	private confirmRemove = false;
 	private busy = false;
-	private message?: { level: "error" | "info"; text: string };
+	private message?: { level: "error" | "info" | "warning"; text: string };
 	private controller?: AbortController;
 	private disposed = false;
 	private _focused = false;
@@ -216,7 +261,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 
 	private formFields(): FormField[] {
 		if (!this.form) return [];
-		return this.form.authType === "bearer" ? ["label", "url", "auth", "credential"] : ["label", "url", "auth"];
+		return this.form.authType === "bearer" ? ["label", "url", "auth", "credential", "token"] : ["label", "url", "auth"];
 	}
 
 	private activeInput(): Input | undefined {
@@ -224,6 +269,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		if (this.form.field === "label") return this.form.label;
 		if (this.form.field === "url") return this.form.url;
 		if (this.form.field === "credential") return this.form.credential;
+		if (this.form.field === "token") return this.form.token;
 		return undefined;
 	}
 
@@ -232,6 +278,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		this.form.label.focused = this._focused && this.form.field === "label";
 		this.form.url.focused = this._focused && this.form.field === "url";
 		this.form.credential.focused = this._focused && this.form.field === "credential";
+		this.form.token.focused = this._focused && this.form.field === "token";
 	}
 
 	private startForm(mode: "add" | "edit"): void {
@@ -240,11 +287,14 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		const label = new Input();
 		const url = new Input();
 		const credential = new Input();
+		const token = new Input();
 		label.setValue(selected?.label ?? "");
 		url.setValue(selected?.url ?? "");
 		credential.setValue(
 			selected?.auth.type === "bearer" ? selected.auth.credentialRef.slice(4) : "JOUZU_MODEL_CATALOG_TOKEN",
 		);
+		// A saved token is never echoed back into the form; the field stays empty
+		// and the hint says one exists.
 		this.form = {
 			mode,
 			...(selected ? { sourceId: selected.id } : {}),
@@ -252,6 +302,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			url,
 			authType: selected?.auth.type ?? "none",
 			credential,
+			token,
 			field: "label",
 		};
 		this.message = undefined;
@@ -285,6 +336,34 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		const credentialName = form.credential.getValue().trim();
 		const auth: CatalogSourceAuth =
 			form.authType === "none" ? { type: "none" } : { type: "bearer", credentialRef: `env:${credentialName}` };
+		const enteredToken = form.token.getValue().trim();
+		try {
+			// Validate before anything is written, so a bad token cannot strand a saved source.
+			if (enteredToken) validateCatalogSourceToken(enteredToken);
+		} catch (error) {
+			this.message = {
+				level: "error",
+				text: sanitizeTerminalText(error instanceof Error ? error.message : String(error)),
+			};
+			this.tui.requestRender();
+			return;
+		}
+		let storedToken: string | undefined;
+		try {
+			storedToken = form.sourceId ? getCatalogSourceToken(this.paths, form.sourceId) : undefined;
+		} catch (error) {
+			this.message = {
+				level: "error",
+				text: `Saved tokens could not be read: ${sanitizeTerminalText(error instanceof Error ? error.message : String(error))}`,
+			};
+			this.tui.requestRender();
+			return;
+		}
+		const envToken = form.authType === "bearer" ? this.env[credentialName]?.trim() || undefined : undefined;
+		const effectiveToken = form.authType === "none" ? undefined : (envToken ?? enteredToken ?? storedToken);
+		// A bearer source without any usable token is still saved, just unchecked:
+		// the user sets the variable or saves a token afterwards and refreshes.
+		const skipDiscovery = form.authType === "bearer" && !effectiveToken;
 		this.busy = true;
 		this.message = { level: "info", text: "Saving catalog…" };
 		this.controller?.abort();
@@ -292,30 +371,49 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		this.controller = controller;
 		this.tui.requestRender();
 		try {
-			const discovered = await this.discover?.(inputUrl, { auth, env: this.env, signal: controller.signal });
-			if (!discovered) throw new Error("catalog endpoint discovery returned no result");
-			if (this.disposed || controller.signal.aborted) return;
+			let discovered: CatalogEndpointDiscoveryResult | undefined;
+			if (!skipDiscovery) {
+				discovered = await this.discover?.(inputUrl, {
+					auth,
+					env: this.env,
+					signal: controller.signal,
+					...(effectiveToken ? { bearerToken: effectiveToken } : {}),
+				});
+				if (!discovered) throw new Error("catalog endpoint discovery returned no result");
+				if (this.disposed || controller.signal.aborted) return;
+			}
 			let refreshed: CatalogRefreshResult | undefined;
 			const activate = (source: CatalogSource) => {
+				if (!discovered) return;
 				refreshed = activateDiscoveredCatalog(this.paths, source, discovered, this.env);
 				if (refreshed.status === "error" || refreshed.status === "rejected") throw new Error(refreshed.message);
 			};
+			const url = discovered?.url ?? normalizeCatalogSourceUrl(inputUrl);
 			const source =
 				form.mode === "edit" && form.sourceId
-					? this.store.update(form.sourceId, { label, url: discovered.url, auth }, activate)
-					: this.store.add({ label, url: discovered.url, auth }, activate);
+					? this.store.update(form.sourceId, { label, url, auth }, activate)
+					: this.store.add({ label, url, auth }, activate);
+			if (enteredToken && auth.type === "bearer") setCatalogSourceToken(this.paths, source.id, enteredToken);
 			this.form = undefined;
 			this.reloadViews(source.id);
 			const count = refreshed?.catalogStatus.configured
-				? (refreshed.catalogStatus.offeringCount ?? discovered.document.modelOfferings.length)
-				: discovered.document.modelOfferings.length;
-			this.message =
+				? (refreshed.catalogStatus.offeringCount ?? discovered?.document.modelOfferings.length ?? 0)
+				: (discovered?.document.modelOfferings.length ?? 0);
+			const notes: string[] = [];
+			if (skipDiscovery)
+				notes.push(
+					`token variable ${sanitizeTerminalText(credentialName)} is not set and no token is saved; set it or save a token, then press R to refresh`,
+				);
+			if (enteredToken && envToken)
+				notes.push(
+					`${sanitizeTerminalText(credentialName)} is set in this Jouzu process and takes precedence over the saved token`,
+				);
+			const base =
 				refreshed?.status === "quarantined"
-					? {
-							level: "info",
-							text: `Saved ${sanitizeTerminalText(source.label)}. Catalog revision quarantined: ${refreshed.reasons.join(", ")}.`,
-						}
-					: { level: "info", text: `Saved ${sanitizeTerminalText(source.label)} with ${countLabel(count)}.` };
+					? `Saved ${sanitizeTerminalText(source.label)}. Catalog revision quarantined: ${refreshed.reasons.join(", ")}.`
+					: `Saved ${sanitizeTerminalText(source.label)}${discovered ? ` with ${countLabel(count)}` : " without checking the catalog"}.`;
+			this.message =
+				notes.length > 0 ? { level: "warning", text: `${base} ${notes.join(". ")}.` } : { level: "info", text: base };
 			this.onCatalogsChanged?.();
 		} catch (error) {
 			if (this.disposed || controller.signal.aborted) return;
@@ -555,7 +653,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		const form = this.form;
 		if (!form) return 0;
 		const innerWidth = paletteInnerWidth(width);
-		const fields = form.authType === "bearer" ? 4 : 3;
+		const fields = form.authType === "bearer" ? 5 : 3;
 		const transportWarning = transportWarningText(form.url.getValue().trim());
 		const warningLines = transportWarning ? wrapTextWithAnsi(transportWarning, innerWidth).length : 0;
 		return fields + warningLines;
@@ -600,22 +698,60 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			const credentialName = form.credential.getValue().trim();
 			const credentialValue = credentialName ? this.env[credentialName] : undefined;
 			const credentialAvailable = typeof credentialValue === "string" && Boolean(credentialValue.trim());
+			let savedToken = false;
+			try {
+				savedToken = form.sourceId ? getCatalogSourceToken(this.paths, form.sourceId) !== undefined : false;
+			} catch {
+				savedToken = false;
+			}
+			const enteredToken = form.token.getValue().trim();
 			items.push({
 				rank: form.field === "credential" ? 0 : 1,
 				text: field("credential", "Token variable", form.credential.render(inputWidth)[0] ?? ""),
 			});
 			for (const hintLine of wrapTextWithAnsi(
-				`${" ".repeat(FORM_LABEL_COLUMN + 2)}Enter the variable name, not the token. Its value is never saved.`,
+				`${" ".repeat(FORM_LABEL_COLUMN + 2)}Enter the variable name, not the token. The environment value is never saved.`,
 				innerWidth,
 			)) {
 				items.push({ rank: 4, text: this.styles.apply("palette.hint", hintLine) });
 			}
 			if (credentialName) {
+				const availability = credentialAvailable
+					? "set"
+					: savedToken
+						? "not set; the saved token will be used"
+						: "not set";
 				for (const hintLine of wrapTextWithAnsi(
-					`${" ".repeat(FORM_LABEL_COLUMN + 2)}${sanitizeTerminalText(credentialName)} is ${credentialAvailable ? "set" : "not set"} in this Jouzu process.`,
+					`${" ".repeat(FORM_LABEL_COLUMN + 2)}${sanitizeTerminalText(credentialName)} is ${availability} in this Jouzu process.`,
 					innerWidth,
 				)) {
 					items.push({ rank: 3, text: this.styles.apply("palette.hint", hintLine) });
+				}
+			}
+			items.push({
+				rank: form.field === "token" ? 0 : 1,
+				text: field("token", "Token", maskRenderedInput(form.token.render(inputWidth)[0] ?? "")),
+			});
+			for (const hintLine of wrapTextWithAnsi(
+				`${" ".repeat(FORM_LABEL_COLUMN + 2)}Optional: enter a token to save it in Jouzu's private credential store. The variable takes precedence when set.`,
+				innerWidth,
+			)) {
+				items.push({ rank: 4, text: this.styles.apply("palette.hint", hintLine) });
+			}
+			if (savedToken && !enteredToken) {
+				for (const hintLine of wrapTextWithAnsi(
+					`${" ".repeat(FORM_LABEL_COLUMN + 2)}A token is saved for this source; leave this empty to keep it, or enter a new one to replace it.`,
+					innerWidth,
+				)) {
+					items.push({ rank: 4, text: this.styles.apply("palette.hint", hintLine) });
+				}
+			}
+			if (enteredToken && credentialAvailable) {
+				for (const hintLine of wrapTextWithAnsi(
+					`${" ".repeat(FORM_LABEL_COLUMN + 2)}Warning: ${sanitizeTerminalText(credentialName)} is set and takes precedence over the saved token.`,
+					innerWidth,
+				)) {
+					items.push({ rank: 3, text: this.styles.apply("palette.message.warning", hintLine) });
 				}
 			}
 		}
@@ -659,7 +795,9 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		const status = view.status;
 		const credential =
 			status.configured && status.credentialName
-				? ` · ${status.credentialName} ${status.credentialAvailable ? "set" : "not set"}`
+				? ` · ${status.credentialName} ${
+						status.credentialEnv ? "set" : status.credentialStored ? "not set, saved token in use" : "not set"
+					}`
 				: "";
 		const detail = [
 			line(
@@ -675,6 +813,8 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		const warning: string[] = [];
 		const transportWarning = transportWarningText(view.source.url);
 		if (transportWarning) warning.push(...warnHint(this.styles, transportWarning, innerWidth, line));
+		const credentialWarning = credentialWarningText(status);
+		if (credentialWarning) warning.push(...warnHint(this.styles, credentialWarning, innerWidth, line));
 		const conflict: string[] = [];
 		if (status.configured && status.conflict) {
 			conflict.push(
@@ -686,13 +826,16 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		return { detail, warning, conflict };
 	}
 
-	/** Body rows the sources list can never shed: the selected row and its full transport warning. */
+	/** Body rows the sources list can never shed: the selected row and its full warnings. */
 	private sourcesRequired(width: number): number {
 		if (this.views.length === 0) return 2;
 		const innerWidth = paletteInnerWidth(width);
 		const selected = this.views[this.selectedIndex];
-		const transportWarning = transportWarningText(selected.source.url);
-		const warningLines = transportWarning ? wrapTextWithAnsi(transportWarning, innerWidth).length : 0;
+		const warnings = [transportWarningText(selected.source.url), credentialWarningText(selected.status)];
+		const warningLines = warnings.reduce(
+			(total, warning) => total + (warning ? wrapTextWithAnsi(warning, innerWidth).length : 0),
+			0,
+		);
 		return 1 + warningLines;
 	}
 
@@ -943,7 +1086,12 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		this.messageCapacity = 0;
 		let shownMessage: string[] = [];
 		if (message && messageLines.length > 0 && messageRoom >= 2) {
-			const role = message.level === "error" ? "palette.message.error" : "palette.message.info";
+			const role =
+				message.level === "error"
+					? "palette.message.error"
+					: message.level === "warning"
+						? "palette.message.warning"
+						: "palette.message.info";
 			shownMessage = this.fitMessage(messageLines, messageRoom, innerWidth).map((messageLine, index, lines) =>
 				this.styles.apply(this.messageCapacity > 0 && index === lines.length - 1 ? "palette.hint" : role, messageLine),
 			);
@@ -973,6 +1121,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		this.form?.label.invalidate();
 		this.form?.url.invalidate();
 		this.form?.credential.invalidate();
+		this.form?.token.invalidate();
 	}
 
 	dispose(): void {

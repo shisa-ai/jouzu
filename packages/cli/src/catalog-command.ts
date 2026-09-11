@@ -37,9 +37,16 @@ function formatOneCatalogStatus(status: CatalogSyncStatus): string[] {
 	if (status.revision) lines.push(`  Revision: ${status.revision} (sequence ${status.sequence})`);
 	if (status.validatedAt) lines.push(`  Validated: ${status.validatedAt}`);
 	if (status.credentialName) {
-		lines.push(
-			`  Credential: environment variable ${status.credentialName} (${status.credentialAvailable ? "set" : "not set"})`,
-		);
+		if (status.credentialAvailable && status.credentialEnv) {
+			lines.push(`  Credential: environment variable ${status.credentialName} (set)`);
+		} else if (status.credentialAvailable) {
+			lines.push(`  Credential: saved token (environment variable ${status.credentialName} not set)`);
+		} else {
+			lines.push(`  Credential: environment variable ${status.credentialName} (not set)`);
+			lines.push(
+				`  Warning: token variable ${status.credentialName} is not set and no token is saved for this source; refreshes are skipped until one is available.`,
+			);
+		}
 	}
 	if (status.conflict) lines.push(`  Warning: ${status.conflict}`);
 	if (status.quarantined > 0) lines.push(`  Quarantined candidates: ${status.quarantined}`);

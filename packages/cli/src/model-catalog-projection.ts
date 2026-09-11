@@ -5,9 +5,11 @@ import type {
 	ProviderConfig,
 	ProviderModelConfig,
 } from "@earendil-works/pi-coding-agent";
+import { getCatalogSourceToken } from "./catalog-sources.js";
 import type { CatalogModelOffering } from "./model-catalog.js";
 import type { ActiveModelCatalog } from "./model-catalog-sync.js";
 import type { ModelReference } from "./model-picker-state.js";
+import type { JouzuPaths } from "./paths.js";
 
 type PiModel = NonNullable<ExtensionContext["model"]>;
 
@@ -401,10 +403,19 @@ export class CatalogProjectionController {
 	private readonly owned = new Map<string, OwnedProviderRegistration>();
 	private readonly pending = new Map<string, ProviderConfig>();
 
+	/** Environment value first, then the source's saved token, then the Pi env reference. */
 	private gatewayConfig(catalog: ActiveModelCatalog): ProviderConfig {
 		if (catalog.source.auth.type !== "bearer") return {};
 		const name = catalog.source.auth.credentialRef.slice(4);
-		return { apiKey: this.env[name]?.trim() || `$${name}`, authHeader: true };
+		const fromEnv = this.env[name]?.trim();
+		if (fromEnv) return { apiKey: fromEnv, authHeader: true };
+		let saved: string | undefined;
+		try {
+			saved = this.paths ? getCatalogSourceToken(this.paths, catalog.source.id) : undefined;
+		} catch {
+			saved = undefined;
+		}
+		return { apiKey: saved || `$${name}`, authHeader: true };
 	}
 
 	registerStartup(pi: ExtensionAPI, catalogs: readonly ActiveModelCatalog[]): void {
@@ -417,7 +428,10 @@ export class CatalogProjectionController {
 		}
 	}
 
-	constructor(private readonly env: NodeJS.ProcessEnv = process.env) {}
+	constructor(
+		private readonly env: NodeJS.ProcessEnv = process.env,
+		private readonly paths?: JouzuPaths,
+	) {}
 
 	private supportsProjection(ctx: ExtensionContext): boolean {
 		const registry = ctx.modelRegistry as Partial<ExtensionContext["modelRegistry"]> | undefined;

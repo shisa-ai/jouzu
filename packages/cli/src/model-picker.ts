@@ -815,6 +815,7 @@ export function pickerModels(
 	ctx: ExtensionContext,
 	catalogs: ActiveModelCatalog[],
 	env: NodeJS.ProcessEnv = process.env,
+	paths?: JouzuPaths,
 ): PickerModel[] {
 	const available = ctx.modelRegistry.getAvailable();
 	const availableKeys = new Set(available.map((model) => `${model.provider}\0${model.id}`));
@@ -859,7 +860,8 @@ export function pickerModels(
 				(!identity ||
 					gateways.some(
 						(active) =>
-							active.document.catalogId === identity.catalogId && catalogSourceCredentialAvailable(active.source, env),
+							active.document.catalogId === identity.catalogId &&
+							catalogSourceCredentialAvailable(active.source, env, paths),
 					)),
 		}));
 	});
@@ -874,7 +876,7 @@ export function createJouzuModelPicker(
 	const jouzuKeybindings = createJouzuKeybindingsManager(paths);
 	const surface = new JouzuPaletteSurfaceHost({ jouzuKeybindings });
 	const catalogEnv = options.palette?.env ?? process.env;
-	const catalogProjection = new CatalogProjectionController(catalogEnv);
+	const catalogProjection = new CatalogProjectionController(catalogEnv, paths);
 	let catalogs: ActiveModelCatalog[] = [];
 	const modelReference = (model: PiModel | undefined, fallback?: ModelCatalogDocument): ModelReference | undefined => {
 		if (!model) return undefined;
@@ -1294,7 +1296,7 @@ export function createJouzuModelPicker(
 								initialFilter: state.filter,
 								getRows: (query, filter) =>
 									buildPickerRows({
-										models: pickerModels(ctx, catalogs, catalogEnv),
+										models: pickerModels(ctx, catalogs, catalogEnv, paths),
 										state,
 										projectKey,
 										current: modelReference(ctx.model, catalog),
@@ -1423,7 +1425,7 @@ export function createJouzuModelPicker(
 		}
 		const current = queuedModelSwitch?.reference ?? modelReference(ctx.model, catalog);
 		const favoriteRows = buildPickerRows({
-			models: pickerModels(ctx, catalogs, catalogEnv),
+			models: pickerModels(ctx, catalogs, catalogEnv, paths),
 			state,
 			projectKey,
 			current,

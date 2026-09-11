@@ -10,10 +10,16 @@ import {
 	catalogEndpointCandidates,
 	catalogInsecureTransportWarning,
 	catalogSourceConflict,
+	catalogSourceCredentialAvailable,
+	catalogSourceCredentialState,
 	discoverCatalogEndpoint,
+	getCatalogSourceToken,
 	loadCatalogSourceRegistry,
+	loadCatalogSourceTokens,
+	removeCatalogSourceToken,
 	resolveCatalogBearer,
 	resolveCatalogSources,
+	setCatalogSourceToken,
 } from "../dist/catalog-sources.js";
 import { MODEL_CATALOG_MAX_BYTES } from "../dist/model-catalog.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
@@ -441,4 +447,101 @@ test("plain HTTP is allowed but flagged as an insecure transport", () => {
 	assert.match(catalogInsecureTransportWarning("http://example.test/catalog"), /plain text/u);
 	assert.match(catalogInsecureTransportWarning("http://192.168.1.10:8080/v1/jouzu/model-catalog"), /plain text/u);
 	assert.equal(catalogInsecureTransportWarning("not a url"), undefined);
+});
+
+test("saved tokens live in a private store and never in the registry", () => {
+	const { root, paths } = setup();
+	try {
+		const store = new CatalogSourceStore(paths, { env: {} });
+		const source = store.add({
+			label: "Office pool",
+			url: "https://catalog.example/v1/jouzu/model-catalog",
+			auth: { type: "bearer", credentialRef: "env:OFFICE_POOL_TOKEN" },
+		});
+		const credentialsPath = join(paths.configDir, "catalog-credentials.json");
+		assert.equal(existsSync(credentialsPath), false);
+
+		setCatalogSourceToken(paths, source.id, "  sk-office-secret  ");
+		assert.equal(getCatalogSourceToken(paths, source.id), "sk-office-secret");
+		const bytes = readFileSync(credentialsPath, "utf8");
+		assert.match(bytes, /sk-office-secret/u);
+		assert.doesNotMatch(readFileSync(join(paths.configDir, "catalogs.json"), "utf8"), /sk-office-secret/u);
+		assert.equal(JSON.parse(bytes).schemaVersion, 1);
+
+		// Update, remove, and the empty store deletes its own file.
+		setCatalogSourceToken(paths, source.id, "sk-rotated");
+		assert.equal(getCatalogSourceToken(paths, source.id), "sk-rotated");
+		removeCatalogSourceToken(paths, source.id);
+		assert.equal(getCatalogSourceToken(paths, source.id), undefined);
+		assert.equal(existsSync(credentialsPath), false);
+
+		assert.throws(() => setCatalogSourceToken(paths, source.id, "no\nnewlines"), CatalogSourceError);
+		assert.throws(() => setCatalogSourceToken(paths, source.id, " ".repeat(10)), CatalogSourceError);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("bearer resolution prefers the environment over a saved token", () => {
+	const { root, paths } = setup();
+	try {
+		const store = new CatalogSourceStore(paths, { env: {} });
+		const source = store.add({
+			label: "Office pool",
+			url: "https://catalog.example/v1/jouzu/model-catalog",
+			auth: { type: "bearer", credentialRef: "env:OFFICE_POOL_TOKEN" },
+		});
+		assert.throws(() => resolveCatalogBearer(source, {}, paths), /OFFICE_POOL_TOKEN is not set/u);
+		assert.equal(catalogSourceCredentialAvailable(source, {}, paths), false);
+		assert.deepEqual(catalogSourceCredentialState(source, {}, paths), {
+			name: "OFFICE_POOL_TOKEN",
+			envSet: false,
+			stored: false,
+		});
+
+		setCatalogSourceToken(paths, source.id, "sk-saved");
+		assert.equal(resolveCatalogBearer(source, {}, paths), "sk-saved");
+		assert.equal(catalogSourceCredentialAvailable(source, {}, paths), true);
+		assert.deepEqual(catalogSourceCredentialState(source, {}, paths), {
+			name: "OFFICE_POOL_TOKEN",
+			envSet: false,
+			stored: true,
+		});
+
+		// The environment overrides the saved token.
+		assert.equal(resolveCatalogBearer(source, { OFFICE_POOL_TOKEN: "sk-env" }, paths), "sk-env");
+		// Without paths, only the environment is consulted.
+		assert.equal(resolveCatalogBearer(source, { OFFICE_POOL_TOKEN: "sk-env" }), "sk-env");
+		assert.throws(() => resolveCatalogBearer(source, {}), /OFFICE_POOL_TOKEN is not set/u);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("removing a source or dropping bearer auth removes its saved token", () => {
+	const { root, paths } = setup();
+	try {
+		const store = new CatalogSourceStore(paths, { env: {} });
+		const source = store.add({
+			label: "Office pool",
+			url: "https://catalog.example/v1/jouzu/model-catalog",
+			auth: { type: "bearer", credentialRef: "env:OFFICE_POOL_TOKEN" },
+		});
+		setCatalogSourceToken(paths, source.id, "sk-saved");
+		assert.equal(Object.keys(loadCatalogSourceTokens(paths)).length, 1);
+
+		store.update(source.id, {
+			label: "Office pool",
+			url: "https://catalog.example/v1/jouzu/model-catalog",
+			auth: { type: "none" },
+		});
+		assert.equal(getCatalogSourceToken(paths, source.id), undefined);
+		assert.equal(existsSync(join(paths.configDir, "catalog-credentials.json")), false);
+
+		setCatalogSourceToken(paths, source.id, "sk-saved-again");
+		store.remove(source.id);
+		assert.equal(Object.keys(loadCatalogSourceTokens(paths)).length, 0);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
 });
