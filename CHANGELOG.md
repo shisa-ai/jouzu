@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.1.9 - unreleased
+
+### Added
+
+- Session flow control is on by default. It gives one place to see and control the automatic turns a session produces. Background-task completions and goals and measured loops register with it, so a completion that arrives while the agent is working waits until the current turn and any queued messages finish instead of interrupting, and completions that are ready together are delivered in one turn. Waits have a deadline, and a running background task reports whether its process is still alive. Other automatic sources — child agents, scheduled prompts, and task-list advances — are held while a wait is live. Set `JOUZU_FLOW_CONTROL=0` to run a session without it.
+- Inspect and repair held work with `/flow`. The command lists what is held, what is waiting, and which work can still take automatic turns, with the reason and any deadline for each. It writes to the terminal only and adds nothing to the model's context.
+  - `/flow retry <request>` re-sends one request whose input was withheld.
+  - `/flow cancel <token>` cancels a wait without stopping the job it was watching.
+  - `/flow pause <work>` and `/flow resume <work>` hold and release the automatic turns of the named work, such as a running goal or measured loop.
+  - `/flow stop <work>` retires the named work and ends its waits. A job it already started keeps running.
+  - `/flow resolve <attempt> retry|discard` decides a turn that was interrupted before its outcome was recorded, when Jouzu cannot tell whether the provider answered it.
+- Save a catalog bearer token in Settings / Catalogs without exporting an environment variable. The token is stored in `catalog-credentials.json` next to `catalogs.json` with private file permissions, keyed to its source, and never shown on screen; the environment variable still takes precedence. A bearer source whose variable is unset can be saved with a warning in the source list and detail, stored without contacting it, and refreshed once the variable is set or a token is saved. Removing a source, or switching it to no authentication, removes its saved token.
+
+### Changed
+
+- TextGuard review is one screen: a scrollable list of withheld items and reports, and a detail view with findings, locations, and the flagged content shown with control and invisible characters escaped. Only content-blocking findings interrupt the session; warnings and informational reports stay inspectable through `/textguard` and can be dismissed for the session. **Always allow this exact content** records an approval for those exact bytes that survives restarts and is rechecked when the content, scanner, or policy changes.
+- Long-running automated sessions stay within bounded storage: finished results, settled attempts, and superseded history are retired under fixed limits, while the evidence needed to explain a hold is kept.
+- Child agents receive the same model-specific behavior guidance as the parent session.
+
+### Fixed
+
+- Keep a background task's unread result summary after the task is cleared.
+- Stop `/flow` from reporting input that was already delivered as held.
+- Let an RPC session finish an accepted prompt when its input stream ends.
+
+### Testing limits
+
+- Session flow control is newly on by default. Its behavior under real workloads still needs dogfooding; the deterministic suite substitutes the provider, and the live smoke is opt-in.
+
 ## 0.1.8 - 2026-09-07
 
 ### Added
