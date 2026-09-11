@@ -45,6 +45,32 @@ test("adapts process-level Pi output only for the runtime operation", async () =
 	}
 });
 
+test("passes machine-readable stdout through byte-exact", async () => {
+	const processWrite = process.stdout.write;
+	let captured = "";
+	const captureWrite = (chunk) => {
+		captured += String(chunk);
+		return true;
+	};
+	process.stdout.write = captureWrite;
+	try {
+		const hint = `To resume this session: pi --session-dir /tmp/sessions --session ${sessionId}\n`;
+		const titleWrite = "\u001b]0;π - workspace\u0007";
+		await withJouzuOutput(
+			async () => {
+				assert.equal(process.stdout.write, captureWrite);
+				process.stdout.write(hint);
+				process.stdout.write(titleWrite);
+			},
+			{ interactive: true, rewrite: false },
+		);
+		assert.equal(captured, hint + titleWrite);
+		assert.equal(process.stdout.write, captureWrite);
+	} finally {
+		process.stdout.write = processWrite;
+	}
+});
+
 test("output adapter forwards buffers, callbacks, and errors without replacing a successor", async () => {
 	const original = process.stdout.write;
 	const calls = [];
@@ -57,11 +83,14 @@ test("output adapter forwards buffers, callbacks, and errors without replacing a
 		const bytes = Buffer.from("unchanged");
 		const callback = () => {};
 		await assert.rejects(
-			withJouzuOutput(async () => {
-				assert.equal(process.stdout.write(bytes, callback), false);
-				assert.equal(process.stdout.write("ordinary text", "utf8", callback), false);
-				throw new Error("operation failed");
-			}, true),
+			withJouzuOutput(
+				async () => {
+					assert.equal(process.stdout.write(bytes, callback), false);
+					assert.equal(process.stdout.write("ordinary text", "utf8", callback), false);
+					throw new Error("operation failed");
+				},
+				{ interactive: true },
+			),
 			/operation failed/,
 		);
 		assert.equal(process.stdout.write, capture);

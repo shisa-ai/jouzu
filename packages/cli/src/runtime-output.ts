@@ -17,8 +17,20 @@ export function rewritePiWindowTitle(text: string): string {
 	return text.replaceAll(PI_WINDOW_TITLE_PREFIX, JOUZU_WINDOW_TITLE_PREFIX);
 }
 
+export interface JouzuOutputOptions {
+	/** Brand Pi terminal-title sequences for an interactive TUI session. */
+	interactive?: boolean;
+	/**
+	 * Rewrite process-level Pi output. Disable when stdout carries a protocol or event stream
+	 * (`--mode rpc`, `--mode json`), which must reach the caller byte-exact.
+	 */
+	rewrite?: boolean;
+}
+
 /** Brand Pi output for the lifetime of one runtime invocation. */
-export async function withJouzuOutput<T>(operation: () => Promise<T>, interactive = false): Promise<T> {
+export async function withJouzuOutput<T>(operation: () => Promise<T>, options: JouzuOutputOptions = {}): Promise<T> {
+	if (options.rewrite === false) return operation();
+	const interactive = options.interactive === true;
 	const originalWrite = process.stdout.write;
 	const jouzuWrite = function (this: NodeJS.WriteStream, chunk: Uint8Array | string, ...args: unknown[]): boolean {
 		let output = typeof chunk === "string" ? rewriteResumeHint(chunk) : chunk;

@@ -10,6 +10,24 @@ const NON_INTERACTIVE_FLAGS = new Set([
 	"--export",
 ]);
 const NON_INTERACTIVE_MODES = new Set(["json", "print", "rpc"]);
+const MACHINE_READABLE_MODES = new Set(["json", "rpc"]);
+
+/**
+ * True when Pi writes a protocol or event stream to stdout. Callers that decorate process output
+ * must pass these modes through byte-exact.
+ */
+export function usesMachineReadableStdout(args: string[]): boolean {
+	for (let index = 0; index < args.length; index += 1) {
+		const arg = args[index];
+		if (arg === "--mode") {
+			if (MACHINE_READABLE_MODES.has(args[index + 1] ?? "")) return true;
+			index += 1;
+			continue;
+		}
+		if (arg.startsWith("--mode=") && MACHINE_READABLE_MODES.has(arg.slice("--mode=".length))) return true;
+	}
+	return false;
+}
 
 export interface InteractiveStartupContext {
 	stdinIsTTY?: boolean;

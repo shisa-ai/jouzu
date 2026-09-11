@@ -34,13 +34,16 @@ test("owns startup, session, and delayed Pi title writes for the runtime operati
 	process.stdout.write = captureWrite;
 	try {
 		const terminal = new ProcessTerminal();
-		await withJouzuOutput(async () => {
-			terminal.setTitle("Jouzu - workspace");
-			terminal.setTitle("π - workspace");
-			terminal.setTitle("π - named session - workspace");
-			await Promise.resolve();
-			terminal.setTitle("π - named session - workspace");
-		}, true);
+		await withJouzuOutput(
+			async () => {
+				terminal.setTitle("Jouzu - workspace");
+				terminal.setTitle("π - workspace");
+				terminal.setTitle("π - named session - workspace");
+				await Promise.resolve();
+				terminal.setTitle("π - named session - workspace");
+			},
+			{ interactive: true },
+		);
 		assert.equal(
 			captured,
 			[

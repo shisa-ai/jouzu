@@ -4,7 +4,7 @@ import { formatHelp, isBlockedPiSelfUpdate, parseJouzuArgs, UsageError } from ".
 import { createAstraCompatibilityExtension } from "./astra-compatibility.js";
 import { catalogStatus, formatCatalogStatus, validateCatalogFile } from "./catalog-command.js";
 import { createDoctorReport } from "./doctor.js";
-import { isInteractivePiStartup } from "./interactive-startup.js";
+import { isInteractivePiStartup, usesMachineReadableStdout } from "./interactive-startup.js";
 import {
 	applyKeybindings,
 	ensureDefaultKeybindings,
@@ -353,7 +353,10 @@ export async function runMainCli(args: string[]): Promise<void> {
 			? withReleaseExtensionConflictPolicy(pi, releaseExtensionStatus, startPi)
 			: startPi();
 	try {
-		await withJouzuOutput(runPi, interactiveStartup);
+		await withJouzuOutput(runPi, {
+			interactive: interactiveStartup,
+			rewrite: !usesMachineReadableStdout(piArgs),
+		});
 	} finally {
 		try {
 			await textguard?.dispose();
