@@ -6,14 +6,16 @@ import type {
 	ProviderModelConfig,
 } from "@earendil-works/pi-coding-agent";
 import { getCatalogSourceToken } from "./catalog-sources.js";
-import type { CatalogModelOffering } from "./model-catalog.js";
+import { CATALOG_THINKING_LEVELS, type CatalogModelOffering } from "./model-catalog.js";
 import type { ActiveModelCatalog } from "./model-catalog-sync.js";
 import type { ModelReference } from "./model-picker-state.js";
 import type { JouzuPaths } from "./paths.js";
 
 type PiModel = NonNullable<ExtensionContext["model"]>;
 
-type CatalogModelPatch = Partial<Pick<PiModel, "name" | "reasoning" | "input" | "contextWindow" | "maxTokens">>;
+type CatalogModelPatch = Partial<
+	Pick<PiModel, "name" | "reasoning" | "input" | "contextWindow" | "maxTokens" | "thinkingLevelMap">
+>;
 
 interface CatalogOfferingProjection {
 	offering: CatalogModelOffering;
@@ -52,12 +54,34 @@ interface OwnedProviderRegistration {
 	config: ProviderConfig;
 }
 
-const EMPTY_COST = Object.freeze({ input: 0, output: 0, cacheRead: 0, cacheWrite: 0 });
+const EMPTY_COST = Object.freeze({
+	input: 0,
+	output: 0,
+	cacheRead: 0,
+	cacheWrite: 0,
+});
+
+function catalogThinkingMap(
+	offering: CatalogModelOffering,
+	base?: PiModel["thinkingLevelMap"],
+): PiModel["thinkingLevelMap"] {
+	if (!offering.supportedThinkingLevels) return base;
+	return Object.fromEntries(
+		CATALOG_THINKING_LEVELS.map((level) => [
+			level,
+			offering.supportedThinkingLevels?.includes(level) ? (base?.[level] ?? (level === "off" ? "none" : level)) : null,
+		]),
+	);
+}
 
 function offeringPatch(offering: CatalogModelOffering): CatalogModelPatch {
 	const patch: CatalogModelPatch = {};
 	if (typeof offering.name === "string" && offering.name.length > 0) patch.name = offering.name;
 	if (Array.isArray(offering.capabilities)) patch.reasoning = offering.capabilities.includes("reasoning");
+	if (offering.supportedThinkingLevels) {
+		patch.thinkingLevelMap = catalogThinkingMap(offering);
+		patch.reasoning = offering.supportedThinkingLevels.some((level) => level !== "off");
+	}
 	if (Array.isArray(offering.modalities)) {
 		const input = offering.modalities.filter(
 			(value): value is "text" | "image" => value === "text" || value === "image",
@@ -128,6 +152,7 @@ function createCatalogModel(
 		api: template.api,
 		baseUrl: template.baseUrl,
 		reasoning: patch.reasoning ?? false,
+		...(patch.thinkingLevelMap ? { thinkingLevelMap: patch.thinkingLevelMap } : {}),
 		input: patch.input,
 		cost: { ...EMPTY_COST },
 		contextWindow: patch.contextWindow,
@@ -199,6 +224,9 @@ export function projectCatalogProviders(
 				const base = projectedModels[index];
 				if (!base) continue;
 				const projected = { ...base, ...projection.patch };
+				if (projection.offering.supportedThinkingLevels) {
+					projected.thinkingLevelMap = catalogThinkingMap(projection.offering, base.thinkingLevelMap);
+				}
 				if (JSON.stringify(registrationModel(projected)) !== JSON.stringify(registrationModel(base))) {
 					projectedModels[index] = projected;
 					overriddenModelIds.push(base.id);
@@ -386,6 +414,7 @@ function gatewayProviders(catalog: ActiveModelCatalog): CatalogProviderProjectio
 			api,
 			baseUrl: api === "anthropic-messages" ? baseUrl.slice(0, -3) : baseUrl,
 			reasoning: patch.reasoning ?? false,
+			...(patch.thinkingLevelMap ? { thinkingLevelMap: patch.thinkingLevelMap } : {}),
 			input: patch.input,
 			contextWindow: patch.contextWindow,
 			maxTokens: patch.maxTokens,

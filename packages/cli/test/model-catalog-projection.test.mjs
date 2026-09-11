@@ -3,6 +3,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { clampThinkingLevel, getSupportedThinkingLevels } from "@earendil-works/pi-ai";
 import { ModelRegistry, ModelRuntime } from "@earendil-works/pi-coding-agent";
 
 import { setCatalogSourceToken } from "../dist/catalog-sources.js";
@@ -456,9 +457,19 @@ test("gateway model dispatch sends the catalog bearer and compatibility to the g
 		catalog.source.url = `http://127.0.0.1:${server.address().port}/v1/jouzu/model-catalog`;
 		catalog.source.auth = { type: "bearer", credentialRef: "env:GATEWAY_TOKEN" };
 		catalog.document.compatibilityProfiles[0].projections = {
-			pi: { compat: { supportsDeveloperRole: false, maxTokensField: "max_tokens" } },
+			pi: {
+				compat: {
+					supportsDeveloperRole: false,
+					supportsReasoningEffort: true,
+					maxTokensField: "max_tokens",
+				},
+			},
 		};
-		const controller = new CatalogProjectionController({ GATEWAY_TOKEN: "gateway-test-jwt" });
+		catalog.document.modelOfferings[0].supportedThinkingLevels = ["off", "low", "high", "xhigh", "max"];
+		catalog.document.modelOfferings[0].capabilities = ["reasoning"];
+		const controller = new CatalogProjectionController({
+			GATEWAY_TOKEN: "gateway-test-jwt",
+		});
 		controller.registerStartup(pi, [catalog]);
 		const reference = { provider: "ai.example.gateway", modelId: "example-model" };
 		assert.ok(resolveCatalogModel(ctx, reference, [catalog]), "registered before session restoration");
@@ -466,8 +477,11 @@ test("gateway model dispatch sends the catalog bearer and compatibility to the g
 		const selected = resolveCatalogModel(ctx, reference, [catalog]);
 		const result = await runtime.complete(
 			selected,
-			{ systemPrompt: "test instruction", messages: [{ role: "user", content: "hello", timestamp: Date.now() }] },
-			{ maxTokens: 8 },
+			{
+				systemPrompt: "test instruction",
+				messages: [{ role: "user", content: "hello", timestamp: Date.now() }],
+			},
+			{ maxTokens: 8, reasoningEffort: "max" },
 		);
 		assert.equal(result.stopReason, "stop", result.errorMessage);
 		assert.equal(requests.length, 1);
@@ -475,7 +489,56 @@ test("gateway model dispatch sends the catalog bearer and compatibility to the g
 		assert.equal(requests[0].headers.authorization, "Bearer gateway-test-jwt");
 		assert.equal(requests[0].body.model, "example-model");
 		assert.equal(requests[0].body.max_tokens, 8);
+		assert.deepEqual(getSupportedThinkingLevels(selected), ["off", "low", "high", "xhigh", "max"]);
+		assert.equal(requests[0].body.reasoning_effort, "max");
+		await runtime.complete(
+			selected,
+			{ messages: [{ role: "user", content: "hello", timestamp: Date.now() }] },
+			{ maxTokens: 8 },
+		);
+		assert.equal(requests[1].body.reasoning_effort, "none");
 		assert.equal(requests[0].body.messages[0].role, "system");
+		const { createAgentSession, DefaultResourceLoader, SessionManager, SettingsManager } = await import(
+			"@earendil-works/pi-coding-agent"
+		);
+		const loader = new DefaultResourceLoader({
+			cwd: root,
+			agentDir: root,
+			noExtensions: true,
+			noSkills: true,
+			noPromptTemplates: true,
+			noContextFiles: true,
+		});
+		await loader.reload();
+		const { session } = await createAgentSession({
+			cwd: root,
+			agentDir: root,
+			modelRuntime: runtime,
+			model: selected,
+			resourceLoader: loader,
+			sessionManager: SessionManager.inMemory(root),
+			tools: [],
+			settingsManager: SettingsManager.inMemory({ defaultThinkingLevel: "medium" }),
+		});
+		try {
+			assert.deepEqual(session.getAvailableThinkingLevels(), ["off", "low", "high", "xhigh", "max"]);
+			session.setThinkingLevel("medium");
+			assert.equal(session.thinkingLevel, "high");
+			assert.equal(session.cycleThinkingLevel(), "xhigh");
+			assert.equal(session.cycleThinkingLevel(), "max");
+			assert.equal(session.cycleThinkingLevel(), "off");
+			catalog.document.modelOfferings[0].supportedThinkingLevels = ["low", "high"];
+			controller.sync(pi, ctx, [catalog]);
+			await session.setModel(resolveCatalogModel(ctx, reference, [catalog]));
+			assert.deepEqual(session.getAvailableThinkingLevels(), ["low", "high"]);
+			session.setThinkingLevel("max");
+			assert.equal(session.thinkingLevel, "high");
+			session.setThinkingLevel("off");
+			assert.equal(session.thinkingLevel, "low");
+		} finally {
+			session.dispose();
+		}
+
 		controller.release(pi, ctx);
 		assert.equal(registry.find(selected.provider, selected.id), undefined);
 	} finally {
@@ -524,4 +587,40 @@ test("a saved source token serves the gateway when the environment has no value"
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
+});
+
+test("catalog levels constrain existing and added models while preserving native effort mappings", () => {
+	const document = fixture();
+	const offering = document.modelOfferings[0];
+	offering.supportedThinkingLevels = ["low", "high", "xhigh", "max"];
+	offering.capabilities = ["reasoning"];
+	offering.defaultThinkingLevel = "high";
+	document.modelOfferings.push({ ...offering, id: "new", modelId: "new" });
+	const result = projectCatalogProviders(
+		[
+			model("example-model", {
+				thinkingLevelMap: { high: "native-high", xhigh: "native-max" },
+			}),
+			model("untouched"),
+		],
+		[activeCatalog(document)],
+	);
+	const models = result.providers[0].models;
+	for (const id of ["example-model", "new"]) {
+		const selected = models.find((model) => model.id === id);
+		assert.deepEqual(getSupportedThinkingLevels(selected), offering.supportedThinkingLevels);
+		assert.equal(clampThinkingLevel(selected, "off"), "low");
+		assert.equal(clampThinkingLevel(selected, "medium"), "high");
+		assert.equal(clampThinkingLevel(selected, "max"), "max");
+	}
+	assert.equal(models[0].thinkingLevelMap.high, "native-high");
+	assert.equal(models[0].thinkingLevelMap.xhigh, "native-max");
+	assert.equal(models.find((model) => model.id === "untouched").thinkingLevelMap, undefined);
+	const conflict = structuredClone(document);
+	conflict.modelOfferings[0].supportedThinkingLevels = ["high"];
+	assert.ok(
+		projectCatalogProviders([model("example-model")], [activeCatalog(document), activeCatalog(conflict)]).skipped.some(
+			(skip) => skip.modelId === "example-model" && skip.reason === "conflicting-catalogs",
+		),
+	);
 });

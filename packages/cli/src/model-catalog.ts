@@ -72,6 +72,7 @@ export interface CatalogCanonicalModel extends Record<string, unknown> {
 export interface CatalogModelOffering extends Record<string, unknown> {
 	id: string;
 	defaultThinkingLevel?: CatalogThinkingLevel;
+	supportedThinkingLevels?: CatalogThinkingLevel[];
 	providerId: string;
 	modelId: string;
 	name?: string;
@@ -581,6 +582,26 @@ export function validateModelCatalog(value: unknown, options: ValidateCatalogOpt
 				`$.modelOfferings[${index}].defaultThinkingLevel`,
 				`must be one of: ${CATALOG_THINKING_LEVELS.join(", ")}`,
 			);
+		}
+		if (offering.supportedThinkingLevels !== undefined) {
+			const path = `$.modelOfferings[${index}].supportedThinkingLevels`;
+			const levels = stringArray(offering.supportedThinkingLevels, path);
+			if (
+				levels.length === 0 ||
+				new Set(levels).size !== levels.length ||
+				levels.some((level) => !CATALOG_THINKING_LEVELS.includes(level as CatalogThinkingLevel))
+			) {
+				throw new ModelCatalogError("invalid_record", path, "must contain distinct recognized thinking levels");
+			}
+			if (offering.defaultThinkingLevel !== undefined && !levels.includes(offering.defaultThinkingLevel as string)) {
+				throw new ModelCatalogError("invalid_record", path, "must include defaultThinkingLevel");
+			}
+			if (
+				Array.isArray(offering.capabilities) &&
+				offering.capabilities.includes("reasoning") !== levels.some((level) => level !== "off")
+			) {
+				throw new ModelCatalogError("invalid_record", path, "must agree with reasoning capability");
+			}
 		}
 		if (offering.modalities !== undefined) {
 			stringArray(offering.modalities, `$.modelOfferings[${index}].modalities`);

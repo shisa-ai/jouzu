@@ -218,3 +218,33 @@ test("conformance result is machine-readable and never throws", () => {
 		{ valid: false, code: "invalid_record", path: "$" },
 	);
 });
+
+test("supported thinking levels reject malformed sets and contradictory metadata", () => {
+	const schema = JSON.parse(readFileSync(join(catalogRoot, "model-catalog-v1.schema.json"), "utf8"));
+	assert.deepEqual(
+		schema.$defs.offering.properties.supportedThinkingLevels.items.enum,
+		schema.$defs.offering.properties.defaultThinkingLevel.enum,
+	);
+	for (const levels of [undefined, ["off"], ["low", "high", "xhigh", "max"], ["high"]]) {
+		const document = accountSnapshot();
+		delete document.modelOfferings[0].defaultThinkingLevel;
+		delete document.modelOfferings[0].capabilities;
+		if (levels !== undefined) document.modelOfferings[0].supportedThinkingLevels = levels;
+		assert.deepEqual(
+			parseAndValidateModelCatalog(JSON.stringify(document)).modelOfferings[0].supportedThinkingLevels,
+			levels,
+		);
+	}
+	for (const levels of [null, [], "high", ["high", "high"], ["ultra"], [75], ["HIGH"], ["off", null]]) {
+		const document = accountSnapshot();
+		document.modelOfferings[0].supportedThinkingLevels = levels;
+		assert.throws(() => parseAndValidateModelCatalog(JSON.stringify(document)), ModelCatalogError);
+	}
+	const document = accountSnapshot();
+	document.modelOfferings[0].supportedThinkingLevels = ["low", "high"];
+	assert.throws(() => parseAndValidateModelCatalog(JSON.stringify(document)), /must include defaultThinkingLevel/);
+	delete document.modelOfferings[0].defaultThinkingLevel;
+	assert.throws(() => parseAndValidateModelCatalog(JSON.stringify(document)), /must agree with reasoning capability/);
+	document.modelOfferings[0].capabilities.push("reasoning");
+	assert.doesNotThrow(() => parseAndValidateModelCatalog(JSON.stringify(document)));
+});
