@@ -43,7 +43,7 @@ npm run build
 node --test packages/cli/test/flow-*.test.mjs
 ```
 
-The 63 files under `packages/cli/test/flow-*.test.mjs` (1032 tests) substitute the provider, drive a real Pi session with a substituted stream, or exercise hand-built stores and pure functions. No test calls a provider. The suite imports `packages/cli/dist/flow-control/*.js`, so `npm run build` must run first; the full CLI test script rejects stale output.
+The 63 files under `packages/cli/test/flow-*.test.mjs` substitute the provider, drive a real Pi session with a substituted stream, or exercise hand-built stores and pure functions. No test calls a provider. The suite imports `packages/cli/dist/flow-control/*.js`, so `npm run build` must run first; the full CLI test script rejects stale output.
 
 | Area | Example files |
 | --- | --- |
