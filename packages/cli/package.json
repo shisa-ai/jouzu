@@ -49,7 +49,7 @@
 		"@earendil-works/pi-server": "0.85.1",
 		"@earendil-works/pi-telemetry": "0.85.1",
 		"@earendil-works/pi-tui": "0.85.1",
-		"@lhl/pi-tasks": "git+https://github.com/lhl/pi-tasks.git#5b35d3a68e5963cbde6e3d47e21df7d7c1f7d06b",
+		"@lhl/pi-tasks": "git+https://github.com/lhl/pi-tasks.git#f665274f745e3710031b5263a62cb2b410adf019",
 		"@picovoice/pvrecorder-node": "1.2.9",
 		"@sinclair/typebox": "0.34.52",
 		"@sting8k/pi-vcc": "0.7.2",
