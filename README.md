@@ -352,17 +352,7 @@ ownership, update lanes, and bundled profile boundaries.
 and [docs/palette-ux.md](https://github.com/shisa-ai/jouzu/blob/main/docs/palette-ux.md) adds the Palette standards. [Pi update review](https://github.com/shisa-ai/jouzu/blob/main/docs/PI-UPDATES.md)
 records the candidate checklist, compatibility findings, and reverse-chronological update log.
 
-The opt-in live Japanese tool-flow smoke requires an explicitly selected provider/model and cost budget; it is not part of default tests:
-
-```bash
-JOUZU_LIVE_SMOKE=1 \
-JOUZU_LIVE_PROVIDER="$PROVIDER" \
-JOUZU_LIVE_MODEL="$MODEL" \
-JOUZU_LIVE_MAX_USD=0.02 \
-npm run test:live:ja
-```
-
-It installs the packed artifact in a temporary consumer, permits only `read` and `write`, stores no session or transcript, verifies exact Japanese output bytes, and fails if reported cost exceeds the declared budget.
+[docs/testing.md](https://github.com/shisa-ai/jouzu/blob/main/docs/testing.md) lists the deterministic suites, session flow control tests, and the opt-in live provider smokes.
 
 ## License
 
