@@ -427,3 +427,51 @@ test("background activity and unread output retain work without a declared wait"
 	lease.close();
 	assert.throws(() => results.retainedWorkIds(), /detached/);
 });
+
+test("a result receipt survives the live task being cleared", async (t) => {
+	// "Background tasks cleared" empties the task map while a manifest is still pending delivery, so a
+	// receipt written only onto a live task would be lost with it. The controller would then be told
+	// the result is unavailable, offer it again, and retain its work forever.
+	const { createBackgroundFlowSource } = await loadBackground(t);
+	const scope = { sessionId: "cleared", branchId: "branch" };
+	let live = [
+		{
+			id: "task",
+			sessionId: scope.sessionId,
+			status: "completed",
+			notifyOnExit: true,
+			exitNotified: false,
+			flow: { version: 1, execution: "execution", scope, work: { id: "work", revision: 1 } },
+			logFile: "/log",
+		},
+	];
+	const source = createBackgroundFlowSource(() => live);
+	const lease = source.activate(scope, () => ({ id: "work", revision: 1 }));
+	t.after(() => lease.close());
+	const results = source.activateResults(scope, () => {});
+	source.prepareResult(live[0]);
+	source.commitResults(live);
+	const [manifest] = results.snapshot();
+	assert.equal(manifest.id, "bg-result:execution");
+
+	live = [];
+	// The store outlives the task, so the pending manifest is still offered and still acknowledgeable.
+	assert.deepEqual(
+		results.snapshot().map((value) => value.id),
+		[manifest.id],
+	);
+	assert.equal(source.setResultReceipt(manifest.id, manifest.revision, "delivered", true), true);
+	assert.deepEqual(results.snapshot(), []);
+	// A second acknowledgement is a no-op rather than an error, and a rollback restores the offer.
+	assert.equal(source.setResultReceipt(manifest.id, manifest.revision, "delivered", true), false);
+	assert.equal(source.setResultReceipt(manifest.id, manifest.revision, "delivered", undefined), true);
+	assert.deepEqual(
+		results.snapshot().map((value) => value.id),
+		[manifest.id],
+	);
+	// Observation retains work until it is recorded, and an unknown identity is still refused.
+	assert.deepEqual(results.retainedWorkIds(), ["work"]);
+	assert.equal(source.setResultReceipt(manifest.id, manifest.revision, "observed", true), true);
+	assert.deepEqual(results.retainedWorkIds(), []);
+	assert.throws(() => source.setResultReceipt("bg-result:missing", "1", "delivered", true), /unavailable/);
+});

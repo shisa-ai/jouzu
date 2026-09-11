@@ -65,30 +65,30 @@ export function transform(path, source) {
 			request.accept({
 				...backgroundFlowSource,
 				acknowledgeObservation(id: string, revision: string) {
+					if (!backgroundFlowSource.setResultReceipt(id, revision, "observed", true)) return;
 					const task = [...tasks.values()].find(task => task.flow?.result?.metadata.id === id && task.flow.result.metadata.revision === revision);
-					if (!task?.flow?.result) throw new Error("Exact background result is unavailable.");
-					if (task.flow.result.observed) return;
-					const prior = task.exitNotified;
-					task.flow.result.observed = true;
-					task.exitNotified = true;
+					const prior = task?.exitNotified;
+					if (task?.flow?.result) { task.flow.result.observed = true; task.exitNotified = true; }
 					try {
 						const saved = persistSnapshots();
 						if (!saved.sidecar && !(saved.appendEntry && saved.appendReason === "appended")) throw new Error("Background observation could not be persisted.");
-					} catch (error) { task.flow.result.observed = undefined; task.exitNotified = prior; throw error; }
+					} catch (error) {
+						backgroundFlowSource.setResultReceipt(id, revision, "observed", undefined);
+						if (task?.flow?.result) { task.flow.result.observed = undefined; task.exitNotified = prior; }
+						throw error;
+					}
 				},
 				acknowledgeResult(id: string, revision: string) {
+					if (!backgroundFlowSource.setResultReceipt(id, revision, "delivered", true)) return;
 					const task = [...tasks.values()].find(task => task.flow?.result?.metadata.id === id && task.flow.result.metadata.revision === revision);
-					if (!task?.flow?.result) throw new Error("Exact background result is unavailable.");
-					if (task.flow.result.delivered) return;
-					const prior = task.exitNotified;
-					task.flow.result.delivered = true;
-					task.exitNotified = true;
+					const prior = task?.exitNotified;
+					if (task?.flow?.result) { task.flow.result.delivered = true; task.exitNotified = true; }
 					try {
 						const saved = persistSnapshots();
 						if (!saved.sidecar && !(saved.appendEntry && saved.appendReason === "appended")) throw new Error("Background result receipt could not be persisted.");
 					} catch (error) {
-						task.flow.result.delivered = undefined;
-						task.exitNotified = prior;
+						backgroundFlowSource.setResultReceipt(id, revision, "delivered", undefined);
+						if (task?.flow?.result) { task.flow.result.delivered = undefined; task.exitNotified = prior; }
 						throw error;
 					}
 				},

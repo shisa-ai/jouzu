@@ -146,6 +146,22 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 			result.reads = [...reads, receipt];
 			return true;
 		},
+		/**
+		 * Record delivery or observation against the stored result, and report whether that changed it.
+		 *
+		 * `results` outlives the live task: clearing finished background tasks empties the task map while
+		 * a manifest is still pending here, and a receipt written only onto a task would be lost with it.
+		 * An unrecorded receipt makes the controller offer the result again and retains its work forever,
+		 * so the store is the authority and a caller mirrors the flag onto a live task only if one remains.
+		 */
+		setResultReceipt(id: string, revision: string, field: "delivered" | "observed", value: true | undefined): boolean {
+			const entry = [...results.values()].find(value => value.result.metadata.id === id && value.result.metadata.revision === revision);
+			if (!entry) throw new Error("Exact background result is unavailable.");
+			if (!!entry.result[field] === !!value) return false;
+			if (value) entry.result[field] = true;
+			else delete entry.result[field];
+			return true;
+		},
 		commitResults(tasks: Iterable<Snapshot>): void {
 			const changed = new Set<string>();
 			for (const task of tasks) {
