@@ -213,7 +213,7 @@ test("a prompt sent with flow control keeps its acceptance when input ends at on
 		);
 		// End-of-input starts shutdown. Admission adds latency the prompt has to survive, so with
 		// flow control installed the command must still run and report the same result as without it.
-		for (const flag of [undefined, "1"]) {
+		for (const flag of [undefined, "1", "0"]) {
 			const result = run(
 				[
 					"--jouzu-home",
@@ -231,6 +231,7 @@ test("a prompt sent with flow control keeps its acceptance when input ends at on
 					...(flag ? { env: { JOUZU_FLOW_CONTROL: flag } } : {}),
 				},
 			);
+			// Unset now means enabled, so this covers the default path as well as both explicit values.
 			const label = `JOUZU_FLOW_CONTROL=${flag ?? "unset"}`;
 			assert.equal(result.status, 0, `${label}: ${result.stderr}`);
 			assert.ok(result.stderr.includes("JOUZU_SHUTDOWN_PROBE=ran"), `${label}: the command never ran`);

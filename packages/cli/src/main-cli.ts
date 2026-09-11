@@ -319,11 +319,11 @@ export async function runMainCli(args: string[]): Promise<void> {
 		approvalPath: join(paths.cacheDir, "textguard", "approvals.json"),
 		files: parsed.options.textguardFiles,
 	});
-	// Opt-in while session flow control is incomplete: it has no visible hold status, no manual
-	// retry, and no background health policy yet.
+	// On by default so real sessions exercise it; `JOUZU_FLOW_CONTROL=0` turns it off for a session
+	// whose behaviour it gets wrong. `/flow` shows what it is holding and releases it.
 	// Imported lazily so `doctor` and `--help` keep working when the Pi runtime is unavailable.
 	const flow =
-		process.env.JOUZU_FLOW_CONTROL === "1"
+		process.env.JOUZU_FLOW_CONTROL !== "0"
 			? (await import("./flow-control/flow-runtime.js")).createFlowControlRuntime({
 					root: join(paths.stateDir, "flow"),
 					onError: (error) =>
