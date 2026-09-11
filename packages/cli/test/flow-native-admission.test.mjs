@@ -106,3 +106,88 @@ test("an unresolved outcome holds automated input while verified user input proc
 	const labelled = record("labelled", { api: "prompt", origin: { kind: "extension", id: "synthetic" } });
 	assert.equal(decide(labelled, [labelled], unresolved).allowed, false);
 });
+
+/**
+ * A queued user message the host takes is pending work that automated input must wait behind. One
+ * the host discards is not, and telling them apart is the only thing that stops a single dropped
+ * steer from starving every automated send for the rest of the session.
+ *
+ * Shapes here mirror a real ledger: a dispatched `steer` carrying one queue input, with and without
+ * the claim receipt the host writes when it actually takes the message.
+ */
+function queuedUser(id, { claimed = false } = {}) {
+	const queue = { id: `queue-${id}`, revision: 1 };
+	return {
+		...record(id, { api: "steer", origin: { kind: "host", id: "terminal" }, args: ["a user message"] }),
+		dispatch: {
+			operationId: `op-${id}`,
+			inputs: [{ kind: "steer", queue }],
+			...(claimed ? { queueClaims: [{ ...queue, consumed: true }] } : {}),
+		},
+	};
+}
+const reason = (decision) => (decision.allowed ? undefined : decision.reason);
+
+test("automated input waits behind a queued user message the host still holds", () => {
+	const automated = record("automated");
+	const user = queuedUser("user");
+	const live = new Set(["queue-user"]);
+	// With or without the live-queue evidence, a message the host still holds outranks automation.
+	for (const queue of [undefined, live])
+		assert.equal(
+			reason(
+				decideNativeAdmission(automated.submission, [user, automated], gates, host, "submission", undefined, queue),
+			),
+			"Input is waiting for queued user work.",
+		);
+});
+
+test("a queued user message the host discarded stops holding automated input", () => {
+	const automated = record("automated");
+	const user = queuedUser("user");
+	// The host no longer holds it and no claim was ever recorded: it was dropped, not delivered.
+	// Without this evidence the record reads as pending forever and nothing automated ever runs.
+	assert.equal(
+		decideNativeAdmission(automated.submission, [user, automated], gates, host, "submission", undefined, new Set())
+			.allowed,
+		true,
+	);
+	// A claimed message is already terminal, so it never held anything either way.
+	assert.equal(
+		decideNativeAdmission(
+			automated.submission,
+			[queuedUser("user", { claimed: true }), automated],
+			gates,
+			host,
+			"submission",
+			undefined,
+			new Set(),
+		).allowed,
+		true,
+	);
+});
+
+test("an undispatched user message holds automated input whatever the queue says", () => {
+	// Not yet dispatched means not yet offered to the host, so an empty queue is not evidence of
+	// anything. Only a record the host was given and then dropped may stop holding.
+	const automated = record("automated");
+	const pending = record("pending", { api: "steer", origin: { kind: "host", id: "terminal" }, args: ["typed"] });
+	for (const queue of [undefined, new Set()])
+		assert.equal(
+			reason(
+				decideNativeAdmission(automated.submission, [pending, automated], gates, host, "submission", undefined, queue),
+			),
+			"Input is waiting for queued user work.",
+		);
+});
+
+test("user input is admitted regardless of the queue evidence", () => {
+	// The user's own input never waits on this gate; only its origin decides that.
+	const user = record("typed", { api: "steer", origin: { kind: "host", id: "terminal" }, args: ["typed"] });
+	const blocker = queuedUser("other");
+	for (const queue of [undefined, new Set(["queue-other"]), new Set()])
+		assert.equal(
+			decideNativeAdmission(user.submission, [blocker, user], gates, host, "submission", undefined, queue).allowed,
+			true,
+		);
+});

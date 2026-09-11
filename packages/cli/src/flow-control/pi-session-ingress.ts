@@ -204,11 +204,29 @@ export class PiSessionFlowIngress implements Ingress {
 		return run;
 	}
 
+	/**
+	 * Queue identities the host still holds. An unclaimed retained entry missing from this set was
+	 * discarded by the host rather than delivered, which is the only local evidence that it will
+	 * never arrive. Reading it costs nothing and is safe under the serialized boundary: during a
+	 * claim pass an entry is briefly absent, but the host is starting a run then, so the idle gate
+	 * below still holds automated input.
+	 */
+	private liveQueueIds(): ReadonlySet<string> | undefined {
+		try {
+			const queued = this.session?.agent?.inspectQueuedMessages?.();
+			return Array.isArray(queued) ? new Set(queued.map((item) => item.id)) : undefined;
+		} catch {
+			// No view of the queue means no evidence of discard, so fall back to the conservative read.
+			return undefined;
+		}
+	}
+
 	private async refreshUserInput(): Promise<void> {
 		const records = await this.branch().attachment.submissions.snapshot();
+		const liveQueue = this.liveQueueIds();
 		this.retainedUserInput = new Set(
 			records
-				.filter((record) => isNativeUserInput(record.submission) && awaitingNativeInput(record))
+				.filter((record) => isNativeUserInput(record.submission) && awaitingNativeInput(record, liveQueue))
 				.map((record) => record.id),
 		);
 	}
@@ -455,6 +473,7 @@ export class PiSessionFlowIngress implements Ingress {
 			this.session,
 			phase,
 			input,
+			this.liveQueueIds(),
 		);
 		if (this.options.admit && !recoveryBlocked && !outcomeUnresolved) {
 			try {
@@ -498,6 +517,7 @@ export class PiSessionFlowIngress implements Ingress {
 				session,
 				phase,
 				input,
+				this.liveQueueIds(),
 			);
 		};
 		const waitDecision = durableWaitDecision();

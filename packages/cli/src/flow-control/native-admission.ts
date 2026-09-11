@@ -30,21 +30,28 @@ function lane(submission: FlowSubmission): string {
 	if (!submission.hostState?.streaming) return "prompt";
 	return options?.deliverAs ?? options?.streamingBehavior ?? "prompt";
 }
-export function awaitingNativeInput(record: RetainedSubmission): boolean {
+/**
+ * Whether a retained send still has input the host has not taken.
+ *
+ * `liveQueue` is the set of queue identities the host still holds. An unclaimed entry that is no
+ * longer among them was discarded rather than delivered, which is what happens to a queued steer
+ * when its run is aborted. Without that evidence such a record reads as pending forever, and since
+ * pending user work holds every automated send, one dropped steer starves the session for good.
+ * Omitting the set keeps the conservative reading, so a caller with no view of the queue is unchanged.
+ */
+export function awaitingNativeInput(record: RetainedSubmission, liveQueue?: ReadonlySet<string>): boolean {
 	if (record.status === "cancelled") return false;
 	if (!record.dispatch) return true;
 	if (record.dispatch.promptClaims?.length || record.dispatch.promptHistory?.length) return false;
 	const inputs = record.dispatch.inputs;
-	return (
-		!inputs?.length ||
-		inputs.some(
-			(input) =>
-				!input.queue ||
-				!record.dispatch?.queueClaims?.some(
-					(claim) => claim.id === input.queue?.id && claim.revision === input.queue.revision,
-				),
-		)
-	);
+	if (!inputs?.length) return true;
+	return inputs.some((input) => {
+		if (!input.queue) return true;
+		const queue = input.queue;
+		if (record.dispatch?.queueClaims?.some((claim) => claim.id === queue.id && claim.revision === queue.revision))
+			return false;
+		return liveQueue ? liveQueue.has(queue.id) : true;
+	});
 }
 
 /** Conservative admission for retained sends without semantic work/independence authority. */
@@ -55,6 +62,7 @@ export function decideNativeAdmission(
 	host: Pick<AgentSession, "isIdle" | "isStreaming" | "isRetrying" | "isCompacting">,
 	phase: "submission" | "queue",
 	input?: FlowNativeInput,
+	liveQueue?: ReadonlySet<string>,
 ): NativeAdmissionDecision {
 	const hold = (reason: string): NativeAdmissionDecision => ({ allowed: false, reason });
 	const index = records.findIndex((record) => record.id === submission.id);
@@ -80,7 +88,7 @@ export function decideNativeAdmission(
 	if (gates.waitingWorkIds.length) return hold("Unclassified input cannot establish independence from a live wait.");
 	if (
 		gates.userPending ||
-		records.some((record) => isNativeUserInput(record.submission) && awaitingNativeInput(record))
+		records.some((record) => isNativeUserInput(record.submission) && awaitingNativeInput(record, liveQueue))
 	)
 		return hold("Input is waiting for queued user work.");
 	if (phase === "submission" && (!host.isIdle || host.isStreaming))
@@ -91,7 +99,7 @@ export function decideNativeAdmission(
 			.some(
 				(record) =>
 					lane(record.submission) === lane(submission) &&
-					awaitingNativeInput(record) &&
+					awaitingNativeInput(record, liveQueue) &&
 					(phase === "submission" || !record.dispatch?.inputs?.every((input) => !!input.queue)),
 			)
 	)
