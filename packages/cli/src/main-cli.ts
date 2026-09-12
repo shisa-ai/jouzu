@@ -268,6 +268,8 @@ export async function runMainCli(args: string[]): Promise<void> {
 	presentation.clearInteractiveStartup(parsed.args);
 	const modelPicker = createJouzuModelPicker(paths, {
 		textguardFiles: parsed.options.textguardFiles,
+		// Read at launch time: a child inherits whatever mode the session is in.
+		textguardMode: () => nativeTextguard.currentMode(),
 		applyProjectDefaultAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
 		restoreLastModelAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
 		startupArgs: parsed.args,
@@ -318,6 +320,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 		cachePath: join(paths.cacheDir, "textguard", "scans.json"),
 		approvalPath: join(paths.cacheDir, "textguard", "approvals.json"),
 		files: parsed.options.textguardFiles,
+		mode: parsed.options.textguardOff ? "off" : parsed.options.textguardStrict ? "strict" : "guarded",
 	});
 	// On by default so real sessions exercise it; `JOUZU_FLOW_CONTROL=0` turns it off for a session
 	// whose behaviour it gets wrong. `/flow` shows what it is holding and releases it.

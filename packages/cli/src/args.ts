@@ -18,6 +18,8 @@ export interface JouzuOptions {
 	textguardPython?: string;
 	textguardFiles?: boolean;
 	textguardYara?: boolean;
+	textguardStrict?: boolean;
+	textguardOff?: boolean;
 }
 
 export type ParsedCommand =
@@ -224,8 +226,18 @@ export function parseJouzuArgs(args: string[]): ParsedCommand {
 			index = parsed.next;
 			continue;
 		}
-		if (token === "--jouzu-textguard-files" || token === "--jouzu-textguard-yara") {
-			const key = token === "--jouzu-textguard-files" ? "textguardFiles" : "textguardYara";
+		if (
+			token === "--jouzu-textguard-files" ||
+			token === "--jouzu-textguard-yara" ||
+			token === "--jouzu-textguard-strict" ||
+			token === "--jouzu-textguard-off"
+		) {
+			const key = {
+				"--jouzu-textguard-files": "textguardFiles",
+				"--jouzu-textguard-yara": "textguardYara",
+				"--jouzu-textguard-strict": "textguardStrict",
+				"--jouzu-textguard-off": "textguardOff",
+			}[token] as "textguardFiles" | "textguardYara" | "textguardStrict" | "textguardOff";
 			if (options[key]) throw new UsageError(`${token} may be specified only once`);
 			options[key] = true;
 			index += 1;
@@ -237,6 +249,12 @@ export function parseJouzuArgs(args: string[]): ParsedCommand {
 
 	if (options.textguardYara && !options.textguardPython) {
 		throw new UsageError("--jouzu-textguard-yara requires --jouzu-textguard-python <absolute-path>");
+	}
+	if (options.textguardOff && options.textguardStrict) {
+		throw new UsageError("--jouzu-textguard-off and --jouzu-textguard-strict cannot be combined");
+	}
+	if (options.textguardOff && options.textguardFiles) {
+		throw new UsageError("--jouzu-textguard-off and --jouzu-textguard-files cannot be combined");
 	}
 	const remaining = args.slice(index);
 	const [command, ...rest] = remaining;
@@ -333,8 +351,12 @@ Commands:
   self-update   Inspect, check, apply, or configure Jouzu npm updates
   pi, --        Explicitly pass all remaining arguments to pinned Pi
 
-TextGuard scans skills and web content locally by default.
-Use /textguard in an interactive session to review withheld content.
+TextGuard scans skills and web content locally by default. Flagged web results
+reach the model labelled as untrusted data; flagged skills stay withheld until
+you approve them. Use /textguard in an interactive session to review findings,
+and /textguard on, strict, or off to change scanning for that session.
+  --jouzu-textguard-strict                  Withhold every flagged input until approved
+  --jouzu-textguard-off                     Start with scanning off
   --jouzu-textguard-files                   Also scan ordinary read-tool content
   --jouzu-textguard-python <absolute-path>  Add TextGuard 1.0.0 Python comparison reports
   --jouzu-textguard-yara                    Include Python YARA rules (requires textguard[yara])

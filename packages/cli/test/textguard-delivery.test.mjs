@@ -43,7 +43,7 @@ test("registered review command releases checked skill bytes through reload to t
 	timeout: 15000,
 }, async () => {
 	const directory = await mkdtemp(join(tmpdir(), "jouzu-textguard-delivery-"));
-	const guard = new TextGuardRuntime();
+	const guard = new TextGuardRuntime({ mode: "strict" });
 	let session;
 	try {
 		const skill = join(directory, "SKILL.md");

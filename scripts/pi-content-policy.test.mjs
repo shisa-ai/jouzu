@@ -330,7 +330,7 @@ test("native policy skill inventory admits scanned skills and withholds oversize
 	const loader = new DefaultResourceLoader({
 		cwd: directory,
 		agentDir: directory,
-		contentPolicy: new NativeContentPolicy({ cwd: directory, scanner: textguardScanner() }),
+		contentPolicy: new NativeContentPolicy({ cwd: directory, scanner: textguardScanner(), mode: "strict" }),
 		noExtensions: true,
 	});
 	await loader.updateSkillsFromPaths([skillsDir], new Map());
@@ -542,7 +542,7 @@ test("aborted responses keep valid assistant messages for session stats and late
 		agentDir: directory,
 		noExtensions: true,
 		noSkills: true,
-		contentPolicy: new NativeContentPolicy({ cwd: directory, scanner: textguardScanner() }),
+		contentPolicy: new NativeContentPolicy({ cwd: directory, scanner: textguardScanner(), mode: "strict" }),
 	});
 	await loader.reload();
 	const { session } = await createAgentSession({
@@ -687,7 +687,7 @@ const restoredFixtureSession = async (t, directory, sessionManager) => {
 		agentDir: directory,
 		noExtensions: true,
 		noSkills: true,
-		contentPolicy: new NativeContentPolicy({ cwd: directory, scanner: textguardScanner() }),
+		contentPolicy: new NativeContentPolicy({ cwd: directory, scanner: textguardScanner(), mode: "strict" }),
 	});
 	await loader.reload();
 	const { session } = await createAgentSession({
@@ -750,7 +750,7 @@ test("manual compaction filters restored blocked tool results before hooks and s
 	assert.equal(requests.length, 1);
 	const serialized = JSON.stringify(requests[0]);
 	assert.equal(serialized.includes("PRIVATE"), false);
-	assert.match(serialized, /TextGuard withheld this content pending user review/);
+	assert.match(serialized, /TextGuard withheld this result from the model/);
 	assert.ok(hooks.length > 0);
 	assert.equal(JSON.stringify(hooks[0].preparation.messagesToSummarize).includes("PRIVATE"), false);
 	assert.equal(JSON.stringify(hooks[0].branchEntries).includes("PRIVATE"), false);
@@ -823,7 +823,7 @@ test("branch summaries filter restored blocked skill expansions before summariza
 	assert.equal(requests.length, 1);
 	const serialized = JSON.stringify(requests[0]);
 	assert.equal(serialized.includes("PRIVATE"), false);
-	assert.match(serialized, /TextGuard withheld this content pending user review/);
+	assert.match(serialized, /TextGuard withheld this result from the model/);
 	const summary = sessionManager.getEntries().find((entry) => entry.type === "branch_summary");
 	assert.match(summary.summary, /BRANCH SUMMARY/);
 });

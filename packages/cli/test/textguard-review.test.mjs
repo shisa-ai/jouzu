@@ -47,6 +47,7 @@ async function setup(t, scan = evidence, options = {}) {
 	const dir = await mkdtemp(join(tmpdir(), "textguard-review-"));
 	t.after(() => rm(dir, { recursive: true, force: true }));
 	const runtime = new TextGuardRuntime({
+		mode: "strict",
 		scanner: {
 			async initialize() {
 				return "a".repeat(64);
@@ -134,7 +135,7 @@ test("the list shows source labels and status without leaking content", async (t
 	const { pending, component } = await f.open();
 	const compact = clean(component.render(48));
 	assert.match(compact, /Withheld/);
-	assert.match(compact, /1 withheld, 0 reports/);
+	assert.match(compact, /1 withheld · 0 delivered/);
 	// Wide terminals show more of the label; CJK stays readable.
 	const wide = clean(component.render(80));
 	assert.match(wide, /https:\/\/example\.com\/日/);
@@ -159,7 +160,7 @@ test("detail shows the fingerprint, findings, and escaped body; escape returns t
 	assert.match(scrolled, /> Back/);
 	// Escape returns to the list instead of discarding the review session.
 	component.handleInput(ESC);
-	assert.match(clean(component.render(48)), /1 withheld, 0 reports/);
+	assert.match(clean(component.render(48)), /1 withheld · 0 delivered/);
 	component.handleInput(ESC);
 	await pending;
 	assert.equal(f.policy.reviews().length, 1);
@@ -189,6 +190,7 @@ test("always-allow persists across sessions for the exact bytes", async (t) => {
 	await f.runtime.close();
 
 	const second = new TextGuardRuntime({
+		mode: "strict",
 		scanner: {
 			async initialize() {
 				return "a".repeat(64);
@@ -222,7 +224,7 @@ test("an accidental confirm lands on Back and withholds", async (t) => {
 	component.handleInput(ENTER);
 	component.handleInput(ENTER);
 	// Back was the default action: still in the overlay, still withheld.
-	assert.match(clean(component.render(48)), /1 withheld, 0 reports/);
+	assert.match(clean(component.render(48)), /1 withheld · 0 delivered/);
 	component.handleInput(ESC);
 	await pending;
 	assert.equal(f.policy.reviews().length, 1);
@@ -231,8 +233,12 @@ test("an accidental confirm lands on Back and withholds", async (t) => {
 
 test("reports offer dismiss instead of approval and dismissal sticks", async (t) => {
 	const f = await setup(t, infoEvidence);
-	const { pending, component } = await f.open();
-	assert.match(clean(component.render(48)), /0 withheld, 1 report/);
+	// Findings that blocked nothing stay out of the default list and keep their own view.
+	assert.equal((await f.open()).component, undefined);
+	assert.match(f.messages.at(-1), /nothing waiting for a decision/);
+	assert.match(f.messages.at(-1), /1 finding blocked nothing/);
+	const { pending, component } = await f.open("reports");
+	assert.match(clean(component.render(48)), /0 withheld · 1 delivered/);
 	component.handleInput(ENTER);
 	const detail = clean(component.render(48));
 	assert.match(detail, /No errors/);
@@ -264,13 +270,15 @@ test("notifications fire only for content-blocking items", async (t) => {
 
 	const blocked = await setup(t);
 	blocked.events.get("session_start")({}, blocked.ctx);
+	// The alert names what was withheld and why, so the waiting-items summary would only repeat it.
 	assert.equal(blocked.messages.length, 1);
-	assert.match(blocked.messages[0], /1 item waiting for your review/);
+	assert.match(blocked.messages[0], /TextGuard withheld .*1 error-level finding \(bidi_control\)/);
+	assert.match(blocked.messages[0], /Run \/textguard to review and approve it\./);
 	assert.doesNotMatch(blocked.messages[0], /scan report|without an exact content identity/);
 	// Repeated events deduplicate.
 	blocked.events.get("agent_end")({}, blocked.ctx);
 	assert.equal(blocked.messages.length, 1);
-	assert.doesNotMatch(blocked.messages[0], /private source body|example\.com/);
+	assert.doesNotMatch(blocked.messages[0], /private source body/);
 });
 
 test("identity-limited checks never notify but remain visible in the list footer", async (t) => {
@@ -284,13 +292,48 @@ test("identity-limited checks never notify but remain visible in the list footer
 	});
 	assert.equal(f.policy.scanNotices().length, 1);
 	f.events.get("session_start")({}, f.ctx);
-	// Only the one pending item notifies; the notice adds no warning.
+	// The withheld result alerts; an unidentifiable payload has nothing to approve and stays quiet.
 	assert.equal(f.messages.length, 1);
-	assert.match(f.messages[0], /1 item waiting/);
+	assert.match(f.messages[0], /TextGuard withheld/);
 	const { pending, component } = await f.open();
 	assert.match(norm(clean(component.render(48))), /could not identify the complete content/);
 	component.handleInput(ESC);
 	await pending;
+});
+
+test("scanning can be turned off and back on from the review command", async (t) => {
+	const f = await setup(t);
+	const { component: none } = await f.open("off");
+	assert.equal(none, undefined);
+	assert.equal(f.runtime.currentMode(), "off");
+	assert.match(f.messages.at(-1), /TextGuard is off for this session/);
+	assert.equal(f.reloads(), 1);
+	// Turning scanning off discards the decisions taken under the previous mode.
+	assert.equal(f.policy.reviews().length, 0);
+	assert.deepEqual(await f.policy.filterToolResult(request), request.result);
+
+	// With nothing left to review, the view is the switch that turns scanning back on.
+	const { pending, component } = await f.open();
+	const view = clean(component.render(48));
+	assert.match(view, /scanning off for this session/);
+	assert.match(view, /> Turn scanning back on/);
+	component.handleInput(ENTER);
+	await pending;
+	assert.equal(f.runtime.currentMode(), "guarded");
+	assert.match(f.messages.at(-1), /Flagged web results reach the model labelled as untrusted data/);
+	assert.equal(f.reloads(), 2);
+});
+
+test("an unknown argument explains the modes without opening the review", async (t) => {
+	const f = await setup(t);
+	assert.equal((await f.open("sometimes")).component, undefined);
+	assert.match(f.messages.at(-1), /\/textguard on, strict, or off/);
+	assert.equal(f.runtime.currentMode(), "strict");
+	assert.equal(f.reloads(), 0);
+	// Selecting the mode a session already uses changes nothing.
+	await f.open("strict");
+	assert.match(f.messages.at(-1), /already set to strict/);
+	assert.equal(f.reloads(), 0);
 });
 
 test("arguments and noninteractive or degraded terminals cannot approve", async (t) => {
@@ -466,7 +509,7 @@ test("the component renders a bounded list for many items", async (t) => {
 	const { pending, component } = await f.open();
 	const lines = component.render(48);
 	assert.ok(lines.length <= 24);
-	assert.match(clean(lines), /21 withheld, 0 reports/);
+	assert.match(clean(lines), /21 withheld · 0 delivered/);
 	component.handleInput(PGDN);
 	component.handleInput(PGDN);
 	component.handleInput(PGDN);

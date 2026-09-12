@@ -2,6 +2,7 @@ import type { ExtensionAPI, ExtensionContext, ToolDefinition } from "@earendil-w
 import { preferCatalogModels } from "../model-catalog-projection.js";
 import { createNotificationInbox } from "../notifications/inbox.js";
 import type { JouzuPaths } from "../paths.js";
+import type { TextGuardMode } from "../textguard-policy.js";
 import {
 	observedSubagentResults,
 	SUBAGENT_RESULT,
@@ -38,7 +39,7 @@ export interface WorkflowService {
 export function createWorkflowIntegration(
 	paths: JouzuPaths,
 	workerFactory?: WorkerFactory,
-	options: { textguardFiles?: boolean } = {},
+	options: { textguardFiles?: boolean; textguardMode?: () => TextGuardMode } = {},
 ): { service: WorkflowService; register(pi: ExtensionAPI, open: () => Promise<boolean>): void } {
 	const store = new AgentRoleStore(paths);
 	let ctx: ExtensionContext | undefined;
@@ -118,6 +119,7 @@ export function createWorkflowIntegration(
 				cwd,
 				task,
 				textguardFiles: options.textguardFiles === true,
+				...(options.textguardMode ? { textguardMode: options.textguardMode() } : {}),
 			},
 			active.sessionManager.getLeafId() ?? undefined,
 			previousRunId,

@@ -183,7 +183,11 @@ export class TextGuardSkills {
 		// Framing binds all published metadata and the entire original body to one approval identity.
 		const input = `${JSON.stringify(skill)}\n${snapshot.text}`;
 		const decision = await this.admission.check(`skill:${skill.filePath}`, input, signal);
-		if (decision.review.evidence.status !== "clear") reports.push(decision.review);
+		// A withheld skill is already in the approval queue; only an admitted one needs a report.
+		if (decision.allowed) {
+			if (decision.review.evidence.status !== "clear") reports.push(decision.review);
+		} else if (!this.admission.reviews().some((item) => item.id === decision.review.id))
+			notices.push({ source: reviewLabel(skill.filePath), reason: decision.review.evidence.reason ?? "protocol" });
 		if (generation === this.generation && decision.allowed) return snapshot.text;
 	}
 }

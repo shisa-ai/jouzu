@@ -26,7 +26,7 @@ const scanner = (scan = async (text) => (text.includes("PRIVATE") ? error : clea
 	scan,
 	async close() {},
 });
-const policy = (scan) => new NativeContentPolicy({ cwd: process.cwd(), scanner: scanner(scan) });
+const policy = (scan, mode = "strict") => new NativeContentPolicy({ cwd: process.cwd(), scanner: scanner(scan), mode });
 const result = (text) => ({ content: [{ type: "text", text }], details: {} });
 const event = (name = "web_fetch", text = "PRIVATE BODY", input = { url: "https://example.com" }) => ({
 	toolName: name,

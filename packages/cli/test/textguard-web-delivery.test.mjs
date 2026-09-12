@@ -42,7 +42,7 @@ async function driveReview(factory, allow) {
 for (const variant of ["text", "image"]) {
 	test(`registered web approval binds the complete payload: ${variant}`, { timeout: 15000 }, async () => {
 		const directory = await mkdtemp(join(tmpdir(), "jouzu-web-delivery-"));
-		const guard = new TextGuardRuntime();
+		const guard = new TextGuardRuntime({ mode: "strict" });
 		let session;
 		try {
 			const modelRuntime = await ModelRuntime.create({

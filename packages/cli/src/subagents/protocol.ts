@@ -1,3 +1,4 @@
+import type { TextGuardMode } from "../textguard-policy.js";
 import type { AgentModel, AgentRole } from "./roles.js";
 
 /** Credentials travel only over the private parent/child pipe, never into run records. */
@@ -9,6 +10,8 @@ export interface WorkerLaunch {
 	directory: string;
 	sessionFile?: string;
 	textguardFiles?: boolean;
+	/** The parent's scanning mode, so a child never re-blocks what the user unblocked. */
+	textguardMode?: TextGuardMode;
 	task: string;
 }
 export type WorkerCommand =

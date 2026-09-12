@@ -38,7 +38,7 @@ async function home(t) {
 }
 
 async function session(t, dir) {
-	const runtime = new TextGuardRuntime({ scanner, approvalPath: join(dir, "approvals.json") });
+	const runtime = new TextGuardRuntime({ scanner, mode: "strict", approvalPath: join(dir, "approvals.json") });
 	t.after(() => runtime.close());
 	const policy = await runtime.createPolicy({ sessionId: `${Math.random()}`, cwd: process.cwd() });
 	return { runtime, policy };
@@ -150,7 +150,11 @@ test("report dismissal is session-scoped and cannot dismiss withheld items", asy
 			return info;
 		},
 	};
-	const infoRuntime = new TextGuardRuntime({ scanner: infoScanner, approvalPath: join(dir, "other.json") });
+	const infoRuntime = new TextGuardRuntime({
+		scanner: infoScanner,
+		mode: "strict",
+		approvalPath: join(dir, "other.json"),
+	});
 	t.after(() => infoRuntime.close());
 	const infoPolicy = await infoRuntime.createPolicy({ sessionId: "info", cwd: process.cwd() });
 	await infoPolicy.filterToolResult(request("https://example.com/b", "body b"));

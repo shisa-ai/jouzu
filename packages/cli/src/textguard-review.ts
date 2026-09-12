@@ -1,8 +1,9 @@
 import type { ExtensionContext, ExtensionFactory, KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
 import { type Component, type TUI, truncateToWidth, wrapTextWithAnsi } from "@earendil-works/pi-tui";
 import { formatEffectiveKeybinding } from "./keybinding-hints.js";
-import type { ScanEvidence, ScanFinding, UnavailableReason } from "./textguard.js";
+import { type ScanEvidence, type ScanFinding, UNAVAILABLE_TEXT } from "./textguard.js";
 import { type ContentReview, type ContentSnapshot, displayLabel, escapeInvisible } from "./textguard-admission.js";
+import type { TextGuardAlert, TextGuardMode } from "./textguard-policy.js";
 import type { TextGuardRuntime } from "./textguard-runtime.js";
 
 /** Native scans attach the offending code point; injected evidence may not. */
@@ -11,23 +12,29 @@ type ReviewFinding = ScanFinding & { codepoint?: string };
 const ALLOW_SESSION = "Allow for this session";
 const ALLOW_ALWAYS = "Always allow this exact content";
 const DISMISS = "Dismiss report";
+const ENABLE = "Turn scanning back on";
 const BACK = "Back";
 
-const REASON_TEXT: Record<UnavailableReason, string> = {
-	"input-limit": "the content is larger than TextGuard can scan",
-	"unsupported-content": "part of the content is something the scanner cannot check, such as an image",
-	"finding-limit": "there were too many findings to report completely",
-	"decode-limit": "the content has too many encoded layers to decode completely",
-	"output-limit": "the scanner produced too much output",
-	scanner: "the scanner could not run",
-	timeout: "the scan ran out of time",
-	process: "the scanner stopped unexpectedly",
-	version: "the installed scanner version is not supported",
-	protocol: "the scanner returned an unreadable result",
-	busy: "the scanner was busy with other work",
-	closed: "the review session ended",
-	file: "the content could not be read",
-	budget: "the time reserved for scanning ran out",
+/** What each mode does, for a confirmation the user reads once. */
+const MODE_TEXT: Record<TextGuardMode, string> = {
+	guarded:
+		"TextGuard scans again. Flagged web results reach the model labelled as untrusted data; flagged skills stay withheld until you approve them.",
+	strict: "TextGuard now withholds every flagged input until you approve it with /textguard.",
+	off: "TextGuard is off for this session. Content is admitted unscanned until you run /textguard on.",
+};
+/** What the user may type after /textguard to choose a mode. */
+const MODE_ARGS: Record<string, TextGuardMode | undefined> = {
+	on: "guarded",
+	guarded: "guarded",
+	strict: "strict",
+	off: "off",
+};
+const MODE_LABEL: Record<TextGuardMode, string> = { guarded: "on", strict: "strict", off: "off" };
+/** Shown above the list whenever scanning is not in its default mode. */
+const MODE_BANNER: Record<TextGuardMode, string> = {
+	guarded: "",
+	strict: "strict mode — every flagged input is withheld",
+	off: "scanning off for this session",
 };
 
 /** A human name and one-sentence explanation for each finding kind the scanner reports. */
@@ -88,7 +95,7 @@ function describeFinding(finding: ReviewFinding, body?: string): string[] {
 	];
 }
 
-function countsLine(evidence: ScanEvidence): string {
+function countsLine(evidence: ScanEvidence, withheld: boolean): string {
 	const counts = evidence.severityCounts ?? { info: 0, warn: 0, error: 0 };
 	const errors = counts.error ?? 0;
 	const warnings = counts.warn ?? 0;
@@ -98,19 +105,26 @@ function countsLine(evidence: ScanEvidence): string {
 		notes ? `${notes} informational finding${notes === 1 ? "" : "s"}` : "",
 	].filter(Boolean);
 	const blocking =
-		errors > 0
-			? `${errors} error${errors === 1 ? "" : "s"} that block${errors === 1 ? "s" : ""} this content until you approve it`
-			: "No errors";
+		errors === 0
+			? "No errors"
+			: withheld
+				? `${errors} error${errors === 1 ? "" : "s"} that block${errors === 1 ? "s" : ""} this content until you approve it`
+				: `${errors} error-level finding${errors === 1 ? "" : "s"}; the content reached the model labelled as untrusted data`;
 	return nonBlocking.length ? `${blocking}; ${nonBlocking.join(" and ")} do not block it.` : `${blocking}.`;
 }
 
-function evidenceLines(review: ContentReview, body?: string): string[] {
+function evidenceLines(review: ContentReview, withheld: boolean, body?: string): string[] {
 	const evidence = review.evidence;
 	if (evidence.status === "unavailable") {
-		const reason = REASON_TEXT[evidence.reason ?? "scanner"];
-		return [`The check did not finish: ${reason}.`, "This content stays withheld unless you approve it."];
+		const reason = UNAVAILABLE_TEXT[evidence.reason ?? "scanner"];
+		return [
+			`The check did not finish: ${reason}.`,
+			withheld
+				? "This content stays withheld unless you approve it."
+				: "The content reached the model labelled as untrusted data.",
+		];
 	}
-	const lines = [countsLine(evidence)];
+	const lines = [countsLine(evidence, withheld)];
 	for (const finding of evidence.findings) lines.push(...describeFinding(finding, body));
 	if (evidence.findingCount !== undefined && evidence.findingCount > evidence.findings.length)
 		lines.push(`Showing the first ${evidence.findings.length} of ${evidence.findingCount} findings.`);
@@ -130,13 +144,13 @@ function displayContent(text: string): string {
  * fingerprint, findings with explanations and locations, and the escaped
  * content when retained. The review component wraps these at render width.
  */
-export function reviewLines(review: ContentReview, snapshot?: ContentSnapshot): string[] {
+export function reviewLines(review: ContentReview, snapshot?: ContentSnapshot, withheld = true): string[] {
 	const body = snapshot?.body;
 	const lines = [
 		`Source: ${snapshot ? displayLabel(snapshot.source) : review.displaySource}`,
 		`Content fingerprint (SHA-256): ${review.contentDigest}`,
 		"",
-		...evidenceLines(review, body),
+		...evidenceLines(review, withheld, body),
 		"",
 	];
 	if (body === undefined) lines.push("The flagged content itself is not retained for viewing here.");
@@ -154,8 +168,14 @@ interface ReviewItem {
 	withheld: boolean;
 }
 
+/** Error-level findings and incomplete checks are the ones a user has to decide about. */
+export function blocking(review: ContentReview): boolean {
+	return review.evidence.status === "unavailable" || (review.evidence.severityCounts?.error ?? 0) > 0;
+}
+
 export interface ReviewOutcome {
 	approval?: { id: string; persist: boolean };
+	mode?: TextGuardMode;
 }
 
 export interface ReviewComponentDeps {
@@ -167,6 +187,9 @@ export interface ReviewComponentDeps {
 	dismiss: (id: string) => void;
 	notices: number;
 	done: (outcome: ReviewOutcome) => void;
+	mode?: TextGuardMode;
+	/** Count of items in the other view, named in the footer so neither list hides the other. */
+	otherView?: { count: number; hint: string };
 }
 
 /**
@@ -178,8 +201,10 @@ export interface ReviewComponentDeps {
 export function createReviewComponent(deps: ReviewComponentDeps): Component {
 	const { theme, keybindings } = deps;
 	const items = [...deps.items];
+	const mode = deps.mode ?? "guarded";
 	const outcome: ReviewOutcome = {};
-	let state: "list" | "detail" = "list";
+	// With scanning off there is nothing to review, so the view is the switch that turns it back on.
+	let state: "list" | "detail" | "off" = mode === "off" ? "off" : "list";
 	let selected = 0;
 	let listScroll = 0;
 	let actionIndex = 0;
@@ -202,7 +227,7 @@ export function createReviewComponent(deps: ReviewComponentDeps): Component {
 	const enterDetail = () => {
 		const item = items[selected];
 		if (!item) return;
-		detailLines = reviewLines(item.review, deps.snapshotFor(item.review.id));
+		detailLines = reviewLines(item.review, deps.snapshotFor(item.review.id), item.withheld);
 		wrapCache = undefined;
 		// Default to denial: the cursor starts on the non-approving action.
 		const itemActions = actions(item);
@@ -233,18 +258,34 @@ export function createReviewComponent(deps: ReviewComponentDeps): Component {
 		state = "list";
 	};
 
+	const renderOff = (width: number): string[] => [
+		truncateToWidth(theme.bold(theme.fg("accent", "TextGuard — scanning off for this session")), width, ""),
+		"",
+		...wrapTextWithAnsi(
+			theme.fg("dim", "Content is admitted unscanned. Skills and web results are not checked."),
+			width,
+		),
+		"",
+		truncateToWidth(theme.fg("accent", `> ${ENABLE}`), width, "…"),
+		"",
+		theme.fg(
+			"dim",
+			truncateToWidth(`${hint("tui.select.confirm")} select · ${hint("tui.select.cancel")} close`, width, "…"),
+		),
+	];
+
 	const renderList = (width: number, height: number): string[] => {
 		const withheld = items.filter((item) => item.withheld).length;
 		const header = theme.bold(theme.fg("accent", "TextGuard review"));
-		const summary = theme.fg(
-			"dim",
-			` ${withheld} withheld, ${items.length - withheld} report${items.length - withheld === 1 ? "" : "s"}`,
-		);
+		const summary = theme.fg("dim", ` ${withheld} withheld · ${items.length - withheld} delivered`);
 		const lines = [truncateToWidth(`${header}${summary}`, width, ""), ""];
+		if (mode !== "guarded") lines.push(theme.fg("warning", truncateToWidth(MODE_BANNER[mode], width, "…")), "");
 		const hints =
 			`${hint("tui.select.up")}/${hint("tui.select.down")} select · ` +
 			`${hint("tui.select.confirm")} open · ${hint("tui.select.cancel")} close`;
 		const footer: string[] = [];
+		if (deps.otherView && deps.otherView.count > 0)
+			footer.push(...wrapTextWithAnsi(theme.fg("dim", `${deps.otherView.count} ${deps.otherView.hint}`), width));
 		if (deps.notices > 0)
 			footer.push(
 				...wrapTextWithAnsi(
@@ -263,7 +304,11 @@ export function createReviewComponent(deps: ReviewComponentDeps): Component {
 		const window = items.slice(listScroll, listScroll + budget);
 		for (const [index, item] of window.entries()) {
 			const current = listScroll + index === selected;
-			const status = item.withheld ? theme.fg("warning", "Withheld") : theme.fg("dim", "Report  ");
+			const status = item.withheld
+				? theme.fg("warning", "Withheld ")
+				: blocking(item.review)
+					? theme.fg("warning", "Delivered")
+					: theme.fg("dim", "Report   ");
 			const label = item.review.displaySource;
 			lines.push(truncateToWidth(`${current ? theme.fg("accent", "> ") : "  "}${status} ${label}`, width, "…"));
 		}
@@ -279,7 +324,14 @@ export function createReviewComponent(deps: ReviewComponentDeps): Component {
 			return renderList(width, height);
 		}
 		const header = theme.bold(
-			theme.fg("accent", item.withheld ? "TextGuard review — withheld content" : "TextGuard review — scan report"),
+			theme.fg(
+				"accent",
+				item.withheld
+					? "TextGuard review — withheld content"
+					: blocking(item.review)
+						? "TextGuard review — delivered with findings"
+						: "TextGuard review — scan report",
+			),
 		);
 		const itemActions = actions(item);
 		const hints =
@@ -308,7 +360,12 @@ export function createReviewComponent(deps: ReviewComponentDeps): Component {
 			const columns = Math.max(12, width - 2);
 			const rows = Number(deps.tui.terminal?.rows ?? 24);
 			const height = Math.max(8, Math.min(rows - 6, 44));
-			const inner = state === "list" ? renderList(columns, height) : renderDetail(columns, height);
+			const inner =
+				state === "off"
+					? renderOff(columns)
+					: state === "list"
+						? renderList(columns, height)
+						: renderDetail(columns, height);
 			return inner.map((line) => ` ${line}`);
 		},
 		invalidate() {
@@ -318,6 +375,13 @@ export function createReviewComponent(deps: ReviewComponentDeps): Component {
 			if (keybindings.matches(data, "tui.select.cancel")) {
 				if (state === "detail") state = "list";
 				else deps.done(outcome);
+				return;
+			}
+			if (state === "off") {
+				if (keybindings.matches(data, "tui.select.confirm")) {
+					outcome.mode = "guarded";
+					deps.done(outcome);
+				}
 				return;
 			}
 			if (state === "list") {
@@ -360,20 +424,43 @@ export function createTextGuardReviewExtension(
 		}));
 	return (pi) => {
 		let lastNotice = "";
+		let context: ExtensionContext | undefined;
 		const notify = (ctx: ExtensionContext, message: string, type: "info" | "warning" | "error" = "warning") => {
 			if (ctx.mode === "tui" && ctx.hasUI) ctx.ui.notify(message, type);
 			else writeDiagnostic(message);
 		};
+		const alertText = (alert: TextGuardAlert, interactive: boolean): string => {
+			const source = alert.source.length > 96 ? `${alert.source.slice(0, 96)}…` : alert.source;
+			if (alert.kind === "advisory")
+				return `TextGuard flagged ${source}: ${alert.detail}. The content reached the model labelled as untrusted data${interactive ? "; /textguard shows the report" : ""}.`;
+			const next = alert.approvable
+				? interactive
+					? " Run /textguard to review and approve it."
+					: " Approve it with /textguard in an interactive session."
+				: " This content cannot be approved; retry the request.";
+			return `TextGuard withheld ${source}: ${alert.detail}.${next}`;
+		};
+		// Raised as content is admitted or withheld, so a blocked request is visible when it happens.
+		const showAlert = (alert: TextGuardAlert): boolean => {
+			const ctx = context;
+			if (!ctx) return false;
+			notify(ctx, alertText(alert, ctx.mode === "tui" && ctx.hasUI), alert.kind === "withheld" ? "warning" : "info");
+			return true;
+		};
 		const report = (_event: unknown, ctx: ExtensionContext) => {
+			context = ctx;
+			runtime.setAlertListener(showAlert);
 			const policy = runtime.forSession(ctx.sessionManager.getSessionId());
 			if (!policy) return;
+			const queued = policy.drainAlerts();
+			for (const alert of queued) showAlert(alert);
 			const pending = policy.reviews();
 			const identity = JSON.stringify([ctx.sessionManager.getSessionId(), pending.map((item) => item.id)]);
 			if (identity === lastNotice) return;
 			lastNotice = identity;
-			// Only content-blocking items notify. Non-blocking reports and identity-limited
-			// checks stay inspectable through /textguard without interrupting the session.
-			if (pending.length) {
+			// Only content still waiting for a decision notifies here, and only when no alert just
+			// named it. Non-blocking reports never interrupt the session.
+			if (pending.length && queued.length === 0) {
 				const noun = pending.length === 1 ? "item" : "items";
 				notify(
 					ctx,
@@ -384,15 +471,35 @@ export function createTextGuardReviewExtension(
 		pi.on("session_start", report);
 		pi.on("agent_end", report);
 		pi.registerCommand("textguard", {
-			description: "Review TextGuard findings and withheld content",
+			description: "Review TextGuard findings, or set scanning to on, strict, or off",
 			handler: async (args, ctx) => {
-				if (args.trim()) {
-					notify(ctx, "Use /textguard without arguments. Approval requires an interactive confirmation.");
+				context = ctx;
+				runtime.setAlertListener(showAlert);
+				const argument = args.trim().toLowerCase();
+				const requested = MODE_ARGS[argument];
+				if (argument && !requested && argument !== "reports") {
+					notify(
+						ctx,
+						"Use /textguard to review findings, /textguard reports for findings that did not block anything, or /textguard on, strict, or off to set scanning.",
+					);
+					return;
+				}
+				if (requested) {
+					if (!runtime.setMode(requested)) {
+						notify(ctx, `TextGuard is already set to ${MODE_LABEL[requested]}.`, "info");
+						return;
+					}
+					notify(ctx, MODE_TEXT[requested], "info");
+					try {
+						await ctx.reload();
+					} catch {
+						notify(ctx, "TextGuard changed, but resources could not reload. Run /reload before retrying.");
+					}
 					return;
 				}
 				const dimensions = terminal();
 				if (ctx.mode !== "tui" || !ctx.hasUI || dimensions.dumb) {
-					notify(ctx, "TextGuard approval requires an interactive terminal. Content stays withheld.");
+					notify(ctx, "TextGuard review requires an interactive terminal. Content stays withheld.");
 					return;
 				}
 				if (dimensions.columns < 48 || dimensions.rows < 24) {
@@ -407,41 +514,79 @@ export function createTextGuardReviewExtension(
 					notify(ctx, "TextGuard review is unavailable for this session. Content stays withheld.");
 					return;
 				}
+				const open = (items: ReviewItem[], otherView: { count: number; hint: string }) =>
+					ctx.ui.custom<ReviewOutcome>(
+						(tui, theme, keybindings, done) =>
+							createReviewComponent({
+								tui,
+								theme,
+								keybindings,
+								items,
+								snapshotFor: (id) => policy.admission.snapshotFor(id),
+								dismiss: (id) => policy.dismissReport(id),
+								notices: policy.scanNotices().length,
+								mode: policy.currentMode(),
+								otherView,
+								done,
+							}),
+						{
+							overlay: true,
+							overlayOptions: { width: "90%", minWidth: 48, maxHeight: "85%", anchor: "center", margin: 1 },
+						},
+					);
+				const applyMode = async (mode: TextGuardMode) => {
+					if (!runtime.setMode(mode)) return;
+					notify(ctx, MODE_TEXT[mode], "info");
+					try {
+						await ctx.reload();
+					} catch {
+						notify(ctx, "TextGuard changed, but resources could not reload. Run /reload before retrying.");
+					}
+				};
+				if (policy.currentMode() === "off") {
+					const offOutcome = await open([], { count: 0, hint: "" });
+					if (offOutcome?.mode) await applyMode(offOutcome.mode);
+					return;
+				}
 				const pending = policy.reviews();
 				const pendingIds = new Set(pending.map((item) => item.id));
-				const items: ReviewItem[] = [
+				const reports = policy.scanReports().filter((item) => !pendingIds.has(item.id));
+				// The default view carries only what needs a decision. Findings that blocked nothing
+				// stay one command away instead of burying the items that matter.
+				const decisions: ReviewItem[] = [
 					...pending.map((review) => ({ review, withheld: true })),
-					...policy
-						.scanReports()
-						.filter((item) => !pendingIds.has(item.id))
-						.map((review) => ({ review, withheld: false })),
+					...reports.filter(blocking).map((review) => ({ review, withheld: false })),
 				];
+				const informational: ReviewItem[] = reports
+					.filter((review) => !blocking(review))
+					.map((review) => ({ review, withheld: false }));
+				const reportsView = argument === "reports";
+				const items = reportsView ? informational : decisions;
+				const otherView = reportsView
+					? { count: decisions.length, hint: "items need a decision · /textguard" }
+					: { count: informational.length, hint: "findings blocked nothing · /textguard reports" };
 				if (!items.length) {
+					if (reportsView) {
+						notify(ctx, "TextGuard has no findings that blocked nothing to show.", "info");
+						return;
+					}
+					const extra = informational.length
+						? ` ${informational.length} finding${informational.length === 1 ? "" : "s"} blocked nothing; see /textguard reports.`
+						: "";
 					notify(
 						ctx,
 						policy.scanNotices().length
-							? "TextGuard could not identify the complete content. Retry the request; this content cannot be approved."
-							: "TextGuard has no findings to review.",
+							? `TextGuard could not identify the complete content. Retry the request; this content cannot be approved.${extra}`
+							: `TextGuard has nothing waiting for a decision.${extra}`,
+						"info",
 					);
 					return;
 				}
-				const outcome = await ctx.ui.custom<ReviewOutcome>(
-					(tui, theme, keybindings, done) =>
-						createReviewComponent({
-							tui,
-							theme,
-							keybindings,
-							items,
-							snapshotFor: (id) => policy.admission.snapshotFor(id),
-							dismiss: (id) => policy.dismissReport(id),
-							notices: policy.scanNotices().length,
-							done,
-						}),
-					{
-						overlay: true,
-						overlayOptions: { width: "90%", minWidth: 48, maxHeight: "85%", anchor: "center", margin: 1 },
-					},
-				);
+				const outcome = await open(items, otherView);
+				if (outcome?.mode) {
+					await applyMode(outcome.mode);
+					return;
+				}
 				if (!outcome?.approval) return;
 				const finalDimensions = terminal();
 				if (finalDimensions.dumb || finalDimensions.columns < 48 || finalDimensions.rows < 24) {

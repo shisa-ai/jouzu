@@ -55,6 +55,9 @@ export default function(pi) {
 					([key]) => !/^(JOUZU_|PI_|SHISA_|AI_AGENT|TEXTGUARD_|OPENAI_|ANTHROPIC_)/u.test(key),
 				),
 			);
+			// The fixture provider supplies its own streamSimple, which flow control refuses to wrap.
+			// These tests exercise the content policy, not request routing.
+			env.JOUZU_FLOW_CONTROL = "0";
 			env.PI_OFFLINE = "1";
 			const args = [
 				fileURLToPath(new URL("../dist/cli.js", import.meta.url)),
@@ -98,10 +101,16 @@ export default function(pi) {
 				assert.equal(result.content[0].text, web.content[0].text);
 				assert.equal(result.isError, false);
 			} else {
-				assert.equal(result.isError, true);
-				assert.match(result.content[0].text, /withheld/);
-				assert.doesNotMatch(JSON.stringify(contexts), /UNIQUE_WEB_BODY|UNIQUE_WEB_DETAILS|UNIQUE_IMAGE_BYTES/);
-				assert.match(stderr, /items? waiting for your review/);
+				// A web result is data: it reaches the model with the findings attached rather than
+				// being dropped, while the flagged skill above stays withheld.
+				assert.equal(result.isError, false);
+				assert.match(result.content[0].text, /^TextGuard advisory:/);
+				assert.match(JSON.stringify(contexts), /UNIQUE_WEB_BODY/);
+				assert.match(stderr, /TextGuard flagged/);
+				assert.match(stderr, /untrusted data/);
+			}
+			if (variant === "major") {
+				assert.match(stderr, /TextGuard withheld "skill:.*\d+ error-level findings? \(bidi_control/);
 				assert.match(stderr, /interactive session/);
 			}
 			const cache = JSON.parse(await readFile(join(home, "cache", "textguard", "scans.json"), "utf8"));

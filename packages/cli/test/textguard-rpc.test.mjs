@@ -43,6 +43,9 @@ export default function(pi) {
 				([key]) => !/^(JOUZU_|PI_|SHISA_|AI_AGENT|TEXTGUARD_|OPENAI_|ANTHROPIC_)/u.test(key),
 			),
 		);
+		// The fixture provider supplies its own streamSimple, which flow control refuses to wrap.
+		// These tests exercise the content policy, not request routing.
+		env.JOUZU_FLOW_CONTROL = "0";
 		env.PI_OFFLINE = "1";
 		child = spawn(
 			process.execPath,

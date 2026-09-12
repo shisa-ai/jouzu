@@ -80,6 +80,10 @@ export class TextGuardAdmission {
 		if (persist) this.persistentApprovals?.add(review.contentDigest, review.scannerIdentity, review.policy);
 		return true;
 	}
+	/** Drop a pending review without approving it: the content was delivered under an advisory mode. */
+	discard(id: string): boolean {
+		return this.pending.delete(id);
+	}
 	clearApprovals(): void {
 		this.generation += 1;
 		this.approvals.clear();
@@ -169,8 +173,10 @@ export class TextGuardAdmission {
 		body?: string,
 	): ContentDecision {
 		if (signal?.aborted) evidence = unavailable("timeout");
-		const active = generation === this.generation && !signal?.aborted;
-		if (generation !== this.generation) evidence = unavailable("closed");
+		// A replaced session invalidates the review outright. An interrupted scan only withholds this
+		// attempt, so its review still has to reach the queue or the content can never be approved.
+		const current = generation === this.generation;
+		if (!current) evidence = unavailable("closed");
 		// Invalid Unicode has no exact UTF-8 identity and therefore cannot be approved.
 		const id = digest(JSON.stringify([source, contentDigest, scannerIdentity, ADMISSION_POLICY, validUnicode]));
 		const review: ContentReview = {
@@ -194,16 +200,17 @@ export class TextGuardAdmission {
 		}
 		const approved =
 			validUnicode &&
-			active &&
+			current &&
 			(this.approvals.has(id) ||
 				(this.persistentApprovals?.has(contentDigest, scannerIdentity, ADMISSION_POLICY) ?? false));
-		if (blocked && !approved && validUnicode && active) {
+		if (blocked && !approved && validUnicode && current) {
 			this.pending.delete(id);
 			this.pending.set(id, review);
 			while (this.pending.size > MAX_DECISIONS) this.pending.delete(this.pending.keys().next().value as string);
-		} else if (active) {
+		} else if (current) {
 			this.pending.delete(id);
 		}
-		return { allowed: active && (!blocked || approved), approved, review: structuredClone(review) };
+		// An interrupt forces an unavailable verdict, so only an existing approval admits the content here.
+		return { allowed: current && (!blocked || approved), approved, review: structuredClone(review) };
 	}
 }

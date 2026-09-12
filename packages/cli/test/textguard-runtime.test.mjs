@@ -19,6 +19,7 @@ function fixture() {
 	let scans = 0;
 	let closes = 0;
 	const runtime = new TextGuardRuntime({
+		mode: "strict",
 		scanner: {
 			async initialize() {
 				return "a".repeat(64);

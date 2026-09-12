@@ -83,12 +83,15 @@ for (const variant of ["clear-skill", "major-skill", "ordinary-file", "ordinary-
 			assert.equal(result.status, "completed", result.result);
 			assert.equal(requests.length, 2);
 			const visible = JSON.stringify(requests[1].messages);
-			const blocked = variant === "major-skill" || variant === "ordinary-file-opt-in";
+			// A skill is an instruction the child would follow, so it is withheld. An ordinary file is
+			// data: the child reads it with the findings attached instead of losing the read.
+			const blocked = variant === "major-skill";
 			assert.equal(visible.includes("CHILD_SOURCE_MARKER"), !blocked);
 			if (blocked) {
 				assert.match(visible, /TextGuard withheld/);
 				assert.doesNotMatch(readFileSync(result.sessionFile, "utf8"), /CHILD_SOURCE_MARKER/);
 			}
+			if (variant === "ordinary-file-opt-in") assert.match(visible, /TextGuard advisory:/);
 			assert.ok(requests[0].tools.every((tool) => ["read", "grep", "find", "ls"].includes(tool.function.name)));
 			// Simulate history written before admission: resume must scan the persisted
 			// expansion even though the child loader publishes no skills.

@@ -67,7 +67,7 @@ test("malformed, cyclic, deep, and accessor-bearing payloads cannot obtain appro
 	assert.deepEqual(snapshotPayload(Array(8193).fill(0)), { status: "unavailable", reason: "budget" });
 });
 
-test("complete oversized identities support exact session approval, never cancellation or changed payloads", async () => {
+test("complete oversized identities support exact session approval, never changed payloads", async () => {
 	const scanner = {
 		async initialize() {
 			return "a".repeat(64);
@@ -86,8 +86,14 @@ test("complete oversized identities support exact session approval, never cancel
 	assert.equal((await gate.checkUnavailableSnapshot("web:fixture", snapshot.digest, "input-limit")).allowed, true);
 	assert.equal((await gate.check("web:fixture", JSON.stringify(snapshot.value))).allowed, true);
 	assert.equal((await gate.checkUnavailableSnapshot("web:fixture", sha("changed"), "input-limit")).allowed, false);
+	// The approval covers these exact bytes, so interrupting a later check does not withhold them again.
 	assert.equal(
 		(await gate.checkUnavailableSnapshot("web:fixture", snapshot.digest, "input-limit", AbortSignal.abort())).allowed,
+		true,
+	);
+	// An identity with no approval is still withheld when its check is interrupted.
+	assert.equal(
+		(await gate.checkUnavailableSnapshot("web:other", snapshot.digest, "input-limit", AbortSignal.abort())).allowed,
 		false,
 	);
 	gate.clearApprovals();

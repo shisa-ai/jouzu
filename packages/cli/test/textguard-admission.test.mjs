@@ -69,12 +69,19 @@ test("approval is exact-source, content, scanner, and session bound", async () =
 	assert.equal((await gate.check("skill-a", "text")).allowed, false);
 });
 
-test("unavailable coverage can be explicitly approved but cancellation and invalid UTF-8 cannot", async () => {
+test("unavailable coverage and interrupted scans can be approved; invalid UTF-8 cannot", async () => {
 	const gate = new TextGuardAdmission(scanner({ status: "unavailable", reason: "timeout", findings: [] }));
 	const missing = await gate.check("web", "content");
 	gate.approve(missing.review.id);
 	assert.equal((await gate.check("web", "content")).allowed, true);
-	assert.equal((await gate.check("web", "content", AbortSignal.abort())).allowed, false);
+	// An approval covers the exact bytes, so a later interrupted check does not withhold them again.
+	assert.equal((await gate.check("web", "content", AbortSignal.abort())).allowed, true);
+	// Unapproved content is withheld when a check is interrupted, and still reaches the approval queue.
+	const interrupted = await gate.check("other", "content", AbortSignal.abort());
+	assert.equal(interrupted.allowed, false);
+	assert.equal(interrupted.review.evidence.reason, "timeout");
+	assert.ok(gate.reviews().some((item) => item.id === interrupted.review.id));
+	assert.equal(gate.approve(interrupted.review.id), true);
 	const invalid = await gate.check("web", "\ud800");
 	assert.equal(invalid.allowed, false);
 	assert.equal(gate.approve(invalid.review.id), false);

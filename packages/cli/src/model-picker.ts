@@ -76,6 +76,7 @@ import {
 	renderTerminalFrameTitle,
 	sanitizeTerminalText,
 } from "./terminal-layout.js";
+import type { TextGuardMode } from "./textguard-policy.js";
 import { WorkflowComponent } from "./workflow.js";
 
 type PiModel = NonNullable<ExtensionContext["model"]>;
@@ -87,6 +88,8 @@ export interface JouzuModelPickerRequest {
 
 export interface JouzuModelPickerOptions {
 	textguardFiles?: boolean;
+	/** Reads the live TextGuard mode when a child agent launches. */
+	textguardMode?: () => TextGuardMode;
 	applyProjectDefaultAtStartup?: boolean;
 	restoreLastModelAtStartup?: boolean;
 	restoreLastThinkingLevelAtStartup?: boolean;
@@ -872,7 +875,10 @@ export function createJouzuModelPicker(
 	options: JouzuModelPickerOptions = {},
 ): JouzuModelPickerIntegration {
 	const store = new ModelPickerStore(paths);
-	const workflow = createWorkflowIntegration(paths, undefined, { textguardFiles: options.textguardFiles });
+	const workflow = createWorkflowIntegration(paths, undefined, {
+		textguardFiles: options.textguardFiles,
+		...(options.textguardMode ? { textguardMode: options.textguardMode } : {}),
+	});
 	const jouzuKeybindings = createJouzuKeybindingsManager(paths);
 	const surface = new JouzuPaletteSurfaceHost({ jouzuKeybindings });
 	const catalogEnv = options.palette?.env ?? process.env;
