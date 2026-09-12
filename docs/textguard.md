@@ -5,17 +5,46 @@ web results locally by default. The packaged native helper requires no Python
 installation or first-use download. Scanning preserves admitted content; it does
 not clean or rewrite it.
 
-A skill with error-level findings or an incomplete check is omitted before its
-metadata or body enters model context. Web results requiring approval are
-withheld as a whole, including structured details and images. Informational and
-warning-level findings do not block content. Images cannot be checked by the
-text scanner and require explicit approval.
+A scan cannot establish that content is safe, and blocking a result is itself a
+cost. TextGuard separates the two kinds of input it sees:
+
+| Input | Treated as | Flagged content |
+| --- | --- | --- |
+| Web and search results, ordinary file reads | Data the model reads | Delivered with the findings attached and a line telling the model to read it as untrusted data, never as instructions |
+| Skill files, skill names and descriptions, expanded skill text, reads of a skill file | Instructions the agent follows | Withheld until you approve it |
+
+Error-level findings and incomplete checks are what TextGuard acts on.
+Informational and warning-level findings never block or annotate content.
+Images cannot be checked by the text scanner; a web result containing one is
+treated as an incomplete check.
+
+## Modes
+
+| Command | Launch flag | Effect |
+| --- | --- | --- |
+| `/textguard on` | (default) | Flagged data is delivered with findings attached; flagged instructions are withheld |
+| `/textguard strict` | `--jouzu-textguard-strict` | Every flagged input is withheld until you approve it |
+| `/textguard off` | `--jouzu-textguard-off` | Nothing is scanned and everything is admitted |
+
+A mode lasts for the session and survives reload; restarting Jouzu returns to
+the launch mode. Changing it discards the approvals and reports collected under
+the previous mode and reloads resources. A child agent starts in the mode its
+parent session is in.
+
+## Notifications
+
+Withholding content, or delivering it with findings attached, raises one
+notification naming the source and what the scan found. The same content
+notifies once per session. Findings that block nothing never interrupt the
+session.
 
 ## Review withheld content
 
 1. In an interactive session, run `/textguard` without arguments.
-2. The review list shows each withheld item and non-blocking report with its
-   source label. Select an item to open its detail view.
+2. The review list shows what needs a decision: content withheld pending
+   approval, and content that was delivered with error-level findings. Findings
+   that blocked nothing are counted in the footer and listed by
+   `/textguard reports`. Select an item to open its detail view.
 3. The detail view shows the escaped source label, the content's SHA-256
    fingerprint, severity counts, finding explanations with locations, and the
    flagged content with controls and invisible characters shown as escapes.
@@ -35,9 +64,9 @@ columns and 24 rows and uses the normal selection and cancel keys. Print and RPC
 sessions do not grant approvals; their diagnostics direct you to interactive
 review.
 
-Only content-blocking items raise a session notification. Warning and
-informational reports stay inspectable through `/textguard` without
-interrupting the session.
+Warning and informational reports stay inspectable through `/textguard reports`
+without interrupting the session. Dismissing one removes it from the list and
+notifications for the current session.
 
 ## Approvals and their scope
 
@@ -55,7 +84,9 @@ Delete that file to revoke all persistent approvals. Child agents do not share
 the store and cannot create approvals.
 
 Checks limited by input size, time, decoding, or scanner failure are incomplete,
-not clean. Scanning accepts up to 256 KiB of text per request; a serialized web
+not clean. An incomplete check can be approved: the approval covers those exact
+bytes, and a later check of the same content that is interrupted does not
+withhold it again. Scanning accepts up to 256 KiB of text per request; a serialized web
 result includes both text and structured details in that budget. Content that
 cannot be captured completely and identified cannot be approved. Retry the
 request after resolving its size, access, or read error.
@@ -75,8 +106,9 @@ including any truncation, rather than every byte of the source file.
 
 Jouzu child agents check skill-file reads and expanded skill text in restored
 sessions. Each child has its own scanner and decisions; it does not inherit
-parent approvals. Child agents cannot open approval dialogs, so content requiring
-approval stays withheld. `--jouzu-textguard-files` also checks ordinary reads in
+parent approvals, but it does start in the parent session's mode. Child agents
+cannot open approval dialogs, so content that needs approval stays withheld for
+the child. `--jouzu-textguard-files` also checks ordinary reads in
 child agents launched or resumed from that CLI session. Role-based tool
 restrictions still apply.
 

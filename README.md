@@ -8,7 +8,7 @@ It comes batteries included with the tools and workflows we use every day:
 - **Background work without repeated interruptions.** Run shell jobs while you keep working, inspect logs, and receive batched unread completion summaries.
 - **Child agents with defined roles.** Assign a model, tools, instructions, and workspace; inspect results, send follow-ups, stop runs, and resume their conversations.
 - **Web search and readable pages.** Fetch pages directly or use browser-backed search and rendering. A Camoufox browser runtime installs on first use for a full headless browsing agent.
-- **Local content scanning.** TextGuard checks skills and web results before they reach the model. Review withheld content explicitly; scanning is not a guarantee of safety.
+- **Local content scanning.** TextGuard checks skills and web results before they reach the model. Flagged web results arrive labelled as untrusted data; flagged skills wait for your approval. Scanning is not a guarantee of safety.
 - **Searchable session history.** Recall earlier decisions and code after context compaction without keeping the whole conversation in the model's active context.
 - **Japanese and mixed-width text support.** Terminal layouts account for Japanese, Chinese, Korean, and emoji display widths. The optional Japanese profile adds language-focused instructions and skills.
 - **Voice dictation.** Speak into an editable prompt with live previews and finalized transcription through Shisa. Requires realtime speech access; never auto-sends.
@@ -123,7 +123,7 @@ Jouzu's default system prompt tells agents to follow repository instructions, pr
 
 Core also installs the `jouzu-review` prompt. Skill names and descriptions appear in context; full instructions load when a task matches or you run `/skill:<name>`.
 
-Sessions started with `jz` use local [TextGuard scanning](https://github.com/shisa-ai/jouzu/blob/main/docs/textguard.md) for skills and web results by default. Content with error-level findings or incomplete checks stays withheld until you approve it through `/textguard` in an interactive session. Add `--jouzu-textguard-files` to include ordinary file reads. No Python installation is required.
+Sessions started with `jz` use local [TextGuard scanning](https://github.com/shisa-ai/jouzu/blob/main/docs/textguard.md) for skills and web results by default. A flagged web result reaches the model with its findings attached and a note to treat it as untrusted data, so a search still returns something you can use; a flagged skill file stays withheld until you approve it through `/textguard` in an interactive session. `/textguard strict` withholds everything flagged, and `/textguard off` stops scanning for the session. Add `--jouzu-textguard-files` to include ordinary file reads. No Python installation is required.
 
 The optional `ja` preview extends Core with a concise Japanese response policy while preserving exact code, commands, identifiers, paths, URLs, logs, and source error messages. Enable it through first-run consent or explicit selection at any time:
 
