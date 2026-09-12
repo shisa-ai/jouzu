@@ -490,6 +490,13 @@ function lazyTool(
 	};
 }
 
+// Camoufox backs both browser tools with one shared browser and one shared
+// BrowserContext, and the search context recycles by closing the context it
+// hands out. Pi starts a batch of tool calls in parallel unless one of them
+// declares sequential execution, so two browser calls in one batch can close a
+// page the other is still navigating. Both tools declare it for that reason.
+const camoufoxExecutionMode = "sequential" as const;
+
 /** Register browser tools without installing or importing the Camoufox runtime during startup. */
 export function createJouzuCamoufoxExtension(pi: ExtensionAPI, stateDir: string): void {
 	let basePath: string | null = null;
@@ -544,6 +551,7 @@ export function createJouzuCamoufoxExtension(pi: ExtensionAPI, stateDir: string)
 					"isolate: true opens a one-shot browser context so cookies/storage do not leak across calls.",
 				],
 				parameters: fetchUrlParameters,
+				executionMode: camoufoxExecutionMode,
 			},
 			(signal) => getTool("tff-fetch_url", signal),
 		),
@@ -564,6 +572,7 @@ export function createJouzuCamoufoxExtension(pi: ExtensionAPI, stateDir: string)
 					"Default engine is 'auto' (Google first, DuckDuckGo fallback). Set engine to 'google' or 'duckduckgo' to pin a specific provider.",
 				],
 				parameters: searchWebParameters,
+				executionMode: camoufoxExecutionMode,
 			},
 			(signal) => getTool("tff-search_web", signal),
 		),

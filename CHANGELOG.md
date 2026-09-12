@@ -29,6 +29,7 @@
 - Keep a background task's unread result summary after the task is cleared.
 - Stop `/flow` from reporting input that was already delivered as held.
 - Let an RPC session finish an accepted prompt when its input stream ends.
+- Run `tff-fetch_url` and `tff-search_web` one at a time. Both tools share one Camoufox browser and one page context, so calls that started together could close a page another call was still navigating and fail. A batch that includes either tool now runs its calls in order.
 
 ### Testing limits
 
