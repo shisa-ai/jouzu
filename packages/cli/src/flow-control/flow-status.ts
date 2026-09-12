@@ -63,6 +63,8 @@ export interface FlowActiveWork {
 export interface FlowStatus {
 	version: 1;
 	scope: FlowScope;
+	/** Why the session's automated work is held as a whole, when it is. */
+	paused?: string;
 	held: FlowHeldInput[];
 	retryable: FlowRetryableRequest[];
 	waiting: FlowBlockedWait[];
@@ -84,6 +86,7 @@ export function projectFlowStatus(
 	work: FlowAuthorityWork[],
 	unaccountable: FlowUnaccountableWork[] = [],
 	uncertain: FlowUncertainAttempt[] = [],
+	paused?: string,
 ): FlowStatus {
 	const owners = new Map(work.map((record) => [record.id, record.owner]));
 	const held: FlowHeldInput[] = [];
@@ -142,6 +145,7 @@ export function projectFlowStatus(
 	return {
 		version: 1,
 		scope: { ...scope },
+		...(paused ? { paused } : {}),
 		held,
 		retryable,
 		waiting,
@@ -163,6 +167,11 @@ const duration = (milliseconds: number): string => {
 /** Render the status for a terminal. Identifiers stay whole so a retry can be copied from it. */
 export function formatFlowStatus(status: FlowStatus, now: number): string {
 	const lines: string[] = [];
+	if (status.paused) {
+		lines.push(`Paused: ${status.paused}`);
+		lines.push("Resume now with: /flow resume");
+		lines.push("");
+	}
 	if (status.waiting.length) {
 		lines.push("Waiting");
 		for (const wait of status.waiting) {
@@ -223,5 +232,6 @@ export function formatFlowStatus(status: FlowStatus, now: number): string {
 		lines.push("Not accounted for in this session");
 		for (const item of status.unaccountable) lines.push(`- ${item.producer}: ${item.description}`);
 	}
-	return lines.length ? lines.join("\n") : "Nothing is held, withheld, waiting, or unresolved.";
+	if (!lines.length) return "Nothing is held, withheld, waiting, or unresolved.";
+	return lines.join("\n").replace(/\n+$/, "");
 }

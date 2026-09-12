@@ -286,3 +286,14 @@ test("inactive work cannot request or continue, while independent work and retai
 		);
 	assert.throws(() => choose(initialFlowAdmission(), [intent("work")], { inactiveWorkIds: [42] }), { code: "schema" });
 });
+
+test("a paused session admits no semantic work whatever its rank", () => {
+	const state = initialFlowAdmission();
+	const intents = [intent("urgent"), intent("cadence", 5)];
+	const open = { hostReady: true, userPending: false, recoveryBlocked: false, waitingWorkIds: [] };
+	assert.ok(choose(state, intents));
+	// One switch covers every producer, so an interrupt does not have to name them.
+	assert.equal(chooseFlowIntent(state, intents, { ...open, automatedPaused: true }), undefined);
+	assert.equal(chooseFlowIntent(state, intents, { ...open, automatedPaused: false }) !== undefined, true);
+	assert.throws(() => chooseFlowIntent(state, intents, { ...open, automatedPaused: "yes" }), { code: "schema" });
+});

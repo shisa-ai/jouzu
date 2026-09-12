@@ -27,6 +27,8 @@ export interface PiFlowSessionOptions {
 	root: string;
 	/** Reported once when state written under an earlier record shape is moved aside on open. */
 	onIsolatedState?(path: string): void;
+	/** Turn-level signals the session acts on as a whole; see `PiNativeRequests`. */
+	turn?: { aborted(): void };
 	maxInputBytes: number;
 	maxResultBytes: number;
 	/** Host-approved producer participants for work created from user input. */
@@ -154,6 +156,7 @@ export class PiFlowSessionService {
 							.map((record) => record.dispatch?.operationId)
 							.filter((id): id is string => !!id),
 					),
+				this.options.turn,
 			);
 			this.opening.requests = requests;
 			const workContext = new FlowWorkContext(() => this.branch().attachment);

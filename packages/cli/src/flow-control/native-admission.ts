@@ -74,6 +74,10 @@ export function decideNativeAdmission(
 	// decision, and the controls for it arrive as user input, so holding those would make the state
 	// unrecoverable. Host-verified origin is what passes here, never a caller-supplied label.
 	if (isNativeUserInput(submission)) return { allowed: true };
+	// Checked immediately after the user-input allow: an interrupt holds everything automated and
+	// nothing the user typed, and it outranks the ordinary boundary reasons below because the user
+	// asked for it directly rather than the controller inferring it from session state.
+	if (gates.automatedPaused) return hold("Automated input is paused until the next user turn is under way.");
 	if (gates.outcomeUnresolved) return hold("Automated input is waiting for an interrupted turn to be resolved.");
 	if (submission.api === "sendCustomMessage") {
 		const options = submission.args[1] as { deliverAs?: string; triggerTurn?: boolean } | undefined;

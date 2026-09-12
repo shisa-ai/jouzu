@@ -103,6 +103,8 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 				},
 				policy: () => ({ userPending: false, recoveryBlocked: false, waitingWorkIds: [] }),
 				autoRelease: { onError: options.onError, retireHistory: true },
+				// An interrupt's hold is reported through the status extension, which owns the terminal.
+				onAutomatedPause: () => void status.announcePause().catch(options.onError),
 				// State from an earlier record shape is isolated rather than migrated, and the user is
 				// told where it went so nothing disappears silently.
 				onIsolatedState: (path) =>

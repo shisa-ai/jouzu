@@ -67,6 +67,15 @@ export class PiNativeRequests {
 		trustedStream?: AgentSession["agent"]["streamFunction"],
 		/** Operation IDs of host-verified user submissions, used to place user instruction in a run. */
 		userOperations?: () => Promise<ReadonlySet<string>>,
+		/**
+		 * Turn-level signals the session acts on as a whole.
+		 *
+		 * The host reserves its interrupt key, so an interrupt is not observable directly; a turn
+		 * ending with an aborted outcome is the evidence available for it. Only the conversational
+		 * route reports here. Maintenance work such as compaction aborts for its own reasons and
+		 * already gates the session while it runs, so it is left out deliberately.
+		 */
+		private readonly turn?: { aborted(): void },
 	) {
 		if (!Number.isSafeInteger(maxBytes) || maxBytes < 1)
 			throw new FlowLedgerError("capacity", "Invalid native payload limit.");
@@ -572,9 +581,14 @@ export class PiNativeRequests {
 								id,
 								message.stopReason === "error" ? "failure" : message.stopReason === "aborted" ? "aborted" : "success",
 							);
+							if (message.stopReason === "aborted") this.turn?.aborted();
 							if (composed) await this.composition?.settled(composed, message);
 							return message;
 						} catch (error) {
+							// An interrupt usually rejects the request rather than returning an aborted
+							// outcome, so the signal is what identifies it. Both routes are reported: a
+							// provider that answers with `aborted` is the same event to the user.
+							if (options?.signal?.aborted) this.turn?.aborted();
 							await withheld();
 							throw error;
 						} finally {

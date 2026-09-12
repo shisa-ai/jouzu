@@ -252,3 +252,17 @@ test("inputs sharing one cause are listed under it once", () => {
 	// rather than three lines of the same sentence.
 	assert.match(text, /Held input\n- Waiting for user work\.\n {2}2 inputs: s1, s2\n- s3: Queue is revised\./);
 });
+
+test("a session pause leads the status and names how to release it", () => {
+	const status = projectFlowStatus(scope, [], [], [], [], [], "a turn was interrupted");
+	assert.equal(status.paused, "a turn was interrupted");
+	const text = formatFlowStatus(status, 0);
+	// It explains every other hold below it, so it is stated first rather than last.
+	assert.match(text, /^Paused: a turn was interrupted\nResume now with: \/flow resume/);
+	// Without a pause nothing is added, and an otherwise empty status still reads as empty.
+	assert.equal(projectFlowStatus(scope, [], [], []).paused, undefined);
+	assert.equal(
+		formatFlowStatus(projectFlowStatus(scope, [], [], []), 0),
+		"Nothing is held, withheld, waiting, or unresolved.",
+	);
+});

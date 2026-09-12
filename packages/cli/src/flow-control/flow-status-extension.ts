@@ -14,7 +14,8 @@ const USAGE = [
 	"/flow shows what session flow control is holding.",
 	"/flow retry <request> authorizes one withheld request.",
 	"/flow cancel <token> removes a wait's dependency gate without stopping its job.",
-	"/flow pause <work> holds a campaign's automated turns; /flow resume <work> releases it.",
+	"/flow pause holds every automated turn in this session; /flow resume releases it.",
+	"/flow pause <work> holds one campaign's automated turns; /flow resume <work> releases it.",
 	"/flow stop <work> retires a campaign and ends its waits. None of these stop a running job.",
 	"/flow resolve <attempt> retry|discard decides an interrupted turn whose outcome is unknown.",
 ].join("\n");
@@ -23,11 +24,33 @@ const USAGE = [
  * The user's view of and controls over held work. Every reply goes to the terminal through
  * `ctx.ui.notify`, so reading status or repairing a hold adds nothing to the model's context.
  */
-export function createFlowStatusExtension(options: FlowStatusOptions): InlineExtension {
+export function createFlowStatusExtension(options: FlowStatusOptions): InlineExtension & {
+	announcePause(): Promise<void>;
+} {
 	const now = () => options.now?.() ?? Date.now();
+	let announce: ((text: string) => void) | undefined;
 	return {
 		name: "jouzu-flow-status",
+		/**
+		 * Report an interrupt's hold once, and only when it is actually holding something. Saying
+		 * nothing when the queue is empty keeps the ordinary interrupt silent, which is almost all of
+		 * them; the message only appears when it explains automated work that has stopped.
+		 */
+		async announcePause() {
+			const reason = options.ingress().automatedPause();
+			if (!reason || !announce) return;
+			const inspected = await options.ingress().inspect();
+			const holding = inspected.submissions.some((submission) => submission.admission === "held");
+			if (!holding) return;
+			announce(
+				"Flow control paused after an interrupt. Automated work resumes on your next message. Run /flow for details.",
+			);
+		},
 		factory(pi) {
+			pi.on("agent_end", async (_event, ctx) => {
+				// Kept fresh here rather than captured at load: the context is replaced with the session.
+				if (ctx) announce = (text) => ctx.ui.notify(text, "info");
+			});
 			pi.registerCommand("flow", {
 				description: "Show held, withheld, and waiting flow-control work, and repair a hold",
 				handler: async (args, ctx) => {
@@ -51,6 +74,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 										authority.work,
 										options.unaccountable?.() ?? [],
 										inspected.uncertain,
+										ingress.automatedPause(),
 									),
 									now(),
 								),
@@ -100,6 +124,24 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 						}
 						// Lifecycle controls name the work, not its owner: the producer that owns a campaign
 						// is looked up, so a user cannot act on work by guessing whose it is.
+						if ((verb === "pause" || verb === "resume") && !target) {
+							if (verb === "pause") {
+								notify(
+									ingress.pauseAutomated("held from /flow")
+										? "Paused every automated turn in this session. Release it with /flow resume."
+										: `Already paused: ${ingress.automatedPause()}. Release it with /flow resume.`,
+								);
+								return;
+							}
+							if (!ingress.resumeAutomated()) {
+								notify("Automated turns are not paused for this session.");
+								return;
+							}
+							// Releasing only lifts the gate; the ordinary boundary decides when work runs.
+							await ingress.releaseReady();
+							notify("Resumed automated turns. They run from the next idle boundary.");
+							return;
+						}
 						const lifecycle = { pause: "paused", resume: "active", stop: "stopped" } as const;
 						if (verb in lifecycle) {
 							const status = lifecycle[verb as keyof typeof lifecycle];

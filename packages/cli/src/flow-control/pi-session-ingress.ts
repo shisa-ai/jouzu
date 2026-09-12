@@ -27,6 +27,8 @@ type Submission = Parameters<Ingress["submit"]>[0];
 export interface PiFlowIngressOptions extends Omit<PiFlowSessionOptions, "admitNativeQueue" | "decorateNativeContext"> {
 	/** Opt in to host-boundary release; failures require visible host reporting. */
 	autoRelease?: { onError(error: unknown): void; clock?: FlowWaitClock; retireHistory?: boolean };
+	/** Called when an interrupted turn newly pauses automated work, so the user can be told once. */
+	onAutomatedPause?(): void;
 	/** Semantic admission override; omission uses conservative unadapted-send admission. */
 	admit?(
 		submission: Submission,
@@ -48,6 +50,7 @@ export class PiSessionFlowIngress implements Ingress {
 	readonly version = 1 as const;
 	private service?: PiFlowSessionService;
 	private session?: AgentSession;
+	private automatedPauseReason?: string;
 	private opening?: Promise<void>;
 	private closing?: Promise<void>;
 	private disposed = false;
@@ -92,7 +95,14 @@ export class PiSessionFlowIngress implements Ingress {
 					return {
 						...policy,
 						userPending: policy.userPending || this.activeUserInput > 0 || this.retainedUserInput.size > 0,
+						automatedPaused: policy.automatedPaused || this.automatedPauseReason !== undefined,
 					};
+				},
+				turn: {
+					// An interrupt is not observable directly, so an aborted turn stands for it.
+					aborted: () => {
+						if (this.pauseAutomated("a turn was interrupted")) this.options.onAutomatedPause?.();
+					},
 				},
 				decorateNativeContext: async (messages, sources, signal) => {
 					const branch = this.branch();
@@ -219,6 +229,29 @@ export class PiSessionFlowIngress implements Ingress {
 			// No view of the queue means no evidence of discard, so fall back to the conservative read.
 			return undefined;
 		}
+	}
+
+	/**
+	 * Why the session's automated work is held as a whole, or undefined when it is not.
+	 *
+	 * Interrupting a turn means stop, so nothing automated starts behind the interrupt until the
+	 * user's next turn is under way. This is session state rather than each work's own lifecycle:
+	 * it clears itself, where a paused campaign waits for the user to resume it by name.
+	 */
+	automatedPause(): string | undefined {
+		return this.automatedPauseReason;
+	}
+	/** Returns whether this changed anything, so a caller can report it only when it did. */
+	pauseAutomated(reason: string): boolean {
+		if (this.automatedPauseReason !== undefined) return false;
+		this.automatedPauseReason = reason;
+		return true;
+	}
+	resumeAutomated(): boolean {
+		if (this.automatedPauseReason === undefined) return false;
+		this.automatedPauseReason = undefined;
+		// Releasing is the caller's business; producers are woken by the ordinary boundary.
+		return true;
 	}
 
 	private async refreshUserInput(): Promise<void> {
@@ -469,6 +502,7 @@ export class PiSessionFlowIngress implements Ingress {
 				waitingWorkIds: [...new Set([...policy.waitingWorkIds, ...waits.waitingWorkIds])],
 				recoveryBlocked,
 				outcomeUnresolved,
+				automatedPaused: policy.automatedPaused || this.automatedPauseReason !== undefined,
 			},
 			this.session,
 			phase,
@@ -563,6 +597,10 @@ export class PiSessionFlowIngress implements Ingress {
 		const captured = structuredClone(submission);
 		const user = isNativeUserInput(captured);
 		if (user) this.activeUserInput++;
+		// Every send passes through here, so this is where the user speaking again releases an
+		// interrupt's hold. Automated work still waits for an idle boundary, which is what keeps it
+		// out of the very turn being submitted: the hold ends, the queue does not jump.
+		if (user) this.resumeAutomated();
 		return this.track(async () => {
 			const branch = this.branch();
 			const saved = await branch.attachment.submissions.retain(captured);

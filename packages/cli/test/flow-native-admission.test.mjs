@@ -191,3 +191,17 @@ test("user input is admitted regardless of the queue evidence", () => {
 			true,
 		);
 });
+
+test("an interrupt pause holds automated input and never the user's own", () => {
+	const automated = record("automated");
+	const user = record("typed", { api: "steer", origin: { kind: "host", id: "terminal" }, args: ["typed"] });
+	const paused = { ...gates, automatedPaused: true };
+	assert.equal(
+		reason(decideNativeAdmission(automated.submission, [automated], paused, host, "submission")),
+		"Automated input is paused until the next user turn is under way.",
+	);
+	// The gesture means stop what is happening, not stop the user from speaking.
+	assert.equal(decideNativeAdmission(user.submission, [user], paused, host, "submission").allowed, true);
+	// And it holds on an idle host, where automated input would otherwise be admitted.
+	assert.equal(decideNativeAdmission(automated.submission, [automated], gates, host, "submission").allowed, true);
+});

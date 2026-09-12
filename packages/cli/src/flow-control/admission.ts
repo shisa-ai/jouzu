@@ -28,6 +28,12 @@ export interface FlowAdmissionGates {
 	 */
 	outcomeUnresolved?: boolean;
 	waitingWorkIds: string[];
+	/**
+	 * The session's automated work is held as a whole, without touching any work's own lifecycle.
+	 * Set when the user interrupts a turn: an interrupt means stop, so nothing automated starts
+	 * behind it until the user's next turn is under way. The user's own input is never held by it.
+	 */
+	automatedPaused?: boolean;
 	/** Explicitly paused, stopped, or completed work cannot request another turn. */
 	inactiveWorkIds?: string[];
 	retiredWorkHashes?: string[];
@@ -163,10 +169,11 @@ export function chooseFlowIntent(
 				gates.retiredWorkHashes.length > MAX_RETIRED_FLOW_IDENTITIES ||
 				gates.retiredWorkHashes.some((hash) => !validRetiredIdentityHash(hash)))) ||
 		(gates.inactiveWorkIds !== undefined &&
-			(!Array.isArray(gates.inactiveWorkIds) || gates.inactiveWorkIds.some((id) => !identity(id))))
+			(!Array.isArray(gates.inactiveWorkIds) || gates.inactiveWorkIds.some((id) => !identity(id)))) ||
+		(gates.automatedPaused !== undefined && typeof gates.automatedPaused !== "boolean")
 	)
 		throw new FlowAdmissionError("schema", "Invalid admission gates.");
-	if (!gates.hostReady || gates.userPending || gates.recoveryBlocked) return undefined;
+	if (!gates.hostReady || gates.userPending || gates.recoveryBlocked || gates.automatedPaused) return undefined;
 	const waits = new Set(gates.waitingWorkIds);
 	const inactive = new Set(gates.inactiveWorkIds);
 	const retired = new Set(gates.retiredWorkHashes);

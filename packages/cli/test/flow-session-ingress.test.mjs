@@ -4175,3 +4175,66 @@ test("a queued user message survives an abort and still holds automated input", 
 		true,
 	);
 });
+
+test("an interrupted turn pauses automated work until the next user turn is under way", async (t) => {
+	// The host reserves its interrupt key, so the interrupt is not observable directly; a turn
+	// ending aborted is the evidence for it. Pressing it means stop, so nothing automated starts
+	// behind it, and the user's next turn releases the hold once it is actually running.
+	const f = await fixture(t, { provider: true, admit: null });
+	const started = deferred(),
+		proceed = deferred();
+	const stream = f.session.agent.streamFunction;
+	let calls = 0;
+	f.session.agent.streamFunction = async (...args) => {
+		if (++calls === 1) {
+			started.resolve();
+			await proceed.promise;
+		}
+		return stream(...args);
+	};
+	const running = f.session.prompt("a turn the user will interrupt");
+	await started.promise;
+	assert.equal(f.ingress.automatedPause(), undefined, "nothing is paused before the interrupt");
+
+	const aborting = f.session.abort();
+	proceed.resolve();
+	await aborting.catch(() => {});
+	await running.catch(() => {});
+	assert.ok(f.ingress.automatedPause(), "the aborted turn paused automated work");
+
+	// Automated input is held while paused, and the user's own input is not.
+	await f.session.sendUserMessage("Continue by working on the next task", { deliverAs: "followUp" });
+	const automated = (await f.ingress.branch().attachment.submissions.snapshot()).find(
+		(record) => record.submission.args[0] === "Continue by working on the next task",
+	);
+	assert.equal(automated.dispatch, undefined, "the follow-up is held rather than sent into the gap");
+
+	await f.session.prompt("the user's next instruction");
+	// The user's turn ran, which releases the hold; the follow-up may go from the next boundary.
+	assert.equal(f.ingress.automatedPause(), undefined, "the next user turn resumed automated work");
+	// Releasing the pause does not itself dispatch: the follow-up still waits for an idle boundary,
+	// which is what keeps it out of the turn the user just submitted. That the pause never holds the
+	// user's own input is pinned directly in flow-native-admission.test.mjs.
+});
+
+test("a session pause holds automated work until it is resumed explicitly", async (t) => {
+	const f = await fixture(t, { provider: true, admit: null });
+	await f.session.prompt("first");
+	assert.equal(f.ingress.pauseAutomated("held from /flow"), true);
+	assert.equal(f.ingress.pauseAutomated("held again"), false, "pausing twice keeps the first reason");
+	assert.equal(f.ingress.automatedPause(), "held from /flow");
+
+	await f.session.sendUserMessage("Continue by working on the next task", { deliverAs: "followUp" });
+	const held = (await f.ingress.branch().attachment.submissions.snapshot()).find(
+		(record) => record.submission.args[0] === "Continue by working on the next task",
+	);
+	assert.equal(held.dispatch, undefined);
+
+	assert.equal(f.ingress.resumeAutomated(), true);
+	assert.equal(f.ingress.resumeAutomated(), false, "resuming twice is a no-op");
+	await f.ingress.releaseReady();
+	const released = (await f.ingress.branch().attachment.submissions.snapshot()).find(
+		(record) => record.submission.args[0] === "Continue by working on the next task",
+	);
+	assert.ok(released.dispatch);
+});
