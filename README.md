@@ -192,6 +192,8 @@ Catalog configuration is stored at:
 
 Settings reports each source's status and model count. `Enter` edits the selected source; `→` expands its cached offerings and `←` collapses them. `A` adds, `Space` enables or disables, `R` refreshes, and `D` removes the source registration; removal asks for confirmation. Model changes from these actions apply to the current session immediately. `/reload` refreshes local provider models and enabled catalogs whose credentials are available before reapplying the active catalog data. The built-in `shisa-api` row supports only `Space`; its endpoint and credential reference are managed by Jouzu. Removing a custom source does not remove provider configuration, credentials, favorites, or recents.
 
+A global context ceiling sits above the source list. `↑` from the first source row focuses it, and `←` and `→` step through 128K, 192K, 256K, 384K, 512K, 768K, 1M, or off. The ceiling is stored in `context-policy.json` next to `catalogs.json`. Compaction, the footer percentage, and the model picker's fit check use the smaller of the model's declared window and the ceiling, so a 1M-token model under a 384K ceiling compacts as if its window were 384K. Catalog `limits.contextWindow` values compose through the same minimum, and an explicit `models.json` `modelOverrides.contextWindow` still outranks the ceiling. Turning the ceiling off restores the declared windows in the same session.
+
 Refresh uses ETag/`304`, validates complete bytes before activation, partitions private cache by source and account, and keeps each source's last valid catalog on network or validation failure. CLI status and refresh operate on all enabled sources or one named source:
 
 ```bash

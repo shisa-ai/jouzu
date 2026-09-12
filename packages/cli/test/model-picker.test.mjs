@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { visibleWidth } from "@earendil-works/pi-tui";
 import { CatalogSourceStore } from "../dist/catalog-sources.js";
+import { writeContextPolicy } from "../dist/context-clamp.js";
 import { createJouzuKeybindingsManagerFromConfig } from "../dist/jouzu-keybindings.js";
 import { MODEL_CATALOG_MEDIA_TYPE, parseAndValidateModelCatalog } from "../dist/model-catalog.js";
 import { refreshCatalogSource } from "../dist/model-catalog-sync.js";
@@ -16,7 +17,9 @@ import {
 	compactContextForModelSwitch,
 	createJouzuModelPicker,
 	ModelPickerComponent,
+	pickerModels,
 } from "../dist/model-picker.js";
+import { modelContextFit } from "../dist/model-picker-ranking.js";
 import { deriveProjectKey, emptyModelPickerState, ModelPickerStore } from "../dist/model-picker-state.js";
 import { JouzuPaletteRouter } from "../dist/palette.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
@@ -2178,6 +2181,54 @@ test("selecting the active Models row preserves live and saved thinking with the
 		assert.deepEqual(errors, []);
 	} finally {
 		session?.dispose();
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("The context ceiling caps picker rows and the model switch fit check", () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-clamp-"));
+	try {
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "jouzu") });
+		mkdirSync(paths.configDir, { recursive: true });
+		writeContextPolicy(paths, 384_000);
+		const catalog = parseAndValidateModelCatalog(
+			readFileSync(join(import.meta.dirname, "..", "catalog", "fixtures", "account-snapshot-v1.json"), "utf8"),
+			{ remote: true },
+		);
+		catalog.modelOfferings[0].limits = { contextWindow: 1_000_000, maxOutputTokens: 32_768 };
+		const active = [
+			{
+				source: {
+					id: "metadata",
+					label: "Metadata catalog",
+					url: "https://metadata.test/catalog",
+					enabled: true,
+					auth: { type: "none" },
+				},
+				document: catalog,
+			},
+		];
+		const model = {
+			provider: "ai.example.gateway",
+			id: "example-model",
+			name: "Pi label",
+			contextWindow: 1_000_000,
+			maxTokens: 32_768,
+		};
+		const ctx = {
+			modelRegistry: { getAvailable: () => [model], getAll: () => [model] },
+			scopedModels: [],
+		};
+
+		const rows = pickerModels(ctx, active, {}, paths);
+		assert.equal(rows.length, 1);
+		assert.equal(rows[0].contextWindow, 384_000, "the catalog offering's declared window is capped");
+		assert.equal(modelContextFit(rows[0], 500_000), "too-small", "the fit check uses the capped window");
+		assert.equal(modelContextFit(rows[0], 300_000), "fits");
+
+		writeContextPolicy(paths, undefined);
+		assert.equal(pickerModels(ctx, active, {}, paths)[0].contextWindow, 1_000_000, "off restores the declared window");
+	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
 });

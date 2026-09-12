@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -743,27 +743,34 @@ test("Expanding a source pages its offerings inside the overlay budget", async (
 		let rendered = component.render(84);
 		assert.ok(rendered.length <= budget, `expanded render stays within ${budget} rows`);
 		assert.match(rendered.join("\n"), /Example Model 0/u);
-		assert.match(rendered.join("\n"), /1-8\/30/u, "paging hint names the visible window");
+		// The context ceiling row spends one body row, so each page holds one fewer model.
+		assert.match(rendered.join("\n"), /1-7\/30/u, "paging hint names the visible window");
+		assert.match(rendered.join("\n"), /Maximum context/u, "context ceiling row stays visible");
 		assert.ok(selectedLine(rendered)?.includes("Paged pool"), "selected source row stays visible while expanded");
 		assert.match(rendered.join("\n"), /Enter edit/u, "footer key bar stays visible while expanded");
 
 		component.handleInput("pageDown");
 		rendered = component.render(84);
 		assert.ok(rendered.length <= budget);
-		assert.match(rendered.join("\n"), /9-16\/30/u);
+		assert.match(rendered.join("\n"), /8-14\/30/u);
 
 		component.handleInput("pageDown");
 		rendered = component.render(84);
 		assert.ok(rendered.length <= budget);
-		assert.match(rendered.join("\n"), /17-24\/30/u);
+		assert.match(rendered.join("\n"), /15-21\/30/u);
 
 		component.handleInput("pageDown");
 		rendered = component.render(84);
 		assert.ok(rendered.length <= budget);
-		assert.match(rendered.join("\n"), /23-30\/30/u, "paging clamps at the end of the catalog");
+		assert.match(rendered.join("\n"), /22-28\/30/u);
 
 		component.handleInput("pageDown");
-		assert.match(component.render(84).join("\n"), /23-30\/30/u);
+		rendered = component.render(84);
+		assert.ok(rendered.length <= budget);
+		assert.match(rendered.join("\n"), /24-30\/30/u, "paging clamps at the end of the catalog");
+
+		component.handleInput("pageDown");
+		assert.match(component.render(84).join("\n"), /24-30\/30/u);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
@@ -783,13 +790,14 @@ test("Paging steps by the rendered capacity so every offering stays reachable", 
 		component.handleInput("down");
 		component.handleInput("\u001b[C");
 		const budget = overlayBudget(20);
-		// The 20-row budget leaves room for a five-row page, smaller than the
-		// historical fixed eight; paging must follow the page size, not skip it.
-		const windows = ["1-5/30", "6-10/30", "11-15/30", "16-20/30", "21-25/30", "26-30/30"];
+		// The 20-row budget leaves room for a four-row page once the context ceiling
+		// row is counted; paging must follow the page size, not skip it.
+		const windows = ["1-4/30", "5-8/30", "9-12/30", "13-16/30", "17-20/30", "21-24/30", "25-28/30", "27-30/30"];
 		for (const [step, window] of windows.entries()) {
 			const rendered = component.render(84);
 			assert.ok(rendered.length <= budget, `render stays within ${budget} rows at window ${window}`);
 			assert.ok(rendered.join("\n").includes(window), `window ${step} (${window}) shown`);
+			assert.match(rendered.join("\n"), /Maximum context/u, "context ceiling row stays visible");
 			assert.match(rendered.join("\n"), /Enter edit/u, "footer stays visible");
 			if (step < windows.length - 1) component.handleInput("pageDown");
 		}
@@ -801,9 +809,9 @@ test("Paging steps by the rendered capacity so every offering stays reachable", 
 				.join("\n")
 				.match(/model-\d+/gu) ?? [],
 		);
-		assert.equal(seen.size, 5);
+		assert.equal(seen.size, 4);
 		component.handleInput("pageUp");
-		assert.match(component.render(84).join("\n"), /21-25\/30/u, "pageUp walks back one full window");
+		assert.match(component.render(84).join("\n"), /23-26\/30/u, "pageUp walks back one full window");
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
@@ -827,14 +835,15 @@ test("Expansion survives moving the selection and pages the sticky source by cap
 		let rendered = component.render(84);
 		assert.ok(rendered.length <= budget, "sticky expansion stays within the budget");
 		assert.ok(selectedLine(rendered)?.includes("Shisa API"), "selection moved to the built-in source");
-		assert.match(rendered.join("\n"), /1-3\/30/u, "sticky source keeps a paged window");
+		assert.match(rendered.join("\n"), /1-2\/30/u, "sticky source keeps a paged window");
+		assert.match(rendered.join("\n"), /Maximum context/u, "context ceiling row stays visible");
 		assert.match(rendered.join("\n"), /Enter edit/u, "footer stays visible");
 
 		component.handleInput("pageDown");
 		rendered = component.render(84);
 		assert.ok(rendered.length <= budget);
-		assert.match(rendered.join("\n"), /4-6\/30/u, "sticky paging advances by the rendered capacity");
-		assert.doesNotMatch(rendered.join("\n"), /1-3\/30/u, "no overlapping re-show of the first window");
+		assert.match(rendered.join("\n"), /3-4\/30/u, "sticky paging advances by the rendered capacity");
+		assert.doesNotMatch(rendered.join("\n"), /1-2\/30/u, "no overlapping re-show of the first window");
 
 		component.handleInput("\u001b[D");
 		assert.doesNotMatch(component.render(84).join("\n"), /Example Model/u, "left collapses the expansion");
@@ -1015,6 +1024,75 @@ test("Long source labels leave the status column readable", async () => {
 			assert.match(row, /active/u, "the status stays readable beside a long label");
 			assert.ok(rendered.every((value) => terminalTextWidth(value) <= width));
 		}
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("The context ceiling row steps through presets, persists, and notifies the host", () => {
+	const { root, paths, context } = setup();
+	try {
+		let changes = 0;
+		const component = new CatalogSettingsComponent({
+			context,
+			paths,
+			env: {},
+			onCatalogsChanged: () => {
+				changes += 1;
+			},
+		});
+		let rendered = component.render(84);
+		assert.match(rendered.join("\n"), /Maximum context\s+‹ Off ›/u, "the ceiling starts off");
+
+		// Up from the first source row moves focus onto the ceiling; arrows step it.
+		component.handleInput("up");
+		rendered = component.render(84);
+		assert.match(selectedLine(rendered) ?? "", /Maximum context/u, "the ceiling row takes the selection marker");
+		assert.match(rendered.join("\n"), /←→ context limit/u, "the key bar names the ceiling keys");
+
+		component.handleInput("\u001b[C");
+		rendered = component.render(84);
+		assert.match(rendered.join("\n"), /‹ 128K ›/u);
+		assert.equal(changes, 1, "a change asks the host to recompose provider models");
+		assert.deepEqual(JSON.parse(readFileSync(join(paths.configDir, "context-policy.json"), "utf8")), {
+			schemaVersion: 1,
+			maxContextTokens: 128_000,
+		});
+
+		component.handleInput("\u001b[C");
+		rendered = component.render(84);
+		assert.match(rendered.join("\n"), /‹ 192K ›/u);
+
+		component.handleInput("\u001b[D");
+		rendered = component.render(84);
+		assert.match(rendered.join("\n"), /‹ 128K ›/u, "left steps back down the ladder");
+
+		component.handleInput("\u001b[D");
+		rendered = component.render(84);
+		assert.match(rendered.join("\n"), /‹ Off ›/u);
+		assert.equal(existsSync(join(paths.configDir, "context-policy.json")), false, "off removes the stored policy");
+		assert.equal(changes, 4);
+
+		// Down returns to the source list and the arrows disclose models again.
+		component.handleInput("down");
+		rendered = component.render(84);
+		assert.ok(selectedLine(rendered)?.includes("Shisa API"), "down returns the selection to the sources");
+		assert.match(rendered.join("\n"), /Enter edit/u);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("A rejected context policy warns once and keeps the ceiling off", () => {
+	const { root, paths, context } = setup();
+	try {
+		mkdirSync(paths.configDir, { recursive: true });
+		writeFileSync(join(paths.configDir, "context-policy.json"), '{"schemaVersion":9,"maxContextTokens":384000}');
+		const component = new CatalogSettingsComponent({ context, paths, env: {} });
+		const rendered = component.render(84);
+		assert.match(rendered.join("\n"), /Maximum context\s+‹ Off ›/u);
+		assert.match(rendered.join("\n"), /Context limit was not applied/u);
+		assert.match(rendered.join("\n"), /use their declared windows/u);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}

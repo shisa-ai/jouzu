@@ -8,6 +8,7 @@ import type {
 import { type Focusable, getKeybindings, Input, matchesKey, type TUI, wrapTextWithAnsi } from "@earendil-works/pi-tui";
 import { CatalogSettingsComponent } from "./catalog-settings.js";
 import { catalogSourceCredentialAvailable } from "./catalog-sources.js";
+import { activeContextClamp, clampContextWindow } from "./context-clamp.js";
 import {
 	createJouzuKeybindingsManager,
 	formatEffectiveJouzuKeybinding,
@@ -843,6 +844,7 @@ export function pickerModels(
 		provider: catalogRuntimeIdentity(model.provider)?.provider ?? model.provider,
 		catalogId: catalogRuntimeIdentity(model.provider)?.catalogId,
 	}));
+	const clamp = activeContextClamp(paths);
 	return models.flatMap((model) => {
 		const identity = catalogRuntimeIdentity(model.provider);
 		if (
@@ -857,6 +859,9 @@ export function pickerModels(
 			return [];
 		return catalogPickerModels(model, catalogs).map((row) => ({
 			...row,
+			// The picker's context detail and fit check must show the window the
+			// session actually compacts against, including for catalog offerings.
+			contextWindow: clampContextWindow(row.contextWindow, clamp),
 			available:
 				row.available &&
 				availableKeys.has(`${model.provider}\0${model.id}`) &&

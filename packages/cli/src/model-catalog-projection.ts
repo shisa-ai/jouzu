@@ -6,12 +6,14 @@ import type {
 	ProviderModelConfig,
 } from "@earendil-works/pi-coding-agent";
 import { getCatalogSourceToken } from "./catalog-sources.js";
+import { activeContextClamp, clampModelContextWindow, modelsExceedContextClamp } from "./context-clamp.js";
 import { CATALOG_THINKING_LEVELS, type CatalogModelOffering } from "./model-catalog.js";
 import type { ActiveModelCatalog } from "./model-catalog-sync.js";
 import type { ModelReference } from "./model-picker-state.js";
 import type { JouzuPaths } from "./paths.js";
 
 type PiModel = NonNullable<ExtensionContext["model"]>;
+type PiProvider = NonNullable<ReturnType<ExtensionContext["modelRegistry"]["getRegisteredNativeProvider"]>>;
 
 type CatalogModelPatch = Partial<
 	Pick<PiModel, "name" | "reasoning" | "input" | "contextWindow" | "maxTokens" | "thinkingLevelMap">
@@ -34,6 +36,13 @@ export interface CatalogProviderProjection {
 	models: ProviderModelConfig[];
 	addedModelIds: string[];
 	overriddenModelIds: string[];
+	/** Model ids whose context window was reduced to the active clamp. */
+	clampedModelIds: string[];
+}
+
+export interface CatalogProjectionOptions {
+	/** Ceiling applied to every composed provider model; absent means no ceiling. */
+	maxContextTokens?: number;
 }
 
 export interface CatalogProjectionResult {
@@ -52,6 +61,42 @@ export interface CatalogProjectionRefreshResult {
 
 interface OwnedProviderRegistration {
 	config: ProviderConfig;
+}
+
+interface WrappedNativeProvider {
+	original: PiProvider;
+	wrapper: PiProvider;
+}
+
+/**
+ * A config overlay replaces a provider's whole model list, so every definition
+ * must stand alone: Pi rejects a model without an `api` or `baseUrl`, and an
+ * overlay cannot carry the per-model headers some built-in providers need.
+ */
+function canOverlayProviderModels(models: readonly ProviderModelConfig[]): boolean {
+	return models.every(
+		(model) =>
+			typeof model.api === "string" &&
+			model.api.length > 0 &&
+			typeof model.baseUrl === "string" &&
+			model.baseUrl.length > 0 &&
+			(model.headers === undefined || Object.keys(model.headers).length === 0),
+	);
+}
+
+/** Reduce composed model definitions to the ceiling and name the models it changed. */
+function clampProviderModels(
+	models: readonly ProviderModelConfig[],
+	clamp: number | undefined,
+): { models: ProviderModelConfig[]; clampedModelIds: string[] } {
+	if (clamp === undefined) return { models: [...models], clampedModelIds: [] };
+	const clampedModelIds: string[] = [];
+	const clamped = models.map((model) => {
+		if (model.contextWindow <= clamp) return model;
+		clampedModelIds.push(model.id);
+		return { ...model, contextWindow: clamp };
+	});
+	return { models: clamped, clampedModelIds };
 }
 
 const EMPTY_COST = Object.freeze({
@@ -169,7 +214,9 @@ function createCatalogModel(
 export function projectCatalogProviders(
 	baseModels: readonly PiModel[],
 	catalogs: readonly ActiveModelCatalog[],
+	options: CatalogProjectionOptions = {},
 ): CatalogProjectionResult {
+	const clamp = options.maxContextTokens;
 	const modelsByProvider = new Map<string, PiModel[]>();
 	for (const model of baseModels) {
 		const models = modelsByProvider.get(model.provider) ?? [];
@@ -253,11 +300,28 @@ export function projectCatalogProviders(
 		}
 
 		if (addedModelIds.length > 0 || overriddenModelIds.length > 0) {
+			const clamped = clampProviderModels(projectedModels.map(registrationModel), clamp);
 			providers.push({
 				providerId,
-				models: projectedModels.map(registrationModel),
+				models: clamped.models,
 				addedModelIds,
 				overriddenModelIds,
+				clampedModelIds: clamped.clampedModelIds,
+			});
+		}
+	}
+
+	if (clamp !== undefined) {
+		const projectedProviderIds = new Set(providers.map((provider) => provider.providerId));
+		for (const [providerId, providerModels] of modelsByProvider) {
+			if (projectedProviderIds.has(providerId) || !modelsExceedContextClamp(providerModels, clamp)) continue;
+			const clamped = clampProviderModels(providerModels.map(registrationModel), clamp);
+			providers.push({
+				providerId,
+				models: clamped.models,
+				addedModelIds: [],
+				overriddenModelIds: [],
+				clampedModelIds: clamped.clampedModelIds,
 			});
 		}
 	}
@@ -396,7 +460,7 @@ function gatewayCompat(catalog: ActiveModelCatalog, offering: CatalogModelOfferi
 	return Object.keys(compat).length ? compat : undefined;
 }
 
-function gatewayProviders(catalog: ActiveModelCatalog): CatalogProviderProjection[] {
+function gatewayProviders(catalog: ActiveModelCatalog, maxContextTokens?: number): CatalogProviderProjection[] {
 	const baseUrl = catalogGatewayBase(catalog);
 	if (!baseUrl) return [];
 	const providers = new Map<string, CatalogProviderProjection>();
@@ -407,7 +471,13 @@ function gatewayProviders(catalog: ActiveModelCatalog): CatalogProviderProjectio
 		const patch = offeringPatch(offering);
 		if (!patch.input || patch.contextWindow === undefined || patch.maxTokens === undefined) continue;
 		const providerId = catalogRuntimeProvider(catalog.document.catalogId, offering.providerId, catalog.source.url);
-		const provider = providers.get(providerId) ?? { providerId, models: [], addedModelIds: [], overriddenModelIds: [] };
+		const provider = providers.get(providerId) ?? {
+			providerId,
+			models: [],
+			addedModelIds: [],
+			overriddenModelIds: [],
+			clampedModelIds: [],
+		};
 		provider.models.push({
 			id: offering.modelId,
 			name: patch.name ?? offering.modelId,
@@ -424,13 +494,24 @@ function gatewayProviders(catalog: ActiveModelCatalog): CatalogProviderProjectio
 		provider.addedModelIds.push(offering.modelId);
 		providers.set(providerId, provider);
 	}
+	for (const provider of providers.values()) {
+		const clamped = clampProviderModels(provider.models, maxContextTokens);
+		provider.models = clamped.models;
+		provider.clampedModelIds.push(...clamped.clampedModelIds);
+	}
 	return [...providers.values()];
 }
 
-/** Owns only provider overlays installed by one Jouzu model-picker instance. */
+/** Owns the provider overlays installed by one Jouzu model-picker instance: catalog projections and the active context clamp. */
 export class CatalogProjectionController {
 	private readonly owned = new Map<string, OwnedProviderRegistration>();
 	private readonly pending = new Map<string, ProviderConfig>();
+	private readonly wrappedNatives = new Map<string, WrappedNativeProvider>();
+
+	/** The stored ceiling, read at each composition so a Settings change applies without a restart. */
+	private contextClamp(): number | undefined {
+		return activeContextClamp(this.paths);
+	}
 
 	/** Environment value first, then the source's saved token, then the Pi env reference. */
 	private gatewayConfig(catalog: ActiveModelCatalog): ProviderConfig {
@@ -448,8 +529,9 @@ export class CatalogProjectionController {
 	}
 
 	registerStartup(pi: ExtensionAPI, catalogs: readonly ActiveModelCatalog[]): void {
+		const clamp = this.contextClamp();
 		for (const catalog of catalogs) {
-			for (const projection of gatewayProviders(catalog)) {
+			for (const projection of gatewayProviders(catalog, clamp)) {
 				const config = { ...this.gatewayConfig(catalog), models: projection.models };
 				pi.registerProvider(projection.providerId, config);
 				this.pending.set(projection.providerId, config);
@@ -474,6 +556,7 @@ export class CatalogProjectionController {
 	private releaseOwned(pi: ExtensionAPI, ctx: ExtensionContext, keepGateways = false): void {
 		if (!this.supportsProjection(ctx)) {
 			this.owned.clear();
+			this.wrappedNatives.clear();
 			return;
 		}
 		for (const [providerId, pending] of this.pending) {
@@ -489,6 +572,12 @@ export class CatalogProjectionController {
 			}
 			this.owned.delete(providerId);
 		}
+		for (const [providerId, wrapped] of this.wrappedNatives) {
+			if (ctx.modelRegistry.getRegisteredNativeProvider(providerId) === wrapped.wrapper) {
+				pi.registerProvider(wrapped.original);
+			}
+			this.wrappedNatives.delete(providerId);
+		}
 	}
 
 	release(pi: ExtensionAPI, ctx: ExtensionContext): void {
@@ -498,13 +587,15 @@ export class CatalogProjectionController {
 	sync(pi: ExtensionAPI, ctx: ExtensionContext, catalogs: readonly ActiveModelCatalog[]): CatalogProjectionSyncResult {
 		this.releaseOwned(pi, ctx);
 		if (!this.supportsProjection(ctx)) return { providers: [], skipped: [], blockedProviderIds: [] };
+		const clamp = this.contextClamp();
 		const result = projectCatalogProviders(
 			ctx.modelRegistry.getAll(),
 			catalogs.filter((catalog) => !catalogGatewayBase(catalog)),
+			{ ...(clamp !== undefined ? { maxContextTokens: clamp } : {}) },
 		);
 		const gatewayConfigs = new Map<string, ProviderConfig>();
 		for (const catalog of catalogs) {
-			for (const projection of gatewayProviders(catalog)) {
+			for (const projection of gatewayProviders(catalog, clamp)) {
 				if (catalog.source.auth.type !== "bearer") continue;
 				gatewayConfigs.set(projection.providerId, this.gatewayConfig(catalog));
 				result.providers.push(projection);
@@ -512,21 +603,57 @@ export class CatalogProjectionController {
 		}
 		const blockedProviderIds: string[] = [];
 		for (const projection of result.providers) {
-			if (
-				ctx.modelRegistry.getRegisteredProviderConfig(projection.providerId) !== undefined ||
-				ctx.modelRegistry.getRegisteredNativeProvider(projection.providerId) !== undefined
-			) {
+			if (ctx.modelRegistry.getRegisteredProviderConfig(projection.providerId) !== undefined) {
 				blockedProviderIds.push(projection.providerId);
 				continue;
 			}
-			pi.registerProvider(projection.providerId, {
+			const catalogDerived = projection.addedModelIds.length > 0 || projection.overriddenModelIds.length > 0;
+			const native = ctx.modelRegistry.getRegisteredNativeProvider(projection.providerId);
+			const source = this.providerSource(ctx, projection.providerId);
+			// A config overlay would delete a native registration, and it would drop
+			// headers a built-in provider routes with, so those providers are clamped
+			// through a wrapper that keeps auth, refresh, and stream behavior intact.
+			const wrapped = native ?? (source && !canOverlayProviderModels(projection.models) ? source : undefined);
+			if (wrapped) {
+				if (catalogDerived || clamp === undefined || !modelsExceedContextClamp(wrapped.getModels(), clamp)) {
+					blockedProviderIds.push(projection.providerId);
+					continue;
+				}
+				const wrapper: PiProvider = {
+					...wrapped,
+					getModels: () => wrapped.getModels().map((model) => clampModelContextWindow(model, this.contextClamp())),
+				};
+				pi.registerProvider(wrapper);
+				this.wrappedNatives.set(projection.providerId, { original: wrapped, wrapper });
+				continue;
+			}
+			const config: ProviderConfig = {
 				...gatewayConfigs.get(projection.providerId),
 				models: projection.models,
-			});
-			const config = ctx.modelRegistry.getRegisteredProviderConfig(projection.providerId);
-			if (config) this.owned.set(projection.providerId, { config });
+				...(source && projection.clampedModelIds.length > 0
+					? {
+							// A reloaded models.json list re-enters through this hook, so a newly
+							// added model is clamped instead of keeping its declared window.
+							refreshModels: async () =>
+								clampProviderModels(
+									(this.providerSource(ctx, projection.providerId)?.getModels() ?? []).map(registrationModel),
+									this.contextClamp(),
+								).models,
+						}
+					: {}),
+			};
+			pi.registerProvider(projection.providerId, config);
+			const registered = ctx.modelRegistry.getRegisteredProviderConfig(projection.providerId);
+			if (registered) this.owned.set(projection.providerId, { config: registered });
 		}
 		return { ...result, blockedProviderIds };
+	}
+
+	/** The live provider object behind a route, when this Pi build exposes one. */
+	private providerSource(ctx: ExtensionContext, providerId: string): PiProvider | undefined {
+		const registry = ctx.modelRegistry as Partial<ExtensionContext["modelRegistry"]> | undefined;
+		if (typeof registry?.getProvider !== "function") return undefined;
+		return registry.getProvider.call(ctx.modelRegistry, providerId);
 	}
 
 	async refresh(

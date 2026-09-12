@@ -15,6 +15,12 @@ import {
 } from "./catalog-sources.js";
 import { formatEffectiveKeybinding, formatEffectiveKeyPair } from "./keybinding-hints.js";
 import {
+	formatContextClamp,
+	loadContextPolicy,
+	stepContextClamp,
+	writeContextPolicy,
+} from "./context-clamp.js";
+import {
 	activateDiscoveredCatalog,
 	type CatalogRefreshResult,
 	type CatalogSyncStatus,
@@ -114,6 +120,8 @@ function sourceStatusRole(view: SourceView): SessionUiStyleRole {
 
 const SOURCE_LABEL_COLUMN = 22;
 const FORM_LABEL_COLUMN = 14;
+/** Body rows the global context ceiling row spends: one, and it yields before the selected source. */
+const CONTEXT_SECTION_ROWS = 1;
 
 /** Plain-text token warning for a source URL, prefixed for list rendering. */
 function transportWarningText(url: string): string | undefined {
@@ -176,6 +184,11 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	private readonly wordmark: string;
 	private views: SourceView[] = [];
 	private selectedIndex = 0;
+	private contextFocused = false;
+	/** Whether the last render kept the context ceiling row; a dropped row cannot take focus. */
+	private contextRowVisible = true;
+	private maxContextTokens?: number;
+	private contextPolicyError?: string;
 	private expandedSourceId?: string;
 	private expandedOffset = 0;
 	/** Offering rows the last render granted the expanded source; paging steps by this. */
@@ -205,6 +218,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		this.onCatalogsChanged = options.onCatalogsChanged;
 		this.wordmark = renderBrandGradient("JOUZU", detectBannerColorMode());
 		this.reloadViews();
+		this.reloadContextPolicy();
 		if (this.views.length === 0 && !this.message) this.startForm("add");
 	}
 
@@ -284,6 +298,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	private startForm(mode: "add" | "edit"): void {
 		const selected = mode === "edit" ? this.selected()?.source : undefined;
 		if (mode === "edit" && !selected) return;
+		this.contextFocused = false;
 		const label = new Input();
 		const url = new Input();
 		const credential = new Input();
@@ -458,7 +473,46 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		}
 	}
 
+	private reloadContextPolicy(): void {
+		const policy = loadContextPolicy(this.paths);
+		this.maxContextTokens = policy.maxContextTokens;
+		this.contextPolicyError = policy.error;
+		if (policy.error && !this.message) {
+			this.message = {
+				level: "warning",
+				text: `Context limit was not applied: ${sanitizeTerminalText(policy.error)}. Models use their declared windows.`,
+			};
+		}
+	}
+
+	/** Store one ladder step and ask the host to recompose provider models. */
+	private stepContextLimit(direction: -1 | 1): void {
+		const next = stepContextClamp(this.maxContextTokens, direction);
+		try {
+			writeContextPolicy(this.paths, next);
+		} catch (error) {
+			this.message = {
+				level: "error",
+				text: `Context limit was not saved: ${sanitizeTerminalText(error instanceof Error ? error.message : String(error))}`,
+			};
+			this.tui.requestRender();
+			return;
+		}
+		this.maxContextTokens = next;
+		this.contextPolicyError = undefined;
+		this.message = {
+			level: "info",
+			text:
+				next === undefined
+					? "Context limit off. Models use their declared windows."
+					: `Context limit ${formatContextClamp(next)} tokens. Models above it report ${formatContextClamp(next)} and compact sooner.`,
+		};
+		this.onCatalogsChanged?.();
+		this.tui.requestRender();
+	}
+
 	private moveSelection(delta: number): void {
+		this.contextFocused = false;
 		this.selectedIndex = Math.max(0, Math.min(this.views.length - 1, this.selectedIndex + delta));
 		this.expandedOffset = 0;
 		this.confirmRemove = false;
@@ -538,10 +592,21 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			return;
 		}
 		if (this.keybindings.matches(data, "tui.select.up")) {
+			if (this.contextFocused) return;
+			if (this.selectedIndex === 0 && this.views.length > 0 && this.contextRowVisible) {
+				this.contextFocused = true;
+				this.tui.requestRender();
+				return;
+			}
 			this.moveSelection(-1);
 			return;
 		}
 		if (this.keybindings.matches(data, "tui.select.down")) {
+			if (this.contextFocused) {
+				this.contextFocused = false;
+				this.tui.requestRender();
+				return;
+			}
 			this.moveSelection(1);
 			return;
 		}
@@ -556,6 +621,10 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		if (this.keybindings.matches(data, "tui.select.pageDown") && this.expandedSourceId) {
 			this.expandedOffset += this.expandedCapacity;
 			this.tui.requestRender();
+			return;
+		}
+		if (this.contextFocused && (matchesKey(data, "left") || matchesKey(data, "right"))) {
+			this.stepContextLimit(matchesKey(data, "right") ? 1 : -1);
 			return;
 		}
 		if (matchesKey(data, "right") && this.selected()) {
@@ -774,6 +843,13 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 				{ key: confirm, label: "remove" },
 				{ key: cancel, label: "cancel" },
 			];
+		if (this.contextFocused)
+			return [
+				{ key: "←→", label: "context limit" },
+				{ key: "Tab", label: "section" },
+				{ key: move, label: "move" },
+				{ key: cancel, label: "close" },
+			];
 		return [
 			{ key: confirm, label: "edit" },
 			{ key: "A", label: "add" },
@@ -839,6 +915,22 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		return 1 + warningLines;
 	}
 
+	/** The global ceiling row, rendered above the catalog list and dropped when the list needs its room. */
+	private contextRow(innerWidth: number, line: (value?: string) => string): string {
+		return line(
+			renderPaletteField({
+				label: "Maximum context",
+				labelRole: "palette.identity",
+				value: this.styles.apply("palette.detail", paletteChoice(formatContextClamp(this.maxContextTokens))),
+				labelWidth: SOURCE_LABEL_COLUMN,
+				innerWidth,
+				selected: this.contextFocused,
+				theme: this.theme,
+				styles: this.styles,
+			}),
+		);
+	}
+
 	/**
 	 * One-frame paging indicator, kept to a single line so the trailer
 	 * reservation below always holds: the key names yield before the range.
@@ -853,11 +945,11 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 
 	/**
 	 * Sources list bounded to the body budget. Drop order, always whole groups:
-	 * the conflict note, the URL detail line, then the list heading. The
-	 * selected row and its full transport warning stay; if even those exceed
-	 * the budget the render overflows rather than hide mandatory rows, and the
-	 * overlay clips its bottom edge. Other source rows and expanded model pages
-	 * spend only the rows that remain.
+	 * the conflict note, the URL detail line, the context ceiling row, then the
+	 * list heading. The selected row and its full transport warning stay; if even
+	 * those exceed the budget the render overflows rather than hide mandatory
+	 * rows, and the overlay clips its bottom edge. Other source rows and expanded
+	 * model pages spend only the rows that remain.
 	 */
 	private renderSources(
 		width: number,
@@ -868,6 +960,8 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		this.expandedCapacity = 0;
 		const innerWidth = paletteInnerWidth(width);
 		const lines: string[] = [];
+		const contextRow = this.contextRow(innerWidth, line);
+		let contextRows = CONTEXT_SECTION_ROWS;
 		const active = this.views.filter((view) => view.source.enabled && view.status.status === "active").length;
 		const headingText = line(
 			renderPaletteHeading(
@@ -879,7 +973,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			),
 		);
 		if (this.views.length === 0) {
-			lines.push(headingText);
+			lines.push(contextRow, headingText);
 			lines.push(line(this.styles.apply("palette.empty", "  No catalog sources configured.")));
 			return lines;
 		}
@@ -898,6 +992,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		// never mid-warning, until the pool clears.
 		let pool =
 			budget -
+			contextRows -
 			1 -
 			1 -
 			(extras.detail.length + extras.warning.length + extras.conflict.length) -
@@ -911,12 +1006,19 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			} else if (extras.detail.length > 0) {
 				pool += extras.detail.length;
 				extras.detail = [];
+			} else if (contextRows > 0) {
+				pool += contextRows;
+				contextRows = 0;
 			} else if (headingKept) {
 				pool += 1;
 				headingKept = false;
 			}
 		};
-		while (pool < 0 && (extras.conflict.length > 0 || extras.detail.length > 0 || headingKept)) dropOrShrink();
+		while (
+			pool < 0 &&
+			(extras.conflict.length > 0 || extras.detail.length > 0 || contextRows > 0 || headingKept)
+		)
+			dropOrShrink();
 		// An expanded selection keeps its first offering and paging trailer
 		// ahead of optional source rows. When even that does not fit, the tab row
 		// and divider yield first so the expansion stays reachable.
@@ -1020,7 +1122,12 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 					),
 				);
 		}
-		if (headingKept) lines.unshift(headingText);
+		const prefix: string[] = [];
+		if (contextRows > 0) prefix.push(contextRow);
+		this.contextRowVisible = contextRows > 0;
+		if (!this.contextRowVisible) this.contextFocused = false;
+		if (headingKept) prefix.push(headingText);
+		lines.unshift(...prefix);
 		return lines;
 	}
 

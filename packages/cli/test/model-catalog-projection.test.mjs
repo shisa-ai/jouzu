@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -7,6 +7,7 @@ import { clampThinkingLevel, getSupportedThinkingLevels } from "@earendil-works/
 import { ModelRegistry, ModelRuntime } from "@earendil-works/pi-coding-agent";
 
 import { setCatalogSourceToken } from "../dist/catalog-sources.js";
+import { writeContextPolicy } from "../dist/context-clamp.js";
 import { parseAndValidateModelCatalog } from "../dist/model-catalog.js";
 import { CatalogProjectionController, projectCatalogProviders } from "../dist/model-catalog-projection.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
@@ -637,4 +638,203 @@ test("catalog levels unknown to this client are filtered before projection", () 
 	const selected = result.providers[0].models.find((candidate) => candidate.id === "example-model");
 	assert.deepEqual(getSupportedThinkingLevels(selected), ["low"]);
 	assert.equal(selected.reasoning, true);
+});
+
+test("a context clamp caps catalog models and adds a clamp-only overlay for untouched providers", () => {
+	const local = model("example-model");
+	const other = { ...model("big-model"), provider: "ai.example.other", contextWindow: 1_000_000 };
+	const catalogs = [activeCatalog(fixture())];
+	const clamped = projectCatalogProviders([local, other], catalogs, { maxContextTokens: 100_000 });
+	const gateway = clamped.providers.find((provider) => provider.providerId === "ai.example.gateway");
+	assert.equal(gateway.models.find((candidate) => candidate.id === "example-model").contextWindow, 100_000);
+	assert.deepEqual(gateway.clampedModelIds, ["example-model"]);
+	const untouched = clamped.providers.find((provider) => provider.providerId === "ai.example.other");
+	assert.equal(untouched.addedModelIds.length, 0);
+	assert.deepEqual(untouched.clampedModelIds, ["big-model"]);
+	assert.equal(untouched.models.find((candidate) => candidate.id === "big-model").contextWindow, 100_000);
+
+	// A ceiling above every model leaves the projection exactly as it was.
+	const unclamped = projectCatalogProviders([local, other], catalogs, { maxContextTokens: 2_000_000 });
+	assert.deepEqual(unclamped.providers.map((provider) => provider.providerId), ["ai.example.gateway"]);
+	assert.deepEqual(unclamped.providers[0].clampedModelIds, []);
+	assert.equal(
+		projectCatalogProviders([local, other], catalogs, { maxContextTokens: 2_000_000 })
+			.providers[0].models.find((candidate) => candidate.id === "example-model").contextWindow,
+		131_072,
+	);
+});
+
+test("the clamp survives the projection controller round-trip for a local provider", async () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-context-clamp-local-"));
+	try {
+		const modelsPath = join(root, "models.json");
+		writeFileSync(
+			modelsPath,
+			JSON.stringify({
+				providers: {
+					"ai.example.local": {
+						api: "openai-completions",
+						baseUrl: "https://local.example.test/v1",
+						apiKey: "local-key",
+						models: [{ id: "big-model", name: "Big", contextWindow: 1_000_000, maxTokens: 32_768 }],
+					},
+				},
+			}),
+		);
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "jouzu") });
+		mkdirSync(paths.configDir, { recursive: true });
+		writeContextPolicy(paths, 384_000);
+		const runtime = await ModelRuntime.create({ modelsPath, refreshOnCreate: false });
+		const registry = new ModelRegistry(runtime);
+		const ctx = { modelRegistry: registry };
+		const pi = {
+			registerProvider: (providerId, config) => registry.registerProvider(providerId, config),
+			unregisterProvider: (providerId) => registry.unregisterProvider(providerId),
+		};
+		const controller = new CatalogProjectionController({}, paths);
+
+		const applied = controller.sync(pi, ctx, []);
+		assert.deepEqual(
+			applied.providers.find((provider) => provider.providerId === "ai.example.local").clampedModelIds,
+			["big-model"],
+		);
+		assert.equal(registry.find("ai.example.local", "big-model").contextWindow, 384_000);
+		assert.equal(registry.getRegisteredProviderConfig("ai.example.local").refreshModels !== undefined, true);
+
+		// The refresh hook re-applies the ceiling to models reloaded from models.json.
+		const provider = registry.getProvider("ai.example.local");
+		await provider.refreshModels({
+			allowNetwork: false,
+			force: false,
+			signal: new AbortController().signal,
+			stored: undefined,
+			publish: async (update) => {
+				await update.update();
+				return true;
+			},
+		});
+		assert.equal(registry.find("ai.example.local", "big-model").contextWindow, 384_000);
+
+		writeContextPolicy(paths, undefined);
+		controller.sync(pi, ctx, []);
+		assert.equal(registry.find("ai.example.local", "big-model").contextWindow, 1_000_000);
+		assert.equal(
+			registry.getRegisteredProviderConfig("ai.example.local"),
+			undefined,
+			"turning the ceiling off removes the clamp overlay",
+		);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("a gateway catalog clamps its models through the controller", async () => {
+	const { catalogRuntimeProvider } = await import("../dist/model-catalog-projection.js");
+	const root = mkdtempSync(join(tmpdir(), "jouzu-context-clamp-gateway-"));
+	try {
+		const modelsPath = join(root, "models.json");
+		writeFileSync(
+			modelsPath,
+			JSON.stringify({
+				providers: {
+					"ai.example.gateway": {
+						api: "openai-completions",
+						baseUrl: "https://gateway.example.test/v1",
+						apiKey: "test-key",
+						models: [{ id: "example-model", name: "Stale local name", contextWindow: 4096, maxTokens: 1024 }],
+					},
+				},
+			}),
+		);
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "jouzu") });
+		mkdirSync(paths.configDir, { recursive: true });
+		writeContextPolicy(paths, 384_000);
+		const runtime = await ModelRuntime.create({ modelsPath, refreshOnCreate: false });
+		const registry = new ModelRegistry(runtime);
+		const ctx = { modelRegistry: registry };
+		const pi = {
+			registerProvider: (providerId, config) => registry.registerProvider(providerId, config),
+			unregisterProvider: (providerId) => registry.unregisterProvider(providerId),
+		};
+		const catalog = activeCatalog(fixture());
+		catalog.source.url = "https://pool.example.test/v1/jouzu/model-catalog";
+		catalog.source.auth = { type: "bearer", credentialRef: "env:GATEWAY_TOKEN" };
+		catalog.document.modelOfferings[0].limits = { contextWindow: 1_000_000, maxOutputTokens: 32_768 };
+		const controller = new CatalogProjectionController({ GATEWAY_TOKEN: "gateway-jwt" }, paths);
+
+		controller.registerStartup(pi, [catalog]);
+		const gatewayId = catalogRuntimeProvider(catalog.document.catalogId, "ai.example.gateway", catalog.source.url);
+		assert.equal(registry.find(gatewayId, "example-model").contextWindow, 384_000);
+
+		// Turning the ceiling off re-registers the gateway with its declared window.
+		writeContextPolicy(paths, undefined);
+		controller.sync(pi, ctx, [catalog]);
+		assert.equal(registry.find(gatewayId, "example-model").contextWindow, 1_000_000);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("a native provider is wrapped while the ceiling is active and restored after release", async () => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-context-clamp-native-"));
+	try {
+		const paths = resolveJouzuPaths({ homeOverride: join(root, "jouzu") });
+		mkdirSync(paths.configDir, { recursive: true });
+		writeContextPolicy(paths, 384_000);
+		const runtime = await ModelRuntime.create({ modelsPath: join(root, "models.json"), refreshOnCreate: false });
+		const registry = new ModelRegistry(runtime);
+		const ctx = { modelRegistry: registry };
+		const pi = {
+			registerProvider: (...args) => registry.registerProvider(...args),
+			unregisterProvider: (providerId) => registry.unregisterProvider(providerId),
+		};
+		const nativeProvider = {
+			id: "native-test",
+			name: "Native Test",
+			auth: {
+				apiKey: {
+					name: "API key",
+					check: async () => ({ type: "api_key", source: "test" }),
+					resolve: async () => ({ auth: { apiKey: "native-key" }, source: "test" }),
+				},
+			},
+			getModels: () => [
+				{
+					id: "big-model",
+					name: "Big",
+					provider: "native-test",
+					api: "openai-completions",
+					baseUrl: "https://native.example.test/v1",
+					reasoning: false,
+					input: ["text"],
+					cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+					contextWindow: 1_000_000,
+					maxTokens: 32_768,
+				},
+			],
+			stream: () => {
+				throw new Error("stream is not used in this test");
+			},
+			streamSimple: () => {
+				throw new Error("streamSimple is not used in this test");
+			},
+		};
+		runtime.registerNativeProvider(nativeProvider);
+		assert.equal(registry.find("native-test", "big-model").contextWindow, 1_000_000);
+
+		const controller = new CatalogProjectionController({}, paths);
+		const applied = controller.sync(pi, ctx, []);
+		assert.deepEqual(
+			applied.providers.find((provider) => provider.providerId === "native-test").clampedModelIds,
+			["big-model"],
+		);
+		assert.notEqual(registry.getRegisteredNativeProvider("native-test"), nativeProvider);
+		assert.equal(registry.find("native-test", "big-model").contextWindow, 384_000);
+
+		controller.release(pi, ctx);
+		assert.equal(registry.getRegisteredNativeProvider("native-test"), nativeProvider);
+		assert.equal(registry.find("native-test", "big-model").contextWindow, 1_000_000);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
 });
