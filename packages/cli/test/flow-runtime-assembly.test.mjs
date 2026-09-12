@@ -38,14 +38,35 @@ test("the ingress is unavailable until the host creates a session", async (t) =>
 	assert.throws(() => flow.ingress(), { code: "stale" });
 });
 
-test("one runtime serves one session and releases it on dispose", async (t) => {
+test("one runtime serves one session at a time and releases it on dispose", async (t) => {
 	const { flow, root } = await runtime(t);
 	const sessionManager = SessionManager.inMemory(root);
 	const ingress = await flow.flowIngressFactory({ cwd: root, sessionManager });
 	assert.equal(flow.ingress(), ingress);
-	await assert.rejects(flow.flowIngressFactory({ cwd: root, sessionManager }), { code: "identity" });
 	await flow.dispose();
 	assert.throws(() => flow.ingress(), { code: "stale" });
+});
+
+test("the runtime follows the host through a session replacement", async (t) => {
+	// `/new`, resume, session switch, fork, and rewind all tear the current session down and build
+	// a new runtime, which calls the factory again. Refusing that aborted every one of them: the
+	// live symptom was `/new` ending the program. One ingress serves one session, so replace it.
+	const { flow, root, errors } = await runtime(t);
+	const first = await flow.flowIngressFactory({ cwd: root, sessionManager: SessionManager.inMemory(root) });
+	const second = await flow.flowIngressFactory({ cwd: root, sessionManager: SessionManager.inMemory(root) });
+	assert.notEqual(second, first);
+	assert.equal(flow.ingress(), second, "the extensions' closure resolves to the session now in use");
+	// The outgoing ingress is closed, so the replaced session holds no live admission or storage.
+	assert.throws(() => first.releaseReady(), { code: "stale" });
+	assert.deepEqual(errors, [], "an ordinary replacement reports nothing to the user");
+
+	// A third replacement still works, and disposing the outgoing ingress twice is harmless: the
+	// host may already have disposed it while tearing its session down.
+	await second.dispose();
+	const third = await flow.flowIngressFactory({ cwd: root, sessionManager: SessionManager.inMemory(root) });
+	assert.notEqual(third, second);
+	assert.equal(flow.ingress(), third);
+	assert.deepEqual(errors, []);
 });
 
 test("a prompt through the assembled runtime is captured, admitted, and returned", async (t) => {

@@ -78,7 +78,18 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 		extensions: [multiloop, background, waitTools, noReply, status],
 		ingress,
 		async flowIngressFactory({ sessionManager }) {
-			if (attached) throw new FlowLedgerError("identity", "Flow control runtime serves one session.");
+			// The host replaces the session for resume, fork, rewind, and session switching, and calls
+			// this again for each one after tearing the previous session down. One ingress serves one
+			// session, so hand back a fresh one: refusing aborted every one of those operations.
+			const previous = attached;
+			attached = undefined;
+			try {
+				await previous?.dispose();
+			} catch (error) {
+				// The outgoing session's state is already written; failing here would abort the
+				// replacement the user asked for, so report it and continue into the new session.
+				options.onError(error);
+			}
 			attached = new PiSessionFlowIngress({
 				root: options.root,
 				// Only valid here: extensions cannot replace the stream before the SDK boundary.
