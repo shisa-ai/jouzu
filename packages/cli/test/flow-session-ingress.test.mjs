@@ -10,6 +10,7 @@ import { stream } from "@earendil-works/pi-ai/api/openai-completions";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { assistant, createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { createBackgroundControllerExtension } from "../dist/flow-control/background-extension.js";
+import { createFlowStatusExtension } from "../dist/flow-control/flow-status-extension.js";
 import { createMultiloopControllerExtension } from "../dist/flow-control/multiloop-extension.js";
 import { multiloopWorkBinding } from "../dist/flow-control/multiloop-producer.js";
 import { awaitingNativeInput } from "../dist/flow-control/native-admission.js";
@@ -18,6 +19,7 @@ import { consumedUserWork, retainUserWork } from "../dist/flow-control/user-work
 import { finishedUserWork } from "../dist/flow-control/user-work-retention.js";
 import { createFlowWaitDecisionProducer } from "../dist/flow-control/wait-decisions.js";
 import { createFlowWaitExtension } from "../dist/flow-control/wait-tools.js";
+import { capturedNotices } from "./fixtures/flow-assembly.mjs";
 
 async function fixture(
 	t,
@@ -4237,4 +4239,82 @@ test("a session pause holds automated work until it is resumed explicitly", asyn
 		(record) => record.submission.args[0] === "Continue by working on the next task",
 	);
 	assert.ok(released.dispatch);
+});
+
+for (const phase of ["selected", "prepared", "handed-off", "partial"])
+	test(`/flow reset releases ${phase} work and permits the next user turn`, async (t) => {
+		let ingress;
+		const status = createFlowStatusExtension({ ingress: () => ingress });
+		const f = await fixture(t, { provider: true, extensions: [status.factory] });
+		ingress = f.ingress;
+		const ledger = ingress.branch().attachment.ledger;
+		const member = { id: "work", revision: "1", kind: "work", required: true, contentHash: "a".repeat(64) };
+		await ledger.select("stuck", [member]);
+		if (phase !== "selected") {
+			const queue = { id: "queue", revision: 1 };
+			await ledger.queued("stuck", queue);
+			await ledger.claim("stuck", queue);
+			const inclusion = [
+				{ id: member.id, revision: member.revision, disposition: "included", contentHash: member.contentHash },
+			];
+			await ledger.prepare("stuck", "request", inclusion, false);
+			if (phase !== "prepared") await ledger.handoff("stuck", "request");
+			if (phase === "partial") {
+				await ledger.requestOutcome("stuck", "request", "success");
+				await ledger.prepare("stuck", "request2", inclusion, false);
+			}
+		}
+		const before = await ledger.snapshot();
+		const notices = capturedNotices(f.session);
+		ingress.pauseAutomated("interrupted");
+		await f.session.prompt("/flow reset");
+		const after = await ledger.snapshot();
+		assert.equal(after.activeAttemptId, undefined);
+		assert.equal(
+			after.attempts[0].phase,
+			phase === "handed-off" ? "uncertain" : phase === "partial" ? "settled" : "cancelled",
+		);
+		assert.deepEqual(after.attempts[0].requests, before.attempts[0].requests);
+		assert.equal(ingress.automatedPause(), undefined);
+		assert.match(notices[0].text, /Cleared flow reservation stuck/);
+		assert.equal(f.sent.length, 0);
+		if (phase === "handed-off") await f.session.prompt("/flow resolve stuck discard");
+		await f.session.prompt("hello after reset");
+		assert.equal(f.sent.length, 1);
+	});
+
+test("reset management refuses a running turn and /flow reset succeeds at idle", async (t) => {
+	let ingress;
+	const entered = deferred(),
+		release = deferred();
+	const status = createFlowStatusExtension({ ingress: () => ingress });
+	const f = await fixture(t, {
+		provider: true,
+		extensions: [status.factory],
+		onRequest: async () => {
+			entered.resolve();
+			await release.promise;
+		},
+	});
+	ingress = f.ingress;
+	const ledger = ingress.branch().attachment.ledger;
+	await ledger.select("stuck", [
+		{ id: "work", revision: "1", kind: "work", required: true, contentHash: "a".repeat(64) },
+	]);
+	const running = f.session.prompt("start");
+	await entered.promise;
+	ingress.pauseAutomated("manual pause");
+	const before = await ledger.snapshot();
+	const notices = capturedNotices(f.session);
+	try {
+		await assert.rejects(ingress.resetFlow(), { code: "busy" });
+		assert.equal(ingress.automatedPause(), "manual pause");
+		assert.deepEqual(await ledger.snapshot(), before);
+	} finally {
+		release.resolve();
+		await running;
+	}
+	await f.session.prompt("/flow reset");
+	assert.equal((await ledger.snapshot()).activeAttemptId, undefined);
+	assert.match(notices[0].text, /Cleared flow reservation stuck/);
 });

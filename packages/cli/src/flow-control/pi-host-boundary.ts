@@ -6,7 +6,7 @@ import { PiHostHooks } from "./pi-host-hooks.js";
 import { FlowLedgerError, type FlowOutcome, type FlowReceiptLedger } from "./receipt-ledger.js";
 
 interface Frame {
-	kind: "operation" | "navigation" | "boundary";
+	kind: "operation" | "command" | "navigation" | "boundary";
 	active: boolean;
 }
 export type PiBoundaryResult<T> = { kind: "busy" } | { kind: "idle"; value: T };
@@ -42,7 +42,15 @@ export class PiHostBoundary {
 			resumeQueued = agent.continueQueued.bind(agent);
 		this.hooks.set(agent, "continue", () => this.execution(resume));
 		this.hooks.set(agent, "continueQueued", () => this.execution(resumeQueued));
-		this.hooks.set(session, "prompt", this.wrap(session.prompt.bind(session)));
+		const sessionPrompt = session.prompt.bind(session);
+		this.hooks.set(session, "prompt", (text, options) => {
+			// Match Pi's extension-command dispatch; literal slash text and unknown commands
+			// still run ordinary prompt preflight and must not acquire an idle boundary.
+			const name = text.slice(1).split(" ", 1)[0];
+			const command =
+				options?.expandPromptTemplates !== false && text.startsWith("/") && session.extensionRunner.getCommand(name);
+			return this.operation(() => sessionPrompt(text, options), command ? "command" : "operation");
+		});
 		this.hooks.set(session, "continueQueued", this.wrap(session.continueQueued.bind(session)));
 		this.hooks.set(session, "steer", this.wrap(session.steer.bind(session)));
 		this.hooks.set(session, "followUp", this.wrap(session.followUp.bind(session)));
@@ -88,7 +96,7 @@ export class PiHostBoundary {
 	}
 	private wrap<A extends unknown[], R>(
 		fn: (...args: A) => Promise<R>,
-		kind: "operation" | "navigation" = "operation",
+		kind: "operation" | "command" | "navigation" = "operation",
 	): (...args: A) => Promise<R> {
 		return (...args) => this.operation(() => fn(...args), kind);
 	}
@@ -174,7 +182,10 @@ export class PiHostBoundary {
 		})();
 		return this.stoppingPromise;
 	}
-	private async operation<T>(run: () => Promise<T>, kind: "operation" | "navigation" = "operation"): Promise<T> {
+	private async operation<T>(
+		run: () => Promise<T>,
+		kind: "operation" | "command" | "navigation" = "operation",
+	): Promise<T> {
 		this.assertWritable();
 		const parent = this.frames.getStore();
 		if (parent?.kind === "boundary")
@@ -215,6 +226,7 @@ export class PiHostBoundary {
 	private commandIdle(allowQueued = false): boolean {
 		return (
 			this.active === 1 &&
+			this.session.isIdle &&
 			this.session.sessionId === this.sessionId &&
 			!this.closed &&
 			!this.stopping &&
@@ -239,7 +251,7 @@ export class PiHostBoundary {
 	private async atRest<T>(run: () => Promise<T>, allowQueued: boolean): Promise<PiBoundaryResult<T>> {
 		this.assertActive();
 		const parentFrame = this.frames.getStore();
-		const inIdleCommand = parentFrame?.kind === "operation" && parentFrame.active && this.active === 1;
+		const inIdleCommand = parentFrame?.kind === "command" && parentFrame.active && this.active === 1;
 		if (this.barrier || !(inIdleCommand ? this.commandIdle(allowQueued) : this.idle(allowQueued)))
 			return { kind: "busy" };
 		let release!: () => void;

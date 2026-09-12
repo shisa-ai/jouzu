@@ -17,9 +17,9 @@ const answer = (tool = false) =>
 		`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta: tool ? { tool_calls: [{ index: 0, id: "call", type: "function", function: { name: "probe", arguments: "{}" } }] } : { content: "Done" }, finish_reason: null }] })}\n\ndata: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta: {}, finish_reason: tool ? "tool_calls" : "stop" }] })}\n\ndata: [DONE]\n\n`,
 		{ headers: { "Content-Type": "text/event-stream" } },
 	);
-async function fixture(t, { transform, fetch, native, reversed = false, inputs } = {}) {
+async function fixture(t, { transform, fetch, native, reversed = false, inputs, extensions = [] } = {}) {
 	const { session } = await createFlowSession(t, {
-		extensions: transform ? [(pi) => pi.on("before_provider_request", transform)] : [],
+		extensions: [...extensions, ...(transform ? [(pi) => pi.on("before_provider_request", transform)] : [])],
 	});
 	await session.prompt("initial");
 	const repo = new MemorySessionRepo();
@@ -228,43 +228,54 @@ for (const afterHandoff of [false, true])
 		if (afterHandoff) assert.equal(attempt.requests[0].outcome, "aborted");
 	});
 
-test("queued AgentSession execution retries without an unrelated user prompt", async (t) => {
-	let calls = 0;
-	const { session, ledger, sent, boundary } = await fixture(t, {
-		fetch: () => {
-			calls++;
-			return calls === 1
-				? new Response(JSON.stringify({ error: { message: "Service unavailable", type: "server_error" } }), {
-						status: 503,
-						headers: { "content-type": "application/json" },
-					})
-				: answer();
-		},
+for (const viaCommand of [false, true])
+	test(`queued AgentSession execution retries without an unrelated user prompt: command=${viaCommand}`, async (t) => {
+		let calls = 0;
+		const { session, ledger, sent, boundary } = await fixture(t, {
+			extensions: [
+				(pi) =>
+					pi.registerCommand("run-queued", {
+						description: "Run queued fixture work",
+						handler: async () => {
+							assert.equal(await session.continueQueued(), true);
+						},
+					}),
+			],
+			fetch: () => {
+				calls++;
+				return calls === 1
+					? new Response(JSON.stringify({ error: { message: "Service unavailable", type: "server_error" } }), {
+							status: 503,
+							headers: { "content-type": "application/json" },
+						})
+					: answer();
+			},
+		});
+		session.settingsManager.applyOverrides({ retry: { enabled: true, maxRetries: 1, baseDelayMs: 1 } });
+		const retryStates = [];
+		const retryBoundaries = [];
+		session.subscribe((event) => {
+			if (event.type === "auto_retry_start") {
+				retryStates.push(ledger.snapshot());
+				retryBoundaries.push(boundary.reconcile(ledger, "attempt"));
+			}
+		});
+		if (viaCommand) await session.prompt("/run-queued");
+		else assert.equal(await session.continueQueued(), true);
+		const state = await ledger.snapshot();
+		assert.equal(sent.length, 2);
+		assert.equal(retryStates.length, 1);
+		assert.equal((await retryStates[0]).activeAttemptId, "attempt");
+		assert.equal(state.activeAttemptId, "attempt");
+		assert.deepEqual(
+			state.attempts[0].requests.map((request) => request.outcome),
+			["failure", "success"],
+		);
+		assert.equal(session.isIdle, true);
+		assert.equal((await retryBoundaries[0]).kind, "busy");
+		assert.equal((await boundary.reconcile(ledger, "attempt")).value.kind, "settled");
+		assert.equal((await ledger.snapshot()).activeAttemptId, undefined);
 	});
-	session.settingsManager.applyOverrides({ retry: { enabled: true, maxRetries: 1, baseDelayMs: 1 } });
-	const retryStates = [];
-	const retryBoundaries = [];
-	session.subscribe((event) => {
-		if (event.type === "auto_retry_start") {
-			retryStates.push(ledger.snapshot());
-			retryBoundaries.push(boundary.reconcile(ledger, "attempt"));
-		}
-	});
-	assert.equal(await session.continueQueued(), true);
-	const state = await ledger.snapshot();
-	assert.equal(sent.length, 2);
-	assert.equal(retryStates.length, 1);
-	assert.equal((await retryStates[0]).activeAttemptId, "attempt");
-	assert.equal(state.activeAttemptId, "attempt");
-	assert.deepEqual(
-		state.attempts[0].requests.map((request) => request.outcome),
-		["failure", "success"],
-	);
-	assert.equal(session.isIdle, true);
-	assert.equal((await retryBoundaries[0]).kind, "busy");
-	assert.equal((await boundary.reconcile(ledger, "attempt")).value.kind, "settled");
-	assert.equal((await ledger.snapshot()).activeAttemptId, undefined);
-});
 
 test("concurrent sessions and reversed attachment order keep distinct request receipts", async (t) => {
 	const first = await fixture(t);

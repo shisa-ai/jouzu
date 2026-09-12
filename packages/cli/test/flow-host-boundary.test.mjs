@@ -395,3 +395,88 @@ test("idle listeners recheck streaming state before notification", async (t) => 
 	await new Promise((resolve) => setImmediate(resolve));
 	assert.equal(calls, 1);
 });
+
+test("ordinary prompt preflight cannot enter idle maintenance", async (t) => {
+	let boundary;
+	const results = [];
+	const { session } = await createFlowSession(t, {
+		extensions: [
+			(pi) =>
+				pi.on("input", async () => {
+					results.push(await boundary.atIdle(async () => "entered"));
+					return { action: "continue" };
+				}),
+		],
+	});
+	boundary = new PiHostBoundary(session);
+	t.after(() => boundary.close());
+	await session.prompt("ordinary input");
+	assert.deepEqual(results, [{ kind: "busy" }]);
+});
+
+test("registered commands can maintain an idle session but literal command text cannot", async (t) => {
+	let boundary;
+	const commands = [],
+		inputs = [];
+	const { session } = await createFlowSession(t, {
+		extensions: [
+			(pi) => {
+				pi.registerCommand("repair", {
+					description: "Repair fixture state",
+					handler: async () => {
+						commands.push(await boundary.atIdle(async () => "repaired"));
+					},
+				});
+				pi.on("input", async () => {
+					inputs.push(await boundary.atIdle(async () => "entered"));
+					return { action: "continue" };
+				});
+			},
+		],
+	});
+	boundary = new PiHostBoundary(session);
+	t.after(() => boundary.close());
+	await session.prompt("/repair argument");
+	await session.prompt("/repair", { expandPromptTemplates: false });
+	await session.prompt("/unknown");
+	assert.deepEqual(commands, [{ kind: "idle", value: "repaired" }]);
+	assert.deepEqual(inputs, [{ kind: "busy" }, { kind: "busy" }]);
+});
+
+test("a registered command cannot enter maintenance during another host turn", async (t) => {
+	let boundary;
+	const entered = deferred(),
+		release = deferred();
+	const results = [];
+	const { session } = await createFlowSession(t, {
+		extensions: [
+			(pi) =>
+				pi.registerCommand("repair", {
+					description: "Repair fixture state",
+					handler: async () => {
+						results.push(await boundary.atIdle(async () => "repaired"));
+					},
+				}),
+		],
+	});
+	boundary = new PiHostBoundary(session);
+	t.after(() => boundary.close());
+	const unsubscribe = session.agent.subscribe(async (event) => {
+		if (event.type === "agent_end") {
+			entered.resolve();
+			await release.promise;
+		}
+	});
+	t.after(unsubscribe);
+	const running = session.prompt("start");
+	await entered.promise;
+	try {
+		await session.prompt("/repair");
+		assert.deepEqual(results, [{ kind: "busy" }]);
+	} finally {
+		release.resolve();
+		await running;
+	}
+	await session.prompt("/repair");
+	assert.deepEqual(results.at(-1), { kind: "idle", value: "repaired" });
+});
