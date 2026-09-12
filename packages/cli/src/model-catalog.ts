@@ -9,6 +9,13 @@ export const MODEL_CATALOG_MAX_ID_BYTES = 2_048;
 export const MODEL_CATALOG_MAX_STRING_BYTES = 64 * 1024;
 export const CATALOG_THINKING_LEVELS = ["off", "minimal", "low", "medium", "high", "xhigh", "max"] as const;
 export type CatalogThinkingLevel = (typeof CATALOG_THINKING_LEVELS)[number];
+
+/** Catalog levels this client can select; entries from newer catalogs are ignored. */
+export function clientVisibleThinkingLevels(levels: readonly string[]): CatalogThinkingLevel[] {
+	return levels.filter((level): level is CatalogThinkingLevel =>
+		CATALOG_THINKING_LEVELS.includes(level as CatalogThinkingLevel),
+	);
+}
 const UINT64_MAX = 18_446_744_073_709_551_615n;
 
 const RECORD_CLASSES = [
@@ -573,35 +580,53 @@ export function validateModelCatalog(value: unknown, options: ValidateCatalogOpt
 		const providerId = stringAt(offering, "providerId", `$.modelOfferings[${index}]`);
 		optionalString(offering, "name", `$.modelOfferings[${index}]`);
 		optionalString(offering, "api", `$.modelOfferings[${index}]`);
-		if (
-			offering.defaultThinkingLevel !== undefined &&
-			!CATALOG_THINKING_LEVELS.includes(offering.defaultThinkingLevel as CatalogThinkingLevel)
-		) {
+		const declaredDefault = offering.defaultThinkingLevel;
+		if (declaredDefault !== undefined && (typeof declaredDefault !== "string" || declaredDefault.length === 0)) {
 			throw new ModelCatalogError(
 				"invalid_record",
 				`$.modelOfferings[${index}].defaultThinkingLevel`,
 				`must be one of: ${CATALOG_THINKING_LEVELS.join(", ")}`,
 			);
 		}
+		const knownDefault =
+			typeof declaredDefault === "string" && CATALOG_THINKING_LEVELS.includes(declaredDefault as CatalogThinkingLevel)
+				? (declaredDefault as CatalogThinkingLevel)
+				: undefined;
+		const dropDefault = typeof declaredDefault === "string" && knownDefault === undefined;
+		let visibleLevels: CatalogThinkingLevel[] | undefined;
+		let declaredCount = 0;
 		if (offering.supportedThinkingLevels !== undefined) {
 			const path = `$.modelOfferings[${index}].supportedThinkingLevels`;
 			const levels = stringArray(offering.supportedThinkingLevels, path);
-			if (
-				levels.length === 0 ||
-				new Set(levels).size !== levels.length ||
-				levels.some((level) => !CATALOG_THINKING_LEVELS.includes(level as CatalogThinkingLevel))
-			) {
-				throw new ModelCatalogError("invalid_record", path, "must contain distinct recognized thinking levels");
+			declaredCount = levels.length;
+			if (declaredCount === 0 || new Set(levels).size !== declaredCount) {
+				throw new ModelCatalogError("invalid_record", path, "must contain distinct thinking levels");
 			}
-			if (offering.defaultThinkingLevel !== undefined && !levels.includes(offering.defaultThinkingLevel as string)) {
-				throw new ModelCatalogError("invalid_record", path, "must include defaultThinkingLevel");
+			// A newer catalog may declare levels this client cannot select. Keep the
+			// document and filter those entries instead of rejecting the whole catalog.
+			visibleLevels = clientVisibleThinkingLevels(levels);
+			if (visibleLevels.length === 0) {
+				visibleLevels = undefined;
+			} else {
+				if (knownDefault !== undefined && !visibleLevels.includes(knownDefault)) {
+					throw new ModelCatalogError("invalid_record", path, "must include defaultThinkingLevel");
+				}
+				if (
+					visibleLevels.length === declaredCount &&
+					Array.isArray(offering.capabilities) &&
+					offering.capabilities.includes("reasoning") !== levels.some((level) => level !== "off")
+				) {
+					throw new ModelCatalogError("invalid_record", path, "must agree with reasoning capability");
+				}
 			}
-			if (
-				Array.isArray(offering.capabilities) &&
-				offering.capabilities.includes("reasoning") !== levels.some((level) => level !== "off")
-			) {
-				throw new ModelCatalogError("invalid_record", path, "must agree with reasoning capability");
-			}
+		}
+		const dropSupported = offering.supportedThinkingLevels !== undefined && visibleLevels === undefined;
+		if (dropDefault || dropSupported || (visibleLevels !== undefined && visibleLevels.length !== declaredCount)) {
+			const normalized = { ...offering };
+			if (dropDefault) delete normalized.defaultThinkingLevel;
+			if (dropSupported) delete normalized.supportedThinkingLevels;
+			else if (visibleLevels !== undefined) normalized.supportedThinkingLevels = visibleLevels;
+			arrays.modelOfferings[index] = normalized;
 		}
 		if (offering.modalities !== undefined) {
 			stringArray(offering.modalities, `$.modelOfferings[${index}].modalities`);

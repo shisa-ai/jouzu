@@ -52,7 +52,7 @@ test("per-model reasoning defaults match the schema and remain optional", () => 
 		assert.equal(parsed.modelOfferings[0].defaultThinkingLevel, level);
 		assert.equal(Object.hasOwn(parsed.modelOfferings[0], "defaultThinkingLevel"), level !== undefined);
 	}
-	for (const level of [null, true, 1, "", "auto", "MEDIUM", {}, ["medium"]]) {
+	for (const level of [null, true, 1, "", {}, ["medium"]]) {
 		const document = accountSnapshot();
 		document.modelOfferings[0].defaultThinkingLevel = level;
 		assert.throws(
@@ -62,6 +62,13 @@ test("per-model reasoning defaults match the schema and remain optional", () => 
 				error.code === "invalid_record" &&
 				error.path === "$.modelOfferings[0].defaultThinkingLevel",
 		);
+	}
+	for (const level of ["auto", "MEDIUM", "ultra"]) {
+		const document = accountSnapshot();
+		document.modelOfferings[0].defaultThinkingLevel = level;
+		const parsed = parseAndValidateModelCatalog(JSON.stringify(document), { remote: true });
+		assert.equal(parsed.modelOfferings[0].defaultThinkingLevel, undefined);
+		assert.equal(Object.hasOwn(parsed.modelOfferings[0], "defaultThinkingLevel"), false);
 	}
 });
 
@@ -219,27 +226,52 @@ test("conformance result is machine-readable and never throws", () => {
 	);
 });
 
-test("supported thinking levels reject malformed sets and contradictory metadata", () => {
+test("supported thinking levels filter unknown levels and reject malformed sets and contradictions", () => {
 	const schema = JSON.parse(readFileSync(join(catalogRoot, "model-catalog-v1.schema.json"), "utf8"));
 	assert.deepEqual(
 		schema.$defs.offering.properties.supportedThinkingLevels.items.enum,
 		schema.$defs.offering.properties.defaultThinkingLevel.enum,
 	);
-	for (const levels of [undefined, ["off"], ["low", "high", "xhigh", "max"], ["high"]]) {
+	for (const [levels, expected] of [
+		[undefined, undefined],
+		[["off"], ["off"]],
+		[
+			["low", "high", "xhigh", "max"],
+			["low", "high", "xhigh", "max"],
+		],
+		[["high"], ["high"]],
+		[["low", "ultra"], ["low"]],
+		[["off", "ultra"], ["off"]],
+		[["ultra"], undefined],
+		[["HIGH"], undefined],
+	]) {
 		const document = accountSnapshot();
 		delete document.modelOfferings[0].defaultThinkingLevel;
 		delete document.modelOfferings[0].capabilities;
 		if (levels !== undefined) document.modelOfferings[0].supportedThinkingLevels = levels;
 		assert.deepEqual(
 			parseAndValidateModelCatalog(JSON.stringify(document)).modelOfferings[0].supportedThinkingLevels,
-			levels,
+			expected,
+			JSON.stringify(levels),
 		);
 	}
-	for (const levels of [null, [], "high", ["high", "high"], ["ultra"], [75], ["HIGH"], ["off", null]]) {
+	for (const levels of [null, [], "high", ["high", "high"], [75], ["off", null]]) {
 		const document = accountSnapshot();
 		document.modelOfferings[0].supportedThinkingLevels = levels;
 		assert.throws(() => parseAndValidateModelCatalog(JSON.stringify(document)), ModelCatalogError);
 	}
+	const unknownDefault = accountSnapshot();
+	unknownDefault.modelOfferings[0].defaultThinkingLevel = "ultra";
+	assert.equal(
+		parseAndValidateModelCatalog(JSON.stringify(unknownDefault)).modelOfferings[0].defaultThinkingLevel,
+		undefined,
+	);
+	const mixed = accountSnapshot();
+	mixed.modelOfferings[0].supportedThinkingLevels = ["low", "ultra"];
+	mixed.modelOfferings[0].defaultThinkingLevel = "low";
+	const mixedParsed = parseAndValidateModelCatalog(JSON.stringify(mixed));
+	assert.deepEqual(mixedParsed.modelOfferings[0].supportedThinkingLevels, ["low"]);
+	assert.equal(mixedParsed.modelOfferings[0].defaultThinkingLevel, "low");
 	const document = accountSnapshot();
 	document.modelOfferings[0].supportedThinkingLevels = ["low", "high"];
 	assert.throws(() => parseAndValidateModelCatalog(JSON.stringify(document)), /must include defaultThinkingLevel/);

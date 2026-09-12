@@ -624,3 +624,17 @@ test("catalog levels constrain existing and added models while preserving native
 		),
 	);
 });
+
+test("catalog levels unknown to this client are filtered before projection", () => {
+	const document = fixture();
+	document.modelOfferings[0].supportedThinkingLevels = ["low", "ultra"];
+	document.modelOfferings[0].capabilities = ["reasoning"];
+	document.modelOfferings[0].defaultThinkingLevel = "ultra";
+	const parsed = parseAndValidateModelCatalog(JSON.stringify(document));
+	assert.deepEqual(parsed.modelOfferings[0].supportedThinkingLevels, ["low"]);
+	assert.equal(parsed.modelOfferings[0].defaultThinkingLevel, undefined);
+	const result = projectCatalogProviders([model("example-model")], [activeCatalog(parsed)]);
+	const selected = result.providers[0].models.find((candidate) => candidate.id === "example-model");
+	assert.deepEqual(getSupportedThinkingLevels(selected), ["low"]);
+	assert.equal(selected.reasoning, true);
+});
