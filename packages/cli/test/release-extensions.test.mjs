@@ -459,3 +459,25 @@ test("the Jouzu Camoufox adapter registers both tools without installing its run
 		rmSync(stateDir, { recursive: true, force: true });
 	}
 });
+
+test("the Jouzu Camoufox tools declare sequential execution", () => {
+	const stateDir = mkdtempSync(join(tmpdir(), "jouzu-camoufox-sequential-"));
+	const tools = new Map();
+	const pi = {
+		registerTool(tool) {
+			tools.set(tool.name, tool);
+		},
+		on() {},
+	};
+	try {
+		createJouzuCamoufoxExtension(pi, stateDir);
+		assert.deepEqual([...tools.keys()].sort(), ["tff-fetch_url", "tff-search_web"]);
+		// The two tools share one Camoufox browser and context, so a batch that
+		// started them together could close a page the other was navigating.
+		for (const name of ["tff-fetch_url", "tff-search_web"]) {
+			assert.equal(tools.get(name).executionMode, "sequential", `${name} must declare sequential execution`);
+		}
+	} finally {
+		rmSync(stateDir, { recursive: true, force: true });
+	}
+});
