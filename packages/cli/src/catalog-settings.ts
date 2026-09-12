@@ -13,13 +13,8 @@ import {
 	setCatalogSourceToken,
 	validateCatalogSourceToken,
 } from "./catalog-sources.js";
+import { formatContextClamp, loadContextPolicy, stepContextClamp, writeContextPolicy } from "./context-clamp.js";
 import { formatEffectiveKeybinding, formatEffectiveKeyPair } from "./keybinding-hints.js";
-import {
-	formatContextClamp,
-	loadContextPolicy,
-	stepContextClamp,
-	writeContextPolicy,
-} from "./context-clamp.js";
 import {
 	activateDiscoveredCatalog,
 	type CatalogRefreshResult,
@@ -188,7 +183,6 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	/** Whether the last render kept the context ceiling row; a dropped row cannot take focus. */
 	private contextRowVisible = true;
 	private maxContextTokens?: number;
-	private contextPolicyError?: string;
 	private expandedSourceId?: string;
 	private expandedOffset = 0;
 	/** Offering rows the last render granted the expanded source; paging steps by this. */
@@ -476,7 +470,6 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	private reloadContextPolicy(): void {
 		const policy = loadContextPolicy(this.paths);
 		this.maxContextTokens = policy.maxContextTokens;
-		this.contextPolicyError = policy.error;
 		if (policy.error && !this.message) {
 			this.message = {
 				level: "warning",
@@ -499,7 +492,6 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			return;
 		}
 		this.maxContextTokens = next;
-		this.contextPolicyError = undefined;
 		this.message = {
 			level: "info",
 			text:
@@ -1014,10 +1006,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 				headingKept = false;
 			}
 		};
-		while (
-			pool < 0 &&
-			(extras.conflict.length > 0 || extras.detail.length > 0 || contextRows > 0 || headingKept)
-		)
+		while (pool < 0 && (extras.conflict.length > 0 || extras.detail.length > 0 || contextRows > 0 || headingKept))
 			dropOrShrink();
 		// An expanded selection keeps its first offering and paging trailer
 		// ahead of optional source rows. When even that does not fit, the tab row

@@ -61,7 +61,9 @@ export function loadContextPolicy(paths: JouzuPaths): LoadedContextPolicy {
 			maxContextTokens < POLICY_MIN_TOKENS ||
 			maxContextTokens > POLICY_MAX_TOKENS
 		) {
-			return { error: `context policy maxContextTokens must be an integer from ${POLICY_MIN_TOKENS} to ${POLICY_MAX_TOKENS}` };
+			return {
+				error: `context policy maxContextTokens must be an integer from ${POLICY_MIN_TOKENS} to ${POLICY_MAX_TOKENS}`,
+			};
 		}
 		return { maxContextTokens };
 	} catch (error) {
@@ -94,15 +96,15 @@ export function clampContextWindow(contextWindow: number | undefined, clamp: num
 	return clamp;
 }
 
-export function clampModelContextWindow<T extends { contextWindow?: number }>(
-	model: T,
-	clamp: number | undefined,
-): T {
+export function clampModelContextWindow<T extends { contextWindow?: number }>(model: T, clamp: number | undefined): T {
 	const contextWindow = clampContextWindow(model.contextWindow, clamp);
 	return contextWindow === model.contextWindow ? model : { ...model, contextWindow };
 }
 
-export function modelsExceedContextClamp(models: readonly { contextWindow?: number }[], clamp: number | undefined): boolean {
+export function modelsExceedContextClamp(
+	models: readonly { contextWindow?: number }[],
+	clamp: number | undefined,
+): boolean {
 	if (clamp === undefined) return false;
 	return models.some((model) => model.contextWindow !== undefined && model.contextWindow > clamp);
 }

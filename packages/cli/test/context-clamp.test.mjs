@@ -6,10 +6,10 @@ import { test } from "node:test";
 
 import {
 	activeContextClamp,
+	CONTEXT_CLAMP_CHOICES,
 	clampContextWindow,
 	clampModelContextWindow,
 	contextPolicyPath,
-	CONTEXT_CLAMP_CHOICES,
 	formatContextClamp,
 	loadContextPolicy,
 	modelsExceedContextClamp,
