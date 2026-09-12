@@ -101,6 +101,37 @@ test("history persistence does not establish final inclusion or request success"
 	assert.equal(attempt.history.length, 1);
 });
 
+test("emergency reset releases unsent, partially started, and unknown reservations safely", async (t) => {
+	{
+		const { ledger } = await fixture(t);
+		await ledger.select("unsent", [member("unsent")]);
+		assert.equal(await ledger.emergencyReset("unsent", "Emergency reset."), "cancelled");
+		assert.equal((await ledger.snapshot()).activeAttemptId, undefined);
+	}
+	{
+		const { ledger } = await fixture(t);
+		const started = member("started");
+		await claimed(ledger, [started], "unknown");
+		await ledger.prepare("unknown", "request", [included(started)], false);
+		await ledger.handoff("unknown", "request");
+		assert.equal(await ledger.emergencyReset("unknown", "Emergency reset."), "uncertain");
+		assert.equal((await ledger.snapshot()).attempts[0].phase, "uncertain");
+	}
+	{
+		const { ledger } = await fixture(t);
+		const started = member("started");
+		await claimed(ledger, [started], "partial");
+		await ledger.prepare("partial", "request-1", [included(started)], false);
+		await ledger.handoff("partial", "request-1");
+		await ledger.requestOutcome("partial", "request-1", "success");
+		await ledger.prepare("partial", "request-2", [included(started)], false);
+		assert.equal(await ledger.emergencyReset("partial", "Emergency reset."), "settled");
+		const attempt = (await ledger.snapshot()).attempts[0];
+		assert.equal(attempt.phase, "settled");
+		assert.equal(attempt.outcome, "failure");
+	}
+});
+
 test("filtering optional results preserves an admitted work item and exact dispositions", async (t) => {
 	const { ledger } = await fixture(t);
 	const work = member("work", "work", true);

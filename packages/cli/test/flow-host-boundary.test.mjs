@@ -45,6 +45,19 @@ test("idle reconciliation settles known outcomes and is idempotent", async (t) =
 	assert.equal((await boundary.reconcile(ledger, "attempt")).value.kind, "inactive");
 });
 
+test("idle reconciliation settles an unhanded follow-up after an earlier request started", async (t) => {
+	const { ledger, boundary } = await fixture(t);
+	const member = { id: "work", revision: "1", disposition: "included", contentHash: "a".repeat(64) };
+	await ledger.prepare("attempt", "request-2", [member], false);
+
+	const result = await boundary.reconcile(ledger, "attempt");
+	assert.deepEqual(result, { kind: "idle", value: { kind: "settled", attemptId: "attempt" } });
+	const attempt = (await ledger.snapshot()).attempts[0];
+	assert.equal(attempt.phase, "settled");
+	assert.equal(attempt.outcome, "failure");
+	assert.equal(attempt.requests.at(-1).handedOff, false);
+});
+
 for (const phase of ["claimed", "prepared", "handed-off"])
 	test(`idle reconciliation preserves unsent versus unknown evidence: ${phase}`, async (t) => {
 		const { ledger, boundary } = await fixture(t, phase);

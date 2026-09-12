@@ -212,6 +212,18 @@ export class PiHostBoundary {
 			(allowQueued || (!this.session.agent.hasQueuedMessages() && this.session.pendingMessageCount === 0))
 		);
 	}
+	private commandIdle(allowQueued = false): boolean {
+		return (
+			this.active === 1 &&
+			this.session.sessionId === this.sessionId &&
+			!this.closed &&
+			!this.stopping &&
+			!this.session.agent.state.isStreaming &&
+			!this.session.isRetrying &&
+			!this.session.isCompacting &&
+			(allowQueued || (!this.session.agent.hasQueuedMessages() && this.session.pendingMessageCount === 0))
+		);
+	}
 	assertAttachedBranch(): void {
 		this.assertActive();
 		if (this.navigated) throw new FlowLedgerError("scope", "Branch navigation requires a new flow attachment.");
@@ -226,7 +238,10 @@ export class PiHostBoundary {
 	}
 	private async atRest<T>(run: () => Promise<T>, allowQueued: boolean): Promise<PiBoundaryResult<T>> {
 		this.assertActive();
-		if (this.barrier || !this.idle(allowQueued)) return { kind: "busy" };
+		const parentFrame = this.frames.getStore();
+		const inIdleCommand = parentFrame?.kind === "operation" && parentFrame.active && this.active === 1;
+		if (this.barrier || !(inIdleCommand ? this.commandIdle(allowQueued) : this.idle(allowQueued)))
+			return { kind: "busy" };
 		let release!: () => void;
 		this.barrier = new Promise<void>((resolve) => {
 			release = resolve;
@@ -256,16 +271,34 @@ export class PiHostBoundary {
 			const attempt = state.attempts.find((item) => item.id === attemptId);
 			if (!attempt) throw new FlowLedgerError("identity", "Settlement attempt is missing.");
 			if (attempt.phase === "selected" || attempt.phase === "queued") return { kind: "waiting", attemptId };
-			if (attempt.phase === "claimed" || attempt.phase === "prepared") {
+			const started = attempt.requests.some((request) => request.handedOff);
+			if (attempt.phase === "claimed" || (attempt.phase === "prepared" && !started)) {
 				await ledger.cancel(attemptId, "Host became idle before transport handoff.");
 				return { kind: "cancelled", attemptId };
 			}
-			if (attempt.phase === "handed-off") {
+			let current = attempt;
+			if (attempt.phase === "prepared") {
+				// A later request can be prepared after an earlier request in the same attempt was
+				// handed off. The trailing request has no external effect yet, so withhold it and
+				// settle the started attempt as failed; cancelling the whole attempt would erase the
+				// earlier provider handoff.
+				const request = attempt.requests.at(-1);
+				if (!request || request.handedOff)
+					throw new FlowLedgerError("transition", "Prepared attempt has no unhanded trailing request.");
+				await ledger.withholdRequest(attemptId, request.id, "Host became idle before transport handoff.");
+				const repaired = await ledger.snapshot();
+				current = repaired.attempts.find((item) => item.id === attemptId) ?? current;
+			}
+			if (current.phase === "handed-off") {
 				await ledger.uncertain(attemptId, "Host is inactive but the provider outcome is unknown.");
 				return { kind: "uncertain", attemptId };
 			}
-			if (attempt.phase !== "running")
+			if (current.phase !== "running")
 				throw new FlowLedgerError("transition", "Attempt cannot settle at this boundary.");
+			if (current.reason) {
+				await ledger.settle(attemptId, "failure");
+				return { kind: "settled", attemptId };
+			}
 			const last = this.session.messages
 				.slice()
 				.reverse()
@@ -275,7 +308,7 @@ export class PiHostBoundary {
 			const outcome: FlowOutcome =
 				last.stopReason === "aborted"
 					? "aborted"
-					: last.stopReason === "error" || attempt.reason
+					: last.stopReason === "error" || current.reason
 						? "failure"
 						: "success";
 			await ledger.settle(attemptId, outcome);

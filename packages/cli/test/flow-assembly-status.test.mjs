@@ -360,3 +360,16 @@ test("resolving an unknown turn says where the identities are", async (t) => {
 	assert.equal(notices.at(-1).level, "error", "an unknown resolution is refused with the usage text");
 	assert.deepEqual(f.errors, []);
 });
+
+test("/flow clear is an emergency alias that releases the session pause", async (t) => {
+	const f = await assembledSession(t, { producerExtensions: await installedProducerExtensions() });
+	const notices = capturedNotices(f.session);
+	f.ingress.pauseAutomated("stuck flow");
+	await f.session.prompt("/flow clear");
+	await settle();
+	assert.equal(f.ingress.automatedPause(), undefined);
+	assert.deepEqual(notices, [
+		{ text: "Flow has no active reservation. Jobs, waits, and receipt history were left unchanged.", level: "info" },
+	]);
+	assert.deepEqual(f.errors, []);
+});
