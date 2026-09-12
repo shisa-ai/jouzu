@@ -12,6 +12,7 @@ import { assistant, createFlowSession, deferred } from "../../../scripts/fixture
 import { createBackgroundControllerExtension } from "../dist/flow-control/background-extension.js";
 import { createMultiloopControllerExtension } from "../dist/flow-control/multiloop-extension.js";
 import { multiloopWorkBinding } from "../dist/flow-control/multiloop-producer.js";
+import { awaitingNativeInput } from "../dist/flow-control/native-admission.js";
 import { PiSessionFlowIngress } from "../dist/flow-control/pi-session-ingress.js";
 import { consumedUserWork, retainUserWork } from "../dist/flow-control/user-work.js";
 import { finishedUserWork } from "../dist/flow-control/user-work-retention.js";
@@ -4134,4 +4135,43 @@ test("archived user submissions retain native source evidence through later prom
 	assert.equal(next.sent.length, 1);
 	assert.equal((await next.ingress.branch().attachment.submissionViews()).length, 3);
 	assert.equal((await next.ingress.branch().attachment.nativeRequests.snapshot()).at(-1).outcome, "success");
+});
+
+test("a queued user message survives an abort and still holds automated input", async (t) => {
+	// An abort ends the turn but leaves the queued message in the host's queue, so it is genuinely
+	// pending for the next turn rather than discarded. Admission must keep holding automated input
+	// behind it: treating "the turn ended" as "the message is gone" would deliver automated work
+	// ahead of something the user typed and is still waiting on.
+	const f = await fixture(t, { provider: true, admit: null });
+	const started = deferred(),
+		proceed = deferred();
+	const stream = f.session.agent.streamFunction;
+	let calls = 0;
+	f.session.agent.streamFunction = async (...args) => {
+		if (++calls === 1) {
+			started.resolve();
+			await proceed.promise;
+		}
+		return stream(...args);
+	};
+	const running = f.session.prompt("initial request");
+	await started.promise;
+	await f.session.prompt("the user interrupts", { streamingBehavior: "steer" });
+	const aborting = f.session.abort();
+	proceed.resolve();
+	await aborting.catch(() => {});
+	await running.catch(() => {});
+
+	assert.equal(f.session.isIdle, true, "the host is idle, so only the queue says what is pending");
+	assert.equal(f.session.agent.inspectQueuedMessages().length, 1, "the user's message is still queued");
+	const record = (await f.ingress.branch().attachment.submissions.snapshot()).find(
+		(item) => item.submission.args[0] === "the user interrupts",
+	);
+	assert.ok(record.dispatch, "dispatched into the queue");
+	assert.ok(!record.dispatch.queueClaims?.length, "and not claimed, because the aborted turn never took it");
+	// The queue is the evidence, and it still holds the entry, so this is pending work and not a discard.
+	assert.equal(
+		awaitingNativeInput(record, new Set(f.session.agent.inspectQueuedMessages().map((item) => item.id))),
+		true,
+	);
 });
