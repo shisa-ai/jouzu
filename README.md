@@ -332,7 +332,7 @@ node packages/cli/dist/cli.js         # run this local copy without changing glo
 npm run dev:link                      # optional: replace global jz/jouzu links with this checkout
 ```
 
-The helper installs dependencies with lifecycle scripts disabled and repeats installation when manifests or lockfiles change. Builds record UTC build time, Git commit, and dirty-worktree state. `--version` displays an identifier such as `0.1.7-dev.20260905-010203+g215b2188`; `.dirty` marks uncommitted files. The offline startup check uses isolated temporary state and a 15-second deadline. No provider key is required.
+The helper installs dependencies with lifecycle scripts disabled and repeats installation when manifests or lockfiles change. Concurrent builds in one clone serialize on a lock in the Git directory, so two of them cannot replace each other's dependency trees, and the release-bundle install repeats only when its manifest, lockfile, or bundle scripts change. Builds record UTC build time, Git commit, and dirty-worktree state. `--version` displays an identifier such as `0.1.7-dev.20260905-010203+g215b2188`; `.dirty` marks uncommitted files. The offline startup check uses isolated temporary state and a 15-second deadline. No provider key is required.
 
 `dev:setup` does not change command links or install Git hooks. If global commands already point to this checkout, rebuilding updates the code they run. To opt in to automatic rebuilds after Git operations:
 
