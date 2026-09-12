@@ -256,16 +256,34 @@ export class PiHostBoundary {
 			const attempt = state.attempts.find((item) => item.id === attemptId);
 			if (!attempt) throw new FlowLedgerError("identity", "Settlement attempt is missing.");
 			if (attempt.phase === "selected" || attempt.phase === "queued") return { kind: "waiting", attemptId };
-			if (attempt.phase === "claimed" || attempt.phase === "prepared") {
+			const started = attempt.requests.some((request) => request.handedOff);
+			if (attempt.phase === "claimed" || (attempt.phase === "prepared" && !started)) {
 				await ledger.cancel(attemptId, "Host became idle before transport handoff.");
 				return { kind: "cancelled", attemptId };
 			}
-			if (attempt.phase === "handed-off") {
+			let current = attempt;
+			if (attempt.phase === "prepared") {
+				// A later request can be prepared after an earlier request in the same attempt was
+				// handed off. The trailing request has no external effect yet, so withhold it and
+				// settle the started attempt as failed; cancelling the whole attempt would erase the
+				// earlier provider handoff.
+				const request = attempt.requests.at(-1);
+				if (!request || request.handedOff)
+					throw new FlowLedgerError("transition", "Prepared attempt has no unhanded trailing request.");
+				await ledger.withholdRequest(attemptId, request.id, "Host became idle before transport handoff.");
+				const repaired = await ledger.snapshot();
+				current = repaired.attempts.find((item) => item.id === attemptId) ?? current;
+			}
+			if (current.phase === "handed-off") {
 				await ledger.uncertain(attemptId, "Host is inactive but the provider outcome is unknown.");
 				return { kind: "uncertain", attemptId };
 			}
-			if (attempt.phase !== "running")
+			if (current.phase !== "running")
 				throw new FlowLedgerError("transition", "Attempt cannot settle at this boundary.");
+			if (current.reason) {
+				await ledger.settle(attemptId, "failure");
+				return { kind: "settled", attemptId };
+			}
 			const last = this.session.messages
 				.slice()
 				.reverse()
@@ -275,7 +293,7 @@ export class PiHostBoundary {
 			const outcome: FlowOutcome =
 				last.stopReason === "aborted"
 					? "aborted"
-					: last.stopReason === "error" || attempt.reason
+					: last.stopReason === "error" || current.reason
 						? "failure"
 						: "success";
 			await ledger.settle(attemptId, outcome);
