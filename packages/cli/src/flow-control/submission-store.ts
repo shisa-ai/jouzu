@@ -36,11 +36,13 @@ export interface FlowNativeInput {
 }
 export interface FlowNativeObserver {
 	observe(input: FlowNativeInput): Promise<number>;
+	completeWithoutInput(): void;
 }
 export interface FlowSubmissionDispatch {
 	operationId: string;
 	ownerId: string;
 	phase: "started" | "returned" | "failed";
+	noInput?: true;
 	inputs?: FlowNativeInput[];
 	queueCancellations?: { id: string; revision: number }[];
 	contextCancellations?: { inputIndex: number; removed: boolean }[];
@@ -343,6 +345,11 @@ export class FlowSubmissionStore {
 					if (claim.consumed) consumedIds.add(claim.id);
 				}
 			}
+			if (
+				record.dispatch?.noInput !== undefined &&
+				(record.dispatch.noInput !== true || record.dispatch.phase !== "returned" || inputs?.length)
+			)
+				throw new FlowLedgerError("schema", "Invalid input-free completion receipt.");
 			const cancellations = record.dispatch?.queueCancellations;
 			if (cancellations !== undefined) {
 				if (
@@ -625,6 +632,7 @@ export class FlowSubmissionStore {
 										operationId: dispatch.operationId,
 										ownerId: dispatch.ownerId,
 										phase: dispatch.phase,
+										...(dispatch.noInput ? { noInput: dispatch.noInput } : {}),
 										...(dispatch.queueClaims ? { queueClaims: dispatch.queueClaims } : {}),
 										...(dispatch.queueCancellations ? { queueCancellations: dispatch.queueCancellations } : {}),
 										...(dispatch.contextCancellations ? { contextCancellations: dispatch.contextCancellations } : {}),
@@ -665,8 +673,8 @@ export class FlowSubmissionStore {
 					record.status !== "retained" ||
 					record.holds?.length ||
 					dispatch?.phase !== "returned" ||
-					!dispatch.inputs?.length ||
-					dispatch.inputs.some((entry, inputIndex) => {
+					(!dispatch.noInput && !dispatch.inputs?.length) ||
+					dispatch.inputs?.some((entry, inputIndex) => {
 						const input = decode(entry.payload) as FlowNativeInput;
 						if (input.queue)
 							return !dispatch.queueClaims?.some(
@@ -908,6 +916,7 @@ export class FlowSubmissionStore {
 				record.dispatch = { operationId, ownerId: this.ownership.token, phase: "started" };
 				return { changed: true, result: decode(record.payload) as Submission };
 			});
+			let noInput = false;
 			const finish = (phase: "returned" | "failed") =>
 				this.transact((state) => {
 					const dispatch = state.records.find((item) => item.id === id)?.dispatch;
@@ -919,12 +928,17 @@ export class FlowSubmissionStore {
 					)
 						throw new FlowLedgerError("stale", "Native dispatch ownership changed before its outcome.");
 					dispatch.phase = phase;
+					if (phase === "returned" && noInput && !dispatch.inputs?.length) dispatch.noInput = true;
 					return { changed: true, result: undefined };
 				});
 			this.ownership.assertActive();
 			let observing = true;
 			const pending: Promise<number>[] = [];
 			const observer: FlowNativeObserver = {
+				completeWithoutInput: () => {
+					if (!observing) throw new FlowLedgerError("stale", "Native completion outlived its dispatch.");
+					noInput = true;
+				},
 				observe: (input) => {
 					if (!observing)
 						return Promise.reject(new FlowLedgerError("stale", "Native observation outlived its dispatch."));

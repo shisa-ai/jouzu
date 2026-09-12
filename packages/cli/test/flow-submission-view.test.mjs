@@ -247,3 +247,33 @@ test("a recorded admission hold is still reported over the generic states", asyn
 	assert.equal(view.admission, "held");
 	assert.equal(view.reason, "Waiting for user work.");
 });
+
+test("explicit input-free completion survives reopening and archival without a delivery claim", async (t) => {
+	const f = await fixture(t);
+	await f.attachment.submissions.dispatch("source", 1, "operation", async (observer) => {
+		observer.completeWithoutInput();
+	});
+	const view = await f.view();
+	assert.equal(view.delivery, "none");
+	assert.equal(view.reason, undefined);
+	assert.equal((await f.attachment.submissions.snapshot())[0].dispatch.noInput, true);
+	await f.reopen();
+	assert.deepEqual(await f.view(), view);
+	assert.equal(await f.attachment.submissions.archiveHandled([{ id: "source", revision: 1 }]), 1);
+	assert.deepEqual(await f.attachment.submissions.snapshot(false), []);
+	await f.reopen();
+	assert.deepEqual(await f.view(), view);
+});
+
+test("failed dispatch cannot retain an input-free completion", async (t) => {
+	const f = await fixture(t);
+	await assert.rejects(
+		f.attachment.submissions.dispatch("source", 1, "operation", async (observer) => {
+			observer.completeWithoutInput();
+			throw new Error("command failed");
+		}),
+		/command failed/,
+	);
+	assert.equal((await f.attachment.submissions.snapshot())[0].dispatch.noInput, undefined);
+	assert.equal((await f.view()).delivery, "uncertain");
+});

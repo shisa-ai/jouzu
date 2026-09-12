@@ -1,3 +1,4 @@
+import { completedWithoutNativeInput } from "./native-admission.js";
 import type { NativeRequest } from "./native-request-store.js";
 import { type NativeSubmissionRequestView, projectNativeSubmissionRequests } from "./native-submission-view.js";
 import { type FlowAttempt, FlowLedgerError, type FlowLedgerState } from "./receipt-ledger.js";
@@ -87,7 +88,9 @@ export function projectFlowSubmissions(
 						)),
 			);
 		const ambiguous =
-			attempts.length === 0 && (unlinkedConsumption || (!!record.dispatch && !consumedNative && !unconsumedNative));
+			!completedWithoutNativeInput(record) &&
+			attempts.length === 0 &&
+			(unlinkedConsumption || (!!record.dispatch && !consumedNative && !unconsumedNative));
 		let delivery: FlowSubmissionView["delivery"] = ambiguous
 			? "uncertain"
 			: nativeHistory

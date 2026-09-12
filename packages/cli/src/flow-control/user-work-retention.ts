@@ -1,4 +1,4 @@
-import { isNativeUserInput } from "./native-admission.js";
+import { completedWithoutNativeInput, isNativeUserInput } from "./native-admission.js";
 import type { NativeRequest } from "./native-request-store.js";
 import { projectNativeSubmissionRequests } from "./native-submission-view.js";
 import type { RetainedSubmission } from "./submission-store.js";
@@ -31,6 +31,7 @@ export function finishedUserWork(
 				dispatch?.phase !== "returned"
 			)
 				return false;
+			if (completedWithoutNativeInput(record)) return true;
 			const claims = dispatch.promptClaims ?? [];
 			const queues = dispatch.queueClaims ?? [];
 			if ((!claims.length && !queues.length) || queues.some((claim) => !claim.consumed) || !dispatch.inputs?.length)

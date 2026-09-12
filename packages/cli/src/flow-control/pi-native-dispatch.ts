@@ -486,6 +486,9 @@ export class PiNativeDispatch {
 							throw new FlowLedgerError("identity", "Non-waking input has no native append receipt.");
 						frame.active = false;
 						await Promise.all(frame.writes);
+						// A completed command or handled input hook can return before Agent.prompt.
+						// Record that observed absence explicitly; missing receipts alone prove nothing.
+						if (submission.api === "prompt" && !frame.writes.length) observer.completeWithoutInput();
 						return result;
 					} catch (error) {
 						if (context) this.contextFailure = true;

@@ -1,7 +1,12 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { assistantToolCalls } from "../../../scripts/fixtures/pi-flow-session.mjs";
-import { assembledSession, capturedNotices, installedProducerExtensions } from "./fixtures/flow-assembly.mjs";
+import {
+	assembledSession,
+	capturedNotices,
+	installedProducerExtensions,
+	replacedSession,
+} from "./fixtures/flow-assembly.mjs";
 import { campaignScript, liveWait } from "./fixtures/flow-campaign.mjs";
 
 const settle = () => new Promise((resolve) => setImmediate(resolve));
@@ -143,9 +148,18 @@ test("pausing a campaign holds its turns and resuming releases them", async (t) 
 	assert.match(paused.lifecycle.reason, /\/flow/);
 	// Pausing holds automated turns; it does not cancel the wait or stop the job.
 	assert.equal((await f.ingress.branch().attachment.waits.snapshot())[0].state, "waiting");
-	const held = f.bodies.length;
+	const continuations = async () =>
+		(await f.ingress.branch().attachment.ledger.snapshot()).attempts.filter(
+			(attempt) => attempt.admission?.choice.intent.producer === "multiloop",
+		).length;
+	const held = await continuations();
 	await new Promise((resolve) => setTimeout(resolve, 900));
-	assert.equal(f.bodies.length, held, "a paused campaign produces no automated turn when its job ends");
+	// Terminal wait decisions may be delivered while the campaign's continuation stays paused.
+	assert.equal(await continuations(), held, "a paused campaign cannot start another continuation");
+	assert.ok(
+		f.bodies.some((body) => JSON.stringify(body.messages).includes("wait-")),
+		"the terminal wait decision is delivered",
+	);
 
 	await f.session.prompt(`/flow resume ${wait.workId}`);
 	await settle();
@@ -299,7 +313,8 @@ test("a permission the run did not offer is refused and the turn continues", asy
 	assert.match(JSON.stringify(refusal.content), /Answer this turn instead/);
 	// The refusal did not end the turn: the model was asked again and answered in prose.
 	const answered = Date.now() + 5000;
-	while (Date.now() < answered && f.bodies.length < 3) await new Promise((resolve) => setTimeout(resolve, 50));
+	while (Date.now() < answered && (f.bodies.length < 3 || f.session.messages.at(-1)?.role !== "assistant"))
+		await new Promise((resolve) => setTimeout(resolve, 50));
 	assert.ok(f.bodies.length >= 3, "a follow-up request follows the refusal");
 	const last = f.session.messages.at(-1);
 	assert.equal(last?.role, "assistant", "the model replied instead of going silent");
@@ -373,3 +388,35 @@ test("/flow clear is an emergency alias that releases the session pause", async 
 	]);
 	assert.deepEqual(f.errors, []);
 });
+
+for (const action of ["start", "goal-resume", "multiloop-resume", "detached-resume"])
+	test(`a fresh session dispatches /goal work: ${action}`, async (t) => {
+		let target;
+		const producerExtensions = await installedProducerExtensions();
+		const script = (_body, index) =>
+			index === 0 ? assistantToolCalls({ name: "multiloop_stop", arguments: { target } }) : { text: "Goal handled" };
+		let f = await assembledSession(t, { producerExtensions, script });
+		const notices = capturedNotices(f.session);
+		let preparingResume = action !== "start";
+		const host = f.ingress.branch().host;
+		const gate = host.gate.bind(host);
+		t.mock.method(host, "gate", () => ({ ...gate(), automatedPaused: preparingResume }));
+		await f.session.prompt("/goal Say hello from a fresh session");
+		target = notices.find((notice) => notice.text.startsWith("Goal started:"))?.text.match(/Goal started: (\S+)/)?.[1];
+		assert.ok(target);
+		if (action !== "start") {
+			await f.session.prompt("/goal pause");
+			preparingResume = false;
+			if (action === "detached-resume") f = await replacedSession(t, f, { producerExtensions, script });
+			await f.session.prompt(action === "goal-resume" ? "/goal resume" : `/multiloop resume ${target}`);
+		}
+		const deadline = Date.now() + 5000;
+		while (Date.now() < deadline && f.bodies.length < 2) await new Promise((resolve) => setTimeout(resolve, 20));
+		assert.ok(f.bodies.length >= 2, "the goal starts without another user message");
+		assert.deepEqual(f.errors, []);
+		const inspection = await f.ingress.inspect();
+		assert.equal(
+			inspection.submissions.some((item) => item.delivery === "uncertain"),
+			false,
+		);
+	});

@@ -205,3 +205,16 @@ test("an interrupt pause holds automated input and never the user's own", () => 
 	// And it holds on an idle host, where automated input would otherwise be admitted.
 	assert.equal(decideNativeAdmission(automated.submission, [automated], gates, host, "submission").allowed, true);
 });
+
+test("only an explicit input-free completion releases pending user priority", () => {
+	const user = record("user", { api: "prompt", origin: { kind: "host", id: "prompt" } });
+	const automated = record("automated");
+	for (const phase of ["started", "failed", "returned"]) {
+		user.dispatch = { phase };
+		assert.equal(decide(automated, [user, automated]).allowed, false);
+	}
+	user.dispatch = { phase: "returned", noInput: true };
+	assert.equal(decide(automated, [user, automated]).allowed, true);
+	user.dispatch.inputs = [{ kind: "prompt", args: ["real input"] }];
+	assert.equal(decide(automated, [user, automated]).allowed, false);
+});

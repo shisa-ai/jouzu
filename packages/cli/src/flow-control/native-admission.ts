@@ -30,6 +30,11 @@ function lane(submission: FlowSubmission): string {
 	if (!submission.hostState?.streaming) return "prompt";
 	return options?.deliverAs ?? options?.streamingBehavior ?? "prompt";
 }
+/** The host observed a completed dispatch that produced no native model or queue input. */
+export function completedWithoutNativeInput(record: RetainedSubmission): boolean {
+	return record.dispatch?.phase === "returned" && record.dispatch.noInput === true && !record.dispatch.inputs?.length;
+}
+
 /**
  * Whether a retained send still has input the host has not taken.
  *
@@ -40,7 +45,7 @@ function lane(submission: FlowSubmission): string {
  * Omitting the set keeps the conservative reading, so a caller with no view of the queue is unchanged.
  */
 export function awaitingNativeInput(record: RetainedSubmission, liveQueue?: ReadonlySet<string>): boolean {
-	if (record.status === "cancelled") return false;
+	if (record.status === "cancelled" || completedWithoutNativeInput(record)) return false;
 	if (!record.dispatch) return true;
 	if (record.dispatch.promptClaims?.length || record.dispatch.promptHistory?.length) return false;
 	const inputs = record.dispatch.inputs;

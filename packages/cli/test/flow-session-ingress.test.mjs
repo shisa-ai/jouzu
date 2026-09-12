@@ -1275,6 +1275,7 @@ test("prompt-array mutation during observation cannot swap identical deferred so
 		dispatch(id, revision, operation, (observer, submission) =>
 			run(
 				{
+					...observer,
 					observe: async (input) => {
 						const index = await observer.observe(input);
 						if (input.kind === "prompt") [batch[1], batch[2]] = [batch[2], batch[1]];
@@ -4317,4 +4318,26 @@ test("reset management refuses a running turn and /flow reset succeeds at idle",
 	await f.session.prompt("/flow reset");
 	assert.equal((await ledger.snapshot()).activeAttemptId, undefined);
 	assert.match(notices[0].text, /Cleared flow reservation stuck/);
+});
+
+test("completed command user work retires without waiting for a provider receipt", async (t) => {
+	const f = await fixture(t, {
+		extensions: [
+			(pi) =>
+				pi.registerCommand("local", {
+					description: "Handle a local command",
+					handler: async () => {},
+				}),
+		],
+	});
+	await f.session.prompt("/local");
+	const branch = f.ingress.branch();
+	const records = await branch.attachment.submissions.snapshot();
+	const work = (await branch.attachment.waits.authoritySnapshot()).work;
+	assert.equal(records[0].dispatch.noInput, true);
+	assert.equal(finishedUserWork(work, records, [], new Set()).length, 1);
+	assert.deepEqual(finishedUserWork(work, records, [], new Set(work.map((item) => item.id))), []);
+	await f.ingress.retireWaitHistory(true);
+	assert.equal(await f.ingress.archiveSubmissionHistory(), 1);
+	assert.deepEqual(await branch.attachment.submissions.snapshot(false), []);
 });
