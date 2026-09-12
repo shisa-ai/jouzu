@@ -463,6 +463,27 @@ export class PiFlowSessionService {
 		});
 	}
 
+	/** Release a stuck active reservation without deleting receipts or stopping producer jobs. */
+	resetFlow() {
+		return this.registry.run(async () => {
+			const branch = this.branch();
+			const result = await branch.host.atIdle(async () => {
+				if (this.branch() !== branch) throw new FlowLedgerError("stale", "Flow reset branch changed.");
+				const state = await branch.attachment.ledger.snapshot();
+				const attemptId = state.activeAttemptId;
+				if (!attemptId) return { kind: "inactive" as const };
+				const kind = await branch.attachment.ledger.emergencyReset(
+					attemptId,
+					"Emergency flow reset from /flow; provider outcome may be unknown.",
+				);
+				return { kind, attemptId };
+			});
+			if (result.kind === "busy") throw new FlowLedgerError("busy", "Flow reset requires an idle session.");
+			if (result.value.kind !== "inactive") await branch.host.reconcile(result.value.attemptId);
+			return result.value;
+		});
+	}
+
 	/**
 	 * Change a campaign's lifecycle on the user's behalf. The owner and revision are looked up rather
 	 * than supplied, so a user cannot pause or stop work by guessing whose it is. Stopping also ends

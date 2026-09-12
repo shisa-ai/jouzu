@@ -48,6 +48,7 @@ export type FlowAttemptPhase =
 	| "uncertain";
 
 export type FlowOutcome = "success" | "transient-failure" | "failure" | "aborted";
+export type FlowResetKind = "cancelled" | "settled" | "uncertain";
 
 export interface FlowRequest {
 	id: string;
@@ -592,6 +593,35 @@ export class FlowReceiptLedger {
 			attempt.outcome = outcome;
 			attempt.phase = "settled";
 			delete state.activeAttemptId;
+		});
+	}
+
+	/** Emergency release for an active reservation when the host cannot complete normal reconciliation. */
+	emergencyReset(id: string, reason: string): Promise<FlowResetKind> {
+		requireIdentity(reason);
+		return this.mutate((state) => {
+			const attempt = this.attempt(state, id, ["selected", "queued", "claimed", "prepared", "handed-off", "running"]);
+			if (state.activeAttemptId !== id)
+				throw new FlowLedgerError("identity", "The flow attempt is not the active reservation.");
+			const started = attempt.requests.some((request) => request.handedOff);
+			if (!started) {
+				attempt.phase = "cancelled";
+				attempt.reason = reason;
+				delete state.activeAttemptId;
+				return "cancelled";
+			}
+			const trailing = attempt.requests.at(-1);
+			if (attempt.phase === "prepared" && trailing && !trailing.handedOff) {
+				attempt.phase = "settled";
+				attempt.outcome = "failure";
+				attempt.reason = reason;
+				delete state.activeAttemptId;
+				return "settled";
+			}
+			attempt.phase = "uncertain";
+			attempt.reason = reason;
+			delete state.activeAttemptId;
+			return "uncertain";
 		});
 	}
 

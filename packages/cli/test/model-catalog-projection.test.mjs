@@ -655,11 +655,15 @@ test("a context clamp caps catalog models and adds a clamp-only overlay for unto
 
 	// A ceiling above every model leaves the projection exactly as it was.
 	const unclamped = projectCatalogProviders([local, other], catalogs, { maxContextTokens: 2_000_000 });
-	assert.deepEqual(unclamped.providers.map((provider) => provider.providerId), ["ai.example.gateway"]);
+	assert.deepEqual(
+		unclamped.providers.map((provider) => provider.providerId),
+		["ai.example.gateway"],
+	);
 	assert.deepEqual(unclamped.providers[0].clampedModelIds, []);
 	assert.equal(
-		projectCatalogProviders([local, other], catalogs, { maxContextTokens: 2_000_000 })
-			.providers[0].models.find((candidate) => candidate.id === "example-model").contextWindow,
+		projectCatalogProviders([local, other], catalogs, { maxContextTokens: 2_000_000 }).providers[0].models.find(
+			(candidate) => candidate.id === "example-model",
+		).contextWindow,
 		131_072,
 	);
 });
@@ -694,10 +698,9 @@ test("the clamp survives the projection controller round-trip for a local provid
 		const controller = new CatalogProjectionController({}, paths);
 
 		const applied = controller.sync(pi, ctx, []);
-		assert.deepEqual(
-			applied.providers.find((provider) => provider.providerId === "ai.example.local").clampedModelIds,
-			["big-model"],
-		);
+		assert.deepEqual(applied.providers.find((provider) => provider.providerId === "ai.example.local").clampedModelIds, [
+			"big-model",
+		]);
 		assert.equal(registry.find("ai.example.local", "big-model").contextWindow, 384_000);
 		assert.equal(registry.getRegisteredProviderConfig("ai.example.local").refreshModels !== undefined, true);
 
@@ -824,10 +827,9 @@ test("a native provider is wrapped while the ceiling is active and restored afte
 
 		const controller = new CatalogProjectionController({}, paths);
 		const applied = controller.sync(pi, ctx, []);
-		assert.deepEqual(
-			applied.providers.find((provider) => provider.providerId === "native-test").clampedModelIds,
-			["big-model"],
-		);
+		assert.deepEqual(applied.providers.find((provider) => provider.providerId === "native-test").clampedModelIds, [
+			"big-model",
+		]);
 		assert.notEqual(registry.getRegisteredNativeProvider("native-test"), nativeProvider);
 		assert.equal(registry.find("native-test", "big-model").contextWindow, 384_000);
 
