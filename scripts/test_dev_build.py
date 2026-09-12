@@ -626,6 +626,149 @@ class DevBuildTests(unittest.TestCase):
         self.assertEqual(self._run("unknown").returncode, 2)
         self.assertEqual(self._run("build", "unexpected").returncode, 2)
 
+    def _lock_path(self, checkout: Path) -> Path:
+        common = self._git(checkout, "rev-parse", "--git-common-dir").stdout.strip()
+        return (checkout / common / "jouzu-dev-build.lock").resolve()
+
+    def _hold_build_lock(self, lock_path: Path, seconds: float) -> subprocess.Popen[bytes]:
+        """Hold the build lock with a real flock process until it is released."""
+        flock = shutil.which("flock")
+        if flock is None:
+            self.skipTest("flock is not available")
+        ready = self.root / "lock-ready"
+        process = subprocess.Popen(
+            [flock, str(lock_path), "bash", "-c", 'touch "$1"; sleep "$2"', "_", str(ready), str(seconds)],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        deadline = time.monotonic() + 10
+        while not ready.exists():
+            if process.poll() is not None or time.monotonic() > deadline:
+                process.kill()
+                self.fail("the test lock holder did not start")
+            time.sleep(0.02)
+        return process
+
+    def test_build_lock_lives_in_the_git_common_directory(self) -> None:
+        checkout = self.root / "jouzu"
+        self._create_jouzu_repo(checkout, with_typescript=True)
+        result = self._run("build")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        # Outside node_modules, so the installs it serializes cannot delete it.
+        self.assertTrue(self._lock_path(checkout).is_file())
+        self.assertFalse((checkout / "node_modules" / "jouzu-dev-build.lock").exists())
+
+    def test_contended_build_waits_for_the_lock_and_then_builds(self) -> None:
+        checkout = self.root / "jouzu"
+        self._create_jouzu_repo(checkout, with_typescript=True)
+        holder = self._hold_build_lock(self._lock_path(checkout), 2)
+        try:
+            result = self._run("build", env={**self.env, "JOUZU_DEV_BUILD_LOCK_TIMEOUT_SECONDS": "60"})
+        finally:
+            holder.wait(timeout=10)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("another build holds the build lock", result.stdout)
+        self.assertIn("dev-build: Jouzu rebuild complete", result.stdout)
+
+    def test_build_lock_timeout_reports_and_fails(self) -> None:
+        checkout = self.root / "jouzu"
+        self._create_jouzu_repo(checkout, with_typescript=True)
+        holder = self._hold_build_lock(self._lock_path(checkout), 5)
+        try:
+            result = self._run("build", env={**self.env, "JOUZU_DEV_BUILD_LOCK_TIMEOUT_SECONDS": "1"})
+        finally:
+            holder.wait(timeout=10)
+        self.assertEqual(result.returncode, 75)
+        self.assertIn("timed out after 1s waiting for the build lock", result.stderr)
+        self.assertNotIn("dev-build: Jouzu rebuild complete", result.stdout)
+
+    def test_hook_skips_the_rebuild_when_the_lock_times_out(self) -> None:
+        checkout = self.root / "jouzu"
+        self._create_jouzu_repo(checkout, with_typescript=True)
+        holder = self._hold_build_lock(self._lock_path(checkout), 5)
+        try:
+            result = self._run(
+                "__hook",
+                "post-commit",
+                str(checkout),
+                env={**self.env, "JOUZU_DEV_BUILD_LOCK_TIMEOUT_SECONDS": "1"},
+            )
+        finally:
+            holder.wait(timeout=10)
+        # A hook must never fail the Git operation it runs for.
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("post-commit hook skipped the rebuild", result.stderr)
+
+    def test_directory_lock_is_released_after_the_build(self) -> None:
+        checkout = self.root / "jouzu"
+        self._create_jouzu_repo(checkout, with_typescript=True)
+        result = self._run("build", env={**self.env, "JOUZU_DEV_BUILD_LOCK_MODE": "directory"})
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertNotIn("another build holds", result.stdout)
+        self.assertFalse(Path(f"{self._lock_path(checkout)}.d").exists())
+
+    def test_stale_directory_lock_is_reclaimed(self) -> None:
+        checkout = self.root / "jouzu"
+        self._create_jouzu_repo(checkout, with_typescript=True)
+        lock_directory = Path(f"{self._lock_path(checkout)}.d")
+        lock_directory.mkdir(parents=True)
+        stopped = subprocess.Popen(["true"])
+        stopped.wait()
+        (lock_directory / "pid").write_text(f"{stopped.pid}\n", encoding="utf-8")
+
+        result = self._run("build", env={**self.env, "JOUZU_DEV_BUILD_LOCK_MODE": "directory"})
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("reclaimed the build lock left by a stopped build", result.stderr)
+        self.assertFalse(lock_directory.exists())
+
+    def test_live_directory_lock_is_not_reclaimed(self) -> None:
+        checkout = self.root / "jouzu"
+        self._create_jouzu_repo(checkout, with_typescript=True)
+        lock_directory = Path(f"{self._lock_path(checkout)}.d")
+        lock_directory.mkdir(parents=True)
+        (lock_directory / "pid").write_text(f"{os.getpid()}\n", encoding="utf-8")
+
+        result = self._run(
+            "build",
+            env={**self.env, "JOUZU_DEV_BUILD_LOCK_MODE": "directory", "JOUZU_DEV_BUILD_LOCK_TIMEOUT_SECONDS": "1"},
+        )
+
+        self.assertEqual(result.returncode, 75)
+        self.assertIn("timed out after 1s waiting for the build lock", result.stderr)
+        self.assertTrue(lock_directory.exists())
+
+    def test_held_lock_environment_skips_acquisition(self) -> None:
+        checkout = self.root / "jouzu"
+        self._create_jouzu_repo(checkout, with_typescript=True)
+        lock_directory = Path(f"{self._lock_path(checkout)}.d")
+        lock_directory.mkdir(parents=True)
+        (lock_directory / "pid").write_text(f"{os.getpid()}\n", encoding="utf-8")
+
+        # The private wrapper holds the lock across its patch revert and re-apply, then
+        # runs this script; the nested invocation must not wait on its own lock.
+        result = self._run(
+            "build",
+            env={
+                **self.env,
+                "JOUZU_DEV_BUILD_LOCK_MODE": "directory",
+                "JOUZU_DEV_BUILD_LOCK_HELD": "1",
+                "JOUZU_DEV_BUILD_LOCK_TIMEOUT_SECONDS": "1",
+            },
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertNotIn("another build holds", result.stdout)
+        self.assertIn("dev-build: Jouzu rebuild complete", result.stdout)
+        self.assertTrue(lock_directory.exists())
+
+    def test_unknown_lock_mode_is_rejected(self) -> None:
+        checkout = self.root / "jouzu"
+        self._create_jouzu_repo(checkout, with_typescript=True)
+        result = self._run("build", env={**self.env, "JOUZU_DEV_BUILD_LOCK_MODE": "nonsense"})
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("JOUZU_DEV_BUILD_LOCK_MODE must be auto, flock, or directory", result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -8,6 +8,22 @@ readonly HOOK_MARKER="# Managed by Jouzu dev-build.sh; rerun install-hooks to up
 LINK_DEVELOPMENT=false
 readonly HOOK_NAMES=(post-commit post-merge post-checkout post-rewrite)
 
+# Two builds in one clone must not install at the same time. The dependency bootstrap
+# replaces the root node_modules and the release-bundle install replaces
+# packages/cli/node_modules with a different layout from a different lockfile, so a root
+# install that runs during another build's bundle install deletes that directory under
+# it. That fails with ENOTEMPTY and leaves a tree that needs manual repair. The lock
+# lives in the Git common directory, outside node_modules, so it survives the installs it
+# serializes and covers every worktree of the clone.
+readonly BUILD_LOCK_TIMEOUT_STATUS=75
+readonly BUILD_LOCK_DEFAULT_TIMEOUT_SECONDS=900
+readonly BUILD_LOCK_POLL_SECONDS=1
+BUILD_LOCK_DIRECTORY=""
+SCRIPT_ARGV=("$@")
+if (( ${#SCRIPT_ARGV[@]} == 0 )); then
+	SCRIPT_ARGV=(build)
+fi
+
 usage() {
 	cat <<'EOF'
 Usage: ./dev-build.sh [build|link|install-hooks|uninstall-hooks]
@@ -23,6 +39,10 @@ Dependency installs disable lifecycle scripts and repeat when manifests or locks
 Builds record development identity and run a bounded offline RPC smoke test.
 Only link changes global commands. Hooks build without linking and report failures
 without failing Git. Existing unmanaged hooks are never replaced.
+Concurrent builds in one clone serialize on a lock in the Git directory, because the
+dependency bootstrap and the release-bundle install replace each other's trees.
+Set JOUZU_DEV_BUILD_LOCK_TIMEOUT_SECONDS to change the wait (default 900) and
+JOUZU_DEV_BUILD_LOCK_MODE to flock or directory to select the lock implementation.
 EOF
 }
 
@@ -254,6 +274,141 @@ ensure_development_link() {
 	echo "dev-build: jz and jouzu resolve to $expected"
 }
 
+build_lock_timeout() {
+	local value="${JOUZU_DEV_BUILD_LOCK_TIMEOUT_SECONDS:-$BUILD_LOCK_DEFAULT_TIMEOUT_SECONDS}"
+	if [[ "$value" =~ ^[0-9]+$ ]]; then
+		printf '%s\n' "$value"
+	else
+		printf '%s\n' "$BUILD_LOCK_DEFAULT_TIMEOUT_SECONDS"
+	fi
+}
+
+# flock is the fast path; the directory lock covers macOS, Git-Bash, and any platform
+# whose flock misbehaves. JOUZU_DEV_BUILD_LOCK_MODE pins one implementation.
+build_lock_mode() {
+	case "${JOUZU_DEV_BUILD_LOCK_MODE:-auto}" in
+		flock | directory)
+			printf '%s\n' "$JOUZU_DEV_BUILD_LOCK_MODE"
+			;;
+		auto)
+			if command -v flock >/dev/null 2>&1; then
+				printf 'flock\n'
+			else
+				printf 'directory\n'
+			fi
+			;;
+		*)
+			echo "dev-build: JOUZU_DEV_BUILD_LOCK_MODE must be auto, flock, or directory" >&2
+			return 1
+			;;
+	esac
+}
+
+build_lock_path() {
+	local common
+	common="$(git -C "$JOUZU_REPO" rev-parse --git-common-dir)" || return 1
+	[[ "$common" == /* ]] || common="$JOUZU_REPO/$common"
+	printf '%s\n' "$common/jouzu-dev-build.lock"
+}
+
+# A build re-runs this script under flock, so the child must not take the lock again.
+build_lock_is_held() {
+	[[ "${JOUZU_DEV_BUILD_LOCK_HELD:-}" == 1 ]]
+}
+
+release_directory_lock() {
+	[[ -n "$BUILD_LOCK_DIRECTORY" ]] || return 0
+	rm -f -- "$BUILD_LOCK_DIRECTORY/pid" 2>/dev/null || true
+	rmdir -- "$BUILD_LOCK_DIRECTORY" 2>/dev/null || true
+	BUILD_LOCK_DIRECTORY=""
+}
+
+build_lock_holder_is_running() {
+	local pid
+	[[ -f "$1/pid" ]] || return 1
+	pid="$(<"$1/pid")" || return 1
+	[[ "$pid" =~ ^[0-9]+$ ]] || return 1
+	kill -0 "$pid" 2>/dev/null
+}
+
+# Rename the abandoned lock aside before removing it: only one waiter can rename it, so
+# two waiters cannot both take over the same stale lock.
+reclaim_stale_directory_lock() {
+	local stale="$BUILD_LOCK_DIRECTORY.stale.$$"
+	mv -- "$BUILD_LOCK_DIRECTORY" "$stale" 2>/dev/null || return 1
+	rm -f -- "$stale/pid" 2>/dev/null || true
+	rmdir -- "$stale" 2>/dev/null || true
+}
+
+acquire_directory_lock() {
+	local lock_path="$1" deadline waiting=false
+	BUILD_LOCK_DIRECTORY="${lock_path}.d"
+	deadline=$((SECONDS + $(build_lock_timeout)))
+	while true; do
+		if mkdir -- "$BUILD_LOCK_DIRECTORY" 2>/dev/null; then
+			if ! printf '%s\n' "$$" >"$BUILD_LOCK_DIRECTORY/pid" 2>/dev/null; then
+				release_directory_lock
+				echo "dev-build: could not record the build lock owner" >&2
+				return 1
+			fi
+			trap release_directory_lock EXIT
+			return 0
+		fi
+		if ! build_lock_holder_is_running "$BUILD_LOCK_DIRECTORY" && reclaim_stale_directory_lock; then
+			echo "dev-build: reclaimed the build lock left by a stopped build" >&2
+			continue
+		fi
+		if [[ "$waiting" == false ]]; then
+			echo "dev-build: another build holds the build lock; waiting up to $(build_lock_timeout)s"
+			waiting=true
+		fi
+		if (( SECONDS >= deadline )); then
+			echo "dev-build: timed out after $(build_lock_timeout)s waiting for the build lock" >&2
+			return "$BUILD_LOCK_TIMEOUT_STATUS"
+		fi
+		sleep "$BUILD_LOCK_POLL_SECONDS"
+	done
+}
+
+# Run the build once, under the build lock, and return its status. With flock the whole
+# script is re-run under the lock instead, so the caller must not build again afterwards;
+# BUILD_LOCK_TIMEOUT_STATUS reports that the wait expired.
+run_locked_build() {
+	local lock_path mode status
+	if build_lock_is_held; then
+		build_jouzu
+		return $?
+	fi
+	lock_path="$(build_lock_path)" || {
+		echo "dev-build: could not locate the Git common directory for the build lock" >&2
+		return 1
+	}
+	mode="$(build_lock_mode)" || return 1
+	if [[ "$mode" == flock ]]; then
+		if ! flock -n "$lock_path" true 2>/dev/null; then
+			echo "dev-build: another build holds the build lock; waiting up to $(build_lock_timeout)s"
+		fi
+		# Export the resolved checkout so the re-run locks and builds the same repo, and
+		# mark the lock held so the re-run does not take it again. --close keeps the lock
+		# descriptor out of the build's children.
+		export JOUZU_REPO
+		JOUZU_DEV_BUILD_LOCK_HELD=1 flock -w "$(build_lock_timeout)" -E "$BUILD_LOCK_TIMEOUT_STATUS" -o \
+			"$lock_path" "$SCRIPT_PATH" "${SCRIPT_ARGV[@]}"
+		status=$?
+		if (( status == BUILD_LOCK_TIMEOUT_STATUS )); then
+			echo "dev-build: timed out after $(build_lock_timeout)s waiting for the build lock" >&2
+		fi
+		return "$status"
+	fi
+	acquire_directory_lock "$lock_path"
+	status=$?
+	if (( status != 0 )); then
+		return "$status"
+	fi
+	build_jouzu
+	return $?
+}
+
 build_jouzu() {
 	local head
 	head="$(git -C "$JOUZU_REPO" rev-parse --short HEAD)" || return 1
@@ -416,7 +571,12 @@ run_hook() {
 		echo "dev-build: deferring $hook_name rebuild until rebase completes"
 		return 0
 	fi
-	if ! build_jouzu; then
+	local status
+	run_locked_build
+	status=$?
+	if (( status == BUILD_LOCK_TIMEOUT_STATUS )); then
+		echo "dev-build: $hook_name hook skipped the rebuild; another build holds the build lock" >&2
+	elif (( status != 0 )); then
 		echo "dev-build: $hook_name hook rebuild failed; run $SCRIPT_PATH for details" >&2
 	fi
 	return 0
@@ -431,7 +591,7 @@ main() {
 	case "$command" in
 		build|link)
 			[[ "$command" == link ]] && LINK_DEVELOPMENT=true
-			resolve_jouzu_repo && build_jouzu
+			resolve_jouzu_repo && run_locked_build
 			;;
 		install-hooks)
 			resolve_jouzu_repo && install_hooks
