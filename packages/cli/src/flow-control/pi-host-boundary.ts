@@ -212,6 +212,18 @@ export class PiHostBoundary {
 			(allowQueued || (!this.session.agent.hasQueuedMessages() && this.session.pendingMessageCount === 0))
 		);
 	}
+	private commandIdle(allowQueued = false): boolean {
+		return (
+			this.active === 1 &&
+			this.session.sessionId === this.sessionId &&
+			!this.closed &&
+			!this.stopping &&
+			!this.session.agent.state.isStreaming &&
+			!this.session.isRetrying &&
+			!this.session.isCompacting &&
+			(allowQueued || (!this.session.agent.hasQueuedMessages() && this.session.pendingMessageCount === 0))
+		);
+	}
 	assertAttachedBranch(): void {
 		this.assertActive();
 		if (this.navigated) throw new FlowLedgerError("scope", "Branch navigation requires a new flow attachment.");
@@ -226,7 +238,10 @@ export class PiHostBoundary {
 	}
 	private async atRest<T>(run: () => Promise<T>, allowQueued: boolean): Promise<PiBoundaryResult<T>> {
 		this.assertActive();
-		if (this.barrier || !this.idle(allowQueued)) return { kind: "busy" };
+		const parentFrame = this.frames.getStore();
+		const inIdleCommand = parentFrame?.kind === "operation" && parentFrame.active && this.active === 1;
+		if (this.barrier || !(inIdleCommand ? this.commandIdle(allowQueued) : this.idle(allowQueued)))
+			return { kind: "busy" };
 		let release!: () => void;
 		this.barrier = new Promise<void>((resolve) => {
 			release = resolve;

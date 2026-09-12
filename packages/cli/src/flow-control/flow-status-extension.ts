@@ -18,6 +18,7 @@ const USAGE = [
 	"/flow pause <work> holds one campaign's automated turns; /flow resume <work> releases it.",
 	"/flow stop <work> retires a campaign and ends its waits. None of these stop a running job.",
 	"/flow resolve <attempt> retry|discard decides an interrupted turn whose outcome is unknown.",
+	"/flow reset (or /flow clear) releases a stuck reservation without stopping jobs or deleting receipts.",
 ].join("\n");
 
 /**
@@ -98,6 +99,37 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 									? `Resolved ${target} as undelivered. Its work is eligible again and may repeat a turn the provider already answered.`
 									: `Resolved ${target} as spent. Its work will not run again for this attempt.`,
 							);
+							return;
+						}
+						if (verb === "reset" || verb === "clear") {
+							if (rest.length || choice || target) {
+								notify(USAGE, "error");
+								return;
+							}
+							let result: Awaited<ReturnType<PiSessionFlowIngress["resetFlow"]>>;
+							try {
+								result = await ingress.resetFlow();
+							} catch (error) {
+								if (error instanceof FlowLedgerError && error.code === "busy") {
+									notify(
+										"Flow reset needs an idle session. Interrupt the running turn, then run /flow reset again.",
+										"error",
+									);
+									return;
+								}
+								throw error;
+							}
+							if (result.kind === "inactive") {
+								notify("Flow has no active reservation. Jobs, waits, and receipt history were left unchanged.");
+							} else if (result.kind === "uncertain") {
+								notify(
+									`Cleared flow reservation ${result.attemptId}. The provider outcome is unknown; run /flow resolve ${result.attemptId} retry or discard.`,
+								);
+							} else {
+								notify(
+									`Cleared flow reservation ${result.attemptId}. Jobs, waits, and receipt history were left unchanged.`,
+								);
+							}
 							return;
 						}
 						if (rest.length || choice || !target) {

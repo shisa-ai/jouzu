@@ -447,6 +447,13 @@ export class PiSessionFlowIngress implements Ingress {
 	resolveUncertainAttempt(id: string, resolution: "retry" | "discard") {
 		return this.manage((service) => service.resolveUncertainAttempt(id, resolution));
 	}
+	resetFlow() {
+		return this.manage(async (service) => {
+			const result = await service.resetFlow();
+			this.automatedPauseReason = undefined;
+			return result;
+		});
+	}
 
 	retryNativeRequest(id: string, expectedHash: string): Promise<void> {
 		return this.manage((service) => service.retryNativeRequest(id, expectedHash));
