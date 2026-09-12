@@ -64,6 +64,45 @@ export async function assembledSession(
 }
 
 /**
+ * Replace the host session the way `AgentSessionRuntime` does, keeping the same flow control
+ * runtime. `/new`, resume, session switch, fork, and rewind all follow this sequence: tear the
+ * current session down, then ask the runtime for a fresh ingress and build the next session on it.
+ *
+ * Testing flow control against its own factory in isolation is what let the refusal on the second
+ * call ship, so the host's order is modelled here once and reused rather than restated per test.
+ */
+export async function replacedSession(
+	t,
+	prior,
+	{ reason = "new", script, persist = false, producerExtensions = [], sessionManager: supplied } = {},
+) {
+	await prior.shutdown(reason, prior.sessionManager.getSessionFile?.());
+	const sessionManager =
+		supplied ??
+		(persist
+			? SessionManager.create(prior.root, join(prior.root, `history-${reason}-${Date.now()}`))
+			: SessionManager.inMemory(prior.root));
+	const ingress = await prior.flow.flowIngressFactory({ cwd: prior.root, sessionManager });
+	const extensions = [...producerExtensions, ...prior.flow.extensions];
+	const { session, bodies, shutdown } = await createQualifiedFlowSession(t, {
+		root: prior.root,
+		sessionManager,
+		persist,
+		extensions,
+		script,
+		ingress: {
+			version: 1,
+			attach: (target) => ingress.attach(target),
+			submit: (...args) => ingress.submit(...args),
+			beforeBranchChange: () => ingress.beforeBranchChange(),
+			branchChanged: () => ingress.branchChanged(),
+			dispose: () => ingress.dispose(),
+		},
+	});
+	return { ...prior, ingress, session, sessionManager, bodies, shutdown };
+}
+
+/**
  * Record what commands print through `ctx.ui.notify`, so a command's user-visible answer can be
  * asserted rather than inferred from stored state. The existing context is kept so extensions that
  * use the rest of the UI surface keep working.
