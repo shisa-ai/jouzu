@@ -287,6 +287,12 @@ export async function runMainCli(args: string[]): Promise<void> {
 			import("./session-ui/index.js"),
 		]);
 	presentation.clearInteractiveStartup(parsed.args);
+	if (interactiveStartup) {
+		// Refresh before the picker snapshots catalogs so Pi's initial provider
+		// registration and model selection see successful updates. Sources without
+		// credentials are skipped; the catalog timeout bounds this best-effort wait.
+		await refreshAvailableModelCatalogs(paths).catch(() => {});
+	}
 	const modelPicker = createJouzuModelPicker(paths, {
 		textguardFiles: parsed.options.textguardFiles,
 		// Read at launch time: a child inherits whatever mode the session is in.
@@ -295,15 +301,6 @@ export async function runMainCli(args: string[]): Promise<void> {
 		restoreLastModelAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
 		startupArgs: parsed.args,
 	});
-	if (interactiveStartup) {
-		// Best-effort catalog refresh in the background: a source is contacted only
-		// when its credential is available, and cached revisions keep serving.
-		void refreshAvailableModelCatalogs(paths)
-			.then((result) => {
-				if (result) modelPicker.reloadCatalogs();
-			})
-			.catch(() => {});
-	}
 	const help = createJouzuHelpExtension();
 	const voice = (await import("./voice/integration.js")).createVoiceExtension(paths);
 	const effectiveKeyText = (action: "app.model.select" | "app.model.cycleForward") => pi.keyText(action) || "unbound";
