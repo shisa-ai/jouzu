@@ -37,7 +37,8 @@ function startup(scenario) {
 					PI_OFFLINE: "1",
 				},
 				encoding: "utf8",
-				timeout: 20_000,
+				// Allow the real 15-second catalog abort plus runtime startup overhead.
+				timeout: 35_000,
 			},
 		);
 		assert.equal(result.status, 0, `${result.error ?? ""}\n${result.stderr}\n${result.stdout}`);
@@ -63,7 +64,8 @@ for (const [credential, key] of [
 			result.requests.map((request) => request.authorization),
 			[`Bearer ${key}`],
 		);
-		assert.deepEqual(result.catalogTimeouts, [30_000]);
+		assert.equal(result.startupTimeoutMs, 15_000, "startup has a 15-second catalog budget");
+		assert.equal(result.catalogAbortAfterMs, null);
 	});
 }
 
@@ -76,10 +78,10 @@ test("stale catalog: refreshed metadata is used by initial model resolution", ()
 });
 
 for (const scenario of [{}, { credential: "login", disabled: true }]) {
-	test(`${scenario.disabled ? "disabled source" : "missing credential"}: no startup request or catalog timeout`, () => {
+	test(`${scenario.disabled ? "disabled source" : "missing credential"}: no startup network wait`, () => {
 		const result = startup({ ...scenario, local: true });
 		assert.deepEqual(result.requests, []);
-		assert.deepEqual(result.catalogTimeouts, [], "no network wait was scheduled");
+		assert.equal(result.catalogAbortAfterMs, null);
 		assert.equal(result.model?.provider, "local-fixture");
 		assert.equal(result.apiKey, "local-key");
 	});
@@ -94,7 +96,16 @@ for (const refresh of ["network", "invalid", "timeout"]) {
 		assert.equal(result.model?.name, "Example Model");
 		assert.equal(result.apiKey, "saved-login-key");
 		assert.ok(result.catalog.sources[0].lastError, "refresh failure remains diagnosable");
-		assert.deepEqual(result.catalogTimeouts, [30_000]);
+		assert.equal(result.startupTimeoutMs, 15_000, "startup has a 15-second catalog budget");
+		if (refresh === "timeout") {
+			assert.equal(result.catalog.sources[0].lastError.code, "timeout");
+			assert.ok(
+				result.catalogAbortAfterMs >= 14_900 && result.catalogAbortAfterMs < 20_000,
+				`the catalog signal must abort after 15 seconds (observed ${result.catalogAbortAfterMs} ms)`,
+			);
+		} else {
+			assert.equal(result.catalogAbortAfterMs, null);
+		}
 	});
 }
 

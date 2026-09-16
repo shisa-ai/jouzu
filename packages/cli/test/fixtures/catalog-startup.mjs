@@ -3,7 +3,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { CatalogSourceStore, setCatalogSourceToken } from "../../dist/catalog-sources.js";
-import { runMainCli } from "../../dist/main-cli.js";
+import { runMainCli, STARTUP_CATALOG_TIMEOUT_MS } from "../../dist/main-cli.js";
 import { MODEL_CATALOG_MEDIA_TYPE } from "../../dist/model-catalog.js";
 import { getCatalogStatuses, loadActiveModelCatalogs, refreshModelCatalog } from "../../dist/model-catalog-sync.js";
 import { resolveJouzuPaths } from "../../dist/paths.js";
@@ -68,20 +68,18 @@ if (scenario.local) {
 }
 
 const requests = [];
-const catalogTimeouts = [];
-const originalSetTimeout = globalThis.setTimeout;
-globalThis.setTimeout = (callback, ms, ...args) => {
-	if (ms === 30_000) {
-		catalogTimeouts.push(ms);
-		// Exercise the actual catalog abort path without making the suite wait 30 seconds.
-		if (scenario.refresh === "timeout") ms = 20;
-	}
-	return originalSetTimeout(callback, ms, ...args);
-};
+let catalogAbortAfterMs = null;
 let refreshSettled = false;
 globalThis.fetch = async (url, init) => {
 	assert.equal(String(url), "https://api.shisa.ai/v1/jouzu/model-catalog", "no unrelated network requests");
 	requests.push({ url: String(url), authorization: new Headers(init.headers).get("authorization") });
+	assert.ok(init.signal instanceof AbortSignal, "catalog requests have an abort budget");
+	const startedAt = performance.now();
+	const onAbort = () => {
+		catalogAbortAfterMs = performance.now() - startedAt;
+	};
+	// Observe only this catalog request's real abort signal; do not alter timers.
+	init.signal.addEventListener("abort", onAbort, { once: true });
 	try {
 		await delay(scenario.refresh === "timeout" ? 60_000 : 2_000, undefined, { signal: init.signal });
 		if (scenario.refresh === "network") throw new TypeError("fetch failed");
@@ -92,6 +90,7 @@ globalThis.fetch = async (url, init) => {
 		updated.modelOfferings[0].name = "Refreshed Model";
 		return response(updated);
 	} finally {
+		init.signal.removeEventListener("abort", onAbort);
 		refreshSettled = true;
 	}
 };
@@ -110,7 +109,8 @@ InteractiveMode.prototype.run = async function () {
 		model,
 		apiKey: model && model.provider !== "unknown" ? (await runtime.prepareRequest(model)).options.apiKey : undefined,
 		requests: [...requests],
-		catalogTimeouts: [...catalogTimeouts],
+		startupTimeoutMs: STARTUP_CATALOG_TIMEOUT_MS,
+		catalogAbortAfterMs,
 		refreshSettled,
 		catalog: getCatalogStatuses(paths),
 	};

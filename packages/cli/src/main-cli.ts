@@ -52,6 +52,8 @@ import { offerShisaOnboarding } from "./shisa-link/onboarding.js";
 import { ensureQuietStartupDefault, suppressPiReleaseNotes } from "./startup-settings.js";
 import { JouzuUpdater } from "./updater.js";
 
+export const STARTUP_CATALOG_TIMEOUT_MS = 15_000;
+
 async function loadPiRuntime(): Promise<typeof import("@earendil-works/pi-coding-agent")> {
 	return import("@earendil-works/pi-coding-agent");
 }
@@ -290,8 +292,8 @@ export async function runMainCli(args: string[]): Promise<void> {
 	if (interactiveStartup) {
 		// Refresh before the picker snapshots catalogs so Pi's initial provider
 		// registration and model selection see successful updates. Sources without
-		// credentials are skipped; the catalog timeout bounds this best-effort wait.
-		await refreshAvailableModelCatalogs(paths).catch(() => {});
+		// credentials are skipped; use the same 15-second budget as /reload.
+		await refreshAvailableModelCatalogs(paths, { timeoutMs: STARTUP_CATALOG_TIMEOUT_MS }).catch(() => {});
 	}
 	const modelPicker = createJouzuModelPicker(paths, {
 		textguardFiles: parsed.options.textguardFiles,
