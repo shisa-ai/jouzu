@@ -617,18 +617,110 @@ export function projectCamoufoxToolResult(
 	};
 }
 
+export interface LazyToolHooks {
+	/** Called when a delegate call starts, before the delegate is resolved. */
+	onCallStart?(): void;
+	/** Called when a delegate call settles, after success or failure. */
+	onCallSettled?(): void;
+}
+
 /** Register a tool whose delegate is resolved on first call, projecting its payload. */
 export function lazyTool(
 	definition: Omit<ToolDefinition, "execute">,
 	getDelegate: (signal?: AbortSignal) => Promise<ToolDefinition>,
+	hooks?: LazyToolHooks,
 ): ToolDefinition {
 	return {
 		...definition,
 		async execute(toolCallId, params, signal, onUpdate, context) {
-			const delegate = await getDelegate(signal);
-			const delegateParams = definition.name === "tff-fetch_url" ? preferJpegScreenshot(params) : params;
-			const result = await delegate.execute(toolCallId, delegateParams, signal, onUpdate, context);
-			return projectCamoufoxToolResult(definition.name, result);
+			hooks?.onCallStart?.();
+			try {
+				const delegate = await getDelegate(signal);
+				const delegateParams = definition.name === "tff-fetch_url" ? preferJpegScreenshot(params) : params;
+				const result = await delegate.execute(toolCallId, delegateParams, signal, onUpdate, context);
+				return projectCamoufoxToolResult(definition.name, result);
+			} finally {
+				hooks?.onCallSettled?.();
+			}
+		},
+	};
+}
+
+// The loaded Camoufox browser is a full Firefox process that stays resident
+// until the session ends, long after the last browser tool call. Stop it after
+// an idle period and let the next call rebuild it from the already installed
+// runtime, which relaunches in seconds. The runtime modules imported into the
+// Jouzu process stay loaded either way; an ES module cannot be unloaded.
+export const CAMOUFOX_IDLE_STOP_MS = 5 * 60_000;
+const CAMOUFOX_IDLE_STOP_MIN_MS = 1_000;
+
+/** Resolve the idle-stop delay. 0 keeps the browser loaded; other values are whole milliseconds. */
+export function resolveJouzuCamoufoxIdleStopMs(environment: NodeJS.ProcessEnv = process.env): number {
+	const raw = environment.JOUZU_CAMOUFOX_IDLE_STOP_MS?.trim();
+	if (!raw) return CAMOUFOX_IDLE_STOP_MS;
+	const parsed = Number(raw);
+	if (!Number.isInteger(parsed) || (parsed !== 0 && parsed < CAMOUFOX_IDLE_STOP_MIN_MS)) {
+		throw new Error(
+			`JOUZU_CAMOUFOX_IDLE_STOP_MS must be 0 to keep the browser loaded, or whole milliseconds of at least ${CAMOUFOX_IDLE_STOP_MIN_MS} (got ${raw})`,
+		);
+	}
+	return parsed;
+}
+
+export interface CamoufoxIdleStopScheduler {
+	/** Schedule a fire after the delay; return the timer's cancel function. */
+	schedule(fire: () => void, delayMs: number): () => void;
+}
+
+export interface CamoufoxIdleStop {
+	/** Cancel the pending idle timer for the duration of a browser tool call. */
+	onCallStart(): void;
+	/** Re-arm the idle timer after a browser tool call settles. */
+	onCallSettled(): void;
+	/** Cancel any pending idle timer and block further arming. */
+	close(): void;
+}
+
+export function createCamoufoxIdleStop(options: {
+	timeoutMs: number;
+	scheduler: CamoufoxIdleStopScheduler;
+	/** Stop the loaded browser; called only with no browser tool call in flight. */
+	stop: () => void;
+}): CamoufoxIdleStop {
+	let inFlight = 0;
+	let closed = false;
+	let cancelTimer: (() => void) | undefined;
+	const arm = () => {
+		cancelTimer?.();
+		cancelTimer = undefined;
+		if (closed || options.timeoutMs <= 0) return;
+		cancelTimer = options.scheduler.schedule(fire, options.timeoutMs);
+	};
+	const fire = () => {
+		cancelTimer = undefined;
+		// onCallStart cancels the pending timer, so fire normally sees no call in
+		// flight; the count guards a timer delivered despite cancellation, where
+		// stopping would tear down a browser a call still relies on.
+		if (inFlight > 0) {
+			arm();
+			return;
+		}
+		options.stop();
+	};
+	return {
+		onCallStart() {
+			inFlight += 1;
+			cancelTimer?.();
+			cancelTimer = undefined;
+		},
+		onCallSettled() {
+			inFlight = Math.max(0, inFlight - 1);
+			arm();
+		},
+		close() {
+			closed = true;
+			cancelTimer?.();
+			cancelTimer = undefined;
 		},
 	};
 }
@@ -640,11 +732,52 @@ export function lazyTool(
 // page the other is still navigating. Both tools declare it for that reason.
 const camoufoxExecutionMode = "sequential" as const;
 
+export interface CreateJouzuCamoufoxExtensionOptions {
+	/** Idle delay before the loaded browser is stopped; defaults to JOUZU_CAMOUFOX_IDLE_STOP_MS. */
+	idleStopTimeoutMs?: number;
+	/** Timer source for the idle stop; defaults to an unref'd setTimeout. */
+	scheduleIdleStop?: CamoufoxIdleStopScheduler["schedule"];
+}
+
 /** Register browser tools without installing or importing the Camoufox runtime during startup. */
-export function createJouzuCamoufoxExtension(pi: ExtensionAPI, stateDir: string): void {
+export function createJouzuCamoufoxExtension(
+	pi: ExtensionAPI,
+	stateDir: string,
+	options: CreateJouzuCamoufoxExtensionOptions = {},
+): void {
 	let basePath: string | null = null;
 	let runtime: Promise<InstalledCamoufoxRuntime> | undefined;
 	const delegates = new Map<string, ToolDefinition>();
+	let stopping: Promise<void> | undefined;
+	// Reset the runtime synchronously and close the client afterwards, so a
+	// call that starts at the stop instant loads a fresh client instead of
+	// racing the close of the one it would otherwise have grabbed.
+	const stopLoadedRuntime = (): void => {
+		const pending = runtime;
+		if (!pending) return;
+		runtime = undefined;
+		delegates.clear();
+		stopping = (async () => {
+			const loaded = await pending.catch(() => undefined);
+			// A best-effort background stop must not surface as an unhandled
+			// rejection in a session that continues without the browser.
+			await loaded?.client.close().catch(() => undefined);
+		})();
+	};
+	const idleStop = createCamoufoxIdleStop({
+		timeoutMs: options.idleStopTimeoutMs ?? resolveJouzuCamoufoxIdleStopMs(),
+		scheduler: {
+			schedule:
+				options.scheduleIdleStop ??
+				((fire, delayMs) => {
+					const timer = setTimeout(fire, delayMs);
+					// An idle reaper must not hold a session process open on its own.
+					timer.unref?.();
+					return () => clearTimeout(timer);
+				}),
+		},
+		stop: stopLoadedRuntime,
+	});
 	const getRuntime = (signal?: AbortSignal): Promise<InstalledCamoufoxRuntime> => {
 		if (!runtime) {
 			runtime = loadCamoufoxRuntime(stateDir, signal).catch((error: unknown) => {
@@ -698,6 +831,7 @@ export function createJouzuCamoufoxExtension(pi: ExtensionAPI, stateDir: string)
 				executionMode: camoufoxExecutionMode,
 			},
 			(signal) => getTool("tff-fetch_url", signal),
+			idleStop,
 		),
 	);
 	pi.registerTool(
@@ -721,17 +855,21 @@ export function createJouzuCamoufoxExtension(pi: ExtensionAPI, stateDir: string)
 				executionMode: camoufoxExecutionMode,
 			},
 			(signal) => getTool("tff-search_web", signal),
+			idleStop,
 		),
 	);
 	pi.on("session_start", (_event, context) => {
 		basePath = context.cwd;
 	});
 	pi.on("session_shutdown", async () => {
+		idleStop.close();
 		basePath = null;
 		delegates.clear();
 		const loaded = runtime ? await runtime.catch(() => undefined) : undefined;
 		runtime = undefined;
 		await loaded?.client.close();
+		// An idle stop may still be closing the browser it stopped.
+		await stopping;
 	});
 }
 

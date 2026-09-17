@@ -14,6 +14,7 @@
 
 - Explain held flow work in `/flow`: the submitted source, the stage that failed, the owning task and its dependencies, and the original failure cause after a reset.
 - Render `batch_web_fetch` as one row per requested URL with its queued, fetching, done, or error status, elapsed time, and extracted size, instead of one summary line.
+- Stop the Camoufox browser after five minutes without a browser tool call and relaunch it on the next call, so a long session no longer keeps an idle Firefox resident. Set `JOUZU_CAMOUFOX_IDLE_STOP_MS` to whole milliseconds of at least 1000 to change the delay, or `0` to keep the browser loaded until the session ends.
 
 ### Fixed
 
