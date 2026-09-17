@@ -893,6 +893,22 @@ export function createJouzuCamoufoxExtension(
 			idleStop,
 		),
 	);
+	const closeGraceMs = options.closeGraceMs ?? CAMOUFOX_CLOSE_GRACE_MS;
+	// Drain every idle-stop close still in flight, but never let a wedged close
+	// hold the session hostage past the grace period. The grace timer is ref'd
+	// so the bound actually elapses in a quiet process, and it is cleared once
+	// the drain settles so it cannot hold the session process open afterwards.
+	const drainIdleStops = (): Promise<void> => {
+		let graceTimer: ReturnType<typeof setTimeout> | undefined;
+		const grace = new Promise<void>((resolveGrace) => {
+			graceTimer = setTimeout(resolveGrace, closeGraceMs);
+		});
+		return Promise.race([Promise.all(stoppingCloses).catch(() => undefined), grace])
+			.finally(() => {
+				clearTimeout(graceTimer);
+			})
+			.then(() => undefined);
+	};
 	pi.on("session_start", (_event, context) => {
 		basePath = context.cwd;
 		// A reused extension instance serves a later session in the same
@@ -905,17 +921,10 @@ export function createJouzuCamoufoxExtension(
 		delegates.clear();
 		const loaded = runtime ? await runtime.catch(() => undefined) : undefined;
 		runtime = undefined;
-		const closeGraceMs = options.closeGraceMs ?? CAMOUFOX_CLOSE_GRACE_MS;
 		try {
 			await loaded?.client.close();
 		} finally {
-			// Drain every idle-stop close still in flight, but never let a
-			// wedged close hold the session hostage past the grace period. The
-			// unref'd grace timer cannot hold a process open on its own.
-			await Promise.race([
-				Promise.all(stoppingCloses).catch(() => undefined),
-				delay(closeGraceMs, undefined, { ref: false }),
-			]);
+			await drainIdleStops();
 		}
 	});
 }

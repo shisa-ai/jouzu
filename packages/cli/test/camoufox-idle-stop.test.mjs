@@ -626,7 +626,9 @@ test("a wedged idle-stop close does not block session_shutdown past the grace pe
 
 		const startedAt = Date.now();
 		await handlers.get("session_shutdown")();
-		assert.ok(Date.now() - startedAt < 5_000, "shutdown must complete within the grace bound");
+		const elapsed = Date.now() - startedAt;
+		assert.ok(elapsed >= 95, "shutdown must not settle before the grace period");
+		assert.ok(elapsed < 5_000, "shutdown must complete within the grace bound");
 		assert.equal(camoufoxPi.closedClients.length, 0, "the wedged close must remain unreleased");
 	} finally {
 		rmSync(stateDir, { recursive: true, force: true });
