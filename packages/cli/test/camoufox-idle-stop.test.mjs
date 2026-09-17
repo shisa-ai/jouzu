@@ -39,7 +39,19 @@ test("zero disables the idle stop", () => {
 });
 
 test("an invalid idle-stop delay is rejected with the variable name", () => {
-	for (const value of ["soon", "-5", "1.5", "999", "10 seconds", "1e-3"]) {
+	for (const value of [
+		"soon",
+		"-5",
+		"1.5",
+		"999",
+		"10 seconds",
+		"1e-3",
+		"1e4",
+		"0x10",
+		"+1000",
+		"1e21",
+		"2147483648",
+	]) {
 		assert.throws(
 			() => resolveJouzuCamoufoxIdleStopMs({ JOUZU_CAMOUFOX_IDLE_STOP_MS: value }),
 			(error) => error instanceof Error && error.message.includes("JOUZU_CAMOUFOX_IDLE_STOP_MS"),
@@ -48,18 +60,27 @@ test("an invalid idle-stop delay is rejected with the variable name", () => {
 	}
 });
 
+test("the idle-stop delay accepts the full timer-safe range", () => {
+	assert.equal(resolveJouzuCamoufoxIdleStopMs({ JOUZU_CAMOUFOX_IDLE_STOP_MS: "1000" }), 1_000);
+	assert.equal(resolveJouzuCamoufoxIdleStopMs({ JOUZU_CAMOUFOX_IDLE_STOP_MS: "2147483647" }), 2_147_483_647);
+});
+
 const makeScheduler = () => {
 	const timers = [];
-	return {
-		timers,
-		schedule(fire, delayMs) {
-			const timer = { fire, delayMs, cancelled: false };
-			timers.push(timer);
-			return () => {
-				timer.cancelled = true;
-			};
-		},
+	const schedule = (fire, delayMs) => {
+		const timer = { delayMs, cancelled: false, fired: false };
+		timer.fire = () => {
+			timer.fired = true;
+			fire();
+		};
+		timers.push(timer);
+		return () => {
+			timer.cancelled = true;
+		};
 	};
+	// A fired timer is spent; an armed timer can still stop the browser.
+	const armed = () => timers.filter((timer) => !timer.cancelled && !timer.fired);
+	return { timers, schedule, armed };
 };
 
 test("a settled browser call arms one idle timer for the full delay", () => {
@@ -120,6 +141,68 @@ test("close cancels the pending timer and blocks further arming", () => {
 	assert.equal(scheduler.timers[0].cancelled, true);
 	idleStop.onCallSettled();
 	assert.equal(scheduler.timers.length, 1, "arming after close must be blocked");
+});
+
+test("a stale timer fire is ignored after a newer timer is armed", () => {
+	const scheduler = makeScheduler();
+	const stops = [];
+	const idleStop = createCamoufoxIdleStop({ timeoutMs: 5_000, scheduler, stop: () => stops.push(1) });
+	idleStop.onCallSettled();
+	idleStop.onCallStart();
+	idleStop.onCallSettled();
+	scheduler.timers[0].fire();
+	assert.equal(stops.length, 0, "a stale fire must not stop the browser");
+	assert.equal(scheduler.armed().length, 1, "the stale fire must not consume the live timer");
+	scheduler.timers[1].fire();
+	assert.equal(stops.length, 1, "the live timer must still stop the browser");
+});
+
+test("a fire after close is ignored", () => {
+	const scheduler = makeScheduler();
+	const stops = [];
+	const idleStop = createCamoufoxIdleStop({ timeoutMs: 5_000, scheduler, stop: () => stops.push(1) });
+	idleStop.onCallSettled();
+	idleStop.close();
+	scheduler.timers[0].fire();
+	assert.equal(stops.length, 0, "a fire after close must not stop the browser");
+});
+
+test("open re-enables arming for a session that reuses the extension", () => {
+	const scheduler = makeScheduler();
+	const stops = [];
+	const idleStop = createCamoufoxIdleStop({ timeoutMs: 5_000, scheduler, stop: () => stops.push(1) });
+	idleStop.onCallSettled();
+	idleStop.close();
+	idleStop.onCallSettled();
+	assert.equal(scheduler.timers.length, 1, "arming must stay blocked before open");
+	idleStop.open();
+	idleStop.onCallSettled();
+	assert.equal(scheduler.timers.length, 2, "open must re-enable arming");
+	scheduler.timers[1].fire();
+	assert.equal(stops.length, 1);
+});
+
+test("a stale fire is ignored after open resets the timer generation", () => {
+	const scheduler = makeScheduler();
+	const stops = [];
+	const idleStop = createCamoufoxIdleStop({ timeoutMs: 5_000, scheduler, stop: () => stops.push(1) });
+	idleStop.onCallSettled();
+	idleStop.close();
+	idleStop.open();
+	scheduler.timers[0].fire();
+	assert.equal(stops.length, 0, "a pre-close fire must be ignored after open");
+});
+
+test("open resets an in-flight count a shutdown left behind", () => {
+	const scheduler = makeScheduler();
+	const stops = [];
+	const idleStop = createCamoufoxIdleStop({ timeoutMs: 5_000, scheduler, stop: () => stops.push(1) });
+	idleStop.onCallStart();
+	idleStop.close();
+	idleStop.open();
+	idleStop.onCallSettled();
+	scheduler.timers.at(-1).fire();
+	assert.equal(stops.length, 1, "open must restore a working stop path");
 });
 
 test("a disabled idle stop never arms a timer", () => {
@@ -201,17 +284,31 @@ const camoufoxFake = {
 	client: [
 		"export const clients = [];",
 		"export const closedClients = [];",
+		"export const pendingCloseReleases = [];",
+		"let closeMode = 'immediate';",
+		"export function setCloseMode(mode) {",
+		"	closeMode = mode;",
+		"}",
+		"export function releasePendingCloses() {",
+		"	for (const release of pendingCloseReleases.splice(0)) release();",
+		"}",
+		"let nextClientId = 1;",
 		"export class CamoufoxClient {",
 		"	constructor(options) {",
 		"		this.options = options;",
 		"		this.config = { headless: true };",
+		"		this.id = nextClientId++;",
 		"		clients.push(this);",
 		"	}",
 		"	async close() {",
+		"		if (closeMode === 'defer') {",
+		"			await new Promise((release) => pendingCloseReleases.push(release));",
+		"		}",
 		"		closedClients.push(this);",
 		"	}",
 		"}",
-		"export function createAllTools() {",
+		"export function createAllTools(service) {",
+		"	const servedBy = () => service.getClient().id;",
 		"	return [",
 		"		{",
 		"			name: 'tff-fetch_url',",
@@ -224,6 +321,7 @@ const camoufoxFake = {
 		"						format: 'markdown',",
 		"						markdown: '# Fetched',",
 		"						bytes: 8,",
+		"						servedBy: servedBy(),",
 		"					},",
 		"				};",
 		"			},",
@@ -233,13 +331,17 @@ const camoufoxFake = {
 		"			async execute() {",
 		"				return {",
 		"					content: [{ type: 'text', text: 'search ok' }],",
-		"					details: { engine: 'duckduckgo', results: [{ rank: 1, title: 'T', url: 'https://example.com', snippet: 'S' }] },",
+		"					details: {",
+		"						engine: 'duckduckgo',",
+		"						results: [{ rank: 1, title: 'T', url: 'https://example.com', snippet: 'S' }],",
+		"						servedBy: servedBy(),",
+		"					},",
 		"				};",
 		"			},",
 		"		},",
 		"	];",
 		"}",
-		"export const __test_wrapTool__ = (definition) => definition;",
+		"export const __test_wrapTool__ = (definition) => ({ execute: definition.execute });",
 	].join("\n"),
 	camoufoxJs: ["export const launchOptions = async () => ({});"].join("\n"),
 	playwright: [
@@ -328,18 +430,24 @@ const extensionHarness = () => {
 		on: (event, handler) => handlers.set(event, handler),
 	};
 	const scheduleIdleStop = (fire, delayMs) => {
-		const timer = { fire, delayMs, cancelled: false };
+		const timer = { delayMs, cancelled: false, fired: false };
+		timer.fire = () => {
+			timer.fired = true;
+			fire();
+		};
 		timers.push(timer);
 		return () => {
 			timer.cancelled = true;
 		};
 	};
-	return { tools, handlers, timers, pi, scheduleIdleStop };
+	// A fired timer is spent; an armed timer can still stop the browser.
+	const armed = () => timers.filter((timer) => !timer.cancelled && !timer.fired);
+	return { tools, handlers, timers, armed, pi, scheduleIdleStop };
 };
 
 test("an idle stop closes the loaded browser and a later call reloads it", async () => {
 	const stateDir = mkdtempSync(join(tmpdir(), "jouzu-camoufox-idle-"));
-	const { tools, handlers, timers, pi, scheduleIdleStop } = extensionHarness();
+	const { tools, handlers, timers, armed, pi, scheduleIdleStop } = extensionHarness();
 	try {
 		writeFakeRuntime(stateDir);
 		createJouzuCamoufoxExtension(pi, stateDir, { idleStopTimeoutMs: 60_000, scheduleIdleStop });
@@ -347,6 +455,7 @@ test("an idle stop closes the loaded browser and a later call reloads it", async
 
 		const first = await fetch.execute("call-1", { url: "https://example.com" }, undefined, undefined, undefined);
 		assert.ok(textOf(first).includes("# Fetched"), "the first call must project the fetched body");
+		assert.equal(first.details.servedBy, 1, "the first call must serve from the first client");
 		assert.equal(timers.length, 1, "a settled call arms one idle timer");
 		assert.equal(timers[0].delayMs, 60_000);
 		const camoufoxPi = await fakeCamoufoxPi(stateDir);
@@ -359,6 +468,7 @@ test("an idle stop closes the loaded browser and a later call reloads it", async
 
 		const second = await fetch.execute("call-2", { url: "https://example.com/2" }, undefined, undefined, undefined);
 		assert.ok(textOf(second).includes("# Fetched"), "the call after the idle stop must succeed");
+		assert.equal(second.details.servedBy, 2, "the reload must serve from a fresh client, not the stale delegate");
 		assert.equal(camoufoxPi.clients.length, 2, "the next call must reload a fresh client");
 		assert.equal(camoufoxPi.closedClients.length, 1);
 		assert.equal(timers.length, 2, "the settled reload arms a new idle timer");
@@ -367,7 +477,7 @@ test("an idle stop closes the loaded browser and a later call reloads it", async
 
 		await handlers.get("session_shutdown")();
 		assert.equal(camoufoxPi.closedClients.length, 2, "session shutdown must close the reloaded browser");
-		assert.equal(timers[1].cancelled, true, "session shutdown must disarm the pending idle timer");
+		assert.equal(armed().length, 0, "session shutdown must leave no armed idle timer");
 	} finally {
 		rmSync(stateDir, { recursive: true, force: true });
 	}
@@ -428,6 +538,127 @@ test("an invalid idle-stop environment value fails extension creation eagerly", 
 		);
 	} finally {
 		delete process.env.JOUZU_CAMOUFOX_IDLE_STOP_MS;
+		rmSync(stateDir, { recursive: true, force: true });
+	}
+});
+
+test("a call that lands during an in-flight idle-stop close serves a fresh client", async () => {
+	const stateDir = mkdtempSync(join(tmpdir(), "jouzu-camoufox-idle-race-"));
+	const { tools, handlers, timers, pi, scheduleIdleStop } = extensionHarness();
+	try {
+		writeFakeRuntime(stateDir);
+		const camoufoxPi = await fakeCamoufoxPi(stateDir);
+		camoufoxPi.setCloseMode("defer");
+		createJouzuCamoufoxExtension(pi, stateDir, { idleStopTimeoutMs: 60_000, scheduleIdleStop });
+		const fetch = tools.get("tff-fetch_url");
+		const first = await fetch.execute("call-1", { url: "https://example.com" }, undefined, undefined, undefined);
+		assert.equal(first.details.servedBy, 1);
+
+		timers[0].fire();
+		const second = await fetch.execute("call-2", { url: "https://example.com/2" }, undefined, undefined, undefined);
+		assert.equal(
+			second.details.servedBy,
+			2,
+			"the synchronous reset must serve a fresh client before the old close finishes",
+		);
+		assert.equal(camoufoxPi.closedClients.length, 0, "the stopped client's close must still be in flight");
+
+		camoufoxPi.releasePendingCloses();
+		await waitForClosedClients(camoufoxPi, 1);
+		assert.equal(camoufoxPi.closedClients.length, 1);
+		camoufoxPi.setCloseMode("immediate");
+		await handlers.get("session_shutdown")();
+		assert.equal(camoufoxPi.closedClients.length, 2);
+	} finally {
+		rmSync(stateDir, { recursive: true, force: true });
+	}
+});
+
+test("session_shutdown waits for an idle-stop close still in flight", async () => {
+	const stateDir = mkdtempSync(join(tmpdir(), "jouzu-camoufox-idle-drain-"));
+	const { tools, handlers, timers, pi, scheduleIdleStop } = extensionHarness();
+	try {
+		writeFakeRuntime(stateDir);
+		const camoufoxPi = await fakeCamoufoxPi(stateDir);
+		camoufoxPi.setCloseMode("defer");
+		createJouzuCamoufoxExtension(pi, stateDir, { idleStopTimeoutMs: 60_000, scheduleIdleStop });
+		const fetch = tools.get("tff-fetch_url");
+		await fetch.execute("call-1", { url: "https://example.com" }, undefined, undefined, undefined);
+		timers[0].fire();
+
+		let settled = false;
+		const shutdown = handlers
+			.get("session_shutdown")()
+			.then(
+				() => {
+					settled = true;
+				},
+				() => {
+					settled = true;
+				},
+			);
+		await delay(30);
+		assert.equal(settled, false, "shutdown must wait for the in-flight idle-stop close");
+		camoufoxPi.releasePendingCloses();
+		await shutdown;
+		assert.equal(settled, true, "shutdown must settle once the idle-stop close completes");
+		assert.equal(camoufoxPi.closedClients.length, 1);
+	} finally {
+		rmSync(stateDir, { recursive: true, force: true });
+	}
+});
+
+test("a wedged idle-stop close does not block session_shutdown past the grace period", async () => {
+	const stateDir = mkdtempSync(join(tmpdir(), "jouzu-camoufox-idle-wedged-"));
+	const { tools, handlers, timers, pi, scheduleIdleStop } = extensionHarness();
+	try {
+		writeFakeRuntime(stateDir);
+		const camoufoxPi = await fakeCamoufoxPi(stateDir);
+		camoufoxPi.setCloseMode("defer");
+		createJouzuCamoufoxExtension(pi, stateDir, {
+			idleStopTimeoutMs: 60_000,
+			scheduleIdleStop,
+			closeGraceMs: 100,
+		});
+		const fetch = tools.get("tff-fetch_url");
+		await fetch.execute("call-1", { url: "https://example.com" }, undefined, undefined, undefined);
+		timers[0].fire();
+
+		const startedAt = Date.now();
+		await handlers.get("session_shutdown")();
+		assert.ok(Date.now() - startedAt < 5_000, "shutdown must complete within the grace bound");
+		assert.equal(camoufoxPi.closedClients.length, 0, "the wedged close must remain unreleased");
+	} finally {
+		rmSync(stateDir, { recursive: true, force: true });
+	}
+});
+
+test("a session restart on a reused extension keeps the idle stop armed", async () => {
+	const stateDir = mkdtempSync(join(tmpdir(), "jouzu-camoufox-idle-restart-"));
+	const { tools, handlers, timers, armed, pi, scheduleIdleStop } = extensionHarness();
+	try {
+		writeFakeRuntime(stateDir);
+		createJouzuCamoufoxExtension(pi, stateDir, { idleStopTimeoutMs: 60_000, scheduleIdleStop });
+		const sessionStart = handlers.get("session_start");
+		sessionStart({}, { cwd: stateDir });
+		const fetch = tools.get("tff-fetch_url");
+		const first = await fetch.execute("call-1", { url: "https://example.com" }, undefined, undefined, undefined);
+		assert.equal(first.details.servedBy, 1);
+		assert.equal(timers.length, 1);
+
+		await handlers.get("session_shutdown")({ reason: "new" });
+		assert.equal(armed().length, 0, "shutdown must disarm the pending idle timer");
+
+		sessionStart({}, { cwd: stateDir });
+		const second = await fetch.execute("call-2", { url: "https://example.com/2" }, undefined, undefined, undefined);
+		assert.equal(second.details.servedBy, 2, "the restarted session must reload the browser");
+		assert.equal(timers.length, 2, "the restarted session must arm the idle stop again");
+
+		timers.at(-1).fire();
+		const camoufoxPi = await fakeCamoufoxPi(stateDir);
+		await waitForClosedClients(camoufoxPi, 2);
+		assert.equal(camoufoxPi.closedClients.length, 2, "the idle stop must still work after the restart");
+	} finally {
 		rmSync(stateDir, { recursive: true, force: true });
 	}
 });
