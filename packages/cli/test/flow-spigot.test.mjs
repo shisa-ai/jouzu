@@ -1,4 +1,7 @@
 import assert from "node:assert/strict";
+import { mkdtemp } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { test } from "node:test";
 import { assistantToolCalls } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { FLOW_OFF_MESSAGE } from "../dist/flow-control/flow-off-message.js";
@@ -6,6 +9,7 @@ import {
 	assembledSession,
 	capturedNotices,
 	installedProducerExtensions,
+	installedTaskExtension,
 	syntheticProducer,
 } from "./fixtures/flow-assembly.mjs";
 import { campaignScript, liveWait } from "./fixtures/flow-campaign.mjs";
@@ -209,6 +213,46 @@ test("flow control on restores routing, and reset is off followed by on", async 
 	await f.session.prompt("/flow reset");
 	assert.equal(f.ingress.enabled(), true);
 	assert.match(notices.at(-1).text, /Flow control reset/);
+	assert.deepEqual(f.errors, []);
+});
+
+test("off and on reach the task and lane hosts without a re-handshake", async (t) => {
+	// The producers hold one host each for the life of the attachment, so the switch has to be readable
+	// through that host rather than delivered as a new one.
+	const hosts = { tasks: [], multiloop: [] };
+	const capture = {
+		name: "capture-producer-hosts",
+		factory(pi) {
+			for (const [channel, into] of [
+				["jouzu:task-flow", hosts.tasks],
+				["jouzu:multiloop-flow", hosts.multiloop],
+			])
+				pi.events.on(channel, (request) => {
+					const accept = request.accept;
+					request.accept = (host) => {
+						into.push(host);
+						accept(host);
+					};
+				});
+		},
+	};
+	const f = await assembledSession(t, {
+		producerExtensions: [
+			capture,
+			...(await installedProducerExtensions()),
+			await installedTaskExtension(join(await mkdtemp(join(tmpdir(), "jouzu-spigot-tasks-")), "tasks.json")),
+		],
+	});
+	await f.session.prompt("hello");
+	assert.ok(hosts.tasks.length, "the task store takes its host at attach");
+	assert.ok(hosts.multiloop.length, "and so does the loaded multiloop");
+	const live = () => [...hosts.tasks, ...hosts.multiloop].map((host) => host.live());
+	assert.deepEqual(live(), [true, true], "flow control is on by default");
+
+	await f.session.prompt("/flow off");
+	assert.deepEqual(live(), [false, false], "off reaches both hosts, which is what stops flow routing");
+	await f.session.prompt("/flow on");
+	assert.deepEqual(live(), [true, true], "and on reaches the same hosts again");
 	assert.deepEqual(f.errors, []);
 });
 
