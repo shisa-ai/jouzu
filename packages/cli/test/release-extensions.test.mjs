@@ -124,6 +124,31 @@ test("all release-owned resources resolve to the exact installed package version
 	}
 });
 
+test("an invalid Camoufox idle delay disables only the optional browser adapter", () => {
+	const previous = process.env.JOUZU_CAMOUFOX_IDLE_STOP_MS;
+	process.env.JOUZU_CAMOUFOX_IDLE_STOP_MS = "soon";
+	try {
+		const status = inspectReleaseExtensions();
+		assert.deepEqual(status.errors, []);
+		assert.equal(status.degradedExtensions.length, 1);
+		const failure = status.degradedExtensions[0];
+		assert.equal(failure.packageName, "jouzu-camoufox-adapter");
+		assert.deepEqual(failure.tools, ["tff-fetch_url", "tff-search_web"]);
+		assert.match(failure.error, /JOUZU_CAMOUFOX_IDLE_STOP_MS.*soon/u);
+		assert.equal(status.resolvedExtensionPaths.length, 8);
+		assert.equal(
+			status.resolvedExtensionPaths.some((path) => path.endsWith("camoufox-adapter.js")),
+			false,
+		);
+		const args = withReleaseExtensionArguments(["--mode", "rpc", "--no-session"], status);
+		assert.equal(args.filter((value) => value === "--extension").length, 8);
+		assert.ok(!args.some((value) => value.endsWith("camoufox-adapter.js")));
+	} finally {
+		if (previous === undefined) delete process.env.JOUZU_CAMOUFOX_IDLE_STOP_MS;
+		else process.env.JOUZU_CAMOUFOX_IDLE_STOP_MS = previous;
+	}
+});
+
 test("the selected native runtime dependencies load on the host", () => {
 	const status = inspectReleaseExtensions();
 	probeReleaseRuntimeCompatibility(status);

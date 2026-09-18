@@ -10,6 +10,7 @@ import type {
 	ResolvedPaths,
 	ResolvedResource,
 } from "@earendil-works/pi-coding-agent";
+import { resolveJouzuCamoufoxIdleStopMs } from "./camoufox-adapter.js";
 
 export interface ReleaseExtensionPackage {
 	name: string;
@@ -156,6 +157,7 @@ function resolveResource(root: string, resource: string): string {
 
 function resolveAdapter(adapter: ReleaseExtensionPackage["adapter"]): string {
 	if (adapter !== "jouzu-lazy-camoufox") throw new Error(`unsupported release adapter: ${String(adapter)}`);
+	resolveJouzuCamoufoxIdleStopMs();
 	const path = fileURLToPath(new URL("./camoufox-adapter.js", import.meta.url));
 	const stat = lstatSync(path);
 	if (!stat.isFile() || stat.isSymbolicLink()) throw new Error("release adapter is not a regular file");
