@@ -1,5 +1,6 @@
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
 import type { FlowAdmissionGates } from "./admission.js";
+import { retainAutomaticWork } from "./automatic-work.js";
 import { SessionFlowController } from "./controller.js";
 import { isNativeUserInput } from "./native-admission.js";
 import { reconcileNativeSources } from "./native-source-reconciliation.js";
@@ -164,7 +165,10 @@ export class PiFlowSessionService {
 				() => reconcileNativeSources(this.session, attachment, native),
 			);
 			this.opening.requests = requests;
-			const workContext = new FlowWorkContext(() => this.branch().attachment);
+			const workContext = new FlowWorkContext(
+				() => this.branch().attachment,
+				() => retainAutomaticWork(this.branch().attachment),
+			);
 			const host = new PiControllerHost(
 				this.session,
 				attachment.ledger,

@@ -364,6 +364,43 @@ test("a native user prompt spawns background work and declares its wait from the
 	assert.deepEqual(errors, []);
 });
 
+test("result work lookup survives task cleanup and rejects foreign identities", async (t) => {
+	const { backgroundFlowSource: source } = await loadBackground(t);
+	const scope = { sessionId: "work-lookup", branchId: "branch" };
+	const lease = source.activate(scope, () => ({ id: "work", revision: 1 }));
+	t.after(() => lease.close());
+	const results = source.activateResults(scope, () => {});
+	const owned = {
+		id: "task",
+		sessionId: scope.sessionId,
+		status: "completed",
+		notifyOnExit: true,
+		flow: { version: 1, execution: "execution", scope, work: { id: "work", revision: 1 } },
+		logFile: "/log",
+	};
+	// An execution without owning work never publishes a result, so every published one resolves.
+	const unowned = {
+		id: "unowned",
+		sessionId: scope.sessionId,
+		status: "completed",
+		notifyOnExit: true,
+		flow: { version: 1, execution: "unowned-execution", scope },
+		logFile: "/log",
+	};
+	for (const task of [owned, unowned]) {
+		source.prepareResult(task);
+		source.commitResults([task]);
+	}
+	assert.equal(unowned.flow.result, undefined);
+	const [first] = results.snapshot();
+	assert.equal(first.id, "bg-result:execution");
+	assert.deepEqual(results.workForResult(first.id, first.revision), { id: "work", revision: 1 });
+	assert.equal(results.workForResult(first.id, "9"), undefined, "a stale revision has no work");
+	assert.equal(results.workForResult("bg-result:elsewhere", first.revision), undefined, "a foreign result has no work");
+	lease.close();
+	assert.throws(() => results.workForResult(first.id, first.revision), /detached/);
+});
+
 test("background read receipts require terminal state, durable publication, and an active branch", async (t) => {
 	const { backgroundFlowSource: source } = await loadBackground(t);
 	const scope = { sessionId: "reads", branchId: "branch" };

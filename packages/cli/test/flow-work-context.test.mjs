@@ -4,10 +4,11 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
+import { automaticWorkId, retainAutomaticWork } from "../dist/flow-control/automatic-work.js";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { FlowWorkContext } from "../dist/flow-control/work-context.js";
 
-async function fixture(t) {
+async function fixture(t, options = {}) {
 	const root = await mkdtemp(join(tmpdir(), "jouzu-work-context-"));
 	const attachment = await PiFlowAttachment.open(root, { sessionId: "session", branchId: "branch" });
 	t.after(async () => {
@@ -19,7 +20,7 @@ async function fixture(t) {
 	let current = attachment;
 	return {
 		attachment,
-		context: new FlowWorkContext(() => current),
+		context: new FlowWorkContext(() => current, options.automatic ? () => retainAutomaticWork(current) : undefined),
 		changeBranch: () => {
 			current = undefined;
 		},
@@ -310,4 +311,113 @@ test("an admitted task releases completed authority without adopting another wor
 			assert.throws(() => context.authorize("work"), { code: "identity" });
 		});
 	});
+});
+
+const resultIntent = (workId) => ({
+	id: "bg-result:execution",
+	revision: "1",
+	producer: "bg",
+	sequence: 0,
+	rank: 6,
+	independent: true,
+	runnable: true,
+	...(workId === undefined ? {} : { workId, workRevision: "2" }),
+});
+const selectedAttempt = (attachment, intent) => {
+	attachment.ledger.snapshot = async () => ({
+		activeAttemptId: "attempt",
+		attempts: [{ id: "attempt", phase: "queued", admission: { choice: { intent } } }],
+	});
+};
+
+test("result delivery runs on the work that owns its execution", async (t) => {
+	const { context, attachment } = await fixture(t);
+	await attachment.waits.shareWork("work", "lane", 1, "bg", 1);
+	selectedAttempt(attachment, resultIntent("work"));
+	await context.runSelected("attempt", async () => {
+		assert.deepEqual(context.current(), { id: "work", revision: 2 });
+		assert.equal(context.authorize("work").actor, "lane");
+		// The spawn path captures exactly this authority before any process starts.
+		assert.deepEqual(attachment.waits.captureExecutionWork("work", 2, "bg"), { id: "work", revision: 2 });
+	});
+});
+
+for (const variant of ["paused", "completed", "unshared", "missing", "absent"])
+	test(`result delivery without live owning work still keeps its tools: ${variant}`, async (t) => {
+		const { context, attachment } = await fixture(t, { automatic: true });
+		if (variant !== "unshared") await attachment.waits.shareWork("work", "lane", 1, "bg", 1);
+		if (["paused", "completed"].includes(variant))
+			await attachment.waits.changeWork("work", "lane", 2, variant, "Lifecycle test", 2);
+		selectedAttempt(
+			attachment,
+			resultIntent(variant === "absent" ? undefined : variant === "missing" ? "elsewhere" : "work"),
+		);
+		await context.runSelected("attempt", async () => {
+			const current = context.current();
+			assert.equal(current.id, automaticWorkId(attachment.ledger.scope));
+			const authority = await attachment.waits.authoritySnapshot();
+			assert.deepEqual(
+				authority.work.find((item) => item.id === current.id).participants,
+				["host-automatic", "bg", "tasks"],
+				"a wake turn can start background jobs and derive task work",
+			);
+			assert.deepEqual(attachment.waits.captureExecutionWork(current.id, current.revision, "bg"), {
+				id: current.id,
+				revision: current.revision,
+			});
+			const derived = await attachment.waits.deriveWorkBinding(
+				{ producer: "tasks", key: ["created-in-a-wake-turn"] },
+				"task-revision",
+				current,
+				1,
+				["bg", "tasks"],
+			);
+			assert.deepEqual(derived.origin, { id: current.id, revision: current.revision });
+		});
+	});
+
+for (const rank of [2, 3, 6])
+	test(`automated rank ${rank} falls back to host work only when the host supplies it`, async (t) => {
+		const plain = await fixture(t);
+		await plain.attachment.waits.shareWork("work", "lane", 1, "bg", 1);
+		selectedAttempt(plain.attachment, { ...resultIntent("work"), rank });
+		await plain.context.runSelected("attempt", async () => {
+			if (rank === 6) assert.deepEqual(plain.context.current(), { id: "work", revision: 2 });
+			else assert.equal(plain.context.current(), undefined, "no owning work is invented without a host supplier");
+		});
+	});
+
+test("producer-bound attempts never borrow host automatic work", async (t) => {
+	const { context, attachment } = await fixture(t, { automatic: true });
+	selectedAttempt(attachment, {
+		id: "task-continuation",
+		revision: "1",
+		producer: "tasks",
+		sequence: 0,
+		rank: 4,
+		independent: false,
+		runnable: true,
+		workId: "elsewhere",
+		workRevision: "1",
+	});
+	await context.runSelected("attempt", async () => assert.equal(context.current(), undefined));
+});
+
+test("a wait decision for finished work keeps its tools through host work", async (t) => {
+	const { waitDecisionIntent } = await import("../dist/flow-control/wait-decisions.js");
+	const { context, attachment } = await fixture(t, { automatic: true });
+	const wait = {
+		token: "wait",
+		scope: attachment.ledger.scope,
+		workId: "work",
+		state: "expired",
+		createdAt: 0,
+		endedAt: 1,
+	};
+	attachment.waits.snapshot = async () => [wait];
+	selectedAttempt(attachment, waitDecisionIntent(wait));
+	await attachment.waits.changeWork("work", "lane", 1, "completed", "Done", 1);
+	await context.runSelected("attempt", async () =>
+		assert.equal(context.current().id, automaticWorkId(attachment.ledger.scope)),
+	);
 });

@@ -5,7 +5,7 @@ import { FlowLedgerError } from "./receipt-ledger.js";
 import { requireAuthorityWork } from "./wait-authority.js";
 import { waitDecisionIntent } from "./wait-decisions.js";
 
-interface WorkIdentity {
+export interface WorkIdentity {
 	id: string;
 	actor: string;
 	revision: number;
@@ -24,7 +24,11 @@ export class FlowWorkContext {
 	private selected?: Invocation;
 	private returnWork: WorkIdentity[] = [];
 	private readonly invocations = new AsyncLocalStorage<Invocation | undefined>();
-	constructor(private readonly attachment: () => PiFlowAttachment) {}
+	constructor(
+		private readonly attachment: () => PiFlowAttachment,
+		/** Host-supplied authority for automated turns that no producer owns. */
+		private readonly automaticWork?: () => Promise<WorkIdentity | undefined>,
+	) {}
 
 	get busy(): boolean {
 		return this.active !== undefined;
@@ -86,10 +90,25 @@ export class FlowWorkContext {
 			const work = authority.work.find((item) => item.id === wait.workId);
 			if (this.attachment() !== attachment) throw new FlowLedgerError("stale", "Selected wait branch changed.");
 			// Paused or finished work may receive a notification, but cannot restart tools.
-			if (!work || (work.lifecycle?.state ?? "active") !== "active") return this.run(undefined, invoke);
+			if (!work || (work.lifecycle?.state ?? "active") !== "active") return this.runAutomatic(invoke);
 			return this.run({ id: work.id, actor: work.owner, revision: work.revision }, invoke);
 		}
-		if (!intent || ![4, 5].includes(intent.rank)) return this.run(undefined, invoke);
+		// A delivered result names the work that owned its execution, so the turn answers on that work
+		// while it is live. A finished or paused owner still delivers, because the completion already
+		// happened, and the turn keeps its tools through host work.
+		if (intent?.rank === 6) {
+			if (!intent.workId) return this.runAutomatic(invoke);
+			const authority = await attachment.waits.authoritySnapshot();
+			const work = authority.work.find((item) => item.id === intent.workId);
+			if (this.attachment() !== attachment) throw new FlowLedgerError("stale", "Selected result branch changed.");
+			if (!work || (work.lifecycle?.state ?? "active") !== "active" || !work.participants.includes(intent.producer))
+				return this.runAutomatic(invoke);
+			return this.run({ id: work.id, actor: work.owner, revision: work.revision }, invoke);
+		}
+		// Ranks 4 and 5 are producer-bound: their own work is the only authority, so an inactive one is
+		// never replaced. Alert and wait-decision turns are scheduled by the host instead, so they fall
+		// back to host work rather than running with no authority at all.
+		if (!intent || ![4, 5].includes(intent.rank)) return this.runAutomatic(invoke);
 		if (!intent.workId) return this.run(undefined, invoke);
 		const authority = await attachment.waits.authoritySnapshot();
 		const work = authority.work.find((item) => item.id === intent.workId);
@@ -99,6 +118,12 @@ export class FlowWorkContext {
 			throw new FlowLedgerError("identity", "Selected producer does not own the requested work.");
 		if (this.attachment() !== attachment) throw new FlowLedgerError("stale", "Selected work branch changed.");
 		return this.run({ id: work.id, actor: intent.producer, revision: work.revision }, invoke);
+	}
+
+	/** Automated turns run on their own work when no producer owns them, so their tools stay usable. */
+	private async runAutomatic(invoke: () => Promise<void>): Promise<void> {
+		const work = this.automaticWork ? await this.automaticWork() : undefined;
+		return this.run(work, invoke);
 	}
 
 	/** Select fresh tool authority after exact native consumption; old scopes are never modified. */

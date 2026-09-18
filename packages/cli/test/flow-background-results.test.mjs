@@ -124,3 +124,39 @@ for (const variant of ["success", "failure", "missing", "redacted", "error", "ca
 		assert.deepEqual(producer.observationProjections(offered([{ type: "text", text: "changed" }])), []);
 	});
 }
+
+const pendingAttachment = {
+	ledger: { scope: { sessionId: "session", branchId: "branch" }, snapshot: async () => ({ attempts: [] }) },
+};
+for (const variant of ["owned", "unowned", "unknown"])
+	test(`a result delivery carries the work that owns its execution: ${variant}`, async () => {
+		const producer = new BackgroundResultProducer(
+			pendingAttachment,
+			{
+				activateResults: () => ({
+					snapshot: () => [metadata],
+					...(variant === "unknown"
+						? {}
+						: {
+								workForResult: (id, revision) =>
+									variant === "owned" && id === metadata.id && revision === "1"
+										? { id: "tasks-work:bound", revision: 7 }
+										: undefined,
+							}),
+				}),
+				acknowledgeResult: () => {},
+			},
+			() => {},
+		);
+		const [intent] = await producer.snapshot(new AbortController().signal);
+		assert.deepEqual(intent, {
+			id: metadata.id,
+			revision: "1",
+			producer: "bg",
+			rank: 6,
+			sequence: 0,
+			independent: true,
+			runnable: true,
+			...(variant === "owned" ? { workId: "tasks-work:bound", workRevision: "7" } : {}),
+		});
+	});

@@ -27,7 +27,13 @@ export interface BackgroundResultSourceAPI {
 	activateResults(
 		scope: FlowScope,
 		changed: () => void,
-	): { snapshot(): FlowResultReference[]; readReceipts?(): BackgroundReadReceipt[]; retainedWorkIds?(): string[] };
+	): {
+		snapshot(): FlowResultReference[];
+		readReceipts?(): BackgroundReadReceipt[];
+		retainedWorkIds?(): string[];
+		/** The work that owned the execution, so a delivery turn can keep its authority. */
+		workForResult?(id: string, revision: string): { id: string; revision: number } | undefined;
+	};
 	acknowledgeResult(id: string, revision: string): void;
 	acknowledgeObservation?(id: string, revision: string): void;
 }
@@ -40,6 +46,7 @@ export class BackgroundResultProducer implements FlowProducer {
 		snapshot(): FlowResultReference[];
 		readReceipts?(): BackgroundReadReceipt[];
 		retainedWorkIds?(): string[];
+		workForResult?(id: string, revision: string): { id: string; revision: number } | undefined;
 	};
 	constructor(
 		private readonly attachment: PiFlowAttachment,
@@ -96,6 +103,7 @@ export class BackgroundResultProducer implements FlowProducer {
 				this.api.acknowledgeResult(value.id, value.revision);
 				continue;
 			}
+			const workForResult = this.source.workForResult?.(value.id, value.revision);
 			result.push({
 				id: value.id,
 				revision: value.revision,
@@ -104,6 +112,7 @@ export class BackgroundResultProducer implements FlowProducer {
 				sequence: result.length,
 				independent: true,
 				runnable: true,
+				...(workForResult ? { workId: workForResult.id, workRevision: String(workForResult.revision) } : {}),
 			});
 		}
 		return result;

@@ -3,7 +3,7 @@
 	"package": "@vanillagreen/pi-background-tasks",
 	"version": "2.0.0",
 	"commit": "1c4e7a6b3469fa6bfd3337b36df45ddea6014eda",
-	"runtime": "ff107b17b48ad26d88284be94dee9503e32b7f09397f94a30650ae426ebc631b",
+	"runtime": "dccac52af6836412c69f12ac8cf040fd592d41846b9f030c2504c2eeeb95b6dd",
 	"files": {
 		"extensions/background-tasks.ts": {
 			"before": "aa9384de228f2a99910278f14ee74e469f143e470d0af183cf0261b36bc6917d",

@@ -195,6 +195,17 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 					if (deliveries.get(scope.sessionId) !== lease) throw new Error("Background result source is detached.");
 					return structuredClone([...results.values()].filter(value => sameScope(value.scope, scope) && !value.result.observed).flatMap(value => value.result.reads ?? []));
 				},
+				workForResult(id: string, revision: string) {
+					if (deliveries.get(scope.sessionId) !== lease) throw new Error("Background result source is detached.");
+					// The saved record outlives the live task, so the owning work survives task cleanup.
+					const saved = [...results.values()].find(
+						value =>
+							sameScope(value.scope, scope) &&
+							value.result.metadata.id === id &&
+							value.result.metadata.revision === revision,
+					);
+					return saved?.work ? { ...saved.work } : undefined;
+				},
 				snapshot() {
 					if (deliveries.get(scope.sessionId) !== lease) throw new Error("Background result source is detached.");
 					return structuredClone([...results.values()].filter(value => sameScope(value.scope, scope) && value.result.notify !== false && !value.result.delivered && !value.result.observed).map(value => value.result.metadata));

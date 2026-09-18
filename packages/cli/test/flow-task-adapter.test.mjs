@@ -438,6 +438,124 @@ test("an unadapted extension turn cannot borrow preceding user authority to crea
 	assert.deepEqual(f.errors, []);
 });
 
+const backgroundSpawns = (f) => messages(f).filter((message) => message.toolName === "bg_task" && !message.isError);
+const deliveredResult = (f, index) => JSON.stringify(f.bodies[index] ?? {}).includes("bg-result:");
+
+test("a background completion turn keeps the work that owns the job it answers", {
+	timeout: 30000,
+}, async (t) => {
+	const setupData = await setup(t);
+	let phase = 0;
+	const f = await assembledSession(t, {
+		...setupData,
+		script: () => {
+			switch (phase++) {
+				case 0:
+					return call("bg_task", { action: "spawn", command: "true", notifyOnExit: true, notifyOnOutput: false });
+				case 1:
+					return { text: "The job is running." };
+				case 2:
+					return assistantToolCalls(
+						{
+							name: "TaskCreate",
+							arguments: { subject: "Follow up on the completed job", description: "Created in a completion turn" },
+						},
+						{
+							name: "bg_task",
+							arguments: { action: "spawn", command: "true", notifyOnExit: false, notifyOnOutput: false },
+						},
+					);
+				default:
+					return { text: "Recorded the completion and started the follow-up." };
+			}
+		},
+	});
+	await f.session.prompt("Start a background job and report when it finishes.");
+	await until(f, () => backgroundSpawns(f).length >= 2);
+	await f.session.waitForIdle();
+	assert.ok(
+		messages(f).every((message) => !message.isError),
+		JSON.stringify(messages(f)),
+	);
+	assert.ok(deliveredResult(f, 2), "the second model request delivers the completed job");
+	const [first, second] = backgroundSpawns(f);
+	assert.match(first.details.task.flow.work.id, /^user:/, "the user turn owns the job it started");
+	assert.equal(
+		second.details.task.flow.work.id,
+		first.details.task.flow.work.id,
+		"the completion turn answers on that same work",
+	);
+	const authority = await f.ingress.branch().attachment.waits.authoritySnapshot();
+	assert.deepEqual(
+		authority.work.filter((work) => work.owner === "host-automatic"),
+		[],
+	);
+	const tasks = JSON.parse(await readFile(setupData.taskFile, "utf8"));
+	assert.ok(JSON.stringify(tasks).includes("Follow up on the completed job"), "a completion turn can create task work");
+	assert.deepEqual(f.errors, []);
+});
+
+test("a completion turn whose owning work finished runs on host work", { timeout: 30000 }, async (t) => {
+	const setupData = await setup(t);
+	let phase = 0;
+	const f = await assembledSession(t, {
+		...setupData,
+		script: () => {
+			switch (phase++) {
+				case 0:
+					return call("TaskCreate", { subject: "Own the long job", description: "Its job outlives it" });
+				case 1:
+					return { text: "The task is ready." };
+				case 2:
+					return call("bg_task", { action: "spawn", command: "sleep 1", notifyOnExit: true, notifyOnOutput: false });
+				case 3:
+					return call("TaskUpdate", { taskId: "1", status: "completed" });
+				case 4:
+					return { text: "The task is complete." };
+				case 5:
+					return assistantToolCalls(
+						{
+							name: "TaskCreate",
+							arguments: { subject: "Follow up after the task ended", description: "Created in a completion turn" },
+						},
+						{
+							name: "bg_task",
+							arguments: { action: "spawn", command: "true", notifyOnExit: false, notifyOnOutput: false },
+						},
+					);
+				default:
+					return { text: "Recorded the completion and started the follow-up." };
+			}
+		},
+	});
+	await f.session.prompt("Run a background job inside a task that finishes before it does.");
+	await until(f, () => backgroundSpawns(f).length >= 2);
+	await f.session.waitForIdle();
+	assert.ok(
+		messages(f).every((message) => !message.isError),
+		JSON.stringify(messages(f)),
+	);
+	assert.ok(deliveredResult(f, 5), "the delivery turn follows the task that owned the job");
+	const [first, second] = backgroundSpawns(f);
+	const authority = await f.ingress.branch().attachment.waits.authoritySnapshot();
+	assert.match(first.details.task.flow.work.id, /^tasks-work:/, "the task turn owns the job it started");
+	assert.equal(
+		authority.work.find((work) => work.id === first.details.task.flow.work.id).lifecycle.state,
+		"completed",
+		"the job outlived the task that started it",
+	);
+	const automatic = authority.work.filter((work) => work.owner === "host-automatic");
+	assert.equal(automatic.length, 1, "one reusable host work identity per branch");
+	assert.deepEqual(automatic[0].participants, ["host-automatic", "bg", "tasks"]);
+	assert.equal(second.details.task.flow.work.id, automatic[0].id, "the completion turn owns the job it started");
+	const tasks = JSON.parse(await readFile(setupData.taskFile, "utf8"));
+	assert.ok(
+		JSON.stringify(tasks).includes("Follow up after the task ended"),
+		"a completion turn can create task work after its own work ended",
+	);
+	assert.deepEqual(f.errors, []);
+});
+
 test("an existing unbound task requires an explicit start from an authorized turn", { timeout: 15000 }, async (t) => {
 	const setupData = await setup(t);
 	await writeFile(
