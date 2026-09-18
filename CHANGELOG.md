@@ -1,10 +1,34 @@
 # Changelog
 
-## Unreleased
+## 0.1.13 - 2026-09-19
+
+### Added
+
+- Turn flow control off and on for a session with `/flow off` and `/flow on`. While it is off, what you send runs as an ordinary turn, and jobs, tasks, and loops deliver their own notifications instead of flow control composing them. The session, its records, and every running job are kept, and producer tools keep their own delivery paths.
+- Resume a recent conversation branch by returning to it. Its unfinished work comes back with it, including a wait on a background job, and a retained late result stays readable. Restart rebinds to the branch that owns the newest transcript entry; a rewind inside the active branch still starts a new branch with nothing inherited.
 
 ### Changed
 
 - Stop the Camoufox browser after five minutes without a browser tool call and relaunch it on the next call, so a long session no longer keeps an idle Firefox resident. Set `JOUZU_CAMOUFOX_IDLE_STOP_MS` to a whole number of milliseconds from 1000 to 2147483647 to change the delay, or `0` to keep the browser loaded until the session ends; an invalid value keeps the browser tools from loading until it is fixed.
+
+### Fixed
+
+- Retire completed, cancelled, and archived flow work into indexed history. A long session no longer accumulates unbounded active records, retained evidence stays readable after retirement, and routine reads query exact records instead of scanning bounded windows.
+- Keep retired result history outside the active manifest quota, keep retired wait history out of active state limits, and backfill result trigger indexes from archived attempts, so archived work stops pinning active reads.
+- Retire explicitly reset native requests that never reached an outcome, retire a completed retry chain as one group, and keep cancellation checks in force after a request is retired.
+- Preserve producer rounds across nonprefix retirement, and recheck retirement authorization before the ledger commits.
+- Bound the branch registry by its byte budget instead of its record count, so many small branches cannot grow the registry past its limit.
+- Give automated turns host work when no producer owns them, so their tools run instead of being refused.
+- Recover an interrupted branch transition by rebinding to the branch that owns the leaf instead of holding the session, and fence controller revocation while queue maintenance runs.
+
+### Installation
+
+- A failed Windows installation now names the stage that failed, the launcher error, and the automatic setup log path, and each activation check allows 90 seconds instead of 30. The unsigned x64 installer preview includes this release's CLI changes.
+
+### Testing limits
+
+- Flow retention and indexing changes are covered by component tests with controlled fixtures; long-session behavior under live provider traffic is not measured.
+- Native Windows installer acceptance covers Windows Server 2025 x64. Clean Windows 10/11 testing remains pending, and the installer is unsigned.
 
 ## 0.1.12 - 2026-09-17
 

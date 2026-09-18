@@ -5,8 +5,8 @@ fd, and the Visual C++ runtime DLLs. Users do not need to install these tools
 or run a terminal command. The target is Windows 10 build 19041 or later on
 x64 hardware.
 
-Download the **unsigned v0.1.12 preview** from the
-[GitHub release page](https://github.com/shisa-ai/jouzu/releases/tag/v0.1.12).
+Download the **unsigned v0.1.13 preview** from the
+[GitHub release page](https://github.com/shisa-ai/jouzu/releases/tag/v0.1.13).
 Windows may show an unknown-publisher warning. Native acceptance tests passed
 on Windows Server 2025 x64; clean Windows 10/11 testing remains pending.
 Code signing is planned for v0.2.0.

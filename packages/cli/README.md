@@ -49,7 +49,7 @@ npx --yes jouzu --version
 
 [GitHub Releases](https://github.com/shisa-ai/jouzu/releases) include the same tested npm tarball, checksums, and package manifest from v0.1.7 onward. The Windows installer is a separate download.
 
-Download the unsigned Windows x64 installer from the [v0.1.12 release page](https://github.com/shisa-ai/jouzu/releases/tag/v0.1.12). It bundles Node.js/npm, Git Bash, Windows Terminal, and native tools, with desktop and Start menu shortcuts. The launcher shows the working folder before it opens a terminal and can remember it for later launches; if the saved folder is unavailable, it asks for another folder instead of opening a different one. Windows may show an unknown-publisher warning. The preview has been tested on Windows Server 2025; clean Windows 10/11 testing remains pending. See [Windows installer preview](https://github.com/shisa-ai/jouzu/blob/main/packaging/windows/README.md) for setup and testing details.
+Download the unsigned Windows x64 installer from the [v0.1.13 release page](https://github.com/shisa-ai/jouzu/releases/tag/v0.1.13). It bundles Node.js/npm, Git Bash, Windows Terminal, and native tools, with desktop and Start menu shortcuts. The launcher shows the working folder before it opens a terminal and can remember it for later launches; if the saved folder is unavailable, it asks for another folder instead of opening a different one. Windows may show an unknown-publisher warning. The preview has been tested on Windows Server 2025; clean Windows 10/11 testing remains pending. See [Windows installer preview](https://github.com/shisa-ai/jouzu/blob/main/packaging/windows/README.md) for setup and testing details.
 
 ## Quick start
 
