@@ -253,7 +253,10 @@ test("a fork reservation honors the branches the transcript still owns", async (
 	const after = await registry.snapshot();
 	assert.equal(after.branches.length, 1024);
 	assert.equal(after.activeBranchId, scope.branchId);
-	assert.ok(after.branches.some((record) => record.id === "branch-0"), "the protected owner survives");
+	assert.ok(
+		after.branches.some((record) => record.id === "branch-0"),
+		"the protected owner survives",
+	);
 	assert.ok(!after.branches.some((record) => record.id === "branch-1"), "the slot comes from the next record");
 	assert.deepEqual(after.retired.through, ["branch-1"], "the dropped record is still cited by its retained child");
 });
@@ -368,7 +371,8 @@ test("retirement is a no-op below its keep size and is refused mid-navigation", 
 	const state = await registry.snapshot();
 	await registry.beginNavigation(state.revision, "old-leaf");
 	await assert.rejects(registry.retireBranchHistory(1, new Set()), { code: "busy" });
-	for (const size of [0, -1, 1.5]) await assert.rejects(registry.retireBranchHistory(size, new Set()), { code: "capacity" });
+	for (const size of [0, -1, 1.5])
+		await assert.rejects(registry.retireBranchHistory(size, new Set()), { code: "capacity" });
 	// A caller that names nothing is refusing to decide which branches the transcript still needs.
 	// Dropping a transcript owner leaves the session unbindable, so the omission is refused rather
 	// than silently treated as an empty set.

@@ -564,10 +564,7 @@ test("retirement keeps a transcript owner bindable across a reopen", async (t) =
 		"both records are load-bearing",
 	);
 	const before = await registry.snapshot();
-	assert.deepEqual(
-		before.branches.map((record) => record.id).sort(),
-		[first.branchId, second.branchId].sort(),
-	);
+	assert.deepEqual(before.branches.map((record) => record.id).sort(), [first.branchId, second.branchId].sort());
 	await registry.close();
 
 	// Without the protection the tip owner would be gone and this reopen would reject with
