@@ -78,6 +78,30 @@ test("flow control off flushes a send held behind a recovery hold and lets later
 	assert.deepEqual(f.errors, []);
 });
 
+test("flow control off flushes a retained producer delivery back to Pi", async (t) => {
+	// A producer's completion arrives while the request that would carry it is withheld, so flow
+	// retains the message instead of dispatching it. Off hands that delivery back to Pi, which is what
+	// makes off usable when a stuck hold is what brought the user here.
+	const f = await withheldSession(t);
+	const delivered = () => f.sessionManager.getEntries().some((entry) => entry.customType === "probe:delivery");
+	const retained = async () => (await f.ingress.branch().attachment.submissions.snapshot()).length;
+	const before = await retained();
+	void f.session.sendCustomMessage(
+		{ customType: "probe:delivery", content: "the job finished", display: false },
+		{ triggerTurn: true, deliverAs: "followUp" },
+	);
+	const deadline = Date.now() + 5000;
+	while ((await retained()) === before && Date.now() < deadline) await settle();
+	assert.equal(await retained(), before + 1, "flow retains the delivery while the request is withheld");
+	assert.equal(delivered(), false, "and Pi has not seen it");
+
+	const result = await f.ingress.suspend();
+	assert.equal(result.flushed, 1, "turning flow control off hands the retained delivery back to Pi");
+	while (!delivered() && Date.now() < deadline) await settle();
+	assert.ok(delivered(), "the flushed delivery ran, with no flow turn composed for it");
+	assert.deepEqual(f.errors, []);
+});
+
 test("flow control off ends live waits, and the completion arrives natively", async (t) => {
 	const campaign = campaignScript({ command: "sleep 2", goal: "Sweep while flow control stops" });
 	let asked = false;
@@ -198,6 +222,14 @@ test("flow control on restores routing, and reset is off followed by on", async 
 	assert.equal(f.ingress.enabled(), false);
 	await f.session.prompt("/flow off");
 	assert.match(notices.at(-1).text, /already off/);
+
+	// Off stops scheduling as well as interception: offered work starts no turn, which is what leaves
+	// a producer's own delivery path as the only thing that can act on it.
+	synthetic.offer([{ id: "intent-0", revision: "1" }]);
+	await registration.changed();
+	await settle();
+	assert.equal(f.bodies.length, 0, "no turn starts for offered work while flow control is off");
+
 	await f.session.prompt("/flow on");
 	assert.equal(f.ingress.enabled(), true);
 	assert.match(notices.at(-1).text, /Flow control is on again/);
