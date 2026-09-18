@@ -40,9 +40,10 @@ internal static class Jouzu {
         if (!Regex.IsMatch(id, "^[0-9][a-z0-9.-]{0,99}$") || id.Contains("..")) throw new Exception("Invalid installed version identifier.");
         return Path.Combine(Root, "versions", id);
     }
-    static string Verify(string id, bool full = true) {
+    static string Verify(string id, bool full = true, Action<string> report = null) {
         string directory = LongPath(VersionPath(id)), manifest = Path.Combine(directory, "manifest.json");
         var checkedPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        if (report != null) report("Reading manifest: " + manifest);
         RegularPath(manifest, checkedPaths);
         var data = ReadJson(manifest);
         if (Text(data, "releaseId") != id) throw new Exception("The installed version manifest differs.");
@@ -55,6 +56,7 @@ internal static class Jouzu {
             if (relative.Length == 0 || relative.Contains("\\") || relative.Contains(":") || relative.Split('/').Any(p => p == ".." || p == "." || p.Length == 0) || !seen.Add(relative)) throw new Exception("Invalid program manifest path.");
             string file = Path.Combine(directory, relative.Replace('/', Path.DirectorySeparatorChar));
             if (!full && relative != "node/node.exe" && relative != "bootstrap.mjs" && relative != "app/node_modules/jouzu/dist/cli.js") continue;
+            if (report != null) report("Checking SHA-256: " + relative);
             RegularPath(file, checkedPaths);
             if (Digest(file) != Text(entry, "sha256")) throw new Exception("Jouzu needs repair. A program file differs: " + relative);
             if (full && (++checkedFiles % 128 == 0 || checkedFiles == totalFiles)) {
@@ -71,6 +73,7 @@ internal static class Jouzu {
         foreach (string required in new [] { "node/node.exe", "bootstrap.mjs", "app/node_modules/jouzu/dist/cli.js", "git/bin/bash.exe", "terminal/WindowsTerminal.exe" }) {
             if (!seen.Contains(required)) throw new Exception("The program manifest is missing " + required);
             string requiredPath = Path.Combine(directory, required.Replace('/', '\\'));
+            if (report != null) report("Checking required file: " + required);
             RegularPath(requiredPath, checkedPaths);
             if (!File.Exists(requiredPath)) throw new Exception("A required program file is missing: " + required);
         }
@@ -86,12 +89,15 @@ internal static class Jouzu {
         }
         result.Append('\\', slashes * 2); return result.Append('"').ToString();
     }
-    static Process Start(string exe, IEnumerable<string> args, string cwd, bool hidden) {
+    static ProcessStartInfo StartInfo(string exe, IEnumerable<string> args, string cwd, bool hidden) {
         var info = new ProcessStartInfo(exe, String.Join(" ", args.Select(Quote))) { UseShellExecute = false, WorkingDirectory = cwd, CreateNoWindow = hidden };
         info.EnvironmentVariables["NODE_USE_SYSTEM_CA"] = "1";
         info.EnvironmentVariables["NODE_USE_ENV_PROXY"] = "1";
         info.EnvironmentVariables["JOUZU_NO_UPDATE"] = "1";
-        return Process.Start(info);
+        return info;
+    }
+    static Process Start(string exe, IEnumerable<string> args, string cwd, bool hidden) {
+        return Process.Start(StartInfo(exe, args, cwd, hidden));
     }
     internal static T CompleteWithin<T>(Func<T> action, int timeoutMs, string timeoutMessage) {
         var task = Task.Run(action);
@@ -99,32 +105,98 @@ internal static class Jouzu {
             throw new Exception(timeoutMessage);
         return task.GetAwaiter().GetResult();
     }
-    internal static void ProbeRuntime(string exe, IEnumerable<string> args, string directory, int timeoutMs = 30000) {
-        using (var probe = Start(exe, args, directory, true)) {
-            if (!probe.WaitForExit(timeoutMs)) {
-                probe.Kill();
-                probe.WaitForExit(5000);
-                throw new Exception("The new runtime did not start within 30 seconds. The active version was preserved.");
+    internal const int ActivationTimeoutMs = 90000;
+    static void Diagnostic(string message) { Console.WriteLine("Jouzu diagnostic: " + message); }
+    internal static void ProbeRuntime(string exe, IEnumerable<string> args, string directory, int timeoutMs = ActivationTimeoutMs) {
+        var info = StartInfo(exe, args, directory, true);
+        info.RedirectStandardOutput = true;
+        info.RedirectStandardError = true;
+        Diagnostic("Runtime command: " + Quote(exe) + " " + info.Arguments);
+        Diagnostic("Working directory: " + directory + "; timeout: " + timeoutMs + " ms");
+        var elapsed = Stopwatch.StartNew();
+        using (var probe = new Process { StartInfo = info }) {
+            var stdoutDone = new TaskCompletionSource<bool>();
+            var stderrDone = new TaskCompletionSource<bool>();
+            int outputLines = 0;
+            bool captureClosed = false;
+            var outputLock = new object();
+            var outputTail = new Queue<string>();
+            Action<string, string> output = (channel, line) => {
+                string message = "Runtime " + channel + ": " + (line.Length > 2048 ? line.Substring(0, 2048) + " [truncated]" : line);
+                lock (outputLock) {
+                    if (captureClosed) return;
+                    if (++outputLines <= 50) Diagnostic(message);
+                    else {
+                        if (outputTail.Count == 50) outputTail.Dequeue();
+                        outputTail.Enqueue(message);
+                    }
+                }
+            };
+            probe.OutputDataReceived += (sender, e) => { if (e.Data == null) stdoutDone.TrySetResult(true); else output("stdout", e.Data); };
+            probe.ErrorDataReceived += (sender, e) => { if (e.Data == null) stderrDone.TrySetResult(true); else output("stderr", e.Data); };
+            try { probe.Start(); }
+            catch (Exception error) { throw new Exception("Could not launch the bundled runtime: " + error.Message, error); }
+            Diagnostic("Runtime process ID: " + probe.Id);
+            probe.BeginOutputReadLine();
+            probe.BeginErrorReadLine();
+            bool exited = probe.WaitForExit(timeoutMs);
+            if (!exited) {
+                Diagnostic("Runtime exceeded its deadline after " + elapsed.ElapsedMilliseconds + " ms; stopping it.");
+                try { probe.Kill(); }
+                catch (InvalidOperationException) { /* The process exited at the deadline. */ }
+                catch (System.ComponentModel.Win32Exception error) { Diagnostic("Could not stop runtime process " + probe.Id + ": " + error.Message); }
+                if (!probe.WaitForExit(5000)) Diagnostic("Runtime process " + probe.Id + " is still running after 5000 ms.");
             }
-            if (probe.ExitCode != 0) throw new Exception("The new runtime failed its startup check. The active version was preserved.");
+            // Descendants can inherit the pipes. Never wait indefinitely for their EOF.
+            if (!Task.WaitAll(new Task[] { stdoutDone.Task, stderrDone.Task }, 2000)) {
+                Diagnostic("Runtime output capture did not finish within 2000 ms.");
+                probe.CancelOutputRead();
+                probe.CancelErrorRead();
+            }
+            lock (outputLock) {
+                captureClosed = true;
+                if (outputLines > 100) Diagnostic("Runtime output omitted " + (outputLines - 100) + " middle lines; final 50 lines follow.");
+                foreach (string line in outputTail) Diagnostic(line);
+            }
+            if (!exited) throw new Exception("The runtime startup check did not exit within " + (timeoutMs / 1000.0).ToString("0.###", System.Globalization.CultureInfo.InvariantCulture) + " seconds.");
+            Diagnostic("Runtime exited with code " + probe.ExitCode + " after " + elapsed.ElapsedMilliseconds + " ms.");
+            if (probe.ExitCode != 0) throw new Exception("The runtime failed its startup check (exit code " + probe.ExitCode + ").");
         }
     }
     static void Activate(string id) {
-        using (var activationLock = new FileStream(Path.Combine(Root, "activation.lock"), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None)) {
-            Console.WriteLine("Jouzu setup: Checking startup files…");
-            string directory = CompleteWithin(() => Verify(id, false), 30000,
-                "Startup file checks did not finish within 30 seconds. The active version was preserved.");
-            Console.WriteLine("Jouzu setup: Testing Jouzu startup…");
-            ProbeRuntime(Path.Combine(directory, "node", "node.exe"),
-                new [] { Path.Combine(directory, "app", "node_modules", "jouzu", "dist", "cli.js"), "--version" }, directory);
-            Console.WriteLine("Jouzu setup: Activating Jouzu…");
-            string previous = File.Exists(Pointer) ? Text(ReadJson(Pointer), "current") : "";
-            if (previous != id) {
-                string temporary = Pointer + "." + Guid.NewGuid().ToString("N");
-                File.WriteAllText(temporary, Json.Serialize(new { current = id, previous = previous }), new UTF8Encoding(false));
-                if (File.Exists(Pointer)) File.Replace(temporary, Pointer, null); else File.Move(temporary, Pointer);
+        string stage = "Opening the installation lock";
+        bool selectingVersion = false;
+        var elapsed = Stopwatch.StartNew();
+        Diagnostic("Activating release: " + id);
+        try {
+            using (var activationLock = new FileStream(Path.Combine(Root, "activation.lock"), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None)) {
+                stage = "Checking startup files";
+                elapsed.Restart();
+                Console.WriteLine("Jouzu setup: Checking startup files…");
+                string directory = CompleteWithin(() => Verify(id, false, Diagnostic), ActivationTimeoutMs,
+                    "Startup file checks did not finish within 90 seconds. See the last file check in the diagnostic output.");
+                Diagnostic("Startup file checks completed after " + elapsed.ElapsedMilliseconds + " ms.");
+                stage = "Testing Jouzu startup";
+                elapsed.Restart();
+                Console.WriteLine("Jouzu setup: Testing Jouzu startup…");
+                ProbeRuntime(Path.Combine(directory, "node", "node.exe"),
+                    new [] { Path.Combine(directory, "app", "node_modules", "jouzu", "dist", "cli.js"), "--version" }, directory);
+                stage = "Activating Jouzu";
+                selectingVersion = true;
+                elapsed.Restart();
+                Console.WriteLine("Jouzu setup: Activating Jouzu…");
+                string previous = File.Exists(Pointer) ? Text(ReadJson(Pointer), "current") : "";
+                if (previous != id) {
+                    string temporary = Pointer + "." + Guid.NewGuid().ToString("N");
+                    File.WriteAllText(temporary, Json.Serialize(new { current = id, previous = previous }), new UTF8Encoding(false));
+                    if (File.Exists(Pointer)) File.Replace(temporary, Pointer, null); else File.Move(temporary, Pointer);
+                }
+                Console.WriteLine("Jouzu setup: Jouzu is ready.");
             }
-            Console.WriteLine("Jouzu setup: Jouzu is ready.");
+        } catch (Exception error) {
+            Diagnostic("Activation exception: " + error);
+            string selection = selectingVersion ? "" : " The active version selection was not changed.";
+            throw new Exception(stage + " failed after " + elapsed.ElapsedMilliseconds + " ms: " + error.Message + selection, error);
         }
     }
     internal sealed class FolderPreference {

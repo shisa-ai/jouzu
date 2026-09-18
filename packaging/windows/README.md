@@ -59,11 +59,15 @@ Run a newer installer to install another version. After extraction, an animated
 progress bar shows the startup-file check, CLI startup test, and activation.
 Activation checks the manifest, required files, and the hashes of Node, the
 bootstrap, and the CLI entry point before changing `current.json`. The startup-file
-check and CLI startup test each have a 30-second limit. A failed check preserves
-the active version. The installer writes a log only when `/LOG` is passed:
-re-run the installer with `/LOG="C:\path\install.log"`, or with `/LOG` to
-write `%TEMP%\Setup Log <YYYY-MM-DD> #001.txt`. The log records the activation
-phases and the failing check's message.
+check and CLI startup test each have a 90-second timeout; stopping a timed-out
+runtime and collecting its output can take up to seven additional seconds. A failed check leaves
+the active version selection unchanged. The installer saves a log in
+`%TEMP%\Setup Log <YYYY-MM-DD> #001.txt` by default; pass
+`/LOG="C:\path\install.log"` to choose another path. On failure, the dialog shows
+the check's error and the log path. The log records file-check progress, the runtime
+command and working directory, process ID, elapsed times, exit code, and runtime
+output (the first 50 and last 50 lines, with each line limited to 2,048 characters).
+Review the log before sharing it: it contains local paths and runtime output.
 The previous version remains available through the Start menu's **Restore
 previous Jouzu version** shortcut or `JouzuConsole.exe --rollback`.
 

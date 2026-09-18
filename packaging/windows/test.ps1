@@ -46,10 +46,32 @@ foreach ($phase in @('Checking startup files', 'Testing Jouzu startup', 'Activat
     if (-not $installLog.Contains($phase)) { throw "Installer did not report activation phase: $phase" }
 }
 $results.activationPhasesLogged = $true
+foreach ($detail in @('Checking SHA-256:', 'Checking required file:', 'Startup file checks completed after', 'Runtime command:', 'Working directory:', 'Runtime process ID:', 'Runtime stdout: jouzu ', 'Runtime exited with code 0 after')) {
+    if (-not $installLog.Contains($detail)) { throw "Installer log is missing diagnostic detail: $detail" }
+}
+$results.activationDiagnosticsLogged = $true
 $console = Join-Path $install 'JouzuConsole.exe'
 $pointer = Join-Path $install 'current.json'
 $id = (Get-Content -Raw -Encoding UTF8 $pointer | ConvertFrom-Json).current
 $payload = Join-Path $install "versions\$id"
+Write-Host 'Checking installer startup-failure diagnostics'
+$pointerBeforeFailure = Get-Content -Raw -Encoding UTF8 $pointer
+$failureLogPath = Join-Path $TestDirectory 'startup-failure.log'
+try {
+    # Force Node to reject startup before it loads the CLI, without changing installed files.
+    $env:NODE_OPTIONS = '--jouzu-installer-test-invalid-option'
+    $failedInstall = Start-Process $Installer -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART',('/DIR="' + $install + '"'),('/LOG="' + $failureLogPath + '"')) -Wait -PassThru
+} finally { $env:NODE_OPTIONS = '' }
+if ($failedInstall.ExitCode -eq 0) { throw 'Installer accepted a failed runtime startup check' }
+$failureLog = Get-Content -Raw $failureLogPath
+foreach ($detail in @('Runtime stderr:', 'NODE_OPTIONS', 'Testing Jouzu startup failed after', 'failed its startup check (exit code', 'Jouzu could not finish installation.', 'Installation log:')) {
+    if (-not $failureLog.Contains($detail)) { throw "Installer failure log is missing diagnostic detail: $detail" }
+}
+if ($failureLog -notmatch 'Jouzu could not finish installation\.\s+Testing Jouzu startup failed after') {
+    throw 'Installer error message did not include the launcher failure reason'
+}
+if ((Get-Content -Raw -Encoding UTF8 $pointer) -ne $pointerBeforeFailure) { throw 'Failed installation changed the active version selection' }
+$results.activationFailureDiagnosticsLogged = $true
 $watch.Restart()
 Write-Host 'Checking bundled CLI and tools'
 $results.version = (Run $console @('--version')).Trim()

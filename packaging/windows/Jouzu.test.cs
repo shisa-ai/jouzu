@@ -160,29 +160,55 @@ internal static class LauncherTests {
             finally { release.Set(); }
             Check(timedOut, "Startup check did not time out");
         }
+        Check(Jouzu.ActivationTimeoutMs == 90000, "Activation deadline must be 90 seconds");
         string exe = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
-        Jouzu.ProbeRuntime(exe, new [] { "--probe-fixture", "success" }, Path.GetTempPath(), 5000);
-        bool failed = false;
-        try { Jouzu.ProbeRuntime(exe, new [] { "--probe-fixture", "failure" }, Path.GetTempPath(), 5000); }
-        catch (Exception error) { failed = error.Message.Contains("failed its startup check"); }
-        Check(failed, "Failed runtime probe was accepted");
-        string marker = Path.Combine(Path.GetTempPath(), "jouzu-probe-" + Guid.NewGuid().ToString("N"));
+        var captured = new StringWriter();
+        TextWriter previousOutput = Console.Out;
+        Console.SetOut(TextWriter.Synchronized(captured));
         try {
-            bool timedOut = false;
-            try { Jouzu.ProbeRuntime(exe, new [] { "--probe-fixture", marker }, Path.GetTempPath(), 500); }
-            catch (Exception error) { timedOut = error.Message.Contains("did not start within"); }
-            Check(timedOut && File.Exists(marker), "Runtime probe did not time out after starting");
-            bool running = false;
-            try { using (var child = System.Diagnostics.Process.GetProcessById(Int32.Parse(File.ReadAllText(marker)))) running = !child.HasExited; }
-            catch (ArgumentException) { }
-            Check(!running, "Timed out runtime probe was left running");
-        } finally { if (File.Exists(marker)) File.Delete(marker); }
+            Jouzu.ProbeRuntime(exe, new [] { "--probe-fixture", "success" }, Path.GetTempPath(), 5000);
+            bool failed = false;
+            try { Jouzu.ProbeRuntime(exe, new [] { "--probe-fixture", "failure" }, Path.GetTempPath(), 5000); }
+            catch (Exception error) { failed = error.Message.Contains("failed its startup check (exit code 7)"); }
+            Check(failed, "Failed runtime probe did not report its exit code");
+            bool launchFailed = false;
+            try { Jouzu.ProbeRuntime(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".exe"), new string[0], Path.GetTempPath()); }
+            catch (Exception error) { launchFailed = error.Message.Contains("Could not launch the bundled runtime:"); }
+            Check(launchFailed, "Runtime launch failure was not identified");
+            Jouzu.ProbeRuntime(exe, new [] { "--probe-fixture", "output-limit" }, Path.GetTempPath(), 5000);
+            string marker = Path.Combine(Path.GetTempPath(), "jouzu-probe-" + Guid.NewGuid().ToString("N"));
+            try {
+                bool timedOut = false;
+                try { Jouzu.ProbeRuntime(exe, new [] { "--probe-fixture", marker }, Path.GetTempPath(), 500); }
+                catch (Exception error) { timedOut = error.Message.Contains("did not exit within 0.5 seconds"); }
+                Check(timedOut && File.Exists(marker), "Runtime probe did not time out after starting");
+                bool running = false;
+                try { using (var child = System.Diagnostics.Process.GetProcessById(Int32.Parse(File.ReadAllText(marker)))) running = !child.HasExited; }
+                catch (ArgumentException) { }
+                Check(!running, "Timed out runtime probe was left running");
+            } finally { if (File.Exists(marker)) File.Delete(marker); }
+        } finally { Console.SetOut(previousOutput); }
+        string log = captured.ToString();
+        Check(log.Contains("Runtime command:") && log.Contains("Working directory:") && log.Contains("Runtime process ID:"), "Probe launch diagnostics missing");
+        Check(log.Contains("Runtime stdout: fixture stdout") && log.Contains("Runtime stderr: fixture stderr"), "Probe output was not captured");
+        Check(log.Contains("Runtime exited with code 7 after") && log.Contains("Runtime exceeded its deadline after"), "Probe timing diagnostics missing");
+        Check(log.Contains("[truncated]") && !log.Contains(new string('x', 2049)), "Runtime line length limit failed");
+        Check(log.Contains("Runtime output omitted 20 middle lines; final 50 lines follow.") && log.Contains("Runtime stdout: output 0") && log.Contains("Runtime stdout: output 119") && !log.Contains("Runtime stdout: output 50"), "Runtime output head/tail limit failed");
     }
     [STAThread]
     static int Main(string[] args) {
         if (args.Length == 2 && args[0] == "--probe-fixture") {
             if (args[1] == "success") return 0;
-            if (args[1] == "failure") return 1;
+            if (args[1] == "failure") {
+                Console.WriteLine("fixture stdout");
+                Console.WriteLine(new string('x', 3000));
+                Console.Error.WriteLine("fixture stderr");
+                return 7;
+            }
+            if (args[1] == "output-limit") {
+                for (int i = 0; i < 120; i++) Console.WriteLine("output " + i);
+                return 0;
+            }
             File.WriteAllText(args[1], System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             System.Threading.Thread.Sleep(30000); return 0;
         }
