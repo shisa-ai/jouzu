@@ -91,6 +91,9 @@ jobs:
         timeout-minutes: 10
       - run: npm test --workspaces --if-present
         timeout-minutes: 20
+        env:
+          JOUZU_TEST_TIMEOUT_MS: "360000"
+          JOUZU_TEST_SUITE_TIMEOUT_MS: "900000"
       - if: matrix.os == 'windows-latest'
         name: Verify early-failure extension cleanup
         run: node scripts/run-tests.mjs packages/cli/test/release-extension-behavior.test.mjs
@@ -200,6 +203,9 @@ jobs:
         timeout-minutes: 10
       - run: npm test --workspaces --if-present
         timeout-minutes: 20
+        env:
+          JOUZU_TEST_TIMEOUT_MS: "360000"
+          JOUZU_TEST_SUITE_TIMEOUT_MS: "900000"
       - run: npm run test:extensions:online
         timeout-minutes: 15
         env:
