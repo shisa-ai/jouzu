@@ -209,6 +209,18 @@ test("flow control on restores routing, and reset is off followed by on", async 
 	await settle();
 	assert.equal(f.bodies.length, 1, "the restored spigot drives offered work");
 
+	// A malformed verb is the one place the whole command list is shown, so it has to name the
+	// controls that get a session out of trouble.
+	await f.session.prompt("/flow off extra");
+	assert.equal(f.ingress.enabled(), true, "a malformed verb changes nothing");
+	for (const line of [
+		"off turns flow control off",
+		"on turns flow control back on",
+		"reset turns flow control off and on again",
+		"clear releases a stuck reservation",
+	])
+		assert.match(notices.at(-1).text, new RegExp(`/flow ${line}`));
+
 	// Reset is the same pair in one command: it takes the spigot down and back up.
 	await f.session.prompt("/flow reset");
 	assert.equal(f.ingress.enabled(), true);
