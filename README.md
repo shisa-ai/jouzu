@@ -28,6 +28,8 @@ For Windows setup, see [Windows prerequisites](https://github.com/shisa-ai/jouzu
 
 Rendered fetches return up to 50,000 characters to the model and mark truncation. Search results mark empty responses as inconclusive and results at the requested limit as possibly incomplete. Browser screenshots default to JPEG and attach only when at most 1 MiB.
 
+The Camoufox browser stays loaded once a browser tool call starts it. When no `tff-fetch_url` or `tff-search_web` call has run for five minutes, Jouzu stops the browser to release its memory, and the next call relaunches it, which takes a few seconds. Set `JOUZU_CAMOUFOX_IDLE_STOP_MS` to a whole number of milliseconds from 1000 to 2147483647 to change the delay, or to `0` to keep the browser loaded until the session ends. An invalid value stops the browser tools from loading for that session; the startup warning reports the cause. Stopping releases the browser process; the runtime modules already loaded in the session stay in memory.
+
 On older enterprise Linux distributions, install the GTK/X11/audio libraries required by Firefox. If the system NSS is older than Camoufox requires, set `JOUZU_CAMOUFOX_LIBRARY_PATH` to a compatible NSS library directory; Jouzu applies it only to the browser child.
 
 ## Install

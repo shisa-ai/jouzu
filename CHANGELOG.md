@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Stop the Camoufox browser after five minutes without a browser tool call and relaunch it on the next call, so a long session no longer keeps an idle Firefox resident. Set `JOUZU_CAMOUFOX_IDLE_STOP_MS` to a whole number of milliseconds from 1000 to 2147483647 to change the delay, or `0` to keep the browser loaded until the session ends; an invalid value keeps the browser tools from loading until it is fixed.
+
 ## 0.1.12 - 2026-09-17
 
 ### Added
