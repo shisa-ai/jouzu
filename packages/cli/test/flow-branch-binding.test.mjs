@@ -420,7 +420,7 @@ test("an interrupted navigation onto a retired path completes its fork on reopen
 	const transition = await registry.beginNavigation((await registry.snapshot()).revision, manager.getLeafId());
 	manager.resetLeaf();
 	const second = await completePiFlowNavigation(registry, manager, transition.id);
-	assert.equal(await registry.retireBranchHistory(1), 1);
+	assert.equal(await registry.retireBranchHistory(1, new Set()), 1);
 	// Crash point: the transition is durable, the leaf moved onto the retired path, and Pi's
 	// branch summary (here a plain message) landed before the flow marker was appended.
 	const nav = await registry.beginNavigation((await registry.snapshot()).revision, manager.getLeafId());
@@ -482,7 +482,7 @@ test("navigation onto a retired branch's position forks with a fresh marker", as
 	manager.resetLeaf();
 	const second = await completePiFlowNavigation(registry, manager, transition.id);
 	const secondEntry = manager.getLeafId();
-	assert.equal(await registry.retireBranchHistory(1), 1, "the active branch bounds the prefix drop");
+	assert.equal(await registry.retireBranchHistory(1, new Set()), 1, "the active branch bounds the prefix drop");
 	// The retired branch's marker is still the deepest on its abandoned path, but it names a
 	// branch no registry retains, so the navigation forks with a fresh marker instead.
 	const nav = await registry.beginNavigation((await registry.snapshot()).revision, manager.getLeafId());

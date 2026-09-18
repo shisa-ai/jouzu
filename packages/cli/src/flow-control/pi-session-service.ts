@@ -22,6 +22,9 @@ import type { FlowWaitState } from "./wait-state.js";
 
 import { FlowWorkContext } from "./work-context.js";
 
+/** Branch records the automatic idle pass keeps. The registry is a mechanism; this is the policy. */
+const retainedBranches = 64;
+
 export interface PiFlowSessionOptions {
 	/** Set only when attaching at the SDK creation boundary, before extensions can replace the stream. */
 	qualifyProviderRoute?: boolean;
@@ -349,7 +352,10 @@ export class PiFlowSessionService {
 				// a restart reopens at the newest transcript entry and binds by its marker.
 				return (
 					manifests +
-					(await this.registry.retireBranchHistory(keepBranches, piTranscriptBranchOwners(this.session.sessionManager)))
+					(await this.registry.retireBranchHistory(
+						keepBranches ?? retainedBranches,
+						piTranscriptBranchOwners(this.session.sessionManager),
+					))
 				);
 			});
 			if (result.kind === "busy") throw new FlowLedgerError("busy", "Result retirement requires an idle session.");

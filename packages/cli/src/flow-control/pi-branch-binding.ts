@@ -164,7 +164,12 @@ export async function bindPiFlowBranch(registry: PiFlowSessionRegistry, manager:
 			if (marker && marker.data.branchId === pending.branchId && marker.data.transitionId === pending.id) {
 				const leafId = manager.getLeafId();
 				const position = await evidence(manager, marker);
-				const scope = await registry.finishNavigation(pending.id, marker.id, position);
+				const scope = await registry.finishNavigation(
+					pending.id,
+					marker.id,
+					piTranscriptBranchOwners(manager),
+					position,
+				);
 				await assertRegistry(registry, scope, state.revision + 1);
 				assertPosition(manager, state.sessionId, leafId);
 				return scope;
@@ -195,7 +200,12 @@ export async function bindPiFlowBranch(registry: PiFlowSessionRegistry, manager:
 				transitionId: pending.id,
 			});
 			const position = await evidence(manager, forkMarker);
-			const scope = await registry.finishNavigation(pending.id, forkMarker.id, position);
+			const scope = await registry.finishNavigation(
+				pending.id,
+				forkMarker.id,
+				piTranscriptBranchOwners(manager),
+				position,
+			);
 			await assertRegistry(registry, scope, state.revision + 1);
 			assertPosition(manager, state.sessionId, forkMarker.id);
 			return scope;
@@ -279,7 +289,12 @@ export async function completePiFlowNavigation(
 			});
 		const leafId = manager.getLeafId();
 		const position = await evidence(manager, forkMarker);
-		const scope = await registry.finishNavigation(pending.id, forkMarker.id, position);
+		const scope = await registry.finishNavigation(
+			pending.id,
+			forkMarker.id,
+			piTranscriptBranchOwners(manager),
+			position,
+		);
 		await assertRegistry(registry, scope, state.revision + 1);
 		assertPosition(manager, state.sessionId, leafId);
 		return scope;

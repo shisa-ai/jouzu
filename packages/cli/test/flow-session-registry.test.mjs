@@ -49,7 +49,7 @@ test("one session lease excludes competing registries across branch transitions"
 	assert.notEqual((await first.currentScope()).branchId, (await other.currentScope()).branchId);
 	const state = await first.snapshot();
 	const transition = await first.beginNavigation(state.revision, "old-leaf");
-	await first.finishNavigation(transition.id, "new-leaf");
+	await first.finishNavigation(transition.id, "new-leaf", new Set());
 	await assert.rejects(open(), { code: "busy" });
 });
 test("navigation uses revision checks, holds incomplete transitions, and commits once", async (t) => {
@@ -70,14 +70,14 @@ test("navigation uses revision checks, holds incomplete transitions, and commits
 	const second = await open();
 	assert.deepEqual(await second.snapshot(), pending);
 	await assert.rejects(second.currentScope(), { code: "transition" });
-	await assert.rejects(second.finishNavigation("foreign", "new"), { code: "stale" });
-	const scope = await second.finishNavigation(a.value.id, "new");
+	await assert.rejects(second.finishNavigation("foreign", "new", new Set()), { code: "stale" });
+	const scope = await second.finishNavigation(a.value.id, "new", new Set());
 	assert.notEqual(scope.branchId, initial.activeBranchId);
 	const final = await second.snapshot();
 	assert.equal(final.branches[1].fromBranchId, initial.activeBranchId);
-	assert.deepEqual(await second.finishNavigation(a.value.id, "new"), scope);
+	assert.deepEqual(await second.finishNavigation(a.value.id, "new", new Set()), scope);
 	assert.deepEqual(await second.snapshot(), final);
-	await assert.rejects(second.finishNavigation(a.value.id, "different"), { code: "stale" });
+	await assert.rejects(second.finishNavigation(a.value.id, "different", new Set()), { code: "stale" });
 	await second.close();
 	assert.deepEqual(await (await open()).currentScope(), scope);
 });
@@ -94,7 +94,7 @@ test("a repeated completion is refused once another branch owns the session", as
 	// The retry matches the completed record, but reporting that record's identity as a fresh
 	// completion would name a branch this transition never entered.
 	await assert.rejects(
-		registry.finishNavigation(completed.transitionId, completed.enteredAtLeafId, completed.position),
+		registry.finishNavigation(completed.transitionId, completed.enteredAtLeafId, new Set(), completed.position),
 		{ code: "stale" },
 	);
 });
@@ -218,7 +218,7 @@ test("a full registry permits reactivation and reserves a bounded slot for a for
 	await registry.reactivateNavigation(back.id, "branch-0");
 	assert.equal((await registry.snapshot()).branches.length, 1024);
 	const next = await registry.beginNavigation((await registry.snapshot()).revision, "first-leaf");
-	const scope = await registry.finishNavigation(next.id, "fork-leaf");
+	const scope = await registry.finishNavigation(next.id, "fork-leaf", new Set());
 	const after = await registry.snapshot();
 	assert.equal(after.branches.length, 1024);
 	assert.equal(after.activeBranchId, scope.branchId);
@@ -229,12 +229,41 @@ test("a full registry permits reactivation and reserves a bounded slot for a for
 	assert.equal((await registry.snapshot()).branches.length, 64);
 });
 
+test("a fork reservation honors the branches the transcript still owns", async (t) => {
+	const { root, cleanup } = await fixture(t);
+	const repo = new MemorySessionRepo();
+	const session = await repo.create({}, BACKGROUND_CONTEXT);
+	cleanup(() => repo.close(BACKGROUND_CONTEXT));
+	const registry = await PiFlowSessionRegistry.open(root, "parent", null, async () => session);
+	cleanup(() => registry.close());
+	const state = await registry.snapshot();
+	state.branches = Array.from({ length: 1024 }, (_, i) => ({
+		id: `branch-${i}`,
+		enteredAtLeafId: null,
+		...(i ? { fromBranchId: `branch-${i - 1}`, transitionId: `move-${i}` } : {}),
+	}));
+	state.activeBranchId = state.branches.at(-1).id;
+	await session.mutate(
+		(m) => m.commit([setValue(value("jouzu.flow.session", "v1"), state)], BACKGROUND_CONTEXT),
+		BACKGROUND_CONTEXT,
+	);
+	// The oldest record owns the transcript tip, so the reservation must take the slot elsewhere.
+	const next = await registry.beginNavigation(state.revision, "leaf");
+	const scope = await registry.finishNavigation(next.id, "fork-leaf", new Set(["branch-0"]));
+	const after = await registry.snapshot();
+	assert.equal(after.branches.length, 1024);
+	assert.equal(after.activeBranchId, scope.branchId);
+	assert.ok(after.branches.some((record) => record.id === "branch-0"), "the protected owner survives");
+	assert.ok(!after.branches.some((record) => record.id === "branch-1"), "the slot comes from the next record");
+	assert.deepEqual(after.retired.through, ["branch-1"], "the dropped record is still cited by its retained child");
+});
+
 /** Navigate `count` times so the registry holds a real ancestry chain. */
 async function navigate(registry, count) {
 	for (let step = 0; step < count; step++) {
 		const state = await registry.snapshot();
 		const transition = await registry.beginNavigation(state.revision, `leaf-${step}`);
-		await registry.finishNavigation(transition.id, `leaf-${step + 1}`);
+		await registry.finishNavigation(transition.id, `leaf-${step + 1}`, new Set());
 	}
 	return registry.snapshot();
 }
@@ -246,7 +275,7 @@ test("branch retirement keeps the active branch, its ancestry link, and the navi
 	assert.equal(before.branches.length, 6);
 	assert.equal(before.retired, undefined);
 
-	assert.equal(await registry.retireBranchHistory(2), 4);
+	assert.equal(await registry.retireBranchHistory(2, new Set()), 4);
 	const after = await registry.snapshot();
 	assert.equal(after.branches.length, 2, "the newest records are kept");
 	assert.equal(after.activeBranchId, before.activeBranchId, "the active branch is never retired");
@@ -256,7 +285,7 @@ test("branch retirement keeps the active branch, its ancestry link, and the navi
 	assert.equal(after.branches[0].fromBranchId, before.branches[3].id);
 
 	// Retirement can leave one record behind, so record count alone no longer proves a first branch.
-	assert.equal(await registry.retireBranchHistory(1), 1);
+	assert.equal(await registry.retireBranchHistory(1, new Set()), 1);
 	const collapsed = await registry.snapshot();
 	assert.equal(collapsed.branches.length, 1);
 	assert.deepEqual(collapsed.retired, { count: 5, through: [collapsed.branches[0].fromBranchId] });
@@ -269,20 +298,25 @@ test("retirement is a no-op below its keep size and is refused mid-navigation", 
 	const { open } = await fixture(t);
 	const registry = await open();
 	const initial = await navigate(registry, 2);
-	assert.equal(await registry.retireBranchHistory(8), 0, "nothing is retired below the keep size");
+	assert.equal(await registry.retireBranchHistory(8, new Set()), 0, "nothing is retired below the keep size");
 	assert.deepEqual(await registry.snapshot(), initial, "and the revision does not move");
 
 	const state = await registry.snapshot();
 	await registry.beginNavigation(state.revision, "old-leaf");
-	await assert.rejects(registry.retireBranchHistory(1), { code: "busy" });
-	for (const size of [0, -1, 1.5]) await assert.rejects(registry.retireBranchHistory(size), { code: "capacity" });
+	await assert.rejects(registry.retireBranchHistory(1, new Set()), { code: "busy" });
+	for (const size of [0, -1, 1.5]) await assert.rejects(registry.retireBranchHistory(size, new Set()), { code: "capacity" });
+	// A caller that names nothing is refusing to decide which branches the transcript still needs.
+	// Dropping a transcript owner leaves the session unbindable, so the omission is refused rather
+	// than silently treated as an empty set.
+	await assert.rejects(registry.retireBranchHistory(1), { code: "capacity" });
+	await assert.rejects(registry.retireBranchHistory(1, []), { code: "capacity" });
 });
 
 test("a retired ancestry survives reopen and keeps its records valid", async (t) => {
 	const { open } = await fixture(t);
 	const first = await open();
 	await navigate(first, 4);
-	await first.retireBranchHistory(2);
+	await first.retireBranchHistory(2, new Set());
 	const before = await first.snapshot();
 	await first.close();
 
@@ -291,7 +325,7 @@ test("a retired ancestry survives reopen and keeps its records valid", async (t)
 	// A retired head is accepted on reload; the same record without one is not.
 	const state = await second.snapshot();
 	const transition = await second.beginNavigation(state.revision, "old-leaf");
-	const scope = await second.finishNavigation(transition.id, "new-leaf");
+	const scope = await second.finishNavigation(transition.id, "new-leaf", new Set());
 	const grown = await second.snapshot();
 	assert.equal(grown.branches.length, 3);
 	assert.equal(grown.activeBranchId, scope.branchId);
@@ -313,7 +347,7 @@ test("reactivation restores an earlier retained branch and later forks from it",
 	assert.equal(reactivated.transition, undefined);
 	// A fork from the reactivated branch cites it as a tree parent, not the previous array record.
 	const next = await registry.beginNavigation(reactivated.revision, "fork-leaf");
-	const forked = await registry.finishNavigation(next.id, "forked-leaf");
+	const forked = await registry.finishNavigation(next.id, "forked-leaf", new Set());
 	const tree = await registry.snapshot();
 	assert.equal(tree.branches.at(-1).fromBranchId, original.id);
 	assert.equal(tree.activeBranchId, forked.branchId);
@@ -337,14 +371,14 @@ test("retirement skips an active root while dropping unrelated older records", a
 	const earliest = state.branches[0];
 	const back = await registry.beginNavigation(state.revision, "back-leaf");
 	await registry.reactivateNavigation(back.id, earliest.id);
-	assert.equal(await registry.retireBranchHistory(2), 2);
+	assert.equal(await registry.retireBranchHistory(2, new Set()), 2);
 	const sparse = await registry.snapshot();
 	assert.equal(sparse.branches[0].id, earliest.id);
 	assert.equal(sparse.branches[1].id, state.branches[3].id);
 	assert.deepEqual(sparse.retired, { count: 2, through: [state.branches[2].id] });
 	const fork = await registry.beginNavigation((await registry.snapshot()).revision, "fork-leaf");
-	await registry.finishNavigation(fork.id, "forked-leaf");
-	assert.equal(await registry.retireBranchHistory(1), 2);
+	await registry.finishNavigation(fork.id, "forked-leaf", new Set());
+	assert.equal(await registry.retireBranchHistory(1, new Set()), 2);
 	const after = await registry.snapshot();
 	assert.equal(after.branches[0].id, fork.branchId);
 	assert.deepEqual(after.retired, { count: 4, through: [earliest.id] });
@@ -359,7 +393,7 @@ test("retirement never drops a protected tip owner", async (t) => {
 	// The active branch sits at the end; protecting the first record bounds the prefix drop.
 	assert.equal(await registry.retireBranchHistory(1, new Set([original.id])), 0);
 	assert.equal((await registry.snapshot()).branches.length, 2);
-	assert.equal(await registry.retireBranchHistory(1), 1);
+	assert.equal(await registry.retireBranchHistory(1, new Set()), 1);
 	const after = await registry.snapshot();
 	assert.equal(after.branches.length, 1);
 	assert.deepEqual(after.retired, { count: 1, through: [original.id] });

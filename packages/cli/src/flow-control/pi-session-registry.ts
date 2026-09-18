@@ -234,10 +234,18 @@ export class PiFlowSessionRegistry {
 			return { result: undefined, changed };
 		});
 	}
-	/** Retire oldest unprotected records, preserving the active branch and transcript owners. */
-	retireBranchHistory(keep = 64, protectedIds: ReadonlySet<string> = new Set()): Promise<number> {
+	/**
+	 * Retire oldest unprotected records, preserving the active branch and the branches named in
+	 * `protectedIds`. The caller must name every branch a later attach could bind to — the
+	 * transcript owners — because a record dropped here can leave the session unable to attach:
+	 * binding a verified marker whose record is gone rejects with `identity`. The parameter is
+	 * required so no caller can retire without making that decision.
+	 */
+	retireBranchHistory(keep: number, protectedIds: ReadonlySet<string>): Promise<number> {
 		if (!Number.isSafeInteger(keep) || keep < 1)
 			return Promise.reject(new FlowLedgerError("capacity", "Invalid branch retention size."));
+		if (!(protectedIds instanceof Set))
+			return Promise.reject(new FlowLedgerError("capacity", "Branch retirement requires the protected branches."));
 		return this.transact((state) => {
 			if (state.transition) throw new FlowLedgerError("busy", "Branch retirement requires a settled navigation.");
 			const dropped = this.retireRecords(state, keep, protectedIds);
@@ -328,13 +336,24 @@ export class PiFlowSessionRegistry {
 			return { result: state.transition, changed: true };
 		});
 	}
-	/** Call after native branch mutation and verified transcript-position evidence. This creates no delivery permission. */
+	/**
+	 * Call after native branch mutation and verified transcript-position evidence. This creates no
+	 * delivery permission. `protectedIds` names the branches a later attach could bind to; the
+	 * slot reservation below retires one record to make room for the fork, and it must not drop a
+	 * record the transcript still needs.
+	 */
 	finishNavigation(
 		transitionId: string,
 		enteredAtLeafId: string | null,
+		protectedIds: ReadonlySet<string>,
 		position?: FlowBranchPosition,
 	): Promise<FlowScope> {
-		if (!identity(transitionId) || !leaf(enteredAtLeafId) || (position !== undefined && !validPosition(position)))
+		if (
+			!identity(transitionId) ||
+			!leaf(enteredAtLeafId) ||
+			!(protectedIds instanceof Set) ||
+			(position !== undefined && !validPosition(position))
+		)
 			return Promise.reject(new FlowLedgerError("identity", "Invalid branch transition identity."));
 		return this.transact((state) => {
 			const last = state.branches.at(-1);
@@ -352,8 +371,9 @@ export class PiFlowSessionRegistry {
 			if (state.transition?.id !== transitionId) throw new FlowLedgerError("stale", "Branch transition changed.");
 			const { branchId, fromBranchId } = state.transition;
 			this.recordDeparture(state);
-			// A verified fork marker is already durable. Reserve its slot without dropping its parent.
-			this.retireRecords(state, 1023, new Set());
+			// A verified fork marker is already durable. Reserve its slot without dropping its parent
+			// or any branch the transcript still owns.
+			this.retireRecords(state, 1023, protectedIds);
 			state.branches.push({
 				id: branchId,
 				fromBranchId,
