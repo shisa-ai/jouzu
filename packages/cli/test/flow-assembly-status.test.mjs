@@ -384,7 +384,7 @@ test("resolving an unknown turn says where the identities are", async (t) => {
 	assert.deepEqual(f.errors, []);
 });
 
-test("/flow clear is an emergency alias that releases the session pause", async (t) => {
+test("/flow clear is the reservation release, and it also releases the session pause", async (t) => {
 	const f = await assembledSession(t, { producerExtensions: await installedProducerExtensions() });
 	const notices = capturedNotices(f.session);
 	f.ingress.pauseAutomated("stuck flow");
@@ -392,7 +392,7 @@ test("/flow clear is an emergency alias that releases the session pause", async 
 	await settle();
 	assert.equal(f.ingress.automatedPause(), undefined);
 	assert.deepEqual(notices, [
-		{ text: "Flow reset completed. No active reservation was found; continue with a new message.", level: "info" },
+		{ text: "Flow clear completed. No active reservation was found; continue with a new message.", level: "info" },
 	]);
 	assert.deepEqual(f.errors, []);
 });

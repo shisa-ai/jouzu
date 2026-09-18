@@ -101,7 +101,7 @@ for (const preempt of [false, true])
 		registration.dispose();
 		// A newer unrelated manifest makes the delivered manifest eligible by age, but its transcript reference must protect it.
 		await f.ingress.branch().attachment.results.retain([{ ...members[0], id: "unrelated", execution: "unrelated" }]);
-		await f.session.prompt("/flow reset");
+		await f.session.prompt("/flow clear");
 		await f.ingress.retireResultHistory(1);
 		assert.deepEqual(await pages(f.ingress.branch().attachment.results, envelope.manifest), expected);
 		const file = f.sessionManager.getSessionFile();

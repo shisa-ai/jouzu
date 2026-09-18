@@ -33,6 +33,8 @@ export interface PiFlowSessionOptions {
 	onIsolatedState?(path: string): void;
 	/** Turn-level signals the session acts on as a whole; see `PiNativeRequests`. */
 	turn?: { aborted(): void; failed?(error: unknown): void };
+	/** Flow control is on. While it is off, request-level holds are recorded but not enforced. */
+	flowEnabled?(): boolean;
 	maxInputBytes: number;
 	maxResultBytes: number;
 	/** Host-approved producer participants for work created from user input. */
@@ -43,6 +45,10 @@ export interface PiFlowSessionOptions {
 	policy(): Omit<FlowAdmissionGates, "hostReady">;
 	/** Register branch-owned sources before retained executions are reconciled. */
 	attachWaitSources?(attachment: PiFlowAttachment): Promise<void>;
+	/** Release producer delivery leases while flow control is off; the producers then deliver natively. */
+	detachProducers?(): Promise<void>;
+	/** Re-acquire those leases when flow control comes back on. */
+	reattachProducers?(): Promise<void>;
 }
 export interface PiFlowBranchResources {
 	scope: Readonly<FlowScope>;
@@ -141,7 +147,12 @@ export class PiFlowSessionService {
 			this.outcomeUnresolved = state.attempts.some((attempt) => attempt.phase === "uncertain");
 			await attachment.submissions.archiveCompleted();
 			await attachment.submissions.recoverCallbacks();
-			const native = new PiNativeDispatch(this.session, attachment.submissions, this.options.admitNativeQueue);
+			const native = new PiNativeDispatch(
+				this.session,
+				attachment.submissions,
+				this.options.admitNativeQueue,
+				() => this.options.flowEnabled?.() !== false,
+			);
 			this.opening.native = native;
 			const sourceRecovery = await native.recoverSources();
 			await reconcileNativeSources(this.session, attachment, native);
@@ -166,6 +177,8 @@ export class PiFlowSessionService {
 					),
 				this.options.turn,
 				() => reconcileNativeSources(this.session, attachment, native),
+				// Turning flow control off releases a recovery hold's grip on the session's own sends.
+				() => this.options.flowEnabled?.() !== false,
 			);
 			this.opening.requests = requests;
 			const workContext = new FlowWorkContext(
@@ -180,6 +193,7 @@ export class PiFlowSessionService {
 					results: attachment.results,
 					invokeWork: (id, invoke) => workContext.runSelected(id, invoke),
 					invokeOperation: (invoke) => workContext.withOperation(invoke),
+					flowEnabled: () => this.options.flowEnabled?.() !== false,
 					revokeWork: () => workContext.revoke(),
 					consumeWork: async (claimed) => {
 						const work = await consumedUserWork(attachment, claimed, this.options.userWorkParticipants);
@@ -506,7 +520,7 @@ export class PiFlowSessionService {
 				if (attemptId)
 					await branch.attachment.ledger.emergencyReset(
 						attemptId,
-						"Emergency flow reset from /flow; provider outcome may be unknown.",
+						"Emergency flow release from /flow; provider outcome may be unknown.",
 					);
 				await this.refreshOutcomeUnresolved(branch);
 				await branch.attachment.submissions.archiveCompleted();
@@ -663,6 +677,11 @@ export class PiFlowSessionService {
 			branch.host.handoffNavigation();
 			await this.closeBranch();
 		});
+	}
+
+	/** Live waits, read through the registry so a caller can end them from outside the branch scope. */
+	parkedWaits() {
+		return this.registry.run(async () => (this.current ? this.current.attachment.waits.snapshot() : []));
 	}
 
 	/** Persist navigation and attach its branch resources before Pi emits session_tree. */

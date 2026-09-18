@@ -1,9 +1,10 @@
 import type { ToolDefinition } from "@earendil-works/pi-coding-agent";
+import { FLOW_OFF_MESSAGE } from "./flow-off-message.js";
 import type { PiFlowAttachment } from "./pi-attachment.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 
 /** Manifest pages expose retained membership; retrieving metadata does not acknowledge terminal output. */
-export function createFlowResultExtension(options: { attachment(): PiFlowAttachment }): {
+export function createFlowResultExtension(options: { attachment(): PiFlowAttachment; enabled?(): boolean }): {
 	name: string;
 	factory: import("@earendil-works/pi-coding-agent").ExtensionFactory;
 } {
@@ -26,6 +27,7 @@ export function createFlowResultExtension(options: { attachment(): PiFlowAttachm
 					},
 				} as unknown as ToolDefinition["parameters"],
 				async execute(_id, raw, signal, _update, ctx) {
+					if (options.enabled && !options.enabled()) throw new FlowLedgerError("stale", FLOW_OFF_MESSAGE);
 					const args = raw as { reference: string; cursor?: string; limit?: number };
 					if (
 						!args ||

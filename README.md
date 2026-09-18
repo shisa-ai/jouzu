@@ -101,7 +101,9 @@ Jouzu coordinates background jobs, goals, loops, and task lists by default. Back
 
 Run `/flow` to see why automatic work has stopped and which commands can resume it. `/flow pause` pauses automatic replies; `/flow resume` allows them again. Interrupting a reply also pauses automatic work until your next message or `/flow resume`. Pausing does not stop background jobs.
 
-If a turn stays stuck, run `/flow reset` while Jouzu is idle. This releases the stuck turn without stopping jobs or deleting their records. If Jouzu cannot tell whether a model request completed, use `/flow resolve <attempt> retry|discard` with the identifier shown by `/flow`. Retrying may repeat a request the model already answered.
+`/flow off` takes flow control out of the circuit for this session: what you send runs as an ordinary turn, and jobs, tasks, and loops deliver their own notifications instead of flow composing them. `/flow on` puts flow control back. Both keep the session, its records, and every running job. `/flow reset` does both in order.
+
+If a turn stays stuck, run `/flow clear` while Jouzu is idle. This releases the stuck turn without stopping jobs or deleting their records. If Jouzu cannot tell whether a model request completed, use `/flow resolve <attempt> retry|discard` with the identifier shown by `/flow`. Retrying may repeat a request the model already answered.
 
 Returning to where you last left a recent conversation branch resumes its unfinished work, including tasks waiting for background jobs. Rewinding to an earlier point starts a new branch without resuming that work. It does not undo file changes. Reopening a session continues from its last saved position, which may differ from the branch you last viewed.
 

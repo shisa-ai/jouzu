@@ -12,6 +12,8 @@ export interface FlowContinuation {
 }
 export interface MultiloopFlowHost {
 	version: 1;
+	/** Flow control is on for this session. Absent on older hosts, which are treated as live. */
+	live?(): boolean;
 	submit(continuation: FlowContinuation): void;
 	waiting(lane: FlowLane): boolean;
 	changed(lanes: FlowLane[]): void;
@@ -27,6 +29,7 @@ export function attachMultiloopFlow(sessionId: string, host: MultiloopFlowHost):
 		throw new Error("Invalid multiloop flow host.");
 	const captured = Object.freeze({
 		version: 1 as const,
+		live: host.live?.bind(host),
 		submit: host.submit.bind(host),
 		waiting: host.waiting.bind(host),
 		changed: host.changed.bind(host),
@@ -40,6 +43,15 @@ export function attachMultiloopFlow(sessionId: string, host: MultiloopFlowHost):
 
 export function multiloopFlow(sessionId: string): MultiloopFlowHost | undefined {
 	return hosts.get(sessionId);
+}
+
+/**
+ * The host that may drive a continuation. Lifecycle and status still route through `multiloopFlow`, so
+ * turning flow control off stops flow from driving without losing lane state it needs when it returns.
+ */
+export function multiloopFlowDriving(sessionId: string): MultiloopFlowHost | undefined {
+	const host = hosts.get(sessionId);
+	return host && host.live?.() !== false ? host : undefined;
 }
 
 /** Exchange a host through Pi's event bus so the loaded extension supplies its own module instance. */

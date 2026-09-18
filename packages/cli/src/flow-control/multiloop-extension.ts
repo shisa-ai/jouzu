@@ -6,6 +6,8 @@ import type { FlowAuthorityWork } from "./wait-authority.js";
 
 export interface MultiloopControllerOptions {
 	ingress(): PiSessionFlowIngress;
+	/** Flow control is on. Absent means on, so a host without the switch keeps its live producer. */
+	enabled?(): boolean;
 	work?(lane: MultiloopLane): Promise<FlowAuthorityWork | undefined>;
 	waitingWork?(lane: MultiloopLane): string | undefined;
 	onError(error: unknown): void;
@@ -86,6 +88,8 @@ export function createMultiloopControllerExtension(options: MultiloopControllerO
 						submit: next.submit.bind(next),
 						waiting: next.waiting.bind(next),
 						changed: next.lanesChanged.bind(next),
+						// With flow control off, lanes report and continue through multiloop's own paths.
+						live: () => options.enabled?.() !== false,
 						async transition(lane: MultiloopLane, status: "active" | "paused" | "stopped" | "completed") {
 							assertBranch();
 							// This adapter owns the producer-specific policy: lanes map to owner-scoped

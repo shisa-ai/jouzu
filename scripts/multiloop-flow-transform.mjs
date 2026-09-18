@@ -25,6 +25,38 @@ export function reconnectMultiloopOnTree(source) {
 	);
 }
 
+/**
+ * Driving decisions ask the gated lookup, so flow control stops routing continuations while it is off;
+ * lifecycle, status, and wait reporting keep using the host they already hold.
+ */
+export function gateMultiloopFlowDriving(source) {
+	source = replace(
+		source,
+		'import { multiloopFlow, connectMultiloopFlow } from "./jouzu-flow.js";',
+		'import { multiloopFlow, multiloopFlowDriving, connectMultiloopFlow } from "./jouzu-flow.js";',
+	);
+	source = replace(
+		source,
+		"function queueExplicitFlow(pi: ExtensionAPI, ctx: ExtensionContext, state: LoopState, reason: string, build: () => string): void {\n  const flow = multiloopFlow(ctx.sessionManager.getSessionId());",
+		"function queueExplicitFlow(pi: ExtensionAPI, ctx: ExtensionContext, state: LoopState, reason: string, build: () => string): void {\n  const flow = multiloopFlowDriving(ctx.sessionManager.getSessionId());",
+	);
+	for (const [name, parameters] of [
+		["queueCompactionResume", "  compactionEntryId?: string"],
+		["queueLoopAutoContinue", "  reason: string"],
+	]) {
+		source = replace(
+			source,
+			`function ${name}(\n  pi: ExtensionAPI,\n  ctx: ExtensionContext,\n${parameters}\n): void {\n  const flow = multiloopFlow(ctx.sessionManager.getSessionId());`,
+			`function ${name}(\n  pi: ExtensionAPI,\n  ctx: ExtensionContext,\n${parameters}\n): void {\n  const flow = multiloopFlowDriving(ctx.sessionManager.getSessionId());`,
+		);
+	}
+	return replace(
+		source,
+		"    if (!multiloopFlow(ctx.sessionManager.getSessionId()) && cascadingTasksWillDrive(ctx)) return;",
+		"    if (!multiloopFlowDriving(ctx.sessionManager.getSessionId()) && cascadingTasksWillDrive(ctx)) return;",
+	);
+}
+
 export function transformMultiloopFlow(source) {
 	source = replace(
 		source,
@@ -78,7 +110,7 @@ export function transformMultiloopFlow(source) {
 		"  function updateStatus(ctx: ExtensionContext | ExtensionCommandContext) {",
 		"  function updateStatus(ctx: ExtensionContext | ExtensionCommandContext) {\n    multiloopFlow(ctx.sessionManager.getSessionId())?.changed(runningStates().map((state) => ({ lane: state.lane, runTag: state.runTag })));",
 	);
-	return transformMultiloopStatus(transformGoalResume(transformMultiloopLifecycle(source)));
+	return gateMultiloopFlowDriving(transformMultiloopStatus(transformGoalResume(transformMultiloopLifecycle(source))));
 }
 
 export function transformMultiloopLifecycle(source) {

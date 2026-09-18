@@ -55,6 +55,7 @@ function nativeFailure(
 /** Retain native request lifecycle around Pi's final payload callback, without inferring input membership. */
 export class PiNativeRequests {
 	private readonly hooks = new PiHostHooks();
+	private readonly enabled: () => boolean;
 	private pending?: string;
 	private executing?: string;
 	get queueingBlocked(): boolean {
@@ -99,6 +100,12 @@ export class PiNativeRequests {
 		 */
 		private readonly turn?: { aborted(): void; failed?(error: unknown): void },
 		reconcileSources?: () => Promise<unknown>,
+		/**
+		 * Flow control is on. While it is off, receipts are still recorded but nothing is enforced or
+		 * injected: a stuck recovery hold must not keep blocking the session's own sends, because
+		 * turning flow control off is the user's way of taking it out of the way.
+		 */
+		flowEnabled?: () => boolean,
 	) {
 		if (!Number.isSafeInteger(maxBytes) || maxBytes < 1)
 			throw new FlowLedgerError("capacity", "Invalid native payload limit.");
@@ -108,6 +115,7 @@ export class PiNativeRequests {
 			throw new FlowLedgerError("identity", "Flow control cannot attach after the session request handler changed.");
 		if (attached.has(session)) throw new FlowLedgerError("identity", "Pi session already has native request receipts.");
 		attached.add(session);
+		this.enabled = flowEnabled ?? (() => true);
 		if (identifySources) {
 			const transform = session.agent.transformContext;
 			this.hooks.set(session.agent, "transformContext", async (messages, signal) => {
@@ -163,7 +171,7 @@ export class PiNativeRequests {
 					this.references = references;
 					this.cloneSourceHash = sourceHash;
 					let result = transform ? await transform(messages, signal) : messages;
-					if (decorateContext) {
+					if (decorateContext && this.enabled()) {
 						const intact = members.flatMap((member) => {
 							const reference = this.references![member.index];
 							const index = result.indexOf(reference);
@@ -412,8 +420,9 @@ export class PiNativeRequests {
 							...(this.projections ? { projectionCapture: this.projections } : {}),
 							...(this.projections && this.projectionWaitTokens ? { waitTokens: this.projectionWaitTokens } : {}),
 						},
-						enforceRequiredSources,
+						this.enabled() && enforceRequiredSources,
 						await consumedSources?.(),
+						this.enabled(),
 					);
 					this.pending = input.requestId;
 					// One checkpoint records both facts: the native request and, when this turn carries a

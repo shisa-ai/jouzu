@@ -4,8 +4,8 @@ import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { FlowLedgerError } from "../dist/flow-control/receipt-ledger.js";
 import { assembledSession, installedProducerExtensions, replacedSession } from "./fixtures/flow-assembly.mjs";
 
-for (const reset of [false, true])
-	test(`compacted undelivered input recovers across reset and reopen: reset=${reset}`, async (t) => {
+for (const release of [false, true])
+	test(`compacted undelivered input recovers across clear and reopen: release=${release}`, async (t) => {
 		const producers = await installedProducerExtensions();
 		const f = await assembledSession(t, { persist: true, producerExtensions: producers });
 		const store = f.ingress.branch().attachment.nativeRequests;
@@ -31,7 +31,7 @@ for (const reset of [false, true])
 			sessionManager: SessionManager.open(file),
 			producerExtensions: producers,
 		});
-		if (reset) await next.session.prompt("/flow reset");
+		if (release) await next.session.prompt("/flow clear");
 		const recovered = (await next.ingress.branch().attachment.submissions.snapshot()).find(
 			(record) => record.id === undelivered.id,
 		);
@@ -98,12 +98,12 @@ test("terminal admission failure holds the next automated input without consumin
 	store.begin = original;
 });
 
-test("reset preserves successful receipts and records unresolved outcomes without claiming success", async (t) => {
+test("clear preserves successful receipts and records unresolved outcomes without claiming success", async (t) => {
 	const f = await assembledSession(t, { persist: true, producerExtensions: await installedProducerExtensions() });
 	await f.session.prompt("Delivered input");
 	const store = f.ingress.branch().attachment.nativeRequests;
 	const before = await store.snapshot();
-	await f.session.prompt("/flow reset");
+	await f.session.prompt("/flow clear");
 	assert.deepEqual(await store.snapshot(), before);
 	await store.begin({
 		id: "unfinished",
@@ -112,7 +112,7 @@ test("reset preserves successful receipts and records unresolved outcomes withou
 		modelHash: "c".repeat(64),
 		systemHash: "d".repeat(64),
 	});
-	await f.session.prompt("/flow reset");
+	await f.session.prompt("/flow clear");
 	const unresolved = (await store.snapshot()).find((record) => record.id === "unfinished");
 	assert.equal(unresolved.reset, true);
 	assert.equal(unresolved.outcome, undefined);
@@ -123,13 +123,13 @@ test("reset preserves successful receipts and records unresolved outcomes withou
 	assert.deepEqual(f.errors, []);
 });
 
-test("reset preserves live queued input and does not replay a delivered request", async (t) => {
+test("clear preserves live queued input and does not replay a delivered request", async (t) => {
 	const f = await assembledSession(t, { producerExtensions: await installedProducerExtensions() });
 	await f.session.prompt("Delivered once");
 	await f.session.followUp("Still queued");
 	const queued = structuredClone(f.session.agent.inspectQueuedMessages());
 	assert.equal(queued.length, 1);
-	await f.session.prompt("/flow reset");
+	await f.session.prompt("/flow clear");
 	assert.deepEqual(f.session.agent.inspectQueuedMessages(), queued);
 	assert.equal(f.bodies.length, 1);
 	await f.session.prompt("Start next work");

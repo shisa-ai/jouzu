@@ -324,7 +324,7 @@ test("a running provider request is not reported as an unknown outcome needing r
 		const notices = capturedNotices(f.session);
 		await f.session.prompt("/flow");
 		assert.match(notices.at(-1).text, /A model turn is in progress/);
-		assert.doesNotMatch(notices.at(-1).text, /no recorded outcome|needs a recovery decision|\/flow reset/);
+		assert.doesNotMatch(notices.at(-1).text, /no recorded outcome|needs a recovery decision|\/flow reset|\/flow clear/);
 	} finally {
 		release();
 		await running;

@@ -10,6 +10,8 @@ interface Host {
 	version: 1;
 	ready(): Promise<void>;
 	changed(): void;
+	/** Flow control is on for this session. Absent on older hosts, which are treated as live. */
+	live?(): boolean;
 	submit(input: { key: string; revision: string; requestId: string; build(): string; consumed(): void; cancelled(): void }): void;
 	tool<T>(name: string, args: unknown, invoke: () => Promise<T>): Promise<T>;
 }
@@ -53,7 +55,9 @@ export function installTaskFlow(pi: ExtensionAPI, list: () => Task[], storeIdent
 		},
 		send(task: Task, build: () => string, consumed: () => void, cancelled: () => void): boolean {
 			const active = currentHost();
-			if (!active) return false;
+			// While flow control is off the task store drives its own continuations, exactly as it does
+			// in a session where flow control was never attached.
+			if (!active || active.live?.() === false) return false;
 			const descriptor = describe(task);
 			let delivered = false;
 			active.submit({ ...descriptor, requestId: randomUUID(),
@@ -84,7 +88,7 @@ export function installTaskFlow(pi: ExtensionAPI, list: () => Task[], storeIdent
 					signal?.throwIfAborted();
 					return result;
 				};
-				return active ? active.tool(tool.name, args, invoke) : invoke();
+				return active && active.live?.() !== false ? active.tool(tool.name, args, invoke) : invoke();
 			} });
 		},
 	};

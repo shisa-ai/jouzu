@@ -4286,7 +4286,7 @@ test("a session pause holds automated work until it is resumed explicitly", asyn
 });
 
 for (const phase of ["selected", "prepared", "handed-off", "partial"])
-	test(`/flow reset releases ${phase} work and permits the next user turn`, async (t) => {
+	test(`/flow clear releases ${phase} work and permits the next user turn`, async (t) => {
 		let ingress;
 		const status = createFlowStatusExtension({ ingress: () => ingress });
 		const f = await fixture(t, { provider: true, extensions: [status.factory] });
@@ -4311,7 +4311,7 @@ for (const phase of ["selected", "prepared", "handed-off", "partial"])
 		const before = await ledger.snapshot();
 		const notices = capturedNotices(f.session);
 		ingress.pauseAutomated("interrupted");
-		await f.session.prompt("/flow reset");
+		await f.session.prompt("/flow clear");
 		const after = await ledger.snapshot();
 		assert.equal(after.activeAttemptId, undefined);
 		assert.equal(
@@ -4337,7 +4337,7 @@ for (const phase of ["selected", "prepared", "handed-off", "partial"])
 		assert.equal(f.sent.length, 1);
 	});
 
-test("reset management refuses a running turn and /flow reset succeeds at idle", async (t) => {
+test("clear management refuses a running turn and /flow clear succeeds at idle", async (t) => {
 	let ingress;
 	const entered = deferred(),
 		release = deferred();
@@ -4368,7 +4368,7 @@ test("reset management refuses a running turn and /flow reset succeeds at idle",
 		release.resolve();
 		await running;
 	}
-	await f.session.prompt("/flow reset");
+	await f.session.prompt("/flow clear");
 	assert.equal((await ledger.snapshot()).activeAttemptId, undefined);
 	assert.match(notices[0].text, /Cleared flow reservation stuck/);
 });

@@ -64,7 +64,7 @@ for (const keepTail of [true, false])
 				assert.match(f.session.agent.state.errorMessage, /Composed model input was withheld after transformation/);
 				assert.ok(f.ingress.automatedPause());
 				ledger.prepare.mock.restore();
-				await f.session.prompt("/flow reset");
+				await f.session.prompt("/flow clear");
 				assert.equal(f.bodies.length, 2, "reset does not replay requests");
 				await f.session.prompt("/flow resume");
 				producer.offer([{ id: "compact-work", revision: "2" }]);

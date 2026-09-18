@@ -776,6 +776,11 @@ export class FlowNativeRequestStore {
 		>,
 		requireUnreceived = false,
 		consumedClaims?: NativeSourceClaim[],
+		/**
+		 * A recovery hold refuses every later request until it is reconciled. Flow control off is the
+		 * user's way out of the circuit, so the hold is recorded but not enforced while it is off.
+		 */
+		enforceRecovery = true,
 	): Promise<void> {
 		const claims = consumedClaims === undefined ? undefined : structuredClone(consumedClaims);
 		const captured = {
@@ -795,7 +800,7 @@ export class FlowNativeRequestStore {
 					throw new FlowLedgerError("stale", "Native request identity has been retired.");
 				if (records.some((record) => record.id === captured.id))
 					throw new FlowLedgerError("identity", "Native request ID is already retained.");
-				if (this.requiresRecovery(records))
+				if (enforceRecovery && this.requiresRecovery(records))
 					throw new FlowLedgerError("busy", "Native request requires reconciliation before another request.");
 				const received = new Set(
 					records.flatMap((request) =>
@@ -822,7 +827,7 @@ export class FlowNativeRequestStore {
 						)
 							throw new FlowLedgerError(
 								"identity",
-								"Consumed native input requires source reconciliation. Run /flow reset, then retry your message.",
+								"Consumed native input requires source reconciliation. Run /flow clear, then retry your message.",
 							);
 					}
 				}

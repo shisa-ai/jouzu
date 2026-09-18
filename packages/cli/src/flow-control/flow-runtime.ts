@@ -45,6 +45,10 @@ export interface FlowControlRuntime {
 	/** Register with `pi.main` in this order; each binds to the same ingress. */
 	extensions: InlineExtension[];
 	ingress(): PiSessionFlowIngress;
+	/** Flow control is on for this session: it intercepts, queues, and schedules. */
+	enabled(): boolean;
+	/** Flush and detach (`false`), or attach again (`true`). */
+	setEnabled(enabled: boolean): Promise<{ flushed: number; waits: number }>;
 	dispose(): Promise<void>;
 }
 
@@ -60,21 +64,28 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 		if (!attached) throw new FlowLedgerError("stale", "Flow control ingress is not attached.");
 		return attached;
 	};
-	const tasks = createTaskControllerExtension({ ingress, onError: options.onError });
-	const multiloop = createMultiloopControllerExtension({ ingress, onError: options.onError });
+	// While flow control is off, producers route through their own delivery paths and the flow tools
+	// refuse. The ingress object stays attached, so turning it back on needs no re-attach or handshake.
+	const enabled = () => attached?.enabled() ?? false;
+	const tasks = createTaskControllerExtension({ ingress, enabled, onError: options.onError });
+	const multiloop = createMultiloopControllerExtension({ ingress, enabled, onError: options.onError });
 	const background = createBackgroundControllerExtension({
 		ingress,
+		enabled,
 		currentWork: () => ingress().branch().workContext.current(),
 		onError: options.onError,
 	});
 	const waitTools = createFlowWaitExtension({
 		attachment: () => ingress().branch().attachment,
 		authorize: (workId) => ingress().branch().workContext.authorize(workId),
+		enabled,
 		maxDurationMs: limits.maxWaitDurationMs,
 	});
-	const noReply = createFlowNoReplyExtension({ ingress });
+	const noReply = createFlowNoReplyExtension({ ingress, enabled });
 	const status = createFlowStatusExtension({
 		ingress,
+		enabled,
+		setEnabled,
 		runtimeReport: options.runtimeReport,
 		tasks: () => tasks.inventory(),
 		unaccountable: () => [
@@ -98,6 +109,8 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 			status,
 		],
 		ingress,
+		enabled,
+		setEnabled,
 		async flowIngressFactory({ sessionManager }) {
 			// The host replaces the session for resume, fork, rewind, and session switching, and calls
 			// this again for each one after tearing the previous session down. One ingress serves one
@@ -147,6 +160,21 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 							),
 						);
 				},
+				// Off releases the background delivery lease, which is what lets the task extension deliver its
+				// own completion batches while flow control is out of the circuit. On takes it back.
+				detachProducers: () => background.detach(),
+				reattachProducers: async () => {
+					const current = attached;
+					if (!current) return;
+					if (background.attach(current.branch().attachment, sessionManager) === "unavailable")
+						options.onError(
+							new FlowLedgerError(
+								"identity",
+								"Background task waits are unavailable because the background task extension is not loaded.",
+							),
+						);
+					background.install();
+				},
 			});
 			if (options.interactive && sessionManager.getEntries().length > 0)
 				attached.pauseAutomated("the session was reopened");
@@ -158,4 +186,14 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 			await active?.dispose();
 		},
 	};
+
+	/** Flush and detach, or attach again. Refused while a session is closing or has no ingress. */
+	async function setEnabled(next: boolean): Promise<{ flushed: number; waits: number }> {
+		const active = attached;
+		if (!active) throw new FlowLedgerError("stale", "Flow control has no session to change.");
+		if (next === active.enabled()) return { flushed: 0, waits: 0 };
+		if (!next) return active.suspend();
+		await active.resume();
+		return { flushed: 0, waits: 0 };
+	}
 }

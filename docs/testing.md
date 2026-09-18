@@ -212,7 +212,8 @@ In an interactive session, `/flow` shows what flow control is holding and repair
 /flow pause <work> holds a campaign's automated turns; /flow resume <work> releases it.
 /flow stop <work> retires a campaign and ends its waits.
 /flow resolve <attempt> retry|discard decides an interrupted turn whose outcome is unknown.
-/flow reset (or /flow clear) releases a stuck reservation without stopping jobs or deleting receipts.
+/flow off takes flow control out of the circuit; /flow on puts it back; /flow reset is both in order.
+/flow clear releases a stuck reservation without stopping jobs or deleting receipts.
 ```
 
 `JOUZU_FLOW_CONTROL=0` starts a session with flow control disabled.

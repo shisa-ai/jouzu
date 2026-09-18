@@ -253,6 +253,11 @@ export class FlowWaitProducerRegistry {
 		return producer.probeExecution(execution, signal);
 	}
 
+	/** Namespaces with an attached producer. Diagnostics and lease lifecycle read this, nothing gates on it. */
+	attachedNamespaces(): string[] {
+		return [...this.producers.keys()];
+	}
+
 	async bindForWait(
 		namespace: string,
 		identity: Omit<FlowExecutionIdentity, "scope">,

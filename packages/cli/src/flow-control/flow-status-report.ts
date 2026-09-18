@@ -56,7 +56,7 @@ export function formatFlowReport(
 	if (status.retryable.length) {
 		const count = status.retryable.length;
 		lines.push(`Blocked: ${count} request${count === 1 ? " was" : "s were"} not sent.`);
-		lines.push("Correct the reported cause, then run /flow reset to release the saved hold.");
+		lines.push("Correct the reported cause, then run /flow clear to release the saved hold.");
 		if (status.paused)
 			lines.push(
 				`Automation is also paused: ${flowDisplayText(status.paused)}. /flow resume alone cannot clear the request block.`,

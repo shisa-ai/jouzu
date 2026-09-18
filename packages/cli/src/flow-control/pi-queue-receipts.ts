@@ -21,12 +21,16 @@ export class PiQueueReceipts {
 	constructor(
 		private readonly agent: Agent,
 		private readonly ledger: FlowReceiptLedger,
+		/** Flow control is on. While it is off, permits from finished dispatches are ignored. */
+		private readonly enabled: () => boolean = () => true,
 	) {
 		for (const method of ["steer", "followUp"] as const) {
 			const native = agent[method].bind(agent);
 			this.hooks.set(agent, method, (message) => {
 				const dispatch = this.dispatches.getStore();
-				if (!dispatch) return native(message);
+				// A finished permit reaches here only through a callback the dispatch's turn registered,
+				// such as a producer's deferred completion, and stops mattering once flow control is off.
+				if (!dispatch || (!dispatch.active && !this.enabled())) return native(message);
 				if (!dispatch.active) throw new FlowLedgerError("stale", "Native enqueue outlived its dispatch permit.");
 				this.assertActive();
 				if (dispatch.item) throw new FlowLedgerError("identity", "One flow attempt must enqueue one composed item.");
@@ -42,20 +46,17 @@ export class PiQueueReceipts {
 		}
 		const prompt = agent.prompt.bind(agent);
 		this.hooks.set(agent, "prompt", (input: string | AgentMessage | AgentMessage[], images?: ImageContent[]) => {
-			if (this.dispatches.getStore())
-				throw new FlowLedgerError("identity", "Queue dispatch cannot start a direct native run.");
+			this.assertNoDispatchPermit();
 			return typeof input === "string" ? prompt(input, images) : prompt(input);
 		});
 		const continueRun = agent.continue.bind(agent);
 		this.hooks.set(agent, "continue", (...args) => {
-			if (this.dispatches.getStore())
-				throw new FlowLedgerError("identity", "Queue dispatch cannot start a direct native run.");
+			this.assertNoDispatchPermit();
 			return continueRun(...args);
 		});
 		const continueQueued = agent.continueQueued.bind(agent);
 		this.hooks.set(agent, "continueQueued", () => {
-			if (this.dispatches.getStore())
-				throw new FlowLedgerError("identity", "Queue dispatch cannot start a direct native run.");
+			this.assertNoDispatchPermit();
 			return continueQueued();
 		});
 		const previous = agent.flowCheckpoints;
@@ -84,6 +85,13 @@ export class PiQueueReceipts {
 
 	private assertActive(): void {
 		if (this.closed) throw new FlowLedgerError("stale", "Queue receipt attachment is closed.");
+	}
+
+	/** A live permit means flow is driving the run; a finished one stops mattering while flow is off. */
+	private assertNoDispatchPermit(): void {
+		const permit = this.dispatches.getStore();
+		if (!permit || (!permit.active && !this.enabled())) return;
+		throw new FlowLedgerError("identity", "Queue dispatch cannot start a direct native run.");
 	}
 
 	/** The selected ledger attempt must exist before native enqueue. */

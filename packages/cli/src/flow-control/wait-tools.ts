@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { InlineExtension, ToolDefinition } from "@earendil-works/pi-coding-agent";
+import { FLOW_OFF_MESSAGE } from "./flow-off-message.js";
 import type { PiFlowAttachment } from "./pi-attachment.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowWaitHandle } from "./wait-state.js";
@@ -14,7 +15,7 @@ export const FLOW_WAIT_GUIDANCE = [
 	"On a wake, match each result's producer and execution identity to the work you are waiting for. A stopped or completed older job does not describe its replacement. Notifications can be batched; inspect every relevant result and retrieve omitted details when needed. Verify output and completion criteria before marking requested work complete.",
 	"After user input or context restoration, use the supplied wait state and preserve pending work. A status question does not renew or replace a wait. At expiry or dependency failure, decide whether to repair, stop, or declare a new wait; do not retry the wait automatically.",
 	"When work changes, cancel or explicitly replace its affected wait and update the owning work. Replacement requires replaceToken. agent_wait_cancel removes only the dependency gate; it does not stop the process or complete the work.",
-	"The user can inspect holds with /flow and build identity with /flow runtime, pause or resume automation, or use /flow reset to recover a stuck session. These are user slash commands, not shell commands or agent tools. Report remaining blockers; do not claim reset delivered pending work.",
+	"The user can inspect holds with /flow and build identity with /flow runtime, pause or resume automation, or use /flow clear to release a stuck hold. These are user slash commands, not shell commands or agent tools. Report remaining blockers; do not claim reset delivered pending work.",
 ];
 
 /** Include extension-specific controls only when their tools are active. */
@@ -45,6 +46,7 @@ export interface FlowWaitToolOptions {
 	attachment(): PiFlowAttachment;
 	/** Host authority for the requested work, captured for this tool invocation. */
 	authorize(workId: string): { actor: string; revision: number; assertActive(): void };
+	enabled?(): boolean;
 	maxDurationMs: number;
 	now?(): number;
 }
@@ -145,6 +147,9 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 		throw new FlowLedgerError("capacity", "Invalid session wait duration limit.");
 	const maxDurationMs = options.maxDurationMs;
 	const now = options.now ?? Date.now;
+	const requireEnabled = () => {
+		if (options.enabled && !options.enabled()) throw new FlowLedgerError("stale", FLOW_OFF_MESSAGE);
+	};
 	function access(attachment: PiFlowAttachment, work: string, signal?: AbortSignal) {
 		const authority = options.authorize(work);
 		const check = () => {
@@ -159,6 +164,9 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 		name: "jouzu-flow-waits",
 		factory(pi) {
 			pi.on("before_agent_start", (event) => {
+				// While flow control is off its tools refuse, so guidance that tells the model to use them
+				// would be instructions it cannot follow.
+				if (options.enabled && !options.enabled()) return;
 				const missing = flowWaitGuidance(pi.getActiveTools()).filter((line) => !event.systemPrompt.includes(line));
 				if (missing.length)
 					return {
@@ -174,6 +182,7 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 				promptGuidelines: FLOW_WAIT_GUIDANCE,
 				parameters: waitSchema,
 				async execute(toolCallId, raw, signal, _update, ctx) {
+					requireEnabled();
 					const args = parseWait(raw),
 						attachment = options.attachment();
 					if (attachment.ledger.scope.sessionId !== ctx.sessionManager.getSessionId())
@@ -245,6 +254,7 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 				promptSnippet: "agent_wait_cancel: remove a dependency gate without stopping its job or completing its work.",
 				parameters: cancelSchema,
 				async execute(toolCallId, raw, signal, _update, ctx) {
+					requireEnabled();
 					fields(raw, ["token", "reason"]);
 					text(raw.token);
 					text(raw.reason, 4096);

@@ -1,11 +1,15 @@
 import assert from "node:assert/strict";
-import { mkdtemp, rm } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { test } from "node:test";
 import { pathToFileURL } from "node:url";
 import { build } from "esbuild";
-import { applyInstalledMultiloopWaitSkill } from "../../../scripts/apply-multiloop-wait-skill.mjs";
+import {
+	applyInstalledMultiloopWaitSkill,
+	applyMultiloopWaitSkill,
+} from "../../../scripts/apply-multiloop-wait-skill.mjs";
 
 const root = resolve(import.meta.dirname, "../../..");
 async function fixture(t) {
@@ -252,4 +256,65 @@ test("goal and measured loop lifecycle immediately update footer status", async 
 	assert.equal(f.statuses.get("multiloop"), "multiloop: 1 completed");
 	await f.emit("session_start");
 	assert.equal(f.statuses.get("multiloop"), undefined);
+});
+
+test("installed multiloop drives natively while the host reports flow control off", async (t) => {
+	const f = await fixture(t),
+		intents = [],
+		changes = [],
+		transitions = [];
+	let live = false;
+	const detach = f.attachMultiloopFlow("session", {
+		version: 1,
+		live: () => live,
+		submit: (intent) => intents.push(intent),
+		waiting: () => false,
+		changed: (lanes) => changes.push(lanes),
+		transition: async (lane, status) => transitions.push({ ...lane, status }),
+	});
+	t.after(detach);
+	// Lifecycle and status still route while off, so flow control keeps the lane state it needs back.
+	await f.command("goal", "Offline campaign");
+	assert.deepEqual(intents, []);
+	assert.equal(f.sends.length, 1);
+	assert.match(f.sends.at(-1), /Offline campaign/);
+	assert.equal(transitions.at(-1).status, "active");
+	assert.equal(changes.at(-1)[0].lane, "offline-campaign");
+	await f.command("goal", "pause");
+	assert.equal(transitions.at(-1).status, "paused");
+	live = true;
+	await f.command("goal", "resume");
+	assert.equal(intents.at(-1).reason, "goal-resume");
+	assert.equal(f.sends.length, 1, "a live host drives the continuation instead of sending it natively");
+});
+
+test("installed multiloop gate upgrade replaces only the pinned preceding source", async (t) => {
+	const installed = join(root, "packages/cli/node_modules/pi-multiloop/extensions/pi-multiloop/index.ts");
+	const source = await readFile(installed, "utf8");
+	const previous = source
+		.replace(
+			'import { multiloopFlow, multiloopFlowDriving, connectMultiloopFlow } from "./jouzu-flow.js";',
+			'import { multiloopFlow, connectMultiloopFlow } from "./jouzu-flow.js";',
+		)
+		.replaceAll("multiloopFlowDriving(", "multiloopFlow(");
+	const lock = JSON.parse(await readFile(join(root, "upstream/multiloop-wait-skill/patch.lock.json"), "utf8"));
+	assert.equal(createHash("sha256").update(previous).digest("hex"), lock.extension.previousAfter);
+	const target = await mkdtemp(join(root, "packages/cli/node_modules/.jouzu-loop-upgrade-"));
+	t.after(() => rm(target, { recursive: true, force: true }));
+	await mkdir(join(target, "extensions/pi-multiloop"), { recursive: true });
+	await writeFile(join(target, "package.json"), JSON.stringify({ name: "pi-multiloop", version: "0.4.0" }));
+	for (const path of [
+		"skills/multiloop/SKILL.md",
+		"extensions/pi-multiloop/index.ts",
+		"extensions/pi-multiloop/lanes.ts",
+		"extensions/pi-multiloop/jouzu-flow.ts",
+	]) {
+		await mkdir(join(target, path, ".."), { recursive: true });
+		await writeFile(join(target, path), await readFile(join(root, "packages/cli/node_modules/pi-multiloop", path)));
+	}
+	await writeFile(join(target, "extensions/pi-multiloop/index.ts"), previous);
+	await assert.rejects(applyMultiloopWaitSkill(target, true), /differs/);
+	assert.equal(await applyMultiloopWaitSkill(target), 1);
+	assert.equal(await readFile(join(target, "extensions/pi-multiloop/index.ts"), "utf8"), source);
+	assert.equal(await applyMultiloopWaitSkill(target, true), 0);
 });

@@ -1,4 +1,5 @@
 import type { InlineExtension, ToolDefinition } from "@earendil-works/pi-coding-agent";
+import { FLOW_OFF_MESSAGE } from "./flow-off-message.js";
 import { checkFlowNoReply, NO_REPLY_REFUSALS } from "./no-reply.js";
 import type { PiSessionFlowIngress } from "./pi-session-ingress.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
@@ -17,6 +18,7 @@ const schema = {
 
 export interface FlowNoReplyOptions {
 	ingress(): PiSessionFlowIngress;
+	enabled?(): boolean;
 }
 
 /**
@@ -40,6 +42,7 @@ export function createFlowNoReplyExtension(options: FlowNoReplyOptions): InlineE
 				promptGuidelines: FLOW_NO_REPLY_GUIDANCE,
 				parameters: schema,
 				async execute(_toolCallId, raw, _signal, _update, ctx) {
+					if (options.enabled && !options.enabled()) throw new FlowLedgerError("stale", FLOW_OFF_MESSAGE);
 					const permission = (raw as { permission?: unknown })?.permission;
 					const ingress = options.ingress();
 					const branch = ingress.branch();

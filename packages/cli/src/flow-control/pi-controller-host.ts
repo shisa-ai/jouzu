@@ -22,6 +22,8 @@ export interface PiControllerHostOptions {
 	/** Exact controller queue consumption, after its durable claim and user-work preemption. */
 	consumedAttempt?(attempt: import("./receipt-ledger.js").FlowAttempt): void;
 	invokeWork?(attemptId: string, invoke: () => Promise<void>): Promise<void>;
+	/** Flow control is on. While it is off, host input is not validated against finished dispatches. */
+	flowEnabled?(): boolean;
 }
 interface Pending {
 	input: FlowModelInput;
@@ -127,7 +129,7 @@ export class PiControllerHost implements FlowControllerHost {
 		attached.add(session);
 		this.retainResults = options.results?.retain.bind(options.results);
 		this.invokeWork = options.invokeWork;
-		this.queue = new PiQueueReceipts(session.agent, ledger);
+		this.queue = new PiQueueReceipts(session.agent, ledger, () => options.flowEnabled?.() !== false);
 		this.history = new PiHistoryReceipts(session, ledger);
 		// Records ledger facts only; PiNativeRequests owns the transport and drives it.
 		this.requests = new PiRequestReceipts(session, ledger);

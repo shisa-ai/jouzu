@@ -715,7 +715,7 @@ test("stale task cancellation preserves joined results through provider delivery
 				attempt.members.some((member) => member.id === result.id),
 		),
 	);
-	await f.session.prompt("/flow reset");
+	await f.session.prompt("/flow clear");
 	await f.session.prompt("User input after cancellation");
 	assert.ok(JSON.stringify(f.bodies.at(-1)).includes("User input after cancellation"));
 	assert.ok(

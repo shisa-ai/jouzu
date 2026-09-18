@@ -9,6 +9,10 @@ import type { FlowTask } from "./task-producer.js";
 
 export interface FlowStatusOptions {
 	ingress(): PiSessionFlowIngress;
+	/** Flow control is on for this session. Absent means on, so a read-only host reports as usual. */
+	enabled?(): boolean;
+	/** Turn flow control off (`false`) or on (`true`). Absent means this host cannot switch it. */
+	setEnabled?(enabled: boolean): Promise<{ flushed: number; waits: number }>;
 	/** Work a loaded producer still names that this session holds no authority for. */
 	unaccountable?(): FlowUnaccountableWork[];
 	now?(): number;
@@ -16,17 +20,31 @@ export interface FlowStatusOptions {
 	tasks?(): FlowTask[];
 }
 
+/** Flow control is on unless the host says otherwise; a host without the switch never turns it off. */
+function flowOn(options: FlowStatusOptions): boolean {
+	return options.enabled?.() !== false;
+}
+
+const FLOW_OFF_NOTICE = [
+	"Flow control is off for this session: nothing is intercepted, queued, or scheduled.",
+	"Jobs, tasks, and lanes run and report through their own delivery paths.",
+	"Run /flow on to turn flow control back on; /flow runtime still reports builds.",
+].join("\n");
+
 const USAGE = [
 	"/flow shows what session flow control is holding.",
 	"/flow details [page] includes full identifiers and per-item controls.",
 	"/flow runtime shows running and installed builds and startup package paths and hashes.",
+	"/flow off turns flow control off: retained sends run natively and nothing is queued or scheduled.",
+	"/flow on turns flow control back on for this session.",
 	"/flow retry <request> authorizes one withheld request.",
 	"/flow cancel <token> removes a wait's dependency gate without stopping its job.",
 	"/flow pause holds every automated turn in this session; /flow resume releases it.",
 	"/flow pause <work> holds one campaign's automated turns; /flow resume <work> releases it.",
 	"/flow stop <work> retires a campaign and ends its waits. None of these stop a running job.",
 	"/flow resolve <attempt> retry|discard decides an interrupted turn whose outcome is unknown.",
-	"/flow reset (or /flow clear) releases a stuck reservation without stopping jobs or deleting receipts.",
+	"/flow reset turns flow control off and on again: a full reset of what is queued and held.",
+	"/flow clear releases a stuck reservation without stopping jobs or deleting receipts.",
 ].join("\n");
 
 /**
@@ -47,20 +65,20 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 		 */
 		async announcePause() {
 			const reason = options.ingress().automatedPause();
-			if (!reason || !announce) return;
+			if (!reason || !announce || !flowOn(options)) return;
 			const inspected = await options.ingress().inspect();
 			const holding = inspected.submissions.some((submission) => submission.admission === "held");
 			if (!holding) return;
 			announce(
 				reason === "a turn was interrupted"
 					? "Flow control paused after an interrupt. Automated work resumes on your next message. Run /flow for details."
-					: "Flow control paused after an admission failure. Pending work is held. Run /flow for details or /flow reset to recover.",
+					: "Flow control paused after an admission failure. Pending work is held. Run /flow for details, /flow clear to release the hold, or /flow reset to reset delivery.",
 			);
 		},
 		factory(pi) {
 			pi.registerMessageRenderer("jouzu-flow", renderFlowMessage);
 			pi.on("session_start", (_event, ctx) => {
-				if (ctx.hasUI && options.ingress().automatedPause() === "the session was reopened")
+				if (ctx.hasUI && flowOn(options) && options.ingress().automatedPause() === "the session was reopened")
 					ctx.ui.notify(
 						"Flow control is paused after reopening this session. Inspect with /flow; resume automation with /flow resume or your next message.",
 						"info",
@@ -80,7 +98,59 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 							notify(options.runtimeReport?.() ?? "Runtime diagnostics are unavailable in this session.");
 							return;
 						}
+						// Off and on are the only controls that work in both states, so they come first.
+						if (verb === "off" || verb === "on" || verb === "reset") {
+							if (target || choice || rest.length) {
+								notify(USAGE, "error");
+								return;
+							}
+							if (!options.setEnabled) {
+								notify("This session cannot switch flow control.", "error");
+								return;
+							}
+							const live = flowOn(options);
+							if (verb === "off" && !live) {
+								notify("Flow control is already off for this session. Turn it back on with /flow on.");
+								return;
+							}
+							if (verb === "on" && live) {
+								notify("Flow control is already on for this session.");
+								return;
+							}
+							// Off and on take effect at once and tear nothing down, so a running turn is no obstacle:
+							// anything Pi has queued for it runs natively from here on.
+							const off = verb === "on" ? { flushed: 0, waits: 0 } : await options.setEnabled(false);
+							if (verb !== "off") await options.setEnabled(true);
+							const did = [
+								...(off.flushed ? [`${off.flushed} retained send${off.flushed === 1 ? "" : "s"} ran natively`] : []),
+								...(off.waits ? [`${off.waits} wait${off.waits === 1 ? "" : "s"} ended`] : []),
+							];
+							const headline =
+								verb === "off"
+									? "Flow control is off."
+									: verb === "on"
+										? "Flow control is on again."
+										: "Flow control reset.";
+							const tail =
+								verb === "off"
+									? "Jobs, tasks, and lanes now run and report through their own delivery paths."
+									: "Held results and waits are live and run from the next idle boundary.";
+							// Off and on do not release a withheld request: that stays an explicit decision.
+							const held = options.ingress().branch().attachment.nativeRequests.recoveryBlocked
+								? " A withheld request still needs /flow clear."
+								: "";
+							notify(`${headline} ${did.length ? `${did.join("; ")}. ` : ""}${tail}${held}`);
+							return;
+						}
 						const ingress = options.ingress();
+						if (!flowOn(options)) {
+							const read = verb === undefined || verb === "details";
+							notify(
+								read ? FLOW_OFF_NOTICE : `${FLOW_OFF_NOTICE}\n/flow ${verb} works again after /flow on.`,
+								read ? "info" : "error",
+							);
+							return;
+						}
 						if (
 							verb === undefined ||
 							(verb === "details" && (!target || /^[1-9]\d{0,5}$/.test(target)) && !choice && !rest.length)
@@ -189,7 +259,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 							);
 							return;
 						}
-						if (verb === "reset" || verb === "clear") {
+						if (verb === "clear") {
 							if (rest.length || choice || target) {
 								notify(USAGE, "error");
 								return;
@@ -200,7 +270,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 							} catch (error) {
 								if (error instanceof FlowLedgerError && error.code === "busy") {
 									notify(
-										"Flow reset needs an idle session. Interrupt the running turn, then run /flow reset again.",
+										"Flow clear needs an idle session. Interrupt the running turn, then run /flow clear again.",
 										"error",
 									);
 									return;
@@ -209,15 +279,15 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 							}
 							if (result.recoveryHeld) {
 								notify(
-									"Flow reset preserved pending evidence that still needs reconciliation. Run /flow for the remaining hold.",
+									"Flow clear preserved pending evidence that still needs reconciliation. Run /flow for the remaining hold.",
 									"error",
 								);
 							} else if (result.releasedRequests) {
 								notify(
-									`Flow reset released ${result.releasedRequests} request hold${result.releasedRequests === 1 ? "" : "s"}${result.attemptId ? ` and cleared reservation ${result.attemptId}` : ""}. Receipt evidence was preserved. Continue with a new message.`,
+									`Flow clear released ${result.releasedRequests} request hold${result.releasedRequests === 1 ? "" : "s"}${result.attemptId ? ` and cleared reservation ${result.attemptId}` : ""}. Receipt evidence was preserved. Continue with a new message.`,
 								);
 							} else if (result.kind === "inactive") {
-								notify("Flow reset completed. No active reservation was found; continue with a new message.");
+								notify("Flow clear completed. No active reservation was found; continue with a new message.");
 							} else {
 								notify(
 									`Cleared flow reservation ${result.attemptId}. Jobs and waits were left unchanged; receipt evidence was preserved.`,

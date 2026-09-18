@@ -8,11 +8,11 @@ import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { PiQueueReceipts } from "../dist/flow-control/pi-queue-receipts.js";
 
 const member = { id: "input", revision: "1", kind: "work", required: true, contentHash: "a".repeat(64) };
-async function fixture(t, checkpoints) {
+async function fixture(t, checkpoints, flowEnabled) {
 	const root = await mkdtemp(join(tmpdir(), "jouzu-flow-claims-"));
 	const host = await createFlowSession(t, { checkpoints });
 	const attachment = await PiFlowAttachment.open(root, { sessionId: host.session.sessionId, branchId: "main" });
-	const receipts = new PiQueueReceipts(host.session.agent, attachment.ledger);
+	const receipts = new PiQueueReceipts(host.session.agent, attachment.ledger, flowEnabled);
 	t.after(async () => {
 		receipts.close();
 		await attachment.close();
@@ -197,4 +197,50 @@ test("an idle custom send cannot start a direct provider run under a queue permi
 		/cannot start a direct native run/,
 	);
 	assert.equal(requests.length, 0);
+});
+
+/**
+ * A producer's deferred callback runs in the async context of whatever registered it, so a timer armed
+ * inside a dispatch inherits that dispatch's permit after the dispatch is over. Flow control on, that
+ * leftover permit is a bookkeeping error; flow control off, it must not decide whether Pi may run.
+ */
+async function deferredRun(session, receipts) {
+	// The run is created inside the dispatch, so it keeps the dispatch's async context, and it waits
+	// for the test to release it so the permit is finished by the time it starts.
+	const fire = deferred();
+	const done = deferred();
+	let outcome;
+	await receipts.enqueue("attempt", () => {
+		const item = session.followUp("work");
+		void (async () => {
+			await fire.promise;
+			try {
+				await session.agent.prompt("deferred");
+				outcome = "ran";
+			} catch (error) {
+				outcome = error.message;
+			} finally {
+				done.resolve();
+			}
+		})();
+		return item;
+	});
+	fire.resolve();
+	await done.promise;
+	return outcome;
+}
+
+test("a finished queue permit still refuses a direct native run while flow control is on", async (t) => {
+	const { session, requests, receipts } = await fixture(t);
+	assert.match(await deferredRun(session, receipts), /cannot start a direct native run/);
+	assert.equal(requests.length, 0);
+});
+
+test("a finished queue permit stops mattering once flow control is off", async (t) => {
+	const { session, requests, receipts } = await fixture(t, undefined, () => false);
+	assert.equal(await deferredRun(session, receipts), "ran");
+	assert.ok(
+		requests.some((request) => JSON.stringify(request).includes("deferred")),
+		"the deferred run reached the provider",
+	);
 });

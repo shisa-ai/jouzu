@@ -56,6 +56,8 @@ export class PiSessionFlowIngress implements Ingress {
 	private closing?: Promise<void>;
 	private disposed = false;
 	private fenced = false;
+	/** Flow control is off: submissions pass through, nothing is queued, and nothing is scheduled. */
+	private suspended = false;
 	private readonly pending = new Map<string, Pending>();
 	private readonly waitContexts = new Map<
 		string,
@@ -91,6 +93,8 @@ export class PiSessionFlowIngress implements Ingress {
 		this.opening = (async () => {
 			const service = await PiFlowSessionService.open(session, {
 				...this.options,
+				// Request-level holds follow the same switch as interception and scheduling.
+				flowEnabled: () => this.enabled(),
 				policy: () => {
 					const policy = this.options.policy();
 					return {
@@ -191,9 +195,89 @@ export class PiSessionFlowIngress implements Ingress {
 			return this.wakeProducers();
 		});
 	}
+	/** Flow control is on: this session still intercepts, queues, and schedules. */
+	enabled(): boolean {
+		return !this.disposed && !this.suspended;
+	}
+
+	/**
+	 * Turn flow control off for this session. Retained sends are dispatched natively, scheduling stops,
+	 * live waits end, and the producers' own delivery paths take over. The branch attachment stays open:
+	 * nothing is torn down, so `resume` needs no re-attach and no producer re-handshake.
+	 */
+	async suspend(): Promise<{ flushed: number; waits: number }> {
+		if (this.disposed) throw new FlowLedgerError("stale", "Flow ingress is closed.");
+		if (this.suspended) return { flushed: 0, waits: 0 };
+		this.suspended = true;
+		this.stopReleaseNotifications();
+		const flushed = await this.flushRetained();
+		const waits = await this.cancelParkedWaits();
+		// Off is a reset of the session spigot, so a pause that was holding it is spent rather than kept.
+		this.resumeAutomated();
+		try {
+			await this.options.detachProducers?.();
+		} catch (error) {
+			this.options.autoRelease?.onError(error);
+		}
+		return { flushed, waits };
+	}
+
+	/** Turn flow control back on for this session, deriving what runs from the retained journal. */
+	async resume(): Promise<void> {
+		if (this.disposed) throw new FlowLedgerError("stale", "Flow ingress is closed.");
+		if (!this.suspended) return;
+		this.suspended = false;
+		await this.refreshUserInput();
+		await this.options.reattachProducers?.();
+		await this.startScheduling(true);
+		this.requestRelease();
+	}
+
+	/** End live waits, which have no native equivalent: flow control owns them and is no longer running. */
+	private async cancelParkedWaits(): Promise<number> {
+		if (!this.service) return 0;
+		const waiting = (await this.service.parkedWaits()).filter((wait) => wait.state === "waiting");
+		for (const wait of waiting) {
+			try {
+				await this.cancelWait(wait.token, "Flow control was turned off.");
+			} catch (error) {
+				this.options.autoRelease?.onError(error);
+			}
+		}
+		return waiting.length;
+	}
+
+	/**
+	 * Hand retained sends back to Pi. Nothing is admitted, composed, or journalled: the callback is the
+	 * host's own dispatch, which is exactly what would have run had flow control never intercepted it.
+	 * A release already under way owns its entry, so this waits for it rather than dispatching twice.
+	 */
+	private async flushRetained(): Promise<number> {
+		let flushed = 0;
+		for (const [id, pending] of [...this.pending.entries()]) {
+			if (pending.running) {
+				try {
+					await pending.running;
+				} catch (error) {
+					this.options.autoRelease?.onError(error);
+				}
+			}
+			if (this.pending.get(id) !== pending) continue;
+			this.pending.delete(id);
+			try {
+				await pending.dispatch();
+				flushed++;
+			} catch (error) {
+				this.options.autoRelease?.onError(error);
+			}
+		}
+		this.retainedUserInput.clear();
+		return flushed;
+	}
 	/** Join producer changes, releasing retained user callbacks before semantic selection. */
 	wakeProducers(): Promise<void> {
 		const branch = this.branch();
+		if (this.suspended) return Promise.resolve();
 		if (this.frames.getStore()?.active)
 			return Promise.reject(new FlowLedgerError("busy", "Producer scheduling cannot join its own ingress operation."));
 		this.producerWakeRequested = true;
@@ -275,7 +359,12 @@ export class PiSessionFlowIngress implements Ingress {
 		);
 	}
 
-	private async startScheduling(): Promise<void> {
+	/**
+	 * Subscribe the boundary callbacks that drive releases. `resume` re-runs this after `suspend`
+	 * unsubscribed them; deadline scheduling and the recovered-decision wake are one-time work that
+	 * belongs to the first call, since neither was stopped.
+	 */
+	private async startScheduling(resumed = false): Promise<void> {
 		const automatic = this.options.autoRelease;
 		if (!automatic) return;
 		const branch = this.branch();
@@ -290,7 +379,7 @@ export class PiSessionFlowIngress implements Ingress {
 			unsubscribeWaits();
 			unsubscribeProducers();
 		};
-		await branch.attachment.waits.startDeadlines(automatic.onError, automatic.clock);
+		if (!resumed) await branch.attachment.waits.startDeadlines(automatic.onError, automatic.clock);
 		// The monitor lives here rather than in the store because it needs the producer registry to
 		// resolve a requested policy, and the store must not depend on its own producers.
 		const health = new FlowWaitHealthMonitor({
@@ -324,7 +413,7 @@ export class PiSessionFlowIngress implements Ingress {
 		this.queueRelease(true);
 	}
 	private queueRelease(semantic: boolean): void {
-		if (!this.options.autoRelease || this.disposed || this.fenced) return;
+		if (!this.options.autoRelease || this.disposed || this.fenced || this.suspended) return;
 		this.releaseRequested = true;
 		this.semanticReleaseRequested ||= semantic;
 		if (this.scheduledRelease || this.automaticReleaseRunning) return;
@@ -633,6 +722,8 @@ export class PiSessionFlowIngress implements Ingress {
 		return operation;
 	}
 	submit(submission: Submission, dispatch: () => Promise<void>): Promise<void> {
+		// Flow control is off: the host's own dispatch runs, unread and unrecorded.
+		if (this.suspended) return dispatch();
 		const captured = structuredClone(submission);
 		const user = isNativeUserInput(captured);
 		// Local flow inspection and repair must remain reachable while provider admission is blocked.
@@ -853,6 +944,7 @@ export class PiSessionFlowIngress implements Ingress {
 	}
 	/** Release at most one eligible live callback; new arrivals belong to a later pass. */
 	releaseReady(): Promise<{ released: string[]; held: string[] }> {
+		if (this.suspended) return Promise.resolve({ released: [], held: [] });
 		const branch = this.branch();
 		if (this.frames.getStore()?.active)
 			return Promise.reject(new FlowLedgerError("busy", "Flow release cannot run from its own admission or dispatch."));

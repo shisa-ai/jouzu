@@ -15,7 +15,7 @@ import { copyFlowSession } from "./fixtures/flow-session-copy.mjs";
 
 const sourceSession = process.env.JOUZU_FLOW_RECOVERY_SESSION;
 const sourceRoot = process.env.JOUZU_FLOW_RECOVERY_ROOT;
-test("saved session recovers on a disposable copy, resets, and resumes again", {
+test("saved session recovers on a disposable copy, clears the hold, and resumes again", {
 	skip:
 		!sourceSession &&
 		!sourceRoot &&
@@ -37,11 +37,11 @@ test("saved session recovers on a disposable copy, resets, and resumes again", {
 		const notices = capturedNotices(f.session);
 		await f.session.prompt("/flow");
 		assert.ok(notices.length, "saved recovery state must not block inspection");
-		assert.match(notices.map((notice) => notice.text).join("\n"), /\/flow reset/);
+		assert.match(notices.map((notice) => notice.text).join("\n"), /\/flow clear/);
 		const before = await f.ingress.branch().attachment.nativeRequests.snapshot();
-		await f.session.prompt("/flow reset");
+		await f.session.prompt("/flow clear");
 		assert.equal(f.ingress.branch().attachment.nativeRequests.recoveryBlocked, false);
-		assert.equal(f.bodies.length, 0, "reset itself does not call the provider");
+		assert.equal(f.bodies.length, 0, "clear itself does not call the provider");
 		const after = await f.ingress.branch().attachment.nativeRequests.snapshot();
 		for (const receipt of before.filter((record) => record.outcome === "withheld")) {
 			const preserved = after.find((record) => record.id === receipt.id);

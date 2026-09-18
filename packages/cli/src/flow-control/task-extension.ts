@@ -6,6 +6,8 @@ import { type FlowTask, TaskFlowProducer, taskWorkBinding } from "./task-produce
 
 export function createTaskControllerExtension(options: {
 	ingress(): PiSessionFlowIngress;
+	/** Flow control is on. Absent means on, so a host without the switch keeps its live producer. */
+	enabled?(): boolean;
 	onError(error: unknown): void;
 }): InlineExtension & {
 	consumedAttempt(attempt: FlowAttempt): void;
@@ -91,6 +93,8 @@ export function createTaskControllerExtension(options: {
 						version: 1,
 						submit: next.submit.bind(next),
 						changed,
+						// With flow control off, a task's own continuations and deliveries take over again.
+						live: () => options.enabled?.() !== false,
 						async ready() {
 							assertActive();
 							await next.synchronize();

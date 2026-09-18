@@ -40,17 +40,21 @@ export class PiNativeDispatch {
 	private closed = false;
 	private drained?: () => void;
 	private closing?: Promise<void>;
+	private readonly enabled: () => boolean;
 	private readonly history: PiNativeHistory;
 	constructor(
 		private readonly session: AgentSession,
 		private readonly store: FlowSubmissionStore,
 		private readonly admitQueued?: (record: RetainedSubmission, input: FlowNativeInput) => Promise<boolean>,
+		/** Flow control is on. While it is off, permits from finished dispatches are ignored. */
+		flowEnabled?: () => boolean,
 	) {
 		if (session.sessionId !== store.scope.sessionId)
 			throw new FlowLedgerError("scope", "Native observation requires matching session storage.");
 		if (attached.has(session))
 			throw new FlowLedgerError("identity", "Pi session already has native dispatch observation.");
 		attached.add(session);
+		this.enabled = flowEnabled ?? (() => true);
 		this.sessionId = session.sessionId;
 		this.history = new PiNativeHistory(session, store);
 		const agent = session.agent;
@@ -441,7 +445,14 @@ export class PiNativeDispatch {
 	private frame(): Frame | undefined {
 		this.assertActive();
 		const frame = this.frames.getStore();
-		if (frame && !frame.active) throw new FlowLedgerError("stale", "Native input outlived its dispatch.");
+		if (!frame) return undefined;
+		if (!frame.active) {
+			// A finished dispatch's frame is inherited by any callback the turn registered, such as a
+			// producer's deferred completion. Flow control off no longer validates host input, so that
+			// leftover frame must not decide whether the host may run.
+			if (!this.enabled()) return undefined;
+			throw new FlowLedgerError("stale", "Native input outlived its dispatch.");
+		}
 		return frame;
 	}
 	dispatch<T>(id: string, revision: number, operationId: string, run: () => Promise<T>): Promise<T> {

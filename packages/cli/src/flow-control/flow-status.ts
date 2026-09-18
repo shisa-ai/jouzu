@@ -200,7 +200,7 @@ export function formatFlowStatus(
 		lines.push(`Paused: ${status.paused}`);
 		lines.push(
 			status.paused.startsWith("flow admission failed (")
-				? "Repair the cause, then run /flow reset and send a new message."
+				? "Repair the cause, then run /flow clear and send a new message."
 				: "Resume now with: /flow resume",
 		);
 		lines.push("");
@@ -238,7 +238,7 @@ export function formatFlowStatus(
 			);
 			lines.push(`  retry with: /flow retry ${request.requestId}`);
 		}
-		lines.push("After repairing the cause, /flow reset releases these holds and keeps their receipts.");
+		lines.push("After repairing the cause, /flow clear releases these holds and keeps their receipts.");
 	}
 	if (status.uncertain.length) {
 		if (lines.length) lines.push("");

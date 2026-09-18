@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { readFile, realpath, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { extensionPath, reconnectMultiloopOnTree, transformMultiloopFlow } from "./multiloop-flow-transform.mjs";
+import { extensionPath, gateMultiloopFlowDriving, transformMultiloopFlow } from "./multiloop-flow-transform.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const sha = (value) => createHash("sha256").update(value).digest("hex");
@@ -51,7 +51,7 @@ export async function applyMultiloopWaitSkill(packageRoot, checkOnly = false) {
 		const changed =
 			extensionDigest === lock.extension.before
 				? transformMultiloopFlow(extension)
-				: reconnectMultiloopOnTree(extension);
+				: gateMultiloopFlowDriving(extension);
 		if (sha(changed) !== lock.extension.after) throw new Error("Multiloop extension transform differs.");
 		writes.push([join(packageRoot, extensionPath), changed]);
 	}
@@ -71,7 +71,8 @@ export async function applyMultiloopWaitSkill(packageRoot, checkOnly = false) {
 		throw error;
 	});
 	if (installed !== runtime) {
-		if (checkOnly || installed !== undefined) throw new Error("Multiloop installed runtime differs.");
+		if (checkOnly || (installed !== undefined && sha(installed) !== lock.previousRuntime))
+			throw new Error("Multiloop installed runtime differs.");
 		writes.push([destination, runtime]);
 	}
 	for (const [destination, content] of writes) await writeFile(destination, content);

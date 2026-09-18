@@ -58,7 +58,7 @@ test("/flow reports a withheld request through the recovery gate without retaini
 	assert.ok(notices.length, "inspection must reach the local command handler");
 	const output = notices.map((notice) => notice.text).join("\n");
 	assert.match(output, /Required input was removed or changed/);
-	assert.match(output, /\/flow reset/);
+	assert.match(output, /\/flow clear/);
 	const withheld = (await f.ingress.branch().attachment.nativeRequests.snapshot()).find(
 		(record) => record.outcome === "withheld",
 	);
@@ -71,39 +71,39 @@ test("/flow reports a withheld request through the recovery gate without retaini
 	assert.deepEqual(await f.ingress.branch().attachment.submissions.snapshot(), before);
 });
 
-for (const command of ["/flow reset", "/flow clear"])
-	test(`${command} recovers a required-input hold and preserves its receipt across reopen`, async (t) => {
-		const f = await withheldSession(t);
-		f.restore();
-		const notices = capturedNotices(f.session);
-		const store = f.ingress.branch().attachment.nativeRequests;
-		const before = await store.snapshot();
-		await f.session.prompt(command);
-		assert.equal(store.recoveryBlocked, false, JSON.stringify(notices));
-		assert.equal(f.ingress.automatedPause(), undefined);
-		assert.equal(f.bodies.length, 0, "reset does not send work");
-		assert.ok(notices.some((notice) => /released 1 request hold/.test(notice.text)));
-		const recovered = (await store.snapshot()).find((record) => record.id === before[0].id);
-		assert.equal(recovered.reset, true);
-		assert.equal(recovered.outcome, "withheld");
-		assert.deepEqual(recovered.withheldPayload, before[0].withheldPayload);
-		await f.session.prompt("Continue after repair");
-		await f.session.prompt("Continue again");
-		assert.equal(f.bodies.length, 2, f.session.agent.state.errorMessage);
-		assert.ok(JSON.stringify(f.bodies[0]).includes("Required continuation"));
-		const next = await replacedSession(t, f, {
-			reason: "resume",
-			persist: true,
-			sessionManager: SessionManager.open(f.sessionManager.getSessionFile()),
-			producerExtensions: f.producers,
-		});
-		await next.session.prompt("Continue after reopening");
-		assert.equal(next.bodies.length, 1, next.session.agent.state.errorMessage);
-		assert.deepEqual(f.errors, []);
-		assert.deepEqual(next.errors, []);
+// `/flow clear` is the reservation release; `/flow reset` is off-then-on and must leave the hold alone.
+test("/flow clear recovers a required-input hold and preserves its receipt across reopen", async (t) => {
+	const f = await withheldSession(t);
+	f.restore();
+	const notices = capturedNotices(f.session);
+	const store = f.ingress.branch().attachment.nativeRequests;
+	const before = await store.snapshot();
+	await f.session.prompt("/flow clear");
+	assert.equal(store.recoveryBlocked, false, JSON.stringify(notices));
+	assert.equal(f.ingress.automatedPause(), undefined);
+	assert.equal(f.bodies.length, 0, "clear does not send work");
+	assert.ok(notices.some((notice) => /released 1 request hold/.test(notice.text)));
+	const recovered = (await store.snapshot()).find((record) => record.id === before[0].id);
+	assert.equal(recovered.reset, true);
+	assert.equal(recovered.outcome, "withheld");
+	assert.deepEqual(recovered.withheldPayload, before[0].withheldPayload);
+	await f.session.prompt("Continue after repair");
+	await f.session.prompt("Continue again");
+	assert.equal(f.bodies.length, 2, f.session.agent.state.errorMessage);
+	assert.ok(JSON.stringify(f.bodies[0]).includes("Required continuation"));
+	const next = await replacedSession(t, f, {
+		reason: "resume",
+		persist: true,
+		sessionManager: SessionManager.open(f.sessionManager.getSessionFile()),
+		producerExtensions: f.producers,
 	});
+	await next.session.prompt("Continue after reopening");
+	assert.equal(next.bodies.length, 1, next.session.agent.state.errorMessage);
+	assert.deepEqual(f.errors, []);
+	assert.deepEqual(next.errors, []);
+});
 
-test("reset preserves partially cancelled source evidence", async (t) => {
+test("clear preserves partially cancelled source evidence", async (t) => {
 	const f = await nativeRequests(t, {
 		retainInputs: true,
 		enforceRequiredSources: true,
@@ -150,12 +150,12 @@ for (const failsAgain of [false, true])
 		assert.equal(await f.store.reset(), 0);
 	});
 
-test("input held before reset does not race a new prompt for the work invocation", async (t) => {
+test("input held before clear does not race a new prompt for the work invocation", async (t) => {
 	const f = await withheldSession(t);
 	await f.session.prompt("Message held behind recovery");
 	assert.equal(f.bodies.length, 0);
 	f.restore();
-	await f.session.prompt("/flow reset");
+	await f.session.prompt("/flow clear");
 	await f.session.prompt("New message after recovery");
 	const deadline = Date.now() + 5000;
 	while (f.bodies.length < 2 && Date.now() < deadline) await new Promise((resolve) => setTimeout(resolve, 20));
