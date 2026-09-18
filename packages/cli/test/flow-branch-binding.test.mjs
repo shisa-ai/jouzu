@@ -7,7 +7,11 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
-import { bindPiFlowBranch, completePiFlowNavigation } from "../dist/flow-control/pi-branch-binding.js";
+import {
+	bindPiFlowBranch,
+	completePiFlowNavigation,
+	piTranscriptBranchOwners,
+} from "../dist/flow-control/pi-branch-binding.js";
 import { PiFlowSessionRegistry } from "../dist/flow-control/pi-session-registry.js";
 
 async function fixture(t, { memory = false } = {}) {
@@ -501,4 +505,73 @@ test("navigation onto a retired branch's position forks with a fresh marker", as
 	const settled = await registry.snapshot();
 	assert.equal(settled.branches.length, 2);
 	assert.equal(settled.activeBranchId, third.branchId);
+});
+
+// A restart reopens the transcript at its newest entry, so both the selected leaf and the file
+// tip can be resume targets. Retirement must protect both, or the next attach cannot bind.
+test("transcript owners cover the selected leaf and the reopened file tip", async (t) => {
+	const { manager, registry } = await fixture(t);
+	const first = await bindPiFlowBranch(registry, manager);
+	assert.deepEqual(
+		[...piTranscriptBranchOwners(manager)],
+		[first.branchId],
+		"a fresh session's leaf and tip are one branch",
+	);
+	const firstMarker = manager.getBranch().find((entry) => entry.type === "custom");
+	assert.equal(firstMarker.data.branchId, first.branchId);
+
+	// Fork at the marker itself, then leave the fork's message as the file tip.
+	const fork = await registry.beginNavigation((await registry.snapshot()).revision, manager.getLeafId());
+	manager.resetLeaf();
+	const second = await completePiFlowNavigation(registry, manager, fork.id);
+	manager.appendMessage({ role: "user", content: "on the second branch", timestamp: 1 });
+	manager.flush();
+
+	// The first branch's recorded departure is the marker, so returning there reactivates it and
+	// appends no marker: the selected leaf and the file tip now sit on different branches.
+	const back = await registry.beginNavigation((await registry.snapshot()).revision, manager.getLeafId());
+	manager.branch(firstMarker.id);
+	const resumed = await completePiFlowNavigation(registry, manager, back.id);
+	assert.equal(resumed.branchId, first.branchId, "returning to the recorded departure reactivates");
+	assert.equal((await registry.snapshot()).branches.length, 2, "reactivation appends no record");
+	assert.equal(manager.getLeafId(), firstMarker.id);
+	assert.notEqual(manager.getLeafId(), manager.getEntries().at(-1).id, "the tip is on the other branch");
+	assert.deepEqual(
+		[...piTranscriptBranchOwners(manager)].sort(),
+		[first.branchId, second.branchId].sort(),
+		"the selected leaf and the file tip are both protected",
+	);
+});
+
+test("retirement keeps a transcript owner bindable across a reopen", async (t) => {
+	const { manager, registry, open } = await fixture(t);
+	const first = await bindPiFlowBranch(registry, manager);
+	const firstMarker = manager.getBranch().find((entry) => entry.type === "custom");
+	const fork = await registry.beginNavigation((await registry.snapshot()).revision, manager.getLeafId());
+	manager.resetLeaf();
+	const second = await completePiFlowNavigation(registry, manager, fork.id);
+	manager.appendMessage({ role: "user", content: "on the second branch", timestamp: 1 });
+	manager.flush();
+	const back = await registry.beginNavigation((await registry.snapshot()).revision, manager.getLeafId());
+	manager.branch(firstMarker.id);
+	await completePiFlowNavigation(registry, manager, back.id);
+	assert.equal(manager.getLeafId(), firstMarker.id);
+
+	// Retirement at the smallest possible size must not drop a branch the restart can land on.
+	assert.equal(
+		await registry.retireBranchHistory(1, piTranscriptBranchOwners(manager)),
+		0,
+		"both records are load-bearing",
+	);
+	const before = await registry.snapshot();
+	assert.deepEqual(
+		before.branches.map((record) => record.id).sort(),
+		[first.branchId, second.branchId].sort(),
+	);
+	await registry.close();
+
+	// Without the protection the tip owner would be gone and this reopen would reject with
+	// `identity`, leaving the session permanently unbindable.
+	const reopened = SessionManager.open(manager.getSessionFile());
+	assert.deepEqual(await bindPiFlowBranch(await open(reopened), reopened), second);
 });
