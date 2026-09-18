@@ -46,6 +46,14 @@ export interface FlowSessionRegistryState {
 export const neverNavigated = (state: FlowSessionRegistryState): boolean =>
 	state.branches.length === 1 && state.retired === undefined;
 const address = value<FlowSessionRegistryState>("jouzu.flow.session", "v1");
+/**
+ * Bounds on one session's branch registry. The record count bounds the common case, and the byte
+ * budget is the real limit: it is what the storage layer and the transcript reader pay. Both are
+ * enforced by retirement, because a state over either is refused when it is read, which leaves the
+ * session unable to attach.
+ */
+const maxBranches = 1024;
+const maxStateBytes = 1024 * 1024;
 const identity = (id: unknown): id is string => typeof id === "string" && id.length > 0 && id.length <= 512;
 const leaf = (id: unknown) => id === null || identity(id);
 const validPosition = (position: FlowBranchPosition) =>
@@ -99,7 +107,7 @@ export class PiFlowSessionRegistry {
 			!identity(state.activeBranchId)
 		)
 			throw new FlowLedgerError("schema", "Invalid session branch registry.");
-		if (state.branches.length > 1024 || Buffer.byteLength(JSON.stringify(state)) > 1024 * 1024)
+		if (state.branches.length > maxBranches || this.stateBytes(state) > maxStateBytes)
 			throw new FlowLedgerError("capacity", "Session branch registry capacity reached.");
 		const retired = state.retired;
 		if (
@@ -253,27 +261,69 @@ export class PiFlowSessionRegistry {
 		});
 	}
 
-	private retireRecords(state: FlowSessionRegistryState, keep: number, protectedIds: ReadonlySet<string>): number {
-		let excess = Math.max(0, state.branches.length - keep);
-		const dropped = new Set<string>();
+	private stateBytes(state: FlowSessionRegistryState): number {
+		return Buffer.byteLength(JSON.stringify(state));
+	}
+
+	/** Drop at most `count` of the oldest records that are neither active nor protected. */
+	private dropOldest(
+		state: FlowSessionRegistryState,
+		count: number,
+		protectedIds: ReadonlySet<string>,
+		dropped: Set<string>,
+	): number {
+		let excess = Math.max(0, count);
 		state.branches = state.branches.filter((record) => {
 			if (!excess || record.id === state.activeBranchId || protectedIds.has(record.id)) return true;
 			dropped.add(record.id);
 			excess--;
 			return false;
 		});
-		if (!dropped.size) return 0;
-		const retained = new Set(state.branches.map((record) => record.id));
-		state.retired = {
-			count: (state.retired?.count ?? 0) + dropped.size,
-			through: [
-				...new Set(
-					state.branches.flatMap((record) =>
-						record.fromBranchId && !retained.has(record.fromBranchId) ? [record.fromBranchId] : [],
+		return Math.max(0, count) - excess;
+	}
+
+	/**
+	 * Retire oldest unprotected records down to `keep`, then further while the state is over the
+	 * byte budget. The byte budget is a load-time limit, so it has to bound growth here: a state
+	 * committed over it cannot be read back, which leaves the session unopenable. `reserve` is the
+	 * size of a record the caller is about to add, so the budget it has to fit is smaller by that
+	 * much. The second loop drops proportionally so a large excess converges in a few passes, and
+	 * stops as soon as a pass cannot shrink the state or has nothing left to drop.
+	 */
+	private retireRecords(
+		state: FlowSessionRegistryState,
+		keep: number,
+		protectedIds: ReadonlySet<string>,
+		reserve = 0,
+	): number {
+		const dropped = new Set<string>();
+		const retiredBefore = state.retired?.count ?? 0;
+		const refresh = () => {
+			const retained = new Set(state.branches.map((record) => record.id));
+			state.retired = {
+				count: retiredBefore + dropped.size,
+				through: [
+					...new Set(
+						state.branches.flatMap((record) =>
+							record.fromBranchId && !retained.has(record.fromBranchId) ? [record.fromBranchId] : [],
+						),
 					),
-				),
-			],
+				],
+			};
 		};
+		this.dropOldest(state, state.branches.length - keep, protectedIds, dropped);
+		if (dropped.size) refresh();
+		const budget = maxStateBytes - Math.max(0, reserve);
+		let bytes = this.stateBytes(state);
+		while (bytes > budget) {
+			const perRecord = Math.max(1, Math.ceil(bytes / state.branches.length));
+			const wanted = Math.max(1, Math.ceil((bytes - budget) / perRecord));
+			if (this.dropOldest(state, wanted, protectedIds, dropped) === 0) break;
+			refresh();
+			const next = this.stateBytes(state);
+			if (next >= bytes) break;
+			bytes = next;
+		}
 		return dropped.size;
 	}
 
@@ -372,15 +422,17 @@ export class PiFlowSessionRegistry {
 			const { branchId, fromBranchId } = state.transition;
 			this.recordDeparture(state);
 			// A verified fork marker is already durable. Reserve its slot without dropping its parent
-			// or any branch the transcript still owns.
-			this.retireRecords(state, 1023, protectedIds);
-			state.branches.push({
+			// or any branch the transcript still owns, and keep room for the record being added: the
+			// retirement has to leave the committed state inside the budget, not just the current one.
+			const record: FlowBranchRecord = {
 				id: branchId,
 				fromBranchId,
 				transitionId,
 				enteredAtLeafId,
 				...(position ? { position: structuredClone(position) } : {}),
-			});
+			};
+			this.retireRecords(state, 1023, protectedIds, Buffer.byteLength(JSON.stringify(record)) + 1);
+			state.branches.push(record);
 			state.activeBranchId = branchId;
 			delete state.transition;
 			return { result: { sessionId: state.sessionId, branchId }, changed: true };

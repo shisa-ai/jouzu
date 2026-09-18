@@ -258,6 +258,70 @@ test("a fork reservation honors the branches the transcript still owns", async (
 	assert.deepEqual(after.retired.through, ["branch-1"], "the dropped record is still cited by its retained child");
 });
 
+test("a fork that would exceed the byte budget retires records instead of failing", async (t) => {
+	const { root, cleanup } = await fixture(t);
+	const repo = new MemorySessionRepo();
+	const session = await repo.create({}, BACKGROUND_CONTEXT);
+	cleanup(() => repo.close(BACKGROUND_CONTEXT));
+	const registry = await PiFlowSessionRegistry.open(root, "parent", null, async () => session);
+	cleanup(() => registry.close());
+	// Records are far smaller in a real session (~330 bytes, measured from live navigation), so the
+	// record cap is reached long before the byte budget. Padding here reaches the budget under the
+	// record cap, which is the case the reservation has to handle.
+	const cap = 1024 * 1024;
+	const state = await registry.snapshot();
+	const size = (branches) => Buffer.byteLength(JSON.stringify({ ...state, branches }));
+	const pad = "x".repeat(500);
+	const branches = [];
+	while (cap - size(branches) > 40000) {
+		const i = branches.length;
+		branches.push({
+			id: `b${pad}${i}`.slice(0, 512),
+			enteredAtLeafId: `l${pad}${i}`.slice(0, 512),
+			...(i ? { fromBranchId: branches[i - 1].id, transitionId: `t${pad}${i}`.slice(0, 512) } : {}),
+		});
+	}
+	while (cap - size(branches) > 1300) {
+		const i = branches.length;
+		branches.push({
+			id: `b${i}`,
+			enteredAtLeafId: `l${i}`,
+			...(i ? { fromBranchId: branches[i - 1].id, transitionId: `t${i}` } : {}),
+		});
+	}
+	// One appended record with tunable fields lands the state a known distance below the budget.
+	const index = branches.length;
+	const tunable = {
+		id: `b${index}`,
+		enteredAtLeafId: "e",
+		fromBranchId: branches[index - 1].id,
+		transitionId: `t${index}`,
+		position: { entryId: "p", entryHash: "a".repeat(64) },
+	};
+	branches.push(tunable);
+	for (let m = 1; cap - size(branches) > 400 && m <= 512; m++) tunable.position.entryId = "p".repeat(m);
+	for (let k = 1; cap - size(branches) > 400 && k <= 512; k++) tunable.enteredAtLeafId = "e".repeat(k);
+	state.branches = branches;
+	state.activeBranchId = branches.at(-1).id;
+	await session.mutate(
+		(m) => m.commit([setValue(value("jouzu.flow.session", "v1"), state)], BACKGROUND_CONTEXT),
+		BACKGROUND_CONTEXT,
+	);
+
+	const before = await registry.snapshot();
+	const room = cap - Buffer.byteLength(JSON.stringify(before));
+	assert.ok(room > 0 && room < 700, `the seeded state sits just under the budget (room ${room})`);
+	// A long enteredAtLeafId makes the overshoot deterministic; real ids are short.
+	const next = await registry.beginNavigation(before.revision, "leaf");
+	const scope = await registry.finishNavigation(next.id, "f".repeat(512), new Set());
+	const after = await registry.snapshot();
+	assert.equal(after.activeBranchId, scope.branchId, "the fork completes");
+	assert.ok(Buffer.byteLength(JSON.stringify(after)) <= cap, "the committed state fits the budget");
+	// The fork adds a record and the reservation drops one, so the count can stay level.
+	assert.ok(after.retired.count > (before.retired?.count ?? 0), "retirement made room for it");
+	assert.ok(after.retired.count >= before.branches.length - after.branches.length);
+});
+
 /** Navigate `count` times so the registry holds a real ancestry chain. */
 async function navigate(registry, count) {
 	for (let step = 0; step < count; step++) {
