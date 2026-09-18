@@ -19,6 +19,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { patchInputs } from "./patch-inputs.mjs";
 
 export const RELEASE_BUNDLE_RECEIPT_SCHEMA_VERSION = 1;
 
@@ -27,14 +28,14 @@ export const RELEASE_BUNDLE_RECEIPT_NAME = ".jouzu-release-bundle-receipt";
 /**
  * Files that determine the installed tree and the rewrites applied to it. The root lock
  * participates because the webaio dist build resolves TypeScript from the root tree.
+ * The pinned patch inputs join them through `scripts/patch-inputs.mjs`, which
+ * `dev-build.sh` fingerprints for the root tree too.
  */
 const FINGERPRINT_INPUTS = [
 	"package-lock.json",
 	"packages/cli/package.json",
 	"packages/cli/package-lock.json",
 	"scripts/install-release-extensions.mjs",
-	"scripts/apply-background-flow.mjs",
-	"scripts/apply-multiloop-wait-skill.mjs",
 	"scripts/webaio-package-boundary.mjs",
 ];
 
@@ -57,7 +58,7 @@ export function releaseBundleFingerprint(root) {
 		`arch ${process.arch}`,
 		`node ${process.versions.node}`,
 	];
-	for (const relative of FINGERPRINT_INPUTS) {
+	for (const relative of [...FINGERPRINT_INPUTS, ...patchInputs(root)]) {
 		const path = join(root, relative);
 		parts.push(existsSync(path) ? `${relative} ${sha256(readFileSync(path))}` : `${relative} missing`);
 	}

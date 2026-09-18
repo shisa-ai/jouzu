@@ -78,12 +78,24 @@ class DevBuildTests(unittest.TestCase):
             "{}\n", encoding="utf-8"
         )
         (path / "scripts" / "check-dist-fresh.mjs").write_text("// test fixture\n", encoding="utf-8")
-        shutil.copy2(SOURCE_SCRIPT.parent / "scripts" / "dev-smoke.mjs", path / "scripts" / "dev-smoke.mjs")
         (path / "scripts" / "apply-pi-content-policy.mjs").write_text(
             'import { appendFileSync } from "node:fs";\n'
             'appendFileSync(process.env.DEV_BUILD_TEST_LOG, "policy-setup\\n");\n'
             'if (process.env.DEV_BUILD_TEST_POLICY_FAILS) process.exit(1);\n',
             encoding="utf-8",
+        )
+        (path / "upstream" / "background-flow").mkdir(parents=True)
+        (path / "upstream" / "pi.lock.json").write_text("{}\n", encoding="utf-8")
+        (path / "upstream" / "background-flow" / "patch.lock.json").write_text(
+            "{}\n", encoding="utf-8"
+        )
+        (path / "upstream" / "background-flow" / "runtime.ts").write_text(
+            "// pinned patch source\n", encoding="utf-8"
+        )
+        shutil.copy2(SOURCE_SCRIPT.parent / "scripts" / "dev-smoke.mjs", path / "scripts" / "dev-smoke.mjs")
+        shutil.copy2(
+            SOURCE_SCRIPT.parent / "scripts" / "patch-inputs.mjs",
+            path / "scripts" / "patch-inputs.mjs",
         )
         if with_typescript:
             tsc = path / "node_modules" / ".bin" / "tsc"
@@ -100,6 +112,9 @@ class DevBuildTests(unittest.TestCase):
             "packages/cli/package.json",
             "packages/cli/package-lock.json",
             "scripts/check-dist-fresh.mjs",
+            "upstream/pi.lock.json",
+            "upstream/background-flow/patch.lock.json",
+            "upstream/background-flow/runtime.ts",
         )
         self._git(path, "commit", "-q", "-m", "test: create Jouzu fixture")
 
@@ -434,6 +449,30 @@ class DevBuildTests(unittest.TestCase):
         self.log.write_text("", encoding="utf-8")
         (sibling / "packages" / "cli" / "package-lock.json").write_text(
             '{"updated": true}\n', encoding="utf-8"
+        )
+
+        second = self._run()
+        self.assertEqual(second.returncode, 0, second.stderr)
+        self.assertIn(
+            f"npm\t--prefix\t{sibling}\tci\t--ignore-scripts\n",
+            self.log.read_text(encoding="utf-8"),
+        )
+
+        self.log.write_text("", encoding="utf-8")
+        third = self._run()
+        self.assertEqual(third.returncode, 0, third.stderr)
+        self.assertNotIn("\tci\t", self.log.read_text(encoding="utf-8"))
+
+    def test_patch_input_change_reinstalls(self) -> None:
+        sibling = self.root / "jouzu"
+        self._create_jouzu_repo(sibling, with_typescript=True)
+
+        first = self._run()
+        self.assertEqual(first.returncode, 0, first.stderr)
+
+        self.log.write_text("", encoding="utf-8")
+        (sibling / "upstream" / "background-flow" / "runtime.ts").write_text(
+            "// changed pinned patch source\n", encoding="utf-8"
         )
 
         second = self._run()

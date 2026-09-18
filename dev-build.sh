@@ -18,6 +18,14 @@ readonly HOOK_NAMES=(post-commit post-merge post-checkout post-rewrite)
 readonly BUILD_LOCK_TIMEOUT_STATUS=75
 readonly BUILD_LOCK_DEFAULT_TIMEOUT_SECONDS=900
 readonly BUILD_LOCK_POLL_SECONDS=1
+# Manifests and lockfiles that determine the installed workspace tree. The pinned patch
+# inputs from scripts/patch-inputs.mjs join them, because a patch cannot be applied over
+# the revision it already wrote: a change there has to reinstall the tree it belongs to.
+readonly DEPENDENCY_INPUTS='package.json
+package-lock.json
+packages/cli/package.json
+packages/cli/package-lock.json
+packages/session-ui/package.json'
 BUILD_LOCK_DIRECTORY=""
 SCRIPT_ARGV=("$@")
 if (( ${#SCRIPT_ARGV[@]} == 0 )); then
@@ -36,7 +44,8 @@ Usage: ./dev-build.sh [build|link|install-hooks|uninstall-hooks]
 Requires Bash, Git, npm, Node.js >=22.19.0, and Go >=1.21. Go is a bootstrap:
 the TextGuard artifact build selects its reviewed compiler version automatically. Uses this
 checkout by default; set JOUZU_REPO to select another local checkout. Never clones or publishes.
-Dependency installs disable lifecycle scripts and repeat when manifests or locks change.
+Dependency installs disable lifecycle scripts and repeat when manifests, lockfiles, or
+pinned patch inputs change, so a pulled patch revision reinstalls its tree.
 Builds record development identity and run a bounded offline RPC smoke test.
 Only link changes global commands. Hooks build without linking and report failures
 without failing Git. Existing unmanaged hooks are never replaced.
@@ -114,12 +123,20 @@ dependency_receipt_path() {
 # Hash the manifests and lockfiles that determine the installed tree: the
 # root manifest and lock cover the workspace tree, the CLI lock covers the
 # CLI build's own install, and the CLI and Session UI manifests complete
-# the workspace inputs. Presence participates in the hash alongside
-# content, so a file that appears or disappears changes the fingerprint.
+# the workspace inputs. The pinned patch inputs from scripts/patch-inputs.mjs
+# complete them, because a patch revision change has to reinstall the tree
+# instead of being applied over the revision already there. Presence
+# participates in the hash alongside content, so a file that appears or
+# disappears changes the fingerprint.
 dependency_fingerprint() {
-	local parts relative
+	local parts relative patch_inputs
+	if ! patch_inputs="$(node "$JOUZU_REPO/scripts/patch-inputs.mjs")"; then
+		echo "dev-build: could not list the pinned patch inputs" >&2
+		return 1
+	fi
 	parts="dev-build-receipt-v1"$'\n'
 	while IFS= read -r relative; do
+		[[ -n "$relative" ]] || continue
 		if [[ -f "$JOUZU_REPO/$relative" ]]; then
 			parts+="$relative $(git -C "$JOUZU_REPO" hash-object -- "$relative")"$'\n' || {
 				echo "dev-build: could not hash Jouzu dependency input: $relative" >&2
@@ -128,13 +145,7 @@ dependency_fingerprint() {
 		else
 			parts+="$relative missing"$'\n'
 		fi
-	done <<'DEPENDENCY_INPUTS'
-package.json
-package-lock.json
-packages/cli/package.json
-packages/cli/package-lock.json
-packages/session-ui/package.json
-DEPENDENCY_INPUTS
+	done < <(printf '%s\n%s\n' "$DEPENDENCY_INPUTS" "$patch_inputs")
 	printf '%s' "$parts" | git hash-object --stdin || {
 		echo "dev-build: could not fingerprint Jouzu dependency inputs" >&2
 		return 1

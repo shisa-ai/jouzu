@@ -19,9 +19,13 @@ const FINGERPRINT_FILES = [
 	"packages/cli/package.json",
 	"packages/cli/package-lock.json",
 	"scripts/install-release-extensions.mjs",
-	"scripts/apply-background-flow.mjs",
-	"scripts/apply-multiloop-wait-skill.mjs",
 	"scripts/webaio-package-boundary.mjs",
+	// The pinned patch inputs are fingerprinted through scripts/patch-inputs.mjs.
+	"scripts/apply-background-flow.mjs",
+	"scripts/background-flow-transform.mjs",
+	"upstream/pi.lock.json",
+	"upstream/background-flow/patch.lock.json",
+	"upstream/background-flow/runtime.ts",
 ];
 
 /** A fixture root with the fingerprinted inputs and an installed bundle tree. */
@@ -75,6 +79,43 @@ test("a changed input invalidates the receipt", () => {
 		writeFileSync(join(root, "packages", "cli", "package-lock.json"), "changed\n");
 		const changed = releaseBundleFingerprint(root);
 		assert.equal(releaseBundleIsCurrent(cli, changed), false);
+	} finally {
+		cleanup();
+	}
+});
+
+test("a changed pinned patch input invalidates the receipt", () => {
+	const { root, cli, cleanup } = fixture();
+	try {
+		writeReleaseBundleReceipt(cli, releaseBundleFingerprint(root));
+		writeFileSync(join(root, "upstream", "background-flow", "runtime.ts"), "changed\n");
+		assert.equal(releaseBundleIsCurrent(cli, releaseBundleFingerprint(root)), false);
+	} finally {
+		cleanup();
+	}
+});
+
+test("the fingerprint follows the patch tree without a maintained file list", () => {
+	const { root, cleanup } = fixture();
+	try {
+		const first = releaseBundleFingerprint(root);
+		writeFileSync(join(root, "upstream", "background-flow", "added.ts"), "added\n");
+		const second = releaseBundleFingerprint(root);
+		assert.notEqual(second, first);
+		writeFileSync(join(root, "scripts", "apply-new-patch.mjs"), "// new patch\n");
+		assert.notEqual(releaseBundleFingerprint(root), second);
+	} finally {
+		cleanup();
+	}
+});
+
+test("textguard inputs stay out of the patch fingerprint", () => {
+	const { root, cleanup } = fixture();
+	try {
+		const before = releaseBundleFingerprint(root);
+		mkdirSync(join(root, "upstream", "textguard"), { recursive: true });
+		writeFileSync(join(root, "upstream", "textguard", "artifacts.lock.json"), "{}\n");
+		assert.equal(releaseBundleFingerprint(root), before);
 	} finally {
 		cleanup();
 	}
