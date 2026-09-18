@@ -29,8 +29,8 @@ test("runner expands quoted globs, deduplicates files, and retains name filters"
 	const invocation = testInvocation(["--test-name-pattern", "pass=one", "*.test.mjs", path], {}, root);
 	assert.deepEqual(invocation.files, [path]);
 	assert.deepEqual(invocation.options, ["--test-name-pattern=pass=one"]);
-	assert.equal(invocation.testTimeout, 60_000);
-	assert.equal(invocation.suiteTimeout, 300_000);
+	assert.equal(invocation.testTimeout, 120_000);
+	assert.equal(invocation.suiteTimeout, 600_000);
 	const result = run(path);
 	assert.equal(result.status, 0, result.stderr + result.stdout);
 	assert.match(result.stdout, /TAP version 13/);

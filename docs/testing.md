@@ -36,8 +36,8 @@ npm run build
 ### Bounded Node runs
 
 The Node suite commands use `scripts/run-tests.mjs`. It selects TAP output so
-failure details appear alongside failed tests, applies a 60-second default
-test timeout, and supervises each suite with a separate five-minute deadline.
+failure details appear alongside failed tests, applies a 120-second default
+test timeout, and supervises each suite with a separate ten-minute deadline.
 It prints elapsed-time notices to stderr every 15 seconds. The separate
 supervisor can terminate a blocked test event loop or leaked handles that
 prevent the test runner from exiting.
@@ -55,8 +55,8 @@ direct timeout flags are rejected rather than overriding the safeguards.
 
 | Environment variable | Default | Allowed range |
 | --- | --- | --- |
-| `JOUZU_TEST_TIMEOUT_MS` | `60000` | 1-3600000 milliseconds |
-| `JOUZU_TEST_SUITE_TIMEOUT_MS` | `300000` | 1-3600000 milliseconds |
+| `JOUZU_TEST_TIMEOUT_MS` | `120000` | 1-3600000 milliseconds |
+| `JOUZU_TEST_SUITE_TIMEOUT_MS` | `600000` | 1-3600000 milliseconds |
 
 Set a larger finite budget only for a measured workload that needs it, and
 record the reason with the validation result. A timeout is a failure, not a

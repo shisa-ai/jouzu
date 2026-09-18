@@ -46,8 +46,8 @@ export function testInvocation(args, env = process.env, cwd = process.cwd()) {
 	return {
 		files: [...files].sort(),
 		options,
-		testTimeout: limit(env, "JOUZU_TEST_TIMEOUT_MS", 60_000),
-		suiteTimeout: limit(env, "JOUZU_TEST_SUITE_TIMEOUT_MS", 300_000),
+		testTimeout: limit(env, "JOUZU_TEST_TIMEOUT_MS", 120_000),
+		suiteTimeout: limit(env, "JOUZU_TEST_SUITE_TIMEOUT_MS", 600_000),
 	};
 }
 

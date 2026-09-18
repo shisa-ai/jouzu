@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
 import { NativeTextGuard } from "../dist/textguard-native.js";
 
 test("request count is bounded before initialization and cancelled queue slots are reusable", async () => {
@@ -31,7 +32,7 @@ test("repeated immediate shutdown drains admitted work", async () => {
 });
 
 test("missing packaged artifacts remain unavailable", async () => {
-	const scanner = new NativeTextGuard(new URL("./missing-artifacts", import.meta.url).pathname);
+	const scanner = new NativeTextGuard(fileURLToPath(new URL("./missing-artifacts", import.meta.url)));
 	try {
 		assert.equal((await scanner.scan("fixture")).status, "unavailable");
 	} finally {

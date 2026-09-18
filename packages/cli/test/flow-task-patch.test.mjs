@@ -4,7 +4,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { applyInstalledTaskFlow, applyTaskFlow } from "../../../scripts/apply-task-flow.mjs";
 
 const installed = new URL("../node_modules/@lhl/pi-tasks/", import.meta.url);
@@ -99,7 +99,7 @@ test("installed task adapter drives natively while the host reports flow control
 	const outputDir = await mkdtemp(join(tmpdir(), "jouzu-task-live-"));
 	const outfile = join(outputDir, "task-flow.mjs");
 	await build({
-		entryPoints: [new URL("src/jouzu-flow.ts", installed).pathname],
+		entryPoints: [fileURLToPath(new URL("src/jouzu-flow.ts", installed))],
 		bundle: true,
 		platform: "node",
 		format: "esm",
