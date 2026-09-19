@@ -4,7 +4,7 @@
 
 ### Added
 
-- Leave an end-of-run summary card after every measured run, goal, and loop run that finishes, stops, or is paused. It reports the outcome, the objective, the local start and finish times, wall-clock elapsed against active agent time, and the step, turn, tool-call, and token counters, and it names the command that resumes a run that has not finished. The card is a session entry: it stays in the transcript and does not enter model context. A host without entry rendering shows it as a notification.
+- Leave an end-of-run summary card after every measured run, goal, and loop run that finishes, stops, or is paused. It reports the outcome, the objective, the local start and finish times, wall-clock elapsed against active agent time, and the step, turn, tool-call, and token counters, and it names the command that resumes a run that has not finished. A measured run's card also reports the metric it reached against its baseline and how its last iteration was accepted. The card is a session entry: it stays in the transcript and does not enter model context. A host without entry rendering shows it as a notification.
 
 ### Changed
 
