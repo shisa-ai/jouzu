@@ -1,5 +1,3 @@
-import { isAbsolute } from "node:path";
-
 export const PROFILE_IDS = ["core", "ja"] as const;
 export type ProfileId = (typeof PROFILE_IDS)[number];
 
@@ -15,9 +13,7 @@ export class UsageError extends Error {
 export interface JouzuOptions {
 	home?: string;
 	profile?: ProfileId;
-	textguardPython?: string;
 	textguardFiles?: boolean;
-	textguardYara?: boolean;
 	textguardStrict?: boolean;
 	textguardOff?: boolean;
 }
@@ -216,28 +212,16 @@ export function parseJouzuArgs(args: string[]): ParsedCommand {
 			index = parsed.next;
 			continue;
 		}
-		if (token === "--jouzu-textguard-python" || token.startsWith("--jouzu-textguard-python=")) {
-			if (options.textguardPython !== undefined)
-				throw new UsageError("--jouzu-textguard-python may be specified only once");
-			const parsed = readOptionValue(args, index, "--jouzu-textguard-python");
-			if (!isAbsolute(parsed.value))
-				throw new UsageError("--jouzu-textguard-python requires an absolute Python executable path");
-			options.textguardPython = parsed.value;
-			index = parsed.next;
-			continue;
-		}
 		if (
 			token === "--jouzu-textguard-files" ||
-			token === "--jouzu-textguard-yara" ||
 			token === "--jouzu-textguard-strict" ||
 			token === "--jouzu-textguard-off"
 		) {
 			const key = {
 				"--jouzu-textguard-files": "textguardFiles",
-				"--jouzu-textguard-yara": "textguardYara",
 				"--jouzu-textguard-strict": "textguardStrict",
 				"--jouzu-textguard-off": "textguardOff",
-			}[token] as "textguardFiles" | "textguardYara" | "textguardStrict" | "textguardOff";
+			}[token] as "textguardFiles" | "textguardStrict" | "textguardOff";
 			if (options[key]) throw new UsageError(`${token} may be specified only once`);
 			options[key] = true;
 			index += 1;
@@ -247,9 +231,6 @@ export function parseJouzuArgs(args: string[]): ParsedCommand {
 		break;
 	}
 
-	if (options.textguardYara && !options.textguardPython) {
-		throw new UsageError("--jouzu-textguard-yara requires --jouzu-textguard-python <absolute-path>");
-	}
 	if (options.textguardOff && options.textguardStrict) {
 		throw new UsageError("--jouzu-textguard-off and --jouzu-textguard-strict cannot be combined");
 	}
@@ -358,8 +339,6 @@ and /textguard on, strict, or off to change scanning for that session.
   --jouzu-textguard-strict                  Withhold every flagged input until approved
   --jouzu-textguard-off                     Start with scanning off
   --jouzu-textguard-files                   Also scan ordinary read-tool content
-  --jouzu-textguard-python <absolute-path>  Add TextGuard 1.0.0 Python comparison reports
-  --jouzu-textguard-yara                    Include Python YARA rules (requires textguard[yara])
 
 The jz command is an exact alias. Resume with the jz --session command printed
 on exit; Jouzu resolves its isolated session root. First interactive launch asks before enabling

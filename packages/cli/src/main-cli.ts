@@ -365,13 +365,6 @@ export async function runMainCli(args: string[]): Promise<void> {
 		usesReleaseExtensions(parsed.args) ? releaseExtensionStatus.resolvedPackageRoots : {},
 	);
 	const releaseDiagnostics = createReleaseExtensionDiagnostics(releaseExtensionStatus, runtimeDiagnostics);
-	const textguard = parsed.options.textguardPython
-		? (await import("./textguard-extension.js")).createTextGuardExtension({
-				python: parsed.options.textguardPython,
-				files: parsed.options.textguardFiles,
-				yara: parsed.options.textguardYara,
-			})
-		: undefined;
 	const [{ TextGuardRuntime }, { createTextGuardReviewExtension }] = await Promise.all([
 		import("./textguard-runtime.js"),
 		import("./textguard-review.js"),
@@ -412,7 +405,6 @@ export async function runMainCli(args: string[]): Promise<void> {
 				voice,
 				help,
 				releaseDiagnostics,
-				...(textguard ? [textguard] : []),
 			],
 		});
 	const runPi = () =>
@@ -426,13 +418,9 @@ export async function runMainCli(args: string[]): Promise<void> {
 		});
 	} finally {
 		try {
-			await textguard?.dispose();
+			await nativeTextguard.close();
 		} finally {
-			try {
-				await nativeTextguard.close();
-			} finally {
-				await flow?.dispose();
-			}
+			await flow?.dispose();
 		}
 	}
 }

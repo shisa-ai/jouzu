@@ -112,22 +112,6 @@ the child. `--jouzu-textguard-files` also checks ordinary reads in
 child agents launched or resumed from that CLI session. Role-based tool
 restrictions still apply.
 
-## Python comparison reports
-
-To add reports from a separately installed TextGuard 1.0.0:
-
-```sh
-python3 -m venv /absolute/path/to/textguard-env
-/absolute/path/to/textguard-env/bin/python -m pip install 'textguard==1.0.0'
-jz --jouzu-textguard-python /absolute/path/to/textguard-env/bin/python
-```
-
-On Windows, use the environment's `Scripts/python.exe` path. For Python's bundled
-YARA pattern rules, install `textguard[yara]==1.0.0` and add
-`--jouzu-textguard-yara`. Python comparison reports do not replace native checks
-or approve withheld content. The Python adapter does not load semantic models
-or custom rule directories.
-
 ## Limits
 
 The verdict cache holds up to 128 complete results and is bounded to 256 KiB on
