@@ -12,7 +12,7 @@
 	"scripts": {
 		"build": "npm run build --workspace packages/session-ui && npm run build --workspace packages/cli",
 		"build:dev": "npm run build && node scripts/write-dev-build-info.mjs",
-		"check": "npm run check --workspace packages/session-ui && npm run check --workspace packages/cli && biome check . && npm run pi:check && node scripts/apply-background-flow.mjs --check && node scripts/apply-multiloop-wait-skill.mjs --check && node scripts/apply-task-flow.mjs --check && npm run test:runner",
+		"check": "npm run check --workspace packages/session-ui && npm run check --workspace packages/cli && biome check . && npm run pi:check && node scripts/apply-background-flow.mjs --check && node scripts/apply-multiloop-wait-skill.mjs --check && node scripts/apply-task-flow.mjs --check && npm run test:runner && npm run test:release-metadata",
 		"test": "npm run test:runner && npm run test --workspace packages/session-ui && npm run test --workspace packages/cli && npm run test:python && npm run test:pack-check && npm run test:release-metadata",
 		"test:node": "node scripts/run-tests.mjs",
 		"test:runner": "node scripts/run-tests.mjs scripts/run-tests.test.mjs",

@@ -92,7 +92,8 @@ jobs:
       - run: npm test --workspaces --if-present
         timeout-minutes: 20
         env:
-          JOUZU_TEST_TIMEOUT_MS: "360000"
+          # 240 s is about twice the slowest test file on CI (~107 s).
+          JOUZU_TEST_TIMEOUT_MS: "240000"
           JOUZU_TEST_SUITE_TIMEOUT_MS: "900000"
       - if: matrix.os == 'windows-latest'
         name: Verify early-failure extension cleanup
@@ -204,7 +205,8 @@ jobs:
       - run: npm test --workspaces --if-present
         timeout-minutes: 20
         env:
-          JOUZU_TEST_TIMEOUT_MS: "360000"
+          # 240 s is about twice the slowest test file on CI (~107 s).
+          JOUZU_TEST_TIMEOUT_MS: "240000"
           JOUZU_TEST_SUITE_TIMEOUT_MS: "900000"
       - run: npm run test:extensions:online
         timeout-minutes: 15
