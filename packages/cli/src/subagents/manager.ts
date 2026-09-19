@@ -15,7 +15,7 @@ import { dirname, isAbsolute, join, relative, sep } from "node:path";
 import type { NotificationRecord } from "../notifications/inbox.js";
 import type { JouzuPaths } from "../paths.js";
 import { ensurePrivateDirectory, writeFilePrivateAtomic } from "../private-fs.js";
-import { acquireStateLock } from "../state-lock.js";
+import { acquireProcessLock, type ProcessLock, ProcessLockError } from "../process-lock.js";
 import type { WorkerCommand, WorkerEvent, WorkerLaunch } from "./protocol.js";
 import { captureReviewCandidate, type ReviewCandidate } from "./review.js";
 import { type AgentRole, digest, parseAgentConfig } from "./roles.js";
@@ -59,8 +59,6 @@ export type WorkerFactory = (
 	exit: (success: boolean) => void,
 ) => WorkerHandle;
 
-// Allow an in-progress lock write to finish before recovering an unknown owner.
-const SUBAGENT_LOCK_STALE_MS = 5_000;
 const ACTIVE = new Set<RunStatus>(["queued", "starting", "running"]);
 export function isActiveRun(run: AgentRun): boolean {
 	return ACTIVE.has(run.status);
@@ -232,8 +230,8 @@ export class SubagentManager {
 	private readonly timers = new Map<string, ReturnType<typeof setTimeout>>();
 	private readonly results = new Map<string, WorkerEvent & { type: "result" }>();
 	private readonly listeners = new Set<() => void>();
-	private readonly releases = new Map<string, () => void>();
-	private releaseOwner?: () => void;
+	private readonly releases = new Map<string, ProcessLock>();
+	private releaseOwner?: ProcessLock;
 	private queueTimer?: ReturnType<typeof setTimeout>;
 	private disposed = false;
 	private pumping = false;
@@ -271,13 +269,17 @@ export class SubagentManager {
 		if (this.storageError) throw new Error(this.storageError);
 		if (this.releaseOwner) return;
 		ensurePrivateDirectory(this.paths.stateDir, this.root);
-		this.releaseOwner = acquireStateLock({
-			path: join(this.root, "owner.lock"),
-			staleMs: SUBAGENT_LOCK_STALE_MS,
-			describe: "subagent session",
-			onBusy: () =>
-				new Error("This session's agents are controlled by another Jouzu process. Close it before starting more work."),
-		});
+		// Ownership is a held database reservation, so a killed process releases
+		// it and a leftover file never blocks this session.
+		try {
+			this.releaseOwner = acquireProcessLock(join(this.root, "owner.sqlite"));
+		} catch (error) {
+			if (error instanceof ProcessLockError && error.reason === "busy")
+				throw new Error(
+					"This session's agents are controlled by another Jouzu process. Close it before starting more work.",
+				);
+			throw error;
+		}
 		for (const run of this.runs.values())
 			if (isActiveRun(run)) {
 				run.status = "interrupted";
@@ -445,20 +447,15 @@ export class SubagentManager {
 					.filter((other) => other.cwd === run.cwd);
 				if (sameWorkspace.some((other) => roleCanWrite(other.role)) || (roleCanWrite(run.role) && sameWorkspace.length))
 					continue;
-				let release: (() => void) | undefined;
+				let lock: ProcessLock | undefined;
 				try {
 					// Serialize workspace writers across parent sessions as well.
 					if (roleCanWrite(run.role))
-						release = acquireStateLock({
-							path: join(this.paths.stateDir, "subagent-writers", `${digest(run.cwd)}.lock`),
-							staleMs: SUBAGENT_LOCK_STALE_MS,
-							describe: "workspace writer",
-							onBusy: () => new Error("Writer busy"),
-						});
+						lock = acquireProcessLock(join(this.paths.stateDir, "subagent-writers", `${digest(run.cwd)}.sqlite`));
 				} catch {
 					continue;
 				}
-				if (release) this.releases.set(id, release);
+				if (lock) this.releases.set(id, lock);
 				this.pending.delete(id);
 				run.status = "starting";
 				this.persist(run);
@@ -520,7 +517,7 @@ export class SubagentManager {
 		clearTimeout(this.timers.get(id));
 		this.timers.delete(id);
 		this.workers.delete(id);
-		this.releases.get(id)?.();
+		this.releaseHeld(this.releases.get(id));
 		this.releases.delete(id);
 		const result = this.results.get(id);
 		this.results.delete(id);
@@ -633,8 +630,17 @@ export class SubagentManager {
 		}
 		await Promise.allSettled([...this.workers.values()].map((worker) => worker.stop()));
 		for (const timer of this.timers.values()) clearTimeout(timer);
-		this.releaseOwner?.();
+		this.releaseHeld(this.releaseOwner);
 		this.releaseOwner = undefined;
 		this.listeners.clear();
+	}
+	/**
+	 * Release a lock without letting a close failure interrupt run finalization.
+	 * A lock that does not close cleanly stays reserved until process exit.
+	 */
+	private releaseHeld(lock: ProcessLock | undefined): void {
+		try {
+			lock?.release();
+		} catch {}
 	}
 }

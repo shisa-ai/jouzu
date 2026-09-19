@@ -11,6 +11,10 @@
 - Show when each background task finished in the completion receipt. The expanded heading carries the span from the first start to the last finish, and each task row carries its duration and local finish time. A receipt written before this change still renders, without timing.
 - Stopping or pausing a run no longer repeats the same sentence as a notification, because the summary card carries it.
 
+### Fixed
+
+- Hold the subagent session lock and each workspace-writer lock for as long as the owning process runs, instead of leaving a record file that a later process ages out and reclaims. A Jouzu process that exits for any reason, including a kill, releases its locks immediately, so a stopped process no longer blocks a session or leaves a workspace writer queued, while a suspended process keeps its lock. A lock file left behind by an earlier run no longer blocks a new owner, and the five-second recovery grace period is gone. A Jouzu process running a version from before this change does not share these locks, so close other Jouzu processes before upgrading and start them again afterward.
+
 ## 0.1.13 - 2026-09-19
 
 ### Added

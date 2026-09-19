@@ -1,39 +1,37 @@
 import assert from "node:assert/strict";
-import { spawn } from "node:child_process";
+import { fork } from "node:child_process";
 import { once } from "node:events";
-import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, utimesSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { test } from "node:test";
+import { setTimeout as delay } from "node:timers/promises";
 import { SubagentManager } from "../dist/subagents/manager.js";
 import { defaultAgentConfig, digest } from "../dist/subagents/roles.js";
 
-// Hold a real exclusive-create descriptor open before publishing its owner record.
-const pendingWriter = `
-const fs = require("node:fs");
-const path = process.argv[1];
-const fd = fs.openSync(path, "wx", 0o600);
-process.send("opened");
-process.once("message", () => {
-  fs.writeFileSync(fd, JSON.stringify({ pid: process.pid, startedAt: new Date().toISOString(), token: "child" }));
-  fs.closeSync(fd);
-  process.send("published");
-});
-`;
+const holder = new URL("./fixtures/process-lock-holder.mjs", import.meta.url);
+
+// Hold a real reservation in a second process and report when it is in place.
+async function hold(path) {
+	const child = fork(holder, [path], { stdio: ["ignore", "ignore", "inherit", "ipc"] });
+	const exited = once(child, "exit");
+	const [ready] = await once(child, "message");
+	assert.deepEqual(ready, { state: "ready" });
+	child.send("acquire");
+	const [reply] = await once(child, "message");
+	assert.equal(reply.state, "held", `the holder could not acquire the lock: ${JSON.stringify(reply)}`);
+	return { child, exited };
+}
 
 for (const kind of ["owner", "workspace"]) {
-	test(`${kind} lock refuses a second process during publication and while its owner is live`, async () => {
+	test(`${kind} lock refuses a second process while its owner is live and admits one after it dies`, async () => {
 		const root = realpathSync(mkdtempSync(join(tmpdir(), "jouzu-lock-contention-")));
 		const paths = { cwd: root, stateDir: join(root, "state") };
 		const path =
 			kind === "owner"
-				? join(paths.stateDir, "subagents", digest("parent"), "owner.lock")
-				: join(paths.stateDir, "subagent-writers", `${digest(root)}.lock`);
+				? join(paths.stateDir, "subagents", digest("parent"), "owner.sqlite")
+				: join(paths.stateDir, "subagent-writers", `${digest(root)}.sqlite`);
 		mkdirSync(dirname(path), { recursive: true });
-		const child = spawn(process.execPath, ["-e", pendingWriter, path], {
-			stdio: ["ignore", "ignore", "inherit", "ipc"],
-		});
-		const exited = once(child, "exit");
 		let starts = 0;
 		const manager = new SubagentManager(paths, "parent", 1, (_launch, _emit, exit) => {
 			starts++;
@@ -44,7 +42,8 @@ for (const kind of ["owner", "workspace"]) {
 				},
 			};
 		});
-		const contend = () => {
+		const held = await hold(path);
+		try {
 			if (kind === "owner") {
 				assert.throws(() => manager.attach(), /controlled by another Jouzu process/);
 			} else {
@@ -56,39 +55,38 @@ for (const kind of ["owner", "workspace"]) {
 					task: "Test contention",
 				});
 				assert.equal(run.status, "queued");
-				assert.equal(starts, 0, "no writer may start while the other process owns the lock");
+				assert.equal(starts, 0, "no writer may start while another process owns the lock");
 			}
-		};
-		try {
-			assert.deepEqual(await once(child, "message"), ["opened", undefined]);
-			assert.equal(readFileSync(path, "utf8"), "");
-			contend();
-			const published = once(child, "message");
-			child.send("publish");
-			await published;
-			assert.equal(JSON.parse(readFileSync(path, "utf8")).pid, child.pid);
-			contend();
+			held.child.kill("SIGKILL");
+			await held.exited;
+			if (kind === "owner") {
+				manager.attach();
+			} else {
+				const deadline = Date.now() + 5_000;
+				while (starts === 0 && Date.now() < deadline) await delay(50);
+				assert.equal(starts, 1, "the queued writer must start after the holder dies");
+			}
 		} finally {
 			await manager.dispose();
-			child.kill();
-			await exited;
+			held.child.kill("SIGKILL");
 			rmSync(root, { recursive: true, force: true });
 		}
 	});
 }
 
-test("subagent ownership recovers an abandoned lock after the publication grace period", async () => {
-	const root = realpathSync(mkdtempSync(join(tmpdir(), "jouzu-lock-recovery-")));
+test("a leftover lock file from an earlier protocol does not block subagent ownership", async () => {
+	const root = realpathSync(mkdtempSync(join(tmpdir(), "jouzu-lock-leftover-")));
 	const paths = { cwd: root, stateDir: join(root, "state") };
-	const path = join(paths.stateDir, "subagents", digest("parent"), "owner.lock");
-	mkdirSync(dirname(path), { recursive: true });
-	writeFileSync(path, "");
-	const past = new Date(Date.now() - 10_000);
-	utimesSync(path, past, past);
+	const directory = join(paths.stateDir, "subagents", digest("parent"));
+	mkdirSync(directory, { recursive: true });
+	writeFileSync(join(directory, "owner.sqlite"), "");
+	writeFileSync(
+		join(directory, "owner.lock"),
+		`${JSON.stringify({ pid: 1, startedAt: new Date().toISOString(), token: "earlier-protocol" })}\n`,
+	);
 	const manager = new SubagentManager(paths, "parent", 1);
 	try {
 		manager.attach();
-		assert.equal(JSON.parse(readFileSync(path, "utf8")).pid, process.pid);
 	} finally {
 		await manager.dispose();
 		rmSync(root, { recursive: true, force: true });

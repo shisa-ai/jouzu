@@ -34,7 +34,8 @@ cli.ts  (entry: argument routing, profile resolution, launch)
   ├─ terminal-layout.ts  stable CLI re-export of shared display-width and color helpers
   ├─ session-ui/         build-time adapters to the standalone workspace
   ├─ runtime-output.ts   session-resume guidance and terminal-title branding
-  ├─ state-lock.ts       shared state-lock primitive
+  ├─ state-lock.ts       state-lock primitive for short-lived state files
+  ├─ process-lock.ts     held-lock primitive for session ownership
   └─ private-fs.ts       private directory/file boundary and atomic writes
 
 packages/session-ui
@@ -51,8 +52,8 @@ packages/session-ui
 ```
 
 `cli.ts` composes the runtime. `args.ts` and `paths.ts` have no internal
-imports; `state-lock.ts` depends on `private-fs.ts`. `runtime.ts` reads profile
-state through `profile-manager.ts`; `doctor.ts`
+imports; `state-lock.ts` and `process-lock.ts` depend on `private-fs.ts`.
+`runtime.ts` reads profile state through `profile-manager.ts`; `doctor.ts`
 combines runtime inspection from the Camoufox adapter, model catalog,
 model-picker state, and state-lock modules with the shared command renderer.
 There are no circular module imports.
@@ -83,10 +84,21 @@ the saved file. An existing file above the read limit is left unchanged rather t
 quarantined or reset. Opening the picker does not refresh a project's dispatch recency.
 
 Locks (`profile.lock`, `pi-import.lock`, `keybindings.lock`, `self-update.lock`, `model-picker.lock`, and per-endpoint catalog `refresh.lock`) are created and
-released by `state-lock.ts`, the shared state-lock primitive used by the
+released by `state-lock.ts`, the state-lock primitive used by the
 updater, profile, Pi-import, keybinding, model-picker, and catalog operations. It records a PID, a started-at
 timestamp, and a release token, refuses locks held by a live process, and
 recovers a dead owner's or owner-unknown lock after the stale threshold.
+
+A subagent session's `owner.sqlite` and each workspace-writer
+`<digest>.sqlite` use `process-lock.ts` instead, because those locks are held
+for as long as a session or a child agent runs. Ownership is a held SQLite
+write transaction on that file, so the operating system releases it when the
+holder exits for any reason, including a kill, while a paused or suspended
+holder keeps it. The file is a rendezvous point: its presence does not mean the
+path is locked, and a leftover file never blocks a later acquisition. Closing
+the connection releases the transaction, and the file is left in place. These
+locks cover one local filesystem; they do not coordinate across machines or
+network shares.
 
 `private-fs.ts` creates Jouzu-owned roots and descendants with POSIX mode
 `0700`, creates copied backup files with mode `0600`, rejects symlinks inside

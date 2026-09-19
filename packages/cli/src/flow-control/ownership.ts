@@ -1,9 +1,9 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { createHash, randomUUID } from "node:crypto";
-import { closeSync, lstatSync, openSync, realpathSync } from "node:fs";
+import { realpathSync } from "node:fs";
 import { join } from "node:path";
-import { DatabaseSync } from "node:sqlite";
 import { ensurePrivateDirectory } from "../private-fs.js";
+import { acquireProcessLock, type ProcessLock, ProcessLockError } from "../process-lock.js";
 import type { FlowScope } from "./receipt-ledger.js";
 
 export class FlowOwnershipError extends Error {
@@ -36,7 +36,7 @@ export class FlowOwnership {
 	private readonly operations = new AsyncLocalStorage<{ active: boolean }>();
 
 	private constructor(
-		private readonly database: DatabaseSync,
+		private readonly lock: ProcessLock,
 		scope: FlowScope,
 		readonly directory: string,
 	) {
@@ -48,7 +48,7 @@ export class FlowOwnership {
 			if (typeof id !== "string" || id.length === 0 || id.length > 512)
 				throw new FlowOwnershipError("identity", "Session and branch IDs must contain 1–512 characters.");
 		}
-		let database: DatabaseSync | undefined;
+		let lock: ProcessLock | undefined;
 		try {
 			ensurePrivateDirectory(root);
 			const key = createHash("sha256")
@@ -58,25 +58,15 @@ export class FlowOwnership {
 			// The digest is one directory component. Creating it as a root uses
 			// recursive mkdir (safe under a competing create) and validates it.
 			ensurePrivateDirectory(directory);
-			const path = join(directory, "owner.sqlite");
-			try {
-				closeSync(openSync(path, "wx", 0o600));
-			} catch (error) {
-				if (!(error instanceof Error && "code" in error && error.code === "EEXIST")) throw error;
-			}
-			const metadata = lstatSync(path);
-			if (!metadata.isFile() || metadata.isSymbolicLink())
-				throw new FlowOwnershipError("storage", "Flow ownership requires a regular lock file.");
-			database = new DatabaseSync(path);
-			// No journal or application writes: this connection exists solely to
-			// hold the single writer reservation on the stable database file.
-			// IMMEDIATE permits competing openers to read SQLite metadata without
-			// making both fail while upgrading a shared lock to EXCLUSIVE.
-			database.exec("PRAGMA busy_timeout=0; BEGIN IMMEDIATE;");
-			return new FlowOwnership(database, scope, directory);
+			// The lock file is a rendezvous point, not a record: its presence
+			// never means "held", so a leftover file cannot block a new owner.
+			lock = acquireProcessLock(join(directory, "owner.sqlite"));
+			return new FlowOwnership(lock, scope, directory);
 		} catch (error) {
-			database?.close();
-			const busy = error instanceof Error && "errcode" in error && [5, 6].includes(Number(error.errcode));
+			try {
+				lock?.release();
+			} catch {}
+			const busy = error instanceof ProcessLockError && error.reason === "busy";
 			throw new FlowOwnershipError(
 				busy ? "busy" : "storage",
 				busy ? "This session branch is already owned by another attachment." : "Flow ownership could not be acquired.",
@@ -118,7 +108,7 @@ export class FlowOwnership {
 		this.closePromise = drain
 			.then(async () => {
 				await beforeRelease?.();
-				this.database.close();
+				this.lock.release();
 			})
 			.catch((cause) => {
 				FlowOwnership.failedClosures.add(this);
