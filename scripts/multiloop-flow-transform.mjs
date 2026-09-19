@@ -102,8 +102,8 @@ export function transformMultiloopFlow(source) {
 	);
 	source = replace(
 		source,
-		"      const stalled = runningStates();",
-		"      const flow = multiloopFlow(ctx.sessionManager.getSessionId());\n      const stalled = runningStates().filter((state) => !flow?.waiting({ lane: state.lane, runTag: state.runTag }));",
+		"      for (const state of runningStates()) {",
+		"      const flow = multiloopFlow(ctx.sessionManager.getSessionId());\n      for (const state of runningStates().filter((state) => !flow?.waiting({ lane: state.lane, runTag: state.runTag }))) {",
 	);
 	source = replace(
 		source,
@@ -145,13 +145,13 @@ export function transformMultiloopLifecycle(source) {
 	for (const status of ["paused", "stopped"])
 		source = replace(
 			source,
-			`    state.status = "${status}";\n    saveState(ctx.cwd, id, state);`,
-			`    await multiloopFlow(ctx.sessionManager.getSessionId())?.transition?.(id, "${status}");\n    state.status = "${status}";\n    saveState(ctx.cwd, id, state);`,
+			`    state.status = "${status}";\n    state.finishedAt = new Date().toISOString();\n    saveState(ctx.cwd, id, state);`,
+			`    await multiloopFlow(ctx.sessionManager.getSessionId())?.transition?.(id, "${status}");\n    state.status = "${status}";\n    state.finishedAt = new Date().toISOString();\n    saveState(ctx.cwd, id, state);`,
 		);
 	source = replace(
 		source,
-		'    state.status = "completed";\n    saveState(ctx.cwd, id, state);',
-		'    await multiloopFlow(ctx.sessionManager.getSessionId())?.transition?.(id, "completed");\n    state.status = "completed";\n    saveState(ctx.cwd, id, state);',
+		'    state.status = "completed";\n    state.finishedAt = new Date().toISOString();\n    saveState(ctx.cwd, id, state);',
+		'    await multiloopFlow(ctx.sessionManager.getSessionId())?.transition?.(id, "completed");\n    state.status = "completed";\n    state.finishedAt = new Date().toISOString();\n    saveState(ctx.cwd, id, state);',
 	);
 	source = replace(
 		source,
@@ -182,8 +182,8 @@ export function transformMultiloopLifecycle(source) {
 	);
 	source = replace(
 		source,
-		'    state.status = "paused";\n    saveState(ctx.cwd, id, state);',
-		'    state.status = "paused";\n    if (isQuickGoal(state)) pausedQuickGoal = state;\n    saveState(ctx.cwd, id, state);',
+		'    state.status = "paused";\n    state.finishedAt = new Date().toISOString();\n    saveState(ctx.cwd, id, state);',
+		'    state.status = "paused";\n    state.finishedAt = new Date().toISOString();\n    if (isQuickGoal(state)) pausedQuickGoal = state;\n    saveState(ctx.cwd, id, state);',
 	);
 	source = replace(
 		source,
