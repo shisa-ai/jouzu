@@ -61,7 +61,12 @@ export function acquireProcessLock(path: string): ProcessLock {
 	} catch (error) {
 		try {
 			database?.close();
-		} catch {}
+		} catch (closeError) {
+			if (database) retained.add(database);
+			throw new ProcessLockError("storage", `The process lock could not be closed after acquisition failed: ${path}`, {
+				cause: new AggregateError([error, closeError]),
+			});
+		}
 		if (error instanceof ProcessLockError) throw error;
 		const busy = error instanceof Error && "errcode" in error && [5, 6].includes(Number(error.errcode));
 		throw new ProcessLockError(
@@ -72,15 +77,20 @@ export function acquireProcessLock(path: string): ProcessLock {
 	}
 	const held = database;
 	let released = false;
+	let releaseError: ProcessLockError | undefined;
 	return {
 		release(): void {
+			if (releaseError) throw releaseError;
 			if (released) return;
-			released = true;
 			try {
 				held.close();
+				released = true;
 				retained.delete(held);
 			} catch (error) {
-				throw new ProcessLockError("storage", `The process lock did not close cleanly: ${path}`, { cause: error });
+				releaseError = new ProcessLockError("storage", `The process lock did not close cleanly: ${path}`, {
+					cause: error,
+				});
+				throw releaseError;
 			}
 		},
 	};

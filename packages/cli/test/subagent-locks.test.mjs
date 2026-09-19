@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
 import { fork } from "node:child_process";
 import { once } from "node:events";
-import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { setTimeout as delay } from "node:timers/promises";
+import { acquireProcessLock } from "../dist/process-lock.js";
 import { SubagentManager } from "../dist/subagents/manager.js";
 import { defaultAgentConfig, digest } from "../dist/subagents/roles.js";
 
@@ -73,6 +74,140 @@ for (const kind of ["owner", "workspace"]) {
 		}
 	});
 }
+
+test("a damaged workspace lock fails the run without starting a worker or retrying", async () => {
+	const root = realpathSync(mkdtempSync(join(tmpdir(), "jouzu-lock-damaged-")));
+	const paths = { cwd: root, stateDir: join(root, "state") };
+	const path = join(paths.stateDir, "subagent-writers", `${digest(root)}.sqlite`);
+	mkdirSync(dirname(path), { recursive: true });
+	writeFileSync(path, "damaged database");
+	let starts = 0;
+	const completions = [];
+	const manager = new SubagentManager(
+		paths,
+		"parent",
+		1,
+		() => {
+			starts++;
+			assert.fail("A storage failure must not admit a worker");
+		},
+		(run) => completions.push(run),
+	);
+	try {
+		const run = manager.launch({
+			role: defaultAgentConfig().roles[1],
+			model: { provider: "fixture", id: "test" },
+			auth: {},
+			cwd: root,
+			task: "Test damaged lock",
+		});
+		assert.equal(run.status, "failed");
+		assert.match(run.result, /Workspace lock failed:.*could not be acquired/);
+		assert.ok(run.result.includes(path));
+		assert.equal(starts, 0);
+		assert.equal(completions.length, 1);
+		assert.equal(completions[0].id, run.id);
+		const saved = JSON.parse(
+			readFileSync(join(paths.stateDir, "subagents", digest("parent"), run.id, "run.json"), "utf8"),
+		);
+		assert.equal(saved.status, "failed");
+		assert.equal(saved.result, run.result);
+		assert.equal(manager.pending.size, 0);
+		assert.equal(manager.queueTimer, undefined);
+		assert.equal(readFileSync(path, "utf8"), "damaged database");
+	} finally {
+		await manager.dispose();
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("a failed writer-lock release fails completed and queued runs and rejects further work", async (t) => {
+	const root = realpathSync(mkdtempSync(join(tmpdir(), "jouzu-lock-release-")));
+	const paths = { cwd: root, stateDir: join(root, "state") };
+	let emit;
+	let exit;
+	let starts = 0;
+	const completions = [];
+	const manager = new SubagentManager(
+		paths,
+		"parent",
+		1,
+		(_launch, onEvent, onExit) => {
+			starts++;
+			emit = onEvent;
+			exit = onExit;
+			return {
+				send() {},
+				async stop() {
+					onExit(false);
+				},
+			};
+		},
+		(run) => completions.push(run),
+	);
+	const launch = {
+		role: defaultAgentConfig().roles[1],
+		model: { provider: "fixture", id: "test" },
+		auth: {},
+		cwd: root,
+		task: "Test release failure",
+	};
+	const first = manager.launch(launch);
+	const queued = manager.launch(launch);
+	const lock = manager.releases.get(first.id);
+	const failure = t.mock.method(lock, "release", () => {
+		throw new Error("Injected release failure");
+	});
+	try {
+		emit({ type: "result", status: "completed", text: "Work finished" });
+		exit(true);
+		assert.equal(starts, 1);
+		for (const run of [first, queued]) {
+			const finished = manager.get(run.id);
+			assert.equal(finished.status, "failed");
+			assert.match(finished.result, /Process lock release failed; restart Jouzu/);
+			assert.match(finished.result, /Injected release failure/);
+			const saved = JSON.parse(
+				readFileSync(join(paths.stateDir, "subagents", digest("parent"), run.id, "run.json"), "utf8"),
+			);
+			assert.equal(saved.status, "failed");
+		}
+		assert.equal(completions.length, 2);
+		assert.throws(() => manager.launch(launch), /Process lock release failed/);
+		assert.throws(() => acquireProcessLock(join(paths.stateDir, "subagent-writers", `${digest(root)}.sqlite`)), {
+			reason: "busy",
+		});
+		await assert.rejects(manager.dispose(), /Process lock release failed/);
+		await assert.rejects(manager.dispose(), /Process lock release failed/);
+	} finally {
+		failure.mock.restore();
+		lock.release();
+		await manager.dispose().catch(() => {});
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("a failed owner-lock release rejects disposal and retains ownership", async (t) => {
+	const root = realpathSync(mkdtempSync(join(tmpdir(), "jouzu-owner-release-")));
+	const paths = { cwd: root, stateDir: join(root, "state") };
+	const manager = new SubagentManager(paths, "parent", 1);
+	manager.attach();
+	const lock = manager.releaseOwner;
+	const failure = t.mock.method(lock, "release", () => {
+		throw new Error("Injected owner close failure");
+	});
+	try {
+		await assert.rejects(manager.dispose(), /Injected owner close failure/);
+		await assert.rejects(manager.dispose(), /Injected owner close failure/);
+		assert.throws(() => acquireProcessLock(join(paths.stateDir, "subagents", digest("parent"), "owner.sqlite")), {
+			reason: "busy",
+		});
+	} finally {
+		failure.mock.restore();
+		lock.release();
+		rmSync(root, { recursive: true, force: true });
+	}
+});
 
 test("a leftover lock file from an earlier protocol does not block subagent ownership", async () => {
 	const root = realpathSync(mkdtempSync(join(tmpdir(), "jouzu-lock-leftover-")));

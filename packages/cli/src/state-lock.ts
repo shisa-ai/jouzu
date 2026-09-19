@@ -98,8 +98,9 @@ function releaseToken(path: string, token: string): void {
  * operations. The lock records a PID, started-at timestamp, and a release
  * token. A lock held by a live process is always refused; a dead owner's lock
  * or an owner-unknown legacy lock is refused while younger than the stale
- * threshold and recovered automatically once it is older, without deleting a
- * successor's lock. Returns a token-matched release function.
+ * threshold and recovered automatically once it is older. Recovery and release
+ * inspect and unlink separately; they do not atomically exclude a successor.
+ * Returns a token-matched release function.
  */
 export function acquireStateLock(options: AcquireStateLockOptions): () => void {
 	const now = options.now ?? new Date();

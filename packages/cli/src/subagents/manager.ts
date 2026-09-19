@@ -236,6 +236,7 @@ export class SubagentManager {
 	private disposed = false;
 	private pumping = false;
 	private storageError?: string;
+	private releaseError?: Error;
 	constructor(
 		private readonly paths: JouzuPaths,
 		readonly parentSessionId: string,
@@ -441,6 +442,13 @@ export class SubagentManager {
 				if (this.workers.size >= this.maxConcurrent) break;
 				const run = this.runs.get(id);
 				if (!run) continue;
+				if (this.releaseError) {
+					this.pending.delete(id);
+					run.status = "failed";
+					run.result = this.releaseError.message;
+					this.finalize(run);
+					continue;
+				}
 				const sameWorkspace = [...this.workers.keys()]
 					.map((key) => this.runs.get(key))
 					.filter((other): other is AgentRun => other !== undefined)
@@ -452,7 +460,12 @@ export class SubagentManager {
 					// Serialize workspace writers across parent sessions as well.
 					if (roleCanWrite(run.role))
 						lock = acquireProcessLock(join(this.paths.stateDir, "subagent-writers", `${digest(run.cwd)}.sqlite`));
-				} catch {
+				} catch (error) {
+					if (error instanceof ProcessLockError && error.reason === "busy") continue;
+					this.pending.delete(id);
+					run.status = "failed";
+					run.result = `Workspace lock failed: ${error instanceof Error ? error.message : String(error)}`;
+					this.finalize(run);
 					continue;
 				}
 				if (lock) this.releases.set(id, lock);
@@ -521,7 +534,10 @@ export class SubagentManager {
 		this.releases.delete(id);
 		const result = this.results.get(id);
 		this.results.delete(id);
-		if (isActiveRun(run)) {
+		if (this.releaseError) {
+			run.status = "failed";
+			run.result = this.releaseError.message;
+		} else if (isActiveRun(run)) {
 			run.status = success && result ? result.status : "failed";
 			run.result =
 				success && result
@@ -608,7 +624,10 @@ export class SubagentManager {
 			throw new Error("Some subagents could not be stopped. Inspect Runs and retry Stop for each active child.");
 	}
 	async dispose(): Promise<void> {
-		if (this.disposed) return;
+		if (this.disposed) {
+			if (this.releaseError) throw this.releaseError;
+			return;
+		}
 		this.disposed = true;
 		clearTimeout(this.queueTimer);
 		for (const id of this.pending.keys()) {
@@ -633,14 +652,18 @@ export class SubagentManager {
 		this.releaseHeld(this.releaseOwner);
 		this.releaseOwner = undefined;
 		this.listeners.clear();
+		if (this.releaseError) throw this.releaseError;
 	}
-	/**
-	 * Release a lock without letting a close failure interrupt run finalization.
-	 * A lock that does not close cleanly stays reserved until process exit.
-	 */
+	/** Keep finalization running, but report a failed close and refuse further work. */
 	private releaseHeld(lock: ProcessLock | undefined): void {
 		try {
 			lock?.release();
-		} catch {}
+		} catch (cause) {
+			this.releaseError ??= new Error(
+				`Process lock release failed; restart Jouzu before starting more agents. ${cause instanceof Error ? cause.message : String(cause)}`,
+				{ cause },
+			);
+			this.storageError = this.releaseError.message;
+		}
 	}
 }

@@ -13,6 +13,8 @@
 
 ### Fixed
 
+- Report subagent lock storage failures instead of queueing indefinitely. A failed lock release marks affected work failed and requires a restart; it no longer disappears during run finalization or shutdown.
+
 - Hold the subagent session lock and each workspace-writer lock for as long as the owning process runs, instead of leaving a record file that a later process ages out and reclaims. A Jouzu process that exits for any reason, including a kill, releases its locks immediately, so a stopped process no longer blocks a session or leaves a workspace writer queued, while a suspended process keeps its lock. A lock file left behind by an earlier run no longer blocks a new owner, and the five-second recovery grace period is gone. A Jouzu process running a version from before this change does not share these locks, so close other Jouzu processes before upgrading and start them again afterward.
 
 ## 0.1.13 - 2026-09-19

@@ -95,10 +95,18 @@ for as long as a session or a child agent runs. Ownership is a held SQLite
 write transaction on that file, so the operating system releases it when the
 holder exits for any reason, including a kill, while a paused or suspended
 holder keeps it. The file is a rendezvous point: its presence does not mean the
-path is locked, and a leftover file never blocks a later acquisition. Closing
-the connection releases the transaction, and the file is left in place. These
-locks cover one local filesystem; they do not coordinate across machines or
-network shares.
+path is locked. Closing the connection releases the transaction, and the file
+is left in place for reuse. These locks cover one local filesystem; they do
+not coordinate across machines or network shares.
+
+A damaged or inaccessible lock file reports a storage error. A workspace writer
+fails without starting rather than waiting for that error to clear. Inspect the
+reported path and permissions; if a damaged lock file must be removed, stop all
+Jouzu processes using that state directory first. Never delete or replace a lock
+file while a process could hold it: another process could then lock a different
+file at the same path. A failed lock release fails the affected run and queued
+work, rejects further launches, and reports an error during shutdown. The
+reservation remains held until process exit; restart Jouzu before continuing.
 
 `private-fs.ts` creates Jouzu-owned roots and descendants with POSIX mode
 `0700`, creates copied backup files with mode `0600`, rejects symlinks inside

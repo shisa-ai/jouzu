@@ -22,15 +22,32 @@ const holder = new URL("./fixtures/process-lock-holder.mjs", import.meta.url);
 const contender = fileURLToPath(new URL("./fixtures/process-lock-contender.mjs", import.meta.url));
 const posixOnly = process.platform === "win32" ? "POSIX-only assertion" : false;
 
-function makeDir() {
-	return mkdtempSync(join(tmpdir(), "jouzu-process-lock-"));
+const cleanups = new WeakMap();
+function makeDir(t) {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-process-lock-"));
+	cleanups.set(t, []);
+	t.after(async () => {
+		for (const cleanup of cleanups.get(t).reverse()) await cleanup();
+		rmSync(root, { recursive: true, force: true });
+	});
+	return root;
 }
 
-async function holdInChild(t, path) {
-	const child = fork(holder, [path], { stdio: ["ignore", "ignore", "inherit", "ipc"] });
-	t.after(() => child.kill("SIGKILL"));
+function reap(t, child) {
+	cleanups.get(t).push(async () => {
+		if (child.exitCode !== null || child.signalCode !== null) return;
+		const exited = once(child, "exit");
+		child.kill("SIGKILL");
+		await exited;
+	});
+}
+
+async function holdInChild(t, path, acquire = true) {
+	const child = fork(holder, [path], { stdio: ["ignore", "ignore", "inherit", "ipc"], execArgv: ["--expose-gc"] });
+	reap(t, child);
 	const [ready] = await once(child, "message");
 	assert.deepEqual(ready, { state: "ready" });
+	if (!acquire) return child;
 	child.send("acquire");
 	const [reply] = await once(child, "message");
 	assert.equal(reply.state, "held", `the child could not hold the lock: ${JSON.stringify(reply)}`);
@@ -54,8 +71,7 @@ function assertStorageFailure(path) {
 }
 
 test("a held lock excludes another process and release admits it", async (t) => {
-	const root = makeDir();
-	t.after(() => rmSync(root, { recursive: true, force: true }));
+	const root = makeDir(t);
 	const path = join(root, "state", "owner.sqlite");
 	const child = await holdInChild(t, path);
 	assertBusy(path);
@@ -68,8 +84,7 @@ test("a held lock excludes another process and release admits it", async (t) => 
 });
 
 test("a suspended holder keeps ownership past the former stale threshold", { skip: posixOnly }, async (t) => {
-	const root = makeDir();
-	t.after(() => rmSync(root, { recursive: true, force: true }));
+	const root = makeDir(t);
 	const path = join(root, "state", "owner.sqlite");
 	const child = await holdInChild(t, path);
 	child.kill("SIGSTOP");
@@ -89,8 +104,7 @@ test("a suspended holder keeps ownership past the former stale threshold", { ski
 });
 
 test("a killed holder releases the lock without cleanup", async (t) => {
-	const root = makeDir();
-	t.after(() => rmSync(root, { recursive: true, force: true }));
+	const root = makeDir(t);
 	const path = join(root, "state", "owner.sqlite");
 	const child = await holdInChild(t, path);
 	child.kill("SIGKILL");
@@ -100,8 +114,7 @@ test("a killed holder releases the lock without cleanup", async (t) => {
 });
 
 test("simultaneous contenders never hold the lock at the same time", async (t) => {
-	const root = makeDir();
-	t.after(() => rmSync(root, { recursive: true, force: true }));
+	const root = makeDir(t);
 	const path = join(root, "state", "owner.sqlite");
 	const ledger = join(root, "ledger.txt");
 	writeFileSync(ledger, "");
@@ -111,9 +124,7 @@ test("simultaneous contenders never hold the lock at the same time", async (t) =
 	const children = [0, 1, 2, 3].map((index) =>
 		spawn(process.execPath, [contender, path, ledger, String(index), "40"], { stdio: ["ignore", "ignore", "inherit"] }),
 	);
-	t.after(() => {
-		for (const child of children) child.kill("SIGKILL");
-	});
+	for (const child of children) reap(t, child);
 	const codes = await Promise.all(children.map(async (child) => (await once(child, "exit"))[0]));
 	assert.deepEqual(codes, [0, 0, 0, 0], "every contender must acquire the lock at least once");
 	const events = readFileSync(ledger, "utf8").trim().split("\n");
@@ -133,20 +144,42 @@ test("simultaneous contenders never hold the lock at the same time", async (t) =
 });
 
 test("release is idempotent and a leftover file never blocks acquisition", (t) => {
-	const root = makeDir();
-	t.after(() => rmSync(root, { recursive: true, force: true }));
+	const root = makeDir(t);
 	const path = join(root, "state", "owner.sqlite");
 	const lock = acquireProcessLock(path);
 	lock.release();
 	lock.release();
 	assert.ok(existsSync(path));
 	const next = acquireProcessLock(path);
-	next.release();
+	try {
+		lock.release();
+		assertBusy(path);
+	} finally {
+		next.release();
+	}
 });
 
+for (const command of ["fail-release", "fail-acquire-close"]) {
+	test(`${command} reports failure and retains ownership through garbage collection until exit`, async (t) => {
+		const root = makeDir(t);
+		const path = join(root, "state", "owner.sqlite");
+		const child = await holdInChild(t, path, command === "fail-release");
+		const reply = once(child, "message");
+		child.send(command);
+		const [failure] = await reply;
+		assert.equal(failure.reason, "storage");
+		if (command === "fail-release") assert.equal(failure.repeated, true);
+		else assert.equal(failure.causes, 2);
+		assertBusy(path);
+		const exited = once(child, "exit");
+		child.kill("SIGKILL");
+		await exited;
+		acquireProcessLock(path).release();
+	});
+}
+
 test("locks on different paths do not exclude each other", (t) => {
-	const root = makeDir();
-	t.after(() => rmSync(root, { recursive: true, force: true }));
+	const root = makeDir(t);
 	const first = acquireProcessLock(join(root, "state", "first.sqlite"));
 	const second = acquireProcessLock(join(root, "state", "second.sqlite"));
 	first.release();
@@ -154,8 +187,7 @@ test("locks on different paths do not exclude each other", (t) => {
 });
 
 test("a damaged lock file is reported as a storage failure and left untouched", (t) => {
-	const root = makeDir();
-	t.after(() => rmSync(root, { recursive: true, force: true }));
+	const root = makeDir(t);
 	const path = join(root, "state", "owner.sqlite");
 	mkdirSync(dirname(path), { recursive: true });
 	writeFileSync(path, "a leftover record from another protocol\n");
@@ -164,8 +196,7 @@ test("a damaged lock file is reported as a storage failure and left untouched", 
 });
 
 test("a symlinked lock path is refused", { skip: posixOnly }, (t) => {
-	const root = makeDir();
-	t.after(() => rmSync(root, { recursive: true, force: true }));
+	const root = makeDir(t);
 	const target = join(root, "real.sqlite");
 	const alias = join(root, "alias.sqlite");
 	writeFileSync(target, "");
@@ -177,8 +208,7 @@ test("a symlinked lock path is refused", { skip: posixOnly }, (t) => {
 });
 
 test("the lock file is private and its parent directory is created", { skip: posixOnly }, (t) => {
-	const root = makeDir();
-	t.after(() => rmSync(root, { recursive: true, force: true }));
+	const root = makeDir(t);
 	const path = join(root, "nested", "state", "owner.sqlite");
 	const lock = acquireProcessLock(path);
 	lock.release();
