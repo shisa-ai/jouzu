@@ -535,7 +535,9 @@ export function createDoctorReport(context: DoctorContext): DoctorResult {
 		const path = pathApi.join(context.paths.stateDir, file);
 		field("roots", id, label, describeStateLock(path, staleMs, now));
 		const status = inspectStateLock(path, now).status;
-		if (status === "held-dead" || status === "owner-unknown" || status === "invalid") {
+		if (status === "unreadable") {
+			problem(`${id}.unreadable`, `A state lock could not be inspected: ${path}`);
+		} else if (status === "held-dead" || status === "owner-unknown" || status === "invalid") {
 			problem(`${id}.stale`, `A leftover state lock blocks Jouzu operations: ${path} (${status})`);
 		}
 	}

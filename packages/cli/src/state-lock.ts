@@ -1,14 +1,5 @@
 import { randomUUID } from "node:crypto";
-import {
-	closeSync,
-	existsSync,
-	fsyncSync,
-	lstatSync,
-	openSync,
-	readFileSync,
-	unlinkSync,
-	writeFileSync,
-} from "node:fs";
+import { closeSync, fsyncSync, lstatSync, openSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { ensurePrivateDirectory, validatePrivateDirectory } from "./private-fs.js";
 
@@ -21,7 +12,7 @@ export interface StateLockRecord {
 	token: string;
 }
 
-export type StateLockStatus = "free" | "held-live" | "held-dead" | "owner-unknown" | "invalid";
+export type StateLockStatus = "free" | "held-live" | "held-dead" | "owner-unknown" | "invalid" | "unreadable";
 
 export interface StateLockInspection {
 	exists: boolean;
@@ -58,15 +49,15 @@ export function inspectStateLock(path: string, now: Date): StateLockInspection {
 	} catch {
 		return { exists: true, status: "invalid", ageMs: null };
 	}
-	if (!existsSync(path)) return { exists: false, status: "free", ageMs: null };
 	try {
 		const metadata = lstatSync(path);
 		if (!metadata.isFile() || metadata.isSymbolicLink()) {
 			return { exists: true, status: "invalid", ageMs: null };
 		}
+		const contents = readFileSync(path, "utf8");
 		let record: StateLockRecord | null = null;
 		try {
-			const parsed = JSON.parse(readFileSync(path, "utf8")) as Partial<StateLockRecord>;
+			const parsed = JSON.parse(contents) as Partial<StateLockRecord>;
 			if (
 				typeof parsed.pid === "number" &&
 				typeof parsed.startedAt === "string" &&
@@ -77,11 +68,7 @@ export function inspectStateLock(path: string, now: Date): StateLockInspection {
 			}
 		} catch {}
 		if (record === null) {
-			let ageMs: number | null = null;
-			try {
-				ageMs = now.getTime() - lstatSync(path).mtimeMs;
-			} catch {}
-			return { exists: true, status: "owner-unknown", ageMs };
+			return { exists: true, status: "owner-unknown", ageMs: now.getTime() - metadata.mtimeMs };
 		}
 		const ageMs = now.getTime() - Date.parse(record.startedAt);
 		return {
@@ -89,8 +76,11 @@ export function inspectStateLock(path: string, now: Date): StateLockInspection {
 			status: pidIsAlive(record.pid) ? "held-live" : "held-dead",
 			ageMs,
 		};
-	} catch {
-		return { exists: false, status: "free", ageMs: null };
+	} catch (error) {
+		if (error instanceof Error && "code" in error && error.code === "ENOENT") {
+			return { exists: false, status: "free", ageMs: null };
+		}
+		return { exists: true, status: "unreadable", ageMs: null };
 	}
 }
 
@@ -132,7 +122,7 @@ export function acquireStateLock(options: AcquireStateLockOptions): () => void {
 			writeNew();
 			return () => releaseToken(options.path, token);
 		}
-		if (inspection.status === "held-live" || inspection.status === "invalid") {
+		if (inspection.status === "held-live" || inspection.status === "invalid" || inspection.status === "unreadable") {
 			throw options.onBusy(inspection);
 		}
 		// held-dead or owner-unknown: refuse while younger than the threshold,
@@ -166,6 +156,8 @@ export function describeStateLock(path: string, staleMs: number, now: Date): str
 			return `left by a dead process (${ageText(inspection.ageMs ?? 0)}; recoverable after ${ageText(staleMs)})`;
 		case "owner-unknown":
 			return `owner unknown (${ageText(inspection.ageMs ?? 0)}; recoverable after ${ageText(staleMs)})`;
+		case "unreadable":
+			return "unreadable (lock inspection failed)";
 		case "invalid":
 			return "invalid (not a regular lock file)";
 	}

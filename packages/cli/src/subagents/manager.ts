@@ -59,6 +59,8 @@ export type WorkerFactory = (
 	exit: (success: boolean) => void,
 ) => WorkerHandle;
 
+// Allow an in-progress lock write to finish before recovering an unknown owner.
+const SUBAGENT_LOCK_STALE_MS = 5_000;
 const ACTIVE = new Set<RunStatus>(["queued", "starting", "running"]);
 export function isActiveRun(run: AgentRun): boolean {
 	return ACTIVE.has(run.status);
@@ -271,7 +273,7 @@ export class SubagentManager {
 		ensurePrivateDirectory(this.paths.stateDir, this.root);
 		this.releaseOwner = acquireStateLock({
 			path: join(this.root, "owner.lock"),
-			staleMs: -1,
+			staleMs: SUBAGENT_LOCK_STALE_MS,
 			describe: "subagent session",
 			onBusy: () =>
 				new Error("This session's agents are controlled by another Jouzu process. Close it before starting more work."),
@@ -449,7 +451,7 @@ export class SubagentManager {
 					if (roleCanWrite(run.role))
 						release = acquireStateLock({
 							path: join(this.paths.stateDir, "subagent-writers", `${digest(run.cwd)}.lock`),
-							staleMs: -1,
+							staleMs: SUBAGENT_LOCK_STALE_MS,
 							describe: "workspace writer",
 							onBusy: () => new Error("Writer busy"),
 						});

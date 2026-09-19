@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync } from "node:fs";
+import fs, { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync } from "node:fs";
+import { syncBuiltinESMExports } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -117,6 +118,30 @@ test("a malformed legacy lock is owner-unknown: refused young, recovered stale",
 		rmSync(root, { recursive: true, force: true });
 	}
 });
+
+for (const operation of ["lstatSync", "readFileSync"]) {
+	test(`${operation} failures leave an existing lock busy rather than free or recoverable`, (t) => {
+		const { root, stateDir } = makeStateDir();
+		const path = join(stateDir, "lock");
+		writeAged(path, "", STATE_LOCK_STALE_MS + 1000);
+		const original = fs[operation];
+		t.mock.method(fs, operation, (target, ...args) => {
+			if (target === path) throw Object.assign(new Error("inspection failed"), { code: "EIO" });
+			return original(target, ...args);
+		});
+		syncBuiltinESMExports();
+		try {
+			assert.deepEqual(inspectStateLock(path, new Date()), { exists: true, status: "unreadable", ageMs: null });
+			assert.match(describeStateLock(path, STATE_LOCK_STALE_MS, new Date()), /unreadable/);
+			assert.throws(() => acquireStateLock({ path, describe: "test", onBusy: busyError }), /domain busy/);
+			assert.ok(existsSync(path), "inspection failure must not remove the lock");
+		} finally {
+			t.mock.restoreAll();
+			syncBuiltinESMExports();
+			rmSync(root, { recursive: true, force: true });
+		}
+	});
+}
 
 test("describeStateLock reports free, dead, and owner-unknown states", async () => {
 	const { root, stateDir } = makeStateDir();
