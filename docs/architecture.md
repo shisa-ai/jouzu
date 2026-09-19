@@ -50,10 +50,11 @@ packages/session-ui
   └─ sources/            bounded Git and optional runtime probes
 ```
 
-Dependency direction is downward: `cli.ts` composes, leaf modules
-(`args.ts`, `paths.ts`, `state-lock.ts`) depend on nothing internal except
-types. `runtime.ts` and `profile-manager.ts` depend on `paths.ts` and
-`profiles.ts`; `doctor.ts` depends only on leaf modules and type-only imports.
+`cli.ts` composes the runtime. `args.ts` and `paths.ts` have no internal
+imports; `state-lock.ts` depends on `private-fs.ts`. `runtime.ts` reads profile
+state through `profile-manager.ts`; `doctor.ts`
+combines runtime inspection from the Camoufox adapter, model catalog,
+model-picker state, and state-lock modules with the shared command renderer.
 There are no circular module imports.
 
 ## Interactive UX authority

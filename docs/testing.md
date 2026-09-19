@@ -68,9 +68,9 @@ Windows; independently detached processes may require separate cleanup.
 CI's opt-in extension network qualification uses a 600000ms test budget and
 900000ms suite budget to accommodate its declared ten-minute network test; those
 overrides apply only to that step. The `npm test --workspaces` steps use a
-360000ms test budget and a 900000ms suite budget, because shared runners run the
-CLI suites roughly four times slower than a developer machine: the heaviest
-files take about a minute here, and the whole CLI suite needs about 280s on CI.
+240000ms test budget and a 900000ms suite budget. The test budget is about twice
+the slowest measured CI test file (107 seconds); the whole CLI suite needs about
+280 seconds on CI.
 
 Keep the full output while preserving failures in a Bash pipeline:
 
