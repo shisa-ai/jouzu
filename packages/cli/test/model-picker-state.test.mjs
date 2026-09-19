@@ -1,5 +1,16 @@
 import assert from "node:assert/strict";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import {
+	existsSync,
+	mkdirSync,
+	mkdtempSync,
+	readdirSync,
+	readFileSync,
+	rmSync,
+	statSync,
+	symlinkSync,
+	truncateSync,
+	writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -8,7 +19,9 @@ import {
 	deriveProjectKey,
 	emptyModelPickerState,
 	loadModelPickerState,
+	MODEL_PICKER_PROJECT_HISTORY_LIMIT,
 	MODEL_PICKER_RECENT_LIMIT,
+	MODEL_PICKER_STATE_MAX_BYTES,
 	ModelPickerStateError,
 	ModelPickerStore,
 	modelReferenceKey,
@@ -45,6 +58,141 @@ test("missing state is empty and dispatch updates bounded project and global MRU
 		assert.equal(state.recents.global[0].modelId, "model-5");
 		assert.equal(state.recents.global[0].useCount, 2);
 		assert.equal(readFileSync(join(paths.stateDir, "model-picker.json"), "utf8").includes(root), false);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+function recent(index, reference = { provider: "p", modelId: "m" }) {
+	return { ...reference, lastUsedAt: new Date(Date.UTC(2026, 0, 1, 0, 0, index)).toISOString(), useCount: 1 };
+}
+
+function writeState(paths, state) {
+	mkdirSync(paths.stateDir, { recursive: true });
+	const path = join(paths.stateDir, "model-picker.json");
+	writeFileSync(path, JSON.stringify(state));
+	return path;
+}
+
+test("project history evicts least recently used projects and preserves explicit preferences", () => {
+	const { root, paths } = context();
+	try {
+		const state = emptyModelPickerState();
+		for (let index = 0; index < MODEL_PICKER_PROJECT_HISTORY_LIMIT; index++) {
+			state.recents.projects[`project-${index}`] = [recent(index)];
+		}
+		const favorite = { provider: "p", modelId: "favorite", addedAt: recent(0).lastUsedAt };
+		state.favorites = [favorite];
+		state.defaults.projects["project-1"] = { provider: "p", modelId: "saved" };
+		writeState(paths, state);
+		const store = new ModelPickerStore(paths);
+		store.recordDispatch({ provider: "p", modelId: "m" }, "project-0", { now: new Date("2026-02-01T00:00:00Z") });
+		store.recordDispatch({ provider: "p", modelId: "new" }, "new-project", { now: new Date("2026-02-02T00:00:00Z") });
+		const saved = store.load().state;
+		assert.equal(Object.keys(saved.recents.projects).length, MODEL_PICKER_PROJECT_HISTORY_LIMIT);
+		assert.equal(saved.recents.projects["project-1"], undefined, "use order, not original insertion order");
+		assert.equal(saved.recents.projects["project-0"][0].useCount, 2);
+		assert.ok(saved.recents.projects["new-project"]);
+		assert.deepEqual(saved.defaults, state.defaults);
+		assert.deepEqual(saved.favorites, [favorite]);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("loading excess project histories bounds memory state without rewriting the source", () => {
+	const { root, paths } = context();
+	try {
+		const state = emptyModelPickerState();
+		for (let index = MODEL_PICKER_PROJECT_HISTORY_LIMIT + 2; index >= 0; index--) {
+			state.recents.projects[`project-${index}`] = [recent(index)];
+		}
+		state.recents.projects.empty = [];
+		const path = writeState(paths, state);
+		const before = readFileSync(path, "utf8");
+		const loaded = loadModelPickerState(paths).state;
+		assert.equal(Object.keys(loaded.recents.projects).length, MODEL_PICKER_PROJECT_HISTORY_LIMIT);
+		assert.equal(loaded.recents.projects["project-0"], undefined);
+		assert.equal(loaded.recents.projects.empty, undefined);
+		assert.ok(loaded.recents.projects[`project-${MODEL_PICKER_PROJECT_HISTORY_LIMIT + 2}`]);
+		assert.equal(readFileSync(path, "utf8"), before);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("the byte limit evicts oldest project histories before writing UTF-8 state", () => {
+	const { root, paths } = context();
+	try {
+		const state = emptyModelPickerState();
+		const reference = {
+			provider: "日".repeat(512),
+			modelId: "語".repeat(512),
+			catalogId: "書".repeat(512),
+			offeringId: "字".repeat(512),
+		};
+		const records = Array.from({ length: MODEL_PICKER_RECENT_LIMIT }, () => recent(0, reference));
+		// Choose a compact input below the cap whose indented persisted representation exceeds it.
+		const one = { ...state, recents: { ...state.recents, projects: { "project-0000": records } } };
+		const bytesPerProject =
+			Buffer.byteLength(JSON.stringify(one, null, 2)) - Buffer.byteLength(JSON.stringify(state, null, 2));
+		const count = Math.floor(MODEL_PICKER_STATE_MAX_BYTES / bytesPerProject) + 1;
+		assert.ok(count < MODEL_PICKER_PROJECT_HISTORY_LIMIT);
+		for (let index = 0; index < count; index++) {
+			state.recents.projects[`project-${String(index).padStart(4, "0")}`] = records.map((record) => ({
+				...record,
+				lastUsedAt: recent(index).lastUsedAt,
+			}));
+		}
+		state.defaults.projects["project-0000"] = { provider: "p", modelId: "saved" };
+		assert.ok(Buffer.byteLength(JSON.stringify(state)) < MODEL_PICKER_STATE_MAX_BYTES);
+		assert.ok(Buffer.byteLength(JSON.stringify(state, null, 2)) > MODEL_PICKER_STATE_MAX_BYTES);
+		const path = writeState(paths, state);
+		const saved = new ModelPickerStore(paths).setFilter("all");
+		const keys = Object.keys(saved.recents.projects);
+		assert.ok(keys.length < count);
+		assert.equal(saved.recents.projects["project-0000"], undefined);
+		assert.ok(saved.recents.projects[`project-${String(count - 1).padStart(4, "0")}`]);
+		assert.deepEqual(saved.defaults, state.defaults);
+		assert.ok(statSync(path).size <= MODEL_PICKER_STATE_MAX_BYTES);
+		assert.deepEqual(loadModelPickerState(paths).state, saved);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("explicit preferences are not evicted when they alone exceed the serialized byte limit", () => {
+	const { root, paths } = context();
+	try {
+		const state = emptyModelPickerState();
+		const favorite = { provider: "日".repeat(512), modelId: "語".repeat(512), addedAt: recent(0).lastUsedAt };
+		const one = { ...state, favorites: [favorite] };
+		const two = { ...state, favorites: [favorite, favorite] };
+		const bytesPerFavorite =
+			Buffer.byteLength(JSON.stringify(two, null, 2)) - Buffer.byteLength(JSON.stringify(one, null, 2));
+		state.favorites = Array(Math.floor(MODEL_PICKER_STATE_MAX_BYTES / bytesPerFavorite) + 1).fill(favorite);
+		const original = JSON.stringify(state);
+		assert.ok(Buffer.byteLength(original) < MODEL_PICKER_STATE_MAX_BYTES);
+		assert.ok(Buffer.byteLength(JSON.stringify(state, null, 2)) > MODEL_PICKER_STATE_MAX_BYTES);
+		const path = writeState(paths, state);
+		assert.throws(() => new ModelPickerStore(paths).setFilter("all"), /preferences exceed/);
+		assert.equal(readFileSync(path, "utf8"), original);
+		assert.deepEqual(readdirSync(paths.stateDir), ["model-picker.json"]);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test("oversized existing state is never read, quarantined, or replaced by a mutation", () => {
+	const { root, paths } = context();
+	try {
+		const path = writeState(paths, emptyModelPickerState());
+		truncateSync(path, MODEL_PICKER_STATE_MAX_BYTES + 1);
+		for (const recover of [true, false])
+			assert.throws(() => loadModelPickerState(paths, { recover }), /exceeds 16 MiB/);
+		assert.throws(() => new ModelPickerStore(paths).setFilter("all"), /exceeds 16 MiB/);
+		assert.equal(statSync(path).size, MODEL_PICKER_STATE_MAX_BYTES + 1);
+		assert.deepEqual(readdirSync(paths.stateDir), ["model-picker.json"]);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}

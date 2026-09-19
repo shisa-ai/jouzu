@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, lstatSync, readFileSync, realpathSync, renameSync } from "node:fs";
+import { closeSync, existsSync, fstatSync, lstatSync, openSync, readSync, realpathSync, renameSync } from "node:fs";
 import { isAbsolute, join, resolve } from "node:path";
 import type { JouzuPaths } from "./paths.js";
 import { ensurePrivateDirectory, writeFilePrivateAtomic } from "./private-fs.js";
@@ -9,6 +9,8 @@ import { acquireStateLock, type StateLockInspection } from "./state-lock.js";
 export const MODEL_PICKER_SCHEMA_VERSION = 4;
 export const MODEL_PICKER_RECENT_LIMIT = 12;
 export const MODEL_PICKER_HISTORY_LIMIT = 8;
+export const MODEL_PICKER_PROJECT_HISTORY_LIMIT = 512;
+export const MODEL_PICKER_STATE_MAX_BYTES = 16 * 1024 * 1024;
 
 export const MODEL_PICKER_FILTERS = ["recent", "favorite", "all"] as const;
 export type ModelPickerFilter = (typeof MODEL_PICKER_FILTERS)[number];
@@ -67,6 +69,76 @@ export class ModelPickerStateError extends Error {
 	constructor(message: string) {
 		super(message);
 		this.name = "ModelPickerStateError";
+	}
+}
+
+class ModelPickerStateLimitError extends ModelPickerStateError {}
+
+function projectHistoryByRecency(state: ModelPickerState): [string, RecentRecord[]][] {
+	return Object.entries(state.recents.projects)
+		.map(([key, records]) => ({
+			key,
+			records,
+			lastUsed: Math.max(...records.map((record) => Date.parse(record.lastUsedAt))),
+		}))
+		.sort((a, b) => b.lastUsed - a.lastUsed || (a.key < b.key ? -1 : a.key > b.key ? 1 : 0))
+		.map(({ key, records }) => [key, records]);
+}
+
+/** Evict project history, never explicit defaults or favorites, before persisting. */
+function serializeBoundedState(state: ModelPickerState): string {
+	const projects = projectHistoryByRecency(state).slice(0, MODEL_PICKER_PROJECT_HISTORY_LIMIT);
+	const serialize = (keep: number): string => {
+		state.recents.projects = Object.fromEntries(projects.slice(0, keep));
+		return `${JSON.stringify(state, null, 2)}\n`;
+	};
+	let text = serialize(projects.length);
+	if (Buffer.byteLength(text) <= MODEL_PICKER_STATE_MAX_BYTES) return text;
+	text = serialize(0);
+	if (Buffer.byteLength(text) > MODEL_PICKER_STATE_MAX_BYTES) {
+		throw new ModelPickerStateLimitError(
+			"model picker preferences exceed the 16 MiB state limit; existing state was not changed",
+		);
+	}
+	// Find the largest newest-first prefix that fits without serializing once per eviction.
+	let low = 0;
+	let high = projects.length;
+	while (low + 1 < high) {
+		const keep = Math.floor((low + high) / 2);
+		if (Buffer.byteLength(serialize(keep)) <= MODEL_PICKER_STATE_MAX_BYTES) low = keep;
+		else high = keep;
+	}
+	return serialize(low);
+}
+
+function readBoundedState(path: string): string {
+	const descriptor = openSync(path, "r");
+	try {
+		const metadata = fstatSync(descriptor);
+		if (!metadata.isFile()) throw new ModelPickerStateError(`model picker state must be a regular file: ${path}`);
+		if (metadata.size > MODEL_PICKER_STATE_MAX_BYTES) {
+			throw new ModelPickerStateLimitError("model picker state exceeds 16 MiB; the original file was left unchanged");
+		}
+		const chunk = Buffer.alloc(Math.min(metadata.size + 1, 64 * 1024));
+		const chunks: Buffer[] = [];
+		let total = 0;
+		for (;;) {
+			const bytes = readSync(
+				descriptor,
+				chunk,
+				0,
+				Math.min(chunk.length, MODEL_PICKER_STATE_MAX_BYTES - total + 1),
+				null,
+			);
+			if (!bytes) return Buffer.concat(chunks, total).toString("utf8");
+			total += bytes;
+			if (total > MODEL_PICKER_STATE_MAX_BYTES) {
+				throw new ModelPickerStateLimitError("model picker state exceeds 16 MiB; the original file was left unchanged");
+			}
+			chunks.push(Buffer.from(chunk.subarray(0, bytes)));
+		}
+	} finally {
+		closeSync(descriptor);
 	}
 }
 
@@ -292,8 +364,15 @@ export function loadModelPickerState(
 		if (!metadata.isFile() || metadata.isSymbolicLink()) {
 			throw new ModelPickerStateError(`model picker state must be a regular file: ${path}`);
 		}
-		return { state: parseState(JSON.parse(readFileSync(path, "utf8"))) };
+		const state = parseState(JSON.parse(readBoundedState(path)));
+		if (Object.keys(state.recents.projects).length > MODEL_PICKER_PROJECT_HISTORY_LIMIT) {
+			state.recents.projects = Object.fromEntries(
+				projectHistoryByRecency(state).slice(0, MODEL_PICKER_PROJECT_HISTORY_LIMIT),
+			);
+		}
+		return { state };
 	} catch (error) {
+		if (error instanceof ModelPickerStateLimitError) throw error;
 		if (error instanceof ModelPickerStateError && /regular file/.test(error.message)) throw error;
 		const message = error instanceof Error ? error.message : String(error);
 		if (options.recover === false) throw new ModelPickerStateError(`model picker state is unreadable: ${message}`);
@@ -373,7 +452,7 @@ export class ModelPickerStore {
 		try {
 			const state = this.load({ now }).state;
 			mutator(state);
-			writeFilePrivateAtomic(statePath(this.paths), `${JSON.stringify(state, null, 2)}\n`, this.paths.stateDir);
+			writeFilePrivateAtomic(statePath(this.paths), serializeBoundedState(state), this.paths.stateDir);
 			return state;
 		} finally {
 			release();

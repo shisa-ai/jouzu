@@ -75,6 +75,13 @@ Read the interaction model and collision map before changing interactive keys. R
 | Model-picker project defaults, favorites, recents, and last used model | `model-picker-state.ts` | `state/model-picker.json` |
 | Account-partitioned model catalog cache | `model-catalog-sync.ts` | `cache/model-catalog/<endpoint-hash>/` |
 
+Model-picker state keeps recent history for at most 512 projects. On writes, it evicts
+the least recently dispatched project histories first to meet that count and a 16 MiB
+UTF-8 file limit. Explicit project defaults, favorites, and thinking preferences are
+preserved. If preferences alone exceed the size limit, the write fails without replacing
+the saved file. An existing file above the read limit is left unchanged rather than
+quarantined or reset. Opening the picker does not refresh a project's dispatch recency.
+
 Locks (`profile.lock`, `pi-import.lock`, `keybindings.lock`, `self-update.lock`, `model-picker.lock`, and per-endpoint catalog `refresh.lock`) are created and
 released by `state-lock.ts`, the shared state-lock primitive used by the
 updater, profile, Pi-import, keybinding, model-picker, and catalog operations. It records a PID, a started-at
