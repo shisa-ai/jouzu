@@ -27,7 +27,7 @@ npm run build
 | `npm run test:runner` | Test-runner deadlines, diagnostics, and command contracts |
 | `npm run test --workspace packages/session-ui` | Session UI |
 | `npm run test --workspace packages/cli` | CLI and session flow control |
-| `npm run test:python` | Python scanner |
+| `npm run test:python` | Python package reservation |
 | `npm run test:pack-check` | Package contents and `dev-build.sh` |
 | `npm run test:release-metadata` | Release metadata, smoke phases, and live-smoke event analysis |
 
@@ -131,17 +131,29 @@ The standalone wait-decision case in `flow-assembly-pair.test.mjs` starts anothe
 
 ### Task continuation integration
 
-To qualify changes to task cancellation or Jouzu's task-message handling, provide a pi-tasks source checkout and run:
+To qualify changes to task cancellation or Jouzu's task-message handling, run:
 
 ```bash
-JOUZU_PI_TASKS_CHECKOUT=/path/to/pi-tasks npm run test:tasks:integration
+npm run test:tasks:integration
 ```
 
-This command requires the checkout; missing or invalid sources fail the run. The default suite skips these two tests when the variable is absent. The tests bundle `src/task-continuation.ts` from that checkout against Jouzu's installed runtime packages and use the full flow assembly with the installed background and multiloop producers.
+The two cases in `flow-task-continuation-integration.test.mjs` load the installed
+pi-tasks extension and the production flow assembly, with the installed background
+and multiloop producers. They also run in the default suite and require no additional
+source checkout.
 
-A local HTTP server gates a response to test a follow-up enqueued while a request is active; a second case enqueues at `agent_end`. Both require zero extra HTTP requests for the stale task, no automation pause, intact stored source text, and successful admission of the next user message. Lifecycle events determine settlement; the tests do not use a timed sleep to infer success.
+One case submits the installed extension's continuation at `agent_end`; the other
+holds that same request until a separate user response is streaming. Both complete
+the task after submission and require cancellation before prompt construction, zero
+extra HTTP requests, no automation pause, intact stored task text, and successful
+admission of the next user message. A local HTTP response gate and the adapter's
+cancellation callback determine settlement; the tests do not infer success from a
+sleep.
 
-These tests verify cancellation and transport behavior. When valid input accompanies a stale task, the source instruction remains in context with a cancellation note; the tests do not prove that a model will obey that note.
+The consumed-queue and mixed-input cases in `flow-task-adapter.test.mjs` separately
+check cancellation after prompt construction and preservation of source bytes through
+provider delivery and session reopen. These tests verify cancellation and transport
+behavior, not whether a model obeys a cancellation note.
 
 ### Saved flow-session recovery
 

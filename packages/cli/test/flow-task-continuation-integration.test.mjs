@@ -1,105 +1,130 @@
 import assert from "node:assert/strict";
-import { mkdtemp, rm } from "node:fs/promises";
-import { join, resolve } from "node:path";
+import { readFileSync, writeFileSync } from "node:fs";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { test } from "node:test";
-import { pathToFileURL } from "node:url";
-import { build } from "esbuild";
-import { deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
-import { afterFlowCleanup, assembledSession, installedProducerExtensions } from "./fixtures/flow-assembly.mjs";
-
-const checkout = process.env.JOUZU_PI_TASKS_CHECKOUT;
-
-async function loadGuard(t) {
-	// Resolve runtime packages through the CLI tree, as installed extensions do.
-	const outputDir = await mkdtemp(join(import.meta.dirname, "../node_modules/.task-guard-test-"));
-	afterFlowCleanup(t, () => rm(outputDir, { recursive: true, force: true }));
-	const outfile = join(outputDir, "guard.mjs");
-	await build({
-		entryPoints: [join(resolve(checkout), "src/task-continuation.ts")],
-		bundle: true,
-		platform: "node",
-		format: "esm",
-		packages: "external",
-		outfile,
-		logLevel: "silent",
-	});
-	return import(pathToFileURL(outfile).href);
-}
+import { assistantToolCalls, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
+import {
+	afterFlowCleanup,
+	assembledSession,
+	installedProducerExtensions,
+	installedTaskExtension,
+} from "./fixtures/flow-assembly.mjs";
 
 for (const enqueueAt of ["agent_end", "streaming"])
-	test(`task continuation integration: stale follow-up queued at ${enqueueAt}`, {
-		skip: !checkout && "Set JOUZU_PI_TASKS_CHECKOUT to a pi-tasks source checkout.",
-		timeout: 15_000,
-	}, async (t) => {
-		const { installTaskContinuationGuard, taskContinuation } = await loadGuard(t);
-		const task = { id: "1", createdAt: 1, status: "in_progress", subject: "A task" };
-		const requested = deferred(),
+	test(`installed task continuation cancels stale work queued at ${enqueueAt}`, { timeout: 15_000 }, async (t) => {
+		const root = await mkdtemp(join(tmpdir(), "jouzu-task-continuation-"));
+		afterFlowCleanup(t, () => rm(root, { recursive: true, force: true }));
+		await mkdir(join(root, ".pi"));
+		await writeFile(
+			join(root, ".pi/tasks-config.json"),
+			JSON.stringify({ autoMode: "cascade", autoClearCompleted: "never" }),
+		);
+		const taskFile = join(root, "tasks.json");
+		const description = "Preserve this task's original instruction 日本語";
+		const captured = deferred(),
+			requested = deferred(),
 			releaseResponse = deferred(),
-			settled = deferred();
-		let pi,
-			delivered = false,
-			queued = false,
-			original;
-		const queue = () => {
-			assert.equal(queued, false);
-			queued = true;
-			original = taskContinuation(task, 'Continue by working on task #1: "A task"\n\nDo work');
-			pi.sendMessage(original, { deliverAs: "followUp", triggerTurn: true });
-			task.status = "completed";
+			cancelled = deferred();
+		let host,
+			pending,
+			inAgentEnd = false,
+			builds = 0,
+			consumed = 0;
+		const complete = () => {
+			const saved = JSON.parse(readFileSync(taskFile, "utf8"));
+			assert.equal(saved.tasks.length, 1);
+			saved.tasks[0].status = "completed";
+			saved.tasks[0].updatedAt++;
+			writeFileSync(taskFile, JSON.stringify(saved));
+		};
+		const enqueueThenComplete = () => {
+			host.submit(pending);
+			complete();
 		};
 		const f = await assembledSession(t, {
+			root,
 			producerExtensions: [
-				...(await installedProducerExtensions()),
 				{
-					name: "task-guard",
-					factory(api) {
-						pi = api;
-						installTaskContinuationGuard(
-							pi,
-							() => task,
-							() => {
-								delivered = true;
-							},
-						);
-						pi.on("agent_end", () => {
-							if (enqueueAt === "agent_end" && !queued) queue();
+					name: "observe-installed-task-submission",
+					factory(pi) {
+						pi.on("agent_start", () => {
+							inAgentEnd = false;
 						});
-						pi.on("agent_settled", () => {
-							if (delivered) settled.resolve();
+						pi.on("agent_end", () => {
+							inAgentEnd = true;
+						});
+						pi.events.on("jouzu:task-flow", (request) => {
+							const accept = request.accept;
+							request.accept = (value) => {
+								host = value;
+								accept({
+									...value,
+									submit(input) {
+										assert.equal(pending, undefined, "the installed extension submits one continuation");
+										assert.equal(inAgentEnd, true, "capture the installed extension's agent_end submission");
+										pending = {
+											...input,
+											build() {
+												builds++;
+												return input.build();
+											},
+											consumed() {
+												consumed++;
+												input.consumed();
+											},
+											cancelled() {
+												input.cancelled();
+												cancelled.resolve();
+											},
+										};
+										if (enqueueAt === "agent_end") enqueueThenComplete();
+										captured.resolve();
+									},
+								});
+							};
 						});
 					},
 				},
+				...(await installedProducerExtensions()),
+				await installedTaskExtension(taskFile),
 			],
 			script: async (_body, index) => {
-				if (index === 0 && enqueueAt === "streaming") {
+				if (index === 0)
+					return assistantToolCalls({ name: "TaskCreate", arguments: { subject: "A task", description } });
+				if (index === 2 && enqueueAt === "streaming") {
 					requested.resolve();
 					await releaseResponse.promise;
 				}
 				return { text: "Done" };
 			},
 		});
-		// Release a gated response before teardown tries to join the active request.
 		afterFlowCleanup(t, () => releaseResponse.resolve());
-		const first = f.session.prompt("start");
+		assert.ok(host, "the installed task extension must complete its Jouzu adapter handshake");
+		await f.session.prompt("Create the task");
+		await captured.promise;
 		if (enqueueAt === "streaming") {
+			// Delay only delivery of the real installed extension's request until a user response is active.
+			const active = f.session.prompt("Answer this separate user request");
 			await requested.promise;
 			assert.equal(f.session.agent.state.isStreaming, true);
-			queue();
-			assert.equal(delivered, false, "follow-up must stay queued during the active request");
+			enqueueThenComplete();
 			releaseResponse.resolve();
+			await active;
 		}
-		await first;
-		await settled.promise;
+		await cancelled.promise;
 		await f.session.waitForIdle();
-		assert.equal(f.bodies.length, 1, "stale delivery must not send another HTTP request");
+		const expected = enqueueAt === "streaming" ? 3 : 2;
+		assert.equal(f.bodies.length, expected, "stale continuation sends no extra HTTP request");
+		assert.equal(builds, 0, "stale work is cancelled before its prompt is built");
+		assert.equal(consumed, 0);
 		assert.equal(f.ingress.automatedPause(), undefined);
-		const saved = f.sessionManager
-			.getBranch()
-			.find((entry) => entry.type === "custom_message" && entry.customType === original.customType);
-		assert.equal(saved.content, original.content, "cancellation must preserve source bytes");
+		const task = JSON.parse(readFileSync(taskFile, "utf8")).tasks[0];
+		assert.equal(task.status, "completed");
+		assert.equal(task.description, description, "cancellation preserves stored source text");
 		await f.session.prompt("Explain the completed result");
-		assert.equal(f.bodies.length, 2, JSON.stringify(await f.ingress.inspect()));
-		assert.ok(JSON.stringify(f.bodies[1]).includes("is cancelled"));
-		assert.ok(JSON.stringify(f.bodies[1]).includes("Explain the completed result"));
+		assert.equal(f.bodies.length, expected + 1);
+		assert.ok(JSON.stringify(f.bodies.at(-1)).includes("Explain the completed result"));
 		assert.deepEqual(f.errors, []);
 	});

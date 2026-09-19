@@ -1,10 +1,12 @@
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
-// Qualification must fail rather than silently skip a missing source checkout.
-if (!process.env.JOUZU_PI_TASKS_CHECKOUT?.trim()) {
-	console.error("Set JOUZU_PI_TASKS_CHECKOUT to the pi-tasks source checkout to test.");
-	process.exitCode = 1;
+const fresh = spawnSync(process.execPath, [fileURLToPath(new URL("./check-dist-fresh.mjs", import.meta.url))], {
+	stdio: "inherit",
+});
+if (fresh.error) console.error(fresh.error.message);
+if (fresh.status !== 0) {
+	process.exitCode = fresh.status ?? 1;
 } else {
 	const result = spawnSync(
 		process.execPath,
