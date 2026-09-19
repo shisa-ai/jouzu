@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readdir, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -890,4 +890,26 @@ test("branch admission failure releases summarization state and permits retry", 
 	policy.filterContext = filter;
 	await session.navigateTree(target, { summarize: true });
 	assert.equal(calls, 1);
+});
+
+test("session listing skips a session a forced flush persisted before any message", async (t) => {
+	const directory = await mkdtemp(join(tmpdir(), "jouzu-policy-session-list-"));
+	const sessionDir = join(directory, "sessions");
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	await mkdir(sessionDir, { recursive: true });
+	// Flow control persists a marker with flush() before any message exists, which creates the file.
+	const markerOnly = SessionManager.create(directory, sessionDir);
+	markerOnly.appendCustomEntry("jouzu-flow-branch", { marker: true });
+	markerOnly.flush();
+	// A session with one user message is resumable and must stay listed.
+	const withMessage = SessionManager.create(directory, sessionDir);
+	withMessage.appendMessage({ role: "user", content: [{ type: "text", text: "hello" }], timestamp: Date.now() });
+	withMessage.flush();
+	assert.equal((await readdir(sessionDir)).filter((name) => name.endsWith(".jsonl")).length, 2);
+	const listed = await SessionManager.list(directory, sessionDir);
+	assert.deepEqual(
+		listed.map((session) => session.id),
+		[withMessage.getSessionId()],
+	);
+	assert.equal(listed[0].firstMessage, "hello");
 });

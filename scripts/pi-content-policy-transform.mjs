@@ -36,6 +36,10 @@ export function transform(path, source) {
 			"    flush() {\n        if (!this.persist || !this.sessionFile || this.flushed) return;\n        this._persist(this.fileEntries[this.fileEntries.length - 1], true);\n    }\n    _persist(entry, force = false) {",
 		);
 		change("        if (!hasAssistant) {", "        if (!hasAssistant && !force) {");
+		change(
+			'        if (!header)\n            return null;\n        const cwd = typeof header.cwd === "string" ? header.cwd : "";',
+			'        if (!header)\n            return null;\n        // A session with no messages has nothing to resume. Pi never creates its file before an\n        // assistant message, but a forced flush can, so the list skips it explicitly.\n        if (messageCount === 0)\n            return null;\n        const cwd = typeof header.cwd === "string" ? header.cwd : "";',
+		);
 	} else if (path === "dist/core/session-manager.d.ts") {
 		change(
 			"    _persist(entry: SessionEntry): void;",

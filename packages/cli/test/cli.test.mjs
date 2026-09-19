@@ -493,6 +493,15 @@ test("jz --session resolves an ID inside Jouzu's isolated session root", () => {
 				id: sessionId,
 				timestamp: "2026-08-20T00:00:00.000Z",
 				cwd: process.cwd(),
+			})}\n${JSON.stringify({
+				type: "message",
+				id: "00000001",
+				timestamp: "2026-08-20T00:00:01.000Z",
+				message: {
+					role: "user",
+					content: [{ type: "text", text: "resume me" }],
+					timestamp: Date.parse("2026-08-20T00:00:01.000Z"),
+				},
 			})}\n`,
 		);
 		const result = run(["--jouzu-home", jouzuHome, "--session", sessionId, "--mode", "rpc", "--no-context-files"], {

@@ -65,7 +65,7 @@
 		},
 		"dist/core/session-manager.js": {
 			"before": "ccace64949db25379a43971ecea750c1b7ec6344e1bc31b9d5fe596ac2f1c9f3",
-			"after": "5f3f0fa2dcddad98cdf0dab36c4c2f6d4e1bebe318ec331eb662ea9e20c499b8"
+			"after": "294bf6f3e802c066523601d933fe014109f3b17513726a72827d01687da4a5a4"
 		},
 		"dist/core/session-manager.d.ts": {
 			"before": "b349557f08b25c8655b041ee05d27ff824ffd7c805531ddb460d46b62e4445f7",
