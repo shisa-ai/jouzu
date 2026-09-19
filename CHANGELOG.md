@@ -8,6 +8,7 @@
 
 ### Changed
 
+- Show when each background task finished in the completion receipt. The expanded heading carries the span from the first start to the last finish, and each task row carries its duration and local finish time. A receipt written before this change still renders, without timing.
 - Stopping or pausing a run no longer repeats the same sentence as a notification, because the summary card carries it.
 
 ## 0.1.13 - 2026-09-19

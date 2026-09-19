@@ -15,8 +15,8 @@
 		{
 			"name": "@vanillagreen/pi-background-tasks",
 			"version": "2.0.0",
-			"source": "git+https://github.com/shisa-ai/kendex.git#1c4e7a6b3469fa6bfd3337b36df45ddea6014eda",
-			"commit": "1c4e7a6b3469fa6bfd3337b36df45ddea6014eda",
+			"source": "git+https://github.com/shisa-ai/kendex.git#66356512b81d2358b17531fffa791e2f1e51afef",
+			"commit": "66356512b81d2358b17531fffa791e2f1e51afef",
 			"repository": "https://github.com/shisa-ai/kendex/tree/packages/pi-background-tasks",
 			"license": "MIT",
 			"licenseEvidence": "package.json and THIRD_PARTY_NOTICES.md",
