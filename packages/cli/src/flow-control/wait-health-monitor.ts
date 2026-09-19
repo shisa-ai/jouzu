@@ -126,7 +126,7 @@ export class FlowWaitHealthMonitor {
 			for (const id of this.probed) if (!liveTokens.has(JSON.parse(id)[0])) this.probed.delete(id);
 			let next = Infinity;
 			for (const { wait, handle, execution } of this.monitored(waits, authority.executions)) {
-				const policy = this.options.policy(handle, wait.workId);
+				const policy = this.options.policy(handle, execution.workId);
 				// A producer that detached takes its policy with it. The wait keeps its hard deadline,
 				// which is the guarantee that never depends on a responsive producer.
 				if (!policy) continue;

@@ -112,6 +112,7 @@ test("wait tools use host work authority and cannot claim another registered wor
 	const tools = new Map();
 	createFlowWaitExtension({
 		attachment: () => attachment,
+		currentWork: () => context.current(),
 		authorize: (id) => context.authorize(id),
 		maxDurationMs: 1000,
 		now: () => 2,
@@ -132,9 +133,11 @@ test("wait tools use host work authority and cannot claim another registered wor
 			.get("agent_wait")
 			.execute("call-1", args, undefined, undefined, { sessionManager: { getSessionId: () => "session" } });
 	await assert.rejects(execute(request), { code: "identity" });
+	const { work: _work, ...implicit } = request;
+	await assert.rejects(execute(implicit), { code: "identity" });
 	await context.run({ ...work, revision: 2 }, async () => {
 		await assert.rejects(execute({ ...request, work: "other" }), { code: "identity" });
-		await execute(request);
+		await execute(implicit);
 	});
 	const [wait] = await attachment.waits.snapshot();
 	assert.equal(wait.workId, "work");

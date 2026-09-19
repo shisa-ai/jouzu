@@ -6,6 +6,7 @@ import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import { MAX_RETIRED_FLOW_IDENTITIES, retiredIdentityHash, validRetiredIdentityHash } from "./retired-identities.js";
 import {
 	authorityObservations,
+	canObserveExecution,
 	captureWorkBinding,
 	changeAuthorityWork,
 	emptyWaitAuthority,
@@ -650,7 +651,7 @@ export class FlowWaitStore {
 				index < 0 ||
 				!handle.health ||
 				!execution ||
-				execution.workId !== wait.workId ||
+				!canObserveExecution(state.authority, wait.workId, execution.workId) ||
 				!isDeepStrictEqual(execution, captured.expected)
 			)
 				return false;

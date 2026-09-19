@@ -361,6 +361,12 @@ export function observeAuthorityExecution(
 	execution.observedAt = now;
 	return execution;
 }
+/** Observing a direct parent's job does not grant authority to mutate that work or execution. */
+export function canObserveExecution(authority: FlowWaitAuthority, workId: string, executionWorkId: string): boolean {
+	if (workId === executionWorkId) return true;
+	return authority.work.some((work) => work.id === workId && work.origin?.id === executionWorkId);
+}
+
 export function authorityObservations(
 	authority: FlowWaitAuthority,
 	scope: FlowScope,
@@ -373,7 +379,7 @@ export function authorityObservations(
 				execution.producer === handle.producer &&
 				execution.handle === handle.handle &&
 				execution.execution === handle.execution &&
-				execution.workId === workId,
+				canObserveExecution(authority, workId, execution.workId),
 		);
 		const predicate = execution?.predicates.find((predicate) => predicate.until === handle.until);
 		if (!predicate)
