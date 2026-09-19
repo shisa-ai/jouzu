@@ -439,31 +439,42 @@ export function transform(path, source) {
                 if (!admitted || !Array.isArray(admitted.content)) throw new Error("Invalid content-policy result");
                 return { ...admitted, details: admitted.details ?? {} };
             } catch {
+                // A source the policy does not inspect must keep its result rather than turn a
+                // successful tool call into a TextGuard failure for a check that never ran.
+                if (!this.resourceLoader.contentPolicy.shouldInspectTool?.(toolCall.name, args)) return finalResult;
                 return { content: [{ type: "text", text: "TextGuard could not check this result; content withheld." }], details: {}, isError: true };
             }`,
 		);
 		change(
 			"        // Notify all listeners\n",
 			`        if (event.type === "message_end" && this.resourceLoader.contentPolicy) {
-            try {
-                const admitted = await this.resourceLoader.contentPolicy.filterContext([event.message], this.agent.signal);
-                if (!Array.isArray(admitted) || admitted.length !== 1 || admitted[0].role !== event.message.role) throw new Error("Invalid content-policy result");
-                this._replaceMessageInPlace(event.message, admitted[0]);
-            } catch {
-                if (event.message.role === "toolResult") {
-                    this._replaceMessageInPlace(event.message, {
-                        role: "toolResult", toolCallId: event.message.toolCallId, toolName: event.message.toolName, timestamp: event.message.timestamp,
-                        content: [{ type: "text", text: "TextGuard could not check this message; content withheld." }], details: {}, isError: true,
-                    });
-                } else if (event.message.role === "user") {
-                    this._replaceMessageInPlace(event.message, {
-                        role: "user", timestamp: event.message.timestamp,
-                        content: [{ type: "text", text: "TextGuard could not check this message; content withheld." }],
-                    });
+            const policy = this.resourceLoader.contentPolicy;
+            // A cancelled run, or a source the policy does not inspect, keeps its message instead
+            // of being replaced with a TextGuard failure for a check that never ran.
+            const inspect =
+                !this.agent.signal?.aborted &&
+                (event.message.role !== "toolResult" || policy.shouldInspectTool?.(event.message.toolName, undefined));
+            if (inspect) {
+                try {
+                    const admitted = await policy.filterContext([event.message], this.agent.signal);
+                    if (!Array.isArray(admitted) || admitted.length !== 1 || admitted[0].role !== event.message.role) throw new Error("Invalid content-policy result");
+                    this._replaceMessageInPlace(event.message, admitted[0]);
+                } catch {
+                    if (event.message.role === "toolResult") {
+                        this._replaceMessageInPlace(event.message, {
+                            role: "toolResult", toolCallId: event.message.toolCallId, toolName: event.message.toolName, timestamp: event.message.timestamp,
+                            content: [{ type: "text", text: "TextGuard could not check this message; content withheld." }], details: {}, isError: true,
+                        });
+                    } else if (event.message.role === "user") {
+                        this._replaceMessageInPlace(event.message, {
+                            role: "user", timestamp: event.message.timestamp,
+                            content: [{ type: "text", text: "TextGuard could not check this message; content withheld." }],
+                        });
+                    }
+                    // Assistant, custom, and bashExecution messages are not scanned here; on a failed
+                    // check they must stay intact so required provider metadata, session statistics,
+                    // and subscribers keep working instead of receiving an unusable placeholder shape.
                 }
-                // Assistant, custom, and bashExecution messages are not scanned here; on a failed
-                // check they must stay intact so required provider metadata, session statistics,
-                // and subscribers keep working instead of receiving an unusable placeholder shape.
             }
         }
         // Notify all listeners

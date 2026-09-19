@@ -402,6 +402,18 @@ test("final tool policy sees extension output and errors remove text and structu
 	assert.deepEqual(result.details, {});
 	assert.equal(result.isError, true);
 	assert.equal(JSON.stringify(result).includes("PRIVATE"), false);
+	// A tool the policy does not inspect keeps its output rather than reporting a failed check.
+	policy.shouldInspectTool = () => false;
+	const kept = await fake.agent.afterToolCall({
+		toolCall: { name: "bash", id: "2" },
+		args: { command: "echo hi" },
+		result: { content: [{ type: "text", text: "PRIVATE SHELL OUTPUT" }], details: { secret: "PRIVATE DETAIL" } },
+		isError: false,
+	});
+	assert.equal(kept.content[0].text, "EXTENSION BODY");
+	assert.equal(kept.details.secret, "EXTENSION DETAIL");
+	assert.equal(kept.isError, false);
+	assert.equal(JSON.stringify(kept).includes("could not check"), false);
 });
 
 test("SDK final context errors stop delivery after ordinary extension handlers", async () => {
@@ -666,6 +678,32 @@ test("message_end policy failures keep unscanned roles intact and fail closed wi
 	await session._handleAgentEvent({ type: "message_end", message: custom });
 	assert.equal(custom.content, "EXTENSION NOTE");
 	assert.equal(custom.customType, "note");
+	// A tool the policy does not inspect keeps its result instead of becoming a fabricated failure.
+	policy.shouldInspectTool = (name) => name !== "bash";
+	const shellResult = {
+		role: "toolResult",
+		toolCallId: "call2",
+		toolName: "bash",
+		content: [{ type: "text", text: "PRIVATE SHELL OUTPUT" }],
+		isError: false,
+		timestamp: 6,
+	};
+	await session._handleAgentEvent({ type: "message_end", message: shellResult });
+	assert.equal(shellResult.isError, false);
+	assert.equal(shellResult.content[0].text, "PRIVATE SHELL OUTPUT");
+	// A cancelled run never reaches the check, so its message must stay intact as well.
+	const cancelled = {
+		role: "toolResult",
+		toolCallId: "call3",
+		toolName: "web_fetch",
+		content: [{ type: "text", text: "PRIVATE WEB BODY" }],
+		isError: false,
+		timestamp: 7,
+	};
+	Object.defineProperty(session.agent, "signal", { value: AbortSignal.abort(), configurable: true });
+	await session._handleAgentEvent({ type: "message_end", message: cancelled });
+	assert.equal(cancelled.isError, false);
+	assert.equal(cancelled.content[0].text, "PRIVATE WEB BODY");
 	const stats = session.getSessionStats();
 	assert.ok(Number.isFinite(stats.tokens.total));
 });
