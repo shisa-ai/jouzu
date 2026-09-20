@@ -24,6 +24,8 @@
 
 ### Fixed
 
+- Keep built-in OpenAI requests compatible with flow control while preserving Astra reasoning settings and explicit cache disable. `/reload` refreshes added, removed, and changed OpenAI model entries without a restart.
+- Preserve Unicode spaces in file-tool paths. Writes and edits no longer target an ASCII-space sibling; reads prefer an existing exact path before trying pasted-space compatibility fallbacks.
 - Preserve incomplete Shisa sign-in confirmation warnings, distinguish environment-key connections from saved account identities, and avoid presenting signup offers as balances. Settings sign-in refreshes catalogs and model availability in the same session. The account row scrolls with the catalog pane, and expanded catalogs take priority over extra source rows.
 - Give prompt-cache refreshes separate request checks without consuming conversational input. Include successful child refresh usage in parent totals and copy the global warming mode into new and resumed child runs. See [Prompt-cache warming](docs/cache-warming.md) for settings and limits.
 - Allow a task to wait on a background job started by its parent invocation without transferring job ownership or allowing sibling-task access.
