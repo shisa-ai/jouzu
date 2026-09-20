@@ -43,7 +43,7 @@ import type { RuntimeDiagnostics } from "./runtime-diagnostics.js";
 import type { SessionUiStyleRole, SessionUiStyles } from "./session-ui/index.js";
 import { readShisaAccountStatus, type ShisaAccountStatus } from "./shisa-link/account.js";
 import { onShisaAuthChange, setShisaSignedOut } from "./shisa-link/credentials.js";
-import { resolveShisaGatewayUrl } from "./shisa-link/device-flow.js";
+import { resolveShisaGatewayUrl, type ShisaLoginCompletion } from "./shisa-link/device-flow.js";
 import { loginShisa } from "./shisa-link/login.js";
 import { logoutShisa, shisaLogoutMessage } from "./shisa-link/logout.js";
 import {
@@ -66,6 +66,8 @@ interface CatalogSettingsOptions {
 		options?: RefreshCatalogOptions,
 	) => Promise<CatalogRefreshResult>;
 	onCatalogsChanged?: () => void;
+	/** Host hook after a Shisa sign-in or sign-out: refresh providers, catalogs, and model availability. */
+	onAccountChanged?: (change: { signedIn: boolean }) => Promise<void> | void;
 	runtime?: Pick<RuntimeDiagnostics, "about">;
 	initialRoute?: PaletteRoute;
 	/** Client version reported to the Shisa device flow; the account row needs it to sign in. */
@@ -192,6 +194,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	private readonly discover: CatalogSettingsOptions["discover"];
 	private readonly refreshSource: NonNullable<CatalogSettingsOptions["refresh"]>;
 	private readonly onCatalogsChanged?: () => void;
+	private readonly onAccountChanged?: (change: { signedIn: boolean }) => Promise<void> | void;
 	private readonly wordmark: string;
 	private readonly runtime?: Pick<RuntimeDiagnostics, "about">;
 	private readonly jouzuVersion?: string;
@@ -241,6 +244,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		this.discover = options.discover ?? discoverCatalogEndpoint;
 		this.refreshSource = options.refresh ?? refreshCatalogSource;
 		this.onCatalogsChanged = options.onCatalogsChanged;
+		this.onAccountChanged = options.onAccountChanged;
 		this.wordmark = renderBrandGradient("JOUZU", detectBannerColorMode());
 		this.runtime = options.runtime;
 		this.jouzuVersion = options.jouzuVersion;
@@ -1119,11 +1123,14 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	 */
 	private accountRow(innerWidth: number, line: (value?: string) => string): string {
 		const confirm = formatEffectiveKeybinding(this.keybindings, "tui.select.confirm");
+		const identity =
+			this.account.credential === "environment"
+				? "Connected · SHISA_API_KEY"
+				: this.account.org
+					? `Connected · ${sanitizeTerminalText(this.account.org)}`
+					: "Connected";
 		const value = this.account.signedIn
-			? this.styles.apply(
-					"palette.status.ready",
-					this.account.org ? `Connected · ${sanitizeTerminalText(this.account.org)}` : "Connected",
-				)
+			? this.styles.apply("palette.status.ready", identity)
 			: this.styles.apply("palette.status.off", "Not connected · $10 in credits");
 		// The metadata column truncates before the value, so it carries the shorter of
 		// the two: the dashboard address without its scheme, or the connect key.
@@ -1161,6 +1168,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		};
 		const cancel = formatEffectiveKeybinding(this.keybindings, "tui.select.cancel");
 		report("info", `Requesting a Shisa device code. ${cancel} cancels.`);
+		let completion: ShisaLoginCompletion | undefined;
 		try {
 			await this.login(
 				{
@@ -1181,6 +1189,9 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 					paths: this.paths,
 					jouzuVersion: this.jouzuVersion,
 					gatewayUrl: resolveShisaGatewayUrl(this.env),
+					onCompletion: (value) => {
+						completion = value;
+					},
 					...(this.openBrowser ? { openBrowser: this.openBrowser } : {}),
 				},
 			);
@@ -1188,12 +1199,24 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			this.account = readShisaAccountStatus(this.paths, this.env);
 			this.reloadViews();
 			this.onCatalogsChanged?.();
-			report(
-				"info",
-				this.account.bonusUsd !== undefined
-					? `Connected to Shisa AI. $${this.account.bonusUsd} in credits is on this account.`
-					: "Connected to Shisa AI.",
-			);
+			try {
+				await this.onAccountChanged?.({ signedIn: true });
+			} catch {
+				// The host owns its own recovery message; the credential is already saved.
+			}
+			if (completion?.acknowledged === false) {
+				// The device flow saves the credential before acknowledgement, so an
+				// incomplete confirmation is a warning with a recovery action, never a
+				// plain success screen.
+				report(
+					"warning",
+					completion.reason === "cancelled"
+						? "Shisa sign-in was saved, but confirmation was interrupted. Sign in again to avoid losing access when the confirmation window expires."
+						: "Shisa sign-in was saved, but confirmation failed. Sign in again to avoid losing access when the confirmation window expires.",
+				);
+			} else {
+				report("info", "Connected to Shisa AI.");
+			}
 		} catch {
 			// Remote errors can carry credentials; keep the panel's recovery text local.
 			report(
@@ -1218,6 +1241,11 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			this.account = readShisaAccountStatus(this.paths, this.env);
 			this.reloadViews();
 			this.onCatalogsChanged?.();
+			try {
+				await this.onAccountChanged?.({ signedIn: false });
+			} catch {
+				// The host owns its own recovery message; local sign-out already completed.
+			}
 			this.message = {
 				level: result.localCleared ? "info" : "error",
 				text: shisaLogoutMessage(result, Boolean(this.env.SHISA_API_KEY?.trim())),
@@ -1355,35 +1383,72 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			pool = 0;
 		}
 		const others = this.views.length - 1;
-		let visibleOthers = others;
-		let pageSize = 0;
-		let stickyPageSize = 0;
-		if (pool - offeringReserve >= others) {
-			visibleOthers = others;
-			const pagePool = pool - others - offeringReserve;
-			pageSize = selectedExpanded ? Math.max(0, Math.min(selected.offerings.length, pagePool + offeringReserve)) : 0;
-			stickyPageSize = sticky
-				? Math.max(0, Math.min(this.views[stickyIndex].offerings.length, pagePool + offeringReserve - pageSize))
-				: 0;
-		} else {
-			// Window the source rows; the reserved offering row keeps at least one
-			// entry of the selected expansion visible ahead of further sources.
-			visibleOthers = Math.max(0, pool - offeringReserve);
-			pageSize = selectedExpanded ? Math.max(0, Math.min(selected.offerings.length, pool - visibleOthers)) : 0;
+		/**
+		 * Split the pool between the selected catalog's disclosure and the other
+		 * source rows. An expanded selection takes priority: it keeps one
+		 * neighboring source for context and spends the rest on offerings (at least
+		 * one whenever a row remains) before widening the window to more sources.
+		 * The sticky expansion of a non-selected source keeps its one-offering
+		 * reserve and fills from whatever the pool has left.
+		 */
+		const allocate = (
+			available: number,
+		): { pageSize: number; stickyPageSize: number; windowSize: number; start: number } => {
+			let visibleOthers: number;
+			let pageSize = 0;
+			let stickyPageSize = 0;
+			if (selectedExpanded) {
+				const floor = available > 0 && selected.offerings.length > 0 ? 1 : 0;
+				const neighbor = others > 0 ? 1 : 0;
+				pageSize = Math.max(0, Math.min(selected.offerings.length, Math.max(floor, available - neighbor)));
+				visibleOthers = Math.min(others, Math.max(0, available - pageSize));
+			} else {
+				const reserve = sticky ? Math.min(this.views[stickyIndex].offerings.length, 1) : 0;
+				if (available - reserve >= others) {
+					visibleOthers = others;
+					const pagePool = available - others - reserve;
+					stickyPageSize = sticky
+						? Math.max(0, Math.min(this.views[stickyIndex].offerings.length, pagePool + reserve))
+						: 0;
+				} else {
+					// Window the source rows; the reserved offering row keeps at least one
+					// entry of the sticky expansion visible ahead of further sources.
+					visibleOthers = Math.max(0, available - reserve);
+					stickyPageSize = sticky
+						? Math.max(0, Math.min(this.views[stickyIndex].offerings.length, available - visibleOthers))
+						: 0;
+				}
+			}
+			const windowSize = visibleOthers + 1;
+			let start =
+				windowSize >= this.views.length
+					? 0
+					: Math.max(
+							0,
+							Math.min(this.selectedIndex - Math.floor((windowSize - 1) / 2), this.views.length - windowSize),
+						);
+			if (sticky && windowSize < this.views.length) {
+				// Shift the window just enough to keep the sticky expanded source in
+				// view alongside the selection; when the window cannot span both, the
+				// sticky block yields (its reserved rows go unused).
+				const lo = Math.max(0, Math.max(this.selectedIndex, stickyIndex) - (windowSize - 1));
+				const hi = Math.min(this.views.length - windowSize, Math.min(this.selectedIndex, stickyIndex));
+				if (lo <= hi) start = hi;
+			}
+			return { pageSize, stickyPageSize, windowSize, start };
+		};
+		let allocation = allocate(pool);
+		// The account row scrolls with the catalog pane. Once the source window has
+		// moved past its first page, the row yields its line to the pane and comes
+		// back when keyboard navigation returns to the first source. A focused
+		// account (including a running sign-in or sign-out, which holds focus)
+		// always stays visible so no control is lost off-screen.
+		if (allocation.start > 0 && accountRows > 0 && !this.accountFocused) {
+			accountRows = 0;
+			pool += 1;
+			allocation = allocate(pool);
 		}
-		const windowSize = visibleOthers + 1;
-		let start =
-			windowSize >= this.views.length
-				? 0
-				: Math.max(0, Math.min(this.selectedIndex - Math.floor((windowSize - 1) / 2), this.views.length - windowSize));
-		if (sticky && windowSize < this.views.length) {
-			// Shift the window just enough to keep the sticky expanded source in
-			// view alongside the selection; when the window cannot span both, the
-			// sticky block yields (its reserved rows go unused).
-			const lo = Math.max(0, Math.max(this.selectedIndex, stickyIndex) - (windowSize - 1));
-			const hi = Math.min(this.views.length - windowSize, Math.min(this.selectedIndex, stickyIndex));
-			if (lo <= hi) start = hi;
-		}
+		const { pageSize, stickyPageSize, windowSize, start } = allocation;
 		const end = start + windowSize;
 		for (let index = start; index < end; index += 1) {
 			const view = this.views[index];

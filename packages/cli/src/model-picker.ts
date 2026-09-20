@@ -724,6 +724,11 @@ export interface JouzuModelPickerIntegration {
 	activeAgentCount(): number;
 	/** Re-read activated catalog revisions after an external refresh. */
 	reloadCatalogs(): void;
+	/**
+	 * After a Settings sign-in or sign-out, refresh authenticated catalogs, re-project
+	 * them into providers, and refresh model availability without a restart.
+	 */
+	refreshShisaAccount(change: { signedIn: boolean }): Promise<void>;
 }
 
 const CONTROL_LABEL_COLUMN = 8;
@@ -931,6 +936,48 @@ export function createJouzuModelPicker(
 		reapplyCatalogProjection?.();
 		// The registry is updated synchronously above; open views recompute now.
 		for (const listener of catalogReloadListeners) listener();
+	};
+	/**
+	 * The Settings account row signs in through the same device flow as Pi's OAuth
+	 * login, but Pi does not run its credential synchronization for that call. Fetch
+	 * the now-authenticated catalogs, project them, and refresh availability so the
+	 * newly available models work in this live session.
+	 */
+	const refreshShisaAccount = async (change: { signedIn: boolean }): Promise<void> => {
+		const ctx = activeCtx;
+		if (change.signedIn) {
+			try {
+				const refreshed = await refreshAvailableModelCatalogs(paths, {
+					env: catalogEnv,
+					fetch: options.catalogFetch,
+					timeoutMs: 15_000,
+				});
+				const failed = (refreshed?.results ?? [])
+					.filter(({ result }) => result.status === "error" || result.status === "rejected")
+					.map(({ source }) => sanitizeTerminalText(source.label));
+				if (failed.length > 0 && ctx)
+					ctx.ui.notify(
+						`Catalogs not refreshed: ${failed.join(", ")}. Cached catalog data remains available. Open Catalogs to retry.`,
+						"warning",
+					);
+			} catch (error) {
+				if (ctx)
+					ctx.ui.notify(
+						`Catalogs were not refreshed: ${sanitizeTerminalText(error instanceof Error ? error.message : String(error))} Cached catalog data remains available. Open Catalogs to retry.`,
+						"warning",
+					);
+			}
+		}
+		reloadCatalogs();
+		if (!ctx) return;
+		try {
+			await ctx.modelRegistry.refresh({ allowNetwork: false });
+		} catch (error) {
+			ctx.ui.notify(
+				`Model availability was not refreshed: ${sanitizeTerminalText(error instanceof Error ? error.message : String(error))} Run /reload.`,
+				"warning",
+			);
+		}
 	};
 	let state: ModelPickerState = emptyModelPickerState();
 	let projectKey = "";
@@ -1432,6 +1479,7 @@ export function createJouzuModelPicker(
 								paths,
 								env: catalogEnv,
 								onCatalogsChanged: reloadCatalogs,
+								onAccountChanged: (change) => refreshShisaAccount(change),
 								...(options.jouzuVersion ? { jouzuVersion: options.jouzuVersion } : {}),
 							}),
 					},
@@ -1557,5 +1605,6 @@ export function createJouzuModelPicker(
 		handleScopedModelsCommand,
 		activeAgentCount: () => workflow.service.runs().filter(isActiveRun).length,
 		reloadCatalogs,
+		refreshShisaAccount,
 	};
 }

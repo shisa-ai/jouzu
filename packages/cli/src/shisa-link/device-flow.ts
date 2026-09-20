@@ -407,6 +407,14 @@ export interface ShisaLoginIo {
 	writeCredential(credential: OAuthCredentials): Promise<void>;
 }
 
+/** Structured outcome of a sign-in whose credential was saved before acknowledgement. */
+export interface ShisaLoginCompletion {
+	/** False when the link acknowledgement never confirmed; the credential is still saved. */
+	acknowledged: boolean;
+	/** Why confirmation did not complete; absent on success. */
+	reason?: "failed" | "cancelled";
+}
+
 export interface ShisaLoginDeps extends ShisaLoginIo {
 	gatewayUrl: string;
 	clientVersion: string;
@@ -417,12 +425,14 @@ export interface ShisaLoginDeps extends ShisaLoginIo {
 	sleep?: (ms: number) => Promise<void>;
 	openBrowser?: (url: string) => void;
 	ackAttempts?: number;
+	/** Reports whether acknowledgement confirmed after the credential was saved. */
+	onCompletion?: (completion: ShisaLoginCompletion) => void;
 }
 
 /**
  * Run the Shisa device-flow login. Returns the OAuth credential for Pi's
- * credential store; the platform offer data (bonus) travels in the link
- * state and is presented by the account UI, never printed here.
+ * credential store; the platform offer data (bonus) is retained in the link
+ * state as metadata, never printed here or treated as a current balance.
  */
 export async function loginShisaDeviceFlow(
 	callbacks: OAuthLoginCallbacks,
@@ -521,9 +531,12 @@ export async function loginShisaDeviceFlow(
 	// 5. Acknowledge the link. Retries are bounded; a later successful
 	// GET /device/link also acknowledges, and the worst case of never
 	// acking is platform-side revocation when the delivery window lapses.
+	// Cancellation stops the retries immediately: the credential is already
+	// saved, so the caller reports an incomplete confirmation, never success.
 	const ackAttempts = deps.ackAttempts ?? ACK_ATTEMPTS;
 	let acknowledged = false;
 	for (let attempt = 0; attempt < ackAttempts && !acknowledged; attempt++) {
+		if (callbacks.signal?.aborted) break;
 		if (attempt > 0) await sleep(ACK_RETRY_DELAY_MS);
 		try {
 			const ackResponse = await postJson(
@@ -545,9 +558,14 @@ export async function loginShisaDeviceFlow(
 		} catch {
 			// The ack itself succeeded; the marker update is best-effort.
 		}
+		deps.onCompletion?.({ acknowledged: true });
 	} else {
+		const cancelled = callbacks.signal?.aborted === true;
+		deps.onCompletion?.({ acknowledged: false, reason: cancelled ? "cancelled" : "failed" });
 		callbacks.onProgress?.(
-			"Shisa sign-in was saved, but confirmation failed. Sign in again to avoid losing access when the confirmation window expires.",
+			cancelled
+				? "Shisa sign-in was saved, but confirmation was interrupted. Sign in again to avoid losing access when the confirmation window expires."
+				: "Shisa sign-in was saved, but confirmation failed. Sign in again to avoid losing access when the confirmation window expires.",
 		);
 	}
 	return credential;

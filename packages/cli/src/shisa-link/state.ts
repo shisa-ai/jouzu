@@ -23,7 +23,7 @@ export interface ShisaLinkEndpoints {
 	asr_realtime_url: string;
 }
 
-/** Credits bonus offer data from the login response; presented by the account UI, never logged. */
+/** Credits bonus offer data from the login response; retained as link metadata, never logged. */
 export interface ShisaBonus {
 	status: string;
 	amount_usd?: number;
@@ -42,7 +42,7 @@ export interface ShisaLinkState {
 	gateway_url?: string;
 	/** Whether the device-link acknowledgement has been confirmed by the platform. */
 	acked: boolean;
-	/** Present when the login response carried a credits bonus offer. */
+	/** Present when the login response carried a credits bonus offer; offer metadata, not a balance. */
 	bonus?: ShisaBonus;
 }
 

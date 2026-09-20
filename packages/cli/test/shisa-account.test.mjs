@@ -71,9 +71,10 @@ test("account status reads local state only and reports the organization", async
 	});
 	const status = readShisaAccountStatus(resolved, {});
 	assert.equal(status.signedIn, true);
+	assert.equal(status.credential, "login");
 	assert.equal(status.org, "Example Org");
 	assert.equal(status.dashboardUrl, "https://platform.shisa.ai/en/dashboard");
-	assert.equal(status.bonusUsd, 10);
+	assert.equal(Object.hasOwn(status, "bonusUsd"), false, "an offer is not presented as account credit");
 });
 
 test("signing out suppresses the account without touching the saved link", async (t) => {
@@ -93,6 +94,30 @@ test("signing out suppresses the account without touching the saved link", async
 
 test("an environment key counts as signed in", async (t) => {
 	const resolved = await paths(t);
-	assert.equal(readShisaAccountStatus(resolved, { SHISA_API_KEY: "shsk:env" }).signedIn, true);
+	const status = readShisaAccountStatus(resolved, { SHISA_API_KEY: "shsk:env" });
+	assert.equal(status.signedIn, true);
+	assert.equal(status.credential, "environment");
+	assert.equal(status.dashboardUrl, DEFAULT_SHISA_DASHBOARD_URL);
 	assert.equal(readShisaAccountStatus(resolved, { SHISA_API_KEY: "   " }).signedIn, false);
+});
+
+test("an environment key takes precedence over a saved sign-in and hides its account metadata", async (t) => {
+	const resolved = await paths(t);
+	await writeShisaLinkState(
+		shisaLinkStatePath(resolved),
+		linkState({ gateway_url: "https://gateway.staging.shisa.ai", bonus: { status: "granted", amount_usd: 10 } }),
+		resolved.stateDir,
+	);
+	await writeShisaLoginCredential(resolved, {
+		access: "shsk:test",
+		type: "oauth",
+		expires: Date.now() + 3_600_000,
+		refresh: "",
+	});
+	const status = readShisaAccountStatus(resolved, { SHISA_API_KEY: "shsk:env" });
+	assert.equal(status.signedIn, true);
+	assert.equal(status.credential, "environment");
+	assert.equal(status.org, undefined, "saved organization metadata cannot be verified for an environment key");
+	assert.equal(status.dashboardUrl, DEFAULT_SHISA_DASHBOARD_URL);
+	assert.equal(Object.hasOwn(status, "bonusUsd"), false);
 });

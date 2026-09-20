@@ -475,6 +475,58 @@ test("an acknowledgement that never succeeds does not fail the login", async () 
 	assertNoSecretMaterial(JSON.stringify(events));
 });
 
+test("an unacknowledged sign-in reports structured completion and the recovery warning", async () => {
+	const completions = [];
+	const { deps, mock } = loginDeps({
+		ackAttempts: 2,
+		onCompletion: (completion) => completions.push(completion),
+	});
+	mock.enqueue(jsonResponse(201, DEVICE_CODE_BODY));
+	mock.enqueue(jsonResponse(200, TOKEN_BODY));
+	mock.enqueue(jsonResponse(503, {}));
+	mock.enqueue(jsonResponse(503, {}));
+	const { callbacks, events } = fakeCallbacks();
+	await loginShisaDeviceFlow(callbacks, deps);
+	assert.deepEqual(completions, [{ acknowledged: false, reason: "failed" }]);
+	assert.match(events.filter((event) => event.kind === "progress").at(-1).message, /confirmation failed/);
+});
+
+test("a confirmed acknowledgement reports structured completion", async () => {
+	const completions = [];
+	const { deps, mock } = loginDeps({ onCompletion: (completion) => completions.push(completion) });
+	standardTokenResponses(mock);
+	const { callbacks } = fakeCallbacks();
+	await loginShisaDeviceFlow(callbacks, deps);
+	assert.deepEqual(completions, [{ acknowledged: true }]);
+});
+
+test("cancelling during acknowledgement reports an interrupted completion", async () => {
+	const controller = new AbortController();
+	const completions = [];
+	const states = [];
+	const { deps, mock } = loginDeps({
+		ackAttempts: 3,
+		writeLinkState: async (state) => {
+			states.push(state);
+			if (!state.acked) controller.abort();
+		},
+		onCompletion: (completion) => completions.push(completion),
+	});
+	mock.enqueue(jsonResponse(201, DEVICE_CODE_BODY));
+	mock.enqueue(jsonResponse(200, TOKEN_BODY));
+	const { callbacks, events } = fakeCallbacks();
+	const credential = await loginShisaDeviceFlow({ ...callbacks, signal: controller.signal }, deps);
+	assert.equal(credential.access, "shsk:secret-value");
+	assert.equal(
+		mock.calls.filter((call) => call.url.includes("/device/link/ack")).length,
+		0,
+		"cancellation stops acknowledgement attempts",
+	);
+	assert.deepEqual(completions, [{ acknowledged: false, reason: "cancelled" }]);
+	assert.equal(states.length, 1, "the acked marker is never written after cancellation");
+	assert.match(events.filter((event) => event.kind === "progress").at(-1).message, /interrupted/);
+});
+
 test("failures before approval surface without secret material", async () => {
 	const mock = createFetchMock();
 	mock.enqueue(jsonResponse(500, { error: "boom", detail: "dc-secret-value shsk:secret-value link-token-secret" }));

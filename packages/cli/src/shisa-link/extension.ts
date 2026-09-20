@@ -1,7 +1,7 @@
 import type { OAuthCredentials, OAuthLoginCallbacks } from "@earendil-works/pi-ai";
 import type { ExtensionContext, InlineExtension } from "@earendil-works/pi-coding-agent";
 import type { JouzuPaths } from "../paths.js";
-import { isShisaSignedOut, setShisaSignedOut } from "./credentials.js";
+import { isShisaSignedOut, onShisaAuthChange, setShisaSignedOut } from "./credentials.js";
 import { resolveShisaGatewayUrl } from "./device-flow.js";
 import { loginShisa } from "./login.js";
 import { logoutShisa, shisaLogoutMessage } from "./logout.js";
@@ -78,6 +78,7 @@ export function createShisaExtension(options: ShisaExtensionOptions): InlineExte
 				if (!result.localCleared && clearCredential) throw new Error(message);
 			};
 			let removeHook: (() => void) | undefined = installShisaLogoutHook(ModelRuntime, oauth, signOut);
+			let removeAuthListener: (() => void) | undefined;
 			pi.registerProvider(SHISA_PROVIDER_ID, providerConfig());
 			// Pi owns /logout and its autocomplete. Handle the explicit Shisa form
 			// through input so registering the extension does not shadow that command.
@@ -97,8 +98,17 @@ export function createShisaExtension(options: ShisaExtensionOptions): InlineExte
 			pi.on("session_start", (_event, ctx) => {
 				activeCtx = ctx;
 				removeHook ??= installShisaLogoutHook(ModelRuntime, oauth, signOut);
+				// A Settings or onboarding sign-in saves the link state after this factory
+				// registered the provider. Re-register on every credential change so the
+				// base URL follows the gateway that issued the current sign-in, exactly as
+				// the OAuth login path does.
+				removeAuthListener ??= onShisaAuthChange(options.paths, () => {
+					pi.registerProvider(SHISA_PROVIDER_ID, providerConfig());
+				});
 			});
 			pi.on("session_shutdown", () => {
+				removeAuthListener?.();
+				removeAuthListener = undefined;
 				removeHook?.();
 				removeHook = undefined;
 				activeCtx = undefined;

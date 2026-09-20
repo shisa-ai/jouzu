@@ -1361,6 +1361,7 @@ test("signing out asks first and then clears the account", async (t) => {
 	t.after(() => setShisaSignedOut(f.paths, false));
 	await signIn(f.paths);
 	let logouts = 0;
+	const changes = [];
 	const component = new CatalogSettingsComponent({
 		context: f.context,
 		paths: f.paths,
@@ -1370,6 +1371,7 @@ test("signing out asks first and then clears the account", async (t) => {
 			setShisaSignedOut(f.paths, true);
 			return { revocation: "confirmed", localCleared: true };
 		},
+		onAccountChanged: (change) => changes.push(change),
 	});
 	component.render(84);
 	component.handleInput("up");
@@ -1383,6 +1385,7 @@ test("signing out asks first and then clears the account", async (t) => {
 	component.handleInput("enter");
 	await new Promise((resolve) => setImmediate(resolve));
 	assert.equal(logouts, 1);
+	assert.deepEqual(changes, [{ signedIn: false }], "the host refreshes providers and catalogs after sign-out");
 	const rendered = component.render(84).join("\n");
 	assert.match(rendered, /Not connected/u);
 	assert.match(rendered, /Signed out of Shisa/u);
@@ -1421,6 +1424,201 @@ test("connecting runs the device flow in the panel and cancels with Escape", asy
 	component.handleInput("escape");
 	await new Promise((resolve) => setImmediate(resolve));
 	assert.equal(f.closes.length, 0, "cancelling the sign-in keeps Settings open");
+	assert.match(component.render(84).join("\n"), /Shisa sign-in cancelled/u);
+});
+
+test("a failed acknowledgement keeps the warning instead of reporting success", async (t) => {
+	const f = setup();
+	t.after(() => rmSync(f.root, { recursive: true, force: true }));
+	t.after(() => setShisaSignedOut(f.paths, false));
+	const component = new CatalogSettingsComponent({
+		context: f.context,
+		paths: f.paths,
+		env: {},
+		jouzuVersion: "0.1.13",
+		login: async (callbacks, options) => {
+			options?.onCompletion?.({ acknowledged: false, reason: "failed" });
+			callbacks.onProgress(
+				"Shisa sign-in was saved, but confirmation failed. Sign in again to avoid losing access when the confirmation window expires.",
+			);
+		},
+	});
+	component.render(84);
+	component.handleInput("up");
+	component.handleInput("up");
+	component.handleInput("enter");
+	await new Promise((resolve) => setImmediate(resolve));
+	const text = component.render(84).join("\n");
+	assert.match(text, /confirmation failed/u, "the warning survives the login resolution");
+	assert.match(text, /Sign in again/u);
+	assert.doesNotMatch(text, /Connected to Shisa AI/u, "an unacknowledged sign-in never reports plain success");
+});
+
+test("cancelling during acknowledgement keeps the interrupted warning", async (t) => {
+	const f = setup();
+	t.after(() => rmSync(f.root, { recursive: true, force: true }));
+	t.after(() => setShisaSignedOut(f.paths, false));
+	const component = new CatalogSettingsComponent({
+		context: f.context,
+		paths: f.paths,
+		env: {},
+		jouzuVersion: "0.1.13",
+		login: async (_callbacks, options) => {
+			await writeShisaLoginCredential(f.paths, {
+				access: "shsk:test",
+				type: "oauth",
+				expires: Date.now() + 3_600_000,
+				refresh: "",
+			});
+			options?.onCompletion?.({ acknowledged: false, reason: "cancelled" });
+		},
+	});
+	component.render(84);
+	component.handleInput("up");
+	component.handleInput("up");
+	component.handleInput("enter");
+	await new Promise((resolve) => setImmediate(resolve));
+	const text = component.render(84).join("\n");
+	assert.match(text, /confirmation was interrupted/u, "cancelling acknowledgement keeps the recovery warning");
+	assert.match(text, /Sign in again/u);
+	assert.doesNotMatch(text, /Connected to Shisa AI/u);
+	assert.match(text, /Connected/u, "the saved credential is reflected truthfully in the account row");
+});
+
+test("a confirmed connect reports plain success without claiming credit", async (t) => {
+	const f = setup();
+	t.after(() => rmSync(f.root, { recursive: true, force: true }));
+	t.after(() => setShisaSignedOut(f.paths, false));
+	await signIn(f.paths, { bonus: { status: "granted", amount_usd: 10 } });
+	// Start signed out with only the saved link state, as after a prior local sign-out.
+	writeFileSync(join(f.paths.agentDir, "auth.json"), "{}");
+	const changes = [];
+	const component = new CatalogSettingsComponent({
+		context: f.context,
+		paths: f.paths,
+		env: {},
+		jouzuVersion: "0.1.13",
+		login: async (_callbacks, options) => {
+			await writeShisaLoginCredential(f.paths, {
+				access: "shsk:test",
+				type: "oauth",
+				expires: Date.now() + 3_600_000,
+				refresh: "",
+			});
+			options?.onCompletion?.({ acknowledged: true });
+		},
+		onAccountChanged: (change) => changes.push(change),
+	});
+	component.render(84);
+	component.handleInput("up");
+	component.handleInput("up");
+	component.handleInput("enter");
+	await new Promise((resolve) => setImmediate(resolve));
+	const text = component.render(84).join("\n");
+	assert.match(text, /Connected to Shisa AI\./u);
+	assert.doesNotMatch(text, /credits/u, "the account offer is not presented as a balance");
+	assert.doesNotMatch(text, /\$10/u);
+	assert.deepEqual(changes, [{ signedIn: true }], "the host refreshes providers and catalogs after sign-in");
+});
+
+test("an environment key shows its identity and hides saved account metadata", async (t) => {
+	const f = setup();
+	t.after(() => rmSync(f.root, { recursive: true, force: true }));
+	t.after(() => setShisaSignedOut(f.paths, false));
+	await signIn(f.paths);
+	const component = new CatalogSettingsComponent({
+		context: f.context,
+		paths: f.paths,
+		env: { SHISA_API_KEY: "env-key" },
+	});
+	const text = component.render(100).join("\n");
+	assert.match(text, /Connected · SHISA_API_KEY/u);
+	assert.doesNotMatch(text, /Example Org/u, "saved organization metadata cannot be verified for an environment key");
+	assert.match(text, /platform\.shisa\.ai\/en\/dashboard/u);
+});
+
+test("the account row scrolls out with the catalog pane and returns with keyboard navigation", async (t) => {
+	const f = setup({ rows: 20 });
+	t.after(() => rmSync(f.root, { recursive: true, force: true }));
+	const store = new CatalogSourceStore(f.paths);
+	for (let index = 0; index < 8; index += 1) {
+		store.add({
+			label: `Pool ${index}`,
+			url: `https://pool${index}.example/v1/jouzu/model-catalog`,
+			auth: { type: "none" },
+		});
+	}
+	const paged = store.list().find((source) => source.label === "Pool 3");
+	await refreshCatalogSource(f.paths, paged, { env: {}, fetch: async () => response(manyModelsFixture) });
+	const component = new CatalogSettingsComponent({ context: f.context, paths: f.paths, env: {} });
+	const budget = overlayBudget(20);
+	for (let step = 0; step < 4; step += 1) component.handleInput("down");
+	component.handleInput("\u001b[C");
+	const rendered = component.render(84);
+	assert.ok(rendered.length <= budget, `render stays within ${budget} rows`);
+	assert.equal(
+		rendered.some((row) => row.includes("Shisa AI")),
+		false,
+		"the account row yields its line to the scrolled pane",
+	);
+	assert.ok(selectedLine(rendered)?.includes("Pool 3"), "the selected source stays visible");
+	assert.match(rendered.join("\n"), /1-4\/30/u, "the freed row pages four offerings instead of one");
+	assert.ok(rendered.every((row) => terminalTextWidth(row) <= 84));
+
+	// Keyboard navigation back to the first source brings the row on screen again,
+	// and the account remains reachable above the context row.
+	for (let step = 0; step < 4; step += 1) {
+		component.handleInput("up");
+		component.render(84);
+	}
+	assert.ok(selectedLine(component.render(84))?.includes("Shisa API"), "the first source is selected");
+	assert.match(component.render(84).join("\n"), /Shisa AI/u, "the account row returns with the first source");
+	component.handleInput("up");
+	assert.equal(component.contextFocused, true);
+	component.handleInput("up");
+	assert.equal(component.accountFocused, true);
+	assert.ok(selectedLine(component.render(84))?.includes("Shisa AI"), "the account row takes the selection marker");
+});
+
+test("an active sign-in stays visible at a short terminal with many sources", async (t) => {
+	const f = setup({ rows: 20 });
+	t.after(() => rmSync(f.root, { recursive: true, force: true }));
+	t.after(() => setShisaSignedOut(f.paths, false));
+	const store = new CatalogSourceStore(f.paths);
+	for (let index = 0; index < 8; index += 1) {
+		store.add({ label: `Pool ${index}`, url: `https://pool${index}.example/catalog`, auth: { type: "none" } });
+	}
+	let released;
+	const started = new Promise((resolve) => {
+		released = resolve;
+	});
+	const component = new CatalogSettingsComponent({
+		context: f.context,
+		paths: f.paths,
+		env: {},
+		jouzuVersion: "0.1.13",
+		login: async (callbacks) => {
+			callbacks.onDeviceCode({ verificationUri: "https://example.test/connect", userCode: "JOUZU-TEST-1234" });
+			released();
+			await new Promise((_resolve, reject) => {
+				callbacks.signal.addEventListener("abort", () => reject(callbacks.signal.reason), { once: true });
+			});
+		},
+	});
+	component.render(84);
+	component.handleInput("up");
+	component.handleInput("up");
+	component.handleInput("enter");
+	await started;
+	const budget = overlayBudget(20);
+	const rendered = component.render(84);
+	assert.ok(rendered.length <= budget, `render stays within ${budget} rows`);
+	assert.ok(selectedLine(rendered)?.includes("Shisa AI"), "the focused account row stays visible during sign-in");
+	assert.match(rendered.join("\n"), /example\.test\/connect/u);
+	assert.match(rendered.join("\n"), /JOUZU-TEST-1234/u);
+	assert.ok(rendered.every((row) => terminalTextWidth(row) <= 84));
+	component.handleInput("escape");
+	await new Promise((resolve) => setImmediate(resolve));
 	assert.match(component.render(84).join("\n"), /Shisa sign-in cancelled/u);
 });
 

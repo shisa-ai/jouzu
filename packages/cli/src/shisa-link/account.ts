@@ -38,11 +38,11 @@ export function shisaDashboardUrl(gateway?: string): string {
 
 export interface ShisaAccountStatus {
 	signedIn: boolean;
-	/** Organization name from the saved link state; Jouzu stores no account address. */
+	/** How the effective credential was supplied; absent when signed out. */
+	credential?: "login" | "environment";
+	/** Organization from the saved link state; present only when that saved sign-in is the effective credential. */
 	org?: string;
 	dashboardUrl: string;
-	/** Credits offered by the login response, when it carried an offer. */
-	bonusUsd?: number;
 }
 
 /** Local account state only: reading it makes no network request. */
@@ -50,13 +50,22 @@ export function readShisaAccountStatus(
 	paths: Pick<JouzuPaths, "agentDir" | "stateDir">,
 	env: NodeJS.ProcessEnv = process.env,
 ): ShisaAccountStatus {
+	// A local sign-out suppresses every Shisa credential in this process, including
+	// an environment key, until the user signs in again.
+	if (isShisaSignedOut(paths)) return { signedIn: false, dashboardUrl: DEFAULT_SHISA_DASHBOARD_URL };
+	// The environment key follows the same precedence the catalog request uses, so
+	// it is the effective credential even when a sign-in is saved. It can belong to
+	// any account, so the saved link state cannot verify its organization or
+	// issuing gateway; only the credential source is known.
+	if (env.SHISA_API_KEY?.trim())
+		return { signedIn: true, credential: "environment", dashboardUrl: DEFAULT_SHISA_DASHBOARD_URL };
+	if (!readShisaLoginToken(paths)) return { signedIn: false, dashboardUrl: DEFAULT_SHISA_DASHBOARD_URL };
 	const linked = readShisaLinkState(shisaLinkStatePath(paths));
-	const signedIn = !isShisaSignedOut(paths) && Boolean(readShisaLoginToken(paths) ?? env.SHISA_API_KEY?.trim());
 	const org = linked?.org.name.trim();
 	return {
-		signedIn,
-		...(signedIn && org ? { org } : {}),
+		signedIn: true,
+		credential: "login",
+		...(org ? { org } : {}),
 		dashboardUrl: shisaDashboardUrl(linked?.gateway_url),
-		...(linked?.bonus?.amount_usd !== undefined ? { bonusUsd: linked.bonus.amount_usd } : {}),
 	};
 }

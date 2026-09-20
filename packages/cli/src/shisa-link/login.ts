@@ -1,7 +1,7 @@
 import type { OAuthCredentials, OAuthLoginCallbacks } from "@earendil-works/pi-ai";
 import type { JouzuPaths } from "../paths.js";
 import { writeShisaLoginCredential } from "./credentials.js";
-import { loginShisaDeviceFlow, type ShisaLoginDeps } from "./device-flow.js";
+import { loginShisaDeviceFlow, type ShisaLoginCompletion, type ShisaLoginDeps } from "./device-flow.js";
 import { withShisaAuthOperation } from "./logout.js";
 import { newShisaInstallId, readShisaLinkState, shisaLinkStatePath, writeShisaLinkState } from "./state.js";
 
@@ -12,6 +12,8 @@ export interface ShisaLoginOptions {
 	fetchImpl?: typeof fetch;
 	sleep?: (ms: number) => Promise<void>;
 	openBrowser?: (url: string) => void;
+	/** Reports whether the link acknowledgement confirmed after the credential was saved. */
+	onCompletion?: (completion: ShisaLoginCompletion) => void;
 }
 
 /** Both startup and /login use the same persistence, acknowledgement, and auth-operation guard. */
@@ -31,6 +33,7 @@ export async function loginShisa(
 			fetchImpl: options.fetchImpl,
 			sleep: options.sleep,
 			openBrowser: options.openBrowser,
+			onCompletion: options.onCompletion,
 		} satisfies ShisaLoginDeps);
 		return credential;
 	});
