@@ -430,8 +430,15 @@ export class FlowWaitStore {
 			throw new FlowLedgerError("identity", "Wait token is already registered.");
 		const active = state.waits.find((wait) => wait.workId === next.workId && wait.state === "waiting");
 		if (replaceToken !== undefined && (!active || active.token !== replaceToken))
-			throw new FlowLedgerError("stale", "Wait replacement requires the active token.");
-		if (active && replaceToken === undefined) throw new FlowLedgerError("transition", "Work already has a live wait.");
+			throw new FlowLedgerError(
+				"stale",
+				"Wait replacement requires the active token. Omit replaceToken for a new wait; to replace a live wait, copy its returned token. Do not supply a placeholder.",
+			);
+		if (active && replaceToken === undefined)
+			throw new FlowLedgerError(
+				"transition",
+				"Work already has a live wait. Keep that wait, or copy its token into replaceToken to change it; do not redeclare it to check status.",
+			);
 		if (active) state.waits[state.waits.indexOf(active)] = cancelFlowWait(active, "Replaced by a new wait.", now);
 		state.waits.push(next);
 		return next;

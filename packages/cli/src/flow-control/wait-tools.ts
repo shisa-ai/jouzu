@@ -76,7 +76,11 @@ const waitSchema = {
 		deadline: { type: "string", pattern: "^[1-9][0-9]*(ms|s|m|h|d)$" },
 		checkAfter: { type: "string", pattern: "^[1-9][0-9]*(ms|s|m|h|d)$" },
 		mode: { type: "string", enum: ["all", "any"] },
-		replaceToken: string,
+		replaceToken: {
+			...string,
+			description:
+				"Omit for a new wait. To replace a live wait, copy its exact returned token; never use a placeholder.",
+		},
 		on: {
 			type: "array",
 			minItems: 1,
@@ -223,7 +227,11 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 					if (attachment.ledger.scope.sessionId !== ctx.sessionManager.getSessionId())
 						throw new FlowLedgerError("scope", "Wait tool belongs to another session.");
 					const workId = args.work ?? options.currentWork?.()?.id;
-					if (!workId) throw new FlowLedgerError("identity", "Waiting requires a current authorized work invocation.");
+					if (!workId)
+						throw new FlowLedgerError(
+							"identity",
+							"Waiting requires a current authorized work invocation. Omit work to use the current invocation; do not invent an ID. If no invocation is available, report the blocker.",
+						);
 					const authority = access(attachment, workId, signal);
 					for (const handle of args.on) {
 						if (
@@ -236,8 +244,7 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 					const expiresAt = now() + Math.min(duration(args.deadline), maxDurationMs);
 					if (!Number.isSafeInteger(expiresAt))
 						throw new FlowLedgerError("schema", "Wait expiry exceeds the supported time range.");
-					// Resolve every requested policy before binding anything: an unsupported policy must fail
-					// without parking a subscription the failed declaration would then leave behind.
+					// Resolve ownership before subscribing; policy checks use the captured execution evidence.
 					const monitored = args.on.filter((handle) => handle.health !== undefined);
 					const owners = new Map<string, string>();
 					for (const handle of args.on) {
@@ -252,7 +259,6 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 						if (owners.has(key) && owners.get(key) !== identity.workId)
 							throw new FlowLedgerError("identity", "Wait predicates disagree on execution ownership.");
 						owners.set(key, identity.workId);
-						if (handle.health) attachment.waitProducers.requireHealthPolicy(handle.producer, identity, handle.health);
 						authority.check();
 					}
 					// An expected check exists to reconcile health early. With no monitored dependency there
@@ -264,40 +270,60 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 						);
 					const checkAt = args.checkAfter === undefined ? undefined : now() + duration(args.checkAfter);
 					const bound = new Set<string>();
-					for (const handle of args.on) {
-						const key = JSON.stringify([handle.producer, handle.execution]);
-						if (!bound.has(key)) {
-							await attachment.waitProducers.bindForWait(
-								handle.producer,
-								{ workId, handle: handle.handle, execution: handle.execution },
-								authority.revision,
-								owners.get(key),
-							);
-							bound.add(key);
+					const rollback: (() => Promise<void>)[] = [];
+					try {
+						for (const handle of args.on) {
+							const key = JSON.stringify([handle.producer, handle.execution]);
+							if (!bound.has(key)) {
+								const close = await attachment.waitProducers.bindForWait(
+									handle.producer,
+									{ workId, handle: handle.handle, execution: handle.execution },
+									authority.revision,
+									owners.get(key),
+								);
+								if (close) rollback.push(close);
+								bound.add(key);
+							}
+							authority.check();
 						}
-						authority.check();
+						for (const handle of monitored) {
+							await attachment.waitProducers.requirePendingHealthPolicy(
+								handle.producer,
+								{
+									workId: owners.get(JSON.stringify([handle.producer, handle.execution]))!,
+									handle: handle.handle,
+									execution: handle.execution,
+								},
+								handle.until,
+								handle.health!,
+							);
+							authority.check();
+						}
+						return waitToolResponse(
+							await attachment.waits.declareOwned(
+								authority.actor,
+								authority.revision,
+								{
+									scope: { ...attachment.ledger.scope },
+									workId,
+									token: randomUUID(),
+									reason: args.reason,
+									mode: args.mode ?? "all",
+									on: args.on.map(({ work: _work, scope: _scope, ...handle }) => handle),
+									...(checkAt === undefined ? {} : { checkAt }),
+									expiresAt,
+								},
+								now(),
+								maxDurationMs,
+								args.replaceToken,
+								authority.check,
+								{ toolCallId, toolName: "agent_wait" },
+							),
+						);
+					} catch (error) {
+						await Promise.all(rollback.map((close) => close()));
+						throw error;
 					}
-					return waitToolResponse(
-						await attachment.waits.declareOwned(
-							authority.actor,
-							authority.revision,
-							{
-								scope: { ...attachment.ledger.scope },
-								workId,
-								token: randomUUID(),
-								reason: args.reason,
-								mode: args.mode ?? "all",
-								on: args.on.map(({ work: _work, scope: _scope, ...handle }) => handle),
-								...(checkAt === undefined ? {} : { checkAt }),
-								expiresAt,
-							},
-							now(),
-							maxDurationMs,
-							args.replaceToken,
-							authority.check,
-							{ toolCallId, toolName: "agent_wait" },
-						),
-					);
 				},
 			});
 			pi.registerTool({
@@ -317,7 +343,11 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 					if (attachment.ledger.scope.sessionId !== ctx.sessionManager.getSessionId())
 						throw new FlowLedgerError("scope", "Wait tool belongs to another session.");
 					const wait = (await attachment.waits.snapshot()).find((wait) => wait.token === args.token);
-					if (!wait) throw new FlowLedgerError("identity", "Wait token is not registered in this branch.");
+					if (!wait)
+						throw new FlowLedgerError(
+							"identity",
+							"Wait token is not registered in this branch. Copy the token returned by agent_wait in this branch; do not use a job ID or a token from another session.",
+						);
 					const authority = access(attachment, wait.workId, signal);
 					return waitToolResponse(
 						await attachment.waits.cancelOwned(

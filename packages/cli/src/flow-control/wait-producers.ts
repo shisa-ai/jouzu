@@ -286,7 +286,7 @@ export class FlowWaitProducerRegistry {
 		identity: Omit<FlowExecutionIdentity, "scope">,
 		workRevision: number,
 		executionWorkId?: string,
-	): Promise<void> {
+	): Promise<(() => Promise<void>) | undefined> {
 		if (this.updating) throw new FlowLedgerError("busy", "Producer subscriptions are changing.");
 		const captured = await this.waitIdentity(namespace, identity, workRevision, executionWorkId);
 		const authority = await this.store.authoritySnapshot();
@@ -299,7 +299,52 @@ export class FlowWaitProducerRegistry {
 		if (!producer) throw new FlowLedgerError("identity", "Wait producer is not attached.");
 		const owner = authority.work.find((work) => work.id === captured.workId);
 		if (!owner) throw new FlowLedgerError("identity", "Execution owner is not registered.");
-		if (!(await producer.flushExecution(captured.execution))) await producer.bind(captured, owner.revision);
+		if (!(await producer.flushExecution(captured.execution))) {
+			const binding = await producer.bind(captured, owner.revision);
+			return () => binding.close();
+		}
+	}
+
+	/** Terminal predicates need no live health policy, including after the source detaches. */
+	async requirePendingHealthPolicy(
+		namespace: string,
+		identity: Omit<FlowExecutionIdentity, "scope">,
+		until: string,
+		name: string,
+	): Promise<void> {
+		const terminal = async () => {
+			const authority = await this.store.authoritySnapshot();
+			const execution = authority.executions.find(
+				(item) =>
+					item.producer === namespace &&
+					item.execution === identity.execution &&
+					item.handle === identity.handle &&
+					item.workId === identity.workId,
+			);
+			const predicate = execution?.predicates.find((item) => item.until === until);
+			return predicate !== undefined && !needsExecutionEvidence(predicate.state);
+		};
+		if (await terminal()) return;
+		if (this.healthPolicy(namespace, identity, name)) return;
+		// Completion can remove the advertised policy between subscription and lookup.
+		// Refresh the exact execution before rejecting the copied launch receipt.
+		const abort = new AbortController();
+		let rejectProbe!: (error: unknown) => void;
+		const timeout = new Promise<never>((_resolve, reject) => {
+			rejectProbe = reject;
+		});
+		const cancel = this.clock.after(5000, () => {
+			const error = new FlowLedgerError("stale", "Producer snapshot timed out.");
+			abort.abort(error);
+			rejectProbe(error);
+		});
+		try {
+			await Promise.race([this.probeExecution(namespace, identity.execution, abort.signal), timeout]);
+		} finally {
+			cancel();
+		}
+		if (await terminal()) return;
+		this.requireHealthPolicy(namespace, identity, name);
 	}
 
 	/** Release listeners after every predicate is terminal; retain durable evidence and unread output. */

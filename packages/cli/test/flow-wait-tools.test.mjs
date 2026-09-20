@@ -174,6 +174,51 @@ test("already terminal evidence resolves immediately and can be used after its s
 	assert.deepEqual(f.requests, []);
 });
 
+test("terminal dependencies accept launch health receipts even after their source detaches", async (t) => {
+	const f = await fixture(t);
+	f.state = "satisfied";
+	const args = { ...request(), checkAfter: "1s", on: [{ ...handle, health: policy.name }] };
+	assert.equal((await f.call("agent_wait", args)).details.state, "resolved");
+	await f.registration.close();
+	assert.equal((await f.call("agent_wait", args)).details.state, "resolved");
+	assert.deepEqual(f.errors, []);
+});
+
+for (const state of ["satisfied", "failed", "cancelled"])
+	test(`completion during health lookup resolves exact ${state} evidence`, async (t) => {
+		let f;
+		f = await fixture(t, undefined, () => {
+			f.state = state;
+			return [];
+		});
+		const result = await f.call("agent_wait", { ...request(), on: [{ ...handle, health: policy.name }] });
+		assert.equal(result.details.state, state === "satisfied" ? "resolved" : "failed");
+		assert.equal((await f.attachment.waits.snapshot())[0].observations[0].state, state);
+		assert.deepEqual(f.errors, []);
+	});
+
+test("invalid health leaves an existing wait subscription intact", async (t) => {
+	const f = await fixture(t);
+	const initial = (await f.call("agent_wait", request())).details;
+	await assert.rejects(
+		f.call("agent_wait", {
+			...request(),
+			replaceToken: initial.token,
+			on: [{ ...handle, health: "unknown" }],
+		}),
+		/not registered/,
+	);
+	assert.equal(f.listeners.size, 1);
+	assert.equal((await f.attachment.waits.snapshot())[0].state, "waiting");
+});
+
+test("replacement misuse explains omission and does not install a wait", async (t) => {
+	const f = await fixture(t);
+	await assert.rejects(f.call("agent_wait", { ...request(), replaceToken: "unused" }), /Omit replaceToken/);
+	assert.equal(f.listeners.size, 0);
+	assert.deepEqual(await f.attachment.waits.snapshot(), []);
+});
+
 test("wait tool rejects unsupported health, malformed dependencies, and foreign ownership without creating waits", async (t) => {
 	const f = await fixture(t);
 	for (const args of [
