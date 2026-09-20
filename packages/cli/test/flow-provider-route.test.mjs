@@ -341,6 +341,109 @@ test("Astra compatibility composition keeps the OpenAI route admitted with a rec
 	assert.equal(records[0].outcome, "success");
 });
 
+test("official Astra keeps the OpenAI route admitted with a normalized receipt", async (t) => {
+	const f = await fixture(t);
+	f.runtime.registerProvider("openai", {
+		api: "openai-responses",
+		apiKey: "fixture-key",
+		models: [
+			{
+				id: "gpt-6-astra",
+				name: "Account Astra",
+				api: "openai-responses",
+				baseUrl: "https://api.openai.com/v1",
+				reasoning: false,
+				input: ["text"],
+				contextWindow: 400000,
+				maxTokens: 12000,
+				cost: { input: 10, output: 50, cacheRead: 1, cacheWrite: 12.5 },
+			},
+		],
+	});
+	const model = f.runtime.getModel("openai", "gpt-6-astra");
+	const loader = new DefaultResourceLoader({
+		cwd: f.root,
+		agentDir: f.root,
+		noExtensions: true,
+		noSkills: true,
+		extensionFactories: [createAstraCompatibilityExtension()],
+	});
+	await loader.reload();
+	const { session } = await createAgentSession({
+		cwd: f.root,
+		agentDir: f.root,
+		modelRuntime: f.runtime,
+		resourceLoader: loader,
+		sessionManager: SessionManager.inMemory(f.root),
+		model,
+		thinkingLevel: "off",
+		tools: [],
+		settingsManager: SettingsManager.inMemory({ retry: { enabled: false }, compaction: { enabled: false } }),
+	});
+	await session.bindExtensions({
+		mode: "rpc",
+		onError: (error) => {
+			throw error;
+		},
+	});
+	assert.equal(f.runtime.getRegisteredNativeProvider("openai"), undefined);
+	assert.equal(f.runtime.getRegisteredProviderConfig("openai")?.streamSimple, undefined);
+	assert.equal(session.model.thinkingLevelMap?.max, "max");
+	const bodies = [];
+	const nativeStream = session.agent.streamFunction;
+	const streamFn = (selected, context, options) =>
+		nativeStream(selected, context, {
+			...options,
+			fetch: async (_url, init) => {
+				bodies.push(JSON.parse(init.body));
+				const item = {
+					type: "message",
+					id: "msg_done",
+					role: "assistant",
+					content: [{ type: "output_text", text: "ok", annotations: [] }],
+					status: "completed",
+				};
+				const events = [
+					{ type: "response.output_item.done", output_index: 0, item },
+					{ type: "response.completed", response: { id: "fixture", status: "completed", output: [item] } },
+				];
+				return new Response(
+					events.map((event) => `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`).join(""),
+					{ headers: { "content-type": "text/event-stream" } },
+				);
+			},
+		});
+	session.agent.streamFunction = streamFn;
+	const attachment = await PiFlowAttachment.open(join(f.root, "flow"), {
+		sessionId: session.sessionId,
+		branchId: "main",
+	});
+	const bridge = new PiNativeRequests(
+		session,
+		attachment.nativeRequests,
+		100000,
+		undefined,
+		false,
+		undefined,
+		undefined,
+		streamFn,
+	);
+	afterCleanup(t, async () => {
+		await bridge.close();
+		await attachment.close();
+		await session.dispose();
+	});
+	assert.doesNotThrow(() => preparePiProviderRoute(f.runtime, model, () => {}));
+	await session.prompt("hello");
+	const records = await attachment.nativeRequests.snapshot();
+	assert.equal(bodies.length, 1);
+	assert.deepEqual(bodies[0].prompt_cache_options, { ttl: "30m" });
+	assert.equal(bodies[0].reasoning?.effort, "low");
+	assert.equal(bodies[0].temperature, undefined);
+	assert.equal(records.length, 1);
+	assert.equal(records[0].outcome, "success");
+});
+
 for (const replacement of ["registered", "mutated-stream", "mutated-simple", "mutated-api"]) {
 	test(`legacy API guard rejects ${replacement} and accepts builtin reset`, async (t) => {
 		const f = await fixture(t);

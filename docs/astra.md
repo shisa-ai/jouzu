@@ -16,8 +16,8 @@ add account access or a catalog entry.
 The official API adapter removes unsupported sampling and logprob fields after
 Pi's request transforms and uses `prompt_cache_options.ttl: "30m"` for automatic
 caching. Explicit cache disable is preserved. It covers main-session requests
-and auxiliary requests dispatched through the registered provider. Compatibility
-rules apply only to that exact provider, API, model ID, and endpoint.
+and auxiliary requests that use the adapted model. Compatibility rules apply
+only to that exact provider, API, model ID, and endpoint.
 
 ## Verification
 

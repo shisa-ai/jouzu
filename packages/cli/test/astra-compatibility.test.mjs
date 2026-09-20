@@ -37,21 +37,31 @@ test("metadata-free entries expose five efforts and preserve account limits and 
 	assert.equal(selected.cost, model.cost);
 	assert.equal(selected.reasoning, true);
 	assert.equal(selected.compat?.supportsExplicitPromptCacheMode, true);
+	assert.equal(selected.samplingParams, undefined);
 	assert.equal(model.thinkingLevelMap, undefined);
 	const custom = { ...model, baseUrl: "https://custom.example/v1" };
 	assert.equal(withAstraMetadata(custom), custom);
 });
 
-function astraHandlers() {
+function astraHarness(registerProvider) {
 	const handlers = new Map();
-	createAstraCompatibilityExtension().factory({ on: (event, handler) => handlers.set(event, handler) });
-	return handlers;
+	const registrations = [];
+	const pi = {
+		on: (event, handler) => handlers.set(event, handler),
+		registerProvider: (providerId, config) => {
+			registrations.push({ providerId, config });
+			registerProvider?.(providerId, config);
+		},
+		setThinkingLevel: () => {},
+	};
+	createAstraCompatibilityExtension().factory(pi);
+	return { handlers, registrations, pi };
 }
 
 async function request(selected, options = {}, simple = true) {
 	const bodies = [];
 	const sessionModel = withAstraMetadata(selected);
-	const handlers = astraHandlers();
+	const handlers = astraHarness().handlers;
 	const p = provider([sessionModel]);
 	await p[simple ? "streamSimple" : "stream"](sessionModel, context, {
 		apiKey: "fixture",
@@ -133,6 +143,80 @@ test("custom endpoints, provider aliases, and Codex retain their metadata and pa
 	assert.equal(custom.prompt_cache_options, undefined);
 });
 
+test("registry overlay keeps the contract across provider refresh and auxiliary requests", async () => {
+	const { mkdtemp, rm } = await import("node:fs/promises");
+	const { tmpdir } = await import("node:os");
+	const { join } = await import("node:path");
+	const { ModelRuntime } = await import("@earendil-works/pi-coding-agent");
+	const dir = await mkdtemp(join(tmpdir(), "jouzu-astra-overlay-"));
+	try {
+		const runtime = await ModelRuntime.create({
+			credentials: {
+				read: async () => undefined,
+				list: async () => [],
+				modify: async () => undefined,
+				delete: async () => {},
+			},
+			modelsPath: null,
+			modelsStorePath: join(dir, "models.json"),
+			allowModelNetwork: false,
+			refreshOnCreate: false,
+		});
+		const bodies = [];
+		runtime.registerProvider("openai", {
+			api: model.api,
+			baseUrl: model.baseUrl,
+			apiKey: "fixture",
+			models: [{ ...model, samplingParams: { temperature: 0.5 } }],
+		});
+		const { handlers, registrations } = astraHarness((providerId, config) =>
+			runtime.registerProvider(providerId, config),
+		);
+		await handlers.get("session_start")(
+			{},
+			{
+				modelRegistry: runtime,
+				sessionManager: { getBranch: () => [] },
+				model: undefined,
+				thinkingLevel: undefined,
+			},
+		);
+		assert.equal(registrations.length, 1);
+		assert.equal(registrations[0].providerId, "openai");
+		assert.equal(registrations[0].config.streamSimple, undefined);
+		assert.equal(runtime.getRegisteredNativeProvider("openai"), undefined);
+		assert.equal(runtime.getRegisteredProviderConfig("openai")?.streamSimple, undefined);
+		const adapted = runtime.getModel("openai", model.id);
+		assert.deepEqual(getSupportedThinkingLevels(adapted), ["low", "medium", "high", "xhigh", "max"]);
+		assert.equal(adapted.compat?.supportsExplicitPromptCacheMode, true);
+		assert.equal(adapted.samplingParams, undefined);
+		// Auxiliary summaries never run before_provider_request, so the adapted model
+		// alone must keep explicit cache disable and drop unsupported sampling.
+		await runtime
+			.streamSimple(adapted, context, {
+				apiKey: "fixture",
+				cacheRetention: "none",
+				sessionId: "fixture",
+				fetch: async (_url, init) => {
+					bodies.push(JSON.parse(init.body));
+					return new Response(JSON.stringify({ error: { message: "fixture capture complete" } }), {
+						status: 400,
+						headers: { "content-type": "application/json" },
+					});
+				},
+			})
+			.result();
+		assert.deepEqual(bodies[0].prompt_cache_options, { mode: "explicit" });
+		assert.equal(bodies[0].prompt_cache_key, undefined);
+		assert.equal(bodies[0].temperature, undefined);
+		// A registry refresh republishes extension models; the contract must survive it.
+		await runtime.refresh({ allowNetwork: false });
+		assert.equal(runtime.getModel("openai", model.id).thinkingLevelMap?.max, "max");
+	} finally {
+		await rm(dir, { recursive: true, force: true });
+	}
+});
+
 test("registered extension normalizes startup, switches, and restored session effort", async () => {
 	const { mkdtemp, rm } = await import("node:fs/promises");
 	const { tmpdir } = await import("node:os");
@@ -156,7 +240,45 @@ test("registered extension normalizes startup, switches, and restored session ef
 			allowModelNetwork: false,
 			refreshOnCreate: false,
 		});
-		const other = { ...model, id: "other" };
+		const other = {
+			...model,
+			id: "other",
+			thinkingLevelMap: {
+				off: null,
+				minimal: null,
+				low: "low",
+				medium: "medium",
+				high: "high",
+				xhigh: "xhigh",
+				max: "max",
+			},
+		};
+		const probeConfig = {
+			api: "openai-completions",
+			apiKey: "fixture",
+			baseUrl: "https://probe.example/v1",
+			models: [
+				{
+					id: "probe-model",
+					name: "probe-model",
+					reasoning: false,
+					input: ["text"],
+					contextWindow: 4096,
+					maxTokens: 256,
+					cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+				},
+			],
+		};
+		let probe;
+		const probeExtension = {
+			name: "probe",
+			factory: (pi) => {
+				probe = {
+					register: (providerId, config) => pi.registerProvider(providerId, config),
+					unregister: (providerId) => pi.unregisterProvider(providerId),
+				};
+			},
+		};
 		const delivered = [];
 		const bodies = [];
 		runtime.registerProvider("openai", {
@@ -188,7 +310,7 @@ test("registered extension normalizes startup, switches, and restored session ef
 				noSkills: true,
 				noContextFiles: true,
 				noPromptTemplates: true,
-				extensionFactories: [createAstraCompatibilityExtension(), presentation],
+				extensionFactories: [createAstraCompatibilityExtension(), presentation, probeExtension],
 			});
 			await loader.reload();
 			return loader;
@@ -219,6 +341,12 @@ test("registered extension normalizes startup, switches, and restored session ef
 		assert.match(delivered[0], /carry authorized work through implementation/);
 		assert.equal(session.thinkingLevel, "low");
 		assert.equal(runtime.getRegisteredNativeProvider("openai"), undefined);
+		assert.equal(
+			runtime.getRegisteredProviderConfig("openai")?.models?.find((entry) => entry.id === model.id)?.thinkingLevelMap
+				?.max,
+			"max",
+		);
+		assert.equal(runtime.getModel("openai", model.id).thinkingLevelMap?.max, "max");
 		assert.equal(bodies.length, 1);
 		assert.equal(bodies[0].temperature, undefined);
 		assert.deepEqual(bodies[0].prompt_cache_options, { ttl: "30m" });
@@ -228,9 +356,22 @@ test("registered extension normalizes startup, switches, and restored session ef
 			session.setThinkingLevel(effort);
 			assert.equal(session.thinkingLevel, effort);
 		}
+		// A switch from a max-capable model keeps max because the registry already serves adapted metadata.
 		await session.setModel(runtime.getModel("openai", "other"));
-		session.setThinkingLevel("off");
+		session.setThinkingLevel("max");
+		assert.equal(session.thinkingLevel, "max");
 		await session.setModel(runtime.getModel("openai", model.id));
+		assert.equal(session.thinkingLevel, "max");
+		// Re-selecting the active row replaces the model object without model_select.
+		await session.setModel(runtime.getModel("openai", model.id));
+		assert.equal(session.thinkingLevel, "max");
+		assert.deepEqual(getSupportedThinkingLevels(session.model), ["low", "medium", "high", "xhigh", "max"]);
+		// A provider register/unregister refresh re-reads the current model from the registry.
+		probe.register("probe", probeConfig);
+		probe.unregister("probe");
+		probe.register("openai", {});
+		assert.equal(session.model.thinkingLevelMap?.max, "max");
+		assert.equal(session.thinkingLevel, "max");
 		session.setThinkingLevel("minimal");
 		assert.equal(session.thinkingLevel, "low");
 		session.setThinkingLevel("max");
