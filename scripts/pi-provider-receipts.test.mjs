@@ -6,6 +6,84 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { test } from "node:test";
 import { applyProviderReceipts } from "./apply-pi-provider-receipts.mjs";
+import { assistant } from "./fixtures/pi-flow-session.mjs";
+
+for (const api of [
+	"openai-completions",
+	"openai-responses",
+	"anthropic-messages",
+	"google-generative-ai",
+	"bedrock-converse-stream",
+	"mistral-conversations",
+]) {
+	test(`normalized transcript keeps exact user and tool-result receipt identities: ${api}`, async () => {
+		const { stream } = await import(`@earendil-works/pi-ai/api/${api}`);
+		const model = {
+			id: "fixture",
+			name: "fixture",
+			api,
+			provider: "fixture",
+			baseUrl: "https://fixture.invalid/v1",
+			reasoning: false,
+			input: ["text"],
+			contextWindow: 4096,
+			maxTokens: 32,
+			cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+		};
+		const users = [1, 2].map(() => ({ role: "user", content: [{ type: "text", text: "same input" }], timestamp: 1 }));
+		const results = ["call_a", "call_b"].map((toolCallId) => ({
+			role: "toolResult",
+			toolCallId,
+			toolName: "probe",
+			content: [{ type: "text", text: "same result" }],
+			isError: false,
+			timestamp: 3,
+		}));
+		const messages = [
+			{ role: "system", content: "Follow instructions.", sections: { project: "Project context." }, timestamp: 0 },
+			...users,
+			{
+				...assistant(),
+				api,
+				provider: model.provider,
+				model: model.id,
+				stopReason: "toolUse",
+				content: results.map(({ toolCallId }) => ({ type: "toolCall", id: toolCallId, name: "probe", arguments: {} })),
+			},
+			...results,
+		];
+		const original = structuredClone(messages);
+		const receipts = [];
+		let payload;
+		const response = await stream(
+			model,
+			{ messages },
+			{
+				apiKey: "fixture-key",
+				region: "us-east-1",
+				maxTokens: 32,
+				onMessageConverted(source, output) {
+					receipts.push({ source, output });
+				},
+				onPayload(value) {
+					payload = value;
+					throw new Error("fixture-before-network");
+				},
+			},
+		).result();
+		assert.ok(payload, response.errorMessage);
+		assert.match(response.errorMessage, /fixture-before-network/);
+		assert.deepEqual(messages, original);
+		const contains = (value, target) =>
+			value === target ||
+			(value !== null && typeof value === "object" && Object.values(value).some((child) => contains(child, target)));
+		for (const source of [...users, ...results]) {
+			const matches = receipts.filter((receipt) => receipt.source === source);
+			assert.equal(matches.length, 1, `one receipt for source index ${messages.indexOf(source)}`);
+			assert.ok(contains(payload, matches[0].output), "receipt points into the final payload");
+		}
+	});
+}
 
 test("provider receipt patch is pinned and idempotent in both package resolutions", async () => {
 	const path = "upstream/pi-provider-receipts/patch.lock.json";
