@@ -7,7 +7,7 @@ import type { WorkIdentity } from "./work-context.js";
  * captures its owning work before the process starts, and a task derives its work from the
  * invocation that created it, so both are unusable without one.
  */
-const automaticWorkParticipants = ["bg", "tasks"] as const;
+const automaticWorkParticipants = ["bg", "tasks", "subagent"] as const;
 
 /**
  * One reusable host identity per branch for turns that no producer owns: result deliveries, wait

@@ -97,6 +97,7 @@ export function createMultiloopControllerExtension(options: MultiloopControllerO
 							if (status === "active") {
 								const work = await branch.attachment.waits.activateWorkBinding(multiloopWorkBinding(lane), Date.now(), [
 									"bg",
+									"subagent",
 									"tasks",
 								]);
 								assertBranch();

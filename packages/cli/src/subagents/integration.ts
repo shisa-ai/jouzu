@@ -6,6 +6,7 @@ import {
 	type SubagentReadReceipt,
 	subagentReadReceiptKey,
 } from "../flow-control/subagent-observation-extension.js";
+import { SUBAGENT_WAIT_SOURCE, type SubagentWaitSourceRequest } from "../flow-control/subagent-waits.js";
 import { preferCatalogModels } from "../model-catalog-projection.js";
 import { createNotificationInbox } from "../notifications/inbox.js";
 import type { JouzuPaths } from "../paths.js";
@@ -231,6 +232,22 @@ export function createWorkflowIntegration(
 		service,
 		register(pi, open) {
 			api = pi;
+			pi.events?.on(SUBAGENT_WAIT_SOURCE, (data) => {
+				const request = data as SubagentWaitSourceRequest;
+				if (typeof request?.accept !== "function" || typeof request.sessionId !== "string") return;
+				request.accept({
+					get(id) {
+						// Attachment restores waits before session_start acquires the manager's lock.
+						// Construction reads records only; the active manager later reports interruption.
+						const owner =
+							manager?.parentSessionId === request.sessionId
+								? manager
+								: new SubagentManager(paths, request.sessionId, 1, workerFactory);
+						return owner.get(id);
+					},
+					subscribe: service.subscribe,
+				});
+			});
 			const inbox = createNotificationInbox({
 				pi,
 				customType: SUBAGENT_RESULT,

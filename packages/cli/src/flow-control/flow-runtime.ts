@@ -7,6 +7,7 @@ import type { PiFlowAttachment } from "./pi-attachment.js";
 import { PiSessionFlowIngress } from "./pi-session-ingress.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import { createSubagentObservationExtension } from "./subagent-observation-extension.js";
+import { createSubagentWaitExtension } from "./subagent-waits.js";
 import { createTaskControllerExtension } from "./task-extension.js";
 import { createFlowWaitExtension } from "./wait-tools.js";
 
@@ -75,6 +76,7 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 		currentWork: () => ingress().branch().workContext.current(),
 		onError: options.onError,
 	});
+	const subagents = createSubagentWaitExtension({ ingress, enabled, onError: options.onError });
 	const waitTools = createFlowWaitExtension({
 		attachment: () => ingress().branch().attachment,
 		currentWork: () => ingress().branch().workContext.current(),
@@ -104,6 +106,7 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 			tasks,
 			multiloop,
 			background,
+			subagents,
 			createSubagentObservationExtension({ ingress }),
 			waitTools,
 			noReply,
@@ -131,7 +134,7 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 				qualifyProviderRoute: true,
 				maxInputBytes: limits.maxInputBytes,
 				maxResultBytes: limits.maxResultBytes,
-				userWorkParticipants: ["bg", "multiloop", "tasks"],
+				userWorkParticipants: ["bg", "multiloop", "tasks", "subagent"],
 				host: {
 					maxPayloadBytes: limits.maxPayloadBytes,
 					consumedAttempt: (attempt) => {
@@ -153,6 +156,7 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 						),
 					),
 				attachWaitSources: async (attachment: PiFlowAttachment) => {
+					subagents.attach(attachment, sessionManager);
 					if (background.attach(attachment, sessionManager) === "unavailable")
 						options.onError(
 							new FlowLedgerError(
@@ -163,10 +167,14 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 				},
 				// Off releases the background delivery lease, which is what lets the task extension deliver its
 				// own completion batches while flow control is out of the circuit. On takes it back.
-				detachProducers: () => background.detach(),
+				detachProducers: async () => {
+					await subagents.detach();
+					await background.detach();
+				},
 				reattachProducers: async () => {
 					const current = attached;
 					if (!current) return;
+					subagents.attach(current.branch().attachment, sessionManager);
 					if (background.attach(current.branch().attachment, sessionManager) === "unavailable")
 						options.onError(
 							new FlowLedgerError(

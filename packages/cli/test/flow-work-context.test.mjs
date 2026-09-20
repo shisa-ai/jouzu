@@ -361,7 +361,7 @@ for (const variant of ["paused", "completed", "unshared", "missing", "absent"])
 			const authority = await attachment.waits.authoritySnapshot();
 			assert.deepEqual(
 				authority.work.find((item) => item.id === current.id).participants,
-				["host-automatic", "bg", "tasks"],
+				["host-automatic", "bg", "tasks", "subagent"],
 				"a wake turn can start background jobs and derive task work",
 			);
 			assert.deepEqual(attachment.waits.captureExecutionWork(current.id, current.revision, "bg"), {
