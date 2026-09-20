@@ -1,3 +1,4 @@
+import "./pi-bug-report.test.mjs";
 import "./pi-summary-preparation.test.mjs";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
