@@ -403,7 +403,7 @@ export async function load(url, context, nextLoad) {
 		const env = {
 			DISPLAY: ":99",
 			JOUZU_IMPORT_MARKER: marker,
-			NODE_OPTIONS: `--import=${preload}`,
+			NODE_OPTIONS: `--import=${pathToFileURL(preload).href}`,
 		};
 		const status = run(["--jouzu-home", join(temp, "home"), "self-update", "status", "--json"], { env });
 		assert.equal(status.status, 0, status.stderr);

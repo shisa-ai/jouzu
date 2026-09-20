@@ -4,21 +4,22 @@ import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { afterFlowCleanup, assembledSession, capturedNotices } from "./fixtures/flow-assembly.mjs";
 
 const { createJiti } = await import(
-	createRequire(import.meta.resolve("@earendil-works/pi-coding-agent")).resolve("jiti")
+	pathToFileURL(createRequire(import.meta.resolve("@earendil-works/pi-coding-agent")).resolve("jiti")).href
 );
 const jiti = createJiti(import.meta.url, { moduleCache: false });
 const { CronScheduler } = await jiti.import(
-	new URL("../node_modules/pi-schedule-prompt/src/scheduler.ts", import.meta.url).pathname,
+	fileURLToPath(new URL("../node_modules/pi-schedule-prompt/src/scheduler.ts", import.meta.url)),
 );
 const { CronStorage } = await jiti.import(
-	new URL("../node_modules/pi-schedule-prompt/src/storage.ts", import.meta.url).pathname,
+	fileURLToPath(new URL("../node_modules/pi-schedule-prompt/src/storage.ts", import.meta.url)),
 );
 const { createCronTool } = await jiti.import(
-	new URL("../node_modules/pi-schedule-prompt/src/tool.ts", import.meta.url).pathname,
+	fileURLToPath(new URL("../node_modules/pi-schedule-prompt/src/tool.ts", import.meta.url)),
 );
 
 for (const outcome of ["trigger", "inline", "timer", "remove", "disable", "error", "deadline", "reopen-corrupt"]) {
