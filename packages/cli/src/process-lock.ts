@@ -52,10 +52,14 @@ export function acquireProcessLock(path: string): ProcessLock {
 		const metadata = lstatSync(path);
 		if (!metadata.isFile() || metadata.isSymbolicLink())
 			throw new ProcessLockError("storage", `A process lock requires a regular file: ${path}`);
-		database = new DatabaseSync(path);
-		// No journal and no application writes: this connection exists only to
-		// hold the single writer reservation. IMMEDIATE keeps competing openers
-		// from both failing while upgrading a shared lock to exclusive.
+		database = new DatabaseSync(path, { defensive: false });
+		// Newer Node releases enable SQLite defensive mode, which silently refuses
+		// journal_mode=OFF. This private connection executes only the fixed SQL here:
+		// no application writes, schemas, or commits are permitted.
+		if (database.prepare("PRAGMA journal_mode=OFF").get()?.journal_mode !== "off")
+			throw new ProcessLockError("storage", `The process lock could not disable journaling: ${path}`);
+		// IMMEDIATE keeps competing openers from both failing while upgrading a
+		// shared lock to exclusive. OFF prevents even an empty database's journal.
 		database.exec("PRAGMA busy_timeout=0; BEGIN IMMEDIATE;");
 		retained.add(database);
 	} catch (error) {

@@ -70,6 +70,25 @@ function assertStorageFailure(path) {
 	);
 }
 
+test("lock reservations write no database bytes or journal sidecars", (t) => {
+	const path = join(makeDir(t), "state", "owner.sqlite");
+	const unchanged = () => {
+		assert.equal(statSync(path).size, 0);
+		for (const suffix of ["-wal", "-shm", "-journal"]) assert.equal(existsSync(`${path}${suffix}`), false);
+	};
+	for (let attempt = 0; attempt < 3; attempt++) {
+		const lock = acquireProcessLock(path);
+		try {
+			unchanged();
+			assertBusy(path);
+			unchanged();
+		} finally {
+			lock.release();
+		}
+		unchanged();
+	}
+});
+
 test("a held lock excludes another process and release admits it", async (t) => {
 	const root = makeDir(t);
 	const path = join(root, "state", "owner.sqlite");
