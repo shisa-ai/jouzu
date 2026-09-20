@@ -83,6 +83,12 @@ test("child warming usage reaches the parent without becoming assistant work", {
 		const warms = entries.filter((entry) => entry.type === "usage" && entry.kind === "cache_warm");
 		assert.ok(warms.length > 0, "worker should perform at least one automatic refresh during the tool");
 		assert.equal(requests.length, 2 + warms.length);
+		for (const warm of requests.slice(1, -1)) {
+			assert.deepEqual(warm.messages, requests[0].messages);
+			assert.deepEqual(warm.tools, requests[0].tools);
+			assert.equal(warm.model, requests[0].model);
+			assert.ok(warm.max_tokens === 1 || warm.max_completion_tokens === 1);
+		}
 		assert.equal(result.usage.input, requests.length * 10, "parent totals must include cache-warming input");
 		assert.equal(result.usage.output, 10 + warms.length);
 		assert.equal(result.result, "Completed.");
