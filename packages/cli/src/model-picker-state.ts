@@ -1,6 +1,16 @@
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { closeSync, existsSync, fstatSync, lstatSync, openSync, readSync, realpathSync, renameSync } from "node:fs";
+import {
+	closeSync,
+	constants,
+	existsSync,
+	fstatSync,
+	lstatSync,
+	openSync,
+	readSync,
+	realpathSync,
+	renameSync,
+} from "node:fs";
 import { isAbsolute, join, resolve } from "node:path";
 import type { JouzuPaths } from "./paths.js";
 import { ensurePrivateDirectory, writeFilePrivateAtomic } from "./private-fs.js";
@@ -112,7 +122,7 @@ function serializeBoundedState(state: ModelPickerState): string {
 }
 
 function readBoundedState(path: string): string {
-	const descriptor = openSync(path, "r");
+	const descriptor = openSync(path, constants.O_RDONLY | constants.O_NONBLOCK);
 	try {
 		const metadata = fstatSync(descriptor);
 		if (!metadata.isFile()) throw new ModelPickerStateError(`model picker state must be a regular file: ${path}`);

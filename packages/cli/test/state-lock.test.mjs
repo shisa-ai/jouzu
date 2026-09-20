@@ -6,7 +6,13 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 
-import { acquireStateLock, describeStateLock, inspectStateLock, STATE_LOCK_STALE_MS } from "../dist/state-lock.js";
+import {
+	acquireStateLock,
+	describeStateLock,
+	inspectStateLock,
+	STATE_LOCK_MAX_BYTES,
+	STATE_LOCK_STALE_MS,
+} from "../dist/state-lock.js";
 
 function makeStateDir() {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-state-lock-"));
@@ -119,14 +125,15 @@ test("a malformed legacy lock is owner-unknown: refused young, recovered stale",
 	}
 });
 
-for (const operation of ["lstatSync", "readFileSync"]) {
+for (const operation of ["lstatSync", "fstatSync", "readSync"]) {
 	test(`${operation} failures leave an existing lock busy rather than free or recoverable`, (t) => {
 		const { root, stateDir } = makeStateDir();
 		const path = join(stateDir, "lock");
 		writeAged(path, "", STATE_LOCK_STALE_MS + 1000);
 		const original = fs[operation];
 		t.mock.method(fs, operation, (target, ...args) => {
-			if (target === path) throw Object.assign(new Error("inspection failed"), { code: "EIO" });
+			if (target === path || typeof target === "number")
+				throw Object.assign(new Error("inspection failed"), { code: "EIO" });
 			return original(target, ...args);
 		});
 		syncBuiltinESMExports();
@@ -142,6 +149,35 @@ for (const operation of ["lstatSync", "readFileSync"]) {
 		}
 	});
 }
+
+test("oversized lock records stay busy and token release leaves them untouched", (t) => {
+	const { root, stateDir } = makeStateDir();
+	t.after(() => rmSync(root, { recursive: true, force: true }));
+	const path = join(stateDir, "lock");
+	const release = acquireStateLock({ path, describe: "test", onBusy: busyError });
+	const record = readFileSync(path, "utf8").trim();
+	writeAged(path, record.padEnd(STATE_LOCK_MAX_BYTES + 1), STATE_LOCK_STALE_MS + 1000);
+	assert.equal(inspectStateLock(path, new Date()).status, "unreadable");
+	assert.throws(() => acquireStateLock({ path, describe: "test", onBusy: busyError }), /domain busy/);
+	release();
+	assert.ok(existsSync(path));
+	// Even if a file grows after fstat, the read itself must remain bounded.
+	const original = fs.fstatSync;
+	t.mock.method(fs, "fstatSync", (...args) => Object.assign(original(...args), { size: 0 }));
+	syncBuiltinESMExports();
+	try {
+		assert.equal(inspectStateLock(path, new Date()).status, "unreadable");
+		release();
+		assert.ok(existsSync(path));
+	} finally {
+		t.mock.restoreAll();
+		syncBuiltinESMExports();
+	}
+	writeFileSync(path, record.padEnd(STATE_LOCK_MAX_BYTES));
+	assert.equal(inspectStateLock(path, new Date()).status, "held-live");
+	release();
+	assert.equal(existsSync(path), false);
+});
 
 test("describeStateLock reports free, dead, and owner-unknown states", async () => {
 	const { root, stateDir } = makeStateDir();

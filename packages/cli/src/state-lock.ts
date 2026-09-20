@@ -1,10 +1,39 @@
 import { randomUUID } from "node:crypto";
-import { closeSync, fsyncSync, lstatSync, openSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
+import {
+	closeSync,
+	constants,
+	fstatSync,
+	fsyncSync,
+	lstatSync,
+	openSync,
+	readSync,
+	unlinkSync,
+	writeFileSync,
+} from "node:fs";
 import { dirname } from "node:path";
 import { ensurePrivateDirectory, validatePrivateDirectory } from "./private-fs.js";
 
 /** Stale threshold after which a dead or owner-unknown lock may be recovered. */
 export const STATE_LOCK_STALE_MS = 30 * 60 * 1000;
+export const STATE_LOCK_MAX_BYTES = 4096;
+
+function readLockRecord(path: string): string {
+	const descriptor = openSync(path, constants.O_RDONLY | constants.O_NONBLOCK | (constants.O_NOFOLLOW ?? 0));
+	try {
+		const metadata = fstatSync(descriptor);
+		if (!metadata.isFile() || metadata.size > STATE_LOCK_MAX_BYTES) throw new Error("Invalid lock record");
+		const bytes = Buffer.alloc(STATE_LOCK_MAX_BYTES + 1);
+		let total = 0;
+		while (total < bytes.length) {
+			const count = readSync(descriptor, bytes, total, bytes.length - total, null);
+			if (count === 0) return bytes.subarray(0, total).toString("utf8");
+			total += count;
+		}
+		throw new Error("Lock record exceeds size limit");
+	} finally {
+		closeSync(descriptor);
+	}
+}
 
 export interface StateLockRecord {
 	pid: number;
@@ -54,7 +83,7 @@ export function inspectStateLock(path: string, now: Date): StateLockInspection {
 		if (!metadata.isFile() || metadata.isSymbolicLink()) {
 			return { exists: true, status: "invalid", ageMs: null };
 		}
-		const contents = readFileSync(path, "utf8");
+		const contents = readLockRecord(path);
 		let record: StateLockRecord | null = null;
 		try {
 			const parsed = JSON.parse(contents) as Partial<StateLockRecord>;
@@ -88,7 +117,7 @@ function releaseToken(path: string, token: string): void {
 	try {
 		const metadata = lstatSync(path);
 		if (!metadata.isFile() || metadata.isSymbolicLink()) return;
-		const parsed = JSON.parse(readFileSync(path, "utf8")) as { token?: unknown };
+		const parsed = JSON.parse(readLockRecord(path)) as { token?: unknown };
 		if (parsed.token === token) unlinkSync(path);
 	} catch {}
 }

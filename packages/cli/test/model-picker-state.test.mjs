@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import {
 	existsSync,
 	mkdirSync,
@@ -36,6 +37,44 @@ function context() {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-state-"));
 	return { root, paths: resolveJouzuPaths({ homeOverride: join(root, "home") }) };
 }
+
+test("a FIFO replacing picker state between inspection and open cannot block", {
+	skip: process.platform === "win32",
+}, () => {
+	const { root, paths } = context();
+	try {
+		const path = writeState(paths, emptyModelPickerState());
+		execFileSync(
+			process.execPath,
+			[
+				"--input-type=module",
+				"-e",
+				`
+			import assert from 'node:assert/strict';
+			import fs from 'node:fs';
+			import { execFileSync } from 'node:child_process';
+			import { syncBuiltinESMExports } from 'node:module';
+			import { loadModelPickerState } from ${JSON.stringify(new URL("../dist/model-picker-state.js", import.meta.url).href)};
+			const path = ${JSON.stringify(path)};
+			const original = fs.openSync;
+			fs.openSync = (target, ...args) => {
+				if (target === path) {
+					fs.unlinkSync(path);
+					execFileSync('mkfifo', [path]);
+				}
+				return original(target, ...args);
+			};
+			syncBuiltinESMExports();
+			assert.throws(() => loadModelPickerState(${JSON.stringify(paths)}), /regular file/);
+			assert.ok(fs.lstatSync(path).isFIFO());
+		`,
+			],
+			{ timeout: 5000, stdio: "pipe" },
+		);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
 
 test("missing state is empty and dispatch updates bounded project and global MRU lists", () => {
 	const { root, paths } = context();
