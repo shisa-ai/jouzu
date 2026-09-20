@@ -65,6 +65,7 @@ export function createScheduleWaitSource(options: {
 	return {
 		version: 1,
 		namespace: "schedule",
+		requiresRegisteredExecution: true,
 		subscribe(identity, changed) {
 			const unsubscribe = options.events.on("cron:change", (data) => {
 				const event = data as ScheduleChange;

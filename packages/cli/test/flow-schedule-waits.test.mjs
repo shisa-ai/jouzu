@@ -181,6 +181,19 @@ for (const corrupt of ["{", '{"version":2,"jobs":[]}', '{"version":1,"jobs":[{}]
 		assert.equal((await f.attachment.waits.authoritySnapshot()).executions.length, 0);
 		assert.equal(f.errors.length, 1);
 	});
+test("a schedule without a creation receipt cannot acquire invented work ownership", async (t) => {
+	const f = await fixture(t);
+	await assert.rejects(
+		f.attachment.waitProducers.bindForWait(
+			"schedule",
+			{ workId: "work", handle: f.job.id, execution: `${f.job.id}@${f.job.createdAt}` },
+			2,
+		),
+		/registered launch receipt/,
+	);
+	assert.deepEqual((await f.attachment.waits.authoritySnapshot()).executions, []);
+});
+
 test("foreign-session jobs cannot issue receipts", async (t) => {
 	const f = await fixture(t);
 	f.call();

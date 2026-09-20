@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { afterFlowCleanup, assembledSession } from "./fixtures/flow-assembly.mjs";
+import { SessionManager } from "@earendil-works/pi-coding-agent";
+import { afterFlowCleanup, assembledSession, capturedNotices } from "./fixtures/flow-assembly.mjs";
 
 const { createJiti } = await import(
 	createRequire(import.meta.resolve("@earendil-works/pi-coding-agent")).resolve("jiti")
@@ -20,7 +21,7 @@ const { createCronTool } = await jiti.import(
 	new URL("../node_modules/pi-schedule-prompt/src/tool.ts", import.meta.url).pathname,
 );
 
-for (const outcome of ["trigger", "inline", "timer", "remove", "disable", "error", "deadline"]) {
+for (const outcome of ["trigger", "inline", "timer", "remove", "disable", "error", "deadline", "reopen-corrupt"]) {
 	test(`assembled scheduled-prompt wait wakes on ${outcome} without polling`, { timeout: 15000 }, async (t) => {
 		const root = await mkdtemp(join(tmpdir(), "flow-schedule-wake-"));
 		afterFlowCleanup(t, () => rm(root, { recursive: true, force: true }));
@@ -29,6 +30,7 @@ for (const outcome of ["trigger", "inline", "timer", "remove", "disable", "error
 		const delivered = [];
 		const f = await assembledSession(t, {
 			root,
+			persist: outcome === "reopen-corrupt",
 			producerExtensions: [
 				{
 					name: "installed-scheduler",
@@ -108,6 +110,20 @@ for (const outcome of ["trigger", "inline", "timer", "remove", "disable", "error
 		});
 		await f.session.prompt("Schedule a prompt and wait for its trigger.");
 		assert.equal((await f.ingress.branch().attachment.waits.snapshot())[0].state, "waiting");
+		if (outcome === "reopen-corrupt") {
+			const history = f.sessionManager.getSessionFile();
+			await f.shutdown("resume", history);
+			await writeFile(join(root, ".pi/schedule-prompts.json"), "{");
+			const reopened = await assembledSession(t, { root, persist: true, sessionManager: SessionManager.open(history) });
+			assert.deepEqual(reopened.ingress.branch().waitSourceRecovery.missing, ["schedule"]);
+			assert.ok(reopened.errors.some((error) => /Cannot restore wait source schedule/.test(error.message)));
+			const notices = capturedNotices(reopened.session);
+			await reopened.session.prompt("/flow");
+			assert.ok(notices.some((notice) => /unavailable job sources: schedule/.test(notice.text)));
+			assert.equal(reopened.bodies.length, 0);
+			assert.equal((await reopened.ingress.branch().attachment.waits.snapshot())[0].state, "waiting");
+			return;
+		}
 		const job = storage.getJob(dependency.handle);
 		if (outcome === "trigger" || outcome === "inline") await scheduler.executeJob(job);
 		else if (outcome === "remove") {

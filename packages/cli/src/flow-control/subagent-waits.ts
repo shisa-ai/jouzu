@@ -146,6 +146,7 @@ export function createSubagentWaitExtension(options: {
 				{
 					version: 1,
 					namespace: "subagent",
+					requiresRegisteredExecution: true,
 					subscribe: (identity, changed) =>
 						selected.subscribe(() => {
 							try {

@@ -701,28 +701,32 @@ test("reopening reconciles retained executions before exposing the branch and ho
 	);
 	await first.service.close();
 	let failedSourceClosed = 0;
-	await assert.rejects(
-		PiFlowSessionService.open(first.session, {
-			...options(first.root),
-			attachWaitSources: async (attachment) => {
-				attachment.waitProducers.register(
-					{
-						version: 1,
-						namespace: "bg",
-						subscribe: () => () => {},
-						snapshot: async () => {
-							throw new Error("snapshot unavailable");
-						},
-						close: () => {
-							failedSourceClosed++;
-						},
+	const sourceErrors = [];
+	const unavailable = await PiFlowSessionService.open(first.session, {
+		...options(first.root),
+		attachWaitSources: async (attachment) => {
+			attachment.waitProducers.register(
+				{
+					version: 1,
+					namespace: "bg",
+					subscribe: () => () => {},
+					snapshot: async () => {
+						throw new Error("snapshot unavailable");
 					},
-					assert.ifError,
-				);
-			},
-		}),
-		/snapshot unavailable/,
-	);
+					close: () => {
+						failedSourceClosed++;
+					},
+				},
+				(error) => sourceErrors.push(error),
+			);
+		},
+	});
+	t.after(() => unavailable.close());
+	assert.deepEqual(unavailable.branch().waitSourceRecovery, { restored: 0, missing: ["bg"] });
+	assert.equal(unavailable.branch().host.gate().recoveryBlocked, true);
+	assert.equal(sourceErrors.length, 1);
+	assert.match(sourceErrors[0].cause.message, /snapshot unavailable/);
+	await unavailable.close();
 	assert.equal(failedSourceClosed, 1);
 	const manager = () => SessionManager.open(first.session.sessionManager.getSessionFile());
 	const missing = await fixture(t, { root: first.root, manager: manager() });

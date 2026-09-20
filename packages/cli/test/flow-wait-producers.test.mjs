@@ -77,6 +77,44 @@ function source(snapshot = async () => evidence()) {
 	};
 }
 
+test("an unavailable source holds recovery without preventing other subscriptions from restoring", async (t) => {
+	const f = await fixture(t);
+	const registration = f.attachment.waitProducers.register(
+		source(async (id) => ({ ...evidence(), ...id })),
+		(error) => f.errors.push(error),
+	);
+	await registration.bind(identity, 2);
+	await registration.bind({ ...identity, handle: "bg-2", execution: "exec-2" }, 2);
+	await f.attachment.waits.declareOwned("lane", 2, waitRequest(), Date.now(), 100000);
+	await f.reopen();
+	const unavailable = new Error("Producer record is unreadable");
+	f.attachment.waitProducers.register(
+		source(async (id) => {
+			if (id.execution === identity.execution) throw unavailable;
+			return { ...evidence(), ...id };
+		}),
+		(error) => f.errors.push(error),
+	);
+	assert.deepEqual(await f.attachment.waitProducers.restorePending(), { restored: 1, missing: ["bg"] });
+	assert.equal((await f.attachment.waits.snapshot())[0].state, "waiting");
+	assert.equal(f.errors.length, 1);
+	assert.equal(f.errors[0].cause, unavailable);
+	assert.match(f.errors[0].message, /bg.*exec-1/);
+});
+
+test("receipt-only sources refuse first-time wait binding but accept producer registration", async (t) => {
+	const f = await fixture(t);
+	const producer = source();
+	producer.requiresRegisteredExecution = true;
+	const registration = f.attachment.waitProducers.register(producer, assert.ifError);
+	await assert.rejects(f.attachment.waitProducers.bindForWait("bg", identity, 2), /registered launch receipt/);
+	assert.equal(producer.listeners, 0);
+	assert.deepEqual((await f.attachment.waits.authoritySnapshot()).executions, []);
+	await registration.bind(identity, 2);
+	await f.attachment.waitProducers.bindForWait("bg", identity, 2);
+	assert.equal(producer.listeners, 1);
+});
+
 for (const timing of ["before", "during", "after"]) {
 	test(`subscribed completion ${timing} snapshot is retained and resolves an owned wait`, async (t) => {
 		const f = await fixture(t),

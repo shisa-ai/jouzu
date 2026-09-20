@@ -23,6 +23,8 @@ export interface FlowExecutionEvidence extends FlowExecutionIdentity {
 export interface FlowWaitExecutionSource {
 	version: 1;
 	namespace: string;
+	/** Require a producer-issued binding; snapshots alone cannot attest execution ownership. */
+	requiresRegisteredExecution?: boolean;
 	/** Install the local listener synchronously, before snapshot inspection starts. */
 	subscribe(identity: FlowExecutionIdentity, changed: (evidence: FlowExecutionEvidence) => void): () => void;
 	snapshot(identity: FlowExecutionIdentity, signal: AbortSignal): Promise<FlowExecutionEvidence>;
@@ -38,6 +40,8 @@ export interface FlowWaitExecutionSource {
 }
 
 interface ProducerRegistration {
+	requiresRegisteredExecution: boolean;
+	onError(error: unknown): void;
 	bind(
 		identity: Omit<FlowExecutionIdentity, "scope">,
 		workRevision: number,
@@ -95,6 +99,7 @@ export class FlowWaitProducerRegistry {
 			!/^[a-z][a-z0-9-]{0,63}$/.test(source.namespace) ||
 			typeof source.subscribe !== "function" ||
 			typeof source.snapshot !== "function" ||
+			(source.requiresRegisteredExecution !== undefined && typeof source.requiresRegisteredExecution !== "boolean") ||
 			(source.canRetireExecution !== undefined && typeof source.canRetireExecution !== "function") ||
 			(source.healthPolicies !== undefined && typeof source.healthPolicies !== "function") ||
 			(source.close !== undefined && typeof source.close !== "function") ||
@@ -113,6 +118,8 @@ export class FlowWaitProducerRegistry {
 		let closed = false;
 		let closing: Promise<void> | undefined;
 		const registration = {
+			requiresRegisteredExecution: source.requiresRegisteredExecution === true,
+			onError,
 			healthPolicies: (identity: FlowExecutionIdentity) => {
 				const declared = policies?.(structuredClone(identity)) ?? [];
 				if (!Array.isArray(declared)) throw new FlowLedgerError("schema", "Health policies must be a list.");
@@ -272,6 +279,11 @@ export class FlowWaitProducerRegistry {
 		const known = authority.executions.find(
 			(execution) => execution.producer === namespace && execution.execution === captured.execution,
 		);
+		if (!known && this.producers.get(namespace)?.requiresRegisteredExecution)
+			throw new FlowLedgerError(
+				"identity",
+				"This producer requires a registered launch receipt. Use the dependency returned when the execution was started; do not invent an execution or its owner.",
+			);
 		const ownerId = executionWorkId ?? known?.workId ?? captured.workId;
 		if (
 			!canObserveExecution(authority, captured.workId, ownerId) ||
@@ -425,11 +437,22 @@ export class FlowWaitProducerRegistry {
 				if (!producer || (await producer.flushExecution(execution.execution))) continue;
 				const work = authority.work.find((work) => work.id === execution.workId);
 				if (!work) throw new FlowLedgerError("identity", "Retained execution has no owning work.");
-				await producer.bind(
-					{ workId: execution.workId, handle: execution.handle, execution: execution.execution },
-					work.revision,
-				);
-				restored++;
+				try {
+					await producer.bind(
+						{ workId: execution.workId, handle: execution.handle, execution: execution.execution },
+						work.revision,
+					);
+					restored++;
+				} catch (error) {
+					if (this.closed) throw error;
+					if (!missing.includes(execution.producer)) missing.push(execution.producer);
+					producer.onError(
+						new Error(
+							`Cannot restore wait source ${execution.producer} for execution ${execution.execution}. Inspect its stored state; automatic work remains held. Use /flow to inspect recovery options.`,
+							{ cause: error },
+						),
+					);
+				}
 			}
 			if (this.closed) throw new FlowLedgerError("stale", "Wait producer registry is closed.");
 			return { restored, missing };

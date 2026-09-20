@@ -159,6 +159,16 @@ test("flow off retains native child behavior without a wait receipt", async (t) 
 	assert.equal(await f.result(), undefined);
 	assert.equal(f.listeners.size, 0);
 });
+test("a child run without a launch receipt cannot acquire invented work ownership", async (t) => {
+	const f = await fixture(t);
+	await assert.rejects(
+		f.attachment.waitProducers.bindForWait("subagent", { workId: "work", handle: "run-1", execution: "run-1" }, 2),
+		/registered launch receipt/,
+	);
+	assert.equal(f.listeners.size, 0);
+	assert.deepEqual((await f.attachment.waits.authoritySnapshot()).executions, []);
+});
+
 test("child evidence rejects cross-session and mismatched handles", () => {
 	const identity = { scope, workId: "work", handle: "run", execution: "run" };
 	assert.throws(
