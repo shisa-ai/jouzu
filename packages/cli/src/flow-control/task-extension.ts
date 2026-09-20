@@ -143,7 +143,7 @@ export function createTaskControllerExtension(options: {
 										task.revision,
 										origin,
 										Date.now(),
-										["bg", "tasks", "subagent"],
+										["bg", "tasks", "subagent", "schedule"],
 									);
 								}
 							}

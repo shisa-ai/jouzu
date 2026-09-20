@@ -6,6 +6,7 @@ import { createFlowNoReplyExtension } from "./no-reply-tool.js";
 import type { PiFlowAttachment } from "./pi-attachment.js";
 import { PiSessionFlowIngress } from "./pi-session-ingress.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
+import { createScheduleWaitExtension } from "./schedule-waits.js";
 import { createSubagentObservationExtension } from "./subagent-observation-extension.js";
 import { createSubagentWaitExtension } from "./subagent-waits.js";
 import { createTaskControllerExtension } from "./task-extension.js";
@@ -76,6 +77,7 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 		currentWork: () => ingress().branch().workContext.current(),
 		onError: options.onError,
 	});
+	const schedules = createScheduleWaitExtension({ ingress, enabled, onError: options.onError });
 	const subagents = createSubagentWaitExtension({ ingress, enabled, onError: options.onError });
 	const waitTools = createFlowWaitExtension({
 		attachment: () => ingress().branch().attachment,
@@ -107,6 +109,7 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 			multiloop,
 			background,
 			subagents,
+			schedules,
 			createSubagentObservationExtension({ ingress }),
 			waitTools,
 			noReply,
@@ -115,7 +118,7 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 		ingress,
 		enabled,
 		setEnabled,
-		async flowIngressFactory({ sessionManager }) {
+		async flowIngressFactory({ cwd, sessionManager }) {
 			// The host replaces the session for resume, fork, rewind, and session switching, and calls
 			// this again for each one after tearing the previous session down. One ingress serves one
 			// session, so hand back a fresh one: refusing aborted every one of those operations.
@@ -134,7 +137,7 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 				qualifyProviderRoute: true,
 				maxInputBytes: limits.maxInputBytes,
 				maxResultBytes: limits.maxResultBytes,
-				userWorkParticipants: ["bg", "multiloop", "tasks", "subagent"],
+				userWorkParticipants: ["bg", "multiloop", "tasks", "subagent", "schedule"],
 				host: {
 					maxPayloadBytes: limits.maxPayloadBytes,
 					consumedAttempt: (attempt) => {
@@ -156,6 +159,7 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 						),
 					),
 				attachWaitSources: async (attachment: PiFlowAttachment) => {
+					schedules.attach(attachment, cwd);
 					subagents.attach(attachment, sessionManager);
 					if (background.attach(attachment, sessionManager) === "unavailable")
 						options.onError(
@@ -168,12 +172,14 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 				// Off releases the background delivery lease, which is what lets the task extension deliver its
 				// own completion batches while flow control is out of the circuit. On takes it back.
 				detachProducers: async () => {
+					await schedules.detach();
 					await subagents.detach();
 					await background.detach();
 				},
 				reattachProducers: async () => {
 					const current = attached;
 					if (!current) return;
+					schedules.attach(current.branch().attachment, cwd);
 					subagents.attach(current.branch().attachment, sessionManager);
 					if (background.attach(current.branch().attachment, sessionManager) === "unavailable")
 						options.onError(

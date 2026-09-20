@@ -601,7 +601,7 @@ test("a completion turn whose owning work finished runs on host work", { timeout
 	);
 	const automatic = authority.work.filter((work) => work.owner === "host-automatic");
 	assert.equal(automatic.length, 1, "one reusable host work identity per branch");
-	assert.deepEqual(automatic[0].participants, ["host-automatic", "bg", "tasks", "subagent"]);
+	assert.deepEqual(automatic[0].participants, ["host-automatic", "bg", "tasks", "subagent", "schedule"]);
 	assert.equal(second.details.task.flow.work.id, automatic[0].id, "the completion turn owns the job it started");
 	const tasks = JSON.parse(await readFile(setupData.taskFile, "utf8"));
 	assert.ok(

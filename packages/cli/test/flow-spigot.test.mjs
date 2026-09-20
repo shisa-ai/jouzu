@@ -304,7 +304,7 @@ test("flow control off releases the background delivery lease so the task extens
 	const f = await assembledSession(t, { producerExtensions: await installedProducerExtensions() });
 	const attachment = f.ingress.branch().attachment;
 	const attached = () => attachment.waitProducers.attachedNamespaces();
-	assert.deepEqual(attached(), ["bg"], "the background wait source is attached while flow control is on");
+	assert.deepEqual(attached(), ["schedule", "bg"], "the wait sources are attached while flow control is on");
 	await f.session.prompt("/flow off");
 	assert.deepEqual(
 		attached(),
@@ -314,7 +314,7 @@ test("flow control off releases the background delivery lease so the task extens
 	await f.session.prompt("/flow on");
 	assert.deepEqual(
 		attached(),
-		["bg"],
+		["schedule", "bg"],
 		"turning it back on re-acquires the lease on the same attachment, with no re-handshake",
 	);
 	assert.equal(f.ingress.branch().attachment, attachment, "and the branch is never torn down");

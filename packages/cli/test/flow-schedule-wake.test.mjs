@@ -1,0 +1,137 @@
+import assert from "node:assert/strict";
+import { mkdtemp, rm } from "node:fs/promises";
+import { createRequire } from "node:module";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { test } from "node:test";
+import { afterFlowCleanup, assembledSession } from "./fixtures/flow-assembly.mjs";
+
+const { createJiti } = await import(
+	createRequire(import.meta.resolve("@earendil-works/pi-coding-agent")).resolve("jiti")
+);
+const jiti = createJiti(import.meta.url, { moduleCache: false });
+const { CronScheduler } = await jiti.import(
+	new URL("../node_modules/pi-schedule-prompt/src/scheduler.ts", import.meta.url).pathname,
+);
+const { CronStorage } = await jiti.import(
+	new URL("../node_modules/pi-schedule-prompt/src/storage.ts", import.meta.url).pathname,
+);
+const { createCronTool } = await jiti.import(
+	new URL("../node_modules/pi-schedule-prompt/src/tool.ts", import.meta.url).pathname,
+);
+
+for (const outcome of ["trigger", "inline", "timer", "remove", "disable", "error", "deadline"]) {
+	test(`assembled scheduled-prompt wait wakes on ${outcome} without polling`, { timeout: 15000 }, async (t) => {
+		const root = await mkdtemp(join(tmpdir(), "flow-schedule-wake-"));
+		afterFlowCleanup(t, () => rm(root, { recursive: true, force: true }));
+		const wake = Promise.withResolvers();
+		let dependency, scheduler, storage, bus;
+		const delivered = [];
+		const f = await assembledSession(t, {
+			root,
+			producerExtensions: [
+				{
+					name: "installed-scheduler",
+					factory(pi) {
+						bus = pi.events;
+						pi.registerTool(
+							createCronTool(
+								() => storage,
+								() => scheduler,
+								() => "session",
+							),
+						);
+						pi.on("session_start", (_event, ctx) => {
+							storage = new CronStorage(ctx.cwd);
+							// Exercise the installed scheduler's start/end events without queuing an extra user turn.
+							scheduler = new CronScheduler(
+								storage,
+								{
+									...pi,
+									sendUserMessage:
+										outcome === "inline" ? pi.sendUserMessage.bind(pi) : (prompt) => delivered.push(prompt),
+								},
+								ctx,
+							);
+							scheduler.start();
+						});
+						pi.on("session_shutdown", () => scheduler?.stop());
+					},
+				},
+			],
+			script: async (_body, index) => {
+				if (index === 0)
+					return {
+						toolCalls: [
+							{
+								id: "schedule",
+								name: "schedule_prompt",
+								arguments: {
+									action: "add",
+									type: "once",
+									schedule: outcome === "timer" ? "+1s" : "+1h",
+									prompt: "Scheduled fixture",
+								},
+							},
+						],
+					};
+				if (index === 1) {
+					const result = f.sessionManager
+						.getBranch()
+						.find(
+							(entry) =>
+								entry.type === "message" &&
+								entry.message.role === "toolResult" &&
+								entry.message.toolCallId === "schedule",
+						).message;
+					assert.equal(result.isError, false, JSON.stringify(result));
+					dependency = result.details.waitDependency;
+					assert.equal(dependency?.producer, "schedule");
+					return {
+						toolCalls: [
+							{
+								id: "wait",
+								name: "agent_wait",
+								arguments: {
+									on: [dependency],
+									reason: "Await scheduled trigger",
+									deadline: outcome === "deadline" ? "1s" : "10s",
+								},
+							},
+						],
+					};
+				}
+				if (index === 2) return { text: "Waiting for the scheduled trigger." };
+				wake.resolve();
+				return { text: "Wake received." };
+			},
+		});
+		await f.session.prompt("Schedule a prompt and wait for its trigger.");
+		assert.equal((await f.ingress.branch().attachment.waits.snapshot())[0].state, "waiting");
+		const job = storage.getJob(dependency.handle);
+		if (outcome === "trigger" || outcome === "inline") await scheduler.executeJob(job);
+		else if (outcome === "remove") {
+			storage.removeJob(job.id);
+			scheduler.removeJob(job.id);
+		} else if (outcome === "disable") {
+			storage.updateJob(job.id, { enabled: false });
+			scheduler.updateJob(job.id, { ...job, enabled: false });
+		} else if (outcome === "error")
+			bus.emit("cron:change", { type: "error", jobId: job.id, error: "Fixture scheduling failure" });
+		await wake.promise;
+		await f.session.agent.waitForIdle();
+		assert.equal(
+			(await f.ingress.branch().attachment.waits.snapshot())[0].state,
+			["trigger", "inline", "timer"].includes(outcome) ? "resolved" : outcome === "deadline" ? "expired" : "failed",
+		);
+		if (outcome !== "inline") assert.equal(f.bodies.length, 4, "one automatic decision wake");
+		else assert.ok(JSON.stringify(f.bodies.at(-1)).includes("Scheduled fixture"));
+		assert.deepEqual(delivered, ["trigger", "timer"].includes(outcome) ? ["Scheduled fixture"] : []);
+		assert.equal(
+			storage.getJob(job.id)?.enabled,
+			outcome === "remove" ? undefined : !["disable", "timer"].includes(outcome),
+		);
+		assert.equal(f.errors.length, 1);
+		assert.match(f.errors[0].message, /^Background task waits are unavailable/);
+	});
+}

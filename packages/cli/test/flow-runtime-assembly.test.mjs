@@ -27,6 +27,7 @@ test("the assembly registers the controller extensions the launcher passes to Pi
 			"jouzu-multiloop-controller",
 			"jouzu-background-controller",
 			"jouzu-subagent-waits",
+			"jouzu-schedule-waits",
 			"jouzu-subagent-observation",
 			"jouzu-flow-waits",
 			"jouzu-flow-no-reply",
