@@ -241,6 +241,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		if (this.runtime && route.query) {
 			this.about = route.query === "about";
 			this.viewFocused = this.about;
+			this.contextFocused = false;
 			this.aboutOffset = 0;
 		}
 		this.reloadViews();

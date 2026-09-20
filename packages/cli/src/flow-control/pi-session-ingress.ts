@@ -729,7 +729,8 @@ export class PiSessionFlowIngress implements Ingress {
 		// Local flow inspection and repair must remain reachable while provider admission is blocked.
 		const localFlowCommand =
 			user && typeof captured.args[0] === "string" && /^\/flow(?:\s|$)/.test(captured.args[0].trim());
-		const localAboutCommand = user && typeof captured.args[0] === "string" && captured.args[0].trim() === "/about";
+		const localAboutCommand =
+			user && typeof captured.args[0] === "string" && /^\/about(?: |$)/.test(captured.args[0].trim());
 		if (user) this.activeUserInput++;
 		// Every send passes through here, so this is where the user speaking again releases an
 		// interrupt's hold. Automated work still waits for an idle boundary, which is what keeps it

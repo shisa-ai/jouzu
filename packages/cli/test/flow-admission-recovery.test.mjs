@@ -70,8 +70,11 @@ test("/about remains local during a hold and does not retain input or resume aut
 	t.mock.method(store, "retain", async () => {
 		throw new Error("Diagnostic commands must not need submission capacity");
 	});
-	await f.session.prompt("/about");
-	assert.ok(notices.some((notice) => notice.text.includes("fixture-build")));
+	for (const command of ["/about", "/about extra"]) {
+		const count = notices.length;
+		await f.session.prompt(command);
+		assert.ok(notices.slice(count).some((notice) => notice.text.includes("fixture-build")));
+	}
 	assert.equal(f.ingress.automatedPause(), pause);
 	assert.equal(f.bodies.length, 0);
 	assert.deepEqual(await store.snapshot(), before);

@@ -148,6 +148,27 @@ test("About opens directly, wraps runtime identity, and returns to Catalogs with
 	assert.equal(f.closes.length, 1);
 });
 
+test("routing About from the context row leaves exactly one selected control", (t) => {
+	const f = setup();
+	t.after(() => rmSync(f.root, { recursive: true, force: true }));
+	const component = new CatalogSettingsComponent({
+		context: f.context,
+		paths: f.paths,
+		runtime: { about: () => "Running Jouzu test" },
+	});
+	component.render(80);
+	component.handleInput("up");
+	assert.equal(component.contextFocused, true);
+	component.route({ view: "settings", query: "about" });
+	component.handleInput("\x1b[D");
+	assert.equal(component.contextFocused, false);
+	for (const width of [48, 80]) {
+		const rows = component.render(width);
+		assert.equal(rows.filter((row) => row.slice(2).startsWith("→ ")).length, 1);
+		assert.ok(rows.every((row) => terminalTextWidth(row) <= width));
+	}
+});
+
 test("About is reachable from catalog browse and cannot discard a catalog edit", (t) => {
 	const f = setup();
 	t.after(() => rmSync(f.root, { recursive: true, force: true }));
