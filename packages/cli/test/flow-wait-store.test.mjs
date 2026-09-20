@@ -684,3 +684,67 @@ test("a monitored wait persists its policy and check time and still validates af
 		{ code: "transition" },
 	);
 });
+
+test("derived work can observe only its own or its direct origin's execution across reopen", async (t) => {
+	const f = await fixture(t);
+	const store = f.attachment.waits;
+	await store.registerWork("parent", "host-user", 0);
+	await store.shareWork("parent", "host-user", 1, "tasks", 1);
+	await store.shareWork("parent", "host-user", 2, "bg", 2);
+	const child = await store.deriveWorkBinding(
+		{ producer: "tasks", key: ["child"] },
+		"r1",
+		{ id: "parent", revision: 3 },
+		3,
+		["bg"],
+	);
+	const sibling = await store.deriveWorkBinding(
+		{ producer: "tasks", key: ["sibling"] },
+		"r1",
+		{ id: "parent", revision: 3 },
+		3,
+		["bg"],
+	);
+	await store.registerExecution(
+		{ ...handle, workId: "parent", revision: 1, predicates: [{ until: "exit", state: "pending" }] },
+		3,
+		4,
+	);
+	await store.registerExecution(
+		{
+			...handle,
+			execution: "sibling-exec",
+			workId: sibling.id,
+			revision: 1,
+			predicates: [{ until: "exit", state: "pending" }],
+		},
+		sibling.revision,
+		4,
+	);
+	await assert.rejects(
+		store.declareOwned(
+			"tasks",
+			child.revision,
+			{ ...request("foreign", child.id), on: [{ ...handle, execution: "sibling-exec" }] },
+			5,
+			100,
+		),
+		{ code: "identity" },
+	);
+	await assert.rejects(
+		store.declareOwned(
+			"host-user",
+			3,
+			{ ...request("reverse", "parent"), on: [{ ...handle, execution: "sibling-exec" }] },
+			5,
+			100,
+		),
+		{ code: "identity" },
+	);
+	const wait = await store.declareOwned("tasks", child.revision, request("child-wait", child.id), 5, 100);
+	assert.equal(wait.state, "waiting");
+	const reopened = await f.reopen();
+	await reopened.observeExecution(handle, 2, [{ until: "exit", state: "satisfied" }], 6);
+	assert.equal((await reopened.snapshot())[0].state, "resolved");
+	assert.equal((await reopened.authoritySnapshot()).executions[0].workId, "parent");
+});

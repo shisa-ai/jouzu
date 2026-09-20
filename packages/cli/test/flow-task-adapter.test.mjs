@@ -143,6 +143,61 @@ test("installed task continuation owns background execution and waits", { timeou
 	);
 });
 
+for (const health of [false, true])
+	test(`task waits on its user turn's background job using the returned dependency (health=${health})`, {
+		timeout: 20000,
+	}, async (t) => {
+		const background = await controlledBackground(t);
+		let dependency;
+		const f = await assembledSession(t, {
+			...(await setup(t)),
+			persist: true,
+			script: (body, index) => {
+				if (index === 0) return call("bg_task", { action: "spawn", command: background.command, notifyOnExit: true });
+				if (index === 1) {
+					dependency = waitDependencyFrom(body);
+					return call("TaskCreate", { subject: "Analyze job", description: "Wait for the existing job" });
+				}
+				if (index === 2) return { text: "Task ready" };
+				if (index === 3)
+					return call("agent_wait", {
+						reason: "The analysis needs the running job's output",
+						deadline: "30m",
+						on: [{ ...dependency, health: health ? dependency.health : undefined }],
+					});
+				if (index === 4) return { text: "Waiting for the job" };
+				if (index === 5) return call("TaskUpdate", { taskId: "1", status: "completed" });
+				return { text: "Analyzed completed job" };
+			},
+		});
+		await f.session.prompt("Start a job and create its analysis task");
+		await until(f, () => f.bodies.length >= 5);
+		const waitResult = messages(f).find((message) => message.toolName === "agent_wait");
+		assert.equal(waitResult?.isError, false, JSON.stringify(waitResult));
+		const waits = await f.ingress.branch().attachment.waits.snapshot();
+		assert.equal(waits.length, 1);
+		assert.equal(waits[0].state, "waiting");
+		assert.notEqual(waits[0].workId, dependency.work.id);
+		const authority = await f.ingress.branch().attachment.waits.authoritySnapshot();
+		assert.equal(authority.work.find((work) => work.id === waits[0].workId).origin.id, dependency.work.id);
+		assert.equal(
+			authority.executions[0].workId,
+			dependency.work.id,
+			"observing a parent job does not transfer ownership",
+		);
+		await new Promise((resolve) => setTimeout(resolve, 150));
+		assert.equal(f.bodies.length, 5, "the waiting task must not churn continuations");
+		await background.release();
+		await until(f, () => f.bodies.length >= 7);
+		await f.session.waitForIdle();
+		assert.equal(f.bodies.length, 7);
+		assert.ok(
+			messages(f).every((message) => !message.isError),
+			JSON.stringify(messages(f)),
+		);
+		assert.deepEqual(f.errors, []);
+	});
+
 for (const reverseExtensions of [false, true])
 	test(`tree navigation reconnects installed task tools (reverse bridges=${reverseExtensions})`, {
 		timeout: 20000,

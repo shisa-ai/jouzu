@@ -1,6 +1,6 @@
 import { isDeepStrictEqual } from "node:util";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
-import { type FlowAuthorityExecution, requireAuthorityWork } from "./wait-authority.js";
+import { canObserveExecution, type FlowAuthorityExecution, requireAuthorityWork } from "./wait-authority.js";
 import { type FlowWaitClock, systemWaitClock } from "./wait-deadlines.js";
 import { type FlowHealthEvidence, type FlowHealthPolicy, validateFlowHealthPolicy } from "./wait-health.js";
 import type { FlowWaitStore } from "./wait-store.js";
@@ -258,26 +258,48 @@ export class FlowWaitProducerRegistry {
 		return [...this.producers.keys()];
 	}
 
-	async bindForWait(
+	/** Resolve observation access without changing the producer's execution ownership. */
+	async waitIdentity(
 		namespace: string,
 		identity: Omit<FlowExecutionIdentity, "scope">,
 		workRevision: number,
-	): Promise<void> {
+		executionWorkId?: string,
+	): Promise<Omit<FlowExecutionIdentity, "scope">> {
 		if (this.closed) throw new FlowLedgerError("stale", "Wait producer registry is closed.");
-		if (this.updating) throw new FlowLedgerError("busy", "Producer subscriptions are changing.");
 		const captured = structuredClone(identity);
 		const authority = await this.store.authoritySnapshot();
 		requireAuthorityWork(authority, captured.workId, namespace, workRevision);
 		const known = authority.executions.find(
 			(execution) => execution.producer === namespace && execution.execution === captured.execution,
 		);
-		if (known && (known.workId !== captured.workId || known.handle !== captured.handle))
+		const ownerId = executionWorkId ?? known?.workId ?? captured.workId;
+		if (
+			!canObserveExecution(authority, captured.workId, ownerId) ||
+			(known && (known.workId !== ownerId || known.handle !== captured.handle))
+		)
 			throw new FlowLedgerError("identity", "Wait execution has different ownership.");
+		return { ...captured, workId: ownerId };
+	}
+
+	async bindForWait(
+		namespace: string,
+		identity: Omit<FlowExecutionIdentity, "scope">,
+		workRevision: number,
+		executionWorkId?: string,
+	): Promise<void> {
+		if (this.updating) throw new FlowLedgerError("busy", "Producer subscriptions are changing.");
+		const captured = await this.waitIdentity(namespace, identity, workRevision, executionWorkId);
+		const authority = await this.store.authoritySnapshot();
+		const known = authority.executions.find(
+			(execution) => execution.producer === namespace && execution.execution === captured.execution,
+		);
 		if (this.closed) throw new FlowLedgerError("stale", "Wait producer registry is closed.");
 		if (known?.predicates.every((predicate) => !needsExecutionEvidence(predicate.state))) return;
 		const producer = this.producers.get(namespace);
 		if (!producer) throw new FlowLedgerError("identity", "Wait producer is not attached.");
-		if (!(await producer.flushExecution(captured.execution))) await producer.bind(captured, workRevision);
+		const owner = authority.work.find((work) => work.id === captured.workId);
+		if (!owner) throw new FlowLedgerError("identity", "Execution owner is not registered.");
+		if (!(await producer.flushExecution(captured.execution))) await producer.bind(captured, owner.revision);
 	}
 
 	/** Release listeners after every predicate is terminal; retain durable evidence and unread output. */

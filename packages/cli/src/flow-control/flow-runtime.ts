@@ -77,6 +77,7 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 	});
 	const waitTools = createFlowWaitExtension({
 		attachment: () => ingress().branch().attachment,
+		currentWork: () => ingress().branch().workContext.current(),
 		authorize: (workId) => ingress().branch().workContext.authorize(workId),
 		enabled,
 		maxDurationMs: limits.maxWaitDurationMs,

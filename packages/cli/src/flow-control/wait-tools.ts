@@ -8,7 +8,7 @@ import { waitToolResponse } from "./wait-tool-response.js";
 
 export const FLOW_WAIT_GUIDANCE = [
 	"Flow control coordinates automated continuations, dependency waits, and completion notifications. Workflow tools track the requested work; a wait holds its next automatic turn while a dependency runs. Ending your turn leaves that work and its background jobs in place.",
-	"Continue independent work while dependencies run. When remaining work depends on asynchronous execution, call agent_wait with the owning work and exact dependency values returned by the producer's tools. Do not invent handles or borrow a work ID from an unrelated turn; if ownership is refused, report the blocker instead of repeatedly retrying.",
+	"Continue independent work while dependencies run. When remaining work depends on asynchronous execution, call agent_wait with the exact dependency values returned by the producer's tools. Omit work to wait as the current task or invocation; flowInput IDs identify messages, not work. A task may also wait on a job owned by its direct parent invocation. Do not invent handles or borrow a work ID from an unrelated turn; if ownership is refused, report the blocker instead of repeatedly retrying.",
 	"State the dependency in the reason and choose a hard deadline with bounded slack for its expected duration. The returned expiresAt is the effective deadline after the session cap; expiry is a decision point, not proof the job stopped.",
 	"Request health only with a policy name offered for that execution. Without one, the wait is deadline-only. checkAfter needs a monitored dependency. Health may end a wait early as unhealthy or health-unknown; it never extends the deadline.",
 	"After agent_wait returns waiting and no independent work remains, briefly state what is running, what will unblock you, and what you will verify, then end the turn. Trust completion delivery; do not poll status, add timer-based checks, or create extra continuations merely to stay active. Inspect logs for a concrete diagnostic question or an explicit user request.",
@@ -26,7 +26,7 @@ export function flowWaitGuidance(activeTools: readonly string[]): string[] {
 		...FLOW_WAIT_GUIDANCE,
 		...(tools.has("bg_task")
 			? [
-					"With bg_task, keep exit notifications enabled when relying on its completion wake; notifyOnExit: false suppresses that result notification. Use the returned wait dependency to hold task or loop continuation while the job runs.",
+					"With bg_task, keep exit notifications enabled when relying on its completion wake; notifyOnExit: false suppresses that result notification. Copy the returned Wait dependency object into agent_wait.on, including its work and scope; omit agent_wait.work so the current task waits. The dependency work identifies the job owner, not the task to suspend.",
 				]
 			: []),
 		...(tools.has("TaskUpdate")
@@ -44,6 +44,8 @@ export function flowWaitGuidance(activeTools: readonly string[]): string[] {
 
 export interface FlowWaitToolOptions {
 	attachment(): PiFlowAttachment;
+	/** The work selected by the host for this tool invocation. */
+	currentWork?(): { id: string; revision: number } | undefined;
 	/** Host authority for the requested work, captured for this tool invocation. */
 	authorize(workId: string): { actor: string; revision: number; assertActive(): void };
 	enabled?(): boolean;
@@ -51,10 +53,10 @@ export interface FlowWaitToolOptions {
 	now?(): number;
 }
 interface WaitArguments {
-	work: string;
+	work?: string;
 	reason: string;
 	deadline: string;
-	on: FlowWaitHandle[];
+	on: (FlowWaitHandle & { work?: { id: string; revision: number }; scope?: { sessionId: string; branchId: string } })[];
 	mode?: "all" | "any";
 	replaceToken?: string;
 	checkAfter?: string;
@@ -64,9 +66,12 @@ const reason = { type: "string", minLength: 1, maxLength: 4096 };
 const waitSchema = {
 	type: "object",
 	additionalProperties: false,
-	required: ["work", "reason", "deadline", "on"],
+	required: ["reason", "deadline", "on"],
 	properties: {
-		work: string,
+		work: {
+			...string,
+			description: "Omit to use the current invocation. If supplied, must exactly match its work ID.",
+		},
 		reason,
 		deadline: { type: "string", pattern: "^[1-9][0-9]*(ms|s|m|h|d)$" },
 		checkAfter: { type: "string", pattern: "^[1-9][0-9]*(ms|s|m|h|d)$" },
@@ -80,7 +85,26 @@ const waitSchema = {
 				type: "object",
 				additionalProperties: false,
 				required: ["producer", "handle", "execution", "until"],
-				properties: { producer: string, handle: string, execution: string, until: string, health: string },
+				properties: {
+					producer: string,
+					handle: string,
+					execution: string,
+					until: string,
+					health: string,
+					work: {
+						type: "object",
+						additionalProperties: false,
+						required: ["id", "revision"],
+						properties: { id: string, revision: { type: "integer", minimum: 1 } },
+						description: "Execution owner returned by the producer. Copy this when waiting from a different task.",
+					},
+					scope: {
+						type: "object",
+						additionalProperties: false,
+						required: ["sessionId", "branchId"],
+						properties: { sessionId: string, branchId: string },
+					},
+				},
 			},
 		},
 	},
@@ -120,7 +144,7 @@ function duration(value: unknown): number {
 }
 function parseWait(raw: unknown): WaitArguments {
 	fields(raw, ["work", "reason", "deadline", "checkAfter", "on", "mode", "replaceToken"]);
-	text(raw.work);
+	if (raw.work !== undefined) text(raw.work);
 	text(raw.reason, 4096);
 	duration(raw.deadline);
 	if (raw.mode !== undefined && !["all", "any"].includes(raw.mode as string))
@@ -132,7 +156,18 @@ function parseWait(raw: unknown): WaitArguments {
 		throw new FlowLedgerError("schema", "A wait requires 1 to 64 exact dependencies.");
 	const seen = new Set<string>();
 	for (const handle of raw.on) {
-		fields(handle, ["producer", "handle", "execution", "until", "health"]);
+		fields(handle, ["producer", "handle", "execution", "until", "health", "work", "scope"]);
+		if (handle.work !== undefined) {
+			fields(handle.work, ["id", "revision"]);
+			text(handle.work.id);
+			if (!Number.isSafeInteger(handle.work.revision) || (handle.work.revision as number) < 1)
+				throw new FlowLedgerError("schema", "Invalid execution owner revision.");
+		}
+		if (handle.scope !== undefined) {
+			fields(handle.scope, ["sessionId", "branchId"]);
+			text(handle.scope.sessionId);
+			text(handle.scope.branchId);
+		}
 		for (const name of ["producer", "handle", "execution", "until"]) text(handle[name]);
 		if (handle.health !== undefined) text(handle.health);
 		const key = JSON.stringify([handle.producer, handle.handle, handle.execution, handle.until]);
@@ -177,7 +212,7 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 				name: "agent_wait",
 				label: "Wait for dependencies",
 				description:
-					"Declare a durable dependency wait for authorized work. Use exact producer/handle/execution/until values returned by producer tools, and a health policy only where that tool offered one. A successful waiting result gates that work until completion, failure, cancellation, a health decision, or the capped hard deadline. Replacement requires replaceToken.",
+					"Declare a durable dependency wait for the current invocation; omit work to select it automatically. Use exact producer/handle/execution/until values returned by producer tools, and a health policy only where that tool offered one. A successful waiting result gates that work until completion, failure, cancellation, a health decision, or the capped hard deadline. Replacement requires replaceToken.",
 				promptSnippet: "agent_wait: wait for exact asynchronous dependencies with a hard deadline.",
 				promptGuidelines: FLOW_WAIT_GUIDANCE,
 				parameters: waitSchema,
@@ -187,19 +222,37 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 						attachment = options.attachment();
 					if (attachment.ledger.scope.sessionId !== ctx.sessionManager.getSessionId())
 						throw new FlowLedgerError("scope", "Wait tool belongs to another session.");
-					const authority = access(attachment, args.work, signal);
+					const workId = args.work ?? options.currentWork?.()?.id;
+					if (!workId) throw new FlowLedgerError("identity", "Waiting requires a current authorized work invocation.");
+					const authority = access(attachment, workId, signal);
+					for (const handle of args.on) {
+						if (
+							handle.scope &&
+							(handle.scope.sessionId !== attachment.ledger.scope.sessionId ||
+								handle.scope.branchId !== attachment.ledger.scope.branchId)
+						)
+							throw new FlowLedgerError("scope", "Dependency belongs to another session or branch.");
+					}
 					const expiresAt = now() + Math.min(duration(args.deadline), maxDurationMs);
 					if (!Number.isSafeInteger(expiresAt))
 						throw new FlowLedgerError("schema", "Wait expiry exceeds the supported time range.");
 					// Resolve every requested policy before binding anything: an unsupported policy must fail
 					// without parking a subscription the failed declaration would then leave behind.
 					const monitored = args.on.filter((handle) => handle.health !== undefined);
-					for (const handle of monitored) {
-						attachment.waitProducers.requireHealthPolicy(
+					const owners = new Map<string, string>();
+					for (const handle of args.on) {
+						const identity = await attachment.waitProducers.waitIdentity(
 							handle.producer,
-							{ workId: args.work, handle: handle.handle, execution: handle.execution },
-							handle.health as string,
+							{ workId, handle: handle.handle, execution: handle.execution },
+							authority.revision,
+							handle.work?.id,
 						);
+						authority.check();
+						const key = JSON.stringify([handle.producer, handle.execution]);
+						if (owners.has(key) && owners.get(key) !== identity.workId)
+							throw new FlowLedgerError("identity", "Wait predicates disagree on execution ownership.");
+						owners.set(key, identity.workId);
+						if (handle.health) attachment.waitProducers.requireHealthPolicy(handle.producer, identity, handle.health);
 						authority.check();
 					}
 					// An expected check exists to reconcile health early. With no monitored dependency there
@@ -216,8 +269,9 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 						if (!bound.has(key)) {
 							await attachment.waitProducers.bindForWait(
 								handle.producer,
-								{ workId: args.work, handle: handle.handle, execution: handle.execution },
+								{ workId, handle: handle.handle, execution: handle.execution },
 								authority.revision,
+								owners.get(key),
 							);
 							bound.add(key);
 						}
@@ -229,11 +283,11 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 							authority.revision,
 							{
 								scope: { ...attachment.ledger.scope },
-								workId: args.work,
+								workId,
 								token: randomUUID(),
 								reason: args.reason,
 								mode: args.mode ?? "all",
-								on: args.on,
+								on: args.on.map(({ work: _work, scope: _scope, ...handle }) => handle),
 								...(checkAt === undefined ? {} : { checkAt }),
 								expiresAt,
 							},

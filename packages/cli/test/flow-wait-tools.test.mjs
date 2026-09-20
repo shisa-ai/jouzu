@@ -186,6 +186,9 @@ test("wait tool rejects unsupported health, malformed dependencies, and foreign 
 		{ ...request(), deadline: "999999999999999999999h" },
 		{ ...request(), on: [{ ...handle, handle: "unknown" }] },
 		{ ...request(), mode: "none" },
+		{ ...request(), on: [{ ...handle, work: { id: "foreign", revision: 1 } }] },
+		{ ...request(), on: [{ ...handle, work: { id: "work", revision: 0 } }] },
+		{ ...request(), on: [{ ...handle, scope: { sessionId: "foreign", branchId: "branch" } }] },
 	])
 		await assert.rejects(f.call("agent_wait", args));
 	f.revision = 1;

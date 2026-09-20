@@ -385,3 +385,48 @@ test("an unanswered probe times out and aborts before the health decision", asyn
 	assert.deepEqual(f.probes, ["exec"]);
 	assert.deepEqual(f.errors, []);
 });
+
+test("child wait health uses the parent execution policy without ending its execution", async (t) => {
+	const owners = [];
+	const f = await fixture(t, {
+		policyFor: (_handle, owner) => {
+			owners.push(owner);
+			return owner === "work" ? policy : undefined;
+		},
+	});
+	await f.store.shareWork("work", "lane", 2, "tasks", 1);
+	const child = await f.store.deriveWorkBinding(
+		{ producer: "tasks", key: ["child"] },
+		"r1",
+		{ id: "work", revision: 3 },
+		1,
+		["bg"],
+	);
+	await f.store.declareOwned(
+		"tasks",
+		child.revision,
+		{
+			token: "child",
+			scope,
+			workId: child.id,
+			reason: "Observe parent",
+			mode: "all",
+			on: [monitored],
+			expiresAt: 100000,
+		},
+		1,
+		100000,
+	);
+	await f.store.observeExecutionHealth(
+		monitored,
+		{ policy: policy.name, revision: 1, observedAt: 1, state: "unhealthy" },
+		1,
+	);
+	await f.time.advance(1);
+	await f.monitor.refresh();
+	assert.equal((await f.store.snapshot()).find((wait) => wait.token === "child").state, "unhealthy");
+	assert.ok(owners.length >= 2);
+	assert.ok(owners.every((owner) => owner === "work"));
+	assert.equal((await f.store.authoritySnapshot()).executions[0].predicates[0].state, "pending");
+	assert.deepEqual(f.errors, []);
+});
