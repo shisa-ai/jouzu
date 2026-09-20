@@ -2,6 +2,7 @@ import { createHash, randomUUID } from "node:crypto";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import { type AssistantMessage, getCurrentSystemPrompt, type Message } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
+import { cacheWarmAdmission } from "./cache-warm-admission.js";
 import { flowDiagnosticText } from "./diagnostic-text.js";
 import {
 	captureNativeProjections,
@@ -56,6 +57,7 @@ function nativeFailure(
 export class PiNativeRequests {
 	private readonly hooks = new PiHostHooks();
 	private readonly enabled: () => boolean;
+	private warmGeneration = 0;
 	private pending?: string;
 	private executing?: string;
 	get queueingBlocked(): boolean {
@@ -387,6 +389,7 @@ export class PiNativeRequests {
 				}
 			},
 			beforeRequest: async (input, signal) => {
+				this.warmGeneration++;
 				this.assertActive();
 				this.active++;
 				try {
@@ -585,6 +588,21 @@ export class PiNativeRequests {
 			};
 			const composed = this.composed;
 			this.composed = undefined;
+			const warmGeneration = this.warmGeneration;
+			const warming = cacheWarmAdmission({
+				session,
+				store,
+				requestId: id,
+				model,
+				context,
+				maxBytes,
+				members: prepared?.capture?.members ?? [],
+				assertCurrent: () => {
+					this.assertActive();
+					if (warmGeneration !== this.warmGeneration)
+						throw new FlowLedgerError("stale", "Cache refresh was replaced by a new request.");
+				},
+			});
 			const withheld = async (error?: unknown) => {
 				if (handedOff) return;
 				if (error !== undefined)
@@ -601,6 +619,7 @@ export class PiNativeRequests {
 				const response = await native(model, context, {
 					...options,
 					...(flowValidateProvider ? { flowValidateProvider } : {}),
+					...{ flowCacheWarm: warming.refresh },
 					onPayload: async (payload, requestModel) => {
 						try {
 							this.assertActive();
@@ -617,6 +636,7 @@ export class PiNativeRequests {
 								requestModel.id !== model.id
 							)
 								throw new FlowLedgerError("identity", "Native provider identity changed during conversion.");
+							const rawPayload = copyFlowPayload(payload, model.api).owned;
 							const replacement = await options?.onPayload?.(payload, requestModel);
 							this.assertActive();
 							options?.signal?.throwIfAborted();
@@ -643,6 +663,7 @@ export class PiNativeRequests {
 							if (composed) await this.composition?.handedOff(composed, options?.signal);
 							this.assertActive();
 							options?.signal?.throwIfAborted();
+							warming.capture(rawPayload, owned);
 							return owned;
 						} catch (error) {
 							admissionFailure = { error };

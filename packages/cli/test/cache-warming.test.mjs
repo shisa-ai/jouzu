@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import { test } from "node:test";
 import {
 	CacheWarmer,
@@ -180,11 +181,12 @@ test("refresh failure does not add usage and can be cancelled", async (t) => {
 	}
 });
 
-test("parent warming cannot reuse a conversational payload admission", async (t) => {
+test("parent warming uses separate admission without consuming conversational work", async (t) => {
 	const entered = deferred(),
 		release = deferred();
 	let first = true;
 	const f = await assembledSession(t, {
+		persist: true,
 		producerExtensions: [
 			(pi) => {
 				pi.on("cache_warming_decision", () => ({ action: "warm" }));
@@ -222,6 +224,7 @@ test("parent warming cannot reuse a conversational payload admission", async (t)
 			};
 		},
 	};
+	const initialErrors = [...f.errors];
 	const prompt = f.session.prompt("Run warming_probe then finish.");
 	try {
 		await entered.promise;
@@ -229,15 +232,35 @@ test("parent warming cannot reuse a conversational payload admission", async (t)
 		assert.ok(run);
 		clearTimeout(run.timer);
 		await warmer.refresh(run);
+		assert.equal(warmResult.stopReason, "stop");
+		assert.equal(f.bodies.length, 2, "the refresh should reach the loopback provider");
+		assert.deepEqual(f.bodies[1].messages, f.bodies[0].messages);
+		assert.deepEqual(f.bodies[1].tools, f.bodies[0].tools);
+		assert.equal(f.bodies[1].max_tokens ?? f.bodies[1].max_completion_tokens, 1);
+		assert.equal(f.sessionManager.getEntries().filter((entry) => entry.type === "usage").length, 1);
+		const receipts = f.sessionManager.getEntries().filter((entry) => entry.customType === "jouzu-cache-warm-request");
+		assert.equal(receipts.length, 2);
+		assert.equal(receipts[0].data.phase, "handoff");
+		assert.equal(receipts[1].data.phase, "settled");
+		assert.equal(receipts[0].data.id, receipts[1].data.id);
+		// A changed replay is refused without poisoning the real turn or adding usage.
+		clearTimeout(run.timer);
+		const originalContext = run.context;
+		run.context = { ...run.context, messages: [] };
+		await warmer.refresh(run);
+		run.context = originalContext;
+		assert.equal(f.bodies.length, 2);
 		assert.equal(warmResult.stopReason, "error");
-		assert.match(warmResult.errorMessage, /Native payload admission was repeated or outlived its request/);
-		assert.equal(f.bodies.length, 1, "a repeated admission must not send another provider request");
-		assert.equal(f.sessionManager.getEntries().filter((entry) => entry.type === "usage").length, 0);
+		assert.equal(f.sessionManager.getEntries().filter((entry) => entry.type === "usage").length, 1);
 	} finally {
 		release.resolve();
 		await prompt;
 	}
-	assert.equal(f.bodies.length, 2);
+	assert.equal(f.bodies.length, 3);
 	assert.equal(f.session.messages.at(-1).stopReason, "stop");
 	assert.equal(warmer.run, undefined);
+	assert.deepEqual(f.errors, initialErrors);
+	const persisted = (await readFile(f.sessionManager.getSessionFile(), "utf8")).trim().split("\n").map(JSON.parse);
+	assert.equal(persisted.filter((entry) => entry.customType === "jouzu-cache-warm-request").length, 2);
+	assert.equal(persisted.filter((entry) => entry.type === "usage" && entry.kind === "cache_warm").length, 1);
 });

@@ -9,7 +9,24 @@ export function transform(path, source) {
 	const change = (before, after, count) => {
 		text = replace(text, before, after, count);
 	};
-	if (path === "dist/core/model-runtime.js") {
+	if (path === "dist/core/cache-warmer.js") {
+		change(
+			`            const message = await this.models
+                .streamSimple(run.model, run.context, {`,
+			`            const options = {`,
+		);
+		change(
+			`                signal: run.controller.signal,
+            })
+                .result();`,
+			`                signal: run.controller.signal,
+            };
+            const send = (admittedOptions) => this.models.streamSimple(run.model, run.context, admittedOptions).result();
+            const message = run.options.flowCacheWarm
+                ? await run.options.flowCacheWarm(options, send)
+                : await send(options);`,
+		);
+	} else if (path === "dist/core/model-runtime.js") {
 		text = 'import { isBuiltinApiProvider } from "@earendil-works/pi-ai/compat";\n' + text;
 		change(
 			"    getRegisteredProviderConfig(providerId) {",
@@ -1222,4 +1239,5 @@ export const paths = [
 	"dist/core/session-manager.d.ts",
 	"dist/core/model-runtime.js",
 	"dist/core/model-runtime.d.ts",
+	"dist/core/cache-warmer.js",
 ];
