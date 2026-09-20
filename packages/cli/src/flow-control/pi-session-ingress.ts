@@ -729,21 +729,23 @@ export class PiSessionFlowIngress implements Ingress {
 		// Local flow inspection and repair must remain reachable while provider admission is blocked.
 		const localFlowCommand =
 			user && typeof captured.args[0] === "string" && /^\/flow(?:\s|$)/.test(captured.args[0].trim());
+		const localAboutCommand = user && typeof captured.args[0] === "string" && captured.args[0].trim() === "/about";
 		if (user) this.activeUserInput++;
 		// Every send passes through here, so this is where the user speaking again releases an
 		// interrupt's hold. Automated work still waits for an idle boundary, which is what keeps it
 		// out of the very turn being submitted: the hold ends, the queue does not jump.
 		const flowCommand = typeof captured.args[0] === "string" && /^\/flow(?:\s|$)/.test(captured.args[0].trim());
 		// Inspection must not release a hold. Flow commands perform their own explicit state changes.
-		if (user && !flowCommand) this.resumeAutomated();
+		if (user && !flowCommand && !localAboutCommand) this.resumeAutomated();
 		return this.track(async () => {
 			const branch = this.branch();
 			if (
-				localFlowCommand &&
-				(branch.host.gate().recoveryBlocked ||
-					/^\/flow(?:\s+(?:details(?:\s+[1-9]\d{0,5})?|runtime|reset|clear))?$/.test(
-						(captured.args[0] as string).trim(),
-					))
+				localAboutCommand ||
+				(localFlowCommand &&
+					(branch.host.gate().recoveryBlocked ||
+						/^\/flow(?:\s+(?:details(?:\s+[1-9]\d{0,5})?|runtime|reset|clear))?$/.test(
+							(captured.args[0] as string).trim(),
+						)))
 			) {
 				await dispatch();
 				return;

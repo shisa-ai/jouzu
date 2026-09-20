@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { test } from "node:test";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
+import { createJouzuModelPicker } from "../dist/model-picker.js";
+import { resolveJouzuPaths } from "../dist/paths.js";
 import {
 	assembledSession,
 	capturedNotices,
@@ -9,13 +14,14 @@ import {
 } from "./fixtures/flow-assembly.mjs";
 import { nativeRequests } from "./fixtures/native-requests.mjs";
 
-async function withheldSession(t) {
+async function withheldSession(t, extraExtensions = []) {
 	let filter = true;
 	const producers = await installedProducerExtensions();
 	const f = await assembledSession(t, {
 		persist: true,
 		producerExtensions: [
 			...producers,
+			...extraExtensions,
 			{
 				name: "withhold-required-input",
 				factory(pi) {
@@ -47,6 +53,28 @@ test("payload admission retains its original failure instead of replacing it wit
 	const f = await withheldSession(t);
 	assert.match(f.session.agent.state.errorMessage, /required input was changed or unresolved/);
 	assert.doesNotMatch(f.session.agent.state.errorMessage, /returned without payload admission/);
+});
+
+test("/about remains local during a hold and does not retain input or resume automation", async (t) => {
+	const root = await mkdtemp(join(tmpdir(), "jouzu-about-held-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const integration = createJouzuModelPicker(resolveJouzuPaths({ homeOverride: root }), {
+		runtime: { about: () => "Running Jouzu fixture-build\nPi fixture" },
+	});
+	const f = await withheldSession(t, [integration.extension]);
+	const notices = capturedNotices(f.session);
+	const store = f.ingress.branch().attachment.submissions;
+	const before = await store.snapshot();
+	const pause = f.ingress.automatedPause();
+	assert.ok(pause);
+	t.mock.method(store, "retain", async () => {
+		throw new Error("Diagnostic commands must not need submission capacity");
+	});
+	await f.session.prompt("/about");
+	assert.ok(notices.some((notice) => notice.text.includes("fixture-build")));
+	assert.equal(f.ingress.automatedPause(), pause);
+	assert.equal(f.bodies.length, 0);
+	assert.deepEqual(await store.snapshot(), before);
 });
 
 test("/flow reports a withheld request through the recovery gate without retaining a command", async (t) => {
