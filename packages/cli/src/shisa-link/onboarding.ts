@@ -13,7 +13,7 @@ import { loginShisa, type ShisaLoginOptions } from "./login.js";
 /** Keep account messaging separate from the first-launch decision and login protocol. */
 export const SHISA_ONBOARDING_COPY = {
 	points: [
-		"Connect to Shisa AI for access to the latest open coding models (Qwen, GLM, etc).",
+		"Connect to Shisa AI for the latest open coding models (Qwen, GLM, etc).",
 		"New signups get $10 instant credits. Add a credit card for $25 more.",
 	],
 	question: "Connect now? [y/N] ",

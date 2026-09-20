@@ -234,7 +234,7 @@ test("unknown terminal width uses readable prose wrapping", async (t) => {
 	const h = harness(t);
 	h.output.columns = 0;
 	await offerShisaOnboarding(h.options);
-	assert.match(h.text(), /Connect to Shisa AI for access/);
+	assert.match(h.text(), /Connect to Shisa AI for the latest/);
 });
 
 const ESCAPE = "\u001b";
