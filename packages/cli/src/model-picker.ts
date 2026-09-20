@@ -67,6 +67,7 @@ import {
 } from "./palette.js";
 import type { JouzuPaths } from "./paths.js";
 import { detectBannerColorMode, renderBrandGradient } from "./presentation.js";
+import type { RuntimeDiagnostics } from "./runtime-diagnostics.js";
 import type { SessionUiStyles } from "./session-ui/index.js";
 import { onShisaAuthChange } from "./shisa-link/credentials.js";
 import { createWorkflowIntegration } from "./subagents/integration.js";
@@ -90,6 +91,7 @@ export interface JouzuModelPickerRequest {
 }
 
 export interface JouzuModelPickerOptions {
+	runtime?: RuntimeDiagnostics;
 	textguardFiles?: boolean;
 	/** Reads the live TextGuard mode when a child agent launches. */
 	textguardMode?: () => TextGuardMode;
@@ -1054,6 +1056,18 @@ export function createJouzuModelPicker(
 					}
 				},
 			});
+			if (options.runtime)
+				pi.registerCommand?.("about", {
+					description: "Show Jouzu runtime and installed builds",
+					handler: async (_args, ctx) => {
+						activeCtx = ctx;
+						if (ctx.mode !== "tui") {
+							ctx.ui.notify(options.runtime?.about() ?? "Runtime diagnostics are unavailable.", "info");
+							return;
+						}
+						await openPalette({ view: "settings", query: "about" });
+					},
+				});
 			pi.on("session_start", async (event, ctx) => {
 				activeCtx = ctx;
 				removeShisaAuthListener ??= onShisaAuthChange(paths, reloadCatalogs);
@@ -1408,9 +1422,11 @@ export function createJouzuModelPicker(
 								},
 							}),
 						workflow: (childContext, route) => new WorkflowComponent(childContext, workflow.service, route),
-						settings: (childContext) =>
+						settings: (childContext, route) =>
 							new CatalogSettingsComponent({
 								context: childContext,
+								initialRoute: route,
+								runtime: options.runtime,
 								paths,
 								env: catalogEnv,
 								onCatalogsChanged: reloadCatalogs,
@@ -1424,7 +1440,7 @@ export function createJouzuModelPicker(
 	const open = async (request: JouzuModelPickerRequest): Promise<boolean> =>
 		openPalette({ view: "models", ...(request.initialSearchInput ? { query: request.initialSearchInput } : {}) });
 
-	const openSettings = async (): Promise<boolean> => openPalette({ view: "settings" });
+	const openSettings = async (): Promise<boolean> => openPalette({ view: "settings", query: "catalogs" });
 
 	const modelsOpenText = (): string => {
 		// Pi installs the app-level manager as the global registry when the TUI

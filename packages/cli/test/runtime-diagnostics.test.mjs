@@ -4,11 +4,45 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { stripVTControlCharacters } from "node:util";
+import { InteractiveMode, initTheme } from "@earendil-works/pi-coding-agent";
 import { createFlowStatusExtension } from "../dist/flow-control/flow-status-extension.js";
 import { createReleaseExtensionDiagnostics } from "../dist/release-extensions.js";
 import { createRuntimeDiagnostics } from "../dist/runtime-diagnostics.js";
 
 const metadata = { displayVersion: "test-build", piVersion: "test-pi", lock: { deviations: [] } };
+test("native session report appends the host runtime line after the existing statistics", () => {
+	initTheme("dark");
+	for (const footer of [undefined, () => "Runtime: Jouzu startup-build · Pi test-pi"]) {
+		const components = [];
+		InteractiveMode.prototype.handleSessionCommand.call({
+			options: { sessionInfoFooter: footer },
+			session: {
+				getSessionStats: () => ({
+					sessionId: "session",
+					sessionFile: "session.jsonl",
+					totalMessages: 3,
+					userMessages: 1,
+					assistantMessages: 2,
+					toolCalls: 0,
+					toolResults: 0,
+					tokens: { input: 10, cacheRead: 0, cacheWrite: 0, output: 5, total: 15 },
+					cost: 0,
+				}),
+			},
+			sessionManager: { getSessionName: () => undefined, getEntries: () => [] },
+			chatContainer: { addChild: (child) => components.push(child) },
+			ui: { requestRender() {} },
+		});
+		const text = stripVTControlCharacters(components.flatMap((component) => component.render(160)).join("\n"));
+		assert.match(text, /Session Info/);
+		assert.match(text, /Total: 15/);
+		if (footer) {
+			assert.ok(text.indexOf("Runtime:") > text.indexOf("Total: 15"));
+			assert.match(text, /Jouzu startup-build/);
+		} else assert.doesNotMatch(text, /Runtime:/);
+	}
+});
 test("runtime identity uses resolved files and preserves startup evidence after replacement", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "jouzu-runtime-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
@@ -32,6 +66,10 @@ test("runtime identity uses resolved files and preserves startup evidence after 
 	assert.match(diagnostics.report(), /Installed Jouzu next-build/);
 	assert.ok(diagnostics.report().includes(hash));
 	assert.equal(diagnostics.warnings().length, 1);
+	assert.equal(diagnostics.summary(), "Runtime: Jouzu test-build · Pi test-pi · restart available");
+	assert.match(diagnostics.about(), /Running Jouzu test-build/);
+	assert.match(diagnostics.about(), /Installed Jouzu next-build/);
+	assert.doesNotMatch(diagnostics.about(), /adapter\.ts|SHA-256/);
 	const restarted = createRuntimeDiagnostics(
 		installed,
 		{ tasks: root },
@@ -56,6 +94,8 @@ test("unreadable build metadata never blocks diagnostics and does not claim an u
 	);
 	assert.deepEqual(diagnostics.warnings(), []);
 	assert.match(diagnostics.report(), /Installed Jouzu unavailable/);
+	assert.equal(diagnostics.summary(), "Runtime: Jouzu test-build · Pi test-pi");
+	assert.match(diagnostics.about(), /Installed Jouzu unavailable/);
 });
 test("runtime warnings are once per session and use stderr outside the UI", async (t) => {
 	const handlers = new Map(),

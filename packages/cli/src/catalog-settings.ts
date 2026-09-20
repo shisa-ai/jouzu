@@ -39,6 +39,7 @@ import {
 } from "./palette.js";
 import type { JouzuPaths } from "./paths.js";
 import { detectBannerColorMode, renderBrandGradient } from "./presentation.js";
+import type { RuntimeDiagnostics } from "./runtime-diagnostics.js";
 import type { SessionUiStyleRole, SessionUiStyles } from "./session-ui/index.js";
 import {
 	fitTerminalText,
@@ -60,6 +61,8 @@ interface CatalogSettingsOptions {
 		options?: RefreshCatalogOptions,
 	) => Promise<CatalogRefreshResult>;
 	onCatalogsChanged?: () => void;
+	runtime?: Pick<RuntimeDiagnostics, "about">;
+	initialRoute?: PaletteRoute;
 }
 
 type FormField = "label" | "url" | "auth" | "credential" | "token";
@@ -177,6 +180,11 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	private readonly refreshSource: NonNullable<CatalogSettingsOptions["refresh"]>;
 	private readonly onCatalogsChanged?: () => void;
 	private readonly wordmark: string;
+	private readonly runtime?: Pick<RuntimeDiagnostics, "about">;
+	private about = false;
+	private viewFocused = false;
+	private aboutOffset = 0;
+	private aboutCapacity = 1;
 	private views: SourceView[] = [];
 	private selectedIndex = 0;
 	private contextFocused = false;
@@ -211,9 +219,12 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		this.refreshSource = options.refresh ?? refreshCatalogSource;
 		this.onCatalogsChanged = options.onCatalogsChanged;
 		this.wordmark = renderBrandGradient("JOUZU", detectBannerColorMode());
+		this.runtime = options.runtime;
+		this.about = !!this.runtime && options.initialRoute?.query === "about";
+		this.viewFocused = this.about;
 		this.reloadViews();
 		this.reloadContextPolicy();
-		if (this.views.length === 0 && !this.message) this.startForm("add");
+		if (!this.about && this.views.length === 0 && !this.message) this.startForm("add");
 	}
 
 	get focused(): boolean {
@@ -226,9 +237,18 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	}
 
 	route(route: PaletteRoute): void {
-		if (route.view !== "settings") return;
+		if (route.view !== "settings" || !this.allowsGlobalNavigation()) return;
+		if (this.runtime && route.query) {
+			this.about = route.query === "about";
+			this.viewFocused = this.about;
+			this.aboutOffset = 0;
+		}
 		this.reloadViews();
 		this.tui.requestRender();
+	}
+
+	snapshotRoute(): PaletteRoute {
+		return { view: "settings", query: this.about ? "about" : "catalogs" };
 	}
 
 	allowsGlobalNavigation(): boolean {
@@ -512,6 +532,44 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	}
 
 	handleInput(data: string): void {
+		if (this.runtime && this.allowsGlobalNavigation() && (this.viewFocused || this.about)) {
+			if (
+				matchesKey(data, "left") ||
+				matchesKey(data, "right") ||
+				this.keybindings.matches(data, "tui.select.confirm")
+			) {
+				this.about = !this.about;
+				this.viewFocused = true;
+				this.aboutOffset = 0;
+				this.message = undefined;
+				this.tui.requestRender();
+				return;
+			}
+			if (this.keybindings.matches(data, "tui.select.cancel")) {
+				this.close();
+				return;
+			}
+			if (this.about) {
+				const up = this.keybindings.matches(data, "tui.select.up");
+				const down = this.keybindings.matches(data, "tui.select.down");
+				const pageUp = this.keybindings.matches(data, "tui.select.pageUp");
+				const pageDown = this.keybindings.matches(data, "tui.select.pageDown");
+				if (up || down || pageUp || pageDown) {
+					this.aboutOffset = Math.max(
+						0,
+						this.aboutOffset + (up || pageUp ? -1 : 1) * (pageUp || pageDown ? this.aboutCapacity : 1),
+					);
+					this.tui.requestRender();
+				}
+				return;
+			}
+			if (this.keybindings.matches(data, "tui.select.down")) {
+				this.viewFocused = false;
+				this.contextFocused = this.contextRowVisible;
+				this.tui.requestRender();
+			}
+			return;
+		}
 		if (this.message && this.message.text === this.messageIdentity && this.messageCapacity > 0) {
 			const previous = this.keybindings.matches(data, "tui.select.pageUp");
 			const next = this.keybindings.matches(data, "tui.select.pageDown");
@@ -584,6 +642,12 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			return;
 		}
 		if (this.keybindings.matches(data, "tui.select.up")) {
+			if (this.runtime && (this.contextFocused || (this.selectedIndex === 0 && !this.contextRowVisible))) {
+				this.contextFocused = false;
+				this.viewFocused = true;
+				this.tui.requestRender();
+				return;
+			}
 			if (this.contextFocused) return;
 			if (this.selectedIndex === 0 && this.views.length > 0 && this.contextRowVisible) {
 				this.contextFocused = true;
@@ -835,6 +899,14 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 				{ key: confirm, label: "remove" },
 				{ key: cancel, label: "cancel" },
 			];
+		if (this.viewFocused || this.about)
+			return [
+				{ key: confirm, label: "change view" },
+				{ key: "←→", label: "view" },
+				{ key: move, label: this.about ? "scroll" : "move" },
+				{ key: "Tab/Shift+Tab", label: "section" },
+				{ key: cancel, label: "close" },
+			];
 		if (this.contextFocused)
 			return [
 				{ key: "←→", label: "context limit" },
@@ -1066,7 +1138,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 						meta: countLabel(count),
 						labelWidth: SOURCE_LABEL_COLUMN,
 						innerWidth,
-						selected: isSelected,
+						selected: isSelected && !this.viewFocused && !this.contextFocused,
 						theme: this.theme,
 						styles: this.styles,
 					}),
@@ -1151,7 +1223,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	}
 
 	render(width: number): string[] {
-		const title = `${this.wordmark} ${this.theme.bold(this.styles.apply("palette.title", "· Settings / Catalogs"))}`;
+		const title = `${this.wordmark} ${this.theme.bold(this.styles.apply("palette.title", `· Settings / ${this.about ? "About" : "Catalogs"}`))}`;
 		if (width < 12) return [fitTerminalText(title, Math.max(1, width))];
 		const border = (value: string) => this.styles.apply("palette.border", value);
 		const frameOptions = { border };
@@ -1161,19 +1233,49 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		if (!this.form && !this.confirmRemove) {
 			head.push(line(renderPaletteTabs("settings", this.theme, this.styles)));
 			head.push(renderPaletteDivider(width, this.styles));
+			if (this.runtime)
+				head.push(
+					line(
+						renderPaletteField({
+							label: "View",
+							value: paletteChoice(this.about ? "About" : "Catalogs"),
+							labelWidth: 8,
+							innerWidth,
+							selected: this.viewFocused || this.about,
+							theme: this.theme,
+							styles: this.styles,
+						}),
+					),
+				);
 		}
 		const baseTail = [
 			...renderPaletteKeyBar(this.hints(), innerWidth, this.theme, this.styles).map(line),
 			renderTerminalFrameBorder(width, { ...frameOptions, left: "╰", right: "╯" }),
 		];
 		const budget = this.heightBudget();
+		if (this.about) {
+			const content = (this.runtime?.about() ?? "")
+				.split("\n")
+				.flatMap((text) => wrapTextWithAnsi(sanitizeTerminalText(text), innerWidth));
+			this.aboutCapacity = Math.max(1, budget - head.length - baseTail.length - 1);
+			this.aboutOffset = Math.min(this.aboutOffset, Math.max(0, content.length - this.aboutCapacity));
+			const end = Math.min(content.length, this.aboutOffset + this.aboutCapacity);
+			return [
+				...head,
+				...content.slice(this.aboutOffset, end).map((text) => line(this.styles.apply("palette.value", text))),
+				...(content.length > this.aboutCapacity
+					? [line(this.pagingHintText(this.aboutOffset, end, content.length, innerWidth))]
+					: []),
+				...baseTail,
+			].map((value) => fitTerminalText(value, width));
+		}
 		// Keep complete messages available through paging. On short terminals,
 		// non-focused form rows yield before the message, warning, or controls.
 		const message = this.message;
 		const messageLines = message ? wrapTextWithAnsi(message.text, innerWidth) : [];
 		const bodyMin = this.form ? this.formRequired(width) : this.sourcesRequired(width);
 		if (messageLines.length && head.length > 1 && budget - head.length - baseTail.length - 1 - bodyMin < 2)
-			head.splice(1);
+			head.splice(1, this.runtime ? 2 : head.length - 1);
 		let messageRoom = Math.max(0, budget - head.length - baseTail.length - 1 - bodyMin);
 		if (messageLines.length && messageRoom < 2 && this.form) {
 			const minimum = this.formItems(width).filter((item) => item.rank === 0).length;

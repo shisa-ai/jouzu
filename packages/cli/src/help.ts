@@ -21,7 +21,8 @@ export function createJouzuHelpExtension(): InlineExtension {
 								`${theme.fg("accent", formatEffectiveKeybinding(keybindings, "app.model.cycleForward"))}  Cycle favorites`,
 								`${theme.fg("accent", helpKeys)}  Help`,
 								`${theme.fg("accent", "/hotkeys")}  All shortcuts`,
-								`${theme.fg("accent", "/status")}  Session details`,
+								`${theme.fg("accent", "/session")}  Session details`,
+								`${theme.fg("accent", "/about")}  Runtime and installed builds`,
 								`${theme.fg("accent", "/workflow")}  Agents and runs`,
 								"",
 								theme.fg("dim", `${formatEffectiveKeybinding(keybindings, "tui.select.cancel")} close`),
@@ -44,7 +45,7 @@ export function createJouzuHelpExtension(): InlineExtension {
 					},
 					{
 						overlay: true,
-						overlayOptions: { width: 38, maxHeight: 13, anchor: "center", margin: 1 },
+						overlayOptions: { width: 42, maxHeight: 14, anchor: "center", margin: 1 },
 					},
 				);
 			};

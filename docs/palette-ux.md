@@ -65,7 +65,7 @@ When an item supports disclosure as well as a primary action, reserve `Enter` fo
 - Nested filters and choices are not tab rows. Change a visible choice with `←` and `→` when no text field holds focus.
 - `Esc` in browse mode closes the Palette. There is no separate root level to return to first.
 - Cancel restores the editor text that was present when the Palette opened.
-- `/catalogs`, `/model`, and `/workflow` route directly to a view. A route is registered only when its view exists.
+- `/catalogs`, `/about`, `/model`, and `/workflow` route directly to a view. A route is registered only when its view exists.
 
 ## Browse mode
 
@@ -184,6 +184,12 @@ An interaction change must include tests for the affected modes and transitions:
 11. Committal row actions fire through their semantic accelerators while search holds focus, and the title names the search state.
 
 Run the focused interaction tests while iterating, then run `npm run check` and `npm test` before committing.
+
+## Settings
+
+Settings has a **View: ‹ Catalogs › / ‹ About ›** choice. Move to it with `↑` from the context-limit row, then use `←`, `→`, or `Enter` to change the view. `/catalogs` opens Catalogs; `/about` opens About. `Tab` and `Shift+Tab` remain top-level navigation and preserve the selected Settings view. A catalog edit or confirmation blocks external routes.
+
+About shows the running and installed Jouzu builds, Pi version, and process startup time. Running identity is captured at startup; a changed installation is reported separately with a restart notice. `↑`/`↓` and semantic paging controls scroll a report taller than the available area. `Esc` closes the Palette without writing settings. Outside the TUI, `/about` reports the same information as text.
 
 ## Workflow
 

@@ -313,7 +313,17 @@ export async function runMainCli(args: string[]): Promise<void> {
 			// catalog configuration and continues with local models.
 		}
 	}
+	const releaseExtensionStatus = inspectReleaseExtensions();
+	probeReleaseRuntimeCompatibility(releaseExtensionStatus);
+	ensureReleaseRuntimeCompatibility(releaseExtensionStatus);
+	const piArgs = withReleaseExtensionArguments(parsed.args, releaseExtensionStatus);
+	const runtimeDiagnostics = createRuntimeDiagnostics(
+		metadata,
+		usesReleaseExtensions(parsed.args) ? releaseExtensionStatus.resolvedPackageRoots : {},
+	);
+	const releaseDiagnostics = createReleaseExtensionDiagnostics(releaseExtensionStatus, runtimeDiagnostics);
 	const modelPicker = createJouzuModelPicker(paths, {
+		runtime: runtimeDiagnostics,
 		textguardFiles: parsed.options.textguardFiles,
 		// Read at launch time: a child inherits whatever mode the session is in.
 		textguardMode: () => nativeTextguard.currentMode(),
@@ -356,15 +366,6 @@ export async function runMainCli(args: string[]): Promise<void> {
 		onModelCycle: (direction) => modelPicker.cycleFavorite(direction),
 		onScopedModelsCommand: () => modelPicker.handleScopedModelsCommand(),
 	});
-	const releaseExtensionStatus = inspectReleaseExtensions();
-	probeReleaseRuntimeCompatibility(releaseExtensionStatus);
-	ensureReleaseRuntimeCompatibility(releaseExtensionStatus);
-	const piArgs = withReleaseExtensionArguments(parsed.args, releaseExtensionStatus);
-	const runtimeDiagnostics = createRuntimeDiagnostics(
-		metadata,
-		usesReleaseExtensions(parsed.args) ? releaseExtensionStatus.resolvedPackageRoots : {},
-	);
-	const releaseDiagnostics = createReleaseExtensionDiagnostics(releaseExtensionStatus, runtimeDiagnostics);
 	const [{ TextGuardRuntime }, { createTextGuardReviewExtension }] = await Promise.all([
 		import("./textguard-runtime.js"),
 		import("./textguard-review.js"),
@@ -390,6 +391,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 			: undefined;
 	const startPi = () =>
 		pi.main(piArgs, {
+			sessionInfoFooter: runtimeDiagnostics.summary,
 			contentPolicyFactory: nativeTextguard.createPolicy,
 			...(flow ? { flowIngressFactory: flow.flowIngressFactory } : {}),
 			extensionFactories: [

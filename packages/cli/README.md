@@ -111,7 +111,7 @@ Returning to where you last left a recent conversation branch resumes its unfini
 
 If a conversation branch lacks a tool result, Jouzu tells the model the outcome is unknown. It does not rerun the tool, copy a result from another branch, or change the saved conversation. If Jouzu cannot safely match tool calls to their results, it stops the request.
 
-Use `/flow runtime` to compare the running and installed versions when troubleshooting. If they differ, restart Jouzu to load the installed version.
+Open `/about` for Settings / About: running and installed Jouzu builds, Pi version, and startup time. `/session` ends with a compact runtime line. If the installed build differs, restart Jouzu to load it. `/flow runtime` adds startup package paths and hashes for troubleshooting.
 
 Set `JOUZU_FLOW_CONTROL=0` before starting Jouzu to disable flow control for that process. See [v0.1.9 release notes](https://github.com/shisa-ai/jouzu/blob/main/docs/releases/v0.1.9.md) for the command list and [Testing](https://github.com/shisa-ai/jouzu/blob/main/docs/testing.md) for validation limits.
 

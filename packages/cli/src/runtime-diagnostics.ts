@@ -9,6 +9,8 @@ interface Patch {
 }
 export interface RuntimeDiagnostics {
 	report(): string;
+	about(): string;
+	summary(): string;
 	warnings(): string[];
 }
 
@@ -60,18 +62,26 @@ export function createRuntimeDiagnostics(
 	const changed = (current: JouzuMetadata) =>
 		JSON.stringify([current.displayVersion, current.build, current.lock]) !==
 		JSON.stringify([metadata.displayVersion, metadata.build, metadata.lock]);
+	const versionLines = () => {
+		const current = installed();
+		return [
+			`Running Jouzu ${metadata.displayVersion}`,
+			`Pi ${metadata.piVersion}`,
+			`Started ${started}`,
+			`Installed Jouzu ${current?.displayVersion ?? "unavailable"}`,
+			...(current && changed(current) ? ["Installed build differs. Restart Jouzu to load it."] : []),
+		];
+	};
 	return {
-		report() {
+		about: () => versionLines().join("\n"),
+		summary() {
 			const current = installed();
-			return [
-				`Running Jouzu ${metadata.displayVersion} · Pi ${metadata.piVersion}`,
-				`Started ${started}`,
-				`Installed Jouzu ${current?.displayVersion ?? "unavailable"}`,
-				...(current && changed(current) ? ["Installed build differs. Restart Jouzu to load it."] : []),
-				"Package paths and SHA-256 hashes captured at startup:",
-				...packages,
-				...issues,
-			].join("\n");
+			return `Runtime: Jouzu ${metadata.displayVersion} · Pi ${metadata.piVersion}${current && changed(current) ? " · restart available" : ""}`;
+		},
+		report() {
+			return [...versionLines(), "Package paths and SHA-256 hashes captured at startup:", ...packages, ...issues].join(
+				"\n",
+			);
 		},
 		warnings() {
 			const current = installed();
