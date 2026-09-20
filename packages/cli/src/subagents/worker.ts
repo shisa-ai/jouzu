@@ -127,6 +127,17 @@ async function runGuardedWorker(
 		return undefined;
 	};
 	const unsubscribe = session.subscribe((event) => {
+		if (event.type === "entry_appended" && event.entry.type === "usage") {
+			const usage = event.entry.usage;
+			send({
+				type: "usage",
+				input: usage.input,
+				output: usage.output,
+				cacheRead: usage.cacheRead,
+				cacheWrite: usage.cacheWrite,
+				cost: Number.isFinite(usage.cost?.total) && usage.cost.total > 0 ? usage.cost.total : null,
+			});
+		}
 		if (event.type === "tool_execution_start") send({ type: "activity", tool: event.toolName });
 		if (event.type === "message_end") {
 			const message = event.message;
