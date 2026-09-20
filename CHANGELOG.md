@@ -11,7 +11,7 @@
 
 ### Changed
 
-- Upgrade embedded Pi from 0.85.1 to 0.86.0. Preserve system instructions independently of cancelled user input, verify compacted summaries by message role, and use Pi's packaged native clipboard helpers. Keep Pi's `streaming` cache-warming default.
+- Upgrade embedded Pi from 0.85.1 to 0.86.0. Preserve system instructions independently of cancelled user input, verify compacted summaries by message role, and use Pi's packaged native clipboard helpers. Default prompt-cache warming to `off`; explicit `streaming` and `idle` choices remain available in `/settings`.
 - Pi 0.86.0 adds `/bug`. Its upload option sends reports to the Pi developers (Earendil), not Jouzu support. Export a zip and inspect it before sharing: extension paths, error diagnostics, and any selected transcript can contain private data.
 - Tell agents to prefer completion notifications and bounded waits over sleeping, repeated status calls, or scheduled check-ins. Waits use the current invocation when `work` is omitted.
 - Limit model-picker history to 512 projects and 16 MiB, evicting least recently dispatched histories while preserving explicit defaults, favorites, and reasoning preferences.

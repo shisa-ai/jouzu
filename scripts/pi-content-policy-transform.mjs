@@ -9,7 +9,12 @@ export function transform(path, source) {
 	const change = (before, after, count) => {
 		text = replace(text, before, after, count);
 	};
-	if (path === "dist/core/cache-warmer.js") {
+	if (path === "dist/core/settings-manager.js") {
+		change(
+			'return mode !== undefined && CACHE_WARMING_MODES.includes(mode) ? mode : "streaming";',
+			'return mode !== undefined && CACHE_WARMING_MODES.includes(mode) ? mode : "off";',
+		);
+	} else if (path === "dist/core/cache-warmer.js") {
 		change(
 			`            const message = await this.models
                 .streamSimple(run.model, run.context, {`,
@@ -1240,4 +1245,5 @@ export const paths = [
 	"dist/core/model-runtime.js",
 	"dist/core/model-runtime.d.ts",
 	"dist/core/cache-warmer.js",
+	"dist/core/settings-manager.js",
 ];

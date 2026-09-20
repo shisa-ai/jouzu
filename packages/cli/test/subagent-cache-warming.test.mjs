@@ -83,7 +83,8 @@ for (const mode of [undefined, "off", "streaming", "idle"])
 			assert.equal(result.status, "completed", result.result);
 			const entries = readFileSync(result.sessionFile, "utf8").trim().split("\n").map(JSON.parse);
 			const warms = entries.filter((entry) => entry.type === "usage" && entry.kind === "cache_warm");
-			if (mode === "off") assert.equal(warms.length, 0, "disabled child must not refresh");
+			if (mode === undefined || mode === "off")
+				assert.equal(warms.length, 0, "default and disabled children must not refresh");
 			else assert.ok(warms.length > 0, "worker should perform at least one automatic refresh during the tool");
 			assert.equal(requests.length, 2 + warms.length);
 			for (const warm of requests.slice(1, -1)) {

@@ -1,14 +1,14 @@
 # Prompt-cache warming
 
-Cache warming replays a prompt with a minimal output budget to refresh a provider's cached prompt before it expires. These requests can incur token charges. They do not add assistant turns or tool calls to the conversation.
+Cache warming is off by default in Jouzu. If you opt in, it replays a prompt with a minimal output budget to refresh a provider's cached prompt before it expires. These requests can incur token charges and do not guarantee savings. They do not add assistant turns or tool calls to the conversation.
 
 Choose **Cache warming** in `/settings`:
 
 | Mode | Behavior |
 | --- | --- |
-| `streaming` (default) | Refresh while an agent run is active, including during tool execution. Stop when the run settles. |
+| `streaming` | Refresh while an agent run is active, including during tool execution. Stop when the run settles. |
 | `idle` | Also allow refreshes after the run settles. |
-| `off` | Do not send refreshes. |
+| `off` (default) | Do not send refreshes. |
 
 The global settings key is `cacheWarming`. Project settings do not override it. `/session` shows the warming status and the reason when warming is inactive.
 

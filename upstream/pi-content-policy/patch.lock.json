@@ -3,6 +3,10 @@
 	"package": "@earendil-works/pi-coding-agent",
 	"version": "0.86.0",
 	"files": {
+		"dist/core/settings-manager.js": {
+			"before": "5368b155ec26d88374cec9e66b8e588b5041a0fb0047414f70b34e13892c4f48",
+			"after": "a7d2ba5eba80673cfc56f655253afed41ead2f96791380b6c7e236fc2e90d903"
+		},
 		"dist/core/cache-warmer.js": {
 			"before": "cd488877ddf0bba1489ff6699bd8200ef645a9e6e028110ce675609bbe8fe556",
 			"after": "b453c0ea871b1f69cb17e59445d84174d8d8ee6a198603382c4dde0800846404"

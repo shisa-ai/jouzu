@@ -181,6 +181,33 @@ test("refresh failure does not add usage and can be cancelled", async (t) => {
 	}
 });
 
+test("both installed settings managers default warming off and preserve explicit modes", async () => {
+	for (const path of [
+		"../../../node_modules/@earendil-works/pi-coding-agent/dist/index.js",
+		"../node_modules/@earendil-works/pi-coding-agent/dist/index.js",
+	]) {
+		const { SettingsManager } = await import(path);
+		assert.equal(SettingsManager.inMemory().getCacheWarmingMode(), "off");
+		for (const cacheWarming of ["off", "streaming", "idle"]) {
+			assert.equal(SettingsManager.inMemory({ cacheWarming }).getCacheWarmingMode(), cacheWarming);
+		}
+		assert.equal(SettingsManager.inMemory({ cacheWarming: "invalid" }).getCacheWarmingMode(), "off");
+	}
+});
+
+test("a default parent session does not schedule refreshes even with a known lifetime", async (t) => {
+	const f = await assembledSession(t, {
+		producerExtensions: [(pi) => pi.on("cache_warming_decision", () => ({ action: "warm" }))],
+		script: () => ({ text: "done" }),
+	});
+	f.session.agent.state.model = { ...f.session.model, promptCache: { short: 300 } };
+	await f.session.prompt("Reply done.");
+	assert.equal(f.session.settingsManager.getCacheWarmingMode(), "off");
+	assert.equal(f.session._cacheWarmer.run, undefined);
+	assert.equal(f.bodies.length, 1);
+	assert.equal(f.sessionManager.getEntries().filter((e) => e.type === "usage").length, 0);
+});
+
 test("session abort cancels a pending refresh and ignores late usage", async (t) => {
 	const toolEntered = deferred(),
 		toolRelease = deferred(),
@@ -188,6 +215,7 @@ test("session abort cancels a pending refresh and ignores late usage", async (t)
 		warmRelease = deferred();
 	let first = true;
 	const f = await assembledSession(t, {
+		settings: { cacheWarming: "streaming" },
 		producerExtensions: [
 			(pi) => {
 				pi.on("cache_warming_decision", () => ({ action: "warm" }));
@@ -303,6 +331,7 @@ test("parent warming uses separate admission without consuming conversational wo
 	let first = true;
 	const f = await assembledSession(t, {
 		persist: true,
+		settings: { cacheWarming: "streaming" },
 		producerExtensions: [
 			(pi) => {
 				pi.on("cache_warming_decision", () => ({ action: "warm" }));
