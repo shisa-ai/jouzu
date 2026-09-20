@@ -12,7 +12,7 @@
 ### Changed
 
 - Upgrade embedded Pi from 0.85.1 to 0.86.0. Preserve system instructions independently of cancelled user input, verify compacted summaries by message role, and use Pi's packaged native clipboard helpers. Default prompt-cache warming to `off`; explicit `streaming` and `idle` choices remain available in `/settings`.
-- Export a local Jouzu diagnostic archive with `/bug` and report problems at `shisa-ai/jouzu/issues`. Transcript inclusion defaults to **No**; the command makes no upload or model-summary request. Inspect exported files before sharing them in a public issue. See [Report a Jouzu bug](docs/bug-reporting.md).
+- Prepare an editable Jouzu issue draft with `/bug`, without automatic transcript collection or attachments. Always show the GitHub issue form link; offer submission as the verified `gh` account only after review and explicit confirmation. See [Report a Jouzu bug](docs/bug-reporting.md).
 - Tell agents to prefer completion notifications and bounded waits over sleeping, repeated status calls, or scheduled check-ins. Waits use the current invocation when `work` is omitted.
 - Limit model-picker history to 512 projects and 16 MiB, evicting least recently dispatched histories while preserving explicit defaults, favorites, and reasoning preferences.
 - Use the embedded TextGuard scanner exclusively. The optional Python comparison-scanner flags from v0.1.13 are removed; native scanning modes and approvals remain.

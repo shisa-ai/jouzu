@@ -270,7 +270,7 @@ jouzu catalog conformance ./remote-catalog.json --json
 
 ## Report a bug
 
-Use `/bug` in a session to export local diagnostics for a [Jouzu issue](https://github.com/shisa-ai/jouzu/issues). Transcript inclusion defaults to **No**. Nothing is uploaded automatically. Issues and attachments are public, so inspect all files before sharing them; diagnostics can contain private paths, settings, and error details even without a transcript. See [Report a Jouzu bug](https://github.com/shisa-ai/jouzu/blob/main/docs/bug-reporting.md), including how to report installation failures when Jouzu cannot start.
+Use `/bug` to prepare and edit a report with minimal runtime details. Jouzu always provides the [GitHub issue form](https://github.com/shisa-ai/jouzu/issues/new) link. If it verifies an authenticated `gh` account, it also offers to submit as that user after explicit confirmation; keeping the draft is the default. Issues are public, so review the text before posting. No transcript or attachments are collected automatically. See [Report a Jouzu bug](https://github.com/shisa-ai/jouzu/blob/main/docs/bug-reporting.md), including installation failures when Jouzu cannot start.
 
 ## Diagnostics and Pi passthrough
 
