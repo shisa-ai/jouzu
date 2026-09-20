@@ -268,6 +268,10 @@ jouzu catalog conformance ./remote-catalog.json --json
 
 `conformance` also requires the remote-stream sequence field. The JSON Schema is installed at `dist/catalog/model-catalog-v1.schema.json`; runtime validation additionally rejects duplicate JSON keys, broken references, credential-bearing fields, and invalid account scope.
 
+## Report a bug
+
+Use `/bug` in a session to export local diagnostics for a [Jouzu issue](https://github.com/shisa-ai/jouzu/issues). Transcript inclusion defaults to **No**. Nothing is uploaded automatically. Issues and attachments are public, so inspect all files before sharing them; diagnostics can contain private paths, settings, and error details even without a transcript. See [Report a Jouzu bug](https://github.com/shisa-ai/jouzu/blob/main/docs/bug-reporting.md), including how to report installation failures when Jouzu cannot start.
+
 ## Diagnostics and Pi passthrough
 
 ```bash

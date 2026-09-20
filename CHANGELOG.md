@@ -12,7 +12,7 @@
 ### Changed
 
 - Upgrade embedded Pi from 0.85.1 to 0.86.0. Preserve system instructions independently of cancelled user input, verify compacted summaries by message role, and use Pi's packaged native clipboard helpers. Default prompt-cache warming to `off`; explicit `streaming` and `idle` choices remain available in `/settings`.
-- Pi 0.86.0 adds `/bug`. Its upload option sends reports to the Pi developers (Earendil), not Jouzu support. Export a zip and inspect it before sharing: extension paths, error diagnostics, and any selected transcript can contain private data.
+- Export a local Jouzu diagnostic archive with `/bug` and report problems at `shisa-ai/jouzu/issues`. Transcript inclusion defaults to **No**; the command makes no upload or model-summary request. Inspect exported files before sharing them in a public issue. See [Report a Jouzu bug](docs/bug-reporting.md).
 - Tell agents to prefer completion notifications and bounded waits over sleeping, repeated status calls, or scheduled check-ins. Waits use the current invocation when `work` is omitted.
 - Limit model-picker history to 512 projects and 16 MiB, evicting least recently dispatched histories while preserving explicit defaults, favorites, and reasoning preferences.
 - Use the embedded TextGuard scanner exclusively. The optional Python comparison-scanner flags from v0.1.13 are removed; native scanning modes and approvals remain.
@@ -43,7 +43,6 @@
 ### Testing limits
 
 - Pi 0.86.0 passed local Linux qualification. Parent refresh admission, cancellation, and child warming settings/accounting pass loopback tests. Native macOS/Windows and live-provider cache hits, retention, and savings require separate checks.
-- Pi's `/bug` model-generated summary is rejected by Jouzu's active flow-control request check. For a local diagnostic archive, choose **No** for transcript inclusion, **No** for summary generation, then **Export as Zip**. Inspect the archive before sharing it.
 
 ## 0.1.13 - 2026-09-19
 
