@@ -181,6 +181,122 @@ test("refresh failure does not add usage and can be cancelled", async (t) => {
 	}
 });
 
+test("session abort cancels a pending refresh and ignores late usage", async (t) => {
+	const toolEntered = deferred(),
+		toolRelease = deferred(),
+		warmEntered = deferred(),
+		warmRelease = deferred();
+	let first = true;
+	const f = await assembledSession(t, {
+		producerExtensions: [
+			(pi) => {
+				pi.on("cache_warming_decision", () => ({ action: "warm" }));
+				pi.registerTool({
+					name: "hold",
+					label: "Hold",
+					description: "Wait in the fixture",
+					parameters: { type: "object", properties: {} },
+					async execute() {
+						toolEntered.resolve();
+						await toolRelease.promise;
+						return { content: [{ type: "text", text: "done" }], details: {} };
+					},
+				});
+			},
+		],
+		script: () => {
+			if (!first) return { text: "done" };
+			first = false;
+			return { toolCalls: [{ id: "hold", name: "hold", arguments: {} }] };
+		},
+	});
+	f.session.agent.state.model = { ...f.session.model, promptCache: { short: 300 } };
+	const warmer = f.session._cacheWarmer,
+		runtime = warmer.models;
+	let signal;
+	warmer.models = {
+		streamSimple(...args) {
+			signal = args[2].signal;
+			const response = runtime.streamSimple(...args);
+			return {
+				async result() {
+					const message = await response.result();
+					warmEntered.resolve();
+					await warmRelease.promise;
+					return message;
+				},
+			};
+		},
+	};
+	const prompt = f.session.prompt("Call hold, then finish.");
+	let refreshing;
+	try {
+		await toolEntered.promise;
+		const run = warmer.run;
+		clearTimeout(run.timer);
+		refreshing = warmer.refresh(run);
+		await warmEntered.promise;
+		const stopping = f.session.abort();
+		toolRelease.resolve();
+		await stopping;
+		assert.equal(signal.aborted, true);
+		assert.equal(warmer.run, undefined);
+		warmRelease.resolve();
+		await refreshing;
+		assert.equal(f.bodies.length, 2);
+		assert.equal(f.sessionManager.getEntries().filter((e) => e.type === "usage").length, 0);
+	} finally {
+		toolRelease.resolve();
+		warmRelease.resolve();
+		await prompt;
+		await refreshing;
+	}
+});
+
+test("idle-session disposal cancels a pending refresh without adding late usage", async (t) => {
+	const f = await assembledSession(t, {
+		settings: { cacheWarming: "idle" },
+		producerExtensions: [(pi) => pi.on("cache_warming_decision", () => ({ action: "warm" }))],
+		script: () => ({ text: "done" }),
+	});
+	f.session.agent.state.model = { ...f.session.model, promptCache: { short: 300 } };
+	await f.session.prompt("Reply done.");
+	const warmer = f.session._cacheWarmer,
+		runtime = warmer.models;
+	const entered = deferred(),
+		release = deferred();
+	let signal;
+	warmer.models = {
+		streamSimple(...args) {
+			signal = args[2].signal;
+			const response = runtime.streamSimple(...args);
+			return {
+				async result() {
+					const message = await response.result();
+					entered.resolve();
+					await release.promise;
+					return message;
+				},
+			};
+		},
+	};
+	const run = warmer.run;
+	assert.ok(run);
+	clearTimeout(run.timer);
+	const refreshing = warmer.refresh(run);
+	try {
+		await entered.promise;
+		await f.session.dispose();
+		assert.equal(signal.aborted, true);
+		assert.equal(warmer.run, undefined);
+	} finally {
+		release.resolve();
+		await refreshing;
+	}
+	assert.equal(f.bodies.length, 2);
+	assert.equal(f.sessionManager.getEntries().filter((e) => e.type === "usage").length, 0);
+});
+
 test("parent warming uses separate admission without consuming conversational work", async (t) => {
 	const entered = deferred(),
 		release = deferred();
