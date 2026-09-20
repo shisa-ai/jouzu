@@ -129,7 +129,7 @@
 		},
 		"dist/modes/interactive/bug-report.js": {
 			"before": "450e3917bfa9fe8c2eaf3a319c4b27a775cd1a8108217787235484d549fde070",
-			"after": "d552ab8dc375cdbc9c644a6c8911f16420be2ac41d3936562b333c513a904d01"
+			"after": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b"
 		}
 	},
 	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863",

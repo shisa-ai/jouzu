@@ -1,16 +1,20 @@
 import { execFile } from "node:child_process";
-import { getKeybindings } from "@earendil-works/pi-tui";
+import { getKeybindings, stripTerminalSequences } from "@earendil-works/pi-tui";
 import { VERSION } from "../../config.js";
 import { ExtensionEditorComponent } from "./components/extension-editor.js";
 import { ExtensionInputComponent } from "./components/extension-input.js";
 import { ExtensionSelectorComponent } from "./components/extension-selector.js";
 export const ISSUE_NEW_URL = "https://github.com/shisa-ai/jouzu/issues/new";
+export const ISSUES_URL = "https://github.com/shisa-ai/jouzu/issues";
 const ISSUE_REPOSITORY = "shisa-ai/jouzu";
+const ISSUE_REPOSITORY_URL = "https://github.com/shisa-ai/jouzu";
+const GITHUB_HOSTNAME = "github.com";
+const ISSUE_URL_PATTERN = /^https:\/\/github\.com\/shisa-ai\/jouzu\/issues\/\d+$/;
 const GH_TIMEOUT_MS = 10_000;
 const GH_MAX_OUTPUT_BYTES = 64 * 1024;
 const TITLE_MAX_LENGTH = 80;
 const NOT_PROVIDED = "Not provided.";
-const INTRO = `This drafts a public GitHub issue for ${ISSUE_REPOSITORY}. Nothing is posted without your review, and the draft is never sent to a model. Submission with gh is offered only when an authenticated gh account is available.`;
+const INTRO = `This drafts a public GitHub issue for ${ISSUE_REPOSITORY}. Nothing is posted without your review, and the draft is never sent to a model. Submission with gh is offered only when an authenticated gh account is available. New issue form: ${ISSUE_NEW_URL}`;
 /** Build the deterministic Markdown draft shown for review and posted only on consent. */
 export function buildBugReportDraft(options) {
 	const description = field(options.description);
@@ -83,6 +87,7 @@ export async function reportBug(context, initialHint) {
 	);
 	if (title === null) return cancel(context, draft, "Report cancelled; the draft was not posted.");
 	draft.title = title.trim() || draft.title;
+	showDraft(context, draft, "Review this draft before submitting. Nothing has been posted yet.");
 	const gh = await detectGh(context);
 	if (!gh.account) {
 		showDraft(context, draft, `${gh.reason}. Copy the draft above into the new-issue form to post it.`);
@@ -106,12 +111,13 @@ export async function reportBug(context, initialHint) {
 		showDraft(context, draft, `Issue created: ${issueUrl}`);
 		context.showStatus(`Issue created: ${issueUrl}`);
 	} catch (error) {
+		const message = errorMessage(error);
 		showDraft(
 			context,
 			draft,
-			`Submission failed: ${errorMessage(error)}. The draft was not posted; copy it into the new-issue form instead.`,
+			`Submission result is unknown: ${message}. Check ${ISSUES_URL} for a new issue before retrying; the reviewed draft is kept and the new-issue form is below.`,
 		);
-		context.showError(`Failed to create the issue: ${errorMessage(error)}`);
+		context.showError(`The issue creation result is unknown: ${message}. Check ${ISSUES_URL} before retrying.`);
 	}
 }
 function cancel(context, draft, note) {
@@ -139,8 +145,8 @@ function environmentLines(runtimeIdentity) {
 }
 async function detectGh(context) {
 	try {
-		const { stdout } = await runGh(context, ["api", "user", "--jq", ".login"]);
-		const account = String(stdout).trim();
+		const { stdout } = await runGh(context, ["api", "user", "--hostname", GITHUB_HOSTNAME, "--jq", ".login"]);
+		const account = sanitizeTerminalText(stdout);
 		if (!/^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/.test(account))
 			return { reason: "gh did not report an authenticated GitHub account" };
 		return { account };
@@ -174,14 +180,14 @@ async function createIssue(context, draft) {
 		"issue",
 		"create",
 		"--repo",
-		ISSUE_REPOSITORY,
+		ISSUE_REPOSITORY_URL,
 		"--title",
 		draft.title,
 		"--body",
 		draft.body,
 	]);
-	const issueUrl = String(stdout).trim();
-	if (!issueUrl) throw new Error("gh did not return an issue URL");
+	const issueUrl = sanitizeTerminalText(stdout);
+	if (!ISSUE_URL_PATTERN.test(issueUrl)) throw new Error("gh did not return a Jouzu GitHub issue URL");
 	return issueUrl;
 }
 function showDraft(context, draft, note) {
@@ -254,6 +260,16 @@ function restoreEditor(context, component) {
 	context.ui.setFocus(context.editor);
 	context.ui.requestRender();
 }
+/** Strip ANSI/OSC/APC sequences and remaining control characters from untrusted gh output. */
+function sanitizeTerminalText(value) {
+	const stripped = stripTerminalSequences(String(value ?? ""));
+	let text = "";
+	for (const character of stripped) {
+		const code = character.codePointAt(0) ?? 0;
+		text += code < 0x20 || code === 0x7f ? " " : character;
+	}
+	return text.replace(/\s+/g, " ").trim();
+}
 function errorMessage(error) {
-	return error instanceof Error ? error.message : "Unknown error";
+	return sanitizeTerminalText(error instanceof Error ? error.message : "") || "Unknown error";
 }

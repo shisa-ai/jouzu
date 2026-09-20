@@ -8,7 +8,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const piRoot = fileURLToPath(new URL("../node_modules/@earendil-works/pi-coding-agent/", import.meta.url));
 const loadPi = (relative) => import(pathToFileURL(join(piRoot, relative)).href);
 const { initTheme } = await loadPi("dist/modes/interactive/theme/theme.js");
-const { ISSUE_NEW_URL, buildBugReportDraft, renderBugReport, reportBug } = await loadPi(
+const { ISSUE_NEW_URL, ISSUES_URL, buildBugReportDraft, renderBugReport, reportBug } = await loadPi(
 	"dist/modes/interactive/bug-report.js",
 );
 const { InteractiveMode } = await loadPi("dist/modes/interactive/interactive-mode.js");
@@ -19,7 +19,11 @@ initTheme("dark");
 
 const IDENTITY = "Runtime: Jouzu 0.1.13 · Pi 0.86.0";
 const EXPECTED_LINK = "https://github.com/shisa-ai/jouzu/issues/new";
+const EXPECTED_ISSUES = "https://github.com/shisa-ai/jouzu/issues";
+const EXPECTED_API_ARGS = ["api", "user", "--hostname", "github.com", "--jq", ".login"];
+const EXPECTED_REPO_URL = "https://github.com/shisa-ai/jouzu";
 assert.equal(ISSUE_NEW_URL, EXPECTED_LINK);
+assert.equal(ISSUES_URL, EXPECTED_ISSUES);
 
 function tick() {
 	return new Promise((resolve) => setImmediate(resolve));
@@ -207,6 +211,7 @@ async function driveBugReport(fixture, options = {}) {
 	const hasSelector = selector !== undefined;
 	const last = selector ?? fixture.overlays.at(-1);
 	if (hasSelector) {
+		options.beforeConfirm?.(selector, fixture);
 		if (cancelAt === "confirm") {
 			last.handleInput("\x1b");
 			await running;
@@ -300,9 +305,15 @@ test("default flow stays local, keeps no archive, and never calls a model", asyn
 	assert.equal(fetchCalls, 0);
 	assert.deepEqual(summaryCalls, []);
 	assert.deepEqual(await readdir(fixture.workDir), []);
-	assert.equal(fixture.reports.length, 1);
-	assert.match(fixture.reports[0], /New issue form: https:\/\/github\.com\/shisa-ai\/jouzu\/issues\/new/);
-	assert.doesNotMatch(fixture.reports[0], /session\.jsonl|report\.json|diagnostics\.json|private transcript fixture/);
+	assert.equal(fixture.reports.length, 2);
+	assert.match(fixture.reports[0], /Review this draft before submitting\. Nothing has been posted yet\./);
+	assert.match(fixture.reports[0], /## What happened/);
+	assert.match(fixture.reports.at(-1), /gh is not installed/);
+	for (const report of fixture.reports) assert.match(report, new RegExp(`New issue form: ${EXPECTED_LINK}`));
+	assert.doesNotMatch(
+		fixture.reports.at(-1),
+		/session\.jsonl|report\.json|diagnostics\.json|private transcript fixture/,
+	);
 	assert.deepEqual(fixture.errors, []);
 
 	const source = await readFile(join(piRoot, "dist/modes/interactive/bug-report.js"), "utf8");
@@ -338,6 +349,11 @@ test("generated body and title are shown for review and edits are used", async (
 	assert.ok(renderedLines > 0, "the review editor must render at 48 columns");
 	assert.equal(generatedTitle, "original title");
 	assert.equal(title.input.getValue(), "Edited public title");
+	assert.match(fixture.reports[0], /^# Edited public title\n/);
+	assert.match(fixture.reports[0], /Edited body\./);
+	assert.match(fixture.reports[0], /Nothing has been posted yet\./);
+	assert.match(fixture.reports[0], new RegExp(`New issue form: ${EXPECTED_LINK}`));
+	assert.equal(fixture.reports.length, 2);
 	assert.match(fixture.reports.at(-1), /^# Edited public title\n/);
 	assert.match(fixture.reports.at(-1), /Edited body\./);
 	assert.doesNotMatch(fixture.reports.at(-1), /expected text/);
@@ -350,10 +366,11 @@ test("missing gh offers no submission and keeps the draft with the link", async 
 	const fixture = await createFixture(t, { execGh: stub.execGh });
 	const { confirm } = await driveBugReport(fixture, { hint: "no gh" });
 	assert.equal(confirm, undefined);
-	assert.deepEqual(stub.calls, [["api", "user", "--jq", ".login"]]);
-	assert.equal(fixture.reports.length, 1);
-	assert.match(fixture.reports[0], /gh is not installed/);
-	assert.match(fixture.reports[0], new RegExp(`New issue form: ${EXPECTED_LINK}`));
+	assert.deepEqual(stub.calls, [EXPECTED_API_ARGS]);
+	assert.equal(fixture.reports.length, 2);
+	assert.match(fixture.reports[0], /Review this draft before submitting/);
+	assert.match(fixture.reports.at(-1), /gh is not installed/);
+	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
 	assert.equal(fixture.statuses.at(-1), "Draft ready; nothing was posted.");
 });
 
@@ -362,7 +379,7 @@ test("unauthenticated gh offers no submission and keeps the draft with the link"
 	const fixture = await createFixture(t, { execGh: stub.execGh });
 	const { confirm } = await driveBugReport(fixture, { hint: "not logged in" });
 	assert.equal(confirm, undefined);
-	assert.deepEqual(stub.calls, [["api", "user", "--jq", ".login"]]);
+	assert.deepEqual(stub.calls, [EXPECTED_API_ARGS]);
 	assert.match(fixture.reports.at(-1), /gh is not authenticated/);
 	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
 	assert.equal(fixture.statuses.at(-1), "Draft ready; nothing was posted.");
@@ -379,7 +396,7 @@ test("authenticated gh offers submission that names the account and public repo"
 	assert.match(text, /public issue in shisa-ai\/jouzu as octocat/);
 	assert.match(text, /public/);
 	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
-	assert.deepEqual(stub.calls, [["api", "user", "--jq", ".login"]]);
+	assert.deepEqual(stub.calls, [EXPECTED_API_ARGS]);
 });
 
 test("declined confirmation never creates an issue", async (t) => {
@@ -387,7 +404,7 @@ test("declined confirmation never creates an issue", async (t) => {
 	const fixture = await createFixture(t, { execGh: stub.execGh });
 	const { confirm } = await driveBugReport(fixture, { hint: "decline" });
 	assert.equal(confirm.selectedIndex, 0);
-	assert.deepEqual(stub.calls, [["api", "user", "--jq", ".login"]]);
+	assert.deepEqual(stub.calls, [EXPECTED_API_ARGS]);
 	assert.match(fixture.reports.at(-1), /Not submitted\./);
 	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
 	assert.equal(fixture.statuses.at(-1), "Draft kept; nothing was posted.");
@@ -404,22 +421,25 @@ test("affirmative consent runs gh once with the exact fixed arguments", async (t
 		confirmSubmit: true,
 	});
 	assert.deepEqual(stub.calls, [
-		["api", "user", "--jq", ".login"],
-		["issue", "create", "--repo", "shisa-ai/jouzu", "--title", "Title with $HOME; rm -rf /", "--body", editedBody],
+		EXPECTED_API_ARGS,
+		["issue", "create", "--repo", EXPECTED_REPO_URL, "--title", "Title with $HOME; rm -rf /", "--body", editedBody],
 	]);
 	assert.match(fixture.reports.at(-1), /Issue created: https:\/\/github\.com\/shisa-ai\/jouzu\/issues\/42/);
 	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
 	assert.equal(fixture.statuses.at(-1), "Issue created: https://github.com/shisa-ai/jouzu/issues/42");
 });
 
-test("submission failure keeps the draft and never retries", async (t) => {
+test("ambiguous submission failure keeps the draft and never retries", async (t) => {
 	const stub = createGhStub({ account: "octocat", createError: new Error("HTTP 403: Forbidden") });
 	const fixture = await createFixture(t, { execGh: stub.execGh });
 	await driveBugReport(fixture, { hint: "failure", confirmSubmit: true });
 	assert.equal(stub.calls.filter((args) => args[0] === "issue").length, 1);
 	assert.equal(fixture.errors.length, 1);
-	assert.match(fixture.errors[0], /Failed to create the issue: HTTP 403: Forbidden/);
-	assert.match(fixture.reports.at(-1), /Submission failed: HTTP 403: Forbidden/);
+	assert.match(fixture.errors[0], /result is unknown: HTTP 403: Forbidden/);
+	assert.match(fixture.errors[0], new RegExp(`Check ${EXPECTED_ISSUES} before retrying`));
+	assert.match(fixture.reports.at(-1), /Submission result is unknown: HTTP 403: Forbidden/);
+	assert.match(fixture.reports.at(-1), new RegExp(`Check ${EXPECTED_ISSUES} for a new issue before retrying`));
+	assert.doesNotMatch(fixture.reports.at(-1), /was not posted/);
 	assert.match(fixture.reports.at(-1), /## What happened/);
 	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
 });
@@ -434,7 +454,7 @@ test("cancelling after the draft keeps it visible with the link", async (t) => {
 	assert.equal(fixture.statuses.at(-1), "Bug report cancelled");
 
 	await driveBugReport(fixture, { hint: "cancel confirm", cancelAt: "confirm" });
-	assert.deepEqual(stub.calls, [["api", "user", "--jq", ".login"]]);
+	assert.deepEqual(stub.calls, [EXPECTED_API_ARGS]);
 	assert.match(fixture.reports.at(-1), /Not submitted\./);
 	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
 });
@@ -442,7 +462,9 @@ test("cancelling after the draft keeps it visible with the link", async (t) => {
 test("cancelling before a draft posts nothing", async (t) => {
 	const stub = createGhStub({ account: "octocat" });
 	const fixture = await createFixture(t, { execGh: stub.execGh });
-	await driveBugReport(fixture, { cancelAt: "description" });
+	const { description } = await driveBugReport(fixture, { cancelAt: "description" });
+	const descriptionText = description.children.map((child) => child.text ?? "").join("\n");
+	assert.match(descriptionText, new RegExp(`New issue form: ${EXPECTED_LINK}`));
 	await driveBugReport(fixture, { cancelAt: "expected" });
 	assert.deepEqual(fixture.reports, []);
 	assert.deepEqual(fixture.statuses, ["Bug report cancelled", "Bug report cancelled"]);
@@ -520,13 +542,16 @@ test("builtin /bug routing renders the draft and link at 48 columns", async (t) 
 	latestOverlay(fixture).handleInput("\n");
 	await running;
 
-	const report = children.find((child) => typeof child.text === "string" && child.text.includes("New issue form:"));
-	assert.ok(report, "the routed report was not added to the chat");
-	assert.match(report.text, /New issue form: https:\/\/github\.com\/shisa-ai\/jouzu\/issues\/new/);
-	assert.match(report.text, /# routed hint/);
-	const lines = report.render(48);
-	assert.ok(lines.length > 0, "the routed report must render");
-	for (const line of lines) assert.ok(visibleWidth(line) <= 48, `line exceeds 48 columns: ${JSON.stringify(line)}`);
+	const reports = children.filter((child) => typeof child.text === "string" && child.text.includes("New issue form:"));
+	assert.equal(reports.length, 2, "the pre-consent draft and the outcome must both be shown");
+	assert.match(reports[0].text, /Review this draft before submitting\. Nothing has been posted yet\./);
+	assert.match(reports[0].text, /# routed hint/);
+	assert.match(reports[1].text, /gh is not installed/);
+	for (const report of reports) {
+		const lines = report.render(48);
+		assert.ok(lines.length > 0, "the routed report must render");
+		for (const line of lines) assert.ok(visibleWidth(line) <= 48, `line exceeds 48 columns: ${JSON.stringify(line)}`);
+	}
 	assert.equal(fixture.statuses.at(-1), "Draft ready; nothing was posted.");
 });
 
@@ -563,15 +588,12 @@ test("default gh runner uses fixed argv without a shell", { skip: process.platfo
 	const captured = (await readFile(capturePath)).toString("utf8").split("\0");
 	assert.deepEqual(captured.slice(0, -1), [
 		"CALL",
-		"api",
-		"user",
-		"--jq",
-		".login",
+		...EXPECTED_API_ARGS,
 		"CALL",
 		"issue",
 		"create",
 		"--repo",
-		"shisa-ai/jouzu",
+		EXPECTED_REPO_URL,
 		"--title",
 		title,
 		"--body",
@@ -580,4 +602,96 @@ test("default gh runner uses fixed argv without a shell", { skip: process.platfo
 	assert.equal(fixture.statuses.at(-1), "Issue created: https://github.com/shisa-ai/jouzu/issues/7");
 	assert.match(fixture.reports.at(-1), /Issue created: https:\/\/github\.com\/shisa-ai\/jouzu\/issues\/7/);
 	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
+});
+
+test("final draft and link are shown before the submission choice", async (t) => {
+	const stub = createGhStub({ account: "octocat" });
+	const fixture = await createFixture(t, { execGh: stub.execGh });
+	let reportsAtChoice;
+	const { confirm } = await driveBugReport(fixture, {
+		hint: "pre-consent",
+		bodyEdit: "## What happened\n\nPre-consent body.",
+		titleEdit: "Pre-consent title",
+		beforeConfirm: (selector, current) => {
+			reportsAtChoice = current.reports.length;
+			assert.deepEqual(selector.options, ["No, keep the draft", "Submit as octocat using gh"]);
+			assert.match(current.reports.at(-1), /^# Pre-consent title\n/);
+			assert.match(current.reports.at(-1), /Pre-consent body\./);
+			assert.match(current.reports.at(-1), /Review this draft before submitting\. Nothing has been posted yet\./);
+			assert.match(current.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
+		},
+	});
+	assert.ok(confirm, "the submission choice must appear");
+	assert.equal(reportsAtChoice, 1, "the reviewed draft must be visible before the choice");
+	assert.match(fixture.reports.at(-1), /Not submitted\./);
+	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
+});
+
+test("gh detection failures and timeouts offer no submission", async (t) => {
+	const timeoutError = Object.assign(new Error("Command failed: gh api user"), { killed: true, signal: "SIGTERM" });
+	const stub = createGhStub({ authError: timeoutError });
+	const fixture = await createFixture(t, { execGh: stub.execGh });
+	const { confirm } = await driveBugReport(fixture, { hint: "timeout" });
+	assert.equal(confirm, undefined);
+	assert.deepEqual(stub.calls, [EXPECTED_API_ARGS]);
+	assert.match(fixture.reports.at(-1), /gh is not authenticated/);
+	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
+});
+
+test("gh host and repository are pinned against the environment", async (t) => {
+	const stub = createGhStub({ account: "octocat" });
+	const fixture = await createFixture(t, { execGh: stub.execGh });
+	const previousHost = process.env.GH_HOST;
+	const previousRepo = process.env.GH_REPO;
+	process.env.GH_HOST = "evil.example";
+	process.env.GH_REPO = "evil/repo";
+	t.after(() => {
+		if (previousHost === undefined) delete process.env.GH_HOST;
+		else process.env.GH_HOST = previousHost;
+		if (previousRepo === undefined) delete process.env.GH_REPO;
+		else process.env.GH_REPO = previousRepo;
+	});
+	await driveBugReport(fixture, { hint: "pinned", confirmSubmit: true });
+	assert.deepEqual(stub.calls[0], EXPECTED_API_ARGS);
+	assert.equal(stub.calls[0].includes("evil.example"), false);
+	const createArgs = stub.calls[1];
+	assert.deepEqual(createArgs.slice(0, 7), [
+		"issue",
+		"create",
+		"--repo",
+		EXPECTED_REPO_URL,
+		"--title",
+		"pinned",
+		"--body",
+	]);
+	assert.equal(createArgs[7].includes("## What happened\n\npinned"), true);
+	assert.equal(
+		createArgs.some((arg) => arg.includes("evil")),
+		false,
+	);
+});
+
+test("malformed gh output is an uncertain outcome and is sanitized", async (t) => {
+	const stub = createGhStub({ account: "octocat", issueUrl: "https://evil.example/jouzu/1\u001b[31m" });
+	const fixture = await createFixture(t, { execGh: stub.execGh });
+	await driveBugReport(fixture, { hint: "malformed", confirmSubmit: true });
+	assert.equal(stub.calls.filter((args) => args[0] === "issue").length, 1);
+	assert.match(fixture.reports.at(-1), /Submission result is unknown/);
+	assert.match(fixture.reports.at(-1), new RegExp(`Check ${EXPECTED_ISSUES} for a new issue before retrying`));
+	assert.doesNotMatch(fixture.reports.at(-1), /evil\.example/);
+	assert.equal(fixture.reports.at(-1).includes("\u001b"), false);
+	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
+});
+
+test("gh error output cannot inject terminal control sequences", async (t) => {
+	const stub = createGhStub({
+		account: "octocat",
+		createError: new Error("\u001b[31mboom\u001b[0m\nsecond line"),
+	});
+	const fixture = await createFixture(t, { execGh: stub.execGh });
+	await driveBugReport(fixture, { hint: "sanitize", confirmSubmit: true });
+	assert.match(fixture.reports.at(-1), /boom second line/);
+	assert.equal(fixture.reports.at(-1).includes("\u001b"), false);
+	assert.equal(fixture.errors.join("\n").includes("\u001b"), false);
+	assert.match(fixture.errors[0], /result is unknown/);
 });
