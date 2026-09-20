@@ -37,15 +37,47 @@ export function transform(path, source) {
 		);
 		change("        if (!hasAssistant) {", "        if (!hasAssistant && !force) {");
 		change(
-			'        if (!header)\n            return null;\n        const cwd = typeof header.cwd === "string" ? header.cwd : "";',
-			'        if (!header)\n            return null;\n        // A session with no messages has nothing to resume. Pi never creates its file before an\n        // assistant message, but a forced flush can, so the list skips it explicitly.\n        if (messageCount === 0)\n            return null;\n        const cwd = typeof header.cwd === "string" ? header.cwd : "";',
+			'            if (entry.type !== "message")\n                continue;\n            messageCount++;',
+			'            if (entry.type === "custom_message") {\n                messageCount++;\n                continue;\n            }\n            if (entry.type !== "message")\n                continue;\n            messageCount++;',
+		);
+		change(
+			"static async list(cwd, sessionDir, onProgress)",
+			"static async list(cwd, sessionDir, onProgress, includeEmpty = false)",
+		);
+		change(
+			"static async listAll(sessionDirOrOnProgress, onProgress)",
+			"static async listAll(sessionDirOrOnProgress, onProgress, includeEmpty = false)",
+		);
+		change(
+			"        sessions.sort((a, b) => b.modified.getTime() - a.modified.getTime());\n        return sessions;",
+			"        sessions.sort((a, b) => b.modified.getTime() - a.modified.getTime());\n        return includeEmpty ? sessions : sessions.filter((session) => session.messageCount > 0);",
+		);
+		change(
+			"            sessions.sort((a, b) => b.modified.getTime() - a.modified.getTime());\n            return sessions;",
+			"            sessions.sort((a, b) => b.modified.getTime() - a.modified.getTime());\n            return includeEmpty ? sessions : sessions.filter((session) => session.messageCount > 0);",
+			2,
 		);
 	} else if (path === "dist/core/session-manager.d.ts") {
+		change(
+			"static list(cwd: string, sessionDir?: string, onProgress?: SessionListProgress)",
+			"static list(cwd: string, sessionDir?: string, onProgress?: SessionListProgress, includeEmpty?: boolean)",
+		);
+		change(
+			"static listAll(sessionDir?: string, onProgress?: SessionListProgress)",
+			"static listAll(sessionDir?: string, onProgress?: SessionListProgress, includeEmpty?: boolean)",
+		);
 		change(
 			"    _persist(entry: SessionEntry): void;",
 			"    /** Persist buffered entries without requiring an assistant turn; never overwrite an existing file. */\n    flush(): void;\n    _persist(entry: SessionEntry): void;",
 		);
 	} else if (path === "dist/main.js") {
+		// Explicit ID lookup must include sessions persisted for recovery before any conversation.
+		change(
+			"await SessionManager.list(cwd, sessionDir);",
+			"await SessionManager.list(cwd, sessionDir, undefined, true);",
+			2,
+		);
+		change("await SessionManager.listAll(sessionDir);", "await SessionManager.listAll(sessionDir, undefined, true);");
 		change(
 			"        const interactiveMode = new InteractiveMode(runtime, {",
 			"        const interactiveMode = new InteractiveMode(runtime, {\n            sessionInfoFooter: options?.sessionInfoFooter,",

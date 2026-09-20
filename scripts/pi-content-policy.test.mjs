@@ -925,4 +925,43 @@ test("session listing skips a session a forced flush persisted before any messag
 		[withMessage.getSessionId()],
 	);
 	assert.equal(listed[0].firstMessage, "hello");
+	assert.equal((await SessionManager.list(directory, sessionDir, undefined, true)).length, 2);
+	assert.equal((await SessionManager.listAll(sessionDir, undefined, true)).length, 2);
+
+	const main = await readFile(new URL("main.js", import.meta.resolve("@earendil-works/pi-coding-agent")), "utf8");
+	const start = main.indexOf("async function findLocalSessionByExactId(");
+	const end = main.indexOf("/** Prompt user for yes/no confirmation */", start);
+	assert.ok(start >= 0 && end > start);
+	const { resolveSessionPath, findLocalSessionByExactId } = new Function(
+		"SessionManager",
+		`${main.slice(start, end)}; return { resolveSessionPath, findLocalSessionByExactId };`,
+	)(SessionManager);
+	const expected = { type: "local", path: markerOnly.getSessionFile() };
+	assert.deepEqual(await resolveSessionPath(markerOnly.getSessionId(), directory, sessionDir), expected);
+	assert.deepEqual(await resolveSessionPath(markerOnly.getSessionId().slice(0, 20), directory, sessionDir), expected);
+	assert.deepEqual(await findLocalSessionByExactId(markerOnly.getSessionId(), directory, sessionDir), expected);
+	assert.deepEqual(await resolveSessionPath(markerOnly.getSessionId(), join(directory, "other"), sessionDir), {
+		type: "global",
+		path: markerOnly.getSessionFile(),
+		cwd: directory,
+	});
+	assert.equal((await SessionManager.listAll(sessionDir)).length, 1);
+
+	const withContext = SessionManager.create(directory, sessionDir);
+	withContext.appendCustomMessageEntry("wait-context", "Pending work", false);
+	withContext.flush();
+	const withTool = SessionManager.create(directory, sessionDir);
+	withTool.appendMessage({
+		role: "toolResult",
+		toolCallId: "call",
+		toolName: "read",
+		content: [{ type: "text", text: "result" }],
+		isError: false,
+		timestamp: Date.now(),
+	});
+	withTool.flush();
+	assert.deepEqual(
+		new Set((await SessionManager.list(directory, sessionDir)).map((item) => item.id)),
+		new Set([withMessage.getSessionId(), withContext.getSessionId(), withTool.getSessionId()]),
+	);
 });
