@@ -4,18 +4,38 @@
 
 ### Added
 
+- Wait for an exact subagent run or a newly created schedule through copyable `agent_wait` receipts. Subagent waits observe terminal outcomes; schedule waits observe only the first trigger, not completion of the scheduled work. Both support deadline wake-ups without polling.
+- Open `/about` for running and installed Jouzu builds, Pi version, and startup time. `/session` includes a compact runtime line; `/about` stays available while flow work is held without releasing the hold.
+
 - Leave an end-of-run summary card after every measured run, goal, and loop run that finishes, stops, or is paused. It reports the outcome, the objective, the local start and finish times, wall-clock elapsed against active agent time, and the step, turn, tool-call, and token counters, and it names the command that resumes a run that has not finished. A measured run's card also reports the metric it reached against its baseline and how its last iteration was accepted. The card is a session entry: it stays in the transcript and does not enter model context. A host without entry rendering shows it as a notification.
 
 ### Changed
+
+- Tell agents to prefer completion notifications and bounded waits over sleeping, repeated status calls, or scheduled check-ins. Waits use the current invocation when `work` is omitted.
+- Limit model-picker history to 512 projects and 16 MiB, evicting least recently dispatched histories while preserving explicit defaults, favorites, and reasoning preferences.
+- Use the embedded TextGuard scanner exclusively. The optional Python comparison-scanner flags from v0.1.13 are removed; native scanning modes and approvals remain.
 
 - Show when each background task finished in the completion receipt. The expanded heading carries the span from the first start to the last finish, and each task row carries its duration and local finish time. A receipt written before this change still renders, without timing.
 - Stopping or pausing a run no longer repeats the same sentence as a notification, because the summary card carries it.
 
 ### Fixed
 
+- Allow a task to wait on a background job started by its parent invocation without transferring job ownership or allowing sibling-task access.
+- Resolve terminal execution evidence before checking live health policies, so completion between launch and wait registration does not invalidate a copied receipt. Rejected wait declarations explain recovery and leave no new subscription behind.
+- Require registered launch receipts for subagent and schedule waits. Unreadable retained producer state keeps automatic work held while allowing session reopening and `/flow` inspection.
+- Bound empty request-history records during continuous tool runs, including after compaction, rather than waiting for an idle turn. Preserve records needed by live input, projections, waits, and retries.
+- Keep tool results intact when a cancelled run never reached their content check, and omit message-less sessions from the resume list.
+- Disable SQLite journaling on held process-lock connections and verify that acquisition, contention, and release leave the lock database empty with no journal sidecars.
+
 - Report subagent lock storage failures instead of queueing indefinitely. A failed lock release marks affected work failed and requires a restart; it no longer disappears during run finalization or shutdown.
 
 - Hold the subagent session lock and each workspace-writer lock for as long as the owning process runs, instead of leaving a record file that a later process ages out and reclaims. A Jouzu process that exits for any reason, including a kill, releases its locks immediately, so a stopped process no longer blocks a session or leaves a workspace writer queued, while a suspended process keeps its lock. A lock file left behind by an earlier run no longer blocks a new owner, and the five-second recovery grace period is gone. A Jouzu process running a version from before this change does not share these locks, so close other Jouzu processes before upgrading and start them again afterward.
+
+### Development
+
+- Refresh installed dependency trees when pinned patch inputs change, and include release-metadata checks in the ordinary check gate.
+- Test task-continuation timing through the installed adapter without a separate source checkout. CI uses a four-minute per-file test bound and finite suite deadlines.
+- Keep the root and npm README copies synchronized and clarify the Python package's non-functional reservation status.
 
 ## 0.1.13 - 2026-09-19
 

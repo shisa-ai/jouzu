@@ -56,7 +56,6 @@ imports; `state-lock.ts` and `process-lock.ts` depend on `private-fs.ts`.
 `runtime.ts` reads profile state through `profile-manager.ts`; `doctor.ts`
 combines runtime inspection from the Camoufox adapter, model catalog,
 model-picker state, and state-lock modules with the shared command renderer.
-There are no circular module imports.
 
 ## Interactive UX authority
 
@@ -92,7 +91,8 @@ recovers a dead owner's or owner-unknown lock after the stale threshold.
 A subagent session's `owner.sqlite` and each workspace-writer
 `<digest>.sqlite` use `process-lock.ts` instead, because those locks are held
 for as long as a session or a child agent runs. Ownership is a held SQLite
-write transaction on that file, so the operating system releases it when the
+write transaction on that file. The lock connection disables journaling and performs
+no data writes, schema changes, or commits. The operating system releases ownership when the
 holder exits for any reason, including a kill, while a paused or suspended
 holder keeps it. The file is a rendezvous point: its presence does not mean the
 path is locked. Closing the connection releases the transaction, and the file
