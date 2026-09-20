@@ -58,6 +58,17 @@ test("native source capture distinguishes duplicate input by operation before co
 	assert.deepEqual(await f.dispatch.sources(structuredClone(f.session.agent.state.messages)), []);
 });
 
+test("bug-report summaries cannot bypass the native request checkpoint", async (t) => {
+	const f = await nativeRequests(t);
+	await f.session.prompt("private session content");
+	assert.equal(f.sent.length, 1);
+	await assert.rejects(
+		f.session.summarizeForBugReport({ hint: "fixture", signal: AbortSignal.timeout(3000) }),
+		/Native provider call has no request checkpoint/,
+	);
+	assert.equal(f.sent.length, 1);
+});
+
 test("native prompt source positions survive request-store reopen", async (t) => {
 	const f = await nativeRequests(t, { retainInputs: true });
 	await f.session.prompt("source", { images: [{ type: "image", data: "YQ==", mimeType: "image/png" }] });
