@@ -8,6 +8,7 @@ import {
 	createJouzuPresentationExtension,
 	detectBannerColorMode,
 	isInteractivePiStartup,
+	JOUZU_ASYNC_WAIT_GUIDANCE,
 	JOUZU_DEFAULT_GUIDANCE,
 	JOUZU_REPOSITORY_WORK_GUIDANCE,
 	JOUZU_USER_COMMUNICATION_GUIDANCE,
@@ -102,8 +103,17 @@ Guidelines:
 	assert.match(expected, /never search guessed package paths/);
 	assert.doesNotMatch(JOUZU_DEFAULT_GUIDANCE, /be concise/i);
 	assert.doesNotMatch(JOUZU_DEFAULT_GUIDANCE, /jouzu-core/);
-	assert.equal(JOUZU_DEFAULT_GUIDANCE, `${JOUZU_USER_COMMUNICATION_GUIDANCE}\n${JOUZU_REPOSITORY_WORK_GUIDANCE}`);
-	assert.ok(JOUZU_DEFAULT_GUIDANCE.length <= 900);
+	assert.equal(
+		JOUZU_DEFAULT_GUIDANCE,
+		`${JOUZU_USER_COMMUNICATION_GUIDANCE}\n${JOUZU_REPOSITORY_WORK_GUIDANCE}\n${JOUZU_ASYNC_WAIT_GUIDANCE}`,
+	);
+	assert.ok(JOUZU_DEFAULT_GUIDANCE.length <= 2000);
+	assert.match(expected, /Prefer completion notifications and flow-control waits over sleeping or polling/);
+	assert.match(expected, /When agent_wait is available and the producer returns a wait dependency/);
+	assert.match(expected, /omit work to use the current invocation/);
+	assert.match(expected, /After a waiting response.*end the turn/);
+	assert.match(expected, /A refused wait does not suspend work/);
+	assert.match(expected, /no completion notification or wait support.*bounded polling/);
 
 	const routingOptions = {
 		customPrompt: undefined,

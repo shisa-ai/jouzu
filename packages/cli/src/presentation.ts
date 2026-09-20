@@ -78,7 +78,9 @@ export const JOUZU_USER_COMMUNICATION_GUIDANCE =
 	"Communicate clearly with the user. Do not invent acronyms or use unexplained jargon. Use `jouzu-clear-writing` for documentation, README text, release notes, issues, prompts, tool descriptions, CLI help, or diagnostics.";
 export const JOUZU_REPOSITORY_WORK_GUIDANCE =
 	"Work directly by default. Follow repository instructions and preserve user-owned work. Inspect relevant files before editing. Distinguish evidence from assumptions, make the smallest coherent change, and run the narrowest deterministic check. Report untested limitations honestly. Use task tracking only for work with three or more distinct steps. Use background, goal, loop, scheduling, web, or browser tools only when the task requires them; do not combine workflow systems unless each has a separate purpose. For optional skills, read the exact listed `<location>` once; never search guessed package paths. If a skill file is unavailable, continue without it.";
-export const JOUZU_DEFAULT_GUIDANCE = `${JOUZU_USER_COMMUNICATION_GUIDANCE}\n${JOUZU_REPOSITORY_WORK_GUIDANCE}`;
+export const JOUZU_ASYNC_WAIT_GUIDANCE =
+	"Prefer completion notifications and flow-control waits over sleeping or polling. Do independent work while a job runs. When agent_wait is available and the producer returns a wait dependency, copy that dependency, choose a bounded deadline, and omit work to use the current invocation. After a waiting response, state what will unblock you and end the turn; flow control holds dependent continuation and requests a decision on completion, failure, or deadline expiry. A refused wait does not suspend work. Do not use shell sleep, repeated status calls, or scheduled check-ins merely to keep the session active. Inspect status or logs for a concrete diagnostic question or a user request. If a system has no completion notification or wait support, use bounded polling only when needed and explain the limit. On wake, verify the exact execution and its output before marking work complete.";
+export const JOUZU_DEFAULT_GUIDANCE = `${JOUZU_USER_COMMUNICATION_GUIDANCE}\n${JOUZU_REPOSITORY_WORK_GUIDANCE}\n${JOUZU_ASYNC_WAIT_GUIDANCE}`;
 
 interface CapabilityRoute {
 	need: string;
@@ -169,7 +171,7 @@ export function buildCapabilityRoutingGuidance(options: BuildSystemPromptOptions
 		tools.has("agent_wait"),
 		"Remaining work depends on asynchronous execution",
 		"`agent_wait`",
-		"Use the returned work and dependency identities. Once waiting, end the turn; flow control holds dependent continuation and delivers eligible wakes.",
+		"Copy the returned dependency identities and omit work to use the current invocation. Once waiting, end the turn; flow control holds dependent continuation and delivers eligible wakes.",
 	);
 	add(
 		tools.has("schedule_prompt"),
