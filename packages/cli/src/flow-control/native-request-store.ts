@@ -2,7 +2,11 @@ import { BACKGROUND_CONTEXT, deleteValue, type Session, setValue, value } from "
 import { flowDiagnosticText } from "./diagnostic-text.js";
 import { type NativeProjectionCapture, validateNativeProjections } from "./native-context-projections.js";
 import { nativeProjectionDelivered, nativeSourceDelivered } from "./native-inclusion.js";
-import { retirableNativeRequests, supersededNativeRequests } from "./native-request-retention.js";
+import {
+	retirableEmptyNativeRequests,
+	retirableNativeRequests,
+	supersededNativeRequests,
+} from "./native-request-retention.js";
 import type { FlowOwnership } from "./ownership.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 import { retiredIdentityHash } from "./retired-identities.js";
@@ -638,10 +642,20 @@ export class FlowNativeRequestStore {
 	}
 	/** Retire only duplicate successful observations while preserving compact replay fences. */
 	retireSuperseded(): Promise<number> {
+		return this.retireRedundant(false);
+	}
+	/** Also bound terminal records with no input, projection, wait, or retry dependencies. */
+	retireBeforeRequest(): Promise<number> {
+		return this.retireRedundant(true);
+	}
+	private retireRedundant(includeEmptyHistory: boolean): Promise<number> {
 		return this.transact((records, retired) => {
 			if (this.requiresRecovery(records) || records.some((record) => record.outcome === undefined && !record.reset))
 				throw new FlowLedgerError("busy", "Request history retirement requires settled requests.");
-			const selected = new Set(supersededNativeRequests(records));
+			const selected = new Set([
+				...supersededNativeRequests(records),
+				...(includeEmptyHistory ? retirableEmptyNativeRequests(records) : []),
+			]);
 			retired.push(...[...selected].map(requestIdentity));
 			const remaining = records.filter((record) => !selected.has(record.id));
 			records.splice(0, records.length, ...remaining);
