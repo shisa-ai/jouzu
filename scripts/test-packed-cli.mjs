@@ -3,6 +3,7 @@
 import assert from "node:assert/strict";
 import { spawn, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { createServer } from "node:http";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -199,6 +200,144 @@ function assertPackedSurfaces(installedCli, probe, cwd, env, profile) {
 	assert.equal(rpcResponse(result.stdout, "commands").success, true);
 }
 
+/**
+ * Run the packed CLI's actual write tool through a loopback provider and prove an absolute
+ * U+3000 path lands at the exact file. The runtime write route is the bundled pi-code-previews
+ * override, so a source-only Pi import cannot cover this regression.
+ */
+async function assertPackedUnicodePaths(installedCli, temp) {
+	const expected = "日本語のツール確認\n完了 🦁";
+	const project = resolve(temp, "日本語　project-unicode");
+	mkdirSync(project, { recursive: true });
+	const absolutePath = resolve(project, "絶対　確認.txt");
+	const relativePath = "相対　確認.txt";
+	const asciiSibling = resolve(temp, "日本語 project-unicode");
+	let step = 0;
+	const server = createServer((request, response) => {
+		let body = "";
+		request.on("data", (chunk) => (body += chunk));
+		request.on("end", () => {
+			const index = step++;
+			const send = (payload) => {
+				response.writeHead(200, { "content-type": "text/event-stream" });
+				response.end(`data: ${JSON.stringify(payload)}\n\ndata: [DONE]\n\n`);
+			};
+			const toolCall = (id, name, args) =>
+				send({
+					choices: [
+						{
+							index: 0,
+							delta: {
+								tool_calls: [{ index: 0, id, type: "function", function: { name, arguments: JSON.stringify(args) } }],
+							},
+							finish_reason: "tool_calls",
+						},
+					],
+					usage: { prompt_tokens: 1, completion_tokens: 1, total_tokens: 2 },
+				});
+			if (index === 0) return toolCall("call_write_absolute", "write", { path: absolutePath, content: expected });
+			if (index === 1) return toolCall("call_write_relative", "write", { path: relativePath, content: expected });
+			if (index === 2) return toolCall("call_read", "read", { path: absolutePath });
+			return send({
+				choices: [{ index: 0, delta: { content: "done" }, finish_reason: "stop" }],
+				usage: { prompt_tokens: 1, completion_tokens: 1, total_tokens: 2 },
+			});
+		});
+	});
+	await new Promise((done) => server.listen(0, "127.0.0.1", done));
+	try {
+		const home = resolve(temp, "unicode-home");
+		mkdirSync(resolve(home, "agent"), { recursive: true });
+		writeFileSync(
+			resolve(home, "agent", "models.json"),
+			`${JSON.stringify(
+				{
+					providers: {
+						loopback: {
+							baseUrl: `http://127.0.0.1:${server.address().port}/v1`,
+							api: "openai-completions",
+							apiKey: "loopback",
+							compat: { supportsDeveloperRole: false, supportsReasoningEffort: false },
+							models: [
+								{
+									id: "loopback-model",
+									name: "Loopback",
+									reasoning: false,
+									input: ["text"],
+									contextWindow: 8192,
+									maxTokens: 512,
+									cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+								},
+							],
+						},
+					},
+				},
+				null,
+				2,
+			)}\n`,
+		);
+		const env = { ...scrubbedHarnessEnv(), PI_OFFLINE: "1" };
+		const child = spawn(
+			process.execPath,
+			[
+				installedCli,
+				"--jouzu-home",
+				home,
+				"--jouzu-profile",
+				"ja",
+				"--mode",
+				"json",
+				"--no-session",
+				"--provider",
+				"loopback",
+				"--model",
+				"loopback-model",
+				"--tools",
+				"read,write",
+				"write ツールで絶対パスと相対パスにファイルを作成し、read ツールで確認してください。",
+			],
+			{ cwd: project, env, stdio: ["ignore", "pipe", "pipe"] },
+		);
+		let stdout = "";
+		let stderr = "";
+		child.stdout.on("data", (chunk) => (stdout += chunk));
+		child.stderr.on("data", (chunk) => (stderr += chunk));
+		const status = await new Promise((done, reject) => {
+			const timer = setTimeout(() => {
+				child.kill("SIGKILL");
+				reject(new Error(`packed unicode path smoke timed out: ${stderr.slice(0, 600)}`));
+			}, 120_000);
+			child.on("close", (code) => {
+				clearTimeout(timer);
+				done(code);
+			});
+		});
+		assert.equal(status, 0, `packed unicode path smoke exited ${status}: ${stderr || stdout}`);
+		const events = stdout
+			.split("\n")
+			.filter(Boolean)
+			.map((line) => {
+				try {
+					return JSON.parse(line);
+				} catch {
+					return undefined;
+				}
+			})
+			.filter(Boolean);
+		const writes = events.filter((event) => event.type === "tool_execution_end" && event.toolName === "write");
+		assert.equal(writes.length, 2, "packed unicode path smoke did not run both writes");
+		assert.ok(
+			writes.every((event) => !event.isError),
+			"packed unicode path smoke write failed",
+		);
+		assert.equal(readFileSync(absolutePath, "utf8"), expected);
+		assert.equal(readFileSync(resolve(project, relativePath), "utf8"), expected);
+		assert.equal(existsSync(asciiSibling), false, "packed write resolved an absolute U+3000 path to its ASCII sibling");
+	} finally {
+		await new Promise((done) => server.close(done));
+	}
+}
+
 const temp = mkdtempSync(join(tmpdir(), "jouzu-packed-cli-"));
 try {
 	let tarball;
@@ -304,6 +443,7 @@ try {
 		assert.deepEqual(secondPlan.actions, []);
 		assertPackedSurfaces(installedCli, probe, temp, env, "core");
 		await assertPackedFlowControl(temp, installedCli, probe, temp, env, "core");
+		await assertPackedUnicodePaths(installedCli, temp);
 		assert.equal(
 			existsSync(resolve(consumer, "state", "camoufox-runtime")),
 			false,
