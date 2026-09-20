@@ -61,7 +61,7 @@ test("patch is locked and idempotent; modified input never gets overwritten", as
 	try {
 		await writeFile(
 			join(directory, "package.json"),
-			JSON.stringify({ name: "@earendil-works/pi-coding-agent", version: "0.85.1" }),
+			JSON.stringify({ name: "@earendil-works/pi-coding-agent", version: "0.86.0" }),
 		);
 		await mkdir(join(directory, "dist"));
 		await writeFile(join(directory, "dist/main.js"), "unrecognized");
@@ -354,6 +354,10 @@ test("skill expansion injects checked bytes and awaits both queued paths", async
 		promptTemplates: [],
 		_throwIfExtensionCommand() {},
 		_expandSkillCommand: AgentSession.prototype._expandSkillCommand,
+		_queueUserInput: AgentSession.prototype._queueUserInput,
+		async _runInputHandlers(text, images) {
+			return { text, images };
+		},
 		async _queueSteer(text) {
 			received.push(text);
 		},
@@ -363,6 +367,7 @@ test("skill expansion injects checked bytes and awaits both queued paths", async
 	};
 	await AgentSession.prototype.steer.call(fake, "/skill:fixture");
 	await AgentSession.prototype.followUp.call(fake, "/skill:fixture");
+	assert.equal(received.length, 2);
 	for (const text of received) assert.match(text, /CHECKED BODY/);
 	policy.readSkill = async () => {
 		throw new Error("PRIVATE BODY");
@@ -911,7 +916,7 @@ test("session listing skips a session a forced flush persisted before any messag
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	await mkdir(sessionDir, { recursive: true });
 	// Flow control persists a marker with flush() before any message exists, which creates the file.
-	const markerOnly = SessionManager.create(directory, sessionDir);
+	const markerOnly = SessionManager.create(directory, sessionDir, { id: "recovery-marker-only-session" });
 	markerOnly.appendCustomEntry("jouzu-flow-branch", { marker: true });
 	markerOnly.flush();
 	// A session with one user message is resumable and must stay listed.
@@ -925,11 +930,20 @@ test("session listing skips a session a forced flush persisted before any messag
 		[withMessage.getSessionId()],
 	);
 	assert.equal(listed[0].firstMessage, "hello");
-	assert.equal((await SessionManager.list(directory, sessionDir, undefined, true)).length, 2);
-	assert.equal((await SessionManager.listAll(sessionDir, undefined, true)).length, 2);
+	assert.equal((await SessionManager.list(directory, sessionDir, undefined, undefined, true)).length, 2);
+	assert.equal((await SessionManager.listAll(sessionDir, undefined, undefined, true)).length, 2);
+	const partials = [];
+	const progress = (_loaded, _total, sessions) => partials.push(...(sessions ?? []));
+	await SessionManager.list(directory, sessionDir, progress);
+	await SessionManager.listAll(sessionDir, progress);
+	assert.ok(partials.length > 0);
+	assert.ok(partials.every((session) => session.id === withMessage.getSessionId()));
+	const aborted = AbortSignal.abort();
+	await assert.rejects(SessionManager.list(directory, sessionDir, undefined, aborted), { name: "AbortError" });
+	await assert.rejects(SessionManager.listAll(sessionDir, undefined, aborted), { name: "AbortError" });
 
 	const main = await readFile(new URL("main.js", import.meta.resolve("@earendil-works/pi-coding-agent")), "utf8");
-	const start = main.indexOf("async function findLocalSessionByExactId(");
+	const start = main.indexOf("function findLocalSessionByExactId(");
 	const end = main.indexOf("/** Prompt user for yes/no confirmation */", start);
 	assert.ok(start >= 0 && end > start);
 	const { resolveSessionPath, findLocalSessionByExactId } = new Function(

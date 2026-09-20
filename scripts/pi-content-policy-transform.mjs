@@ -18,11 +18,11 @@ export function transform(path, source) {
 		for (const method of ["stream", "streamSimple"]) {
 			change(
 				`            const prepared = await this.prepareRequest(model, options);
-            return prepared.provider.${method}(prepared.model, context, prepared.options);`,
+            return prepared.provider.${method}(prepared.model, transcript, prepared.options);`,
 				`            const validateProvider = options?.flowValidateProvider;
             const prepared = await this.prepareRequest(model, options);
             validateProvider?.(prepared.model, prepared.provider);
-            return prepared.provider.${method}(prepared.model, context, prepared.options);`,
+            return prepared.provider.${method}(prepared.model, transcript, prepared.options);`,
 			);
 		}
 	} else if (path === "dist/core/model-runtime.d.ts") {
@@ -41,30 +41,41 @@ export function transform(path, source) {
 			'            if (entry.type === "custom_message") {\n                messageCount++;\n                continue;\n            }\n            if (entry.type !== "message")\n                continue;\n            messageCount++;',
 		);
 		change(
-			"static async list(cwd, sessionDir, onProgress)",
-			"static async list(cwd, sessionDir, onProgress, includeEmpty = false)",
+			"static async list(cwd, sessionDir, onProgress, signal)",
+			"static async list(cwd, sessionDir, onProgress, signal, includeEmpty = false)",
 		);
 		change(
-			"static async listAll(sessionDirOrOnProgress, onProgress)",
-			"static async listAll(sessionDirOrOnProgress, onProgress, includeEmpty = false)",
+			"const includeSession = (session) => !filterCwd || sessionCwdMatches(session.cwd, resolvedCwd);",
+			"const includeSession = (session) => (includeEmpty || session.messageCount > 0) && (!filterCwd || sessionCwdMatches(session.cwd, resolvedCwd));",
 		);
 		change(
-			"        sessions.sort((a, b) => b.modified.getTime() - a.modified.getTime());\n        return sessions;",
-			"        sessions.sort((a, b) => b.modified.getTime() - a.modified.getTime());\n        return includeEmpty ? sessions : sessions.filter((session) => session.messageCount > 0);",
+			"static async listAll(sessionDirOrOnProgress, onProgressOrSignal, signal)",
+			"static async listAll(sessionDirOrOnProgress, onProgressOrSignal, signal, includeEmpty = false)",
 		);
 		change(
-			"            sessions.sort((a, b) => b.modified.getTime() - a.modified.getTime());\n            return sessions;",
-			"            sessions.sort((a, b) => b.modified.getTime() - a.modified.getTime());\n            return includeEmpty ? sessions : sessions.filter((session) => session.messageCount > 0);",
-			2,
+			"        const progress = typeof sessionDirOrOnProgress",
+			"        const rawProgress = typeof sessionDirOrOnProgress",
+		);
+		change(
+			"        const abortSignal = typeof sessionDirOrOnProgress",
+			"        const includeSession = (session) => includeEmpty || session.messageCount > 0;\n        const progress = rawProgress ? (loaded, total, partial) => rawProgress(loaded, total, partial?.filter(includeSession)) : undefined;\n        const abortSignal = typeof sessionDirOrOnProgress",
+		);
+		change(
+			"return sortSessionInfos(await listSessionsFromDir(customSessionDir, progress, abortSignal));",
+			"return sortSessionInfos((await listSessionsFromDir(customSessionDir, progress, abortSignal)).filter(includeSession));",
+		);
+		change(
+			"return sortSessionInfos(results.filter((info) => info !== null));",
+			"return sortSessionInfos(results.filter((info) => info !== null && includeSession(info)));",
 		);
 	} else if (path === "dist/core/session-manager.d.ts") {
 		change(
-			"static list(cwd: string, sessionDir?: string, onProgress?: SessionListProgress)",
-			"static list(cwd: string, sessionDir?: string, onProgress?: SessionListProgress, includeEmpty?: boolean)",
+			"static list(cwd: string, sessionDir?: string, onProgress?: SessionListProgress, signal?: AbortSignal)",
+			"static list(cwd: string, sessionDir?: string, onProgress?: SessionListProgress, signal?: AbortSignal, includeEmpty?: boolean)",
 		);
 		change(
-			"static listAll(sessionDir?: string, onProgress?: SessionListProgress)",
-			"static listAll(sessionDir?: string, onProgress?: SessionListProgress, includeEmpty?: boolean)",
+			"static listAll(sessionDir?: string, onProgress?: SessionListProgress, signal?: AbortSignal)",
+			"static listAll(sessionDir?: string, onProgress?: SessionListProgress, signal?: AbortSignal, includeEmpty?: boolean)",
 		);
 		change(
 			"    _persist(entry: SessionEntry): void;",
@@ -74,10 +85,12 @@ export function transform(path, source) {
 		// Explicit ID lookup must include sessions persisted for recovery before any conversation.
 		change(
 			"await SessionManager.list(cwd, sessionDir);",
-			"await SessionManager.list(cwd, sessionDir, undefined, true);",
-			2,
+			"await SessionManager.list(cwd, sessionDir, undefined, undefined, true);",
 		);
-		change("await SessionManager.listAll(sessionDir);", "await SessionManager.listAll(sessionDir, undefined, true);");
+		change(
+			"await SessionManager.listAll(sessionDir);",
+			"await SessionManager.listAll(sessionDir, undefined, undefined, true);",
+		);
 		change(
 			"        const interactiveMode = new InteractiveMode(runtime, {",
 			"        const interactiveMode = new InteractiveMode(runtime, {\n            sessionInfoFooter: options?.sessionInfoFooter,",
@@ -344,10 +357,14 @@ export function transform(path, source) {
 		);
 		change("    dispose() {", "    dispose() {\n        const flowClosing = this._flowBinding?.dispose();");
 		change(
-			"        this._disconnectFromAgent();\n        this._eventListeners = [];\n        cleanupSessionResources(this.sessionId);",
+			"        this._disconnectFromAgent();\n        this._eventListeners = [];\n        if (this._cacheWarmer) {\n            this._cacheWarmer.onWarmed = undefined;\n            this._cacheWarmer.cancel();\n        }\n        cleanupSessionResources(this.sessionId);",
 			`        const finish = () => {
             this._disconnectFromAgent();
             this._eventListeners = [];
+            if (this._cacheWarmer) {
+                this._cacheWarmer.onWarmed = undefined;
+                this._cacheWarmer.cancel();
+            }
             cleanupSessionResources(this.sessionId);
         };
         if (flowClosing) return flowClosing.finally(finish);
@@ -435,12 +452,12 @@ export function transform(path, source) {
     /** Generate Pi's built-in compaction summary for manual and automatic compaction. */`,
 		);
 		change(
-			"                throw new Error(formatNoModelSelectedMessage());\n            }\n            const { model: requestModel, apiKey, headers, env } = await this._getSummarizationRequestAuth(this.model);\n            const pathEntries = this.sessionManager.getBranch();",
-			'                throw new Error(formatNoModelSelectedMessage());\n            }\n            const { model: requestModel, apiKey, headers, env } = await this._getSummarizationRequestAuth(this.model);\n            const pathEntries = await this._filterSummarizationEntries(this.sessionManager.getBranch(), this._compactionAbortController.signal, "compaction");',
+			"            const { model: requestModel, apiKey, headers, env, } = await this._getSummarizationRequestAuth(model, this._compactionAbortController.signal);\n            const pathEntries = this.sessionManager.getBranch();",
+			'            const { model: requestModel, apiKey, headers, env, } = await this._getSummarizationRequestAuth(model, this._compactionAbortController.signal);\n            const pathEntries = await this._filterSummarizationEntries(this.sessionManager.getBranch(), this._compactionAbortController.signal, "compaction");',
 		);
 		change(
-			'            const pathEntries = this.sessionManager.getBranch();\n            const preparation = prepareCompaction(pathEntries, settings);\n            if (!preparation) {\n                return false;\n            }\n            this._emit({ type: "compaction_start", reason });\n            this._autoCompactionAbortController = new AbortController();\n            started = true;',
-			'            this._autoCompactionAbortController = new AbortController();\n            const pathEntries = await this._filterSummarizationEntries(this.sessionManager.getBranch(), this._autoCompactionAbortController.signal, "compaction");\n            const preparation = prepareCompaction(pathEntries, settings);\n            if (!preparation) {\n                return false;\n            }\n            this._emit({ type: "compaction_start", reason });\n            started = true;',
+			"            const pathEntries = this.sessionManager.getBranch();\n            const preparation = prepareCompaction(pathEntries, settings);\n            if (!preparation) {\n                return false;\n            }\n            abortController = new AbortController();\n            this._autoCompactionAbortController = abortController;",
+			'            abortController = new AbortController();\n            this._autoCompactionAbortController = abortController;\n            const pathEntries = await this._filterSummarizationEntries(this.sessionManager.getBranch(), abortController.signal, "compaction");\n            const preparation = prepareCompaction(pathEntries, settings);\n            if (!preparation) {\n                return false;\n            }',
 		);
 		change(
 			"        // Set up abort controller for summarization\n        this._branchSummaryAbortController = new AbortController();\n        try {",
@@ -451,7 +468,7 @@ export function transform(path, source) {
 			"await this._resourceLoader.extendResources(extensionPaths);",
 		);
 		change("this._expandSkillCommand(expandedText)", "await this._expandSkillCommand(expandedText)");
-		change("this._expandSkillCommand(text)", "await this._expandSkillCommand(text)", 2);
+		change("this._expandSkillCommand(processedInput.text)", "await this._expandSkillCommand(processedInput.text)");
 		change("    _expandSkillCommand(text) {", "    async _expandSkillCommand(text) {");
 		change(
 			'            const content = readFileSync(skill.filePath, "utf-8");',

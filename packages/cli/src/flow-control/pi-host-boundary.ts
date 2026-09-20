@@ -329,12 +329,15 @@ export class PiHostBoundary {
 					.find((entry) => entry.type === "compaction");
 				const cutoff = compaction ? compactionHistoryEnd(branch, compaction) : -1;
 				if (compaction && cutoff >= 0 && manager.buildContextEntries().some((entry) => entry.id === compaction.id)) {
-					const summary = sessionEntryToContextMessages(compaction)[0];
+					const summary = sessionEntryToContextMessages(compaction).find(
+						(message) => message.role === "compactionSummary",
+					);
 					const entry = branch
 						.slice()
 						.reverse()
 						.find((item) => item.type === "message" && item.message.role === "assistant");
 					if (
+						summary &&
 						this.session.messages.some((message) => isDeepStrictEqual(message, summary)) &&
 						entry?.type === "message" &&
 						entry.message.role === "assistant" &&

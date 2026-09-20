@@ -5,7 +5,6 @@ import { readdirSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { deriveClipboardBindingRequirements } from "./clipboard-bindings.mjs";
 import { isPrunedDependencyMetadata } from "./configure-release-packlists.mjs";
 import { assertVoiceBundlePresent } from "./voice-package-boundary.mjs";
 
@@ -22,8 +21,6 @@ export function assertExternalWebTransport(files, packageJson, record) {
 		throw new Error("jouzu tarball contains platform-selected wreq-js transport files");
 	}
 }
-
-export { deriveClipboardBindingRequirements } from "./clipboard-bindings.mjs";
 
 const packageDirectories = [join("packages", "cli")];
 
@@ -68,20 +65,19 @@ export function assertProfileFilesPresent(packedFiles, required) {
 	}
 }
 
-/**
- * Assert that every clipboard binding package is packed inside the bundled Pi
- * runtime and that each non-placeholder package includes its native entrypoint.
- */
-export function assertClipboardBindingsPresent(packedFiles, requirements) {
-	for (const requirement of requirements) {
-		const base = `node_modules/@earendil-works/pi-coding-agent/node_modules/@mariozechner/${requirement.packageName}`;
-		if (!packedFiles.some((file) => file.path === `${base}/package.json`)) {
-			throw new Error(`jouzu tarball is missing clipboard binding ${requirement.packageName}`);
-		}
-		if (!requirement.placeholder && !packedFiles.some((file) => file.path === `${base}/${requirement.entrypoint}`)) {
-			throw new Error(
-				`jouzu tarball clipboard binding ${requirement.packageName} is missing native entrypoint ${requirement.entrypoint}`,
-			);
+/** Require every platform helper in each bundled Pi TUI package. */
+export function assertPiNativeHelpersPresent(packedFiles) {
+	const paths = new Set(packedFiles.map((file) => file.path));
+	const packages = [...paths].filter((path) => path.endsWith("node_modules/@earendil-works/pi-tui/package.json"));
+	if (packages.length === 0) throw new Error("jouzu tarball is missing the Pi TUI package");
+	for (const metadata of packages) {
+		const base = metadata.slice(0, -"package.json".length);
+		for (const platform of ["darwin", "win32", "linux"]) {
+			for (const arch of ["x64", "arm64"]) {
+				const suffix = platform === "linux" ? "-x11" : "";
+				const path = `${base}native/${platform}/prebuilds/${platform}-${arch}/${platform}-platform${suffix}.node`;
+				if (!paths.has(path)) throw new Error(`jouzu tarball is missing Pi native helper ${path}`);
+			}
 		}
 	}
 }
@@ -253,22 +249,7 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 		}
 		assertProfileFilesPresent(packed.files, deriveRequiredProfileFiles(join(directory, "profiles")));
 		assertVoiceBundlePresent(packed.files);
-		const clipboardPackage = JSON.parse(
-			readFileSync(
-				join(
-					directory,
-					"node_modules",
-					"@earendil-works",
-					"pi-coding-agent",
-					"node_modules",
-					"@mariozechner",
-					"clipboard",
-					"package.json",
-				),
-				"utf8",
-			),
-		);
-		assertClipboardBindingsPresent(packed.files, deriveClipboardBindingRequirements(clipboardPackage));
+		assertPiNativeHelpersPresent(packed.files);
 		if (!packed.files.some((file) => file.path === "dist/release-extensions.json")) {
 			throw new Error("jouzu tarball is missing dist/release-extensions.json");
 		}

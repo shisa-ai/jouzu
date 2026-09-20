@@ -34,7 +34,7 @@ export function compactedFlowMembers(
 	if (kept < 0) return [];
 	const context = manager.buildContextEntries();
 	if (!context.some((entry) => entry.id === compaction.id)) return [];
-	const summary = sessionEntryToContextMessages(compaction)[0];
+	const summary = sessionEntryToContextMessages(compaction).find((message) => message.role === "compactionSummary");
 	if (!summary || !input.sourceMessages.some((message) => isDeepStrictEqual(message, summary))) return [];
 	const modelSummary = convertToLlm([summary])[0];
 	if (!modelSummary || !input.modelMessages.some((message) => isDeepStrictEqual(message, modelSummary))) return [];

@@ -393,7 +393,8 @@ export class NativeContentPolicy implements Policy {
 						toolCallId: message.toolCallId,
 						timestamp: message.timestamp,
 						content: result.content,
-						details: result.details,
+						// History details are JSON; scanning preserves them or substitutes an empty object.
+						details: result.details as typeof message.details,
 						isError: result.isError ?? false,
 						...(result.usage === undefined ? {} : { usage: result.usage }),
 					});

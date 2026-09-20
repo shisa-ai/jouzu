@@ -62,6 +62,7 @@ export async function createFlowSession(
 		root: fixtureRoot,
 		sessionManager,
 		tools = [],
+		customTools = [],
 		model: selectedModel = model,
 	} = {},
 ) {
@@ -103,6 +104,7 @@ export async function createFlowSession(
 			sessionManager ?? (persist ? SessionManager.create(root, join(root, "history")) : SessionManager.inMemory(root)),
 		settingsManager: SettingsManager.inMemory({ retry: { enabled: false }, compaction: { enabled: false } }),
 		tools,
+		customTools,
 		flowIngress: ingress,
 		flowCheckpoints: checkpoints,
 	}));

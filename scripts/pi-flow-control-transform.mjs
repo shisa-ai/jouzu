@@ -161,9 +161,10 @@ export function transform(path, source) {
 			"getFollowUpMessages: async () => this.followUpQueue.drain(this.signal),",
 		);
 	} else if (path === "dist/agent-loop.js") {
+		text = 'import { getCurrentSystemPrompt } from "@earendil-works/pi-ai";\n' + text;
 		change(
-			"        messages: llmMessages,",
-			"        messages: config.flowCheckpoints ? structuredClone(llmMessages) : llmMessages,",
+			"    const llmContext = normalizeContext({ messages: llmMessages });",
+			"    const llmContext = normalizeContext({ messages: config.flowCheckpoints ? structuredClone(llmMessages) : llmMessages });",
 		);
 		change(
 			"    const response = await streamFunction(config.model, llmContext, {",
@@ -173,7 +174,7 @@ export function transform(path, source) {
             sourceMessages: structuredClone(context.messages),
             transformedMessages: structuredClone(messages),
             modelMessages: structuredClone(llmContext.messages),
-            systemPrompt: llmContext.systemPrompt,
+            systemPrompt: getCurrentSystemPrompt(llmContext.messages),
         }, signal);
     }
     if (signal?.aborted) throw new Error("Flow request cancelled before transport handoff.");

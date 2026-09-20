@@ -100,7 +100,7 @@ test("unrecognized core bytes are refused without overwriting them", async (t) =
 		join(core, "package.json"),
 		JSON.stringify({
 			name: "@earendil-works/pi-agent-core",
-			version: "0.85.1",
+			version: "0.86.0",
 			exports: { "./package.json": "./package.json" },
 		}),
 	);

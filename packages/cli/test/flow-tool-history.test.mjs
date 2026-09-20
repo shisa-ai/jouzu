@@ -77,11 +77,11 @@ function assistantToolCallEntry(session) {
 
 test("ordinary request after navigating to an assistant tool call repairs the model projection", async (t) => {
 	const seen = [];
+	let runs = 0;
 	const f = await nativeRequests(t, {
 		native: scriptedNative([toolCallAssistant([{ id: "call-a", name: "probe" }]), assistant()], seen),
+		tools: [probeTool(() => runs++)],
 	});
-	let runs = 0;
-	f.session.agent.state.tools = [probeTool(() => runs++)];
 	await f.session.prompt("start");
 	assert.equal(runs, 1);
 
@@ -106,11 +106,11 @@ test("ordinary request after navigating to an assistant tool call repairs the mo
 
 test("projected placeholder never replays the missing tool", async (t) => {
 	const seen = [];
+	let runs = 0;
 	const f = await nativeRequests(t, {
 		native: scriptedNative([toolCallAssistant([{ id: "call-a", name: "probe" }]), assistant()], seen),
+		tools: [probeTool(() => runs++)],
 	});
-	let runs = 0;
-	f.session.agent.state.tools = [probeTool(() => runs++)];
 	await f.session.prompt("start");
 	const target = assistantToolCallEntry(f.session);
 	await f.session.navigateTree(target.id);
@@ -426,7 +426,7 @@ for (const kind of ["compaction", "branch"]) {
 		assert.deepEqual(history, snapshot);
 		assert.deepEqual(
 			seen[0].map((message) => message.role),
-			["user"],
+			["system", "user"],
 		);
 		assert.match(JSON.stringify(seen[0]), /outcome is unknown/);
 		assert.match(JSON.stringify(seen[0]), /Actual completed result/);

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { clampThinkingLevel, getSupportedThinkingLevels } from "@earendil-works/pi-ai";
+import { clampThinkingLevel, getCurrentSystemPrompt, getSupportedThinkingLevels } from "@earendil-works/pi-ai";
 import { stream, streamSimple } from "@earendil-works/pi-ai/api/openai-responses";
 import { withAstraCompatibility, withAstraMetadata } from "../dist/astra-compatibility.js";
 
@@ -150,7 +150,7 @@ test("registered extension normalizes startup, switches, and restored session ef
 			apiKey: "fixture",
 			models: [model, other],
 			streamSimple(selected, context, options) {
-				delivered.push(context.systemPrompt);
+				delivered.push(getCurrentSystemPrompt(context.messages));
 				return streamSimple(selected, context, {
 					...options,
 					fetch: async () =>

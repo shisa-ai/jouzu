@@ -52,13 +52,13 @@ export function isBuiltinApiProvider(api) {
 			"        reasoning: rawUsage.completion_tokens_details?.reasoning_tokens ?? rawUsage.reasoning_tokens ?? 0,",
 		);
 		change(
-			"convertMessages(model, context, compat, { grammarToolInputProperties });",
-			"convertMessages(model, context, compat, { grammarToolInputProperties, onMessageConverted: options?.onMessageConverted });",
+			"const messages = convertMessages(model, context, compat, {\n        grammarToolInputProperties,",
+			"const messages = convertMessages(model, context, compat, {\n        onMessageConverted: options?.onMessageConverted,\n        grammarToolInputProperties,",
 		);
 		change(
-			"    const transformedMessages = transformMessages(context.messages, model, (id) => normalizeToolCallId(id));",
+			"    const transformedMessages = transformMessages(normalizedContext.messages, model, (id) => normalizeToolCallId(id));",
 			`    const sources = new Map();
-    const transformedMessages = transformMessages(context.messages, model, (id) => normalizeToolCallId(id),
+    const transformedMessages = transformMessages(normalizedContext.messages, model, (id) => normalizeToolCallId(id),
         options?.onMessageConverted ? (source, transformed) => sources.set(transformed, source) : undefined);`,
 		);
 		change(
@@ -77,12 +77,12 @@ export function isBuiltinApiProvider(api) {
         options?.onMessageConverted ? (source, transformed) => sources.set(transformed, source) : undefined);`,
 		);
 		change(
-			"model.compat?.supportsMidConvoEffort === true ? model.provider : undefined);",
-			"model.compat?.supportsMidConvoEffort === true ? model.provider : undefined, (source, output) => { if (sources.has(source)) options?.onMessageConverted?.(sources.get(source), output); });",
+			"model.compat?.supportsMidConvoEffort === true ? model.provider : undefined, nativeToolChanges);",
+			"model.compat?.supportsMidConvoEffort === true ? model.provider : undefined, nativeToolChanges, (source, output) => { if (sources.has(source)) options?.onMessageConverted?.(sources.get(source), output); });",
 		);
 		change(
-			"normalizeToolName = (name) => name, managedProvider) {",
-			"normalizeToolName = (name) => name, managedProvider, onMessageConverted) {",
+			"managedProvider, nativeToolChanges = false) {",
+			"managedProvider, nativeToolChanges = false, onMessageConverted) {",
 		);
 		change(
 			"        const msg = transformedMessages[i];",
@@ -93,8 +93,8 @@ export function isBuiltinApiProvider(api) {
 			'            if (params.length > rowCount) onMessageConverted?.(msg, params[params.length - 1]);\n        }\n        else if (msg.role === "assistant") {',
 		);
 		change(
-			"                toolResults.push(converted.toolResult);",
-			"                toolResults.push(converted.toolResult);\n                onMessageConverted?.(transformedMessages[j], converted.toolResult);",
+			"                toolResults.push(convertToolResult(transformedMessages[j]));",
+			"                toolResults.push(convertToolResult(transformedMessages[j]));\n                onMessageConverted?.(transformedMessages[j], toolResults[toolResults.length - 1]);",
 		);
 	} else if (path === "dist/api/google-generative-ai.js" || path === "dist/api/google-vertex.js") {
 		change("convertMessages(model, context);", "convertMessages(model, context, options?.onMessageConverted);");
@@ -104,9 +104,9 @@ export function isBuiltinApiProvider(api) {
 			"export function convertMessages(model, context, onMessageConverted) {",
 		);
 		change(
-			"    const transformedMessages = transformMessages(context.messages, model, normalizeToolCallId);",
+			"    const transformedMessages = transformMessages(conversation, model, normalizeToolCallId);",
 			`    const sources = new Map();
-    const transformedMessages = transformMessages(context.messages, model, normalizeToolCallId,
+    const transformedMessages = transformMessages(conversation, model, normalizeToolCallId,
         onMessageConverted ? (source, transformed) => sources.set(transformed, source) : undefined);`,
 		);
 		change(
@@ -120,8 +120,8 @@ export function isBuiltinApiProvider(api) {
 	} else if (path === "dist/api/google-shared.d.ts") {
 		text = `import type { Message } from "../types.js";\n${text}`;
 		change(
-			"context: Context): Content[];",
-			"context: Context, onMessageConverted?: (source: Message, output: unknown) => void): Content[];",
+			"context: TranscriptContext): Content[];",
+			"context: TranscriptContext, onMessageConverted?: (source: Message, output: unknown) => void): Content[];",
 		);
 	} else if (path === "dist/api/openai-codex-responses.js") {
 		change(
@@ -130,22 +130,22 @@ export function isBuiltinApiProvider(api) {
 		);
 	} else if (path === "dist/api/bedrock-converse-stream.js") {
 		change(
-			"convertMessages(context, model, cacheRetention, options.env)",
-			"convertMessages(context, model, cacheRetention, options.env, options.onMessageConverted)",
+			"convertMessages(normalizedContext, model, cacheRetention, options.env)",
+			"convertMessages(normalizedContext, model, cacheRetention, options.env, options.onMessageConverted)",
 		);
 		change(
 			"function convertMessages(context, model, cacheRetention, env) {",
 			"function convertMessages(context, model, cacheRetention, env, onMessageConverted) {",
 		);
 		change(
-			"    const transformedMessages = transformMessages(context.messages, model, normalizeToolCallId);",
+			"    const transformedMessages = transformMessages(withoutInitialSystemMessage(context.messages), model, normalizeToolCallId);",
 			`    const sources = new Map();
-    const transformedMessages = transformMessages(context.messages, model, normalizeToolCallId,
+    const transformedMessages = transformMessages(withoutInitialSystemMessage(context.messages), model, normalizeToolCallId,
         onMessageConverted ? (source, transformed) => sources.set(transformed, source) : undefined);`,
 		);
 		change(
-			"                    content,\n                });\n                break;",
-			"                    content,\n                });\n                if (sources.has(m)) onMessageConverted?.(sources.get(m), result[result.length - 1]);\n                break;",
+			"                result.push({ role: ConversationRole.USER, content });",
+			"                result.push({ role: ConversationRole.USER, content });\n                if (sources.has(m)) onMessageConverted?.(sources.get(m), result[result.length - 1]);",
 		);
 		change(
 			"                // Look ahead for consecutive toolResult messages",
@@ -162,14 +162,14 @@ export function isBuiltinApiProvider(api) {
 		);
 	} else if (path === "dist/api/mistral-conversations.js") {
 		change(
-			"const transformedMessages = transformMessages(context.messages, model, (id) => normalizeMistralToolCallId(id));",
+			"const transformedMessages = transformMessages(normalizedContext.messages, model, (id) => normalizeMistralToolCallId(id));",
 			`const sources = new Map();
-            const transformedMessages = transformMessages(context.messages, model, (id) => normalizeMistralToolCallId(id),
+            const transformedMessages = transformMessages(normalizedContext.messages, model, (id) => normalizeMistralToolCallId(id),
                 options?.onMessageConverted ? (source, transformed) => sources.set(transformed, source) : undefined);`,
 		);
 		change(
-			"buildChatPayload(model, context, transformedMessages, options);",
-			"buildChatPayload(model, context, transformedMessages, options, (source, output) => { if (sources.has(source)) options?.onMessageConverted?.(sources.get(source), output); });",
+			"buildChatPayload(model, normalizedContext, transformedMessages, options);",
+			"buildChatPayload(model, normalizedContext, transformedMessages, options, (source, output) => { if (sources.has(source)) options?.onMessageConverted?.(sources.get(source), output); });",
 		);
 		change(
 			"function buildChatPayload(model, context, messages, options) {",
@@ -205,9 +205,9 @@ export function isBuiltinApiProvider(api) {
 		);
 	} else if (path === "dist/api/openai-responses-shared.js") {
 		change(
-			"    const transformedMessages = transformMessages(context.messages, model, normalizeToolCallId);",
+			"    const transformedMessages = transformMessages(normalizedContext.messages, model, normalizeToolCallId);",
 			`    const sources = new Map();
-    const transformedMessages = transformMessages(context.messages, model, normalizeToolCallId,
+    const transformedMessages = transformMessages(normalizedContext.messages, model, normalizeToolCallId,
         options?.onMessageConverted ? (source, transformed) => sources.set(transformed, source) : undefined);`,
 		);
 		change(
@@ -215,8 +215,8 @@ export function isBuiltinApiProvider(api) {
 			'            options?.onMessageConverted?.(sources.get(msg), messages[messages.length - 1]);\n        }\n        else if (msg.role === "assistant") {',
 		);
 		change(
-			"            const deferredTools = [];",
-			"            if (sources.has(msg)) options?.onMessageConverted?.(sources.get(msg), messages[messages.length - 1]);\n            const deferredTools = [];",
+			"            }\n        }\n        if (!isLeadingSystemMessage)",
+			"            }\n            if (sources.has(msg)) options?.onMessageConverted?.(sources.get(msg), messages[messages.length - 1]);\n        }\n        if (!isLeadingSystemMessage)",
 		);
 	} else if (path === "dist/api/openai-responses-shared.d.ts") {
 		text = `import type { Message } from "../types.js";\n${text}`;

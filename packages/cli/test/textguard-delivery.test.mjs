@@ -3,6 +3,7 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { getCurrentSystemPrompt } from "@earendil-works/pi-ai";
 import { createAssistantMessageEventStream } from "@earendil-works/pi-ai/utils/event-stream";
 import {
 	createAgentSession,
@@ -80,7 +81,9 @@ test("registered review command releases checked skill bytes through reload to t
 			apiKey: "fixture",
 			models: [model],
 			streamSimple(selected, context) {
-				contexts.push(structuredClone({ systemPrompt: context.systemPrompt, messages: context.messages }));
+				contexts.push(
+					structuredClone({ systemPrompt: getCurrentSystemPrompt(context.messages), messages: context.messages }),
+				);
 				const message = {
 					role: "assistant",
 					content: [{ type: "text", text: "Done." }],

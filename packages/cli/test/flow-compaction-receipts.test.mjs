@@ -8,6 +8,7 @@ import { compactedFlowMembers } from "../dist/flow-control/pi-compaction-receipt
 
 function fixture(keepTail = true) {
 	const manager = SessionManager.inMemory();
+	manager.appendMessage({ role: "system", content: "Preserve these instructions.", timestamp: 1 });
 	const composition = FlowModelInput.compose(
 		"attempt",
 		[{ id: "work", revision: "1", kind: "work", text: "Do work" }],
@@ -62,6 +63,7 @@ for (const keepTail of [true, false])
 		"wrong-branch",
 		"missing-summary",
 		"filtered-summary",
+		"changed-summary",
 		"reinserted-source",
 	])
 		test(`compaction cannot excuse unverified omission: ${fault}, keepTail=${keepTail}`, () => {
@@ -86,10 +88,14 @@ for (const keepTail of [true, false])
 					f.manager.branch(f.entryId);
 					break;
 				case "missing-summary":
-					f.input.sourceMessages = [];
+					f.input.sourceMessages = f.input.sourceMessages.filter((message) => message.role !== "compactionSummary");
 					break;
 				case "filtered-summary":
-					f.input.modelMessages = [];
+					f.input.modelMessages = f.input.modelMessages.filter((message) => message.role === "system");
+					break;
+				case "changed-summary":
+					f.input.sourceMessages.find((message) => message.role === "compactionSummary").summary = "Altered summary";
+					f.input.modelMessages = convertToLlm(f.input.sourceMessages);
 					break;
 				case "reinserted-source":
 					f.input.sourceMessages.push({ role: "user", content: f.composition.content, timestamp: 1 });

@@ -491,7 +491,8 @@ for (const variant of ["stop", "error", "aborted", "missing-summary", "changed-s
 		if (["stop", "error", "aborted"].includes(variant)) last.message.stopReason = variant;
 		manager.appendCompaction("Completed work", variant === "invalid-boundary" ? "missing" : "", 1000);
 		const messages = manager.buildSessionContext().messages;
-		if (variant === "changed-summary") messages[0].summary = "Different summary";
+		if (variant === "changed-summary")
+			messages.find((message) => message.role === "compactionSummary").summary = "Different summary";
 		session.agent.state.messages = variant === "missing-summary" ? [] : messages;
 		if (variant.endsWith("summary") || variant === "invalid-boundary") {
 			await assert.rejects(boundary.reconcile(ledger, "attempt"), /no terminal assistant outcome/);

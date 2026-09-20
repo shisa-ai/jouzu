@@ -139,7 +139,7 @@ test("changed native transcript receipts stop recovery without replacing live co
 	const messages = next.session.agent.state.messages;
 	await assert.rejects(next.dispatch.recoverSources(), { code: "identity" });
 	assert.equal(next.session.agent.state.messages, messages);
-	assert.equal(messages[0].content[0].text, "changed on disk");
+	assert.equal(messages.find((message) => message.role === "user").content[0].text, "changed on disk");
 	assert.deepEqual(await next.dispatch.sources(messages), []);
 });
 

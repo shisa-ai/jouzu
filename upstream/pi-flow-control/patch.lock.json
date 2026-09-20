@@ -1,23 +1,23 @@
 {
 	"schemaVersion": 1,
 	"package": "@earendil-works/pi-agent-core",
-	"version": "0.85.1",
+	"version": "0.86.0",
 	"files": {
 		"dist/agent.js": {
-			"before": "d84351e451b9fef40fe2532c446aca90d26a4be9038b2d77d3d45dd6eab21d41",
-			"after": "ec5fce9c57c0e9af79f74792e1b2d28dde5c8279b64ae72696c6d51a94207d58"
+			"before": "d81d9c9b57d61e052542b70f772e2ac0ff7b9d9e43910583b42c47709cad39e6",
+			"after": "af3d1aea717407dc62ca0fc9bfecea916fc9d446cb91737dbbb08c0844711eff"
 		},
 		"dist/agent-loop.js": {
-			"before": "6732a1c65c09577d2ffcb716b48e4f4673e57e3e333f10ebfce5132d82e4d7a2",
-			"after": "ea566e88661c27a334ee045cdccb8d25fc870aa964ec3f88bfa5be2adca1ec80"
+			"before": "aedd3264c31a3b9f1c3dc52826871894c0653718021583abbdfbe1e6763cd3e6",
+			"after": "3a89267486b4870917858299971309a9fe2328e6200042e810a4295a89cb652a"
 		},
 		"dist/agent.d.ts": {
-			"before": "7caf774e58b6ceab9e4629bde58b9ab332a30278142af5a3e99b316be26030a9",
-			"after": "0ba242005bd9fbaaee490d8682f6dd2075467c047e54b216a10f6d090b49188b"
+			"before": "baca5ee2e9ad8809848f64cee5c993323a107695a57bf68047cd9f5a9afcd2b4",
+			"after": "8efbf8c9dfc9bb786ad47b6ce36847c8cdb1ca5589577943f7f427b76c6d3c88"
 		},
 		"dist/types.d.ts": {
-			"before": "2ae8602b59de73435b6d9bd7d4c9dd1b344b7f1d1214866bc08feb04fc490061",
-			"after": "32df810a080708e8b2ac59f74dfa8d1308aa6e504de494be38be4adacf8b9a35"
+			"before": "796784dec2d962c9e8a1933b920299ad0510e4e8758530843af8a982afeb3f26",
+			"after": "ca5d164acb72368b4dc852e21e8fd43f979513f02017b9702fdfbece2666ad46"
 		}
 	},
 	"types": "d36f2353a97ebd6fe66e7a479b5ee1da8ae76f2934e5193ce8df06300e80e55c"

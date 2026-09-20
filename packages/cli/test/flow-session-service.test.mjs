@@ -3,6 +3,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { getCurrentSystemPrompt } from "@earendil-works/pi-ai";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { FlowModelInput } from "../dist/flow-control/model-input.js";
@@ -316,7 +317,7 @@ test("cancelled native input remains excluded after session-service reopen", asy
 	const first = await fixture(t, { retainInputs: true, holdInput: () => true });
 	await first.session.prompt("cancelled original");
 	const [held] = await first.service.branch().attachment.nativeRequests.snapshot();
-	await first.service.cancelNativeSources(held.id, held.withheldPayload.hash, [0]);
+	await first.service.cancelNativeSources(held.id, held.withheldPayload.hash, [1]);
 	assert.equal(first.service.branch().host.gate().recoveryBlocked, false);
 	assert.equal(first.requests.length, 0);
 	await first.service.close();
@@ -330,7 +331,8 @@ test("cancelled native input remains excluded after session-service reopen", asy
 	assert.equal(next.requests.length, 1);
 	assert.ok(!JSON.stringify(next.requests).includes("cancelled original"));
 	const [original, request] = await next.service.branch().attachment.nativeRequests.snapshot();
-	assert.deepEqual(original.cancelledSources, [0]);
+	assert.deepEqual(original.cancelledSources, [1]);
+	assert.equal(getCurrentSystemPrompt(next.requests[0]), next.session.systemPrompt);
 	assert.equal(original.payload, undefined);
 	assert.equal(request.outcome, "success");
 });

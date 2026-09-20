@@ -1,48 +1,26 @@
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 
-import { clipboardBindingDirectoryIsComplete, extractClipboardArchive } from "./clipboard-bindings.mjs";
 import {
 	configureReleasePacklists,
 	isPrunedDependencyMetadata,
 	releaseDependencyFiles,
 } from "./configure-release-packlists.mjs";
 import {
-	assertClipboardBindingsPresent,
 	assertDefaultPackagesAbsent,
 	assertExternalWebTransport,
 	assertLicenseFilesPresent,
 	assertNoPrunedDependencyMetadata,
+	assertPiNativeHelpersPresent,
 	assertProfileFilesPresent,
-	deriveClipboardBindingRequirements,
 	deriveRequiredLicenseFiles,
 	deriveRequiredProfileFiles,
 	forbiddenPublicContent,
 	publicContentForScan,
 } from "./pack-check.mjs";
-
-test("clipboard archives extract from absolute paths containing spaces", () => {
-	const root = mkdtempSync(join(tmpdir(), "jouzu clipboard archive "));
-	try {
-		const source = join(root, "source");
-		const destination = join(root, "destination");
-		mkdirSync(join(source, "package"), { recursive: true });
-		mkdirSync(destination);
-		writeFileSync(join(source, "package", "binding.node"), "native fixture");
-		const archive = join(root, "binding archive.tgz");
-		const tar = process.platform === "win32" ? join(process.env.SystemRoot, "System32", "tar.exe") : "tar";
-		const packed = spawnSync(tar, ["-czf", archive, "-C", source, "package"], { encoding: "utf8" });
-		assert.equal(packed.status, 0, packed.error?.message ?? packed.stderr);
-		extractClipboardArchive(archive, destination);
-		assert.equal(readFileSync(join(destination, "binding.node"), "utf8"), "native fixture");
-	} finally {
-		rmSync(root, { recursive: true, force: true });
-	}
-});
 
 function makeFixtureProfiles() {
 	const dir = mkdtempSync(join(tmpdir(), "pack-check-"));
@@ -95,53 +73,30 @@ test("all declared assets present in the tarball passes the presence check", () 
 	}
 });
 
-test("clipboard requirements derive package names, entrypoints, and exact placeholders", () => {
-	const requirements = deriveClipboardBindingRequirements({
-		optionalDependencies: {
-			"@mariozechner/clipboard-win32-x64-msvc": "0.3.9",
-			"@mariozechner/clipboard-linux-x64-musl": "0.3.9",
-		},
-	});
-	assert.deepEqual(
-		requirements.map(({ packageName, entrypoint, placeholder }) => [packageName, entrypoint, placeholder]),
-		[
-			["clipboard-win32-x64-msvc", "clipboard.win32-x64-msvc.node", false],
-			["clipboard-linux-x64-musl", "clipboard.linux-x64-musl.node", true],
-		],
-	);
-	assert.equal(
-		deriveClipboardBindingRequirements({
-			optionalDependencies: { "@mariozechner/clipboard-linux-x64-musl": "0.4.0" },
-		})[0].placeholder,
-		false,
-	);
-	assert.throws(() => deriveClipboardBindingRequirements({ optionalDependencies: { impit: "1.0.0" } }), /unexpected/);
-	assert.throws(() => deriveClipboardBindingRequirements({}), /no platform binding variants/);
-});
-
-test("clipboard pack checks require native entrypoints except for exact placeholders", () => {
-	const [native] = deriveClipboardBindingRequirements({
-		optionalDependencies: { "@mariozechner/clipboard-win32-x64-msvc": "0.3.9" },
-	});
-	const nativePackage = `node_modules/@earendil-works/pi-coding-agent/node_modules/@mariozechner/${native.packageName}`;
-	assert.throws(
-		() => assertClipboardBindingsPresent([{ path: `${nativePackage}/package.json` }], [native]),
-		/missing native entrypoint clipboard\.win32-x64-msvc\.node/u,
-	);
-	assert.doesNotThrow(() =>
-		assertClipboardBindingsPresent(
-			[{ path: `${nativePackage}/package.json` }, { path: `${nativePackage}/${native.entrypoint}` }],
-			[native],
-		),
-	);
-
-	const [placeholder] = deriveClipboardBindingRequirements({
-		optionalDependencies: { "@mariozechner/clipboard-linux-x64-musl": "0.3.9" },
-	});
-	const placeholderPackage = `node_modules/@earendil-works/pi-coding-agent/node_modules/@mariozechner/${placeholder.packageName}`;
-	assert.doesNotThrow(() =>
-		assertClipboardBindingsPresent([{ path: `${placeholderPackage}/package.json` }], [placeholder]),
-	);
+test("Pi native helpers ship for every supported platform in every bundled TUI", () => {
+	const roots = [
+		"node_modules/@earendil-works/pi-tui/",
+		"node_modules/@earendil-works/pi-coding-agent/node_modules/@earendil-works/pi-tui/",
+	];
+	const helpers = [
+		"native/darwin/prebuilds/darwin-x64/darwin-platform.node",
+		"native/darwin/prebuilds/darwin-arm64/darwin-platform.node",
+		"native/win32/prebuilds/win32-x64/win32-platform.node",
+		"native/win32/prebuilds/win32-arm64/win32-platform.node",
+		"native/linux/prebuilds/linux-x64/linux-platform-x11.node",
+		"native/linux/prebuilds/linux-arm64/linux-platform-x11.node",
+	];
+	const files = roots.flatMap((root) => ["package.json", ...helpers].map((path) => ({ path: root + path })));
+	assert.doesNotThrow(() => assertPiNativeHelpersPresent(files));
+	assert.throws(() => assertPiNativeHelpersPresent([]), /missing the Pi TUI package/);
+	for (const root of roots) {
+		for (const helper of helpers) {
+			assert.throws(
+				() => assertPiNativeHelpersPresent(files.filter((file) => file.path !== root + helper)),
+				/missing Pi native helper/,
+			);
+		}
+	}
 });
 
 test("first-use Camoufox packages fail the default manifest and tarball checks", () => {
@@ -159,24 +114,6 @@ test("first-use Camoufox packages fail the default manifest and tarball checks",
 			),
 		/contains excluded package ua-parser-js/u,
 	);
-});
-
-test("a partial extracted binding is not treated as complete", () => {
-	const root = mkdtempSync(join(tmpdir(), "clipboard-binding-"));
-	try {
-		const [requirement] = deriveClipboardBindingRequirements({
-			optionalDependencies: { "@mariozechner/clipboard-win32-x64-msvc": "0.3.9" },
-		});
-		writeFileSync(
-			join(root, "package.json"),
-			JSON.stringify({ name: requirement.name, version: requirement.version, main: requirement.entrypoint }),
-		);
-		assert.equal(clipboardBindingDirectoryIsComplete(root, requirement), false);
-		writeFileSync(join(root, requirement.entrypoint), "native fixture");
-		assert.equal(clipboardBindingDirectoryIsComplete(root, requirement), true);
-	} finally {
-		rmSync(root, { recursive: true, force: true });
-	}
 });
 
 test("release packlists prune only dependency maps and declarations", () => {

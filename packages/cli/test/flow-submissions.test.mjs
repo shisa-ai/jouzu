@@ -170,7 +170,7 @@ test("one native dispatch retains original input and runs Pi input transformatio
 	assert.equal(record.dispatch.phase, "returned");
 	assert.equal(transformations, 1);
 	assert.equal(requests.length, 1);
-	assert.equal(requests[0][0].content[0].text, "native normalized input");
+	assert.equal(requests[0].find((message) => message.role === "user").content[0].text, "native normalized input");
 });
 async function rootFor(t) {
 	const root = await mkdtemp(join(tmpdir(), "jouzu-flow-submissions-"));

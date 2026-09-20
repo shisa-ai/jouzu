@@ -13,8 +13,8 @@ Jouzu distributes the following release-owned Pi extensions and their default ru
 | `pi-multiloop` | `a24ec57073b2b1066470c7cbca09a0ca9212318a` (v0.4.0) | MIT; `LICENSE` |
 | `@sting8k/pi-vcc` | 0.7.2 | The upstream `README.md` declares MIT under its License heading; the package has no separate license file |
 | `pi-skill-dollar` | `4bff5734d87c4f4725d81a4ea1d1c1283c22423c` (v0.2.0) | MIT; `LICENSE` |
-| `esbuild` | 0.28.1 | MIT; `LICENSE.md` |
-| `typebox` | 1.3.7 | MIT; `license` |
+| `esbuild` | 0.28.2 | MIT; `LICENSE.md` |
+| `typebox` | 1.3.27 | MIT; `license` |
 | `wreq-js` | 3.2.0 | MIT; `LICENSE` |
 
 The bundled `pi-webaio` entrypoint supplies Jouzu's static `web_fetch` and `batch_web_fetch` tools without starting a browser. The package bundle also contains transitive dependencies. Their package metadata and included license or notice files remain with their source files under `node_modules`.

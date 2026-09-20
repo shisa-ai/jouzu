@@ -26,6 +26,7 @@ export async function nativeRequests(
 		identifySources,
 		manager,
 		model,
+		tools = [],
 	} = {},
 ) {
 	const root = supplied ?? (await mkdtemp(join(tmpdir(), "jouzu-native-requests-")));
@@ -36,6 +37,8 @@ export async function nativeRequests(
 		persist: true,
 		sessionManager: manager,
 		model,
+		tools: tools.map((tool) => tool.name),
+		customTools: tools,
 		extensions: [
 			...(transform ? [(pi) => pi.on("before_provider_request", transform)] : []),
 			...(contextHandler ? [(pi) => pi.on("context", contextHandler)] : []),

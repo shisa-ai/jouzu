@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from "node:crypto";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
-import type { AssistantMessage, Message } from "@earendil-works/pi-ai";
+import { type AssistantMessage, getCurrentSystemPrompt, type Message } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
 import { flowDiagnosticText } from "./diagnostic-text.js";
 import {
@@ -486,7 +486,7 @@ export class PiNativeRequests {
 					sourceHash,
 					transformedHash: modelHash,
 					modelHash,
-					systemHash: hash(context.systemPrompt),
+					systemHash: hash(getCurrentSystemPrompt(context.messages)),
 				});
 				const flowValidateProvider = trustedStream
 					? preparePiProviderRoute(session.modelRuntime, model, () => this.assertActive())

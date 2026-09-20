@@ -65,7 +65,7 @@ test("native prompt source positions survive request-store reopen", async (t) =>
 	const [request] = await f.store.snapshot();
 	assert.deepEqual(
 		request.sourceCapture.members.map(({ operationId, prompt, index }) => ({ operationId, prompt, index })),
-		[{ operationId: submission.dispatch.operationId, prompt: { inputIndex: 0, messageIndex: 0 }, index: 0 }],
+		[{ operationId: submission.dispatch.operationId, prompt: { inputIndex: 0, messageIndex: 0 }, index: 1 }],
 	);
 	const entry = f.session.sessionManager.getEntry(submission.dispatch.promptHistory[0].entryId);
 	assert.equal(
@@ -111,7 +111,7 @@ test("repeated native message objects preserve both prompt positions without gue
 test("native source capture rejects mutation while identity validation is pending", async (t) => {
 	const f = await nativeRequests(t, {
 		identifySources: async (messages) => {
-			messages[0].content[0].text = "changed";
+			messages.find((message) => message.role === "user").content[0].text = "changed";
 			return [];
 		},
 	});
@@ -145,7 +145,7 @@ test("native source capture drains before attachment close", async (t) => {
 	await assert.rejects(f.bridge.close(), { code: "busy" });
 	release.resolve();
 	await running;
-	assert.equal((await f.store.snapshot())[0].sourceCapture.count, 1);
+	assert.equal((await f.store.snapshot())[0].sourceCapture.count, 2);
 });
 
 test("native request source schema rejects duplicate and invalid positions", async (t) => {
@@ -155,7 +155,7 @@ test("native request source schema rejects duplicate and invalid positions", asy
 	const member = request.sourceCapture.members[0];
 	for (const members of [
 		[{ ...member, index: -1 }],
-		[{ ...member, index: 1 }],
+		[{ ...member, index: request.sourceCapture.count }],
 		[member, member],
 		[{ ...member, queue: { id: "queue", revision: 1 } }],
 		[{ ...member, messageHash: "bad" }],
@@ -441,7 +441,7 @@ test("native context mutation during model conversion prevents provider executio
 	const f = await nativeRequests(t, { retainInputs: true });
 	const convert = f.session.agent.convertToLlm;
 	f.session.agent.convertToLlm = (messages) => {
-		messages[0].content[0].text = "late mutation";
+		messages.find((message) => message.role === "user").content[0].text = "late mutation";
 		return convert(messages);
 	};
 	await f.session.prompt("original");
@@ -871,7 +871,11 @@ test("required admission permits filtering previously included history", async (
 	const f = await nativeRequests(t, {
 		retainInputs: true,
 		enforceRequiredSources: true,
-		contextHandler: ({ messages }) => ({ messages: filter ? messages.slice(1) : messages }),
+		contextHandler: ({ messages }) => ({
+			messages: filter
+				? messages.filter((message) => message.role !== "user" || message.content[0].text !== "old")
+				: messages,
+		}),
 	});
 	await f.session.prompt("old");
 	filter = true;
@@ -1109,7 +1113,7 @@ test("cancelled held input stays in history and is excluded from unrelated reque
 	await f.session.prompt("cancel this instruction");
 	const [held] = await f.store.snapshot();
 	await assert.rejects(f.store.cancelSources(held.id, held.withheldPayload.hash, [99]), { code: "identity" });
-	await f.store.cancelSources(held.id, held.withheldPayload.hash, [0]);
+	await f.store.cancelSources(held.id, held.withheldPayload.hash, [held.sourceCapture.members[0].index]);
 	assert.equal(f.store.recoveryBlocked, false);
 	assert.equal(f.sent.length, 0);
 	reject = false;
@@ -1120,7 +1124,7 @@ test("cancelled held input stays in history and is excluded from unrelated reque
 	const requests = await f.store.snapshot();
 	assert.deepEqual(requests[0].withheldPayload, held.withheldPayload);
 	assert.equal(requests[0].payload, undefined);
-	assert.deepEqual(requests[0].cancelledSources, [0]);
+	assert.deepEqual(requests[0].cancelledSources, [held.sourceCapture.members[0].index]);
 	assert.equal(requests[1].sourceCapture.members.length, 1);
 	const view = (await f.attachment.submissionViews())[0];
 	assert.equal(view.nativeRequests[0].sources[0].cancelled, true);
@@ -1201,7 +1205,7 @@ test("cancelled input is excluded before extension context handlers", async (t) 
 	});
 	await f.session.prompt("held");
 	const [held] = await f.store.snapshot();
-	await f.store.cancelSources(held.id, held.withheldPayload.hash, [0]);
+	await f.store.cancelSources(held.id, held.withheldPayload.hash, [held.sourceCapture.members[0].index]);
 	clone = true;
 	await f.session.prompt("unrelated");
 	assert.equal(f.sent.length, 1);
@@ -1219,7 +1223,7 @@ test("missing cancelled-source identity requires reconciliation before new work"
 	identify = (messages) => f.dispatch.sources(messages);
 	await f.session.prompt("held");
 	const [held] = await f.store.snapshot();
-	await f.store.cancelSources(held.id, held.withheldPayload.hash, [0]);
+	await f.store.cancelSources(held.id, held.withheldPayload.hash, [held.sourceCapture.members[0].index]);
 	missing = true;
 	await f.session.prompt("other");
 	assert.equal(f.sent.length, 0);

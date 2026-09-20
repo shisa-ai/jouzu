@@ -167,7 +167,7 @@ export class PiHistoryReceipts {
 					["error", "aborted"].includes(event.message.stopReason))
 			)
 				this.claimed.length = 0;
-			if (event.type === "message_start" && this.claimed.length) {
+			if (event.type === "message_start" && event.message.role !== "system" && this.claimed.length) {
 				const input = this.claimed.shift();
 				if (!input || input.role !== event.message.role)
 					throw new FlowLedgerError("identity", "Claimed input does not match native message order.");

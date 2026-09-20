@@ -42,7 +42,11 @@ export class PiNativeHistory {
 				this.claimed.length = 0;
 				this.prompts.length = 0;
 			}
-			if (event.type === "message_start" && (this.prompts.length || this.claimed.length)) {
+			if (
+				event.type === "message_start" &&
+				event.message.role !== "system" &&
+				(this.prompts.length || this.claimed.length)
+			) {
 				const input = this.prompts.length ? this.prompts.shift() : this.claimed.shift();
 				if (!input || !matchesInput(input, event.message))
 					throw new FlowLedgerError("identity", "Native consumed message differs from its observed input.");
@@ -204,8 +208,8 @@ export class PiNativeHistory {
 	/** Only this dispatch's input is retained under its operation; deferred messages retain their own source. */
 	promptInput(input: string | AgentMessage | AgentMessage[]): string | AgentMessage | AgentMessage[] {
 		if (typeof input === "string") return input;
-		if (!Array.isArray(input)) return this.deferred.has(input) ? [] : input;
-		return input.filter((message) => !this.deferred.has(message));
+		if (!Array.isArray(input)) return input.role === "system" || this.deferred.has(input) ? [] : input;
+		return input.filter((message) => message.role !== "system" && !this.deferred.has(message));
 	}
 	observePrompt(
 		operationId: string,
@@ -225,19 +229,24 @@ export class PiNativeHistory {
 		const originalMessages =
 			typeof original === "string" || original === undefined ? [] : Array.isArray(original) ? original : [original];
 		let messageIndex = 0;
-		const captured = messages.map((message, index) => {
+		const captured = messages.flatMap((message, index) => {
+			// Pi may rewrite tool declarations before emitting its system message.
+			// System state is not owned by this retained submission.
+			if (message.role === "system") return [];
 			const deferred = this.deferred.get(originalMessages[index]);
 			if (deferred) {
 				if (!matchesInput(deferred, message))
 					throw new FlowLedgerError("identity", "Deferred context changed before native consumption.");
-				return structuredClone(deferred);
+				return [structuredClone(deferred)];
 			}
-			return {
-				message: structuredClone(message),
-				operationId,
-				prompt: { inputIndex, messageIndex: messageIndex++ },
-				nativeTimestamp,
-			};
+			return [
+				{
+					message: structuredClone(message),
+					operationId,
+					prompt: { inputIndex, messageIndex: messageIndex++ },
+					nativeTimestamp,
+				},
+			];
 		});
 		this.prompts.push(...captured);
 		return () => {

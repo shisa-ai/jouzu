@@ -26,7 +26,7 @@ test("provider receipt patch preserves unrecognized installed source", async (t)
 	t.after(() => rm(root, { recursive: true, force: true }));
 	const pkg = join(root, "node_modules/@earendil-works/pi-ai");
 	await mkdir(join(pkg, "dist/api"), { recursive: true });
-	await writeFile(join(pkg, "package.json"), JSON.stringify({ name: "@earendil-works/pi-ai", version: "0.85.1" }));
+	await writeFile(join(pkg, "package.json"), JSON.stringify({ name: "@earendil-works/pi-ai", version: "0.86.0" }));
 	const path = join(pkg, "dist/api/transform-messages.js");
 	await writeFile(path, "unrecognized");
 	await assert.rejects(applyProviderReceipts(root), /hash mismatch/);

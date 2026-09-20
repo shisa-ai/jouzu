@@ -3,6 +3,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { test } from "node:test";
+import { getCurrentSystemPrompt } from "@earendil-works/pi-ai";
 import {
 	applyInstalledMultiloopWaitSkill,
 	applyMultiloopWaitSkill,
@@ -302,7 +303,7 @@ test("active wait tools add session guidance and a simulated model invokes the r
 	};
 	await f.session.prompt("wait for the process");
 	assert.equal(contexts.length, 2);
-	assert.equal(contexts[0].systemPrompt.split(FLOW_WAIT_GUIDANCE[2]).length - 1, 1);
+	assert.equal(getCurrentSystemPrompt(contexts[0].messages).split(FLOW_WAIT_GUIDANCE[2]).length - 1, 1);
 	assert.equal((await f.attachment.waits.snapshot())[0].state, "waiting");
 	const result = contexts[1].messages.find(
 		(message) => message.role === "toolResult" && message.toolCallId === "wait-call",
@@ -320,7 +321,7 @@ test("active wait tools add session guidance and a simulated model invokes the r
 	assert.equal(saved.message.details.health, "deadline-only");
 	f.session.setActiveToolsByName([]);
 	await f.session.prompt("status with wait tools disabled");
-	assert.ok(!contexts[2].systemPrompt.includes(FLOW_WAIT_GUIDANCE[2]));
+	assert.ok(!getCurrentSystemPrompt(contexts[2].messages).includes(FLOW_WAIT_GUIDANCE[2]));
 	assert.deepEqual(f.errors, []);
 });
 

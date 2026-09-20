@@ -37,9 +37,9 @@ function transport() {
 	const streamFn = async (_model, context) => {
 		assert.deepEqual(
 			context.messages.map((message) => message.role),
-			["user"],
+			["system", "user"],
 		);
-		prompts.push(context.messages[0].content[0].text);
+		prompts.push(context.messages[1].content[0].text);
 		return { result: async () => assistant() };
 	};
 	streamFn.flowPrepareSummaryMessages = (messages) => {

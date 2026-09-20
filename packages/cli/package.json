@@ -16,7 +16,7 @@
 		"THIRD_PARTY_NOTICES.md"
 	],
 	"scripts": {
-		"build": "node ../../scripts/install-release-extensions.mjs && node ../../scripts/apply-task-flow.mjs && node ../../scripts/apply-pi-content-policy.mjs && node ../../scripts/vendor-clipboard-bindings.mjs && node ../../scripts/configure-release-packlists.mjs && tsc -p tsconfig.json && node ../../scripts/copy-session-ui.mjs && node ../../scripts/prepare-cli.mjs && node ../../scripts/copy-pi-lock.mjs dist/pi.lock.json && node ../../scripts/copy-profiles.mjs && node ../../scripts/copy-catalog.mjs && node ../../scripts/copy-release-extensions.mjs && node ../../scripts/build-textguard.mjs",
+		"build": "node ../../scripts/install-release-extensions.mjs && node ../../scripts/apply-task-flow.mjs && node ../../scripts/apply-pi-content-policy.mjs && node ../../scripts/configure-release-packlists.mjs && tsc -p tsconfig.json && node ../../scripts/copy-session-ui.mjs && node ../../scripts/prepare-cli.mjs && node ../../scripts/copy-pi-lock.mjs dist/pi.lock.json && node ../../scripts/copy-profiles.mjs && node ../../scripts/copy-catalog.mjs && node ../../scripts/copy-release-extensions.mjs && node ../../scripts/build-textguard.mjs",
 		"check": "tsc -p tsconfig.json --noEmit",
 		"test": "node ../../scripts/check-dist-fresh.mjs && node ../../scripts/run-tests.mjs test/*.test.mjs"
 	},
@@ -44,23 +44,23 @@
 		"access": "public"
 	},
 	"dependencies": {
-		"@earendil-works/pi-ai": "0.85.1",
-		"@earendil-works/pi-coding-agent": "0.85.1",
-		"@earendil-works/pi-server": "0.85.1",
-		"@earendil-works/pi-telemetry": "0.85.1",
-		"@earendil-works/pi-tui": "0.85.1",
+		"@earendil-works/pi-ai": "0.86.0",
+		"@earendil-works/pi-coding-agent": "0.86.0",
+		"@earendil-works/pi-server": "0.86.0",
+		"@earendil-works/pi-telemetry": "0.86.0",
+		"@earendil-works/pi-tui": "0.86.0",
 		"@lhl/pi-tasks": "git+https://github.com/lhl/pi-tasks.git#14b0f6c941635468b84f392e8a33524e2589bc70",
 		"@picovoice/pvrecorder-node": "1.2.9",
 		"@sinclair/typebox": "0.34.52",
 		"@sting8k/pi-vcc": "0.7.2",
 		"@vanillagreen/pi-background-tasks": "git+https://github.com/shisa-ai/kendex.git#66356512b81d2358b17531fffa791e2f1e51afef",
-		"esbuild": "0.28.1",
+		"esbuild": "0.28.2",
 		"pi-code-previews": "0.1.36",
 		"pi-multiloop": "git+https://github.com/lhl/pi-multiloop.git#a24ec57073b2b1066470c7cbca09a0ca9212318a",
 		"pi-schedule-prompt": "0.4.1",
 		"pi-skill-dollar": "git+https://github.com/lhl/pi-skill-dollar.git#4bff5734d87c4f4725d81a4ea1d1c1283c22423c",
 		"pi-webaio": "git+https://github.com/shisa-ai/pi-webaio.git#f65ae726bc95c50dc0e2c5a0ea95c2cdfb9a1bc2",
-		"typebox": "1.3.7",
+		"typebox": "1.3.27",
 		"wreq-js": "3.2.0",
 		"ws": "8.21.3"
 	},

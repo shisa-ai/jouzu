@@ -16,6 +16,7 @@ test("native session report appends the host runtime line after the existing sta
 	for (const footer of [undefined, () => "Runtime: Jouzu startup-build · Pi test-pi"]) {
 		const components = [];
 		InteractiveMode.prototype.handleSessionCommand.call({
+			settingsManager: { getCacheWarmingMode: () => "streaming" },
 			options: { sessionInfoFooter: footer },
 			session: {
 				getSessionStats: () => ({

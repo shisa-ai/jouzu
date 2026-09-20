@@ -303,7 +303,7 @@ test("retained dispatch uses captured bytes once and sendUserMessage forwarding 
 	assert.match(results.find((result) => result.status === "rejected").reason.message, /already dispatched/);
 	assert.equal(held.entries.length, 1);
 	assert.equal(requests.length, 1);
-	assert.equal(requests[0][0].content[0].text, "original");
+	assert.equal(requests[0].find((message) => message.role === "user").content[0].text, "original");
 });
 
 test("held prompt calls its preflight callback once across later dispatch", async (t) => {
