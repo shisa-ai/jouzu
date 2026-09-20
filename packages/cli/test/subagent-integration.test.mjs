@@ -10,7 +10,7 @@ import { digest } from "../dist/subagents/roles.js";
 
 function fixture(realWorker = false, options = {}) {
 	const root = realpathSync(mkdtempSync(join(tmpdir(), "jouzu-agent-integration-")));
-	const paths = { configDir: join(root, "config"), stateDir: join(root, "state") };
+	const paths = { agentDir: join(root, "agent"), configDir: join(root, "config"), stateDir: join(root, "state") };
 	const workers = [];
 	const messages = [];
 	const entries = [];
@@ -125,6 +125,41 @@ function fixture(realWorker = false, options = {}) {
 		shutdown: () => handlers.get("session_shutdown")(),
 	};
 }
+test("child launches and resumes snapshot the global warming setting", async () => {
+	const f = fixture();
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		mkdirSync(f.paths.agentDir, { recursive: true });
+		writeFileSync(join(f.paths.agentDir, "settings.json"), JSON.stringify({ cacheWarming: "off" }));
+		const run = await f.invoke({ op: "launch", role: "coder", task: "Inspect" });
+		assert.equal(f.workers[0].launch.cacheWarming, "off");
+		const childSession = join(f.workers[0].launch.directory, "session.jsonl");
+		writeFileSync(childSession, "{}\n");
+		f.workers[0].emit({ type: "ready", sessionFile: childSession, sessionId: "child" });
+		f.workers[0].emit({ type: "result", status: "completed", text: "Done" });
+		f.workers[0].exit(true);
+		writeFileSync(join(f.paths.agentDir, "settings.json"), JSON.stringify({ cacheWarming: "idle" }));
+		await f.invoke({ op: "resume", id: run.id, task: "Continue" });
+		assert.equal(f.workers[1].launch.cacheWarming, "idle");
+		assert.equal(f.workers[0].launch.cacheWarming, "off", "existing runs keep their launch snapshot");
+	} finally {
+		await f.shutdown();
+	}
+});
+
+test("unreadable warming settings refuse launch instead of enabling refreshes", async () => {
+	const f = fixture();
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		mkdirSync(f.paths.agentDir, { recursive: true });
+		writeFileSync(join(f.paths.agentDir, "settings.json"), "broken");
+		await assert.rejects(f.invoke({ op: "launch", role: "coder", task: "Inspect" }), /cache-warming settings/);
+		assert.equal(f.workers.length, 0);
+	} finally {
+		await f.shutdown();
+	}
+});
+
 test("role and run displays use catalog names without changing selectors or read content", async () => {
 	const f = fixture();
 	await f.handlers.get("session_start")({}, f.ctx);

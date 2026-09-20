@@ -30,7 +30,7 @@ for (const scenario of [
 		const root = await mkdtemp(join(tmpdir(), "jouzu-subagent-inbox-"));
 		const workers = [];
 		const integration = createWorkflowIntegration(
-			{ configDir: join(root, "config"), stateDir: join(root, "state") },
+			{ agentDir: join(root, "agent"), configDir: join(root, "config"), stateDir: join(root, "state") },
 			(launch, emit, exit) => {
 				const worker = {
 					launch,

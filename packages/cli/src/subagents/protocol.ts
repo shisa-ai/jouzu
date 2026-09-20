@@ -1,3 +1,4 @@
+import type { CacheWarmingMode } from "@earendil-works/pi-coding-agent";
 import type { TextGuardMode } from "../textguard-policy.js";
 import type { AgentModel, AgentRole } from "./roles.js";
 
@@ -10,6 +11,8 @@ export interface WorkerLaunch {
 	directory: string;
 	sessionFile?: string;
 	textguardFiles?: boolean;
+	/** Snapshot of the global warming setting when this run was launched. */
+	cacheWarming?: CacheWarmingMode;
 	/** The parent's scanning mode, so a child never re-blocks what the user unblocked. */
 	textguardMode?: TextGuardMode;
 	task: string;

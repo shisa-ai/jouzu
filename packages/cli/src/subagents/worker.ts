@@ -82,7 +82,11 @@ async function runGuardedWorker(
 		models: [{ ...model, headers: { ...model.headers, ...auth.headers }, baseUrl: auth.baseUrl ?? model.baseUrl }],
 	});
 	if (auth.apiKey) await runtime.setRuntimeApiKey(model.provider, auth.apiKey);
-	const settingsManager = SettingsManager.inMemory({ retry: { enabled: false }, compaction: { enabled: true } });
+	const settingsManager = SettingsManager.inMemory({
+		retry: { enabled: false },
+		compaction: { enabled: true },
+		...(launch.cacheWarming ? { cacheWarming: launch.cacheWarming } : {}),
+	});
 	const sessionManager = launch.sessionFile
 		? SessionManager.open(launch.sessionFile, launch.directory, launch.cwd)
 		: SessionManager.create(launch.cwd, launch.directory);

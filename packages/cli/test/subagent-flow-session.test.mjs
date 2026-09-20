@@ -13,7 +13,7 @@ test("tree navigation releases unread child completions without blocking later r
 	afterFlowCleanup(t, () => rm(root, { recursive: true, force: true }));
 	const workers = [];
 	const integration = createWorkflowIntegration(
-		{ configDir: join(root, "config"), stateDir: join(root, "state") },
+		{ agentDir: join(root, "agent"), configDir: join(root, "config"), stateDir: join(root, "state") },
 		(launch, emit, exit) => {
 			const w = {
 				launch,
@@ -86,7 +86,7 @@ for (const transform of ["included", "replaced", "omitted"])
 		afterFlowCleanup(t, () => rm(root, { recursive: true, force: true }));
 		const workers = [];
 		const integration = createWorkflowIntegration(
-			{ configDir: join(root, "config"), stateDir: join(root, "state") },
+			{ agentDir: join(root, "agent"), configDir: join(root, "config"), stateDir: join(root, "state") },
 			(launch, emit, exit) => {
 				const w = {
 					launch,

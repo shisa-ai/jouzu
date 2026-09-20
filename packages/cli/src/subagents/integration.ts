@@ -1,4 +1,9 @@
-import type { ExtensionAPI, ExtensionContext, ToolDefinition } from "@earendil-works/pi-coding-agent";
+import {
+	type ExtensionAPI,
+	type ExtensionContext,
+	SettingsManager,
+	type ToolDefinition,
+} from "@earendil-works/pi-coding-agent";
 import { FlowLedgerError } from "../flow-control/receipt-ledger.js";
 import {
 	SUBAGENT_READ_RECEIPT,
@@ -145,8 +150,12 @@ export function createWorkflowIntegration(
 		if (!auth.ok) throw new Error("Authentication: sign in to the selected agent provider and retry.");
 		if (auth.env && Object.keys(auth.env).length)
 			throw new Error("Authentication: choose an API-key or token provider for child agents.");
+		const settings = SettingsManager.create(active.cwd, paths.agentDir);
+		if (settings.drainErrors().length)
+			throw new Error("Could not read cache-warming settings for the child. Check settings.json before retrying.");
 		return targetManager.launch(
 			{
+				cacheWarming: settings.getCacheWarmingMode(),
 				role,
 				model,
 				auth: {
