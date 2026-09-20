@@ -20,8 +20,10 @@ export async function applyCodePreviews(packageRoot, checkOnly = false) {
 	const writes = [];
 	for (const [path, hashes] of Object.entries(lock.files)) {
 		const original = await readFile(join(packageRoot, path), "utf8");
-		if (sha(original) === hashes.after) continue;
-		if (checkOnly || sha(original) !== hashes.before) throw new Error(`Code previews hash mismatch: ${path}`);
+		const digest = sha(original);
+		if (digest === hashes.after) continue;
+		if (checkOnly || (digest !== hashes.before && digest !== hashes.previousAfter))
+			throw new Error(`Code previews hash mismatch: ${path}`);
 		const changed = transform(path, original);
 		if (sha(changed) !== hashes.after) throw new Error(`Code previews transform mismatch: ${path}`);
 		writes.push([join(packageRoot, path), changed]);

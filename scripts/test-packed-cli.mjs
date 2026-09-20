@@ -201,9 +201,11 @@ function assertPackedSurfaces(installedCli, probe, cwd, env, profile) {
 }
 
 /**
- * Run the packed CLI's actual write tool through a loopback provider and prove an absolute
- * U+3000 path lands at the exact file. The runtime write route is the bundled pi-code-previews
- * override, so a source-only Pi import cannot cover this regression.
+ * Run the packed CLI's actual write and edit tools through a loopback provider and prove an
+ * absent U+3000 path stays exact: the write creates the exact file without touching an
+ * existing ASCII-space sibling sentinel, and the missing edit fails without mutating it.
+ * The runtime write route is the bundled pi-code-previews override, so a source-only Pi
+ * import cannot cover this regression.
  */
 async function assertPackedUnicodePaths(installedCli, temp) {
 	const expected = "日本語のツール確認\n完了 🦁";
@@ -211,7 +213,15 @@ async function assertPackedUnicodePaths(installedCli, temp) {
 	mkdirSync(project, { recursive: true });
 	const absolutePath = resolve(project, "絶対　確認.txt");
 	const relativePath = "相対　確認.txt";
+	const editPath = resolve(project, "編集　確認.txt");
 	const asciiSibling = resolve(temp, "日本語 project-unicode");
+	mkdirSync(asciiSibling, { recursive: true });
+	const absoluteSentinel = resolve(asciiSibling, "絶対 確認.txt");
+	const relativeSentinel = resolve(asciiSibling, "相対 確認.txt");
+	const editSentinel = resolve(asciiSibling, "編集 確認.txt");
+	writeFileSync(absoluteSentinel, "absolute sentinel");
+	writeFileSync(relativeSentinel, "relative sentinel");
+	writeFileSync(editSentinel, "edit sentinel");
 	let step = 0;
 	const server = createServer((request, response) => {
 		let body = "";
@@ -238,6 +248,11 @@ async function assertPackedUnicodePaths(installedCli, temp) {
 			if (index === 0) return toolCall("call_write_absolute", "write", { path: absolutePath, content: expected });
 			if (index === 1) return toolCall("call_write_relative", "write", { path: relativePath, content: expected });
 			if (index === 2) return toolCall("call_read", "read", { path: absolutePath });
+			if (index === 3)
+				return toolCall("call_edit_missing", "edit", {
+					path: editPath,
+					edits: [{ oldText: "edit sentinel", newText: "changed" }],
+				});
 			return send({
 				choices: [{ index: 0, delta: { content: "done" }, finish_reason: "stop" }],
 				usage: { prompt_tokens: 1, completion_tokens: 1, total_tokens: 2 },
@@ -293,7 +308,7 @@ async function assertPackedUnicodePaths(installedCli, temp) {
 				"--model",
 				"loopback-model",
 				"--tools",
-				"read,write",
+				"read,write,edit",
 				"write ツールで絶対パスと相対パスにファイルを作成し、read ツールで確認してください。",
 			],
 			{ cwd: project, env, stdio: ["ignore", "pipe", "pipe"] },
@@ -332,7 +347,13 @@ async function assertPackedUnicodePaths(installedCli, temp) {
 		);
 		assert.equal(readFileSync(absolutePath, "utf8"), expected);
 		assert.equal(readFileSync(resolve(project, relativePath), "utf8"), expected);
-		assert.equal(existsSync(asciiSibling), false, "packed write resolved an absolute U+3000 path to its ASCII sibling");
+		assert.equal(readFileSync(absoluteSentinel, "utf8"), "absolute sentinel");
+		assert.equal(readFileSync(relativeSentinel, "utf8"), "relative sentinel");
+		assert.equal(readFileSync(editSentinel, "utf8"), "edit sentinel");
+		const edits = events.filter((event) => event.type === "tool_execution_end" && event.toolName === "edit");
+		assert.equal(edits.length, 1, "packed unicode path smoke did not run the edit probe");
+		assert.equal(edits[0].isError, true, "a missing U+3000 edit must fail");
+		assert.equal(existsSync(editPath), false, "a missing U+3000 edit must not create the exact file");
 	} finally {
 		await new Promise((done) => server.close(done));
 	}

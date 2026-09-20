@@ -5,7 +5,8 @@
 	"files": {
 		"src/paths/resolve.ts": {
 			"before": "2f934e58a869661e43bd004905f02749e97b659180ded64c674f80c37dc16578",
-			"after": "ef1f9c679c07a3f279f834b18ca6b0f0281fe99a00e39f5324bef2e770763654"
+			"previousAfter": "ef1f9c679c07a3f279f834b18ca6b0f0281fe99a00e39f5324bef2e770763654",
+			"after": "61b89b3b7525dacf4f64e248a3b2f4b5db67f559c6089a77e4dc30a972016c3d"
 		}
 	}
 }
