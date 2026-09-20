@@ -8,29 +8,52 @@ function replace(text, before, after, count = 1) {
 export function transform(path, source) {
 	if (path !== "dist/core/tools/path-utils.js") throw new Error(`Unknown patch path ${path}`);
 	let text = source;
+	// Mutating tools must resolve the exact path, never a Unicode-normalized sibling.
 	text = replace(
 		text,
-		`/**
- * Resolve a path relative to the given cwd.
- * Handles ~ expansion and absolute paths.
- */
-export function resolveToCwd(filePath, cwd) {
+		`export function resolveToCwd(filePath, cwd) {
     return resolvePath(filePath, cwd, { normalizeUnicodeSpaces: true, stripAtPrefix: true });
 }`,
-		`/**
- * Resolve a path relative to the given cwd.
- * Handles ~ expansion and absolute paths.
- * The exact path wins whenever it exists. Unicode-space normalization stays a
- * fallback for a path that exists under the normalized spelling.
- */
-export function resolveToCwd(filePath, cwd) {
-    const exact = resolvePath(filePath, cwd, { stripAtPrefix: true });
-    const normalized = resolvePath(filePath, cwd, { normalizeUnicodeSpaces: true, stripAtPrefix: true });
-    if (exact === normalized || fileExists(exact)) {
-        return exact;
-    }
-    return fileExists(normalized) ? normalized : exact;
+		`export function resolveToCwd(filePath, cwd) {
+    return resolvePath(filePath, cwd, { stripAtPrefix: true });
 }`,
+	);
+	// Reads keep a Unicode-space fallback, but only for an existing normalized file.
+	text = replace(
+		text,
+		`    const resolved = resolveToCwd(filePath, cwd);
+    if (fileExists(resolved)) {
+        return resolved;
+    }
+    // Try macOS AM/PM variant (narrow no-break space before AM/PM)`,
+		`    const resolved = resolveToCwd(filePath, cwd);
+    if (fileExists(resolved)) {
+        return resolved;
+    }
+    // Try the Unicode-space-normalized variant (spaces pasted from rich text).
+    const unicodeSpaceVariant = resolvePath(filePath, cwd, { normalizeUnicodeSpaces: true, stripAtPrefix: true });
+    if (unicodeSpaceVariant !== resolved && fileExists(unicodeSpaceVariant)) {
+        return unicodeSpaceVariant;
+    }
+    // Try macOS AM/PM variant (narrow no-break space before AM/PM)`,
+	);
+	text = replace(
+		text,
+		`    const resolved = resolveToCwd(filePath, cwd);
+    if (await pathExists(resolved)) {
+        return resolved;
+    }
+    // Try macOS AM/PM variant (narrow no-break space before AM/PM)`,
+		`    const resolved = resolveToCwd(filePath, cwd);
+    if (await pathExists(resolved)) {
+        return resolved;
+    }
+    // Try the Unicode-space-normalized variant (spaces pasted from rich text).
+    const unicodeSpaceVariant = resolvePath(filePath, cwd, { normalizeUnicodeSpaces: true, stripAtPrefix: true });
+    if (unicodeSpaceVariant !== resolved && (await pathExists(unicodeSpaceVariant))) {
+        return unicodeSpaceVariant;
+    }
+    // Try macOS AM/PM variant (narrow no-break space before AM/PM)`,
 	);
 	return text.replace(/^\/\/# sourceMappingURL=.*\n?/m, "");
 }

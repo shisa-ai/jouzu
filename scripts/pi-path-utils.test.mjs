@@ -85,24 +85,67 @@ test("file tools preserve an exact cwd and filename containing U+3000", async (t
 	assert.match(listing, /相対-結果\.txt/);
 });
 
-test("unicode-space normalization stays a fallback for an existing normalized path", async (t) => {
+test("write and edit never mutate an existing ASCII-space sibling", async (t) => {
 	assert.equal(await applyPathUtils(packageRoots[0]), 0);
-	const { createReadTool, createWriteTool } = await import("@earendil-works/pi-coding-agent");
+	const { createEditTool, createWriteTool } = await import("@earendil-works/pi-coding-agent");
+	const temp = await mkdtemp(join(tmpdir(), "jouzu-path-utils-exact-"));
+	t.after(() => rm(temp, { recursive: true, force: true }));
+	const ctx = { cwd: temp };
+	const call = (tool, args) => tool.execute("call", args, undefined, undefined, ctx);
+
+	const write = createWriteTool(temp);
+	const relativeExact = `name${IDEOGRAPHIC_SPACE}file.txt`;
+	await writeFile(join(temp, "name file.txt"), "relative sentinel");
+	await call(write, { path: relativeExact, content: "relative exact" });
+	assert.equal(await readFile(join(temp, relativeExact), "utf8"), "relative exact");
+	assert.equal(await readFile(join(temp, "name file.txt"), "utf8"), "relative sentinel");
+
+	const absoluteExact = join(temp, `absolute${IDEOGRAPHIC_SPACE}file.txt`);
+	await writeFile(join(temp, "absolute file.txt"), "absolute sentinel");
+	await call(write, { path: absoluteExact, content: "absolute exact" });
+	assert.equal(await readFile(absoluteExact, "utf8"), "absolute exact");
+	assert.equal(await readFile(join(temp, "absolute file.txt"), "utf8"), "absolute sentinel");
+
+	const edit = createEditTool(temp);
+	await writeFile(join(temp, "edit file.txt"), "relative edit sentinel");
+	await assert.rejects(
+		call(edit, { path: `edit${IDEOGRAPHIC_SPACE}file.txt`, edits: [{ oldText: "sentinel", newText: "changed" }] }),
+		/Could not edit file/,
+	);
+	assert.equal(await readFile(join(temp, "edit file.txt"), "utf8"), "relative edit sentinel");
+	assert.equal(existsSync(join(temp, `edit${IDEOGRAPHIC_SPACE}file.txt`)), false);
+
+	const absoluteEdit = join(temp, `edit${IDEOGRAPHIC_SPACE}absolute.txt`);
+	await writeFile(join(temp, "edit absolute.txt"), "absolute edit sentinel");
+	await assert.rejects(
+		call(edit, { path: absoluteEdit, edits: [{ oldText: "sentinel", newText: "changed" }] }),
+		/Could not edit file/,
+	);
+	assert.equal(await readFile(join(temp, "edit absolute.txt"), "utf8"), "absolute edit sentinel");
+	assert.equal(existsSync(absoluteEdit), false);
+});
+
+test("read-only unicode-space fallback resolves an existing normalized path", async (t) => {
+	assert.equal(await applyPathUtils(packageRoots[0]), 0);
+	const { createReadTool } = await import("@earendil-works/pi-coding-agent");
 	const temp = await mkdtemp(join(tmpdir(), "jouzu-path-utils-fallback-"));
 	t.after(() => rm(temp, { recursive: true, force: true }));
 	await writeFile(join(temp, "file name.txt"), "legacy");
 	const read = createReadTool(temp);
-	const result = await read.execute("call", { path: `file${NO_BREAK_SPACE}name.txt` }, undefined, undefined, {
+	const relative = await read.execute("call", { path: `file${NO_BREAK_SPACE}name.txt` }, undefined, undefined, {
 		cwd: temp,
 	});
-	assert.equal(result.content[0].text, "legacy");
-
-	const write = createWriteTool(temp);
-	await write.execute("call", { path: `paste${NO_BREAK_SPACE}name.txt`, content: "exact" }, undefined, undefined, {
-		cwd: temp,
-	});
-	assert.equal(await readFile(join(temp, `paste${NO_BREAK_SPACE}name.txt`), "utf8"), "exact");
-	assert.equal(existsSync(join(temp, "paste name.txt")), false, "write normalized a new filename");
+	assert.equal(relative.content[0].text, "legacy");
+	const absolute = await read.execute(
+		"call",
+		{ path: join(temp, `file${NO_BREAK_SPACE}name.txt`) },
+		undefined,
+		undefined,
+		{
+			cwd: temp,
+		},
+	);
+	assert.equal(absolute.content[0].text, "legacy");
 });
 
 test("unrecognized bytes are refused without overwriting them", async (t) => {

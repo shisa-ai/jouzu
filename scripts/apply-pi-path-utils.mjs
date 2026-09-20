@@ -9,10 +9,10 @@ const root = resolve(import.meta.dirname, "..");
 const sha = (text) => createHash("sha256").update(text).digest("hex");
 
 /**
- * Keep file-tool paths exact, so a cwd or filename that contains a Unicode
- * space (for example U+3000) is never rewritten to a different ASCII-space
- * location. The normalized spelling remains a fallback only when that location
- * exists and the exact one does not.
+ * Keep mutating file-tool paths exact, so a cwd or filename that contains a
+ * Unicode space (for example U+3000) is never rewritten to a different
+ * ASCII-space location. The read tool keeps a Unicode-space fallback for an
+ * existing normalized file; write, edit, ls, find, and grep do not.
  */
 export async function applyPathUtils(packageRoot, checkOnly = false) {
 	const manifestPath = "upstream/pi-path-utils/patch.lock.json";
