@@ -5,18 +5,25 @@ import { wrapTextWithAnsi } from "@earendil-works/pi-tui";
 import { catalogSourceCredentialAvailable, SHISA_API_CATALOG_SOURCE } from "../catalog-sources.js";
 import type { JouzuPaths } from "../paths.js";
 import { writeFilePrivateExclusive } from "../private-fs.js";
-import { sanitizeTerminalText } from "../terminal-layout.js";
+import { detectTerminalColorMode, sanitizeTerminalText } from "../terminal-layout.js";
 import { setShisaSignedOut } from "./credentials.js";
 import { resolveShisaGatewayUrl } from "./device-flow.js";
 import { loginShisa, type ShisaLoginOptions } from "./login.js";
 
 /** Keep account messaging separate from the first-launch decision and login protocol. */
 export const SHISA_ONBOARDING_COPY = {
-	intro: "Sign up or sign in to Shisa AI for immediate access to the latest open-source coding models.",
-	credits: "Signup credits are available for eligible accounts. See the terms during signup.",
-	question: "Connect to Shisa AI now? [y/N] ",
+	points: [
+		"Connect to Shisa AI for access to the latest open coding models (Qwen, GLM, etc).",
+		"New signups get $10 instant credits. Add a credit card for $25 more.",
+	],
+	question: "Connect now? [y/N] ",
+	hint: "(or later with /login shisa)",
 	later: "You can connect later with /login shisa.",
 };
+
+/** Marks each offer line without relying on color, so a pipe or NO_COLOR keeps the shape. */
+const POINT_MARKER = "\u25c6";
+const POINT_PREFIX_WIDTH = 4;
 
 export function shisaOnboardingPath(paths: JouzuPaths): string {
 	return join(paths.stateDir, "shisa-onboarding.json");
@@ -26,8 +33,9 @@ export interface ShisaOnboardingOptions extends Omit<ShisaLoginOptions, "gateway
 	interactive: boolean;
 	env?: NodeJS.ProcessEnv;
 	input?: NodeJS.ReadableStream;
-	output?: NodeJS.WritableStream & { columns?: number };
+	output?: NodeJS.WritableStream & { columns?: number; isTTY?: boolean };
 	signal?: AbortSignal;
+	colorEnabled?: boolean;
 	ask?: (question: string, signal: AbortSignal) => Promise<string>;
 }
 
@@ -42,9 +50,20 @@ export async function offerShisaOnboarding(options: ShisaOnboardingOptions): Pro
 		return;
 
 	const output = options.output ?? process.stdout;
+	const columns = () => Math.max(12, output.columns || 80);
 	const write = (message: string) => {
-		const width = Math.max(12, output.columns || 80);
-		output.write(`${wrapTextWithAnsi(sanitizeTerminalText(message), width).join("\n")}\n`);
+		output.write(`${wrapTextWithAnsi(sanitizeTerminalText(message), columns()).join("\n")}\n`);
+	};
+	// Styling wraps sanitized text: `sanitizeTerminalText` removes escape sequences, so
+	// color applied before it would be stripped along with anything the copy inherited.
+	const colorEnabled =
+		options.colorEnabled ?? (output.isTTY === true && detectTerminalColorMode({ env, stdoutIsTTY: true }) !== "none");
+	const style = (value: string, code: string) => (colorEnabled ? `\u001b[${code}m${value}\u001b[0m` : value);
+	const writePoint = (message: string) => {
+		const width = Math.max(8, columns() - POINT_PREFIX_WIDTH);
+		const lines = wrapTextWithAnsi(sanitizeTerminalText(message), width);
+		for (const [index, line] of lines.entries())
+			output.write(index === 0 ? `  ${style(POINT_MARKER, "36")} ${line}\n` : `    ${line}\n`);
 	};
 	const controller = new AbortController();
 	const signal = options.signal ? AbortSignal.any([controller.signal, options.signal]) : controller.signal;
@@ -54,11 +73,11 @@ export async function offerShisaOnboarding(options: ShisaOnboardingOptions): Pro
 	readline?.on("close", cancel);
 	process.on("SIGINT", cancel);
 	try {
-		write(SHISA_ONBOARDING_COPY.intro);
-		write(SHISA_ONBOARDING_COPY.credits);
-		const answer = options.ask
-			? await options.ask(SHISA_ONBOARDING_COPY.question, signal)
-			: await readline?.question(SHISA_ONBOARDING_COPY.question, { signal });
+		output.write("\n");
+		for (const point of SHISA_ONBOARDING_COPY.points) writePoint(point);
+		output.write("\n");
+		const question = `  ${SHISA_ONBOARDING_COPY.question}${style(SHISA_ONBOARDING_COPY.hint, "2")} `;
+		const answer = options.ask ? await options.ask(question, signal) : await readline?.question(question, { signal });
 		signal.throwIfAborted();
 		const connect = /^(?:y|yes)$/iu.test((answer ?? "").trim());
 		try {

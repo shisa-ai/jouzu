@@ -66,7 +66,8 @@ function harness(t, extra = {}) {
 test("skip is private, persists across launches, and wraps the offer at 48 columns", async (t) => {
 	const h = harness(t);
 	await offerShisaOnboarding(h.options);
-	assert.match(h.text(), /Signup credits/);
+	assert.match(h.text(), /\$10 instant credits/);
+	assert.match(h.text(), /\$25 more/);
 	assert.match(h.text(), /\/login shisa/);
 	for (const line of h.text().split("\n")) assert.ok(visibleWidth(line) <= 48, line);
 	const path = shisaOnboardingPath(h.paths);
@@ -233,5 +234,42 @@ test("unknown terminal width uses readable prose wrapping", async (t) => {
 	const h = harness(t);
 	h.output.columns = 0;
 	await offerShisaOnboarding(h.options);
-	assert.match(h.text(), /Sign up or sign in to Shisa AI/);
+	assert.match(h.text(), /Connect to Shisa AI for access/);
+});
+
+const ESCAPE = "\u001b";
+const MARKER_LINE = "  \u25c6 Connect to Shisa AI";
+
+test("offer lines carry a marker and stay plain without color", async (t) => {
+	const h = harness(t);
+	await offerShisaOnboarding(h.options);
+	assert.ok(h.text().includes(MARKER_LINE), h.text());
+	assert.ok(h.text().includes("  \u25c6 New signups"), h.text());
+	assert.ok(!h.text().includes(ESCAPE), h.text());
+});
+
+test("color styles the marker and the prompt hint without touching the copy", async (t) => {
+	let asked = "";
+	const h = harness(t, {
+		colorEnabled: true,
+		ask: async (question) => {
+			asked = question;
+			return "n";
+		},
+	});
+	await offerShisaOnboarding(h.options);
+	assert.ok(asked.includes("[y/N]"), asked);
+	assert.ok(asked.includes(`${ESCAPE}[2m(or later with /login shisa)${ESCAPE}[0m`), asked);
+	assert.ok(h.text().includes(`  ${ESCAPE}[36m\u25c6${ESCAPE}[0m Connect to Shisa AI`), h.text());
+	for (const line of h.text().split("\n")) assert.ok(visibleWidth(line) <= 48, line);
+});
+
+test("NO_COLOR and dumb terminals keep the marker and drop the escapes", async (t) => {
+	for (const env of [{ NO_COLOR: "1", TERM: "xterm-256color" }, { TERM: "dumb" }]) {
+		const h = harness(t, { env });
+		h.output.isTTY = true;
+		await offerShisaOnboarding(h.options);
+		assert.ok(h.text().includes(MARKER_LINE), h.text());
+		assert.ok(!h.text().includes(ESCAPE), h.text());
+	}
 });

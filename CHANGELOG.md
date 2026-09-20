@@ -16,6 +16,7 @@
 - Tell agents to prefer completion notifications and bounded waits over sleeping, repeated status calls, or scheduled check-ins. Waits use the current invocation when `work` is omitted.
 - Limit model-picker history to 512 projects and 16 MiB, evicting least recently dispatched histories while preserving explicit defaults, favorites, and reasoning preferences.
 - Use the embedded TextGuard scanner exclusively. The optional Python comparison-scanner flags from v0.1.13 are removed; native scanning modes and approvals remain.
+- State what a Shisa AI account provides in the first-launch offer: open coding models such as Qwen and GLM, $10 in credits for a new signup, and $25 more when a credit card is attached. Each line carries a `◆` marker, so a pipe, `NO_COLOR`, and `TERM=dumb` keep the same shape. The default answer stays `N`, and the prompt names `/login shisa` for connecting later.
 
 - Show when each background task finished in the completion receipt. The expanded heading carries the span from the first start to the last finish, and each task row carries its duration and local finish time. A receipt written before this change still renders, without timing.
 - Stopping or pausing a run no longer repeats the same sentence as a notification, because the summary card carries it.
