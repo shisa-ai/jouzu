@@ -43,15 +43,16 @@ test("metadata-free entries expose five efforts and preserve account limits and 
 	assert.equal(withAstraMetadata(custom), custom);
 });
 
-function astraHarness(registerProvider) {
+function astraHarness(registry) {
 	const handlers = new Map();
 	const registrations = [];
 	const pi = {
 		on: (event, handler) => handlers.set(event, handler),
 		registerProvider: (providerId, config) => {
 			registrations.push({ providerId, config });
-			registerProvider?.(providerId, config);
+			registry?.registerProvider(providerId, config);
 		},
+		unregisterProvider: (providerId) => registry?.unregisterProvider(providerId),
 		setThinkingLevel: () => {},
 	};
 	createAstraCompatibilityExtension().factory(pi);
@@ -169,9 +170,10 @@ test("registry overlay keeps the contract across provider refresh and auxiliary 
 			apiKey: "fixture",
 			models: [{ ...model, samplingParams: { temperature: 0.5 } }],
 		});
-		const { handlers, registrations } = astraHarness((providerId, config) =>
-			runtime.registerProvider(providerId, config),
-		);
+		const { handlers, registrations } = astraHarness({
+			registerProvider: (providerId, config) => runtime.registerProvider(providerId, config),
+			unregisterProvider: (providerId) => runtime.unregisterProvider(providerId),
+		});
 		await handlers.get("session_start")(
 			{},
 			{
@@ -213,6 +215,120 @@ test("registry overlay keeps the contract across provider refresh and auxiliary 
 		await runtime.refresh({ allowNetwork: false });
 		assert.equal(runtime.getModel("openai", model.id).thinkingLevelMap?.max, "max");
 	} finally {
+		await rm(dir, { recursive: true, force: true });
+	}
+});
+
+test("reload re-adapts added, removed, and changed models.json entries", async () => {
+	const { mkdtemp, rm, writeFile } = await import("node:fs/promises");
+	const { tmpdir } = await import("node:os");
+	const { join } = await import("node:path");
+	const { createAgentSession, DefaultResourceLoader, ModelRuntime, SessionManager, SettingsManager } = await import(
+		"@earendil-works/pi-coding-agent"
+	);
+	const { createAstraCompatibilityExtension } = await import("../dist/astra-compatibility.js");
+	const dir = await mkdtemp(join(tmpdir(), "jouzu-astra-reload-"));
+	let session;
+	try {
+		const modelsPath = join(dir, "models.json");
+		const writeModels = (models) =>
+			writeFile(modelsPath, JSON.stringify({ providers: { openai: { apiKey: "fixture-key", models } } }));
+		await writeModels([
+			{
+				id: model.id,
+				name: "Astra (initial)",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: { input: 1, output: 2, cacheRead: 0, cacheWrite: 0 },
+				contextWindow: 200000,
+				maxTokens: 32000,
+			},
+			{ id: "retired-model", name: "Retired" },
+		]);
+		const runtime = await ModelRuntime.create({
+			credentials: {
+				read: async () => undefined,
+				list: async () => [],
+				modify: async () => undefined,
+				delete: async () => {},
+			},
+			modelsPath,
+			modelsStorePath: join(dir, "store.json"),
+			allowModelNetwork: false,
+			refreshOnCreate: false,
+		});
+		// Plays the model picker's /reload role: the registry is refreshed after
+		// teardown and before Astra re-adapts the resolved list.
+		const refresher = {
+			name: "reload-refresher",
+			factory: (pi) => {
+				pi.on("session_start", async (event, ctx) => {
+					if (event.reason === "reload") await ctx.modelRegistry.refresh({ allowNetwork: false });
+				});
+			},
+		};
+		const loader = new DefaultResourceLoader({
+			cwd: dir,
+			agentDir: dir,
+			noExtensions: true,
+			noSkills: true,
+			noContextFiles: true,
+			noPromptTemplates: true,
+			extensionFactories: [refresher, createAstraCompatibilityExtension()],
+		});
+		await loader.reload();
+		const created = await createAgentSession({
+			cwd: dir,
+			agentDir: dir,
+			modelRuntime: runtime,
+			model: runtime.getModel("openai", model.id),
+			resourceLoader: loader,
+			sessionManager: SessionManager.create(dir, dir),
+			settingsManager: SettingsManager.inMemory({ retry: { enabled: false }, compaction: { enabled: false } }),
+			tools: [],
+		});
+		session = created.session;
+		await session.bindExtensions({
+			mode: "rpc",
+			onError: (error) => {
+				throw error;
+			},
+		});
+		const initial = runtime.getModel("openai", model.id);
+		assert.equal(initial.name, "Astra (initial)");
+		assert.deepEqual(getSupportedThinkingLevels(initial), ["low", "medium", "high", "xhigh", "max"]);
+		assert.equal(runtime.getModel("openai", "retired-model")?.name, "Retired");
+		assert.equal((await runtime.getAuth(initial))?.auth.apiKey, "fixture-key");
+
+		await writeModels([
+			{
+				id: model.id,
+				name: "Astra (reloaded)",
+				reasoning: true,
+				input: ["text", "image"],
+				cost: { input: 1, output: 2, cacheRead: 0, cacheWrite: 0 },
+				contextWindow: 400000,
+				maxTokens: 64000,
+			},
+			{ id: "added-model", name: "Added" },
+		]);
+		await session.reload();
+
+		const reloaded = runtime.getModel("openai", model.id);
+		assert.equal(reloaded.name, "Astra (reloaded)");
+		assert.equal(reloaded.contextWindow, 400000);
+		assert.equal(reloaded.maxTokens, 64000);
+		assert.deepEqual(getSupportedThinkingLevels(reloaded), ["low", "medium", "high", "xhigh", "max"]);
+		assert.equal(reloaded.compat?.supportsExplicitPromptCacheMode, true);
+		assert.equal(reloaded.samplingParams, undefined);
+		assert.equal(runtime.getModel("openai", "added-model")?.name, "Added");
+		assert.equal(runtime.getModel("openai", "retired-model"), undefined);
+		assert.equal((await runtime.getAuth(reloaded))?.auth.apiKey, "fixture-key");
+		assert.equal(runtime.getRegisteredNativeProvider("openai"), undefined);
+		assert.equal(runtime.getRegisteredProviderConfig("openai")?.streamSimple, undefined);
+		assert.equal(session.model.thinkingLevelMap?.max, "max");
+	} finally {
+		session?.dispose();
 		await rm(dir, { recursive: true, force: true });
 	}
 });

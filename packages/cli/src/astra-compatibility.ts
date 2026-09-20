@@ -83,6 +83,10 @@ function savedThinkingLevel(ctx: ExtensionContext): SavedThinkingLevel | undefin
 	return saved && THINKING_LEVELS.has(saved as SavedThinkingLevel) ? (saved as SavedThinkingLevel) : undefined;
 }
 
+type RegisteredProviderConfig = NonNullable<
+	ReturnType<ExtensionContext["modelRegistry"]["getRegisteredProviderConfig"]>
+>;
+
 /** Whether a composed model already carries the full official Astra contract. */
 function hasAstraContract(model: Model<Api>): boolean {
 	if (!isOfficialAstra(model)) return true;
@@ -110,27 +114,37 @@ function hasAstraContract(model: Model<Api>): boolean {
  * carries no handler, so the route guard still admits the builtin transport
  * while every selection, same-id reset, and registry refresh resolves the
  * adapted model before Pi clamps reasoning or prepares a request.
+ *
+ * `/reload` recomposes every provider from the current models.json and catalog
+ * projections. The overlay is released during that teardown so composition
+ * sees the upstream list, and the next session_start re-adapts the resolved
+ * list: added, removed, and changed models appear instead of a stale snapshot.
  */
 export function createAstraCompatibilityExtension(): InlineExtension {
 	return {
 		name: "jouzu-astra-compatibility",
 		factory: (pi) => {
-			let registry: ExtensionContext["modelRegistry"] | undefined;
+			// The exact config object this instance registered, so teardown releases
+			// only its own overlay and never a later foreign registration.
+			let overlay: RegisteredProviderConfig | undefined;
+			const releaseProvider = (ctx: ExtensionContext) => {
+				if (overlay && ctx.modelRegistry.getRegisteredProviderConfig("openai") === overlay) {
+					pi.unregisterProvider("openai");
+				}
+				overlay = undefined;
+			};
 			const syncProvider = (ctx: ExtensionContext) => {
-				registry = ctx.modelRegistry;
-				const provider = registry.getProvider("openai");
+				const provider = ctx.modelRegistry.getProvider("openai");
 				if (!provider) return;
 				const current = provider.getModels();
 				if (current.every(hasAstraContract)) return;
-				pi.registerProvider("openai", {
-					models: current.map((model) => withAstraMetadata(model)),
-					// Pi republishes extension models during a provider refresh. Keep the
-					// contract applied to whatever list the provider resolves at that point
-					// so a refresh cannot fall back to the unadapted registry models.
-					refreshModels: async () =>
-						(registry?.getProvider("openai")?.getModels() ?? []).map((model) => withAstraMetadata(model)),
-				});
+				pi.registerProvider("openai", { models: current.map((model) => withAstraMetadata(model)) });
+				overlay = ctx.modelRegistry.getRegisteredProviderConfig("openai");
 			};
+			pi.on("session_shutdown", (event, ctx) => {
+				if (event.reason !== "reload") return;
+				releaseProvider(ctx);
+			});
 			pi.on("session_start", async (_event, ctx) => {
 				syncProvider(ctx);
 				// The first session resolves its model before this overlay exists, so Pi
