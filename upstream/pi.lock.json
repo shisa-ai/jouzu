@@ -30,6 +30,10 @@
 			"sha256": "f75256f68585e687e67965b7c1544ec82d322c519307860150febdf3d7852299"
 		},
 		{
+			"path": "upstream/pi-path-utils/patch.lock.json",
+			"sha256": "b5342ffefa7fbafab489ee59bc83b07b00a84d36e96de6c459fa8a47099034b4"
+		},
+		{
 			"path": "upstream/background-flow/patch.lock.json",
 			"sha256": "6c7c92fcdc302ee7b1fc129fb6f85522c702d2fb99bb57b40664e99921681dd4"
 		},

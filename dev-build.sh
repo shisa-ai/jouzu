@@ -462,6 +462,11 @@ build_jouzu() {
 		return 1
 	fi
 
+	if ! node "$JOUZU_REPO/scripts/apply-pi-path-utils.mjs"; then
+		echo "dev-build: Pi path-utils setup failed; existing CLI dist files were not rebuilt" >&2
+		return 1
+	fi
+
 	echo "dev-build: type-checking Jouzu CLI"
 	# The no-emit CLI check prevents a failed TypeScript compile from replacing
 	# the working globally linked CLI dist files with partial output.

@@ -84,6 +84,12 @@ class DevBuildTests(unittest.TestCase):
             'if (process.env.DEV_BUILD_TEST_POLICY_FAILS) process.exit(1);\n',
             encoding="utf-8",
         )
+        (path / "scripts" / "apply-pi-path-utils.mjs").write_text(
+            'import { appendFileSync } from "node:fs";\n'
+            'appendFileSync(process.env.DEV_BUILD_TEST_LOG, "path-utils-setup\\n");\n'
+            'if (process.env.DEV_BUILD_TEST_PATH_UTILS_FAILS) process.exit(1);\n',
+            encoding="utf-8",
+        )
         (path / "upstream" / "background-flow").mkdir(parents=True)
         (path / "upstream" / "pi.lock.json").write_text("{}\n", encoding="utf-8")
         (path / "upstream" / "background-flow" / "patch.lock.json").write_text(
@@ -385,6 +391,7 @@ class DevBuildTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         commands = self.log.read_text(encoding="utf-8")
         self.assertLess(commands.index("policy-setup"), commands.index("\tcheck\t"))
+        self.assertLess(commands.index("path-utils-setup"), commands.index("\tcheck\t"))
         self.log.write_text("", encoding="utf-8")
         self.env["DEV_BUILD_TEST_POLICY_FAILS"] = "1"
         failed = self._run()
@@ -393,6 +400,16 @@ class DevBuildTests(unittest.TestCase):
         self.assertNotIn("\tcheck\t", commands)
         self.assertNotIn("\tbuild:dev", commands)
         self.assertIn("Pi content policy setup failed", failed.stderr)
+
+        self.env.pop("DEV_BUILD_TEST_POLICY_FAILS", None)
+        self.env["DEV_BUILD_TEST_PATH_UTILS_FAILS"] = "1"
+        self.log.write_text("", encoding="utf-8")
+        path_failed = self._run()
+        self.assertNotEqual(path_failed.returncode, 0)
+        commands = self.log.read_text(encoding="utf-8")
+        self.assertNotIn("\tcheck\t", commands)
+        self.assertNotIn("\tbuild:dev", commands)
+        self.assertIn("Pi path-utils setup failed", path_failed.stderr)
 
     def test_existing_typescript_tree_reinstalls_after_lock_update(self) -> None:
         sibling = self.root / "jouzu"
