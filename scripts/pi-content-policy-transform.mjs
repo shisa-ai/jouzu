@@ -1,88 +1,17 @@
 // Exact-source changes for the pinned Pi package. Hashes are checked by apply-pi-content-policy.mjs.
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
 function replace(text, before, after, count = 1) {
 	const parts = text.split(before);
 	if (parts.length !== count + 1) throw new Error(`Pi content-policy contract mismatch: ${before.slice(0, 100)}`);
 	return parts.join(after);
 }
-const JOUZU_BUG_REPORT_CONSTANTS = `const ISSUE_URL = "https://github.com/shisa-ai/jouzu/issues";
-const DISCLAIMER = \`This creates a local diagnostic archive for a Jouzu bug report. Nothing is uploaded or posted automatically. File issues at \${ISSUE_URL}; GitHub issues and attachments are public, so review the archive before sharing it. Metadata, settings, error messages, and local paths can contain private data even when the transcript is excluded.\`;
-const TRANSCRIPT_NOTE = "The transcript contains your messages, model output, tool calls and their results, including file contents and command output read during this session. It is excluded by default; include it only when the conversation is needed to reproduce the problem.";`;
-const JOUZU_BUG_REPORT_FLOW = `/** Run the \`/bug\` flow: consent, then write a local archive. */
-export async function reportBug(context, initialHint) {
-    const options = await promptForOptions(context, initialHint);
-    if (!options) {
-        context.showStatus("Bug report cancelled");
-        return;
-    }
-    let bundle;
-    try {
-        bundle = buildBundle(context, options);
-    }
-    catch (error) {
-        context.showError(\`Failed to build bug report: \${errorMessage(error)}\`);
-        return;
-    }
-    await exportZip(context, bundle);
-}
-async function promptForOptions(context, initialHint) {
-    const hint = await input(context, "Export a bug report", \`\${DISCLAIMER}\\n\\nWhat went wrong? (optional)\`, initialHint);
-    if (hint === null)
-        return undefined;
-    const transcript = await choose(context, "Include the session transcript?", ["No", "Yes, include the transcript"], TRANSCRIPT_NOTE);
-    if (!transcript)
-        return undefined;
-    const includeSession = transcript !== "No";
-    const description = hint.trim();
-    const confirm = await choose(context, "Export bug report", ["Export as Zip", "Cancel"], \`Description: \${description || "none"}\\nTranscript: \${includeSession ? "included" : "not included"}\\n\\nJouzu writes a jouzu-bug-report-*.zip archive in the current directory. Nothing is uploaded or posted automatically. GitHub issues and attachments are public; review the archive before sharing it.\`);
-    if (confirm !== "Export as Zip")
-        return undefined;
-    return {
-        hint: description || undefined,
-        includeSession,
-    };
-}
-function buildBundle(context, options) {
-    const session = context.session;
-    const extensions = session.resourceLoader.getExtensions();
-    const metadata = collectBugReportMetadata({
-        hint: options.hint,
-        sessionId: session.sessionId,
-        cwd: session.sessionManager.getCwd(),
-        includeSession: options.includeSession,
-        includeSummary: false,
-        messageCount: session.messages.length,
-        model: session.model,
-        modelRuntime: session.modelRuntime,
-        thinkingLevel: session.thinkingLevel,
-        extensions: extensions.extensions,
-        extensionErrors: extensions.errors,
-        globalSettings: session.settingsManager.getGlobalSettings(),
-        projectSettings: session.settingsManager.getProjectSettings(),
-    });
-    metadata.jouzu = {
-        runtimeIdentity: context.runtimeIdentity ?? null,
-    };
-    return {
-        metadata,
-        diagnostics: collectBugReportDiagnostics(session.sessionManager, readCrashLog()),
-        sessionJsonl: options.includeSession
-            ? serializeSessionBranch(session.sessionManager, (parentId, timestamp) => createShareTrailingEntries(session, parentId, timestamp))
-            : undefined,
-    };
-}
-async function exportZip(context, bundle) {
-    const archivePath = path.join(process.cwd(), bugReportArchiveFileName(bundle.metadata.id));
-    try {
-        await writeBugReportArchive(bundle, archivePath);
-    }
-    catch (error) {
-        context.showError(\`Failed to write bug report: \${errorMessage(error)}\`);
-        return;
-    }
-    recordInSession(context.session, bundle, { delivery: "zip", path: archivePath });
-    context.showStatus(\`Bug report exported to: \${archivePath}\\nReport ID: \${bundle.metadata.id}\`);
-}
-`;
+// The /bug replacement is kept as a standalone source file so it can be linted and diffed.
+const JOUZU_BUG_REPORT_SOURCE = readFileSync(
+	join(import.meta.dirname, "../upstream/pi-content-policy/bug-report.js"),
+	"utf8",
+);
 export function transform(path, source) {
 	let text = source;
 	const change = (before, after, count) => {
@@ -237,23 +166,23 @@ export function transform(path, source) {
 			// biome-ignore lint/suspicious/noTemplateCurlyInString: This is source code for the pinned runtime.
 			"            this.showWarning(`${APP_NAME} crashed on ${when} (${crash.message}). Run /bug to report it; the crash details are attached automatically.`);",
 			// biome-ignore lint/suspicious/noTemplateCurlyInString: This is source code for the pinned runtime.
-			"            this.showWarning(`${APP_NAME} crashed on ${when} (${crash.message}). Run /bug to export a report; crash details are included in the local archive.`);",
+			"            this.showWarning(`${APP_NAME} crashed on ${when} (${crash.message}). Run /bug to draft a report for the Jouzu issue tracker.`);",
 		);
 		change(
 			// biome-ignore lint/suspicious/noTemplateCurlyInString: This is source code for the pinned runtime.
 			"        return `To report this crash: ${resume} run /bug. The crash details are attached automatically.`;",
 			// biome-ignore lint/suspicious/noTemplateCurlyInString: This is source code for the pinned runtime.
-			"        return `To export a report for this crash: ${resume} run /bug. Crash details are included in the local archive.`;",
+			"        return `To draft a report for this crash: ${resume} run /bug.`;",
 		);
 		change(
 			// biome-ignore lint/suspicious/noTemplateCurlyInString: This is source code for the pinned runtime.
 			'        this.chatContainer.addChild(new Text(theme.fg("muted", `If this looks like a ${APP_NAME} bug, /bug sends a report to the developers.`), this.outputPad, 0));',
 			// biome-ignore lint/suspicious/noTemplateCurlyInString: This is source code for the pinned runtime.
-			'        this.chatContainer.addChild(new Text(theme.fg("muted", `If this looks like a ${APP_NAME} bug, /bug exports a local report you can review before sharing.`), this.outputPad, 0));',
+			'        this.chatContainer.addChild(new Text(theme.fg("muted", `If this looks like a ${APP_NAME} bug, /bug drafts a report you can review before posting.`), this.outputPad, 0));',
 		);
 		change(
 			"    async handleBugCommand(hint) {\n        await reportBug({\n            session: this.session,",
-			"    async handleBugCommand(hint) {\n        await reportBug({\n            session: this.session,\n            runtimeIdentity: this.options.sessionInfoFooter?.(),",
+			"    async handleBugCommand(hint) {\n        await reportBug({\n            session: this.session,\n            runtimeIdentity: this.options.sessionInfoFooter?.(),\n            showReport: (markdown) => {\n                this.chatContainer.addChild(new Text(markdown, this.outputPad, 1));\n                this.ui.requestRender();\n            },",
 		);
 	} else if (path === "dist/modes/interactive/interactive-mode.d.ts") {
 		change(
@@ -261,37 +190,14 @@ export function transform(path, source) {
 			"export interface InteractiveModeOptions {\n    /** Host runtime identity appended to /session output. */\n    sessionInfoFooter?: () => string;",
 		);
 	} else if (path === "dist/modes/interactive/bug-report.js") {
-		// /bug becomes a local-only export. Keep the native dialogs and archive
-		// collection, but never upload and never ask the model for a summary.
-		change('import { getAuthCredential } from "../../cli/auth-command.js";\n', "");
-		change('import { uploadBugReport } from "../../core/bug-report-upload.js";\n', "");
-		change('import { getRadiusGatewayUrl, RADIUS_PROVIDER_ID } from "../../core/radius.js";\n', "");
-		change('import { BorderedLoader } from "./components/bordered-loader.js";\n', "");
-		change('import { theme } from "./theme/theme.js";\n', "");
-		change(
-			'const DISCLAIMER = "This report goes to the Pi developers (Earendil) and is not shared publicly. It includes your pi version, operating system, the current model and provider configuration (without API keys), loaded extensions, settings, and provider error diagnostics from this session.";\nconst TRANSCRIPT_NOTE = "The transcript contains your messages, model output, tool calls and their results, including file contents and command output read during this session.";',
-			JOUZU_BUG_REPORT_CONSTANTS,
-		);
-		const flowStart = text.indexOf("/** Run the `/bug` flow: consent, optional summary, then upload or export. */");
-		const flowEnd = text.indexOf("function recordInSession(session, bundle, delivery) {");
-		if (flowStart < 0 || flowEnd < flowStart) throw new Error("Pi content-policy contract mismatch: bug-report flow");
-		text = `${text.slice(0, flowStart)}${JOUZU_BUG_REPORT_FLOW}${text.slice(flowEnd)}`;
-		change(
-			"function showLoader(context, message) {\n    const loader = new BorderedLoader(context.ui, theme, message);\n    showOverlay(context, loader);\n    return loader;\n}\n",
-			"",
-		);
-	} else if (path === "dist/core/bug-report.js") {
-		// biome-ignore lint/suspicious/noTemplateCurlyInString: This is source code for the pinned runtime.
-		change("    return `pi-bug-report-${id}.zip`;", "    return `jouzu-bug-report-${id}.zip`;");
+		// /bug becomes a reviewable Markdown draft with optional gh submission.
+		if (!text.includes("export async function reportBug(context, initialHint)"))
+			throw new Error("Pi content-policy contract mismatch: bug-report flow");
+		text = JOUZU_BUG_REPORT_SOURCE;
 	} else if (path === "dist/core/slash-commands.js") {
 		change(
 			'{ name: "bug", description: "Report a bug to the Pi developers", argumentHint: "<description>" },',
-			'{ name: "bug", description: "Export a local bug report for Jouzu", argumentHint: "<description>" },',
-		);
-	} else if (path === "dist/utils/zip.js") {
-		change(
-			"export function writeZipArchive(filePath, entries) {\n    return writeFile(filePath, createZipArchive(entries));\n}",
-			'export function writeZipArchive(filePath, entries) {\n    return writeFile(filePath, createZipArchive(entries), { flag: "wx", mode: 0o600 });\n}',
+			'{ name: "bug", description: "Draft a bug report for Jouzu", argumentHint: "<description>" },',
 		);
 	} else if (path === "dist/core/resource-loader.js") {
 		change("    skillsOverride;", "    skillsOverride;\n    contentPolicy;\n    skillAdmissionGeneration = 0;");
@@ -1360,10 +1266,8 @@ export const paths = [
 	"dist/core/sdk.d.ts",
 	"dist/core/messages.js",
 	"dist/core/messages.d.ts",
-	"dist/core/bug-report.js",
 	"dist/core/slash-commands.js",
 	"dist/modes/interactive/bug-report.js",
-	"dist/utils/zip.js",
 	"dist/core/compaction/compaction.js",
 	"dist/core/compaction/branch-summarization.js",
 	"dist/core/compaction/branch-summarization.d.ts",

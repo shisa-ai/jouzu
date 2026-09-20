@@ -117,27 +117,19 @@
 		},
 		"dist/modes/interactive/interactive-mode.js": {
 			"before": "ccb1efe72641696c6f0bb73e01c6ce1fbaae080ae55fef97971b2b66e30c26c1",
-			"after": "76f3532f87f4be56f899be2ca568174f67580995c7e34b4ae5f2e143c57602e5"
+			"after": "fb592166af21655dfce8d647179646c4485fd01779dea760ebd25b4695b09e5e"
 		},
 		"dist/modes/interactive/interactive-mode.d.ts": {
 			"before": "5c218db7397380458850e152f1278df8a07c786646bc8d8eba8288b752b63ffa",
 			"after": "ab8b9483b9e7c87c450941c00acf8b25bfdf121d90551057e0e4bdf4572d1ca1"
 		},
-		"dist/core/bug-report.js": {
-			"before": "286bd0cabe3c6ef8aa35bdeae1cd3757300e2a9a0a73ec04b1f83116ef590425",
-			"after": "5060a71cda3c43290603928ef5476f48f5d60769fb3d356e9dd4f822ad2203d5"
-		},
 		"dist/core/slash-commands.js": {
 			"before": "3c4b7576c59d81e39e7dff4a847fdb51021fbea544a7880746018866a599f1e6",
-			"after": "f21224e3e2826b88b8dc186affee4ae700813f56e7e384d8557ec7b2dae93966"
+			"after": "cbc6f2510b6807d5baa81be79f80d24f159e7c8315491c505e024098952a61d6"
 		},
 		"dist/modes/interactive/bug-report.js": {
 			"before": "450e3917bfa9fe8c2eaf3a319c4b27a775cd1a8108217787235484d549fde070",
-			"after": "0da2df95c6ece878b9f74400744ea6feb3796e6a092da90729e4977eed4fad99"
-		},
-		"dist/utils/zip.js": {
-			"before": "1ce5cceedf15c981717527cef36a530b4ffc40bba700a317e5c96a1d483e8744",
-			"after": "3f1defc6f41e6771edace333b98320a453e0a74988493e0bec6e3ad6d5cce9bc"
+			"after": "d552ab8dc375cdbc9c644a6c8911f16420be2ac41d3936562b333c513a904d01"
 		}
 	},
 	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863",

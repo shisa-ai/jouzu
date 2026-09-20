@@ -9,6 +9,7 @@
 			"packages/*/*.json",
 			"upstream/*.json",
 			"upstream/pi-content-policy/flow-ingress.js",
+			"upstream/pi-content-policy/bug-report.js",
 			"!package-lock.json",
 			"!!**/node_modules",
 			"!!**/dist"

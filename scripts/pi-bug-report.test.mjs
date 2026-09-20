@@ -1,107 +1,96 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { chmod, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { delimiter, join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { inflateRawSync } from "node:zlib";
 
 const piRoot = fileURLToPath(new URL("../node_modules/@earendil-works/pi-coding-agent/", import.meta.url));
 const loadPi = (relative) => import(pathToFileURL(join(piRoot, relative)).href);
 const { initTheme } = await loadPi("dist/modes/interactive/theme/theme.js");
-const { reportBug } = await loadPi("dist/modes/interactive/bug-report.js");
+const { ISSUE_NEW_URL, buildBugReportDraft, renderBugReport, reportBug } = await loadPi(
+	"dist/modes/interactive/bug-report.js",
+);
 const { InteractiveMode } = await loadPi("dist/modes/interactive/interactive-mode.js");
 const { BUILTIN_SLASH_COMMANDS } = await loadPi("dist/core/slash-commands.js");
-const { bugReportArchiveFileName, writeBugReportArchive } = await loadPi("dist/core/bug-report.js");
-const { VERSION } = await loadPi("dist/config.js");
+const { visibleWidth } = await loadPi("node_modules/@earendil-works/pi-tui/dist/index.js");
 
 initTheme("dark");
 
 const IDENTITY = "Runtime: Jouzu 0.1.13 · Pi 0.86.0";
+const EXPECTED_LINK = "https://github.com/shisa-ai/jouzu/issues/new";
+assert.equal(ISSUE_NEW_URL, EXPECTED_LINK);
 
 function tick() {
 	return new Promise((resolve) => setImmediate(resolve));
 }
 
-/** Parse the classic local-header ZIP archives written by the pinned runtime. */
-function readZipEntries(buffer) {
-	const entries = new Map();
-	let offset = 0;
-	while (offset + 30 <= buffer.length && buffer.readUInt32LE(offset) === 0x04034b50) {
-		const method = buffer.readUInt16LE(offset + 8);
-		const compressedSize = buffer.readUInt32LE(offset + 18);
-		const nameLength = buffer.readUInt16LE(offset + 26);
-		const extraLength = buffer.readUInt16LE(offset + 28);
-		const name = buffer.subarray(offset + 30, offset + 30 + nameLength).toString("utf8");
-		const dataStart = offset + 30 + nameLength + extraLength;
-		const compressed = buffer.subarray(dataStart, dataStart + compressedSize);
-		entries.set(name, method === 8 ? inflateRawSync(compressed) : Buffer.from(compressed));
-		offset = dataStart + compressedSize;
-	}
-	return entries;
+function enoentError() {
+	const error = new Error("spawn gh ENOENT");
+	error.code = "ENOENT";
+	return error;
 }
 
-async function readArchive(workDir) {
-	const names = (await readdir(workDir)).filter((name) => name.endsWith(".zip"));
-	assert.equal(names.length, 1, `expected one archive, found ${names.join(", ") || "none"}`);
-	const buffer = await readFile(join(workDir, names[0]));
-	return { name: names[0], buffer, entries: readZipEntries(buffer) };
+function createGhStub({
+	account = "octocat",
+	issueUrl = "https://github.com/shisa-ai/jouzu/issues/42",
+	authError,
+	createError,
+} = {}) {
+	const calls = [];
+	return {
+		calls,
+		execGh: async (args) => {
+			calls.push([...args]);
+			if (args[0] === "api" && args[1] === "user") {
+				if (authError) throw authError;
+				return { stdout: `${account}\n`, stderr: "" };
+			}
+			if (args[0] === "issue" && args[1] === "create") {
+				if (createError) throw createError;
+				return { stdout: `${issueUrl}\n`, stderr: "" };
+			}
+			throw new Error(`unexpected gh invocation: ${args.join(" ")}`);
+		},
+	};
 }
 
-function parseReport(archive) {
-	const data = archive.entries.get("report.json");
-	assert.ok(data, "report.json is missing from the archive");
-	return JSON.parse(data.toString("utf8"));
-}
-
-async function createFixture(t, { summaryCalls = [] } = {}) {
-	const agentDir = await mkdtemp(join(tmpdir(), "jouzu-bug-agent-"));
+async function createFixture(t, { execGh, realGh = false, summaryCalls = [] } = {}) {
 	const workDir = await mkdtemp(join(tmpdir(), "jouzu-bug-work-"));
-	const previousAgentDir = process.env.PI_CODING_AGENT_DIR;
 	const previousCwd = process.cwd();
-	process.env.PI_CODING_AGENT_DIR = agentDir;
 	process.chdir(workDir);
 	t.after(async () => {
 		process.chdir(previousCwd);
-		if (previousAgentDir === undefined) delete process.env.PI_CODING_AGENT_DIR;
-		else process.env.PI_CODING_AGENT_DIR = previousAgentDir;
-		await rm(agentDir, { recursive: true, force: true });
 		await rm(workDir, { recursive: true, force: true });
 	});
-	const customEntries = [];
+	const overlays = [];
+	const statuses = [];
+	const errors = [];
+	const reports = [];
+	const editor = { name: "editor" };
+	const ui = { setFocus() {}, requestRender() {}, terminal: { rows: 24 } };
+	const editorContainer = {
+		clear() {
+			overlays.length = 0;
+		},
+		addChild(child) {
+			overlays.push(child);
+		},
+	};
 	const session = {
 		sessionId: "session-fixture",
-		messages: [{ role: "user", content: "hello" }],
+		messages: [{ role: "user", content: "private transcript fixture" }],
 		model: null,
-		modelRuntime: undefined,
 		thinkingLevel: "off",
 		resourceLoader: { getExtensions: () => ({ extensions: [], errors: [] }) },
 		settingsManager: {
 			getGlobalSettings: () => ({ theme: "dark", trackingId: "private-tracking-id" }),
 			getProjectSettings: () => ({}),
 		},
-		sessionManager: {
-			getCwd: () => workDir,
-			getSessionId: () => "session-fixture",
-			getEntries: () => [],
-			getBranch: () => [],
-			appendCustomEntry: (...args) => customEntries.push(args),
-		},
-		state: { systemPrompt: "system", tools: [] },
+		sessionManager: { getCwd: () => workDir, getEntries: () => [], getBranch: () => [] },
 		summarizeForBugReport: (...args) => {
 			summaryCalls.push(args);
 			throw new Error("model summary must not be called");
-		},
-	};
-	const overlays = [];
-	const statuses = [];
-	const errors = [];
-	const editor = { name: "editor" };
-	const ui = { setFocus() {}, requestRender() {} };
-	const editorContainer = {
-		clear() {},
-		addChild(child) {
-			overlays.push(child);
 		},
 	};
 	const context = {
@@ -109,45 +98,14 @@ async function createFixture(t, { summaryCalls = [] } = {}) {
 		ui,
 		editorContainer,
 		editor,
+		runtimeIdentity: IDENTITY,
 		showStatus: (message) => statuses.push(message),
 		showError: (message) => errors.push(message),
-		runtimeIdentity: IDENTITY,
+		showReport: (markdown) => reports.push(markdown),
 	};
-	return {
-		agentDir,
-		workDir,
-		session,
-		overlays,
-		statuses,
-		errors,
-		customEntries,
-		editor,
-		ui,
-		editorContainer,
-		context,
-	};
-}
-
-async function plantCrash(agentDir) {
-	const record = {
-		timestamp: new Date().toISOString(),
-		version: VERSION,
-		kind: "fatal_error",
-		message: "fixture crash",
-		stack: null,
-		sessionFile: null,
-		cwd: agentDir,
-	};
-	await writeFile(join(agentDir, "crashes.json"), `${JSON.stringify([record], null, 2)}\n`);
-}
-
-async function crashLog(agentDir) {
-	try {
-		return await readFile(join(agentDir, "crashes.json"), "utf8");
-	} catch (error) {
-		if (error.code === "ENOENT") return undefined;
-		throw error;
-	}
+	const runner = execGh ?? (realGh ? undefined : createGhStub({ authError: enoentError() }).execGh);
+	if (runner) context.execGh = runner;
+	return { workDir, session, overlays, statuses, errors, reports, editor, ui, editorContainer, context };
 }
 
 function latestOverlay(fixture) {
@@ -156,101 +114,170 @@ function latestOverlay(fixture) {
 	return overlay;
 }
 
-async function driveBugReport(fixture, { hint, includeTranscript = false, cancelAt } = {}) {
-	const running = reportBug(fixture.context, hint);
-	await tick();
-	const input = latestOverlay(fixture);
-	if (cancelAt === "input") {
-		input.handleInput("\x1b");
-		await running;
-		return { input, transcript: undefined, confirm: undefined };
+/** Wait for either the optional submission dialog or the end of the flow (real gh calls are slow). */
+async function waitForSelectorOrEnd(fixture, running) {
+	let settled = false;
+	running.then(
+		() => {
+			settled = true;
+		},
+		() => {
+			settled = true;
+		},
+	);
+	for (let attempt = 0; attempt < 500; attempt++) {
+		const last = fixture.overlays.at(-1);
+		if (last !== fixture.editor && Array.isArray(last.options)) return last;
+		if (settled) return undefined;
+		await new Promise((resolve) => setTimeout(resolve, 10));
 	}
-	input.handleInput("\n");
-	await tick();
-	const transcript = latestOverlay(fixture);
-	if (cancelAt === "transcript") {
-		transcript.handleInput("\x1b");
-		await running;
-		return { input, transcript, confirm: undefined };
-	}
-	if (includeTranscript) transcript.handleInput("j");
-	transcript.handleInput("\n");
-	await tick();
-	const confirm = latestOverlay(fixture);
-	if (cancelAt === "confirm" || cancelAt === "confirm-cancel") {
-		if (cancelAt === "confirm-cancel") {
-			confirm.handleInput("j");
-			confirm.handleInput("\n");
-		} else {
-			confirm.handleInput("\x1b");
-		}
-		await running;
-		return { input, transcript, confirm };
-	}
-	confirm.handleInput("\n");
-	await running;
-	return { input, transcript, confirm };
+	throw new Error("timed out waiting for the submission dialog");
 }
 
-test("bug report cancellation leaves no archive and keeps crash records", async (t) => {
-	const fixture = await createFixture(t);
-	await plantCrash(fixture.agentDir);
-	const crashBefore = await crashLog(fixture.agentDir);
+async function driveBugReport(fixture, options = {}) {
+	const {
+		hint,
+		expected = "",
+		actual = "",
+		reproduction = "",
+		cancelAt,
+		bodyEdit,
+		titleEdit,
+		confirmSubmit = false,
+		beforeBodySubmit,
+		beforeTitleSubmit,
+	} = options;
+	const running = reportBug(fixture.context, hint);
+	await tick();
+	const description = latestOverlay(fixture);
+	if (cancelAt === "description") {
+		description.handleInput("\x1b");
+		await running;
+		return { description };
+	}
+	description.handleInput("\n");
+	await tick();
+	const expectedInput = latestOverlay(fixture);
+	if (cancelAt === "expected") {
+		expectedInput.handleInput("\x1b");
+		await running;
+		return { description, expected: expectedInput };
+	}
+	expectedInput.input.setValue(expected);
+	expectedInput.handleInput("\n");
+	await tick();
+	const actualInput = latestOverlay(fixture);
+	if (cancelAt === "actual") {
+		actualInput.handleInput("\x1b");
+		await running;
+		return { description, expected: expectedInput, actual: actualInput };
+	}
+	actualInput.input.setValue(actual);
+	actualInput.handleInput("\n");
+	await tick();
+	const reproductionInput = latestOverlay(fixture);
+	if (cancelAt === "reproduction") {
+		reproductionInput.handleInput("\x1b");
+		await running;
+		return { description, expected: expectedInput, actual: actualInput, reproduction: reproductionInput };
+	}
+	reproductionInput.input.setValue(reproduction);
+	reproductionInput.handleInput("\n");
+	await tick();
+	const body = latestOverlay(fixture);
+	beforeBodySubmit?.(body);
+	if (cancelAt === "body") {
+		body.handleInput("\x1b");
+		await running;
+		return { description, expected: expectedInput, actual: actualInput, reproduction: reproductionInput, body };
+	}
+	if (bodyEdit !== undefined) body.editor.setText(bodyEdit);
+	body.handleInput("\r");
+	await tick();
+	const title = latestOverlay(fixture);
+	beforeTitleSubmit?.(title);
+	if (cancelAt === "title") {
+		title.handleInput("\x1b");
+		await running;
+		return { description, expected: expectedInput, actual: actualInput, reproduction: reproductionInput, body, title };
+	}
+	if (titleEdit !== undefined) title.input.setValue(titleEdit);
+	title.handleInput("\n");
+	const selector = await waitForSelectorOrEnd(fixture, running);
+	const hasSelector = selector !== undefined;
+	const last = selector ?? fixture.overlays.at(-1);
+	if (hasSelector) {
+		if (cancelAt === "confirm") {
+			last.handleInput("\x1b");
+			await running;
+			return {
+				description,
+				expected: expectedInput,
+				actual: actualInput,
+				reproduction: reproductionInput,
+				body,
+				title,
+				confirm: last,
+			};
+		}
+		if (confirmSubmit) last.handleInput("j");
+		last.handleInput("\n");
+	} else {
+		assert.equal(last, fixture.editor, "expected the flow to finish or offer a submission dialog");
+		assert.equal(cancelAt, undefined, `expected no submission dialog for cancelAt=${cancelAt}`);
+	}
+	await running;
+	return {
+		description,
+		expected: expectedInput,
+		actual: actualInput,
+		reproduction: reproductionInput,
+		body,
+		title,
+		confirm: hasSelector ? last : undefined,
+	};
+}
 
-	await driveBugReport(fixture, { cancelAt: "input" });
-	await driveBugReport(fixture, { cancelAt: "transcript" });
-	await driveBugReport(fixture, { cancelAt: "confirm" });
-	await driveBugReport(fixture, { cancelAt: "confirm-cancel" });
-
-	assert.deepEqual(fixture.statuses, [
-		"Bug report cancelled",
-		"Bug report cancelled",
-		"Bug report cancelled",
-		"Bug report cancelled",
-	]);
-	assert.deepEqual(fixture.errors, []);
-	assert.deepEqual(fixture.customEntries, []);
-	assert.deepEqual(await readdir(fixture.workDir), []);
-	assert.equal(await crashLog(fixture.agentDir), crashBefore);
+test("draft includes the reported detail and minimal environment facts", () => {
+	const draft = buildBugReportDraft({
+		description: "Automatic work remains held after the job finishes",
+		expected: "The held work resumes",
+		actual: "It stays paused",
+		reproduction: "Run /flow auto, then finish the job",
+		runtimeIdentity: IDENTITY,
+	});
+	assert.equal(draft.title, "Automatic work remains held after the job finishes");
+	assert.match(
+		draft.body,
+		/^## What happened\n\nAutomatic work remains held after the job finishes\n\n## Expected behavior\n\nThe held work resumes\n\n## Actual behavior\n\nIt stays paused\n\n## Steps to reproduce\n\nRun \/flow auto, then finish the job\n\n## Environment\n\n- Runtime: Jouzu 0\.1\.13 · Pi 0\.86\.0\n- OS: /,
+	);
+	assert.match(draft.body, /- (Node v|Bun )/);
+	assert.doesNotMatch(draft.body, /transcript|session\.jsonl|report\.json|diagnostics|settings|apiKey|baseUrl|crash/i);
 });
 
-test("transcript is excluded by default and included only after explicit consent", async (t) => {
-	const fixture = await createFixture(t);
-
-	const first = await driveBugReport(fixture, { hint: "default run" });
-	assert.deepEqual(first.transcript.options, ["No", "Yes, include the transcript"]);
-	assert.equal(first.transcript.selectedIndex, 0);
-	const defaultArchive = await readArchive(fixture.workDir);
-	const defaultReport = parseReport(defaultArchive);
-	assert.equal(defaultReport.session.included, false);
-	assert.equal(defaultReport.session.summaryIncluded, false);
-	assert.equal(defaultArchive.entries.has("session.jsonl"), false);
-	assert.equal(defaultArchive.entries.has("diagnostics.json"), true);
-
-	await rm(join(fixture.workDir, defaultArchive.name));
-	const second = await driveBugReport(fixture, { hint: "consent run", includeTranscript: true });
-	assert.equal(second.transcript.selectedIndex, 1);
-	const consentArchive = await readArchive(fixture.workDir);
-	const consentReport = parseReport(consentArchive);
-	assert.equal(consentReport.session.included, true);
-	const sessionJsonl = consentArchive.entries.get("session.jsonl")?.toString("utf8");
-	assert.ok(sessionJsonl, "session.jsonl is missing from the consented archive");
-	assert.match(sessionJsonl, /"type":"session"/);
-	assert.match(sessionJsonl, /session-fixture/);
+test("draft uses editable placeholders for missing detail", () => {
+	const draft = buildBugReportDraft({ runtimeIdentity: IDENTITY });
+	assert.equal(draft.title, "Bug report");
+	assert.match(draft.body, /## What happened\n\nNot provided\./);
+	assert.match(draft.body, /## Expected behavior\n\nNot provided\./);
+	assert.match(draft.body, /## Actual behavior\n\nNot provided\./);
+	assert.match(draft.body, /## Steps to reproduce\n\nNot provided\./);
 });
 
-test("archive metadata records the Jouzu runtime identity and Pi version", async (t) => {
-	const fixture = await createFixture(t);
-	await driveBugReport(fixture, { hint: "identity run" });
-	const archive = await readArchive(fixture.workDir);
-	assert.match(archive.name, /^jouzu-bug-report-[0-9a-f-]+\.zip$/);
-	const report = parseReport(archive);
-	assert.equal(report.jouzu.runtimeIdentity, IDENTITY);
-	assert.equal(report.environment.version, VERSION);
-	assert.equal(report.hint, "identity run");
+test("rendered draft always carries the public new-issue link", () => {
+	const draft = { title: "Fixture title", body: "## What happened\n\nFixture body.\n" };
+	const withNote = renderBugReport(draft, "Fixture note.");
+	assert.match(withNote, /^# Fixture title\n\n## What happened/);
+	assert.match(
+		withNote,
+		/\n---\n\nFixture note\.\n\nNew issue form: https:\/\/github\.com\/shisa-ai\/jouzu\/issues\/new\n$/,
+	);
+	const withoutNote = renderBugReport(draft);
+	assert.match(withoutNote, /\nNew issue form: https:\/\/github\.com\/shisa-ai\/jouzu\/issues\/new\n$/);
+	assert.doesNotMatch(withoutNote, /\n---\n/);
 });
 
-test("export makes no upload request and never calls the model summary", async (t) => {
+test("default flow stays local, keeps no archive, and never calls a model", async (t) => {
 	const summaryCalls = [];
 	const fixture = await createFixture(t, { summaryCalls });
 	let fetchCalls = 0;
@@ -263,61 +290,177 @@ test("export makes no upload request and never calls the model summary", async (
 		globalThis.fetch = originalFetch;
 	});
 
-	await driveBugReport(fixture, { hint: "no network" });
+	await driveBugReport(fixture, {
+		hint: "no network",
+		expected: "expected text",
+		actual: "actual text",
+		reproduction: "steps",
+	});
 
 	assert.equal(fetchCalls, 0);
 	assert.deepEqual(summaryCalls, []);
+	assert.deepEqual(await readdir(fixture.workDir), []);
+	assert.equal(fixture.reports.length, 1);
+	assert.match(fixture.reports[0], /New issue form: https:\/\/github\.com\/shisa-ai\/jouzu\/issues\/new/);
+	assert.doesNotMatch(fixture.reports[0], /session\.jsonl|report\.json|diagnostics\.json|private transcript fixture/);
+	assert.deepEqual(fixture.errors, []);
+
 	const source = await readFile(join(piRoot, "dist/modes/interactive/bug-report.js"), "utf8");
 	assert.doesNotMatch(
 		source,
-		/bug-report-upload|uploadBugReport|getRadiusGatewayUrl|getAuthCredential|summarizeForBugReport/,
+		/uploadBugReport|getRadiusGatewayUrl|getAuthCredential|summarizeForBugReport|writeBugReportArchive|readCrashLog|clearCrashLog/,
 	);
+	assert.doesNotMatch(source, /\.zip/);
 });
 
-test("archive write failure is reported without success or crash clearing", async (t) => {
+test("generated body and title are shown for review and edits are used", async (t) => {
 	const fixture = await createFixture(t);
-	await plantCrash(fixture.agentDir);
-	const crashBefore = await crashLog(fixture.agentDir);
-	const realCwd = process.cwd;
-	process.cwd = () => join(fixture.workDir, "missing");
-	try {
-		await driveBugReport(fixture, { hint: "write failure" });
-	} finally {
-		process.cwd = realCwd;
-	}
-	assert.deepEqual(fixture.statuses, []);
-	assert.match(fixture.errors.at(-1) ?? "", /^Failed to write bug report: /);
-	assert.deepEqual(fixture.customEntries, []);
+	let generatedBody;
+	let generatedTitle;
+	let renderedLines = 0;
+	const { title } = await driveBugReport(fixture, {
+		hint: "original title",
+		expected: "expected text",
+		actual: "actual text",
+		reproduction: "steps",
+		beforeBodySubmit: (component) => {
+			generatedBody = component.editor.getText();
+			renderedLines = component.render(48).length;
+		},
+		beforeTitleSubmit: (component) => {
+			generatedTitle = component.input.getValue();
+		},
+		bodyEdit: "## What happened\n\nEdited body.",
+		titleEdit: "Edited public title",
+	});
+	assert.match(generatedBody, /## What happened\n\noriginal title/);
+	assert.match(generatedBody, /expected text/);
+	assert.ok(renderedLines > 0, "the review editor must render at 48 columns");
+	assert.equal(generatedTitle, "original title");
+	assert.equal(title.input.getValue(), "Edited public title");
+	assert.match(fixture.reports.at(-1), /^# Edited public title\n/);
+	assert.match(fixture.reports.at(-1), /Edited body\./);
+	assert.doesNotMatch(fixture.reports.at(-1), /expected text/);
+	assert.equal(fixture.statuses.at(-1), "Draft ready; nothing was posted.");
 	assert.deepEqual(await readdir(fixture.workDir), []);
-	assert.equal(await crashLog(fixture.agentDir), crashBefore);
 });
 
-test("archives are created exclusively with owner-only permissions", async (t) => {
-	const fixture = await createFixture(t);
-	assert.equal(bugReportArchiveFileName("abc"), "jouzu-bug-report-abc.zip");
-	const target = join(fixture.workDir, "exclusive.zip");
-	const bundle = { metadata: { id: "exclusive" }, diagnostics: {} };
-	await writeBugReportArchive(bundle, target);
-	if (process.platform === "linux") {
-		const info = await stat(target);
-		assert.equal(info.mode & 0o777, 0o600);
-	}
-	const first = await readFile(target);
-	await assert.rejects(writeBugReportArchive(bundle, target), (error) => error.code === "EEXIST");
-	assert.deepEqual(await readFile(target), first);
+test("missing gh offers no submission and keeps the draft with the link", async (t) => {
+	const stub = createGhStub({ authError: enoentError() });
+	const fixture = await createFixture(t, { execGh: stub.execGh });
+	const { confirm } = await driveBugReport(fixture, { hint: "no gh" });
+	assert.equal(confirm, undefined);
+	assert.deepEqual(stub.calls, [["api", "user", "--jq", ".login"]]);
+	assert.equal(fixture.reports.length, 1);
+	assert.match(fixture.reports[0], /gh is not installed/);
+	assert.match(fixture.reports[0], new RegExp(`New issue form: ${EXPECTED_LINK}`));
+	assert.equal(fixture.statuses.at(-1), "Draft ready; nothing was posted.");
 });
 
-test("builtin command and crash hints describe a local export", async () => {
+test("unauthenticated gh offers no submission and keeps the draft with the link", async (t) => {
+	const stub = createGhStub({ authError: new Error("gh: not logged in") });
+	const fixture = await createFixture(t, { execGh: stub.execGh });
+	const { confirm } = await driveBugReport(fixture, { hint: "not logged in" });
+	assert.equal(confirm, undefined);
+	assert.deepEqual(stub.calls, [["api", "user", "--jq", ".login"]]);
+	assert.match(fixture.reports.at(-1), /gh is not authenticated/);
+	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
+	assert.equal(fixture.statuses.at(-1), "Draft ready; nothing was posted.");
+});
+
+test("authenticated gh offers submission that names the account and public repo", async (t) => {
+	const stub = createGhStub({ account: "octocat" });
+	const fixture = await createFixture(t, { execGh: stub.execGh });
+	const { confirm } = await driveBugReport(fixture, { hint: "confirm wording" });
+	assert.ok(confirm, "an authenticated gh must offer submission");
+	assert.deepEqual(confirm.options, ["No, keep the draft", "Submit as octocat using gh"]);
+	assert.equal(confirm.selectedIndex, 0, "the default selection must not submit");
+	const text = confirm.children.map((child) => child.text ?? "").join("\n");
+	assert.match(text, /public issue in shisa-ai\/jouzu as octocat/);
+	assert.match(text, /public/);
+	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
+	assert.deepEqual(stub.calls, [["api", "user", "--jq", ".login"]]);
+});
+
+test("declined confirmation never creates an issue", async (t) => {
+	const stub = createGhStub({ account: "octocat" });
+	const fixture = await createFixture(t, { execGh: stub.execGh });
+	const { confirm } = await driveBugReport(fixture, { hint: "decline" });
+	assert.equal(confirm.selectedIndex, 0);
+	assert.deepEqual(stub.calls, [["api", "user", "--jq", ".login"]]);
+	assert.match(fixture.reports.at(-1), /Not submitted\./);
+	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
+	assert.equal(fixture.statuses.at(-1), "Draft kept; nothing was posted.");
+});
+
+test("affirmative consent runs gh once with the exact fixed arguments", async (t) => {
+	const stub = createGhStub({ account: "octocat", issueUrl: "https://github.com/shisa-ai/jouzu/issues/42" });
+	const fixture = await createFixture(t, { execGh: stub.execGh });
+	const editedBody = "## What happened\n\nBody with $HOME and `backticks`.";
+	await driveBugReport(fixture, {
+		hint: "exact argv",
+		bodyEdit: `${editedBody}\n`,
+		titleEdit: "Title with $HOME; rm -rf /",
+		confirmSubmit: true,
+	});
+	assert.deepEqual(stub.calls, [
+		["api", "user", "--jq", ".login"],
+		["issue", "create", "--repo", "shisa-ai/jouzu", "--title", "Title with $HOME; rm -rf /", "--body", editedBody],
+	]);
+	assert.match(fixture.reports.at(-1), /Issue created: https:\/\/github\.com\/shisa-ai\/jouzu\/issues\/42/);
+	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
+	assert.equal(fixture.statuses.at(-1), "Issue created: https://github.com/shisa-ai/jouzu/issues/42");
+});
+
+test("submission failure keeps the draft and never retries", async (t) => {
+	const stub = createGhStub({ account: "octocat", createError: new Error("HTTP 403: Forbidden") });
+	const fixture = await createFixture(t, { execGh: stub.execGh });
+	await driveBugReport(fixture, { hint: "failure", confirmSubmit: true });
+	assert.equal(stub.calls.filter((args) => args[0] === "issue").length, 1);
+	assert.equal(fixture.errors.length, 1);
+	assert.match(fixture.errors[0], /Failed to create the issue: HTTP 403: Forbidden/);
+	assert.match(fixture.reports.at(-1), /Submission failed: HTTP 403: Forbidden/);
+	assert.match(fixture.reports.at(-1), /## What happened/);
+	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
+});
+
+test("cancelling after the draft keeps it visible with the link", async (t) => {
+	const stub = createGhStub({ account: "octocat" });
+	const fixture = await createFixture(t, { execGh: stub.execGh });
+	await driveBugReport(fixture, { hint: "cancel body", cancelAt: "body" });
+	assert.deepEqual(stub.calls, []);
+	assert.match(fixture.reports.at(-1), /Report cancelled/);
+	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
+	assert.equal(fixture.statuses.at(-1), "Bug report cancelled");
+
+	await driveBugReport(fixture, { hint: "cancel confirm", cancelAt: "confirm" });
+	assert.deepEqual(stub.calls, [["api", "user", "--jq", ".login"]]);
+	assert.match(fixture.reports.at(-1), /Not submitted\./);
+	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
+});
+
+test("cancelling before a draft posts nothing", async (t) => {
+	const stub = createGhStub({ account: "octocat" });
+	const fixture = await createFixture(t, { execGh: stub.execGh });
+	await driveBugReport(fixture, { cancelAt: "description" });
+	await driveBugReport(fixture, { cancelAt: "expected" });
+	assert.deepEqual(fixture.reports, []);
+	assert.deepEqual(fixture.statuses, ["Bug report cancelled", "Bug report cancelled"]);
+	assert.deepEqual(stub.calls, []);
+	assert.deepEqual(await readdir(fixture.workDir), []);
+});
+
+test("crash hints and the builtin command describe a reviewable draft", async () => {
 	const bugCommand = BUILTIN_SLASH_COMMANDS.find((command) => command.name === "bug");
 	assert.ok(bugCommand, "the builtin bug command is missing");
-	assert.match(bugCommand.description, /export/i);
-	assert.doesNotMatch(bugCommand.description, /Pi developers/i);
+	assert.match(bugCommand.description, /draft/i);
+	assert.doesNotMatch(bugCommand.description, /Pi developers|export|zip|archive/i);
 
 	const crashInstructions = InteractiveMode.prototype.crashReportInstructions.call({
 		session: { sessionFile: undefined },
 	});
-	assert.match(crashInstructions, /export/i);
-	assert.doesNotMatch(crashInstructions, /attached automatically/i);
+	assert.match(crashInstructions, /draft/i);
+	assert.doesNotMatch(crashInstructions, /attached|archive|export|zip/i);
 
 	const hints = [];
 	InteractiveMode.prototype.suggestBugReport.call({
@@ -327,40 +470,37 @@ test("builtin command and crash hints describe a local export", async () => {
 		ui: { requestRender() {} },
 	});
 	assert.equal(hints.length, 1);
-	assert.match(hints[0].text, /exports a local report/);
-	assert.doesNotMatch(hints[0].text, /sends a report/);
+	assert.match(hints[0].text, /drafts a report/);
+	assert.doesNotMatch(hints[0].text, /attached|archive|export|zip/i);
 
 	const source = await readFile(join(piRoot, "dist/modes/interactive/interactive-mode.js"), "utf8");
-	assert.match(source, /Run \/bug to export a report/);
-	assert.doesNotMatch(source, /attached automatically/);
+	assert.match(source, /Run \/bug to draft a report/);
+	assert.doesNotMatch(source, /attached automatically|included in the local archive/);
 });
 
-test("report dialogs point at the Jouzu issue tracker and warn that issues are public", async (t) => {
+test("builtin /bug routing renders the draft and link at 48 columns", async (t) => {
 	const fixture = await createFixture(t);
-	const { input, transcript, confirm } = await driveBugReport(fixture, { hint: "privacy run" });
-	const descriptionText = input.children.find((child) => child.text?.includes("github.com"))?.text ?? "";
-	assert.match(descriptionText, /https:\/\/github\.com\/shisa-ai\/jouzu\/issues/);
-	assert.match(descriptionText, /public/);
-	assert.match(descriptionText, /private data even when the transcript is excluded/);
-	assert.match(descriptionText, /Nothing is uploaded or posted automatically/);
-	const transcriptText = transcript.children.find((child) => child.text?.includes("excluded by default"))?.text ?? "";
-	assert.match(transcriptText, /excluded by default/);
-	const confirmText = confirm.children.find((child) => child.text?.includes("jouzu-bug-report"))?.text ?? "";
-	assert.match(confirmText, /Nothing is uploaded or posted automatically/);
-	assert.match(confirmText, /public/);
-});
-
-test("builtin /bug routing forwards the host runtime identity", async (t) => {
-	const fixture = await createFixture(t);
+	const children = [];
 	const interactive = {
 		options: { sessionInfoFooter: () => IDENTITY },
 		session: fixture.session,
 		ui: fixture.ui,
 		editorContainer: fixture.editorContainer,
 		editor: fixture.editor,
+		chatContainer: { addChild: (child) => children.push(child) },
+		outputPad: 1,
 		showStatus: fixture.context.showStatus,
 		showError: fixture.context.showError,
 	};
+	const previousPath = process.env.PATH;
+	const emptyPath = await mkdtemp(join(tmpdir(), "jouzu-empty-path-"));
+	process.env.PATH = emptyPath;
+	t.after(async () => {
+		if (previousPath === undefined) delete process.env.PATH;
+		else process.env.PATH = previousPath;
+		await rm(emptyPath, { recursive: true, force: true });
+	});
+
 	const running = InteractiveMode.prototype.handleBugCommand.call(interactive, "routed hint");
 	await tick();
 	const input = latestOverlay(fixture);
@@ -370,9 +510,74 @@ test("builtin /bug routing forwards the host runtime identity", async (t) => {
 	latestOverlay(fixture).handleInput("\n");
 	await tick();
 	latestOverlay(fixture).handleInput("\n");
+	await tick();
+	latestOverlay(fixture).handleInput("\n");
+	await tick();
+	const body = latestOverlay(fixture);
+	assert.match(body.editor.getText(), /## What happened\n\nrouted hint/);
+	body.handleInput("\r");
+	await tick();
+	latestOverlay(fixture).handleInput("\n");
 	await running;
-	const archive = await readArchive(fixture.workDir);
-	const report = parseReport(archive);
-	assert.equal(report.jouzu.runtimeIdentity, IDENTITY);
-	assert.equal(report.hint, "routed hint");
+
+	const report = children.find((child) => typeof child.text === "string" && child.text.includes("New issue form:"));
+	assert.ok(report, "the routed report was not added to the chat");
+	assert.match(report.text, /New issue form: https:\/\/github\.com\/shisa-ai\/jouzu\/issues\/new/);
+	assert.match(report.text, /# routed hint/);
+	const lines = report.render(48);
+	assert.ok(lines.length > 0, "the routed report must render");
+	for (const line of lines) assert.ok(visibleWidth(line) <= 48, `line exceeds 48 columns: ${JSON.stringify(line)}`);
+	assert.equal(fixture.statuses.at(-1), "Draft ready; nothing was posted.");
+});
+
+test("default gh runner uses fixed argv without a shell", { skip: process.platform === "win32" }, async (t) => {
+	const fixture = await createFixture(t, { realGh: true });
+	const binDir = await mkdtemp(join(tmpdir(), "jouzu-gh-bin-"));
+	const capturePath = join(fixture.workDir, "gh-capture.bin");
+	const scriptPath = join(binDir, "gh");
+	await writeFile(
+		scriptPath,
+		`${[
+			"#!/bin/sh",
+			'{ printf "CALL\\0"; for arg in "$@"; do printf "%s\\0" "$arg"; done; } >> "$JOUZU_GH_CAPTURE"',
+			'if [ "$1" = "api" ]; then printf "fixture-user\\n"; else printf "https://github.com/shisa-ai/jouzu/issues/7\\n"; fi',
+		].join("\n")}\n`,
+	);
+	await chmod(scriptPath, 0o755);
+	const previousPath = process.env.PATH;
+	const previousCapture = process.env.JOUZU_GH_CAPTURE;
+	process.env.PATH = `${binDir}${delimiter}${previousPath}`;
+	process.env.JOUZU_GH_CAPTURE = capturePath;
+	t.after(async () => {
+		if (previousPath === undefined) delete process.env.PATH;
+		else process.env.PATH = previousPath;
+		if (previousCapture === undefined) delete process.env.JOUZU_GH_CAPTURE;
+		else process.env.JOUZU_GH_CAPTURE = previousCapture;
+		await rm(binDir, { recursive: true, force: true });
+	});
+
+	const title = 'Title with $HOME; echo "pwned" && true';
+	const body = "## What happened\n\nBody $(touch /tmp/pwned) with `backticks`.";
+	await driveBugReport(fixture, { hint: "fixture gh", bodyEdit: body, titleEdit: title, confirmSubmit: true });
+
+	const captured = (await readFile(capturePath)).toString("utf8").split("\0");
+	assert.deepEqual(captured.slice(0, -1), [
+		"CALL",
+		"api",
+		"user",
+		"--jq",
+		".login",
+		"CALL",
+		"issue",
+		"create",
+		"--repo",
+		"shisa-ai/jouzu",
+		"--title",
+		title,
+		"--body",
+		body,
+	]);
+	assert.equal(fixture.statuses.at(-1), "Issue created: https://github.com/shisa-ai/jouzu/issues/7");
+	assert.match(fixture.reports.at(-1), /Issue created: https:\/\/github\.com\/shisa-ai\/jouzu\/issues\/7/);
+	assert.match(fixture.reports.at(-1), new RegExp(`New issue form: ${EXPECTED_LINK}`));
 });
