@@ -19,6 +19,9 @@ import { parseAndValidateModelCatalog } from "../dist/model-catalog.js";
 import { loadActiveCatalogForSource, refreshCatalogSource } from "../dist/model-catalog-sync.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
 import { createSessionUiStyles } from "../dist/session-ui/index.js";
+import { DEFAULT_SHISA_DASHBOARD_URL } from "../dist/shisa-link/account.js";
+import { setShisaSignedOut, writeShisaLoginCredential } from "../dist/shisa-link/credentials.js";
+import { newShisaInstallId, shisaLinkStatePath, writeShisaLinkState } from "../dist/shisa-link/state.js";
 import { acquireStateLock } from "../dist/state-lock.js";
 import { terminalTextWidth } from "../dist/terminal-layout.js";
 
@@ -180,10 +183,13 @@ test("About is reachable from catalog browse and cannot discard a catalog edit",
 	component.render(80);
 	component.handleInput("up");
 	component.handleInput("up");
+	assert.equal(component.accountFocused, true, "the account row sits between the list and the view tabs");
 	assert.equal(component.render(80).filter((row) => row.slice(2).startsWith("→ ")).length, 1);
+	component.handleInput("up");
 	component.handleInput("\x1b[C");
 	assert.match(component.render(80).join("\n"), /Settings \/ About/);
 	component.handleInput("\x1b[D");
+	component.handleInput("down");
 	component.handleInput("down");
 	component.handleInput("a");
 	assert.equal(component.allowsGlobalNavigation(), false);
@@ -857,8 +863,9 @@ test("Expanding a source pages its offerings inside the overlay budget", async (
 		let rendered = component.render(84);
 		assert.ok(rendered.length <= budget, `expanded render stays within ${budget} rows`);
 		assert.match(rendered.join("\n"), /Example Model 0/u);
-		// The context ceiling row spends one body row, so each page holds one fewer model.
-		assert.match(rendered.join("\n"), /1-7\/30/u, "paging hint names the visible window");
+		// The account and context ceiling rows spend one body row each, so each page
+		// holds two fewer models than the bare list would.
+		assert.match(rendered.join("\n"), /1-6\/30/u, "paging hint names the visible window");
 		assert.match(rendered.join("\n"), /Maximum context/u, "context ceiling row stays visible");
 		assert.ok(selectedLine(rendered)?.includes("Paged pool"), "selected source row stays visible while expanded");
 		assert.match(rendered.join("\n"), /Enter edit/u, "footer key bar stays visible while expanded");
@@ -866,25 +873,25 @@ test("Expanding a source pages its offerings inside the overlay budget", async (
 		component.handleInput("pageDown");
 		rendered = component.render(84);
 		assert.ok(rendered.length <= budget);
-		assert.match(rendered.join("\n"), /8-14\/30/u);
+		assert.match(rendered.join("\n"), /7-12\/30/u);
 
 		component.handleInput("pageDown");
 		rendered = component.render(84);
 		assert.ok(rendered.length <= budget);
-		assert.match(rendered.join("\n"), /15-21\/30/u);
+		assert.match(rendered.join("\n"), /13-18\/30/u);
 
 		component.handleInput("pageDown");
 		rendered = component.render(84);
 		assert.ok(rendered.length <= budget);
-		assert.match(rendered.join("\n"), /22-28\/30/u);
+		assert.match(rendered.join("\n"), /19-24\/30/u);
 
 		component.handleInput("pageDown");
 		rendered = component.render(84);
 		assert.ok(rendered.length <= budget);
-		assert.match(rendered.join("\n"), /24-30\/30/u, "paging clamps at the end of the catalog");
+		assert.match(rendered.join("\n"), /25-30\/30/u, "paging clamps at the end of the catalog");
 
 		component.handleInput("pageDown");
-		assert.match(component.render(84).join("\n"), /24-30\/30/u);
+		assert.match(component.render(84).join("\n"), /25-30\/30/u);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
@@ -904,9 +911,20 @@ test("Paging steps by the rendered capacity so every offering stays reachable", 
 		component.handleInput("down");
 		component.handleInput("\u001b[C");
 		const budget = overlayBudget(20);
-		// The 20-row budget leaves room for a four-row page once the context ceiling
-		// row is counted; paging must follow the page size, not skip it.
-		const windows = ["1-4/30", "5-8/30", "9-12/30", "13-16/30", "17-20/30", "21-24/30", "25-28/30", "27-30/30"];
+		// The 20-row budget leaves room for a three-row page once the account and
+		// context ceiling rows are counted; paging must follow the page size.
+		const windows = [
+			"1-3/30",
+			"4-6/30",
+			"7-9/30",
+			"10-12/30",
+			"13-15/30",
+			"16-18/30",
+			"19-21/30",
+			"22-24/30",
+			"25-27/30",
+			"28-30/30",
+		];
 		for (const [step, window] of windows.entries()) {
 			const rendered = component.render(84);
 			assert.ok(rendered.length <= budget, `render stays within ${budget} rows at window ${window}`);
@@ -923,9 +941,9 @@ test("Paging steps by the rendered capacity so every offering stays reachable", 
 				.join("\n")
 				.match(/model-\d+/gu) ?? [],
 		);
-		assert.equal(seen.size, 4);
+		assert.equal(seen.size, 3);
 		component.handleInput("pageUp");
-		assert.match(component.render(84).join("\n"), /23-26\/30/u, "pageUp walks back one full window");
+		assert.match(component.render(84).join("\n"), /25-27\/30/u, "pageUp walks back one full window");
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
@@ -949,15 +967,15 @@ test("Expansion survives moving the selection and pages the sticky source by cap
 		let rendered = component.render(84);
 		assert.ok(rendered.length <= budget, "sticky expansion stays within the budget");
 		assert.ok(selectedLine(rendered)?.includes("Shisa API"), "selection moved to the built-in source");
-		assert.match(rendered.join("\n"), /1-2\/30/u, "sticky source keeps a paged window");
+		assert.match(rendered.join("\n"), /1-1\/30/u, "sticky source keeps a paged window");
 		assert.match(rendered.join("\n"), /Maximum context/u, "context ceiling row stays visible");
 		assert.match(rendered.join("\n"), /Enter edit/u, "footer stays visible");
 
 		component.handleInput("pageDown");
 		rendered = component.render(84);
 		assert.ok(rendered.length <= budget);
-		assert.match(rendered.join("\n"), /3-4\/30/u, "sticky paging advances by the rendered capacity");
-		assert.doesNotMatch(rendered.join("\n"), /1-2\/30/u, "no overlapping re-show of the first window");
+		assert.match(rendered.join("\n"), /2-2\/30/u, "sticky paging advances by the rendered capacity");
+		assert.doesNotMatch(rendered.join("\n"), /1-1\/30/u, "no overlapping re-show of the first window");
 
 		component.handleInput("\u001b[D");
 		assert.doesNotMatch(component.render(84).join("\n"), /Example Model/u, "left collapses the expansion");
@@ -1257,4 +1275,168 @@ test("Catalogs refreshes with the Shisa login and displays its credential source
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
+});
+
+/** Sign in locally: a saved credential plus the link state the account row reads. */
+async function signIn(paths, extra = {}) {
+	await writeShisaLinkState(
+		shisaLinkStatePath(paths),
+		{
+			install_id: newShisaInstallId(),
+			authorization_id: "authorization",
+			api_key_uuid: "key",
+			org: { id: "org", name: "Example Org", slug: "example" },
+			endpoints: {
+				openai_base_url: "https://api.example.test/v1",
+				model_catalog_url: "https://api.example.test/catalog",
+				asr_realtime_url: "wss://api.example.test/asr",
+			},
+			link_token: "link-secret",
+			gateway_url: "https://gateway.shisa.ai",
+			acked: true,
+			...extra,
+		},
+		paths.stateDir,
+	);
+	await writeShisaLoginCredential(paths, {
+		access: "shsk:test",
+		type: "oauth",
+		expires: Date.now() + 3_600_000,
+		refresh: "",
+	});
+}
+
+test("the account row leads Settings and offers credits when no account is connected", (t) => {
+	const f = setup();
+	t.after(() => rmSync(f.root, { recursive: true, force: true }));
+	const component = new CatalogSettingsComponent({ context: f.context, paths: f.paths, env: {} });
+	const rendered = component.render(84);
+	const accountIndex = rendered.findIndex((row) => row.includes("Shisa AI"));
+	const catalogIndex = rendered.findIndex((row) => row.includes("Model Catalogs"));
+	assert.ok(accountIndex >= 0 && accountIndex < catalogIndex, "the account row renders above the catalog list");
+	assert.match(rendered.join("\n"), /Not connected · \$10 in credits/u);
+	assert.ok(rendered.every((line) => terminalTextWidth(line) <= 84));
+});
+
+test("a connected account shows its organization and dashboard", async (t) => {
+	const f = setup();
+	t.after(() => rmSync(f.root, { recursive: true, force: true }));
+	t.after(() => setShisaSignedOut(f.paths, false));
+	await signIn(f.paths);
+	const component = new CatalogSettingsComponent({ context: f.context, paths: f.paths, env: {} });
+	const rendered = component.render(100).join("\n");
+	assert.match(rendered, /Connected · Example Org/u);
+	assert.match(rendered, /platform\.shisa\.ai\/en\/dashboard/u);
+});
+
+test("the account row takes focus above the context row and reports the dashboard", async (t) => {
+	const f = setup();
+	t.after(() => rmSync(f.root, { recursive: true, force: true }));
+	t.after(() => setShisaSignedOut(f.paths, false));
+	await signIn(f.paths);
+	const opened = [];
+	const component = new CatalogSettingsComponent({
+		context: f.context,
+		paths: f.paths,
+		env: {},
+		openBrowser: (url) => opened.push(url),
+	});
+	component.render(84);
+	component.handleInput("up");
+	assert.equal(component.contextFocused, true);
+	component.handleInput("up");
+	assert.equal(component.accountFocused, true);
+	assert.equal(component.contextFocused, false);
+	assert.equal(selectedLine(component.render(84)).includes("Shisa AI"), true);
+	component.handleInput("enter");
+	assert.deepEqual(opened, ["https://platform.shisa.ai/en/dashboard"]);
+	component.handleInput("down");
+	assert.equal(component.accountFocused, false);
+	assert.equal(component.contextFocused, true);
+});
+
+test("signing out asks first and then clears the account", async (t) => {
+	const f = setup();
+	t.after(() => rmSync(f.root, { recursive: true, force: true }));
+	t.after(() => setShisaSignedOut(f.paths, false));
+	await signIn(f.paths);
+	let logouts = 0;
+	const component = new CatalogSettingsComponent({
+		context: f.context,
+		paths: f.paths,
+		env: {},
+		logout: async () => {
+			logouts += 1;
+			setShisaSignedOut(f.paths, true);
+			return { revocation: "confirmed", localCleared: true };
+		},
+	});
+	component.render(84);
+	component.handleInput("up");
+	component.handleInput("up");
+	component.handleInput("d");
+	assert.match(component.render(84).join("\n"), /to sign out of Shisa on this device/u);
+	assert.equal(component.allowsGlobalNavigation(), false, "a pending confirmation holds the view");
+	component.handleInput("escape");
+	assert.equal(logouts, 0, "cancelling the confirmation signs nobody out");
+	component.handleInput("d");
+	component.handleInput("enter");
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(logouts, 1);
+	const rendered = component.render(84).join("\n");
+	assert.match(rendered, /Not connected/u);
+	assert.match(rendered, /Signed out of Shisa/u);
+});
+
+test("connecting runs the device flow in the panel and cancels with Escape", async (t) => {
+	const f = setup();
+	t.after(() => rmSync(f.root, { recursive: true, force: true }));
+	t.after(() => setShisaSignedOut(f.paths, false));
+	let released;
+	const started = new Promise((resolve) => {
+		released = resolve;
+	});
+	const component = new CatalogSettingsComponent({
+		context: f.context,
+		paths: f.paths,
+		env: {},
+		jouzuVersion: "0.1.13",
+		login: async (callbacks) => {
+			callbacks.onDeviceCode({ verificationUri: "https://example.test/connect", userCode: "JOUZU-TEST-1234" });
+			released();
+			await new Promise((_resolve, reject) => {
+				callbacks.signal.addEventListener("abort", () => reject(callbacks.signal.reason), { once: true });
+			});
+			throw new Error("unreachable");
+		},
+	});
+	component.render(84);
+	component.handleInput("up");
+	component.handleInput("up");
+	component.handleInput("enter");
+	await started;
+	const rendered = component.render(84).join("\n");
+	assert.match(rendered, /example\.test\/connect/u);
+	assert.match(rendered, /JOUZU-TEST-1234/u);
+	component.handleInput("escape");
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(f.closes.length, 0, "cancelling the sign-in keeps Settings open");
+	assert.match(component.render(84).join("\n"), /Shisa sign-in cancelled/u);
+});
+
+test("without a client version the account row names the login command", (t) => {
+	const f = setup();
+	t.after(() => rmSync(f.root, { recursive: true, force: true }));
+	const component = new CatalogSettingsComponent({
+		context: f.context,
+		paths: f.paths,
+		env: {},
+		login: () => assert.fail("must not sign in without a client version"),
+	});
+	component.render(84);
+	component.handleInput("up");
+	component.handleInput("up");
+	component.handleInput("enter");
+	assert.match(component.render(84).join("\n"), /Run \/login shisa to connect/u);
+	assert.equal(DEFAULT_SHISA_DASHBOARD_URL, "https://platform.shisa.ai/en/dashboard");
 });

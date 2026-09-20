@@ -102,6 +102,8 @@ export interface JouzuModelPickerOptions {
 	palette?: PaletteSurfaceOptions;
 	/** Test seam for the catalog refresh performed by /reload. */
 	catalogFetch?: typeof globalThis.fetch;
+	/** Client version the Settings account row reports when it signs in to Shisa. */
+	jouzuVersion?: string;
 }
 
 export interface ModelPickerComponentOptions {
@@ -1430,6 +1432,7 @@ export function createJouzuModelPicker(
 								paths,
 								env: catalogEnv,
 								onCatalogsChanged: reloadCatalogs,
+								...(options.jouzuVersion ? { jouzuVersion: options.jouzuVersion } : {}),
 							}),
 					},
 				}),

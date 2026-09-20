@@ -41,6 +41,11 @@ import type { JouzuPaths } from "./paths.js";
 import { detectBannerColorMode, renderBrandGradient } from "./presentation.js";
 import type { RuntimeDiagnostics } from "./runtime-diagnostics.js";
 import type { SessionUiStyleRole, SessionUiStyles } from "./session-ui/index.js";
+import { readShisaAccountStatus, type ShisaAccountStatus } from "./shisa-link/account.js";
+import { onShisaAuthChange, setShisaSignedOut } from "./shisa-link/credentials.js";
+import { resolveShisaGatewayUrl } from "./shisa-link/device-flow.js";
+import { loginShisa } from "./shisa-link/login.js";
+import { logoutShisa, shisaLogoutMessage } from "./shisa-link/logout.js";
 import {
 	fitTerminalText,
 	renderTerminalFrameBorder,
@@ -63,6 +68,12 @@ interface CatalogSettingsOptions {
 	onCatalogsChanged?: () => void;
 	runtime?: Pick<RuntimeDiagnostics, "about">;
 	initialRoute?: PaletteRoute;
+	/** Client version reported to the Shisa device flow; the account row needs it to sign in. */
+	jouzuVersion?: string;
+	/** Test seams for the account row. */
+	login?: typeof loginShisa;
+	logout?: typeof logoutShisa;
+	openBrowser?: (url: string) => void;
 }
 
 type FormField = "label" | "url" | "auth" | "credential" | "token";
@@ -120,6 +131,8 @@ const SOURCE_LABEL_COLUMN = 22;
 const FORM_LABEL_COLUMN = 14;
 /** Body rows the global context ceiling row spends: one, and it yields before the selected source. */
 const CONTEXT_SECTION_ROWS = 1;
+/** Body rows the Shisa account row spends; it yields last, after the catalog list heading. */
+const ACCOUNT_SECTION_ROWS = 1;
 
 /** Plain-text token warning for a source URL, prefixed for list rendering. */
 function transportWarningText(url: string): string | undefined {
@@ -181,6 +194,10 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	private readonly onCatalogsChanged?: () => void;
 	private readonly wordmark: string;
 	private readonly runtime?: Pick<RuntimeDiagnostics, "about">;
+	private readonly jouzuVersion?: string;
+	private readonly login: typeof loginShisa;
+	private readonly logout: typeof logoutShisa;
+	private readonly openBrowser?: (url: string) => void;
 	private about = false;
 	private viewFocused = false;
 	private aboutOffset = 0;
@@ -190,6 +207,12 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	private contextFocused = false;
 	/** Whether the last render kept the context ceiling row; a dropped row cannot take focus. */
 	private contextRowVisible = true;
+	private account: ShisaAccountStatus;
+	private accountFocused = false;
+	/** Whether the last render kept the account row; a dropped row cannot take focus. */
+	private accountRowVisible = true;
+	private confirmLogout = false;
+	private readonly unsubscribeAuth: () => void;
 	private maxContextTokens?: number;
 	private expandedSourceId?: string;
 	private expandedOffset = 0;
@@ -220,6 +243,18 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		this.onCatalogsChanged = options.onCatalogsChanged;
 		this.wordmark = renderBrandGradient("JOUZU", detectBannerColorMode());
 		this.runtime = options.runtime;
+		this.jouzuVersion = options.jouzuVersion;
+		this.login = options.login ?? loginShisa;
+		this.logout = options.logout ?? logoutShisa;
+		this.openBrowser = options.openBrowser;
+		this.account = readShisaAccountStatus(this.paths, this.env);
+		// Sign-in and sign-out elsewhere in the session (the /logout menu, a child
+		// process) must reach this row without reopening Settings.
+		this.unsubscribeAuth = onShisaAuthChange(this.paths, () => {
+			if (this.disposed) return;
+			this.account = readShisaAccountStatus(this.paths, this.env);
+			this.tui.requestRender();
+		});
 		this.about = !!this.runtime && options.initialRoute?.query === "about";
 		this.viewFocused = this.about;
 		this.reloadViews();
@@ -253,7 +288,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	}
 
 	allowsGlobalNavigation(): boolean {
-		return !this.form && !this.confirmRemove && !this.busy;
+		return !this.form && !this.confirmRemove && !this.confirmLogout && !this.busy;
 	}
 
 	private selected(): SourceView | undefined {
@@ -526,6 +561,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 
 	private moveSelection(delta: number): void {
 		this.contextFocused = false;
+		this.accountFocused = false;
 		this.selectedIndex = Math.max(0, Math.min(this.views.length - 1, this.selectedIndex + delta));
 		this.expandedOffset = 0;
 		this.confirmRemove = false;
@@ -566,7 +602,8 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			}
 			if (this.keybindings.matches(data, "tui.select.down")) {
 				this.viewFocused = false;
-				this.contextFocused = this.contextRowVisible;
+				if (this.accountRowVisible) this.accountFocused = true;
+				else this.contextFocused = this.contextRowVisible;
 				this.tui.requestRender();
 			}
 			return;
@@ -621,12 +658,73 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			if (this.confirmRemove) {
 				this.confirmRemove = false;
 				this.tui.requestRender();
-			} else {
-				this.close();
+				return;
 			}
+			if (this.confirmLogout) {
+				this.confirmLogout = false;
+				this.message = undefined;
+				this.tui.requestRender();
+				return;
+			}
+			// A running sign-in or sign-out owns the panel: cancel it here rather than
+			// closing Settings and leaving the device flow polling unseen.
+			if (this.busy && this.controller) {
+				this.controller.abort();
+				this.tui.requestRender();
+				return;
+			}
+			this.close();
 			return;
 		}
 		if (this.busy) return;
+		if (this.confirmLogout) {
+			if (this.keybindings.matches(data, "tui.select.confirm")) {
+				this.confirmLogout = false;
+				void this.disconnectShisa();
+			}
+			return;
+		}
+		if (this.accountFocused) {
+			if (this.keybindings.matches(data, "tui.select.up")) {
+				this.accountFocused = false;
+				if (this.runtime) this.viewFocused = true;
+				this.tui.requestRender();
+				return;
+			}
+			if (this.keybindings.matches(data, "tui.select.down")) {
+				this.accountFocused = false;
+				this.contextFocused = this.contextRowVisible;
+				this.tui.requestRender();
+				return;
+			}
+			if (this.keybindings.matches(data, "tui.select.confirm")) {
+				if (!this.account.signedIn) {
+					void this.connectShisa();
+					return;
+				}
+				this.openBrowser?.(this.account.dashboardUrl);
+				this.message = {
+					level: "info",
+					text: this.openBrowser
+						? `Opened the Shisa dashboard: ${this.account.dashboardUrl}`
+						: `Shisa dashboard: ${this.account.dashboardUrl}`,
+				};
+				this.messageOffset = 0;
+				this.tui.requestRender();
+				return;
+			}
+			if (data === "d" && this.account.signedIn) {
+				this.confirmLogout = true;
+				this.message = {
+					level: "error",
+					text: `Press ${formatEffectiveKeybinding(this.keybindings, "tui.select.confirm")} to sign out of Shisa on this device; ${formatEffectiveKeybinding(this.keybindings, "tui.select.cancel")} cancels. Saved catalogs and voice stop using this account.`,
+				};
+				this.messageOffset = 0;
+				this.tui.requestRender();
+				return;
+			}
+			return;
+		}
 		if (this.confirmRemove) {
 			if (this.keybindings.matches(data, "tui.select.confirm")) {
 				const source = this.selected()?.source;
@@ -643,6 +741,12 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			return;
 		}
 		if (this.keybindings.matches(data, "tui.select.up")) {
+			if (this.accountRowVisible && (this.contextFocused || (this.selectedIndex === 0 && !this.contextRowVisible))) {
+				this.contextFocused = false;
+				this.accountFocused = true;
+				this.tui.requestRender();
+				return;
+			}
 			if (this.runtime && (this.contextFocused || (this.selectedIndex === 0 && !this.contextRowVisible))) {
 				this.contextFocused = false;
 				this.viewFocused = true;
@@ -900,6 +1004,31 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 				{ key: confirm, label: "remove" },
 				{ key: cancel, label: "cancel" },
 			];
+		if (this.confirmLogout)
+			return [
+				{ key: confirm, label: "sign out" },
+				{ key: cancel, label: "cancel" },
+			];
+		if (this.busy && this.accountFocused)
+			return [
+				{ key: cancel, label: "cancel" },
+				{ key: move, label: "move" },
+			];
+		if (this.accountFocused)
+			return this.account.signedIn
+				? [
+						{ key: confirm, label: "dashboard" },
+						{ key: "D", label: "sign out" },
+						{ key: "Tab", label: "section" },
+						{ key: move, label: "move" },
+						{ key: cancel, label: "close" },
+					]
+				: [
+						{ key: confirm, label: "connect" },
+						{ key: "Tab", label: "section" },
+						{ key: move, label: "move" },
+						{ key: cancel, label: "close" },
+					];
 		if (this.viewFocused || this.about)
 			return [
 				{ key: confirm, label: "change view" },
@@ -983,6 +1112,129 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	}
 
 	/** The global ceiling row, rendered above the catalog list and dropped when the list needs its room. */
+	/**
+	 * One row for the Shisa account: connection state and organization when signed
+	 * in, and the signup offer when signed out. The dashboard address and the
+	 * connect key ride in the metadata column, which truncates before the value.
+	 */
+	private accountRow(innerWidth: number, line: (value?: string) => string): string {
+		const confirm = formatEffectiveKeybinding(this.keybindings, "tui.select.confirm");
+		const value = this.account.signedIn
+			? this.styles.apply(
+					"palette.status.ready",
+					this.account.org ? `Connected · ${sanitizeTerminalText(this.account.org)}` : "Connected",
+				)
+			: this.styles.apply("palette.status.off", "Not connected · $10 in credits");
+		// The metadata column truncates before the value, so it carries the shorter of
+		// the two: the dashboard address without its scheme, or the connect key.
+		const meta = this.account.signedIn ? this.account.dashboardUrl.replace(/^https?:\/\//u, "") : `${confirm} connects`;
+		return line(
+			renderPaletteField({
+				label: "Shisa AI",
+				labelRole: "palette.identity",
+				value,
+				meta,
+				labelWidth: SOURCE_LABEL_COLUMN,
+				innerWidth,
+				selected: this.accountFocused,
+				theme: this.theme,
+				styles: this.styles,
+			}),
+		);
+	}
+
+	/** Sign in through the same device flow as `/login shisa`, reported in this panel. */
+	private async connectShisa(): Promise<void> {
+		if (!this.jouzuVersion) {
+			this.message = { level: "error", text: "Run /login shisa to connect this account." };
+			this.tui.requestRender();
+			return;
+		}
+		this.busy = true;
+		this.controller = new AbortController();
+		const signal = this.controller.signal;
+		const report = (level: "error" | "info" | "warning", text: string) => {
+			if (this.disposed) return;
+			this.message = { level, text };
+			this.messageOffset = 0;
+			this.tui.requestRender();
+		};
+		const cancel = formatEffectiveKeybinding(this.keybindings, "tui.select.cancel");
+		report("info", `Requesting a Shisa device code. ${cancel} cancels.`);
+		try {
+			await this.login(
+				{
+					signal,
+					onDeviceCode: ({ verificationUri, userCode }) =>
+						report(
+							"info",
+							`Open ${sanitizeTerminalText(verificationUri)} and enter code ${sanitizeTerminalText(userCode)} to approve this device. ${cancel} cancels.`,
+						),
+					onAuth: ({ url }) => this.openBrowser?.(url),
+					onPrompt: async () => {
+						throw new Error("Unexpected Shisa sign-in prompt.");
+					},
+					onSelect: async () => undefined,
+					onProgress: (text: string) => report("info", sanitizeTerminalText(text)),
+				},
+				{
+					paths: this.paths,
+					jouzuVersion: this.jouzuVersion,
+					gatewayUrl: resolveShisaGatewayUrl(this.env),
+					...(this.openBrowser ? { openBrowser: this.openBrowser } : {}),
+				},
+			);
+			setShisaSignedOut(this.paths, false);
+			this.account = readShisaAccountStatus(this.paths, this.env);
+			this.reloadViews();
+			this.onCatalogsChanged?.();
+			report(
+				"info",
+				this.account.bonusUsd !== undefined
+					? `Connected to Shisa AI. $${this.account.bonusUsd} in credits is on this account.`
+					: "Connected to Shisa AI.",
+			);
+		} catch {
+			// Remote errors can carry credentials; keep the panel's recovery text local.
+			report(
+				"error",
+				signal.aborted
+					? "Shisa sign-in cancelled."
+					: "Shisa sign-in could not complete. Retry from this row or run /login shisa.",
+			);
+		} finally {
+			this.busy = false;
+			this.controller = undefined;
+			if (!this.disposed) this.tui.requestRender();
+		}
+	}
+
+	/** Revoke and remove this device's key, through the same path as `/logout shisa`. */
+	private async disconnectShisa(): Promise<void> {
+		this.busy = true;
+		this.controller = new AbortController();
+		try {
+			const result = await this.logout({ paths: this.paths, signal: this.controller.signal });
+			this.account = readShisaAccountStatus(this.paths, this.env);
+			this.reloadViews();
+			this.onCatalogsChanged?.();
+			this.message = {
+				level: result.localCleared ? "info" : "error",
+				text: shisaLogoutMessage(result, Boolean(this.env.SHISA_API_KEY?.trim())),
+			};
+		} catch {
+			this.message = {
+				level: "error",
+				text: "Shisa sign-out could not complete. Wait for any sign-in or sign-out to finish, then retry.",
+			};
+		} finally {
+			this.busy = false;
+			this.controller = undefined;
+			this.messageOffset = 0;
+			if (!this.disposed) this.tui.requestRender();
+		}
+	}
+
 	private contextRow(innerWidth: number, line: (value?: string) => string): string {
 		return line(
 			renderPaletteField({
@@ -1029,6 +1281,8 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		const lines: string[] = [];
 		const contextRow = this.contextRow(innerWidth, line);
 		let contextRows = CONTEXT_SECTION_ROWS;
+		const accountRow = this.accountRow(innerWidth, line);
+		let accountRows = ACCOUNT_SECTION_ROWS;
 		const active = this.views.filter((view) => view.source.enabled && view.status.status === "active").length;
 		const headingText = line(
 			renderPaletteHeading(
@@ -1040,7 +1294,8 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			),
 		);
 		if (this.views.length === 0) {
-			lines.push(contextRow, headingText);
+			this.accountRowVisible = true;
+			lines.push(accountRow, contextRow, headingText);
 			lines.push(line(this.styles.apply("palette.empty", "  No catalog sources configured.")));
 			return lines;
 		}
@@ -1059,6 +1314,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		// never mid-warning, until the pool clears.
 		let pool =
 			budget -
+			accountRows -
 			contextRows -
 			1 -
 			1 -
@@ -1079,9 +1335,15 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			} else if (headingKept) {
 				pool += 1;
 				headingKept = false;
+			} else if (accountRows > 0) {
+				pool += accountRows;
+				accountRows = 0;
 			}
 		};
-		while (pool < 0 && (extras.conflict.length > 0 || extras.detail.length > 0 || contextRows > 0 || headingKept))
+		while (
+			pool < 0 &&
+			(extras.conflict.length > 0 || extras.detail.length > 0 || contextRows > 0 || headingKept || accountRows > 0)
+		)
 			dropOrShrink();
 		// An expanded selection keeps its first offering and paging trailer
 		// ahead of optional source rows. When even that does not fit, the tab row
@@ -1139,7 +1401,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 						meta: countLabel(count),
 						labelWidth: SOURCE_LABEL_COLUMN,
 						innerWidth,
-						selected: isSelected && !this.viewFocused && !this.contextFocused,
+						selected: isSelected && !this.viewFocused && !this.contextFocused && !this.accountFocused,
 						theme: this.theme,
 						styles: this.styles,
 					}),
@@ -1187,6 +1449,9 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 				);
 		}
 		const prefix: string[] = [];
+		if (accountRows > 0) prefix.push(accountRow);
+		this.accountRowVisible = accountRows > 0;
+		if (!this.accountRowVisible) this.accountFocused = false;
 		if (contextRows > 0) prefix.push(contextRow);
 		this.contextRowVisible = contextRows > 0;
 		if (!this.contextRowVisible) this.contextFocused = false;
@@ -1327,6 +1592,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 
 	dispose(): void {
 		this.disposed = true;
+		this.unsubscribeAuth();
 		this.controller?.abort();
 		this.controller = undefined;
 	}

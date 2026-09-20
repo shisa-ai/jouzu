@@ -4,6 +4,7 @@
 
 ### Added
 
+- Open Settings on a **Shisa AI** row above the catalog list. It reports the connected organization and the dashboard for the gateway that issued the sign-in, signs in through the same device flow as `/login shisa` without leaving the panel, and signs out after a confirmation. Signed out, the row carries the signup credits.
 - Wait for an exact subagent run or a newly created schedule through copyable `agent_wait` receipts. Subagent waits observe terminal outcomes; schedule waits observe only the first trigger, not completion of the scheduled work. Both support deadline wake-ups without polling.
 - Open `/about` for running and installed Jouzu builds, Pi version, and startup time. `/session` includes a compact runtime line; `/about` stays available while flow work is held without releasing the hold.
 

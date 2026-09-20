@@ -187,7 +187,9 @@ Run the focused interaction tests while iterating, then run `npm run check` and 
 
 ## Settings
 
-Settings has a **View: ‹ Catalogs › / ‹ About ›** choice. Move to it with `↑` from the context-limit row, then use `←`, `→`, or `Enter` to change the view. `/catalogs` opens Catalogs; `/about` opens About. `Tab` and `Shift+Tab` remain top-level navigation and preserve the selected Settings view. A catalog edit or confirmation blocks external routes.
+Settings has a **View: ‹ Catalogs › / ‹ About ›** choice. Move to it with `↑` from the Shisa AI row, then use `←`, `→`, or `Enter` to change the view. `/catalogs` opens Catalogs; `/about` opens About. `Tab` and `Shift+Tab` remain top-level navigation and preserve the selected Settings view. A catalog edit or confirmation blocks external routes.
+
+Catalogs opens on the **Shisa AI** row, above the context-limit row and the catalog list. Signed out, the row reports `Not connected` with the signup credits, and `Enter` runs the device sign-in inside the panel: the verification URL and code appear in the message area, and `Esc` cancels the sign-in rather than closing Settings. Signed in, the row reports the connected organization and the dashboard address derived from the gateway that issued the sign-in, `Enter` reports or opens that address, and `D` signs out after a confirmation. The row yields its line last when the terminal is too short, after the catalog list heading.
 
 About shows the running and installed Jouzu builds, Pi version, and process startup time. Running identity is captured at startup; a changed installation is reported separately with a restart notice. `↑`/`↓` and semantic paging controls scroll a report taller than the available area. `Esc` closes the Palette without writing settings. Outside the TUI, `/about` reports the same information as text.
 

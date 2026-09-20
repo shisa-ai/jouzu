@@ -324,6 +324,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 	const releaseDiagnostics = createReleaseExtensionDiagnostics(releaseExtensionStatus, runtimeDiagnostics);
 	const modelPicker = createJouzuModelPicker(paths, {
 		runtime: runtimeDiagnostics,
+		jouzuVersion: metadata.jouzuVersion,
 		textguardFiles: parsed.options.textguardFiles,
 		// Read at launch time: a child inherits whatever mode the session is in.
 		textguardMode: () => nativeTextguard.currentMode(),

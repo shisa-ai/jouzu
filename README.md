@@ -143,6 +143,8 @@ These surfaces use terminal display columns rather than JavaScript string length
 
 Run `/login shisa`, open the displayed verification URL, and complete approval in your browser. Jouzu saves a dedicated API key and device link with private file permissions. The saved key supplies inference, the Shisa model catalog, and voice; each service still requires access on your Shisa account.
 
+Settings opens with a **Shisa AI** row above the catalog list. Signed out, it reports `Not connected` and the signup credits, and `Enter` starts the same browser approval in place; `Esc` cancels a sign-in without closing Settings. Signed in, it reports the connected organization and the dashboard address for the gateway that issued the sign-in. `D` signs out after a confirmation and runs the same revocation as `/logout shisa`.
+
 An explicit `SHISA_API_KEY` takes precedence over the saved login. The Shisa catalog also accepts a separately saved catalog token before falling back to the login. If Jouzu saves the key but cannot confirm delivery to Shisa, it asks you to sign in again.
 
 `/logout shisa` attempts server revocation before removing the local Shisa credential and device link. If the server cannot confirm revocation, Jouzu signs out locally and asks you to disconnect the device in the Shisa dashboard. A local storage failure is reported separately. A saved link without its issuing gateway also requires dashboard disconnect. Other providers retain their credentials.
