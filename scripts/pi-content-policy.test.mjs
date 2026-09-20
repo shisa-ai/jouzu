@@ -414,6 +414,19 @@ test("final tool policy sees extension output and errors remove text and structu
 	assert.equal(kept.details.secret, "EXTENSION DETAIL");
 	assert.equal(kept.isError, false);
 	assert.equal(JSON.stringify(kept).includes("could not check"), false);
+	policy.shouldInspectTool = () => true;
+	fake.agent.signal = AbortSignal.abort();
+	seen = undefined;
+	const cancelled = await fake.agent.afterToolCall({
+		toolCall: { name: "web_fetch", id: "3" },
+		args: { url: "https://example.com" },
+		result: { content: [{ type: "text", text: "PRIVATE WEB BODY" }] },
+		isError: false,
+	});
+	assert.equal(seen, undefined, "cancelled checks must not invoke the policy");
+	assert.equal(cancelled.content[0].text, "EXTENSION BODY");
+	assert.equal(cancelled.details.secret, "EXTENSION DETAIL");
+	assert.equal(cancelled.isError, false);
 });
 
 test("SDK final context errors stop delivery after ordinary extension handlers", async () => {

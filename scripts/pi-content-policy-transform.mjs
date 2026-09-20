@@ -449,7 +449,7 @@ export function transform(path, source) {
                 isError: hookResult?.isError ?? isError,
                 usage: hookResult?.usage ?? result.usage,
             };
-            if (!this.resourceLoader.contentPolicy) return finalResult;
+            if (!this.resourceLoader.contentPolicy || this.agent.signal?.aborted) return finalResult;
             try {
                 const admitted = await this.resourceLoader.contentPolicy.filterToolResult({
                     toolName: toolCall.name, toolCallId: toolCall.id, input: args,
