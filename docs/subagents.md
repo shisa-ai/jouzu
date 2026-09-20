@@ -87,7 +87,7 @@ A completed run means the child returned a final response and exited successfull
 
 ## Execution and retained history
 
-Children run through Jouzu's pinned Pi SDK in separate Node processes. They use the selected model and resolved API key/token or headers through a private IPC channel. Authentication requiring extension code or additional credential environment variables is rejected before launch. Long-lived runs do not refresh authentication tokens. Model-reported usage is accumulated per run; missing cost information stays unknown.
+Children run through Jouzu's pinned Pi SDK in separate Node processes. They use the selected model and resolved API key/token or headers through a private IPC channel. Authentication requiring extension code or additional credential environment variables is rejected before launch. Long-lived runs do not refresh authentication tokens. Model-reported usage is accumulated per run, including successful cache-warming requests; missing cost information stays unknown. New launches and resumes copy the global warming mode, while running children retain their launch setting. See [Prompt-cache warming](cache-warming.md) for modes, costs, and limits.
 
 Coder children load repository `AGENTS.md` instructions. Children do not load ambient extensions or skills and cannot delegate through the `subagent` tool. Enabled file tools can access sibling directories and other paths permitted by the operating system. Role tool selection controls what operations a child can perform; the working directory is not a filesystem sandbox. Shell tools also run with the user's OS permissions. Workspace locks coordinate children using the same selected directory, not arbitrary cross-directory writes. Use child roles only for trusted local work.
 

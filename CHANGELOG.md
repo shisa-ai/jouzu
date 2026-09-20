@@ -22,6 +22,7 @@
 
 ### Fixed
 
+- Give prompt-cache refreshes separate request checks without consuming conversational input. Include successful child refresh usage in parent totals and copy the global warming mode into new and resumed child runs. See [Prompt-cache warming](docs/cache-warming.md) for settings and limits.
 - Allow a task to wait on a background job started by its parent invocation without transferring job ownership or allowing sibling-task access.
 - Resolve terminal execution evidence before checking live health policies, so completion between launch and wait registration does not invalidate a copied receipt. Rejected wait declarations explain recovery and leave no new subscription behind.
 - Require registered launch receipts for subagent and schedule waits. Unreadable retained producer state keeps automatic work held while allowing session reopening and `/flow` inspection.
@@ -41,7 +42,7 @@
 
 ### Testing limits
 
-- Pi 0.86.0 passed local Linux qualification. Native macOS/Windows and live-provider cache-warming behavior require separate checks.
+- Pi 0.86.0 passed local Linux qualification. Parent refresh admission, cancellation, and child warming settings/accounting pass loopback tests. Native macOS/Windows and live-provider cache hits, retention, and savings require separate checks.
 - Pi's `/bug` model-generated summary is rejected by Jouzu's active flow-control request check. For a local diagnostic archive, choose **No** for transcript inclusion, **No** for summary generation, then **Export as Zip**. Inspect the archive before sharing it.
 
 ## 0.1.13 - 2026-09-19
