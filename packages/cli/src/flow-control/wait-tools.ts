@@ -287,15 +287,18 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 							authority.check();
 						}
 						for (const handle of monitored) {
+							const ownerId = owners.get(JSON.stringify([handle.producer, handle.execution]));
+							if (!ownerId || !handle.health)
+								throw new FlowLedgerError("identity", "Monitored dependency has no captured owner or health policy.");
 							await attachment.waitProducers.requirePendingHealthPolicy(
 								handle.producer,
 								{
-									workId: owners.get(JSON.stringify([handle.producer, handle.execution]))!,
+									workId: ownerId,
 									handle: handle.handle,
 									execution: handle.execution,
 								},
 								handle.until,
-								handle.health!,
+								handle.health,
 							);
 							authority.check();
 						}

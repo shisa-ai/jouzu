@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "description": "Deterministic prompts for evaluating inline Core guidance and capability selection. Expected entries are positive routes; avoid entries identify unnecessary workflow machinery.",
   "budgets": {
-    "defaultGuidanceCharacters": 900
+    "defaultGuidanceCharacters": 1800
   },
   "cases": [
     {

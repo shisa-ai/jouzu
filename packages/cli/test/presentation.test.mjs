@@ -107,7 +107,7 @@ Guidelines:
 		JOUZU_DEFAULT_GUIDANCE,
 		`${JOUZU_USER_COMMUNICATION_GUIDANCE}\n${JOUZU_REPOSITORY_WORK_GUIDANCE}\n${JOUZU_ASYNC_WAIT_GUIDANCE}`,
 	);
-	assert.ok(JOUZU_DEFAULT_GUIDANCE.length <= 2000);
+	assert.ok(JOUZU_DEFAULT_GUIDANCE.length <= 1800);
 	assert.match(expected, /Prefer completion notifications and flow-control waits over sleeping or polling/);
 	assert.match(expected, /When agent_wait is available and the producer returns a wait dependency/);
 	assert.match(expected, /omit work to use the current invocation/);
