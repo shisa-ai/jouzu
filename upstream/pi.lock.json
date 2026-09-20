@@ -1,33 +1,33 @@
 {
 	"schemaVersion": 2,
 	"repository": "https://github.com/earendil-works/pi",
-	"tag": "v0.86.0",
-	"tagCommit": "ecac0a9c4edad3dac5d9f8b40e0c7db7a56471fc",
-	"commit": "ecac0a9c4edad3dac5d9f8b40e0c7db7a56471fc",
+	"tag": "v0.86.1",
+	"tagCommit": "13cbf77df2396303013a41646bcfa77b4271ae56",
+	"commit": "13cbf77df2396303013a41646bcfa77b4271ae56",
 	"packages": {
 		"@earendil-works/pi-coding-agent": {
-			"version": "0.86.0",
-			"integrity": "sha512-tzLh/10bPQZbA9shvA8TALT4eSNCifJaDq672MPXHldsvZ9t9lQ8J5Z9CD1d7UZVzG4l85XUZWo6ZCCNhBULxw=="
+			"version": "0.86.1",
+			"integrity": "sha512-vZBuNfJnruxZyemZ3O05V0S/Ylze08ahFTIQ1Mik++gVdOevPl89gt/Uv0U97BPAJaj9cj6Vf9rcIgKtUrd0BA=="
 		},
 		"@earendil-works/pi-server": {
-			"version": "0.86.0",
-			"integrity": "sha512-FfPVV37CQPzdAmTHH5+ekzbyB4U8CEtWnR0d9FIUhDkWszHjr0+ZQT2GBU+YgK+eubLjlRR1GLm3eRgrFBMYDg=="
+			"version": "0.86.1",
+			"integrity": "sha512-fyevzqjuOQjqtKX1igY7i59cqHpIlGVQ+idHEtzZGScvaIKaXufZIjYqdxXG41J8fjasH7MS5OBD9ix0s5nnmQ=="
 		}
 	},
-	"reviewedAt": "2026-09-20",
-	"compatibilityStatus": "qualified",
+	"reviewedAt": null,
+	"compatibilityStatus": "pending-qualification",
 	"deviations": [
 		{
 			"path": "upstream/pi-content-policy/patch.lock.json",
-			"sha256": "8db617c031574e226c0cdceb88a5d8df3ed73c7e17850d32a7465e9efbacf0d6"
+			"sha256": "3e8030957b9696ee0209a552b8da1aeb1501d818dbae4a1ecd15b6471ef8963f"
 		},
 		{
 			"path": "upstream/pi-flow-control/patch.lock.json",
-			"sha256": "42c1c04004c34e074efe78e57db7b59ba515098470531a34357c81b2a4ff3a04"
+			"sha256": "85d1604951c086f6476d405545703f7f4dd897fcc8dd13ab2f2d39274fdb5e91"
 		},
 		{
 			"path": "upstream/pi-provider-receipts/patch.lock.json",
-			"sha256": "70d00426106081410937d98c92d5746a52ab1fc812623c706f03c1cdd9cd9bfb"
+			"sha256": "f75256f68585e687e67965b7c1544ec82d322c519307860150febdf3d7852299"
 		},
 		{
 			"path": "upstream/background-flow/patch.lock.json",

@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"package": "@earendil-works/pi-ai",
-	"version": "0.86.0",
+	"version": "0.86.1",
 	"files": {
 		"dist/api/transform-messages.js": {
 			"before": "9d747a3d64c533f7bfaf2a66e8446dc006086559d364a09d4c51d1c8c9c332e5",
@@ -12,16 +12,16 @@
 			"after": "2ec467e677671686920989db787fb750a9cb452ea1d8f40fa74aeba9928a8b3f"
 		},
 		"dist/api/openai-completions.js": {
-			"before": "570d927794892b8e23ff0e079d8a35c910f694e925ee9b4725bf37fb8f37ff7b",
-			"after": "241c642e8fe8b116bb6fdfc08887582fd73c7be157489308009f0f9d7ef892dd"
+			"before": "a28f7e767f2ead3c95b8c8558174ec14072289448b243d2093363a210469591f",
+			"after": "a4099e5ba0966060a7a1fa44839ca94bf0a67c90dbd0d332ded9e9d4e711d40a"
 		},
 		"dist/api/openai-completions.d.ts": {
 			"before": "552baa4343275a20df53734e5aa12f46cb8648ca28421adf1318b199eae69a05",
 			"after": "b6eccdaa2d0b9796728d4f8c3b922713862dac056d331f3b0b530ea57d9cfd95"
 		},
 		"dist/types.d.ts": {
-			"before": "e3ca23bf2ae885f456908d585823b527c118faa103d76ca2543306a88bc84ebd",
-			"after": "e91a417d83d4f7451d1e0a103f2f7bfce40207dbc3b6c42047e324b2f2daeef0"
+			"before": "2527dc035a85e40708478ba1349f35cf7e71c64c4ba50ae547a4188950b1b22b",
+			"after": "e29266c2dd55ba51c10c4e2b9857c210e6d8b9c40fb445df82c5abf5171e1b54"
 		},
 		"dist/api/simple-options.js": {
 			"before": "1caf860e028e22639578aba3ec8b79e5be9650c27bd3f19471c78502976555f3",

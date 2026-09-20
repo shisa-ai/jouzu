@@ -62,7 +62,7 @@ test("patch is locked and idempotent; modified input never gets overwritten", as
 	try {
 		await writeFile(
 			join(directory, "package.json"),
-			JSON.stringify({ name: "@earendil-works/pi-coding-agent", version: "0.86.0" }),
+			JSON.stringify({ name: "@earendil-works/pi-coding-agent", version: "0.86.1" }),
 		);
 		await mkdir(join(directory, "dist"));
 		await writeFile(join(directory, "dist/main.js"), "unrecognized");

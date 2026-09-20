@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"package": "@earendil-works/pi-agent-core",
-	"version": "0.86.0",
+	"version": "0.86.1",
 	"files": {
 		"dist/agent.js": {
 			"before": "d81d9c9b57d61e052542b70f772e2ac0ff7b9d9e43910583b42c47709cad39e6",

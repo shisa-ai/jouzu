@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"package": "@earendil-works/pi-coding-agent",
-	"version": "0.86.0",
+	"version": "0.86.1",
 	"files": {
 		"dist/core/settings-manager.js": {
 			"before": "5368b155ec26d88374cec9e66b8e588b5041a0fb0047414f70b34e13892c4f48",
@@ -116,19 +116,19 @@
 			"after": "b2dacb5a2b30f84648ec8987373508ffdef47671e3681744fd9e6dfd64efd2fb"
 		},
 		"dist/modes/interactive/interactive-mode.js": {
-			"before": "ccb1efe72641696c6f0bb73e01c6ce1fbaae080ae55fef97971b2b66e30c26c1",
-			"after": "fb592166af21655dfce8d647179646c4485fd01779dea760ebd25b4695b09e5e"
+			"before": "8c9275944466afe2df78dcf02f2f6c83f6bc46fb0fdbd7257a3ef9d1da1ed027",
+			"after": "2005d7d1fb0de92163f650e7627093b54ec29ea690366930556d79a273fce72e"
 		},
 		"dist/modes/interactive/interactive-mode.d.ts": {
-			"before": "5c218db7397380458850e152f1278df8a07c786646bc8d8eba8288b752b63ffa",
-			"after": "ab8b9483b9e7c87c450941c00acf8b25bfdf121d90551057e0e4bdf4572d1ca1"
+			"before": "462632cf8748c9c230f71b5787457a077a73fed8250c25ddd13a42a6dc520811",
+			"after": "e3e5eb318edb9b94821159a6ea94e615b0d3eb850075c177ce5251e7044d3771"
 		},
 		"dist/core/slash-commands.js": {
 			"before": "3c4b7576c59d81e39e7dff4a847fdb51021fbea544a7880746018866a599f1e6",
 			"after": "cbc6f2510b6807d5baa81be79f80d24f159e7c8315491c505e024098952a61d6"
 		},
 		"dist/modes/interactive/bug-report.js": {
-			"before": "450e3917bfa9fe8c2eaf3a319c4b27a775cd1a8108217787235484d549fde070",
+			"before": "14dcb077ca77f73d92a784da2994fad1a2aa9c062a805765fdca15bf84cde771",
 			"after": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b"
 		}
 	},
