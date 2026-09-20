@@ -24,6 +24,7 @@
 
 ### Fixed
 
+- Preserve incomplete Shisa sign-in confirmation warnings, distinguish environment-key connections from saved account identities, and avoid presenting signup offers as balances. Settings sign-in refreshes catalogs and model availability in the same session. The account row scrolls with the catalog pane, and expanded catalogs take priority over extra source rows.
 - Give prompt-cache refreshes separate request checks without consuming conversational input. Include successful child refresh usage in parent totals and copy the global warming mode into new and resumed child runs. See [Prompt-cache warming](docs/cache-warming.md) for settings and limits.
 - Allow a task to wait on a background job started by its parent invocation without transferring job ownership or allowing sibling-task access.
 - Resolve terminal execution evidence before checking live health policies, so completion between launch and wait registration does not invalidate a copied receipt. Rejected wait declarations explain recovery and leave no new subscription behind.
