@@ -1079,6 +1079,51 @@ test("favorite guidance resolves the effective model-select binding", async () =
 	}
 });
 
+test("/about routes to Settings About and reports text outside the TUI", async (t) => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-about-command-"));
+	t.after(() => rmSync(root, { recursive: true, force: true }));
+	const paths = resolveJouzuPaths({ homeOverride: join(root, "home") });
+	const commands = new Map();
+	const handlers = new Map();
+	const integration = createJouzuModelPicker(paths, {
+		palette: { env: {}, columns: 100, rows: 30 },
+		runtime: { about: () => "Running Jouzu startup-build\nPi test-pi" },
+	});
+	integration.extension.factory({
+		on: (name, handler) => handlers.set(name, handler),
+		registerCommand: (name, command) => commands.set(name, command),
+		setModel: async () => true,
+	});
+	const rendered = [];
+	const notices = [];
+	const ctx = {
+		mode: "tui",
+		ui: {
+			notify: (text) => notices.push(text),
+			custom: (factory) =>
+				new Promise((resolve) => {
+					const component = factory(
+						{ terminal: { rows: 30 }, requestRender() {} },
+						identityTheme,
+						fakeKeybindings(),
+						resolve,
+					);
+					setImmediate(() => {
+						rendered.push(component.render(80).join("\n"));
+						component.handleInput("escape");
+					});
+				}),
+		},
+	};
+	await commands.get("about").handler("", ctx);
+	assert.match(rendered[0], /Settings \/ About/);
+	assert.match(rendered[0], /startup-build/);
+	await commands.get("about").handler("", { ...ctx, mode: "rpc" });
+	assert.deepEqual(notices, ["Running Jouzu startup-build\nPi test-pi"]);
+	assert.equal(rendered.length, 1);
+	await handlers.get("session_shutdown")({}, ctx);
+});
+
 test("Jouzu editor wrapper opens the Models component through the Palette surface", async () => {
 	const root = mkdtempSync(join(tmpdir(), "jouzu-model-picker-host-"));
 	try {

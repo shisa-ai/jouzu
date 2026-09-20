@@ -5,11 +5,11 @@
 	"files": {
 		"dist/main.js": {
 			"before": "f0b7e5a8419af8d149ffe367af2992c76ce70b73484c15492bd50787d4f4962a",
-			"after": "f53fdf3b585ac468dc502fd9a1dab90e4423836437f95cbb23365f19bf04d402"
+			"after": "57212aa566f7fc8d14c0912bca4bebfb1f494fda4eb8a0c72d6a9a944f8c60d3"
 		},
 		"dist/main.d.ts": {
 			"before": "cf197873ee07f73d5682fe2236e24989714d1f5c1acf8820264e570a5c17dadc",
-			"after": "1d33000e4919c26247d36f2a838cb40e4194faf86994f87c55b135ce4068a081"
+			"after": "b3c57b99ccfa8d798bb2b9474e6514108e6fe737613a80c4f853a0adde494765"
 		},
 		"dist/core/resource-loader.js": {
 			"before": "8e8a1bc1c5bc9e955f6a2314dd1db02071be56d48b1fea7b8b2cacb4fc9a0628",
@@ -106,6 +106,14 @@
 		"dist/core/model-runtime.d.ts": {
 			"before": "1eab731760756334e38beb22bea56a4ca96db380e2e5b91a633365b5449fe328",
 			"after": "b2dacb5a2b30f84648ec8987373508ffdef47671e3681744fd9e6dfd64efd2fb"
+		},
+		"dist/modes/interactive/interactive-mode.js": {
+			"before": "802ff14f5a47710e5a46d8141b238c4d5ffca30e8ca26bad18f838eddbf086bf",
+			"after": "2fbc5a9d91bc219f12fc562b150a8ad213ac590f7dc2ec2420c1b0e409bebbd7"
+		},
+		"dist/modes/interactive/interactive-mode.d.ts": {
+			"before": "25d25af71429fe0a38ec3b57701fa43a349e48a91cff4b96ad4a58216a54b6d5",
+			"after": "d542fef656e6dd28263494816db9c2f02cbec00fba3e9052801e082cd7933f59"
 		}
 	},
 	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863",

@@ -6,7 +6,11 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { BACKGROUND_CONTEXT, setValue, value } from "@earendil-works/pi-agent-core";
 import { openLocalFlowSession } from "../dist/flow-control/local-storage.js";
-import { retirableNativeRequests, supersededNativeRequests } from "../dist/flow-control/native-request-retention.js";
+import {
+	retirableEmptyNativeRequests,
+	retirableNativeRequests,
+	supersededNativeRequests,
+} from "../dist/flow-control/native-request-retention.js";
 import { MAX_RETIRED_NATIVE_REQUESTS } from "../dist/flow-control/native-request-store.js";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { retiredIdentityHash } from "../dist/flow-control/retired-identities.js";
@@ -61,6 +65,39 @@ const successful = (id, operations) => {
 	const record = input(id, operations);
 	return { ...record, ownerId: "owner", outcome: "success", payload: payload(record) };
 };
+
+test("request-boundary cleanup protects input, projections, waits, holds, and retry relationships", () => {
+	const empty = (id) => successful(id, []);
+	const records = [
+		successful("input", ["live"]),
+		{ ...empty("projection"), projectionCapture: { members: [{ index: 0 }] } },
+		{ ...empty("wait"), waitTokens: ["live-wait"] },
+		{ ...empty("required"), requiredSources: [0] },
+		{ ...empty("required-projection"), requiredProjections: [0] },
+		{ ...empty("cancelled"), cancelledSources: [0] },
+		{ ...empty("cancelled-projection"), cancelledProjections: [0] },
+		{ ...empty("pending"), outcome: undefined },
+		{ ...empty("retry-parent"), outcome: "withheld", retryAuthorization: { requestId: "retry-child" } },
+		{ ...empty("retry-child"), retryOf: "retry-parent" },
+		...["success", "failure", "aborted", "withheld"].map((outcome) => ({ ...empty(outcome), outcome })),
+		empty("latest"),
+	];
+	assert.deepEqual(retirableEmptyNativeRequests(records, 1), ["success", "failure", "aborted", "withheld"]);
+});
+
+test("request-boundary retirement archives empty history and preserves replay fences after reopen", async (t) => {
+	const f = await fixture(t);
+	await complete(f.store, "live", ["retained-input"]);
+	for (let i = 0; i < 70; i++) await complete(f.store, `empty-${i}`, []);
+	assert.equal(await f.store.retireBeforeRequest(), 6);
+	assert.equal((await f.store.snapshot()).length, 65);
+	assert.ok((await f.store.snapshot()).some((r) => r.id === "live"));
+	await f.reopen();
+	await assert.rejects(f.store.begin(input("empty-0", [])), { code: "stale" });
+	await complete(f.store, "after-reopen", []);
+	assert.equal(await f.store.retireBeforeRequest(), 1);
+	assert.equal((await f.store.snapshot()).length, 65);
+});
 async function fixture(t, retiredCount = 0, reconciledCount = 0) {
 	const root = await mkdtemp(join(tmpdir(), "jouzu-request-retention-"));
 	let storage;

@@ -46,7 +46,7 @@ async function fixture(t, { transform, fetch, native, reversed = false, inputs, 
 	const nativeStore = {
 		scope: { sessionId: session.sessionId, branchId: "main" },
 		blocksQueueing: () => false,
-		retireSuperseded: async () => 0,
+		retireBeforeRequest: async () => 0,
 		snapshot: async () => records.map((record) => ({ ...record })),
 		begin: async (record) => {
 			records.push({ ...record });

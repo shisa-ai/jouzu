@@ -100,7 +100,7 @@ async function fixture(t, native, options = {}) {
 			{
 				scope: { sessionId: session.sessionId, branchId: "main" },
 				blocksQueueing: () => false,
-				retireSuperseded: async () => 0,
+				retireBeforeRequest: async () => 0,
 				snapshot: async () => observed.map((record) => ({ ...record })),
 				begin: async (record) => void observed.push({ ...record }),
 				handoff: async () => true,

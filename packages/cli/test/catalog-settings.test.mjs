@@ -110,6 +110,94 @@ function response(document) {
 	});
 }
 
+test("About opens directly, wraps runtime identity, and returns to Catalogs without changing settings", (t) => {
+	const f = setup({ rows: 32 });
+	t.after(() => rmSync(f.root, { recursive: true, force: true }));
+	const runtime = {
+		about: () =>
+			[
+				"Running Jouzu 0.1.13-dev.20260919-165330+g6855ffce",
+				"Pi 0.85.1",
+				"Started 2026-09-20T03:00:00.000Z",
+				"Installed Jouzu 次のビルド",
+				"Installed build differs. Restart Jouzu to load it.",
+			].join("\n"),
+	};
+	const component = new CatalogSettingsComponent({
+		context: f.context,
+		paths: f.paths,
+		runtime,
+		initialRoute: { view: "settings", query: "about" },
+	});
+	for (const width of [24, 48, 80, 120]) {
+		const rendered = component.render(width);
+		assert.ok(rendered.every((line) => terminalTextWidth(line) <= width));
+		assert.ok(rendered.length <= overlayBudget(32));
+		if (width >= 48) {
+			assert.match(rendered.join("\n"), /Settings \/ About/);
+			assert.match(rendered.join("\n"), /Running Jouzu/);
+			assert.match(rendered.join("\n"), /次のビルド/);
+		}
+	}
+	assert.deepEqual(component.snapshotRoute(), { view: "settings", query: "about" });
+	component.handleInput("\x1b[D");
+	assert.match(component.render(80).join("\n"), /Settings \/ Catalogs/);
+	component.handleInput("\x1b[C");
+	assert.match(component.render(80).join("\n"), /Settings \/ About/);
+	component.handleInput("escape");
+	assert.equal(f.closes.length, 1);
+});
+
+test("About is reachable from catalog browse and cannot discard a catalog edit", (t) => {
+	const f = setup();
+	t.after(() => rmSync(f.root, { recursive: true, force: true }));
+	const component = new CatalogSettingsComponent({
+		context: f.context,
+		paths: f.paths,
+		runtime: { about: () => "Running Jouzu test" },
+	});
+	component.render(80);
+	component.handleInput("up");
+	component.handleInput("up");
+	assert.equal(component.render(80).filter((row) => row.slice(2).startsWith("→ ")).length, 1);
+	component.handleInput("\x1b[C");
+	assert.match(component.render(80).join("\n"), /Settings \/ About/);
+	component.handleInput("\x1b[D");
+	component.handleInput("down");
+	component.handleInput("a");
+	assert.equal(component.allowsGlobalNavigation(), false);
+	component.route({ view: "settings", query: "about" });
+	assert.doesNotMatch(component.render(80).join("\n"), /Settings \/ About/);
+});
+
+test("About pages the complete report at the minimum terminal size using rebound controls", (t) => {
+	const f = setup({
+		rows: 16,
+		keybindings: fakeKeybindings({
+			"tui.select.pageDown": ["next"],
+			"tui.select.cancel": ["cancel"],
+		}),
+	});
+	t.after(() => rmSync(f.root, { recursive: true, force: true }));
+	const component = new CatalogSettingsComponent({
+		context: f.context,
+		paths: f.paths,
+		runtime: { about: () => Array.from({ length: 20 }, (_, i) => `Runtime field ${i}`).join("\n") },
+		initialRoute: { view: "settings", query: "about" },
+	});
+	const seen = new Set();
+	for (let i = 0; i < 20; i++) {
+		const rows = component.render(48);
+		assert.ok(rows.length <= overlayBudget(16));
+		assert.ok(rows.every((row) => terminalTextWidth(row) <= 48));
+		for (const match of rows.join("\n").matchAll(/Runtime field (\d+)/g)) seen.add(Number(match[1]));
+		component.handleInput("next");
+	}
+	assert.equal(seen.size, 20);
+	component.handleInput("cancel");
+	assert.equal(f.closes.length, 1);
+});
+
 test("Catalogs settings uses Enter to edit and horizontal arrows for model disclosure", async () => {
 	const { root, paths, context } = setup();
 	try {

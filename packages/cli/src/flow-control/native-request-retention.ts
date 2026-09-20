@@ -66,6 +66,28 @@ export function supersededNativeRequests(records: readonly NativeRequest[]): str
 	return removed.reverse();
 }
 
+/** No live consumer can depend on per-input evidence from these settled, unlinked requests. */
+export function retirableEmptyNativeRequests(records: readonly NativeRequest[], keep = 64): string[] {
+	const protectedIds = new Set(
+		records
+			.filter(
+				(record) =>
+					record.outcome === undefined ||
+					record.sourceCapture?.members.length ||
+					record.projectionCapture?.members.length ||
+					record.waitTokens?.length ||
+					record.requiredSources?.length ||
+					record.requiredProjections?.length ||
+					record.cancelledSources?.length ||
+					record.cancelledProjections?.length ||
+					record.retryOf ||
+					record.retryAuthorization,
+			)
+			.map((record) => record.id),
+	);
+	return retirableNativeRequests(records, keep, new Set(), protectedIds);
+}
+
 /**
  * Bound evidence that no later success can supersede. A request whose input is unique is the only
  * record that the input reached the model, so it is never redundant and `supersededNativeRequests`

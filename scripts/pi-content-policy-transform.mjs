@@ -47,6 +47,10 @@ export function transform(path, source) {
 		);
 	} else if (path === "dist/main.js") {
 		change(
+			"        const interactiveMode = new InteractiveMode(runtime, {",
+			"        const interactiveMode = new InteractiveMode(runtime, {\n            sessionInfoFooter: options?.sessionInfoFooter,",
+		);
+		change(
 			"            customTools: sessionOptions.customTools,",
 			"            customTools: sessionOptions.customTools,\n            flowIngress: await options?.flowIngressFactory?.({ cwd, sessionManager }),",
 		);
@@ -75,7 +79,18 @@ export function transform(path, source) {
 		text = `import type { ContentPolicy } from "./core/jouzu-content-policy.js";\nimport type { FlowIngress } from "./core/jouzu-flow-ingress.js";\n${text}`;
 		change(
 			"export interface MainOptions {",
-			"export interface MainOptions {\n    flowIngressFactory?: (context: { cwd: string; sessionManager: SessionManager }) => FlowIngress | Promise<FlowIngress>;\n    contentPolicyFactory?: (context: { cwd: string; sessionId: string }) => ContentPolicy | Promise<ContentPolicy>;",
+			"export interface MainOptions {\n    sessionInfoFooter?: () => string;\n    flowIngressFactory?: (context: { cwd: string; sessionManager: SessionManager }) => FlowIngress | Promise<FlowIngress>;\n    contentPolicyFactory?: (context: { cwd: string; sessionId: string }) => ContentPolicy | Promise<ContentPolicy>;",
+		);
+	} else if (path === "dist/modes/interactive/interactive-mode.js") {
+		change(
+			"        this.chatContainer.addChild(new Text(info, 1, 0));",
+			// biome-ignore lint/suspicious/noTemplateCurlyInString: This is source code for the pinned runtime.
+			'        const footer = this.options.sessionInfoFooter?.();\n        if (footer) info += `\\n\\n${theme.fg("dim", footer)}`;\n        this.chatContainer.addChild(new Text(info, 1, 0));',
+		);
+	} else if (path === "dist/modes/interactive/interactive-mode.d.ts") {
+		change(
+			"export interface InteractiveModeOptions {",
+			"export interface InteractiveModeOptions {\n    /** Host runtime identity appended to /session output. */\n    sessionInfoFooter?: () => string;",
 		);
 	} else if (path === "dist/core/resource-loader.js") {
 		change("    skillsOverride;", "    skillsOverride;\n    contentPolicy;\n    skillAdmissionGeneration = 0;");
@@ -1132,6 +1147,8 @@ export interface LoadSkillsResult {
 export const paths = [
 	"dist/main.js",
 	"dist/main.d.ts",
+	"dist/modes/interactive/interactive-mode.js",
+	"dist/modes/interactive/interactive-mode.d.ts",
 	"dist/core/resource-loader.js",
 	"dist/core/resource-loader.d.ts",
 	"dist/core/sdk.js",
