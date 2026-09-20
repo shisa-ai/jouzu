@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { clampThinkingLevel, getCurrentSystemPrompt, getSupportedThinkingLevels } from "@earendil-works/pi-ai";
 import { stream, streamSimple } from "@earendil-works/pi-ai/api/openai-responses";
-import { withAstraCompatibility, withAstraMetadata } from "../dist/astra-compatibility.js";
+import { createAstraCompatibilityExtension, withAstraMetadata } from "../dist/astra-compatibility.js";
 
 const model = {
 	id: "gpt-6-astra",
@@ -27,28 +27,42 @@ const provider = (models = [model]) => ({
 const context = { messages: [{ role: "user", content: "Hello", timestamp: 1 }] };
 
 test("metadata-free entries expose five efforts and preserve account limits and provider ownership", () => {
-	const base = provider();
-	const wrapped = withAstraCompatibility(base);
-	assert.equal(wrapped.auth, base.auth);
-	assert.equal(wrapped.name, base.name);
-	const selected = wrapped.getModels()[0];
-	assert.equal(wrapped.getModels()[0], selected);
+	const selected = withAstraMetadata(model);
+	assert.notEqual(selected, model);
+	assert.equal(selected.provider, model.provider);
 	assert.deepEqual(getSupportedThinkingLevels(selected), ["low", "medium", "high", "xhigh", "max"]);
 	for (const effort of ["off", "minimal"]) assert.equal(clampThinkingLevel(selected, effort), "low");
 	assert.equal(selected.contextWindow, model.contextWindow);
 	assert.equal(selected.maxTokens, model.maxTokens);
 	assert.equal(selected.cost, model.cost);
+	assert.equal(selected.reasoning, true);
+	assert.equal(selected.compat?.supportsExplicitPromptCacheMode, true);
 	assert.equal(model.thinkingLevelMap, undefined);
-	assert.equal(withAstraCompatibility(provider([])).getModels().length, 0);
+	const custom = { ...model, baseUrl: "https://custom.example/v1" };
+	assert.equal(withAstraMetadata(custom), custom);
 });
+
+function astraHandlers() {
+	const handlers = new Map();
+	createAstraCompatibilityExtension().factory({ on: (event, handler) => handlers.set(event, handler) });
+	return handlers;
+}
 
 async function request(selected, options = {}, simple = true) {
 	const bodies = [];
-	const p = withAstraCompatibility(provider([selected]));
-	await p[simple ? "streamSimple" : "stream"](selected, context, {
+	const sessionModel = withAstraMetadata(selected);
+	const handlers = astraHandlers();
+	const p = provider([sessionModel]);
+	await p[simple ? "streamSimple" : "stream"](sessionModel, context, {
 		apiKey: "fixture",
 		maxTokens: 2048,
+		sessionId: "fixture",
 		...options,
+		onPayload: async (payload, requestModel) => {
+			const chained = (await options.onPayload?.(payload, requestModel)) ?? payload;
+			const replaced = handlers.get("before_provider_request")({ payload: chained }, { model: sessionModel });
+			return replaced ?? chained;
+		},
 		fetch: async (_url, init) => {
 			bodies.push(JSON.parse(init.body));
 			return new Response(JSON.stringify({ error: { message: "fixture capture complete" } }), {
@@ -144,6 +158,7 @@ test("registered extension normalizes startup, switches, and restored session ef
 		});
 		const other = { ...model, id: "other" };
 		const delivered = [];
+		const bodies = [];
 		runtime.registerProvider("openai", {
 			api: model.api,
 			baseUrl: model.baseUrl,
@@ -153,27 +168,31 @@ test("registered extension normalizes startup, switches, and restored session ef
 				delivered.push(getCurrentSystemPrompt(context.messages));
 				return streamSimple(selected, context, {
 					...options,
-					fetch: async () =>
-						new Response('{"error":{"message":"fixture"}}', {
+					fetch: async (_url, init) => {
+						bodies.push(JSON.parse(init.body));
+						return new Response('{"error":{"message":"fixture"}}', {
 							status: 400,
 							headers: { "content-type": "application/json" },
-						}),
+						});
+					},
 				});
 			},
 		});
-		const loader = new DefaultResourceLoader({
-			cwd: dir,
-			agentDir: dir,
-			noExtensions: true,
-			noSkills: true,
-			noContextFiles: true,
-			noPromptTemplates: true,
-			extensionFactories: [
-				createAstraCompatibilityExtension(),
-				(await import("../dist/presentation.js")).createJouzuPresentationExtension({}, {}),
-			],
-		});
-		await loader.reload();
+		const presentation = (await import("../dist/presentation.js")).createJouzuPresentationExtension({}, {});
+		// Each session binds its own extension instances, matching Pi's reload-on-replace path.
+		const createLoader = async () => {
+			const loader = new DefaultResourceLoader({
+				cwd: dir,
+				agentDir: dir,
+				noExtensions: true,
+				noSkills: true,
+				noContextFiles: true,
+				noPromptTemplates: true,
+				extensionFactories: [createAstraCompatibilityExtension(), presentation],
+			});
+			await loader.reload();
+			return loader;
+		};
 		const manager = SessionManager.create(dir, dir);
 		const create = async (sessionManager, thinkingLevel) => {
 			const created = await createAgentSession({
@@ -182,7 +201,7 @@ test("registered extension normalizes startup, switches, and restored session ef
 				modelRuntime: runtime,
 				model: runtime.getModel("openai", model.id),
 				thinkingLevel,
-				resourceLoader: loader,
+				resourceLoader: await createLoader(),
 				sessionManager,
 				settingsManager: SettingsManager.inMemory({ retry: { enabled: false }, compaction: { enabled: false } }),
 				tools: [],
@@ -199,6 +218,11 @@ test("registered extension normalizes startup, switches, and restored session ef
 		await session.prompt("Can you finish the assigned edit?");
 		assert.match(delivered[0], /carry authorized work through implementation/);
 		assert.equal(session.thinkingLevel, "low");
+		assert.equal(runtime.getRegisteredNativeProvider("openai"), undefined);
+		assert.equal(bodies.length, 1);
+		assert.equal(bodies[0].temperature, undefined);
+		assert.deepEqual(bodies[0].prompt_cache_options, { ttl: "30m" });
+		assert.equal(bodies[0].reasoning?.effort, "low");
 		assert.deepEqual(getSupportedThinkingLevels(session.model), ["low", "medium", "high", "xhigh", "max"]);
 		for (const effort of ["low", "medium", "high", "xhigh", "max"]) {
 			session.setThinkingLevel(effort);

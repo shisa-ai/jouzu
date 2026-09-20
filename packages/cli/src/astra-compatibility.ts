@@ -1,5 +1,5 @@
-import type { Api, Model, Provider, StreamOptions } from "@earendil-works/pi-ai";
-import type { InlineExtension } from "@earendil-works/pi-coding-agent";
+import type { Api, Model } from "@earendil-works/pi-ai";
+import type { ExtensionContext, InlineExtension } from "@earendil-works/pi-coding-agent";
 
 // Tracking and removal fixture: https://github.com/shisa-ai/jouzu/issues/27
 // Keep custom endpoints and Codex/OAuth separate from the official API contract.
@@ -26,7 +26,7 @@ export function withAstraMetadata<T extends Model<Api>>(model: T): T {
 	};
 }
 
-/** Run after other payload transforms, with the effective authenticated route. */
+/** Normalize the final official Astra payload after Pi's converter and extension transforms. */
 export function normalizeAstraPayload(model: Model<Api>, payload: unknown): unknown {
 	if (!isOfficialAstra(model) || !payload || typeof payload !== "object" || Array.isArray(payload)) return payload;
 	const result = { ...(payload as Record<string, unknown>) };
@@ -42,72 +42,62 @@ export function normalizeAstraPayload(model: Model<Api>, payload: unknown): unkn
 		reasoning.effort = "low";
 	result.reasoning = reasoning;
 	const cache = result.prompt_cache_options;
-	// Explicit mode without cache boundaries disables automatic caching. Preserve it.
 	if (cache && typeof cache === "object" && !Array.isArray(cache)) {
 		result.prompt_cache_options = { ...cache };
-	} else if (result.prompt_cache_retention !== undefined) {
+	} else {
+		// Pi emits explicit disable for cacheRetention "none"; every other Astra request uses 30m.
 		result.prompt_cache_options = { ttl: "30m" };
 	}
 	delete result.prompt_cache_retention;
 	return result;
 }
 
-/** Preserve the provider's credentials, discovery, URLs, and API implementation. */
-export function withAstraCompatibility(provider: Provider): Provider {
-	const models = new WeakMap<Model<Api>, Model<Api>>();
-	const adapt = (model: Model<Api>): Model<Api> => {
-		let cached = models.get(model);
-		if (!cached) {
-			cached = withAstraMetadata(model);
-			models.set(model, cached);
-		}
-		return cached;
-	};
-	const optionsFor = <T extends StreamOptions>(model: Model<Api>, options: T): T => {
-		if (!isOfficialAstra(model)) return options;
-		return {
-			...options,
-			onPayload: async (payload, selected) => {
-				const final = (await options.onPayload?.(payload, selected)) ?? payload;
-				const normalized = normalizeAstraPayload(selected, final);
-				if (normalized && typeof normalized === "object" && !Array.isArray(normalized) && isOfficialAstra(selected)) {
-					const body = normalized as Record<string, unknown>;
-					if (body.model === selected.id) {
-						if (options.cacheRetention === "none") {
-							body.prompt_cache_options = { mode: "explicit" };
-							delete body.prompt_cache_key;
-						} else if (!body.prompt_cache_options) body.prompt_cache_options = { ttl: "30m" };
-					}
-				}
-				return normalized;
-			},
-		};
-	};
-	return {
-		...provider,
-		getModels: () => provider.getModels().map(adapt),
-		stream: (model, context, options) => provider.stream(adapt(model), context, optionsFor(model, options ?? {})),
-		streamSimple: (model, context, options) =>
-			provider.streamSimple(adapt(model), context, optionsFor(model, options ?? {})),
-	};
+type SavedThinkingLevel = NonNullable<ExtensionContext["thinkingLevel"]>;
+const THINKING_LEVELS = new Set<SavedThinkingLevel>(["off", "minimal", "low", "medium", "high", "xhigh", "max"]);
+
+/** The session's saved level, which Pi clamps to an unadapted model before extensions bind. */
+function savedThinkingLevel(ctx: ExtensionContext): SavedThinkingLevel | undefined {
+	let saved: string | undefined;
+	for (const entry of ctx.sessionManager.getBranch()) {
+		if (entry.type === "thinking_level_change") saved = entry.thinkingLevel;
+	}
+	return saved && THINKING_LEVELS.has(saved as SavedThinkingLevel) ? (saved as SavedThinkingLevel) : undefined;
 }
 
+/**
+ * Apply the official Astra contract through Pi's own extension events.
+ *
+ * The builtin OpenAI transport stays untouched: a native provider registration
+ * would replace the request handler that flow control qualifies before
+ * dispatch, while `before_provider_request` runs inside that handler's payload
+ * chain and keeps the payload receipt on the request that was actually sent.
+ */
 export function createAstraCompatibilityExtension(): InlineExtension {
 	return {
 		name: "jouzu-astra-compatibility",
 		factory: (pi) => {
-			const wrapped = new WeakSet<Provider>();
+			const adapted = new WeakSet<Model<Api>>();
+			const activate = async (ctx: ExtensionContext, restoreSavedLevel: boolean) => {
+				const selected = ctx.model;
+				if (!selected || !isOfficialAstra(selected) || adapted.has(selected)) return;
+				const thinking = (restoreSavedLevel ? savedThinkingLevel(ctx) : undefined) ?? ctx.thinkingLevel;
+				const compatible = withAstraMetadata(selected);
+				adapted.add(compatible);
+				await pi.setModel(compatible);
+				if (thinking) pi.setThinkingLevel(thinking);
+			};
 			pi.on("session_start", async (_event, ctx) => {
-				const provider = ctx.modelRegistry.getProvider("openai");
-				if (!provider || wrapped.has(provider)) return;
-				const compatible = withAstraCompatibility(provider);
-				wrapped.add(compatible);
-				pi.registerProvider(compatible);
-				if (ctx.model && isOfficialAstra(ctx.model)) {
-					const thinking = ctx.thinkingLevel;
-					await pi.setModel(withAstraMetadata(ctx.model));
-					if (thinking) pi.setThinkingLevel(thinking);
-				}
+				// Restore the saved level instead of the value Pi clamped to the unadapted model.
+				await activate(ctx, true);
+			});
+			pi.on("model_select", async (event, ctx) => {
+				// `activate` sets the adapted model; skip the event that set emits.
+				if (adapted.has(event.model)) return;
+				await activate(ctx, false);
+			});
+			pi.on("before_provider_request", (event, ctx) => {
+				if (!ctx.model || !isOfficialAstra(ctx.model)) return;
+				return normalizeAstraPayload(ctx.model, event.payload);
 			});
 		},
 	};

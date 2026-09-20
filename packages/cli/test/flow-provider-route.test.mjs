@@ -14,6 +14,7 @@ import {
 	SessionManager,
 	SettingsManager,
 } from "@earendil-works/pi-coding-agent";
+import { createAstraCompatibilityExtension } from "../dist/astra-compatibility.js";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { PiNativeRequests } from "../dist/flow-control/pi-native-requests.js";
 import { preparePiProviderRoute } from "../dist/flow-control/pi-provider-route.js";
@@ -266,6 +267,79 @@ for (const scenario of ["qualified", "handler-replaced", "session-replaced", "re
 		}
 	});
 }
+
+test("Astra compatibility composition keeps the OpenAI route admitted with a receipt", async (t) => {
+	const f = await fixture(t);
+	f.runtime.registerProvider("openai", {
+		api: "openai-completions",
+		apiKey: "fixture-key",
+		baseUrl: f.config.baseUrl,
+		models: [
+			{
+				id: "fixture-openai",
+				name: "fixture-openai",
+				reasoning: false,
+				input: ["text"],
+				contextWindow: 4096,
+				maxTokens: 256,
+				cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+			},
+		],
+	});
+	const model = f.runtime.getModel("openai", "fixture-openai");
+	const loader = new DefaultResourceLoader({
+		cwd: f.root,
+		agentDir: f.root,
+		noExtensions: true,
+		noSkills: true,
+		extensionFactories: [createAstraCompatibilityExtension()],
+	});
+	await loader.reload();
+	const { session } = await createAgentSession({
+		cwd: f.root,
+		agentDir: f.root,
+		modelRuntime: f.runtime,
+		resourceLoader: loader,
+		sessionManager: SessionManager.inMemory(f.root),
+		model,
+		tools: [],
+		settingsManager: SettingsManager.inMemory({ retry: { enabled: false }, compaction: { enabled: false } }),
+	});
+	await session.bindExtensions({
+		mode: "rpc",
+		onError: (error) => {
+			throw error;
+		},
+	});
+	// The compatibility layer used to register a native replacement for the whole provider, which
+	// the route guard rejected before any OpenAI model could dispatch.
+	assert.equal(f.runtime.getRegisteredNativeProvider("openai"), undefined);
+	const attachment = await PiFlowAttachment.open(join(f.root, "flow"), {
+		sessionId: session.sessionId,
+		branchId: "main",
+	});
+	const bridge = new PiNativeRequests(
+		session,
+		attachment.nativeRequests,
+		100000,
+		undefined,
+		false,
+		undefined,
+		undefined,
+		session.agent.streamFunction,
+	);
+	afterCleanup(t, async () => {
+		await bridge.close();
+		await attachment.close();
+		await session.dispose();
+	});
+	assert.doesNotThrow(() => preparePiProviderRoute(f.runtime, model, () => {}));
+	await session.prompt("hello");
+	const records = await attachment.nativeRequests.snapshot();
+	assert.equal(f.requests(), 1);
+	assert.equal(records.length, 1);
+	assert.equal(records[0].outcome, "success");
+});
 
 for (const replacement of ["registered", "mutated-stream", "mutated-simple", "mutated-api"]) {
 	test(`legacy API guard rejects ${replacement} and accepts builtin reset`, async (t) => {
