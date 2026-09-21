@@ -136,6 +136,10 @@ function text(value: unknown, max = 512): asserts value is string {
 	if (typeof value !== "string" || !value.trim() || value.length > max)
 		throw new FlowLedgerError("schema", "Wait identity or reason is empty or too long.");
 }
+/** Strict providers mark optional properties required and represent omission as null. */
+function omitNullOptionals(value: Record<string, unknown>, optional: readonly string[]): void {
+	for (const key of optional) if (value[key] === null) delete value[key];
+}
 function duration(value: unknown): number {
 	if (typeof value !== "string")
 		throw new FlowLedgerError("schema", "Wait deadline requires a duration such as 30m or 8h.");
@@ -148,6 +152,7 @@ function duration(value: unknown): number {
 }
 function parseWait(raw: unknown): WaitArguments {
 	fields(raw, ["work", "reason", "deadline", "checkAfter", "on", "mode", "replaceToken"]);
+	omitNullOptionals(raw, ["work", "checkAfter", "mode", "replaceToken"]);
 	if (raw.work !== undefined) text(raw.work);
 	text(raw.reason, 4096);
 	duration(raw.deadline);
@@ -161,6 +166,7 @@ function parseWait(raw: unknown): WaitArguments {
 	const seen = new Set<string>();
 	for (const handle of raw.on) {
 		fields(handle, ["producer", "handle", "execution", "until", "health", "work", "scope"]);
+		omitNullOptionals(handle, ["health", "work", "scope"]);
 		if (handle.work !== undefined) {
 			fields(handle.work, ["id", "revision"]);
 			text(handle.work.id);
@@ -220,6 +226,9 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 				promptSnippet: "agent_wait: wait for exact asynchronous dependencies with a hard deadline.",
 				promptGuidelines: FLOW_WAIT_GUIDANCE,
 				parameters: waitSchema,
+				// Strict providers derive a required-but-nullable form; keep that representation
+				// instead of letting them require a fabricated placeholder for optional fields.
+				constrainedSampling: { type: "json_schema", strict: "prefer" },
 				async execute(toolCallId, raw, signal, _update, ctx) {
 					requireEnabled();
 					const args = parseWait(raw),

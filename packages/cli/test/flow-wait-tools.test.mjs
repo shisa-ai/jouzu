@@ -3,7 +3,9 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { test } from "node:test";
-import { getCurrentSystemPrompt } from "@earendil-works/pi-ai";
+import { getCurrentSystemPrompt, validateToolArguments } from "@earendil-works/pi-ai";
+import { makeStrictJsonSchema } from "@earendil-works/pi-ai/api/constrained-sampling";
+import { convertResponsesTools } from "@earendil-works/pi-ai/api/openai-responses-shared";
 import {
 	applyInstalledMultiloopWaitSkill,
 	applyMultiloopWaitSkill,
@@ -36,6 +38,7 @@ async function fixture(t, snapshot, healthPolicies) {
 		errors = [];
 	const extension = createFlowWaitExtension({
 		attachment: () => attachment,
+		currentWork: () => ({ id: "work", revision }),
 		maxDurationMs: 5000,
 		now: () => clock,
 		authorize(work) {
@@ -121,6 +124,60 @@ async function fixture(t, snapshot, healthPolicies) {
 		},
 	};
 }
+
+test("wait schema keeps optional fields optional and strict providers derive a nullable form", () => {
+	const tools = new Map();
+	createFlowWaitExtension({ maxDurationMs: 5000 }).factory({
+		on() {},
+		getActiveTools: () => [],
+		registerTool(tool) {
+			tools.set(tool.name, tool);
+		},
+	});
+	const wait = tools.get("agent_wait");
+	assert.deepEqual(wait.parameters.required, ["reason", "deadline", "on"]);
+	assert.deepEqual(Object.keys(wait.parameters.properties).sort(), [
+		"checkAfter",
+		"deadline",
+		"mode",
+		"on",
+		"reason",
+		"replaceToken",
+		"work",
+	]);
+	assert.deepEqual(wait.parameters.properties.on.items.required, ["producer", "handle", "execution", "until"]);
+	assert.deepEqual(wait.constrainedSampling, { type: "json_schema", strict: "prefer" });
+	// A strict-capable provider may require every property, but optional fields must stay
+	// nullable so the model can decline them instead of inventing a placeholder token.
+	const strict = makeStrictJsonSchema(wait.parameters);
+	assert.deepEqual([...strict.required].sort(), Object.keys(strict.properties).sort());
+	for (const key of ["work", "checkAfter", "mode", "replaceToken"])
+		assert.ok(
+			strict.properties[key].anyOf?.some((variant) => variant.type === "null"),
+			`${key} must stay nullable instead of requiring a placeholder`,
+		);
+	assert.equal(strict.properties.reason.anyOf, undefined);
+	assert.equal(strict.properties.deadline.anyOf, undefined);
+	for (const key of ["health", "work", "scope"])
+		assert.ok(
+			strict.properties.on.items.properties[key].anyOf?.some((variant) => variant.type === "null"),
+			`on[].${key} must stay nullable`,
+		);
+	const tool = {
+		name: wait.name,
+		description: wait.description,
+		parameters: wait.parameters,
+		constrainedSampling: wait.constrainedSampling,
+	};
+	const optional = convertResponsesTools([tool], { supportsStrictMode: false })[0];
+	assert.deepEqual(optional.parameters.required, ["reason", "deadline", "on"]);
+	assert.equal(optional.strict, undefined);
+	const required = convertResponsesTools([tool], { supportsStrictMode: true })[0];
+	assert.equal(required.strict, true);
+	assert.deepEqual([...required.parameters.required].sort(), Object.keys(required.parameters.properties).sort());
+	assert.ok(required.parameters.properties.replaceToken.anyOf?.some((variant) => variant.type === "null"));
+	assert.equal(required.parameters.properties.reason.anyOf, undefined);
+});
 
 test("wait tool subscribes exact executions, caps expiry, rejects accidental renewal, and cancels only its gate", async (t) => {
 	const f = await fixture(t);
@@ -213,10 +270,67 @@ test("invalid health leaves an existing wait subscription intact", async (t) => 
 	assert.equal((await f.attachment.waits.snapshot())[0].state, "waiting");
 });
 
-test("replacement misuse explains omission and does not install a wait", async (t) => {
+test("replacement misuse explains omission and does not install or disturb a wait", async (t) => {
 	const f = await fixture(t);
-	await assert.rejects(f.call("agent_wait", { ...request(), replaceToken: "unused" }), /Omit replaceToken/);
-	assert.equal(f.listeners.size, 0);
+	for (const replaceToken of ["unused", "none", "null", "pending"]) {
+		await assert.rejects(f.call("agent_wait", { ...request(), replaceToken }), /Omit replaceToken/);
+		assert.equal(f.listeners.size, 0);
+		assert.deepEqual(await f.attachment.waits.snapshot(), []);
+	}
+	const created = (await f.call("agent_wait", request())).details;
+	for (const replaceToken of ["unused", "none", "null", "pending"]) {
+		await assert.rejects(f.call("agent_wait", { ...request(), replaceToken }), /Omit replaceToken/);
+		const [live] = await f.attachment.waits.snapshot();
+		assert.equal(live.token, created.token);
+		assert.equal(live.state, "waiting");
+	}
+});
+
+test("nullable optional arguments mean omission without weakening replacement identity", async (t) => {
+	const f = await fixture(t);
+	const nullable = {
+		work: null,
+		reason: "process must exit",
+		deadline: "8h",
+		checkAfter: null,
+		mode: null,
+		replaceToken: null,
+		on: [{ ...handle, health: null, work: null, scope: null }],
+	};
+	// pi removes optional nulls before execution; the wait parser accepts the same shape directly.
+	assert.deepEqual(validateToolArguments(f.tools.get("agent_wait"), { name: "agent_wait", arguments: nullable }), {
+		reason: "process must exit",
+		deadline: "8h",
+		on: [handle],
+	});
+	const result = (await f.call("agent_wait", nullable)).details;
+	assert.equal(result.state, "waiting");
+	assert.equal(result.health, "deadline-only");
+	assert.deepEqual((await f.attachment.waits.snapshot())[0].on, [handle]);
+	// A null replacement token is omission, so a live wait is still not replaced silently.
+	await assert.rejects(f.call("agent_wait", { ...nullable, deadline: "1s" }), { code: "transition" });
+	const [live] = await f.attachment.waits.snapshot();
+	assert.equal(live.token, result.token);
+	assert.equal(live.state, "waiting");
+});
+
+test("required wait fields stay required and unknown fields fail before a wait is installed", async (t) => {
+	const f = await fixture(t);
+	const wait = f.tools.get("agent_wait");
+	for (const args of [
+		{ reason: "process must exit", deadline: "8h" },
+		{ ...request(), reason: undefined },
+		{ ...request(), deadline: undefined },
+		{ ...request(), on: undefined },
+		{ ...request(), reason: null },
+		{ ...request(), deadline: null },
+		{ ...request(), on: null },
+		{ ...request(), extra: true },
+		{ ...request(), on: [{ ...handle, extra: true }] },
+	]) {
+		assert.throws(() => validateToolArguments(wait, { name: "agent_wait", arguments: args }));
+		await assert.rejects(f.call("agent_wait", args), { code: "schema" });
+	}
 	assert.deepEqual(await f.attachment.waits.snapshot(), []);
 });
 
