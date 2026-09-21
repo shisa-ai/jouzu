@@ -448,10 +448,13 @@ export class FlowWaitStore {
 		// A caller whose token came from a model may carry a placeholder when its provider requires
 		// every field. Tolerating a token that names no live wait keeps the invariant that a live wait
 		// is never replaced without its exact token, and declares the wait the caller asked for.
-		if (replaceToken !== undefined && !active && state.waits.some((wait) => wait.token === replaceToken))
+		const matched = state.waits.find((wait) => wait.token === replaceToken);
+		if (replaceToken !== undefined && !active && matched)
 			throw new FlowLedgerError(
 				"stale",
-				"That token belongs to a finished wait. To declare a new wait, omit replaceToken or pass null or 'none'; do not reuse the finished token.",
+				matched.workId !== next.workId
+					? `That token belongs to another work's ${matched.state} wait. To wait for the current work, omit replaceToken or pass null or 'none'.`
+					: "That token belongs to a finished wait. To declare a new wait, omit replaceToken or pass null or 'none'; do not reuse the finished token.",
 			);
 		if (replaceToken !== undefined && !active && !tolerateUnmatchedToken)
 			throw new FlowLedgerError(
@@ -709,10 +712,24 @@ export class FlowWaitStore {
 		const captured = structuredClone(request);
 		const response = toolResponse ? { ...toolResponse } : undefined;
 		const tolerateUnmatchedToken = options?.tolerateUnmatchedToken === true;
-		return this.update((state) => {
+		return this.update(async (state, reader) => {
 			assertActive?.();
 			const authority = state.authority ?? emptyWaitAuthority();
 			requireOpenAuthorityWork(requireAuthorityWork(authority, captured.workId, producer, workRevision));
+			if (
+				replaceToken !== undefined &&
+				(state.retired?.waits.includes(retiredIdentityHash(replaceToken)) ||
+					(await hasRetiredWaitIdentity(
+						reader,
+						"waits",
+						state.retirementEpoch ?? 0,
+						retiredIdentityHash(replaceToken),
+					)))
+			)
+				throw new FlowLedgerError(
+					"stale",
+					"That token belongs to a retired wait. To declare a new wait, omit replaceToken or pass null or 'none'.",
+				);
 			const observations = authorityObservations(authority, state.scope, captured.workId, captured.on);
 			const ignoredToken = replaceToken !== undefined && !state.waits.some((wait) => wait.token === replaceToken);
 			const next = this.declareInState(

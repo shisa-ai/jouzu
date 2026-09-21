@@ -6,7 +6,6 @@ import { test } from "node:test";
 import { getCurrentSystemPrompt, validateToolArguments } from "@earendil-works/pi-ai";
 import { makeStrictJsonSchema } from "@earendil-works/pi-ai/api/constrained-sampling";
 import { convertResponsesTools } from "@earendil-works/pi-ai/api/openai-responses-shared";
-import { prepareToolCall } from "../../../node_modules/@earendil-works/pi-agent-core/dist/harness/execution/tools.js";
 import {
 	applyInstalledMultiloopWaitSkill,
 	applyMultiloopWaitSkill,
@@ -101,9 +100,9 @@ async function fixture(t, snapshot, healthPolicies) {
 	const call = (name, args, signal) =>
 		tools.get(name).execute("call", args, signal, undefined, { sessionManager: session.sessionManager });
 	const preparedCall = (args) => {
-		const prepared = prepareToolCall({ id: "call", name: "agent_wait", arguments: args }, [tools.get("agent_wait")]);
-		if (prepared.kind === "immediate") throw new Error(prepared.result.content[0].text);
-		return call("agent_wait", prepared.args);
+		const tool = tools.get("agent_wait");
+		const prepared = tool.prepareArguments ? tool.prepareArguments(args) : args;
+		return call("agent_wait", validateToolArguments(tool, { name: "agent_wait", arguments: prepared }));
 	};
 	return {
 		session,
@@ -699,4 +698,22 @@ test("expired tokens cannot renew a deadline and omission allows explicit recove
 	const next = await f.preparedCall(request());
 	assert.equal(next.details.state, "waiting");
 	assert.ok(next.details.expiresAt > created.expiresAt);
+});
+
+test("retired tokens remain rejected after pruning and ordinary waits explain adjustments", async (t) => {
+	const f = await fixture(t);
+	const created = (await f.preparedCall(request())).details;
+	await f.call("agent_wait_cancel", { token: created.token, reason: "done waiting" });
+	await f.attachment.waits.retire({ work: [], executions: [], waits: await f.attachment.waits.snapshot() });
+	assert.deepEqual(await f.attachment.waits.snapshot(), []);
+	await assert.rejects(
+		f.preparedCall({ ...request(), replaceToken: created.token }),
+		/retired wait.*omit replaceToken/,
+	);
+	assert.deepEqual(await f.attachment.waits.snapshot(), []);
+	const result = await f.preparedCall({ ...request(), replaceToken: "unused", checkAfter: "1s" });
+	assert.equal(result.details.state, "waiting");
+	const text = result.content.map((part) => part.text).join("\n");
+	assert.match(text, /checkAfter ignored/);
+	assert.match(text, /Unmatched replaceToken ignored/);
 });

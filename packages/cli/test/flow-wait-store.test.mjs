@@ -808,3 +808,18 @@ test("derived work can observe only its own or its direct origin's execution acr
 	assert.equal((await reopened.snapshot())[0].state, "resolved");
 	assert.equal((await reopened.authoritySnapshot()).executions[0].workId, "parent");
 });
+
+test("a live token from another work is described accurately without changing it", async (t) => {
+	const f = await fixture(t);
+	const original = await f.attachment.waits.declare(
+		request("other-token", "other-work"),
+		observations("pending", "other-work"),
+		0,
+		100,
+	);
+	await assert.rejects(
+		f.attachment.waits.declare(request(), observations(), 1, 100, "other-token"),
+		/another work's waiting wait/,
+	);
+	assert.deepEqual(await f.attachment.waits.snapshot(), [original]);
+});
