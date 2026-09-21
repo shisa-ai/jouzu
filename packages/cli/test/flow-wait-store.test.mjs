@@ -67,6 +67,66 @@ test("replacement validates exact token and dependencies before cancelling the o
 	);
 	assert.equal(waits[1].createdAt, 10);
 });
+test("an owned declaration tolerates a replacement token that names no live wait", async (t) => {
+	const f = await fixture(t),
+		store = f.attachment.waits;
+	await store.registerWork("work", "lane", 0);
+	await store.shareWork("work", "lane", 1, "bg", 0);
+	await store.registerExecution(
+		{
+			producer: "bg",
+			handle: "display",
+			execution: "exec",
+			workId: "work",
+			revision: 1,
+			predicates: [{ until: "exit", state: "pending" }],
+		},
+		2,
+		0,
+	);
+	// The tool layer opts in because a strict provider can force a placeholder into replaceToken.
+	const tolerant = { tolerateUnmatchedToken: true };
+	// Without the option, a token that names no live wait stays refused.
+	await assert.rejects(store.declareOwned("lane", 2, request("one"), 10, 100, "placeholder"), { code: "stale" });
+	const first = await store.declareOwned(
+		"lane",
+		2,
+		request("one"),
+		10,
+		100,
+		"placeholder",
+		undefined,
+		undefined,
+		tolerant,
+	);
+	assert.equal(first.state, "waiting");
+	// A live wait is still never replaced without its exact token, and the refusal names that token.
+	await assert.rejects(
+		store.declareOwned("lane", 2, request("two"), 10, 100, "placeholder", undefined, undefined, tolerant),
+		{ code: "stale", message: new RegExp(`requires the active token ${first.token}`) },
+	);
+	assert.deepEqual(
+		(await store.snapshot()).map((wait) => wait.state),
+		["waiting"],
+	);
+	const replaced = await store.declareOwned(
+		"lane",
+		2,
+		request("two"),
+		10,
+		100,
+		first.token,
+		undefined,
+		undefined,
+		tolerant,
+	);
+	assert.notEqual(replaced.token, first.token);
+	assert.deepEqual(
+		(await store.snapshot()).map((wait) => wait.state),
+		["cancelled", "waiting"],
+	);
+});
+
 test("independent work waits and concurrent terminal transitions stay isolated", async (t) => {
 	const f = await fixture(t),
 		store = f.attachment.waits;

@@ -417,6 +417,7 @@ export class FlowWaitStore {
 		now: number,
 		maxDurationMs: number,
 		replaceToken?: string,
+		tolerateUnmatchedToken = false,
 	): FlowWaitState {
 		if (
 			this.retiredWorkHashes.has(retiredIdentityHash(request.workId)) ||
@@ -429,10 +430,18 @@ export class FlowWaitStore {
 		if (state.waits.some((wait) => wait.token === next.token))
 			throw new FlowLedgerError("identity", "Wait token is already registered.");
 		const active = state.waits.find((wait) => wait.workId === next.workId && wait.state === "waiting");
-		if (replaceToken !== undefined && (!active || active.token !== replaceToken))
+		if (replaceToken !== undefined && active && active.token !== replaceToken)
 			throw new FlowLedgerError(
 				"stale",
-				"Wait replacement requires the active token. Omit replaceToken for a new wait; to replace a live wait, copy its returned token. Do not supply a placeholder.",
+				`Wait replacement requires the active token ${active.token}. Omit replaceToken for a new wait; to replace the live wait, copy that token. Do not supply a placeholder.`,
+			);
+		// A caller whose token came from a model may carry a placeholder when its provider requires
+		// every field. Tolerating a token that names no live wait keeps the invariant that a live wait
+		// is never replaced without its exact token, and declares the wait the caller asked for.
+		if (replaceToken !== undefined && !active && !tolerateUnmatchedToken)
+			throw new FlowLedgerError(
+				"stale",
+				"Wait replacement requires an active wait. Omit replaceToken for a new wait; to replace a live wait, copy its returned token. Do not supply a placeholder.",
 			);
 		if (active && replaceToken === undefined)
 			throw new FlowLedgerError(
@@ -679,15 +688,26 @@ export class FlowWaitStore {
 		replaceToken?: string,
 		assertActive?: () => void,
 		toolResponse?: Pick<FlowWaitToolReceipt, "toolCallId" | "toolName">,
+		/** Tool-supplied tokens may be placeholders; see the declaration check for what stays refused. */
+		options?: { tolerateUnmatchedToken?: boolean },
 	): Promise<FlowWaitState> {
 		const captured = structuredClone(request);
 		const response = toolResponse ? { ...toolResponse } : undefined;
+		const tolerateUnmatchedToken = options?.tolerateUnmatchedToken === true;
 		return this.update((state) => {
 			assertActive?.();
 			const authority = state.authority ?? emptyWaitAuthority();
 			requireOpenAuthorityWork(requireAuthorityWork(authority, captured.workId, producer, workRevision));
 			const observations = authorityObservations(authority, state.scope, captured.workId, captured.on);
-			const next = this.declareInState(state, captured, observations, now, maxDurationMs, replaceToken);
+			const next = this.declareInState(
+				state,
+				captured,
+				observations,
+				now,
+				maxDurationMs,
+				replaceToken,
+				tolerateUnmatchedToken,
+			);
 			authority.waitTokens.push(next.token);
 			this.recordToolResponse(state, next, response);
 			return next;

@@ -70,7 +70,7 @@ const waitSchema = {
 	properties: {
 		work: {
 			...string,
-			description: "Omit to use the current invocation. If supplied, must exactly match its work ID.",
+			description: "Omit or pass null to use the current invocation. If supplied, must exactly match its work ID.",
 		},
 		reason,
 		deadline: { type: "string", pattern: "^[1-9][0-9]*(ms|s|m|h|d)$" },
@@ -79,7 +79,7 @@ const waitSchema = {
 		replaceToken: {
 			...string,
 			description:
-				"Omit for a new wait; null and the exact string 'none' also mean no replacement. To replace a live wait, copy its exact returned token.",
+				"Omit for a new wait; null, 'none', or any value that names no live wait also declare a new wait. To replace a live wait, copy its exact returned token.",
 		},
 		on: {
 			type: "array",
@@ -136,9 +136,10 @@ function text(value: unknown, max = 512): asserts value is string {
 	if (typeof value !== "string" || !value.trim() || value.length > max)
 		throw new FlowLedgerError("schema", "Wait identity or reason is empty or too long.");
 }
-/** Strict providers mark optional properties required and represent omission as null. */
-function omitNullOptionals(value: Record<string, unknown>, optional: readonly string[]): void {
-	for (const key of optional) if (value[key] === null) delete value[key];
+/** A strict provider marks optional properties required, so a model that cannot omit one declines it
+ * with null or an empty value. Neither can name a work, duration, mode, policy, or token. */
+function omitUnsupplied(value: Record<string, unknown>, optional: readonly string[]): void {
+	for (const key of optional) if (value[key] === null || value[key] === "") delete value[key];
 }
 function duration(value: unknown): number {
 	if (typeof value !== "string")
@@ -154,7 +155,7 @@ function parseWait(raw: unknown): WaitArguments {
 	fields(raw, ["work", "reason", "deadline", "checkAfter", "on", "mode", "replaceToken"]);
 	// This sentinel means no replacement; the store still refuses a new wait over a live one.
 	if (raw.replaceToken === "none") delete raw.replaceToken;
-	omitNullOptionals(raw, ["work", "checkAfter", "mode", "replaceToken"]);
+	omitUnsupplied(raw, ["work", "checkAfter", "mode", "replaceToken"]);
 	if (raw.work !== undefined) text(raw.work);
 	text(raw.reason, 4096);
 	duration(raw.deadline);
@@ -168,7 +169,7 @@ function parseWait(raw: unknown): WaitArguments {
 	const seen = new Set<string>();
 	for (const handle of raw.on) {
 		fields(handle, ["producer", "handle", "execution", "until", "health", "work", "scope"]);
-		omitNullOptionals(handle, ["health", "work", "scope"]);
+		omitUnsupplied(handle, ["health", "work", "scope"]);
 		if (handle.work !== undefined) {
 			fields(handle.work, ["id", "revision"]);
 			text(handle.work.id);
@@ -272,14 +273,12 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 						owners.set(key, identity.workId);
 						authority.check();
 					}
-					// An expected check exists to reconcile health early. With no monitored dependency there
-					// would be nothing to reconcile, and the wait is deadline-only by definition.
-					if (args.checkAfter !== undefined && !monitored.length)
-						throw new FlowLedgerError(
-							"identity",
-							"An expected check requires a dependency with a registered health policy.",
-						);
-					const checkAt = args.checkAfter === undefined ? undefined : now() + duration(args.checkAfter);
+					// An expected check exists to reconcile health early. With no monitored dependency there is
+					// nothing to reconcile, so an inapplicable check is dropped rather than refused: a provider
+					// that requires every field leaves the model no way to omit it, and the deadline-only wait
+					// it asked for is still declared exactly.
+					const checkAt =
+						args.checkAfter === undefined || !monitored.length ? undefined : now() + duration(args.checkAfter);
 					const bound = new Set<string>();
 					const rollback: (() => Promise<void>)[] = [];
 					try {
@@ -332,6 +331,10 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 								args.replaceToken,
 								authority.check,
 								{ toolCallId, toolName: "agent_wait" },
+								// The model supplies this token. A provider that requires every property leaves it no
+								// way to omit the field, so a value that names no live wait declares the wait it asked
+								// for instead of failing. A live wait still requires its exact token.
+								{ tolerateUnmatchedToken: true },
 							),
 						);
 					} catch (error) {

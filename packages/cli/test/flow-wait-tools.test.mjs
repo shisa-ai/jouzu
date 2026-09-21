@@ -270,20 +270,40 @@ test("invalid health leaves an existing wait subscription intact", async (t) => 
 	assert.equal((await f.attachment.waits.snapshot())[0].state, "waiting");
 });
 
-test("replacement misuse explains omission and does not install or disturb a wait", async (t) => {
+test("a replacement token that names no live wait declares a new wait", async (t) => {
 	const f = await fixture(t);
-	for (const replaceToken of ["unused", "null", "pending"]) {
-		await assert.rejects(f.call("agent_wait", { ...request(), replaceToken }), /Omit replaceToken/);
-		assert.equal(f.listeners.size, 0);
-		assert.deepEqual(await f.attachment.waits.snapshot(), []);
+	// A provider that requires every property leaves the model no way to omit replaceToken, so a
+	// placeholder declares the wait it asked for instead of dead-ending the call.
+	for (const replaceToken of ["unused", "null", "pending", "x", "0", "785", "/", "new"]) {
+		const declared = (await f.call("agent_wait", { ...request(), replaceToken })).details;
+		assert.equal(declared.state, "waiting");
+		assert.equal(f.listeners.size, 1);
+		await f.call("agent_wait_cancel", { token: declared.token, reason: "next placeholder" });
 	}
+	assert.deepEqual(
+		(await f.attachment.waits.snapshot()).filter((wait) => wait.state === "waiting"),
+		[],
+	);
+});
+
+test("a placeholder token cannot replace or renew a live wait", async (t) => {
+	const f = await fixture(t);
 	const created = (await f.call("agent_wait", request())).details;
-	for (const replaceToken of ["unused", "null", "pending"]) {
-		await assert.rejects(f.call("agent_wait", { ...request(), replaceToken }), /Omit replaceToken/);
+	for (const replaceToken of ["unused", "null", "pending", "x", "785"]) {
+		// The refusal names the live token, because a model that cannot omit the field cannot
+		// otherwise comply with an instruction to copy it.
+		await assert.rejects(f.call("agent_wait", { ...request(), replaceToken }), {
+			code: "stale",
+			message: new RegExp(`requires the active token ${created.token}`),
+		});
 		const [live] = await f.attachment.waits.snapshot();
 		assert.equal(live.token, created.token);
 		assert.equal(live.state, "waiting");
 	}
+	const replaced = (await f.call("agent_wait", { ...request(), replaceToken: created.token })).details;
+	assert.equal(replaced.state, "waiting");
+	assert.notEqual(replaced.token, created.token);
+	assert.equal(f.listeners.size, 1);
 });
 
 test("none replacement sentinel creates a new wait but cannot replace or renew a live wait", async (t) => {
@@ -327,6 +347,30 @@ test("nullable optional arguments mean omission without weakening replacement id
 	assert.equal(live.state, "waiting");
 });
 
+test("the all-required argument shape a strict provider forces still declares a wait", async (t) => {
+	const f = await fixture(t);
+	// Production shape: the provider requires every property and supplies no nullable form, so the
+	// model fills the optional fields with placeholders rather than declining them. None of the
+	// fabricated values may dead-end the declaration or change what it records.
+	const result = (
+		await f.call("agent_wait", {
+			work: "",
+			reason: "process must exit",
+			deadline: "4s",
+			checkAfter: "1s",
+			mode: "all",
+			replaceToken: "unused",
+			on: [{ ...handle, health: "", work: null, scope: null }],
+		})
+	).details;
+	assert.equal(result.state, "waiting");
+	assert.equal(result.health, "deadline-only");
+	assert.equal(result.checkAt, undefined);
+	assert.equal(result.work, "work");
+	assert.equal(result.mode, "all");
+	assert.deepEqual((await f.attachment.waits.snapshot())[0].on, [handle]);
+});
+
 test("required wait fields stay required and unknown fields fail before a wait is installed", async (t) => {
 	const f = await fixture(t);
 	const wait = f.tools.get("agent_wait");
@@ -350,7 +394,7 @@ test("required wait fields stay required and unknown fields fail before a wait i
 test("wait tool rejects unsupported health, malformed dependencies, and foreign ownership without creating waits", async (t) => {
 	const f = await fixture(t);
 	for (const args of [
-		{ ...request(), checkAfter: "1h" },
+		{ ...request(), checkAfter: "8h" },
 		{ ...request(), on: [{ ...handle, health: "heartbeat" }] },
 		{ ...request(), on: [] },
 		{ ...request(), on: [handle, handle] },
@@ -536,12 +580,14 @@ test("a producer that declares no policy keeps its waits deadline-only", async (
 	await assert.rejects(f.call("agent_wait", { ...request(), on: [{ ...handle, health: "sweep-progress-v1" }] }), {
 		code: "identity",
 	});
-	// An expected check has nothing to reconcile without a monitored dependency.
-	await assert.rejects(f.call("agent_wait", { ...request(), deadline: "4s", checkAfter: "1s" }), {
-		code: "identity",
-		message: /expected check requires a dependency/,
-	});
-	const result = await f.call("agent_wait", request());
+	// An expected check has nothing to reconcile without a monitored dependency, so an inapplicable
+	// checkAfter is dropped instead of refused: a provider that requires every field leaves the model
+	// no way to omit it, and the deadline-only wait it asked for is still declared exactly.
+	const checked = (await f.call("agent_wait", { ...request(), deadline: "4s", checkAfter: "1s" })).details;
+	assert.equal(checked.health, "deadline-only");
+	assert.equal(checked.checkAt, undefined);
+	assert.equal((await f.attachment.waits.snapshot())[0].checkAt, undefined);
+	const result = await f.call("agent_wait", { ...request(), replaceToken: checked.token });
 	assert.equal(result.details.health, "deadline-only");
 	assert.equal(result.details.checkAt, undefined);
 });
