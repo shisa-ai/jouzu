@@ -272,18 +272,31 @@ test("invalid health leaves an existing wait subscription intact", async (t) => 
 
 test("replacement misuse explains omission and does not install or disturb a wait", async (t) => {
 	const f = await fixture(t);
-	for (const replaceToken of ["unused", "none", "null", "pending"]) {
+	for (const replaceToken of ["unused", "null", "pending"]) {
 		await assert.rejects(f.call("agent_wait", { ...request(), replaceToken }), /Omit replaceToken/);
 		assert.equal(f.listeners.size, 0);
 		assert.deepEqual(await f.attachment.waits.snapshot(), []);
 	}
 	const created = (await f.call("agent_wait", request())).details;
-	for (const replaceToken of ["unused", "none", "null", "pending"]) {
+	for (const replaceToken of ["unused", "null", "pending"]) {
 		await assert.rejects(f.call("agent_wait", { ...request(), replaceToken }), /Omit replaceToken/);
 		const [live] = await f.attachment.waits.snapshot();
 		assert.equal(live.token, created.token);
 		assert.equal(live.state, "waiting");
 	}
+});
+
+test("none replacement sentinel creates a new wait but cannot replace or renew a live wait", async (t) => {
+	const f = await fixture(t);
+	const created = (await f.call("agent_wait", { ...request(), replaceToken: "none" })).details;
+	assert.equal(created.state, "waiting");
+	const before = await f.attachment.waits.snapshot();
+	await assert.rejects(f.call("agent_wait", { ...request(), replaceToken: "none" }), /already has a live wait/);
+	assert.deepEqual(await f.attachment.waits.snapshot(), before);
+	assert.equal(f.listeners.size, 1);
+	const replaced = (await f.call("agent_wait", { ...request(), replaceToken: created.token })).details;
+	assert.equal(replaced.state, "waiting");
+	assert.notEqual(replaced.token, created.token);
 });
 
 test("nullable optional arguments mean omission without weakening replacement identity", async (t) => {

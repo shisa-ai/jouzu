@@ -79,7 +79,7 @@ const waitSchema = {
 		replaceToken: {
 			...string,
 			description:
-				"Omit for a new wait. To replace a live wait, copy its exact returned token; never use a placeholder.",
+				"Omit for a new wait; null and the exact string 'none' also mean no replacement. To replace a live wait, copy its exact returned token.",
 		},
 		on: {
 			type: "array",
@@ -152,6 +152,8 @@ function duration(value: unknown): number {
 }
 function parseWait(raw: unknown): WaitArguments {
 	fields(raw, ["work", "reason", "deadline", "checkAfter", "on", "mode", "replaceToken"]);
+	// This sentinel means no replacement; the store still refuses a new wait over a live one.
+	if (raw.replaceToken === "none") delete raw.replaceToken;
 	omitNullOptionals(raw, ["work", "checkAfter", "mode", "replaceToken"]);
 	if (raw.work !== undefined) text(raw.work);
 	text(raw.reason, 4096);
