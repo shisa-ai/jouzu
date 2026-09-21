@@ -42,7 +42,12 @@ import {
 	type FlowWaitState,
 	reconcileFlowWait,
 } from "./wait-state.js";
-import { type FlowWaitToolReceipt, waitToolContentHash, waitToolResponse } from "./wait-tool-response.js";
+import {
+	type FlowWaitToolReceipt,
+	WAIT_ADJUSTMENT_NOTICES,
+	waitToolContentHash,
+	waitToolResponse,
+} from "./wait-tool-response.js";
 
 export interface FlowWaitRetirement {
 	/** Exact terminal snapshots whose decision has been observed; cancellation needs no decision receipt. */
@@ -278,8 +283,13 @@ export class FlowWaitStore {
 					receipt.toolCallId.length > 512 ||
 					!["agent_wait", "agent_wait_cancel"].includes(receipt.toolName) ||
 					keys.has(key) ||
+					(receipt.notices !== undefined &&
+						(!Array.isArray(receipt.notices) ||
+							receipt.notices.length > 2 ||
+							receipt.notices.some((notice) => !WAIT_ADJUSTMENT_NOTICES.some((allowed) => allowed === notice)))) ||
 					!([1, 2, 3] as const).some(
-						(format) => receipt.contentHash === waitToolContentHash(waitToolResponse(wait, format).content),
+						(format) =>
+							receipt.contentHash === waitToolContentHash(waitToolResponse(wait, format, receipt.notices).content),
 					)
 				)
 					throw new FlowLedgerError("identity", "Invalid wait tool response receipt.");
@@ -438,6 +448,11 @@ export class FlowWaitStore {
 		// A caller whose token came from a model may carry a placeholder when its provider requires
 		// every field. Tolerating a token that names no live wait keeps the invariant that a live wait
 		// is never replaced without its exact token, and declares the wait the caller asked for.
+		if (replaceToken !== undefined && !active && state.waits.some((wait) => wait.token === replaceToken))
+			throw new FlowLedgerError(
+				"stale",
+				"That token belongs to a finished wait. To declare a new wait, omit replaceToken or pass null or 'none'; do not reuse the finished token.",
+			);
 		if (replaceToken !== undefined && !active && !tolerateUnmatchedToken)
 			throw new FlowLedgerError(
 				"stale",
@@ -689,7 +704,7 @@ export class FlowWaitStore {
 		assertActive?: () => void,
 		toolResponse?: Pick<FlowWaitToolReceipt, "toolCallId" | "toolName">,
 		/** Tool-supplied tokens may be placeholders; see the declaration check for what stays refused. */
-		options?: { tolerateUnmatchedToken?: boolean },
+		options?: { tolerateUnmatchedToken?: boolean; responseNotices?: string[] },
 	): Promise<FlowWaitState> {
 		const captured = structuredClone(request);
 		const response = toolResponse ? { ...toolResponse } : undefined;
@@ -699,6 +714,7 @@ export class FlowWaitStore {
 			const authority = state.authority ?? emptyWaitAuthority();
 			requireOpenAuthorityWork(requireAuthorityWork(authority, captured.workId, producer, workRevision));
 			const observations = authorityObservations(authority, state.scope, captured.workId, captured.on);
+			const ignoredToken = replaceToken !== undefined && !state.waits.some((wait) => wait.token === replaceToken);
 			const next = this.declareInState(
 				state,
 				captured,
@@ -709,7 +725,8 @@ export class FlowWaitStore {
 				tolerateUnmatchedToken,
 			);
 			authority.waitTokens.push(next.token);
-			this.recordToolResponse(state, next, response);
+			if (ignoredToken && tolerateUnmatchedToken) options?.responseNotices?.push(WAIT_ADJUSTMENT_NOTICES[1]);
+			this.recordToolResponse(state, next, response, options?.responseNotices);
 			return next;
 		}, assertActive);
 	}
@@ -738,9 +755,15 @@ export class FlowWaitStore {
 		state: State,
 		wait: FlowWaitState,
 		source?: Pick<FlowWaitToolReceipt, "toolCallId" | "toolName">,
+		notices: readonly string[] = [],
 	): void {
 		if (!source || ["waiting", "cancelled"].includes(wait.state)) return;
-		const receipt = { token: wait.token, ...source, contentHash: waitToolContentHash(waitToolResponse(wait).content) };
+		const receipt = {
+			token: wait.token,
+			...source,
+			...(notices.length ? { notices: [...notices] } : {}),
+			contentHash: waitToolContentHash(waitToolResponse(wait, 3, notices).content),
+		};
 		state.toolReceipts ??= [];
 		if (!state.toolReceipts.some((prior) => isDeepStrictEqual(prior, receipt))) state.toolReceipts.push(receipt);
 	}

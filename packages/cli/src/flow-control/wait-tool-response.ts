@@ -2,16 +2,22 @@ import { createHash } from "node:crypto";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { FlowWaitState } from "./wait-state.js";
 
+export const WAIT_ADJUSTMENT_NOTICES = [
+	"checkAfter ignored: no dependency has a health policy; this wait is deadline-only.",
+	"Unmatched replaceToken ignored: a new wait was declared; no live wait was replaced.",
+] as const;
+
 export interface FlowWaitToolReceipt {
 	token: string;
 	toolCallId: string;
 	toolName: "agent_wait" | "agent_wait_cancel";
 	contentHash: string;
+	notices?: string[];
 }
 // Retained clocks accept safe integers beyond Date's range. Formatting must not reject them.
 const formatInstant = (value: number): string =>
 	Math.abs(value) <= 8_640_000_000_000_000 ? new Date(value).toISOString() : `${value}ms since epoch`;
-export function waitToolResponse(wait: FlowWaitState, format: 1 | 2 | 3 = 3) {
+export function waitToolResponse(wait: FlowWaitState, format: 1 | 2 | 3 = 3, notices: readonly string[] = []) {
 	const details = {
 		token: wait.token,
 		scope: wait.scope,
@@ -57,7 +63,7 @@ export function waitToolResponse(wait: FlowWaitState, format: 1 | 2 | 3 = 3) {
 		.filter(Boolean)
 		.join(" — ");
 	return {
-		content: [{ type: "text" as const, text: summary }],
+		content: [{ type: "text" as const, text: notices.length ? `${summary}\n${notices.join("\n")}` : summary }],
 		details: structuredClone({ ...wait, ...details }),
 	};
 }

@@ -4,7 +4,7 @@ import { FLOW_OFF_MESSAGE } from "./flow-off-message.js";
 import type { PiFlowAttachment } from "./pi-attachment.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowWaitHandle } from "./wait-state.js";
-import { waitToolResponse } from "./wait-tool-response.js";
+import { WAIT_ADJUSTMENT_NOTICES, waitToolResponse } from "./wait-tool-response.js";
 
 export const FLOW_WAIT_GUIDANCE = [
 	"Flow control coordinates automated continuations, dependency waits, and completion notifications. Workflow tools track the requested work; a wait holds its next automatic turn while a dependency runs. Ending your turn leaves that work and its background jobs in place.",
@@ -79,7 +79,7 @@ const waitSchema = {
 		replaceToken: {
 			...string,
 			description:
-				"Omit for a new wait; null, 'none', or any value that names no live wait also declare a new wait. To replace a live wait, copy its exact returned token.",
+				"Omit or pass null for a new wait ('none' also works). Unknown placeholders are ignored only when no live wait exists. A retained finished token is rejected; omit it to start a new wait. To replace a live wait, copy its exact returned token.",
 		},
 		on: {
 			type: "array",
@@ -140,6 +140,19 @@ function text(value: unknown, max = 512): asserts value is string {
  * with null or an empty value. Neither can name a work, duration, mode, policy, or token. */
 function omitUnsupplied(value: Record<string, unknown>, optional: readonly string[]): void {
 	for (const key of optional) if (value[key] === null || value[key] === "") delete value[key];
+}
+function prepareWaitArguments(input: unknown): unknown {
+	if (!input || typeof input !== "object" || Array.isArray(input)) return input;
+	const raw = structuredClone(input) as Record<string, unknown>;
+	if (raw.replaceToken === "none") delete raw.replaceToken;
+	omitUnsupplied(raw, ["work", "checkAfter", "mode", "replaceToken"]);
+	if (Array.isArray(raw.on)) {
+		for (const handle of raw.on) {
+			if (handle && typeof handle === "object" && !Array.isArray(handle))
+				omitUnsupplied(handle, ["health", "work", "scope"]);
+		}
+	}
+	return raw;
 }
 function duration(value: unknown): number {
 	if (typeof value !== "string")
@@ -232,6 +245,7 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 				// Strict providers derive a required-but-nullable form; keep that representation
 				// instead of letting them require a fabricated placeholder for optional fields.
 				constrainedSampling: { type: "json_schema", strict: "prefer" },
+				prepareArguments: prepareWaitArguments,
 				async execute(toolCallId, raw, signal, _update, ctx) {
 					requireEnabled();
 					const args = parseWait(raw),
@@ -279,6 +293,8 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 					// it asked for is still declared exactly.
 					const checkAt =
 						args.checkAfter === undefined || !monitored.length ? undefined : now() + duration(args.checkAfter);
+					const notices: string[] = [];
+					if (args.checkAfter !== undefined && !monitored.length) notices.push(WAIT_ADJUSTMENT_NOTICES[0]);
 					const bound = new Set<string>();
 					const rollback: (() => Promise<void>)[] = [];
 					try {
@@ -334,8 +350,10 @@ export function createFlowWaitExtension(options: FlowWaitToolOptions): InlineExt
 								// The model supplies this token. A provider that requires every property leaves it no
 								// way to omit the field, so a value that names no live wait declares the wait it asked
 								// for instead of failing. A live wait still requires its exact token.
-								{ tolerateUnmatchedToken: true },
+								{ tolerateUnmatchedToken: true, responseNotices: notices },
 							),
+							3,
+							notices,
 						);
 					} catch (error) {
 						await Promise.all(rollback.map((close) => close()));

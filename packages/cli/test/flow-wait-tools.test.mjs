@@ -6,6 +6,7 @@ import { test } from "node:test";
 import { getCurrentSystemPrompt, validateToolArguments } from "@earendil-works/pi-ai";
 import { makeStrictJsonSchema } from "@earendil-works/pi-ai/api/constrained-sampling";
 import { convertResponsesTools } from "@earendil-works/pi-ai/api/openai-responses-shared";
+import { prepareToolCall } from "../../../node_modules/@earendil-works/pi-agent-core/dist/harness/execution/tools.js";
 import {
 	applyInstalledMultiloopWaitSkill,
 	applyMultiloopWaitSkill,
@@ -15,6 +16,7 @@ import {
 } from "../../../scripts/apply-multiloop-wait-skill.mjs";
 import { assistant, createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
+import { observedWaitToolReceipt } from "../dist/flow-control/wait-tool-response.js";
 import { createFlowWaitExtension, FLOW_WAIT_GUIDANCE } from "../dist/flow-control/wait-tools.js";
 
 const handle = { producer: "bg", handle: "bg-1", execution: "exec-1", until: "exit" };
@@ -98,6 +100,11 @@ async function fixture(t, snapshot, healthPolicies) {
 	});
 	const call = (name, args, signal) =>
 		tools.get(name).execute("call", args, signal, undefined, { sessionManager: session.sessionManager });
+	const preparedCall = (args) => {
+		const prepared = prepareToolCall({ id: "call", name: "agent_wait", arguments: args }, [tools.get("agent_wait")]);
+		if (prepared.kind === "immediate") throw new Error(prepared.result.content[0].text);
+		return call("agent_wait", prepared.args);
+	};
 	return {
 		session,
 		requests,
@@ -107,6 +114,7 @@ async function fixture(t, snapshot, healthPolicies) {
 		attachment,
 		listeners,
 		call,
+		preparedCall,
 		get now() {
 			return clock;
 		},
@@ -353,7 +361,7 @@ test("the all-required argument shape a strict provider forces still declares a 
 	// model fills the optional fields with placeholders rather than declining them. None of the
 	// fabricated values may dead-end the declaration or change what it records.
 	const result = (
-		await f.call("agent_wait", {
+		await f.preparedCall({
 			work: "",
 			reason: "process must exit",
 			deadline: "4s",
@@ -625,4 +633,70 @@ test("workflow guidance follows active extensions and does not duplicate itself"
 	assert.doesNotMatch(reduced, /bg_task|TaskUpdate|schedule_prompt/);
 	active = ["bg_task", "TaskUpdate", "schedule_prompt"];
 	assert.equal(before({ systemPrompt: "Custom system prompt" }), undefined);
+});
+
+test("preparation accepts empty optional fields without changing original arguments", async (t) => {
+	const f = await fixture(t);
+	const args = {
+		reason: "wait",
+		deadline: "4s",
+		work: "",
+		mode: "",
+		checkAfter: "",
+		replaceToken: "",
+		on: [{ ...handle, health: "", work: "", scope: "" }],
+	};
+	const original = structuredClone(args);
+	const result = await f.preparedCall(args);
+	assert.equal(result.details.state, "waiting");
+	assert.deepEqual(args, original);
+	for (const patch of [{ reason: "" }, { deadline: "" }, { unknown: true }, { on: [{ ...handle, execution: "" }] }]) {
+		assert.throws(() => f.preparedCall({ ...original, ...patch }), /Validation failed/);
+	}
+});
+
+test("retained finished tokens cannot silently create another hold", async (t) => {
+	const f = await fixture(t);
+	const created = (await f.preparedCall(request())).details;
+	await f.call("agent_wait_cancel", { token: created.token, reason: "user redirected work" });
+	const before = await f.attachment.waits.snapshot();
+	await assert.rejects(
+		f.preparedCall({ ...request(), replaceToken: created.token }),
+		/finished wait.*omit replaceToken/,
+	);
+	assert.deepEqual(await f.attachment.waits.snapshot(), before);
+	const recovered = await f.preparedCall({ ...request(), replaceToken: null });
+	assert.equal(recovered.details.state, "waiting");
+	assert.notEqual(recovered.details.token, created.token);
+});
+
+test("adjustment notices are bounded and immediate-result receipts match returned content", async (t) => {
+	const f = await fixture(t);
+	f.state = "satisfied";
+	const result = await f.preparedCall({ ...request(), replaceToken: "private-placeholder", checkAfter: "1s" });
+	const text = result.content.map((part) => part.text).join("\n");
+	assert.match(text, /checkAfter ignored/);
+	assert.match(text, /Unmatched replaceToken ignored/);
+	assert.doesNotMatch(text, /private-placeholder/);
+	assert.equal(result.details.state, "resolved");
+	const receipts = await f.attachment.waits.toolReceipts();
+	assert.ok(
+		observedWaitToolReceipt(
+			{ role: "toolResult", toolCallId: "call", toolName: "agent_wait", content: result.content },
+			receipts,
+		),
+	);
+});
+
+test("expired tokens cannot renew a deadline and omission allows explicit recovery", async (t) => {
+	const f = await fixture(t);
+	const created = (await f.preparedCall(request())).details;
+	f.advance(5001);
+	await f.attachment.waits.expireDue(f.now);
+	await assert.rejects(f.preparedCall({ ...request(), replaceToken: created.token }), /finished wait/);
+	assert.equal((await f.attachment.waits.snapshot()).length, 1);
+	assert.equal((await f.attachment.waits.snapshot())[0].expiresAt, created.expiresAt);
+	const next = await f.preparedCall(request());
+	assert.equal(next.details.state, "waiting");
+	assert.ok(next.details.expiresAt > created.expiresAt);
 });
