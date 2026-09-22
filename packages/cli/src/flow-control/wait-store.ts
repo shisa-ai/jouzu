@@ -464,7 +464,7 @@ export class FlowWaitStore {
 		if (active && replaceToken === undefined)
 			throw new FlowLedgerError(
 				"transition",
-				"Work already has a live wait. Keep that wait, or copy its token into replaceToken to change it; do not redeclare it to check status.",
+				`Work already has a live wait. Its token is ${active.token}: keep that wait, or copy that token into replaceToken to change it; do not redeclare it to check status.`,
 			);
 		if (active) state.waits[state.waits.indexOf(active)] = cancelFlowWait(active, "Replaced by a new wait.", now);
 		state.waits.push(next);
