@@ -73,11 +73,11 @@
 		},
 		"dist/core/session-manager.js": {
 			"before": "96bd76b298f3c0a6b6d9b57b727f0f9b1196fbfa83172071ac280a5a37f82a08",
-			"after": "3cbdc4f68dd3de213ff9f1ac7434c0d29e2b164ecbf11923f7b1498f30bb425b"
+			"after": "d3d56cb2152afa9a529193a5e0dccc34d28feac0e3393e7a4a724683618afc24"
 		},
 		"dist/core/session-manager.d.ts": {
 			"before": "4b39381623569d0ad6684a170966a092a078ef97359f6e9e7d215273655d15c8",
-			"after": "ff8f4d5c197bfb1b04e01f6648e50ad0f1029e9c9e1333b0783410d554c99270"
+			"after": "e9ae83b4a2ab8c8336cab1907100335eda5a658ea4370c7256ad16f8b18dc196"
 		},
 		"dist/core/extensions/runner.js": {
 			"before": "07a94efe560e6a460a415b2188c1c3c69ca151bd163c9b5f05347caf8403ace2",

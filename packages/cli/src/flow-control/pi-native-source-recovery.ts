@@ -4,7 +4,7 @@ import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { ImageContent } from "@earendil-works/pi-ai";
 import { type AgentSession, type SessionManager, sessionEntryToContextMessages } from "@earendil-works/pi-coding-agent";
 import type { NativeRequestSource } from "./native-request-store.js";
-import { verifyPiHistoryEntry } from "./pi-history-receipts.js";
+import { verifyPiHistoryEntries } from "./pi-history-receipts.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
 import type { FlowNativeInput, FlowSubmissionStore } from "./submission-store.js";
 
@@ -118,6 +118,17 @@ export async function recoverNativeSources(
 	const memoryReceipts = memorySourceReceipts(manager);
 	const records = await store.snapshot();
 	assertCurrent();
+	const projectedIds = new Set(projected.map(({ entry }) => entry.id));
+	const dispatchIds = new Set(records.flatMap((record) => (record.dispatch ? [record.dispatch.operationId] : [])));
+	const proofIds = [
+		...memoryReceipts.filter((receipt) => dispatchIds.has(receipt.operationId)).map((receipt) => receipt.entryId),
+		...records.flatMap((record) => [
+			...(record.dispatch?.queueHistory ?? []).map((receipt) => receipt.entryId),
+			...(record.dispatch?.promptHistory ?? []).map((receipt) => receipt.entryId),
+		]),
+	].filter((id) => projectedIds.has(id));
+	const proofs = await verifyPiHistoryEntries(manager, proofIds);
+	assertCurrent();
 	const bindings = new WeakMap<object, Source[]>();
 	const entries = new Set<string>();
 	let recovered = 0,
@@ -166,7 +177,8 @@ export async function recoverNativeSources(
 			if (targets.length !== 1 || entries.has(receipt.entryId))
 				throw new FlowLedgerError("identity", "Native history entry has ambiguous source ownership.");
 			entries.add(receipt.entryId);
-			const evidence = await verifyPiHistoryEntry(manager, receipt.entryId);
+			const evidence = proofs.get(receipt.entryId);
+			if (!evidence) throw new FlowLedgerError("identity", "Native source history has no verification evidence.");
 			assertCurrent();
 			if (
 				receipt.memory

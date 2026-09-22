@@ -23,6 +23,8 @@ export interface BackgroundTerminalResult {
 	notify?: boolean;
 	reads?: { id: string; revision: string; toolCallId: string; toolName: string; contentHash: string }[];
 }
+export type BackgroundFlowStoredResult = { scope: Scope; work?: Work; result: BackgroundTerminalResult };
+const storedResultKey = (scope: Scope, execution: string) => JSON.stringify([scope.sessionId, scope.branchId, execution]);
 type Snapshot = {
 	id: string;
 	sessionId?: string;
@@ -167,13 +169,48 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 			for (const task of tasks) {
 				const flow = task.flow;
 				if (!flow?.scope || !flow.result) continue;
-				const key = JSON.stringify([flow.scope.sessionId, flow.scope.branchId, flow.execution]);
+				const key = storedResultKey(flow.scope, flow.execution);
 				const value = { scope: flow.scope, work: flow.work, result: flow.result };
 				if (JSON.stringify(results.get(key)) === JSON.stringify(value)) continue;
 				results.set(key, structuredClone(value));
 				changed.add(flow.scope.sessionId);
 			}
 			for (const sessionId of changed) deliveries.get(sessionId)?.changed();
+		},
+		/**
+		 * The exact retained-result set to commit alongside the task records. The map
+		 * outlives cleared tasks, so it is merged with results still attached to live
+		 * tasks; live task state wins because it is the newest prepared revision.
+		 */
+		snapshotResults(tasks: Iterable<Snapshot>): BackgroundFlowStoredResult[] {
+			const merged = new Map<string, BackgroundFlowStoredResult>();
+			for (const value of results.values()) merged.set(storedResultKey(value.scope, value.result.metadata.execution), structuredClone(value));
+			for (const task of tasks) {
+				const flow = task.flow;
+				if (!flow?.scope || !flow.result) continue;
+				merged.set(storedResultKey(flow.scope, flow.execution), {
+					scope: { ...flow.scope },
+					...(flow.work ? { work: { ...flow.work } } : {}),
+					result: structuredClone(flow.result),
+				});
+			}
+			return [...merged.values()];
+		},
+		/** Seed retained results from a committed canonical store. Never delivers by itself. */
+		restoreResults(records: Iterable<BackgroundFlowStoredResult>): void {
+			for (const record of records) {
+				if (!record || typeof record !== "object") continue;
+				const scope = record.scope;
+				const result = record.result;
+				if (!scope || typeof scope.sessionId !== "string" || typeof scope.branchId !== "string") continue;
+				if (!result?.metadata || typeof result.metadata.id !== "string" || typeof result.metadata.execution !== "string") continue;
+				const work = record.work;
+				results.set(storedResultKey(scope, result.metadata.execution), {
+					scope: { ...scope },
+					...(work && typeof work.id === "string" && Number.isSafeInteger(work.revision) ? { work: { ...work } } : {}),
+					result: structuredClone(result),
+				});
+			}
 		},
 		activateResults(scope: Scope, changed: () => void) {
 			if (!sameScope(scopes.get(scope.sessionId)?.scope, scope) || deliveries.has(scope.sessionId)) throw new Error("Background result delivery requires its active wait source.");
