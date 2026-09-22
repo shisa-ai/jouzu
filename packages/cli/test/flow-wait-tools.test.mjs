@@ -318,7 +318,12 @@ test("none replacement sentinel creates a new wait but cannot replace or renew a
 	const created = (await f.call("agent_wait", { ...request(), replaceToken: "none" })).details;
 	assert.equal(created.state, "waiting");
 	const before = await f.attachment.waits.snapshot();
-	await assert.rejects(f.call("agent_wait", { ...request(), replaceToken: "none" }), /already has a live wait/);
+	// This refusal also names the live token: a caller told to copy it has no other way to obtain one
+	// when the live wait came from another invocation or the token left its context.
+	await assert.rejects(f.call("agent_wait", { ...request(), replaceToken: "none" }), {
+		code: "transition",
+		message: new RegExp(`already has a live wait. Its token is ${created.token}:`),
+	});
 	assert.deepEqual(await f.attachment.waits.snapshot(), before);
 	assert.equal(f.listeners.size, 1);
 	const replaced = (await f.call("agent_wait", { ...request(), replaceToken: created.token })).details;
