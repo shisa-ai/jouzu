@@ -8,6 +8,7 @@ import type { AgentToolResult, ExtensionAPI, ToolDefinition } from "@earendil-wo
 import { Type } from "@sinclair/typebox";
 import { ensurePrivateDirectory, validatePrivateDirectory } from "./private-fs.js";
 import { acquireStateLock, type StateLockInspection } from "./state-lock.js";
+import { omitDeclinedArguments } from "./tool-arguments.js";
 
 const RUNTIME_NAME = "@shisa-ai/jouzu-camoufox-runtime";
 const RUNTIME_VERSION = "1.0.0";
@@ -862,6 +863,10 @@ export function createJouzuCamoufoxExtension(
 					"isolate: true opens a one-shot browser context so cookies/storage do not leak across calls.",
 				],
 				parameters: fetchUrlParameters,
+				// A provider that requires every property makes the model fill wait_for_selector and
+				// selector, and both reject an empty string here; read the empty value as the omission
+				// before validation instead of refusing the call.
+				prepareArguments: (input) => omitDeclinedArguments(fetchUrlParameters, input),
 				executionMode: camoufoxExecutionMode,
 			},
 			(signal) => getTool("tff-fetch_url", signal),
@@ -887,6 +892,7 @@ export function createJouzuCamoufoxExtension(
 					"A result count equal to max_results is reported as possibly incomplete; raise max_results or narrow the query to check.",
 				],
 				parameters: searchWebParameters,
+				prepareArguments: (input) => omitDeclinedArguments(searchWebParameters, input),
 				executionMode: camoufoxExecutionMode,
 			},
 			(signal) => getTool("tff-search_web", signal),

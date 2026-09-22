@@ -53,6 +53,7 @@ import { sessionActivity } from "./session-activity.js";
 import { createShisaExtension } from "./shisa-link/extension.js";
 import { offerShisaOnboarding } from "./shisa-link/onboarding.js";
 import { ensureQuietStartupDefault, suppressPiReleaseNotes } from "./startup-settings.js";
+import { createToolArgumentExtension } from "./tool-arguments.js";
 import { JouzuUpdater } from "./updater.js";
 
 export const STARTUP_CATALOG_TIMEOUT_MS = 8_000;
@@ -396,6 +397,8 @@ export async function runMainCli(args: string[]): Promise<void> {
 			contentPolicyFactory: nativeTextguard.createPolicy,
 			...(flow ? { flowIngressFactory: flow.flowIngressFactory } : {}),
 			extensionFactories: [
+				// First, so every later handler and the tool itself see the arguments that will run.
+				createToolArgumentExtension(),
 				...(flow ? flow.extensions : []),
 				{ name: "jouzu-textguard-review", factory: createTextGuardReviewExtension(nativeTextguard) },
 				presentation.createJouzuPresentationExtension(metadata, profile),

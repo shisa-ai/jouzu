@@ -26,6 +26,9 @@ export function createFlowResultExtension(options: { attachment(): PiFlowAttachm
 						limit: { type: "integer", minimum: 1, maximum: 20 },
 					},
 				} as unknown as ToolDefinition["parameters"],
+				// Strict providers derive a required-but-nullable form, so a caller with no cursor to
+				// continue from sends null instead of a value that reads as a real page reference.
+				constrainedSampling: { type: "json_schema", strict: "prefer" },
 				async execute(_id, raw, signal, _update, ctx) {
 					if (options.enabled && !options.enabled()) throw new FlowLedgerError("stale", FLOW_OFF_MESSAGE);
 					const args = raw as { reference: string; cursor?: string; limit?: number };

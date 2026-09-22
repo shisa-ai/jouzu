@@ -452,6 +452,10 @@ export function createWorkflowIntegration(
 				promptSnippet:
 					"subagent: discover roles, delegate coding or fresh review, inspect results, steer/stop/resume children.",
 				parameters: schema,
+				// Strict providers derive a required-but-nullable form, so a model that declines an
+				// operation-specific field sends null instead of a value nobody chose — a fabricated run
+				// ID or role would steer the wrong child.
+				constrainedSampling: { type: "json_schema", strict: "prefer" },
 				renderCall(raw, theme) {
 					const args = raw as { op?: string; role?: string };
 					return subagentComponent(
