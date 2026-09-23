@@ -302,7 +302,7 @@ test("installed multiloop gate upgrade replaces only the pinned preceding source
 	const target = await mkdtemp(join(root, "packages/cli/node_modules/.jouzu-loop-upgrade-"));
 	t.after(() => rm(target, { recursive: true, force: true }));
 	await mkdir(join(target, "extensions/pi-multiloop"), { recursive: true });
-	await writeFile(join(target, "package.json"), JSON.stringify({ name: "pi-multiloop", version: "0.4.0" }));
+	await writeFile(join(target, "package.json"), JSON.stringify({ name: "pi-multiloop", version: lock.version }));
 	for (const path of [
 		"skills/multiloop/SKILL.md",
 		"extensions/pi-multiloop/index.ts",
