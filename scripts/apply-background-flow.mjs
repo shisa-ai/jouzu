@@ -26,6 +26,8 @@ export async function applyBackgroundFlow(packageRoot, checkOnly = false) {
 		throw new Error("Background flow package or path identity mismatch.");
 	const runtime = await readFile(join(root, "upstream/background-flow/runtime.ts"), "utf8");
 	if (sha(runtime) !== lock.runtime) throw new Error("Background flow runtime hash mismatch.");
+	const store = await readFile(join(root, "upstream/background-flow/store.ts"), "utf8");
+	if (sha(store) !== lock.store) throw new Error("Background flow store hash mismatch.");
 	const writes = [];
 	for (const path of paths) {
 		const original = await readFile(join(packageRoot, path), "utf8"),
@@ -44,6 +46,15 @@ export async function applyBackgroundFlow(packageRoot, checkOnly = false) {
 	if (installed !== runtime) {
 		if (checkOnly || installed !== undefined) throw new Error("Background flow installed runtime mismatch.");
 		writes.push([destination, runtime]);
+	}
+	const storeDestination = join(packageRoot, "extensions/jouzu-store.ts");
+	const installedStore = await readFile(storeDestination, "utf8").catch((error) => {
+		if (error.code === "ENOENT") return undefined;
+		throw error;
+	});
+	if (installedStore !== store) {
+		if (checkOnly || installedStore !== undefined) throw new Error("Background flow installed store mismatch.");
+		writes.push([storeDestination, store]);
 	}
 	for (const [path, text] of writes) await writeFile(path, text);
 	return writes.length;

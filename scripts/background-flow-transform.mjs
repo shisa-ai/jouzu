@@ -15,7 +15,7 @@ export function transform(path, source) {
 		source = replace(
 			source,
 			'import { spawn } from "node:child_process";',
-			'import { spawn, spawnSync } from "node:child_process";\nimport { backgroundFlowSource } from "./snapshot.js";',
+			'import { spawn, spawnSync } from "node:child_process";\nimport { backgroundFlowSource } from "./snapshot.js";\nimport { BG_CANONICAL_STORE_MARKER_TYPE, canonicalMarkerData, canonicalStorePath, createCanonicalBackgroundStore } from "./jouzu-store.js";\nimport type { CanonicalStoreDiagnostic } from "./jouzu-store.js";',
 		);
 		source = replace(
 			source,
@@ -37,13 +37,127 @@ export function transform(path, source) {
 		source = replace(source, "\t\tconst task: ManagedTask = {\n", "\t\tconst task: ManagedTask = {\n\t\t\tflow,\n");
 		source = replace(
 			source,
+			"\tlet taskCounter = 0;\n\tlet shuttingDown = false;",
+			"\tlet taskCounter = 0;\n\tconst wakeDiagnostics: CanonicalStoreDiagnostic[] = [];\n\tlet shuttingDown = false;",
+		);
+		source = replace(
+			source,
+			`	const persistenceLayer = createPersistence({
+		pi,
+		customType: BG_STATE_TYPE,
+		getActiveCtx: () => activeCtx,
+		listSnapshots: () => sortedTasks().map((task) => rememberSnapshot(task)),
+		notify: (where) => activeCtx?.ui.notify?.(
+			\`Background task state persistence failed (\${where}). Recent task transitions may not survive a restart.\`,
+			"warning",
+		),
+	});`,
+			`	const canonical = createCanonicalBackgroundStore({
+		sessionId: () => activeSessionId,
+		storePath: (context) => {
+			const target = (context ?? activeCtx) as ExtensionContext | null | undefined;
+			if (!target) return undefined;
+			try {
+				return canonicalStorePath(sidecarStatePath(target));
+			} catch (error) {
+				// A terminal callback may race session replacement. The old context is
+				// stale and must not be used to write into the new session's store.
+				if (error instanceof Error && /stale|session replacement|reload/i.test(error.message)) return undefined;
+				throw error;
+			}
+		},
+		tasks: () => sortedTasks().map((task) => rememberSnapshot(task)),
+		results: () => backgroundFlowSource.snapshotResults(tasks.values()),
+		nextTaskId: () => taskCounter,
+		diagnostics: () => wakeDiagnostics,
+		prepareResults: () => { for (const task of tasks.values()) backgroundFlowSource.prepareResult(task); },
+		commitResults: () => backgroundFlowSource.commitResults(tasks.values()),
+		applyTask: (snapshot) => rememberRestoredSnapshot(snapshot),
+		setNextTaskId: (value) => { taskCounter = Math.max(taskCounter, value); },
+		restoreResults: (records) => backgroundFlowSource.restoreResults(records),
+		markerPresent: (context) => {
+			const target = (context ?? activeCtx) as ExtensionContext | null | undefined;
+			return !!target && target.sessionManager.getBranch().some((entry) => entry.type === "custom" && entry.customType === BG_CANONICAL_STORE_MARKER_TYPE);
+		},
+		appendMarker: (context) => {
+			if ((!context && !activeCtx) || !activeSessionId) return;
+			pi.appendEntry(BG_CANONICAL_STORE_MARKER_TYPE, canonicalMarkerData(activeSessionId));
+		},
+		reportProblem: (where, message) => activeCtx?.ui.notify?.(\`Background task state persistence failed (\${where}): \${message}\`, "warning"),
+	});`,
+		);
+		source = replace(
+			source,
 			"\tconst persistSnapshots = (): { appendEntry: boolean; sidecar: boolean } =>\n\t\tpersistenceLayer.persistSnapshots();",
-			`	const persistSnapshots = (): { appendEntry: boolean; sidecar: boolean; appendReason?: string } => {
-		for (const task of tasks.values()) backgroundFlowSource.prepareResult(task);
-		const saved = persistenceLayer.persistSnapshots();
-		if (saved.sidecar || (saved.appendEntry && saved.appendReason === "appended")) backgroundFlowSource.commitResults(tasks.values());
-		return saved;
+			'\tconst persistSnapshots = (mode: "force" | "progress" = "force"): { appendEntry: boolean; sidecar: boolean; appendReason?: string } =>\n\t\tcanonical.persist(mode);',
+		);
+		source = replace(
+			source,
+			"\tconst restoreSnapshots = (ctx: ExtensionContext) => {\n\t\ttasks.clear();\n\t\ttaskCounter = 0;\n\t\tactiveSessionId = sessionIdForContext(ctx);\n\t\tlet sidecarLoaded = false;",
+			"\tconst restoreLegacySnapshots = (ctx: ExtensionContext): boolean => {\n\t\ttasks.clear();\n\t\ttaskCounter = 0;\n\t\tactiveSessionId = sessionIdForContext(ctx);\n\t\tlet legacyFound = false;\n\t\tlet sidecarLoaded = false;",
+		);
+		source = replace(
+			source,
+			'\t\t\tif (existsSync(file)) {\n\t\t\t\tconst data = JSON.parse(readFileSync(file, "utf8")) as { tasks?: unknown; updatedAt?: number };',
+			'\t\t\tif (existsSync(file)) {\n\t\t\t\tlegacyFound = true;\n\t\t\t\tconst data = JSON.parse(readFileSync(file, "utf8")) as { tasks?: unknown; updatedAt?: number };',
+		);
+		source = replace(
+			source,
+			'\t\t\tif (entry.type === "custom" && entry.customType === BG_STATE_TYPE) {\n\t\t\t\tapplyCustomEntryWithBarrier({',
+			'\t\t\tif (entry.type === "custom" && entry.customType === BG_STATE_TYPE) {\n\t\t\t\tlegacyFound = true;\n\t\t\t\tapplyCustomEntryWithBarrier({',
+		);
+		source = replace(
+			source,
+			'\t\t\tif (entry.type === "message" && entry.message.role === "toolResult" && (entry.message.toolName === "bg_task" || entry.message.toolName === "bg_status")) {\n\t\t\t\tconst details = entry.message.details as { task?: unknown; tasks?: unknown } | undefined;',
+			'\t\t\tif (entry.type === "message" && entry.message.role === "toolResult" && (entry.message.toolName === "bg_task" || entry.message.toolName === "bg_status")) {\n\t\t\t\tlegacyFound = true;\n\t\t\t\tconst details = entry.message.details as { task?: unknown; tasks?: unknown } | undefined;',
+		);
+		source = replace(
+			source,
+			"\t\tif (tasks.size > 0) persistSnapshots();\n\t};",
+			`		return legacyFound;
+	};
+
+	const restoreSnapshots = (ctx: ExtensionContext) => {
+		tasks.clear();
+		taskCounter = 0;
+		activeSessionId = sessionIdForContext(ctx);
+		if (canonical.restoreFromStore(ctx)) return;
+		if (restoreLegacySnapshots(ctx)) canonical.adopt(ctx);
 	};`,
+		);
+		source = replace(
+			source,
+			'\tconst logWakeDiagnostic = (diagnostic: WakeDiagnostic) => {\n\t\tlogBackgroundDiagnostic("wake diagnostic", diagnostic);\n\t};',
+			`	const logWakeDiagnostic = (diagnostic: WakeDiagnostic) => {
+		logBackgroundDiagnostic("wake diagnostic", diagnostic);
+		wakeDiagnostics.push({
+			at: diagnostic.timestamp ?? Date.now(),
+			message: "wake diagnostic",
+			...(diagnostic.reason ? { reason: diagnostic.reason } : {}),
+			...(diagnostic.taskId ? { taskId: diagnostic.taskId } : {}),
+		});
+		if (wakeDiagnostics.length > 100) wakeDiagnostics.splice(0, wakeDiagnostics.length - 100);
+	};`,
+		);
+		source = replace(
+			source,
+			"\t\trememberSnapshot(task);\n\t\tpersistSnapshots();\n\t};\n\n\tconst wakeBudgetLimits",
+			'\t\trememberSnapshot(task);\n\t\tpersistSnapshots("progress");\n\t};\n\n\tconst wakeBudgetLimits',
+		);
+		source = replace(
+			source,
+			"\t\tif (announced) {\n\t\t\trememberSnapshot(task);\n\t\t\tpersistSnapshots();\n\t\t}",
+			'\t\tif (announced) {\n\t\t\trememberSnapshot(task);\n\t\t\tpersistSnapshots("progress");\n\t\t}',
+		);
+		source = replace(
+			source,
+			"\t\trememberSnapshot(task);\n\t\tpersistSnapshots();\n\t\treturn sent;",
+			'\t\trememberSnapshot(task);\n\t\tpersistSnapshots("progress");\n\t\treturn sent;',
+		);
+		source = replace(
+			source,
+			"\t\tconst id = `bg-${++taskCounter}`;\n\t\tconst now = Date.now();",
+			"\t\tconst id = `bg-${++taskCounter}`;\n\t\t// Reserve the allocation before the external spawn so a crash cannot reuse the id.\n\t\tpersistSnapshots();\n\t\tconst now = Date.now();",
 		);
 		source = replace(
 			source,
@@ -146,6 +260,14 @@ export function transform(path, source) {
 			'\tconst task = details.task as BackgroundTaskSnapshot | undefined;\n\tif (task?.flow?.scope) {\n\t\tconst dependency: Record<string, unknown> = { producer: "bg", handle: task.id, execution: task.flow.execution, until: "exit", scope: task.flow.scope, work: task.flow.work };\n\t\tif (task.status === "running" && Number.isSafeInteger(task.pid) && task.pid > 0) dependency.health = "bg-process-alive-v1";\n\t\ttext += "\\nWait dependency: " + JSON.stringify(dependency);\n\t}\n\treturn { content: [{ type: "text", text }], details };',
 		);
 	if (path === paths[5]) {
+		source = replace(
+			source,
+			'import { bgToolResultTasks } from "./tool-result-details.js";',
+			'import { boundedPresentationTasks } from "./jouzu-store.js";',
+		);
+		const toolResultTasks = "tasks: bgToolResultTasks(tasks)";
+		if (source.split(toolResultTasks).length !== 3) throw new Error("Background tool result task anchors changed.");
+		source = source.replaceAll(toolResultTasks, "tasks: boundedPresentationTasks(tasks)");
 		source = replace(
 			source,
 			"export interface RegistrationDeps {",

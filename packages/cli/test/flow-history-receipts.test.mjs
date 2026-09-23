@@ -75,14 +75,14 @@ for (const mode of ["changed", "duplicate", "malformed"]) {
 	});
 }
 
-test("verification bounds total bytes and handles multibyte content across read chunks", async (t) => {
+test("verification bounds individual records and handles multibyte content across read chunks", async (t) => {
 	const root = await rootFor(t);
 	const manager = SessionManager.create(root, join(root, "history"));
 	const id = manager.appendMessage(user("日本語".repeat(30000)));
 	manager.appendMessage(assistant());
-	const bytes = await readFile(manager.getSessionFile());
-	await assert.rejects(verifyPiHistoryEntry(manager, id, bytes.length - 1), { code: "capacity" });
-	assert.equal((await verifyPiHistoryEntry(manager, id, bytes.length)).kind, "persisted");
+	const recordBytes = Buffer.byteLength(JSON.stringify(manager.getEntry(id)), "utf8");
+	await assert.rejects(verifyPiHistoryEntry(manager, id, recordBytes - 1), { code: "capacity" });
+	assert.equal((await verifyPiHistoryEntry(manager, id, recordBytes)).kind, "persisted");
 });
 
 async function fixture(t, persist = true, checkpoints) {
@@ -121,6 +121,17 @@ test("the live AgentSession observer records verified history before the provide
 	assert.match(observed[0][0].entryHash, /^[a-f0-9]{64}$/);
 	const entry = result.session.sessionManager.getEntry(observed[0][0].entryId);
 	assert.equal(entry.message.content[0].text, "owned input");
+});
+
+test("a live provider request proceeds with verified receipts above 64 MiB", async (t) => {
+	const { session, requests, attachment } = await fixture(t);
+	const payload = "x".repeat(60 * 1024);
+	for (let i = 0; i < 1200; i++) session.sessionManager.appendCustomEntry("legacy-background-state", { payload, i });
+	await session.agent.continue();
+	assert.equal(requests.length, 1);
+	const [receipt] = (await attachment.ledger.snapshot()).attempts[0].history;
+	assert.equal(receipt.id, member.id);
+	assert.match(receipt.entryHash, /^[a-f0-9]{64}$/);
 });
 
 test("in-memory execution never invents a durable history receipt", async (t) => {

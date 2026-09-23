@@ -66,6 +66,29 @@ export function transform(path, source) {
 			"    flush() {\n        if (!this.persist || !this.sessionFile || this.flushed) return;\n        this._persist(this.fileEntries[this.fileEntries.length - 1], true);\n    }\n    _persist(entry, force = false) {",
 		);
 		change("        if (!hasAssistant) {", "        if (!hasAssistant && !force) {");
+		// Observe every persistence boundary, including rewrites and failed/partial writes.
+		// Consumers may reuse a verified prefix only across these known writer operations.
+		for (const [method, args, call, kind] of [
+			["_persist", "entry, force = false", "entry, force", "append"],
+			["_rewriteFile", "", "", "rewrite"],
+		]) {
+			change(
+				`    ${method}(${args}) {`,
+				`    ${method}(${args}) {
+        const observer = this.historyWriteObserver;
+        const token = observer?.beforeWrite("${kind}");
+        let succeeded = false;
+        try {
+            const result = this.${method}Unobserved(${call});
+            succeeded = true;
+            return result;
+        } finally {
+            observer?.afterWrite(token, succeeded);
+        }
+    }
+    ${method}Unobserved(${args}) {`,
+			);
+		}
 		change(
 			'            if (entry.type !== "message")\n                continue;\n            messageCount++;',
 			'            if (entry.type === "custom_message") {\n                messageCount++;\n                continue;\n            }\n            if (entry.type !== "message")\n                continue;\n            messageCount++;',
@@ -99,6 +122,15 @@ export function transform(path, source) {
 			"return sortSessionInfos(results.filter((info) => info !== null && includeSession(info)));",
 		);
 	} else if (path === "dist/core/session-manager.d.ts") {
+		change(
+			"export declare class SessionManager {",
+			`export declare class SessionManager {
+    /** Synchronous persistence observer. A failed write or rewrite invalidates verified history prefixes. */
+    historyWriteObserver?: {
+        beforeWrite(kind: "append" | "rewrite"): unknown;
+        afterWrite(token: unknown, succeeded: boolean): void;
+    };`,
+		);
 		change(
 			"static list(cwd: string, sessionDir?: string, onProgress?: SessionListProgress, signal?: AbortSignal)",
 			"static list(cwd: string, sessionDir?: string, onProgress?: SessionListProgress, signal?: AbortSignal, includeEmpty?: boolean)",

@@ -1,6 +1,6 @@
 import type { SessionManager } from "@earendil-works/pi-coding-agent";
 import { inspectPersistedFlowInput } from "./model-input.js";
-import { verifyPiHistoryEntry } from "./pi-history-receipts.js";
+import { verifyPiHistoryEntries } from "./pi-history-receipts.js";
 import { FlowLedgerError, type FlowReceiptLedger } from "./receipt-ledger.js";
 
 /** Recover missing history evidence on an exclusively attached, inactive branch. Never append input. */
@@ -20,6 +20,7 @@ export async function recoverPiHistory(
 			throw new FlowLedgerError("stale", "History branch changed during recovery.");
 	};
 	const entries = manager.getBranch();
+	const planned: { attemptId: string; members: { id: string; revision: string; entryId: string }[] }[] = [];
 	let recovered = 0,
 		unresolved = 0;
 	for (const attempt of state.attempts) {
@@ -57,7 +58,6 @@ export async function recoverPiHistory(
 				});
 			}
 		}
-		const proofs = new Map<string, string>();
 		const receipts = [];
 		for (const member of missing) {
 			const candidate = candidates.get(JSON.stringify([member.id, member.revision]));
@@ -65,22 +65,28 @@ export async function recoverPiHistory(
 				unresolved++;
 				continue;
 			}
-			let entryHash = proofs.get(candidate.entryId);
-			if (!entryHash) {
-				const evidence = await verifyPiHistoryEntry(manager, candidate.entryId);
-				assertCurrent();
-				if (evidence.kind !== "persisted") {
-					unresolved++;
-					continue;
-				}
-				entryHash = evidence.entryHash;
-				proofs.set(candidate.entryId, entryHash);
+			receipts.push({ id: member.id, revision: member.revision, entryId: candidate.entryId });
+		}
+		if (receipts.length) planned.push({ attemptId: attempt.id, members: receipts });
+	}
+	const proofs = await verifyPiHistoryEntries(
+		manager,
+		planned.flatMap((attempt) => attempt.members.map((member) => member.entryId)),
+	);
+	assertCurrent();
+	for (const attempt of planned) {
+		const receipts = [];
+		for (const member of attempt.members) {
+			const proof = proofs.get(member.entryId);
+			if (proof?.kind !== "persisted") {
+				unresolved++;
+				continue;
 			}
-			receipts.push({ id: member.id, revision: member.revision, entryId: candidate.entryId, entryHash });
+			receipts.push({ ...member, entryHash: proof.entryHash });
 		}
 		if (receipts.length) {
 			assertCurrent();
-			await ledger.recoverHistory(attempt.id, receipts);
+			await ledger.recoverHistory(attempt.attemptId, receipts);
 			recovered += receipts.length;
 		}
 	}
