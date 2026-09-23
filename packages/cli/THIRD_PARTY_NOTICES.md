@@ -10,7 +10,7 @@ Jouzu distributes the following release-owned Pi extensions and their default ru
 | `@sinclair/typebox` | 0.34.52 | MIT; `license` |
 | `pi-code-previews` | 0.1.36 | MIT; `LICENSE` |
 | `@lhl/pi-tasks` | `14b0f6c941635468b84f392e8a33524e2589bc70` | MIT; `LICENSE` |
-| `pi-multiloop` | `a24ec57073b2b1066470c7cbca09a0ca9212318a` (v0.4.0) | MIT; `LICENSE` |
+| `pi-multiloop` | `5037b998b4a7d599850d9289cde491f29aba014f` (v0.4.0) | MIT; `LICENSE` |
 | `@sting8k/pi-vcc` | 0.7.2 | The upstream `README.md` declares MIT under its License heading; the package has no separate license file |
 | `pi-skill-dollar` | `4bff5734d87c4f4725d81a4ea1d1c1283c22423c` (v0.2.0) | MIT; `LICENSE` |
 | `esbuild` | 0.28.2 | MIT; `LICENSE.md` |

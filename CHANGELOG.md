@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Resume the attached run or the only active or paused run from a bare `/multiloop resume` or `multiloop_resume` call, instead of handing the choice to the agent. Completed and archived runs still need an explicit target.
+
 ## 0.1.14 - 2026-09-20
 
 ### Added

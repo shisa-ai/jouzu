@@ -56,7 +56,7 @@
 		"@vanillagreen/pi-background-tasks": "git+https://github.com/shisa-ai/kendex.git#66356512b81d2358b17531fffa791e2f1e51afef",
 		"esbuild": "0.28.2",
 		"pi-code-previews": "0.1.36",
-		"pi-multiloop": "git+https://github.com/lhl/pi-multiloop.git#a24ec57073b2b1066470c7cbca09a0ca9212318a",
+		"pi-multiloop": "git+https://github.com/lhl/pi-multiloop.git#5037b998b4a7d599850d9289cde491f29aba014f",
 		"pi-schedule-prompt": "0.4.1",
 		"pi-skill-dollar": "git+https://github.com/lhl/pi-skill-dollar.git#4bff5734d87c4f4725d81a4ea1d1c1283c22423c",
 		"pi-webaio": "git+https://github.com/shisa-ai/pi-webaio.git#f65ae726bc95c50dc0e2c5a0ea95c2cdfb9a1bc2",
