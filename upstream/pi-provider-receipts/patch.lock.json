@@ -25,7 +25,7 @@
 		},
 		"dist/api/simple-options.js": {
 			"before": "1caf860e028e22639578aba3ec8b79e5be9650c27bd3f19471c78502976555f3",
-			"after": "593be1dde4ba47353a48c9c35ee976cac21d9adaf82fcc7410d66422dc82d77c"
+			"after": "9b7045e501501a570b9b36904d159158cb7653cc9dfdb1d0320f861d450404f9"
 		},
 		"dist/api/openai-responses.js": {
 			"before": "3e95145f94ac2a255d1adc0ae65cf02c2e6d479f7a2dbf5c466db21885c29ec6",

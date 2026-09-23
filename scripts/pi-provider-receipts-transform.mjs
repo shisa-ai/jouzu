@@ -232,6 +232,14 @@ export function isBuiltinApiProvider(api) {
 		);
 	} else if (path === "dist/api/simple-options.js") {
 		change(
+			"    const available = model.contextWindow - estimateContextTokens(context).tokens - CONTEXT_SAFETY_TOKENS;",
+			`    const estimatedTokens = estimateContextTokens(context).tokens;
+    // Token estimates can undercount dense tool output. Scale the reserve for long prompts;
+    // this is a heuristic, so provider overflow recovery must remain available.
+    const safetyTokens = Math.max(CONTEXT_SAFETY_TOKENS, Math.ceil(estimatedTokens * 0.05));
+    const available = model.contextWindow - estimatedTokens - safetyTokens;`,
+		);
+		change(
 			"        onPayload: options?.onPayload,",
 			"        onPayload: options?.onPayload,\n        onMessageConverted: options?.onMessageConverted,",
 		);
