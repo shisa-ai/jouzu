@@ -196,7 +196,7 @@ export async function createQualifiedFlowSession(
 			// `httpStatus` drives Pi's own retry path; every other reply is a normal stream.
 			if (reply?.httpStatus) {
 				response.writeHead(reply.httpStatus, { "content-type": "application/json" });
-				response.end(JSON.stringify({ error: { message: "fixture failure" } }));
+				response.end(JSON.stringify(reply.httpBody ?? { error: { message: "fixture failure" } }));
 				return;
 			}
 			response.writeHead(200, { "content-type": "text/event-stream" });
