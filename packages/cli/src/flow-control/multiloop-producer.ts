@@ -59,6 +59,13 @@ export class MultiloopFlowProducer implements FlowProducer {
 	private assertActive() {
 		if (this.closed) throw new FlowLedgerError("stale", "Multiloop producer is detached.");
 	}
+	/**
+	 * Retain this lane's continuation, replacing any earlier one the session has not admitted.
+	 *
+	 * Lanes are keyed by identity, so a second submit supersedes the first rather than queueing behind it.
+	 * The attempt is always built from and accounted to the current entry, and `build` refuses an entry a
+	 * later submit replaced, so a superseded continuation is never issued and its callback is never lost.
+	 */
 	submit(input: MultiloopContinuation): void {
 		this.assertActive();
 		const lane = captureLane(input.lane);
