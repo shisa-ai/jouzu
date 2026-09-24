@@ -20,7 +20,10 @@ export function createMultiloopControllerExtension(options: MultiloopControllerO
 	let producer: MultiloopFlowProducer | undefined;
 	let unregister: (() => void) | undefined;
 	let unsubscribeBus: (() => void) | undefined;
+	let unsubscribeGateChanges: (() => void) | undefined;
 	const close = () => {
+		unsubscribeGateChanges?.();
+		unsubscribeGateChanges = undefined;
 		unregister?.();
 		unregister = undefined;
 		producer?.close();
@@ -75,6 +78,9 @@ export function createMultiloopControllerExtension(options: MultiloopControllerO
 						},
 						() => {
 							assertBranch();
+							// A lane the extension reports while its work already waits is observed here, so the
+							// clear that follows is still a transition the listeners hear about.
+							refreshGates();
 							void registration.changed().catch(options.onError);
 						},
 					);
@@ -83,10 +89,43 @@ export function createMultiloopControllerExtension(options: MultiloopControllerO
 					});
 					producer = next;
 					unregister = () => registration.dispose();
+					const gateListeners = new Set<(lane: MultiloopLane) => void>();
+					const observedGates = new Map<string, boolean>();
+					// A lane whose gate clears while nothing is retained has no release coming, so the
+					// loaded extension is the only thing left that can drive it again.
+					const refreshGates = () => {
+						const known = new Set<string>();
+						for (const lane of next.lanes()) {
+							const id = JSON.stringify([lane.lane, lane.runTag]);
+							known.add(id);
+							const waiting = next.waiting(lane);
+							const was = observedGates.get(id);
+							observedGates.set(id, waiting);
+							if (was !== true || waiting || next.retained(lane)) continue;
+							for (const listener of gateListeners) listener(lane);
+						}
+						for (const id of observedGates.keys()) if (!known.has(id)) observedGates.delete(id);
+					};
+					const stopWaits = branch.attachment.waits.onChanged(refreshGates, options.onError);
+					const stopProducers = branch.attachment.waitProducers.onChanged(refreshGates, options.onError);
+					unsubscribeGateChanges = () => {
+						stopWaits();
+						stopProducers();
+						gateListeners.clear();
+						observedGates.clear();
+					};
+					refreshGates();
 					request.accept({
 						version: 1,
 						submit: next.submit.bind(next),
 						waiting: next.waiting.bind(next),
+						retained: next.retained.bind(next),
+						onGateChange(listener: (lane: MultiloopLane) => void) {
+							gateListeners.add(listener);
+							return () => {
+								gateListeners.delete(listener);
+							};
+						},
 						changed: next.lanesChanged.bind(next),
 						// With flow control off, lanes report and continue through multiloop's own paths.
 						live: () => options.enabled?.() !== false,

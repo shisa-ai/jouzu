@@ -16,8 +16,12 @@ export interface MultiloopFlowHost {
 	live?(): boolean;
 	submit(continuation: FlowContinuation): void;
 	waiting(lane: FlowLane): boolean;
+	/** True while the flow holds a continuation it has not admitted. Absent on older hosts. */
+	retained?(lane: FlowLane): boolean;
 	changed(lanes: FlowLane[]): void;
 	transition?(lane: FlowLane, status: "active" | "paused" | "stopped" | "completed"): Promise<void>;
+	/** Called with each lane whose wait gate cleared while the flow held nothing to release. */
+	onGateChange?(listener: (lane: FlowLane) => void): () => void;
 }
 
 const hosts = new Map<string, MultiloopFlowHost>();
@@ -32,7 +36,9 @@ export function attachMultiloopFlow(sessionId: string, host: MultiloopFlowHost):
 		live: host.live?.bind(host),
 		submit: host.submit.bind(host),
 		waiting: host.waiting.bind(host),
+		retained: host.retained?.bind(host),
 		changed: host.changed.bind(host),
+		onGateChange: host.onGateChange?.bind(host),
 		transition: host.transition?.bind(host),
 	});
 	hosts.set(sessionId, captured);

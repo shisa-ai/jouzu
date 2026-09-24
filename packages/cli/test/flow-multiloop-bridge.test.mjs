@@ -288,15 +288,67 @@ test("installed multiloop drives natively while the host reports flow control of
 	assert.equal(f.sends.length, 1, "a live host drives the continuation instead of sending it natively");
 });
 
-test("installed multiloop gate upgrade replaces only the pinned preceding source", async (t) => {
+test("installed multiloop drives its lanes again when a flow gate clears", async (t) => {
+	const f = await fixture(t),
+		intents = [];
+	let waiting = true;
+	let gates;
+	const detach = f.attachMultiloopFlow("session", {
+		version: 1,
+		submit: (intent) => intents.push(intent),
+		waiting: () => waiting,
+		retained: () => false,
+		onGateChange(listener) {
+			gates = listener;
+			return () => {
+				gates = undefined;
+			};
+		},
+		changed() {},
+	});
+	t.after(detach);
+	await f.emit("session_start");
+	assert.equal(typeof gates, "function");
+	await f.execute("multiloop_start", { lane: "gated", runTag: "run", mode: "research", goal: "Wait on a gate" });
+	await f.emit("agent_start");
+	await f.emit("agent_end");
+	assert.equal(intents.length, 1);
+	intents[0].admitted();
+	// A lane whose continuation was never submitted has no release to wait for, so a cleared gate
+	// has to drive it again through the extension's own auto-continue path.
+	waiting = false;
+	gates({ lane: "gated", runTag: "run" });
+	await new Promise((resolve) => setTimeout(resolve, 5));
+	assert.equal(intents.length, 2);
+	assert.equal(intents[1].reason, "auto-continue:flow-gate-clear");
+	assert.match(intents[1].build(), /Wait on a gate/);
+	await f.emit("session_shutdown");
+});
+
+test("installed multiloop gate-change upgrade replaces only the pinned preceding source", async (t) => {
 	const installed = join(root, "packages/cli/node_modules/pi-multiloop/extensions/pi-multiloop/index.ts");
 	const source = await readFile(installed, "utf8");
 	const previous = source
 		.replace(
-			'import { multiloopFlow, multiloopFlowDriving, connectMultiloopFlow } from "./jouzu-flow.js";',
-			'import { multiloopFlow, connectMultiloopFlow } from "./jouzu-flow.js";',
+			`  let detachGate: (() => void) | undefined;
+  function watchFlowGates(pi: ExtensionAPI, ctx: ExtensionContext): (() => void) | undefined {
+    const flow = multiloopFlow(ctx.sessionManager.getSessionId());
+    return flow?.onGateChange?.(() => {
+      setTimeout(() => {
+        if (runningStates().length === 0) return;
+        queueLoopAutoContinue(pi, ctx, "flow-gate-clear");
+      }, 0);
+    });
+  }
+`,
+			"",
 		)
-		.replaceAll("multiloopFlowDriving(", "multiloopFlow(");
+		.replace(
+			'  pi.on("session_shutdown", async () => { detachGate?.(); detachGate = undefined; detachFlow?.(); detachFlow = undefined; });',
+			'  pi.on("session_shutdown", async () => { detachFlow?.(); detachFlow = undefined; });',
+		)
+		.replaceAll("    detachGate?.();\n    detachFlow?.();\n", "    detachFlow?.();\n")
+		.replaceAll("    detachGate = watchFlowGates(pi, ctx);\n", "");
 	const lock = JSON.parse(await readFile(join(root, "upstream/multiloop-wait-skill/patch.lock.json"), "utf8"));
 	assert.equal(createHash("sha256").update(previous).digest("hex"), lock.extension.previousAfter);
 	const target = await mkdtemp(join(root, "packages/cli/node_modules/.jouzu-loop-upgrade-"));
