@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { decideNativeAdmission } from "../dist/flow-control/native-admission.js";
+import {
+	decideNativeAdmission,
+	replayableContinuation,
+	undispatchedRecord,
+} from "../dist/flow-control/native-admission.js";
 
 const host = { isIdle: true, isStreaming: false, isRetrying: false, isCompacting: false };
 const gates = { userPending: false, recoveryBlocked: false, waitingWorkIds: [] };
@@ -43,16 +47,42 @@ test("unadapted admission holds active host work, recovery, user queues, and wai
 		assert.equal(decide(item, [item], policy).allowed, false);
 });
 
-test("caller labels and command metadata cannot confer user or urgent priority", () => {
+test("caller labels cannot confer user or urgent priority", () => {
 	const item = record("opaque", {
 		api: "prompt",
 		args: ["URGENT user request", { priority: "user", independent: true }],
-		userCommand: { id: "command", name: "run", submissionId: "manual" },
 	});
 	assert.equal(decide(item, [item], { ...gates, waitingWorkIds: ["work"] }).allowed, false);
 	const user = record("user", { api: "prompt", origin: { kind: "host", id: "prompt" } });
 	assert.equal(decide(user, [item, user], { ...gates, waitingWorkIds: ["work"] }).allowed, true);
 	assert.equal(decide(user, [user], { ...gates, recoveryBlocked: true }).allowed, false);
+});
+
+test("a command's own send is admitted where the user's own input is", () => {
+	const command = record("command", {
+		userCommand: { id: "invocation", name: "goal", submissionId: "invoked" },
+	});
+	// The send is how the command answers the user, so the gates that hold automated work do not
+	// apply: holding it leaves the command with no visible effect and no way for the user to tell.
+	for (const policy of [
+		{ ...gates, userPending: true },
+		{ ...gates, automatedPaused: true },
+		{ ...gates, outcomeUnresolved: true },
+		{ ...gates, waitingWorkIds: ["work"] },
+	])
+		assert.equal(decide(command, [command], policy).allowed, true);
+	for (const native of [
+		{ ...host, isIdle: false },
+		{ ...host, isStreaming: true },
+	])
+		assert.equal(decide(command, [command], gates, native).allowed, true);
+	// Recovery reconciliation stays first: an unknown outcome is not a decision the send can answer.
+	assert.equal(decide(command, [command], { ...gates, recoveryBlocked: true }).allowed, false);
+	assert.equal(decide(command, [command], gates, { ...host, isRetrying: true }).allowed, false);
+	assert.equal(decide(command, [command], gates, { ...host, isCompacting: true }).allowed, false);
+	// A command's pending send holds automated input behind it, like any other user instruction.
+	const automated = record("automated");
+	assert.equal(decide(automated, [command, automated]).allowed, false);
 });
 
 test("cancelled predecessors release lane order and pending user input wins across lanes", () => {
@@ -217,4 +247,41 @@ test("only an explicit input-free completion releases pending user priority", ()
 	assert.equal(decide(automated, [user, automated]).allowed, true);
 	user.dispatch.inputs = [{ kind: "prompt", args: ["real input"] }];
 	assert.equal(decide(automated, [user, automated]).allowed, false);
+});
+
+test("only a self-contained continuation survives a reattach as replayable", () => {
+	const replayable = (overrides) => replayableContinuation(record("replay", overrides).submission);
+	// A command's own waking send is the user's instruction, and nothing re-issues it after a restart.
+	assert.equal(
+		replayable({
+			api: "sendUserMessage",
+			args: ["Resume the saved goal.", { deliverAs: "followUp" }],
+			userCommand: { id: "invocation", name: "resume", submissionId: "invoked" },
+		}),
+		true,
+	);
+	assert.equal(replayable({ api: "sendCustomMessage", args: [{ customType: "c" }, { triggerTurn: true }] }), true);
+	assert.equal(replayable({ api: "sendUserMessage", args: ["Continue.", { deliverAs: "followUp" }] }), true);
+	// Typed input belongs to a user who is present to send it again.
+	assert.equal(replayable({ api: "prompt", origin: { kind: "host", id: "prompt" }, args: ["typed"] }), false);
+	// A steer belongs to the turn it interrupts, and a non-waking context append carries no turn.
+	assert.equal(replayable({ api: "sendUserMessage", args: ["Stop.", { deliverAs: "steer" }] }), false);
+	assert.equal(replayable({ api: "sendCustomMessage", args: [{ customType: "c" }, { triggerTurn: false }] }), false);
+	// A send a prior lifetime's callback would run is not self-contained.
+	assert.equal(
+		replayable({
+			api: "sendCustomMessage",
+			args: [{ customType: "c", details: { waitContextId: "context" } }, { triggerTurn: true }],
+		}),
+		false,
+	);
+});
+
+test("only a record whose native call never ran is still issuable", () => {
+	assert.equal(undispatchedRecord({}), true);
+	assert.equal(undispatchedRecord({ dispatch: { phase: "failed" } }), true);
+	assert.equal(undispatchedRecord({ dispatch: { phase: "started" } }), false);
+	assert.equal(undispatchedRecord({ dispatch: { phase: "returned" } }), false);
+	// A failed dispatch that produced native input may already be in the transcript.
+	assert.equal(undispatchedRecord({ dispatch: { phase: "failed", inputs: [{ kind: "prompt" }] } }), false);
 });

@@ -240,6 +240,33 @@ test("automatic deadline expiry delivers once without host activity or explicit 
 	assert.deepEqual(errors, []);
 });
 
+test("a continuation the flow holds runs when its wait clears without host activity", async (t) => {
+	const clock = ingressWaitClock(),
+		errors = [];
+	const f = await fixture(t, {
+		provider: true,
+		admit: null,
+		autoRelease: { clock, onError: (error) => errors.push(error) },
+	});
+	const branch = f.ingress.branch();
+	await declareIngressWait(branch);
+	// An extension's continuation is held while the wait is open, so it produces no turn at all: nothing
+	// reaches the host, and the extension that sent it has no turn boundary to re-drive from.
+	await f.session.sendCustomMessage(
+		{ customType: "continuation", content: "Continue the held work.", display: false },
+		{ triggerTurn: true },
+	);
+	assert.equal(f.sent.length, 0);
+	assert.deepEqual(branch.host.gate().waitingWorkIds, ["work"]);
+	await waitForFlow(() => clock.timers.size === 1);
+	// The deadline is the only thing that changes: no user turn, no host call, no explicit release.
+	clock.advance(100);
+	// The wait's own terminal decision is delivered first; the continuation follows it without any host
+	// activity, which is the re-drive the extension that sent it cannot make for itself.
+	await waitForFlow(async () => JSON.stringify(f.sent).includes("Continue the held work."));
+	assert.deepEqual(errors, []);
+});
+
 test("automatic reattachment delivers an offline deadline and detach clears timers", async (t) => {
 	const clock = ingressWaitClock(),
 		errors = [];

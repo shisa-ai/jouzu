@@ -23,6 +23,7 @@ export async function fixture(
 		shutdownExtensions = false,
 		checkpoints,
 		onRequest,
+		onHeldUserInput,
 		response,
 		tools = [],
 		extensions = [],
@@ -37,6 +38,7 @@ export async function fixture(
 		userWorkParticipants,
 		maxInputBytes,
 		maxResultBytes: 4096,
+		onHeldUserInput,
 		host: {
 			consumedAttempt,
 			maxPayloadBytes: 100000,

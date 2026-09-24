@@ -332,6 +332,73 @@ test("a running provider request is not reported as an unknown outcome needing r
 	assert.deepEqual(f.errors, []);
 });
 
+test("a refused user send is reported once, and automated holds are not reported", async () => {
+	const notices = [];
+	const ingress = {
+		automatedPause: () => undefined,
+		recoveryHold: async () => undefined,
+		inspect: async () => ({ scope, submissions: [], uncertain: [] }),
+	};
+	const handlers = new Map();
+	const extension = createFlowStatusExtension({ ingress: () => ingress });
+	extension.factory({
+		registerMessageRenderer() {},
+		on(name, handler) {
+			handlers.set(name, handler);
+		},
+		registerCommand() {},
+	});
+	await handlers.get("session_start")({}, { hasUI: true, ui: { notify: (text) => notices.push(text) } });
+	extension.announceHeldInput({ id: "held-1", reason: "Input is waiting for recovery reconciliation." });
+	extension.announceHeldInput({ id: "held-1", reason: "Input is waiting for recovery reconciliation." });
+	extension.announceHeldInput({
+		id: "held-1",
+		reason: "Automated input is waiting for an interrupted turn to be resolved.",
+	});
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(notices.length, 2, "one notice per held message and reason, and none for the clean start");
+	assert.match(notices[0], /holding your message: Input is waiting for recovery reconciliation\./);
+	assert.match(notices[0], /Run \/flow for the control that releases it\./);
+	assert.match(notices[1], /interrupted turn to be resolved/);
+});
+
+test("a session that reopens behind a recovery decision says what is held", async () => {
+	const notices = [];
+	let hold;
+	const ingress = {
+		automatedPause: () => undefined,
+		recoveryHold: async () => hold,
+		inspect: async () => ({
+			scope,
+			submissions: [input("held-1", { reason: "Input is waiting for recovery reconciliation." })],
+			uncertain: [],
+		}),
+	};
+	const handlers = new Map();
+	const extension = createFlowStatusExtension({ ingress: () => ingress });
+	extension.factory({
+		registerMessageRenderer() {},
+		on(name, handler) {
+			handlers.set(name, handler);
+		},
+		registerCommand() {},
+	});
+	const start = () => handlers.get("session_start")({}, { hasUI: true, ui: { notify: (text) => notices.push(text) } });
+	await start();
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.deepEqual(notices, [], "an idle session with nothing held says nothing");
+	hold = "an interrupted turn has an unknown outcome";
+	await start();
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(notices.length, 1);
+	assert.match(notices[0], /holding automated work: an interrupted turn has an unknown outcome\./);
+	// A recovery decision with nothing behind it is not a hold, so it stays silent.
+	ingress.inspect = async () => ({ scope, submissions: [], uncertain: [] });
+	await start();
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(notices.length, 1);
+});
+
 test("long histories have bounded output and readable detail pages", () => {
 	const inputs = Object.fromEntries(
 		Array.from({ length: 40 }, (_, index) => [

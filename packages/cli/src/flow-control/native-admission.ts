@@ -10,6 +10,66 @@ export function isNativeUserInput(submission: FlowSubmission): boolean {
 	return submission.origin.kind === "host" && ["prompt", "steer", "followUp"].includes(submission.api);
 }
 
+/**
+ * A send the host attributed to the user's own command invocation.
+ *
+ * Pi records the invocation while the registered command's handler is active, and only for the
+ * extension that owns the command, so this is host-assigned provenance rather than a caller's label.
+ * The send is how a command answers the user, such as a `/goal` handler prompting the agent to resume
+ * the goal: holding it leaves the command with no visible effect at all, which reads as a broken
+ * command rather than a decision the user can make.
+ */
+export function isUserCommandSubmission(submission: FlowSubmission): boolean {
+	return submission.userCommand !== undefined;
+}
+
+/** Whether this submission carries the user's own instruction: typed input, or a command's own send. */
+export function isUserInstruction(submission: FlowSubmission): boolean {
+	return isNativeUserInput(submission) || isUserCommandSubmission(submission);
+}
+
+/**
+ * A retained record whose native call never ran: no dispatch intent, or a dispatch that failed before
+ * producing native input. This is exactly what a new attachment can still issue on its own.
+ */
+export function undispatchedRecord(record: { dispatch?: { phase: string; inputs?: unknown[] } }): boolean {
+	return !record.dispatch || (record.dispatch.phase === "failed" && !record.dispatch.inputs?.length);
+}
+
+/**
+ * A send a reattach can still deliver: a waking continuation with no callback and no user present.
+ *
+ * A submission is retained before it is dispatched, so a restart between the two leaves a send the
+ * session already accepted and never delivered. Nothing re-issues a continuation on its own, so
+ * dropping it is silent, and the work it continues stays stalled with no visible cause. Only these
+ * shapes qualify: the message is self-contained, so issuing it again is what the record says, while
+ * input the user typed and sends a prior lifetime's callback would have run keep the ordinary rule
+ * that they are inspected rather than replayed.
+ */
+export function replayableContinuation(submission: FlowSubmission): boolean {
+	switch (submission.api) {
+		// A typed prompt is the user's own input, which they are present to resend, unless a command issued it.
+		case "prompt":
+			return isUserCommandSubmission(submission);
+		case "followUp":
+			return isUserCommandSubmission(submission);
+		case "sendUserMessage": {
+			const options = submission.args[1] as { deliverAs?: string } | undefined;
+			// A steer belongs to the turn it interrupts, so only a followUp continuation is still meaningful.
+			return options?.deliverAs === "followUp";
+		}
+		case "sendCustomMessage": {
+			const options = submission.args[1] as { triggerTurn?: boolean } | undefined;
+			// A callback-bearing send belongs to the lifetime that composed it, so only a waking message
+			// without one is self-contained enough to issue again.
+			const details = (submission.args[0] as { details?: { waitContextId?: unknown } } | undefined)?.details;
+			return options?.triggerTurn === true && details?.waitContextId === undefined;
+		}
+		default:
+			return false;
+	}
+}
+
 /** Only these user operations insert a queue item while the host is streaming. */
 export function isNativeUserQueueSubmission(
 	submission: FlowSubmission,
@@ -77,8 +137,8 @@ export function decideNativeAdmission(
 	if (phase === "queue" && !input?.queue) return hold("Input has no exact native queue revision.");
 	// An unresolved outcome holds automated admission but never the user: resolving it is the user's
 	// decision, and the controls for it arrive as user input, so holding those would make the state
-	// unrecoverable. Host-verified origin is what passes here, never a caller-supplied label.
-	if (isNativeUserInput(submission)) return { allowed: true };
+	// unrecoverable. Host-assigned provenance is what passes here, never a caller-supplied label.
+	if (isUserInstruction(submission)) return { allowed: true };
 	// Checked immediately after the user-input allow: an interrupt holds everything automated and
 	// nothing the user typed, and it outranks the ordinary boundary reasons below because the user
 	// asked for it directly rather than the controller inferring it from session state.
@@ -97,7 +157,7 @@ export function decideNativeAdmission(
 	if (gates.waitingWorkIds.length) return hold("Unclassified input cannot establish independence from a live wait.");
 	if (
 		gates.userPending ||
-		records.some((record) => isNativeUserInput(record.submission) && awaitingNativeInput(record, liveQueue))
+		records.some((record) => isUserInstruction(record.submission) && awaitingNativeInput(record, liveQueue))
 	)
 		return hold("Input is waiting for queued user work.");
 	if (phase === "submission" && (!host.isIdle || host.isStreaming))

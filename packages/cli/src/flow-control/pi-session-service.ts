@@ -2,7 +2,7 @@ import type { AgentSession } from "@earendil-works/pi-coding-agent";
 import type { FlowAdmissionGates } from "./admission.js";
 import { retainAutomaticWork } from "./automatic-work.js";
 import { SessionFlowController } from "./controller.js";
-import { isNativeUserInput } from "./native-admission.js";
+import { isNativeUserInput, isUserInstruction } from "./native-admission.js";
 import { reconcileNativeSources } from "./native-source-reconciliation.js";
 import { PiFlowAttachment } from "./pi-attachment.js";
 import { bindPiFlowBranch, completePiFlowNavigation, piTranscriptBranchOwners } from "./pi-branch-binding.js";
@@ -166,12 +166,12 @@ export class PiFlowSessionService {
 				() => native.consumedSources(),
 				this.options.decorateNativeContext,
 				this.trustedStream,
-				// Host-assigned origin decides which operations are user instruction. Nothing here reads
-				// message content, so no label or marker can claim to be the user.
+				// Host-assigned origin and command provenance decide which operations are user instruction.
+				// Nothing here reads message content, so no label or marker can claim to be the user.
 				async () =>
 					new Set(
 						(await attachment.submissions.snapshot())
-							.filter((record) => isNativeUserInput(record.submission))
+							.filter((record) => isUserInstruction(record.submission))
 							.map((record) => record.dispatch?.operationId)
 							.filter((id): id is string => !!id),
 					),

@@ -9,9 +9,10 @@ import type { NativeSourceCapture } from "./native-request-store.js";
  * - **Position.** The whole conversation replays on every request, so history is not the question:
  *   only the block after the last assistant turn is this run's input. Each retained source's place in
  *   the converted model input was recorded at conversion, so the boundary is arithmetic.
- * - **Origin.** Whether a source is user instruction is the origin the host assigned to its
- *   submission, never a label, a marker, or matching text. Controller-composed input is not a
- *   retained source at all, so a run carrying only composed input carries no user instruction.
+ * - **Origin.** Whether a source is user instruction is the provenance the host assigned to its
+ *   submission: its own origin, or a command invocation it recorded while that command's handler ran.
+ *   It is never a label, a marker, or matching text. Controller-composed input is not a retained
+ *   source at all, so a run carrying only composed input carries no user instruction.
  *
  * It errs toward withholding: a request with no conversion evidence, or one whose sources cannot be
  * placed, counts as carrying user input, because wrongly granting silence loses a reply the user

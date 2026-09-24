@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { BACKGROUND_CONTEXT, type Session, setValue, value, type Write } from "@earendil-works/pi-agent-core";
 import type { CreateAgentSessionOptions } from "@earendil-works/pi-coding-agent";
+import { replayableContinuation, undispatchedRecord } from "./native-admission.js";
 import type { FlowOwnership } from "./ownership.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
 
@@ -884,7 +885,13 @@ export class FlowSubmissionStore {
 			return { changed: true, result: undefined };
 		});
 	}
-	/** A new attachment cannot execute callbacks from a prior session lifetime. Keep their input inspectable. */
+	/**
+	 * A new attachment cannot execute callbacks from a prior session lifetime. Keep their input inspectable.
+	 *
+	 * An undispatched continuation is the exception: it carries no callback, and the work it continues is
+	 * still open, so it stays retained for the attachment that takes over to issue again. Marking it
+	 * unavailable would drop it, and nothing else re-issues a continuation the session already accepted.
+	 */
 	recoverCallbacks(): Promise<number> {
 		return this.transact((state) => {
 			let count = 0;
@@ -892,7 +899,8 @@ export class FlowSubmissionStore {
 				if (
 					record.status === "retained" &&
 					!record.unavailable &&
-					(!record.dispatch || (record.dispatch.phase === "failed" && !record.dispatch.inputs?.length))
+					!replayableContinuation(decode(record.payload) as Submission) &&
+					undispatchedRecord(record)
 				) {
 					record.unavailable = "callback-ended";
 					count++;
