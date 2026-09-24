@@ -28,7 +28,8 @@ export async function runWorker(
 	onSession: (session: AgentSession) => void,
 	signal: AbortSignal = new AbortController().signal,
 ): Promise<void> {
-	configureChildResources(launch);
+	const cancelledSchedules = configureChildResources(launch);
+	if (cancelledSchedules) send({ type: "schedules_cancelled", count: cancelledSchedules });
 	const failure = new AbortController();
 	const stop = AbortSignal.any([signal, failure.signal]);
 	const flow = createFlowControlRuntime({
@@ -158,7 +159,7 @@ async function runGuardedWorker(
 		const previousBeforeToolCall = session.agent.beforeToolCall;
 		session.agent.beforeToolCall = async (input, toolSignal) => {
 			if (!session.getActiveToolNames().includes(input.toolCall.name))
-				return { block: true, reason: "Access denied: tool is not in the role definition." };
+				return { block: true, reason: "Access denied: tool is not enabled for this child session." };
 			try {
 				if (++toolCount > role.maxTurns * 20) {
 					exhausted = true;

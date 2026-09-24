@@ -146,7 +146,7 @@ test("real children can read outside cwd, use skills/recall/web/tasks, consult p
 		undefined,
 		(run) => complete(run),
 	);
-	const role = { ...defaultAgentConfig().roles[1], thinking: "off", timeoutMs: 10000 };
+	const role = { ...defaultAgentConfig().roles[1], thinking: "off", timeoutSeconds: 10 };
 	const launch = {
 		role,
 		model,
@@ -181,7 +181,8 @@ test("real children can read outside cwd, use skills/recall/web/tasks, consult p
 			assert.ok(allTools.includes(name), `${name}: ${JSON.stringify(allTools)}`);
 		assert.ok(allTools.includes("TaskExecute"));
 		assert.ok(allTools.includes("bg_task"));
-		assert.ok(allTools.includes("schedule_prompt"));
+		assert.ok(!allTools.includes("schedule_prompt"));
+		assert.ok(!allTools.includes("subagent"));
 		assert.ok(allTools.includes("multiloop_start"));
 		assert.ok(allTools.includes("agent_wait"));
 		const prompt = JSON.stringify(requests[0].messages);
@@ -211,6 +212,26 @@ test("real children can read outside cwd, use skills/recall/web/tasks, consult p
 				(result) => result.toolName === "read" && JSON.stringify(result.content).includes("Clear Technical Writing"),
 			),
 		);
+		const schedulePath = join(dirname(run.sessionFile), ".pi", "schedule-prompts.json");
+		mkdirSync(dirname(schedulePath), { recursive: true });
+		writeFileSync(
+			schedulePath,
+			JSON.stringify({
+				version: 1,
+				jobs: [
+					{
+						id: "legacy",
+						name: "legacy",
+						type: "interval",
+						schedule: "1s",
+						prompt: "LEGACY_CHILD_SCHEDULE",
+						enabled: true,
+						createdAt: "2026-01-01T00:00:00Z",
+						runCount: 0,
+					},
+				],
+			}),
+		);
 		const continuation = new Promise((resolve) => {
 			complete = resolve;
 		});
@@ -223,6 +244,10 @@ test("real children can read outside cwd, use skills/recall/web/tasks, consult p
 		const resumed = await continuation;
 		assert.equal(resumed.status, "completed", resumed.result);
 		assert.equal(resumed.childSessionId, run.childSessionId);
+		assert.equal(JSON.parse(readFileSync(schedulePath, "utf8")).jobs[0].enabled, false);
+		assert.match(resumed.result, /1 pending child schedule cancelled/);
+		assert.equal(resumed.cancelledSchedules, 1);
+		assert.equal(requests.length, 11, "resume must not run a saved child schedule");
 		assert.match(
 			JSON.stringify(
 				requests
@@ -284,10 +309,13 @@ test("real children can read outside cwd, use skills/recall/web/tasks, consult p
 				],
 			],
 			[
-				"scheduled prompt",
+				"rejected child scheduling",
 				[
-					["schedule_prompt", { action: "add", type: "once", schedule: "+1s", prompt: "Report AUTOMATION_DONE." }],
-					["reply", "SCHEDULE_PENDING"],
+					[
+						"schedule_prompt",
+						{ action: "add", type: "once", schedule: "+1d", model: "fixture/test", prompt: "Launch another agent." },
+					],
+					["subagent", { op: "launch", role: "coder", task: "Recursive work" }],
 					["reply", "AUTOMATION_DONE"],
 				],
 			],
@@ -309,6 +337,12 @@ test("real children can read outside cwd, use skills/recall/web/tasks, consult p
 				`${label} must drain before reporting completion: ${manager.read(automated.id).text}`,
 			);
 			assert.equal(steps.length, 0, label);
+			if (label === "rejected child scheduling") {
+				const messages = readFileSync(terminal.sessionFile, "utf8").trim().split("\n").map(JSON.parse);
+				for (const tool of ["schedule_prompt", "subagent"]) {
+					assert.equal(messages.find((entry) => entry.message?.toolName === tool)?.message.isError, true);
+				}
+			}
 			if (label.includes("background")) {
 				const messages = readFileSync(terminal.sessionFile, "utf8").trim().split("\n").map(JSON.parse);
 				const task = messages.find((entry) => entry.message?.toolName === "bg_task").message.details.task;

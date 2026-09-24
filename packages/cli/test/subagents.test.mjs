@@ -49,6 +49,27 @@ function fixture(maxConcurrent = 2) {
 	};
 }
 
+test("cancelled child schedules remain visible in terminal results and saved run details", async () => {
+	for (const status of ["completed", "failed"]) {
+		const f = fixture();
+		const run = f.launch();
+		f.children[0].emit({ type: "schedules_cancelled", count: 2 });
+		f.children[0].emit({ type: "result", status, text: "Fixture outcome." });
+		f.children[0].exit(true);
+		assert.match(f.manager.get(run.id).result, /^2 pending child schedules cancelled\./);
+		await f.manager.dispose();
+		const restored = new SubagentManager(f.p, "parent", 2);
+		try {
+			restored.attach();
+			assert.equal(restored.get(run.id).cancelledSchedules, 2);
+			assert.equal(restored.get(run.id).status, status);
+			assert.match(restored.get(run.id).result, /Fixture outcome/);
+		} finally {
+			await restored.dispose();
+		}
+	}
+});
+
 test("role defaults allow 500 turns and two hours, with configurable multi-day limits", () => {
 	const config = defaultAgentConfig();
 	assert.ok(config.roles.every((role) => role.maxTurns === 500 && role.timeoutSeconds === 7200));

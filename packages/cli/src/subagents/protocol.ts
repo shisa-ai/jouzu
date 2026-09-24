@@ -28,6 +28,7 @@ export type WorkerCommand =
 	| { type: "steer"; id: string; text: string }
 	| { type: "stop" };
 export type WorkerEvent =
+	| { type: "schedules_cancelled"; count: number }
 	| { type: "ready"; sessionFile: string; sessionId: string }
 	| { type: "activity"; tool: string }
 	| { type: "message"; role: string; text: string; entryId?: string }

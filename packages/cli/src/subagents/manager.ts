@@ -41,6 +41,7 @@ export interface AgentRun {
 	sessionFile?: string;
 	childSessionId?: string;
 	context?: Omit<ChildContext, "entries">;
+	cancelledSchedules?: number;
 	parentContextFile?: string;
 	currentTool?: string;
 	result?: string;
@@ -547,6 +548,7 @@ export class SubagentManager {
 				run.sessionFile = event.sessionFile;
 				run.childSessionId = event.sessionId;
 			}
+			if (event.type === "schedules_cancelled") run.cancelledSchedules = event.count;
 			if (event.type === "activity") run.currentTool = event.tool;
 			if (event.type === "usage") {
 				for (const field of ["input", "output", "cacheRead", "cacheWrite"] as const)
@@ -587,6 +589,10 @@ export class SubagentManager {
 		this.finalize(run);
 	}
 	private finalize(run: AgentRun): void {
+		if (run.cancelledSchedules) {
+			const notice = `${run.cancelledSchedules} pending child schedule${run.cancelledSchedules === 1 ? "" : "s"} cancelled. Ask the parent to schedule any remaining future work.`;
+			if (!run.result?.includes(notice)) run.result = `${notice}\n${run.result ?? ""}`;
+		}
 		if (run.review) {
 			const after = captureReviewCandidate(run.cwd);
 			run.review.status =

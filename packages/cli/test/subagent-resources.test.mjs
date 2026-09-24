@@ -3,6 +3,7 @@ import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSyn
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { createScheduleWaitSource } from "../dist/flow-control/schedule-waits.js";
 import { configureChildResources, expandedChildResourceLoader } from "../dist/subagents/resources.js";
 import { defaultAgentConfig } from "../dist/subagents/roles.js";
 
@@ -34,7 +35,42 @@ test("child resources retain released tools and skills without reopening project
 		role: { ...defaultAgentConfig().roles[1], judging: false },
 		model: { id: "fixture" },
 	};
-	configureChildResources(launch);
+	mkdirSync(join(directory, ".pi"));
+	const savedSchedules = {
+		version: 1,
+		jobs: [
+			{ id: "future", createdAt: "2026-01-01T00:00:00Z", enabled: true, schedule: "2099-01-01T00:00:00Z", runCount: 0 },
+			{ id: "disabled", createdAt: "2026-01-01T00:00:00Z", enabled: false, runCount: 2 },
+		],
+	};
+	writeFileSync(join(directory, ".pi", "schedule-prompts.json"), JSON.stringify(savedSchedules));
+	assert.equal(configureChildResources(launch), 1);
+	const stoppedSchedules = JSON.parse(readFileSync(join(directory, ".pi", "schedule-prompts.json"), "utf8"));
+	assert.deepEqual(
+		stoppedSchedules.jobs,
+		savedSchedules.jobs.map((job) => ({ ...job, enabled: false })),
+	);
+	const stored = readFileSync(join(directory, ".pi", "schedule-prompts.json"), "utf8");
+	assert.equal(configureChildResources(launch), 0);
+	assert.equal(readFileSync(join(directory, ".pi", "schedule-prompts.json"), "utf8"), stored);
+	const scheduleSource = createScheduleWaitSource({
+		cwd: directory,
+		events: {},
+		attachment: {},
+		onError(error) {
+			throw error;
+		},
+	});
+	const evidence = await scheduleSource.snapshot(
+		{
+			scope: { sessionId: "child", branchId: "branch" },
+			workId: "work",
+			handle: "future",
+			execution: "future@2026-01-01T00:00:00Z",
+		},
+		new AbortController().signal,
+	);
+	assert.deepEqual(evidence.predicates, [{ until: "first-trigger", state: "cancelled" }]);
 	assert.equal(process.env.PI_CODING_AGENT_DIR, directory);
 	assert.equal(process.env.PI_TASKS, join(directory, "tasks.json"));
 	assert.equal(JSON.parse(readFileSync(join(directory, "tasks-config.json"))).taskScope, "session");
@@ -89,10 +125,12 @@ test("child resources retain released tools and skills without reopening project
 		"TaskCreate",
 		"TaskExecute",
 		"bg_task",
-		"schedule_prompt",
 		"multiloop_start",
 	])
 		assert.ok(tools.includes(name), `missing released tool: ${name}`);
+	assert.ok(!tools.includes("schedule_prompt"));
+	assert.ok(!tools.includes("subagent"));
+	assert.ok(loader.getExtensions().extensions.every((extension) => !extension.commands.has("schedule-prompt")));
 	const skills = loader.getSkills().skills.map((skill) => skill.name);
 	assert.ok(skills.includes("local-skill"));
 	assert.ok(skills.includes("jouzu-clear-writing"));
@@ -101,6 +139,12 @@ test("child resources retain released tools and skills without reopening project
 	assert.match(loader.getAppendSystemPrompt().join("\n"), /not a filesystem sandbox/);
 	assert.equal(readFileSync(join(cwd, ".pi", "tasks.json"), "utf8"), "PARENT_TASKS_UNCHANGED");
 	assert.deepEqual(readdirSync(join(cwd, ".pi")), ["tasks.json"]);
+	assert.match(loader.getAppendSystemPrompt().join("\n"), /Scheduling and delegation belong to the parent/);
 	const review = await expandedChildResourceLoader({ ...launch, role: { ...launch.role, judging: true } }, policy);
 	assert.deepEqual(review.getAgentsFiles().agentsFiles, []);
+	assert.ok(
+		review
+			.getExtensions()
+			.extensions.every((extension) => !extension.tools.has("schedule_prompt") && !extension.tools.has("subagent")),
+	);
 });

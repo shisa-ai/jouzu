@@ -14,7 +14,7 @@ Call `subagent` with `op: "roles"` to check live availability, configured models
 
 Give the child one independently checkable outcome. Split a prerequisite refactor from the feature that depends on it. Do not bundle roadmap stages, unrelated fixes, or an open-ended instruction to keep improving. If assignments depend on each other, finish and verify the prerequisite before assigning the next stage. Avoid concurrent edits to the same files.
 
-A fresh child does not receive your conversation. Supply the facts it needs; do not tell it to recover unstated decisions from "the discussion above." Coder children load repository instructions; review-only children must be told which instructions to read. Children load bundled extensions and discovered skills; role definitions select their built-in tools. State which operations the assignment authorizes.
+A fresh child does not receive your conversation. Supply the facts it needs; do not tell it to recover unstated decisions from "the discussion above." Coder children load repository instructions; review-only children must be told which instructions to read. Children load bundled extensions and discovered skills; role definitions select their built-in tools. State which operations the assignment authorizes. The parent owns scheduling and additional agent launches. Children should report those requests to the parent rather than create schedules or launch agents through tools or shell commands.
 
 ## Write the handoff
 
