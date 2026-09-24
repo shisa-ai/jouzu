@@ -28,7 +28,7 @@ export async function runWorker(
 	onSession: (session: AgentSession) => void,
 	signal: AbortSignal = new AbortController().signal,
 ): Promise<void> {
-	const cancelledSchedules = configureChildResources(launch);
+	const cancelledSchedules = configureChildResources(launch, (text) => send({ type: "schedule_warning", text }));
 	if (cancelledSchedules) send({ type: "schedules_cancelled", count: cancelledSchedules });
 	const failure = new AbortController();
 	const stop = AbortSignal.any([signal, failure.signal]);

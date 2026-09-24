@@ -41,6 +41,7 @@ export interface AgentRun {
 	sessionFile?: string;
 	childSessionId?: string;
 	context?: Omit<ChildContext, "entries">;
+	scheduleWarning?: string;
 	cancelledSchedules?: number;
 	parentContextFile?: string;
 	currentTool?: string;
@@ -548,6 +549,7 @@ export class SubagentManager {
 				run.sessionFile = event.sessionFile;
 				run.childSessionId = event.sessionId;
 			}
+			if (event.type === "schedule_warning") run.scheduleWarning = event.text;
 			if (event.type === "schedules_cancelled") run.cancelledSchedules = event.count;
 			if (event.type === "activity") run.currentTool = event.tool;
 			if (event.type === "usage") {
@@ -589,9 +591,11 @@ export class SubagentManager {
 		this.finalize(run);
 	}
 	private finalize(run: AgentRun): void {
+		if (run.scheduleWarning && !run.result?.includes(run.scheduleWarning))
+			run.result = [run.scheduleWarning, run.result].filter(Boolean).join("\n");
 		if (run.cancelledSchedules) {
 			const notice = `${run.cancelledSchedules} pending child schedule${run.cancelledSchedules === 1 ? "" : "s"} cancelled. Ask the parent to schedule any remaining future work.`;
-			if (!run.result?.includes(notice)) run.result = `${notice}\n${run.result ?? ""}`;
+			if (!run.result?.includes(notice)) run.result = [notice, run.result].filter(Boolean).join("\n");
 		}
 		if (run.review) {
 			const after = captureReviewCandidate(run.cwd);

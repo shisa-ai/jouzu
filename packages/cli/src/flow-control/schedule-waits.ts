@@ -21,7 +21,7 @@ interface ScheduleChange {
 	jobId?: string;
 }
 
-function assertJob(value: unknown): asserts value is ScheduleJob {
+export function assertScheduleJob(value: unknown): asserts value is ScheduleJob {
 	const job = value as ScheduleJob;
 	if (
 		!job ||
@@ -72,7 +72,7 @@ export function createScheduleWaitSource(options: {
 				if ((event?.job?.id ?? event?.jobId) !== identity.handle) return;
 				try {
 					if (event.job) {
-						assertJob(event.job);
+						assertScheduleJob(event.job);
 						if (!matches(identity, event.job)) {
 							changed(evidence(identity, "cancelled"));
 							return;
@@ -102,7 +102,7 @@ export function createScheduleWaitSource(options: {
 			const store = JSON.parse(raw) as { version: number; jobs: unknown[] };
 			if (store?.version !== 1 || !Array.isArray(store.jobs))
 				throw new FlowLedgerError("schema", "Scheduled prompt storage has an unsupported format.");
-			for (const job of store.jobs) assertJob(job);
+			for (const job of store.jobs) assertScheduleJob(job);
 			const jobs = store.jobs as ScheduleJob[];
 			if (new Set(jobs.map((job) => job.id)).size !== jobs.length)
 				throw new FlowLedgerError("identity", "Scheduled prompt storage repeats a job identity.");
@@ -189,7 +189,7 @@ export function createScheduleWaitExtension(options: {
 					if (details?.action !== "add" || details.jobs?.length !== 1)
 						throw new FlowLedgerError("schema", "Scheduled prompt creation returned no job identity.");
 					const job = details.jobs[0];
-					assertJob(job);
+					assertScheduleJob(job);
 					if (job.id !== details.jobId)
 						throw new FlowLedgerError("identity", "Scheduled prompt creation returned inconsistent identities.");
 					const execution = `${job.id}@${job.createdAt}`;

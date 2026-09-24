@@ -266,6 +266,17 @@ test("real children can read outside cwd, use skills/recall/web/tasks, consult p
 			),
 			/in_progress/,
 		);
+		writeFileSync(schedulePath, "{invalid");
+		const recovery = new Promise((resolve) => {
+			complete = resolve;
+		});
+		steps.push(["reply", "RECOVERED"]);
+		manager.launch({ ...launch, context: undefined, task: "Report recovery." }, undefined, resumed.id);
+		const recovered = await recovery;
+		assert.equal(recovered.status, "completed", recovered.result);
+		assert.match(recovered.result, /Saved child schedules could not be read/);
+		assert.match(recovered.result, /RECOVERED/);
+		assert.match(recovered.scheduleWarning, /Preserved at .*\.invalid-/);
 		for (const [label, automation] of [
 			[
 				"task execution",

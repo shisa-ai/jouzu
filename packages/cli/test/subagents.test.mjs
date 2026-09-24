@@ -49,6 +49,24 @@ function fixture(maxConcurrent = 2) {
 	};
 }
 
+test("schedule notices do not add a trailing newline to an empty result", async () => {
+	for (const event of [
+		{ type: "schedules_cancelled", count: 2 },
+		{ type: "schedule_warning", text: "Invalid schedules preserved for inspection." },
+	]) {
+		const f = fixture();
+		const run = f.launch();
+		f.children[0].emit(event);
+		f.children[0].emit({ type: "result", status: "failed", text: "" });
+		f.children[0].exit(true);
+		const result = f.manager.get(run.id);
+		assert.ok(result.result.length > 0);
+		assert.equal(result.result, result.result.trimEnd());
+		assert.equal(result.scheduleWarning, event.text);
+		await f.manager.dispose();
+	}
+});
+
 test("cancelled child schedules remain visible in terminal results and saved run details", async () => {
 	for (const status of ["completed", "failed"]) {
 		const f = fixture();

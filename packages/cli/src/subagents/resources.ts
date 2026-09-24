@@ -1,4 +1,5 @@
-import { lstatSync, readFileSync } from "node:fs";
+import { randomUUID } from "node:crypto";
+import { lstatSync, readFileSync, renameSync } from "node:fs";
 import { join } from "node:path";
 import {
 	DefaultResourceLoader,
@@ -10,6 +11,8 @@ import {
 	SettingsManager,
 } from "@earendil-works/pi-coding-agent";
 import { CompactionRequestController, registerCompactionRequest } from "../compaction-request.js";
+import { FlowLedgerError } from "../flow-control/receipt-ledger.js";
+import { assertScheduleJob } from "../flow-control/schedule-waits.js";
 import { buildModelGuidance } from "../model-guidance.js";
 import { brandDefaultSystemPrompt, buildCapabilityRoutingGuidance } from "../presentation.js";
 import { validatePrivateDirectory, writeFilePrivateAtomic } from "../private-fs.js";
@@ -19,7 +22,7 @@ import { createToolArgumentExtension } from "../tool-arguments.js";
 import type { WorkerLaunch } from "./protocol.js";
 
 /** Cancel worker-local schedules before restored flow receipts inspect their state. */
-function disableChildSchedules(directory: string): number {
+function disableChildSchedules(directory: string, warn: (message: string) => void): number {
 	const stateDirectory = join(directory, ".pi");
 	validatePrivateDirectory(directory);
 	validatePrivateDirectory(stateDirectory);
@@ -31,15 +34,27 @@ function disableChildSchedules(directory: string): number {
 		if ((error as NodeJS.ErrnoException).code === "ENOENT") return 0;
 		throw error;
 	}
-	if (!metadata.isFile() || metadata.size > 4 * 1024 * 1024)
-		throw new Error("Child schedule storage must be a regular file of at most 4 MB.");
-	const store = JSON.parse(readFileSync(path, "utf8")) as { version: number; jobs: { enabled: boolean }[] };
-	if (
-		store?.version !== 1 ||
-		!Array.isArray(store.jobs) ||
-		store.jobs.some((job) => !job || typeof job.enabled !== "boolean")
-	)
-		throw new Error("Child schedule storage has an unsupported format.");
+	const quarantine = (reason: string) => {
+		const saved = `${path}.invalid-${randomUUID()}`;
+		renameSync(path, saved);
+		warn(
+			`Saved child schedules could not be read (${reason}). Preserved at ${saved}. No child schedules will run; ask the parent to schedule any remaining future work.`,
+		);
+		return 0;
+	};
+	if (!metadata.isFile()) return quarantine("not a regular file");
+	if (metadata.size > 4 * 1024 * 1024) return quarantine("larger than 4 MB");
+	const text = readFileSync(path, "utf8");
+	let store: { version: number; jobs: { id: string; enabled: boolean }[] };
+	try {
+		store = JSON.parse(text);
+		if (store?.version !== 1 || !Array.isArray(store.jobs)) return quarantine("unsupported format");
+		for (const job of store.jobs) assertScheduleJob(job);
+		if (new Set(store.jobs.map((job) => job.id)).size !== store.jobs.length) return quarantine("duplicate job IDs");
+	} catch (error) {
+		if (error instanceof SyntaxError || error instanceof FlowLedgerError) return quarantine("invalid schedule data");
+		throw error;
+	}
 	const cancelled = store.jobs.filter((job) => job.enabled).length;
 	if (!cancelled) return 0;
 	for (const job of store.jobs) job.enabled = false;
@@ -48,8 +63,8 @@ function disableChildSchedules(directory: string): number {
 }
 
 /** Configure process-global extension discovery only inside the dedicated worker. */
-export function configureChildResources(launch: WorkerLaunch): number {
-	const cancelledSchedules = disableChildSchedules(launch.directory);
+export function configureChildResources(launch: WorkerLaunch, warn: (message: string) => void = () => {}): number {
+	const cancelledSchedules = disableChildSchedules(launch.directory, warn);
 	process.env.PI_CODING_AGENT_DIR = launch.directory;
 	process.env.PI_CODING_AGENT_SESSION_DIR = launch.directory;
 	process.env.PI_TASKS = join(launch.directory, "tasks.json");

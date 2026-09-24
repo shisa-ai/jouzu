@@ -1,11 +1,87 @@
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+	existsSync,
+	lstatSync,
+	mkdirSync,
+	mkdtempSync,
+	readdirSync,
+	readFileSync,
+	rmSync,
+	writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { createScheduleWaitSource } from "../dist/flow-control/schedule-waits.js";
 import { configureChildResources, expandedChildResourceLoader } from "../dist/subagents/resources.js";
 import { defaultAgentConfig } from "../dist/subagents/roles.js";
+
+test("invalid child schedule state is preserved with a warning and cannot block restored waits", async (t) => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-child-schedule-recovery-"));
+	const previous = { ...process.env };
+	t.after(() => {
+		for (const key of Object.keys(process.env)) if (!(key in previous)) delete process.env[key];
+		Object.assign(process.env, previous);
+		rmSync(root, { recursive: true, force: true });
+	});
+	const unsafe = join(root, "unsafe");
+	mkdirSync(unsafe);
+	writeFileSync(join(unsafe, ".pi"), "PRESERVE");
+	assert.throws(() => configureChildResources({ directory: unsafe }), /must be a real directory/);
+	assert.equal(readFileSync(join(unsafe, ".pi"), "utf8"), "PRESERVE");
+	for (const [name, data] of [
+		["json", "{"],
+		["format", '{"version":2,"jobs":[]}'],
+		["job", '{"version":1,"jobs":[{"enabled":true}]}'],
+		["large", "x".repeat(4 * 1024 * 1024 + 1)],
+		["directory", null],
+	]) {
+		const directory = join(root, name);
+		const state = join(directory, ".pi");
+		mkdirSync(state, { recursive: true });
+		const file = join(state, "schedule-prompts.json");
+		if (data === null) mkdirSync(file);
+		else writeFileSync(file, data);
+		const warnings = [];
+		assert.equal(
+			configureChildResources({ directory }, (text) => warnings.push(text)),
+			0,
+		);
+		assert.equal(warnings.length, 1);
+		assert.match(warnings[0], /Preserved at .*\.invalid-/);
+		assert.equal(existsSync(file), false);
+		const backup = join(
+			state,
+			readdirSync(state).find((name) => name.startsWith("schedule-prompts.json.invalid-")),
+		);
+		if (data === null) assert.ok(lstatSync(backup).isDirectory());
+		else assert.equal(readFileSync(backup, "utf8"), data);
+		const identity = {
+			scope: { sessionId: "child", branchId: "branch" },
+			workId: "work",
+			handle: "old",
+			execution: "old@date",
+		};
+		const source = createScheduleWaitSource({
+			cwd: directory,
+			events: {},
+			attachment: {
+				waits: { authoritySnapshot: async () => ({ executions: [{ producer: "schedule", ...identity }] }) },
+			},
+			onError(error) {
+				throw error;
+			},
+		});
+		assert.deepEqual((await source.snapshot(identity, new AbortController().signal)).predicates, [
+			{ until: "first-trigger", state: "cancelled" },
+		]);
+		assert.equal(
+			configureChildResources({ directory }, (text) => warnings.push(text)),
+			0,
+		);
+		assert.equal(warnings.length, 1, "resume does not process quarantined data again");
+	}
+});
 
 // Worker-only process settings are changed in this test process, never in the parent runner.
 test("child resources retain released tools and skills without reopening project automation", async (t) => {
