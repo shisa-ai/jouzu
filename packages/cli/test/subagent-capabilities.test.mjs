@@ -107,7 +107,20 @@ test("real children can read outside cwd, use skills/recall/web/tasks, consult p
 			respond(res, { role: "assistant", content: "DONE" }, "stop");
 			return;
 		}
-		const [name, args] = step;
+		const [name, suppliedArgs] = step;
+		let args = suppliedArgs;
+		if (name === "agent_wait" && suppliedArgs === "background") {
+			const result = [...body.messages]
+				.reverse()
+				.find(
+					(message) =>
+						message.role === "tool" &&
+						typeof message.content === "string" &&
+						message.content.includes("Wait dependency: "),
+				);
+			const dependency = JSON.parse(result.content.split("Wait dependency: ")[1].split("\n")[0]);
+			args = { on: [dependency], mode: "all", deadline: "10s", reason: "Wait for the child fixture execution." };
+		}
 		if (name === "reply") {
 			respond(res, { role: "assistant", content: args }, "stop");
 			return;
@@ -320,6 +333,33 @@ test("real children can read outside cwd, use skills/recall/web/tasks, consult p
 				],
 			],
 			[
+				"multiloop gate recovery",
+				[
+					[
+						"multiloop_start",
+						{
+							lane: "child-fixture",
+							runTag: "gate",
+							mode: "research",
+							goal: "Wait for the job and then stop the lane.",
+						},
+					],
+					[
+						"bg_task",
+						{
+							action: "spawn",
+							command: "node -e 'setTimeout(() => console.log(42), 400)'",
+							notifyOnExit: false,
+							timeoutSeconds: 5,
+						},
+					],
+					["agent_wait", "background"],
+					["reply", "LOOP_WAITING"],
+					["multiloop_stop", { target: "child-fixture/gate" }],
+					["reply", "AUTOMATION_DONE"],
+				],
+			],
+			[
 				"rejected child scheduling",
 				[
 					[
@@ -348,6 +388,14 @@ test("real children can read outside cwd, use skills/recall/web/tasks, consult p
 				`${label} must drain before reporting completion: ${manager.read(automated.id).text}`,
 			);
 			assert.equal(steps.length, 0, label);
+			if (label === "multiloop gate recovery") {
+				const messages = readFileSync(terminal.sessionFile, "utf8").trim().split("\n").map(JSON.parse);
+				for (const result of messages.filter((entry) => entry.message?.role === "toolResult"))
+					assert.equal(result.message.isError, false, JSON.stringify(result.message));
+				const waitResult = messages.find((entry) => entry.message?.toolName === "agent_wait");
+				assert.match(JSON.stringify(waitResult?.message.content), /agent_wait waiting/);
+				assert.ok(messages.some((entry) => JSON.stringify(entry).includes("LOOP_WAITING")));
+			}
 			if (label === "rejected child scheduling") {
 				const messages = readFileSync(terminal.sessionFile, "utf8").trim().split("\n").map(JSON.parse);
 				for (const tool of ["schedule_prompt", "subagent"]) {
