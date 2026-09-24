@@ -6,7 +6,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { assistant, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
+import { assistant, deferred, pngImage } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { PiNativeRequests } from "../dist/flow-control/pi-native-requests.js";
 import { afterCleanup } from "./fixtures/cleanup.mjs";
@@ -613,7 +613,7 @@ test("Pi extension-runner clone checkpoint preserves model source provenance", a
 test("Pi blocked-image conversion cannot retain an intact source receipt", async (t) => {
 	const f = await nativeRequests(t, { retainInputs: true, contextTransform: (messages) => messages });
 	f.session.settingsManager.setBlockImages(true);
-	await f.session.prompt("image", { images: [{ type: "image", mimeType: "image/png", data: "YQ==" }] });
+	await f.session.prompt("image", { images: [pngImage] });
 	const [request] = await f.store.snapshot();
 	assert.equal(request.sourceCapture.context.members[0].status, "intact");
 	assert.equal(request.sourceCapture.model.members[0].status, "changed");

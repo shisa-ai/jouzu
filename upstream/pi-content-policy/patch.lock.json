@@ -1,47 +1,47 @@
 {
 	"schemaVersion": 1,
 	"package": "@earendil-works/pi-coding-agent",
-	"version": "0.86.1",
+	"version": "0.87.1",
 	"files": {
 		"dist/core/settings-manager.js": {
 			"before": "5368b155ec26d88374cec9e66b8e588b5041a0fb0047414f70b34e13892c4f48",
 			"after": "a7d2ba5eba80673cfc56f655253afed41ead2f96791380b6c7e236fc2e90d903"
 		},
 		"dist/core/cache-warmer.js": {
-			"before": "cd488877ddf0bba1489ff6699bd8200ef645a9e6e028110ce675609bbe8fe556",
-			"after": "b453c0ea871b1f69cb17e59445d84174d8d8ee6a198603382c4dde0800846404"
+			"before": "9c4b000930d6d3c567073102f6b6a52660110bb0f79cf78dd72c4dd1ebc87fc0",
+			"after": "d1ccccbb4661e335254a8d38adba82345a829417b0b83ea55645f3d94d9e2b1c"
 		},
 		"dist/main.js": {
-			"before": "e36837e55af695cbb95216763fbc929e87829ced837dd32f281bba8c8e50035c",
-			"after": "4f0d7cafe585b913414d8a564ee1284ac6e6edeeae33cc6424da9573ed14b6dc"
+			"before": "5a9473442cd761b21d07c374bb137967dd11474f5a7754d1c32f585e7b1a1f49",
+			"after": "6aa7b1f561dd0456a0a80ccf903ec462a966395b4e399415f5e029c27f692cfd"
 		},
 		"dist/main.d.ts": {
 			"before": "cf197873ee07f73d5682fe2236e24989714d1f5c1acf8820264e570a5c17dadc",
 			"after": "b3c57b99ccfa8d798bb2b9474e6514108e6fe737613a80c4f853a0adde494765"
 		},
 		"dist/core/resource-loader.js": {
-			"before": "8e8a1bc1c5bc9e955f6a2314dd1db02071be56d48b1fea7b8b2cacb4fc9a0628",
-			"after": "f475ec8aa1ec5c1b657c831c9942a5270c1e76f09509dd360dc7c680d219c303"
+			"before": "70632ebde9a89178ef560f0c0b68ce87d82008dd43d0fa9bf5a909c909a18a8a",
+			"after": "bd88c2f18d7b88b529606c1fcdad0f9edc2b66a3d1681ed05ce056889bd5e3e0"
 		},
 		"dist/core/resource-loader.d.ts": {
 			"before": "f7c1dac7b3d661dff5fbfe51d1b50dff12b4c4329ae29a280ae713740b162493",
 			"after": "4848cfef0a2a2038e079f9bad1d27edbe95deaff88aed77d712f6850be3ba17f"
 		},
 		"dist/core/sdk.js": {
-			"before": "3417c58edc5c02a4ae71a3604bbd04688d1741e0203497bf082a748ca843d850",
-			"after": "66a474e102cbd48e798aa10b2b50da2663c221626a7e196b0a12b8216bb05e3e"
+			"before": "b49c2843197166bb84283edcb7702b91346d8fbaed2b0b8c70e5277dd78bcf5f",
+			"after": "e3e7fee6c7a72d7ebfa06b78cc0246db05cc5f24c71d9b636014978e212328e9"
 		},
 		"dist/core/sdk.d.ts": {
 			"before": "fbb34394c71e113b1f1fb5dd2e3d1da8d559580b339daace88826cd1a666cc4c",
 			"after": "a33ba141c3063a607ca771ac4de411f24e83851efa11ff7229e6c86658743f05"
 		},
 		"dist/core/agent-session.js": {
-			"before": "edaff7055ced7d49d25135c92415fbbfd9c14c4a29be5a79510ab9216045d6d9",
-			"after": "69a163d0876834ca72a4201604a392038d2a0e2d7a5061c78067f941affe4975"
+			"before": "5ebfae51db5a900596145159428e7cb57d195af9d54a28f41d4ac8ff1bfd5729",
+			"after": "1d466c347e53389fa84f51dda230855afd0de0d59af0dd6c25128dd3c9ea43c2"
 		},
 		"dist/core/agent-session.d.ts": {
-			"before": "423bdca09eabd78aa1e729136dd9a1e2fff3b8116c6bc2d3fee3337b269a8432",
-			"after": "99f83471b43c55255969fd39cf6cc6df61de317e499a76a6885a10c1a92bd5cc"
+			"before": "ee0b9c2c2fefeef292c9da884b92c0fa5fce73f04bc834655720253d477f391d",
+			"after": "b7c1591d2c80d60448cede7fbd4cea9f0eebf9865015d240f4b2a51fbd154bee"
 		},
 		"dist/core/agent-session-services.js": {
 			"before": "3a4ee476b0596f346023398f52176381355f98dd621b8161f269c7ef3a57e28f",
@@ -52,8 +52,8 @@
 			"after": "1102fea6f62342fa5a3daacad627df063aa60b694a1366245de8f740156d9b25"
 		},
 		"dist/core/agent-session-runtime.js": {
-			"before": "61375f59afc3395940c05832c3f992e8020139a2f4a53065cccacbc370b65f16",
-			"after": "ee6c5d8c1ea8be0207b1a843f44d8e4e2e0c8a39c2987fe8ec9fb3d681f8228d"
+			"before": "9a502461b1b1df3251b9bc41b786ddbc47413c9115957d6b091e3360a54073fe",
+			"after": "c0b2f689bd46a263f82b388e076a4b1c8bba45f161866a4d8fde40ea2bc68489"
 		},
 		"dist/modes/rpc/rpc-mode.js": {
 			"before": "bdd94e753e6d19731d9fb9ea370462d095d64f1e78bddd7651320663fa57c4ff",
@@ -72,20 +72,20 @@
 			"after": "ee73c560e8bbc55bb5590b6edf1a13d417b29c52c6b0716ba286a7798ade752d"
 		},
 		"dist/core/session-manager.js": {
-			"before": "96bd76b298f3c0a6b6d9b57b727f0f9b1196fbfa83172071ac280a5a37f82a08",
-			"after": "d3d56cb2152afa9a529193a5e0dccc34d28feac0e3393e7a4a724683618afc24"
+			"before": "d365ffb5a189915c3af93953daf751bff45fe46222b05c426f8d8b845946bebf",
+			"after": "6a79445c94432e7bb98ec10403c5786499e0243cf225f2410b3e2353864b629d"
 		},
 		"dist/core/session-manager.d.ts": {
-			"before": "4b39381623569d0ad6684a170966a092a078ef97359f6e9e7d215273655d15c8",
-			"after": "e9ae83b4a2ab8c8336cab1907100335eda5a658ea4370c7256ad16f8b18dc196"
+			"before": "d27e910585a6f41f2d17381516519eefb680f671bd271dcbb09a26de2d4a50f0",
+			"after": "651a5fddf22e6efcd55eca6bb0d8c25de496815e3dfd8dce541b756785050de5"
 		},
 		"dist/core/extensions/runner.js": {
-			"before": "07a94efe560e6a460a415b2188c1c3c69ca151bd163c9b5f05347caf8403ace2",
-			"after": "73d2344016ca74d77d691ac198e6789e8b316080e853f1efe33143c82f68769f"
+			"before": "67c7ca2d24197ff46cb5f0a49d7c19a76825ab7c66bc942015a484b550396441",
+			"after": "e7a1499c58128709ac7c33e51a61210e21921a4adf5bd6845bbc0f78a3609608"
 		},
 		"dist/core/extensions/runner.d.ts": {
-			"before": "fc0f81468c51bacfc093ac09974aa8e8053ca463e205eb66a1c63b0b655f61b9",
-			"after": "c4f21438f8bf867358db1947f035e6131d0c71b544c250a28421ffd8c3e4aafe"
+			"before": "09d91c6d543b58cd96ec2e40e9e496f933e53169d3b2fa955a38ede317e7334d",
+			"after": "c50670672da80f4af9f7084329d39a19b7af6e79ca7dac52e30cacdc5e74d9e0"
 		},
 		"dist/core/messages.js": {
 			"before": "8688b3f6eb28865f779cac998bd4754d1a4f08703200dfe0dd5a799aa0d42ef6",
@@ -96,8 +96,8 @@
 			"after": "b3746474d2b20b87e8c169bc7d9960ac38298b8c82529b68e2aae0d2914bf37c"
 		},
 		"dist/core/compaction/compaction.js": {
-			"before": "e304e621c33d8bb4f3ac8f2fa217f330492fc05fb49fc7a5b9572f6ff00f8319",
-			"after": "dc49b36eba9ebeb3fc8288b97a50dc11d8005ce27fe6fa3b076724a487779490"
+			"before": "871f81769ef67a78c63cfc674e09f13097899effe4677f156a3613878c387640",
+			"after": "dcfa1be2d65da74f95172a227603a0370a0b9ff4f03ea1fadaad52d248fa5310"
 		},
 		"dist/core/compaction/branch-summarization.js": {
 			"before": "0327aead9ce78dab3c3c7e54779b5974ec41bcb769dd3024f0c61edcd9ebea7e",
@@ -116,19 +116,19 @@
 			"after": "b2dacb5a2b30f84648ec8987373508ffdef47671e3681744fd9e6dfd64efd2fb"
 		},
 		"dist/modes/interactive/interactive-mode.js": {
-			"before": "8c9275944466afe2df78dcf02f2f6c83f6bc46fb0fdbd7257a3ef9d1da1ed027",
-			"after": "2005d7d1fb0de92163f650e7627093b54ec29ea690366930556d79a273fce72e"
+			"before": "7dc366e8609d7d1e81fb85952e466aea9933b13e74842c2a9b9df678d267d12e",
+			"after": "da35d9fa123377a297df2a845cc93b7fa65dfdef925644ca350a3a598390dc37"
 		},
 		"dist/modes/interactive/interactive-mode.d.ts": {
-			"before": "462632cf8748c9c230f71b5787457a077a73fed8250c25ddd13a42a6dc520811",
-			"after": "e3e5eb318edb9b94821159a6ea94e615b0d3eb850075c177ce5251e7044d3771"
+			"before": "f4beb43004161ab6d38807c8641ff3e35c77cc3adfc513141654e37947b91f0c",
+			"after": "9b74c726b2d1b0eee985e5de82d1d623bd89a38c8b71f0cb4ea836a43d2aec4c"
 		},
 		"dist/core/slash-commands.js": {
 			"before": "3c4b7576c59d81e39e7dff4a847fdb51021fbea544a7880746018866a599f1e6",
 			"after": "cbc6f2510b6807d5baa81be79f80d24f159e7c8315491c505e024098952a61d6"
 		},
 		"dist/modes/interactive/bug-report.js": {
-			"before": "14dcb077ca77f73d92a784da2994fad1a2aa9c062a805765fdca15bf84cde771",
+			"before": "a367a8873f46cffba53868b314d34cc013269c0d6f2efda62893e8de57c6693e",
 			"after": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b"
 		}
 	},

@@ -155,7 +155,7 @@ test("unrecognized bytes are refused without overwriting them", async (t) => {
 	await mkdir(join(packageRoot, "dist/core/tools"), { recursive: true });
 	await writeFile(
 		join(packageRoot, "package.json"),
-		JSON.stringify({ name: "@earendil-works/pi-coding-agent", version: "0.86.1" }),
+		JSON.stringify({ name: "@earendil-works/pi-coding-agent", version: "0.87.1" }),
 	);
 	await writeFile(join(packageRoot, "dist/core/tools/path-utils.js"), "unrecognized");
 	await assert.rejects(applyPathUtils(packageRoot), /hash mismatch/);

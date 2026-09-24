@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"package": "@earendil-works/pi-coding-agent",
-	"version": "0.86.1",
+	"version": "0.87.1",
 	"files": {
 		"dist/core/tools/path-utils.js": {
 			"before": "76acb2622a7f4f54c871a553501340829580f0f9caad627e7dafb8aee8b449af",

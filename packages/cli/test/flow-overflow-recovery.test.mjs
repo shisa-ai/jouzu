@@ -46,6 +46,9 @@ for (const keepTail of [false, true])
 				{ text: "Later work finished." },
 			],
 		});
+		// Keep the assembled tool/system declarations below the threshold so this fixture
+		// isolates provider overflow recovery rather than pre-request threshold compaction.
+		await f.session.setModel({ ...f.session.model, contextWindow: 262144 });
 		await f.session.prompt("Establish earlier history.");
 		await f.session.prompt("Continue fixture work after an injected overflow.");
 		await f.session.waitForIdle();

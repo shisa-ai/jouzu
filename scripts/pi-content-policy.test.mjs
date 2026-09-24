@@ -62,7 +62,7 @@ test("patch is locked and idempotent; modified input never gets overwritten", as
 	try {
 		await writeFile(
 			join(directory, "package.json"),
-			JSON.stringify({ name: "@earendil-works/pi-coding-agent", version: "0.86.1" }),
+			JSON.stringify({ name: "@earendil-works/pi-coding-agent", version: "0.87.1" }),
 		);
 		await mkdir(join(directory, "dist"));
 		await writeFile(join(directory, "dist/main.js"), "unrecognized");
@@ -933,6 +933,14 @@ test("session listing skips a session a forced flush persisted before any messag
 	assert.equal(listed[0].firstMessage, "hello");
 	assert.equal((await SessionManager.list(directory, sessionDir, undefined, undefined, true)).length, 2);
 	assert.equal((await SessionManager.listAll(sessionDir, undefined, undefined, true)).length, 2);
+	// includeEmpty is this patch's own parameter, re-added after 0.87.1 dropped it. The picker keeps
+	// the default, so the metadata-only session stays listed only for a caller that asks for it.
+	const included = await SessionManager.list(directory, sessionDir, undefined, undefined, true);
+	assert.deepEqual(
+		included.map((session) => session.id).sort(),
+		[markerOnly.getSessionId(), withMessage.getSessionId()].sort(),
+	);
+	assert.equal(included.find((session) => session.id === markerOnly.getSessionId()).messageCount, 0);
 	const partials = [];
 	const progress = (_loaded, _total, sessions) => partials.push(...(sessions ?? []));
 	await SessionManager.list(directory, sessionDir, progress);

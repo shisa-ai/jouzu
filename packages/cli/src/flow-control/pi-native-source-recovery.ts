@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { ImageContent } from "@earendil-works/pi-ai";
-import { type AgentSession, type SessionManager, sessionEntryToContextMessages } from "@earendil-works/pi-coding-agent";
+import type { AgentSession, SessionManager } from "@earendil-works/pi-coding-agent";
 import type { NativeRequestSource } from "./native-request-store.js";
 import { verifyPiHistoryEntries } from "./pi-history-receipts.js";
 import { FlowLedgerError } from "./receipt-ledger.js";
@@ -93,22 +93,12 @@ export async function recoverNativeSources(
 			throw new FlowLedgerError("stale", "Native context changed during source recovery.");
 	};
 	assertCurrent();
-	let projected = manager
-		.buildContextEntries()
-		.flatMap((entry) => sessionEntryToContextMessages(entry).map((message) => ({ entry, message })));
+	const projected = manager
+		.buildSessionProjection()
+		.entries.flatMap(({ sourceEntry: entry, messages }) => messages.map((message) => ({ entry, message })));
 	const transcriptMessages = structuredClone(projected.map((item) => item.message));
-	// Pi retains a retriable terminal response in history but removes it from
-	// live context before continuing, including after overflow compaction.
-	// Permit that single omission only at a request boundary; every surviving
-	// message must still match the authoritative projection below.
-	const terminal = projected.at(-1)?.message;
-	if (
-		atRequestBoundary &&
-		projected.length === live.length + 1 &&
-		terminal?.role === "assistant" &&
-		(terminal.stopReason === "error" || terminal.stopReason === "length")
-	)
-		projected = projected.slice(0, -1);
+	// Pi persists recovery omissions as context edits. Use the same projection as
+	// request preparation, including omitted assistant and tool-result entries.
 	const messages = projected.map((item) => item.message);
 	// Pi timestamps a custom transcript entry separately from its live message.
 	// Compare every other field, then retain the exact live object and bytes.

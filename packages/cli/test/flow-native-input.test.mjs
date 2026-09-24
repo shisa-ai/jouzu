@@ -7,7 +7,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
-import { createFlowSession, deferred, tick } from "../../../scripts/fixtures/pi-flow-session.mjs";
+import { createFlowSession, deferred, pngImage, tick } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { PiNativeDispatch } from "../dist/flow-control/pi-native-dispatch.js";
 import { projectFlowSubmissions } from "../dist/flow-control/submission-view.js";
@@ -53,7 +53,7 @@ for (const handled of [false, true])
 				}));
 			},
 		]);
-		const images = [{ type: "image", data: "YQ==", mimeType: "image/png" }];
+		const images = [pngImage];
 		await f.session.prompt("original", { images });
 		const [record] = await f.attachment.submissions.snapshot();
 		assert.equal(transforms, 1);

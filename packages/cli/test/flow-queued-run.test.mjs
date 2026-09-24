@@ -49,7 +49,7 @@ test("another queued run cannot enter during native execution", async (t) => {
 
 test("a pending user transcript does not dispatch ahead of the selected queue item", async (t) => {
 	const { session, requests } = await createFlowSession(t);
-	session.agent.state.messages = [message("existing user input")];
+	session.sessionManager.appendMessage(message("existing user input"));
 	session.agent.followUp(message("retained work"));
 	await session.continueQueued();
 	assert.equal(requests.length, 1);
@@ -83,6 +83,27 @@ test("cancel during claim preserves newly queued user input without dispatching 
 	assert.equal(session.agent.inspectQueuedMessages()[0].id, user.id);
 	assert.equal(session.isIdle, true);
 });
+
+for (const initialized of [false, true])
+	test(`a denied initial queue claim settles without another poll: initialized=${initialized}`, async (t) => {
+		const { session, requests } = await createFlowSession(t);
+		if (initialized) await session.prompt("initial");
+		requests.length = 0;
+		let claims = 0;
+		session.agent.flowCheckpoints = {
+			beforeQueueClaim: () => {
+				claims++;
+				return false;
+			},
+		};
+		const queued = session.agent.followUp(message("held"));
+		await session.continueQueued();
+		assert.equal(claims, 1);
+		assert.equal(requests.length, 0);
+		assert.equal(session.agent.inspectQueuedMessages()[0].id, queued.id);
+		assert.equal(session.isIdle, true);
+		session.agent.clearAllQueues();
+	});
 
 test("queue additions from agent_end use the same AgentSession run", async (t) => {
 	const { session, requests } = await createFlowSession(t);

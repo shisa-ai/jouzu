@@ -121,7 +121,45 @@ export function transform(path, source) {
 			"return sortSessionInfos(results.filter((info) => info !== null));",
 			"return sortSessionInfos(results.filter((info) => info !== null && includeSession(info)));",
 		);
+		// A custom context message keeps the object Pi emitted for its entry. Pi 0.87 builds agent
+		// state from a session projection, and a projection that rebuilds the object would change
+		// identity that flow receipts and wait decisions bind to the message they observed. The marker
+		// is a shared symbol on the entry, so a second installed copy of the package still sees it.
+		change(
+			"export function sessionEntryToContextMessages(entry) {",
+			`const retainedCustomContextMessage = Symbol.for("jouzu.pi.retainedCustomContextMessage");
+export function retainCustomContextMessage(entry, message) {
+    Object.defineProperty(entry, retainedCustomContextMessage, {
+        value: { message, timestamp: entry.timestamp }, writable: true, configurable: true,
+    });
+}
+export function sessionEntryToContextMessages(entry) {`,
+		);
+		change(
+			`    if (entry.type === "custom_message") {
+        return [
+            createCustomMessage(entry.customType, entry.content ?? [], entry.display, entry.details, entry.timestamp),
+        ];
+    }`,
+			`    if (entry.type === "custom_message") {
+        const cached = entry[retainedCustomContextMessage];
+        const retained = cached?.message;
+        if (retained?.role === "custom" && cached.timestamp === entry.timestamp &&
+            retained.customType === entry.customType && retained.content === (entry.content ?? []) &&
+            retained.display === entry.display && retained.details === entry.details)
+            return [retained];
+        const message = createCustomMessage(entry.customType, entry.content ?? [], entry.display, entry.details, entry.timestamp);
+        retainCustomContextMessage(entry, message);
+        return [message];
+    }`,
+		);
 	} else if (path === "dist/core/session-manager.d.ts") {
+		// The idle custom-message append hands the flow the object Pi emitted for the new entry, so a
+		// receipt binds to the message the projection returns rather than to a predicted message.
+		change(
+			"    appendCustomMessageEntry<T = unknown>(customType: string, content: string | (TextContent | ImageContent)[], display: boolean, details?: T): string;",
+			"    appendCustomMessageEntry<T = unknown>(customType: string, content: string | (TextContent | ImageContent)[], display: boolean, details?: T, emitted?: AgentMessage): string;",
+		);
 		change(
 			"export declare class SessionManager {",
 			`export declare class SessionManager {
@@ -440,6 +478,30 @@ export function transform(path, source) {
 			"export interface CreateAgentSessionOptions {\n    contentPolicy?: ContentPolicy;\n    flowCheckpoints?: FlowCheckpoints;\n    flowIngress?: FlowIngress;",
 		);
 	} else if (path === "dist/core/agent-session.js") {
+		change(
+			'import { getLatestCompactionEntry, SessionManager, } from "./session-manager.js";',
+			'import { getLatestCompactionEntry, retainCustomContextMessage, SessionManager, } from "./session-manager.js";',
+		);
+		// The emitted object is the one the projection must return for this entry, so callers that
+		// bind receipts to a custom message keep the same object across a projection rebuild.
+		change(
+			`    _appendCustomMessage(appMessage) {
+        this.sessionManager.appendCustomMessageEntry(appMessage.customType, appMessage.content, appMessage.display, appMessage.details);
+        this._refreshFinalizedContext();`,
+			`    _appendCustomMessage(appMessage) {
+        const entryId = this.sessionManager.appendCustomMessageEntry(appMessage.customType, appMessage.content, appMessage.display, appMessage.details, appMessage);
+        const entry = this.sessionManager.getEntry(entryId);
+        if (entry)
+            retainCustomContextMessage(entry, appMessage);
+        this._refreshFinalizedContext();`,
+		);
+		change(
+			"                entryId = this.sessionManager.appendCustomMessageEntry(event.message.customType, event.message.content, event.message.display, event.message.details);",
+			`                entryId = this.sessionManager.appendCustomMessageEntry(event.message.customType, event.message.content, event.message.display, event.message.details);
+                const entry = this.sessionManager.getEntry(entryId);
+                if (entry)
+                    retainCustomContextMessage(entry, event.message);`,
+		);
 		text = `import { FlowIngressBinding } from "./jouzu-flow-ingress.js";\n${text}`;
 		change(
 			"        this._buildRuntime({\n            activeToolNames: this._initialActiveToolNames,",
@@ -481,7 +543,52 @@ export function transform(path, source) {
 		);
 		change(
 			"            await this.agent.prompt(messages);",
-			"            if (fromQueue) await this.agent.continueQueued();\n            else await this.agent.prompt(messages);",
+			"            if (fromQueue) {\n                if (!(await this.agent.continueQueued())) return;\n            } else await this.agent.prompt(messages);",
+		);
+		change(
+			`            while (!this._agentRunAbortRequested) {
+                if (await this._handlePostAgentRun()) {
+                    if (this._agentRunAbortRequested)
+                        break;
+                    await this.agent.continue();
+                    continue;
+                }
+                if (this._agentRunAbortRequested || !(await this._runBeforeSettleBoundary()))
+                    break;
+                if (this._agentRunAbortRequested)
+                    break;
+                await this.agent.continue();
+            }`,
+			`            while (!this._agentRunAbortRequested) {
+                if (await this._handlePostAgentRun()) {
+                    if (this._agentRunAbortRequested)
+                        break;
+                    if (!(await this._continueAgentRun()))
+                        break;
+                    continue;
+                }
+                if (this._agentRunAbortRequested || !(await this._runBeforeSettleBoundary()))
+                    break;
+                if (this._agentRunAbortRequested)
+                    break;
+                if (!(await this._continueAgentRun()))
+                    break;
+            }`,
+		);
+		change(
+			"    async _handlePostAgentRun() {",
+			`    async _continueAgentRun() {
+        // Queue claims can be withheld or cancelled while admission is awaited. Stop the
+        // session pass when nothing was consumed, including on an initialized transcript.
+        const messages = this.agent.state.messages;
+        const last = messages[messages.length - 1];
+        if (this.agent.hasQueuedMessages() &&
+            (last?.role === "assistant" || !messages.some((message) => message.role !== "system")))
+            return await this.agent.continueQueued();
+        await this.agent.continue();
+        return true;
+    }
+    async _handlePostAgentRun() {`,
 		);
 		change(
 			"            await command.handler(args, ctx);",
@@ -608,7 +715,7 @@ export function transform(path, source) {
             }`,
 		);
 		change(
-			"        // Notify all listeners\n",
+			"        // Emit to extensions first, then notify public listeners.\n        await this._emitExtensionEvent(event);\n",
 			`        if (event.type === "message_end" && this.resourceLoader.contentPolicy) {
             const policy = this.resourceLoader.contentPolicy;
             // A cancelled run, or a source the policy does not inspect, keeps its message instead
@@ -639,7 +746,8 @@ export function transform(path, source) {
                 }
             }
         }
-        // Notify all listeners
+        // Emit to extensions first, then notify public listeners.
+        await this._emitExtensionEvent(event);
 `,
 		);
 		change(
@@ -665,6 +773,7 @@ export function transform(path, source) {
 			"    private _runAgentPrompt;",
 			"    /** Drain queued input through native retries, compaction, and settlement without appending a prompt. */\n    continueQueued(): Promise<boolean>;\n    private _runAgentPrompt;",
 		);
+		change("    private _handlePostAgentRun;", "    private _handlePostAgentRun;\n    private _continueAgentRun;");
 		change(
 			"export interface AgentSessionConfig {",
 			"export interface AgentSessionConfig {\n    flowIngress?: FlowIngress;",

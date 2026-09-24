@@ -100,7 +100,7 @@ test("unrecognized core bytes are refused without overwriting them", async (t) =
 		join(core, "package.json"),
 		JSON.stringify({
 			name: "@earendil-works/pi-agent-core",
-			version: "0.86.1",
+			version: "0.87.1",
 			exports: { "./package.json": "./package.json" },
 		}),
 	);
@@ -124,6 +124,23 @@ test("native queue identities distinguish duplicate text and images and cancel e
 	assert.equal(requests.length, 1);
 	assert.equal(requests[0].at(-1).content[0].text, "same");
 	assert.equal(requests[0].at(-1).content[1].data, "aGVsbG8=");
+	assert.deepEqual(agent.inspectQueuedMessages(), []);
+});
+
+test("upstream queue readers see queued messages, not claim entries", async () => {
+	const { agent } = agentFixture();
+	const prompt = message("queued");
+	agent.followUp(prompt);
+	// The replacement stores a claim entry per message so cancellation and editing can address a
+	// revision. Every reader Pi already had must still see the message itself.
+	assert.deepEqual(agent.peekQueuedMessages(), [message("queued")]);
+	assert.equal(agent.hasQueuedMessages(), true);
+	const [claimed] = agent.inspectQueuedMessages();
+	assert.equal(claimed.id.length > 0, true);
+	assert.equal(claimed.revision, 1);
+	agent.clearAllQueues();
+	assert.deepEqual(agent.peekQueuedMessages(), []);
+	assert.equal(agent.hasQueuedMessages(), false);
 	assert.deepEqual(agent.inspectQueuedMessages(), []);
 });
 

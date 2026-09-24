@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"package": "@earendil-works/pi-ai",
-	"version": "0.86.1",
+	"version": "0.87.1",
 	"files": {
 		"dist/api/transform-messages.js": {
 			"before": "9d747a3d64c533f7bfaf2a66e8446dc006086559d364a09d4c51d1c8c9c332e5",
@@ -12,16 +12,16 @@
 			"after": "2ec467e677671686920989db787fb750a9cb452ea1d8f40fa74aeba9928a8b3f"
 		},
 		"dist/api/openai-completions.js": {
-			"before": "a28f7e767f2ead3c95b8c8558174ec14072289448b243d2093363a210469591f",
-			"after": "a4099e5ba0966060a7a1fa44839ca94bf0a67c90dbd0d332ded9e9d4e711d40a"
+			"before": "a2397cb3114a3d1a05993f6f19671ecbcc85540d8f8c59a233808c717df2682c",
+			"after": "c78fdf0e4dba9679b364a981479963407b3f6f9fa55e26911ef6dad45cb7eaf6"
 		},
 		"dist/api/openai-completions.d.ts": {
 			"before": "552baa4343275a20df53734e5aa12f46cb8648ca28421adf1318b199eae69a05",
 			"after": "b6eccdaa2d0b9796728d4f8c3b922713862dac056d331f3b0b530ea57d9cfd95"
 		},
 		"dist/types.d.ts": {
-			"before": "2527dc035a85e40708478ba1349f35cf7e71c64c4ba50ae547a4188950b1b22b",
-			"after": "e29266c2dd55ba51c10c4e2b9857c210e6d8b9c40fb445df82c5abf5171e1b54"
+			"before": "5e08c1db4740b95b7107d3c3540a6d0e414a82d9c75fab950150827c994e14a3",
+			"after": "0b31559dfb2a686e44feaa763eff22587da128efa6ffbc83f841514c7cdf38e1"
 		},
 		"dist/api/simple-options.js": {
 			"before": "1caf860e028e22639578aba3ec8b79e5be9650c27bd3f19471c78502976555f3",
@@ -40,8 +40,8 @@
 			"after": "83cceb0c6ad6b48103f349c6137e1f48c26a1fa7f6b9f240261aebb53bbc8817"
 		},
 		"dist/api/anthropic-messages.js": {
-			"before": "54f32708dc88d951d4c1aacd9e2e531da098967cb61b98a726b43e99277e7754",
-			"after": "fd79e92109ae34af605ffbaf122992830b95653aae3c28e4c258572be54f5291"
+			"before": "97de17d406264322ff7927fa0c20e1c61b46386b5e14f9c6e0012599c01664f7",
+			"after": "7cc2b81e7cdd5bb5b96b64cdd4bc74f858e7f3b364dd3b12d08c6d5d467cb055"
 		},
 		"dist/api/google-generative-ai.js": {
 			"before": "e2ebaeb55a99deded745b2ae0c8f3ca420c425d9cab0824ceb3b56224fe0efcf",

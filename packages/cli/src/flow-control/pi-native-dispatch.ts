@@ -115,21 +115,27 @@ export class PiNativeDispatch {
 		});
 		const manager = session.sessionManager;
 		const append = manager.appendCustomMessageEntry.bind(manager);
-		this.hooks.set(manager, "appendCustomMessageEntry", (customType, content, display, details) => {
+		this.hooks.set(manager, "appendCustomMessageEntry", (customType, content, display, details, emitted) => {
 			const frame = this.frame();
 			if (!frame?.context) return append(customType, content, display, details);
-			const message = session.agent.state.messages.at(-1);
-			if (
-				message?.role !== "custom" ||
-				message.customType !== customType ||
-				message.content !== content ||
-				message.display !== display ||
-				!isDeepStrictEqual(message.details, details)
-			)
-				throw new FlowLedgerError("identity", "Non-waking context differs from its native append.");
 			const observed = frame.contextInput;
-			if (!observed || !isDeepStrictEqual({ ...message, timestamp: 0 }, observed.message))
+			// Pi 0.87 builds agent state from the session projection, so the appended message is not in
+			// state yet and a refresh rebuilds its object. The idle append passes the object it emitted,
+			// which the projection retains; compare the fields it persists against the message the
+			// observation reviewed so the receipt binds to a message the flow actually saw.
+			if (!observed) throw new FlowLedgerError("identity", "Unexpected non-waking context append.");
+			const observedMessage = observed.message;
+			if (
+				observedMessage.role !== "custom" ||
+				observedMessage.customType !== customType ||
+				!isDeepStrictEqual(observedMessage.content, content) ||
+				observedMessage.display !== display ||
+				!isDeepStrictEqual(observedMessage.details, details)
+			)
 				throw new FlowLedgerError("identity", "Non-waking context differs from its retained input.");
+			if (!emitted || !isDeepStrictEqual({ ...emitted, timestamp: 0 }, observedMessage))
+				throw new FlowLedgerError("identity", "Non-waking emitted context differs from its retained input.");
+			const message = emitted;
 			frame.contextInput = undefined;
 			const entryId = append(customType, content, display, details);
 			const write = this.history.recordContext(session, store, frame.operationId, observed.index, message, entryId);

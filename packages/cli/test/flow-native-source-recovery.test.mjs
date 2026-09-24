@@ -97,24 +97,34 @@ test("native source recovery respects Pi compaction context selection", async (t
 });
 
 for (const stopReason of ["error", "length"]) {
-	test(`request recovery accepts Pi's omitted terminal ${stopReason} after compaction`, async (t) => {
+	test(`request recovery accepts Pi's persisted ${stopReason} omissions after compaction`, async (t) => {
 		const f = await nativeRequests(t, { retainInputs: true });
 		await f.session.prompt("kept input");
 		const [record] = await f.attachment.submissions.snapshot();
 		const terminal = { ...f.session.agent.state.messages.at(-1), stopReason };
-		f.session.sessionManager.appendMessage(terminal);
+		const terminalId = f.session.sessionManager.appendMessage(terminal);
+		const resultId = f.session.sessionManager.appendMessage({
+			role: "toolResult",
+			toolCallId: "recovery-tool",
+			toolName: "fixture",
+			content: [{ type: "text", text: "failed attempt result" }],
+			isError: true,
+			timestamp: 1,
+		});
 		f.session.sessionManager.appendCompaction("summary", record.dispatch.promptHistory[0].entryId, 100);
-		const projected = f.session.sessionManager.buildSessionContext().messages;
-		// Pi restores the persisted failure during compaction, then removes it before continue().
-		f.session.agent.state.messages = projected.slice(0, -1);
+		f.session.sessionManager.appendContextEdit(terminalId, null);
+		f.session.sessionManager.appendContextEdit(resultId, null);
+		// Pi 0.87 persists recovery omissions and refreshes state from that projection.
+		f.session.agent.state.messages = f.session.sessionManager.buildSessionProjection().messages;
 		const live = f.session.agent.state.messages;
-		await assert.rejects(recoverNativeSources(f.session, f.attachment.submissions), { code: "identity" });
 		const recovered = await recoverNativeSources(f.session, f.attachment.submissions, true);
 		assert.equal(recovered.recovered, 1);
 		assert.equal(recovered.unresolved, 0);
 		assert.equal(recovered.apply().get(live.find((message) => message.role === "user")).length, 1);
 		assert.equal(f.session.agent.state.messages, live);
-		assert.equal(f.session.sessionManager.buildSessionContext().messages.at(-1).stopReason, stopReason);
+		assert.equal(f.session.sessionManager.getEntry(terminalId).message.stopReason, stopReason);
+		assert.equal(f.session.sessionManager.getEntry(resultId).message.role, "toolResult");
+		assert.ok(!live.some((message) => message === terminal || message.toolCallId === "recovery-tool"));
 		live.find((message) => message.role === "user").content[0].text = "changed input";
 		await assert.rejects(recoverNativeSources(f.session, f.attachment.submissions, true), { code: "identity" });
 	});

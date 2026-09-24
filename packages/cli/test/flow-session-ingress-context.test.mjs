@@ -25,6 +25,19 @@ test("idle non-waking custom context persists with native source identity and no
 	assert.ok(JSON.stringify(f.sent).includes("remember this"));
 });
 
+for (const content of [[], [{ type: "text", text: "structured context" }]])
+	test(`non-waking structured context binds the emitted message: parts=${content.length}`, async (t) => {
+		const f = await fixture(t, { admit: null });
+		await f.session.sendCustomMessage({ customType: "note", content, display: false }, { triggerTurn: false });
+		assert.equal(f.sent.length, 0);
+		const [record] = await f.ingress.branch().attachment.submissions.snapshot();
+		assert.equal(record.dispatch.phase, "returned");
+		assert.equal(record.dispatch.promptHistory.length, 1);
+		assert.equal((await f.ingress.branch().native.sources(f.session.agent.state.messages)).length, 1);
+		await f.session.prompt("continue");
+		assert.equal(f.sent.length, 1);
+	});
+
 test("non-waking context restores its source identity after reopen", async (t) => {
 	const first = await fixture(t, { admit: null });
 	await first.session.sendCustomMessage(

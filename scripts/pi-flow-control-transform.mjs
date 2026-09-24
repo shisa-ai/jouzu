@@ -49,20 +49,24 @@ export function transform(path, source) {
     }`,
 		);
 		change(
-			`    drain() {
-        if (this.mode === "all") {
-            const drained = this.messages.slice();
-            this.messages = [];
-            return drained;
-        }
+			`    peek() {
+        if (this.mode === "all")
+            return this.messages.slice();
         const first = this.messages[0];
-        if (!first) {
-            return [];
-        }
-        this.messages = this.messages.slice(1);
-        return [first];
+        return first ? [first] : [];
+    }
+    drain() {
+        const drained = this.peek();
+        this.messages = this.messages.slice(drained.length);
+        return drained;
     }`,
-			`    async drain(signal) {
+			`    peek() {
+        // Callers outside this class see queued messages, not the claim entry that carries
+        // the identity and revision used for cancellation and editing.
+        const selected = this.mode === "all" ? this.messages.slice() : this.messages.slice(0, 1);
+        return selected.map((item) => item.message);
+    }
+    async drain(signal) {
         if (this.claiming || signal?.aborted) return [];
         const candidates = this.mode === "all" ? this.messages.slice() : this.messages.slice(0, 1);
         if (candidates.length === 0) return [];
@@ -140,14 +144,17 @@ export function transform(path, source) {
 			"    normalizePromptInput(input, images) {",
 			`    async continueQueued() {
         // Own the run before awaiting queue admission, including an empty transcript.
+        let consumed = false;
         await this.runWithLifecycle(async (signal) => {
             const steering = await this.steeringQueue.drain(signal);
             const prompts = steering.length > 0 ? steering : await this.followUpQueue.drain(signal);
             if (prompts.length === 0) return;
+            consumed = true;
             await runAgentLoop(prompts, this.createContextSnapshot(),
                 this.createLoopConfig({ skipInitialSteeringPoll: steering.length > 0 }),
                 (event) => this.processEvents(event), signal, this.streamFunction);
         });
+        return consumed;
     }
     normalizePromptInput(input, images) {`,
 		);
@@ -181,7 +188,7 @@ export function transform(path, source) {
     const response = await streamFunction(config.model, llmContext, {`,
 		);
 	} else if (path === "dist/agent.d.ts") {
-		change("    continue(): Promise<void>;", "    continue(): Promise<void>;\n    continueQueued(): Promise<void>;");
+		change("    continue(): Promise<void>;", "    continue(): Promise<void>;\n    continueQueued(): Promise<boolean>;");
 		text = `import type { FlowCheckpoints, FlowQueuedMessage, FlowQueueChange } from "./jouzu-flow.js";\nexport type { FlowCheckpoints, FlowQueuedMessage, FlowQueueChange, FlowRequestInput, FlowQueueClaim } from "./jouzu-flow.js";\n${text}`;
 		change(
 			"export interface AgentOptions {",

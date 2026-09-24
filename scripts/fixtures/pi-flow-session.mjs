@@ -40,6 +40,11 @@ export const assistant = () => ({
 	stopReason: "stop",
 	timestamp: 1,
 });
+export const pngImage = {
+	type: "image",
+	mimeType: "image/png",
+	data: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP4z8AAAAMBAQDJ/pLvAAAAAElFTkSuQmCC",
+};
 export const message = (text = "same") => ({ role: "user", content: [{ type: "text", text }], timestamp: 1 });
 export const tick = () => new Promise((resolve) => setImmediate(resolve));
 export function deferred() {

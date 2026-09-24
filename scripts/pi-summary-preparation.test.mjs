@@ -135,7 +135,8 @@ test("summary preparation runs separately on history and split-turn prefix throu
 	assert.equal(probe.sources[0][1], preparation.messagesToSummarize[1]);
 	assert.equal(probe.sources[1][1], preparation.turnPrefixMessages[1]);
 	for (const prompt of probe.prompts) assert.match(prompt, unknownOutcome);
-	assert.match(probe.prompts[1], /PREFIX of a turn/);
+	// Pi 0.87.1 reworded the turn-prefix prompt; this phrase is unique to it.
+	assert.match(probe.prompts[1], /placed before the later messages/);
 	assert.deepEqual(preparation, snapshot);
 });
 

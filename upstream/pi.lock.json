@@ -1,37 +1,37 @@
 {
 	"schemaVersion": 2,
 	"repository": "https://github.com/earendil-works/pi",
-	"tag": "v0.86.1",
-	"tagCommit": "13cbf77df2396303013a41646bcfa77b4271ae56",
-	"commit": "13cbf77df2396303013a41646bcfa77b4271ae56",
+	"tag": "v0.87.1",
+	"tagCommit": "f07218c4d4bbc12bef056a7058c3dd49dfe41abe",
+	"commit": "f07218c4d4bbc12bef056a7058c3dd49dfe41abe",
 	"packages": {
 		"@earendil-works/pi-coding-agent": {
-			"version": "0.86.1",
-			"integrity": "sha512-vZBuNfJnruxZyemZ3O05V0S/Ylze08ahFTIQ1Mik++gVdOevPl89gt/Uv0U97BPAJaj9cj6Vf9rcIgKtUrd0BA=="
+			"version": "0.87.1",
+			"integrity": "sha512-m8ArJUtVcQMSe1lLE/Ei7vX/JV7O39sWmWBsXV2NOU70F0qCp8GubA24pT3LnwTmM6LL2xV80/h6sQg85n69ew=="
 		},
 		"@earendil-works/pi-server": {
-			"version": "0.86.1",
-			"integrity": "sha512-fyevzqjuOQjqtKX1igY7i59cqHpIlGVQ+idHEtzZGScvaIKaXufZIjYqdxXG41J8fjasH7MS5OBD9ix0s5nnmQ=="
+			"version": "0.87.1",
+			"integrity": "sha512-EZYQ6mSOv7IyDcWoBflNGJcyIBjTnQY9W4z1tF3vOMY5xbksHOsVVzU9Kh49z8iIXGYNawKZSyjaWi9OJjO7Sw=="
 		}
 	},
-	"reviewedAt": "2026-09-20",
+	"reviewedAt": "2026-09-24",
 	"compatibilityStatus": "qualified",
 	"deviations": [
 		{
 			"path": "upstream/pi-content-policy/patch.lock.json",
-			"sha256": "32b5fe8ce275416db698255d9ea08cc51fff61bc25949ff076f0ac06cb532ada"
+			"sha256": "19d05c2126c282e457d056609c694f427d2d63358b6efbe656ae464324b06f31"
 		},
 		{
 			"path": "upstream/pi-flow-control/patch.lock.json",
-			"sha256": "85d1604951c086f6476d405545703f7f4dd897fcc8dd13ab2f2d39274fdb5e91"
+			"sha256": "7529715d3e355d86b2f16ba9dfce1baf0f13fca32f24d789f8ff5c1cd0fa0cf7"
 		},
 		{
 			"path": "upstream/pi-provider-receipts/patch.lock.json",
-			"sha256": "8e567fa5f1e0676120c1a17d141764224d144d8867ab403a1609e4989dc527e4"
+			"sha256": "38b117bcda0f96f5d26e2c9396cf371092c60b614996e32745dbf4b0c5f17d82"
 		},
 		{
 			"path": "upstream/pi-path-utils/patch.lock.json",
-			"sha256": "17421156d6e25787a0e4f7578678836fff682ed782fe04ac8a5e973ef49d5b1e"
+			"sha256": "df5c42bfede3ba9b0e28d56bc7a48eb4331b913d9e4d7dcbbfa01e06b9c2c21e"
 		},
 		{
 			"path": "upstream/background-flow/patch.lock.json",
