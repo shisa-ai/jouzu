@@ -6,9 +6,10 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { setTimeout as delay } from "node:timers/promises";
+import { pathDigest } from "../dist/path-digest.js";
 import { acquireProcessLock } from "../dist/process-lock.js";
 import { SubagentManager } from "../dist/subagents/manager.js";
-import { defaultAgentConfig, digest } from "../dist/subagents/roles.js";
+import { defaultAgentConfig } from "../dist/subagents/roles.js";
 
 const holder = new URL("./fixtures/process-lock-holder.mjs", import.meta.url);
 
@@ -30,8 +31,8 @@ for (const kind of ["owner", "workspace"]) {
 		const paths = { cwd: root, stateDir: join(root, "state") };
 		const path =
 			kind === "owner"
-				? join(paths.stateDir, "subagents", digest("parent"), "owner.sqlite")
-				: join(paths.stateDir, "subagent-writers", `${digest(root)}.sqlite`);
+				? join(paths.stateDir, "subagents", pathDigest("parent"), "owner.sqlite")
+				: join(paths.stateDir, "subagent-writers", `${pathDigest(root)}.sqlite`);
 		mkdirSync(dirname(path), { recursive: true });
 		let starts = 0;
 		const manager = new SubagentManager(paths, "parent", 1, (_launch, _emit, exit) => {
@@ -78,7 +79,7 @@ for (const kind of ["owner", "workspace"]) {
 test("a damaged workspace lock fails the run without starting a worker or retrying", async () => {
 	const root = realpathSync(mkdtempSync(join(tmpdir(), "jouzu-lock-damaged-")));
 	const paths = { cwd: root, stateDir: join(root, "state") };
-	const path = join(paths.stateDir, "subagent-writers", `${digest(root)}.sqlite`);
+	const path = join(paths.stateDir, "subagent-writers", `${pathDigest(root)}.sqlite`);
 	mkdirSync(dirname(path), { recursive: true });
 	writeFileSync(path, "damaged database");
 	let starts = 0;
@@ -108,7 +109,7 @@ test("a damaged workspace lock fails the run without starting a worker or retryi
 		assert.equal(completions.length, 1);
 		assert.equal(completions[0].id, run.id);
 		const saved = JSON.parse(
-			readFileSync(join(paths.stateDir, "subagents", digest("parent"), run.id, "run.json"), "utf8"),
+			readFileSync(join(paths.stateDir, "subagents", pathDigest("parent"), run.id, "run.json"), "utf8"),
 		);
 		assert.equal(saved.status, "failed");
 		assert.equal(saved.result, run.result);
@@ -168,13 +169,13 @@ test("a failed writer-lock release fails completed and queued runs and rejects f
 			assert.match(finished.result, /Process lock release failed; restart Jouzu/);
 			assert.match(finished.result, /Injected release failure/);
 			const saved = JSON.parse(
-				readFileSync(join(paths.stateDir, "subagents", digest("parent"), run.id, "run.json"), "utf8"),
+				readFileSync(join(paths.stateDir, "subagents", pathDigest("parent"), run.id, "run.json"), "utf8"),
 			);
 			assert.equal(saved.status, "failed");
 		}
 		assert.equal(completions.length, 2);
 		assert.throws(() => manager.launch(launch), /Process lock release failed/);
-		assert.throws(() => acquireProcessLock(join(paths.stateDir, "subagent-writers", `${digest(root)}.sqlite`)), {
+		assert.throws(() => acquireProcessLock(join(paths.stateDir, "subagent-writers", `${pathDigest(root)}.sqlite`)), {
 			reason: "busy",
 		});
 		await assert.rejects(manager.dispose(), /Process lock release failed/);
@@ -199,7 +200,7 @@ test("a failed owner-lock release rejects disposal and retains ownership", async
 	try {
 		await assert.rejects(manager.dispose(), /Injected owner close failure/);
 		await assert.rejects(manager.dispose(), /Injected owner close failure/);
-		assert.throws(() => acquireProcessLock(join(paths.stateDir, "subagents", digest("parent"), "owner.sqlite")), {
+		assert.throws(() => acquireProcessLock(join(paths.stateDir, "subagents", pathDigest("parent"), "owner.sqlite")), {
 			reason: "busy",
 		});
 	} finally {
@@ -212,7 +213,7 @@ test("a failed owner-lock release rejects disposal and retains ownership", async
 test("a leftover lock file from an earlier protocol does not block subagent ownership", async () => {
 	const root = realpathSync(mkdtempSync(join(tmpdir(), "jouzu-lock-leftover-")));
 	const paths = { cwd: root, stateDir: join(root, "state") };
-	const directory = join(paths.stateDir, "subagents", digest("parent"));
+	const directory = join(paths.stateDir, "subagents", pathDigest("parent"));
 	mkdirSync(directory, { recursive: true });
 	writeFileSync(join(directory, "owner.sqlite"), "");
 	writeFileSync(
@@ -226,4 +227,26 @@ test("a leftover lock file from an earlier protocol does not block subagent owne
 		await manager.dispose();
 		rmSync(root, { recursive: true, force: true });
 	}
+});
+
+test("a child's flow storage path stays inside the Windows SQLite limit", () => {
+	// SQLite on Windows fails with SQLITE_CANTOPEN once a path reaches roughly
+	// 250 characters, even though node:fs reaches longer paths through \\?\.
+	// The default Windows state root is %LOCALAPPDATA%\Jouzu\state, and a child
+	// nests its flow storage several digests below it.
+	const stateDir = "C:\\Users\\example\\AppData\\Local\\Jouzu\\state";
+	const childDirectory = join(
+		stateDir,
+		"subagents",
+		pathDigest("parent-session"),
+		"3f0f2b1c-9d4e-4a5b-8c6d-7e8f9a0b1c2d",
+	);
+	const lockPath = join(
+		childDirectory,
+		"flow",
+		"session-registry-v1",
+		pathDigest(["parent", "branch"]),
+		"owner.sqlite",
+	);
+	assert.ok(lockPath.length < 250, `child flow lock path is ${lockPath.length} characters: ${lockPath}`);
 });

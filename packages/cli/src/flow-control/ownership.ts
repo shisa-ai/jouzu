@@ -1,7 +1,8 @@
 import { AsyncLocalStorage } from "node:async_hooks";
-import { createHash, randomUUID } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import { realpathSync } from "node:fs";
 import { join } from "node:path";
+import { pathDigest } from "../path-digest.js";
 import { ensurePrivateDirectory } from "../private-fs.js";
 import { acquireProcessLock, type ProcessLock, ProcessLockError } from "../process-lock.js";
 import type { FlowScope } from "./receipt-ledger.js";
@@ -51,9 +52,7 @@ export class FlowOwnership {
 		let lock: ProcessLock | undefined;
 		try {
 			ensurePrivateDirectory(root);
-			const key = createHash("sha256")
-				.update(JSON.stringify([scope.sessionId, scope.branchId]))
-				.digest("hex");
+			const key = pathDigest([scope.sessionId, scope.branchId]);
 			const directory = join(realpathSync(root), key);
 			// The digest is one directory component. Creating it as a root uses
 			// recursive mkdir (safe under a competing create) and validates it.

@@ -5,8 +5,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { notificationHash } from "../dist/notifications/inbox.js";
+import { pathDigest } from "../dist/path-digest.js";
 import { createWorkflowIntegration } from "../dist/subagents/integration.js";
-import { digest } from "../dist/subagents/roles.js";
 
 function fixture(realWorker = false, options = {}) {
 	const root = realpathSync(mkdtempSync(join(tmpdir(), "jouzu-agent-integration-")));
@@ -935,7 +935,7 @@ for (const legacy of [false, true]) {
 			f.workers[0].exit(true);
 			await f.shutdown();
 			if (legacy) {
-				const file = join(f.paths.stateDir, "subagents", digest("parent"), run.id, "run.json");
+				const file = join(f.paths.stateDir, "subagents", pathDigest("parent"), run.id, "run.json");
 				const saved = JSON.parse(readFileSync(file, "utf8"));
 				delete saved.completion;
 				writeFileSync(file, JSON.stringify(saved));

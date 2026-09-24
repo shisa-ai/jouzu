@@ -23,6 +23,7 @@
 
 ### Fixed
 
+- Keep a child's flow storage inside the path length SQLite can open on Windows. A child nests a run identifier and two identity digests below the state root, which put its lock file past the roughly 250-character limit SQLite enforces there even though the filesystem allows longer paths, so no subagent could start. Identity digests used as path components are now 128-bit; the directory layout is otherwise unchanged.
 - Read the placeholders a strict provider forces into optional `agent_wait` fields as the omission they stand for: explicit `null`, an empty string, and the documented `none` sentinel for `replaceToken`. Required fields, unknown-field rejection, and placeholder-token refusal are unchanged, and callers that do not opt in keep the strict default.
 - Name the live wait token in the redeclare refusal, so a caller whose context no longer holds the earlier receipt can copy the token it must replace instead of being told only to copy it.
 - Drop an inapplicable `checkAfter` rather than refusing the declaration, and distinguish a token belonging to another work from one that names no live wait. A rejection survives history pruning.

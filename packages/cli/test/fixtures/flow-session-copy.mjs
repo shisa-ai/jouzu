@@ -6,7 +6,8 @@ import { join } from "node:path";
 const digest = (sessionId, branchId) =>
 	createHash("sha256")
 		.update(JSON.stringify([sessionId, branchId]))
-		.digest("hex");
+		.digest("hex")
+		.slice(0, 32);
 
 async function journal(directory) {
 	const files = [];

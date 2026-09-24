@@ -13,6 +13,7 @@ import {
 } from "node:fs";
 import { dirname, isAbsolute, join, relative, sep } from "node:path";
 import type { NotificationRecord } from "../notifications/inbox.js";
+import { pathDigest } from "../path-digest.js";
 import type { JouzuPaths } from "../paths.js";
 import { ensurePrivateDirectory, writeFilePrivateAtomic } from "../private-fs.js";
 import { acquireProcessLock, type ProcessLock, ProcessLockError } from "../process-lock.js";
@@ -250,7 +251,7 @@ export class SubagentManager {
 		private readonly factory: WorkerFactory = processWorker,
 		private readonly onComplete?: (run: AgentRun) => void,
 	) {
-		this.root = join(paths.stateDir, "subagents", digest(parentSessionId));
+		this.root = join(paths.stateDir, "subagents", pathDigest(parentSessionId));
 		if (!existsSync(this.root)) return;
 		for (const id of readdirSync(this.root)) {
 			if (!/^[a-f0-9-]{36}$/.test(id)) continue;
@@ -501,7 +502,7 @@ export class SubagentManager {
 				try {
 					// Serialize workspace writers across parent sessions as well.
 					if (roleCanWrite(run.role))
-						lock = acquireProcessLock(join(this.paths.stateDir, "subagent-writers", `${digest(run.cwd)}.sqlite`));
+						lock = acquireProcessLock(join(this.paths.stateDir, "subagent-writers", `${pathDigest(run.cwd)}.sqlite`));
 				} catch (error) {
 					if (error instanceof ProcessLockError && error.reason === "busy") continue;
 					this.pending.delete(id);
