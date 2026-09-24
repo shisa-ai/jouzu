@@ -71,6 +71,20 @@ Tool results and completion messages show a themed summary of role, model, statu
 
 **Runs** provides output reading, messaging, Stop, and Resume. Stop requests tool cancellation, then forces process cleanup after a grace period. Files already written remain. Resume starts another run using the original role revision, exact provider/model, workspace, and saved child conversation. Use a new launch for a fresh context or changed definition.
 
+## Session traces
+
+Use `subagent` with `op: "trace"` to inspect saved conversation entries. Supply a run `id` for a child, or omit it for the parent session:
+
+```json
+{"op":"trace","id":"<run-id>","kind":"tools","limit":20}
+{"op":"trace","query":"parser decision"}
+{"op":"trace","entryId":"<entry-id>"}
+```
+
+`kind` accepts `all`, `messages`, `tools`, `errors`, or `compaction`. `query` is a case-insensitive literal search. Results include entry IDs, text, tool-call arguments and linked results, and compaction summaries; thinking blocks and images are excluded. The trace reads the saved file without migrating or rewriting it and can include entries from other branches of that session.
+
+Each call scans at most 8 MiB and returns at most 100 records with a response bounded to 48 KB. Large records contain a UTF-8-safe preview. Continue with `nextOffset`, a JSONL byte cursor, using the same filters. A partial last line returns a retry cursor; malformed complete lines report an error. A single entry larger than the scan budget may require direct file inspection. Trace remains available when subagents are disabled and does not acknowledge completion notifications; use `read` or the delivered batch's acknowledgement instead.
+
 ## Assignment guidance
 
 Core and JA include the `jouzu-delegation` skill for writing launch assignments, steering messages, and resume handoffs. The default prompt routes the parent to it when both the skill and `subagent` tool are available. You can also load it with `/skill:jouzu-delegation`.

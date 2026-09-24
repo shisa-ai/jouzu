@@ -19,6 +19,7 @@ import { acquireProcessLock, type ProcessLock, ProcessLockError } from "../proce
 import type { WorkerCommand, WorkerEvent, WorkerLaunch } from "./protocol.js";
 import { captureReviewCandidate, type ReviewCandidate } from "./review.js";
 import { type AgentRole, digest, parseAgentConfig } from "./roles.js";
+import { readSessionTrace, type TracePage, type TraceQuery } from "./trace.js";
 
 export type RunStatus = "queued" | "starting" | "running" | "completed" | "failed" | "cancelled" | "interrupted";
 export interface AgentRun {
@@ -355,6 +356,14 @@ export class SubagentManager {
 		} finally {
 			closeSync(fd);
 		}
+	}
+	async trace(id: string, options?: TraceQuery): Promise<TracePage> {
+		const run = this.get(id);
+		if (!run.sessionFile)
+			return { records: [], nextOffset: null, totalBytes: 0, notice: "No saved child messages yet." };
+		if (!existsSync(run.sessionFile) || !this.containsSession(run.sessionFile))
+			throw new Error("Trace: the saved child session is unavailable.");
+		return readSessionTrace(run.sessionFile, options);
 	}
 	launch(launch: Omit<WorkerLaunch, "directory">, parentEntryId?: string, previousRunId?: string): AgentRun {
 		this.acquireOwner();

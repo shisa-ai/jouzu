@@ -36,6 +36,7 @@ import {
 	resolveAgentModel,
 	SAME_MODEL,
 } from "./roles.js";
+import { readSessionTrace, type TraceQuery } from "./trace.js";
 import { resolveWorkspace } from "./workspace.js";
 
 export interface WorkflowService {
@@ -46,6 +47,7 @@ export interface WorkflowService {
 	models(): AgentModel[];
 	runs(): AgentRun[];
 	read(id: string, offset?: number): { text: string; nextOffset: number | null; totalBytes: number };
+	trace(id?: string, options?: TraceQuery): ReturnType<typeof readSessionTrace>;
 	launch(roleId: string, task: string, options?: { workspace?: string }): Promise<AgentRun>;
 	resume(id: string, task: string): Promise<AgentRun>;
 	steer(id: string, text: string): string;
@@ -200,6 +202,12 @@ export function createWorkflowIntegration(
 		models: availableModels,
 		runs: () => manager?.list() ?? [],
 		read: (id, offset) => controller().read(id, offset),
+		trace: (id, options) => {
+			if (id) return controller().trace(id, options);
+			const file = context().sessionManager.getSessionFile();
+			if (!file) throw new Error("Trace: the parent session has no saved transcript yet.");
+			return readSessionTrace(file, options);
+		},
 		async launch(id, task, options) {
 			requireSubagents();
 			return dispatch(roleById(id), task, undefined, undefined, options?.workspace);
@@ -422,7 +430,10 @@ export function createWorkflowIntegration(
 			const schema = {
 				type: "object",
 				properties: {
-					op: { type: "string", enum: ["roles", "launch", "list", "read", "steer", "stop", "resume", "acknowledge"] },
+					op: {
+						type: "string",
+						enum: ["roles", "launch", "list", "read", "trace", "steer", "stop", "resume", "acknowledge"],
+					},
 					role: { type: "string", description: "Role ID from op:roles." },
 					batchId: {
 						type: "string",
@@ -433,12 +444,19 @@ export function createWorkflowIntegration(
 						description:
 							"Assignment or follow-up in plain sentences: one objective, verified context/files, constraints, acceptance checks, and a stopping point/report. For review, name the candidate and provide requirements and check evidence without the implementer's reasoning.",
 					},
-					id: { type: "string", description: "Run ID returned by launch or list." },
+					id: {
+						type: "string",
+						description: "Run ID returned by launch or list. Omit for trace of the parent session.",
+					},
 					workspace: {
 						type: "string",
 						description:
 							"Launch working directory, absolute or relative to the parent; empty defaults to parent cwd. Not a filesystem sandbox. Ignored outside launch/resume; resume cannot change its saved directory. For review, selects the candidate repository.",
 					},
+					query: { type: "string", description: "Trace: case-insensitive literal text search." },
+					kind: { type: "string", enum: ["all", "messages", "tools", "errors", "compaction"] },
+					entryId: { type: "string", description: "Trace: select one saved entry." },
+					limit: { type: "integer", minimum: 1, maximum: 100 },
 					offset: { type: "integer", minimum: 0 },
 				},
 				required: ["op"],
@@ -448,7 +466,7 @@ export function createWorkflowIntegration(
 				name: "subagent",
 				label: "Subagent",
 				description:
-					"Launch and control child agents with configured roles and models. Use roles before delegating to check live enabled status and current definitions. Only the user can change role models or the enable setting. Launch uses the configured role model; resume keeps its saved model. Set workspace on launch to select the working directory and review candidate repository. File access follows enabled role tools and OS permissions, not a workspace fence. Launch returns immediately; unread terminal results arrive in a batch after active work and queued messages finish. Read returns bounded output with a byte offset; complete terminal-output reads prevent redundant completion turns. Use acknowledge with the delivered batchId alone when no reply is needed. Steer queues a message; resume starts a follow-up in the saved child session. Main-session ownership remains with you. Treat child output as evidence and verify the integrated result.",
+					"Launch and control child agents with configured roles and models. Use roles before delegating to check live enabled status and current definitions. Only the user can change role models or the enable setting. Launch uses the configured role model; resume keeps its saved model. Set workspace on launch to select the working directory and review candidate repository. File access follows enabled role tools and OS permissions, not a workspace fence. Launch returns immediately; unread terminal results arrive in a batch after active work and queued messages finish. Read returns bounded output with a byte offset; complete terminal-output reads prevent redundant completion turns. Trace searches saved messages, tool arguments/results, errors, and compactions; omit id for parent history. Trace does not acknowledge completion. Use acknowledge with the delivered batchId alone when no reply is needed. Steer queues a message; resume starts a follow-up in the saved child session. Main-session ownership remains with you. Treat child output as evidence and verify the integrated result.",
 				promptSnippet:
 					"subagent: discover roles, delegate coding or fresh review, inspect results, steer/stop/resume children.",
 				parameters: schema,
@@ -478,7 +496,7 @@ export function createWorkflowIntegration(
 				},
 				async execute(
 					_id,
-					params: {
+					params: TraceQuery & {
 						op: string;
 						role?: string;
 						task?: string;
@@ -559,6 +577,15 @@ export function createWorkflowIntegration(
 									};
 							break;
 						}
+						case "trace":
+							result = await service.trace(params.id, {
+								query: params.query,
+								kind: params.kind,
+								entryId: params.entryId,
+								offset: params.offset,
+								limit: params.limit,
+							});
+							break;
 						case "steer":
 							result = { receipt: service.steer(params.id ?? "", params.task ?? ""), status: "accepted" };
 							break;

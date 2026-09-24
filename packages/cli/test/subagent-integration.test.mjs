@@ -125,6 +125,35 @@ function fixture(realWorker = false, options = {}) {
 		shutdown: () => handlers.get("session_shutdown")(),
 	};
 }
+test("trace reads parent and child sessions without acknowledging completion", async () => {
+	const f = fixture();
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		const parentFile = join(f.root, "parent.jsonl");
+		const content = `${JSON.stringify({ type: "message", id: "e", message: { role: "user", content: "Evidence" } })}\n`;
+		writeFileSync(parentFile, content);
+		f.ctx.sessionManager.getSessionFile = () => parentFile;
+		assert.equal((await f.invoke({ op: "trace" })).records[0].text, "Evidence");
+		const run = await f.invoke({ op: "launch", role: "coder", task: "Inspect" });
+		assert.equal((await f.invoke({ op: "trace", id: run.id })).totalBytes, 0);
+		const childFile = join(f.workers[0].launch.directory, "session.jsonl");
+		writeFileSync(childFile, content);
+		f.workers[0].emit({ type: "ready", sessionFile: childFile, sessionId: "child" });
+		f.workers[0].emit({ type: "result", status: "completed", text: "Done" });
+		f.workers[0].exit(true);
+		const result = await f.tool.execute("trace", { op: "trace", id: run.id, entryId: "e" });
+		assert.equal(JSON.parse(result.content[0].text).records[0].entryId, "e");
+		assert.equal(result.details.terminalRead, undefined);
+		assert.equal(f.integration.service.runs()[0].completion.handled, false);
+		assert.equal(readFileSync(childFile, "utf8"), content);
+		await f.integration.service.setSubagentsEnabled(false);
+		assert.equal((await f.invoke({ op: "trace", id: run.id })).records.length, 1);
+		await assert.rejects(f.invoke({ op: "trace", id: "unknown" }), /not found/);
+	} finally {
+		await f.shutdown();
+	}
+});
+
 test("child launches and resumes snapshot the global warming setting", async () => {
 	const f = fixture();
 	try {
