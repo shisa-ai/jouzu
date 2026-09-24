@@ -130,6 +130,7 @@ export class WorkflowComponent implements PaletteComponent, Focusable {
 	private closed = false;
 	private unsubscribe: () => void;
 	private rowsVisible = 8;
+	private listedRunIds: string[] = [];
 	constructor(
 		private readonly context: PaletteComponentContext,
 		private readonly service: WorkflowService,
@@ -138,7 +139,15 @@ export class WorkflowComponent implements PaletteComponent, Focusable {
 		this.section = initialRoute.query === "runs" ? "runs" : "agents";
 		this.wordmark = renderBrandGradient("JOUZU", detectBannerColorMode());
 		this.unsubscribe = service.subscribe(() => {
-			if (!this.closed) this.context.tui.requestRender();
+			if (this.closed) return;
+			if (this.mode === "browse" && this.section === "runs" && this.selected >= 2) {
+				const selectedId = this.listedRunIds[this.selected - 2];
+				const runs = this.service.runs();
+				const index = runs.findIndex((run) => run.id === selectedId);
+				if (index >= 0) this.selected = index + 2;
+				this.listedRunIds = runs.map((run) => run.id);
+			}
+			this.context.tui.requestRender();
 		});
 	}
 	get focused(): boolean {
@@ -338,6 +347,7 @@ export class WorkflowComponent implements PaletteComponent, Focusable {
 				rows.push({ label: "+ Add agent", run: () => this.edit() });
 			} else {
 				const runs = this.service.runs();
+				this.listedRunIds = runs.map((run) => run.id);
 				rows.push(
 					...runs.map((run, index) => ({
 						label: fitTerminalText(run.role.id, RUN_LABEL_MAXIMUM),
@@ -797,7 +807,7 @@ export class WorkflowComponent implements PaletteComponent, Focusable {
 							renderPaletteField({
 								label,
 								value,
-								labelWidth: 8,
+								labelWidth: 10,
 								innerWidth: inner,
 								selected: false,
 								theme,
@@ -807,6 +817,7 @@ export class WorkflowComponent implements PaletteComponent, Focusable {
 					lines.push(heading("Run", sanitizeTerminalText(run.status)));
 					lines.push(detail("Agent", sanitizeTerminalText(run.role.id)));
 					lines.push(detail("Model", agentModelDisplay(run.model).label));
+					lines.push(detail("Workspace", sanitizeTerminalText(run.cwd)));
 					lines.push(detail("Model ID", `${run.model.provider}/${run.model.id}`));
 					lines.push(
 						detail(

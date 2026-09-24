@@ -71,6 +71,16 @@ Tool results and completion messages show a themed summary of role, model, statu
 
 **Runs** provides output reading, messaging, Stop, and Resume. Stop requests tool cancellation, then forces process cleanup after a grace period. Files already written remain. Resume starts another run using the original role revision, exact provider/model, workspace, and saved child conversation. Use a new launch for a fresh context or changed definition.
 
+## Subagent dashboard
+
+The **Subagents** pane appears above the prompt when the session has child runs. It shows active, queued, and finished counts, followed by active runs first. Run rows show status, role/model, current tool, and workspace. The pane updates on run events and limits its height to leave room for the prompt.
+
+- `/subagents` opens **Workflow → Runs**, with output, message, Stop, and Resume controls.
+- `/subagents hide` hides the pane without stopping work.
+- `/subagents show` restores the pane. Visibility resets when the session starts or reloads.
+
+The Runs detail view includes the workspace. Incoming run updates preserve the selected run. In non-interactive mode, `/subagents` reports run summaries as JSON.
+
 ## Session traces
 
 Use `subagent` with `op: "trace"` to inspect saved conversation entries. Supply a run `id` for a child, or omit it for the parent session:

@@ -10,6 +10,7 @@ function fixture() {
 	let writes = 0;
 	let enabled = true;
 	let closes = 0;
+	let update = () => {};
 	const context = {
 		tui: { requestRender() {}, terminal: { rows: 32, columns: 90 } },
 		keybindings: new KeybindingsManager(TUI_KEYBINDINGS),
@@ -32,7 +33,10 @@ function fixture() {
 		models: () => [{ provider: "test", id: "日本語-model", name: "Test" }],
 		runs: () => [],
 		activeRole: () => undefined,
-		subscribe: () => () => {},
+		subscribe: (listener) => {
+			update = listener;
+			return () => {};
+		},
 		activate: async () => {},
 		launch: async () => {},
 		read: () => ({ text: "", nextOffset: null, totalBytes: 0 }),
@@ -43,6 +47,7 @@ function fixture() {
 		view,
 		context,
 		service,
+		update: () => update(),
 		get writes() {
 			return writes;
 		},
@@ -60,6 +65,29 @@ const down = (view, n = 1) => {
 };
 const enter = (view) => view.handleInput("\r");
 const cancel = (view) => view.handleInput("\x1b");
+
+test("Runs keeps the selected child when new runs are inserted", () => {
+	const f = fixture();
+	const run = (id) => ({
+		id,
+		status: "running",
+		role: { id },
+		model: { provider: "test", id: "model" },
+		cwd: `/workspace/${id}`,
+		task: id,
+		usage: {},
+	});
+	let runs = [run("chosen"), run("other")];
+	f.service.runs = () => runs;
+	f.view.route({ view: "workflow", query: "runs" });
+	f.text();
+	down(f.view, 2);
+	runs = [run("new"), ...runs];
+	f.update();
+	enter(f.view);
+	assert.match(f.text(100), /Workspace.*\/workspace\/chosen/);
+	f.view.dispose();
+});
 
 test("subagents toggle supports Enter, arrows and Space without leaking into edits", async () => {
 	const f = fixture();
@@ -335,6 +363,7 @@ test("Runs opens output, requires Stop confirmation, and exposes Resume after ca
 		model: { provider: "fixture", id: "test" },
 		status: "running",
 		task: "Inspect fixture",
+		cwd: "/workspace/fixture",
 		usage: { input: 1, output: 2, cacheRead: 0, cacheWrite: 0, cost: null },
 	};
 	f.service.runs = () => [run];

@@ -22,6 +22,7 @@ import {
 	subagentCompletionBatch,
 	terminalReadObservation,
 } from "./completion.js";
+import { SubagentDashboard } from "./dashboard.js";
 import { type AgentRun, isActiveRun, SubagentManager, type WorkerFactory } from "./manager.js";
 import { agentModelSelectorLabel } from "./model-display.js";
 import { parseSubagentResult, runPresentation, subagentComponent } from "./render.js";
@@ -60,7 +61,11 @@ export function createWorkflowIntegration(
 	paths: JouzuPaths,
 	workerFactory?: WorkerFactory,
 	options: { textguardFiles?: boolean; textguardMode?: () => TextGuardMode } = {},
-): { service: WorkflowService; register(pi: ExtensionAPI, open: () => Promise<boolean>): void } {
+): {
+	service: WorkflowService;
+	register(pi: ExtensionAPI, open: (section?: "agents" | "runs") => Promise<boolean>): void;
+} {
+	const dashboard = new SubagentDashboard();
 	const store = new AgentRoleStore(paths);
 	let ctx: ExtensionContext | undefined;
 	let sessionGeneration = 0;
@@ -86,6 +91,7 @@ export function createWorkflowIntegration(
 		sessionFile: run.sessionFile,
 	});
 	const notify = () => {
+		dashboard.update(manager?.list() ?? []);
 		for (const listener of listeners) listener();
 	};
 	const context = () => {
@@ -322,6 +328,33 @@ export function createWorkflowIntegration(
 				const details = message.details as { presentation?: unknown; runs?: unknown } | undefined;
 				return subagentComponent(details?.presentation ?? (details?.runs ? details : message.content), theme, expanded);
 			});
+			pi.registerCommand("subagents", {
+				description: "Open child runs; use show or hide for the status pane",
+				getArgumentCompletions: (prefix) =>
+					["show", "hide"].filter((value) => value.startsWith(prefix)).map((value) => ({ value, label: value })),
+				handler: async (args, active) => {
+					const action = args.trim();
+					if (action && action !== "show" && action !== "hide") {
+						active.ui.notify("Use /subagents, /subagents show, or /subagents hide.", "warning");
+						return;
+					}
+					if (active.mode !== "tui") {
+						const output = JSON.stringify({ runs: service.runs().map(summary) });
+						if (active.mode === "print") console.log(output);
+						else active.ui.notify(output, "info");
+						return;
+					}
+					if (action) {
+						dashboard.setVisible(action === "show");
+						active.ui.notify(
+							action === "show"
+								? "Subagent pane enabled; it appears when this session has child runs."
+								: "Subagent pane hidden. Use /subagents show to display it.",
+							"info",
+						);
+					} else await open("runs");
+				},
+			});
 			pi.registerCommand("workflow", {
 				description: "Open agents and runs; on/off/toggle controls subagents for this session",
 				getArgumentCompletions: (prefix) =>
@@ -364,10 +397,12 @@ export function createWorkflowIntegration(
 				const generation = ++sessionGeneration;
 				unsubscribe?.();
 				inbox.shutdown();
+				dashboard.dispose();
 				ctx = undefined;
 				await manager?.dispose();
 				if (generation !== sessionGeneration) return;
 				ctx = active;
+				dashboard.attach(active);
 				mainRole = undefined;
 				subagentsEnabled = true;
 				for (const entry of active.sessionManager.getEntries()) {
@@ -419,6 +454,7 @@ export function createWorkflowIntegration(
 				return { systemPrompt };
 			});
 			pi.on("session_shutdown", async () => {
+				dashboard.dispose();
 				sessionGeneration += 1;
 				ctx = undefined;
 				inbox.shutdown();

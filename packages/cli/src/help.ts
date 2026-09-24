@@ -24,6 +24,7 @@ export function createJouzuHelpExtension(): InlineExtension {
 								`${theme.fg("accent", "/session")}  Session details`,
 								`${theme.fg("accent", "/about")}  Runtime and installed builds`,
 								`${theme.fg("accent", "/workflow")}  Agents and runs`,
+								`${theme.fg("accent", "/subagents")}  Child run dashboard`,
 								"",
 								theme.fg("dim", `${formatEffectiveKeybinding(keybindings, "tui.select.cancel")} close`),
 							].join("\n"),

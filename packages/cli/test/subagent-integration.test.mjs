@@ -35,6 +35,8 @@ function fixture(realWorker = false, options = {}) {
 	};
 	const integration = createWorkflowIntegration(paths, realWorker ? undefined : workerFactory, options);
 	const handlers = new Map();
+	const commands = new Map();
+	const opened = [];
 	let tool;
 	let messageRenderer;
 	let command;
@@ -48,6 +50,7 @@ function fixture(realWorker = false, options = {}) {
 				messageRenderer = renderer;
 			},
 			registerCommand: (name, definition) => {
+				commands.set(name, definition);
 				command = name;
 				commandDefinition = definition;
 			},
@@ -65,7 +68,10 @@ function fixture(realWorker = false, options = {}) {
 				resolveMessage({ message, options });
 			},
 		},
-		async () => true,
+		async (section) => {
+			opened.push(section);
+			return true;
+		},
 	);
 	const models = ["gpt-6-astra", "glm-5.3-flash"].map((id) => ({
 		id,
@@ -99,6 +105,8 @@ function fixture(realWorker = false, options = {}) {
 		paths,
 		integration,
 		handlers,
+		commands,
+		opened,
 		workers,
 		messages,
 		nextMessage,
@@ -125,6 +133,48 @@ function fixture(realWorker = false, options = {}) {
 		shutdown: () => handlers.get("session_shutdown")(),
 	};
 }
+test("dashboard command routes to Runs, hides without stopping, and clears across sessions", async () => {
+	const f = fixture();
+	const widgets = [];
+	let component;
+	f.ctx.ui.setWidget = (_key, factory) => {
+		widgets.push(factory);
+		component = factory?.({ requestRender() {}, terminal: { rows: 32 } }, { fg: (_role, text) => text });
+	};
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		const command = f.commands.get("subagents");
+		assert.deepEqual(command.getArgumentCompletions("h"), [{ value: "hide", label: "hide" }]);
+		await command.handler("", f.ctx);
+		assert.deepEqual(f.opened, ["runs"]);
+		const run = await f.invoke({ op: "launch", role: "coder", task: "Inspect" });
+		assert.ok(component);
+		await command.handler("hide", f.ctx);
+		assert.equal(component, undefined);
+		assert.equal(f.integration.service.runs()[0].status, "starting");
+		await command.handler("show", f.ctx);
+		assert.ok(component);
+		await command.handler("invalid", f.ctx);
+		assert.match(f.notifications.at(-1)[0], /Use \/subagents/);
+		await command.handler("", { ...f.ctx, mode: "rpc" });
+		assert.equal(JSON.parse(f.notifications.at(-1)[0]).runs[0].id, run.id);
+		const output = [];
+		const log = console.log;
+		try {
+			console.log = (text) => output.push(text);
+			await command.handler("", { ...f.ctx, mode: "print" });
+		} finally {
+			console.log = log;
+		}
+		assert.equal(JSON.parse(output[0]).runs[0].id, run.id);
+		await f.handlers.get("session_start")({}, f.ctx);
+		assert.ok(widgets.includes(undefined), "session replacement removes the old widget");
+	} finally {
+		await f.shutdown();
+		assert.equal(component, undefined);
+	}
+});
+
 test("trace reads parent and child sessions without acknowledging completion", async () => {
 	const f = fixture();
 	try {
