@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
+import { FlowSubmissionStore } from "../dist/flow-control/submission-store.js";
 import { afterCleanup } from "./fixtures/cleanup.mjs";
 import { fixture, waitForFlow } from "./fixtures/flow-session-ingress.mjs";
 
@@ -965,6 +966,51 @@ test("a continuation retained by a previous lifetime is issued again instead of 
 	assert.equal(issued[0].dispatch?.phase, "returned");
 	await next.session.prompt("Keep going");
 	await waitForFlow(async () => next.sent.some((body) => JSON.stringify(body).includes("Continue the saved goal.")));
+});
+
+test("one record that cannot be retired does not stop the continuations behind it", async (t) => {
+	const failures = [];
+	const first = await fixture(t, { admit: async () => false });
+	await first.session.sendUserMessage("First saved continuation.", { deliverAs: "followUp" });
+	await first.session.sendUserMessage("Second saved continuation.", { deliverAs: "followUp" });
+	const inherited = (await first.ingress.branch().attachment.submissions.snapshot(false)).filter(
+		(record) => record.status === "retained",
+	);
+	assert.equal(inherited.length, 2);
+	await first.ingress.dispose();
+
+	// The first inherited record cannot be retired after it is issued again. The record behind it must
+	// still be issued, and the failure must be reported rather than stalling the rest of the session.
+	const original = FlowSubmissionStore.prototype.cancelPending;
+	FlowSubmissionStore.prototype.cancelPending = function (id, revision) {
+		if (id === inherited[0].id) throw new Error("fixture retirement failed");
+		return original.call(this, id, revision);
+	};
+	t.after(() => {
+		FlowSubmissionStore.prototype.cancelPending = original;
+	});
+
+	const next = await fixture(t, {
+		root: first.root,
+		manager: SessionManager.open(first.session.sessionManager.getSessionFile()),
+		autoRelease: { onError: (error) => failures.push(error) },
+	});
+	assert.ok(next.ingress.branch().attachment.submissions instanceof FlowSubmissionStore);
+	await waitForFlow(async () => {
+		const records = await next.ingress.branch().attachment.submissions.snapshot(true);
+		return records.filter((record) => !inherited.some((item) => item.id === record.id)).length === 2;
+	});
+	const records = await next.ingress.branch().attachment.submissions.snapshot(true);
+	assert.deepEqual(
+		records
+			.filter((record) => !inherited.some((item) => item.id === record.id))
+			.map((record) => record.submission.args[0]),
+		["First saved continuation.", "Second saved continuation."],
+	);
+	assert.equal(failures.length, 1);
+	assert.match(String(failures[0]), /fixture retirement failed/);
+	// The unretired record stays inspectable, so the next open issues it again rather than dropping it.
+	assert.equal(records.find((record) => record.id === inherited[0].id)?.status, "retained");
 });
 
 test("consumed user queue no longer blocks semantic work after automated dispatch settles", async (t) => {

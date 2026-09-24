@@ -301,6 +301,9 @@ export class PiSessionFlowIngress implements Ingress {
 	 * and the ordinary admission path decides when it runs. The superseded record is retired once the
 	 * replacement exists: a continuation the session already accepted is otherwise issued at every later
 	 * open, and one nothing re-issues is the stall this exists to prevent.
+	 *
+	 * Each record is issued on its own: a record that cannot be issued or retired is reported and tried
+	 * again at the next open, rather than stopping the records behind it.
 	 */
 	private async replayContinuations(): Promise<void> {
 		const ids = this.replayIds;
@@ -314,37 +317,44 @@ export class PiSessionFlowIngress implements Ingress {
 			// Re-read every condition: a record captured at the open may have been cancelled or dispatched since.
 			if (!ids.has(record.id) || record.status !== "retained" || record.unavailable) continue;
 			if (!undispatchedRecord(record) || !replayableContinuation(record.submission)) continue;
-			const submission = record.submission;
-			switch (submission.api) {
-				case "sendCustomMessage":
-					await session.sendCustomMessage(
-						submission.args[0] as Parameters<AgentSession["sendCustomMessage"]>[0],
-						submission.args[1] as Parameters<AgentSession["sendCustomMessage"]>[1],
-					);
-					break;
-				case "sendUserMessage":
-					await session.sendUserMessage(
-						submission.args[0] as Parameters<AgentSession["sendUserMessage"]>[0],
-						submission.args[1] as Parameters<AgentSession["sendUserMessage"]>[1],
-					);
-					break;
-				case "prompt":
-					await session.prompt(
-						submission.args[0] as string,
-						submission.args[1] as Parameters<AgentSession["prompt"]>[1],
-					);
-					break;
-				case "followUp":
-					await session.followUp(
-						submission.args[0] as string,
-						submission.args[1] as Parameters<AgentSession["followUp"]>[1],
-						submission.args[2] as Parameters<AgentSession["followUp"]>[2],
-					);
-					break;
-				default:
-					continue;
+			// The remaining continuations must not stall because one record could not be issued or retired:
+			// a record left unretired is issued again at the next open, which is a duplicate rather than the
+			// silent stall that leaving every later record unissued would be.
+			try {
+				const submission = record.submission;
+				switch (submission.api) {
+					case "sendCustomMessage":
+						await session.sendCustomMessage(
+							submission.args[0] as Parameters<AgentSession["sendCustomMessage"]>[0],
+							submission.args[1] as Parameters<AgentSession["sendCustomMessage"]>[1],
+						);
+						break;
+					case "sendUserMessage":
+						await session.sendUserMessage(
+							submission.args[0] as Parameters<AgentSession["sendUserMessage"]>[0],
+							submission.args[1] as Parameters<AgentSession["sendUserMessage"]>[1],
+						);
+						break;
+					case "prompt":
+						await session.prompt(
+							submission.args[0] as string,
+							submission.args[1] as Parameters<AgentSession["prompt"]>[1],
+						);
+						break;
+					case "followUp":
+						await session.followUp(
+							submission.args[0] as string,
+							submission.args[1] as Parameters<AgentSession["followUp"]>[1],
+							submission.args[2] as Parameters<AgentSession["followUp"]>[2],
+						);
+						break;
+					default:
+						continue;
+				}
+				await branch.attachment.submissions.cancelPending(record.id, record.revision);
+			} catch (error) {
+				this.options.autoRelease?.onError(error);
 			}
-			await branch.attachment.submissions.cancelPending(record.id, record.revision);
 		}
 	}
 
