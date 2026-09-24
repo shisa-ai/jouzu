@@ -508,6 +508,89 @@ for (const reverse of [false, true])
 		assert.deepEqual(errors, []);
 	});
 
+test("Pi loaded multiloop hears a cleared gate only while the flow retains nothing", async (t) => {
+	let f, attachedBranch, host;
+	const errors = [],
+		notified = [];
+	const settle = () => new Promise((resolve) => setImmediate(resolve));
+	const bridge = createMultiloopControllerExtension({
+		ingress: () => ({ branch: () => attachedBranch, requestRelease() {} }),
+		onError: (error) => errors.push(error),
+	});
+	const loaded = {
+		name: "loaded-multiloop",
+		factory(pi) {
+			pi.on("session_start", () => {
+				pi.events.emit("jouzu:multiloop-flow", {
+					version: 1,
+					sessionId: attachedBranch.scope.sessionId,
+					accept(value) {
+						host = value;
+						value.onGateChange((lane) => notified.push(lane));
+					},
+					reject(error) {
+						errors.push(error);
+					},
+				});
+			});
+		},
+	};
+	f = await fixture(t, true, { extensions: [bridge, loaded], consumedAttempt: bridge.consumedAttempt });
+	attachedBranch = { ...f, scope: f.ledger.scope };
+	Object.defineProperty(f.policy, "waitingWorkIds", { get: () => f.attachment.waits.gate().waitingWorkIds });
+	Object.defineProperty(f.policy, "inactiveWorkIds", { get: () => f.attachment.waits.gate().inactiveWorkIds });
+	await f.session.bindExtensions({ onError: (error) => errors.push(error) });
+	assert.ok(host, "the loaded extension accepted the flow host");
+	const lane = { lane: "test", runTag: "run" };
+	host.changed([lane]);
+	await host.transition(lane, "active");
+	await f.controller.wake();
+	const campaign = f.attachment.waits.boundWork(multiloopWorkBinding(lane));
+	assert.ok(campaign, "the reported lane has campaign work to gate");
+	const handle = { producer: "bg", handle: "job", execution: "exec", until: "exit" };
+	const register = (value) =>
+		f.attachment.waits.registerExecution(
+			{ ...value, workId: campaign.id, revision: 1, predicates: [{ until: "exit", state: "pending" }] },
+			1,
+			Date.now(),
+		);
+	const declare = (token, value) =>
+		f.attachment.waits.declareOwned(
+			"multiloop",
+			1,
+			{
+				scope: f.ledger.scope,
+				workId: campaign.id,
+				token,
+				reason: "job exit",
+				mode: "all",
+				on: [{ ...value, until: "exit" }],
+				expiresAt: Date.now() + 60000,
+			},
+			Date.now(),
+			60000,
+		);
+	await register(handle);
+	await declare("gate-1", handle);
+	await settle();
+	await f.attachment.waits.observeExecution(handle, 2, [{ until: "exit", state: "satisfied" }], Date.now());
+	await settle();
+	assert.deepEqual(notified, [lane], "a lane with nothing retained is the one the extension has to drive");
+	// A lane the flow still holds a continuation for is driven by that release, so it is not announced.
+	const second = { producer: "bg", handle: "job-2", execution: "exec-2", until: "exit" };
+	await register(second);
+	await declare("gate-2", second);
+	await settle();
+	host.submit({ lane, reason: "auto-continue:test", build: () => "continue", admitted() {} });
+	assert.equal(host.waiting(lane), true, "the lane's work is waiting again");
+	assert.equal(host.retained(lane), true, "the flow now holds a continuation to release");
+	await f.attachment.waits.observeExecution(second, 2, [{ until: "exit", state: "satisfied" }], Date.now());
+	await settle();
+	assert.deepEqual(notified, [lane]);
+	await f.controller.wake();
+	assert.deepEqual(errors, []);
+});
+
 for (const native of [false, true]) {
 	const label = native ? "Pi" : "synthetic";
 	test(`${label}: producers share one serialized controller and repeated revisions do not replay`, async (t) => {

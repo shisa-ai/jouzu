@@ -10,9 +10,12 @@ import {
 	decideNativeAdmission,
 	isNativeUserInput,
 	isNativeUserQueueSubmission,
+	isUserInstruction,
+	replayableContinuation,
+	undispatchedRecord,
 } from "./native-admission.js";
 import { type PiFlowBranchResources, type PiFlowSessionOptions, PiFlowSessionService } from "./pi-session-service.js";
-import { FlowLedgerError } from "./receipt-ledger.js";
+import { FlowLedgerError, type FlowLedgerState } from "./receipt-ledger.js";
 import type { FlowNativeInput } from "./submission-store.js";
 import { activeAdmissionHolds, UNAVAILABLE_INPUT_REASON } from "./submission-view.js";
 import { captureUserWorkParticipants, retainUserWork } from "./user-work.js";
@@ -30,6 +33,11 @@ export interface PiFlowIngressOptions extends Omit<PiFlowSessionOptions, "admitN
 	autoRelease?: { onError(error: unknown): void; clock?: FlowWaitClock; retireHistory?: boolean };
 	/** Called when an interrupted turn newly pauses automated work, so the user can be told once. */
 	onAutomatedPause?(): void;
+	/**
+	 * Called when a submission the user asked for is refused admission. A hold the user cannot see is
+	 * a stall: the message produced no turn, and nothing in the session says why.
+	 */
+	onHeldUserInput?(input: { id: string; reason: string }): void;
 	/** Semantic admission override; omission uses conservative unadapted-send admission. */
 	admit?(
 		submission: Submission,
@@ -71,6 +79,8 @@ export class PiSessionFlowIngress implements Ingress {
 	private producerWakeRequested = false;
 	private activeUserInput = 0;
 	private retainedUserInput = new Set<string>();
+	/** Continuations a prior attachment left undispatched, captured when this one opened. */
+	private replayIds?: Set<string>;
 	private unsubscribeIdle?: () => void;
 	private unsubscribeWaits?: () => void;
 	private stopHealth?: () => Promise<void>;
@@ -183,6 +193,7 @@ export class PiSessionFlowIngress implements Ingress {
 			this.service = service;
 			await this.refreshUserInput();
 			await this.startScheduling();
+			await this.scheduleReplay();
 		})();
 		return this.opening;
 	}
@@ -283,6 +294,85 @@ export class PiSessionFlowIngress implements Ingress {
 		while (this.active.size) await Promise.all([...this.active]);
 	}
 
+	/**
+	 * Issue again a continuation a prior lifetime retained and never dispatched.
+	 *
+	 * A retained send is a live native call, which storage cannot replay, so the message is issued again
+	 * and the ordinary admission path decides when it runs. The superseded record is retired once the
+	 * replacement exists: a continuation the session already accepted is otherwise issued at every later
+	 * open, and one nothing re-issues is the stall this exists to prevent.
+	 */
+	private async replayContinuations(): Promise<void> {
+		const ids = this.replayIds;
+		this.replayIds = undefined;
+		if (!ids?.size) return;
+		const branch = this.branch();
+		const session = this.session;
+		if (!session) return;
+		for (const record of await branch.attachment.submissions.snapshot(false)) {
+			if (this.branch() !== branch) throw new FlowLedgerError("stale", "Flow replay branch changed.");
+			// Re-read every condition: a record captured at the open may have been cancelled or dispatched since.
+			if (!ids.has(record.id) || record.status !== "retained" || record.unavailable) continue;
+			if (!undispatchedRecord(record) || !replayableContinuation(record.submission)) continue;
+			const submission = record.submission;
+			switch (submission.api) {
+				case "sendCustomMessage":
+					await session.sendCustomMessage(
+						submission.args[0] as Parameters<AgentSession["sendCustomMessage"]>[0],
+						submission.args[1] as Parameters<AgentSession["sendCustomMessage"]>[1],
+					);
+					break;
+				case "sendUserMessage":
+					await session.sendUserMessage(
+						submission.args[0] as Parameters<AgentSession["sendUserMessage"]>[0],
+						submission.args[1] as Parameters<AgentSession["sendUserMessage"]>[1],
+					);
+					break;
+				case "prompt":
+					await session.prompt(
+						submission.args[0] as string,
+						submission.args[1] as Parameters<AgentSession["prompt"]>[1],
+					);
+					break;
+				case "followUp":
+					await session.followUp(
+						submission.args[0] as string,
+						submission.args[1] as Parameters<AgentSession["followUp"]>[1],
+						submission.args[2] as Parameters<AgentSession["followUp"]>[2],
+					);
+					break;
+				default:
+					continue;
+			}
+			await branch.attachment.submissions.cancelPending(record.id, record.revision);
+		}
+	}
+
+	/**
+	 * Capture the continuations this attachment inherited, so a send accepted here is never reissued as
+	 * its own duplicate. A record from this lifetime has a live callback and the ordinary release path.
+	 */
+	private async scheduleReplay(): Promise<void> {
+		const inherited = (await this.branch().attachment.submissions.snapshot(false)).filter(
+			(record) =>
+				record.status === "retained" &&
+				!record.unavailable &&
+				undispatchedRecord(record) &&
+				replayableContinuation(record.submission),
+		);
+		this.replayIds = inherited.length ? new Set(inherited.map((record) => record.id)) : undefined;
+		if (!this.replayIds) return;
+		if (this.options.autoRelease) {
+			this.queueRelease(true);
+			return;
+		}
+		// A host without automatic release still gets its retained continuations back at the same boundary.
+		setImmediate(() => {
+			if (!this.replayIds?.size || this.disposed || this.fenced || this.suspended) return;
+			this.track(() => this.replayContinuations()).catch((error: unknown) => this.options.autoRelease?.onError(error));
+		});
+	}
+
 	/** Join producer changes, releasing retained user callbacks before semantic selection. */
 	wakeProducers(): Promise<void> {
 		const branch = this.branch();
@@ -297,7 +387,7 @@ export class PiSessionFlowIngress implements Ingress {
 					this.producerWakeRequested = false;
 					if (this.branch() !== branch) throw new FlowLedgerError("stale", "Producer scheduling branch changed.");
 					const users = [...this.pending.entries()].filter(
-						([, pending]) => pending.branch === branch && isNativeUserInput(pending.submission),
+						([, pending]) => pending.branch === branch && isUserInstruction(pending.submission),
 					);
 					for (const [id, pending] of users) {
 						if (this.pending.get(id) !== pending) continue;
@@ -363,7 +453,7 @@ export class PiSessionFlowIngress implements Ingress {
 		const liveQueue = this.liveQueueIds();
 		this.retainedUserInput = new Set(
 			records
-				.filter((record) => isNativeUserInput(record.submission) && awaitingNativeInput(record, liveQueue))
+				.filter((record) => isUserInstruction(record.submission) && awaitingNativeInput(record, liveQueue))
 				.map((record) => record.id),
 		);
 	}
@@ -453,6 +543,10 @@ export class PiSessionFlowIngress implements Ingress {
 						if (wakeSemantic && !this.disposed && !this.fenced && this.branch().controller.view().producers.length)
 							await this.wakeProducers();
 						// Producer scheduling releases retained users first, then applies semantic rank ordering.
+						if (this.disposed || this.fenced) return { released: [], held: [] };
+						// Continuations a prior lifetime retained are issued here, at the boundary that also applies
+						// the gates, so a restart cannot leave accepted work undelivered and invisible.
+						if (this.replayIds?.size) await this.replayContinuations();
 						if (this.disposed || this.fenced) return { released: [], held: [] };
 						return this.releaseReady();
 					}),
@@ -661,7 +755,7 @@ export class PiSessionFlowIngress implements Ingress {
 		}
 		// A boolean host override supplies no authority to bypass a durable dependency wait.
 		const durableWaitDecision = () => {
-			if (this.automaticReleaseRunning && this.semanticReleaseRequested && !isNativeUserInput(submission))
+			if (this.automaticReleaseRunning && this.semanticReleaseRequested && !isUserInstruction(submission))
 				return { allowed: false, reason: "Input is waiting for updated semantic admission." } as const;
 			const currentWaits = branch.attachment.waits.gate();
 			if (
@@ -698,12 +792,50 @@ export class PiSessionFlowIngress implements Ingress {
 		);
 		if (!saved && phase === "submission")
 			throw new FlowLedgerError("stale", "Retained input changed during admission.");
+		// Only the first refusal is reported: a hold that lasts is reported once, and the status view
+		// keeps showing it for as long as it holds. Reporting a submission the user did not make would
+		// make every automated hold a notification, so user instruction is what qualifies.
+		if (saved && !decision.allowed && phase === "submission" && isUserInstruction(submission))
+			this.options.onHeldUserInput?.({ id: submission.id, reason: decision.reason });
 		return (
 			saved &&
 			decision.allowed &&
 			durableWaitDecision().allowed &&
 			!this.nativeRecoveryBlocked(submission, branch, phase)
 		);
+	}
+
+	/**
+	 * Why a recovery decision is holding this session, or undefined when nothing is.
+	 *
+	 * This is the session-wide part of the conditions admission applies, asked without a submission to
+	 * admit: a session that reopens behind an unresolved decision otherwise looks idle, and a hold the
+	 * user cannot see is a stall rather than a decision they can make.
+	 */
+	recoveryHold(): Promise<string | undefined> {
+		const branch = this.branch();
+		return this.track(async () =>
+			this.recoveryHoldReason(branch, this.options.policy(), await branch.attachment.ledger.snapshot()),
+		);
+	}
+	private recoveryHoldReason(
+		branch: PiFlowBranchResources,
+		policy: { recoveryBlocked: boolean },
+		state: FlowLedgerState,
+	): string | undefined {
+		const waits = branch.attachment.waits.gate();
+		if (policy.recoveryBlocked) return "host recovery is still in progress";
+		if (branch.attachment.nativeRequests.recoveryBlocked) return "a withheld request needs a decision";
+		if (state.attempts.some((attempt) => attempt.phase === "uncertain"))
+			return "an interrupted turn has an unknown outcome";
+		if (waits.updating || branch.attachment.waitProducers.updating) return "wait sources are still being reconciled";
+		if (
+			branch.recovery.unresolved > 0 ||
+			branch.sourceRecovery.unresolved > 0 ||
+			branch.waitSourceRecovery.missing.length > 0
+		)
+			return "saved work needs a recovery decision";
+		return undefined;
 	}
 
 	branch(): PiFlowBranchResources {
@@ -734,7 +866,9 @@ export class PiSessionFlowIngress implements Ingress {
 		// Flow control is off: the host's own dispatch runs, unread and unrecorded.
 		if (this.suspended) return dispatch();
 		const captured = structuredClone(submission);
-		const user = isNativeUserInput(captured);
+		// A command's own send is the user's instruction arriving through a command, so it takes the same
+		// priority as typed input: it releases an interrupt's hold and holds automated work behind it.
+		const user = isUserInstruction(captured);
 		// Local flow inspection and repair must remain reachable while provider admission is blocked.
 		const localFlowCommand =
 			user && typeof captured.args[0] === "string" && /^\/flow(?:\s|$)/.test(captured.args[0].trim());
@@ -919,6 +1053,8 @@ export class PiSessionFlowIngress implements Ingress {
 				throw new FlowLedgerError("stale", "Retained send changed during admission.");
 			if (this.nativeRecoveryBlocked(pending.submission, branch, "submission")) return false;
 			// Remove before dispatch so a reentrant release cannot consume the callback twice.
+			// User work claims stay with typed input: a command's send is admitted with user priority, but
+			// it is not the user's own invocation, so it does not own the waits its turn registers.
 			const user = isNativeUserInput(pending.submission);
 			if (user && pending.submission.api === "prompt" && (await this.appendUserWaitContext(branch))) {
 				if (!(await this.admit(structuredClone(pending.submission), branch, "submission"))) return false;
@@ -963,7 +1099,7 @@ export class PiSessionFlowIngress implements Ingress {
 		if (this.releasing) return this.releasing;
 		const candidates = [...this.pending.entries()]
 			.filter(([, pending]) => pending.branch === branch)
-			.sort(([, a], [, b]) => Number(isNativeUserInput(b.submission)) - Number(isNativeUserInput(a.submission)));
+			.sort(([, a], [, b]) => Number(isUserInstruction(b.submission)) - Number(isUserInstruction(a.submission)));
 		const run = this.track(async () => {
 			const result: { released: string[]; held: string[] } = { released: [], held: [] };
 			for (const [id, pending] of candidates) {
@@ -1019,6 +1155,7 @@ export class PiSessionFlowIngress implements Ingress {
 			this.fenced = false;
 			await this.refreshUserInput();
 			await this.startScheduling();
+			await this.scheduleReplay();
 		}
 	}
 	dispose(): Promise<void> {

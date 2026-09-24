@@ -57,6 +57,59 @@ export function gateMultiloopFlowDriving(source) {
 	);
 }
 
+/**
+ * Flow control holds a lane's continuation while its work waits and releases it when the gate clears.
+ * A lane whose continuation was never submitted has no release to wait for, so it would idle until
+ * some other agent turn ends. Subscribe to gate changes and drive the lanes again when one clears.
+ */
+export function driveMultiloopOnGateChange(source) {
+	source = replace(
+		source,
+		"  let detachFlow: (() => void) | undefined;\n",
+		`  let detachFlow: (() => void) | undefined;
+  let detachGate: (() => void) | undefined;
+  function watchFlowGates(pi: ExtensionAPI, ctx: ExtensionContext): (() => void) | undefined {
+    const flow = multiloopFlow(ctx.sessionManager.getSessionId());
+    return flow?.onGateChange?.(() => {
+      setTimeout(() => {
+        if (runningStates().length === 0) return;
+        queueLoopAutoContinue(pi, ctx, "flow-gate-clear");
+      }, 0);
+    });
+  }
+`,
+	);
+	source = replace(
+		source,
+		'  pi.on("session_shutdown", async () => { detachFlow?.(); detachFlow = undefined; });',
+		'  pi.on("session_shutdown", async () => { detachGate?.(); detachGate = undefined; detachFlow?.(); detachFlow = undefined; });',
+	);
+	source = replace(
+		source,
+		`    detachFlow?.();
+    detachFlow = connectMultiloopFlow(pi.events, ctx.sessionManager.getSessionId());
+    statusStates.clear();`,
+		`    detachGate?.();
+    detachFlow?.();
+    detachFlow = connectMultiloopFlow(pi.events, ctx.sessionManager.getSessionId());
+    detachGate = watchFlowGates(pi, ctx);
+    statusStates.clear();`,
+	);
+	return replace(
+		source,
+		`    detachFlow?.();
+    detachFlow = connectMultiloopFlow(pi.events, ctx.sessionManager.getSessionId());
+    updateStatus(ctx);
+  });`,
+		`    detachGate?.();
+    detachFlow?.();
+    detachFlow = connectMultiloopFlow(pi.events, ctx.sessionManager.getSessionId());
+    detachGate = watchFlowGates(pi, ctx);
+    updateStatus(ctx);
+  });`,
+	);
+}
+
 export function transformMultiloopFlow(source) {
 	source = replace(
 		source,
@@ -110,7 +163,9 @@ export function transformMultiloopFlow(source) {
 		"  function updateStatus(ctx: ExtensionContext | ExtensionCommandContext) {",
 		"  function updateStatus(ctx: ExtensionContext | ExtensionCommandContext) {\n    multiloopFlow(ctx.sessionManager.getSessionId())?.changed(runningStates().map((state) => ({ lane: state.lane, runTag: state.runTag })));",
 	);
-	return gateMultiloopFlowDriving(transformMultiloopStatus(transformGoalResume(transformMultiloopLifecycle(source))));
+	return driveMultiloopOnGateChange(
+		gateMultiloopFlowDriving(transformMultiloopStatus(transformGoalResume(transformMultiloopLifecycle(source)))),
+	);
 }
 
 export function transformMultiloopLifecycle(source) {

@@ -149,6 +149,9 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 				autoRelease: { onError: options.onError, retireHistory: true },
 				// An interrupt's hold is reported through the status extension, which owns the terminal.
 				onAutomatedPause: () => void status.announcePause().catch(options.onError),
+				// A refused send the user asked for is reported the same way: it produced no turn, and the
+				// session's own view of the hold is only visible to someone who runs /flow.
+				onHeldUserInput: (input) => status.announceHeldInput(input),
 				// State from an earlier record shape is isolated rather than migrated, and the user is
 				// told where it went so nothing disappears silently.
 				onIsolatedState: (path) =>

@@ -31,6 +31,12 @@ const FLOW_OFF_NOTICE = [
 	"Run /flow on to turn flow control back on; /flow runtime still reports builds.",
 ].join("\n");
 
+/** One notice for a held input, in the words the status view uses for the same state. */
+const heldInputNotice = (reason: string) =>
+	`Flow control is holding your message: ${reason}. Run /flow for the control that releases it.`;
+const recoveryHoldNotice = (reason: string) =>
+	`Flow control is holding automated work: ${reason}. Run /flow for the control that releases it.`;
+
 const USAGE = [
 	"/flow shows what session flow control is holding.",
 	"/flow details [page] includes full identifiers and per-item controls.",
@@ -53,9 +59,29 @@ const USAGE = [
  */
 export function createFlowStatusExtension(options: FlowStatusOptions): InlineExtension & {
 	announcePause(): Promise<void>;
+	announceHeldInput(input: { id: string; reason: string }): void;
 } {
 	const now = () => options.now?.() ?? Date.now();
 	let announce: ((text: string) => void) | undefined;
+	// A hold is reported once per reason. Re-admission runs on every release pass, so without this a
+	// single blocked message would notify for as long as it stays blocked. The set is bounded because
+	// nothing stops a session from holding a long series of messages.
+	const reportedHolds = new Set<string>();
+	const rememberHold = (key: string): void => {
+		if (reportedHolds.size >= 256) reportedHolds.delete(reportedHolds.values().next().value as string);
+		reportedHolds.add(key);
+	};
+	/** Report what a recovery decision is holding, once per session boundary, and only when it holds. */
+	const announceRecoveryHold = async (): Promise<void> => {
+		if (!announce || !flowOn(options)) return;
+		const ingress = options.ingress();
+		const reason = await ingress.recoveryHold();
+		if (!reason) return;
+		const inspected = await ingress.inspect();
+		if (!inspected.submissions.some((submission) => submission.admission === "held") && !inspected.uncertain.length)
+			return;
+		announce(recoveryHoldNotice(reason));
+	};
 	return {
 		name: "jouzu-flow-status",
 		/**
@@ -75,14 +101,31 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 					: "Flow control paused after an admission failure. Pending work is held. Run /flow for details, /flow clear to release the hold, or /flow reset to reset delivery.",
 			);
 		},
+		/**
+		 * Report a submission the user asked for that admission refused. The send produced no turn and no
+		 * reply, so without this the only sign is a notice from whatever command issued it.
+		 */
+		announceHeldInput(input) {
+			if (!announce || !flowOn(options)) return;
+			const key = `${input.id}:${input.reason}`;
+			if (reportedHolds.has(key)) return;
+			rememberHold(key);
+			announce(heldInputNotice(input.reason));
+		},
 		factory(pi) {
 			pi.registerMessageRenderer("jouzu-flow", renderFlowMessage);
 			pi.on("session_start", (_event, ctx) => {
-				if (ctx.hasUI && flowOn(options) && options.ingress().automatedPause() === "the session was reopened")
+				if (!ctx.hasUI || !flowOn(options)) return;
+				// Kept fresh here as well as on every turn end: a refusal can arrive before the first turn.
+				announce = (text) => ctx.ui.notify(text, "info");
+				if (options.ingress().automatedPause() === "the session was reopened")
 					ctx.ui.notify(
 						"Flow control is paused after reopening this session. Inspect with /flow; resume automation with /flow resume or your next message.",
 						"info",
 					);
+				// A reopened session behind a recovery decision looks idle until the user runs /flow. The
+				// notice is advisory, so a failure to read the hold must not fail session start.
+				setImmediate(() => void announceRecoveryHold().catch(() => {}));
 			});
 			pi.on("agent_end", async (_event, ctx) => {
 				// Kept fresh here rather than captured at load: the context is replaced with the session.

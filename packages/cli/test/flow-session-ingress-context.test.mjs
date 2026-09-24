@@ -3,7 +3,7 @@ import { test } from "node:test";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { afterCleanup } from "./fixtures/cleanup.mjs";
-import { fixture } from "./fixtures/flow-session-ingress.mjs";
+import { fixture, waitForFlow } from "./fixtures/flow-session-ingress.mjs";
 
 test("idle non-waking custom context persists with native source identity and no model call", async (t) => {
 	const f = await fixture(t, { admit: null });
@@ -856,6 +856,58 @@ test("user priority covers retention writes and failed admission remains retaine
 	assert.equal(f.sent.length, 0);
 });
 
+test("a refused send the user asked for is reported while an automated hold is not", async (t) => {
+	const reported = [];
+	const f = await fixture(t, {
+		onHeldUserInput: (input) => reported.push(input),
+		policy: () => ({ userPending: false, recoveryBlocked: true, waitingWorkIds: [] }),
+	});
+	assert.equal(await f.ingress.recoveryHold(), "host recovery is still in progress");
+	await f.session.sendUserMessage("automated extension send", { deliverAs: "followUp" });
+	await f.session.prompt("typed while blocked");
+	assert.deepEqual(
+		reported.map((input) => input.reason),
+		["Input is waiting for recovery reconciliation."],
+	);
+	const records = await f.ingress.branch().attachment.submissions.snapshot(true);
+	assert.equal(records.find((record) => record.submission.api === "sendUserMessage").holds.length, 1);
+	assert.equal(f.sent.length, 0);
+});
+
+test("a command's own send is admitted while automated work is paused", async (t) => {
+	const f = await fixture(t, {
+		extensions: [
+			(pi) =>
+				pi.registerCommand("resume", {
+					description: "Answer the user with a continuation",
+					handler: () => pi.sendUserMessage("Resume the saved goal.", { deliverAs: "followUp" }),
+				}),
+		],
+	});
+	f.ingress.pauseAutomated("Hold automated dispatch");
+	await f.session.prompt("/resume");
+	// The command prompt is still settling, so the send is retained first and dispatched from the
+	// next boundary. Pi records the invocation only for the extension that owns the command, which is
+	// what makes this the user's own instruction arriving through the command.
+	await waitForFlow(async () =>
+		(await f.ingress.branch().attachment.submissions.snapshot(true)).some(
+			(record) => record.submission.api === "sendUserMessage",
+		),
+	);
+	const records = await f.ingress.branch().attachment.submissions.snapshot(true);
+	const invoked = records.find((record) => record.submission.api === "prompt");
+	const send = records.find((record) => record.submission.api === "sendUserMessage");
+	assert.equal(send.submission.userCommand.name, "resume");
+	assert.equal(send.submission.userCommand.submissionId, invoked.id);
+	assert.deepEqual(send.holds ?? [], []);
+	// The command's send releases the pause the way typed input does, so the work it resumes keeps
+	// running instead of stalling after one turn.
+	assert.equal(f.ingress.automatedPause(), undefined);
+	await f.session.waitForIdle();
+	await waitForFlow(async () => f.sent.length > 0);
+	assert.match(JSON.stringify(f.sent[0]), /Resume the saved goal/);
+});
+
 test("unavailable user input stays inspectable without blocking work after reopen", async (t) => {
 	const first = await fixture(t, { admit: async () => false });
 	await first.session.prompt("retained across reopen");
@@ -873,6 +925,46 @@ test("unavailable user input stays inspectable without blocking work after reope
 	await next.ingress.cancelRetained(record.id, 1);
 	assert.equal(next.ingress.branch().host.gate().userPending, false);
 	assert.equal(next.sent.length, 0);
+});
+
+test("a continuation retained by a previous lifetime is issued again instead of dropped", async (t) => {
+	const first = await fixture(t, { admit: async () => false });
+	await first.session.sendUserMessage("Continue the saved goal.", { deliverAs: "followUp" });
+	const [retained] = await first.ingress.branch().attachment.submissions.snapshot();
+	assert.equal(retained.status, "retained");
+	assert.equal(retained.dispatch, undefined);
+	// A record this attachment accepted has a live callback and the ordinary release path, so it is
+	// never reissued as its own duplicate.
+	assert.deepEqual(await first.ingress.branch().attachment.submissions.snapshot(true), [retained]);
+	assert.equal(first.sent.length, 0);
+
+	await first.ingress.dispose();
+	const next = await fixture(t, {
+		root: first.root,
+		manager: SessionManager.open(first.session.sessionManager.getSessionFile()),
+	});
+	// The reissued send is a fresh submission, and the superseded record is retired with it, so the same
+	// continuation is not issued again at every later open.
+	await waitForFlow(async () => {
+		const records = await next.ingress.branch().attachment.submissions.snapshot(true);
+		return records.some((record) => record.id === retained.id && record.status === "cancelled");
+	});
+	const records = await next.ingress.branch().attachment.submissions.snapshot(true);
+	const issued = records.filter((record) => record.id !== retained.id);
+	assert.equal(issued.length, 1);
+	assert.equal(issued[0].submission.api, "sendUserMessage");
+	assert.deepEqual(issued[0].submission.args, ["Continue the saved goal.", { deliverAs: "followUp" }]);
+	assert.equal(issued[0].unavailable, undefined);
+	assert.equal(
+		(await next.ingress.branch().attachment.submissions.snapshot(false)).filter(
+			(record) => record.status === "retained",
+		).length,
+		1,
+	);
+	// The reissued send ran natively; the next turn carries the continuation it queued.
+	assert.equal(issued[0].dispatch?.phase, "returned");
+	await next.session.prompt("Keep going");
+	await waitForFlow(async () => next.sent.some((body) => JSON.stringify(body).includes("Continue the saved goal.")));
 });
 
 test("consumed user queue no longer blocks semantic work after automated dispatch settles", async (t) => {

@@ -20,6 +20,8 @@ export interface MultiloopContinuation {
 interface Entry {
 	lane: MultiloopLane;
 	continuation?: MultiloopContinuation;
+	/** A continuation the controller has not admitted yet, so a cleared gate still has something to release. */
+	retained?: boolean;
 	revision?: string;
 	workId?: string;
 }
@@ -72,6 +74,7 @@ export class MultiloopFlowProducer implements FlowProducer {
 				build: input.build.bind(input),
 				admitted: input.admitted.bind(input),
 			},
+			retained: true,
 		});
 		this.changed();
 	}
@@ -102,6 +105,16 @@ export class MultiloopFlowProducer implements FlowProducer {
 		const id = this.waitingWork(captureLane(lane));
 		return id !== undefined && this.attachment.waits.gate().waitingWorkIds.includes(id);
 	}
+	/** True while this lane's continuation is submitted and not yet admitted. */
+	retained(lane: MultiloopLane): boolean {
+		this.assertActive();
+		return this.entries.get(key(captureLane(lane)))?.retained === true;
+	}
+	/** Lane identities the loaded extension has reported to this producer, in report order. */
+	lanes(): MultiloopLane[] {
+		this.assertActive();
+		return [...this.entries.values()].map((entry) => ({ ...entry.lane }));
+	}
 	private id(lane: MultiloopLane, workId?: string): string {
 		const scope = this.attachment.ledger.scope;
 		return `multiloop:${createHash("sha256")
@@ -125,6 +138,7 @@ export class MultiloopFlowProducer implements FlowProducer {
 			if (!work) {
 				this.unbound.add(key(entry.lane));
 				entry.continuation = undefined;
+				entry.retained = false;
 				continue;
 			}
 			this.unbound.delete(key(entry.lane));
@@ -191,6 +205,7 @@ export class MultiloopFlowProducer implements FlowProducer {
 		const entry = [...this.entries.values()].find((entry) => this.id(entry.lane, entry.workId) === intent.id);
 		if (!entry?.continuation) throw new FlowLedgerError("stale", "Consumed multiloop continuation is detached.");
 		entry.continuation.admitted();
+		entry.retained = false;
 		this.admittedAttempts.add(attempt.id);
 	}
 	close(): void {
