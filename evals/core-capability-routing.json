@@ -201,6 +201,19 @@
       }
     },
     {
+      "id": "deslop-existing-prose",
+      "prompt": "This release note is complete but reads like marketing copy. Cut the filler without losing any facts.",
+      "expect": {
+        "skills": ["jouzu-anti-slop"],
+        "tools": ["read"],
+        "behaviors": ["remove-filler-without-losing-facts"]
+      },
+      "avoid": {
+        "skills": ["multiloop"],
+        "tools": ["schedule_prompt"]
+      }
+    },
+    {
       "id": "background-dependency-wait",
       "prompt": "The background evaluation will finish in about three hours. Its tool returned a work ID and an exit dependency. No independent work remains.",
       "expect": {

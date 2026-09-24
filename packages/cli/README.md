@@ -161,8 +161,9 @@ Run `/login shisa` or set `SHISA_API_KEY` with `shisa/asr-realtime` access first
 
 `core` is the default profile and does not select a provider or response language. Product branding, locale, terminal settings, repository text, and path contents never opt a user into a response language.
 
-Core installs three optional skills:
+Core installs four optional skills:
 
+- `jouzu-anti-slop` for a filler-removal pass over existing prose that keeps facts and qualifiers;
 - `jouzu-clear-writing` for durable user-facing technical artifacts while preserving facts and terminology;
 - `jouzu-delegation` for clear subagent assignments, follow-ups, acceptance checks, and stopping points; and
 - `jouzu-source-check` for claim classification, primary evidence, counterevidence, confidence, and cross-source synthesis.

@@ -96,14 +96,14 @@ test("a non-interactive first run uses Core without recording Japanese consent",
 		assert.equal(result.stdout.trim(), piVersion);
 		const state = JSON.parse(readFileSync(join(jouzuHome, "state", "profile-state.json"), "utf8"));
 		assert.equal(state.activeProfile, "core");
-		assert.equal(state.profileVersion, 12);
+		assert.equal(state.profileVersion, 13);
 		assert.equal(existsSync(join(jouzuHome, "state", "profile-choice.json")), false);
 	} finally {
 		rmSync(temp, { recursive: true, force: true });
 	}
 });
 
-test("Core registers its three optional skills and review prompt", () => {
+test("Core registers its four optional skills and review prompt", () => {
 	const temp = mkdtempSync(join(tmpdir(), "jouzu-core-skills-"));
 	try {
 		const result = run(
@@ -115,7 +115,13 @@ test("Core registers its three optional skills and review prompt", () => {
 		const commandNames = response.data.commands.map((command) => command.name);
 		assert.deepEqual(
 			commandNames.filter((name) => name === "jouzu-review" || name.startsWith("skill:jouzu-")),
-			["jouzu-review", "skill:jouzu-clear-writing", "skill:jouzu-delegation", "skill:jouzu-source-check"],
+			[
+				"jouzu-review",
+				"skill:jouzu-anti-slop",
+				"skill:jouzu-clear-writing",
+				"skill:jouzu-delegation",
+				"skill:jouzu-source-check",
+			],
 		);
 	} finally {
 		rmSync(temp, { recursive: true, force: true });
@@ -180,6 +186,7 @@ test("Core loads the selected release-owned tool, command, and skill surfaces", 
 			"multiloop",
 			"pi-vcc",
 			"schedule-prompt",
+			"skill:jouzu-anti-slop",
 			"skill:jouzu-clear-writing",
 			"skill:jouzu-delegation",
 			"skill:jouzu-source-check",

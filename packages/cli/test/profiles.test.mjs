@@ -47,6 +47,7 @@ test("bundled Core and JA profiles resolve exact ordered assets", () => {
 		core.assets.map((asset) => asset.target),
 		[
 			"prompts/jouzu-review.md",
+			"skills/jouzu-anti-slop/SKILL.md",
 			"skills/jouzu-clear-writing/SKILL.md",
 			"skills/jouzu-delegation/SKILL.md",
 			"skills/jouzu-source-check/SKILL.md",
@@ -57,19 +58,23 @@ test("bundled Core and JA profiles resolve exact ordered assets", () => {
 		[
 			"APPEND_SYSTEM.md",
 			"prompts/jouzu-review.md",
+			"skills/jouzu-anti-slop/SKILL.md",
 			"skills/jouzu-clear-writing/SKILL.md",
 			"skills/jouzu-delegation/SKILL.md",
 			"skills/jouzu-source-check/SKILL.md",
 		],
 	);
-	assert.equal(core.manifestSha256, "8a83f76d1dea8332f8d8cedef910cbaf3ae19db30208e144bd1ba030118064fb");
-	assert.equal(ja.manifestSha256, "98a926d3b355e2497ffbd97d65d488e8795aeee7b7169d9aa874f89e18142cec");
+	assert.equal(core.manifestSha256, "f9e504560de1f138200c9a1eee6ef8cab7d06721f3daf430ce7484f3c9db3843");
+	assert.equal(ja.manifestSha256, "acffc667a187f5e46e3eb9ada862778c62d33b40ed13a8e9e6455579509f7f10");
 });
 
 test("bundled skills declare bounded public workflows", () => {
 	const core = loadBundledProfile("core");
 	const clearWriting = core.assets
 		.find((asset) => asset.target === "skills/jouzu-clear-writing/SKILL.md")
+		?.bytes.toString("utf8");
+	const antiSlop = core.assets
+		.find((asset) => asset.target === "skills/jouzu-anti-slop/SKILL.md")
 		?.bytes.toString("utf8");
 	const sourceCheck = core.assets
 		.find((asset) => asset.target === "skills/jouzu-source-check/SKILL.md")
@@ -88,6 +93,14 @@ test("bundled skills declare bounded public workflows", () => {
 	assert.match(clearWriting ?? "", /Check replacements against the original\./);
 	assert.match(clearWriting ?? "", /brevity must not remove facts, qualifiers, or necessary context\./);
 	assert.doesNotMatch(clearWriting ?? "", /ASD-STE100|[“”]/);
+	assert.match(antiSlop ?? "", /^---\nname: jouzu-anti-slop\n/);
+	assert.match(antiSlop ?? "", /# Anti-slop pass/);
+	assert.match(antiSlop ?? "", /The test for every sentence: \*\*does it state a fact, a number, a path, a/);
+	assert.match(antiSlop ?? "", /If you can't tell which bucket a sentence is in, treat it as/);
+	assert.match(antiSlop ?? "", /`jouzu-clear-writing` covers structure, terminology, the reader's task, and fact/);
+	assert.match(antiSlop ?? "", /### 24\. Obsolete surface narration/);
+	assert.match(antiSlop ?? "", /Blunt phrasing is acceptable; don't smooth terse prose into marketing copy\./);
+	assert.doesNotMatch(antiSlop ?? "", /sherpa|optimum-onnx|ORTModel|verify_export/);
 	assert.equal(
 		core.assets.some((asset) => asset.target === "skills/jouzu-core/SKILL.md"),
 		false,

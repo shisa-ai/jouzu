@@ -23,6 +23,7 @@ const expectedCaseIds = [
 	"long-running-shell-process",
 	"explicit-reminder",
 	"durable-user-facing-documentation",
+	"deslop-existing-prose",
 	"background-dependency-wait",
 	"replacement-job-notification",
 	"task-awaiting-user-input",
@@ -100,7 +101,12 @@ test("Core keeps repository discipline inline and generates bounded decision-tim
 			"bg_task",
 			"schedule_prompt",
 		],
-		skills: [{ name: "jouzu-source-check" }, { name: "multiloop" }, { name: "jouzu-clear-writing" }],
+		skills: [
+			{ name: "jouzu-source-check" },
+			{ name: "multiloop" },
+			{ name: "jouzu-clear-writing" },
+			{ name: "jouzu-anti-slop" },
+		],
 	});
 	assert.doesNotMatch(routing, /Repository files and commands|`read`|`grep`|`find`|`ls`/);
 	for (const phrase of [
@@ -116,6 +122,7 @@ test("Core keeps repository discipline inline and generates bounded decision-tim
 		"bg_task",
 		"schedule_prompt",
 		"jouzu-clear-writing",
+		"jouzu-anti-slop",
 	]) {
 		assert.match(routing, new RegExp(phrase));
 	}
@@ -125,6 +132,8 @@ test("Core keeps repository discipline inline and generates bounded decision-tim
 	assert.match(routing, /One user-approved persistent objective/);
 	assert.match(routing, /Repeated measured improvement/);
 	assert.match(routing, /read `jouzu-clear-writing` at its listed `<location>`/);
+	assert.match(routing, /read `jouzu-anti-slop` at its listed `<location>`/);
+	assert.match(routing, /Existing prose needs a filler-removal pass/);
 });
 
 test("delegation routes to the skill only when both tool and skill are available", () => {

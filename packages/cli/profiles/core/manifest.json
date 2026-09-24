@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "core",
-  "version": 12,
+  "version": 13,
   "assets": [
     {
       "source": "assets/jouzu-delegation-skill.md",
@@ -12,6 +12,11 @@
       "source": "assets/jouzu-clear-writing-skill.md",
       "target": "skills/jouzu-clear-writing/SKILL.md",
       "sha256": "0ba681784f73a32c64226debb2ca8859684b5456ad3c3b4bdb8eb01be740d126"
+    },
+    {
+      "source": "assets/jouzu-anti-slop-skill.md",
+      "target": "skills/jouzu-anti-slop/SKILL.md",
+      "sha256": "9459290ae8705bada5b802673f980ea19e5d636a9bed16168e4a3a7f005e5eae"
     },
     {
       "source": "assets/jouzu-review.md",

@@ -66,6 +66,12 @@ test("profile planning is non-mutating and apply converges", () => {
 				},
 				{
 					type: "create",
+					target: "skills/jouzu-anti-slop/SKILL.md",
+					reason: "missing",
+					desiredSha256: profile.assets.find((asset) => asset.target === "skills/jouzu-anti-slop/SKILL.md").sha256,
+				},
+				{
+					type: "create",
 					target: "skills/jouzu-clear-writing/SKILL.md",
 					reason: "missing",
 					desiredSha256: profile.assets.find((asset) => asset.target === "skills/jouzu-clear-writing/SKILL.md").sha256,

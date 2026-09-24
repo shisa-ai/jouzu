@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Bundle `jouzu-anti-slop`, a filler-removal checklist for existing prose that keeps facts, qualifiers, and exact technical content. Core installs four optional skills.
+
 ### Changed
 
 - Resume the attached run or the only active or paused run from a bare `/multiloop resume` or `multiloop_resume` call, instead of handing the choice to the agent. Completed and archived runs still need an explicit target.

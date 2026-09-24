@@ -146,6 +146,7 @@ test("generates stable capability routing from only active tools and skills", ()
 	assert.doesNotMatch(guidance, /tff-/);
 	assert.doesNotMatch(guidance, /schedule_prompt/);
 	assert.doesNotMatch(guidance, /jouzu-source-check/);
+	assert.doesNotMatch(guidance, /jouzu-anti-slop/);
 
 	const changed = buildCapabilityRoutingGuidance({
 		...options,

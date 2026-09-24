@@ -191,6 +191,12 @@ export function buildCapabilityRoutingGuidance(options: BuildSystemPromptOptions
 		"read `jouzu-clear-writing` at its listed `<location>`",
 		"Ground claims in the implementation and preserve exact technical content.",
 	);
+	add(
+		skills.has("jouzu-anti-slop"),
+		"Existing prose needs a filler-removal pass",
+		"read `jouzu-anti-slop` at its listed `<location>`",
+		"Delete filler, marketing language, and unsupported emphasis without dropping facts, qualifiers, or exact technical content.",
+	);
 	return [
 		"Jouzu capability routing for optional skills and workflow tools (generated from this session's active tools and skills):",
 		"| Need | Use | Boundary |",
