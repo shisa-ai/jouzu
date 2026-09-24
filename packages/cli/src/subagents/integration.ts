@@ -61,7 +61,7 @@ export interface WorkflowService {
 export function createWorkflowIntegration(
 	paths: JouzuPaths,
 	workerFactory?: WorkerFactory,
-	options: { textguardFiles?: boolean; textguardMode?: () => TextGuardMode } = {},
+	options: { textguardFiles?: boolean; textguardMode?: () => TextGuardMode; profile?: () => "core" | "ja" } = {},
 ): {
 	service: WorkflowService;
 	register(pi: ExtensionAPI, open: (section?: "agents" | "runs") => Promise<boolean>): void;
@@ -187,6 +187,9 @@ export function createWorkflowIntegration(
 					baseUrl: auth.baseUrl,
 				},
 				cwd,
+				userAgentDir: paths.agentDir,
+				runtimeStateDir: paths.stateDir,
+				profile: options.profile?.() ?? "core",
 				context: childContext,
 				task,
 				textguardFiles: options.textguardFiles === true,

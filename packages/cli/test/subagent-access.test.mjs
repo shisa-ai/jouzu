@@ -76,7 +76,8 @@ test("real reviewer reads a sibling file with role-limited tools", { timeout: 20
 		assert.equal(result.status, "completed", result.result);
 		assert.equal(requests.length, 2);
 		assert.ok(JSON.stringify(requests[1].messages).includes("SIBLING_REFERENCE_EVIDENCE"));
-		assert.ok(requests[0].tools.every((tool) => ["read", "grep", "find", "ls"].includes(tool.function.name)));
+		assert.ok(requests[0].tools.some((tool) => tool.function.name === "vcc_recall"));
+		assert.ok(requests[0].tools.every((tool) => !["bash", "powershell", "write", "edit"].includes(tool.function.name)));
 		assert.match(readFileSync(result.sessionFile, "utf8"), /SIBLING_REFERENCE_EVIDENCE/);
 	} finally {
 		await manager.dispose();

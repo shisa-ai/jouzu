@@ -1,4 +1,7 @@
 import assert from "node:assert/strict";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { test } from "node:test";
 import { buildModelGuidance } from "../dist/model-guidance.js";
 import { createJouzuPresentationExtension } from "../dist/presentation.js";
@@ -43,19 +46,24 @@ test("delegation guidance describes only the active Jouzu tool", () => {
 		assert.equal(buildModelGuidance(id, ["subagent"]), "");
 });
 
-test("child sessions receive the same model guidance as main sessions", () => {
+test("child sessions receive the same model guidance as main sessions", async (t) => {
+	const root = mkdtempSync(join(tmpdir(), "jouzu-child-model-guidance-"));
+	t.after(() => rmSync(root, { recursive: true, force: true }));
 	const launch = (id) => ({
-		cwd: "/tmp",
-		directory: "/tmp",
+		cwd: root,
+		directory: root,
 		task: "task",
 		role: { id: "reviewer", instructions: "Review the change.", tools: ["read"], judging: true },
 		model: { id, provider: "configured-provider" },
 		auth: {},
 	});
-	const astraPrompt = childResourceLoader(launch("gpt-6-astra")).getAppendSystemPrompt();
-	assert.deepEqual(astraPrompt, ["Review the change.", buildModelGuidance("gpt-6-astra", ["read"])]);
-	assert.match(astraPrompt[1], /offering to continue/);
-	assert.deepEqual(childResourceLoader(launch("gpt-5.6-sol")).getAppendSystemPrompt(), ["Review the change."]);
+	const astraPrompt = (await childResourceLoader(launch("gpt-6-astra"))).getAppendSystemPrompt();
+	assert.ok(astraPrompt.includes("Review the change."));
+	assert.ok(astraPrompt.includes(buildModelGuidance("gpt-6-astra", ["read"])));
+	assert.match(astraPrompt.join("\n"), /offering to continue/);
+	const other = (await childResourceLoader(launch("gpt-5.6-sol"))).getAppendSystemPrompt();
+	assert.ok(other.includes("Review the change."));
+	assert.doesNotMatch(other.join("\n"), /Jouzu guidance for GPT-6 Astra/);
 });
 
 test("explicit custom system prompts remain user-owned", async () => {

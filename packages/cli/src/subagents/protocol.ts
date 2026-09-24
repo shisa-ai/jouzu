@@ -10,6 +10,9 @@ export interface WorkerLaunch {
 	auth: { apiKey?: string; headers?: Record<string, string>; baseUrl?: string; env?: Record<string, string> };
 	cwd: string;
 	directory: string;
+	userAgentDir?: string;
+	runtimeStateDir?: string;
+	profile?: "core" | "ja";
 	sessionFile?: string;
 	context?: ChildContext;
 	parentContextFile?: string;

@@ -18,7 +18,7 @@ Definitions, main-session roles, run history, output reading, Stop, and completi
 
 **Use in main session** changes the idle main agent's model and thinking setting, and adds the role's instructions to subsequent turns. The main session keeps its conversation and tools. **Launch agent** opens an assignment form and starts a separate child session after you submit it. Child tools and execution limits apply to child runs. Editing a definition affects future launches; existing runs retain their saved definition.
 
-**Add agent** and **Duplicate as new agent** support arbitrary role names. Behavior follows the definition's fields, including **Review only**, rather than its name. Review-only definitions run as children and allow only `read`, `grep`, `find`, and `ls`.
+**Add agent** and **Duplicate as new agent** support arbitrary role names. Behavior follows the definition's fields, including **Review only**, rather than its name. Review-only definitions run as children and restrict built-in tools to `read`, `grep`, `find`, and `ls`. Bundled extension tools are also available; review-only is an assignment policy, not an OS security boundary.
 
 Definitions are stored in `agents.json` in Jouzu's configuration directory (`jz doctor` shows the directories). With `JOUZU_HOME`, this is `$JOUZU_HOME/agents.json`. The file contains `schemaVersion: 1`, `maxConcurrent`, and a `roles` array. Each role has:
 
@@ -28,8 +28,8 @@ Definitions are stored in `agents.json` in Jouzu's configuration directory (`jz 
 | `model`, `thinking` | Exact model selector and Pi thinking setting. |
 | `instructions` | Inline instructions, up to 32,000 characters. |
 | `placement` | `main`, `child`, or `both`. |
-| `judging` | Fresh review context with read-only tools; requires `child`. |
-| `tools` | Child tool names: `read`, `grep`, `find`, `ls`, `write`, `edit`, `bash`, `powershell`. |
+| `judging` | Fresh review context with read-only built-in tools; requires `child`. |
+| `tools` | Built-in child tool names: `read`, `grep`, `find`, `ls`, `write`, `edit`, `bash`, `powershell`. Bundled extension tools are loaded separately. |
 | `timeoutSeconds`, `maxTurns` | Defaults: 7,200 seconds (2 hours) and 500 turns. Runtime accepts 10–2,147,483 seconds (about 24 days); turns accept whole numbers from 1 to 9,007,199,254,740,991. |
 
 Saved definitions keep their configured limits. Edit and save them to use different limits; active runs and resumed follow-ups retain their original definition. The runtime ceiling avoids Node timer overflow; for example, 259,200 seconds allows a three-day run. A run stops at whichever limit it reaches first.
@@ -121,7 +121,7 @@ While subagents are enabled, every parent model receives a short checklist: writ
 
 ## Review evidence
 
-A review-only child receives the assignment, role instructions, and its own tools. It does not receive the parent's transcript, extensions, skills, or automatically loaded project instructions. Include requirements, scope, and check evidence in the assignment. The reviewer can read repository instructions as source material; it cannot execute repository tests with its read-only tool set.
+A review-only child receives the assignment, role instructions, bundled extension tools, and discovered skills. Parent conversation is excluded by default, and project instructions are not loaded automatically. Include requirements, scope, and check evidence in the assignment. The reviewer can read repository instructions as source material. State whether running checks is authorized; the review-only setting does not prevent bundled extension tools from executing commands.
 
 Jouzu records a Git working-tree identity at launch and compares it at completion. This covers HEAD, tracked changes, and untracked files in the selected workspace within bounded snapshot limits. It does not cover sibling repositories merely because the reviewer reads them. For multi-repository work, state each target and baseline in the assignment and require separate coverage evidence. Changes produce a **changed** review marker. Non-root workspaces, submodules, unavailable Git data, and snapshots exceeding limits produce **unverified** coverage. Ignored files are outside this identity. An unchanged identity establishes only that the captured inputs match.
 
@@ -131,6 +131,10 @@ A completed run means the child returned a final response and exited successfull
 
 Children run through Jouzu's pinned Pi SDK in separate Node processes. They use the selected model and resolved API key/token or headers through a private IPC channel. Authentication requiring extension code or additional credential environment variables is rejected before launch. Long-lived runs do not refresh authentication tokens. Model-reported usage is accumulated per run, including successful cache-warming requests; missing cost information stays unknown. New launches and resumes copy the global warming mode, while running children retain their launch setting. See [Prompt-cache warming](cache-warming.md) for modes, costs, and limits.
 
-Coder children load repository `AGENTS.md` instructions. Children do not load ambient extensions or skills and cannot delegate through the `subagent` tool. Enabled file tools can access sibling directories and other paths permitted by the operating system. Role tool selection controls what operations a child can perform; the working directory is not a filesystem sandbox. Shell tools also run with the user's OS permissions. Workspace locks coordinate children using the same selected directory, not arbitrary cross-directory writes. Use child roles only for trusted local work.
+Children load Jouzu's bundled extensions and active profile guidance, plus bundled, user, and workspace skills. Ordinary roles also load repository `AGENTS.md` instructions. Model guidance and TextGuard apply to child sessions. Recall searches the child's own saved conversation; `parent_context` provides the separately configured parent lookup.
+
+Task lists, schedules, loops, and flow-control records use child-owned storage. Child startup does not reopen the project's task automation. Resume retains the child's task list. A worker joins requested task continuations, background executions, scheduled prompt delivery, and requested compaction before reporting its final result, within the role's turn and time limits. An unfinished task list alone does not keep a child running. Schedules run only while the child worker is active; a recurring schedule alone does not keep it alive after its first trigger.
+
+Enabled file tools can access sibling directories and other paths permitted by the operating system. Role tool selection controls built-in tools; bundled extension tools are also available, including background commands and automation. The working directory is not a filesystem sandbox, and commands run with the user's OS permissions. Workspace locks use the role's built-in tool selection and selected directory; they do not cover arbitrary extension commands or cross-directory writes. Use child roles only for trusted local work.
 
 Run records, events, and Pi child sessions remain under Jouzu's state directory in `subagents/`. They include parent/session links, definition digests, model identity, control receipts, usage, and completion state. Credentials passed to the worker are excluded from these records, though task and tool output can contain sensitive content. There is no automatic retention deletion. Parent shutdown stops owned children; reopening a parent marks unverifiable active records interrupted, reports them to the main agent, and leaves them for inspection and explicit resume.

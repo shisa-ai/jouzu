@@ -2,17 +2,18 @@ import { join } from "node:path";
 import {
 	type AgentSession,
 	createAgentSession,
-	createExtensionRuntime,
-	loadProjectContextFiles,
 	ModelRuntime,
-	type ResourceLoader,
 	SessionManager,
 	SettingsManager,
 } from "@earendil-works/pi-coding-agent";
-import { buildModelGuidance } from "../model-guidance.js";
+import { createFlowControlRuntime, type FlowControlRuntime } from "../flow-control/flow-runtime.js";
 import { TextGuardRuntime } from "../textguard-runtime.js";
 import { inheritedContextText, parentContextTool } from "./context.js";
 import type { WorkerCommand, WorkerEvent, WorkerLaunch } from "./protocol.js";
+import { configureChildResources, expandedChildResourceLoader } from "./resources.js";
+import { observeChildBackgroundExecution, settleChildWork } from "./settle.js";
+
+export { expandedChildResourceLoader as childResourceLoader } from "./resources.js";
 
 function boundedText(text: string, limit: number): string {
 	return text.length > limit
@@ -22,37 +23,31 @@ function boundedText(text: string, limit: number): string {
 function send(event: WorkerEvent): void {
 	if (process.connected) process.send?.(event);
 }
-export function childResourceLoader(
+export async function runWorker(
 	launch: WorkerLaunch,
-	contentPolicy?: ResourceLoader["contentPolicy"],
-): ResourceLoader {
-	const entries = launch.role.judging ? [] : loadProjectContextFiles({ cwd: launch.cwd, agentDir: launch.directory });
-	return {
-		contentPolicy,
-		getExtensions: () => ({ extensions: [], errors: [], runtime: createExtensionRuntime() }),
-		getSkills: () => ({ skills: [], diagnostics: [] }),
-		getPrompts: () => ({ prompts: [], diagnostics: [] }),
-		getThemes: () => ({ themes: [], diagnostics: [] }),
-		getAgentsFiles: () => ({ agentsFiles: entries }),
-		getSystemPrompt: () => undefined,
-		getSystemPromptSource: () => undefined,
-		getAppendSystemPrompt: () =>
-			[launch.role.instructions, buildModelGuidance(launch.model.id, launch.role.tools)].filter(Boolean),
-		getAppendSystemPromptSources: () => [],
-		extendResources: async () => {},
-		reload: async () => {},
-	};
-}
-export async function runWorker(launch: WorkerLaunch, onSession: (session: AgentSession) => void): Promise<void> {
+	onSession: (session: AgentSession) => void,
+	signal: AbortSignal = new AbortController().signal,
+): Promise<void> {
+	configureChildResources(launch);
+	const failure = new AbortController();
+	const stop = AbortSignal.any([signal, failure.signal]);
+	const flow = createFlowControlRuntime({
+		root: join(launch.directory, "flow"),
+		onError: (error) => failure.abort(error),
+	});
 	const textguard = new TextGuardRuntime({
 		cachePath: join(launch.directory, "textguard-scans.json"),
 		files: launch.textguardFiles,
 		...(launch.textguardMode ? { mode: launch.textguardMode } : {}),
 	});
 	try {
-		await runGuardedWorker(launch, onSession, textguard);
+		await runGuardedWorker(launch, onSession, textguard, flow, stop, failure);
 	} finally {
-		await textguard.close();
+		try {
+			await flow.dispose();
+		} finally {
+			await textguard.close();
+		}
 	}
 }
 
@@ -60,6 +55,9 @@ async function runGuardedWorker(
 	launch: WorkerLaunch,
 	onSession: (session: AgentSession) => void,
 	textguard: TextGuardRuntime,
+	flow: FlowControlRuntime,
+	signal: AbortSignal,
+	failureController: AbortController,
 ): Promise<void> {
 	const { model, auth, role } = launch;
 	const customTools =
@@ -98,6 +96,32 @@ async function runGuardedWorker(
 		const inherited = inheritedContextText(launch.context);
 		if (inherited) sessionManager.appendCustomMessageEntry("jouzu-parent-context", inherited, true);
 	}
+	let turns = 0;
+	let exhausted = false;
+	const resources = await expandedChildResourceLoader(
+		launch,
+		await textguard.createPolicy({ cwd: launch.cwd, sessionId: sessionManager.getSessionId() }),
+		[
+			...flow.extensions,
+			{
+				name: "jouzu-child-lifecycle",
+				factory(pi) {
+					pi.on("before_agent_start", () => {
+						if (turns >= role.maxTurns) {
+							exhausted = true;
+							failureController.abort(new Error("Agent limit reached. Work is incomplete."));
+						}
+					});
+					pi.on("tool_result", async (event) => {
+						if (!event.isError && ["bg_task", "bash", "powershell"].includes(event.toolName))
+							await observeChildBackgroundExecution(ingress, event.details);
+					});
+				},
+			},
+		],
+	);
+	tools.push(...resources.getExtensions().extensions.flatMap((extension) => [...extension.tools.keys()]));
+	const ingress = await flow.flowIngressFactory({ cwd: launch.directory, sessionManager });
 	const { session, modelFallbackMessage } = await createAgentSession({
 		cwd: launch.cwd,
 		agentDir: launch.directory,
@@ -108,68 +132,50 @@ async function runGuardedWorker(
 		customTools,
 		sessionManager,
 		settingsManager,
-		resourceLoader: childResourceLoader(
-			launch,
-			await textguard.createPolicy({ cwd: launch.cwd, sessionId: sessionManager.getSessionId() }),
-		),
+		resourceLoader: resources,
+		flowIngress: ingress,
 	});
-	if (modelFallbackMessage) throw new Error("Model: the requested model could not be restored.");
-	onSession(session);
-	if (!process.connected && process.send) {
-		await session.dispose();
-		throw new Error("Parent disconnected.");
-	}
-	let turns = 0;
-	let exhausted = false;
-	let lastText = "";
-	let lastStop = "";
-	let lastError = "";
-	let toolCount = 0;
-	// Roles control tools; the working directory is not a filesystem sandbox.
-	session.agent.beforeToolCall = async ({ toolCall }) => {
-		if (!tools.includes(toolCall.name))
-			return { block: true, reason: "Access denied: tool is not in the role definition." };
-		try {
-			if (++toolCount > role.maxTurns * 20) {
-				exhausted = true;
-				return { block: true, reason: "Tool limit reached. Report remaining work." };
-			}
-		} catch (error) {
-			return { block: true, reason: error instanceof Error ? error.message : "Access denied." };
-		}
-		return undefined;
+	let unsubscribe = () => {};
+	const abort = () => {
+		void session.abort();
 	};
-	const unsubscribe = session.subscribe((event) => {
-		if (event.type === "entry_appended" && event.entry.type === "usage") {
-			const usage = event.entry.usage;
-			send({
-				type: "usage",
-				input: usage.input,
-				output: usage.output,
-				cacheRead: usage.cacheRead,
-				cacheWrite: usage.cacheWrite,
-				cost: Number.isFinite(usage.cost?.total) && usage.cost.total > 0 ? usage.cost.total : null,
-			});
-		}
-		if (event.type === "tool_execution_start") send({ type: "activity", tool: event.toolName });
-		if (event.type === "message_end") {
-			const message = event.message;
-			if (message.role === "assistant") {
-				lastText = message.content
-					.filter((part) => part.type === "text")
-					.map((part) => part.text)
-					.join("\n");
-				lastStop = message.stopReason;
-				// A provider failure records its cause here and nowhere else the parent can reach.
-				// Without it a dead endpoint is reported as a bare "(error)" with no cause at all.
-				lastError = message.stopReason === "error" ? (message.errorMessage ?? "").trim() : "";
-				send({
-					type: "message",
-					role: "assistant",
-					text: boundedText(lastText, 32_000),
-					entryId: sessionManager.getLeafId() ?? undefined,
-				});
-				const usage = message.usage;
+	signal.addEventListener("abort", abort, { once: true });
+	try {
+		if (modelFallbackMessage) throw new Error("Model: the requested model could not be restored.");
+		await session.bindExtensions({ mode: "print", onError: (error) => failureController.abort(error) });
+		signal.throwIfAborted();
+		session.setActiveToolsByName([
+			...tools,
+			...resources.getExtensions().extensions.flatMap((extension) => [...extension.tools.keys()]),
+		]);
+		onSession(session);
+		if (!process.connected && process.send) throw new Error("Parent disconnected.");
+		let lastText = "";
+		let lastStop = "";
+		let lastError = "";
+		let toolCount = 0;
+		// Roles control tools; the working directory is not a filesystem sandbox.
+		const previousBeforeToolCall = session.agent.beforeToolCall;
+		session.agent.beforeToolCall = async (input, toolSignal) => {
+			if (!session.getActiveToolNames().includes(input.toolCall.name))
+				return { block: true, reason: "Access denied: tool is not in the role definition." };
+			try {
+				if (++toolCount > role.maxTurns * 20) {
+					exhausted = true;
+					return { block: true, reason: "Tool limit reached. Report remaining work." };
+				}
+			} catch (error) {
+				return { block: true, reason: error instanceof Error ? error.message : "Access denied." };
+			}
+			return previousBeforeToolCall?.(input, toolSignal);
+		};
+		unsubscribe = session.subscribe((event) => {
+			if (event.type === "turn_start" && turns >= role.maxTurns) {
+				exhausted = true;
+				failureController.abort(new Error("Agent limit reached. Work is incomplete."));
+			}
+			if (event.type === "entry_appended" && event.entry.type === "usage") {
+				const usage = event.entry.usage;
 				send({
 					type: "usage",
 					input: usage.input,
@@ -179,39 +185,67 @@ async function runGuardedWorker(
 					cost: Number.isFinite(usage.cost?.total) && usage.cost.total > 0 ? usage.cost.total : null,
 				});
 			}
-			if (message.role === "toolResult") {
-				send({
-					type: "message",
-					role: `tool:${message.toolName}`,
-					text: message.content
+			if (event.type === "tool_execution_start") send({ type: "activity", tool: event.toolName });
+			if (event.type === "message_end") {
+				const message = event.message;
+				if (message.role === "assistant") {
+					lastText = message.content
 						.filter((part) => part.type === "text")
 						.map((part) => part.text)
-						.join("\n")
-						.slice(0, 16_000),
-					entryId: sessionManager.getLeafId() ?? undefined,
-				});
+						.join("\n");
+					lastStop = message.stopReason;
+					// A provider failure records its cause here and nowhere else the parent can reach.
+					// Without it a dead endpoint is reported as a bare "(error)" with no cause at all.
+					lastError = message.stopReason === "error" ? (message.errorMessage ?? "").trim() : "";
+					send({
+						type: "message",
+						role: "assistant",
+						text: boundedText(lastText, 32_000),
+						entryId: sessionManager.getLeafId() ?? undefined,
+					});
+					const usage = message.usage;
+					send({
+						type: "usage",
+						input: usage.input,
+						output: usage.output,
+						cacheRead: usage.cacheRead,
+						cacheWrite: usage.cacheWrite,
+						cost: Number.isFinite(usage.cost?.total) && usage.cost.total > 0 ? usage.cost.total : null,
+					});
+				}
+				if (message.role === "toolResult") {
+					send({
+						type: "message",
+						role: `tool:${message.toolName}`,
+						text: message.content
+							.filter((part) => part.type === "text")
+							.map((part) => part.text)
+							.join("\n")
+							.slice(0, 16_000),
+						entryId: sessionManager.getLeafId() ?? undefined,
+					});
+				}
 			}
-		}
-		if (
-			event.type === "turn_end" &&
-			++turns >= role.maxTurns &&
-			event.message.role === "assistant" &&
-			event.message.content.some((part) => part.type === "toolCall")
-		) {
-			exhausted = true;
-			void session.abort();
-		}
-	});
-	const sessionFile = sessionManager.getSessionFile();
-	if (!sessionFile) throw new Error("Worker session file was not created before reporting readiness.");
-	send({
-		type: "ready",
-		sessionFile,
-		sessionId: sessionManager.getSessionId(),
-	});
-	try {
+			if (
+				event.type === "turn_end" &&
+				++turns >= role.maxTurns &&
+				event.message.role === "assistant" &&
+				event.message.content.some((part) => part.type === "toolCall")
+			) {
+				exhausted = true;
+				void session.abort();
+			}
+		});
+		const sessionFile = sessionManager.getSessionFile();
+		if (!sessionFile) throw new Error("Worker session file was not created before reporting readiness.");
+		send({
+			type: "ready",
+			sessionFile,
+			sessionId: sessionManager.getSessionId(),
+		});
 		try {
 			await session.prompt(launch.task);
+			if (!exhausted) await settleChildWork(session, ingress, resources.compaction, signal);
 		} catch (error) {
 			// Admission also observes aborts. Preserve the role-limit outcome when
 			// its cancellation interrupts a final context check.
@@ -233,7 +267,12 @@ async function runGuardedWorker(
 		});
 	} finally {
 		unsubscribe();
-		await session.dispose();
+		signal.removeEventListener("abort", abort);
+		try {
+			await session.extensionRunner.emit({ type: "session_shutdown", reason: "quit" });
+		} finally {
+			await session.dispose();
+		}
 	}
 }
 
@@ -243,6 +282,7 @@ if (process.send) {
 	let session: AgentSession | undefined;
 	let started = false;
 	let cancelled = false;
+	const cancellation = new AbortController();
 	let finished = false;
 	process.on("disconnect", () => {
 		if (finished) return;
@@ -256,6 +296,7 @@ if (process.send) {
 	process.on("message", (raw: WorkerCommand) => {
 		if (raw.type === "stop") {
 			cancelled = true;
+			cancellation.abort(new Error("Agent cancelled."));
 			void session?.abort();
 			return;
 		}
@@ -273,13 +314,17 @@ if (process.send) {
 		}
 		if (raw.type !== "start" || started) return;
 		started = true;
-		void runWorker(raw.launch, (value) => {
-			session = value;
-			if (cancelled) {
-				value.dispose();
-				throw new Error("Agent cancelled before startup.");
-			}
-		})
+		void runWorker(
+			raw.launch,
+			(value) => {
+				session = value;
+				if (cancelled) {
+					value.dispose();
+					throw new Error("Agent cancelled before startup.");
+				}
+			},
+			cancellation.signal,
+		)
 			.catch(() => {
 				// Provider exceptions may contain headers or URLs. Keep diagnostics out of IPC/storage.
 				send({

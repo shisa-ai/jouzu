@@ -62,8 +62,8 @@ test("bundled Core and JA profiles resolve exact ordered assets", () => {
 			"skills/jouzu-source-check/SKILL.md",
 		],
 	);
-	assert.equal(core.manifestSha256, "4957139e71393a97aaf6be714fef9765adc3486c18c3713876a916992474ff22");
-	assert.equal(ja.manifestSha256, "36f4115706dd28a2e8b2c36967c8ebf888b1235abb72c093a737bb818fe185fd");
+	assert.equal(core.manifestSha256, "59bd6d3f31dd582433bca7553fb5b3c974fac93973138a359b8c5c93cc205d9f");
+	assert.equal(ja.manifestSha256, "1edcc47cd59f62cfb65f0aadab4d06e677e79715ce84ec4064da150199e40ae8");
 });
 
 test("bundled skills declare bounded public workflows", () => {
