@@ -329,6 +329,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 		textguardFiles: parsed.options.textguardFiles,
 		// Read at launch time: a child inherits whatever mode the session is in.
 		textguardMode: () => nativeTextguard.currentMode(),
+		profile: () => profile.id,
 		applyProjectDefaultAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
 		restoreLastModelAtStartup: interactiveStartup && projectDefaultAppliesAtStartup(parsed.args),
 		startupArgs: parsed.args,

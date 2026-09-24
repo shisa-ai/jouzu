@@ -92,9 +92,11 @@ for (const variant of ["clear-skill", "major-skill", "ordinary-file", "ordinary-
 				assert.doesNotMatch(readFileSync(result.sessionFile, "utf8"), /CHILD_SOURCE_MARKER/);
 			}
 			if (variant === "ordinary-file-opt-in") assert.match(visible, /TextGuard advisory:/);
-			assert.ok(requests[0].tools.every((tool) => ["read", "grep", "find", "ls"].includes(tool.function.name)));
-			// Simulate history written before admission: resume must scan the persisted
-			// expansion even though the child loader publishes no skills.
+			assert.ok(requests[0].tools.some((tool) => tool.function.name === "vcc_recall"));
+			assert.ok(
+				requests[0].tools.every((tool) => !["bash", "powershell", "write", "edit"].includes(tool.function.name)),
+			);
+			// Simulate history written before admission: resume must scan persisted expansions.
 			const saved = SessionManager.open(result.sessionFile);
 			saved.appendMessage({
 				role: "user",

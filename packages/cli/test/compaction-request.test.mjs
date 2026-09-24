@@ -46,6 +46,27 @@ function settledContext({ hasPendingMessages = false, compactThrows } = {}) {
 	};
 }
 
+test("headless idle waiters join compaction through completion and failure", async () => {
+	for (const outcome of ["complete", "error"]) {
+		const { handlers, tools, sent, controller } = installTool();
+		await controller.waitForIdle();
+		await tools.get(COMPACTION_TOOL_NAME).execute();
+		let idle = false;
+		const joined = controller.waitForIdle().then(() => {
+			idle = true;
+		});
+		const { ctx, compactCalls } = settledContext();
+		await handlers.get("agent_settled")({ type: "agent_settled" }, ctx);
+		assert.equal(idle, false);
+		const second = controller.waitForIdle();
+		if (outcome === "complete") compactCalls[0].onComplete({});
+		else compactCalls[0].onError(new Error("fixture failure"));
+		await Promise.all([joined, second]);
+		assert.equal(idle, true);
+		assert.equal(sent.length, outcome === "complete" ? 1 : 0);
+	}
+});
+
 test("a request is held until the run settles, then dispatched once", async () => {
 	const { handlers, tools, sent, controller } = installTool();
 	const tool = tools.get(COMPACTION_TOOL_NAME);

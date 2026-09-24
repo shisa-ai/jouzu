@@ -35,6 +35,8 @@ function fixture(realWorker = false, options = {}) {
 	};
 	const integration = createWorkflowIntegration(paths, realWorker ? undefined : workerFactory, options);
 	const handlers = new Map();
+	const commands = new Map();
+	const opened = [];
 	let tool;
 	let messageRenderer;
 	let command;
@@ -48,6 +50,7 @@ function fixture(realWorker = false, options = {}) {
 				messageRenderer = renderer;
 			},
 			registerCommand: (name, definition) => {
+				commands.set(name, definition);
 				command = name;
 				commandDefinition = definition;
 			},
@@ -65,7 +68,10 @@ function fixture(realWorker = false, options = {}) {
 				resolveMessage({ message, options });
 			},
 		},
-		async () => true,
+		async (section) => {
+			opened.push(section);
+			return true;
+		},
 	);
 	const models = ["gpt-6-astra", "glm-5.3-flash"].map((id) => ({
 		id,
@@ -99,6 +105,8 @@ function fixture(realWorker = false, options = {}) {
 		paths,
 		integration,
 		handlers,
+		commands,
+		opened,
 		workers,
 		messages,
 		nextMessage,
@@ -125,6 +133,124 @@ function fixture(realWorker = false, options = {}) {
 		shutdown: () => handlers.get("session_shutdown")(),
 	};
 }
+test("launch captures parent context before authentication and resume keeps its snapshot", async () => {
+	const f = fixture();
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		f.branch.push({
+			type: "message",
+			id: "u",
+			parentId: null,
+			message: { role: "user", content: "ORIGINAL_REQUIREMENT" },
+		});
+		const started = await f.invoke({
+			op: "launch",
+			role: "coder",
+			task: "Inspect",
+			context: "splice",
+			entryIds: ["u"],
+			parentContext: true,
+		});
+		assert.equal(started.context.mode, "splice");
+		const worker = f.workers[0];
+		assert.match(readFileSync(worker.launch.parentContextFile, "utf8"), /ORIGINAL_REQUIREMENT/);
+		f.branch[0].message.content = "LATER_REQUIREMENT";
+		assert.doesNotMatch(readFileSync(worker.launch.parentContextFile, "utf8"), /LATER_REQUIREMENT/);
+		const childFile = join(worker.launch.directory, "session.jsonl");
+		writeFileSync(childFile, "{}\n");
+		worker.emit({ type: "ready", sessionFile: childFile, sessionId: "child" });
+		worker.emit({ type: "result", status: "completed", text: "Done" });
+		worker.exit(true);
+		await assert.rejects(f.invoke({ op: "resume", id: started.id, task: "Continue", context: "fork" }), /launch-only/);
+		await f.invoke({ op: "resume", id: started.id, task: "Continue" });
+		assert.equal(f.workers[1].launch.parentContextFile, worker.launch.parentContextFile);
+		assert.deepEqual(f.workers[1].launch.context.entries, []);
+		let authCalls = 0;
+		f.ctx.modelRegistry.getApiKeyAndHeaders = async () => {
+			authCalls++;
+			return { ok: true, apiKey: "secret" };
+		};
+		await assert.rejects(
+			f.invoke({ op: "launch", role: "coder", task: "Inspect", context: "splice", entryIds: ["missing"] }),
+			/Context:/,
+		);
+		assert.equal(authCalls, 0);
+	} finally {
+		await f.shutdown();
+	}
+});
+
+test("dashboard command routes to Runs, hides without stopping, and clears across sessions", async () => {
+	const f = fixture();
+	const widgets = [];
+	let component;
+	f.ctx.ui.setWidget = (_key, factory) => {
+		widgets.push(factory);
+		component = factory?.({ requestRender() {}, terminal: { rows: 32 } }, { fg: (_role, text) => text });
+	};
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		const command = f.commands.get("subagents");
+		assert.deepEqual(command.getArgumentCompletions("h"), [{ value: "hide", label: "hide" }]);
+		await command.handler("", f.ctx);
+		assert.deepEqual(f.opened, ["runs"]);
+		const run = await f.invoke({ op: "launch", role: "coder", task: "Inspect" });
+		assert.ok(component);
+		await command.handler("hide", f.ctx);
+		assert.equal(component, undefined);
+		assert.equal(f.integration.service.runs()[0].status, "starting");
+		await command.handler("show", f.ctx);
+		assert.ok(component);
+		await command.handler("invalid", f.ctx);
+		assert.match(f.notifications.at(-1)[0], /Use \/subagents/);
+		await command.handler("", { ...f.ctx, mode: "rpc" });
+		assert.equal(JSON.parse(f.notifications.at(-1)[0]).runs[0].id, run.id);
+		const output = [];
+		const log = console.log;
+		try {
+			console.log = (text) => output.push(text);
+			await command.handler("", { ...f.ctx, mode: "print" });
+		} finally {
+			console.log = log;
+		}
+		assert.equal(JSON.parse(output[0]).runs[0].id, run.id);
+		await f.handlers.get("session_start")({}, f.ctx);
+		assert.ok(widgets.includes(undefined), "session replacement removes the old widget");
+	} finally {
+		await f.shutdown();
+		assert.equal(component, undefined);
+	}
+});
+
+test("trace reads parent and child sessions without acknowledging completion", async () => {
+	const f = fixture();
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		const parentFile = join(f.root, "parent.jsonl");
+		const content = `${JSON.stringify({ type: "message", id: "e", message: { role: "user", content: "Evidence" } })}\n`;
+		writeFileSync(parentFile, content);
+		f.ctx.sessionManager.getSessionFile = () => parentFile;
+		assert.equal((await f.invoke({ op: "trace" })).records[0].text, "Evidence");
+		const run = await f.invoke({ op: "launch", role: "coder", task: "Inspect" });
+		assert.equal((await f.invoke({ op: "trace", id: run.id })).totalBytes, 0);
+		const childFile = join(f.workers[0].launch.directory, "session.jsonl");
+		writeFileSync(childFile, content);
+		f.workers[0].emit({ type: "ready", sessionFile: childFile, sessionId: "child" });
+		f.workers[0].emit({ type: "result", status: "completed", text: "Done" });
+		f.workers[0].exit(true);
+		const result = await f.tool.execute("trace", { op: "trace", id: run.id, entryId: "e" });
+		assert.equal(JSON.parse(result.content[0].text).records[0].entryId, "e");
+		assert.equal(result.details.terminalRead, undefined);
+		assert.equal(f.integration.service.runs()[0].completion.handled, false);
+		assert.equal(readFileSync(childFile, "utf8"), content);
+		await f.integration.service.setSubagentsEnabled(false);
+		assert.equal((await f.invoke({ op: "trace", id: run.id })).records.length, 1);
+		await assert.rejects(f.invoke({ op: "trace", id: "unknown" }), /not found/);
+	} finally {
+		await f.shutdown();
+	}
+});
+
 test("child launches and resumes snapshot the global warming setting", async () => {
 	const f = fixture();
 	try {

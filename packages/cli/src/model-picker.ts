@@ -95,6 +95,7 @@ export interface JouzuModelPickerOptions {
 	textguardFiles?: boolean;
 	/** Reads the live TextGuard mode when a child agent launches. */
 	textguardMode?: () => TextGuardMode;
+	profile?: () => "core" | "ja";
 	applyProjectDefaultAtStartup?: boolean;
 	restoreLastModelAtStartup?: boolean;
 	restoreLastThinkingLevelAtStartup?: boolean;
@@ -895,6 +896,7 @@ export function createJouzuModelPicker(
 	const store = new ModelPickerStore(paths);
 	const workflow = createWorkflowIntegration(paths, undefined, {
 		textguardFiles: options.textguardFiles,
+		profile: options.profile,
 		...(options.textguardMode ? { textguardMode: options.textguardMode } : {}),
 	});
 	const jouzuKeybindings = createJouzuKeybindingsManager(paths);
@@ -1597,7 +1599,10 @@ export function createJouzuModelPicker(
 		extension,
 		workflowExtension: {
 			name: "jouzu-workflow",
-			factory: (pi) => workflow.register(pi, () => openPalette({ view: "workflow" })),
+			factory: (pi) =>
+				workflow.register(pi, (section) =>
+					openPalette({ view: "workflow", ...(section === "runs" ? { query: "runs" } : {}) }),
+				),
 		},
 		open,
 		openSettings,

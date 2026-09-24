@@ -285,6 +285,15 @@ export class PiSessionFlowIngress implements Ingress {
 		this.retainedUserInput.clear();
 		return flushed;
 	}
+	/** Join submitted callbacks and their native dispatch before a headless owner closes. */
+	async joinPendingOperations(): Promise<void> {
+		if (this.frames.getStore()?.active)
+			throw new FlowLedgerError("busy", "Flow ingress cannot join its own operation.");
+		while (this.active.size) await Promise.all([...this.active]);
+		await this.releaseReady();
+		while (this.active.size) await Promise.all([...this.active]);
+	}
+
 	/**
 	 * Issue again a continuation a prior lifetime retained and never dispatched.
 	 *

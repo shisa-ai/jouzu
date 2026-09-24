@@ -22,6 +22,8 @@ import {
 	subagentCompletionBatch,
 	terminalReadObservation,
 } from "./completion.js";
+import { captureChildContext, type LaunchOptions } from "./context.js";
+import { SubagentDashboard } from "./dashboard.js";
 import { type AgentRun, isActiveRun, SubagentManager, type WorkerFactory } from "./manager.js";
 import { agentModelSelectorLabel } from "./model-display.js";
 import { parseSubagentResult, runPresentation, subagentComponent } from "./render.js";
@@ -36,6 +38,7 @@ import {
 	resolveAgentModel,
 	SAME_MODEL,
 } from "./roles.js";
+import { readSessionTrace, type TraceQuery } from "./trace.js";
 import { resolveWorkspace } from "./workspace.js";
 
 export interface WorkflowService {
@@ -46,7 +49,8 @@ export interface WorkflowService {
 	models(): AgentModel[];
 	runs(): AgentRun[];
 	read(id: string, offset?: number): { text: string; nextOffset: number | null; totalBytes: number };
-	launch(roleId: string, task: string, options?: { workspace?: string }): Promise<AgentRun>;
+	trace(id?: string, options?: TraceQuery): ReturnType<typeof readSessionTrace>;
+	launch(roleId: string, task: string, options?: LaunchOptions): Promise<AgentRun>;
 	resume(id: string, task: string): Promise<AgentRun>;
 	steer(id: string, text: string): string;
 	stop(id: string): Promise<void>;
@@ -57,8 +61,12 @@ export interface WorkflowService {
 export function createWorkflowIntegration(
 	paths: JouzuPaths,
 	workerFactory?: WorkerFactory,
-	options: { textguardFiles?: boolean; textguardMode?: () => TextGuardMode } = {},
-): { service: WorkflowService; register(pi: ExtensionAPI, open: () => Promise<boolean>): void } {
+	options: { textguardFiles?: boolean; textguardMode?: () => TextGuardMode; profile?: () => "core" | "ja" } = {},
+): {
+	service: WorkflowService;
+	register(pi: ExtensionAPI, open: (section?: "agents" | "runs") => Promise<boolean>): void;
+} {
+	const dashboard = new SubagentDashboard();
 	const store = new AgentRoleStore(paths);
 	let ctx: ExtensionContext | undefined;
 	let sessionGeneration = 0;
@@ -77,6 +85,7 @@ export function createWorkflowIntegration(
 		model: run.model,
 		status: run.status,
 		workspace: run.cwd,
+		context: run.context,
 		review: run.review,
 		usage: run.usage,
 		previousRunId: run.previousRunId,
@@ -84,6 +93,7 @@ export function createWorkflowIntegration(
 		sessionFile: run.sessionFile,
 	});
 	const notify = () => {
+		dashboard.update(manager?.list() ?? []);
 		for (const listener of listeners) listener();
 	};
 	const context = () => {
@@ -128,14 +138,27 @@ export function createWorkflowIntegration(
 		task: string,
 		previousRunId?: string,
 		modelSelector?: string,
-		workspace?: string,
+		launchOptions: LaunchOptions = {},
 	) => {
 		requireSubagents();
 		const revision = enableRevision;
 		const active = context();
 		const generation = sessionGeneration;
 		const targetManager = controller();
-		const cwd = resolveWorkspace(active.cwd, previousRunId ? targetManager.get(previousRunId).cwd : workspace);
+		const cwd = resolveWorkspace(
+			active.cwd,
+			previousRunId ? targetManager.get(previousRunId).cwd : launchOptions.workspace,
+		);
+		const parentEntryId = active.sessionManager.getLeafId() ?? undefined;
+		const childContext = previousRunId
+			? undefined
+			: captureChildContext(
+					launchOptions,
+					role.judging,
+					active.sessionManager.getSessionId(),
+					active.sessionManager.getBranch(),
+					parentEntryId,
+				);
 		const model = resolveModel(modelSelector ?? role.model);
 		const registered = active.modelRegistry.getRegisteredProviderConfig(model.provider);
 		if (registered?.streamSimple)
@@ -164,11 +187,15 @@ export function createWorkflowIntegration(
 					baseUrl: auth.baseUrl,
 				},
 				cwd,
+				userAgentDir: paths.agentDir,
+				runtimeStateDir: paths.stateDir,
+				profile: options.profile?.() ?? "core",
+				context: childContext,
 				task,
 				textguardFiles: options.textguardFiles === true,
 				...(options.textguardMode ? { textguardMode: options.textguardMode() } : {}),
 			},
-			active.sessionManager.getLeafId() ?? undefined,
+			parentEntryId,
 			previousRunId,
 		);
 	};
@@ -200,9 +227,15 @@ export function createWorkflowIntegration(
 		models: availableModels,
 		runs: () => manager?.list() ?? [],
 		read: (id, offset) => controller().read(id, offset),
+		trace: (id, options) => {
+			if (id) return controller().trace(id, options);
+			const file = context().sessionManager.getSessionFile();
+			if (!file) throw new Error("Trace: the parent session has no saved transcript yet.");
+			return readSessionTrace(file, options);
+		},
 		async launch(id, task, options) {
 			requireSubagents();
-			return dispatch(roleById(id), task, undefined, undefined, options?.workspace);
+			return dispatch(roleById(id), task, undefined, undefined, options);
 		},
 		async resume(id, task) {
 			requireSubagents();
@@ -314,6 +347,33 @@ export function createWorkflowIntegration(
 				const details = message.details as { presentation?: unknown; runs?: unknown } | undefined;
 				return subagentComponent(details?.presentation ?? (details?.runs ? details : message.content), theme, expanded);
 			});
+			pi.registerCommand("subagents", {
+				description: "Open child runs; use show or hide for the status pane",
+				getArgumentCompletions: (prefix) =>
+					["show", "hide"].filter((value) => value.startsWith(prefix)).map((value) => ({ value, label: value })),
+				handler: async (args, active) => {
+					const action = args.trim();
+					if (action && action !== "show" && action !== "hide") {
+						active.ui.notify("Use /subagents, /subagents show, or /subagents hide.", "warning");
+						return;
+					}
+					if (active.mode !== "tui") {
+						const output = JSON.stringify({ runs: service.runs().map(summary) });
+						if (active.mode === "print") console.log(output);
+						else active.ui.notify(output, "info");
+						return;
+					}
+					if (action) {
+						dashboard.setVisible(action === "show");
+						active.ui.notify(
+							action === "show"
+								? "Subagent pane enabled; it appears when this session has child runs."
+								: "Subagent pane hidden. Use /subagents show to display it.",
+							"info",
+						);
+					} else await open("runs");
+				},
+			});
 			pi.registerCommand("workflow", {
 				description: "Open agents and runs; on/off/toggle controls subagents for this session",
 				getArgumentCompletions: (prefix) =>
@@ -356,10 +416,12 @@ export function createWorkflowIntegration(
 				const generation = ++sessionGeneration;
 				unsubscribe?.();
 				inbox.shutdown();
+				dashboard.dispose();
 				ctx = undefined;
 				await manager?.dispose();
 				if (generation !== sessionGeneration) return;
 				ctx = active;
+				dashboard.attach(active);
 				mainRole = undefined;
 				subagentsEnabled = true;
 				for (const entry of active.sessionManager.getEntries()) {
@@ -411,6 +473,7 @@ export function createWorkflowIntegration(
 				return { systemPrompt };
 			});
 			pi.on("session_shutdown", async () => {
+				dashboard.dispose();
 				sessionGeneration += 1;
 				ctx = undefined;
 				inbox.shutdown();
@@ -422,7 +485,10 @@ export function createWorkflowIntegration(
 			const schema = {
 				type: "object",
 				properties: {
-					op: { type: "string", enum: ["roles", "launch", "list", "read", "steer", "stop", "resume", "acknowledge"] },
+					op: {
+						type: "string",
+						enum: ["roles", "launch", "list", "read", "trace", "steer", "stop", "resume", "acknowledge"],
+					},
 					role: { type: "string", description: "Role ID from op:roles." },
 					batchId: {
 						type: "string",
@@ -433,12 +499,37 @@ export function createWorkflowIntegration(
 						description:
 							"Assignment or follow-up in plain sentences: one objective, verified context/files, constraints, acceptance checks, and a stopping point/report. For review, name the candidate and provide requirements and check evidence without the implementer's reasoning.",
 					},
-					id: { type: "string", description: "Run ID returned by launch or list." },
+					id: {
+						type: "string",
+						description: "Run ID returned by launch or list. Omit for trace of the parent session.",
+					},
 					workspace: {
 						type: "string",
 						description:
 							"Launch working directory, absolute or relative to the parent; empty defaults to parent cwd. Not a filesystem sandbox. Ignored outside launch/resume; resume cannot change its saved directory. For review, selects the candidate repository.",
 					},
+					context: {
+						type: "string",
+						enum: ["fresh", "fork", "splice"],
+						description:
+							"Launch only. Fresh (default): assignment only. Fork: parent conversation as references. Splice: selected entryIds from the active parent branch.",
+					},
+					entryIds: {
+						type: "array",
+						items: { type: "string" },
+						minItems: 1,
+						maxItems: 100,
+						description: "Launch with splice: message or compaction IDs from parent trace.",
+					},
+					parentContext: {
+						type: "boolean",
+						description:
+							"Launch only: allow read-only parent_context snapshot lookup. Defaults to true, or false for review-only roles.",
+					},
+					query: { type: "string", description: "Trace: case-insensitive literal text search." },
+					kind: { type: "string", enum: ["all", "messages", "tools", "errors", "compaction"] },
+					entryId: { type: "string", description: "Trace: select one saved entry." },
+					limit: { type: "integer", minimum: 1, maximum: 100 },
 					offset: { type: "integer", minimum: 0 },
 				},
 				required: ["op"],
@@ -448,7 +539,7 @@ export function createWorkflowIntegration(
 				name: "subagent",
 				label: "Subagent",
 				description:
-					"Launch and control child agents with configured roles and models. Use roles before delegating to check live enabled status and current definitions. Only the user can change role models or the enable setting. Launch uses the configured role model; resume keeps its saved model. Set workspace on launch to select the working directory and review candidate repository. File access follows enabled role tools and OS permissions, not a workspace fence. Launch returns immediately; unread terminal results arrive in a batch after active work and queued messages finish. Read returns bounded output with a byte offset; complete terminal-output reads prevent redundant completion turns. Use acknowledge with the delivered batchId alone when no reply is needed. Steer queues a message; resume starts a follow-up in the saved child session. Main-session ownership remains with you. Treat child output as evidence and verify the integrated result.",
+					"Launch and control child agents with configured roles and models. Use roles before delegating to check live enabled status and current definitions. Only the user can change role models or the enable setting. Launch uses the configured role model; resume keeps its saved model. Set workspace on launch to select the working directory and review candidate repository. Launch context defaults to fresh; fork shares parent conversation as references, splice shares entryIds. parentContext enables snapshot lookup and defaults off for review-only roles. Resume retains the original snapshot. File access follows enabled role tools and OS permissions, not a workspace fence. Launch returns immediately; unread terminal results arrive in a batch after active work and queued messages finish. Read returns bounded output with a byte offset; complete terminal-output reads prevent redundant completion turns. Trace searches saved messages, tool arguments/results, errors, and compactions; omit id for parent history. Trace does not acknowledge completion. Use acknowledge with the delivered batchId alone when no reply is needed. Steer queues a message; resume starts a follow-up in the saved child session. Main-session ownership remains with you. Treat child output as evidence and verify the integrated result.",
 				promptSnippet:
 					"subagent: discover roles, delegate coding or fresh review, inspect results, steer/stop/resume children.",
 				parameters: schema,
@@ -478,19 +569,25 @@ export function createWorkflowIntegration(
 				},
 				async execute(
 					_id,
-					params: {
-						op: string;
-						role?: string;
-						task?: string;
-						id?: string;
-						offset?: number;
-						workspace?: string;
-						batchId?: string;
-					},
+					params: LaunchOptions &
+						TraceQuery & {
+							op: string;
+							role?: string;
+							task?: string;
+							id?: string;
+							offset?: number;
+							workspace?: string;
+							batchId?: string;
+						},
 				) {
 					if ("model" in params)
 						throw new Error("Only the user can change subagent models in Workflow. Omit the model argument.");
 					if (["launch", "resume", "steer"].includes(params.op)) requireSubagents();
+					if (
+						params.op !== "launch" &&
+						[params.context, params.entryIds, params.parentContext].some((value) => value !== undefined)
+					)
+						throw new Error("Context options are launch-only. Resume keeps the original parent snapshot.");
 					const workspace = params.workspace?.trim() ? params.workspace : undefined;
 					if (params.op === "resume" && workspace) {
 						const previous = controller().get(params.id ?? "");
@@ -539,6 +636,9 @@ export function createWorkflowIntegration(
 						case "launch": {
 							const run = await service.launch(params.role ?? "", params.task ?? "", {
 								workspace,
+								context: params.context,
+								entryIds: params.entryIds,
+								parentContext: params.parentContext,
 							});
 							result = summary(run);
 							presentation = runPresentation(run);
@@ -559,6 +659,15 @@ export function createWorkflowIntegration(
 									};
 							break;
 						}
+						case "trace":
+							result = await service.trace(params.id, {
+								query: params.query,
+								kind: params.kind,
+								entryId: params.entryId,
+								offset: params.offset,
+								limit: params.limit,
+							});
+							break;
 						case "steer":
 							result = { receipt: service.steer(params.id ?? "", params.task ?? ""), status: "accepted" };
 							break;

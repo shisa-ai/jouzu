@@ -44,6 +44,13 @@ export type CompactionRequestState = "idle" | "requested" | "dispatching";
  */
 export class CompactionRequestController {
 	private state: CompactionRequestState = "idle";
+	private readonly idleWaiters = new Set<() => void>();
+
+	/** Join a request already accepted by the controller before closing a headless session. */
+	waitForIdle(): Promise<void> {
+		if (this.state === "idle") return Promise.resolve();
+		return new Promise((resolve) => this.idleWaiters.add(resolve));
+	}
 
 	getState(): CompactionRequestState {
 		return this.state;
@@ -70,6 +77,8 @@ export class CompactionRequestController {
 
 	settle(): void {
 		this.state = "idle";
+		for (const resolve of this.idleWaiters) resolve();
+		this.idleWaiters.clear();
 	}
 }
 

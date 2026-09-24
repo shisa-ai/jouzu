@@ -18,7 +18,7 @@ Definitions, main-session roles, run history, output reading, Stop, and completi
 
 **Use in main session** changes the idle main agent's model and thinking setting, and adds the role's instructions to subsequent turns. The main session keeps its conversation and tools. **Launch agent** opens an assignment form and starts a separate child session after you submit it. Child tools and execution limits apply to child runs. Editing a definition affects future launches; existing runs retain their saved definition.
 
-**Add agent** and **Duplicate as new agent** support arbitrary role names. Behavior follows the definition's fields, including **Review only**, rather than its name. Review-only definitions run as children and allow only `read`, `grep`, `find`, and `ls`.
+**Add agent** and **Duplicate as new agent** support arbitrary role names. Behavior follows the definition's fields, including **Review only**, rather than its name. Review-only definitions run as children and restrict built-in tools to `read`, `grep`, `find`, and `ls`. Bundled extension tools are also available; review-only is an assignment policy, not an OS security boundary.
 
 Definitions are stored in `agents.json` in Jouzu's configuration directory (`jz doctor` shows the directories). With `JOUZU_HOME`, this is `$JOUZU_HOME/agents.json`. The file contains `schemaVersion: 1`, `maxConcurrent`, and a `roles` array. Each role has:
 
@@ -28,8 +28,8 @@ Definitions are stored in `agents.json` in Jouzu's configuration directory (`jz 
 | `model`, `thinking` | Exact model selector and Pi thinking setting. |
 | `instructions` | Inline instructions, up to 32,000 characters. |
 | `placement` | `main`, `child`, or `both`. |
-| `judging` | Fresh review context with read-only tools; requires `child`. |
-| `tools` | Child tool names: `read`, `grep`, `find`, `ls`, `write`, `edit`, `bash`, `powershell`. |
+| `judging` | Fresh review context with read-only built-in tools; requires `child`. |
+| `tools` | Built-in child tool names: `read`, `grep`, `find`, `ls`, `write`, `edit`, `bash`, `powershell`. Bundled extension tools are loaded separately. |
 | `timeoutSeconds`, `maxTurns` | Defaults: 7,200 seconds (2 hours) and 500 turns. Runtime accepts 10–2,147,483 seconds (about 24 days); turns accept whole numbers from 1 to 9,007,199,254,740,991. |
 
 Saved definitions keep their configured limits. Edit and save them to use different limits; active runs and resumed follow-ups retain their original definition. The runtime ceiling avoids Node timer overflow; for example, 259,200 seconds allows a three-day run. A run stops at whichever limit it reaches first.
@@ -71,6 +71,48 @@ Tool results and completion messages show a themed summary of role, model, statu
 
 **Runs** provides output reading, messaging, Stop, and Resume. Stop requests tool cancellation, then forces process cleanup after a grace period. Files already written remain. Resume starts another run using the original role revision, exact provider/model, workspace, and saved child conversation. Use a new launch for a fresh context or changed definition.
 
+## Subagent dashboard
+
+The **Subagents** pane appears above the prompt when the session has child runs. It shows active, queued, and finished counts, followed by active runs first. Run rows show status, role/model, current tool, and workspace. The pane updates on run events and limits its height to leave room for the prompt.
+
+- `/subagents` opens **Workflow → Runs**, with output, message, Stop, and Resume controls.
+- `/subagents hide` hides the pane without stopping work.
+- `/subagents show` restores the pane. Visibility resets when the session starts or reloads.
+
+The Runs detail view includes the workspace. Incoming run updates preserve the selected run. In non-interactive mode, `/subagents` reports run summaries as JSON.
+
+## Parent context
+
+Launch accepts `context: "fresh"` (default), `"fork"`, or `"splice"`:
+
+- **Fresh** starts with the assignment, without injecting parent conversation.
+- **Fork** adds the active parent branch as bounded reference text.
+- **Splice** adds selected message or compaction entries from the active parent branch. Supply 1–100 `entryIds` found through the parent trace. IDs from other branches are rejected.
+
+`parentContext` controls the child's read-only `parent_context` lookup tool. It defaults to true for ordinary roles and false for review-only roles. A fresh child can therefore look up parent history without having it injected into its starting conversation. For independent review, keep fresh context and parent lookup off; explicitly sharing parent history can bias the review.
+
+```json
+{"op":"launch","role":"coder","task":"Implement the agreed parser change.","context":"splice","entryIds":["<entry-id>"],"parentContext":true}
+```
+
+The snapshot captures the active parent branch before provider authentication and stays fixed through resume. It excludes thinking blocks, images, system messages, tool declarations, and extension state. Historical tool calls are reference text, not executable pending calls. Inherited text is limited to about 64,000 characters, with 8,000 per entry; lookup uses trace paging. Snapshots larger than 32 MB are rejected: turn lookup off and use fresh context or a focused splice.
+
+Resume keeps the original snapshot and lookup policy; launch a new child to change them. Workspace and context settings appear in run details. Context sharing selects what is supplied to the child; it is not a filesystem sandbox.
+
+## Session traces
+
+Use `subagent` with `op: "trace"` to inspect saved conversation entries. Supply a run `id` for a child, or omit it for the parent session:
+
+```json
+{"op":"trace","id":"<run-id>","kind":"tools","limit":20}
+{"op":"trace","query":"parser decision"}
+{"op":"trace","entryId":"<entry-id>"}
+```
+
+`kind` accepts `all`, `messages`, `tools`, `errors`, or `compaction`. `query` is a case-insensitive literal search. Results include entry IDs, text, tool-call arguments and linked results, and compaction summaries; thinking blocks and images are excluded. The trace reads the saved file without migrating or rewriting it and can include entries from other branches of that session.
+
+Each call scans at most 8 MiB and returns at most 100 records with a response bounded to 48 KB. Large records contain a UTF-8-safe preview. Continue with `nextOffset`, a JSONL byte cursor, using the same filters. A partial last line returns a retry cursor; malformed complete lines report an error. A single entry larger than the scan budget may require direct file inspection. Trace remains available when subagents are disabled and does not acknowledge completion notifications; use `read` or the delivered batch's acknowledgement instead.
+
 ## Assignment guidance
 
 Core and JA include the `jouzu-delegation` skill for writing launch assignments, steering messages, and resume handoffs. The default prompt routes the parent to it when both the skill and `subagent` tool are available. You can also load it with `/skill:jouzu-delegation`.
@@ -79,7 +121,7 @@ While subagents are enabled, every parent model receives a short checklist: writ
 
 ## Review evidence
 
-A review-only child receives the assignment, role instructions, and its own tools. It does not receive the parent's transcript, extensions, skills, or automatically loaded project instructions. Include requirements, scope, and check evidence in the assignment. The reviewer can read repository instructions as source material; it cannot execute repository tests with its read-only tool set.
+A review-only child receives the assignment, role instructions, bundled extension tools, and discovered skills. Parent conversation is excluded by default, and project instructions are not loaded automatically. Include requirements, scope, and check evidence in the assignment. The reviewer can read repository instructions as source material. State whether running checks is authorized; the review-only setting does not prevent bundled extension tools from executing commands.
 
 Jouzu records a Git working-tree identity at launch and compares it at completion. This covers HEAD, tracked changes, and untracked files in the selected workspace within bounded snapshot limits. It does not cover sibling repositories merely because the reviewer reads them. For multi-repository work, state each target and baseline in the assignment and require separate coverage evidence. Changes produce a **changed** review marker. Non-root workspaces, submodules, unavailable Git data, and snapshots exceeding limits produce **unverified** coverage. Ignored files are outside this identity. An unchanged identity establishes only that the captured inputs match.
 
@@ -89,6 +131,10 @@ A completed run means the child returned a final response and exited successfull
 
 Children run through Jouzu's pinned Pi SDK in separate Node processes. They use the selected model and resolved API key/token or headers through a private IPC channel. Authentication requiring extension code or additional credential environment variables is rejected before launch. Long-lived runs do not refresh authentication tokens. Model-reported usage is accumulated per run, including successful cache-warming requests; missing cost information stays unknown. New launches and resumes copy the global warming mode, while running children retain their launch setting. See [Prompt-cache warming](cache-warming.md) for modes, costs, and limits.
 
-Coder children load repository `AGENTS.md` instructions. Children do not load ambient extensions or skills and cannot delegate through the `subagent` tool. Enabled file tools can access sibling directories and other paths permitted by the operating system. Role tool selection controls what operations a child can perform; the working directory is not a filesystem sandbox. Shell tools also run with the user's OS permissions. Workspace locks coordinate children using the same selected directory, not arbitrary cross-directory writes. Use child roles only for trusted local work.
+Children load Jouzu's bundled extensions and active profile guidance, plus bundled, user, and workspace skills. Ordinary roles also load repository `AGENTS.md` instructions. Model guidance and TextGuard apply to child sessions. Recall searches the child's own saved conversation; `parent_context` provides the separately configured parent lookup.
+
+Task lists, schedules, loops, and flow-control records use child-owned storage. Child startup does not reopen the project's task automation. Resume retains the child's task list. A worker joins requested task continuations, background executions, scheduled prompt delivery, and requested compaction before reporting its final result, within the role's turn and time limits. An unfinished task list alone does not keep a child running. Schedules run only while the child worker is active; a recurring schedule alone does not keep it alive after its first trigger.
+
+Enabled file tools can access sibling directories and other paths permitted by the operating system. Role tool selection controls built-in tools; bundled extension tools are also available, including background commands and automation. The working directory is not a filesystem sandbox, and commands run with the user's OS permissions. Workspace locks use the role's built-in tool selection and selected directory; they do not cover arbitrary extension commands or cross-directory writes. Use child roles only for trusted local work.
 
 Run records, events, and Pi child sessions remain under Jouzu's state directory in `subagents/`. They include parent/session links, definition digests, model identity, control receipts, usage, and completion state. Credentials passed to the worker are excluded from these records, though task and tool output can contain sensitive content. There is no automatic retention deletion. Parent shutdown stops owned children; reopening a parent marks unverifiable active records interrupted, reports them to the main agent, and leaves them for inspection and explicit resume.

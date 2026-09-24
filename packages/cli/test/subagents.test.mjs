@@ -136,16 +136,21 @@ test("read-only children run concurrently, cancellation frees capacity, foreign 
 	assert.throws(() => f.manager.get("foreign"), /parent session/);
 	await f.manager.dispose();
 });
-test("child configuration excludes ambient resources and reviewer instructions", () => {
+test("child configuration loads released resources without reviewer project instructions", async () => {
 	const p = paths();
 	writeFileSync(join(p.cwd, "AGENTS.md"), "PROJECT_INJECTION");
-	const launch = { role: defaultAgentConfig().roles[2], directory: join(p.cwd, "child"), cwd: p.cwd };
-	const loader = childResourceLoader(launch);
+	const launch = {
+		role: defaultAgentConfig().roles[2],
+		model: { id: "fixture" },
+		directory: join(p.cwd, "child"),
+		cwd: p.cwd,
+	};
+	const loader = await childResourceLoader(launch);
 	assert.deepEqual(loader.getAgentsFiles().agentsFiles, []);
-	assert.deepEqual(loader.getExtensions().extensions, []);
-	assert.deepEqual(loader.getSkills().skills, []);
+	assert.ok(loader.getExtensions().extensions.length > 0);
+	assert.ok(loader.getSkills().skills.length > 0);
 	assert.equal(
-		childResourceLoader({ ...launch, role: defaultAgentConfig().roles[1] })
+		(await childResourceLoader({ ...launch, role: defaultAgentConfig().roles[1] }))
 			.getAgentsFiles()
 			.agentsFiles.some((entry) => entry.content.includes("PROJECT_INJECTION")),
 		true,
@@ -274,7 +279,8 @@ test("real child process completes through the pinned Pi SDK and persists a reco
 		assert.ok(result.sessionFile);
 		assert.match(readFileSync(result.sessionFile, "utf8"), /Verified fixture/);
 		assert.equal(requests.length, 1);
-		assert.ok(requests[0].tools.every((tool) => ["read", "grep", "find", "ls"].includes(tool.function.name)));
+		assert.ok(requests[0].tools.some((tool) => tool.function.name === "vcc_recall"));
+		assert.ok(requests[0].tools.every((tool) => !["bash", "write", "edit"].includes(tool.function.name)));
 		assert.equal(JSON.stringify(manager.list()).includes("fixture-key"), false);
 		const resumedDone = new Promise((resolve) => {
 			completed = resolve;
