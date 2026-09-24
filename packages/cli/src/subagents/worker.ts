@@ -11,6 +11,7 @@ import {
 } from "@earendil-works/pi-coding-agent";
 import { buildModelGuidance } from "../model-guidance.js";
 import { TextGuardRuntime } from "../textguard-runtime.js";
+import { inheritedContextText, parentContextTool } from "./context.js";
 import type { WorkerCommand, WorkerEvent, WorkerLaunch } from "./protocol.js";
 
 function boundedText(text: string, limit: number): string {
@@ -61,6 +62,9 @@ async function runGuardedWorker(
 	textguard: TextGuardRuntime,
 ): Promise<void> {
 	const { model, auth, role } = launch;
+	const customTools =
+		launch.context?.parentLookup && launch.parentContextFile ? [parentContextTool(launch.parentContextFile)] : [];
+	const tools = [...role.tools, ...customTools.map((tool) => tool.name)];
 	// A closed credential store prevents discovery or mutation of the user's auth.json.
 	const credentials = {
 		read: async () => undefined,
@@ -90,13 +94,18 @@ async function runGuardedWorker(
 	const sessionManager = launch.sessionFile
 		? SessionManager.open(launch.sessionFile, launch.directory, launch.cwd)
 		: SessionManager.create(launch.cwd, launch.directory);
+	if (!launch.sessionFile && launch.context) {
+		const inherited = inheritedContextText(launch.context);
+		if (inherited) sessionManager.appendCustomMessageEntry("jouzu-parent-context", inherited, true);
+	}
 	const { session, modelFallbackMessage } = await createAgentSession({
 		cwd: launch.cwd,
 		agentDir: launch.directory,
 		modelRuntime: runtime,
 		model: { ...model, headers: { ...model.headers, ...auth.headers }, baseUrl: auth.baseUrl ?? model.baseUrl },
 		thinkingLevel: role.thinking,
-		tools: role.tools,
+		tools,
+		customTools,
 		sessionManager,
 		settingsManager,
 		resourceLoader: childResourceLoader(
@@ -118,7 +127,7 @@ async function runGuardedWorker(
 	let toolCount = 0;
 	// Roles control tools; the working directory is not a filesystem sandbox.
 	session.agent.beforeToolCall = async ({ toolCall }) => {
-		if (!role.tools.includes(toolCall.name as (typeof role.tools)[number]))
+		if (!tools.includes(toolCall.name))
 			return { block: true, reason: "Access denied: tool is not in the role definition." };
 		try {
 			if (++toolCount > role.maxTurns * 20) {

@@ -16,6 +16,7 @@ import type { NotificationRecord } from "../notifications/inbox.js";
 import type { JouzuPaths } from "../paths.js";
 import { ensurePrivateDirectory, writeFilePrivateAtomic } from "../private-fs.js";
 import { acquireProcessLock, type ProcessLock, ProcessLockError } from "../process-lock.js";
+import type { ChildContext } from "./context.js";
 import type { WorkerCommand, WorkerEvent, WorkerLaunch } from "./protocol.js";
 import { captureReviewCandidate, type ReviewCandidate } from "./review.js";
 import { type AgentRole, digest, parseAgentConfig } from "./roles.js";
@@ -39,6 +40,8 @@ export interface AgentRun {
 	updatedAt: string;
 	sessionFile?: string;
 	childSessionId?: string;
+	context?: Omit<ChildContext, "entries">;
+	parentContextFile?: string;
 	currentTool?: string;
 	result?: string;
 	usage: {
@@ -389,6 +392,7 @@ export class SubagentManager {
 		};
 		let sessionFile: string | undefined;
 		if (previousRunId) {
+			if (launch.context) throw new Error("Resume keeps the original parent context. Launch a new agent to change it.");
 			const previous = this.get(previousRunId);
 			if (isActiveRun(previous)) throw new Error("Stop or finish this agent before resuming it.");
 			if (
@@ -399,6 +403,10 @@ export class SubagentManager {
 			)
 				throw new Error("Resume requires the original workspace, role revision, and model.");
 			sessionFile = previous.sessionFile;
+			run.context = previous.context;
+			run.parentContextFile = previous.parentContextFile;
+			if (run.parentContextFile && (!existsSync(run.parentContextFile) || !this.containsSession(run.parentContextFile)))
+				throw new Error("The saved parent context is unavailable.");
 			if (
 				[...this.runs.values()].some(
 					(other) =>
@@ -413,6 +421,23 @@ export class SubagentManager {
 		run.sessionFile = sessionFile;
 		if (run.role.judging) run.review = { candidate: captureReviewCandidate(run.cwd), status: "pending" };
 		ensurePrivateDirectory(this.root, this.directory(id));
+		if (!previousRunId && launch.context) {
+			const { entries, ...context } = structuredClone(launch.context);
+			run.context = context;
+			if (context.parentLookup || context.mode !== "fresh") {
+				const snapshot =
+					[
+						JSON.stringify({ type: "session", version: 3, id: context.parentSessionId, cwd: run.cwd }),
+						...entries.map((entry) => JSON.stringify(entry)),
+					].join("\n") + "\n";
+				if (Buffer.byteLength(snapshot) > 32_000_000)
+					throw new Error(
+						"Context: parent snapshot exceeds 32 MB. Use parentContext: false with fresh context or a focused splice.",
+					);
+				run.parentContextFile = join(this.directory(id), "parent-context.jsonl");
+				writeFilePrivateAtomic(run.parentContextFile, snapshot, this.root);
+			}
+		}
 		this.persist(run);
 		this.event(run, { type: "task", text: launch.task, roleRevision: run.roleRevision });
 		this.runs.set(id, run);
@@ -425,6 +450,12 @@ export class SubagentManager {
 				? `${launch.task}\n\nReview candidate for workspace ${JSON.stringify(run.cwd)}: ${JSON.stringify(run.review.candidate)}. This identity covers only that workspace, not sibling repositories or the full assignment. Inspect the assigned scope independently. Return findings with severity, file/line, failure conditions and evidence, then coverage and checks you could not perform. A response is not approval to ship.`
 				: launch.task,
 			cwd: run.cwd,
+			parentContextFile: run.parentContextFile,
+			context: launch.context
+				? structuredClone(launch.context)
+				: run.context
+					? { ...run.context, entries: [] }
+					: undefined,
 			directory: sessionFile ? dirname(sessionFile) : this.directory(id),
 			sessionFile,
 		});

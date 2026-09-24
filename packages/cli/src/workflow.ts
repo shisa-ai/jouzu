@@ -818,6 +818,10 @@ export class WorkflowComponent implements PaletteComponent, Focusable {
 					lines.push(detail("Agent", sanitizeTerminalText(run.role.id)));
 					lines.push(detail("Model", agentModelDisplay(run.model).label));
 					lines.push(detail("Workspace", sanitizeTerminalText(run.cwd)));
+					if (run.context)
+						lines.push(
+							detail("Context", `${run.context.mode} · parent lookup ${run.context.parentLookup ? "on" : "off"}`),
+						);
 					lines.push(detail("Model ID", `${run.model.provider}/${run.model.id}`));
 					lines.push(
 						detail(

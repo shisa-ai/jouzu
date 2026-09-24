@@ -1,5 +1,6 @@
 import type { CacheWarmingMode } from "@earendil-works/pi-coding-agent";
 import type { TextGuardMode } from "../textguard-policy.js";
+import type { ChildContext } from "./context.js";
 import type { AgentModel, AgentRole } from "./roles.js";
 
 /** Credentials travel only over the private parent/child pipe, never into run records. */
@@ -10,6 +11,8 @@ export interface WorkerLaunch {
 	cwd: string;
 	directory: string;
 	sessionFile?: string;
+	context?: ChildContext;
+	parentContextFile?: string;
 	textguardFiles?: boolean;
 	/** Snapshot of the global warming setting when this run was launched. */
 	cacheWarming?: CacheWarmingMode;

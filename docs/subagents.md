@@ -81,6 +81,24 @@ The **Subagents** pane appears above the prompt when the session has child runs.
 
 The Runs detail view includes the workspace. Incoming run updates preserve the selected run. In non-interactive mode, `/subagents` reports run summaries as JSON.
 
+## Parent context
+
+Launch accepts `context: "fresh"` (default), `"fork"`, or `"splice"`:
+
+- **Fresh** starts with the assignment, without injecting parent conversation.
+- **Fork** adds the active parent branch as bounded reference text.
+- **Splice** adds selected message or compaction entries from the active parent branch. Supply 1–100 `entryIds` found through the parent trace. IDs from other branches are rejected.
+
+`parentContext` controls the child's read-only `parent_context` lookup tool. It defaults to true for ordinary roles and false for review-only roles. A fresh child can therefore look up parent history without having it injected into its starting conversation. For independent review, keep fresh context and parent lookup off; explicitly sharing parent history can bias the review.
+
+```json
+{"op":"launch","role":"coder","task":"Implement the agreed parser change.","context":"splice","entryIds":["<entry-id>"],"parentContext":true}
+```
+
+The snapshot captures the active parent branch before provider authentication and stays fixed through resume. It excludes thinking blocks, images, system messages, tool declarations, and extension state. Historical tool calls are reference text, not executable pending calls. Inherited text is limited to about 64,000 characters, with 8,000 per entry; lookup uses trace paging. Snapshots larger than 32 MB are rejected: turn lookup off and use fresh context or a focused splice.
+
+Resume keeps the original snapshot and lookup policy; launch a new child to change them. Workspace and context settings appear in run details. Context sharing selects what is supplied to the child; it is not a filesystem sandbox.
+
 ## Session traces
 
 Use `subagent` with `op: "trace"` to inspect saved conversation entries. Supply a run `id` for a child, or omit it for the parent session:

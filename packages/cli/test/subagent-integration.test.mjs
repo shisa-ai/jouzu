@@ -133,6 +133,53 @@ function fixture(realWorker = false, options = {}) {
 		shutdown: () => handlers.get("session_shutdown")(),
 	};
 }
+test("launch captures parent context before authentication and resume keeps its snapshot", async () => {
+	const f = fixture();
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		f.branch.push({
+			type: "message",
+			id: "u",
+			parentId: null,
+			message: { role: "user", content: "ORIGINAL_REQUIREMENT" },
+		});
+		const started = await f.invoke({
+			op: "launch",
+			role: "coder",
+			task: "Inspect",
+			context: "splice",
+			entryIds: ["u"],
+			parentContext: true,
+		});
+		assert.equal(started.context.mode, "splice");
+		const worker = f.workers[0];
+		assert.match(readFileSync(worker.launch.parentContextFile, "utf8"), /ORIGINAL_REQUIREMENT/);
+		f.branch[0].message.content = "LATER_REQUIREMENT";
+		assert.doesNotMatch(readFileSync(worker.launch.parentContextFile, "utf8"), /LATER_REQUIREMENT/);
+		const childFile = join(worker.launch.directory, "session.jsonl");
+		writeFileSync(childFile, "{}\n");
+		worker.emit({ type: "ready", sessionFile: childFile, sessionId: "child" });
+		worker.emit({ type: "result", status: "completed", text: "Done" });
+		worker.exit(true);
+		await assert.rejects(f.invoke({ op: "resume", id: started.id, task: "Continue", context: "fork" }), /launch-only/);
+		await f.invoke({ op: "resume", id: started.id, task: "Continue" });
+		assert.equal(f.workers[1].launch.parentContextFile, worker.launch.parentContextFile);
+		assert.deepEqual(f.workers[1].launch.context.entries, []);
+		let authCalls = 0;
+		f.ctx.modelRegistry.getApiKeyAndHeaders = async () => {
+			authCalls++;
+			return { ok: true, apiKey: "secret" };
+		};
+		await assert.rejects(
+			f.invoke({ op: "launch", role: "coder", task: "Inspect", context: "splice", entryIds: ["missing"] }),
+			/Context:/,
+		);
+		assert.equal(authCalls, 0);
+	} finally {
+		await f.shutdown();
+	}
+});
+
 test("dashboard command routes to Runs, hides without stopping, and clears across sessions", async () => {
 	const f = fixture();
 	const widgets = [];
