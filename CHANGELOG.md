@@ -1,14 +1,46 @@
 # Changelog
 
-## Unreleased
+## 0.1.15 - 2026-09-24
 
 ### Added
 
+- Choose a subagent's context at launch: `fresh`, `fork` (the parent conversation as references), or `splice` (selected entries). A child can read bounded parent context without inheriting it, snapshots survive resume, and review roles default to independent context. See [Agents and runs](docs/subagents.md).
+- Load bundled extensions, discovered skills, active profile guidance, and TextGuard into child sessions, and let child work join task, background, scheduled, and compaction continuations while keeping cancellation and total turn limits intact.
+- Show a subagent dashboard above the editor with an activity pane, show/hide controls, and a direct route to Runs. Run selection survives dashboard updates.
+- Write read-only parent and child session traces as bounded, filterable JSONL with resumable byte cursors. Tracing does not change completion receipts or saved sessions.
+- Re-drive a multiloop lane when its flow gate clears. A lane whose continuation was never submitted previously waited for an `agent_end` that never fires again on an idle session.
 - Bundle `jouzu-anti-slop`, a filler-removal checklist for existing prose that keeps facts, qualifiers, and exact technical content. Core installs four optional skills.
 
 ### Changed
 
+- Upgrade embedded Pi from 0.86.1 to 0.87.1. Session projections, queue admission, and source recovery keep their behavior across Pi's new provider-context model. See [Pi update review](docs/PI-UPDATES.md).
+- Move background execution state and retained results into a versioned canonical sidecar with bounded progress persistence, migration markers, fail-closed recovery, and session-transition handling. The whole-transcript history capacity lockout is gone, and long sessions use record-bounded streaming and writer-aware indexed verification.
+- Treat a command's own send as the user's instruction, so `/goal resume` and similar sends are admitted where typed input is instead of being held with no visible effect. A refused user submission and a reopened session's recovery hold are reported once per message and reason, so a hold is never visible only to someone who runs `/flow`.
+- Keep an undispatched continuation retained across reattachment and issue the recorded message again at the next release boundary, retiring the superseded record so it is not issued at every later open.
+- Issue each inherited continuation on its own during replay, so one record that cannot be sent or retired is reported and retried at the next open instead of stopping the records behind it.
+- Keep child scheduling under parent ownership: the scheduler is excluded from every child role, and saved child schedules are disabled before resume restores automation.
 - Resume the attached run or the only active or paused run from a bare `/multiloop resume` or `multiloop_resume` call, instead of handing the choice to the agent. Completed and archived runs still need an explicit target.
+
+### Fixed
+
+- Read the placeholders a strict provider forces into optional `agent_wait` fields as the omission they stand for: explicit `null`, an empty string, and the documented `none` sentinel for `replaceToken`. Required fields, unknown-field rejection, and placeholder-token refusal are unchanged, and callers that do not opt in keep the strict default.
+- Name the live wait token in the redeclare refusal, so a caller whose context no longer holds the earlier receipt can copy the token it must replace instead of being told only to copy it.
+- Drop an inapplicable `checkAfter` rather than refusing the declaration, and distinguish a token belonging to another work from one that names no live wait. A rejection survives history pruning.
+- Keep a declined optional tool argument from reaching a tool as a supplied value. A provider that requires every declared property leaves a model no way to omit an optional field, so an empty-string placeholder could act as a chosen role, owner, or dedupe key.
+- Scale the output safety reserve to the larger of 4096 tokens or five percent of estimated input while preserving caller caps and overflow recovery.
+- Recover a child session from invalid schedule state by preserving the state under a quarantine name and reporting a persistent warning, instead of blocking resume.
+
+### Development
+
+- Record the Pi 0.86.0, 0.86.1, and 0.87.1 reviews in [Pi update review](docs/PI-UPDATES.md), including provenance, upstream changes, and qualification evidence for each candidate.
+- Allow substantial work in the current worktree; a pull request still uses a branch.
+- Document that a lane-keyed multiloop submit replaces an earlier unadmitted continuation, and why the attempt accounting stays consistent.
+
+### Testing limits
+
+- Subagent, dashboard, and trace coverage uses assembled sessions and fixtures. It does not establish live-model delegation quality or trace usefulness on a real workload.
+- Long-session storage tests cover migration, injected faults, and a bounded large-session corpus; they do not establish behavior on every filesystem or an unbounded transcript.
+- Wait-tool compatibility tests cover the all-required argument shape and nullable forms; a provider that transforms the registered schema outside the session can still present a shape these tests do not reproduce.
 
 ## 0.1.14 - 2026-09-20
 
