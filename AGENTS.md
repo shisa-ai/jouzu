@@ -29,7 +29,7 @@ git log -5 --oneline --decorate
 git worktree list --porcelain
 ```
 
-Use a dedicated linked worktree and branch for substantial or overlapping work. Worktrees isolate files and indexes, but refs, remotes, Git config, and hooks remain shared. Never switch, move, rebase, or remove another active worktree or branch. Do not use `git stash` as shared-worktree coordination.
+Work directly in the current worktree unless the task calls for a separate branch or worktree. Pull requests use a branch. Worktrees isolate files and indexes, but refs, remotes, Git config, and hooks remain shared. Never switch, move, rebase, or remove another active worktree or branch. Do not use `git stash` as shared-worktree coordination.
 
 High-conflict paths include `package.json`, `package-lock.json`, `upstream/pi.lock.json`, `packages/cli/`, release workflows, installer manifests, `AGENTS.md`, and `README.md`. Coordinate before same-file edits.
 
