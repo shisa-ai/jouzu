@@ -434,7 +434,7 @@ test("review identity follows directory aliases and rejects subdirectory coverag
 	}
 });
 
-test("real child cancellation aborts a running shell and its process", { timeout: 20000 }, async () => {
+test("real child cancellation aborts a running shell and its process", { timeout: 60000 }, async () => {
 	const { createServer } = await import("node:http");
 	const { once } = await import("node:events");
 	const p = paths();
@@ -487,7 +487,10 @@ test("real child cancellation aborts a running shell and its process", { timeout
 			task: "Run the assigned command",
 		});
 		let pid;
-		for (let i = 0; i < 150; i++) {
+		// A cold runner needs to start the child, complete its model round trip, and start the shell,
+		// which takes several times what a warm machine needs. Poll to a deadline rather than assuming
+		// a fixed budget: the assertion below still fails if the file never appears.
+		for (let i = 0; i < 1200; i++) {
 			try {
 				pid = Number(readFileSync(join(p.cwd, "worker-shell.pid"), "utf8"));
 				break;

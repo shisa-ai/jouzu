@@ -7,7 +7,7 @@ import { createWorkflowIntegration } from "../dist/subagents/integration.js";
 import { afterFlowCleanup, assembledSession } from "./fixtures/flow-assembly.mjs";
 
 test("tree navigation releases unread child completions without blocking later results", {
-	timeout: 15000,
+	timeout: 30000,
 }, async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "flow-child-tree-"));
 	afterFlowCleanup(t, () => rm(root, { recursive: true, force: true }));
@@ -58,7 +58,10 @@ test("tree navigation releases unread child completions without blocking later r
 	f.ingress.pauseAutomated("navigation hold");
 	workers[0].emit({ type: "result", status: "completed", text: "First evidence" });
 	workers[0].exit(true);
-	await new Promise((r) => setTimeout(r, 80));
+	// Completion handling is asynchronous, and the batch identifier is assigned during it. Wait for the
+	// held completion to carry one instead of sleeping a fixed interval that a loaded runner can overrun.
+	const heldCompletion = async () => integration.service.runs().find((r) => r.completion?.batchId);
+	for (let i = 0; i < 400 && !(await heldCompletion()); i++) await new Promise((r) => setTimeout(r, 25));
 	const before = integration.service.runs();
 	assert.ok(before.find((r) => r.completion)?.completion.batchId);
 	assert.equal(before.find((r) => r.completion)?.completion.handled, false);
@@ -69,7 +72,11 @@ test("tree navigation releases unread child completions without blocking later r
 	assert.equal(f.ingress.automatedPause(), undefined, "new user turn must release the navigation hold");
 	workers[1].emit({ type: "result", status: "completed", text: "Second evidence" });
 	workers[1].exit(true);
-	await new Promise((r) => setTimeout(r, 150));
+	// Wait for both completions to be handled and carry a batch identifier, which the assertions below
+	// both count, rather than for a fixed interval to elapse.
+	const settledCount = async () =>
+		integration.service.runs().filter((r) => r.completion?.handled && r.completion?.batchId).length;
+	for (let i = 0; i < 400 && (await settledCount()) < 2; i++) await new Promise((r) => setTimeout(r, 25));
 	await f.session.agent.waitForIdle();
 	const runs = integration.service.runs();
 
@@ -81,7 +88,7 @@ test("tree navigation releases unread child completions without blocking later r
 });
 
 for (const transform of ["included", "replaced", "omitted"])
-	test(`terminal read observation requires final-input inclusion: ${transform}`, { timeout: 15000 }, async (t) => {
+	test(`terminal read observation requires final-input inclusion: ${transform}`, { timeout: 30000 }, async (t) => {
 		const root = await mkdtemp(join(tmpdir(), "flow-child-real-"));
 		afterFlowCleanup(t, () => rm(root, { recursive: true, force: true }));
 		const workers = [];
@@ -146,7 +153,12 @@ for (const transform of ["included", "replaced", "omitted"])
 			},
 		});
 		await fixture.session.prompt("Run the fixture child and read its evidence.");
-		await new Promise((r) => setTimeout(r, 50));
+		// The completion is handled asynchronously, and the request bodies that follow depend on it.
+		// Poll for the handled completion instead of racing it with a fixed sleep.
+		for (let i = 0; i < 400; i++) {
+			if (integration.service.runs()[0]?.completion?.handled) break;
+			await new Promise((r) => setTimeout(r, 25));
+		}
 		await fixture.session.agent.waitForIdle();
 		const runs = integration.service.runs();
 		assert.ok(JSON.stringify(fixture.session.sessionManager.getBranch()).includes("SECRET_CHILD_EVIDENCE"));
