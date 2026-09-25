@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readdir, readFile, rename, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readdir, readFile, realpath, rename, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -78,8 +78,12 @@ async function fixture(t, config = {}) {
 // Model a pre-v0.1.15 journal: its header contains the full-digest directory, not
 // merely a new journal moved beneath the old directory name.
 async function legacyStorage(root, scope, move = true) {
-	const current = join(root, pathDigest([scope.sessionId, scope.branchId]));
-	const legacy = join(root, legacyPathDigest([scope.sessionId, scope.branchId]));
+	// The code derives both directories from the canonical root, and the header an earlier version
+	// wrote records that same canonical path. A temp root reached through a symlink, as macOS `/var`
+	// is, otherwise yields a different string for the same directory.
+	const canonical = await realpath(root);
+	const current = join(canonical, pathDigest([scope.sessionId, scope.branchId]));
+	const legacy = join(canonical, legacyPathDigest([scope.sessionId, scope.branchId]));
 	const sessions = join(current, "sessions");
 	const [folder] = await readdir(sessions);
 	const [file] = await readdir(join(sessions, folder));

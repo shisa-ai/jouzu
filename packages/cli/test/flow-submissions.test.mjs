@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { fork } from "node:child_process";
 import { createHash } from "node:crypto";
 import { once } from "node:events";
-import { mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readdir, readFile, realpath, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -333,12 +333,16 @@ for (const mismatch of ["foreign branch", "foreign root", "shared digest prefix"
 		const end = text.indexOf("\n");
 		const header = JSON.parse(text.slice(0, end));
 		const legacy = legacyPathDigest([scope.sessionId, scope.branchId]);
-		if (mismatch === "foreign branch") header.cwd = join(root, legacyPathDigest([scope.sessionId, "other"]));
-		if (mismatch === "foreign root") header.cwd = join(root, "other-root", legacy);
+		// The code derives the accepted directory from the canonical root. Building these from the
+		// unresolved root would reject every case for the wrong reason wherever the temp root is
+		// reached through a symlink, as macOS `/var` is.
+		const canonical = await realpath(root);
+		if (mismatch === "foreign branch") header.cwd = join(canonical, legacyPathDigest([scope.sessionId, "other"]));
+		if (mismatch === "foreign root") header.cwd = join(canonical, "other-root", legacy);
 		if (mismatch === "shared digest prefix")
-			header.cwd = join(root, legacy.slice(0, -1) + (legacy.endsWith("0") ? "1" : "0"));
+			header.cwd = join(canonical, legacy.slice(0, -1) + (legacy.endsWith("0") ? "1" : "0"));
 		if (mismatch === "foreign id") {
-			header.cwd = join(root, legacy);
+			header.cwd = join(canonical, legacy);
 			header.id = "other";
 		}
 		const invalid = JSON.stringify(header) + text.slice(end);

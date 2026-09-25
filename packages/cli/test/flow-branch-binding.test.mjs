@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { fork } from "node:child_process";
 import { once } from "node:events";
-import { mkdtemp, readdir, readFile, rename, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readdir, readFile, realpath, rename, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -593,7 +593,11 @@ const sessionFolderName = (cwd) => `--${cwd.replace(/^[/\\]/, "").replace(/[/\\:
  * the directory without rewriting that path is what the shortened digest leaves behind.
  */
 async function relocateToLegacyDigest(root, sessionId) {
-	const registryRoot = join(root, "session-registry-v1");
+	// The code derives both directories from the canonical root, and the header an earlier version
+	// wrote records that same canonical path. A temp root reached through a symlink, as macOS `/var`
+	// is, otherwise yields a different string for the same directory.
+	const canonical = await realpath(root);
+	const registryRoot = join(canonical, "session-registry-v1");
 	const currentKey = pathDigest([sessionId, "registry"]);
 	const legacyKey = legacyPathDigest([sessionId, "registry"]);
 	const current = join(registryRoot, currentKey);
