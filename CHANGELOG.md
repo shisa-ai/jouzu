@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.16 - 2026-09-25
+
+### Fixed
+
+- Open a session again after upgrading from v0.1.15. Shortening the flow identity digest in v0.1.15 also shortened the directory key that holds a session's flow registry and branch storage, so the transcript's own markers named a registry the code no longer looked for, and opening the session failed with `Active Pi branch differs from its flow registry`. Flow storage written under the previous digest is now adopted on open, and a registry that still cannot be reconciled with the transcript is rebuilt from it instead of blocking the load, with the dropped state saved beside the live one and reported in the session.
+
+### Testing limits
+
+- Flow recovery coverage uses fixture registries and transcripts. It does not establish behavior for every registry shape an earlier version could have written.
+
 ## 0.1.15 - 2026-09-24
 
 ### Added
