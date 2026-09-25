@@ -31,6 +31,8 @@ export interface PiFlowSessionOptions {
 	root: string;
 	/** Reported once when state written under an earlier record shape is moved aside on open. */
 	onIsolatedState?(path: string): void;
+	/** Reported once when a registry from an earlier version is dropped and rebuilt from the transcript. */
+	onRebuiltRegistry?(droppedStatePath?: string): void;
 	/** Turn-level signals the session acts on as a whole; see `PiNativeRequests`. */
 	turn?: { aborted(): void; failed?(error: unknown): void };
 	/** Flow control is on. While it is off, request-level holds are recorded but not enforced. */
@@ -110,7 +112,9 @@ export class PiFlowSessionService {
 		const service = new PiFlowSessionService(session, registry, captured);
 		try {
 			await registry.run(async () => {
-				const scope = await bindPiFlowBranch(registry, session.sessionManager);
+				const scope = await bindPiFlowBranch(registry, session.sessionManager, (path) =>
+					captured.onRebuiltRegistry?.(path),
+				);
 				await service.openBranch(scope);
 			});
 			return service;

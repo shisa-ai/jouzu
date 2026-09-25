@@ -1,8 +1,8 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { randomUUID } from "node:crypto";
-import { realpathSync } from "node:fs";
+import { existsSync, realpathSync, renameSync } from "node:fs";
 import { join } from "node:path";
-import { pathDigest } from "../path-digest.js";
+import { legacyPathDigest, pathDigest } from "../path-digest.js";
 import { ensurePrivateDirectory } from "../private-fs.js";
 import { acquireProcessLock, type ProcessLock, ProcessLockError } from "../process-lock.js";
 import type { FlowScope } from "./receipt-ledger.js";
@@ -16,6 +16,22 @@ export class FlowOwnershipError extends Error {
 		super(message, options);
 		this.name = "FlowOwnershipError";
 	}
+}
+
+/**
+ * Move state written under the full digest to its shortened path. Shortening the digest moved every
+ * session's flow directory, so without this an upgrade leaves the previous registry and branch
+ * storage behind while the transcript still carries their markers, which blocks attaching.
+ * Best effort: a legacy directory that cannot be moved is left alone, and the session opens with
+ * fresh state instead of failing.
+ */
+function adoptLegacyDirectory(root: string, directory: string, legacyKey: string): void {
+	if (existsSync(directory)) return;
+	const legacy = join(root, legacyKey);
+	if (!existsSync(legacy)) return;
+	try {
+		renameSync(legacy, directory);
+	} catch {}
 }
 
 /**
@@ -52,8 +68,10 @@ export class FlowOwnership {
 		let lock: ProcessLock | undefined;
 		try {
 			ensurePrivateDirectory(root);
+			const resolved = realpathSync(root);
 			const key = pathDigest([scope.sessionId, scope.branchId]);
-			const directory = join(realpathSync(root), key);
+			const directory = join(resolved, key);
+			adoptLegacyDirectory(resolved, directory, legacyPathDigest([scope.sessionId, scope.branchId]));
 			// The digest is one directory component. Creating it as a root uses
 			// recursive mkdir (safe under a competing create) and validates it.
 			ensurePrivateDirectory(directory);

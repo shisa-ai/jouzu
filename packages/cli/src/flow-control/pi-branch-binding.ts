@@ -154,7 +154,11 @@ export function piTranscriptBranchOwners(manager: SessionManager): Set<string> {
 }
 
 /** Reconcile an owned registry with the active Pi transcript before attaching a controller. */
-export async function bindPiFlowBranch(registry: PiFlowSessionRegistry, manager: SessionManager): Promise<FlowScope> {
+export async function bindPiFlowBranch(
+	registry: PiFlowSessionRegistry,
+	manager: SessionManager,
+	onRebuiltRegistry?: (droppedStatePath?: string) => void,
+): Promise<FlowScope> {
 	return registry.run(async () => {
 		const state = await registry.snapshot();
 		assertSession(state, manager);
@@ -230,8 +234,17 @@ export async function bindPiFlowBranch(registry: PiFlowSessionRegistry, manager:
 			revision++;
 			await assertRegistry(registry, rebound, revision);
 			active = target;
-		} else if (!target && (marker.data.branchId !== branch.id || marker.data.transitionId !== branch.transitionId))
-			throw new FlowLedgerError("identity", "Active Pi branch differs from its flow registry.");
+		} else if (!target && (marker.data.branchId !== branch.id || marker.data.transitionId !== branch.transitionId)) {
+			// The registry cannot be reconciled with this transcript's verified marker: it holds no
+			// record of the marker's branch, or its record disagrees with the marker. Binding always
+			// writes the marker as its branch position, so this is what a registry from an earlier
+			// version looks like. The marker is the durable evidence and the registry is derived, so
+			// rebuild from the marker and report the dropped state rather than refusing to open.
+			const rebuilt = await registry.rebuildFromMarker(marker.data.branchId, marker.parentId ?? null, position);
+			onRebuiltRegistry?.(rebuilt.isolated);
+			revision = state.revision + 1;
+			active = (await registry.snapshot()).branches[0];
+		}
 		if (active.position && active.position.entryId !== marker.id)
 			throw new FlowLedgerError("identity", "Verified branch position differs from its registry binding.");
 		if (active.position) {

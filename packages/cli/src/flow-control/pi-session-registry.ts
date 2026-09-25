@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { BACKGROUND_CONTEXT, type Session, setValue, value } from "@earendil-works/pi-agent-core";
 import { openLocalFlowSession } from "./local-storage.js";
@@ -363,6 +364,47 @@ export class PiFlowSessionRegistry {
 			state.activeBranchId = branchId;
 			return { result: { sessionId: state.sessionId, branchId }, changed: true };
 		});
+	}
+
+	/**
+	 * Replace the registry with one record derived from a verified transcript marker, after writing
+	 * the discarded state aside. The caller reaches this only when the stored registry holds no
+	 * record of the branch the transcript belongs to, which is what a registry from an earlier
+	 * version looks like. The transcript marker is the durable evidence, so the session rebuilds
+	 * from it rather than refusing to open.
+	 */
+	async rebuildFromMarker(
+		branchId: string,
+		enteredAtLeafId: string | null,
+		position: FlowBranchPosition,
+	): Promise<{ isolated?: string; dropped: number }> {
+		if (!identity(branchId) || !leaf(enteredAtLeafId) || !validPosition(position))
+			throw new FlowLedgerError("identity", "Invalid registry rebuild evidence.");
+		const previous = await this.snapshot();
+		const isolated = await this.isolateRegistryState(previous);
+		const dropped = previous.branches.length;
+		await this.transact((state) => {
+			const retiredBefore = state.retired?.count ?? 0;
+			state.branches = [{ id: branchId, enteredAtLeafId, position: structuredClone(position) }];
+			state.activeBranchId = branchId;
+			delete state.transition;
+			// The rebuilt root cites no ancestry, so no retired ancestor can be named from it.
+			state.retired = { count: retiredBefore + dropped, through: [] };
+			return { result: undefined, changed: true };
+		});
+		return { isolated, dropped };
+	}
+
+	/** Write the state being discarded beside the live one, so a drop stays auditable. */
+	private async isolateRegistryState(state: FlowSessionRegistryState): Promise<string | undefined> {
+		if (!state.branches.length) return undefined;
+		const path = join(this.ownership.directory, `dropped-registry-${Date.now()}.json`);
+		try {
+			await writeFile(path, `${JSON.stringify(state)}\n`, { flag: "wx" });
+			return path;
+		} catch {
+			return undefined;
+		}
 	}
 
 	/** Persist before detaching the old controller or mutating the host transcript. */

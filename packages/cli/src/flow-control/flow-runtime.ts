@@ -161,6 +161,18 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 							`Flow state from an earlier version was moved aside to ${path}; this session starts with fresh state.`,
 						),
 					),
+				// A registry from an earlier version cannot be reconciled with the transcript, so it is
+				// dropped and rebuilt from the transcript's own marker. Say so rather than starting over
+				// silently, and name the copy that was kept.
+				onRebuiltRegistry: (path) =>
+					options.onError(
+						new FlowLedgerError(
+							"schema",
+							`This session's flow registry was incompatible with the current version and was dropped. Flow state was rebuilt from the transcript.${
+								path ? ` The dropped state was saved to ${path}.` : ""
+							}`,
+						),
+					),
 				attachWaitSources: async (attachment: PiFlowAttachment) => {
 					schedules.attach(attachment, cwd);
 					subagents.attach(attachment, sessionManager);

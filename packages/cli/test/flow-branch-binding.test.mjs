@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { fork } from "node:child_process";
 import { once } from "node:events";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -13,6 +13,7 @@ import {
 	piTranscriptBranchOwners,
 } from "../dist/flow-control/pi-branch-binding.js";
 import { PiFlowSessionRegistry } from "../dist/flow-control/pi-session-registry.js";
+import { legacyPathDigest, pathDigest } from "../dist/path-digest.js";
 
 async function fixture(t, { memory = false } = {}) {
 	const root = await mkdtemp(join(tmpdir(), "jouzu-branch-binding-"));
@@ -571,4 +572,56 @@ test("retirement keeps a transcript owner bindable across a reopen", async (t) =
 	// `identity`, leaving the session permanently unbindable.
 	const reopened = SessionManager.open(manager.getSessionFile());
 	assert.deepEqual(await bindPiFlowBranch(await open(reopened), reopened), second);
+});
+test("the legacy digest keeps the full key an earlier version wrote", () => {
+	// Golden value: sha256 of the JSON scope, which is the key shape v0.1.14 and earlier used. The
+	// adoption path is only correct while this derivation still matches what those versions wrote.
+	assert.equal(
+		legacyPathDigest(["01a0d36e-7417-7500-a4ce-202b024a9d8a", "registry"]),
+		"6e02778a37d9c113557d43155e51bf019551dccf648d9813b5151d22c56f4dc0",
+	);
+	assert.equal(
+		pathDigest(["01a0d36e-7417-7500-a4ce-202b024a9d8a", "registry"]),
+		legacyPathDigest(["01a0d36e-7417-7500-a4ce-202b024a9d8a", "registry"]).slice(0, 32),
+	);
+});
+test("a registry left under the legacy full digest is adopted instead of abandoned", async (t) => {
+	const { root, manager, registry, open } = await fixture(t);
+	const scope = await bindPiFlowBranch(registry, manager);
+	await registry.close();
+	// Stand in for the state an upgrade finds: the registry sits under the key the earlier digest
+	// produced, while the code looks under the shortened one.
+	const registryRoot = join(root, "session-registry-v1");
+	const sessionId = manager.getSessionId();
+	const current = pathDigest([sessionId, "registry"]);
+	const legacy = legacyPathDigest([sessionId, "registry"]);
+	assert.deepEqual(await readdir(registryRoot), [current]);
+	await rename(join(registryRoot, current), join(registryRoot, legacy));
+
+	const adopted = await open();
+	const notices = [];
+	// The stored registry is found and reused, so the same branch binds with nothing dropped.
+	assert.deepEqual(await bindPiFlowBranch(adopted, manager, (path) => notices.push(path)), scope);
+	assert.deepEqual(notices, []);
+	assert.deepEqual(await readdir(registryRoot), [current]);
+});
+test("a registry that cannot be reconciled with the transcript rebuilds instead of failing", async (t) => {
+	const { root, manager, registry, open } = await fixture(t);
+	const original = await bindPiFlowBranch(registry, manager);
+	await registry.close();
+	// The registry the transcript's marker refers to is gone, which is what a relocation or an
+	// earlier record shape leaves behind. This reopen used to reject with `identity`.
+	await rm(join(root, "session-registry-v1"), { recursive: true, force: true });
+
+	const rebuilt = await open();
+	const notices = [];
+	const scope = await bindPiFlowBranch(rebuilt, manager, (path) => notices.push(path));
+	assert.equal(scope.branchId, original.branchId);
+	assert.equal(notices.length, 1, "the drop is reported once");
+	const dropped = JSON.parse(await readFile(notices[0], "utf8"));
+	assert.equal(dropped.branches.length, 1, "the discarded state is written aside");
+	// The rebuild is durable: binding again keeps the branch and drops nothing further.
+	const again = [];
+	assert.deepEqual(await bindPiFlowBranch(rebuilt, manager, (path) => again.push(path)), scope);
+	assert.deepEqual(again, []);
 });
