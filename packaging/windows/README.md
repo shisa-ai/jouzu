@@ -5,8 +5,8 @@ fd, and the Visual C++ runtime DLLs. Users do not need to install these tools
 or run a terminal command. The target is Windows 10 build 19041 or later on
 x64 hardware.
 
-Download the **unsigned v0.1.13 preview** from the
-[GitHub release page](https://github.com/shisa-ai/jouzu/releases/tag/v0.1.13).
+Download the **unsigned preview** from the
+[latest release](https://github.com/shisa-ai/jouzu/releases/latest).
 Windows may show an unknown-publisher warning. Native acceptance tests passed
 on Windows Server 2025 x64; clean Windows 10/11 testing remains pending.
 Code signing is planned for v0.2.0.
@@ -206,6 +206,5 @@ remembering and forgetting a folder, and reopening after the saved folder is del
 or a removable drive is disconnected. Canceling either dialog must preserve the
 saved preference. Check the icon in Explorer, shortcuts, and the launch window at
 100%, 150%, and 200% display scaling. Clean Windows 10 and Windows 11 testing remains
-pending for the v0.1.10 preview; a Windows Server run alone does not qualify
-those desktop versions. Provider sign-in and microphone access require
-separate interactive checks.
+pending; a Windows Server run alone does not qualify those desktop versions.
+Provider sign-in and microphone access require separate interactive checks.
