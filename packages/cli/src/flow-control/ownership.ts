@@ -25,9 +25,8 @@ export class FlowOwnershipError extends Error {
  * Best effort: a legacy directory that cannot be moved is left alone, and the session opens with
  * fresh state instead of failing.
  */
-function adoptLegacyDirectory(root: string, directory: string, legacyKey: string): void {
+function adoptLegacyDirectory(directory: string, legacy: string): void {
 	if (existsSync(directory)) return;
-	const legacy = join(root, legacyKey);
 	if (!existsSync(legacy)) return;
 	try {
 		renameSync(legacy, directory);
@@ -56,9 +55,18 @@ export class FlowOwnership {
 		private readonly lock: ProcessLock,
 		scope: FlowScope,
 		readonly directory: string,
+		legacyDirectory: string,
 	) {
 		this.scope = Object.freeze({ ...scope });
+		this.sessionDirectories = Object.freeze([directory, legacyDirectory]);
 	}
+
+	/**
+	 * Directories this branch's session storage may have been created in. Relocating the directory
+	 * under the shortened digest moves a session file that still names the path it was written at,
+	 * so the previous path stays acceptable.
+	 */
+	readonly sessionDirectories: readonly string[];
 
 	static acquire(root: string, scope: FlowScope): FlowOwnership {
 		for (const id of [scope.sessionId, scope.branchId]) {
@@ -71,14 +79,15 @@ export class FlowOwnership {
 			const resolved = realpathSync(root);
 			const key = pathDigest([scope.sessionId, scope.branchId]);
 			const directory = join(resolved, key);
-			adoptLegacyDirectory(resolved, directory, legacyPathDigest([scope.sessionId, scope.branchId]));
+			const legacyDirectory = join(resolved, legacyPathDigest([scope.sessionId, scope.branchId]));
+			adoptLegacyDirectory(directory, legacyDirectory);
 			// The digest is one directory component. Creating it as a root uses
 			// recursive mkdir (safe under a competing create) and validates it.
 			ensurePrivateDirectory(directory);
 			// The lock file is a rendezvous point, not a record: its presence
 			// never means "held", so a leftover file cannot block a new owner.
 			lock = acquireProcessLock(join(directory, "owner.sqlite"));
-			return new FlowOwnership(lock, scope, directory);
+			return new FlowOwnership(lock, scope, directory, legacyDirectory);
 		} catch (error) {
 			try {
 				lock?.release();

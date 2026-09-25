@@ -61,7 +61,10 @@ class FlowExecutionEnv extends NodeExecutionEnv {
 }
 
 /** Called only inside the per-branch writer reservation. Pi owns file naming and replay. */
-export async function openLocalFlowSession(directory: string): Promise<Session> {
+export async function openLocalFlowSession(
+	directory: string,
+	acceptedDirectories: readonly string[] = [],
+): Promise<Session> {
 	const root = join(directory, "sessions");
 	ensurePrivateDirectory(root);
 	const files: string[] = [];
@@ -83,7 +86,14 @@ export async function openLocalFlowSession(directory: string): Promise<Session> 
 		const metadata = await repo.list(undefined, BACKGROUND_CONTEXT);
 		if (
 			metadata.length !== files.length ||
-			metadata.some((item) => item.id !== "flow" || item.cwd !== directory || !files.includes(item.path))
+			metadata.some(
+				(item) =>
+					item.id !== "flow" ||
+					// A relocated directory moves a session file that records the path it was written at.
+					// The caller names that path; anything else is still a genuine inconsistency.
+					(item.cwd !== directory && !acceptedDirectories.includes(item.cwd)) ||
+					!files.includes(item.path),
+			)
 		)
 			throw new FlowOwnershipError("storage", "Flow session metadata is missing or inconsistent.");
 		return metadata.length

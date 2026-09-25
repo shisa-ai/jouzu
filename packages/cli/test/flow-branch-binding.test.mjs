@@ -585,25 +585,70 @@ test("the legacy digest keeps the full key an earlier version wrote", () => {
 		legacyPathDigest(["01a0d36e-7417-7500-a4ce-202b024a9d8a", "registry"]).slice(0, 32),
 	);
 });
+const sessionFolderName = (cwd) => `--${cwd.replace(/^[/\\]/, "").replace(/[/\\:]/g, "-")}--`;
+
+/**
+ * Rewrite state the way an upgrade finds it: the registry sits under the key the full digest
+ * produced, and the flow session inside it still records the path it was written at. Relocating
+ * the directory without rewriting that path is what the shortened digest leaves behind.
+ */
+async function relocateToLegacyDigest(root, sessionId) {
+	const registryRoot = join(root, "session-registry-v1");
+	const currentKey = pathDigest([sessionId, "registry"]);
+	const legacyKey = legacyPathDigest([sessionId, "registry"]);
+	const current = join(registryRoot, currentKey);
+	const legacy = join(registryRoot, legacyKey);
+	const sessions = join(current, "sessions");
+	for (const folder of await readdir(sessions)) {
+		const directory = join(sessions, folder);
+		for (const file of await readdir(directory)) {
+			const path = join(directory, file);
+			const text = await readFile(path, "utf8");
+			const end = text.indexOf("\n");
+			const header = JSON.parse(text.slice(0, end));
+			header.cwd = legacy;
+			await writeFile(path, JSON.stringify(header) + text.slice(end));
+		}
+		await rename(directory, join(sessions, sessionFolderName(legacy)));
+	}
+	await rename(current, legacy);
+	return { currentKey, legacyKey, legacy };
+}
+
 test("a registry left under the legacy full digest is adopted instead of abandoned", async (t) => {
 	const { root, manager, registry, open } = await fixture(t);
 	const scope = await bindPiFlowBranch(registry, manager);
 	await registry.close();
-	// Stand in for the state an upgrade finds: the registry sits under the key the earlier digest
-	// produced, while the code looks under the shortened one.
 	const registryRoot = join(root, "session-registry-v1");
-	const sessionId = manager.getSessionId();
-	const current = pathDigest([sessionId, "registry"]);
-	const legacy = legacyPathDigest([sessionId, "registry"]);
-	assert.deepEqual(await readdir(registryRoot), [current]);
-	await rename(join(registryRoot, current), join(registryRoot, legacy));
+	const { currentKey, legacyKey } = await relocateToLegacyDigest(root, manager.getSessionId());
+	assert.deepEqual(await readdir(registryRoot), [legacyKey]);
 
 	const adopted = await open();
 	const notices = [];
 	// The stored registry is found and reused, so the same branch binds with nothing dropped.
 	assert.deepEqual(await bindPiFlowBranch(adopted, manager, (path) => notices.push(path)), scope);
 	assert.deepEqual(notices, []);
-	assert.deepEqual(await readdir(registryRoot), [current]);
+	assert.deepEqual(await readdir(registryRoot), [currentKey]);
+});
+test("a relocated flow session that must rebuild still opens instead of failing", async (t) => {
+	const { root, manager, registry, open } = await fixture(t);
+	await bindPiFlowBranch(registry, manager);
+	await registry.close();
+	const { legacy } = await relocateToLegacyDigest(root, manager.getSessionId());
+	// Empty the flow journal, which is where the registry keeps its state. The reopen drops and
+	// rebuilds the registry, while the session file still records the pre-shortening path. Rejecting
+	// that path left the whole session unable to load.
+	const sessions = join(legacy, "sessions");
+	const [folder] = await readdir(sessions);
+	const [file] = await readdir(join(sessions, folder));
+	const path = join(sessions, folder, file);
+	const [header] = (await readFile(path, "utf8")).split("\n");
+	await writeFile(path, `${header}\n`);
+
+	const rebuilt = await open();
+	const notices = [];
+	await bindPiFlowBranch(rebuilt, manager, (notice) => notices.push(notice));
+	assert.equal(notices.length, 1, "the rebuilt registry is reported once");
 });
 test("a registry that cannot be reconciled with the transcript rebuilds instead of failing", async (t) => {
 	const { root, manager, registry, open } = await fixture(t);

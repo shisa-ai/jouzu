@@ -17,6 +17,7 @@ import { createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-s
 import { FlowOwnership } from "../dist/flow-control/ownership.js";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { FlowSubmissionStore } from "../dist/flow-control/submission-store.js";
+import { legacyPathDigest } from "../dist/path-digest.js";
 import { afterCleanup, cleanupContext } from "./fixtures/cleanup.mjs";
 
 const scope = { sessionId: "parent", branchId: "main" };
@@ -316,6 +317,36 @@ test("unreadable JSONL header is preserved and never replaced by a new flow sess
 	assert.equal(await readFile(path, "utf8"), "broken header\n");
 	assert.deepEqual(await readdir(join(sessions, folder)), [file]);
 });
+
+for (const mismatch of ["foreign branch", "foreign root", "shared digest prefix", "foreign id"])
+	test(`legacy path acceptance rejects ${mismatch} metadata without rewriting it`, async (t) => {
+		const root = await rootFor(t);
+		const attachment = await PiFlowAttachment.open(root, scope);
+		await attachment.submissions.retain(submission());
+		await attachment.close();
+		const [branch] = await readdir(root);
+		const sessions = join(root, branch, "sessions");
+		const [folder] = await readdir(sessions);
+		const [file] = await readdir(join(sessions, folder));
+		const path = join(sessions, folder, file);
+		const text = await readFile(path, "utf8");
+		const end = text.indexOf("\n");
+		const header = JSON.parse(text.slice(0, end));
+		const legacy = legacyPathDigest([scope.sessionId, scope.branchId]);
+		if (mismatch === "foreign branch") header.cwd = join(root, legacyPathDigest([scope.sessionId, "other"]));
+		if (mismatch === "foreign root") header.cwd = join(root, "other-root", legacy);
+		if (mismatch === "shared digest prefix")
+			header.cwd = join(root, legacy.slice(0, -1) + (legacy.endsWith("0") ? "1" : "0"));
+		if (mismatch === "foreign id") {
+			header.cwd = join(root, legacy);
+			header.id = "other";
+		}
+		const invalid = JSON.stringify(header) + text.slice(end);
+		await writeFile(path, invalid);
+		await assert.rejects(PiFlowAttachment.open(root, scope), /metadata is missing/);
+		assert.equal(await readFile(path, "utf8"), invalid);
+		assert.deepEqual(await readdir(join(sessions, folder)), [file]);
+	});
 
 test("process death after retention acknowledgement restores exact input with the production opener", {
 	timeout: 15000,

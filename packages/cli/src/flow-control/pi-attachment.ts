@@ -27,7 +27,10 @@ export class PiFlowAttachment {
 	static async open(
 		root: string,
 		scope: FlowScope,
-		openSession: (directory: string) => Promise<Session> = openLocalFlowSession,
+		openSession: (
+			directory: string,
+			acceptedDirectories?: readonly string[],
+		) => Promise<Session> = openLocalFlowSession,
 		onIsolatedState?: (path: string) => void,
 	): Promise<PiFlowAttachment> {
 		const ownership = FlowOwnership.acquire(root, scope);
@@ -36,7 +39,7 @@ export class PiFlowAttachment {
 			// State from an earlier record shape is moved aside before any store reads it.
 			const isolated = await ownership.run(() => reconcileFlowStateVersion(ownership.directory));
 			if (isolated) onIsolatedState?.(isolated);
-			session = await openSession(ownership.directory);
+			session = await openSession(ownership.directory, ownership.sessionDirectories);
 			const store = createPiLedgerStore(session);
 			const ledger = await FlowReceiptLedger.attach(
 				{

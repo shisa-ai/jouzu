@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, readdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -8,6 +8,7 @@ import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { createFlowSession, deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { FlowModelInput } from "../dist/flow-control/model-input.js";
 import { PiFlowSessionService } from "../dist/flow-control/pi-session-service.js";
+import { legacyPathDigest, pathDigest } from "../dist/path-digest.js";
 import { afterCleanup, cleanupContext } from "./fixtures/cleanup.mjs";
 
 function options(root) {
@@ -66,12 +67,75 @@ async function fixture(t, config = {}) {
 		...options(root),
 		...(config.host ? { host: config.host } : {}),
 		attachWaitSources: config.attachWaitSources,
+		onRebuiltRegistry: config.onRebuiltRegistry,
 	});
 	afterCleanup(t, async () => {
 		await service.close();
 	});
 	return { root, session, service, requests, treeScopes };
 }
+
+// Model a pre-v0.1.15 journal: its header contains the full-digest directory, not
+// merely a new journal moved beneath the old directory name.
+async function legacyStorage(root, scope, move = true) {
+	const current = join(root, pathDigest([scope.sessionId, scope.branchId]));
+	const legacy = join(root, legacyPathDigest([scope.sessionId, scope.branchId]));
+	const sessions = join(current, "sessions");
+	const [folder] = await readdir(sessions);
+	const [file] = await readdir(join(sessions, folder));
+	const path = join(sessions, folder, file);
+	const text = await readFile(path, "utf8");
+	const end = text.indexOf("\n");
+	const header = JSON.parse(text.slice(0, end));
+	header.cwd = legacy;
+	await writeFile(path, JSON.stringify(header) + text.slice(end));
+	const legacyFolder = `--${legacy.replace(/^[/\\]/, "").replace(/[/\\:]/g, "-")}--`;
+	await rename(join(sessions, folder), join(sessions, legacyFolder));
+	if (move) await rename(current, legacy);
+	return { path: join(current, "sessions", legacyFolder, file), header: JSON.stringify(header) };
+}
+
+for (const recovery of ["legacy registry", "rebuilt registry", "partially adopted branch"])
+	test(`session service reopens full-digest storage with ${recovery}`, async (t) => {
+		const first = await fixture(t);
+		const scope = first.service.branch().scope;
+		const input = FlowModelInput.compose(
+			"saved",
+			[{ id: "saved", revision: "1", kind: "work", text: "Do work" }],
+			4096,
+		);
+		await first.service.branch().attachment.ledger.select(input.attemptId, input.members);
+		const ledger = await first.service.branch().attachment.ledger.snapshot();
+		await first.service.close();
+		const stored = await legacyStorage(first.root, scope, recovery !== "partially adopted branch");
+		if (recovery === "legacy registry")
+			await legacyStorage(join(first.root, "session-registry-v1"), {
+				sessionId: scope.sessionId,
+				branchId: "registry",
+			});
+		else await rm(join(first.root, "session-registry-v1"), { recursive: true });
+		const notices = [];
+		const manager = SessionManager.open(first.session.sessionManager.getSessionFile());
+		const reopened = await fixture(t, { root: first.root, manager, onRebuiltRegistry: (path) => notices.push(path) });
+		assert.deepEqual(reopened.service.branch().scope, scope);
+		// Ordinary reattachment cancels an unsent selection and advances the writer generation.
+		// Migration must preserve its evidence rather than silently starting an empty ledger.
+		delete ledger.activeAttemptId;
+		ledger.generation++;
+		ledger.revision++;
+		ledger.attempts[0].phase = "cancelled";
+		ledger.attempts[0].reason = "Unsent handoff cancelled on reattachment.";
+		assert.deepEqual(await reopened.service.branch().attachment.ledger.snapshot(), ledger);
+		assert.equal(notices.length, recovery === "legacy registry" ? 0 : 1);
+		assert.deepEqual(reopened.requests, []);
+		assert.equal((await readFile(stored.path, "utf8")).split("\n")[0], stored.header);
+		await reopened.service.close();
+		const again = await fixture(t, { root: first.root, manager: SessionManager.open(manager.getSessionFile()) });
+		assert.deepEqual(again.service.branch().scope, scope);
+		ledger.generation++;
+		ledger.revision++;
+		assert.deepEqual(await again.service.branch().attachment.ledger.snapshot(), ledger);
+	});
 
 test("session service binds initial metadata and exclusively owns its session", async (t) => {
 	const { root, session, service, requests } = await fixture(t);

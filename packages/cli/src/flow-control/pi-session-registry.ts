@@ -77,13 +77,16 @@ export class PiFlowSessionRegistry {
 		root: string,
 		sessionId: string,
 		initialLeafId: string | null,
-		openSession: (directory: string) => Promise<Session> = openLocalFlowSession,
+		openSession: (
+			directory: string,
+			acceptedDirectories?: readonly string[],
+		) => Promise<Session> = openLocalFlowSession,
 	): Promise<PiFlowSessionRegistry> {
 		if (!leaf(initialLeafId)) throw new FlowLedgerError("identity", "Invalid initial transcript position.");
 		const ownership = FlowOwnership.acquire(join(root, "session-registry-v1"), { sessionId, branchId: "registry" });
 		let session: Session | undefined;
 		try {
-			session = await openSession(ownership.directory);
+			session = await openSession(ownership.directory, ownership.sessionDirectories);
 			const registry = new PiFlowSessionRegistry(ownership, session);
 			await registry.transact((state) => ({ result: state, changed: false }), initialLeafId);
 			registry.initialized = true;
