@@ -106,9 +106,14 @@ async function assertRegistry(registry: PiFlowSessionRegistry, scope: FlowScope,
 function reactivationTarget(state: FlowSessionRegistryState, marker: Marker | undefined): FlowBranchRecord | undefined {
 	if (!marker) return undefined;
 	const record = state.branches.find((branch) => branch.id === marker.data.branchId);
+	// A rebuilt registry makes the verified branch a root without inventing its lost ancestry.
+	// Its position still binds the complete marker, including the transition ID: every caller
+	// verifies that position's hash and transcript lifetime before selecting or resuming it.
+	const rebuiltRoot =
+		record?.fromBranchId === undefined && record?.transitionId === undefined && state.retired !== undefined;
 	if (
 		!record ||
-		record.transitionId !== marker.data.transitionId ||
+		(record.transitionId !== marker.data.transitionId && !rebuiltRoot) ||
 		!record.position ||
 		record.position.entryId !== marker.id
 	)

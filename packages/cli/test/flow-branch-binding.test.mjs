@@ -650,6 +650,39 @@ test("a relocated flow session that must rebuild still opens instead of failing"
 	await bindPiFlowBranch(rebuilt, manager, (notice) => notices.push(notice));
 	assert.equal(notices.length, 1, "the rebuilt registry is reported once");
 });
+test("rebuilding a navigated branch is idempotent and still rejects changed marker evidence", async (t) => {
+	const { root, manager, registry, open } = await fixture(t);
+	await bindPiFlowBranch(registry, manager);
+	const transition = await registry.beginNavigation((await registry.snapshot()).revision, manager.getLeafId());
+	manager.resetLeaf();
+	const scope = await completePiFlowNavigation(registry, manager, transition.id);
+	await registry.close();
+	await rm(join(root, "session-registry-v1"), { recursive: true });
+	const rebuilt = await open();
+	const notices = [];
+	assert.deepEqual(await bindPiFlowBranch(rebuilt, manager, (path) => notices.push(path)), scope);
+	const state = await rebuilt.snapshot();
+	assert.equal(notices.length, 1);
+	assert.deepEqual(await bindPiFlowBranch(rebuilt, manager, (path) => notices.push(path)), scope);
+	assert.deepEqual(await rebuilt.snapshot(), state);
+	assert.equal(notices.length, 1, "rebinding must not rebuild the same registry again");
+	await rebuilt.close();
+	const reopened = SessionManager.open(manager.getSessionFile());
+	const next = await open(reopened);
+	assert.deepEqual(await bindPiFlowBranch(next, reopened, (path) => notices.push(path)), scope);
+	assert.deepEqual(await next.snapshot(), state);
+	assert.equal(notices.length, 1, "restart must not rebuild the same registry again");
+	await next.close();
+	const path = manager.getSessionFile();
+	const entries = (await readFile(path, "utf8")).trim().split("\n").map(JSON.parse);
+	entries.at(-1).data.transitionId = "changed-transition";
+	await writeFile(path, `${entries.map(JSON.stringify).join("\n")}\n`);
+	const changed = SessionManager.open(path);
+	const rejected = await open(changed);
+	await assert.rejects(bindPiFlowBranch(rejected, changed), { code: "identity" });
+	assert.deepEqual(await rejected.snapshot(), state);
+});
+
 test("a registry that cannot be reconciled with the transcript rebuilds instead of failing", async (t) => {
 	const { root, manager, registry, open } = await fixture(t);
 	const original = await bindPiFlowBranch(registry, manager);

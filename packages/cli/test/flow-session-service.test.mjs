@@ -95,9 +95,21 @@ async function legacyStorage(root, scope, move = true) {
 	return { path: join(current, "sessions", legacyFolder, file), header: JSON.stringify(header) };
 }
 
-for (const recovery of ["legacy registry", "rebuilt registry", "partially adopted branch"])
+for (const recovery of [
+	"legacy registry",
+	"rebuilt registry",
+	"partially adopted branch",
+	"rebuilt navigated registry",
+])
 	test(`session service reopens full-digest storage with ${recovery}`, async (t) => {
 		const first = await fixture(t);
+		if (recovery === "rebuilt navigated registry") {
+			await first.session.prompt("before navigation");
+			const user = first.session.sessionManager
+				.getBranch()
+				.find((entry) => entry.type === "message" && entry.message.role === "user");
+			await first.session.navigateTree(user.id);
+		}
 		const scope = first.service.branch().scope;
 		const input = FlowModelInput.compose(
 			"saved",
@@ -130,7 +142,11 @@ for (const recovery of ["legacy registry", "rebuilt registry", "partially adopte
 		assert.deepEqual(reopened.requests, []);
 		assert.equal((await readFile(stored.path, "utf8")).split("\n")[0], stored.header);
 		await reopened.service.close();
-		const again = await fixture(t, { root: first.root, manager: SessionManager.open(manager.getSessionFile()) });
+		const again = await fixture(t, {
+			root: first.root,
+			manager: SessionManager.open(manager.getSessionFile()),
+			onRebuiltRegistry: () => assert.fail("a second reopen must not rebuild the registry again"),
+		});
 		assert.deepEqual(again.service.branch().scope, scope);
 		ledger.generation++;
 		ledger.revision++;
