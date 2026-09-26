@@ -73,7 +73,7 @@ Tool results and completion messages show a themed summary of role, model, statu
 
 ## Subagent dashboard
 
-The dashboard sits above the Session Line, which stays directly on top of the prompt. It groups work into sections, each opened by a divider that names the section and counts its items, for example `── Agents · 1 running · !1 ─────`. Rows under a divider show a marker (`⠋` running, `○` queued, `✔` done, `✗` failed or cancelled, `!` needs attention), the run's role, elapsed time, and its current tool and task. When space runs out, a section shrinks to its divider, which keeps its counts and names the command that shows the rest.
+The dashboard sits above the Session Line, which stays directly on top of the prompt. It groups work into sections, each opened by a divider that names the section and counts its items, for example `── Agents · 1 running · !1 ─────`. Rows under a divider show a marker (`⠋` running, `○` queued, `✔` done, `✗` failed or cancelled, `!` needs attention), the run's role, elapsed time, and its current tool and task. When space runs out, a section shrinks to its divider, which keeps its counts and names the command that shows the rest. A blank line separates the panel from the Session Line and prompt.
 
 The `!N` count on the Session Line shows how many items need attention. It stays visible when the dashboard is hidden and takes priority over the model name when space is tight. A child's result stays counted until it is delivered to the model or read in full; seeing the row does not clear it. Its row leaves the panel after 30 seconds, but the count remains. A flow condition clears once flow control resolves it, and `/flow` shows the details.
 

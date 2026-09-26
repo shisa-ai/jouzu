@@ -59,7 +59,7 @@ function fixture(t, state = "running", animate = true) {
 }
 test("streaming suppresses the extra spinner timer but not source notifications", (t) => {
 	const f = fixture(t, "running", false);
-	assert.equal(f.component.render(80).length, 2, "section divider and row");
+	assert.equal(f.component.render(80).length, 3, "section divider, row, and separating blank line");
 	f.tick(1000);
 	assert.equal(f.renders(), 0);
 	f.change();
@@ -82,7 +82,7 @@ test("running dashboard animates and disposal releases source listener and timer
 });
 test("retained completion expires without source notification and then stops waking", (t) => {
 	const f = fixture(t, "completed", false);
-	assert.equal(f.component.render(80).length, 2, "section divider and row");
+	assert.equal(f.component.render(80).length, 3, "section divider, row, and separating blank line");
 	f.tick(29999);
 	assert.equal(f.renders(), 0);
 	f.tick(1);

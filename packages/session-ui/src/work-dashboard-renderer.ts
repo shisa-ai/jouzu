@@ -135,9 +135,11 @@ export function renderWorkDashboard(
 	const budget = dashboardLineBudget(layout);
 	if (!budget || layout.width < 1) return [];
 	const candidates = selectWork(snapshot, layout.now, Number.MAX_SAFE_INTEGER).details;
-	const sections = SECTION_ORDER.filter((kind) => candidates.some((unit) => unit.kind === kind)).slice(0, budget);
+	// A blank line separates the panel from the Session Line and prompt when the budget allows it.
+	const gap = budget >= 3 ? 1 : 0;
+	const sections = SECTION_ORDER.filter((kind) => candidates.some((unit) => unit.kind === kind)).slice(0, budget - gap);
 	if (!sections.length) return [];
-	let spare = budget - sections.length;
+	let spare = budget - gap - sections.length;
 	const shown = candidates.filter((unit) => sections.includes(unit.kind) && spare-- > 0);
 	const all = [
 		...new Map(
@@ -184,5 +186,6 @@ export function renderWorkDashboard(
 			);
 		}
 	}
+	if (gap) rows.push("");
 	return rows;
 }

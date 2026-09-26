@@ -42,6 +42,7 @@ test("dashboard obeys aggregate mode, terminal, and remaining-space budgets with
 			const layout = { width, mode, terminalRows: 18, availableRows: 4, now: 0 };
 			const rows = renderWorkDashboard(snapshot, layout, styles);
 			assert.equal(rows.length, mode === "hidden" ? 0 : 4);
+			if (rows.length) assert.equal(rows.at(-1), "", "a blank line separates the panel from the Session Line");
 			assert.ok(rows.every((row) => terminalTextWidth(row) <= width && !row.includes("\x1b") && !row.includes("\n")));
 			// The section divider carries the full counts and route when rows are hidden.
 			if (rows.length && width >= 48) assert.match(rows[0], /── Agents · 12 running · !12 · \/workflow ─/);
@@ -103,6 +104,7 @@ test("sections title their counts and rows follow marker, identity, status, elap
 		"  ○ coder · 1h 5m · sleep",
 		"  ✔ coder · 1h 5m",
 		"  ✗ coder · failed · 1h 5m",
+		"",
 	]);
 	for (const width of [1, 2, 5, 12])
 		for (const row of renderWorkDashboard(
