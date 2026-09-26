@@ -4,6 +4,13 @@ import { promisify } from "node:util";
 
 const execute = promisify(execFile);
 const OWNER = "@jouzu-label-owner";
+const VALUE = "@jouzu-label-value";
+const STATUS_FORMATS = new Set(["#I:#W#F", "#I:#W#{?window_flags,#{window_flags}, }"]);
+const DISPLAY_NAME = `#{?#{&&:#{${OWNER}},#{&&:#{==:#{pane_title},#{${VALUE}}},#{||:#{automatic-rename},#{==:#{window_name},}}}},#{pane_title},#W}`;
+export function paneLabelStatusFormat(original: string): string | undefined {
+	return STATUS_FORMATS.has(original) ? original.replace("#W", DISPLAY_NAME) : undefined;
+}
+
 const quote = (value: string) => `'${value.replaceAll("'", "'\\''")}'`;
 const command = (...args: string[]) => args.map(quote).join(" ");
 export const validPaneLabel = (value: string): boolean => /^[a-z0-9](?:[a-z0-9-]{0,10}[a-z0-9])?$/.test(value);
@@ -75,11 +82,36 @@ export class TmuxLabels {
 					return false;
 				}
 				this.last = label;
+				await this.run("set-option", "-p", "-t", this.pane, VALUE, label);
+				await this.installStatusDisplay().catch(() => {});
 				return true;
 			} catch {
 				return false;
 			}
 		});
+	}
+
+	/** Recognized stock formats only. The conditional falls back after release or manual rename. */
+	private async installStatusDisplay(): Promise<void> {
+		const expected = `@jouzu-label-format-${this.owner}`;
+		try {
+			for (const option of ["window-status-format", "window-status-current-format"]) {
+				const original = await this.run("show-options", "-wAv", "-t", this.pane, option);
+				const replacement = paneLabelStatusFormat(original);
+				if (!replacement) continue;
+				await this.run("set-option", "-p", "-t", this.pane, expected, original);
+				await this.run(
+					"if-shell",
+					"-F",
+					"-t",
+					this.pane,
+					`#{&&:#{==:#{${OWNER}},${this.owner}},#{==:#{${option}},#{${expected}}}}`,
+					command("set-option", "-w", "-t", this.pane, option, replacement),
+				);
+			}
+		} finally {
+			await this.run("set-option", "-pu", "-t", this.pane, expected);
+		}
 	}
 
 	private guard(): string {
@@ -93,7 +125,7 @@ export class TmuxLabels {
 			"-t",
 			this.pane,
 			`#{==:#{${OWNER}},${this.owner}}`,
-			command("set-option", "-pu", "-t", this.pane, OWNER),
+			`${command("set-option", "-pu", "-t", this.pane, OWNER)} ; ${command("set-option", "-pu", "-t", this.pane, VALUE)}`,
 		);
 	}
 

@@ -82,9 +82,26 @@ claim a pane.
 An empty pane title can be claimed automatically. A nonempty title with no
 ownership evidence is protected, including a hostname, shell name, or a title
 beginning with `Jouzu`. Use `/labels pane auto` to opt in on such a pane. The
-adapter uses a pane-local `@jouzu-label-owner` option; it does not change tmux
-border or status configuration. Your tmux configuration decides where pane
-titles are visible.
+adapter uses pane-local `@jouzu-label-owner` and `@jouzu-label-value` options.
+For stock tmux and Byobu status formats, it installs a window-local display rule:
+show the active pane's owned label when the window is automatically named or has
+an empty name. A manual window rename disables automatic naming in tmux, so an
+explicit nonempty window name stays visible—even if it is `jouzu`. An automatically
+named `jouzu` window displays its pane label instead. The actual window name and
+`automatic-rename` setting are never changed.
+
+Custom status formats are preserved. Pane borders are unchanged. The display
+rule remains window-local after Jouzu exits, falling back to the window name when
+there is no matching pane owner and label. To restore inherited status formats
+for that window, run:
+
+```sh
+tmux set-option -wu window-status-format
+tmux set-option -wu window-status-current-format
+```
+
+These commands remove window-local overrides, including any you added yourself;
+do not use them if you want to keep a custom window-local format.
 
 Each update checks the attachment's ownership token and its last title inside
 the tmux command queue. If the title differs, Jouzu relinquishes ownership.
