@@ -11,6 +11,10 @@ export class WorkDashboardController {
 		this.listeners.add(listener);
 		return () => this.listeners.delete(listener);
 	}
+	/** Request a display refresh without reading or acknowledging producer state. */
+	invalidateDisplay(): void {
+		this.publish();
+	}
 	getSnapshot(): WorkDashboardSnapshot | undefined {
 		return this.snapshot ? structuredClone(this.snapshot) : undefined;
 	}

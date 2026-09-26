@@ -70,7 +70,7 @@ import { detectBannerColorMode, renderBrandGradient } from "./presentation.js";
 import type { RuntimeDiagnostics } from "./runtime-diagnostics.js";
 import type { SessionUiStyles } from "./session-ui/index.js";
 import { onShisaAuthChange } from "./shisa-link/credentials.js";
-import { createWorkflowIntegration } from "./subagents/integration.js";
+import { createWorkflowIntegration, type WorkflowService } from "./subagents/integration.js";
 import { isActiveRun } from "./subagents/manager.js";
 import {
 	fitTerminalText,
@@ -91,6 +91,8 @@ export interface JouzuModelPickerRequest {
 }
 
 export interface JouzuModelPickerOptions {
+	dashboardVisibility?: (visible: boolean) => void;
+	onDashboardChanged?: () => void;
 	runtime?: RuntimeDiagnostics;
 	textguardFiles?: boolean;
 	/** Reads the live TextGuard mode when a child agent launches. */
@@ -715,6 +717,7 @@ export class ModelPickerComponent implements PaletteComponent, Focusable {
 export type FavoriteCycleDirection = "forward" | "backward";
 
 export interface JouzuModelPickerIntegration {
+	workflowService: WorkflowService;
 	workflowExtension: JouzuModelPickerIntegration["extension"];
 	extension: InlineExtension;
 	open(request: JouzuModelPickerRequest): Promise<boolean>;
@@ -896,6 +899,7 @@ export function createJouzuModelPicker(
 	const store = new ModelPickerStore(paths);
 	const workflow = createWorkflowIntegration(paths, undefined, {
 		textguardFiles: options.textguardFiles,
+		...(options.dashboardVisibility ? { dashboardVisibility: options.dashboardVisibility } : {}),
 		profile: options.profile,
 		...(options.textguardMode ? { textguardMode: options.textguardMode } : {}),
 	});
@@ -1481,6 +1485,7 @@ export function createJouzuModelPicker(
 								paths,
 								env: catalogEnv,
 								onCatalogsChanged: reloadCatalogs,
+								...(options.onDashboardChanged ? { onDashboardChanged: options.onDashboardChanged } : {}),
 								onAccountChanged: (change) => refreshShisaAccount(change),
 								...(options.jouzuVersion ? { jouzuVersion: options.jouzuVersion } : {}),
 							}),
@@ -1609,6 +1614,7 @@ export function createJouzuModelPicker(
 		cycleFavorite,
 		handleScopedModelsCommand,
 		activeAgentCount: () => workflow.service.runs().filter(isActiveRun).length,
+		workflowService: workflow.service,
 		reloadCatalogs,
 		refreshShisaAccount,
 	};

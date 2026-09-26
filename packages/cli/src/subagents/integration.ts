@@ -62,7 +62,12 @@ export interface WorkflowService {
 export function createWorkflowIntegration(
 	paths: JouzuPaths,
 	workerFactory?: WorkerFactory,
-	options: { textguardFiles?: boolean; textguardMode?: () => TextGuardMode; profile?: () => "core" | "ja" } = {},
+	options: {
+		textguardFiles?: boolean;
+		textguardMode?: () => TextGuardMode;
+		profile?: () => "core" | "ja";
+		dashboardVisibility?: (visible: boolean) => void;
+	} = {},
 ): {
 	service: WorkflowService;
 	register(pi: ExtensionAPI, open: (section?: "agents" | "runs") => Promise<boolean>): void;
@@ -350,7 +355,7 @@ export function createWorkflowIntegration(
 				return subagentComponent(details?.presentation ?? (details?.runs ? details : message.content), theme, expanded);
 			});
 			pi.registerCommand("subagents", {
-				description: "Open child runs; use show or hide for the status pane",
+				description: "Open child runs; use show or hide for the dashboard",
 				getArgumentCompletions: (prefix) =>
 					["show", "hide"].filter((value) => value.startsWith(prefix)).map((value) => ({ value, label: value })),
 				handler: async (args, active) => {
@@ -366,6 +371,16 @@ export function createWorkflowIntegration(
 						return;
 					}
 					if (action) {
+						if (options.dashboardVisibility) {
+							options.dashboardVisibility(action === "show");
+							active.ui.notify(
+								action === "show"
+									? "Dashboard restored to its saved display mode."
+									: "Dashboard hidden for this session. Use /subagents show to restore it.",
+								"info",
+							);
+							return;
+						}
 						dashboard.setVisible(action === "show");
 						active.ui.notify(
 							action === "show"
@@ -423,7 +438,7 @@ export function createWorkflowIntegration(
 				await manager?.dispose();
 				if (generation !== sessionGeneration) return;
 				ctx = active;
-				dashboard.attach(active);
+				if (!options.dashboardVisibility) dashboard.attach(active);
 				mainRole = undefined;
 				subagentsEnabled = true;
 				for (const entry of active.sessionManager.getEntries()) {

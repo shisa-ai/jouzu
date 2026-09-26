@@ -191,6 +191,8 @@ Settings has a **View: ‹ Catalogs › / ‹ About ›** choice. Move to it wit
 
 Catalogs includes a **Shisa AI** row above the context-limit row and the catalog list. Signed out, the row reports `Not connected` with the signup credits, and `Enter` runs device sign-in inside the panel: the verification URL and code appear in the message area, and `Esc` cancels sign-in rather than closing Settings. With a saved sign-in, the row reports its organization and dashboard address. An environment key shows `Connected · SHISA_API_KEY` without borrowing the saved sign-in's organization. `Enter` reports the dashboard address, and `D` signs out after confirmation.
 
+Catalogs also includes a **Dashboard** choice below **Maximum context**. Use `←`, `→`, or `Enter` to save `compact`, `expanded`, or `hidden`. The choice applies across sessions. `/subagents hide` is a session-only override; `/subagents show` restores the saved choice without changing it.
+
 The account row scrolls out of view when the catalog source window moves past its first page. Keyboard navigation back to the first source restores it. A focused account stays visible during sign-in or sign-out. An expanded selected catalog gets offering space before additional source rows.
 
 After sign-in, Jouzu refreshes authenticated catalogs and model availability in the same session. If credentials were saved but server confirmation failed or was interrupted, the panel retains the warning and asks the user to sign in again. Signup offers are not displayed as an account balance.

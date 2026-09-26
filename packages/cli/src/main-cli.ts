@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import { formatHelp, isBlockedPiSelfUpdate, parseJouzuArgs, UsageError } from "./args.js";
 import { createAstraCompatibilityExtension } from "./astra-compatibility.js";
 import { catalogStatus, formatCatalogStatus, validateCatalogFile } from "./catalog-command.js";
+import { DashboardVisibility, loadDashboardPolicy } from "./dashboard-policy.js";
 import { createDoctorReport } from "./doctor.js";
 import { isInteractivePiStartup, usesMachineReadableStdout } from "./interactive-startup.js";
 import {
@@ -56,6 +57,7 @@ import { offerShisaOnboarding } from "./shisa-link/onboarding.js";
 import { ensureQuietStartupDefault, suppressPiReleaseNotes } from "./startup-settings.js";
 import { createToolArgumentExtension } from "./tool-arguments.js";
 import { JouzuUpdater } from "./updater.js";
+import { createChildWorkSource, createFlowWorkSource } from "./work-dashboard-sources.js";
 
 export const STARTUP_CATALOG_TIMEOUT_MS = 8_000;
 
@@ -286,13 +288,17 @@ export async function runMainCli(args: string[]): Promise<void> {
 		throw new Error(`loaded Pi ${piRuntimeVersion} does not match Jouzu's exact pin ${metadata.piVersion}`);
 	}
 	await offerShisaOnboarding({ paths, jouzuVersion: metadata.jouzuVersion, interactive: interactiveStartup });
-	const [presentation, { createJouzuModelPicker }, { createJouzuHelpExtension }, { createSessionUiExtension }] =
-		await Promise.all([
-			import("./presentation.js"),
-			import("./model-picker.js"),
-			import("./help.js"),
-			import("./session-ui/index.js"),
-		]);
+	const [
+		presentation,
+		{ createJouzuModelPicker },
+		{ createJouzuHelpExtension },
+		{ createSessionUiExtension, WorkDashboardController, selectWork },
+	] = await Promise.all([
+		import("./presentation.js"),
+		import("./model-picker.js"),
+		import("./help.js"),
+		import("./session-ui/index.js"),
+	]);
 	presentation.clearInteractiveStartup(parsed.args);
 	// A source with no activated revision has nothing cached to serve Pi's initial
 	// model selection, so it refreshes before the picker snapshots catalogs. Sources
@@ -324,7 +330,19 @@ export async function runMainCli(args: string[]): Promise<void> {
 		usesReleaseExtensions(parsed.args) ? releaseExtensionStatus.resolvedPackageRoots : {},
 	);
 	const releaseDiagnostics = createReleaseExtensionDiagnostics(releaseExtensionStatus, runtimeDiagnostics);
+	const dashboardController = new WorkDashboardController();
+	const dashboardVisibility = new DashboardVisibility();
+	let dashboardMode = loadDashboardPolicy(paths).mode;
 	const modelPicker = createJouzuModelPicker(paths, {
+		onDashboardChanged: () => {
+			dashboardMode = loadDashboardPolicy(paths).mode;
+			dashboardController.invalidateDisplay();
+		},
+		dashboardVisibility: (visible) => {
+			if (visible) dashboardVisibility.show();
+			else dashboardVisibility.hide();
+			dashboardController.invalidateDisplay();
+		},
 		runtime: runtimeDiagnostics,
 		jouzuVersion: metadata.jouzuVersion,
 		textguardFiles: parsed.options.textguardFiles,
@@ -348,6 +366,25 @@ export async function runMainCli(args: string[]): Promise<void> {
 	const voice = (await import("./voice/integration.js")).createVoiceExtension(paths);
 	const effectiveKeyText = (action: "app.model.select" | "app.model.cycleForward") => pi.keyText(action) || "unbound";
 	const sessionUi = createSessionUiExtension({
+		dashboard: {
+			controller: dashboardController,
+			mode: () => dashboardVisibility.mode(dashboardMode),
+			attach: (ctx, resetVisibility) => {
+				if (resetVisibility) dashboardVisibility.reset();
+				const scope = flow?.ingress().branch().scope ?? {
+					sessionId: ctx.sessionManager.getSessionId(),
+					branchId: ctx.sessionManager.getLeafId() ?? "root",
+				};
+				dashboardController.attach(scope, [
+					createChildWorkSource(modelPicker.workflowService),
+					...(flow ? [createFlowWorkSource(() => flow.dashboardStatus())] : []),
+				]);
+				const policy = loadDashboardPolicy(paths);
+				dashboardMode = policy.mode;
+				if (resetVisibility && policy.error)
+					ctx.ui.notify(`Dashboard settings could not be read: ${policy.error}`, "warning");
+			},
+		},
 		getHints: () => [
 			{
 				id: "palette.shortcuts",
@@ -360,10 +397,19 @@ export async function runMainCli(args: string[]): Promise<void> {
 		// both read on the Session Line while the status bar keeps workspace, branch, and context.
 		getActivity: ({ extensionStatuses }) => {
 			const loopStatus = extensionStatuses.get("multiloop");
-			return sessionActivity({
+			const snapshot = dashboardController.getSnapshot();
+			const selection = snapshot ? selectWork(snapshot, Date.now(), 0) : undefined;
+			const activity = sessionActivity({
 				...(loopStatus ? { loopStatus } : {}),
-				activeAgents: modelPicker.activeAgentCount(),
+				activeAgents: selection?.activeCount ?? modelPicker.activeAgentCount(),
 			});
+			return selection?.attentionCount
+				? {
+						text: activity?.text ?? "Needs attention",
+						active: activity?.active ?? false,
+						attentionCount: selection.attentionCount,
+					}
+				: activity;
 		},
 		onModelPicker: (query) =>
 			modelPicker.open({ source: query ? "command" : "action", ...(query ? { initialSearchInput: query } : {}) }),

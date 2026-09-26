@@ -73,11 +73,13 @@ Tool results and completion messages show a themed summary of role, model, statu
 
 ## Subagent dashboard
 
-The **Subagents** pane appears above the prompt when the session has child runs. It shows active, queued, and finished counts, followed by active runs first. Run rows show status, role/model, current tool, and workspace. The pane updates on run events and limits its height to leave room for the prompt.
+The dashboard below the Session Line shows child runs and flow conditions that need attention. An `!N` count on the Session Line takes priority over the model name when space is tight, including when the dashboard is hidden. Merely displaying a result does not mark it as read.
+
+Settings / Catalogs has a **Dashboard** choice: `compact` (up to five rows), `expanded` (up to ten), or `hidden`. The panel also limits itself to one third of the terminal height and the space left by the prompt and other dock components. Finished runs without unread results remain for 30 seconds; unread results remain until handled.
 
 - `/subagents` opens **Workflow → Runs**, with output, message, Stop, and Resume controls.
-- `/subagents hide` hides the pane without stopping work.
-- `/subagents show` restores the pane. Visibility resets when the session starts or reloads.
+- `/subagents hide` hides the dashboard for this session without stopping work or clearing attention.
+- `/subagents show` restores the saved display mode, including `hidden` if that is the saved choice. The session-only override resets when the session starts or reloads.
 
 The Runs detail view includes the workspace. Incoming run updates preserve the selected run. In non-interactive mode, `/subagents` reports run summaries as JSON.
 

@@ -10,6 +10,25 @@ import { notificationHash } from "../dist/notifications/inbox.js";
 import { pathDigest } from "../dist/path-digest.js";
 import { createWorkflowIntegration } from "../dist/subagents/integration.js";
 
+test("shared dashboard takeover suppresses child widget and routes visibility without launching work", async () => {
+	const visibility = [];
+	const f = fixture(false, { dashboardVisibility: (visible) => visibility.push(visible) });
+	const widgets = [];
+	f.ctx.ui.setWidget = (...args) => widgets.push(args);
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		await f.commands.get("subagents").handler("hide", f.ctx);
+		await f.commands.get("subagents").handler("show", f.ctx);
+		await f.commands.get("subagents").handler("", f.ctx);
+		assert.deepEqual(visibility, [false, true]);
+		assert.deepEqual(f.opened, ["runs"]);
+		assert.equal(f.workers.length, 0);
+		assert.ok(widgets.every(([, content]) => content === undefined));
+	} finally {
+		await f.handlers.get("session_shutdown")({}, f.ctx);
+	}
+});
+
 function fixture(realWorker = false, options = {}) {
 	const root = realpathSync(mkdtempSync(join(tmpdir(), "jouzu-agent-integration-")));
 	const paths = { agentDir: join(root, "agent"), configDir: join(root, "config"), stateDir: join(root, "state") };

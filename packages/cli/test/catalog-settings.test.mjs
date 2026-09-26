@@ -1161,6 +1161,45 @@ test("Long source labels leave the status column readable", async () => {
 	}
 });
 
+test("Dashboard display is reachable, persists choices, and preserves rejected policy files", (t) => {
+	const f = setup();
+	t.after(() => rmSync(f.root, { recursive: true, force: true }));
+	let changes = 0;
+	const component = new CatalogSettingsComponent({
+		context: f.context,
+		paths: f.paths,
+		env: {},
+		onDashboardChanged: () => changes++,
+	});
+	component.render(84);
+	component.handleInput("up");
+	assert.match(selectedLine(component.render(84)), /Dashboard/);
+	component.handleInput("\x1b[C");
+	const path = join(f.paths.configDir, "dashboard-policy.json");
+	assert.equal(JSON.parse(readFileSync(path, "utf8")).mode, "expanded");
+	component.handleInput("enter");
+	assert.equal(JSON.parse(readFileSync(path, "utf8")).mode, "hidden");
+	component.handleInput("\x1b[D");
+	assert.equal(JSON.parse(readFileSync(path, "utf8")).mode, "expanded");
+	assert.equal(changes, 3);
+	component.handleInput("up");
+	assert.match(selectedLine(component.render(84)), /Maximum context/);
+	component.handleInput("down");
+	assert.match(selectedLine(component.render(84)), /Dashboard/);
+	for (const width of [48, 80, 120]) {
+		const rows = component.render(width);
+		assert.ok(rows.every((row) => terminalTextWidth(row) <= width));
+		assert.match(rows.join("\n"), /Dashboard/);
+	}
+	writeFileSync(path, "invalid");
+	component.handleInput("\x1b[C");
+	assert.equal(readFileSync(path, "utf8"), "invalid");
+	assert.equal(changes, 3);
+	assert.match(component.render(84).join("\n"), /not saved/);
+	component.handleInput("escape");
+	assert.equal(f.closes.length, 1);
+});
+
 test("The context ceiling row steps through presets, persists, and notifies the host", () => {
 	const { root, paths, context } = setup();
 	try {
