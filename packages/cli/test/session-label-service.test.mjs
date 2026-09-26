@@ -3,7 +3,7 @@ import { test } from "node:test";
 import { boundedLabelTask, createSessionLabelsExtension } from "../dist/session-labels.js";
 
 const settle = () => new Promise((resolve) => setImmediate(resolve));
-function fixture({ entries = [], name, mode = "tui" } = {}) {
+function fixture({ entries = [], name, mode = "tui", policy } = {}) {
 	const handlers = new Map(),
 		events = new Map(),
 		commands = new Map(),
@@ -73,6 +73,7 @@ function fixture({ entries = [], name, mode = "tui" } = {}) {
 			release: async () => {},
 		},
 		async () => ({ folder: "folder", repository: "repository" }),
+		policy,
 	).factory(pi);
 	const emit = (event, data = {}) => handlers.get(event)?.(data, ctx);
 	const command = (args) => commands.get("labels").handler(args, ctx);
@@ -135,7 +136,7 @@ test("admitted input names by default and persists route, ownership, and usage",
 	f.calls[0].resolve();
 	await settle();
 	assert.equal(f.name(), "Fix session labels");
-	assert.deepEqual(f.panes, [["label-fix"]]);
+	assert.deepEqual(f.panes, [["jouzu"], ["label-fix"]]);
 	assert.equal(f.entries.filter((e) => e.customType === "jouzu-session-label-usage").length, 1);
 	await f.input("Fix labels");
 	assert.equal(f.calls.length, 1);
@@ -194,7 +195,7 @@ test("shutdown, tree navigation, and disabled naming discard pending proposals",
 		f.calls[0].resolve();
 		await settle();
 		assert.equal(f.name(), undefined);
-		assert.equal(f.panes.length, 0);
+		assert.deepEqual(f.panes, [["jouzu"]]);
 	}
 });
 
@@ -259,7 +260,7 @@ test("bare labels reports status and every command without changing state or pen
 	await f.command("");
 	assert.equal(f.entries.length, 0);
 	assert.equal(f.calls.length, 0);
-	assert.equal(f.panes.length, 0);
+	assert.deepEqual(f.panes, [["jouzu"]]);
 	assert.match(f.notifications.at(-1), /Automatic naming: on/);
 	for (const command of [
 		"/labels —",
@@ -389,6 +390,51 @@ test("resume checks missing names from completed history and retains deferred sc
 	const finished = fixture({ entries: again.entries, name: again.name() });
 	await finished.emit("session_start");
 	assert.equal(finished.calls.length, 0, "existing automatic labels are reused");
+});
+
+test("startup claims respect persisted global off, session off, and pane pins", async () => {
+	let enabled = false,
+		changed;
+	const policy = {
+		load: () => ({ enabled }),
+		write(value) {
+			enabled = value;
+			changed?.();
+		},
+		subscribe(fn) {
+			changed = fn;
+			return () => {
+				changed = undefined;
+			};
+		},
+	};
+	const f = fixture({ policy });
+	await f.emit("session_start");
+	assert.equal(f.panes.length, 0);
+	await f.input("Task");
+	assert.equal(f.calls.length, 0);
+	await f.command("pane auto");
+	assert.equal(f.panes.length, 0);
+	await f.command("global on");
+	assert.deepEqual(f.panes, [["jouzu"]]);
+	await f.input("New task");
+	assert.equal(f.calls.length, 1);
+	await f.command("global off");
+	assert.equal(f.calls[0].options.signal.aborted, true);
+	f.calls[0].resolve();
+	await settle();
+	assert.equal(f.name(), undefined);
+	await f.command("off");
+	enabled = true;
+	const off = fixture({ entries: f.entries, policy });
+	await off.emit("session_start");
+	assert.equal(off.panes.length, 0);
+	const pinned = fixture();
+	await pinned.emit("session_start");
+	await pinned.command("pane pin");
+	const reopened = fixture({ entries: pinned.entries });
+	await reopened.emit("session_start");
+	assert.equal(reopened.panes.length, 0);
 });
 
 test("task data is byte-bounded and redacts absolute paths and common credential prefixes", () => {

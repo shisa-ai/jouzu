@@ -193,6 +193,13 @@ Catalogs includes a **Shisa AI** row above the context-limit row and the catalog
 
 Catalogs also includes a **Dashboard** choice below **Maximum context**. Use `←`, `→`, or `Enter` to save `compact`, `expanded`, or `hidden`. The choice applies across sessions. `/subagents hide` is a session-only override; `/subagents show` restores the saved choice without changing it.
 
+Catalogs includes **Auto labels** below Dashboard. `Enter`, `Space`, `←`, or `→`
+toggles the persistent global naming switch. It shares its setting with
+`/labels global on|off`; a session-level off choice or pane pin remains effective.
+Turning it off cancels pending naming and releases pane ownership in the current
+process. Invalid saved settings remain off and saving reports an error without
+overwriting them.
+
 The account row scrolls out of view when the catalog source window moves past its first page. Keyboard navigation back to the first source restores it. A focused account stays visible during sign-in or sign-out. An expanded selected catalog gets offering space before additional source rows.
 
 After sign-in, Jouzu refreshes authenticated catalogs and model availability in the same session. If credentials were saved but server confirmation failed or was interrupted, the panel retains the warning and asks the user to sign in again. Signup offers are not displayed as an account balance.

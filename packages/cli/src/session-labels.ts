@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { basename } from "node:path";
 import { promisify } from "node:util";
 import type { ExtensionContext, InlineExtension } from "@earendil-works/pi-coding-agent";
+import type { LabelPolicyStore } from "./label-policy.js";
 import { sanitizeTerminalText } from "./terminal-layout.js";
 import { TmuxLabels, validPaneLabel } from "./tmux-labels.js";
 
@@ -135,6 +136,7 @@ function validState(value: unknown, session: string): value is LabelState {
 export function createSessionLabelsExtension(
 	pane = TmuxLabels.fromEnvironment(),
 	workspace = labelWorkspace,
+	policy?: LabelPolicyStore,
 ): InlineExtension {
 	return {
 		name: "jouzu-session-labels",
@@ -147,6 +149,8 @@ export function createSessionLabelsExtension(
 			let latestTask = "";
 			let running = false;
 			let queued: { task: string; workflow: boolean } | undefined;
+			let unsubscribePolicy: (() => void) | undefined;
+			const globallyEnabled = () => policy?.load().enabled ?? true;
 			let pendingInputs: string[] = [];
 			let pendingTask: { task: string; workflow: boolean } | undefined;
 			let completed = false;
@@ -184,7 +188,14 @@ export function createSessionLabelsExtension(
 					queued = { task: bounded, workflow };
 					return;
 				}
-				if (!ctx || !state?.enabled || !latestTask.trim() || state.attempts >= 20 || (state.pinned && state.panePinned))
+				if (
+					!ctx ||
+					!state?.enabled ||
+					!globallyEnabled() ||
+					!latestTask.trim() ||
+					state.attempts >= 20 ||
+					(state.pinned && state.panePinned)
+				)
 					return;
 				if (!state.route && ctx.model) state.route = { provider: ctx.model.provider, model: ctx.model.id };
 				if (!state.route) return;
@@ -216,7 +227,7 @@ export function createSessionLabelsExtension(
 				void (async () => {
 					try {
 						const location = await workspaceInfo;
-						if (current !== generation || abort.signal.aborted) return;
+						if (current !== generation || abort.signal.aborted || !globallyEnabled()) return;
 						const response = await context.modelRegistry
 							.streamSimple(
 								model,
@@ -245,7 +256,7 @@ export function createSessionLabelsExtension(
 								model: model.id,
 								usage: response.usage,
 							});
-						if (current !== generation || abort.signal.aborted) return;
+						if (current !== generation || abort.signal.aborted || !globallyEnabled()) return;
 						if (response.stopReason === "error" || response.stopReason === "aborted") return;
 						const proposal = parseLabelProposal(
 							response.content
@@ -321,7 +332,17 @@ export function createSessionLabelsExtension(
 							attempts: 0,
 							lastAttempt: 0,
 						};
-				if (ctx && state.label && !state.panePinned) void pane?.update(state.label);
+				const applyPolicy = () => {
+					invalidate();
+					if (!globallyEnabled()) {
+						void pane?.release();
+						return;
+					}
+					if (ctx && state.enabled && !state.panePinned) void pane?.update(state.label ?? "jouzu");
+				};
+				unsubscribePolicy?.();
+				unsubscribePolicy = policy?.subscribe(applyPolicy);
+				applyPolicy();
 				if (ctx && state.enabled && !state.label) {
 					const task = state.lastTask ?? resumedLabelTask(context);
 					if (task) {
@@ -388,6 +409,8 @@ export function createSessionLabelsExtension(
 			});
 			pi.on("session_shutdown", async () => {
 				invalidate();
+				unsubscribePolicy?.();
+				unsubscribePolicy = undefined;
 				ctx = undefined;
 				pendingTask = undefined;
 				queued = undefined;
@@ -402,15 +425,19 @@ export function createSessionLabelsExtension(
 			const showStatus = (context: ExtensionContext) => {
 				context.ui.notify(
 					[
-						`Automatic naming: ${state.enabled ? "on" : "off"}.`,
+						`Automatic naming: ${state.enabled && globallyEnabled() ? "on" : "off"}. Global: ${globallyEnabled() ? "on" : "off"}; session: ${state.enabled ? "on" : "off"}.`,
 						`Naming model: ${state.route ? sanitizeTerminalText(`${state.route.provider}/${state.route.model}`) : state.enabled ? "selected model at the first naming request" : "none"}.`,
 						`Session name: ${state.pinned ? "pinned" : "automatic"}. Pane: ${state.panePinned ? "pinned" : "guarded (unknown titles are protected)"}.`,
 						`Naming requests: ${state.attempts}/20.`,
+						...(policy?.load().error
+							? ["Global label settings are invalid; naming is disabled until the settings file is repaired."]
+							: []),
 						state.revisitAt !== undefined
 							? `Ambiguous task: revisit after ${Math.max(0, state.revisitAt - (state.completedTurns ?? 0))} more completed user turn(s).`
 							: "Naming runs after a completed task turn; saved labels are checked on resume.",
 						"",
 						"/labels — Show status and commands.",
+						"/labels global on|off — Save the global naming setting.",
 						"/labels on — Enable naming with the selected model.",
 						"/labels off — Cancel pending naming and stop requests.",
 						"/labels pin — Protect the session name.",
@@ -433,6 +460,20 @@ export function createSessionLabelsExtension(
 						showStatus(context);
 						return;
 					}
+					if (action === "global on" || action === "global off") {
+						if (!policy) {
+							context.ui.notify("Global label settings are unavailable.", "warning");
+							return;
+						}
+						try {
+							policy.write(action === "global on");
+						} catch (error) {
+							context.ui.notify(sanitizeTerminalText(error instanceof Error ? error.message : String(error)), "error");
+							return;
+						}
+						showStatus(context);
+						return;
+					}
 					if (action === "on") {
 						if (!context.model) {
 							context.ui.notify("Select a model first.", "warning");
@@ -444,6 +485,7 @@ export function createSessionLabelsExtension(
 					} else if (action === "off") {
 						invalidate();
 						state.enabled = false;
+						await pane?.release();
 						delete state.route;
 					} else if (action === "pin") {
 						invalidate();
@@ -457,6 +499,10 @@ export function createSessionLabelsExtension(
 						state.panePinned = true;
 						await pane?.release(false);
 					} else if (action === "pane auto") {
+						if (!state.enabled || !globallyEnabled()) {
+							context.ui.notify("Enable session and global labels before claiming a pane.", "warning");
+							return;
+						}
 						const claimed = await pane?.update(state.label ?? "jouzu", true);
 						if (!claimed) {
 							context.ui.notify("Pane unavailable or owned by another attachment; title preserved.", "warning");

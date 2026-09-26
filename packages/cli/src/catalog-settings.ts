@@ -16,6 +16,7 @@ import {
 import { formatContextClamp, loadContextPolicy, stepContextClamp, writeContextPolicy } from "./context-clamp.js";
 import { DASHBOARD_MODES, loadDashboardPolicy, writeDashboardPolicy } from "./dashboard-policy.js";
 import { formatEffectiveKeybinding, formatEffectiveKeyPair } from "./keybinding-hints.js";
+import type { LabelPolicyStore } from "./label-policy.js";
 import {
 	activateDiscoveredCatalog,
 	type CatalogRefreshResult,
@@ -67,6 +68,7 @@ interface CatalogSettingsOptions {
 		options?: RefreshCatalogOptions,
 	) => Promise<CatalogRefreshResult>;
 	onDashboardChanged?: () => void;
+	labelPolicy?: LabelPolicyStore;
 	onCatalogsChanged?: () => void;
 	/** Host hook after a Shisa sign-in or sign-out: refresh providers, catalogs, and model availability. */
 	onAccountChanged?: (change: { signedIn: boolean }) => Promise<void> | void;
@@ -209,6 +211,8 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	private aboutCapacity = 1;
 	private views: SourceView[] = [];
 	private selectedIndex = 0;
+	private labelsFocused = false;
+	private readonly labelPolicy?: LabelPolicyStore;
 	private dashboardFocused = false;
 	private readonly onDashboardChanged?: () => void;
 	private contextFocused = false;
@@ -237,6 +241,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 	private _focused = false;
 
 	constructor(options: CatalogSettingsOptions) {
+		this.labelPolicy = options.labelPolicy;
 		this.onDashboardChanged = options.onDashboardChanged;
 		this.tui = options.context.tui;
 		this.theme = options.context.theme;
@@ -287,6 +292,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			this.viewFocused = this.about;
 			this.contextFocused = false;
 			this.dashboardFocused = false;
+			this.labelsFocused = false;
 			this.aboutOffset = 0;
 		}
 		this.reloadViews();
@@ -694,12 +700,43 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			}
 			return;
 		}
+		if (this.labelsFocused) {
+			if (this.keybindings.matches(data, "tui.select.up")) {
+				this.labelsFocused = false;
+				this.dashboardFocused = Boolean(this.onDashboardChanged);
+				this.contextFocused = !this.dashboardFocused;
+			} else if (this.keybindings.matches(data, "tui.select.down")) {
+				this.labelsFocused = false;
+			} else if (
+				matchesKey(data, "left") ||
+				matchesKey(data, "right") ||
+				data === " " ||
+				this.keybindings.matches(data, "tui.select.confirm")
+			) {
+				try {
+					const enabled = !this.labelPolicy?.load().enabled;
+					this.labelPolicy?.write(enabled);
+					this.message = {
+						level: "info",
+						text: `Global auto labels saved: ${enabled ? "on" : "off"}. Session off and pane pins remain respected.`,
+					};
+				} catch (error) {
+					this.message = {
+						level: "error",
+						text: `Auto labels were not saved: ${sanitizeTerminalText(error instanceof Error ? error.message : String(error))}`,
+					};
+				}
+			}
+			this.tui.requestRender();
+			return;
+		}
 		if (this.dashboardFocused) {
 			if (this.keybindings.matches(data, "tui.select.up")) {
 				this.dashboardFocused = false;
 				this.contextFocused = true;
 			} else if (this.keybindings.matches(data, "tui.select.down")) {
 				this.dashboardFocused = false;
+				this.labelsFocused = Boolean(this.labelPolicy);
 			} else if (
 				matchesKey(data, "left") ||
 				matchesKey(data, "right") ||
@@ -793,7 +830,8 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			}
 			if (this.contextFocused) return;
 			if (this.selectedIndex === 0 && this.views.length > 0 && this.contextRowVisible) {
-				if (this.onDashboardChanged) this.dashboardFocused = true;
+				if (this.labelPolicy) this.labelsFocused = true;
+				else if (this.onDashboardChanged) this.dashboardFocused = true;
 				else this.contextFocused = true;
 				this.tui.requestRender();
 				return;
@@ -805,6 +843,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			if (this.contextFocused) {
 				this.contextFocused = false;
 				this.dashboardFocused = Boolean(this.onDashboardChanged);
+				this.labelsFocused = !this.dashboardFocused && Boolean(this.labelPolicy);
 				this.tui.requestRender();
 				return;
 			}
@@ -1075,6 +1114,12 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 				{ key: "←→", label: "view" },
 				{ key: move, label: this.about ? "scroll" : "move" },
 				{ key: "Tab/Shift+Tab", label: "section" },
+				{ key: cancel, label: "close" },
+			];
+		if (this.labelsFocused)
+			return [
+				{ key: `${confirm}/Space/←→`, label: "auto labels" },
+				{ key: move, label: "move" },
 				{ key: cancel, label: "close" },
 			];
 		if (this.dashboardFocused)
@@ -1365,7 +1410,26 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 					}),
 				)
 			: undefined;
-		let contextRows = CONTEXT_SECTION_ROWS + Number(dashboardRow !== undefined);
+		const labelsRow = this.labelPolicy
+			? line(
+					renderPaletteField({
+						label: "Auto labels",
+						labelRole: "palette.identity",
+						value: this.styles.apply(
+							"palette.detail",
+							paletteChoice(
+								this.labelPolicy.load().error ? "Off (settings error)" : this.labelPolicy.load().enabled ? "On" : "Off",
+							),
+						),
+						labelWidth: SOURCE_LABEL_COLUMN,
+						innerWidth,
+						selected: this.labelsFocused,
+						theme: this.theme,
+						styles: this.styles,
+					}),
+				)
+			: undefined;
+		let contextRows = CONTEXT_SECTION_ROWS + Number(dashboardRow !== undefined) + Number(labelsRow !== undefined);
 		const accountRow = this.accountRow(innerWidth, line);
 		let accountRows = ACCOUNT_SECTION_ROWS;
 		const active = this.views.filter((view) => view.source.enabled && view.status.status === "active").length;
@@ -1380,7 +1444,13 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		);
 		if (this.views.length === 0) {
 			this.accountRowVisible = true;
-			lines.push(accountRow, contextRow, ...(dashboardRow ? [dashboardRow] : []), headingText);
+			lines.push(
+				accountRow,
+				contextRow,
+				...(dashboardRow ? [dashboardRow] : []),
+				...(labelsRow ? [labelsRow] : []),
+				headingText,
+			);
 			lines.push(line(this.styles.apply("palette.empty", "  No catalog sources configured.")));
 			return lines;
 		}
@@ -1406,6 +1476,7 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			(extras.detail.length + extras.warning.length + extras.conflict.length) -
 			(selectedExpanded ? 1 : 0) -
 			(sticky ? 1 : 0);
+		const contextFloor = this.labelsFocused ? 1 : 0;
 		let headingKept = true;
 		const dropOrShrink = (): void => {
 			if (extras.conflict.length > 0) {
@@ -1414,9 +1485,9 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 			} else if (extras.detail.length > 0) {
 				pool += extras.detail.length;
 				extras.detail = [];
-			} else if (contextRows > 0) {
-				pool += contextRows;
-				contextRows = 0;
+			} else if (contextRows > contextFloor) {
+				pool += contextRows - contextFloor;
+				contextRows = contextFloor;
 			} else if (headingKept) {
 				pool += 1;
 				headingKept = false;
@@ -1427,7 +1498,11 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		};
 		while (
 			pool < 0 &&
-			(extras.conflict.length > 0 || extras.detail.length > 0 || contextRows > 0 || headingKept || accountRows > 0)
+			(extras.conflict.length > 0 ||
+				extras.detail.length > 0 ||
+				contextRows > contextFloor ||
+				headingKept ||
+				accountRows > 0)
 		)
 			dropOrShrink();
 		// An expanded selection keeps its first offering and paging trailer
@@ -1524,7 +1599,12 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 						labelWidth: SOURCE_LABEL_COLUMN,
 						innerWidth,
 						selected:
-							isSelected && !this.viewFocused && !this.contextFocused && !this.accountFocused && !this.dashboardFocused,
+							isSelected &&
+							!this.viewFocused &&
+							!this.contextFocused &&
+							!this.accountFocused &&
+							!this.dashboardFocused &&
+							!this.labelsFocused,
 						theme: this.theme,
 						styles: this.styles,
 					}),
@@ -1575,11 +1655,14 @@ export class CatalogSettingsComponent implements PaletteComponent, Focusable {
 		if (accountRows > 0) prefix.push(accountRow);
 		this.accountRowVisible = accountRows > 0;
 		if (!this.accountRowVisible) this.accountFocused = false;
-		if (contextRows > 0) prefix.push(contextRow, ...(dashboardRow ? [dashboardRow] : []));
+		if (contextRows === 1 && this.labelsFocused && labelsRow) prefix.push(labelsRow);
+		else if (contextRows > 0)
+			prefix.push(contextRow, ...(dashboardRow ? [dashboardRow] : []), ...(labelsRow ? [labelsRow] : []));
 		this.contextRowVisible = contextRows > 0;
 		if (!this.contextRowVisible) {
 			this.contextFocused = false;
 			this.dashboardFocused = false;
+			this.labelsFocused = false;
 		}
 		if (headingKept) prefix.push(headingText);
 		lines.unshift(...prefix);

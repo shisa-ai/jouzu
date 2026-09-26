@@ -52,10 +52,10 @@ export class TmuxLabels {
 			try {
 				if (this.last === undefined) {
 					const title = await this.run("display-message", "-p", "-t", this.pane, "#{pane_title}");
-					if (!explicit && title !== "") return false;
+					if (!explicit && title !== "" && title !== "jouzu") return false;
 					this.previous = title;
 					// Both the empty-owner check and mutation execute in one tmux command queue.
-					const guard = explicit ? `#{==:#{${OWNER}},}` : `#{&&:#{==:#{${OWNER}},},#{==:#{pane_title},}}`;
+					const guard = explicit ? `#{==:#{${OWNER}},}` : `#{&&:#{==:#{${OWNER}},},#{==:#{pane_title},${title}}}`;
 					await this.run(
 						"if-shell",
 						"-F",

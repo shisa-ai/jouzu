@@ -4,7 +4,16 @@ Automatic naming is on by default in interactive sessions. Jouzu uses the select
 provider/model for the first naming request and keeps that exact route when you
 switch the main conversation model. `/labels on` enables naming with the selected
 model; `/labels off` disables it. The choice is saved with the session, and a saved
-off choice stays off when you reopen it.
+off choice stays off when you reopen it. Global **Auto labels** in Settings is a
+separate persistent switch, also controlled by `/labels global on|off`. Both the
+global and session switches must be on for naming and startup pane claims.
+Changing the global switch in Settings applies immediately in that process;
+other running sessions check the saved setting before requests and before applying
+responses. Global settings live in `session-labels.json` under Jouzu's configuration
+directory; malformed settings disable naming and are not overwritten automatically.
+Session choices and pane pins are saved in the session transcript. With session
+persistence disabled, session choices last only for that process; global settings
+remain persistent.
 
 Run `/labels` for a read-only status report and the complete command list. It shows
 the naming model, session and pane protection, request count, and any pending
@@ -20,6 +29,7 @@ do not change.
 | Command | Effect |
 | --- | --- |
 | `/labels` | Show status and all commands without changing settings or starting a request. |
+| `/labels global on` / `/labels global off` | Save the global switch shared with Settings → Auto labels. |
 | `/labels on` | Enable naming with the selected provider/model. |
 | `/labels off` | Cancel pending naming and stop model requests. Keep existing labels. |
 | `/labels pin` | Protect the session name, including when its text has not changed. |
@@ -79,10 +89,14 @@ server and pane at launch and updates only that pane. Other terminal and
 multiplexer titles are left unchanged. Print, JSON, RPC, and child sessions do not
 claim a pane.
 
-An empty pane title can be claimed automatically. A nonempty title with no
-ownership evidence is protected, including a hostname, shell name, or a title
-beginning with `Jouzu`. Use `/labels pane auto` to opt in on such a pane. The
-adapter uses pane-local `@jouzu-label-owner` and `@jouzu-label-value` options.
+At startup, when both naming switches are on and the pane is not pinned, Jouzu
+can claim a pane whose title is empty or exactly lowercase `jouzu`. It applies the
+saved short label, or uses `jouzu` until the first completed turn produces one.
+Another attachment's ownership token still blocks the claim. Other nonempty
+titles remain protected, including shell command titles, hostnames, and names such
+as `jouzu-project`. Use `/labels pane pin` to protect even the exact `jouzu` title;
+use `/labels pane auto` to explicitly claim another title while naming is enabled.
+The adapter uses pane-local `@jouzu-label-owner` and `@jouzu-label-value` options.
 For stock tmux and Byobu status formats, it installs a window-local display rule:
 show the active pane's owned label when the window is automatically named or has
 an empty name. A manual window rename disables automatic naming in tmux, so an

@@ -16,6 +16,7 @@ import {
 	matchesJouzuKeybinding,
 } from "./jouzu-keybindings.js";
 import { formatEffectiveKeybinding, formatEffectiveKeyPair } from "./keybinding-hints.js";
+import { createLabelPolicy } from "./label-policy.js";
 import type { CatalogModelOffering, ModelCatalogDocument } from "./model-catalog.js";
 import {
 	CatalogProjectionController,
@@ -1485,6 +1486,7 @@ export function createJouzuModelPicker(
 								paths,
 								env: catalogEnv,
 								onCatalogsChanged: reloadCatalogs,
+								labelPolicy: createLabelPolicy(paths),
 								...(options.onDashboardChanged ? { onDashboardChanged: options.onDashboardChanged } : {}),
 								onAccountChanged: (change) => refreshShisaAccount(change),
 								...(options.jouzuVersion ? { jouzuVersion: options.jouzuVersion } : {}),

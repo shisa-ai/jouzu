@@ -4,7 +4,6 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-
 import { CatalogSettingsComponent } from "../dist/catalog-settings.js";
 import {
 	CatalogSourceStore,
@@ -15,6 +14,7 @@ import {
 	SHISA_API_CATALOG_SOURCE,
 	setCatalogSourceToken,
 } from "../dist/catalog-sources.js";
+import { createLabelPolicy, labelPolicyPath } from "../dist/label-policy.js";
 import { parseAndValidateModelCatalog } from "../dist/model-catalog.js";
 import { loadActiveCatalogForSource, refreshCatalogSource } from "../dist/model-catalog-sync.js";
 import { resolveJouzuPaths } from "../dist/paths.js";
@@ -1159,6 +1159,54 @@ test("Long source labels leave the status column readable", async () => {
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}
+});
+
+test("Auto labels exposes the persistent global switch with keyboard and width safety", (t) => {
+	const f = setup();
+	t.after(() => rmSync(f.root, { recursive: true, force: true }));
+	const policy = createLabelPolicy(f.paths);
+	const component = new CatalogSettingsComponent({
+		context: f.context,
+		paths: f.paths,
+		env: {},
+		labelPolicy: policy,
+		onDashboardChanged() {},
+	});
+	component.render(84);
+	component.handleInput("up");
+	assert.match(selectedLine(component.render(84)), /Auto labels/);
+	component.handleInput("enter");
+	assert.equal(policy.load().enabled, false);
+	component.handleInput(" ");
+	assert.equal(policy.load().enabled, true);
+	component.handleInput("\x1b[D");
+	assert.equal(policy.load().enabled, false);
+	component.handleInput("\x1b[C");
+	assert.equal(policy.load().enabled, true);
+	component.handleInput("up");
+	assert.match(selectedLine(component.render(84)), /Dashboard/);
+	component.handleInput("down");
+	assert.match(selectedLine(component.render(84)), /Auto labels/);
+	component.handleInput("down");
+	assert.doesNotMatch(selectedLine(component.render(84)), /Auto labels/);
+	component.handleInput("up");
+	for (const width of [48, 80, 120]) {
+		const rows = component.render(width);
+		assert.ok(rows.every((row) => terminalTextWidth(row) <= width));
+		assert.match(rows.join("\n"), /Auto labels/);
+	}
+	const path = labelPolicyPath(f.paths);
+	f.context.tui.terminal.rows = 16;
+	const narrow = component.render(48);
+	assert.match(selectedLine(narrow), /Auto labels/);
+	assert.ok(narrow.length <= overlayBudget(16));
+	f.context.tui.terminal.rows = 32;
+	writeFileSync(path, "broken");
+	component.handleInput("enter");
+	assert.equal(readFileSync(path, "utf8"), "broken");
+	assert.match(component.render(84).join("\n"), /not saved/);
+	component.handleInput("escape");
+	assert.equal(f.closes.length, 1);
 });
 
 test("Dashboard display is reachable, persists choices, and preserves rejected policy files", (t) => {

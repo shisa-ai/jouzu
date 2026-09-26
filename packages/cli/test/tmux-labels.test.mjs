@@ -80,6 +80,13 @@ test("tmux guards pane ownership, restores titles, and preserves window names", 
 		await fresh.release();
 		assert.equal(title(), "");
 		assert.equal(tmux("display-message", "-p", "-t", pane, "#{window_name}"), "manual-window");
+		for (const initial of ["jouzu", "Jouzu", "jouzu-project", "shell"]) {
+			tmux("select-pane", "-t", pane, "-T", initial);
+			const startup = new TmuxLabels(socket, pane);
+			assert.equal(await startup.update("startup"), initial === "jouzu");
+			await startup.release();
+			assert.equal(title(), initial);
+		}
 	} finally {
 		try {
 			tmux("kill-server");

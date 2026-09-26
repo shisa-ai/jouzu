@@ -15,6 +15,7 @@ import {
 	planKeybindings,
 	resetKeybindings,
 } from "./keybindings.js";
+import { createLabelPolicy } from "./label-policy.js";
 import { loadMetadata } from "./metadata.js";
 import { catalogRegistrationGaps, catalogThinkingLevelGaps } from "./model-catalog.js";
 import {
@@ -447,7 +448,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 			extensionFactories: [
 				// First, so every later handler and the tool itself see the arguments that will run.
 				createToolArgumentExtension(),
-				createSessionLabelsExtension(),
+				createSessionLabelsExtension(undefined, undefined, createLabelPolicy(paths)),
 				...(flow ? flow.extensions : []),
 				{ name: "jouzu-textguard-review", factory: createTextGuardReviewExtension(nativeTextguard) },
 				presentation.createJouzuPresentationExtension(metadata, profile),
