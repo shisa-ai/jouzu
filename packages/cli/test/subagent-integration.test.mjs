@@ -4,6 +4,8 @@ import { mkdirSync, mkdtempSync, readFileSync, realpathSync, writeFileSync } fro
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { validateToolArguments } from "@earendil-works/pi-ai";
+import { convertResponsesTools } from "@earendil-works/pi-ai/api/openai-responses-shared";
 import { notificationHash } from "../dist/notifications/inbox.js";
 import { pathDigest } from "../dist/path-digest.js";
 import { createWorkflowIntegration } from "../dist/subagents/integration.js";
@@ -133,6 +135,56 @@ function fixture(realWorker = false, options = {}) {
 		shutdown: () => handlers.get("session_shutdown")(),
 	};
 }
+test("subagent provider schemas allow omission without fabricated arguments", async () => {
+	const f = fixture();
+	try {
+		const tool = f.tool;
+		assert.deepEqual(tool.parameters.required, ["op"]);
+		assert.deepEqual(tool.constrainedSampling, { type: "json_schema", strict: "prefer" });
+		for (const supportsStrictMode of [false, true]) {
+			const converted = convertResponsesTools([tool], { supportsStrictMode })[0];
+			assert.deepEqual(
+				converted.parameters.required,
+				supportsStrictMode ? Object.keys(tool.parameters.properties) : ["op"],
+			);
+			assert.equal(converted.strict, supportsStrictMode ? true : undefined);
+			for (const key of Object.keys(tool.parameters.properties).filter((key) => key !== "op")) {
+				if (supportsStrictMode)
+					assert.ok(
+						converted.parameters.properties[key].anyOf.some((variant) => variant.type === "null"),
+						key,
+					);
+				else assert.deepEqual(converted.parameters.properties[key], tool.parameters.properties[key]);
+			}
+			assert.deepEqual(converted.parameters.properties.op, tool.parameters.properties.op);
+		}
+		const nullable = Object.fromEntries(
+			Object.keys(tool.parameters.properties)
+				.filter((key) => key !== "op")
+				.map((key) => [key, null]),
+		);
+		for (const minimal of [
+			{ op: "roles" },
+			{ op: "list" },
+			{ op: "launch", role: "coder", task: "Inspect" },
+			{ op: "read", id: "returned-run-id" },
+			{ op: "trace" },
+			{ op: "steer", id: "returned-run-id", task: "Report findings" },
+			{ op: "stop", id: "returned-run-id" },
+			{ op: "resume", id: "returned-run-id", task: "Continue" },
+			{ op: "acknowledge", batchId: "delivered-batch-id" },
+		]) {
+			for (const args of [minimal, { ...nullable, ...minimal }])
+				assert.deepEqual(validateToolArguments(tool, { name: "subagent", arguments: args }), minimal);
+		}
+		assert.match(tool.description, /\{"op":"roles"\}/);
+		assert.match(tool.description, /Omit unused fields; use null only if required by the interface/);
+		assert.match(tool.parameters.properties.op.description, /resume\/steer: id, task/);
+	} finally {
+		await f.shutdown();
+	}
+});
+
 test("discovery ignores unrelated launch fields and accepts nullable optional arguments", async () => {
 	const f = fixture();
 	try {

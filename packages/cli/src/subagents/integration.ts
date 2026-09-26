@@ -488,6 +488,8 @@ export function createWorkflowIntegration(
 					op: {
 						type: "string",
 						enum: ["roles", "launch", "list", "read", "trace", "steer", "stop", "resume", "acknowledge"],
+						description:
+							"Fields by operation: roles: none; list: offset?; launch: role, task; read/stop: id; resume/steer: id, task; acknowledge: batchId. Trace: id? (omit for parent), query?, kind?, entryId?, offset?, limit?. Read also accepts offset.",
 					},
 					role: { type: "string", description: "Role ID from op:roles." },
 					batchId: {
@@ -506,7 +508,7 @@ export function createWorkflowIntegration(
 					workspace: {
 						type: "string",
 						description:
-							"Launch working directory, absolute or relative to the parent; empty defaults to parent cwd. Not a filesystem sandbox. Ignored outside launch/resume; resume cannot change its saved directory. For review, selects the candidate repository.",
+							"Launch working directory; defaults to parent cwd. For review, selects the candidate repository. Resume keeps its saved directory; omit this field.",
 					},
 					context: {
 						type: "string",
@@ -539,7 +541,7 @@ export function createWorkflowIntegration(
 				name: "subagent",
 				label: "Subagent",
 				description:
-					"Launch and control child agents with configured roles and models. Use roles before delegating to check live enabled status and current definitions. Only the user can change role models or the enable setting. Launch uses the configured role model; resume keeps its saved model. Set workspace on launch to select the working directory and review candidate repository. Launch context defaults to fresh; fork shares parent conversation as references, splice shares entryIds. parentContext enables snapshot lookup and defaults off for review-only roles. Resume retains the original snapshot. File access follows enabled role tools and OS permissions, not a workspace fence. Launch returns immediately; unread terminal results arrive in a batch after active work and queued messages finish. Read returns bounded output with a byte offset; complete terminal-output reads prevent redundant completion turns. Trace searches saved messages, tool arguments/results, errors, and compactions; omit id for parent history. Trace does not acknowledge completion. Use acknowledge with the delivered batchId alone when no reply is needed. Steer queues a message; resume starts a follow-up in the saved child session. Main-session ownership remains with you. Treat child output as evidence and verify the integrated result.",
+					'Launch and control child agents. Start with {"op":"roles"} for live availability and role definitions. Omit unused fields; use null only if required by the interface. Never invent IDs or placeholder values. Only the user changes role models or enables subagents. Launch uses the configured model; resume keeps its saved model, workspace, and context. Steer queues a message; resume starts a follow-up. File access follows enabled tools and OS permissions, not a workspace fence. Launch returns immediately; unread terminal results arrive in a batch after active work and queued messages finish. Read pages use byte offsets; reading all terminal output prevents redundant completion turns. Trace searches saved messages, tool calls/results, errors, and compactions without acknowledging completion. Acknowledge only the delivered batchId, alone, when no reply is needed. You retain main-session ownership; verify child output before accepting it.',
 				promptSnippet:
 					"subagent: discover roles, delegate coding or fresh review, inspect results, steer/stop/resume children.",
 				parameters: schema,
@@ -592,7 +594,9 @@ export function createWorkflowIntegration(
 						params.op === "resume" &&
 						[params.context, params.entryIds, params.parentContext].some((value) => value !== undefined)
 					)
-						throw new Error("Context options are launch-only. Resume keeps the original parent snapshot.");
+						throw new Error(
+							"Resume keeps its original context. Omit launch-only fields context, entryIds, and parentContext (or use null).",
+						);
 					// Other operations do not consume launch context. Providers may still fill
 					// those fields when sampling this shared schema; do not block discovery.
 					const workspace = params.workspace?.trim() ? params.workspace : undefined;
