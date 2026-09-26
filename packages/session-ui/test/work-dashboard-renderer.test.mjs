@@ -43,7 +43,8 @@ test("dashboard obeys aggregate mode, terminal, and remaining-space budgets with
 			const rows = renderWorkDashboard(snapshot, layout, styles);
 			assert.equal(rows.length, mode === "hidden" ? 0 : 4);
 			assert.ok(rows.every((row) => terminalTextWidth(row) <= width && !row.includes("\x1b") && !row.includes("\n")));
-			if (rows.length) assert.match(rows.at(-1), /\+9 \(!9\)/);
+			// The section divider carries the full counts and route when rows are hidden.
+			if (rows.length && width >= 48) assert.match(rows[0], /── Agents · 12 running · !12 · \/workflow ─/);
 		}
 	}
 	assert.equal(dashboardLineBudget({ mode: "expanded", terminalRows: 18, availableRows: 100 }), 6);
@@ -58,7 +59,7 @@ test("dashboard obeys aggregate mode, terminal, and remaining-space budgets with
 		[],
 	);
 });
-test("rows follow the marker, kind, identity, state, elapsed grammar", () => {
+test("sections title their counts and rows follow marker, identity, status, elapsed, detail", () => {
 	const unit = (id, state, extra = {}) => ({
 		id,
 		producer: "subagent",
@@ -94,12 +95,14 @@ test("rows follow the marker, kind, identity, state, elapsed grammar", () => {
 		{ mode: "expanded", terminalRows: 60, availableRows: 20, width: 80, now: 3_910_000 },
 		styles,
 	);
+	const title = "── Agents · 1 running · 1 open · 1 done · 1 failed · !1 ";
 	assert.deepEqual(rows, [
-		"! agent coder · completed · 5s",
-		"⠋ agent coder · running · 1h 5m · bash · run tests",
-		"○ agent coder · queued · 1h 5m · sleep",
-		"✔ agent coder · completed · 1h 5m",
-		"✗ agent coder · failed · 1h 5m",
+		title + "─".repeat(80 - title.length),
+		"  ! coder · unread result · 5s",
+		"  ⠋ coder · 1h 5m · bash · run tests",
+		"  ○ coder · 1h 5m · sleep",
+		"  ✔ coder · 1h 5m",
+		"  ✗ coder · failed · 1h 5m",
 	]);
 	for (const width of [1, 2, 5, 12])
 		for (const row of renderWorkDashboard(
@@ -108,4 +111,14 @@ test("rows follow the marker, kind, identity, state, elapsed grammar", () => {
 			styles,
 		))
 			assert.ok(terminalTextWidth(row) <= width, `width ${width}`);
+});
+test("attention with no other activity reads as a phrase and the label gives way first", () => {
+	const snapshot = { model: { providerId: "local", modelId: "model" } };
+	const line = renderSessionLine(snapshot, [], 60, styles, { text: "", active: false, attentionCount: 2 });
+	assert.match(line, /^!2 attention +Local model$/);
+	assert.equal(terminalTextWidth(line), 60);
+	assert.doesNotMatch(
+		renderSessionLine(snapshot, [], 18, styles, { text: "", active: false, attentionCount: 2 }),
+		/attention/,
+	);
 });

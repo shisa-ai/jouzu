@@ -76,16 +76,15 @@ test("installs one editor, Session Line, and Status Bar owner and cleans up", as
 			await new Promise((resolve) => setTimeout(resolve, 10));
 		}
 		assert.equal(extension.name, SESSION_UI_RUNTIME_IDS.extension);
-		assert.equal(calls.widgets[0][0], SESSION_UI_RUNTIME_IDS.sessionLineWidget);
-		assert.equal(typeof calls.widgets[0][1], "function");
-		assert.deepEqual(calls.widgets[0][2], { placement: "aboveEditor" });
+		// The Session Line is the prompt editor's first line, not a widget Pi can reorder.
+		assert.deepEqual(calls.widgets, []);
 		assert.equal(typeof calls.footers[0], "function");
 		assert.equal(typeof calls.editors[0], "function");
 		await handlers.get("session_start")({}, ctx);
 		assert.equal(calls.editors.length, 1);
 		assert.deepEqual(execCalls.map(({ command }) => command).sort(), ["git", "git", "node"]);
 
-		const tui = { requestRender() {} };
+		const tui = { requestRender() {}, terminal: { rows: 40, columns: 80 } };
 		const keybindings = {
 			matches(data, action) {
 				return (
@@ -112,7 +111,7 @@ test("installs one editor, Session Line, and Status Bar owner and cleans up", as
 		assert.equal(scopedCommandCalls, 1);
 		assert.equal(builtInModelPickerCalls, 0);
 
-		const lineComponent = calls.widgets.at(-1)[1](tui, theme);
+		const lineComponent = { render: (width) => [editor.render(width)[0]] };
 		const line = lineComponent.render(60)[0];
 		assert.equal(terminalTextWidth(line), 60);
 		assert.match(line, /\/model choose/);
@@ -155,7 +154,8 @@ test("installs one editor, Session Line, and Status Bar owner and cleans up", as
 		assert.equal(branchUnsubscribed, true);
 
 		await handlers.get("session_shutdown")({}, ctx);
-		assert.deepEqual(calls.widgets.at(-1), [SESSION_UI_RUNTIME_IDS.sessionLineWidget, undefined]);
+		assert.deepEqual(calls.widgets, []);
+		assert.equal(lineComponent.render(60)[0].includes("/model choose"), false, "the line leaves with its session");
 		assert.equal(calls.footers.at(-1), undefined);
 		assert.equal(calls.editors.at(-1), undefined);
 	} finally {

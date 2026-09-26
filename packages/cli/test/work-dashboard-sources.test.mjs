@@ -186,8 +186,8 @@ test("producer rows appear only while the producer confirms its widget is hidden
 		[],
 	);
 });
-test("tasks show in-progress rows and condense the open checklist", () => {
-	const task = (taskId, status, state = "active") => ({
+test("every task becomes a unit in checklist order so the section counts the whole list", () => {
+	const task = (taskId, status, state = "active", reason) => ({
 		key: `k${taskId}`,
 		taskId,
 		revision: "r",
@@ -195,21 +195,26 @@ test("tasks show in-progress rows and condense the open checklist", () => {
 		subject: `do ${taskId}`,
 		status,
 		blockedBy: [],
+		...(reason ? { reason } : {}),
 	});
 	const units = taskWorkUnits(scope, [
+		task("10", "pending"),
 		task("1", "completed", "completed"),
 		task("2", "in_progress"),
-		task("3", "pending", "blocked"),
-		task("4", "pending"),
+		task("3", "pending", "blocked", "Waiting for task #2"),
+		task("4", "pending", "paused"),
 	]);
 	assert.deepEqual(
-		units.map((unit) => [unit.state, unit.label, unit.detail]),
+		units.map((unit) => [unit.state, unit.label, unit.detail, unit.completedAt]),
 		[
-			["running", "#2 do 2", undefined],
-			["queued", "2 open", "next #4 do 4"],
+			["queued", "#10 do 10", undefined, undefined],
+			["completed", "#1 do 1", undefined, undefined],
+			["running", "#2 do 2", undefined, undefined],
+			["waiting", "#3 do 3", "Waiting for task #2", undefined],
+			["paused", "#4 do 4", undefined, undefined],
 		],
 	);
-	assert.deepEqual(taskWorkUnits(scope, [task("1", "completed", "completed")]), []);
+	assert.ok(units[1].id < units[0].id, "padded identities sort numerically");
 });
 test("jobs map states, scope, timing, and undelivered completions", () => {
 	const job = (id, status, extra = {}) => ({

@@ -40,6 +40,8 @@ type EditorAutocompleteInternals = {
 export type ModelCycleDirection = "forward" | "backward";
 
 export interface SessionPromptEditorOptions {
+	/** A line drawn directly above the frame, so it stays attached to the prompt whatever widgets do. */
+	topLine?: (width: number) => string | undefined;
 	onModelPicker?: (query?: string) => Promise<boolean>;
 	onModelCycle?: (direction: ModelCycleDirection) => Promise<boolean>;
 	onScopedModelsCommand?: () => Promise<boolean>;
@@ -177,9 +179,11 @@ export class SessionPromptEditor extends CustomEditor {
 		if (width < 4) return super.render(width);
 		const innerWidth = width - 2;
 		const rendered = super.render(innerWidth);
-		return renderPromptFrameLines(rendered, width, autocompleteLineCount(this, innerWidth), {
+		const frame = renderPromptFrameLines(rendered, width, autocompleteLineCount(this, innerWidth), {
 			border: (value) => this.styles.apply("prompt.border", value),
 			rail: (value) => this.styles.apply("prompt.rail", value),
 		});
+		const top = this.options.topLine?.(width);
+		return top === undefined ? frame : [top, ...frame];
 	}
 }

@@ -96,8 +96,16 @@ export function renderSessionLine(
 				? `${provider ? `${styles.apply("session.provider", provider)} ` : ""}${styles.apply("session.model", modelIdentity)}`
 				: styles.apply("session.model", fitTerminalText(modelIdentity, available, "…"));
 		const detailWidth = available - terminalTextWidth(identity) - 2;
-		const detail = detailWidth > 0 ? renderActivityLeft(activity, glyph, detailWidth, styles) : undefined;
-		const prefix = `${left}${detail ? `  ${detail}` : ""}`;
+		// With no other activity the badge reads as a phrase; the label is the first thing to give way.
+		const detail =
+			detailWidth <= 0
+				? undefined
+				: activity.text.trim()
+					? renderActivityLeft(activity, glyph, detailWidth, styles)
+					: detailWidth >= 9
+						? styles.apply("session.hint.muted", "attention")
+						: undefined;
+		const prefix = `${left}${detail ? (activity.text.trim() ? `  ${detail}` : ` ${detail}`) : ""}`;
 		return `${prefix}${" ".repeat(width - terminalTextWidth(prefix) - terminalTextWidth(identity))}${identity}`;
 	}
 	const right = fitTerminalText(

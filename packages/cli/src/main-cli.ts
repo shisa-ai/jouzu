@@ -447,7 +447,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 			});
 			return selection?.attentionCount
 				? {
-						text: activity?.text ?? "Needs attention",
+						text: activity?.text ?? "",
 						active: activity?.active ?? false,
 						attentionCount: selection.attentionCount,
 					}

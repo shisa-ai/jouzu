@@ -1,6 +1,6 @@
 export interface SessionUiRuntimeIds {
 	extension: string;
-	sessionLineWidget: string;
+	workDashboardWidget: string;
 }
 
 /**
@@ -9,5 +9,5 @@ export interface SessionUiRuntimeIds {
  */
 export const SESSION_UI_RUNTIME_IDS: Readonly<SessionUiRuntimeIds> = Object.freeze({
 	extension: "jouzu-session-ui",
-	sessionLineWidget: "jouzu-session-line",
+	workDashboardWidget: "jouzu-work-dashboard",
 });

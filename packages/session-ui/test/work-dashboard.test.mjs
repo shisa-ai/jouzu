@@ -23,16 +23,19 @@ const snapshot = (units) => ({
 });
 const tick = () => new Promise((resolve) => setImmediate(resolve));
 
-test("completion expiry uses explicit time; hidden and filtered attention survives", () => {
+test("completion and attention rows expire on explicit time; the attention count survives", () => {
 	const units = [
 		unit("done"),
 		unit("alert", { attention: [{ id: "r", type: "result", since: 1000, route: "/workflow" }] }),
 	];
 	assert.equal(selectWork(snapshot(units), 30_999, 5).details.length, 2);
-	assert.equal(selectWork(snapshot(units), 31_000, 5).details.length, 1);
+	const expired = selectWork(snapshot(units), 31_000, 5);
+	assert.equal(expired.details.length, 0, "the alert row leaves the panel after its display window");
+	assert.equal(expired.attentionCount, 1, "the count persists until the source resolves it");
 	for (const lines of [0, 1, 5]) {
 		const selected = selectWork(snapshot(units), 40_000, lines, {
 			completionMs: 30_000,
+			attentionMs: 60_000,
 			detailCapacity: 100,
 			filter: () => false,
 		});
@@ -53,7 +56,11 @@ test("capacity and overflow preserve unique counts and oldest attention ordering
 			],
 		}),
 	];
-	const selected = selectWork(snapshot([...units, units[0]]), 4000, 2, { completionMs: 30_000, detailCapacity: 1 });
+	const selected = selectWork(snapshot([...units, units[0]]), 4000, 2, {
+		completionMs: 30_000,
+		attentionMs: 30_000,
+		detailCapacity: 1,
+	});
 	assert.deepEqual(
 		selected.details.map((item) => item.id),
 		["old"],

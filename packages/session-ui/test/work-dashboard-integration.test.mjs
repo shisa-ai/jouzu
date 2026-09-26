@@ -33,7 +33,7 @@ test("dock measurement reserves native widgets, multiline editor, status and foo
 	tui.children.pop();
 	assert.equal(dashboardAvailableRows(tui, dashboard, 80), 0);
 });
-test("dashboard registration follows Session Line once per attachment and tree changes do not move it", async () => {
+test("dashboard registers once per attachment above the editor-hosted Session Line and tree changes do not move it", async () => {
 	const handlers = new Map();
 	const widgets = [];
 	const attachments = [];
@@ -59,21 +59,25 @@ test("dashboard registration follows Session Line once per attachment and tree c
 		isIdle: () => true,
 		sessionManager: { getBranch: () => [] },
 		getContextUsage: () => undefined,
-		ui: { setWidget: (...args) => widgets.push(args), setFooter() {}, setEditorComponent() {} },
+		ui: {
+			theme: { fg: (_color, text) => text, bg: (_color, text) => text, bold: (text) => text },
+			setWidget: (...args) => widgets.push(args),
+			setFooter() {},
+			setEditorComponent() {},
+		},
 	};
 	try {
 		await handlers.get("session_start")({}, ctx);
 		assert.deepEqual(
 			widgets.map(([key]) => key),
-			["jouzu-session-line", "jouzu-work-dashboard"],
+			["jouzu-work-dashboard"],
 		);
 		await handlers.get("session_tree")({}, ctx);
-		assert.equal(widgets.length, 2);
+		assert.equal(widgets.length, 1);
 		assert.deepEqual(attachments, [true, false]);
 		await handlers.get("session_shutdown")({}, ctx);
 		assert.equal(controller.getSnapshot(), undefined);
-		assert.equal(widgets.at(-2)[0], "jouzu-work-dashboard");
-		assert.equal(widgets.at(-2)[1], undefined);
+		assert.deepEqual(widgets.at(-1), ["jouzu-work-dashboard", undefined]);
 		await handlers.get("session_start")({}, { ...ctx, mode: "rpc" });
 		assert.equal(attachments.length, 2);
 	} finally {

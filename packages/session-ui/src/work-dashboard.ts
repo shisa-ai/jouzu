@@ -47,9 +47,11 @@ export interface WorkDashboardSource {
 	subscribe(changed: () => void): () => void;
 	pollIntervalMs?: number;
 }
-export const WORK_DISPLAY_DEFAULTS = { completionMs: 30_000, detailCapacity: 100 } as const;
+export const WORK_DISPLAY_DEFAULTS = { completionMs: 30_000, attentionMs: 30_000, detailCapacity: 100 } as const;
 export interface WorkDisplayPolicy {
 	completionMs: number;
+	/** How long an attention row stays in the panel after its onset. The count persists until resolved. */
+	attentionMs: number;
 	detailCapacity: number;
 	filter?: (unit: WorkUnit) => boolean;
 }
@@ -90,11 +92,10 @@ export function selectWork(
 		).values(),
 	];
 	const attention = units.filter((unit) => unit.attention.length > 0);
-	const eligible = units.filter(
-		(unit) =>
-			unit.attention.length ||
-			!terminal(unit) ||
-			(unit.completedAt !== undefined && now < unit.completedAt + policy.completionMs),
+	const eligible = units.filter((unit) =>
+		unit.attention.length
+			? !Number.isFinite(onset(unit)) || now < onset(unit) + policy.attentionMs
+			: !terminal(unit) || (unit.completedAt !== undefined && now < unit.completedAt + policy.completionMs),
 	);
 	const candidates = eligible
 		.filter((unit) => policy.filter?.(unit) ?? true)

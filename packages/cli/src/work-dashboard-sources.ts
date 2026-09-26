@@ -223,26 +223,28 @@ export function createClaimedWorkSource(options: {
 		},
 	};
 }
-/** In-progress tasks get rows; the rest of the open checklist condenses into one row. */
+const TASK_STATES: Record<FlowTask["state"], WorkUnit["state"]> = {
+	active: "queued",
+	blocked: "waiting",
+	paused: "paused",
+	completed: "completed",
+};
+/**
+ * Every task becomes a unit so the dashboard section can count the whole checklist. Completed tasks
+ * carry no completion time and therefore count without taking rows. Identities sort in checklist order.
+ */
 export function taskWorkUnits(scope: WorkScope, tasks: FlowTask[]): WorkUnit[] {
-	const unit = (id: string, state: WorkUnit["state"], label: string, detail?: string): WorkUnit => ({
-		id,
+	return tasks.map((task) => ({
+		id: `#${task.taskId.padStart(8, "0")}`,
 		producer: "tasks",
 		owner: scope.sessionId,
 		kind: "task",
-		state,
-		label: sanitizeTerminalText(label),
-		...(detail ? { detail: sanitizeTerminalText(detail) } : {}),
+		state: task.status === "in_progress" && task.state !== "completed" ? "running" : TASK_STATES[task.state],
+		label: sanitizeTerminalText(`#${task.taskId} ${task.subject}`),
+		...(task.reason ? { detail: sanitizeTerminalText(task.reason) } : {}),
 		attention: [],
 		route: "/tasks",
-	});
-	const running = tasks.filter((task) => task.status === "in_progress");
-	const open = tasks.filter((task) => task.status !== "in_progress" && task.status !== "completed");
-	const next = open.find((task) => task.state === "active") ?? open[0];
-	return [
-		...running.map((task) => unit(task.key, "running", `#${task.taskId} ${task.subject}`)),
-		...(next ? [unit("open", "queued", `${open.length} open`, `next #${next.taskId} ${next.subject}`)] : []),
-	];
+	}));
 }
 const JOB_STATES: Record<string, WorkUnit["state"]> = {
 	running: "running",

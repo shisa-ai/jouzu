@@ -7,7 +7,7 @@ import { SESSION_UI_RUNTIME_IDS, SYSTEM_SESSION_UI_CLOCK } from "../dist/index.j
 test("centralizes runtime-only identity without persisted configuration", () => {
 	assert.deepEqual(SESSION_UI_RUNTIME_IDS, {
 		extension: "jouzu-session-ui",
-		sessionLineWidget: "jouzu-session-line",
+		workDashboardWidget: "jouzu-work-dashboard",
 	});
 	assert.equal(Object.isFrozen(SESSION_UI_RUNTIME_IDS), true);
 	const packageJson = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));

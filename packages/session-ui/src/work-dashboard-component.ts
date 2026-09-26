@@ -33,10 +33,16 @@ export class WorkDashboardComponent implements Component {
 		const layout = { ...this.layout(width), width, now, frame: this.frame };
 		const rows = renderWorkDashboard(snapshot, layout, this.styles);
 		const units = Object.values(snapshot.sources).flatMap((source) => source.units);
+		const attentionDeadlines = units
+			.flatMap((unit) => unit.attention.map((reason) => reason.since))
+			.filter((since): since is number => since !== undefined)
+			.map((since) => since + WORK_DISPLAY_DEFAULTS.attentionMs - now)
+			.filter((delay) => delay > 0);
 		const deadlines = units
 			.filter((unit) => !unit.attention.length && TERMINAL.includes(unit.state) && unit.completedAt !== undefined)
 			.map((unit) => (unit.completedAt ?? -Infinity) + WORK_DISPLAY_DEFAULTS.completionMs - now)
-			.filter((delay) => delay > 0);
+			.filter((delay) => delay > 0)
+			.concat(attentionDeadlines);
 		const animating = layout.animate !== false && rows.length > 0 && units.some((unit) => unit.state === "running");
 		if (animating) deadlines.push(SESSION_ACTIVITY_TICK_MS);
 		// Elapsed time on unfinished rows advances once a second without producer events or animation.

@@ -38,6 +38,10 @@ export function createSessionUiExtension(options: SessionUiExtensionOptions = {}
 		factory: (pi) => {
 			let controller: SessionStatusController | undefined;
 			let editorInstalled = false;
+			// The Session Line renders as the prompt editor's first line. Pi moves a widget directly above
+			// the editor whenever it is registered again, so a widget cannot hold that position.
+			let sessionLine: SessionLineComponent | undefined;
+			let requestRender = () => {};
 			const styleOptions: SessionUiStyleOptions = {
 				...(options.styleScheme ? { scheme: options.styleScheme } : {}),
 				...(options.colorEnabled !== undefined ? { colorEnabled: options.colorEnabled } : {}),
@@ -67,22 +71,18 @@ export function createSessionUiExtension(options: SessionUiExtensionOptions = {}
 				// Pi exposes extension statuses only through the footer factory, so the footer publishes
 				// the live map for the Session Line to read.
 				let extensionStatuses: ReadonlyMap<string, string> = new Map();
-				ctx.ui.setWidget(
-					SESSION_UI_RUNTIME_IDS.sessionLineWidget,
-					(tui, theme) =>
-						new SessionLineComponent(
-							activeController,
-							stylesFor(theme),
-							() => options.getHints?.(activeController.getSnapshot()) ?? [],
-							() => tui.requestRender(),
-							() => options.getActivity?.({ extensionStatuses }),
-						),
-					{ placement: "aboveEditor" },
+				sessionLine?.dispose();
+				sessionLine = new SessionLineComponent(
+					activeController,
+					stylesFor(ctx.ui.theme),
+					() => options.getHints?.(activeController.getSnapshot()) ?? [],
+					() => requestRender(),
+					() => options.getActivity?.({ extensionStatuses }),
 				);
 				if (options.dashboard) {
 					const dashboard = options.dashboard;
 					ctx.ui.setWidget(
-						"jouzu-work-dashboard",
+						SESSION_UI_RUNTIME_IDS.workDashboardWidget,
 						(tui, theme) => {
 							const component: WorkDashboardComponent = new WorkDashboardComponent(
 								dashboard.controller,
@@ -101,6 +101,7 @@ export function createSessionUiExtension(options: SessionUiExtensionOptions = {}
 					);
 				}
 				ctx.ui.setFooter((tui, theme, footerData) => {
+					requestRender = () => tui.requestRender();
 					extensionStatuses = footerData.getExtensionStatuses();
 					const statusBar = new StatusBarComponent(activeController, stylesFor(theme), () => tui.requestRender());
 					const unsubscribeBranch = footerData.onBranchChange(() => {
@@ -119,6 +120,7 @@ export function createSessionUiExtension(options: SessionUiExtensionOptions = {}
 					ctx.ui.setEditorComponent(
 						(tui, theme, keybindings) =>
 							new SessionPromptEditor(tui, theme, keybindings, stylesFor(ctx.ui.theme), {
+								topLine: (width) => sessionLine?.render(width)[0],
 								...(options.onModelPicker ? { onModelPicker: options.onModelPicker } : {}),
 								...(options.onModelCycle ? { onModelCycle: options.onModelCycle } : {}),
 								...(options.onScopedModelsCommand ? { onScopedModelsCommand: options.onScopedModelsCommand } : {}),
@@ -149,8 +151,10 @@ export function createSessionUiExtension(options: SessionUiExtensionOptions = {}
 				controller = undefined;
 				options.dashboard?.controller.detach();
 				if (ctx.mode !== "tui") return;
-				if (options.dashboard) ctx.ui.setWidget("jouzu-work-dashboard", undefined);
-				ctx.ui.setWidget(SESSION_UI_RUNTIME_IDS.sessionLineWidget, undefined);
+				if (options.dashboard) ctx.ui.setWidget(SESSION_UI_RUNTIME_IDS.workDashboardWidget, undefined);
+				sessionLine?.dispose();
+				sessionLine = undefined;
+				requestRender = () => {};
 				ctx.ui.setFooter(undefined);
 				ctx.ui.setEditorComponent(undefined);
 				editorInstalled = false;
