@@ -30,6 +30,15 @@ test("Astra guidance follows the selected model on every turn without accumulati
 		/Do not stop at acknowledging capability, proposing a plan, or offering to continue/,
 	);
 	assert.match(first.systemPrompt, /continue without ending the turn to clarify/);
+	assert.match(
+		first.systemPrompt,
+		/diagnose and fix the issues you identify within the requested scope, then verify the fixes/,
+	);
+	assert.match(first.systemPrompt, /Do not stop at findings or ask whether to implement an authorized fix/);
+	assert.match(
+		first.systemPrompt,
+		/If the user explicitly requests diagnosis only, review only, or otherwise limits changes, respect that boundary/,
+	);
 	assert.match(first.systemPrompt, /Authorization persists across turns/);
 	assert.match(first.systemPrompt, /repeat or broaden testing only/);
 	assert.doesNotMatch(first.systemPrompt, /Use `subagent`/);
