@@ -1,7 +1,7 @@
 import { fitTerminalText, sanitizeTerminalText } from "./layout.js";
 import { sessionActivityGlyph } from "./session-line.js";
-import type { SessionUiStyles } from "./styles.js";
-import { selectWork, type WorkDashboardSnapshot } from "./work-dashboard.js";
+import type { SessionUiStyleRole, SessionUiStyles } from "./styles.js";
+import { selectWork, type WorkDashboardSnapshot, type WorkUnit } from "./work-dashboard.js";
 
 export interface WorkDashboardLayout {
 	mode: "compact" | "expanded" | "hidden";
@@ -20,6 +20,24 @@ export function dashboardLineBudget(layout: WorkDashboardLayout): number {
 		Math.floor(Math.min(layout.mode === "compact" ? 5 : 10, layout.terminalRows / 3, layout.availableRows)),
 	);
 }
+/** Row markers and roles match the Session Line so one glyph means one thing on both surfaces. */
+function rowMarker(unit: WorkUnit, frame = 0): { marker: string; role: SessionUiStyleRole } {
+	if (unit.attention.length) return { marker: "!", role: "status.error" };
+	if (unit.state === "running")
+		return { marker: sessionActivityGlyph({ active: true, text: "" }, frame), role: "session.activity" };
+	if (unit.state === "completed") return { marker: "✔", role: "status.success" };
+	if (unit.state === "failed" || unit.state === "cancelled") return { marker: "✗", role: "status.error" };
+	return { marker: sessionActivityGlyph({ active: false, text: "" }), role: "session.activity.idle" };
+}
+/** Compact elapsed time: 45s, 12m, 1h 5m. */
+export function formatElapsed(ms: number): string {
+	const seconds = Math.max(0, Math.floor(ms / 1000));
+	if (seconds < 60) return `${seconds}s`;
+	const minutes = Math.floor(seconds / 60);
+	if (minutes < 60) return `${minutes}m`;
+	const hours = Math.floor(minutes / 60);
+	return minutes % 60 ? `${hours}h ${minutes % 60}m` : `${hours}h`;
+}
 export function renderWorkDashboard(
 	snapshot: WorkDashboardSnapshot,
 	layout: WorkDashboardLayout,
@@ -29,13 +47,15 @@ export function renderWorkDashboard(
 	if (!budget || layout.width < 1) return [];
 	const selected = selectWork(snapshot, layout.now, budget);
 	const rows = selected.details.map((unit) => {
-		const active = unit.state === "running";
-		const marker = unit.attention.length ? "!" : sessionActivityGlyph({ active, text: "" }, layout.frame);
+		const { marker, role } = rowMarker(unit, layout.frame);
 		const stale = snapshot.sources[unit.producer]?.availability === "stale" ? " [stale]" : "";
-		const text = `${marker} ${unit.label} · ${unit.state}${stale}${unit.detail ? ` · ${unit.detail}` : ""}`;
-		return styles.apply(
-			unit.attention.length ? "session.hint.warning" : active ? "session.activity" : "session.activity.idle",
-			fitTerminalText(sanitizeTerminalText(text), layout.width, "…"),
+		const elapsed =
+			unit.createdAt === undefined ? "" : ` · ${formatElapsed((unit.completedAt ?? layout.now) - unit.createdAt)}`;
+		const text = `${unit.kind} ${unit.label} · ${unit.state}${stale}${elapsed}${unit.detail ? ` · ${unit.detail}` : ""}`;
+		const body = fitTerminalText(sanitizeTerminalText(text), Math.max(0, layout.width - 2), "…");
+		return fitTerminalText(
+			`${styles.apply(role, marker)} ${styles.apply(unit.state === "running" ? "session.activity" : "session.activity.idle", body)}`,
+			layout.width,
 		);
 	});
 	if (selected.omittedCount && rows.length < budget) {

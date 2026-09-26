@@ -32,6 +32,12 @@ test("children remain parent-session scoped across branches and handling clears 
 	);
 	assert.equal(childWorkSnapshot(scope, [{ ...run, status: "running" }]).units[0].attention.length, 0);
 	assert.equal(
+		childWorkSnapshot(scope, [{ ...run, status: "running", currentTool: "bash", task: "fix tests\nthen report" }])
+			.units[0].detail,
+		"bash · fix tests",
+	);
+	assert.equal(childWorkSnapshot(scope, [{ ...run, currentTool: "bash" }]).units[0].detail, "test");
+	assert.equal(
 		createChildWorkSource({ runs: () => [], sessionId: () => undefined, subscribe: () => () => {} }).read(scope)
 			.complete,
 		false,

@@ -28,7 +28,12 @@ export function childWorkSnapshot(scope: WorkScope, runs: AgentRun[]): WorkSourc
 					kind: "agent",
 					state: run.status === "starting" ? "queued" : run.status === "interrupted" ? "failed" : run.status,
 					label: sanitizeTerminalText(run.role.id),
-					detail: sanitizeTerminalText(run.currentTool ?? run.task),
+					// The task names the run; two children of one role are otherwise indistinguishable.
+					detail: sanitizeTerminalText(
+						[run.status === "running" ? run.currentTool : undefined, run.task.split("\n", 1)[0].trim()]
+							.filter(Boolean)
+							.join(" · "),
+					),
 					route: "/workflow",
 					revision: run.completion?.revision ?? run.updatedAt,
 					createdAt: timestamp(run.createdAt),

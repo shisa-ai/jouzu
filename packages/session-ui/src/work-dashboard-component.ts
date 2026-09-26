@@ -5,6 +5,7 @@ import { WORK_DISPLAY_DEFAULTS } from "./work-dashboard.js";
 import type { WorkDashboardController } from "./work-dashboard-controller.js";
 import { renderWorkDashboard, type WorkDashboardLayout } from "./work-dashboard-renderer.js";
 
+const TERMINAL: readonly string[] = ["completed", "failed", "cancelled"];
 /** One stable registration; source changes and retention deadlines only request renders. */
 export class WorkDashboardComponent implements Component {
 	private frame = 0;
@@ -33,22 +34,20 @@ export class WorkDashboardComponent implements Component {
 		const rows = renderWorkDashboard(snapshot, layout, this.styles);
 		const units = Object.values(snapshot.sources).flatMap((source) => source.units);
 		const deadlines = units
-			.filter(
-				(unit) =>
-					!unit.attention.length &&
-					["completed", "failed", "cancelled"].includes(unit.state) &&
-					unit.completedAt !== undefined,
-			)
+			.filter((unit) => !unit.attention.length && TERMINAL.includes(unit.state) && unit.completedAt !== undefined)
 			.map((unit) => (unit.completedAt ?? -Infinity) + WORK_DISPLAY_DEFAULTS.completionMs - now)
 			.filter((delay) => delay > 0);
-		if (layout.animate !== false && rows.length && units.some((unit) => unit.state === "running"))
-			deadlines.push(SESSION_ACTIVITY_TICK_MS);
+		const animating = layout.animate !== false && rows.length > 0 && units.some((unit) => unit.state === "running");
+		if (animating) deadlines.push(SESSION_ACTIVITY_TICK_MS);
+		// Elapsed time on unfinished rows advances once a second without producer events or animation.
+		else if (rows.length && units.some((unit) => !TERMINAL.includes(unit.state) && unit.createdAt !== undefined))
+			deadlines.push(1000);
 		if (deadlines.length) {
 			this.timer = setTimeout(
 				() => {
 					this.timer = undefined;
 					if (this.disposed) return;
-					this.frame++;
+					if (animating) this.frame++;
 					this.requestRender();
 				},
 				Math.min(...deadlines, 2_147_483_647),

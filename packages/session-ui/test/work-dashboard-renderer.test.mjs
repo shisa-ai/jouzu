@@ -58,3 +58,54 @@ test("dashboard obeys aggregate mode, terminal, and remaining-space budgets with
 		[],
 	);
 });
+test("rows follow the marker, kind, identity, state, elapsed grammar", () => {
+	const unit = (id, state, extra = {}) => ({
+		id,
+		producer: "subagent",
+		kind: "agent",
+		owner: "s",
+		state,
+		label: "coder",
+		createdAt: 0,
+		attention: [],
+		route: "/workflow",
+		...extra,
+	});
+	const snapshot = {
+		scope: { sessionId: "s", branchId: "b" },
+		generation: 1,
+		sequence: 1,
+		sources: {
+			subagent: {
+				availability: "available",
+				complete: true,
+				units: [
+					unit("a", "running", { detail: "bash · run tests" }),
+					unit("b", "queued", { detail: "sleep" }),
+					unit("c", "completed", { completedAt: 3_900_000 }),
+					unit("d", "failed", { completedAt: 3_900_000 }),
+					unit("e", "completed", { completedAt: 5_000, attention: [{ id: "r", type: "result" }] }),
+				],
+			},
+		},
+	};
+	const rows = renderWorkDashboard(
+		snapshot,
+		{ mode: "expanded", terminalRows: 60, availableRows: 20, width: 80, now: 3_910_000 },
+		styles,
+	);
+	assert.deepEqual(rows, [
+		"! agent coder · completed · 5s",
+		"⠋ agent coder · running · 1h 5m · bash · run tests",
+		"○ agent coder · queued · 1h 5m · sleep",
+		"✔ agent coder · completed · 1h 5m",
+		"✗ agent coder · failed · 1h 5m",
+	]);
+	for (const width of [1, 2, 5, 12])
+		for (const row of renderWorkDashboard(
+			snapshot,
+			{ mode: "compact", terminalRows: 60, availableRows: 20, width, now: 3_910_000 },
+			styles,
+		))
+			assert.ok(terminalTextWidth(row) <= width, `width ${width}`);
+});
