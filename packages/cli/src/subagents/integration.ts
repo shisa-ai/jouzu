@@ -42,6 +42,7 @@ import { readSessionTrace, type TraceQuery } from "./trace.js";
 import { resolveWorkspace } from "./workspace.js";
 
 export interface WorkflowService {
+	sessionId(): string | undefined;
 	subagentsEnabled(): boolean;
 	setSubagentsEnabled(enabled: boolean): Promise<void>;
 	roles(): RoleSnapshot;
@@ -200,6 +201,7 @@ export function createWorkflowIntegration(
 		);
 	};
 	const service: WorkflowService = {
+		sessionId: () => (ctx && manager ? manager.parentSessionId : undefined),
 		subagentsEnabled: () => subagentsEnabled,
 		async setSubagentsEnabled(enabled) {
 			context();

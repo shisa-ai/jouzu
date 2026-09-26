@@ -49,6 +49,28 @@ function fixture(maxConcurrent = 2) {
 	};
 }
 
+test("notification handling notifies idle subscribers without changing completion time", async () => {
+	const f = fixture();
+	try {
+		const run = f.launch();
+		f.children[0].emit({ type: "result", status: "completed", text: "Done" });
+		f.children[0].exit(true);
+		const before = f.manager.get(run.id);
+		assert.equal(before.completion.handled, false);
+		let observed;
+		const unsubscribe = f.manager.subscribe(() => {
+			observed = f.manager.get(run.id);
+		});
+		f.manager.saveNotification(run.id, { handled: true });
+		assert.equal(observed.completion.handled, true);
+		assert.equal(observed.updatedAt, before.updatedAt);
+		unsubscribe();
+	} finally {
+		await f.manager.dispose();
+		rmSync(f.p.cwd, { recursive: true, force: true });
+	}
+});
+
 test("schedule notices do not add a trailing newline to an empty result", async () => {
 	for (const event of [
 		{ type: "schedules_cancelled", count: 2 },

@@ -1,5 +1,8 @@
 import type { InlineExtension, SessionManager } from "@earendil-works/pi-coding-agent";
 import { createBackgroundControllerExtension } from "./background-extension.js";
+import type { FlowStatus } from "./flow-status.js";
+import { projectFlowStatus } from "./flow-status.js";
+import { captureFlowStatusContext } from "./flow-status-context.js";
 import { createFlowStatusExtension } from "./flow-status-extension.js";
 import { createMultiloopControllerExtension } from "./multiloop-extension.js";
 import { createFlowNoReplyExtension } from "./no-reply-tool.js";
@@ -51,6 +54,7 @@ export interface FlowControlRuntime {
 	enabled(): boolean;
 	/** Flush and detach (`false`), or attach again (`true`). */
 	setEnabled(enabled: boolean): Promise<{ flushed: number; waits: number }>;
+	dashboardStatus(): Promise<FlowStatus | undefined>;
 	dispose(): Promise<void>;
 }
 
@@ -118,6 +122,35 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 		ingress,
 		enabled,
 		setEnabled,
+		async dashboardStatus() {
+			if (!enabled()) return undefined;
+			const active = ingress();
+			const branch = active.branch();
+			const [inspected, waits, authority, submissions, requests] = await Promise.all([
+				active.inspect(),
+				branch.attachment.waits.snapshot(),
+				branch.attachment.waits.authoritySnapshot(),
+				branch.attachment.submissions.snapshot(),
+				branch.attachment.nativeRequests.snapshot(),
+			]);
+			if (attached !== active || active.branch() !== branch || !enabled())
+				throw new FlowLedgerError("stale", "Dashboard source changed during the read.");
+			return projectFlowStatus(
+				inspected.scope,
+				inspected.submissions,
+				waits,
+				authority.work,
+				[
+					...multiloop
+						.unboundLanes()
+						.map((lane) => ({ producer: "multiloop", description: `lane ${lane.lane} (${lane.runTag})` })),
+					...tasks.unboundTasks().map((task) => ({ producer: "tasks", description: `task #${task.taskId}` })),
+				],
+				inspected.uncertain,
+				active.automatedPause(),
+				captureFlowStatusContext(submissions, requests, [], []),
+			);
+		},
 		async flowIngressFactory({ cwd, sessionManager }) {
 			// The host replaces the session for resume, fork, rewind, and session switching, and calls
 			// this again for each one after tearing the previous session down. One ingress serves one

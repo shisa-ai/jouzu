@@ -335,6 +335,7 @@ export class SubagentManager {
 		next.completion = { ...run.completion, ...change };
 		writeFilePrivateAtomic(join(this.directory(id), "run.json"), `${JSON.stringify(next)}\n`, this.root);
 		this.runs.set(id, next);
+		this.changed();
 	}
 	read(id: string, offset = 0, limit = 12_000): { text: string; nextOffset: number | null; totalBytes: number } {
 		this.get(id);
