@@ -77,7 +77,8 @@ export class WorkDashboardController {
 			const pollInterval = source.pollIntervalMs ?? (subscriptionFailed ? 1000 : undefined);
 			if (pollInterval !== undefined && Number.isFinite(pollInterval) && pollInterval >= 100) {
 				const timer = setInterval(() => {
-					void refresh();
+					// Poll ticks coalesce; only source notifications invalidate an in-flight read.
+					if (!reading) void refresh();
 				}, pollInterval);
 				timer.unref?.();
 				this.cleanup.push(() => clearInterval(timer));

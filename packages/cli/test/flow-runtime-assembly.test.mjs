@@ -40,6 +40,7 @@ test("the assembly registers the controller extensions the launcher passes to Pi
 test("the ingress is unavailable until the host creates a session", async (t) => {
 	const { flow } = await runtime(t);
 	assert.throws(() => flow.ingress(), { code: "stale" });
+	assert.equal(await flow.dashboardStatus(), undefined);
 });
 
 test("one runtime serves one session at a time and releases it on dispose", async (t) => {
@@ -151,6 +152,11 @@ test("a qualified provider route records an exact final-input receipt through th
 	const requests = await branch.attachment.nativeRequests.snapshot();
 	assert.equal(requests.length, 1);
 	assert.equal(requests[0].outcome, "success");
+	const dashboard = await flow.dashboardStatus();
+	assert.deepEqual(dashboard.scope, branch.scope);
+	assert.deepEqual(dashboard.retryable, []);
+	assert.deepEqual(dashboard.uncertain, []);
+	assert.deepEqual(await branch.attachment.nativeRequests.snapshot(), requests, "dashboard reads create no receipt");
 	assert.equal(requests[0].payload.api, "openai-completions");
 	// The route guard accepted the builtin provider, so the source reached the adapter as composed.
 	assert.ok(requests[0].sourceCapture.model.members.some((member) => ["intact", "converted"].includes(member.status)));
