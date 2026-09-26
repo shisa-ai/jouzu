@@ -97,6 +97,15 @@ assert.ok(
 		interactiveText.includes("customEditor.actionHandlers.set(action, handler)"),
 	"Pi no longer copies default action handlers directly into a custom editor; requalify Jouzu's model-picker routing",
 );
+// The work dashboard measures dock height by these root positions; see work-dashboard-height.ts.
+assert.ok(
+	interactiveText
+		.replace(/\s+/g, " ")
+		.includes(
+			"this.mountInteractiveTui(this.renderer, [ this.documentContainer, this.pendingMessagesContainer, this.statusContainer, this.widgetContainerAbove, this.editorContainer, this.widgetContainerBelow, this.footerContainer, ]);",
+		),
+	"Pi changed its interactive root layout; requalify the work dashboard height measurement",
+);
 const agentSessionText = readFileSync(agentSessionSource, "utf8");
 assert.ok(
 	agentSessionText.includes("if (options.persist)") && !agentSessionText.includes("options.persistDefault"),

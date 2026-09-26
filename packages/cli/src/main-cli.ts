@@ -58,7 +58,7 @@ import { offerShisaOnboarding } from "./shisa-link/onboarding.js";
 import { ensureQuietStartupDefault, suppressPiReleaseNotes } from "./startup-settings.js";
 import { createToolArgumentExtension } from "./tool-arguments.js";
 import { JouzuUpdater } from "./updater.js";
-import { createChildWorkSource, createFlowWorkSource } from "./work-dashboard-sources.js";
+import { activeChildCount, createChildWorkSource, createFlowWorkSource } from "./work-dashboard-sources.js";
 
 export const STARTUP_CATALOG_TIMEOUT_MS = 8_000;
 
@@ -402,7 +402,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 			const selection = snapshot ? selectWork(snapshot, Date.now(), 0) : undefined;
 			const activity = sessionActivity({
 				...(loopStatus ? { loopStatus } : {}),
-				activeAgents: selection?.activeCount ?? modelPicker.activeAgentCount(),
+				activeAgents: (snapshot && activeChildCount(snapshot)) ?? modelPicker.activeAgentCount(),
 			});
 			return selection?.attentionCount
 				? {

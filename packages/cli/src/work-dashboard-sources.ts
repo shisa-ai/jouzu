@@ -1,5 +1,11 @@
 import type { FlowStatus } from "./flow-control/flow-status.js";
-import type { WorkDashboardSource, WorkScope, WorkSourceSnapshot, WorkUnit } from "./session-ui/index.js";
+import type {
+	WorkDashboardSnapshot,
+	WorkDashboardSource,
+	WorkScope,
+	WorkSourceSnapshot,
+	WorkUnit,
+} from "./session-ui/index.js";
 import type { AgentRun } from "./subagents/manager.js";
 import { sanitizeTerminalText } from "./terminal-layout.js";
 
@@ -36,6 +42,12 @@ export function childWorkSnapshot(scope: WorkScope, runs: AgentRun[]): WorkSourc
 			}),
 	};
 }
+/** Queued and running children, matching the Session Line count; undefined until the source has read. */
+export function activeChildCount(snapshot: WorkDashboardSnapshot): number | undefined {
+	const source = snapshot.sources.subagent;
+	if (!source || source.availability === "unknown") return undefined;
+	return source.units.filter((unit) => unit.state === "queued" || unit.state === "running").length;
+}
 export function createChildWorkSource(service: {
 	runs(): AgentRun[];
 	subscribe(changed: () => void): () => void;
@@ -52,9 +64,17 @@ export function createChildWorkSource(service: {
 				: { availability: "unknown", complete: false, units: [] },
 	};
 }
-/** Only actionable flow conditions become units; ordinary holds and waits add no alerts. */
-export function flowWorkSnapshot(scope: WorkScope, status: FlowStatus | undefined): WorkSourceSnapshot {
-	if (!status || status.scope.sessionId !== scope.sessionId || status.scope.branchId !== scope.branchId)
+/**
+ * Only actionable flow conditions become units; ordinary holds and waits add no alerts. `undefined`
+ * means flow control is off, which leaves nothing for it to withhold.
+ */
+export function flowWorkSnapshot(
+	scope: WorkScope,
+	status: FlowStatus | undefined,
+	firstSeen?: (id: string) => number,
+): WorkSourceSnapshot {
+	if (!status) return { availability: "available", complete: true, units: [] };
+	if (status.scope.sessionId !== scope.sessionId || status.scope.branchId !== scope.branchId)
 		return { availability: "unknown", complete: false, units: [] };
 	const reasons = [
 		...status.retryable.map((request) => ({
@@ -85,16 +105,43 @@ export function flowWorkSnapshot(scope: WorkScope, status: FlowStatus | undefine
 			label: reason.label,
 			revision: reason.revision,
 			route: "/flow",
-			attention: [{ id: reason.id, type: "authority", route: "/flow" }],
+			attention: [
+				{
+					id: reason.id,
+					type: "authority",
+					route: "/flow",
+					...(firstSeen ? { since: firstSeen(reason.id) } : {}),
+				},
+			],
 		})),
 	};
 }
-export function createFlowWorkSource(read: () => Promise<FlowStatus | undefined>): WorkDashboardSource {
+/**
+ * Flow state has no change notification, so it is polled: every second while alerts are shown,
+ * otherwise every five seconds. Flow records carry no onset time, so alerts are ordered by when
+ * this attachment first saw them.
+ */
+export function createFlowWorkSource(
+	read: () => Promise<FlowStatus | undefined>,
+	now: () => number = Date.now,
+	idleIntervalMs = 5_000,
+): WorkDashboardSource {
+	const seen = new Map<string, number>();
+	let last: { at: number; snapshot: WorkSourceSnapshot } | undefined;
 	return {
 		id: "flow",
 		membership: "branch",
 		pollIntervalMs: 1000,
 		subscribe: () => () => {},
-		read: async (scope) => flowWorkSnapshot(scope, await read()),
+		read: async (scope) => {
+			const at = now();
+			if (last && !last.snapshot.units.length && at - last.at < idleIntervalMs) return last.snapshot;
+			const snapshot = flowWorkSnapshot(scope, await read(), (id) => seen.get(id) ?? at);
+			const current = new Set(snapshot.units.map((unit) => unit.id));
+			for (const id of seen.keys()) if (!current.has(id)) seen.delete(id);
+			for (const id of current) if (!seen.has(id)) seen.set(id, at);
+			last = snapshot.complete ? { at, snapshot } : undefined;
+			return snapshot;
+		},
 	};
 }

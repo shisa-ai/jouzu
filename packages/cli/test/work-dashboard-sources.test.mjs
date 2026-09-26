@@ -1,6 +1,12 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { childWorkSnapshot, createChildWorkSource, flowWorkSnapshot } from "../dist/work-dashboard-sources.js";
+import {
+	activeChildCount,
+	childWorkSnapshot,
+	createChildWorkSource,
+	createFlowWorkSource,
+	flowWorkSnapshot,
+} from "../dist/work-dashboard-sources.js";
 
 const scope = { sessionId: "parent", branchId: "branch" };
 const run = {
@@ -51,6 +57,63 @@ test("flow alerts use branch identity and exclude ordinary waits and holds", () 
 	assert.equal(result.units.length, 3);
 	assert.ok(result.units.every((unit) => unit.attention[0].type === "authority"));
 	assert.equal(flowWorkSnapshot({ ...scope, branchId: "other" }, status).complete, false);
-	assert.equal(flowWorkSnapshot(scope, undefined).availability, "unknown");
+	assert.deepEqual(flowWorkSnapshot(scope, undefined), { availability: "available", complete: true, units: [] });
 	assert.doesNotThrow(() => JSON.stringify(result));
+});
+test("the Session Line child count includes queued children and ignores other producers", () => {
+	const children = childWorkSnapshot(scope, [
+		{ ...run, id: "a", status: "starting" },
+		{ ...run, id: "b", status: "queued" },
+		{ ...run, id: "c", status: "running" },
+		run,
+	]);
+	const loop = { availability: "available", complete: true, units: [{ id: "l", producer: "loop", state: "running" }] };
+	const snapshot = (child) => ({ scope, generation: 0, sequence: 0, sources: { subagent: child, loop } });
+	assert.equal(activeChildCount(snapshot(children)), 3);
+	assert.equal(activeChildCount(snapshot({ availability: "unknown", complete: false, units: [] })), undefined);
+	assert.equal(activeChildCount({ scope, generation: 0, sequence: 0, sources: {} }), undefined);
+});
+test("flow alerts keep their first-seen time and idle flow reads back off", async () => {
+	let clock = 1000;
+	let reads = 0;
+	let status = {
+		version: 1,
+		scope,
+		retryable: [],
+		uncertain: [],
+		unaccountable: [],
+		held: [],
+		waiting: [],
+		active: [],
+		suspended: [],
+	};
+	const source = createFlowWorkSource(
+		async () => {
+			reads++;
+			return status;
+		},
+		() => clock,
+	);
+	assert.deepEqual((await source.read(scope)).units, []);
+	clock += 1000;
+	await source.read(scope);
+	assert.equal(reads, 1);
+	clock += 4000;
+	status = { ...status, uncertain: [{ id: "u", reason: "interrupted" }] };
+	assert.equal((await source.read(scope)).units[0].attention[0].since, 6000);
+	clock += 1000;
+	assert.equal((await source.read(scope)).units[0].attention[0].since, 6000);
+	assert.equal(reads, 3);
+	status = { ...status, uncertain: [] };
+	clock += 1000;
+	await source.read(scope);
+	status = { ...status, uncertain: [{ id: "u", reason: "interrupted" }] };
+	clock += 5000;
+	assert.equal((await source.read(scope)).units[0].attention[0].since, 13000);
+	assert.equal(
+		await createFlowWorkSource(async () => undefined)
+			.read(scope)
+			.then((result) => result.complete),
+		true,
+	);
 });

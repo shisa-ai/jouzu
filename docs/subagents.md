@@ -73,7 +73,7 @@ Tool results and completion messages show a themed summary of role, model, statu
 
 ## Subagent dashboard
 
-The dashboard below the Session Line shows child runs and flow conditions that need attention. An `!N` count on the Session Line takes priority over the model name when space is tight, including when the dashboard is hidden. Merely displaying a result does not mark it as read.
+The dashboard below the Session Line lists running and recently finished child runs, plus flow-control conditions that need a decision. The `!N` count on the Session Line shows how many items need attention. It stays visible when the dashboard is hidden and takes priority over the model name when space is tight. A child's result stays flagged until it is delivered to the model or read in full; seeing the row does not clear it. A flow condition clears once flow control resolves it, and `/flow` shows the details.
 
 Settings / Catalogs has a **Dashboard** choice: `compact` (up to five rows), `expanded` (up to ten), or `hidden`. The panel also limits itself to one third of the terminal height and the space left by the prompt and other dock components. Finished runs without unread results remain for 30 seconds; unread results remain until handled.
 

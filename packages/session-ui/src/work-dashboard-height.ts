@@ -3,7 +3,8 @@ import type { Component, TUI } from "@earendil-works/pi-tui";
 /**
  * Pi's interactive root mounts document, pending messages, status, above widgets,
  * editor, below widgets, and footer in that order in both renderer modes.
- * Measure dock components, never transcript content. Unknown layouts fail closed.
+ * Measure dock components, never transcript content. Unknown layouts fail closed, and
+ * scripts/check-pi-contract.mjs fails when the pinned Pi changes this order.
  */
 export function dashboardAvailableRows(
 	tui: Pick<TUI, "children" | "terminal">,

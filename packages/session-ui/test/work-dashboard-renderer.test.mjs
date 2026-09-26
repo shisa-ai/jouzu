@@ -15,6 +15,7 @@ test("attention survives long identities at every width that fits its badge", ()
 		});
 		assert.ok(row.startsWith("!12"), `width ${width}`);
 		assert.equal(terminalTextWidth(row), width);
+		if (width >= 8 && width < 40) assert.ok(row.endsWith("…"), `width ${width} marks the shortened model`);
 	}
 });
 test("dashboard obeys aggregate mode, terminal, and remaining-space budgets with Unicode", () => {

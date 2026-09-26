@@ -94,7 +94,7 @@ export function renderSessionLine(
 		const identity =
 			terminalTextWidth(fullIdentity) <= available
 				? `${provider ? `${styles.apply("session.provider", provider)} ` : ""}${styles.apply("session.model", modelIdentity)}`
-				: styles.apply("session.model", fitTerminalText(modelIdentity, available));
+				: styles.apply("session.model", fitTerminalText(modelIdentity, available, "…"));
 		const detailWidth = available - terminalTextWidth(identity) - 2;
 		const detail = detailWidth > 0 ? renderActivityLeft(activity, glyph, detailWidth, styles) : undefined;
 		const prefix = `${left}${detail ? `  ${detail}` : ""}`;

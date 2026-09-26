@@ -55,7 +55,6 @@ export interface WorkDisplayPolicy {
 }
 export interface WorkSelection {
 	attentionCount: number;
-	activeCount: number;
 	details: WorkUnit[];
 	omittedAttention: number;
 	omittedCount: number;
@@ -114,7 +113,6 @@ export function selectWork(
 	const shown = new Set(details.map(workIdentity));
 	return {
 		attentionCount: attention.length,
-		activeCount: units.filter((unit) => unit.state === "running").length,
 		details,
 		omittedAttention: attention.filter((unit) => !shown.has(workIdentity(unit))).length,
 		omittedCount: eligible.length - details.length,
