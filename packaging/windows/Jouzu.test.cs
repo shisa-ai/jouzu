@@ -111,7 +111,15 @@ internal static class LauncherTests {
         using (var timer = new System.Windows.Forms.Timer { Interval = 25 }) {
             form.Controls.Add(link);
             var deadline = DateTime.UtcNow.AddSeconds(5);
-            bool rendered = false, responsive = false;
+            bool rendered = false, responsive = false, closing = false;
+            int ticksWhileClosing = 0;
+            form.FormClosing += (sender, e) => {
+                closing = true;
+                // Closing a native window can pump messages. Force a timer interval
+                // here so the test catches callbacks that race control disposal.
+                System.Threading.Thread.Sleep(timer.Interval * 2);
+                System.Windows.Forms.Application.DoEvents();
+            };
             form.Shown += (sender, e) => {
                 Jouzu.CheckForInstallerUpdate(form, link, () => {
                     ready.WaitOne(3000);
@@ -120,12 +128,14 @@ internal static class LauncherTests {
                 timer.Start();
             };
             timer.Tick += (sender, e) => {
+                if (closing) { ticksWhileClosing++; return; }
                 responsive = true; ready.Set();
                 if (link.Visible) {
+                    timer.Stop();
                     rendered = link.Text.Contains("0.1.11") && link.Text.Substring(link.LinkArea.Start, link.LinkArea.Length) == "Download update" &&
                         ((InstallerUpdates.Offer)link.Tag).Url == "https://github.com/shisa-ai/jouzu/releases/download/v0.1.11/JouzuSetup-0.1.11-x64-unsigned.exe";
                     form.Close();
-                } else if (DateTime.UtcNow >= deadline) form.Close();
+                } else if (DateTime.UtcNow >= deadline) { timer.Stop(); form.Close(); }
             };
             form.Show();
             while (!form.IsDisposed && DateTime.UtcNow < deadline) {
@@ -133,6 +143,7 @@ internal static class LauncherTests {
                 System.Threading.Thread.Sleep(10);
             }
             timer.Stop();
+            Check(ticksWhileClosing == 0, "Update notification timer ran during form disposal");
             Check(responsive && rendered, "Update notification blocked the UI or failed to render");
         }
         using (var form = new System.Windows.Forms.Form())

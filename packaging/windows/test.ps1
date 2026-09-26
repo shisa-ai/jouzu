@@ -24,10 +24,21 @@ $env:NODE_PATH = ''
 $env:NODE_OPTIONS = ''
 $results = [ordered]@{ elevated=$false; install=$install; project=$project; data=$data }
 function Run([string]$Command, [string[]]$Arguments) {
-    $text = & $Command @Arguments 2>&1 | Out-String
-    if ($LASTEXITCODE -ne 0) { throw "$Command exited $LASTEXITCODE : $text" }
+    $executable = (Get-Command -Name $Command -CommandType Application -ErrorAction Stop).Source
+    $previousPreference = $ErrorActionPreference
+    try {
+        # Windows PowerShell treats redirected native stderr as ErrorRecords.
+        # Capture it, but use the process exit code to decide success.
+        $ErrorActionPreference = 'Continue'
+        $global:LASTEXITCODE = $null
+        $text = & $executable @Arguments 2>&1 | Out-String
+        $exitCode = $global:LASTEXITCODE
+    } finally { $ErrorActionPreference = $previousPreference }
+    if ($null -eq $exitCode) { throw "$Command did not return an exit code : $text" }
+    if ($exitCode -ne 0) { throw "$Command exited $exitCode : $text" }
     return $text
 }
+& (Join-Path $PSScriptRoot 'test-run.test.ps1')
 Write-Host 'Checking Windows argument parsing'
 $argumentTests = Join-Path $TestDirectory 'LauncherTests.exe'
 $null = Run (Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe') @(
