@@ -7,6 +7,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { assistant, deferred, pngImage } from "../../../scripts/fixtures/pi-flow-session.mjs";
+import { defaultFlowControlLimits } from "../dist/flow-control/flow-runtime.js";
 import { PiFlowAttachment } from "../dist/flow-control/pi-attachment.js";
 import { PiNativeRequests } from "../dist/flow-control/pi-native-requests.js";
 import { afterCleanup } from "./fixtures/cleanup.mjs";
@@ -205,6 +206,31 @@ test("native handoff persistence blocks fetch and receipts survive reopen", asyn
 		await assert.rejects(reopened.nativeRequests.finish(saved[0].id, "success"), { code: "stale" });
 	} finally {
 		await reopened.close();
+	}
+});
+
+test("default maintenance admission accepts image payloads above 8 MiB", async (t) => {
+	const f = await nativeRequests(t, { maxBytes: defaultFlowControlLimits.maxPayloadBytes });
+	const data = Buffer.alloc(7 * 1024 * 1024).toString("base64");
+	Object.defineProperty(f.session, "isCompacting", { configurable: true, get: () => true });
+	try {
+		const response = await f.session.agent.streamFunction(
+			f.session.model,
+			{
+				systemPrompt: "Summarize",
+				messages: [{ role: "user", content: [{ type: "image", mimeType: "image/png", data }], timestamp: 1 }],
+			},
+			{},
+		);
+		assert.equal((await response.result()).stopReason, "stop");
+		assert.equal(f.sent.length, 1);
+		const [record] = await f.store.snapshot();
+		assert.equal(record.kind, "maintenance");
+		assert.equal(record.outcome, "success");
+		assert.ok(record.payload.bytes > 8 * 1024 * 1024);
+		assert.ok(JSON.stringify(f.sent[0]).includes(`data:image/png;base64,${data}`));
+	} finally {
+		delete f.session.isCompacting;
 	}
 });
 

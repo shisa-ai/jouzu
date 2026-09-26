@@ -29,7 +29,9 @@ export interface FlowControlLimits {
 export const defaultFlowControlLimits: FlowControlLimits = {
 	maxInputBytes: 32 * 1024,
 	maxResultBytes: 16 * 1024,
-	maxPayloadBytes: 8 * 1024 * 1024,
+	// Session history includes base64 images. Leave its size to the provider and host memory;
+	// keep a safe-integer ceiling so embedders can still opt into a smaller byte budget.
+	maxPayloadBytes: Number.MAX_SAFE_INTEGER,
 	maxWaitDurationMs: 8 * 60 * 60 * 1000,
 };
 

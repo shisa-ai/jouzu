@@ -113,7 +113,7 @@ test("limits use documented defaults and accept overrides", async (t) => {
 	assert.deepEqual(defaultFlowControlLimits, {
 		maxInputBytes: 32 * 1024,
 		maxResultBytes: 16 * 1024,
-		maxPayloadBytes: 8 * 1024 * 1024,
+		maxPayloadBytes: Number.MAX_SAFE_INTEGER,
 		maxWaitDurationMs: 8 * 60 * 60 * 1000,
 	});
 	const { flow, root } = await runtime(t, { limits: { maxWaitDurationMs: 60_000 } });
@@ -121,6 +121,45 @@ test("limits use documented defaults and accept overrides", async (t) => {
 	assert.equal(ingress.version, 1);
 	// Overrides must not mutate the shared default table.
 	assert.equal(defaultFlowControlLimits.maxWaitDurationMs, 8 * 60 * 60 * 1000);
+});
+
+test("the default runtime admits image history above 8 MiB on repeated turns", async (t) => {
+	const { flow, root } = await runtime(t);
+	const sessionManager = SessionManager.inMemory(root);
+	// Model transport is mocked; this tests encoded image bytes, not image decoding.
+	const data = Buffer.alloc(7 * 1024 * 1024).toString("base64");
+	sessionManager.appendMessage({
+		role: "user",
+		content: [{ type: "image", mimeType: "image/png", data }],
+		timestamp: 1,
+	});
+	const ingress = await flow.flowIngressFactory({ cwd: root, sessionManager });
+	const { session, bodies } = await createQualifiedFlowSession(t, {
+		root,
+		sessionManager,
+		extensions: flow.extensions,
+		ingress: {
+			version: 1,
+			attach: (target) => ingress.attach(target),
+			submit: (...args) => ingress.submit(...args),
+			beforeBranchChange: () => ingress.beforeBranchChange(),
+			branchChanged: () => ingress.branchChanged(),
+			dispose: () => ingress.dispose(),
+		},
+	});
+	await session.prompt("Describe the image in history");
+	await session.prompt("Continue with the same image");
+	assert.equal(bodies.length, 2);
+	for (const body of bodies) {
+		assert.ok(Buffer.byteLength(JSON.stringify(body)) > 8 * 1024 * 1024);
+		assert.ok(JSON.stringify(body).includes(`data:image/png;base64,${data}`));
+	}
+	const requests = await ingress.branch().attachment.nativeRequests.snapshot();
+	assert.equal(requests.length, 2);
+	for (const request of requests) {
+		assert.equal(request.outcome, "success");
+		assert.ok(request.payload.bytes > 8 * 1024 * 1024);
+	}
 });
 
 test("a qualified provider route records an exact final-input receipt through the assembly", async (t) => {
