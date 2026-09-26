@@ -83,6 +83,23 @@ export function renderSessionLine(
 	const model = formatModelId(snapshot.model.modelId);
 	const thinking = snapshot.model.thinkingLevel;
 	const modelIdentity = `${model}${thinking && thinking !== "off" ? ` (${sanitizeTerminalText(thinking)})` : ""}`;
+	if (activity?.attentionCount && activity.attentionCount > 0) {
+		const badge = `!${Math.floor(activity.attentionCount)}`;
+		const badgeWidth = terminalTextWidth(badge);
+		if (width < badgeWidth) return fitTerminalText(badge, width);
+		const left = styles.apply("session.hint.warning", badge);
+		const available = width - badgeWidth - 2;
+		if (available <= 0) return padTerminalText(left, width);
+		const fullIdentity = `${provider ? `${provider} ` : ""}${modelIdentity}`;
+		const identity =
+			terminalTextWidth(fullIdentity) <= available
+				? `${provider ? `${styles.apply("session.provider", provider)} ` : ""}${styles.apply("session.model", modelIdentity)}`
+				: styles.apply("session.model", fitTerminalText(modelIdentity, available));
+		const detailWidth = available - terminalTextWidth(identity) - 2;
+		const detail = detailWidth > 0 ? renderActivityLeft(activity, glyph, detailWidth, styles) : undefined;
+		const prefix = `${left}${detail ? `  ${detail}` : ""}`;
+		return `${prefix}${" ".repeat(width - terminalTextWidth(prefix) - terminalTextWidth(identity))}${identity}`;
+	}
 	const right = fitTerminalText(
 		`${provider ? `${styles.apply("session.provider", provider)} ` : ""}${styles.apply("session.model", modelIdentity)}`,
 		width,

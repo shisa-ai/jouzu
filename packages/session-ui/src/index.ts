@@ -14,3 +14,4 @@ export * from "./status-bar.js";
 export * from "./styles.js";
 export * from "./work-dashboard.js";
 export * from "./work-dashboard-controller.js";
+export * from "./work-dashboard-renderer.js";

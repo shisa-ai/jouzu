@@ -23,6 +23,8 @@ export interface SessionUiActivityContext {
 export interface SessionUiActivity {
 	text: string;
 	active: boolean;
+	/** Distinct unresolved units; retained even when detail or model identity cannot fit. */
+	attentionCount?: number;
 }
 
 export interface SessionUiClock {
