@@ -582,12 +582,19 @@ export function createWorkflowIntegration(
 				) {
 					if ("model" in params)
 						throw new Error("Only the user can change subagent models in Workflow. Omit the model argument.");
+					// Strict providers use null for omitted optional fields. Normalize a copy so
+					// validation and downstream services see the same omission semantics.
+					params = Object.fromEntries(
+						Object.entries(params).filter(([key, value]) => key === "op" || value !== null),
+					) as typeof params;
 					if (["launch", "resume", "steer"].includes(params.op)) requireSubagents();
 					if (
-						params.op !== "launch" &&
+						params.op === "resume" &&
 						[params.context, params.entryIds, params.parentContext].some((value) => value !== undefined)
 					)
 						throw new Error("Context options are launch-only. Resume keeps the original parent snapshot.");
+					// Other operations do not consume launch context. Providers may still fill
+					// those fields when sampling this shared schema; do not block discovery.
 					const workspace = params.workspace?.trim() ? params.workspace : undefined;
 					if (params.op === "resume" && workspace) {
 						const previous = controller().get(params.id ?? "");

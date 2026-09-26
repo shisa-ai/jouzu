@@ -133,6 +133,47 @@ function fixture(realWorker = false, options = {}) {
 		shutdown: () => handlers.get("session_shutdown")(),
 	};
 }
+test("discovery ignores unrelated launch fields and accepts nullable optional arguments", async () => {
+	const f = fixture();
+	try {
+		await f.handlers.get("session_start")({}, f.ctx);
+		const parentFile = join(f.root, "parent.jsonl");
+		writeFileSync(parentFile, "");
+		f.ctx.sessionManager.getSessionFile = () => parentFile;
+		const padding = {
+			batchId: "",
+			context: "fresh",
+			entryId: "",
+			entryIds: ["unused"],
+			id: "",
+			kind: "all",
+			limit: 10,
+			offset: 0,
+			parentContext: false,
+			query: "",
+			role: "",
+			task: "",
+			workspace: "",
+		};
+		const nullable = Object.fromEntries(
+			Object.keys(f.tool.parameters.properties)
+				.filter((key) => key !== "op")
+				.map((key) => [key, null]),
+		);
+		for (const op of ["roles", "list", "trace"]) {
+			const expected = await f.invoke({ op });
+			assert.deepEqual(await f.invoke({ ...padding, op }), expected);
+			assert.deepEqual(await f.invoke({ ...nullable, op }), expected);
+		}
+		assert.equal(f.workers.length, 0);
+		const started = await f.invoke({ ...nullable, op: "launch", role: "coder", task: "Inspect" });
+		assert.equal(started.context.mode, "fresh");
+		assert.equal(f.workers.length, 1);
+	} finally {
+		await f.shutdown();
+	}
+});
+
 test("launch captures parent context before authentication and resume keeps its snapshot", async () => {
 	const f = fixture();
 	try {
@@ -161,8 +202,18 @@ test("launch captures parent context before authentication and resume keeps its 
 		worker.emit({ type: "ready", sessionFile: childFile, sessionId: "child" });
 		worker.emit({ type: "result", status: "completed", text: "Done" });
 		worker.exit(true);
-		await assert.rejects(f.invoke({ op: "resume", id: started.id, task: "Continue", context: "fork" }), /launch-only/);
-		await f.invoke({ op: "resume", id: started.id, task: "Continue" });
+		for (const options of [{ context: "fork" }, { entryIds: ["u"] }, { parentContext: false }]) {
+			await assert.rejects(f.invoke({ op: "resume", id: started.id, task: "Continue", ...options }), /launch-only/);
+		}
+		await f.invoke({
+			op: "resume",
+			id: started.id,
+			task: "Continue",
+			context: null,
+			entryIds: null,
+			parentContext: null,
+			offset: null,
+		});
 		assert.equal(f.workers[1].launch.parentContextFile, worker.launch.parentContextFile);
 		assert.deepEqual(f.workers[1].launch.context.entries, []);
 		let authCalls = 0;
