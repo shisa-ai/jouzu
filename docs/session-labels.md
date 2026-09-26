@@ -90,12 +90,18 @@ multiplexer titles are left unchanged. Print, JSON, RPC, and child sessions do n
 claim a pane.
 
 At startup, when both naming switches are on and the pane is not pinned, Jouzu
-can claim a pane whose title is empty or exactly lowercase `jouzu`. It applies the
+can claim a pane whose title is empty, exactly lowercase `jouzu`, or a recognized
+shell-generated Jouzu title. Recognized shell titles have the launch folder
+(absolute or `~`-relative), followed by `: jz … - jz` or `: jouzu … - jouzu`;
+command arguments are optional. This includes titles produced by the Pure fish
+prompt, such as `~/project: jz - jz`. Folder paths reached through a symbolic link
+are recognized when they resolve to Jouzu's launch directory. Jouzu applies the
 saved short label, or uses `jouzu` until the first completed turn produces one.
-Another attachment's ownership token still blocks the claim. Other nonempty
-titles remain protected, including shell command titles, hostnames, and names such
-as `jouzu-project`. Use `/labels pane pin` to protect even the exact `jouzu` title;
-use `/labels pane auto` to explicitly claim another title while naming is enabled.
+Another attachment's ownership token still blocks the claim. Unrecognized titles
+remain protected, including hostnames, other command titles, and names such as
+`jouzu-project`. Use `/labels pane pin` to protect a title that matches an
+automatic pattern; use `/labels pane auto` to explicitly claim another title
+while naming is enabled.
 The adapter uses pane-local `@jouzu-label-owner` and `@jouzu-label-value` options.
 For stock tmux and Byobu status formats, it installs a window-local display rule:
 show the active pane's owned label when the window is automatically named or has

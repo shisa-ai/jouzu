@@ -1,5 +1,8 @@
 import { execFile } from "node:child_process";
 import { randomUUID } from "node:crypto";
+import { realpathSync } from "node:fs";
+import { homedir } from "node:os";
+import { isAbsolute } from "node:path";
 import { promisify } from "node:util";
 
 const execute = promisify(execFile);
@@ -15,6 +18,18 @@ const quote = (value: string) => `'${value.replaceAll("'", "'\\''")}'`;
 const command = (...args: string[]) => args.map(quote).join(" ");
 export const validPaneLabel = (value: string): boolean => /^[a-z0-9](?:[a-z0-9-]{0,10}[a-z0-9])?$/.test(value);
 
+/** Recognize workspace-prefixed shell titles for a running Jouzu command. */
+export function automaticPaneTitle(title: string, cwd: string, home = homedir()): boolean {
+	if (title === "" || title === "jouzu") return true;
+	const folders = [cwd];
+	if (cwd === home) folders.push("~");
+	else if (cwd.startsWith(`${home}/`)) folders.push(`~${cwd.slice(home.length)}`);
+	return folders.some((folder) => {
+		const prefix = `${folder}: `;
+		return title.startsWith(prefix) && /^(jz|jouzu)(?: [^\r\n]*)? - \1$/.test(title.slice(prefix.length));
+	});
+}
+
 /** One captured pane on one captured server. Never follows the active pane. */
 export class TmuxLabels {
 	private readonly owner = randomUUID();
@@ -22,15 +37,26 @@ export class TmuxLabels {
 	private last: string | undefined;
 	private lost = false;
 	private queue: Promise<unknown> = Promise.resolve();
+	private readonly folders: string[];
 	constructor(
 		private readonly socket: string,
 		private readonly pane: string,
-	) {}
+		cwd = process.cwd(),
+		logicalCwd = process.env.PWD,
+	) {
+		this.folders = [cwd];
+		try {
+			if (logicalCwd && isAbsolute(logicalCwd) && realpathSync(logicalCwd) === realpathSync(cwd))
+				this.folders.push(logicalCwd);
+		} catch {
+			/* A missing or stale shell path cannot authorize a title claim. */
+		}
+	}
 
 	static fromEnvironment(env: NodeJS.ProcessEnv = process.env): TmuxLabels | undefined {
 		const socket = env.TMUX?.replace(/,\d+,\d+$/, "");
 		const pane = env.TMUX_PANE;
-		return socket && pane && /^%\d+$/.test(pane) ? new TmuxLabels(socket, pane) : undefined;
+		return socket && pane && /^%\d+$/.test(pane) ? new TmuxLabels(socket, pane, process.cwd(), env.PWD) : undefined;
 	}
 
 	private async run(...args: string[]): Promise<string> {
@@ -52,18 +78,29 @@ export class TmuxLabels {
 			try {
 				if (this.last === undefined) {
 					const title = await this.run("display-message", "-p", "-t", this.pane, "#{pane_title}");
-					if (!explicit && title !== "" && title !== "jouzu") return false;
+					if (!explicit && !this.folders.some((folder) => automaticPaneTitle(title, folder))) return false;
 					this.previous = title;
-					// Both the empty-owner check and mutation execute in one tmux command queue.
-					const guard = explicit ? `#{==:#{${OWNER}},}` : `#{&&:#{==:#{${OWNER}},},#{==:#{pane_title},${title}}}`;
-					await this.run(
-						"if-shell",
-						"-F",
-						"-t",
-						this.pane,
-						guard,
-						`${command("set-option", "-p", "-t", this.pane, OWNER, this.owner)} ; ${command("select-pane", "-t", this.pane, "-T", label)}`,
-					);
+					// Keep observed titles out of the format expression: paths and arguments can
+					// contain commas, braces, or tmux format syntax. Compare option values instead.
+					const expected = `@jouzu-label-title-${this.owner}`;
+					try {
+						if (!explicit) await this.run("set-option", "-p", "-t", this.pane, expected, title);
+						const guard = explicit
+							? `#{==:#{${OWNER}},}`
+							: `#{&&:#{==:#{${OWNER}},},#{==:#{pane_title},#{${expected}}}}`;
+						// The empty-owner check and title comparison execute with the claim in one queue.
+						await this.run(
+							"if-shell",
+							"-F",
+							"-t",
+							this.pane,
+							guard,
+							`${command("set-option", "-p", "-t", this.pane, OWNER, this.owner)} ; ${command("select-pane", "-t", this.pane, "-T", label)}`,
+						);
+					} finally {
+						// A cleanup failure must not bypass verification of a claim already made.
+						if (!explicit) await this.run("set-option", "-pu", "-t", this.pane, expected).catch(() => {});
+					}
 				} else {
 					await this.run(
 						"if-shell",
@@ -127,6 +164,7 @@ export class TmuxLabels {
 			`#{==:#{${OWNER}},${this.owner}}`,
 			`${command("set-option", "-pu", "-t", this.pane, OWNER)} ; ${command("set-option", "-pu", "-t", this.pane, VALUE)}`,
 		);
+		await this.run("set-option", "-pu", "-t", this.pane, `@jouzu-label-title-${this.owner}`).catch(() => {});
 	}
 
 	/** A manual rename wins, including at shutdown. Pinning releases without restoring. */
