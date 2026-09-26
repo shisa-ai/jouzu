@@ -41,9 +41,14 @@ async function fixture(t) {
 		commands = new Map(),
 		sends = [],
 		notifications = [],
-		statuses = new Map();
+		statuses = new Map(),
+		labelEvents = [];
 	const pi = {
-		events: { emit() {} },
+		events: {
+			emit(name, data) {
+				if (name === "jouzu:workflow-start") labelEvents.push(data);
+			},
+		},
 		on(name, handler) {
 			const list = handlers.get(name) ?? [];
 			list.push(handler);
@@ -83,6 +88,7 @@ async function fixture(t) {
 	};
 	const execute = (name, args) => tools.get(name).execute("tool", args, undefined, undefined, ctx);
 	return {
+		labelEvents,
 		statuses,
 		handlers,
 		...module,
@@ -94,6 +100,20 @@ async function fixture(t) {
 		command: (name, args) => commands.get(name).handler(args, ctx),
 	};
 }
+
+test("workflow labels announce confirmed starts without a flow host, not iterations", async (t) => {
+	const f = await fixture(t);
+	await f.emit("session_start");
+	assert.equal(f.labelEvents.length, 0);
+	await f.execute("multiloop_start", { lane: "labels", runTag: "test", mode: "research", goal: "Study labels" });
+	assert.equal(f.labelEvents.length, 1);
+	assert.equal(f.labelEvents[0].objective, "Study labels");
+	assert.equal(f.labelEvents[0].session, "session");
+	await f.execute("multiloop_iterate", { lane: "labels", runTag: "test", hypothesis: "Test" });
+	assert.equal(f.labelEvents.length, 1);
+	await f.command("goal", "Implement labels");
+	assert.equal(f.labelEvents.at(-1).objective, "Implement labels");
+});
 
 test("installed multiloop reconnects its host on tree navigation", async (t) => {
 	const f = await fixture(t);
@@ -329,6 +349,10 @@ test("installed multiloop gate-change upgrade replaces only the pinned preceding
 	const installed = join(root, "packages/cli/node_modules/pi-multiloop/extensions/pi-multiloop/index.ts");
 	const source = await readFile(installed, "utf8");
 	const previous = source
+		.replaceAll(
+			'    pi.events.emit("jouzu:workflow-start", { session: ctx.sessionManager.getSessionId(), objective: state.goal, identity: stateKey(state) });\n',
+			"",
+		)
 		.replace(
 			`  let detachGate: (() => void) | undefined;
   function watchFlowGates(pi: ExtensionAPI, ctx: ExtensionContext): (() => void) | undefined {

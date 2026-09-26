@@ -1,3 +1,5 @@
+import { TerminalTitleFilter } from "./terminal-title-filter.js";
+
 const ANSI_SEQUENCE = String.raw`\x1B\[[0-?]*[ -/]*[@-~]`;
 const PI_RESUME_HINT = new RegExp(
 	String.raw`(To resume this session:(?:${ANSI_SEQUENCE})*[\t ]+)pi[^\r\n]*[\t ]--session[\t ]+([A-Za-z0-9._-]+)(?=\r?\n|$)`,
@@ -20,6 +22,8 @@ export function rewritePiWindowTitle(text: string): string {
 export interface JouzuOutputOptions {
 	/** Brand Pi terminal-title sequences for an interactive TUI session. */
 	interactive?: boolean;
+	/** Protect titles on surfaces without a qualified ownership adapter. */
+	protectTitles?: boolean;
 	/**
 	 * Rewrite process-level Pi output. Disable when stdout carries a protocol or event stream
 	 * (`--mode rpc`, `--mode json`), which must reach the caller byte-exact.
@@ -32,9 +36,11 @@ export async function withJouzuOutput<T>(operation: () => Promise<T>, options: J
 	if (options.rewrite === false) return operation();
 	const interactive = options.interactive === true;
 	const originalWrite = process.stdout.write;
+	const titleFilter = options.protectTitles && interactive ? new TerminalTitleFilter() : undefined;
 	const jouzuWrite = function (this: NodeJS.WriteStream, chunk: Uint8Array | string, ...args: unknown[]): boolean {
 		let output = typeof chunk === "string" ? rewriteResumeHint(chunk) : chunk;
 		if (interactive && typeof output === "string") output = rewritePiWindowTitle(output);
+		if (titleFilter) output = titleFilter.filter(output);
 		return Reflect.apply(originalWrite, this, [output, ...args]) as boolean;
 	} as typeof process.stdout.write;
 

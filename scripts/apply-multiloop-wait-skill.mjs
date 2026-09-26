@@ -2,7 +2,12 @@ import { createHash } from "node:crypto";
 import { readFile, realpath, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { driveMultiloopOnGateChange, extensionPath, transformMultiloopFlow } from "./multiloop-flow-transform.mjs";
+import {
+	driveMultiloopOnGateChange,
+	extensionPath,
+	notifyMultiloopLabels,
+	transformMultiloopFlow,
+} from "./multiloop-flow-transform.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const sha = (value) => createHash("sha256").update(value).digest("hex");
@@ -46,12 +51,19 @@ export async function applyMultiloopWaitSkill(packageRoot, checkOnly = false) {
 	const extension = await readFile(join(packageRoot, extensionPath), "utf8");
 	if (sha(extension) !== lock.extension.after) {
 		const extensionDigest = sha(extension);
-		if (checkOnly || (extensionDigest !== lock.extension.before && extensionDigest !== lock.extension.previousAfter))
+		if (
+			checkOnly ||
+			![lock.extension.before, lock.extension.previousAfter, lock.extension.labelsPreviousAfter].includes(
+				extensionDigest,
+			)
+		)
 			throw new Error("Multiloop extension source hash differs.");
 		const changed =
 			extensionDigest === lock.extension.before
 				? transformMultiloopFlow(extension)
-				: driveMultiloopOnGateChange(extension);
+				: notifyMultiloopLabels(
+						extensionDigest === lock.extension.previousAfter ? driveMultiloopOnGateChange(extension) : extension,
+					);
 		if (sha(changed) !== lock.extension.after) throw new Error("Multiloop extension transform differs.");
 		writes.push([join(packageRoot, extensionPath), changed]);
 	}

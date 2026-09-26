@@ -110,6 +110,24 @@ export function driveMultiloopOnGateChange(source) {
 	);
 }
 
+export function notifyMultiloopLabels(source) {
+	for (const name of ["startLoop", "resumeLoop"]) {
+		const start = source.indexOf(`  async function ${name}(`);
+		const end = source.indexOf("\n  }", start);
+		if (start < 0 || end < 0) throw new Error(`Multiloop label boundary differs: ${name}`);
+		const body = source.slice(start, end);
+		source =
+			source.slice(0, start) +
+			replace(
+				body,
+				"    updateStatus(ctx, state);",
+				'    updateStatus(ctx, state);\n    pi.events.emit("jouzu:workflow-start", { session: ctx.sessionManager.getSessionId(), objective: state.goal, identity: stateKey(state) });',
+			) +
+			source.slice(end);
+	}
+	return source;
+}
+
 export function transformMultiloopFlow(source) {
 	source = replace(
 		source,
@@ -163,8 +181,10 @@ export function transformMultiloopFlow(source) {
 		"  function updateStatus(ctx: ExtensionContext | ExtensionCommandContext) {",
 		"  function updateStatus(ctx: ExtensionContext | ExtensionCommandContext) {\n    multiloopFlow(ctx.sessionManager.getSessionId())?.changed(runningStates().map((state) => ({ lane: state.lane, runTag: state.runTag })));",
 	);
-	return driveMultiloopOnGateChange(
-		gateMultiloopFlowDriving(transformMultiloopStatus(transformGoalResume(transformMultiloopLifecycle(source)))),
+	return notifyMultiloopLabels(
+		driveMultiloopOnGateChange(
+			gateMultiloopFlowDriving(transformMultiloopStatus(transformGoalResume(transformMultiloopLifecycle(source)))),
+		),
 	);
 }
 

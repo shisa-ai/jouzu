@@ -50,6 +50,7 @@ import { configurePiProcess, type ProfileSelection, resolveProfileSelection } fr
 import { createRuntimeDiagnostics } from "./runtime-diagnostics.js";
 import { withJouzuOutput } from "./runtime-output.js";
 import { sessionActivity } from "./session-activity.js";
+import { createSessionLabelsExtension } from "./session-labels.js";
 import { createShisaExtension } from "./shisa-link/extension.js";
 import { offerShisaOnboarding } from "./shisa-link/onboarding.js";
 import { ensureQuietStartupDefault, suppressPiReleaseNotes } from "./startup-settings.js";
@@ -400,6 +401,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 			extensionFactories: [
 				// First, so every later handler and the tool itself see the arguments that will run.
 				createToolArgumentExtension(),
+				createSessionLabelsExtension(),
 				...(flow ? flow.extensions : []),
 				{ name: "jouzu-textguard-review", factory: createTextGuardReviewExtension(nativeTextguard) },
 				presentation.createJouzuPresentationExtension(metadata, profile),
@@ -421,6 +423,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 	try {
 		await withJouzuOutput(runPi, {
 			interactive: interactiveStartup,
+			protectTitles: true,
 			rewrite: !usesMachineReadableStdout(piArgs),
 		});
 	} finally {

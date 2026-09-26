@@ -5,6 +5,32 @@ import { rewritePiWindowTitle, withJouzuOutput } from "../dist/runtime-output.js
 
 const title = (value) => `\u001b]0;${value}\u0007`;
 
+test("protected output suppresses Pi and extension titles but not ordinary output", async () => {
+	const original = process.stdout.write;
+	const captured = [];
+	process.stdout.write = (chunk, ...args) => {
+		captured.push(Buffer.from(chunk));
+		const callback = args.find((arg) => typeof arg === "function");
+		callback?.();
+		return true;
+	};
+	try {
+		await withJouzuOutput(
+			async () => {
+				const terminal = new ProcessTerminal();
+				terminal.setTitle("π - task");
+				terminal.setTitle("Jouzu - task");
+				process.stdout.write(Buffer.from("\x1b]2;split"));
+				process.stdout.write(" title\x07ordinary output\n");
+			},
+			{ interactive: true, protectTitles: true },
+		);
+		assert.equal(Buffer.concat(captured).toString(), "ordinary output\n");
+	} finally {
+		process.stdout.write = original;
+	}
+});
+
 test("brands only Pi terminal-title sequences", () => {
 	const output = [
 		title("π - workspace"),
