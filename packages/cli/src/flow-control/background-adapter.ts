@@ -7,6 +7,23 @@ export interface BackgroundFlowSourceAPI {
 		scope: FlowScope,
 		currentWork: () => { id: string; revision: number },
 	): FlowWaitExecutionSource & { close(): void };
+	/** Display-only job inventory; absent on older runtimes. */
+	inventory?(sessionId: string): BackgroundJobSnapshot[];
+	watchInventory?(changed: () => void): () => void;
+}
+/** The job fields the dashboard reads; the producer snapshot carries more. */
+export interface BackgroundJobSnapshot {
+	id: string;
+	sessionId?: string;
+	status: string;
+	title?: string;
+	command?: string;
+	exitCode?: number | null;
+	startedAt?: number;
+	updatedAt?: number;
+	notifyOnExit?: boolean;
+	exitNotified?: boolean;
+	terminationReason?: string;
 }
 
 /** The caller loads this API from the same pinned package instance as the background extension. */

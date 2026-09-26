@@ -5,6 +5,8 @@ export interface SessionActivityInput {
 	loopStatus?: string;
 	/** Child runs that are queued, starting, or running in this session. */
 	activeAgents: number;
+	/** Running background jobs the dashboard shows in place of the producer's widget. */
+	activeJobs?: number;
 }
 
 /**
@@ -24,9 +26,11 @@ export function sessionActivity(input: SessionActivityInput): SessionUiActivity 
 	const loop = input.loopStatus?.trim();
 	if (loop) parts.push(loop);
 	if (input.activeAgents > 0) parts.push(`${input.activeAgents} subagent${input.activeAgents === 1 ? "" : "s"}`);
+	const jobs = input.activeJobs ?? 0;
+	if (jobs > 0) parts.push(`${jobs} job${jobs === 1 ? "" : "s"}`);
 	if (parts.length === 0) return undefined;
 	return {
 		text: parts.join(" · "),
-		active: input.activeAgents > 0 || (loop !== undefined && LOOP_RUNNING.test(loop)),
+		active: input.activeAgents > 0 || jobs > 0 || (loop !== undefined && LOOP_RUNNING.test(loop)),
 	};
 }

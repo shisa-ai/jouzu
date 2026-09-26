@@ -401,6 +401,36 @@ test("result work lookup survives task cleanup and rejects foreign identities", 
 	assert.throws(() => results.workForResult(first.id, first.revision), /detached/);
 });
 
+test("the job inventory lists one session's live tasks and reports every published change", async (t) => {
+	const { backgroundFlowSource: source, rememberSnapshot } = await loadBackground(t);
+	let changes = 0;
+	const unwatch = source.watchInventory(() => changes++);
+	t.after(unwatch);
+	const task = (id, sessionId) => ({
+		id,
+		sessionId,
+		status: "running",
+		command: "sleep 1",
+		startedAt: 1,
+		updatedAt: 1,
+		logFile: "/log",
+	});
+	rememberSnapshot(task("inventory-a", "inventory-session"));
+	rememberSnapshot(task("inventory-b", "inventory-other"));
+	assert.equal(changes, 2);
+	const listed = source.inventory("inventory-session");
+	assert.deepEqual(
+		listed.map((job) => [job.id, job.status, job.startedAt]),
+		[["inventory-a", "running", 1]],
+	);
+	listed[0].status = "mutated";
+	assert.equal(source.inventory("inventory-session")[0].status, "running", "the inventory is a copy");
+	unwatch();
+	rememberSnapshot({ ...task("inventory-a", "inventory-session"), status: "completed" });
+	assert.equal(changes, 2);
+	assert.equal(source.inventory("inventory-session")[0].status, "completed");
+});
+
 test("background read receipts require terminal state, durable publication, and an active branch", async (t) => {
 	const { backgroundFlowSource: source } = await loadBackground(t);
 	const scope = { sessionId: "reads", branchId: "branch" };

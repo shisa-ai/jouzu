@@ -58,7 +58,15 @@ import { offerShisaOnboarding } from "./shisa-link/onboarding.js";
 import { ensureQuietStartupDefault, suppressPiReleaseNotes } from "./startup-settings.js";
 import { createToolArgumentExtension } from "./tool-arguments.js";
 import { JouzuUpdater } from "./updater.js";
-import { activeChildCount, createChildWorkSource, createFlowWorkSource } from "./work-dashboard-sources.js";
+import {
+	activeChildCount,
+	createChildWorkSource,
+	createClaimedWorkSource,
+	createFlowWorkSource,
+	jobWorkUnits,
+	taskWorkUnits,
+	type WidgetClaimChannel,
+} from "./work-dashboard-sources.js";
 
 export const STARTUP_CATALOG_TIMEOUT_MS = 8_000;
 
@@ -332,6 +340,8 @@ export async function runMainCli(args: string[]): Promise<void> {
 	);
 	const releaseDiagnostics = createReleaseExtensionDiagnostics(releaseExtensionStatus, runtimeDiagnostics);
 	const dashboardController = new WorkDashboardController();
+	// Producers hide their own widgets through claims sent over Pi's extension event bus.
+	let dashboardEvents: WidgetClaimChannel["events"];
 	const dashboardVisibility = new DashboardVisibility();
 	let dashboardMode = loadDashboardPolicy(paths).mode;
 	const modelPicker = createJouzuModelPicker(paths, {
@@ -376,9 +386,39 @@ export async function runMainCli(args: string[]): Promise<void> {
 					sessionId: ctx.sessionManager.getSessionId(),
 					branchId: ctx.sessionManager.getLeafId() ?? "root",
 				};
+				const work = flow?.dashboardWork;
 				dashboardController.attach(scope, [
 					createChildWorkSource(modelPicker.workflowService),
 					...(flow ? [createFlowWorkSource(() => flow.dashboardStatus())] : []),
+					...(work
+						? [
+								createClaimedWorkSource({
+									id: "tasks",
+									channel: { events: dashboardEvents, claim: "tasks:widget:claim", ready: "tasks:widget:ready" },
+									// The task store has no change notification; its file is small.
+									pollIntervalMs: 1500,
+									read: (current) => {
+										const tasks = work.tasks();
+										return tasks && taskWorkUnits(current, tasks);
+									},
+								}),
+								createClaimedWorkSource({
+									id: "jobs",
+									channel: {
+										events: dashboardEvents,
+										claim: "background-tasks:widget:claim",
+										ready: "background-tasks:widget:ready",
+									},
+									// Jobs publish changes; the poll catches jobs the producer forgets without publishing.
+									pollIntervalMs: 5000,
+									subscribe: (changed) => work.watchJobs(changed),
+									read: (current) => {
+										const jobs = work.jobs();
+										return jobs && jobWorkUnits(current, jobs);
+									},
+								}),
+							]
+						: []),
 				]);
 				const policy = loadDashboardPolicy(paths);
 				dashboardMode = policy.mode;
@@ -403,6 +443,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 			const activity = sessionActivity({
 				...(loopStatus ? { loopStatus } : {}),
 				activeAgents: (snapshot && activeChildCount(snapshot)) ?? modelPicker.activeAgentCount(),
+				activeJobs: snapshot?.sources.jobs?.units.filter((unit) => unit.state === "running").length ?? 0,
 			});
 			return selection?.attentionCount
 				? {
@@ -448,6 +489,12 @@ export async function runMainCli(args: string[]): Promise<void> {
 			extensionFactories: [
 				// First, so every later handler and the tool itself see the arguments that will run.
 				createToolArgumentExtension(),
+				{
+					name: "jouzu-dashboard-events",
+					factory: (api) => {
+						dashboardEvents = api.events;
+					},
+				},
 				createSessionLabelsExtension(undefined, undefined, createLabelPolicy(paths)),
 				...(flow ? flow.extensions : []),
 				{ name: "jouzu-textguard-review", factory: createTextGuardReviewExtension(nativeTextguard) },

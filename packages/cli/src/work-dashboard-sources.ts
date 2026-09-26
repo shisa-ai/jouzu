@@ -1,4 +1,6 @@
+import type { BackgroundJobSnapshot } from "./flow-control/background-adapter.js";
 import type { FlowStatus } from "./flow-control/flow-status.js";
+import type { FlowTask } from "./flow-control/task-producer.js";
 import type {
 	WorkDashboardSnapshot,
 	WorkDashboardSource,
@@ -149,4 +151,131 @@ export function createFlowWorkSource(
 			return snapshot;
 		},
 	};
+}
+interface ClaimEvents {
+	on(event: string, handler: (data: unknown) => void): () => void;
+	emit(event: string, data: unknown): void;
+}
+export interface WidgetClaimChannel {
+	events: ClaimEvents | undefined;
+	claim: string;
+	ready: string;
+}
+/**
+ * A producer's rows appear only while it confirms that its own widget is hidden, so work is never
+ * shown twice and a producer without the claim interface keeps its native widget. The claim never
+ * writes the producer's saved visibility setting; detaching releases it.
+ */
+export function createClaimedWorkSource(options: {
+	id: string;
+	channel: WidgetClaimChannel;
+	/** Units in scope, or undefined while the producer's inventory is unavailable. */
+	read(scope: WorkScope): WorkUnit[] | undefined;
+	subscribe?(changed: () => void): () => void;
+	pollIntervalMs?: number;
+}): WorkDashboardSource {
+	const { events, claim, ready } = options.channel;
+	let release: (() => void) | undefined;
+	const acquire = () => {
+		if (!events || release) return;
+		try {
+			events.emit(claim, {
+				version: 1,
+				respond(value: unknown) {
+					if (typeof value === "function") release = value as () => void;
+				},
+			});
+		} catch {}
+	};
+	const drop = () => {
+		const current = release;
+		release = undefined;
+		try {
+			current?.();
+		} catch {}
+	};
+	return {
+		id: options.id,
+		membership: "session",
+		...(options.pollIntervalMs ? { pollIntervalMs: options.pollIntervalMs } : {}),
+		subscribe(changed) {
+			const unsubscribe = [
+				// The producer ends every claim when a session starts, then announces it can take one again.
+				events?.on(ready, () => {
+					release = undefined;
+					changed();
+				}),
+				options.subscribe?.(changed),
+			];
+			return () => {
+				for (const dispose of unsubscribe) dispose?.();
+				drop();
+			};
+		},
+		read(scope) {
+			const units = options.read(scope);
+			if (!units) {
+				drop();
+				return { availability: "available", complete: true, units: [] };
+			}
+			acquire();
+			return { availability: "available", complete: true, units: release ? units : [] };
+		},
+	};
+}
+/** In-progress tasks get rows; the rest of the open checklist condenses into one row. */
+export function taskWorkUnits(scope: WorkScope, tasks: FlowTask[]): WorkUnit[] {
+	const unit = (id: string, state: WorkUnit["state"], label: string, detail?: string): WorkUnit => ({
+		id,
+		producer: "tasks",
+		owner: scope.sessionId,
+		kind: "task",
+		state,
+		label: sanitizeTerminalText(label),
+		...(detail ? { detail: sanitizeTerminalText(detail) } : {}),
+		attention: [],
+		route: "/tasks",
+	});
+	const running = tasks.filter((task) => task.status === "in_progress");
+	const open = tasks.filter((task) => task.status !== "in_progress" && task.status !== "completed");
+	const next = open.find((task) => task.state === "active") ?? open[0];
+	return [
+		...running.map((task) => unit(task.key, "running", `#${task.taskId} ${task.subject}`)),
+		...(next ? [unit("open", "queued", `${open.length} open`, `next #${next.taskId} ${next.subject}`)] : []),
+	];
+}
+const JOB_STATES: Record<string, WorkUnit["state"]> = {
+	running: "running",
+	completed: "completed",
+	failed: "failed",
+	timed_out: "failed",
+	stopped: "cancelled",
+};
+/** A finished job whose completion has not reached the model yet needs attention, as a child result does. */
+export function jobWorkUnits(scope: WorkScope, jobs: BackgroundJobSnapshot[]): WorkUnit[] {
+	return jobs
+		.filter((job) => job.sessionId === scope.sessionId)
+		.map((job): WorkUnit => {
+			const state = JOB_STATES[job.status] ?? "queued";
+			const finished = state === "completed" || state === "failed" || state === "cancelled";
+			const name = job.title?.trim() || job.command?.split("\n", 1)[0].trim() || "";
+			return {
+				id: job.id,
+				producer: "jobs",
+				owner: scope.sessionId,
+				kind: "job",
+				state,
+				label: sanitizeTerminalText(`${job.id}${name ? ` ${name}` : ""}`),
+				...(state === "failed" && job.exitCode !== undefined && job.exitCode !== null
+					? { detail: `exit ${job.exitCode}` }
+					: {}),
+				...(job.startedAt !== undefined ? { createdAt: job.startedAt } : {}),
+				...(finished && job.updatedAt !== undefined ? { completedAt: job.updatedAt } : {}),
+				attention:
+					finished && job.notifyOnExit !== false && job.exitNotified !== true
+						? [{ id: `${job.id}:exit`, type: "result", since: job.updatedAt, route: "/bg" }]
+						: [],
+				route: "/bg",
+			};
+		});
 }

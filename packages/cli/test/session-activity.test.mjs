@@ -39,3 +39,7 @@ test("reports child agents alone or beside loop counts", () => {
 		active: true,
 	});
 });
+test("running background jobs join the activity text and animate the marker", () => {
+	assert.deepEqual(sessionActivity({ activeAgents: 1, activeJobs: 2 }), { text: "1 subagent · 2 jobs", active: true });
+	assert.deepEqual(sessionActivity({ activeAgents: 0, activeJobs: 1 }), { text: "1 job", active: true });
+});

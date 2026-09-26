@@ -44,7 +44,9 @@ export async function applyBackgroundFlow(packageRoot, checkOnly = false) {
 		throw error;
 	});
 	if (installed !== runtime) {
-		if (checkOnly || installed !== undefined) throw new Error("Background flow installed runtime mismatch.");
+		// An install from the previous runtime revision upgrades in place; anything else is unexpected.
+		if (checkOnly || (installed !== undefined && sha(installed) !== lock.previousRuntime))
+			throw new Error("Background flow installed runtime mismatch.");
 		writes.push([destination, runtime]);
 	}
 	const storeDestination = join(packageRoot, "extensions/jouzu-store.ts");

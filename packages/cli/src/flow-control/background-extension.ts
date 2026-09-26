@@ -1,5 +1,9 @@
 import type { ExtensionAPI, InlineExtension, SessionManager } from "@earendil-works/pi-coding-agent";
-import { attachBackgroundWaitSource, type BackgroundFlowSourceAPI } from "./background-adapter.js";
+import {
+	attachBackgroundWaitSource,
+	type BackgroundFlowSourceAPI,
+	type BackgroundJobSnapshot,
+} from "./background-adapter.js";
 import { BackgroundResultProducer, type BackgroundResultSourceAPI } from "./background-results.js";
 import type { SessionFlowController } from "./controller.js";
 import type { PiFlowAttachment } from "./pi-attachment.js";
@@ -19,6 +23,10 @@ export function createBackgroundControllerExtension(options: {
 	install(): void;
 	/** Release the delivery lease so the task extension delivers its own completion batches. */
 	detach(): Promise<void>;
+	/** This session's jobs while a source that publishes an inventory is attached. */
+	jobs(): BackgroundJobSnapshot[] | undefined;
+	/** Called when jobs change or the source attaches or detaches. */
+	watchJobs(changed: () => void): () => void;
 } {
 	let attached: PiFlowAttachment | undefined;
 	let results: BackgroundResultProducer | undefined;
@@ -27,6 +35,16 @@ export function createBackgroundControllerExtension(options: {
 	let installed: PiFlowAttachment | undefined;
 	let waitRegistration: ReturnType<typeof attachBackgroundWaitSource> | undefined;
 	let events: ExtensionAPI["events"] | undefined;
+	let jobSource: { sessionId: string; api: Required<Pick<BackgroundFlowSourceAPI, "inventory">> } | undefined;
+	let unwatchJobs: (() => void) | undefined;
+	const jobListeners = new Set<() => void>();
+	const jobsChanged = () => {
+		for (const changed of jobListeners) {
+			try {
+				changed();
+			} catch {}
+		}
+	};
 	const install = () => {
 		if (!options.ingress || !results || !attached || installed === attached) return;
 		const ingress = options.ingress();
@@ -52,7 +70,20 @@ export function createBackgroundControllerExtension(options: {
 			pi.on("session_compact", async () => install());
 		},
 		install,
+		jobs: () => (jobSource ? jobSource.api.inventory(jobSource.sessionId) : undefined),
+		watchJobs(changed) {
+			jobListeners.add(changed);
+			return () => {
+				jobListeners.delete(changed);
+			};
+		},
 		async detach() {
+			unwatchJobs?.();
+			unwatchJobs = undefined;
+			if (jobSource) {
+				jobSource = undefined;
+				jobsChanged();
+			}
 			// Closing the wait registration closes the source, which is what releases the extension's
 			// delivery lease: `controls()` then answers false and its own completion batch runs. The
 			// controller registration has to go too, or the next attach finds its namespace taken.
@@ -94,6 +125,14 @@ export function createBackgroundControllerExtension(options: {
 			if (failure) throw failure;
 			if (!source) return "unavailable";
 			waitRegistration = attachBackgroundWaitSource(attachment, source, options.onError, options.currentWork);
+			unwatchJobs?.();
+			unwatchJobs = undefined;
+			jobSource = undefined;
+			if (typeof source.inventory === "function" && typeof source.watchInventory === "function") {
+				jobSource = { sessionId: scope.sessionId, api: { inventory: source.inventory.bind(source) } };
+				unwatchJobs = source.watchInventory(jobsChanged);
+			}
+			jobsChanged();
 			attached = attachment;
 			registration = undefined;
 			controller = undefined;

@@ -35,6 +35,8 @@ type Snapshot = {
 	command?: string;
 	logFile?: string;
 	exitCode?: number | null;
+	startedAt?: number;
+	updatedAt?: number;
 	notifyOnExit?: boolean;
 	exitNotified?: boolean;
 	flow?: { version: 1; execution: string; scope?: Scope; work?: Work; result?: BackgroundTerminalResult };
@@ -86,6 +88,7 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 	const deliveries = new Map<string, { scope: Scope; changed(): void }>();
 	const results = new Map<string, { scope: Scope; work?: Work; result: BackgroundTerminalResult }>();
 	const listeners = new Set<{ identity: Identity; changed(evidence: Evidence): void; signature?: string }>();
+	const inventoryListeners = new Set<() => void>();
 	function evidence(task: Snapshot, identity: Identity): Evidence {
 		if (
 			task.sessionId !== identity.scope.sessionId ||
@@ -268,7 +271,25 @@ export function createBackgroundFlowSource(list: () => Iterable<Snapshot>) {
 				...(lease && work ? { scope: { ...lease.scope }, work: { ...work } } : {}),
 			};
 		},
+		/** Every live task this runtime tracks for one session, for display only. */
+		inventory(sessionId: string): Snapshot[] {
+			return structuredClone([...list()].filter((task) => task.sessionId === sessionId));
+		},
+		/** Called after any task snapshot changes; read `inventory` again. */
+		watchInventory(changed: () => void): () => void {
+			inventoryListeners.add(changed);
+			return () => {
+				inventoryListeners.delete(changed);
+			};
+		},
 		publish(task: Snapshot) {
+			for (const changed of inventoryListeners) {
+				try {
+					changed();
+				} catch {
+					// A display listener never blocks wait evidence.
+				}
+			}
 			for (const listener of listeners) {
 				if (
 					!sameScope(task.flow?.scope, listener.identity.scope) ||

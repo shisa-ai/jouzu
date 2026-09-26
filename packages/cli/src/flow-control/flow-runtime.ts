@@ -1,4 +1,5 @@
 import type { InlineExtension, SessionManager } from "@earendil-works/pi-coding-agent";
+import type { BackgroundJobSnapshot } from "./background-adapter.js";
 import { createBackgroundControllerExtension } from "./background-extension.js";
 import type { FlowStatus } from "./flow-status.js";
 import { projectFlowStatus } from "./flow-status.js";
@@ -13,6 +14,7 @@ import { createScheduleWaitExtension } from "./schedule-waits.js";
 import { createSubagentObservationExtension } from "./subagent-observation-extension.js";
 import { createSubagentWaitExtension } from "./subagent-waits.js";
 import { createTaskControllerExtension } from "./task-extension.js";
+import type { FlowTask } from "./task-producer.js";
 import { createFlowWaitExtension } from "./wait-tools.js";
 
 export interface FlowControlLimits {
@@ -57,6 +59,12 @@ export interface FlowControlRuntime {
 	/** Flush and detach (`false`), or attach again (`true`). */
 	setEnabled(enabled: boolean): Promise<{ flushed: number; waits: number }>;
 	dashboardStatus(): Promise<FlowStatus | undefined>;
+	/** Display-only producer inventories for the work dashboard; undefined while unavailable. */
+	dashboardWork: {
+		jobs(): BackgroundJobSnapshot[] | undefined;
+		watchJobs(changed: () => void): () => void;
+		tasks(): FlowTask[] | undefined;
+	};
 	dispose(): Promise<void>;
 }
 
@@ -124,6 +132,11 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 		ingress,
 		enabled,
 		setEnabled,
+		dashboardWork: {
+			jobs: () => background.jobs(),
+			watchJobs: (changed) => background.watchJobs(changed),
+			tasks: () => tasks.attachedInventory(),
+		},
 		async dashboardStatus() {
 			if (!enabled()) return undefined;
 			const active = ingress();

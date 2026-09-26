@@ -13,6 +13,8 @@ export function createTaskControllerExtension(options: {
 	consumedAttempt(attempt: FlowAttempt): void;
 	unboundTasks(): FlowTask[];
 	inventory(): FlowTask[];
+	/** Tasks while the task store is attached; undefined otherwise. */
+	attachedInventory(): FlowTask[] | undefined;
 } {
 	let producer: TaskFlowProducer | undefined;
 	let closeRegistration: (() => void) | undefined;
@@ -27,6 +29,13 @@ export function createTaskControllerExtension(options: {
 		name: "jouzu-task-controller",
 		inventory() {
 			return producer?.inventory() ?? [];
+		},
+		attachedInventory() {
+			try {
+				return producer?.inventory();
+			} catch {
+				return undefined;
+			}
 		},
 		unboundTasks() {
 			return producer?.unboundTasks() ?? [];
