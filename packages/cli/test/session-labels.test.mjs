@@ -28,6 +28,9 @@ test("proposals reject controls, oversized names, and non-ASCII pane labels", ()
 		label: "label-fix",
 	});
 	assert.equal(parseLabelProposal('{"action":"keep"}'), undefined);
+	assert.deepEqual(parseLabelProposal('{"action":"defer","revisitAfterTurns":2}'), { revisitAfterTurns: 2 });
+	for (const revisitAfterTurns of [0, 4, 1.5, "1", null])
+		assert.throws(() => parseLabelProposal(JSON.stringify({ action: "defer", revisitAfterTurns })));
 	for (const name of ["", "x".repeat(61), "a\x1bb", "a\u202eb"])
 		assert.throws(() => parseLabelProposal(JSON.stringify({ action: "rename", name, label: "ok" })));
 	for (const label of ["日本語", "x".repeat(13), "x;y", "-", "ok\n"]) assert.equal(validPaneLabel(label), false);

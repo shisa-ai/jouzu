@@ -1,9 +1,14 @@
 # Session and pane labels
 
-Use `/labels on` in an interactive session to approve the selected provider and
-model for automatic naming. Jouzu keeps that exact naming model when you switch
-the main conversation model. Run `/labels on` again to approve the new selection.
-Naming is off until approved, and the choice is saved with the session.
+Automatic naming is on by default in interactive sessions. Jouzu uses the selected
+provider/model for the first naming request and keeps that exact route when you
+switch the main conversation model. `/labels on` enables naming with the selected
+model; `/labels off` disables it. The choice is saved with the session, and a saved
+off choice stays off when you reopen it.
+
+Run `/labels` for a read-only status report and the complete command list. It shows
+the naming model, session and pane protection, request count, and any pending
+ambiguity revisit.
 
 The naming request proposes a session name of at most 60 characters and a pane
 label of at most 12 lowercase ASCII letters, digits, or hyphens. Session names
@@ -14,8 +19,8 @@ do not change.
 
 | Command | Effect |
 | --- | --- |
-| `/labels` | Show naming model and ownership settings. |
-| `/labels on` | Approve the selected provider/model for subsequent naming requests. |
+| `/labels` | Show status and all commands without changing settings or starting a request. |
+| `/labels on` | Enable naming with the selected provider/model. |
 | `/labels off` | Cancel pending naming and stop model requests. Keep existing labels. |
 | `/labels pin` | Protect the session name, including when its text has not changed. |
 | `/labels auto` | Allow automatic replacement of the session name. |
@@ -27,22 +32,39 @@ Jouzu ownership metadata is protected. Session and pane ownership are independen
 
 ## When naming runs
 
-Jouzu checks submitted interactive text when it enters the conversation and
-confirmed `/goal` or multiloop starts and resumes. It does not name from tool
-iterations, background notifications, or automatic continuation prompts. A fresh
-launch without task text makes no request. Reopening a session reuses saved labels.
+Jouzu collects admitted interactive queries and confirmed `/goal` or multiloop
+objectives, then waits for the first completed assistant run before requesting
+labels. It does not request names at launch without completed task context, during
+tool iterations, or because of background notifications and automatic
+continuations. An interrupted or failed first run does not trigger naming.
 Commands expanded into different text may not trigger ordinary task naming; the
 explicit goal and multiloop notifications do not depend on text matching.
 
-Requests run independently of the main turn, without tools, repository reads,
-attachments, or full conversation history. The task excerpt is limited to 1,800
-UTF-8 bytes. Absolute path tokens and common credential prefixes are redacted;
-this is not a general secret detector. Do not include secrets in task text.
+The request includes the working folder name, Git repository name when available,
+and bounded current and previous queries. A local, one-second-bounded
+`git rev-parse --show-toplevel` lookup supplies only the repository's name, not its
+absolute path or file contents. The naming model has no tools or attachments;
+it does not receive full conversation history. Each query excerpt is limited to
+1,800 UTF-8 bytes. Absolute path tokens and common credential prefixes are
+redacted; this is not a general secret detector. Do not include secrets in task
+text.
+
+For an ambiguous task, the model can defer naming until 1–3 more task turns have
+completed. Jouzu saves that threshold and revisits with the newer query and prior
+context. There is no timer-driven retry; automatic turns do not advance it. A
+confirmed new workflow can prompt reconsideration after its first completed run.
+
+On resume, valid saved labels are reused and user-owned names remain protected.
+A missing label is reconsidered from the saved task excerpt, or the initial user
+query on the active branch when that history contains a completed assistant
+response. Resuming alone does not advance an ambiguity revisit: additional user
+context is still required.
 
 Requests use a 100-output-token limit, no automatic retries, and cancellation
 after ten seconds. Only one request runs at a time; newer pending tasks replace
 older pending tasks. Completed labels are reconsidered at most once per five
-minutes for ordinary input. Workflow objectives bypass that interval. Deduplication
+minutes for ordinary input. Workflow objectives and due ambiguity revisits bypass
+that interval. Deduplication
 and a 20-request cap persist with the session. Failed or invalid responses keep
 existing names. Model usage returned before session replacement or shutdown is saved in
 `jouzu-session-label-usage` custom session entries, outside the conversation;

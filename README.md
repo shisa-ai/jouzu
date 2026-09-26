@@ -77,7 +77,7 @@ Inside Jouzu:
 - `/login shisa` connects your Shisa account. Use `/login` to select another provider.
 - `/logout shisa` attempts to revoke the key issued by Shisa sign-in and removes its saved credentials. Selecting Shisa in `/logout` does the same.
 - `/workflow` opens agent definitions and child runs. Configure separate planner, coder, and reviewer models, or add your own roles. See [Agents and runs](https://github.com/shisa-ai/jouzu/blob/main/docs/subagents.md).
-- `/labels on` approves the selected model for automatic session names. `/labels pane auto` allows naming this tmux pane without changing its window name. See [Session labels](https://github.com/shisa-ai/jouzu/blob/main/docs/session-labels.md) for ownership protection and request limits.
+- Automatic session naming runs after the first completed task turn. `/labels` shows its status and commands; `/labels off` disables it. `/labels pane auto` permits replacing a protected tmux pane title. See [Session labels](https://github.com/shisa-ai/jouzu/blob/main/docs/session-labels.md) for ownership protection and request limits.
 - `/model` or `Ctrl+L` opens the Jouzu Palette Models view without clearing the prompt draft.
 - `Ctrl+P` and its reverse binding cycle through available favorites in the current model scope.
 - `/status` shows the session, workspace, model, thinking level, context usage, profile, and runtime.
