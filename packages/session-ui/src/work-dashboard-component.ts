@@ -41,7 +41,8 @@ export class WorkDashboardComponent implements Component {
 			)
 			.map((unit) => (unit.completedAt ?? -Infinity) + WORK_DISPLAY_DEFAULTS.completionMs - now)
 			.filter((delay) => delay > 0);
-		if (rows.length && units.some((unit) => unit.state === "running")) deadlines.push(SESSION_ACTIVITY_TICK_MS);
+		if (layout.animate !== false && rows.length && units.some((unit) => unit.state === "running"))
+			deadlines.push(SESSION_ACTIVITY_TICK_MS);
 		if (deadlines.length) {
 			this.timer = setTimeout(
 				() => {

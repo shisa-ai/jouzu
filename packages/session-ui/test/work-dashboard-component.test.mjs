@@ -3,7 +3,7 @@ import { test } from "node:test";
 import { WorkDashboardComponent } from "../dist/work-dashboard-component.js";
 
 const styles = { apply: (_role, text) => text };
-function fixture(t, state = "running") {
+function fixture(t, state = "running", animate = true) {
 	t.mock.timers.enable({ apis: ["setTimeout"] });
 	let changed;
 	let renders = 0;
@@ -30,7 +30,7 @@ function fixture(t, state = "running") {
 			},
 		},
 		styles,
-		() => ({ mode, terminalRows: 24, availableRows: 8 }),
+		() => ({ mode, animate, terminalRows: 24, availableRows: 8 }),
 		() => renders++,
 		() => now,
 	);
@@ -48,6 +48,15 @@ function fixture(t, state = "running") {
 		},
 	};
 }
+test("streaming suppresses the extra spinner timer but not source notifications", (t) => {
+	const f = fixture(t, "running", false);
+	assert.equal(f.component.render(80).length, 1);
+	f.tick(1000);
+	assert.equal(f.renders(), 0);
+	f.change();
+	assert.equal(f.renders(), 1);
+});
+
 test("running dashboard animates and disposal releases source listener and timer", (t) => {
 	const f = fixture(t);
 	const first = f.component.render(80);
@@ -63,7 +72,7 @@ test("running dashboard animates and disposal releases source listener and timer
 	assert.deepEqual(f.component.render(80), []);
 });
 test("retained completion expires without source notification and then stops waking", (t) => {
-	const f = fixture(t, "completed");
+	const f = fixture(t, "completed", false);
 	assert.equal(f.component.render(80).length, 1);
 	f.tick(29999);
 	assert.equal(f.renders(), 0);

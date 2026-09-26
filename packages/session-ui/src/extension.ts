@@ -89,6 +89,7 @@ export function createSessionUiExtension(options: SessionUiExtensionOptions = {}
 								stylesFor(theme),
 								(width) => ({
 									mode: dashboard.mode(),
+									animate: activeController.getSnapshot()?.activity.idle === true,
 									terminalRows: tui.terminal.rows,
 									availableRows: dashboardAvailableRows(tui, component, width),
 								}),

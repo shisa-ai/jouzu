@@ -11,6 +11,7 @@ export interface WorkDashboardLayout {
 	width: number;
 	now: number;
 	frame?: number;
+	animate?: boolean;
 }
 export function dashboardLineBudget(layout: WorkDashboardLayout): number {
 	if (layout.mode === "hidden") return 0;
