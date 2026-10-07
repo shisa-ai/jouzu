@@ -408,10 +408,12 @@ for (const reverse of [false, true])
 		const installed = {
 			name: "installed-multiloop",
 			async factory(pi) {
-				const factory = await createJiti(import.meta.url, { moduleCache: false }).import(
-					new URL("../node_modules/pi-multiloop/extensions/pi-multiloop/index.ts", import.meta.url).pathname,
-					{ default: true },
-				);
+				const factory = await createJiti(import.meta.url, {
+					moduleCache: false,
+					alias: { "@sinclair/typebox": createRequire(import.meta.url).resolve("typebox") },
+				}).import(new URL("../node_modules/pi-multiloop/extensions/pi-multiloop/index.ts", import.meta.url).pathname, {
+					default: true,
+				});
 				pi.on("session_start", (_event, context) => {
 					ctx = context;
 				});

@@ -464,7 +464,10 @@ for (const mode of ["normal", "reversed", "reopen", "model-tools", "shared-resul
 		const { createJiti } = await import(
 			createRequire(import.meta.resolve("@earendil-works/pi-coding-agent")).resolve("jiti")
 		);
-		const jiti = createJiti(import.meta.url, { moduleCache: false });
+		const jiti = createJiti(import.meta.url, {
+			moduleCache: false,
+			alias: { "@sinclair/typebox": createRequire(import.meta.url).resolve("typebox") },
+		});
 		let loaded = await jiti.import(
 			join(import.meta.dirname, "../node_modules/@vanillagreen/pi-background-tasks/extensions/background-tasks.ts"),
 			{ default: true },

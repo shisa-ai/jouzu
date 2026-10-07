@@ -325,6 +325,7 @@ for (const directory of executedDirectly ? packageDirectories : []) {
 		}
 		const forbiddenRuntimePackages = [
 			"@modelcontextprotocol/sdk",
+			"@sinclair/typebox",
 			"@the-forge-flow/camoufox-pi",
 			"better-sqlite3",
 			"camoufox-js",

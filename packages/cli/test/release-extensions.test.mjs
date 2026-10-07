@@ -33,6 +33,9 @@ const {
 } = await import("../dist/camoufox-adapter.js");
 
 const packageJson = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
+const camoufoxRuntimePackageJson = JSON.parse(
+	readFileSync(new URL("../camoufox-runtime/package.json", import.meta.url), "utf8"),
+);
 const manifest = JSON.parse(readFileSync(new URL("../release-extensions.json", import.meta.url), "utf8"));
 const thirdPartyNotices = readFileSync(new URL("../THIRD_PARTY_NOTICES.md", import.meta.url), "utf8");
 
@@ -51,7 +54,7 @@ const expectedPiTasks = {
 	version: "0.6.1",
 	commit: "a07c749439b1909a95a974bf6ee8a560f6d2b0d9",
 };
-const expectedCompatibility = ["@napi-rs/canvas", "@sinclair/typebox", "esbuild", "typebox", "wreq-js"];
+const expectedCompatibility = ["@napi-rs/canvas", "esbuild", "typebox", "wreq-js"];
 
 function packageNames(records) {
 	return records.map((record) => record.name).sort();
@@ -108,6 +111,13 @@ test("the release manifest and bundle list contain the selected extension set", 
 			);
 		}
 	}
+});
+
+test("the default runtime uses modern TypeBox and keeps legacy TypeBox optional", () => {
+	assert.equal(packageJson.dependencies.typebox, "1.3.27");
+	assert.equal(packageJson.dependencies["@sinclair/typebox"], undefined);
+	assert.ok(packageJson.bundleDependencies.includes("typebox"));
+	assert.equal(camoufoxRuntimePackageJson.dependencies["@sinclair/typebox"], "0.34.52");
 });
 
 test("all release-owned resources resolve to the exact installed package versions", () => {

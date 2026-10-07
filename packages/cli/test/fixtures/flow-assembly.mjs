@@ -173,6 +173,9 @@ async function bundleExtension(entry, fresh = false) {
 		bundle: true,
 		platform: "node",
 		format: "esm",
+		// Pi maps legacy extension imports to its modern TypeBox package. Mirror that
+		// compatibility boundary when this fixture loads the extensions without Pi's loader.
+		alias: { "@sinclair/typebox": "typebox" },
 		packages: "external",
 		outfile,
 		logLevel: "silent",

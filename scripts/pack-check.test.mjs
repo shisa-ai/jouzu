@@ -100,10 +100,19 @@ test("Pi native helpers ship for every supported platform in every bundled TUI",
 });
 
 test("first-use Camoufox packages fail the default manifest and tarball checks", () => {
-	assert.doesNotThrow(() => assertDefaultPackagesAbsent([], { dependencies: {} }, ["camoufox-js", "ua-parser-js"]));
+	assert.doesNotThrow(() =>
+		assertDefaultPackagesAbsent([], { dependencies: {} }, ["@sinclair/typebox", "camoufox-js", "ua-parser-js"]),
+	);
 	assert.throws(
 		() => assertDefaultPackagesAbsent([], { dependencies: { "camoufox-js": "0.12.0" } }, ["camoufox-js"]),
 		/default/u,
+	);
+	assert.throws(
+		() =>
+			assertDefaultPackagesAbsent([{ path: "node_modules/@sinclair/typebox/package.json" }], { dependencies: {} }, [
+				"@sinclair/typebox",
+			]),
+		/contains excluded package @sinclair\/typebox/u,
 	);
 	assert.throws(
 		() =>

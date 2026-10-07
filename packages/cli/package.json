@@ -54,7 +54,6 @@
 		"@earendil-works/pi-tui": "1.0.0",
 		"@lhl/pi-tasks": "git+https://github.com/lhl/pi-tasks.git#a07c749439b1909a95a974bf6ee8a560f6d2b0d9",
 		"@picovoice/pvrecorder-node": "1.2.9",
-		"@sinclair/typebox": "0.34.52",
 		"@sting8k/pi-vcc": "0.7.2",
 		"@vanillagreen/pi-background-tasks": "git+https://github.com/shisa-ai/kendex.git#66356512b81d2358b17531fffa791e2f1e51afef",
 		"esbuild": "0.28.2",

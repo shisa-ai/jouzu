@@ -32,6 +32,8 @@ async function fixture(t) {
 		platform: "node",
 		format: "esm",
 		packages: "external",
+		// Pi maps legacy extension imports to its modern TypeBox package.
+		alias: { "@sinclair/typebox": "typebox" },
 		outfile: output,
 		logLevel: "silent",
 	});

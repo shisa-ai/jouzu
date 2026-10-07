@@ -17,6 +17,7 @@ const npmCommand = npmExecPath
 		: "npm";
 const npmPrefix = npmExecPath ? [npmExecPath] : process.platform === "win32" ? ["/d", "/s", "/c", "npm"] : [];
 const forbiddenDefaultPackages = new Set([
+	"@sinclair/typebox",
 	"@the-forge-flow/camoufox-pi",
 	"better-sqlite3",
 	"camoufox-js",
