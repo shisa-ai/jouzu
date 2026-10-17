@@ -2,6 +2,7 @@ import type { InlineExtension, SessionManager } from "@earendil-works/pi-coding-
 import type { BackgroundJobSnapshot } from "./background-adapter.js";
 import { createBackgroundControllerExtension } from "./background-extension.js";
 import { createCompactionControllerExtension } from "./compaction-extension.js";
+import { REOPENED_PAUSE } from "./flow-pause.js";
 import type { FlowStatus } from "./flow-status.js";
 import { projectFlowStatus } from "./flow-status.js";
 import { captureFlowStatusContext } from "./flow-status-context.js";
@@ -255,8 +256,7 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 					background.install();
 				},
 			});
-			if (options.interactive && sessionManager.getEntries().length > 0)
-				attached.pauseAutomated("the session was reopened");
+			if (options.interactive && sessionManager.getEntries().length > 0) attached.pauseAutomated(REOPENED_PAUSE);
 			return attached;
 		},
 		async dispose() {

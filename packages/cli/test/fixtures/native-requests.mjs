@@ -27,6 +27,7 @@ export async function nativeRequests(
 		manager,
 		model,
 		tools = [],
+		turn,
 	} = {},
 ) {
 	const root = supplied ?? (await mkdtemp(join(tmpdir(), "jouzu-native-requests-")));
@@ -88,6 +89,12 @@ export async function nativeRequests(
 		identifySources ?? (dispatch ? (messages) => dispatch.sources(messages) : undefined),
 		enforceRequiredSources,
 		dispatch ? () => dispatch.consumedSources() : undefined,
+		// decorateContext, trustedStream, and userOperations are not exercised here; `turn` is the
+		// last position the fixture needs, so the three between them stay unset.
+		undefined,
+		undefined,
+		undefined,
+		turn,
 	);
 	afterCleanup(t, async () => {
 		await bridge.close();

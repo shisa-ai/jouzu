@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import { type AssistantMessage, getCurrentSystemPrompt, type Message } from "@earendil-works/pi-ai";
-import type { AgentSession } from "@earendil-works/pi-coding-agent";
+import type { AgentSession, AgentSessionEvent } from "@earendil-works/pi-coding-agent";
 import { cacheWarmAdmission } from "./cache-warm-admission.js";
 import { flowDiagnosticText } from "./diagnostic-text.js";
 import {
@@ -67,6 +67,9 @@ export class PiNativeRequests {
 	private prepared?: { modelHash: string; capture?: NativeSourceCapture; projections?: NativeProjectionCapture };
 	private active = 0;
 	private closed = false;
+	/** The settled turn whose provider failure was already reported, so a later event cannot repeat it. */
+	private reportedFailure?: AssistantMessage;
+	private readonly unsubscribeSettled?: () => void;
 	private guardedStream?: AgentSession["agent"]["streamFunction"];
 	private guardTransport = false;
 	private sealed = false;
@@ -100,7 +103,11 @@ export class PiNativeRequests {
 		 * route reports here. Maintenance work such as compaction aborts for its own reasons and
 		 * already gates the session while it runs, so it is left out deliberately.
 		 */
-		private readonly turn?: { aborted(): void; failed?(error: unknown): void },
+		private readonly turn?: {
+			aborted(): void;
+			failed?(error: unknown): void;
+			providerFailed?(detail: string): void;
+		},
 		reconcileSources?: () => Promise<unknown>,
 		/**
 		 * Flow control is on. While it is off, receipts are still recorded but nothing is enforced or
@@ -118,6 +125,7 @@ export class PiNativeRequests {
 		if (attached.has(session)) throw new FlowLedgerError("identity", "Pi session already has native request receipts.");
 		attached.add(session);
 		this.enabled = flowEnabled ?? (() => true);
+		this.unsubscribeSettled = session.subscribe((event) => this.observeSettled(event));
 		if (identifySources) {
 			const transform = session.agent.transformContext;
 			this.hooks.set(session.agent, "transformContext", async (messages, signal) => {
@@ -791,6 +799,31 @@ export class PiNativeRequests {
 		if (this.closed || this.session.sessionId !== this.store.scope.sessionId)
 			throw new FlowLedgerError("stale", "Native request attachment is closed or replaced.");
 	}
+	/**
+	 * Report a provider failure once the host has finished with the turn.
+	 *
+	 * The request path sees one outcome per attempt, including attempts the host retries, so it
+	 * cannot tell a recovered transient failure from a stopped turn. The settled event is the first
+	 * point where the host has stopped retrying and compacting, and the transcript then holds the
+	 * turn's final response: an error there is a turn nothing will resume on its own. The failing
+	 * message is the identity, so the same stop cannot be reported twice, and a later successful
+	 * turn replaces it.
+	 */
+	private observeSettled(event: AgentSessionEvent): void {
+		if (event.type !== "agent_settled" || this.closed) return;
+		if (this.session.sessionId !== this.store.scope.sessionId) return;
+		const messages = this.session.agent.state.messages;
+		let last: AssistantMessage | undefined;
+		for (let index = messages.length - 1; index >= 0; index--) {
+			const message = messages[index];
+			if (message.role !== "assistant") continue;
+			last = message;
+			break;
+		}
+		if (last?.stopReason !== "error" || last === this.reportedFailure) return;
+		this.reportedFailure = last;
+		this.turn?.providerFailed?.(last.errorMessage ?? "");
+	}
 	async close(): Promise<void> {
 		if (this.closed) return;
 		if (this.active) throw new FlowLedgerError("busy", "Native provider execution must settle before close.");
@@ -802,6 +835,7 @@ export class PiNativeRequests {
 		this.projectionWaitTokens = undefined;
 		this.references = undefined;
 		this.closed = true;
+		this.unsubscribeSettled?.();
 		this.hooks.close();
 		attached.delete(this.session);
 	}

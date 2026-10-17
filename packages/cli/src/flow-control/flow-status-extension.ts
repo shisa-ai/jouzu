@@ -1,5 +1,6 @@
 import type { InlineExtension } from "@earendil-works/pi-coding-agent";
 import { renderFlowMessage } from "./flow-message-renderer.js";
+import { COMMAND_PAUSE, INTERRUPTED_PAUSE, isProviderPause, REOPENED_PAUSE } from "./flow-pause.js";
 import { type FlowUnaccountableWork, formatFlowStatus, projectFlowStatus } from "./flow-status.js";
 import { captureFlowStatusContext, flowDisplayText } from "./flow-status-context.js";
 import { nativeHoldHash, nativeHoldPending } from "./native-request-store.js";
@@ -85,18 +86,28 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 	return {
 		name: "jouzu-flow-status",
 		/**
-		 * Report an interrupt's hold once, and only when it is actually holding something. Saying
-		 * nothing when the queue is empty keeps the ordinary interrupt silent, which is almost all of
-		 * them; the message only appears when it explains automated work that has stopped.
+		 * Report a pause once, and only when it explains automated work that has stopped.
+		 *
+		 * An interrupt is the user's own act and is visible as one, so saying nothing when the queue
+		 * is empty keeps the ordinary interrupt silent, which is almost all of them. A provider
+		 * failure is neither: the user cannot see that automatic work stopped, and holding it is what
+		 * prevents a request that cannot succeed from being repeated. That pause is therefore
+		 * reported whether or not something is already waiting behind it.
 		 */
 		async announcePause() {
 			const reason = options.ingress().automatedPause();
 			if (!reason || !announce || !flowOn(options)) return;
+			if (isProviderPause(reason)) {
+				announce(
+					`Flow control paused after ${flowDisplayText(reason, 200)}. Automated work resumes on your next message. Run /flow for details.`,
+				);
+				return;
+			}
 			const inspected = await options.ingress().inspect();
 			const holding = inspected.submissions.some((submission) => submission.admission === "held");
 			if (!holding) return;
 			announce(
-				reason === "a turn was interrupted"
+				reason === INTERRUPTED_PAUSE
 					? "Flow control paused after an interrupt. Automated work resumes on your next message. Run /flow for details."
 					: "Flow control paused after an admission failure. Pending work is held. Run /flow for details, /flow clear to release the hold, or /flow reset to reset delivery.",
 			);
@@ -118,7 +129,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 				if (!ctx.hasUI || !flowOn(options)) return;
 				// Kept fresh here as well as on every turn end: a refusal can arrive before the first turn.
 				announce = (text) => ctx.ui.notify(text, "info");
-				if (options.ingress().automatedPause() === "the session was reopened")
+				if (options.ingress().automatedPause() === REOPENED_PAUSE)
 					ctx.ui.notify(
 						"Flow control is paused after reopening this session. Inspect with /flow; resume automation with /flow resume or your next message.",
 						"info",
@@ -366,7 +377,7 @@ export function createFlowStatusExtension(options: FlowStatusOptions): InlineExt
 						if ((verb === "pause" || verb === "resume") && !target) {
 							if (verb === "pause") {
 								notify(
-									ingress.pauseAutomated("held from /flow")
+									ingress.pauseAutomated(COMMAND_PAUSE)
 										? "Paused every automated turn in this session. Release it with /flow resume."
 										: `Already paused: ${ingress.automatedPause()}. Release it with /flow resume.`,
 								);

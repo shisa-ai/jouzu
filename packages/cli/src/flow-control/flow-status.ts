@@ -1,3 +1,4 @@
+import { isAdmissionPause } from "./flow-pause.js";
 import type { FlowStatusContext } from "./flow-status-context.js";
 import { formatFlowReport } from "./flow-status-report.js";
 import type { FlowScope } from "./receipt-ledger.js";
@@ -201,7 +202,7 @@ export function formatFlowStatus(
 	if (status.paused) {
 		lines.push(`Paused: ${status.paused}`);
 		lines.push(
-			status.paused.startsWith("flow admission failed (")
+			isAdmissionPause(status.paused)
 				? "Repair the cause, then run /flow clear and send a new message."
 				: "Resume now with: /flow resume",
 		);

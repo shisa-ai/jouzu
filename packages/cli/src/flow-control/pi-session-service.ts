@@ -33,7 +33,7 @@ export interface PiFlowSessionOptions {
 	/** Reported once when a registry from an earlier version is dropped and rebuilt from the transcript. */
 	onRebuiltRegistry?(droppedStatePath?: string): void;
 	/** Turn-level signals the session acts on as a whole; see `PiNativeRequests`. */
-	turn?: { aborted(): void; failed?(error: unknown): void };
+	turn?: { aborted(): void; failed?(error: unknown): void; providerFailed?(detail: string): void };
 	/** Flow control is on. While it is off, request-level holds are recorded but not enforced. */
 	flowEnabled?(): boolean;
 	maxInputBytes: number;
