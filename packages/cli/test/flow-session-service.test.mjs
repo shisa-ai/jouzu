@@ -76,6 +76,19 @@ async function fixture(t, config = {}) {
 	return { root, session, service, requests, treeScopes };
 }
 
+test("a second service cannot replace a live navigation guard or leak its registry lease", async (t) => {
+	const f = await fixture(t);
+	const root = await mkdtemp(join(tmpdir(), "jouzu-second-flow-service-"));
+	afterCleanup(t, () => rm(root, { recursive: true, force: true }));
+	await assert.rejects(PiFlowSessionService.open(f.session, options(root)), {
+		code: "busy",
+		message: "Session navigation guard is already attached.",
+	});
+	await f.service.close();
+	const replacement = await PiFlowSessionService.open(f.session, options(root));
+	await replacement.close();
+});
+
 // Model a pre-v0.1.15 journal: its header contains the full-digest directory, not
 // merely a new journal moved beneath the old directory name.
 async function legacyStorage(root, scope, move = true) {

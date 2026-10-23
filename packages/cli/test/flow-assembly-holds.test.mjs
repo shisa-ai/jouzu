@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createServer } from "node:http";
 import { test } from "node:test";
 import { assembledSession, installedProducerExtensions, syntheticProducer } from "./fixtures/flow-assembly.mjs";
 import { campaignScript, liveWait } from "./fixtures/flow-campaign.mjs";
@@ -406,11 +407,26 @@ test("pending result pages remain readable during history retirement", async (t)
 });
 
 test("a composed wake is recorded as notification-only", async (t) => {
+	let connected;
+	const request = new Promise((resolve) => {
+		connected = resolve;
+	});
+	const server = createServer((_request, response) => connected(response));
+	t.after(async () => {
+		server.closeAllConnections();
+		await new Promise((resolve) => server.close(resolve));
+	});
+	await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+	const source = `fetch('http://127.0.0.1:${server.address().port}').then(r => r.text()).then(console.log)`;
 	const f = await assembledSession(t, {
 		producerExtensions: await installedProducerExtensions(),
-		script: campaignScript({ command: "sleep 0.3 && echo swept" }),
+		script: campaignScript({ command: `${JSON.stringify(process.execPath)} -e ${JSON.stringify(source)}` }),
 	});
 	await f.session.prompt("start the sweep and wait");
+	// A fast job can finish before agent_wait runs, producing no deferred wait decision. Release
+	// this real background process only after its wait is persisted, rather than guessing a delay.
+	await liveWait(f.ingress, "the background process is still pending when the wait is declared");
+	(await request).end("swept");
 	await until(
 		() => f.bodies.some((body) => JSON.stringify(body.messages).includes('kind\\":\\"wait')),
 		"the composed wake to be delivered",

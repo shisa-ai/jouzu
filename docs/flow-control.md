@@ -69,6 +69,10 @@ receipts, waits, and running jobs. Continue with a new message after clearing it
 | Rewind to an earlier point | Starts a new branch; unfinished work does not resume. File changes are not undone. |
 | Reopen a session | Continues from its last saved position, which may differ from the branch you last viewed |
 
+Extension commands can await `ctx.navigateTree()` with flow control on or off. Navigation requires an idle session with no queued input or other active host operations. A busy refusal leaves the current branch usable. Wait for navigation to finish before starting another host operation, including while the old branch attachment closes and the new one opens.
+
+A command continues to own host work on the selected branch until its callback ends; independent navigation remains busy during that continuation. Retained input captured before navigation stays bound to its original branch. A callback that outlives the command cannot use the command's old attachment after navigation.
+
 ## Missing tool results
 
 - If a branch lacks a tool result, Jouzu tells the model the outcome is unknown. It does not rerun the tool, copy a result from another branch, or edit the saved conversation.

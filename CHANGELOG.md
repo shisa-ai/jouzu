@@ -4,6 +4,8 @@
 
 ### Fixed
 
+- Close an RPC session whose input ends: unanswered dialogs resolve their defaults, each accepted command receives one response, a command still unfinished after five seconds reports one failure, and cleanup gets a further five seconds before one shutdown failure and status 1. A final command without a trailing newline still runs, a shutdown requested after input ends waits for that drain, a JSON line that is not a command object reports one parse failure, and shutdown failures from extension requests or signals report once instead of exiting early or leaving output unflushed. See [RPC mode](docs/diagnostics.md#rpc-mode).
+- Let extension commands await tree navigation and continue on the selected branch, with flow control on or off. Refuse busy navigation before callbacks or branch changes, refuse host operations during navigation preparation (including in `session_before_tree` callbacks), and keep previously captured input bound to its original branch. See [Branches and resuming](docs/flow-control.md#branches-and-resuming).
 - Avoid loading an unused native HTTP library that prevented browser tools from starting on older Linux systems.
 - Save Defuddle extraction diagnostics with web-fetch results instead of printing parser warnings over the terminal interface. Expand the tool entry to review them. See [Web tools](docs/web.md#extraction-diagnostics).
 - Pause automatic replies after a provider error remains unrecovered, and report the cause. Resume with a new message or `/flow resume`. See [Flow control](docs/flow-control.md).

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { spawn, spawnSync } from "node:child_process";
 import {
+	chmodSync,
 	existsSync,
 	mkdirSync,
 	mkdtempSync,
@@ -859,7 +860,9 @@ test("Jouzu-owned directories get deterministic private modes regardless of umas
 			]) {
 				const jouzuHome = join(temp, `home-${umask}-${label}`);
 				mkdirSync(jouzuHome, { recursive: true });
-				// Simulate a caller-owned home root that Jouzu must not chmod.
+				// mkdir masks its mode with the inherited umask, so prepare the
+				// caller-owned root explicitly to test that Jouzu leaves it alone.
+				chmodSync(jouzuHome, 0o755);
 				const wrapped = spawnSync(
 					"sh",
 					["-c", `umask ${umask}; exec "$@"`, "sh", process.execPath, cli, "--jouzu-home", jouzuHome, ...args],

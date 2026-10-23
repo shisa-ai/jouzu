@@ -70,10 +70,15 @@ export class FlowIngressBinding {
 	assertActive() {
 		if (this.#closed) throw new Error("Flow attachment is closed.");
 		if (this.#changingBranch) throw new Error("Flow branch transition has not completed.");
-		const scope = this.#dispatch.getStore()?.submission.scope;
+		const frame = this.#dispatch.getStore();
+		const scope = frame?.submission.scope;
+		// A live command controls the session runtime, not a retained branch input.
+		// Its awaited continuation can navigate again; captured input dispatches and
+		// callbacks after the command ends keep their original attachment fence.
 		if (
 			scope &&
-			(scope.attachmentId !== this.#attachmentId || scope.sessionId !== this.#session.sessionManager.getSessionId())
+			(scope.sessionId !== this.#session.sessionManager.getSessionId() ||
+				(scope.attachmentId !== this.#attachmentId && !(frame.control && frame.active)))
 		)
 			throw new Error("Flow submission belongs to a replaced attachment.");
 	}
@@ -222,9 +227,13 @@ export class FlowIngressBinding {
 		const commandPreflighted =
 			api === "prompt" && origin.kind === "host" && (!frame || frame.control) && !this.#session._isEmittingAgentSettled;
 		if (commandPreflighted && (snapshot[1]?.expandPromptTemplates ?? true) && snapshot[0].startsWith("/")) {
-			const handled = await this.#dispatch.run({ submission, control: true }, () =>
-				this.#session._tryExecuteExtensionCommand(snapshot[0]),
-			);
+			const control = { submission, control: true, active: true };
+			let handled;
+			try {
+				handled = await this.#dispatch.run(control, () => this.#session._tryExecuteExtensionCommand(snapshot[0]));
+			} finally {
+				control.active = false;
+			}
 			if (handled) {
 				notify("handled");
 				return;

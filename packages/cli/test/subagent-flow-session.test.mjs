@@ -3,6 +3,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { deferred } from "../../../scripts/fixtures/pi-flow-session.mjs";
 import { createWorkflowIntegration } from "../dist/subagents/integration.js";
 import { afterFlowCleanup, assembledSession } from "./fixtures/flow-assembly.mjs";
 
@@ -56,17 +57,45 @@ test("tree navigation releases unread child completions without blocking later r
 	await f.session.prompt("Launch two children.");
 	assert.equal(workers.length, 2);
 	f.ingress.pauseAutomated("navigation hold");
-	workers[0].emit({ type: "result", status: "completed", text: "First evidence" });
-	workers[0].exit(true);
-	// Completion handling is asynchronous, and the batch identifier is assigned during it. Wait for the
-	// held completion to carry one instead of sleeping a fixed interval that a loaded runner can overrun.
-	const heldCompletion = async () => integration.service.runs().find((r) => r.completion?.batchId);
-	for (let i = 0; i < 400 && !(await heldCompletion()); i++) await new Promise((r) => setTimeout(r, 25));
-	const before = integration.service.runs();
-	assert.ok(before.find((r) => r.completion)?.completion.batchId);
-	assert.equal(before.find((r) => r.completion)?.completion.handled, false);
-	assert.equal(f.bodies.length, 2, "the first completion is still held before navigation");
+	const entered = deferred(),
+		release = deferred();
+	const submit = f.ingress.submit;
+	const send = f.session.sendCustomMessage;
+	let delivery;
+	// The inbox saves a batch identifier before its asynchronous host send finishes.
+	// Hold that send explicitly: a saved batch alone does not establish host idleness.
+	f.ingress.submit = async function (input, dispatch) {
+		if (input.api === "sendCustomMessage" && input.args[0]?.customType === "jouzu-subagent-result") {
+			entered.resolve();
+			await release.promise;
+		}
+		return submit.call(this, input, dispatch);
+	};
+	f.session.sendCustomMessage = function (...args) {
+		const pending = send.apply(this, args);
+		if (args[0]?.customType === "jouzu-subagent-result") delivery = pending;
+		return pending;
+	};
 	const user = f.sessionManager.getBranch().find((e) => e.type === "message" && e.message.role === "user");
+	try {
+		workers[0].emit({ type: "result", status: "completed", text: "First evidence" });
+		workers[0].exit(true);
+		await entered.promise;
+		const before = integration.service.runs();
+		assert.ok(before.find((r) => r.completion)?.completion.batchId);
+		assert.equal(before.find((r) => r.completion)?.completion.handled, false);
+		assert.equal(f.bodies.length, 2, "the first completion is still held before navigation");
+		const leaf = f.sessionManager.getLeafId();
+		await assert.rejects(f.session.navigateTree(user.id), { code: "busy" });
+		assert.equal(f.sessionManager.getLeafId(), leaf, "an unfinished host send prevents branch mutation");
+		release.resolve();
+		assert.ok(delivery, "capture the actual host send, not only its batch identifier");
+		await delivery;
+	} finally {
+		release.resolve();
+		f.ingress.submit = submit;
+		f.session.sendCustomMessage = send;
+	}
 	await f.session.navigateTree(user.id);
 	await f.session.prompt("Continue on the new branch.");
 	assert.equal(f.ingress.automatedPause(), undefined, "new user turn must release the navigation hold");

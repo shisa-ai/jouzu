@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import {
+	chmodSync,
 	mkdirSync,
 	mkdtempSync,
 	readdirSync,
@@ -32,8 +33,11 @@ test("private roots, cache descendants, backups, and files use deterministic mod
 	try {
 		const callerRoot = join(temporary, "caller-home");
 		mkdirSync(callerRoot, { mode: 0o755 });
+		// Prepare the intended modes independently of the inherited umask.
+		chmodSync(callerRoot, 0o755);
 		const stateRoot = join(callerRoot, "state");
 		mkdirSync(stateRoot, { mode: 0o755 });
+		chmodSync(stateRoot, 0o755);
 		ensurePrivateDirectory(stateRoot);
 		assert.equal(modeOf(callerRoot), 0o755, "caller-owned parent mode changed");
 		assert.equal(modeOf(stateRoot), 0o700, "existing Jouzu root was not repaired");

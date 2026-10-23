@@ -938,66 +938,406 @@ export function sessionEntryToContextMessages(entry) {`,
 	} else if (path === "dist/core/agent-session-runtime.js") {
 		change("        this.session.dispose();", "        await this.session.dispose();", 2);
 	} else if (path === "dist/modes/rpc/rpc-mode.js") {
-		// End-of-input starts shutdown without waiting for commands already accepted, so a prompt
-		// still being admitted is disposed underneath and answered with a failure. Prompts are
-		// deliberately not awaited here: their authoritative response follows preflight, so
-		// end-of-input waits for that acceptance, not for the turn. SIGTERM and SIGHUP still exit
-		// immediately, and the extension shutdown path is unchanged.
+		// End-of-input must not leave the process waiting on input that can no longer arrive.
+		// Dialogs resolve their defaults and later dialogs are not emitted, accepted commands get a
+		// bounded drain for their terminal response, and anything still unreported is answered with
+		// one explicit failure before exit 1. A command counts as finished when it reported its
+		// response, not when its promise settles, so a response blocked on stdout backpressure is
+		// not failed and a response that settles during shutdown is not emitted twice. Prompts are
+		// not awaited for their turn: their authoritative response follows preflight, so the drain
+		// waits for that acceptance. End-of-input also bounds disposal, because the production host
+		// boundary joins command frames that may never settle; ordinary shutdown keeps its upstream
+		// disposal join, joins reentrant requests instead of exiting early, and every shutdown
+		// failure reports one diagnostic and exits 1. A signal keeps its immediate exit policy.
+		// The end-of-input handler registers after the JSONL reader, so a final line without a
+		// trailing newline is in the command map before the drain inspects it.
+		change(
+			"    let shuttingDown = false;\n    const signalCleanupHandlers = [];",
+			"    let shuttingDown = false;\n" +
+				"    /** Set once end-of-input arrives; dialogs then resolve their defaults. */\n" +
+				"    let inputClosed = false;\n" +
+				"    /** Exit status requested by any shutdown path; a later failing request only raises it. */\n" +
+				"    let exitStatus = 0;\n" +
+				"    let shutdownPromise;\n" +
+				"    let disposalPromise = Promise.resolve();\n" +
+				"    /** End-of-input response drain; an ordinary shutdown joins it before exiting. */\n" +
+				"    let eofDrain;\n" +
+				"    /** Signal that owns the exit, which keeps upstream's immediate termination. */\n" +
+				"    let shutdownSignal;\n" +
+				"    let shutdownFailurePromise;\n" +
+				"    const signalCleanupHandlers = [];",
+		);
+		change(
+			"    function createDialogPromise(opts, defaultValue, request, parseResponse) {\n        if (opts?.signal?.aborted)\n            return Promise.resolve(defaultValue);",
+			"    function createDialogPromise(opts, defaultValue, request, parseResponse) {\n" +
+				"        // A dialog cannot be answered after end-of-input, so it resolves its default\n" +
+				"        // without emitting a request the client can no longer receive.\n" +
+				"        if (inputClosed || opts?.signal?.aborted)\n" +
+				"            return Promise.resolve(defaultValue);",
+		);
+		change(
+			"            pendingExtensionRequests.set(id, {\n" +
+				"                resolve: (response) => {\n" +
+				"                    cleanup();\n" +
+				"                    resolve(parseResponse(response));\n" +
+				"                },\n" +
+				"                reject,\n" +
+				"            });",
+			"            pendingExtensionRequests.set(id, {\n" +
+				"                resolve: (response) => {\n" +
+				"                    cleanup();\n" +
+				"                    resolve(parseResponse(response));\n" +
+				"                },\n" +
+				"                cancel: () => {\n" +
+				"                    cleanup();\n" +
+				"                    resolve(defaultValue);\n" +
+				"                },\n" +
+				"                reject,\n" +
+				"            });",
+		);
+		change(
+			"        async editor(title, prefill) {\n            const id = crypto.randomUUID();",
+			"        async editor(title, prefill) {\n" +
+				"            // End-of-input cannot be answered, so it resolves the editor unchanged.\n" +
+				"            if (inputClosed)\n" +
+				"                return undefined;\n" +
+				"            const id = crypto.randomUUID();",
+		);
+		change(
+			"                    },\n" +
+				"                    reject,\n" +
+				"                });\n" +
+				'                output({ type: "extension_ui_request", id, method: "editor", title, prefill });',
+			"                    },\n" +
+				"                    cancel: () => {\n" +
+				"                        resolve(undefined);\n" +
+				"                    },\n" +
+				"                    reject,\n" +
+				"                });\n" +
+				'                output({ type: "extension_ui_request", id, method: "editor", title, prefill });',
+		);
+		change(
+			'            if (event.type === "agent_settled") {\n                void checkShutdownRequested();\n            }',
+			'            if (event.type === "agent_settled") {\n' +
+				"                void checkShutdownRequested().catch((shutdownError) => reportShutdownFailure(shutdownError));\n" +
+				"            }",
+		);
+		change(
+			"                killTrackedDetachedChildren();\n" +
+				'                void shutdown(signal === "SIGHUP" ? 129 : 143, signal);',
+			"                killTrackedDetachedChildren();\n" +
+				'                void shutdown(signal === "SIGHUP" ? 129 : 143, signal).catch((shutdownError) => reportShutdownFailure(shutdownError));',
+		);
+		change(
+			"    let detachInput = () => { };\n" +
+				"    async function shutdown(exitCode = 0, signal) {\n" +
+				"        if (shuttingDown) {\n" +
+				"            process.exit(exitCode);\n" +
+				"        }\n" +
+				"        shuttingDown = true;\n" +
+				"        for (const cleanup of signalCleanupHandlers) {\n" +
+				"            cleanup();\n" +
+				"        }\n" +
+				"        unsubscribe?.();\n" +
+				"        unsubscribeBackpressure?.();\n" +
+				"        await runtimeHost.dispose();\n" +
+				"        detachInput();\n" +
+				"        process.stdin.pause();\n" +
+				'        if (signal !== "SIGTERM") {\n' +
+				"            await flushRawStdout();\n" +
+				"        }\n" +
+				"        process.exit(exitCode);\n" +
+				"    }\n" +
+				"    async function checkShutdownRequested() {\n" +
+				"        if (!shutdownRequested)\n" +
+				"            return;\n" +
+				"        await shutdown();\n" +
+				"    }",
+			`    let detachInput = () => { };
+    const raiseExitStatus = (code) => {
+        if (code)
+            exitStatus = code;
+    };
+    /**
+     * One diagnostic, one flush, one failing exit for every shutdown failure. A later failure joins
+     * the report already flushing instead of exiting early and losing that diagnostic. End-of-input
+     * owns response accounting, so the report waits for that drain first and answers anything it
+     * could not, rather than dropping an accepted command; a rejected drain is tolerated, and a
+     * signal keeps its own immediate exit.
+     */
+    const reportShutdownFailure = (shutdownError) => {
+        shutdownFailurePromise ??= (async () => {
+            raiseExitStatus(1);
+            if (eofDrain && !shutdownSignal) {
+                await eofDrain.catch(() => { });
+                reportUnreportedCommands("accepted command did not settle before shutdown");
+            }
+            output(error(undefined, "shutdown", shutdownError instanceof Error ? shutdownError.message : String(shutdownError)));
+            try {
+                await flushRawStdout();
+            }
+            finally {
+                process.exit(1);
+            }
+        })();
+        return shutdownFailurePromise;
+    };
+    async function shutdown(exitCode = 0, signal) {
+        raiseExitStatus(exitCode);
+        if (shuttingDown) {
+            // A signal keeps upstream's immediate termination. An ordinary request joins the
+            // shutdown already in flight, so its output flushes and a failing status survives.
+            if (signal)
+                process.exit(exitCode);
+            return shutdownPromise;
+        }
+        shuttingDown = true;
+        shutdownSignal = signal;
+        // Cleanup and disposal run in one promise, so a synchronous cleanup failure rejects into
+        // the single failure path instead of leaving disposalPromise unset.
+        disposalPromise = (async () => {
+            for (const cleanup of signalCleanupHandlers) {
+                cleanup();
+            }
+            unsubscribe?.();
+            unsubscribeBackpressure?.();
+            await runtimeHost.dispose();
+        })().catch((shutdownError) => reportShutdownFailure(shutdownError));
+        shutdownPromise = (async () => {
+            await disposalPromise;
+            // End-of-input owns response accounting once it starts: an ordinary shutdown waits for
+            // every accepted command to report or time out. A signal keeps its native exit.
+            if (!signal && eofDrain)
+                await eofDrain;
+            detachInput();
+            process.stdin.pause();
+            if (signal !== "SIGTERM") {
+                await flushRawStdout();
+            }
+            process.exit(exitStatus);
+        })().catch((shutdownError) => reportShutdownFailure(shutdownError));
+        return shutdownPromise;
+    }
+    async function checkShutdownRequested() {
+        if (!shutdownRequested)
+            return;
+        await shutdown();
+    }`,
+		);
 		change(
 			"    // Handle a single command\n    const handleCommand = async (command) => {",
-			"    /** Commands accepted before end-of-input; shutdown waits for these to settle. */\n" +
-				"    const inFlightCommands = new Set();\n" +
-				"    const trackUntilSettled = (work) => {\n" +
-				"        inFlightCommands.add(work);\n" +
-				"        void work.finally(() => inFlightCommands.delete(work));\n" +
-				"    };\n" +
-				"    // Handle a single command\n" +
-				"    const handleCommand = async (command) => {",
+			`    /** Commands accepted before end-of-input; shutdown gives each one a bounded drain. */
+    const inFlightCommands = new Map();
+    /** Waiters woken when a command reports its response or leaves flight. */
+    const responseWaiters = new Set();
+    const signalResponse = () => {
+        for (const wake of [...responseWaiters]) wake();
+    };
+    const trackUntilSettled = (work, record) => {
+        inFlightCommands.set(work, record);
+        void work.then(() => {
+            inFlightCommands.delete(work);
+            signalResponse();
+        }, () => {
+            inFlightCommands.delete(work);
+            signalResponse();
+        });
+    };
+    /** A command finishes when it reports one terminal response; settlement alone is not enough. */
+    const reportCommand = (record) => {
+        record.reported = true;
+        signalResponse();
+    };
+    const unreportedCommands = () => {
+        for (const record of inFlightCommands.values()) if (!record.reported) return true;
+        return false;
+    };
+    /** One terminal failure for every accepted command that still has no response. */
+    const reportUnreportedCommands = (message) => {
+        for (const record of inFlightCommands.values()) {
+            if (!record.type || record.reported) continue;
+            reportCommand(record);
+            output(error(record.id, record.type, message));
+        }
+    };
+    const waitForResponses = () => new Promise((resolve) => {
+        if (!unreportedCommands()) {
+            resolve();
+            return;
+        }
+        const wake = () => {
+            if (unreportedCommands()) return;
+            responseWaiters.delete(wake);
+            resolve();
+        };
+        responseWaiters.add(wake);
+    });
+    // Handle a single command
+    const handleCommand = async (command) => {`,
 		);
 		change(
 			"                let preflightSucceeded = false;\n                void session\n",
-			"                let preflightSucceeded = false;\n" +
-				"                let accept = () => { };\n" +
-				"                trackUntilSettled(new Promise((resolve) => {\n" +
-				"                    accept = resolve;\n" +
-				"                }));\n" +
-				"                void session\n",
+			`                let preflightSucceeded = false;
+                let accept = () => { };
+                const acceptance = { id, type: "prompt" };
+                trackUntilSettled(new Promise((resolve) => {
+                    accept = resolve;
+                }), acceptance);
+                // Settlement alone is not a response: a prompt deferred during agent_settled
+                // returns before preflight, so only a terminal outcome releases the acceptance.
+                const finishAcceptance = (frame) => {
+                    if (!acceptance.reported) {
+                        reportCommand(acceptance);
+                        output(frame);
+                    }
+                    accept();
+                };
+                void session
+`,
 		);
 		change(
 			"                        preflightSucceeded = true;\n" +
 				'                        output(success(id, "prompt", { disposition }));\n' +
 				"                    },\n",
-			"                        preflightSucceeded = true;\n" +
-				'                        output(success(id, "prompt", { disposition }));\n' +
-				"                        accept();\n" +
-				"                    },\n",
+			`                        preflightSucceeded = true;
+                        finishAcceptance(success(id, "prompt", { disposition }));
+                    },
+`,
 		);
 		change(
 			"                    if (!preflightSucceeded) {\n" +
 				'                        output(error(id, "prompt", e.message));\n' +
 				"                    }\n" +
 				"                });\n",
-			"                    if (!preflightSucceeded) {\n" +
-				'                        output(error(id, "prompt", e.message));\n' +
-				"                    }\n" +
-				"                })\n" +
-				"                    .finally(() => accept());\n",
+			`                    if (preflightSucceeded) {
+                        accept();
+                        return;
+                    }
+                    finishAcceptance(error(id, "prompt", e.message));
+                });
+`,
+		);
+		change(
+			"    const handleInputLine = async (line) => {\n        let parsed;",
+			"    const handleInputLine = async (line, record) => {\n        let parsed;",
+		);
+		change(
+			"            await waitForRawStdoutBackpressure();\n            return;\n        }\n        // Handle extension UI responses",
+			"            // A parse failure answers its line without a command identity, so it is not drained.\n" +
+				"            reportCommand(record);\n" +
+				"            await waitForRawStdoutBackpressure();\n            return;\n        }\n        // Handle extension UI responses",
+		);
+		change(
+			`        const command = parsed;
+        try {
+            const response = await handleCommand(command);
+            if (response) {
+                output(response);
+                await waitForRawStdoutBackpressure();
+            }
+            await checkShutdownRequested();
+        }
+        catch (commandError) {
+            output(error(command.id, command.type, commandError instanceof Error ? commandError.message : String(commandError)));
+            await waitForRawStdoutBackpressure();
+        }`,
+			`        if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+            // Valid JSON that is not a command object still gets one terminal frame, so no input
+            // line disappears before response accounting sees it.
+            reportCommand(record);
+            output(error(undefined, "parse", "Command must be a JSON object."));
+            await waitForRawStdoutBackpressure();
+            return;
+        }
+        const command = parsed;
+        record.id = command.id;
+        record.type = command.type;
+        try {
+            const response = await handleCommand(command);
+            // A command that already reported, or that was failed at end-of-input, must not emit a
+            // second terminal response for the same id.
+            if (!record.reported) {
+                reportCommand(record);
+                if (response) {
+                    output(response);
+                    await waitForRawStdoutBackpressure();
+                }
+            }
+        }
+        catch (commandError) {
+            if (!record.reported) {
+                reportCommand(record);
+                output(error(command.id, command.type, commandError instanceof Error ? commandError.message : String(commandError)));
+                await waitForRawStdoutBackpressure();
+            }
+        }
+        // Shutdown failures have their own diagnostic and exit; they are not command responses.
+        await checkShutdownRequested();`,
 		);
 		change(
 			"    const onInputEnd = () => {\n        void shutdown();\n    };",
-			"    const onInputEnd = () => {\n" +
-				"        void (async () => {\n" +
-				"            while (inFlightCommands.size > 0)\n" +
-				"                await Promise.allSettled([...inFlightCommands]);\n" +
-				"            await shutdown();\n" +
-				"        })();\n" +
-				"    };",
+			`    /** End-of-input cleanup allowance, separate from the accepted-command drain. */
+    const CLEANUP_TIMEOUT_MS = 5000;
+    const onInputEnd = () => {
+        // One drain owner: an ordinary shutdown started later joins eofDrain before exiting, and
+        // the drain itself starts shutdown once every accepted command reported or timed out.
+        eofDrain = (async () => {
+            inputClosed = true;
+            // Dialogs cannot be answered after end-of-input: resolve the defaults of the ones
+            // already emitted, and let later ones resolve without emitting a request.
+            for (const pending of [...pendingExtensionRequests.values()]) pending.cancel();
+            pendingExtensionRequests.clear();
+            // Accepted commands get one bounded drain to report their terminal response.
+            const drained = await new Promise((resolve) => {
+                const timer = setTimeout(() => resolve(false), 5000);
+                void (async () => {
+                    while (unreportedCommands()) await waitForResponses();
+                })().then(() => {
+                    clearTimeout(timer);
+                    resolve(true);
+                });
+            });
+            if (!drained) {
+                // One explicit failure for each command that never reported a response. Reporting
+                // marks the command so a later settlement cannot emit a second frame.
+                reportUnreportedCommands("accepted command did not settle within 5000ms");
+            }
+            return drained;
+        })();
+        void eofDrain
+            .then(async (drained) => {
+                // Disposal can join a command frame that never settles, so end-of-input bounds
+                // disposal only and still flushes what was reported.
+                void shutdown(drained ? 0 : 1).catch((shutdownError) => reportShutdownFailure(shutdownError));
+                let timer;
+                const cleanupTimedOut = await Promise.race([
+                    disposalPromise.then(() => false, () => false),
+                    new Promise((resolve) => {
+                        timer = setTimeout(() => resolve(true), CLEANUP_TIMEOUT_MS);
+                    }),
+                ]);
+                clearTimeout(timer);
+                if (cleanupTimedOut) {
+                    await reportShutdownFailure(new Error(\`end-of-input cleanup did not complete within \${CLEANUP_TIMEOUT_MS}ms\`));
+                }
+            })
+            .catch((shutdownError) => reportShutdownFailure(shutdownError));
+    };`,
 		);
 		change(
-			"        const detachJsonl = attachJsonlLineReader(process.stdin, (line) => {\n            void handleInputLine(line);\n        });",
-			"        const detachJsonl = attachJsonlLineReader(process.stdin, (line) => {\n" +
-				"            trackUntilSettled(handleInputLine(line));\n" +
+			'    process.stdin.on("end", onInputEnd);\n' +
+				"    detachInput = (() => {\n" +
+				"        const detachJsonl = attachJsonlLineReader(process.stdin, (line) => {\n" +
+				"            void handleInputLine(line);\n" +
 				"        });",
+			"    detachInput = (() => {\n" +
+				"        const detachJsonl = attachJsonlLineReader(process.stdin, (line) => {\n" +
+				"            const record = {};\n" +
+				"            trackUntilSettled(handleInputLine(line, record), record);\n" +
+				"        });\n" +
+				"        // Registered after the reader, so the reader's end handler flushes a final line\n" +
+				"        // without a trailing newline into the command map before the drain inspects it.\n" +
+				'        process.stdin.on("end", onInputEnd);',
 		);
 	} else if (path === "dist/core/extensions/loader.js") {
 		change(

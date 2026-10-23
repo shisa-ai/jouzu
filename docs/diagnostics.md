@@ -42,3 +42,11 @@ jz -- --version
 
 - Pi's own self-update is blocked because Jouzu pins its Pi version.
 - `jz update --extensions` and `jz update --models` work and use Jouzu's state.
+
+## RPC mode
+
+`jz pi --mode rpc` runs Pi's JSONL protocol on standard input and output. Each accepted command receives exactly one response, and a line that is valid JSON but not a command object reports one `parse` failure.
+
+When standard input closes, Jouzu resolves unanswered dialogs with their defaults and gives accepted commands up to five seconds to answer. A command still unanswered after that reports one failure. Cleanup then gets up to five seconds of its own; if it cannot finish, Jouzu reports one `shutdown` failure and exits with status 1. Responses and diagnostics already written are flushed first.
+
+A shutdown failure from an extension request or a signal reports the same way: one `shutdown` failure, one flush, status 1. A second ordinary shutdown request waits for the one in progress instead of exiting early, so queued output is not lost and a failing status is not replaced by success. A shutdown requested after input has ended also waits for the command drain, so every accepted command still reports before the process exits. `SIGTERM` and `SIGHUP` keep their own exit status and exit at once when a shutdown is already in progress. Keep standard input open for commands that can take longer than five seconds.

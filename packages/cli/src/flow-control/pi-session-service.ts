@@ -9,6 +9,7 @@ import { bindPiFlowBranch, completePiFlowNavigation, piTranscriptBranchOwners } 
 import { PiControllerHost, type PiControllerHostOptions } from "./pi-controller-host.js";
 import { recoverPiHistory } from "./pi-history-recovery.js";
 import { PiNativeDispatch } from "./pi-native-dispatch.js";
+import { PiNavigationGuard } from "./pi-navigation-guard.js";
 import { type NativeContextDecorator, PiNativeRequests } from "./pi-native-requests.js";
 import { PiFlowSessionRegistry } from "./pi-session-registry.js";
 import { FlowLedgerError, type FlowScope } from "./receipt-ledger.js";
@@ -79,12 +80,15 @@ export class PiFlowSessionService {
 	// the branch was opened. The gate is synchronous, so the last read is kept here.
 	private outcomeUnresolved = false;
 	private readonly trustedStream?: AgentSession["agent"]["streamFunction"];
+	private readonly navigation: PiNavigationGuard;
 	private constructor(
 		private readonly session: AgentSession,
 		private readonly registry: PiFlowSessionRegistry,
 		private readonly options: PiFlowSessionOptions,
 	) {
 		this.trustedStream = options.qualifyProviderRoute ? session.agent.streamFunction : undefined;
+		// Install before branch hooks so closing a branch restores these guards, not bare native methods.
+		this.navigation = new PiNavigationGuard(session);
 	}
 
 	static async open(session: AgentSession, options: PiFlowSessionOptions): Promise<PiFlowSessionService> {
@@ -106,18 +110,21 @@ export class PiFlowSessionService {
 			session.sessionId,
 			session.sessionManager.getLeafId(),
 		);
-		const service = new PiFlowSessionService(session, registry, captured);
+		let service: PiFlowSessionService | undefined;
 		try {
+			const attached = new PiFlowSessionService(session, registry, captured);
+			service = attached;
 			await registry.run(async () => {
 				const scope = await bindPiFlowBranch(registry, session.sessionManager, (path) =>
 					captured.onRebuiltRegistry?.(path),
 				);
-				await service.openBranch(scope);
+				await attached.openBranch(scope);
 			});
-			return service;
+			return attached;
 		} catch (error) {
 			try {
-				await service.close();
+				if (service) await service.close();
+				else await registry.close(async () => {});
 			} catch (closeError) {
 				throw new AggregateError([error, closeError], "Session flow attachment failed to close.");
 			}
@@ -740,6 +747,6 @@ export class PiFlowSessionService {
 
 	close(): Promise<void> {
 		this.closing = true;
-		return this.registry.close(() => this.closeBranch());
+		return this.registry.close(() => this.closeBranch()).then(() => this.navigation.close());
 	}
 }
