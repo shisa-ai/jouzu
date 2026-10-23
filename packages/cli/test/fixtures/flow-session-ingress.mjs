@@ -97,9 +97,8 @@ export async function fixture(
 	});
 	// The generic fixture replaces its stream after SDK construction.
 	session.agent.streamFunction = wrapped;
-	afterCleanup(t, async () => {
-		await ingress.dispose();
-	});
+	// createFlowSession shuts down extensions, then aborts native work while joining
+	// flow disposal. Joining ingress first would prevent that abort from being reached.
 	return { root, session, ingress, sent };
 }
 

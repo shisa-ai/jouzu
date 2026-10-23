@@ -690,6 +690,7 @@ for (const mode of ["normal", "reversed", "reopen", "model-tools", "model-tools-
 				async () =>
 					(await tools.get("bg_status").execute("status", { action: "list" })).details.tasks[0]?.status === "completed",
 			);
+			assert.match(await readFile(task.logFile, "utf8"), /flow-result-marker/);
 			loaded = await createJiti(import.meta.url, { moduleCache: false }).import(
 				join(import.meta.dirname, "../node_modules/@vanillagreen/pi-background-tasks/extensions/background-tasks.ts"),
 				{ default: true },
@@ -732,7 +733,17 @@ for (const mode of ["normal", "reversed", "reopen", "model-tools", "model-tools-
 			attempts[0].members.map((member) => member.kind),
 			mode === "shared-results" ? ["wait", "work", "result"] : ["wait", "work"],
 		);
-		assert.equal((await branch.attachment.waits.snapshot())[0].token, token);
+		const [resolved] = await branch.attachment.waits.snapshot();
+		assert.equal(resolved.token, token);
+		// A job-timer exit also settles the wait and an attempt, so the outcome alone
+		// cannot tell the release file from the timer. The resolved state, the release-file
+		// marker and the completed status are what prove the task ran to its own exit.
+		assert.equal(resolved.state, "resolved");
+		assert.match(await readFile(task.logFile, "utf8"), /flow-result-marker/);
+		assert.equal(
+			(await tools.get("bg_status").execute("status", { action: "list" })).details.tasks[0].status,
+			"completed",
+		);
 		assert.deepEqual(errors, []);
 		assert.equal(f.sent.length, modelTools ? 8 : 4);
 		if (mode === "shared-results") {

@@ -10,6 +10,9 @@
 - Save Defuddle extraction diagnostics with web-fetch results instead of printing parser warnings over the terminal interface. Expand the tool entry to review them. See [Web tools](docs/web.md#extraction-diagnostics).
 - Pause automatic replies after a provider error remains unrecovered, and report the cause. Resume with a new message or `/flow resume`. See [Flow control](docs/flow-control.md).
 - Count prompt-cache refreshes that complete after the next request or a context change replaces their schedule in usage and cost totals. See [Prompt-cache warming](docs/cache-warming.md).
+- Keep automatic replies paused when a local command such as `/flow` or `/about` runs while flow control is holding model input for recovery or waiting on a request. See [Flow control](docs/flow-control.md).
+- Do not start a local command that is still waiting on recovery state when the session was replaced or its branch changed meanwhile. See [Flow control](docs/flow-control.md).
+- Treat text that only resembles a command, such as a leading space, an unknown name, or a prompt sent with template expansion off, as an ordinary message and apply the same recovery hold to it. See [Flow control](docs/flow-control.md).
 
 ## 0.2.1 - 2026-10-19
 

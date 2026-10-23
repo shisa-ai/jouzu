@@ -29,6 +29,8 @@ turns. A stuck reservation can prevent the next reply from starting.
 
 - Interrupting a reply also pauses automatic work until your next message or `/flow resume`.
 - A reply that still ends with a provider error or is truncated after retries and context recovery pauses automatic work. The pause explains the failure; your next message or `/flow resume` releases it.
+- Local commands stay available while flow control holds model input: during recovery, and while a model request is still in flight. Running one, such as `/flow` or `/about`, does not resume automatic replies by itself; use `/flow resume`, `/flow clear`, `/flow reset confirm`, or send a message. If the session is replaced or its branch changes while a command is still waiting on recovery state, the command does not start.
+- A command runs locally only when the message is its name followed by a space or the end of the message; everything after the first space is the command's argument. Other text, such as `/flow` followed by a tab, `/flows`, a leading space, an unknown name, or a prompt sent with template expansion off, is a message: flow control holds or delivers it like any other input.
 - `/flow clear` repairs a reservation without discarding flow evidence. If that does not fix the problem, `/flow reset confirm` is the destructive fallback: it discards all queued messages and flow delivery state, cancels waits, and leaves underlying jobs running.
 - `/flow resolve <attempt> retry` may repeat a request the model already answered. It resolves an unknown attempt outcome; `/flow retry <request>` instead authorizes a withheld request.
 - Set `JOUZU_FLOW_CONTROL=0` before starting Jouzu to disable flow control for that process.

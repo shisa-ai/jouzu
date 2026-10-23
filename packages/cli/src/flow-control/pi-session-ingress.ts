@@ -61,6 +61,12 @@ export class PiSessionFlowIngress implements Ingress {
 	private service?: PiFlowSessionService;
 	private session?: AgentSession;
 	private automatedPauseReason?: string;
+	/**
+	 * Counts pause requests and releases, not just the current reason: a repeated pause with the same
+	 * text is still a newer instruction than a decision made before it, and an asynchronous decision
+	 * may only end the pause it saw. Kept apart from the reason so no caller has to compare text.
+	 */
+	private pauseRevision = 0;
 	private opening?: Promise<void>;
 	private closing?: Promise<void>;
 	private disposed = false;
@@ -452,6 +458,7 @@ export class PiSessionFlowIngress implements Ingress {
 	}
 	/** Returns whether this changed anything, so a caller can report it only when it did. */
 	pauseAutomated(reason: string): boolean {
+		this.pauseRevision++;
 		if (this.automatedPauseReason !== undefined) return false;
 		this.automatedPauseReason = reason;
 		return true;
@@ -459,6 +466,7 @@ export class PiSessionFlowIngress implements Ingress {
 	resumeAutomated(): boolean {
 		if (this.automatedPauseReason === undefined) return false;
 		this.automatedPauseReason = undefined;
+		this.pauseRevision++;
 		// Releasing is the caller's business; producers are woken by the ordinary boundary.
 		return true;
 	}
@@ -674,7 +682,7 @@ export class PiSessionFlowIngress implements Ingress {
 	clearFlow() {
 		return this.manage(async (service) => {
 			const result = await service.clearFlow();
-			this.automatedPauseReason = undefined;
+			this.resumeAutomated();
 			return result;
 		});
 	}
@@ -691,7 +699,7 @@ export class PiSessionFlowIngress implements Ingress {
 					if (context.branch === branch) this.waitContexts.delete(id);
 				this.replayIds?.clear();
 			});
-			this.automatedPauseReason = undefined;
+			this.resumeAutomated();
 			return result;
 		});
 	}
@@ -850,6 +858,15 @@ export class PiSessionFlowIngress implements Ingress {
 			this.recoveryHoldReason(branch, this.options.policy(), await branch.attachment.ledger.snapshot()),
 		);
 	}
+	/** Whether a recovery decision still holds model admission; a hold that cannot be read is kept. */
+	private async recoveryHolds(): Promise<boolean> {
+		try {
+			return (await this.recoveryHold()) !== undefined;
+		} catch {
+			// A branch whose recovery state cannot be read is not evidence that recovery finished.
+			return true;
+		}
+	}
 	private recoveryHoldReason(
 		branch: PiFlowBranchResources,
 		policy: { recoveryBlocked: boolean },
@@ -896,12 +913,31 @@ export class PiSessionFlowIngress implements Ingress {
 	}
 	async runCommand(submission: Submission, run: () => Promise<void>): Promise<void> {
 		if (this.suspended) return run();
-		this.branch();
-		this.activeUserInput++;
-		// Control commands retain user priority without owning input or a disposal join.
-		// Inspection commands leave an explicit automation pause in place.
-		if (!/^\/(?:flow|about)(?:\s|$)/.test((submission.args[0] as string).trim())) this.resumeAutomated();
+		const branch = this.branch();
 		try {
+			// User priority covers every await and parse below, so its release cannot be skipped by a read
+			// or parse failure.
+			this.activeUserInput++;
+			// Control commands retain user priority without owning input or a disposal join. Inspection
+			// commands leave an explicit automation pause in place, and starting a local command is not
+			// consent to resume automated work while recovery still holds model admission: the pause keeps
+			// automated turns out of a state the user has not resolved yet. Explicit recovery actions and
+			// model-bound sends end it through their own paths.
+			const inspection = /^\/(?:flow|about)(?:\s|$)/.test((submission.args[0] as string).trim());
+			// Only an existing pause is this command's to end, so an unpaused session pays for no read.
+			const paused = !inspection && this.automatedPause() !== undefined;
+			const revision = this.pauseRevision;
+			const held = paused && (await this.recoveryHolds());
+			if (paused) {
+				// The read above is asynchronous. A replaced branch or a disposed ingress invalidates the
+				// session this command would use, and a pause requested meanwhile is a newer instruction
+				// than this command. Neither may be overridden by a decision taken before the read.
+				if (this.branch() !== branch)
+					throw new FlowLedgerError("stale", "Flow command branch changed during its recovery read.");
+				if (!held && this.pauseRevision === revision) this.resumeAutomated();
+			}
+			// The handler stays outside the ingress's own operations: Pi's command path owns its lifetime,
+			// including a handler that replaces or disposes this session.
 			await run();
 		} finally {
 			this.activeUserInput--;
@@ -915,31 +951,16 @@ export class PiSessionFlowIngress implements Ingress {
 		// A command's own send is the user's instruction arriving through a command, so it takes the same
 		// priority as typed input: it releases an interrupt's hold and holds automated work behind it.
 		const user = isUserInstruction(captured);
-		// Local flow inspection and repair must remain reachable while provider admission is blocked.
-		const localFlowCommand =
-			user && typeof captured.args[0] === "string" && /^\/flow(?:\s|$)/.test(captured.args[0].trim());
-		const localAboutCommand =
-			user && typeof captured.args[0] === "string" && /^\/about(?: |$)/.test(captured.args[0].trim());
 		if (user) this.activeUserInput++;
 		// Every send passes through here, so this is where the user speaking again releases an
 		// interrupt's hold. Automated work still waits for an idle boundary, which is what keeps it
-		// out of the very turn being submitted: the hold ends, the queue does not jump.
-		const flowCommand = typeof captured.args[0] === "string" && /^\/flow(?:\s|$)/.test(captured.args[0].trim());
-		// Inspection must not release a hold. Flow commands perform their own explicit state changes.
-		if (user && !flowCommand && !localAboutCommand) this.resumeAutomated();
+		// out of the very turn being submitted: the hold ends, the queue does not jump. A registered
+		// host command already ran before this point, so text that arrives here is model input, not a
+		// control: leading whitespace, an invalid separator, an unregistered name, a steer or follow-up,
+		// an extension's own message, or a prompt with template expansion off.
+		if (user) this.resumeAutomated();
 		return this.track(async () => {
 			const branch = this.branch();
-			if (
-				localAboutCommand ||
-				(localFlowCommand &&
-					(branch.host.gate().recoveryBlocked ||
-						/^\/flow(?:\s+(?:details(?:\s+[1-9]\d{0,5})?|runtime|reset(?:\s+confirm)?|clear))?$/.test(
-							(captured.args[0] as string).trim(),
-						)))
-			) {
-				await dispatch();
-				return;
-			}
 			const [previous] = await branch.attachment.submissions.forIds([captured.id]);
 			if (previous) {
 				if (!isDeepStrictEqual(previous.submission, captured))
