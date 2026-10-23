@@ -22,8 +22,13 @@ export class FlowIngressBinding {
 	#branchWork;
 	#closing;
 	#dispatches = 0;
+	/** Deferred native executions whose completion settles when the action runs or the drain ends. */
+	#deferredSettled = new Set();
+	/** Nesting depth of `agent_settled` emissions whose drains are still running. */
+	#settledDepth = 0;
 	#session;
 	#handler;
+	#nativePrompt;
 
 	static install(session, handler) {
 		if (handler === undefined) return undefined;
@@ -59,12 +64,116 @@ export class FlowIngressBinding {
 				binding.assertActive();
 			},
 		};
+		// Pi drains deferred settled actions after the event and stops at the first rejection, so an
+		// earlier action's failure would abandon every later one without invoking it. Settle this
+		// binding's pending executions when the drain ends instead of relying on its closure running.
+		//
+		// A deferred action that completes a turn emits a nested `agent_settled` before the outer drain
+		// reaches its remaining actions, and Pi resumes that outer drain when the nested event returns.
+		// Only the outermost completion means the drain is over, so an inner completion must not settle
+		// actions the outer drain still owns.
+		const emitSettled = session._emitAgentSettled;
+		if (typeof emitSettled === "function") {
+			const emit = emitSettled.bind(session);
+			session._emitAgentSettled = async () => {
+				binding.#settledDepth++;
+				try {
+					return await emit();
+				} finally {
+					binding.#settledDepth--;
+					if (binding.#settledDepth === 0) binding.#abandonSettled();
+				}
+			};
+		}
 		return binding;
 	}
 
 	constructor(session, handler) {
 		this.#session = session;
 		this.#handler = handler;
+		this.#nativePrompt = session.prompt.bind(session);
+	}
+
+	/**
+	 * Run a native send that Pi may defer until the settled event finishes.
+	 *
+	 * While Pi emits `agent_settled`, a prompt and a waking custom send store a closure that re-enters the
+	 * wrapped session method and return without executing. That re-entry would become a second submission
+	 * with no retained record, so the dispatch that owns the retained record would report that it produced
+	 * no native input while the text ran under an unowned host record instead. Replacing Pi's deferred
+	 * closure with one that makes the same native call keeps the input owned by the record retained for it,
+	 * so one delivery carries the original receipt identity.
+	 *
+	 * The deferred closure re-asks `revalidate` when it runs: grant authorization, runtime identity, and
+	 * target are read at execution, not inherited from admission before the event was held. Every pending
+	 * execution is settled when the outermost settled drain ends, so an earlier action's failure or a
+	 * nested turn it starts cannot leave this dispatch waiting on a closure Pi has already discarded.
+	 *
+	 * Only a dispatch whose caller does not wait for the settled event may use this. Pi drains deferred work
+	 * after the event finishes, so a send an `agent_settled` handler awaits would wait for itself.
+	 */
+	async #settled(revalidate, native, args) {
+		const deferred = this.#session._deferredSettledActions;
+		if (!Array.isArray(deferred)) return native(...args);
+		const pending = deferred.length;
+		const result = native(...args);
+		if (deferred.length === pending) return result;
+		// Pi drains these actions from the settled event's own async context, which belongs to whichever
+		// dispatch emitted it. Capture this dispatch's context so the re-entry keeps the frame and
+		// provenance that own the retained record.
+		const snapshot = AsyncLocalStorage.snapshot();
+		const entry = { running: false, settled: false, settle: undefined };
+		const completed = new Promise((resolve, reject) => {
+			entry.settle = { resolve, reject };
+		});
+		// Drop Pi's own re-entry, which would dispatch the same text again outside this dispatch.
+		deferred.splice(pending);
+		deferred.push(async () => {
+			// The drain may have ended before this action ran; it was settled with the others then, and a
+			// later invocation must not dispatch input that already reports a conservative outcome.
+			if (entry.settled) return;
+			entry.running = true;
+			try {
+				await snapshot(async () => {
+					this.assertActive();
+					try {
+						await revalidate();
+					} catch (error) {
+						// A refusal is this dispatch's outcome, not a reason to abort the host's settled drain
+						// and the deferred work other extensions queued behind it.
+						entry.settled = true;
+						entry.settle.reject(error);
+						return;
+					}
+					const value = await native(...args);
+					entry.settled = true;
+					entry.settle.resolve(value);
+				});
+			} catch (error) {
+				entry.settled = true;
+				entry.settle.reject(error);
+				throw error;
+			} finally {
+				entry.running = false;
+				this.#deferredSettled.delete(entry);
+			}
+		});
+		this.#deferredSettled.add(entry);
+		return completed;
+	}
+
+	/** Settle every deferred execution whose action the outermost settled drain did not run. */
+	#abandonSettled() {
+		for (const entry of this.#deferredSettled) {
+			if (entry.running || entry.settled) continue;
+			entry.settled = true;
+			entry.settle.reject(
+				Object.assign(new Error("Deferred external input did not run before the settled event ended."), {
+					code: "dispatch-abandoned",
+				}),
+			);
+		}
+		this.#deferredSettled.clear();
 	}
 
 	assertActive() {
@@ -85,6 +194,76 @@ export class FlowIngressBinding {
 
 	fromExtension(id, run) {
 		return this.#source.run({ origin: { kind: "extension", id }, used: false }, run);
+	}
+
+	async registerUserInputAdapter(extensionId, options, assertRuntime = () => {}) {
+		assertRuntime();
+		this.assertActive();
+		if (typeof this.#handler.registerUserInputAdapter !== "function")
+			throw Object.assign(new Error("External user input is unavailable in this host."), {
+				code: "unsupported-protocol",
+			});
+		return this.#handler.registerUserInputAdapter(
+			{
+				extensionId,
+				scope: () => {
+					assertRuntime();
+					this.assertActive();
+					return this.#scope();
+				},
+				prepare: (input, expectedEpoch) => {
+					assertRuntime();
+					this.assertActive();
+					const submission = structuredClone(input);
+					const scope = this.#scope();
+					if (
+						submission.origin.kind !== "extension" ||
+						submission.origin.id !== extensionId ||
+						submission.api !== "prompt" ||
+						!submission.externalUser ||
+						submission.scope.sessionId !== scope.sessionId ||
+						submission.scope.attachmentId !== scope.attachmentId ||
+						(expectedEpoch !== undefined && typeof expectedEpoch !== "string")
+					)
+						throw new Error("Invalid external user-input dispatch identity.");
+					/** Live authority for this exact input, asked again immediately before native input. */
+					const revalidate = async () => {
+						assertRuntime();
+						this.assertActive();
+						this.#assertTarget(submission);
+						if (expectedEpoch === undefined) return;
+						// The target epoch is the handler's: only it can compare the journal lifetime the caller
+						// validated against the one a dispatch would run in.
+						if (typeof this.#handler.authorizeExternal !== "function")
+							throw Object.assign(new Error("External user input cannot be revalidated."), {
+								code: "stale-target",
+							});
+						await this.#handler.authorizeExternal(submission, expectedEpoch);
+						// Authorization reads the grant and the journal asynchronously, so the runtime that created
+						// this callback, the binding it belongs to, and the target can all be replaced while it
+						// waits. Ask again here rather than dispatching under authority read before the await.
+						assertRuntime();
+						this.assertActive();
+						this.#assertTarget(submission);
+					};
+					let started = false;
+					return async () => {
+						await revalidate();
+						if (started) throw new Error("External user input was already dispatched.");
+						started = true;
+						this.#dispatches++;
+						try {
+							await this.#dispatch.run({ submission, scope: submission.scope }, () =>
+								this.#settled(revalidate, this.#nativePrompt, structuredClone(submission.args)),
+							);
+						} finally {
+							this.#dispatches--;
+						}
+					};
+				},
+			},
+			structuredClone(options),
+		);
 	}
 
 	commandPreflighted() {
@@ -115,6 +294,12 @@ export class FlowIngressBinding {
 			leafId: this.#session.sessionManager.getLeafId(),
 			attachmentId: this.#attachmentId,
 		};
+	}
+
+	/** The attachment and session this prepared dispatch validated are still the live ones. */
+	#assertTarget(submission) {
+		if (submission.scope.attachmentId !== this.#attachmentId || submission.scope.sessionId !== this.#scope().sessionId)
+			throw Object.assign(new Error("External user-input target changed."), { code: "stale-target" });
 	}
 
 	#assertBranchIdle() {
@@ -161,6 +346,8 @@ export class FlowIngressBinding {
 	dispose() {
 		if (this.#branchCallback.getStore()?.active) throw new Error("Flow branch callback cannot join its own disposal.");
 		this.#closed = true;
+		// A held settled event must not keep a dispatch waiting on a closure this binding no longer owns.
+		this.#abandonSettled();
 		this.#closing ??= Promise.resolve().then(async () => {
 			await this.#branchWork?.catch(() => {});
 			await this.#handler.dispose?.();

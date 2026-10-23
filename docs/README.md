@@ -40,6 +40,7 @@ Install and first steps are in the [project README](../README.md).
 | --- | --- |
 | [Development](development.md) | Building from source |
 | [Architecture](architecture.md) | Module map, state files, update lanes |
+| [External user-input adapters](user-input-adapters.md) | Authorized human input from extensions, targets, delivery receipts |
 | [Testing](testing.md) | Test suites and how to run them |
 | [CI runs](ci.md) | Hosted checks and Windows qualification |
 | [Interaction model](ux.md) | Rules for every interactive surface |

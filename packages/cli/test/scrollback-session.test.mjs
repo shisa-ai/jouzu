@@ -86,6 +86,40 @@ test("scrollback wrapper preserves delegate methods, receivers, and dispatch own
 	assert.equal(commands, 2);
 });
 
+test("scrollback wrapper forwards adapter registration and dispatch authorization with their receiver", async () => {
+	const observer = createScrollbackSessionObserver();
+	const calls = [];
+	const adapter = {};
+	const delegate = {
+		version: 1,
+		submit() {},
+		async registerUserInputAdapter(...args) {
+			assert.equal(this, delegate);
+			calls.push(["register", ...args]);
+			return adapter;
+		},
+		async authorizeExternal(...args) {
+			assert.equal(this, delegate);
+			calls.push(["authorize", ...args]);
+			if (args[1] === "expired") throw Error("expired target");
+		},
+	};
+	const wrapped = observer.wrap(delegate);
+	const host = {};
+	const options = { id: "fixture", label: "Fixture" };
+	const submission = {};
+	assert.equal(await wrapped.registerUserInputAdapter(host, options), adapter);
+	await wrapped.authorizeExternal(submission, "epoch");
+	await assert.rejects(wrapped.authorizeExternal(submission, "expired"), /expired target/);
+	assert.deepEqual(calls, [
+		["register", host, options],
+		["authorize", submission, "epoch"],
+		["authorize", submission, "expired"],
+	]);
+	assert.equal(observer.wrap().registerUserInputAdapter, undefined);
+	assert.equal(observer.wrap().authorizeExternal, undefined);
+});
+
 test("host shell activity stays busy through executeBash while the agent is idle", async (t) => {
 	const observer = createScrollbackSessionObserver();
 	const { session } = await createFlowSession(t, { ingress: observer.wrap() });

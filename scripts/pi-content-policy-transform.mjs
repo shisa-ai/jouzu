@@ -531,6 +531,15 @@ export function sessionEntryToContextMessages(entry) {`,
 			"export declare function convertToLlm(messages: AgentMessage[], onConverted?: (index: number, message: Message | undefined) => void): Message[];",
 		);
 	} else if (path === "dist/core/extensions/types.d.ts") {
+		text = `import type { UserInputAdapter } from "../jouzu-flow-ingress.js";\n${text}`;
+		change(
+			"export interface ExtensionActions {",
+			"export interface ExtensionActions {\n    registerUserInputAdapter?: (options: { id: string; label: string }, extensionPath: string, assertRuntime: () => void) => Promise<UserInputAdapter>;",
+		);
+		change(
+			"export interface ExtensionAPI {",
+			"export interface ExtensionAPI {\n    /** Submit authenticated human input through an explicitly authorized adapter. */\n    registerUserInputAdapter(options: { id: string; label: string }): Promise<UserInputAdapter>;",
+		);
 		change(
 			`export interface BeforeProviderRequestEvent {
     type: "before_provider_request";
@@ -550,6 +559,10 @@ export function sessionEntryToContextMessages(entry) {`,
 }`,
 		);
 	} else if (path === "dist/core/extensions/runner.js") {
+		change(
+			"        this.runtime.sendUserMessage = actions.sendUserMessage;",
+			'        this.runtime.sendUserMessage = actions.sendUserMessage;\n        this.runtime.registerUserInputAdapter = actions.registerUserInputAdapter ?? (() => Promise.reject(Object.assign(new Error("External user input is unavailable."), { code: "unsupported-protocol" })));',
+		);
 		change("    async emitBeforeProviderRequest(payload) {", "    async emitBeforeProviderRequest(payload, request) {");
 		change(
 			'                        type: "before_provider_request",\n                        payload: currentPayload,',
@@ -719,7 +732,7 @@ export function sessionEntryToContextMessages(entry) {`,
 		);
 		change(
 			"            sendUserMessage: (content, options) => {\n                this.sendUserMessage(content, options).catch((err) => {",
-			'            sendUserMessage: (content, options, extensionPath) => {\n                const send = () => this.sendUserMessage(content, options);\n                (this._flowBinding ? this._flowBinding.fromExtension(extensionPath ?? "<runtime>", send) : send()).catch((err) => {',
+			'            registerUserInputAdapter: (options, extensionPath, assertRuntime) => {\n                if (!this._flowBinding) return Promise.reject(Object.assign(new Error("External user input requires a Jouzu host."), { code: "unsupported-protocol" }));\n                return this._flowBinding.registerUserInputAdapter(extensionPath, options, assertRuntime);\n            },\n            sendUserMessage: (content, options, extensionPath) => {\n                const send = () => this.sendUserMessage(content, options);\n                (this._flowBinding ? this._flowBinding.fromExtension(extensionPath ?? "<runtime>", send) : send()).catch((err) => {',
 		);
 		change(
 			"            // Switch leaf (with or without summary)",
@@ -1340,6 +1353,49 @@ export function sessionEntryToContextMessages(entry) {`,
 				'        process.stdin.on("end", onInputEnd);',
 		);
 	} else if (path === "dist/core/extensions/loader.js") {
+		change(
+			"        sendUserMessage: notInitialized,",
+			"        sendUserMessage: notInitialized,\n        registerUserInputAdapter: notInitialized,",
+		);
+		change(
+			"        sendUserMessage(content, options) {",
+			`        async registerUserInputAdapter(options) {
+            assertActive();
+            const adapter = await runtime.registerUserInputAdapter(options, extension.path, assertActive);
+            assertActive();
+            // A reload or a disposal fails the runtime assertion synchronously, while bind, submit and lookup
+            // are asynchronous handle methods. Report that refusal as a rejected promise with the code the
+            // host adapter uses for a stale target, and keep the original refusal as its cause.
+            const refuse = (cause) => Object.assign(
+                new Error(cause instanceof Error ? cause.message : String(cause), { cause }),
+                { code: "stale-target" },
+            );
+            const guarded = (method) => async (...args) => {
+                try {
+                    assertActive();
+                }
+                catch (cause) {
+                    throw refuse(cause);
+                }
+                return adapter[method](...args);
+            };
+            return {
+                version: adapter.version,
+                bind: guarded("bind"),
+                submit: guarded("submit"),
+                lookup: guarded("lookup"),
+                subscribe: (listener) => {
+                    assertActive();
+                    return adapter.subscribe((receipt) => { assertActive(); listener(receipt); });
+                },
+                onTargetInvalidated: (listener) => {
+                    assertActive();
+                    return adapter.onTargetInvalidated(() => { assertActive(); listener(); });
+                },
+            };
+        },
+        sendUserMessage(content, options) {`,
+		);
 		change(
 			"            runtime.sendMessage(message, options);",
 			"            runtime.sendMessage(message, options, extension.path);",

@@ -116,6 +116,8 @@
 		"packages/cli/test/flow-task-adapter.test.mjs :: automatic task completion permits inspection before the next task continuation": "integration",
 		"packages/cli/test/flow-task-adapter.test.mjs :: completing a selected task returns following tools to the invocation (goal=true)": "integration",
 		"packages/cli/test/flow-task-adapter.test.mjs :: stale task cancellation preserves joined results through provider delivery and reopen": "integration",
+		"packages/cli/test/flow-user-input-crash.test.mjs :: a crash after external dispatch intent stays unknown and is never resent": "child-process",
+		"packages/cli/test/flow-user-input-crash.test.mjs :: a crash after external retention reopens without replay and retries only on request": "child-process",
 		"packages/cli/test/flow-wait-observation.test.mjs :: anthropic-messages: later dependency completion dispatches one retained decision and survives reopening": "integration",
 		"packages/cli/test/flow-wait-observation.test.mjs :: Codex omitted decision after conversion transmits through cached transport": "integration",
 		"packages/cli/test/flow-wait-observation.test.mjs :: Codex replaced decision after conversion transmits through cached transport": "integration",

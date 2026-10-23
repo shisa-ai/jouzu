@@ -2,6 +2,7 @@
 
 import assert from "node:assert/strict";
 import { spawn, spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createServer } from "node:http";
 import { createRequire } from "node:module";
@@ -14,6 +15,9 @@ const packageDirectory = resolve(root, "packages", "cli");
 const packageJson = JSON.parse(readFileSync(resolve(packageDirectory, "package.json"), "utf8"));
 const piLock = JSON.parse(readFileSync(resolve(root, "upstream", "pi.lock.json"), "utf8"));
 const piVersion = piLock.packages["@earendil-works/pi-coding-agent"].version;
+const contentPolicyLock = JSON.parse(
+	readFileSync(resolve(root, "upstream", "pi-content-policy", "patch.lock.json"), "utf8"),
+);
 const npmExecPath = process.env.npm_execpath;
 const npmCommand = npmExecPath
 	? process.execPath
@@ -140,11 +144,36 @@ async function assertPackedFlowControl(temp, installedCli, probe, cwd, env, prof
 	);
 	for (const tool of flowTools) assert.ok(on.tools.includes(tool), `${profile} flow: missing ${tool} when enabled`);
 	assert.ok(on.commands.includes("flow"), `${profile} flow: missing /flow when enabled`);
+	assert.equal(on.userInputAdapter, "function", `${profile} flow: loaded extension has no user-input adapter API`);
 	// A single resolved Pi tree is what makes the route guard's prototype identity check meaningful.
 	const trees = readdirSync(resolve(temp, "node_modules"), { recursive: true, withFileTypes: true })
 		.filter((entry) => entry.isDirectory() && entry.name === "pi-coding-agent")
 		.map((entry) => join(entry.parentPath, entry.name));
 	assert.equal(trees.length, 1, `${profile} flow: expected one packed Pi tree, found ${trees.join(", ")}`);
+	assertPackedUserInputApi(trees[0], profile);
+}
+
+/** Verify the installed API and locked binding, not just source declarations. */
+function assertPackedUserInputApi(piRoot, profile) {
+	const sha256 = (path) => createHash("sha256").update(readFileSync(path)).digest("hex");
+	const ingress = resolve(piRoot, "dist", "core", "jouzu-flow-ingress.js");
+	assert.ok(existsSync(ingress), `${profile} flow: packed Pi is missing ${ingress}`);
+	assert.equal(
+		sha256(ingress),
+		contentPolicyLock.flowIngress,
+		`${profile} flow: packed flow ingress is not the locked patch`,
+	);
+	assert.match(readFileSync(ingress, "utf8"), /FlowIngressBinding/, `${profile} flow: binding is not exported`);
+	assert.match(
+		readFileSync(resolve(piRoot, "dist", "core", "extensions", "runner.js"), "utf8"),
+		/registerUserInputAdapter/,
+		`${profile} flow: external user-input API is not installed in the extension runner`,
+	);
+	assert.match(
+		readFileSync(resolve(piRoot, "dist", "core", "sdk.js"), "utf8"),
+		/flowIngress/,
+		`${profile} flow: packed Pi does not expose the flow ingress option`,
+	);
 }
 
 function probePackedSurfaces(installedCli, probe, cwd, env, profile) {
@@ -436,7 +465,7 @@ try {
 				handler: async () => {
 					const tools = pi.getAllTools().map((tool) => tool.name).sort();
 					const commands = pi.getCommands().map((command) => command.name).sort();
-					process.stderr.write("JOUZU_SURFACE_PROBE=" + JSON.stringify({ tools, commands }) + "\\n");
+					process.stderr.write("JOUZU_SURFACE_PROBE=" + JSON.stringify({ tools, commands, userInputAdapter: typeof pi.registerUserInputAdapter }) + "\\n");
 				},
 			});
 		}

@@ -11,6 +11,10 @@ export function createScrollbackSessionObserver() {
 			let attached: AgentSession | undefined;
 			return {
 				version: 1,
+				...(delegate?.registerUserInputAdapter
+					? { registerUserInputAdapter: delegate.registerUserInputAdapter.bind(delegate) }
+					: {}),
+				...(delegate?.authorizeExternal ? { authorizeExternal: delegate.authorizeExternal.bind(delegate) } : {}),
 				async attach(session) {
 					await delegate?.attach?.(session);
 					attached = session;

@@ -42,6 +42,7 @@ export const defaultFlowControlLimits: FlowControlLimits = {
 export interface FlowControlRuntimeOptions {
 	/** Directory owning this installation's durable flow state. */
 	root: string;
+	agentDir?: string;
 	/** Reopened interactive histories wait for the user before automated work can run. */
 	interactive?: boolean;
 	/** Reported to the user; flow failures never silently bypass admission. */
@@ -183,6 +184,7 @@ export function createFlowControlRuntime(options: FlowControlRuntimeOptions): Fl
 			}
 			attached = new PiSessionFlowIngress({
 				root: options.root,
+				agentDir: options.agentDir,
 				// Only valid here: extensions cannot replace the stream before the SDK boundary.
 				qualifyProviderRoute: true,
 				maxInputBytes: limits.maxInputBytes,

@@ -37,7 +37,7 @@
 		},
 		"dist/core/agent-session.js": {
 			"before": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
-			"after": "3ebac610081d07bcfedd0ba43c26beb0aa11ea03920ee3f7a27f2b945c4ccf8f"
+			"after": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a"
 		},
 		"dist/core/agent-session.d.ts": {
 			"before": "67cbae964cda7c05f4d2e587c825177d616a762847e10d84694571d29cf027c1",
@@ -61,7 +61,7 @@
 		},
 		"dist/core/extensions/loader.js": {
 			"before": "c63226a56ab2f4f9e4e6c8ea97e4bcb9c71d723b38eba1ee3569559bba21a666",
-			"after": "fd6a2a8099d8e9dacf9399b9a0966aec202c527cd28a2d25f09386d30718e25d"
+			"after": "d6e2d202c2b32e724bfcc270d942b1a7278a1ffebd19a2138bb94c43f8972d57"
 		},
 		"dist/core/skills.js": {
 			"before": "0e20ec500ed9783d5b01b5399e6600134fc3fdd10e6dc46c9113bc01565c9aa5",
@@ -81,7 +81,7 @@
 		},
 		"dist/core/extensions/runner.js": {
 			"before": "0e659fb4338069d91c4d0a3b032b51bf8d179a99e6417bc3e39e59b672aaec76",
-			"after": "ba82c537c645fbc983896959eb17746c2f08b46ca027a4b9b0aef233eef1bfdb"
+			"after": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7"
 		},
 		"dist/core/extensions/runner.d.ts": {
 			"before": "24072380e2d884f2a8ecd148f374ee901e35e79f2bb6370f867bcce3523a9e1e",
@@ -133,10 +133,10 @@
 		},
 		"dist/core/extensions/types.d.ts": {
 			"before": "c5038d9410cfb13f5be391f46f13de338bc46ab4c9a7d064f7b962c0dc4a807c",
-			"after": "b9c5d2e7d264d554ec7dc7b07d86faa6c390d18590f27c43bb4cbc335b819226"
+			"after": "2e00dfc241c0f5a26627766e047238178dad4d250a8e5b86a6e0408f3609d3fb"
 		}
 	},
 	"types": "14e9fb4505bf13670b82e12a72fb589d8a2c1142ecab5e1615ab2a5dba774863",
-	"flowIngress": "de74330bd0833a6a1fe96d0aa10ab143b21bd34c2ded4dda0e756e412d0d5b2b",
-	"flowIngressTypes": "986e3620ac3c31640b7e95626741aad0fb0835193e4a3a18ec0d1f05fafff5ce"
+	"flowIngress": "429b7485746f6a266310724b8c73d4604e937956d394fffb09e48202fd045d38",
+	"flowIngressTypes": "d77e21096d185c5568b8bf27b7f72a919117b58291f3e9ad58bbbbb6e9a6fb9f"
 }

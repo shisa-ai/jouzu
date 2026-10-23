@@ -11,6 +11,7 @@ export async function fixture(
 	t,
 	{
 		root: supplied,
+		agentDir,
 		userWorkParticipants,
 		admit = async () => true,
 		policy,
@@ -28,12 +29,15 @@ export async function fixture(
 		response,
 		tools = [],
 		extensions = [],
+		additionalExtensionPaths = [],
+		wrapIngress = (handler) => handler,
 	} = {},
 ) {
 	const root = supplied ?? (await mkdtemp(join(tmpdir(), "jouzu-ingress-owner-")));
 	if (!supplied) afterCleanup(t, () => rm(root, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 }));
 	const ingress = new PiSessionFlowIngress({
 		root,
+		agentDir,
 		autoRelease,
 		attachWaitSources,
 		userWorkParticipants,
@@ -55,9 +59,10 @@ export async function fixture(
 		shutdownExtensions,
 		tools,
 		extensions,
+		additionalExtensionPaths,
 		checkpoints,
 		sessionManager: manager,
-		ingress: {
+		ingress: wrapIngress({
 			version: 1,
 			async attach(session) {
 				session.flowNextTurn = nextTurnObserver;
@@ -90,10 +95,12 @@ export async function fixture(
 			},
 			runCommand: (...args) => ingress.runCommand(...args),
 			submit: (...args) => ingress.submit(...args),
+			registerUserInputAdapter: (...args) => ingress.registerUserInputAdapter(...args),
+			authorizeExternal: (...args) => ingress.authorizeExternal(...args),
 			beforeBranchChange: () => ingress.beforeBranchChange(),
 			branchChanged: () => ingress.branchChanged(),
 			dispose: () => ingress.dispose(),
-		},
+		}),
 	});
 	// The generic fixture replaces its stream after SDK construction.
 	session.agent.streamFunction = wrapped;

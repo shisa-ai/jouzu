@@ -15,10 +15,12 @@ import {
 	replayableContinuation,
 	undispatchedRecord,
 } from "./native-admission.js";
+import { PiHostHooks } from "./pi-host-hooks.js";
 import { type PiFlowBranchResources, type PiFlowSessionOptions, PiFlowSessionService } from "./pi-session-service.js";
 import { FlowLedgerError, type FlowLedgerState } from "./receipt-ledger.js";
 import type { FlowNativeInput } from "./submission-store.js";
 import { activeAdmissionHolds, UNAVAILABLE_INPUT_REASON } from "./submission-view.js";
+import { UserInputAdapters, userInputError } from "./user-input-adapters.js";
 import { captureUserWorkParticipants, retainUserWork } from "./user-work.js";
 import type { FlowWorkStatus } from "./wait-authority.js";
 import { type FlowWaitClock, systemWaitClock } from "./wait-deadlines.js";
@@ -30,6 +32,7 @@ import { observedWaitToolReceipt } from "./wait-tool-response.js";
 type Ingress = NonNullable<CreateAgentSessionOptions["flowIngress"]>;
 type Submission = Parameters<Ingress["submit"]>[0];
 export interface PiFlowIngressOptions extends Omit<PiFlowSessionOptions, "admitNativeQueue" | "decorateNativeContext"> {
+	agentDir?: string;
 	/** Opt in to host-boundary release; failures require visible host reporting. */
 	autoRelease?: { onError(error: unknown): void; clock?: FlowWaitClock; retireHistory?: boolean };
 	/** Called when an interrupted turn newly pauses automated work, so the user can be told once. */
@@ -60,6 +63,7 @@ export class PiSessionFlowIngress implements Ingress {
 	readonly version = 1 as const;
 	private service?: PiFlowSessionService;
 	private session?: AgentSession;
+	private readonly retiredRuntimes = new WeakSet<NonNullable<AgentSession["extensionRunner"]>>();
 	private automatedPauseReason?: string;
 	/**
 	 * Counts pause requests and releases, not just the current reason: a repeated pause with the same
@@ -79,6 +83,8 @@ export class PiSessionFlowIngress implements Ingress {
 		{ branch: PiFlowBranchResources; args: unknown[]; used: boolean; completed: boolean }
 	>();
 	private readonly frames = new AsyncLocalStorage<{ active: boolean; id?: string }>();
+	/** Host admission decisions run here: a reset must not join the admission operation that invoked it. */
+	private readonly admitting = new AsyncLocalStorage<boolean>();
 	/** Created before branch adapters so producer wakes inherit no native invocation authority. */
 	private readonly scheduling = new AsyncResource("jouzu-flow-scheduling", { requireManualDestroy: true });
 	private readonly active = new Set<Promise<unknown>>();
@@ -96,7 +102,42 @@ export class PiSessionFlowIngress implements Ingress {
 	private semanticReleaseRequested = false;
 	private automaticReleaseRunning = false;
 	private releasing?: Promise<{ released: string[]; held: string[] }>;
+	private readonly external: UserInputAdapters;
+	/** Owned host hooks, restored in reverse order when this ingress closes. */
+	private readonly hooks = new PiHostHooks();
 	constructor(private readonly options: PiFlowIngressOptions) {
+		this.external = new UserInputAdapters({
+			agentDir: options.agentDir,
+			branch: () => this.branch(),
+			enabled: () => this.enabled() && !this.fenced,
+			liveQueue: () => this.liveQueue() ?? new Map(),
+			pending: (id) => this.pending.has(id),
+			onError: (error) => this.options.autoRelease?.onError(error),
+			retain: (submission, digest, epoch, dispatch) =>
+				this.track(async () => {
+					const branch = this.branch();
+					if (this.suspended || this.fenced)
+						throw userInputError("flow-suspended", "External input admission is paused.");
+					const saved = await branch.attachment.submissions.retainExternal(submission, digest, epoch).catch((error) => {
+						// The target epoch rotated between validation and this transaction, so the record the caller
+						// prepared belongs to a journal lifetime that no longer exists.
+						if (error instanceof FlowLedgerError && error.code === "stale")
+							throw userInputError("stale-target", "External input target changed before retention.");
+						throw error;
+					});
+					if (this.suspended || this.fenced || this.branch() !== branch) {
+						await branch.attachment.submissions.cancelExternal(saved.id, "flow-suspended");
+						throw userInputError("stale-target", "External input admission changed.");
+					}
+					this.resumeAutomated();
+					this.retainedUserInput.add(saved.id);
+					this.pending.set(saved.id, { branch, submission, revision: saved.revision, dispatch });
+					await this.admit(submission, branch, "submission");
+					// release owns model execution; admission returns without joining the provider.
+					if (!this.suspended && this.pending.has(saved.id))
+						void this.release(saved.id, saved.revision).catch((error) => this.options.autoRelease?.onError(error));
+				}),
+		});
 		this.options = {
 			...options,
 			userWorkParticipants: captureUserWorkParticipants(options.userWorkParticipants),
@@ -107,6 +148,23 @@ export class PiSessionFlowIngress implements Ingress {
 		if (this.disposed || this.opening || this.service)
 			return Promise.reject(new FlowLedgerError("stale", "Flow ingress is already attached or closed."));
 		this.session = session;
+		// An in-place reload replaces the extension runtime that registered external adapters, and the host
+		// fences every callback that runtime prepared. End those callbacks before Pi invalidates the runtime
+		// so the record keeps no dispatch intent and an authorized retry can reattach it.
+		const reload = session.reload.bind(session);
+		this.hooks.set(session, "reload", async (options?: Parameters<AgentSession["reload"]>[0]) => {
+			// Admission cannot drain itself. Refuse before the cleanup catch so native reload cannot
+			// invalidate the runtime while that runtime is still deciding this submission.
+			if (this.admitting.getStore())
+				throw new FlowLedgerError("busy", "Flow reload cannot run from its own admission decision.");
+			try {
+				await this.endExtensionRuntime();
+			} catch (error) {
+				// Reload still has to run: the alternative is a session whose extensions cannot be replaced.
+				this.options.autoRelease?.onError(error);
+			}
+			return reload(options);
+		});
 		this.opening = (async () => {
 			const service = await PiFlowSessionService.open(session, {
 				...this.options,
@@ -208,6 +266,68 @@ export class PiSessionFlowIngress implements Ingress {
 		})();
 		return this.opening;
 	}
+	registerUserInputAdapter: NonNullable<Ingress["registerUserInputAdapter"]> = (host, options) => {
+		const runner = this.session?.extensionRunner;
+		if (runner && this.retiredRuntimes.has(runner))
+			return Promise.reject(userInputError("stale-target", "External input runtime is retiring."));
+		return this.external.register(host, options);
+	};
+
+	/**
+	 * Revalidate live authority for one prepared external dispatch, immediately before native input.
+	 *
+	 * The grant decision is asked again rather than inherited from admission, and the expected target
+	 * epoch must still be the journal's: a destructive reset rotates it without replacing the attachment,
+	 * so an old binding would otherwise dispatch into the new journal lifetime.
+	 */
+	async authorizeExternal(submission: Submission, epoch: string): Promise<void> {
+		await this.external.authorizeSubmission(submission, epoch);
+	}
+
+	/**
+	 * The extension runtime that registered external adapters is ending, as an in-place reload replaces it.
+	 *
+	 * A prepared callback is fenced by the runtime that created it, so it cannot dispatch once the host
+	 * invalidates that runtime. Recording dispatch intent first would leave the message permanently
+	 * non-retryable although it never reached native input. Ending the callback now keeps the record with no
+	 * dispatch intent, so it stays inspectable and an authorized retry from the new runtime can reattach it.
+	 *
+	 * A registered command can await reload without owning a native input dispatch. The replacement
+	 * runtime registers the same adapter identity from its own
+	 * `session_start`, and a registration that survived would fail as already registered. The drain covers
+	 * external admission rather than the current command dispatch. An admission decision itself must
+	 * still refuse retirement, since waiting for that drain would join its own operation.
+	 */
+	endExtensionRuntime(): Promise<void> {
+		if (this.admitting.getStore())
+			return Promise.reject(new FlowLedgerError("busy", "Flow runtime cannot end from its own admission decision."));
+		if (this.disposed || this.fenced || !this.service) return Promise.resolve();
+		const branch = this.branch();
+		return this.track(async () => {
+			// Native shutdown still runs on the old runner after registry retirement. It cannot
+			// reserve a registration for the replacement runner's session_start.
+			const runner = this.session?.extensionRunner;
+			if (runner) this.retiredRuntimes.add(runner);
+			await this.external.drain();
+			this.external.endRuntime();
+			let ended = 0;
+			for (const [id, pending] of [...this.pending]) {
+				if (!pending.submission.externalUser || pending.branch !== branch) continue;
+				try {
+					await branch.attachment.submissions.endCallback(id, pending.revision);
+				} catch (error) {
+					// A record that changed under a concurrent release keeps that release's own evidence.
+					if (!(error instanceof FlowLedgerError) || error.code !== "stale") throw error;
+					continue;
+				}
+				this.pending.delete(id);
+				this.retainedUserInput.delete(id);
+				ended++;
+			}
+			if (ended) await this.refreshUserInput();
+		});
+	}
+
 	/** Register with this branch's controller; notifications return through the ingress owner. */
 	registerProducer(producer: FlowProducer) {
 		const branch = this.branch();
@@ -228,10 +348,20 @@ export class PiSessionFlowIngress implements Ingress {
 	 * nothing is torn down, so `resume` needs no re-attach and no producer re-handshake.
 	 */
 	async suspend(): Promise<{ flushed: number; waits: number }> {
+		if (this.admitting.getStore())
+			throw new FlowLedgerError("busy", "Flow suspension cannot run from its own admission decision.");
 		if (this.disposed) throw new FlowLedgerError("stale", "Flow ingress is closed.");
 		if (this.suspended) return { flushed: 0, waits: 0 };
 		this.suspended = true;
 		this.stopReleaseNotifications();
+		await this.external.drain();
+		for (const [id, pending] of this.pending) {
+			if (!pending.submission.externalUser) continue;
+			if (await pending.branch.attachment.submissions.cancelExternal(id, "flow-suspended")) {
+				this.pending.delete(id);
+				this.retainedUserInput.delete(id);
+			}
+		}
 		const flushed = await this.flushRetained();
 		const waits = await this.cancelParkedWaits();
 		// Off is a reset of the session spigot, so a pause that was holding it is spent rather than kept.
@@ -277,6 +407,7 @@ export class PiSessionFlowIngress implements Ingress {
 	private async flushRetained(): Promise<number> {
 		let flushed = 0;
 		for (const [id, pending] of [...this.pending.entries()]) {
+			if (pending.submission.externalUser) continue;
 			if (pending.running) {
 				try {
 					await pending.running;
@@ -606,18 +737,33 @@ export class PiSessionFlowIngress implements Ingress {
 	/** Read persisted admission reasons; inspection cannot reconstruct an executable send. */
 	async heldInputs(): Promise<{ id: string; reason: string }[]> {
 		const records = await this.branch().attachment.submissions.snapshot(false);
+		const liveQueue = this.liveQueue();
 		return records.flatMap((record) =>
 			record.unavailable && record.status !== "cancelled"
 				? [{ id: record.id, reason: UNAVAILABLE_INPUT_REASON }]
-				: activeAdmissionHolds(record).map((hold) => ({ id: record.id, reason: hold.reason })),
+				: activeAdmissionHolds(record, liveQueue).map((hold) => ({ id: record.id, reason: hold.reason })),
 		);
+	}
+
+	/**
+	 * Queue identities and revisions the host still holds. A queue-phase admission hold clears only when
+	 * that exact entry is claimed or removed, so a hold for an entry the host no longer holds can never
+	 * clear and must not keep reporting input the host has already discarded.
+	 */
+	private liveQueue(): ReadonlyMap<string, number> | undefined {
+		try {
+			const queued = this.session?.agent?.inspectQueuedMessages?.();
+			return Array.isArray(queued) ? new Map(queued.map((item) => [item.id, item.revision])) : undefined;
+		} catch {
+			return undefined;
+		}
 	}
 
 	/** Versioned read-only management snapshot; neither inspection nor receipt presence authorizes replay. */
 	inspect() {
 		return this.track(async () => {
 			const branch = this.branch();
-			const submissions = await branch.attachment.submissionViews();
+			const submissions = await branch.attachment.submissionViews(this.liveQueue());
 			if (this.branch() !== branch) throw new FlowLedgerError("stale", "Flow inspection branch changed.");
 			const state = await branch.attachment.ledger.snapshot();
 			if (this.branch() !== branch) throw new FlowLedgerError("stale", "Flow inspection branch changed.");
@@ -687,18 +833,34 @@ export class PiSessionFlowIngress implements Ingress {
 		});
 	}
 	resetFlow() {
+		// Reset drains external admission. A host admission decision that awaits reset would join its own
+		// drain: reset waits for the submit's admission promise while that submit waits for the reset.
+		if (this.admitting.getStore())
+			return Promise.reject(new FlowLedgerError("busy", "Flow reset cannot run from its own admission decision."));
 		return this.manage(async (service) => {
 			const branch = service.branch();
-			const result = await service.resetFlow(() => {
-				for (const [id, pending] of this.pending) {
-					if (pending.branch !== branch) continue;
-					this.pending.delete(id);
-					this.retainedUserInput.delete(id);
-				}
-				for (const [id, context] of this.waitContexts)
-					if (context.branch === branch) this.waitContexts.delete(id);
-				this.replayIds?.clear();
-			});
+			// Destructive reset rotates the target epoch. Close external admission first and drain what
+			// already validated the previous target, so no old-target submission retains into the new
+			// journal. Prepared callbacks are additionally fenced by their captured epoch at dispatch.
+			await this.external.beginReset();
+			let result: Awaited<ReturnType<typeof service.resetFlow>>;
+			try {
+				result = await service.resetFlow(() => {
+					for (const [id, pending] of this.pending) {
+						if (pending.branch !== branch) continue;
+						this.pending.delete(id);
+						this.retainedUserInput.delete(id);
+					}
+					for (const [id, context] of this.waitContexts)
+						if (context.branch === branch) this.waitContexts.delete(id);
+					this.replayIds?.clear();
+					// The reset rotated the target epoch, so every published binding now names a target that
+					// cannot accept input. Withdraw them; each adapter binds the new target for a fresh message.
+					this.external.invalidateTargets();
+				});
+			} finally {
+				this.external.endReset();
+			}
 			this.resumeAutomated();
 			return result;
 		});
@@ -737,6 +899,21 @@ export class PiSessionFlowIngress implements Ingress {
 			? branch.requests.queueingBlocked
 			: branch.attachment.nativeRequests.recoveryBlocked;
 	}
+	private async holdExternalAuthorization(
+		branch: PiFlowBranchResources,
+		id: string,
+		phase: "submission" | "queue",
+		input?: FlowNativeInput,
+	): Promise<void> {
+		const [record] = await branch.attachment.submissions.forIds([id]);
+		if (!record) return;
+		await branch.attachment.submissions.recordAdmission(
+			id,
+			record.revision,
+			{ phase, ...(input?.queue ? { queue: input.queue } : {}) },
+			"External input authorization is unavailable; review the configuration before retrying.",
+		);
+	}
 	private async admit(
 		submission: Submission,
 		branch: PiFlowBranchResources,
@@ -744,6 +921,33 @@ export class PiSessionFlowIngress implements Ingress {
 		input?: FlowNativeInput,
 	): Promise<boolean> {
 		if (!this.session) throw new FlowLedgerError("stale", "Flow ingress has no host session.");
+		if (submission.externalUser) {
+			if (phase === "submission" && this.suspended) return false;
+			try {
+				await this.external.authorizeSubmission(submission);
+			} catch (error) {
+				// Only a revocation withdraws authority for this input. Every other refusal — an unusable
+				// grants file (`invalid-config`), an unreadable directory, a changed target — is a repairable
+				// condition: hold it and admit it once the operator fixes it. Cancelling here would discard
+				// the person's message permanently for a fault that ends when the file is repaired.
+				if ((error as { code?: unknown }).code !== "unauthorized") {
+					await this.holdExternalAuthorization(branch, submission.id, phase, input);
+					return false;
+				}
+				if (
+					phase === "submission" &&
+					(await branch.attachment.submissions.cancelExternal(submission.id, "unauthorized"))
+				) {
+					this.pending.delete(submission.id);
+					this.retainedUserInput.delete(submission.id);
+				}
+				// A revoked entry left at the head of the native queue is re-offered on every drain and
+				// blocks every later entry, including the user's own input. Remove that exact identity and
+				// keep its cancellation evidence; no admission decision grants it authority.
+				if (phase === "queue" && input?.queue) await this.cancelRevokedQueue(branch, input.queue);
+				return false;
+			}
+		}
 		const session = this.session;
 		const records = await branch.attachment.submissions.snapshot(false);
 		const state = await branch.attachment.ledger.snapshot();
@@ -773,13 +977,16 @@ export class PiSessionFlowIngress implements Ingress {
 			input,
 			this.liveQueueIds(),
 		);
-		if (this.options.admit && !recoveryBlocked && !outcomeUnresolved) {
+		const admitHost = this.options.admit;
+		if (admitHost && !recoveryBlocked && !outcomeUnresolved) {
 			try {
-				decision = (await this.options.admit(
-					structuredClone(submission),
-					branch,
-					phase,
-					input ? structuredClone(input) : undefined,
+				decision = (await this.admitting.run(true, () =>
+					admitHost(
+						structuredClone(submission),
+						branch,
+						phase,
+						input ? structuredClone(input) : undefined,
+					),
 				))
 					? { allowed: true }
 					: { allowed: false, reason: "Input is held by host admission policy." };
@@ -843,6 +1050,21 @@ export class PiSessionFlowIngress implements Ingress {
 			durableWaitDecision().allowed &&
 			!this.nativeRecoveryBlocked(submission, branch, phase)
 		);
+	}
+
+	/**
+	 * Remove one revoked queued input at its exact live revision.
+	 *
+	 * The owned cancellation path keeps the intent durable before the native removal and the removal
+	 * receipt after it, so the record reports a confirmed cancellation instead of being re-offered on every
+	 * drain. A failure is reported, not retried as authority: the entry stays queued, and nothing admits it.
+	 */
+	private async cancelRevokedQueue(branch: PiFlowBranchResources, queue: { id: string; revision: number }) {
+		try {
+			await branch.native.cancelQueue(queue.id, queue.revision);
+		} catch (error) {
+			this.options.autoRelease?.onError(error);
+		}
 	}
 
 	/**
@@ -945,6 +1167,10 @@ export class PiSessionFlowIngress implements Ingress {
 		}
 	}
 	submit(submission: Submission, dispatch: () => Promise<void>): Promise<void> {
+		// External input has its own authenticated path. Refused before the suspended pass-through, so a
+		// session with flow control off cannot dispatch host-adapter text as an ordinary send.
+		if (submission.externalUser)
+			return Promise.reject(userInputError("unauthorized", "External input requires the registered adapter path."));
 		// Flow control is off: the host's own dispatch runs, unread and unrecorded.
 		if (this.suspended) return dispatch();
 		const captured = structuredClone(submission);
@@ -1132,24 +1358,68 @@ export class PiSessionFlowIngress implements Ingress {
 			}
 			if (this.branch() !== branch || this.pending.get(id) !== pending)
 				throw new FlowLedgerError("stale", "User dispatch changed during context preparation.");
-			const work = user
-				? await retainUserWork(branch.attachment, id, revision, this.options.userWorkParticipants)
-				: undefined;
+			const work =
+				user && !pending.submission.externalUser
+					? await retainUserWork(branch.attachment, id, revision, this.options.userWorkParticipants)
+					: undefined;
 			if (this.branch() !== branch || this.pending.get(id) !== pending)
 				throw new FlowLedgerError("stale", "User dispatch changed during work registration.");
-			const startsWork =
-				work && pending.submission.api === "prompt" && this.session?.isIdle && !this.session.isStreaming;
+			const ownsWork = (): boolean =>
+				user && pending.submission.api === "prompt" && this.session?.isIdle === true && !this.session.isStreaming;
+			let startsWork = ownsWork();
 			// A prior prompt can own work while its asynchronous authority check precedes Pi's streaming flag.
+			if (startsWork && branch.workContext.busy) return false;
+			if (pending.submission.externalUser) {
+				try {
+					await this.external.authorizeSubmission(pending.submission);
+				} catch (error) {
+					// A revocation ends the callback. A repairable authorization fault holds it instead: the
+					// pending callback stays live, and a later release retries after the grants file is repaired.
+					if ((error as { code?: unknown }).code !== "unauthorized") {
+						await this.holdExternalAuthorization(branch, id, "submission");
+						return false;
+					}
+					await branch.attachment.submissions.cancelExternal(id, "unauthorized");
+					this.pending.delete(id);
+					this.retainedUserInput.delete(id);
+					return false;
+				}
+				if (this.suspended || this.pending.get(id) !== pending || this.branch() !== branch) return false;
+			}
+			// Authorization reads the grants file asynchronously, so work ownership is read again from the
+			// live host: a release or typed prompt that started a turn while it waited now owns the host.
+			// Deciding from the value read before that wait would start a second invocation, which the work
+			// context refuses, and the refusal would end a callback that never dispatched.
+			startsWork = ownsWork();
 			if (startsWork && branch.workContext.busy) return false;
 			if (user) this.activeUserInput++;
 			this.pending.delete(id);
 			try {
 				const dispatch = () => branch.native.dispatch(id, revision, pending.submission.id, pending.dispatch);
-				if (startsWork) await branch.workContext.run(work, dispatch);
+				if (startsWork)
+					await branch.workContext.run(work, async () => {
+						// External input held by authority or another invocation has not started work.
+						// Reserve the invocation before this asynchronous claim so an abandoned release
+						// cannot leave an active claim for a cancelled or later reattached revision.
+						if (pending.submission.externalUser) {
+							const selected = await retainUserWork(
+								branch.attachment,
+								id,
+								revision,
+								this.options.userWorkParticipants,
+							);
+							await branch.workContext.selectToolWork(selected);
+						}
+						return dispatch();
+					});
+				// Queued external input acquires attribution when its exact queue receipt is consumed.
 				else await dispatch();
 				await this.refreshUserInput();
 				return true;
 			} catch (error) {
+				// A callback ended by a concurrent runtime retirement refuses dispatch intent before native
+				// input, so this release delivers nothing and the record keeps its ended-callback evidence.
+				if (error instanceof FlowLedgerError && error.code === "transition") return false;
 				// Deferred release can outlive submit(), but the dispatch callback is still one-use.
 				await branch.attachment.submissions.endCallback(id, revision);
 				await this.refreshUserInput();
@@ -1219,6 +1489,8 @@ export class PiSessionFlowIngress implements Ingress {
 		const service = this.service;
 		this.branch();
 		this.fenced = true;
+		this.external.clearSubscriptions();
+		await this.external.drain();
 		this.stopReleaseNotifications();
 		await Promise.allSettled([...this.active]);
 		this.pending.clear();
@@ -1241,12 +1513,15 @@ export class PiSessionFlowIngress implements Ingress {
 				new FlowLedgerError("busy", "Flow ingress cannot close from its own admission or dispatch."),
 			);
 		this.disposed = true;
+		this.external.close();
 		this.fenced = true;
 		this.stopReleaseNotifications();
 		this.closing ??= (async () => {
+			await this.external.drain();
 			await this.opening?.catch(() => {});
 			await Promise.allSettled([...this.active]);
 			this.pending.clear();
+			this.hooks.close();
 			try {
 				await this.service?.close();
 			} finally {

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Add `pi.registerUserInputAdapter`, which lets an authorized extension deliver authenticated human input with user-input ordering, durable receipts, and a target-scoped binding. See [External user-input adapters](docs/user-input-adapters.md).
+
 ### Fixed
 
 - Close an RPC session whose input ends: unanswered dialogs resolve their defaults, each accepted command receives one response, a command still unfinished after five seconds reports one failure, and cleanup gets a further five seconds before one shutdown failure and status 1. A final command without a trailing newline still runs, a shutdown requested after input ends waits for that drain, a JSON line that is not a command object reports one parse failure, and shutdown failures from extension requests or signals report once instead of exiting early or leaving output unflushed. See [RPC mode](docs/diagnostics.md#rpc-mode).

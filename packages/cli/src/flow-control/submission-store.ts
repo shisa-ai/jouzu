@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import type { CreateAgentSessionOptions } from "@earendil-works/pi-coding-agent";
 import { replayableContinuation, undispatchedRecord } from "./native-admission.js";
 import type { FlowOwnership } from "./ownership.js";
@@ -21,6 +21,8 @@ export interface FlowAdmissionHold {
 	queue?: { id: string; revision: number };
 }
 interface RecordData {
+	externalDigest?: string;
+	cancellationReason?: "flow-suspended" | "unauthorized";
 	unavailable?: "callback-ended";
 	id: string;
 	revision: number;
@@ -82,6 +84,8 @@ interface State {
 	records: RecordData[];
 	archived?: ArchivedSubmission[];
 	orderIds?: string[];
+	externalEpoch?: string;
+	externalBudget?: { count: number; bytes: number };
 	history?: { generation: number; next: number; active: { id: string; position: number }[] };
 }
 interface IndexedSubmission extends ArchivedSubmission {
@@ -95,6 +99,8 @@ interface SubmissionHistory {
 	positions: Map<string, number>;
 }
 export interface RetainedSubmission {
+	externalDigest?: string;
+	cancellationReason?: "flow-suspended" | "unauthorized";
 	unavailable?: "callback-ended";
 	id: string;
 	revision: number;
@@ -103,6 +109,50 @@ export interface RetainedSubmission {
 	holds?: FlowAdmissionHold[];
 	submission: Submission;
 	dispatch?: FlowSubmissionDispatch;
+}
+/** Indexed evidence for one record, as recorded by the journal version that last wrote it. */
+export interface FlowSubmissionMarker {
+	revision: number;
+	contentHash: string;
+}
+/**
+ * Records one subscriber has already projected.
+ *
+ * It is opaque except for passing it back: the store compares its markers against the journal's own index,
+ * so a cursor from another store instance, or from before a reset, is answered with a full snapshot rather
+ * than a partial one.
+ */
+export interface FlowSubmissionCursor {
+	/** Identity of the store instance that produced the cursor. */
+	store: string;
+	generation: number;
+	revision: number;
+	records: ReadonlyMap<string, FlowSubmissionMarker>;
+	/** A projection failed; compare markers even if no newer write has committed. */
+	retry?: true;
+}
+export interface FlowSubmissionUpdate {
+	/** Committed position of this read; receipts order by it. */
+	journal: { generation: number; revision: number };
+	/** Records whose indexed evidence changed since the cursor, in journal order. */
+	records: RetainedSubmission[];
+	/** Marker set at `journal`, to pass back as the next cursor. */
+	cursor: FlowSubmissionCursor;
+}
+/** Archived content a transaction loads before its update callback runs. */
+type ArchivedSelection = boolean | ArchiveQuery | ChangedArchive;
+interface ArchiveQuery {
+	kind: "id" | "operation";
+	ids: ReadonlySet<string>;
+}
+/** Change detection state the transaction fills while it compares indexed markers. */
+interface ChangedArchive {
+	kind: "changed";
+	cursor?: FlowSubmissionCursor;
+	/** Filled with the marker of every record at this journal version. */
+	markers: Map<string, FlowSubmissionMarker>;
+	/** Filled with the ids whose indexed marker differs from the cursor. */
+	ids: Set<string>;
 }
 /** One observed input is settled when its consumption is claimed or its cancellation is receipt-confirmed. */
 function settledInput(dispatch: FlowSubmissionDispatch, input: FlowNativeInput, inputIndex: number): boolean {
@@ -175,6 +225,57 @@ function historyPosition(positions: ReadonlyMap<string, number>, id: string): nu
 	return position;
 }
 const identity = (id: unknown) => typeof id === "string" && id.length > 0 && id.length <= 512;
+const sameMarker = (left: FlowSubmissionMarker | undefined, right: FlowSubmissionMarker) =>
+	left !== undefined && left.revision === right.revision && left.contentHash === right.contentHash;
+/** A cursor is only compared against, never trusted, so reject shapes that could skip a record. */
+function validCursor(cursor: FlowSubmissionCursor): boolean {
+	return (
+		!!cursor &&
+		typeof cursor === "object" &&
+		typeof cursor.store === "string" &&
+		Number.isSafeInteger(cursor.generation) &&
+		cursor.generation >= 0 &&
+		Number.isSafeInteger(cursor.revision) &&
+		cursor.revision >= 0 &&
+		(cursor.retry === undefined || cursor.retry === true) &&
+		cursor.records instanceof Map &&
+		[...cursor.records].every(
+			([id, marker]) =>
+				identity(id) &&
+				!!marker &&
+				typeof marker === "object" &&
+				Number.isSafeInteger(marker.revision) &&
+				marker.revision >= 1 &&
+				typeof marker.contentHash === "string" &&
+				/^[a-f0-9]{64}$/.test(marker.contentHash),
+		)
+	);
+}
+/** Receipt-facing view of one record: the stored payload and its digest stay inside the store. */
+function retainedSubmission(record: RecordData): RetainedSubmission {
+	const { payload, digest: _digest, dispatch, ...rest } = record;
+	return {
+		...rest,
+		...(dispatch ? { dispatch: retainedDispatch(dispatch) } : {}),
+		submission: decode(payload) as Submission,
+	};
+}
+/** Dispatch evidence without the encoded observation payloads. */
+function retainedDispatch(dispatch: NonNullable<RecordData["dispatch"]>): FlowSubmissionDispatch {
+	return {
+		operationId: dispatch.operationId,
+		ownerId: dispatch.ownerId,
+		phase: dispatch.phase,
+		...(dispatch.noInput ? { noInput: dispatch.noInput } : {}),
+		...(dispatch.queueClaims ? { queueClaims: dispatch.queueClaims } : {}),
+		...(dispatch.queueCancellations ? { queueCancellations: dispatch.queueCancellations } : {}),
+		...(dispatch.contextCancellations ? { contextCancellations: dispatch.contextCancellations } : {}),
+		...(dispatch.queueHistory ? { queueHistory: dispatch.queueHistory } : {}),
+		...(dispatch.promptHistory ? { promptHistory: dispatch.promptHistory } : {}),
+		...(dispatch.promptClaims ? { promptClaims: dispatch.promptClaims } : {}),
+		...(dispatch.inputs ? { inputs: dispatch.inputs.map((input) => decode(input.payload) as FlowNativeInput) } : {}),
+	};
+}
 function validateHold(hold: FlowAdmissionHold): void {
 	if (
 		!hold ||
@@ -283,6 +384,15 @@ function validateSubmission(input: Submission, scope: FlowScope): void {
 	)
 		throw new FlowLedgerError("schema", "Invalid submission identity or session scope.");
 	if (
+		input.externalUser &&
+		(input.externalUser.version !== 1 ||
+			!identity(input.externalUser.adapterId) ||
+			!identity(input.externalUser.messageId) ||
+			input.origin.kind !== "extension" ||
+			input.api !== "prompt")
+	)
+		throw new FlowLedgerError("schema", "Invalid external user-input provenance.");
+	if (
 		input.userCommand &&
 		(!identity(input.userCommand.id) || !identity(input.userCommand.name) || !identity(input.userCommand.submissionId))
 	)
@@ -292,6 +402,27 @@ function validateSubmission(input: Submission, scope: FlowScope): void {
 /** Durable opaque ingress only. Admission and executable queue ownership remain with the controller and Pi. */
 export class FlowSubmissionStore {
 	private initialized = false;
+	/** Identifies cursors this instance produced; a replaced or reopened store answers in full. */
+	private readonly instance = randomUUID();
+	private readonly listeners = new Set<(version: { generation: number; revision: number }) => void>();
+	subscribe(listener: (version: { generation: number; revision: number }) => void): () => void {
+		this.listeners.add(listener);
+		return () => this.listeners.delete(listener);
+	}
+	/** Stable for this journal lifetime; replacement or reset cannot reuse target authority. */
+	externalTargetEpoch(): Promise<string> {
+		return this.transact((state) => {
+			const changed = state.externalEpoch === undefined;
+			state.externalEpoch ??= randomUUID();
+			return { changed, result: state.externalEpoch };
+		});
+	}
+	journalVersion(): Promise<{ generation: number; revision: number }> {
+		return this.transact((state) => ({
+			changed: false,
+			result: { generation: state.history?.generation ?? 0, revision: state.revision },
+		}));
+	}
 	get scope(): Readonly<FlowScope> {
 		return this.ownership.scope;
 	}
@@ -324,11 +455,44 @@ export class FlowSubmissionStore {
 			!Array.isArray(state.records)
 		)
 			throw new FlowLedgerError("schema", "Invalid retained submission state.");
+		const receiptBytes = state.records.reduce(
+			(bytes, record) =>
+				record.externalDigest
+					? bytes +
+						Buffer.byteLength(JSON.stringify(record.dispatch ?? {})) +
+						Buffer.byteLength(JSON.stringify(record.holds ?? []))
+					: bytes,
+			0,
+		);
 		if (
 			state.records.length > this.limits.maxRecords ||
-			Buffer.byteLength(JSON.stringify({ ...state, archived: undefined, orderIds: undefined })) > this.limits.maxBytes
+			Buffer.byteLength(JSON.stringify({ ...state, archived: undefined, orderIds: undefined })) - receiptBytes >
+				this.limits.maxBytes ||
+			receiptBytes > 64 * 1024 * 1024
 		)
 			throw new FlowLedgerError("capacity", "Submission retention limit reached; admission is held.");
+		if (state.externalEpoch !== undefined && !/^[0-9a-f-]{36}$/.test(state.externalEpoch))
+			throw new FlowLedgerError("schema", "Invalid external input target epoch.");
+		const budget = state.externalBudget;
+		if (
+			budget &&
+			(!Number.isSafeInteger(budget.count) ||
+				budget.count < 0 ||
+				budget.count > 16384 ||
+				!Number.isSafeInteger(budget.bytes) ||
+				budget.bytes < 0 ||
+				budget.bytes > 64 * 1024 * 1024)
+		)
+			throw new FlowLedgerError("capacity", "Invalid external input lifetime budget.");
+		for (const record of state.records) {
+			if (record.externalDigest !== undefined && !/^[a-f0-9]{64}$/.test(record.externalDigest))
+				throw new FlowLedgerError("schema", "Invalid external input digest.");
+			if (
+				record.cancellationReason !== undefined &&
+				!["flow-suspended", "unauthorized"].includes(record.cancellationReason)
+			)
+				throw new FlowLedgerError("schema", "Invalid external input cancellation reason.");
+		}
 		const history = state.history;
 		if (history !== undefined && (!history || typeof history !== "object"))
 			throw new FlowLedgerError("schema", "Invalid submission history manifest.");
@@ -426,6 +590,8 @@ export class FlowSubmissionStore {
 				}
 			}
 			const submission = decode(record.payload) as Submission;
+			if (Boolean(record.externalDigest) !== Boolean(submission.externalUser))
+				throw new FlowLedgerError("schema", "External input metadata is incomplete.");
 			const claims = record.dispatch?.queueClaims;
 			if (claims !== undefined) {
 				if (!Array.isArray(claims) || claims.length > 64)
@@ -598,7 +764,7 @@ export class FlowSubmissionStore {
 			archived: RecordData[],
 			history: SubmissionHistory,
 		) => { result: T; changed: boolean } | Promise<{ result: T; changed: boolean }>,
-		includeArchived: boolean | { kind: "id" | "operation"; ids: ReadonlySet<string> } = false,
+		includeArchived: ArchivedSelection = false,
 		assertCurrent?: () => void,
 	): Promise<T> {
 		return this.ownership.run(() =>
@@ -630,6 +796,8 @@ export class FlowSubmissionStore {
 								records,
 								...(header.archived !== undefined ? { archived: header.archived } : {}),
 								...(header.orderIds !== undefined ? { orderIds: header.orderIds } : {}),
+								...(header.externalEpoch !== undefined ? { externalEpoch: header.externalEpoch } : {}),
+								...(header.externalBudget !== undefined ? { externalBudget: header.externalBudget } : {}),
 								...(header.history !== undefined ? { history: header.history } : {}),
 							}
 						: { version: 1, scope: this.ownership.scope, revision: 0, records: [] },
@@ -733,6 +901,33 @@ export class FlowSubmissionStore {
 						if (!entry) throw new FlowLedgerError("identity", "Submission history entry is missing.");
 						archived.push(await load(entry));
 					}
+				} else if (includeArchived && includeArchived.kind === "changed") {
+					// Index metadata decides what is loaded. Archived content is read only for an entry the caller
+					// has not already seen at this revision and content hash, so an unrelated write cannot decode
+					// the archived journal again.
+					const { cursor, markers, ids } = includeArchived;
+					const current =
+						cursor !== undefined && cursor.store === this.instance && cursor.generation === generation
+							? cursor
+							: undefined;
+					if (current?.revision !== state.revision || current?.retry) {
+						for (const record of state.records) {
+							const marker = { revision: record.revision, contentHash: recordHash(record) };
+							markers.set(record.id, marker);
+							if (!current || !sameMarker(current.records.get(record.id), marker)) ids.add(record.id);
+						}
+						const activePositions = new Set(positions.values());
+						for (let position = 0; position < state.history.next; position++) {
+							if (activePositions.has(position)) continue;
+							const entry = await lookup("position", position);
+							if (!entry) throw new FlowLedgerError("identity", "Submission history entry is missing.");
+							const marker = { revision: entry.revision, contentHash: entry.contentHash };
+							markers.set(entry.id, marker);
+							if (current && sameMarker(current.records.get(entry.id), marker)) continue;
+							ids.add(entry.id);
+							archived.push(await load(entry));
+						}
+					}
 				} else if (includeArchived) {
 					for (const id of includeArchived.ids) {
 						const entry = await lookup(includeArchived.kind, id);
@@ -757,6 +952,16 @@ export class FlowSubmissionStore {
 							writes.push(setValue(recordAddress(record.id), record));
 					assertCurrent?.();
 					await mutation.commit(writes, context);
+					const version = { generation: metadata.generation, revision: state.revision };
+					queueMicrotask(() => {
+						for (const listener of this.listeners) {
+							try {
+								listener({ ...version });
+							} catch {
+								/* Observers cannot fail a committed write. */
+							}
+						}
+					});
 				}
 				return result;
 			}, BACKGROUND_CONTEXT),
@@ -788,6 +993,67 @@ export class FlowSubmissionStore {
 				changed: !previous,
 				result: { id: record.id, revision: record.revision, status: record.status, duplicate: !!previous },
 			};
+		});
+	}
+	/** Retain or reattach only an external record that has never acquired dispatch intent. */
+	retainExternal(
+		submission: Submission,
+		normalizedDigest: string,
+		expectedEpoch: string,
+	): Promise<{ id: string; revision: number; reattached: boolean }> {
+		validateSubmission(submission, this.scope);
+		if (!submission.externalUser || !/^[a-f0-9]{64}$/.test(normalizedDigest))
+			return Promise.reject(new FlowLedgerError("schema", "External input requires verified identity."));
+		if (!/^[0-9a-f-]{36}$/.test(expectedEpoch))
+			return Promise.reject(new FlowLedgerError("schema", "External input requires a target epoch."));
+		const payload = encode(submission);
+		return this.transact<{ id: string; revision: number; reattached: boolean }>(async (state, _archived, history) => {
+			// Destructive reset rotates the epoch outside this transaction. The caller validated its target
+			// against the epoch it read, so retaining under any other epoch would put input authorized for
+			// the previous target into the new journal lifetime.
+			if (state.externalEpoch !== expectedEpoch)
+				throw new FlowLedgerError("stale", "External input target changed before retention.");
+			if (await history.byId(submission.id))
+				throw new FlowLedgerError("stale", "Archived external input is lookup-only.");
+			const previous = state.records.find((record) => record.id === submission.id);
+			if (previous) {
+				if (previous.externalDigest !== normalizedDigest)
+					throw new FlowLedgerError("identity", "External input ID has different content.");
+				if (previous.status !== "retained" || previous.dispatch || previous.unavailable !== "callback-ended")
+					throw new FlowLedgerError("stale", "External input cannot be reattached.");
+				previous.payload = payload;
+				previous.digest = digest(payload);
+				previous.revision++;
+				delete previous.unavailable;
+				delete previous.holds;
+				return { changed: true, result: { id: previous.id, revision: previous.revision, reattached: true } };
+			}
+			const budget = state.externalBudget ?? { count: 0, bytes: 0 };
+			const bytes = Buffer.byteLength(JSON.stringify(payload));
+			if (budget.count >= 16384 || budget.bytes + bytes > 64 * 1024 * 1024)
+				throw new FlowLedgerError("capacity", "External input lifetime capacity reached.");
+			state.externalBudget = { count: budget.count + 1, bytes: budget.bytes + bytes };
+			state.records.push({
+				id: submission.id,
+				revision: 1,
+				status: "retained",
+				acceptedAt: Date.now(),
+				payload,
+				digest: digest(payload),
+				externalDigest: normalizedDigest,
+			});
+			return { changed: true, result: { id: submission.id, revision: 1, reattached: false } };
+		});
+	}
+	cancelExternal(id: string, reason: "flow-suspended" | "unauthorized"): Promise<boolean> {
+		return this.transact((state) => {
+			const record = state.records.find((item) => item.id === id);
+			if (!record?.externalDigest || record.dispatch || record.status !== "retained")
+				return { changed: false, result: false };
+			record.status = "cancelled";
+			record.cancellationReason = reason;
+			record.revision++;
+			return { changed: true, result: true };
 		});
 	}
 	/** Replace one bounded diagnostic. Clearing it never grants dispatch or replay permission. */
@@ -838,44 +1104,81 @@ export class FlowSubmissionStore {
 		return this.readRecords({ kind: "id", ids: new Set(ids) });
 	}
 
-	private readRecords(
+	private async readRecords(
 		includeArchived: boolean | { kind: "id" | "operation"; ids: ReadonlySet<string> },
 	): Promise<RetainedSubmission[]> {
+		return (await this.readRecordsVersioned(includeArchived)).records;
+	}
+
+	/** Snapshot data and ordering come from the same journal transaction. */
+	snapshotVersioned(ids?: readonly string[]) {
+		if (ids && (ids.length > 16384 || ids.some((id) => !identity(id))))
+			throw new FlowLedgerError("identity", "Invalid receipt snapshot query.");
+		return this.readRecordsVersioned(ids ? { kind: "id", ids: new Set(ids) } : true);
+	}
+	/**
+	 * Changed records since `cursor`, with the marker set that supersedes it.
+	 *
+	 * The first call for a journal generation, or a cursor from another store instance, reports every
+	 * retained and archived record. Afterwards the transaction compares indexed markers before it decodes
+	 * anything: an active record is compared from the content it already reads, and an archived record is
+	 * loaded only when its history index entry (revision and content hash) differs from the cursor. Records
+	 * keep journal order, and the cursor and records describe one committed version.
+	 */
+	snapshotChanged(cursor?: FlowSubmissionCursor): Promise<FlowSubmissionUpdate> {
+		if (cursor !== undefined && !validCursor(cursor))
+			throw new FlowLedgerError("identity", "Invalid receipt subscription cursor.");
+		const markers = new Map<string, FlowSubmissionMarker>();
+		const ids = new Set<string>();
+		return this.transact<FlowSubmissionUpdate>(
+			(state, archived, history) => {
+				const generation = state.history?.generation ?? 0;
+				const journal = { generation, revision: state.revision };
+				// Nothing committed since this cursor, so no record can have changed.
+				if (
+					markers.size === 0 &&
+					ids.size === 0 &&
+					cursor !== undefined &&
+					cursor.store === this.instance &&
+					cursor.generation === generation &&
+					cursor.revision === state.revision &&
+					!cursor.retry
+				)
+					return { changed: false, result: { journal, records: [], cursor } };
+				return {
+					changed: false,
+					result: {
+						journal,
+						records: [...state.records, ...archived]
+							.filter((record) => ids.has(record.id))
+							.sort((a, b) => historyPosition(history.positions, a.id) - historyPosition(history.positions, b.id))
+							.map(retainedSubmission),
+						cursor: { store: this.instance, generation, revision: state.revision, records: markers },
+					},
+				};
+			},
+			{ kind: "changed", cursor, markers, ids },
+		);
+	}
+	private readRecordsVersioned(
+		includeArchived: boolean | { kind: "id" | "operation"; ids: ReadonlySet<string> },
+	): Promise<{ records: RetainedSubmission[]; journal: { generation: number; revision: number } }> {
 		return this.transact(
 			(state, archived, history) => ({
 				changed: false,
-				result: [...state.records, ...archived]
-					.filter(
-						(record) =>
-							typeof includeArchived === "boolean" ||
-							(includeArchived.kind === "id"
-								? includeArchived.ids.has(record.id)
-								: !!record.dispatch && includeArchived.ids.has(record.dispatch.operationId)),
-					)
-					.sort((a, b) => historyPosition(history.positions, a.id) - historyPosition(history.positions, b.id))
-					.map(({ payload, digest: _digest, dispatch, ...record }) => ({
-						...record,
-						...(dispatch
-							? {
-									dispatch: {
-										operationId: dispatch.operationId,
-										ownerId: dispatch.ownerId,
-										phase: dispatch.phase,
-										...(dispatch.noInput ? { noInput: dispatch.noInput } : {}),
-										...(dispatch.queueClaims ? { queueClaims: dispatch.queueClaims } : {}),
-										...(dispatch.queueCancellations ? { queueCancellations: dispatch.queueCancellations } : {}),
-										...(dispatch.contextCancellations ? { contextCancellations: dispatch.contextCancellations } : {}),
-										...(dispatch.queueHistory ? { queueHistory: dispatch.queueHistory } : {}),
-										...(dispatch.promptHistory ? { promptHistory: dispatch.promptHistory } : {}),
-										...(dispatch.promptClaims ? { promptClaims: dispatch.promptClaims } : {}),
-										...(dispatch.inputs
-											? { inputs: dispatch.inputs.map((input) => decode(input.payload) as FlowNativeInput) }
-											: {}),
-									},
-								}
-							: {}),
-						submission: decode(payload) as Submission,
-					})),
+				result: {
+					journal: { generation: state.history?.generation ?? 0, revision: state.revision },
+					records: [...state.records, ...archived]
+						.filter(
+							(record) =>
+								typeof includeArchived === "boolean" ||
+								(includeArchived.kind === "id"
+									? includeArchived.ids.has(record.id)
+									: !!record.dispatch && includeArchived.ids.has(record.dispatch.operationId)),
+						)
+						.sort((a, b) => historyPosition(history.positions, a.id) - historyPosition(history.positions, b.id))
+						.map(retainedSubmission),
+				},
 			}),
 			includeArchived,
 		);
@@ -883,9 +1186,19 @@ export class FlowSubmissionStore {
 	reset(): Promise<void> {
 		return this.transact((state) => {
 			state.records = [];
+			delete state.externalBudget;
+			state.externalEpoch = randomUUID();
 			state.history = { generation: state.revision + 1, next: 0, active: [] };
 			return { changed: true, result: undefined };
 		});
+	}
+	/**
+	 * A callback that ended before this record acquired any dispatch intent. `undispatchedRecord` also
+	 * covers a failed dispatch, which is not proof for external input that nothing reached the host, so
+	 * the reattachment marker is reserved for a record that never had dispatch intent at all.
+	 */
+	private endedCallback(record: RecordData): boolean {
+		return record.externalDigest ? !record.dispatch : undispatchedRecord(record);
 	}
 	/**
 	 * A new attachment cannot execute callbacks from a prior session lifetime. Keep their input inspectable.
@@ -902,7 +1215,7 @@ export class FlowSubmissionStore {
 					record.status === "retained" &&
 					!record.unavailable &&
 					!replayableContinuation(decode(record.payload) as Submission) &&
-					undispatchedRecord(record)
+					this.endedCallback(record)
 				) {
 					record.unavailable = "callback-ended";
 					count++;
@@ -917,7 +1230,7 @@ export class FlowSubmissionStore {
 			const record = state.records.find((record) => record.id === id);
 			if (!record || record.revision !== revision)
 				throw new FlowLedgerError("stale", "Submission callback revision changed.");
-			if (record.unavailable || record.status !== "retained" || !undispatchedRecord(record))
+			if (record.unavailable || record.status !== "retained" || !this.endedCallback(record))
 				return { changed: false, result: undefined };
 			record.unavailable = "callback-ended";
 			return { changed: true, result: undefined };
@@ -1201,6 +1514,11 @@ export class FlowSubmissionStore {
 				const record = state.records.find((item) => item.id === id);
 				if (!record || record.revision !== revision || record.status !== "retained")
 					throw new FlowLedgerError("stale", "Submission changed before native dispatch.");
+				// A runtime retirement ends the callback that would have run this input. It writes no dispatch
+				// intent, so it does not change the revision a release captured; refusing here is what keeps a
+				// parked release from acquiring intent for a callback the host already reports as ended.
+				if (record.unavailable)
+					throw new FlowLedgerError("transition", "Submission callback ended before native dispatch.");
 				if (record.dispatch)
 					throw new FlowLedgerError("transition", "Submission already has a native dispatch intent.");
 				if (

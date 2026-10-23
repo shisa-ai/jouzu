@@ -24,17 +24,33 @@ interface Frame {
 	nextTurnObserved?: boolean;
 	contextInput?: { index: number; message: AgentMessage };
 }
+interface QueuedObservation {
+	operationId: string;
+	revision: number;
+	write: Promise<unknown>;
+	/** The revision the sender was given is already recorded as not delivered. */
+	invalidated?: boolean;
+}
 const attached = new WeakSet<AgentSession>();
 
 /** Observe native input inside one retained dispatch, without rerunning prompt normalization. */
 export class PiNativeDispatch {
 	private readonly hooks = new PiHostHooks();
 	private readonly frames = new AsyncLocalStorage<Frame>();
-	private readonly queued = new Map<string, { operationId: string; revision: number; write: Promise<unknown> }>();
+	private readonly queued = new Map<string, QueuedObservation>();
 	private readonly deferred = new Map<string, { inputIndex: number; cancel: () => boolean; removed?: boolean }>();
 	private readonly held = new Map<string, { id: string; revision: number; reason: string }>();
 	private readonly sessionId: string;
 	private readonly contextWrites = new Set<Promise<void>>();
+	/** Queue-removal evidence this observation owes the journal. Tracked writes never reject. */
+	private readonly queueWrites = new Set<Promise<void>>();
+	private queueFailure = false;
+	/** Advances on reset, so a write from the discarded journal lifetime cannot report a failure. */
+	private queueGeneration = 0;
+	/** Native queue mutations this observation issues itself, whose evidence it already records. */
+	private selfMutation = 0;
+	/** Depth of the open queue-mutation bracket; nested mutations delegate to it. */
+	private queueBracket = 0;
 	private contextFailure = false;
 	private active = 0;
 	private closed = false;
@@ -88,15 +104,47 @@ export class PiNativeDispatch {
 				try {
 					write = frame.observer.observe({ kind, args, queue });
 				} catch (error) {
-					agent.cancelQueuedMessage(queue.id, queue.revision);
+					this.mutateNativeQueue(() => agent.cancelQueuedMessage(queue.id, queue.revision));
 					throw error;
 				}
 				this.queued.set(queue.id, { operationId: frame.operationId, revision: queue.revision, write });
-				write.catch(() => agent.cancelQueuedMessage(queue.id, queue.revision));
+				// A failed observation is its dispatch's error, so it leaves no receipt to correct. The entry
+				// stays observed: the claim checkpoint still has to refuse the revision the flow did not retain.
+				write.catch(() => this.mutateNativeQueue(() => agent.cancelQueuedMessage(queue.id, queue.revision)));
 				frame.writes.push(write);
 				return queue;
 			});
 		}
+		// Every supported host path that drops or re-revisions queued input leaves no journal evidence on
+		// its own. Without a newer journal revision the receipt stays `queued` at the revision the sender
+		// already accepted, and ordering drops the correction. Each path runs inside one bracket that
+		// records exactly what it invalidated.
+		const cancelQueuedMessage = agent.cancelQueuedMessage.bind(agent);
+		this.hooks.set(agent, "cancelQueuedMessage", (id, revision) =>
+			this.selfMutation
+				? cancelQueuedMessage(id, revision)
+				: this.queueMutationBracket(() => cancelQueuedMessage(id, revision)),
+		);
+		const editQueuedMessage = agent.editQueuedMessage.bind(agent);
+		this.hooks.set(agent, "editQueuedMessage", (id, revision, message) =>
+			this.selfMutation
+				? editQueuedMessage(id, revision, message)
+				: this.queueMutationBracket(() => editQueuedMessage(id, revision, message)),
+		);
+		const clearSteeringQueue = agent.clearSteeringQueue.bind(agent);
+		this.hooks.set(agent, "clearSteeringQueue", () =>
+			this.selfMutation ? clearSteeringQueue() : this.queueMutationBracket(clearSteeringQueue),
+		);
+		const clearFollowUpQueue = agent.clearFollowUpQueue.bind(agent);
+		this.hooks.set(agent, "clearFollowUpQueue", () =>
+			this.selfMutation ? clearFollowUpQueue() : this.queueMutationBracket(clearFollowUpQueue),
+		);
+		// The session clear reaches the lane clears through `agent.clearAllQueues`, so its bracket is the
+		// outer one and the nested lane brackets only delegate to it.
+		const clearQueue = session.clearQueue.bind(session);
+		this.hooks.set(session, "clearQueue", () =>
+			this.selfMutation ? clearQueue() : this.queueMutationBracket(clearQueue),
+		);
 		const nextTurn = session.flowNextTurn;
 		this.hooks.set(session, "flowNextTurn", async (message, cancel) => {
 			const frame = this.frame();
@@ -288,10 +336,77 @@ export class PiNativeDispatch {
 		if (this.closed || this.session.sessionId !== this.sessionId)
 			throw new FlowLedgerError("stale", "Native dispatch observation is closed or replaced.");
 	}
+	/**
+	 * Record the exact observed queue revisions one supported native mutation invalidated.
+	 *
+	 * The host clears queued input by identity-free calls, removes it by identity, and re-revisions it by
+	 * edit, so its removal alone proves nothing durable. Nested mutations delegate to the outermost
+	 * bracket, so one change is recorded once. An entry still queued at a newer revision keeps its
+	 * observation, because the claim checkpoint still has to refuse the revision the flow did not review.
+	 */
+	private queueMutationBracket<T>(run: () => T): T {
+		if (this.queueBracket) return run();
+		// A native claim removes entries before awaiting its durable receipt. Those absent before this
+		// mutation belong to that claim, not to this call. Match IDs rather than revisions so an edited
+		// entry removed here still invalidates the revision the sender was originally given.
+		const before = new Set(this.session.agent.inspectQueuedMessages().map((item) => item.id));
+		this.queueBracket = 1;
+		try {
+			return run();
+		} finally {
+			this.queueBracket = 0;
+			const live = new Map(this.session.agent.inspectQueuedMessages().map((item) => [item.id, item.revision]));
+			for (const [id, observed] of [...this.queued]) {
+				if (!before.has(id)) continue;
+				const revision = live.get(id);
+				if (revision === observed.revision) continue;
+				if (observed.invalidated) {
+					if (revision === undefined) this.forgetQueue(id);
+					continue;
+				}
+				this.recordQueueInvalidation(id, observed, revision !== undefined);
+			}
+		}
+	}
+	/** Persist that one observed identity is no longer live at the revision the sender was given. */
+	private recordQueueInvalidation(id: string, observed: QueuedObservation, stillQueued: boolean): void {
+		if (stillQueued) observed.invalidated = true;
+		else this.forgetQueue(id);
+		const generation = this.queueGeneration;
+		// A failed observation already failed its dispatch, so it leaves no receipt to correct.
+		const write = observed.write.then(
+			() => this.store.recordQueueClaim(observed.operationId, { id, revision: observed.revision }, false),
+			() => {},
+		);
+		// Only the journal lifetime that owns this write reports its failure. A reset discards the records
+		// it describes, so its late rejection must not pause unrelated work in the new lifetime.
+		const settled = write.then(
+			() => {},
+			() => {
+				if (generation === this.queueGeneration) this.queueFailure = true;
+			},
+		);
+		this.queueWrites.add(settled);
+		void settled.then(() => this.queueWrites.delete(settled));
+	}
+	private forgetQueue(id: string): void {
+		this.queued.delete(id);
+		this.held.delete(id);
+	}
+	/** Issue a native queue mutation whose own durable evidence this observation already records. */
+	private mutateNativeQueue<T>(run: () => T): T {
+		this.selfMutation++;
+		try {
+			return run();
+		} finally {
+			this.selfMutation--;
+		}
+	}
 	private async drainContext(): Promise<void> {
-		await Promise.all([...this.contextWrites]);
+		await Promise.all([...this.contextWrites, ...this.queueWrites]);
 		if (this.contextFailure)
 			throw new FlowLedgerError("identity", "Non-waking context requires receipt reconciliation.");
+		if (this.queueFailure) throw new FlowLedgerError("identity", "Queue removal requires receipt reconciliation.");
 	}
 
 	async consumedSources() {
@@ -398,7 +513,7 @@ export class PiNativeDispatch {
 			if (observed.revision !== revision) await this.reconcileQueueEdit(id, revision);
 			await this.store.cancelQueue(observed.operationId, { id, revision });
 			this.assertActive();
-			const result = this.session.agent.cancelQueuedMessage(id, revision);
+			const result = this.mutateNativeQueue(() => this.session.agent.cancelQueuedMessage(id, revision));
 			if (result.kind !== "cancelled") throw new FlowLedgerError("stale", "Native queue changed during cancellation.");
 			await this.store.recordQueueClaim(observed.operationId, { id, revision }, false);
 			this.queued.delete(id);
@@ -444,9 +559,15 @@ export class PiNativeDispatch {
 		this.assertActive();
 		if (this.active || this.contextWrites.size)
 			throw new FlowLedgerError("busy", "Native reset requires drained dispatch.");
-		this.session.clearQueue();
-		for (const pending of this.deferred.values()) pending.cancel();
+		// Reset discards the journal and the queue together, so the clear is not a removal to record.
 		this.queued.clear();
+		// A removal write that started before this reset describes records the reset discards. Fence it:
+		// its late failure belongs to the old journal lifetime and must not pause the new one.
+		this.queueGeneration++;
+		this.queueWrites.clear();
+		this.queueFailure = false;
+		this.mutateNativeQueue(() => this.session.clearQueue());
+		for (const pending of this.deferred.values()) pending.cancel();
 		this.deferred.clear();
 		this.held.clear();
 		this.contextFailure = false;
@@ -556,6 +677,8 @@ export class PiNativeDispatch {
 					})
 				: Promise.resolve()
 		).then(async () => {
+			// Queue-removal evidence still owed must land before the hooks are released.
+			await Promise.allSettled([...this.queueWrites]);
 			const pending = this.session.agent.inspectQueuedMessages().filter((item) => this.queued.has(item.id));
 			for (const item of pending) {
 				const observed = this.queued.get(item.id);
@@ -572,7 +695,7 @@ export class PiNativeDispatch {
 						},
 					);
 				}
-				const result = this.session.agent.cancelQueuedMessage(item.id, item.revision);
+				const result = this.mutateNativeQueue(() => this.session.agent.cancelQueuedMessage(item.id, item.revision));
 				if (result.kind !== "cancelled") throw new FlowLedgerError("stale", "Native queue changed during close.");
 				await this.store.recordQueueClaim(observed.operationId, { id: item.id, revision: item.revision }, false);
 			}

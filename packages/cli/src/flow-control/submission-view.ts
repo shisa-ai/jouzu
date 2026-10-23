@@ -20,15 +20,19 @@ export interface FlowSubmissionView {
 }
 
 /** Keep historical diagnostics in storage, but expose only holds on unconsumed live revisions. */
-export function activeAdmissionHolds(record: RetainedSubmission) {
+export function activeAdmissionHolds(record: RetainedSubmission, liveQueue?: ReadonlyMap<string, number>) {
 	if (record.unavailable || record.status === "cancelled") return [];
-	return (record.holds ?? []).filter((hold) =>
-		hold.phase === "submission"
-			? !record.dispatch
-			: !record.dispatch?.queueClaims?.some(
-					(claim) => claim.id === hold.queue?.id && claim.revision === hold.queue?.revision,
-				),
-	);
+	return (record.holds ?? []).filter((hold) => {
+		if (hold.phase === "submission") return !record.dispatch;
+		const queue = hold.queue;
+		if (!queue) return false;
+		if (record.dispatch?.queueClaims?.some((claim) => claim.id === queue.id && claim.revision === queue.revision))
+			return false;
+		// A queue hold clears only when the host claims or removes that exact entry. An entry the live
+		// host no longer holds at that revision was discarded without a recorded claim, so no later
+		// admission can clear the hold; the queue evidence is missing instead of pending.
+		return liveQueue ? liveQueue.get(queue.id) === queue.revision : true;
+	});
 }
 
 /** Derive durable dispositions without rewriting ingress or acknowledging work completion.
@@ -38,6 +42,7 @@ export function projectFlowSubmissions(
 	records: RetainedSubmission[],
 	ledger: FlowLedgerState,
 	nativeRequests?: NativeRequest[],
+	liveQueue?: ReadonlyMap<string, number>,
 ): FlowSubmissionView[] {
 	const native = nativeRequests ? projectNativeSubmissionRequests(records, nativeRequests) : undefined;
 	const byId = new Map(records.map((record) => [record.id, record]));
@@ -110,7 +115,7 @@ export function projectFlowSubmissions(
 				: consumedNative
 					? "consumed"
 					: "none";
-		const admissionHolds = activeAdmissionHolds(record);
+		const admissionHolds = activeAdmissionHolds(record, liveQueue);
 		let held = ambiguous || !!record.dispatch || admissionHolds.length > 0;
 		for (const attempt of attempts) {
 			const members = attempt.members.filter((member) => member.sourceSubmission?.id === record.id);

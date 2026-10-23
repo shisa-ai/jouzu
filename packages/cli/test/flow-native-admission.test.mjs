@@ -277,6 +277,44 @@ test("only a self-contained continuation survives a reattach as replayable", () 
 	);
 });
 
+test("external input is never replayed by a reattach while ordinary continuations still are", () => {
+	const external = (overrides) =>
+		replayableContinuation(
+			record("external", {
+				api: "sendUserMessage",
+				args: ["Continue.", { deliverAs: "followUp" }],
+				externalUser: { version: 1, adapterId: "fixture", messageId: "message" },
+				...overrides,
+			}).submission,
+		);
+	assert.equal(
+		replayableContinuation(
+			record("ordinary", { api: "sendUserMessage", args: ["Continue.", { deliverAs: "followUp" }] }).submission,
+		),
+		true,
+	);
+	assert.equal(
+		replayableContinuation(
+			record("ordinary", {
+				api: "sendCustomMessage",
+				args: [{ customType: "c" }, { triggerTurn: true }],
+			}).submission,
+		),
+		true,
+	);
+	// External human input waits for an explicit retry instead of replaying after a restart.
+	assert.equal(external(), false);
+	assert.equal(external({ api: "sendCustomMessage", args: [{ customType: "c" }, { triggerTurn: true }] }), false);
+	assert.equal(external({ api: "prompt", origin: { kind: "host", id: "prompt" }, args: ["typed"] }), false);
+	assert.equal(
+		external({
+			userCommand: { id: "invocation", name: "goal", submissionId: "invoked" },
+			args: ["Resume the saved goal.", { deliverAs: "followUp" }],
+		}),
+		false,
+	);
+});
+
 test("only a record whose native call never ran is still issuable", () => {
 	assert.equal(undispatchedRecord({}), true);
 	assert.equal(undispatchedRecord({ dispatch: { phase: "failed" } }), true);

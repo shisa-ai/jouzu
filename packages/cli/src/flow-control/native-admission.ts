@@ -7,7 +7,10 @@ export type NativeAdmissionDecision = { allowed: true } | { allowed: false; reas
 
 /** Origin is supplied by the installed host binding, never by message content. */
 export function isNativeUserInput(submission: FlowSubmission): boolean {
-	return submission.origin.kind === "host" && ["prompt", "steer", "followUp"].includes(submission.api);
+	return (
+		(submission.origin.kind === "host" && ["prompt", "steer", "followUp"].includes(submission.api)) ||
+		(submission.origin.kind === "extension" && submission.api === "prompt" && submission.externalUser?.version === 1)
+	);
 }
 
 /**
@@ -47,6 +50,7 @@ export function undispatchedRecord(record: { dispatch?: { phase: string; inputs?
  * that they are inspected rather than replayed.
  */
 export function replayableContinuation(submission: FlowSubmission): boolean {
+	if (submission.externalUser) return false;
 	switch (submission.api) {
 		// A typed prompt is the user's own input, which they are present to resend, unless a command issued it.
 		case "prompt":
@@ -79,7 +83,7 @@ export function isNativeUserQueueSubmission(
 	if (submission.api === "steer" || submission.api === "followUp") return true;
 	const options = submission.args[1] as { streamingBehavior?: unknown } | undefined;
 	return (
-		submission.hostState?.streaming === true &&
+		(submission.externalUser !== undefined || submission.hostState?.streaming === true) &&
 		(options?.streamingBehavior === "steer" || options?.streamingBehavior === "followUp")
 	);
 }
@@ -87,7 +91,7 @@ function lane(submission: FlowSubmission): string {
 	const options = submission.args[1] as { deliverAs?: string; streamingBehavior?: string } | undefined;
 	if (submission.api === "steer" || submission.api === "followUp") return submission.api;
 	if (submission.api === "sendCustomMessage" && options?.deliverAs === "nextTurn") return "context";
-	if (!submission.hostState?.streaming) return "prompt";
+	if (!submission.hostState?.streaming && !submission.externalUser) return "prompt";
 	return options?.deliverAs ?? options?.streamingBehavior ?? "prompt";
 }
 /** The host observed a completed dispatch that produced no native model or queue input. */
