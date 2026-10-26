@@ -1,4 +1,5 @@
 import {
+	InteractiveMode,
 	OAuthSelectorComponent,
 	SessionSelectorComponent,
 	SettingsSelectorComponent,
@@ -285,6 +286,7 @@ interface RenderablePrototype {
 }
 
 export interface PiUiRuntime {
+	InteractiveMode?: typeof InteractiveMode;
 	SessionSelectorComponent?: typeof SessionSelectorComponent;
 	TreeSelectorComponent?: typeof TreeSelectorComponent;
 	UserMessageSelectorComponent?: typeof UserMessageSelectorComponent;
@@ -1130,6 +1132,14 @@ function installPrototypePatches(
 	return restoreAll;
 }
 
+interface ErrorComponent {
+	build?: () => string;
+}
+
+interface ErrorHost {
+	chatContainer: { addChild(component: ErrorComponent): void };
+}
+
 /**
  * Localize Pi's built-in interactive settings menu, submenus, and selector
  * components for the duration of `operation` when the effective catalog is not
@@ -1172,9 +1182,39 @@ export async function withPiUiLocalization<T>(
 	};
 	const trustPrototype = await loadTrustSelectorPrototype();
 	const restorePrototypes = installPrototypePatches(localizationRuntime, trustPrototype);
+	const prototype = (runtime.InteractiveMode ?? InteractiveMode).prototype as unknown as {
+		showError(this: ErrorHost, message: string): void;
+	};
+	const originalShowError = prototype.showError;
+	const restoreErrors = patchMethod(prototype, "showError", function (this: ErrorHost, message: string): void {
+		if (message !== "Compaction failed: Nothing to compact (session too small)") {
+			originalShowError.call(this, message);
+			return;
+		}
+		// Keep Pi's theme-aware component and layout, changing only this known display sentence.
+		const container = this.chatContainer;
+		const originalAdd = container.addChild;
+		container.addChild = function (component: ErrorComponent): void {
+			if (typeof component.build === "function") {
+				const build = component.build;
+				component.build = function (): string {
+					return build
+						.call(this)
+						.replace(`Error: ${message}`, catalogText(getCatalog(), "jouzu.cli.piUi.compaction.tooSmallError"));
+				};
+			}
+			originalAdd.call(this, component);
+		};
+		try {
+			originalShowError.call(this, message);
+		} finally {
+			container.addChild = originalAdd;
+		}
+	});
 	try {
 		return await operation();
 	} finally {
+		restoreErrors();
 		restorePrototypes();
 	}
 }

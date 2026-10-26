@@ -7,6 +7,7 @@
     "zh-Hant": "38823fe59480cfe0b34e069204fa4ff3c8477b992e901e1d500370cfb2789638"
   },
   "extra": {
+    "en/compaction.ftl": "04cd2f1efd45825c059a598dcab4a805432323d6a2a875e92e3f8e0e2cf9e54d",
     "en/localization-deferral.ftl": "8a609fcd4f5bfe420f0f399cbe5cca1dab3d1617c46c26a8ba29308508febece",
     "en/localization-settings.ftl": "e8d1a7fa300bda060f2d50c0ba9a78d8a03bd83afcd9e0517b2e41d92f7c6ddc",
     "en/palette-navigation.ftl": "40b6d41fff6e38cf508353ca6fb36a18a4aaac3a9e34457bc1f191778a679d46",
@@ -15,6 +16,7 @@
     "en/runtime.ftl": "d49b400423cfc04a8405b6ec66a0678dbc929a8f5255d4ce132bb0db722add52",
     "en/slash-commands.ftl": "8649c1f0d1ef064b941fa4706fc99f6a1395ffd3034ea44fe2e3d27a7cf20ad4",
     "en/user-input.ftl": "0ba85cac7baace66ce14ef3666f162db7e2457c159db73d01b797f1f6ad20a92",
+    "ja/compaction.ftl": "58432b76d1edc7c7dea1c49d13303c226c42e33fd3b6a2aea03c7fe2373dfb73",
     "ja/localization-deferral.ftl": "5d1ff4ae935ece7c906119bbd45a6e4a87727b25132e8965d5e4b68671940179",
     "ja/localization-settings.ftl": "3e2f0680f52e5c7977aebf9d833226c0d7dd7d352e99482a6997f197482600d3",
     "ja/palette-navigation.ftl": "052cdb7a97409c52dc3e1f73d06c322a7151701fb81267fca1c70fd376be04d8",
@@ -23,6 +25,7 @@
     "ja/runtime.ftl": "70b495087ea56094dd8f0a0bf76fecb2bb71818fb9161c47ae8c634de6469824",
     "ja/slash-commands.ftl": "c55e3442d918f1f840965efa2cbc1b299e5bd1348068f951a8bb7c58f8c8b34c",
     "ja/user-input.ftl": "121191b999beebfd34bb9ba0b8126de320a46fb9914e2cc26b72c9053ae1398f",
+    "zh-Hans/compaction.ftl": "04cd2f1efd45825c059a598dcab4a805432323d6a2a875e92e3f8e0e2cf9e54d",
     "zh-Hans/localization-deferral.ftl": "8aad4d0690a7c1863c34c150916fcc2f8e5bba1fa09e660f3777cc3d7c5123c7",
     "zh-Hans/localization-settings.ftl": "dd1b584ed1a0e631ef5aabd17340807b1f8635f1b0ef97975fead594aa88d01b",
     "zh-Hans/palette-navigation.ftl": "143915d80578e85cd165b93d9b57aa921e6e8276dc334b23e5ab56ed6e984413",
@@ -31,6 +34,7 @@
     "zh-Hans/runtime.ftl": "c09948bcd7e15c1c1df9d74a4067483edd9e692e803304128bbb2493782a89af",
     "zh-Hans/slash-commands.ftl": "5d7d725f0d6271cbd1cab3f62b98e5b3904cd95e271cde2e64d2465b280bd70e",
     "zh-Hans/user-input.ftl": "f5654e271da53728a42398a29c3ab65d3c2a5483c2053d5fa7db38b0e7ccb193",
+    "zh-Hant/compaction.ftl": "04cd2f1efd45825c059a598dcab4a805432323d6a2a875e92e3f8e0e2cf9e54d",
     "zh-Hant/localization-deferral.ftl": "5bafb9887c7970e76b29d3f2c7440060a8da464bb1abaffdd56640aa712e72f8",
     "zh-Hant/localization-settings.ftl": "8f4aceb7068b10e0549b53d3f233e86700735efc0754c087a0eaa1939f727cf7",
     "zh-Hant/palette-navigation.ftl": "2e0ce0db66c0f39b8f582efa6d5e91ee889e83c2c49d6e2c08dc60244b166fd2",
