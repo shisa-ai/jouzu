@@ -2,7 +2,7 @@
 
 ## Source inventory closed; execution and language review not complete
 
-This is the translation backlog from the bounded source inventory. It is not an exhaustive string count, a promise that every state was exercised, or Japanese language/layout approval. See [FINDINGS.md](FINDINGS.md) for individual findings and [COVERAGE.md](COVERAGE.md) for limitations. No translations or product behavior were changed.
+This is the translation backlog from the bounded source inventory. The [consolidated proposal backlog](../translation-drafts/final-backlog/README.md) links these findings to existing Japanese drafts and source-anchored supplements, while retaining undrafted families. It is not an exhaustive string count, a promise that every state was exercised, or Japanese language/layout approval. See [FINDINGS.md](FINDINGS.md) for individual findings and [COVERAGE.md](COVERAGE.md) for limitations. No translations or product behavior were changed.
 
 Priorities below are recommendations based on visibility and shared wiring, not measured usage.
 

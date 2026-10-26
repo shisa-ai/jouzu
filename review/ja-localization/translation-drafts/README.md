@@ -1,5 +1,7 @@
 # Japanese translation drafts
 
+**For the consolidated implementation backlog, start with [final-backlog/README.md](final-backlog/README.md).** It preserves the existing current-source drafts, adds source-anchored proposals for final audit findings and explicitly records undrafted families. It is not a complete-string or language/runtime approval claim.
+
 **For v0.2.3 source, start with [the current-source reconciliation](CURRENT.md).** The original CSVs and `glossary.csv` below are a historical draft snapshot; they are not a current outstanding-work list. Use `*-reconciliation.csv` and `current-glossary.csv` to distinguish remaining gaps from fixes and changed wording on `main`.
 
 These review files propose Japanese for the English inventory at `review/ja-localization/untranslated-text.md`, using source revision `c0caa9950988a4b6a41f40e6005d913d282df7a1`. They do not change runtime code, live catalogs, stored identifiers, or dependency packages.

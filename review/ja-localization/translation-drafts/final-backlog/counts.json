@@ -1,0 +1,35 @@
+{
+  "existing_status_counts": {
+    "needs_context": 31,
+    "remaining_gap": 1314,
+    "removed": 1,
+    "resolved": 195,
+    "retained_by_policy": 96,
+    "source_changed": 2
+  },
+  "existing_gap_rows": 1314,
+  "existing_unique_wording_entries": 1309,
+  "new_proposal_rows": 305,
+  "new_proposals_merged_with_existing_or_other_new": 0,
+  "unique_wording_entries": 1614,
+  "final_finding_groups": 28,
+  "coverage_counts": {
+    "matched": 5,
+    "supplemented": 23
+  },
+  "row_followups": 37,
+  "exact_fix_count": null,
+  "all_final_strings_translation_complete": false,
+  "language_approval": false,
+  "runtime_approval": false,
+  "limits": "Wording entries are deduplicated only by catalog identity or source file plus exact English and Japanese. All occurrence contexts remain. Finding groups overlap wording entries and cannot be added to them. Per-finding limits remain authoritative; family reconciliation is not an exhaustive string extraction.",
+  "input_sha256": {
+    "review/ja-localization/translation-drafts/extensions-cli-launcher-reconciliation.csv": "6f88672866df2f89dd1031672719a5088e4c271a121c1c2c7ea8f9f73ccc190b",
+    "review/ja-localization/translation-drafts/jouzu-ui-reconciliation.csv": "4467f48dd846e200bb0662416f2cedea1b23d9ba92fcd081e1592a36920196a4",
+    "review/ja-localization/translation-drafts/pi-and-previews-reconciliation.csv": "1ab841fb5423cf18e04ff9fbd23d4cf2c75ff3ddb5a27ccda2e2abb6d6488950",
+    "review/ja-localization/translation-drafts/final-backlog/owned.json": "5719a87db554973e40421e963837e18309fb616a2e330f60b5ccd06655d77a74",
+    "review/ja-localization/translation-drafts/final-backlog/dependencies.json": "706e12b65e5d6e9afb1a882c33d0b5115e5d2b1505467fca5ba7da26f4fde66f",
+    "review/ja-localization/translation-drafts/final-backlog/launcher-operator.json": "abf261f7f05498b69c47e21fab209b5373aee9b7a36a63cb4736554ff3273b89",
+    "review/ja-localization/full-ui-audit/FINDINGS.md": "9b9322805fbb799ab73ae59b8d8a95eca7ddc07b9d51b994b170393d7bdfb9d3"
+  }
+}
