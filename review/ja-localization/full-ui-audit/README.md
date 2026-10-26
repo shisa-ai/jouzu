@@ -1,8 +1,8 @@
 # Full Japanese UI audit
 
-## Status: inventory snapshot; semantic and runtime audit unfinished
+## Status: bounded source inventory closed; semantic and runtime verification incomplete
 
-Start with [FINDINGS.md](FINDINGS.md) for the confirmed gaps and [COVERAGE.md](COVERAGE.md) for evidence levels and unfinished work. The partition CSVs retain detailed source/state records and candidate leads; their rows are not a unique-defect or completed-screen count.
+Start with [CHECKLIST.md](CHECKLIST.md) for the prioritized translation backlog, [FINDINGS.md](FINDINGS.md) for the confirmed gaps and [COVERAGE.md](COVERAGE.md) for evidence levels and unfinished verification. The source inventory stops at this snapshot; the listed residuals do not establish exhaustive semantic or runtime approval. The partition CSVs retain detailed source/state records and candidate leads; their rows are not a unique-defect or completed-screen count.
 
 The scope is all repository-owned user-interface text and the pinned runtime/extension UI shipped by Jouzu, with Japanese selected. The earlier [startup audit](../translation-drafts/STARTUP-AUDIT.md) supplies a reproducible baseline, not the universe of screens.
 
@@ -36,7 +36,12 @@ Partitions:
 - `semantic-flow/`: all 84 fixed primary bodies and three additional tool producers read; external receipt, host and native limits remain explicit.
 - `semantic-dependencies/`: 27 original candidates, the immediate exported-viewer graph and bounded diagnostic continuations; runtime and arbitrary extension producer boundaries remain open.
 
-`owned-command-coverage.csv` reconciles literal Jouzu-owned `registerCommand` calls against named source families. It does not cover dynamic, dependency, builtin, resource-derived or Session UI interception routes, and a mapped family is not exhaustive branch coverage.
+- `display-consumers/`: dashboard count/state framing and external-receipt transport boundary.
+- `host-consumers/`: selected TextGuard, direct/nested tool, transcript and native fallback consumers, with explicit remaining boundaries.
+- `import-consumers/`: bounded dispositions for the exact 25 helper-import candidates, not whole-importer approval.
+- `command-routes/`: selected registration/dispatch/resource graph and passing structural checks; final semantic mapping review incomplete.
+
+`owned-command-coverage.csv` reconciles literal Jouzu-owned `registerCommand` calls against named source families. `command-routes/` supplements this with selected dependency, builtin, resource-derived and interception routes. Neither mapping is exhaustive branch coverage.
 
 Each partition has a source disposition table and surface/state ledger. Existing tests are pointers, not assertions that every listed state was run or that a test checks Japanese. Combined state names describe families, not exhaustive permutations.
 

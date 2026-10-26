@@ -1,0 +1,92 @@
+anchor_id,source_file,line,kind,exact_text
+entry.import,packages/cli/src/main-cli.ts,101,declaration,"async function loadPiRuntime(): Promise<typeof import(""@earendil-works/pi-coding-agent"")> {"
+entry.policy,packages/cli/src/main-cli.ts,740,expression,"			contentPolicyFactory: nativeTextguard.createPolicy,"
+entry.direct,packages/cli/src/main-cli.ts,744,expression,"				createDirectToolPolicyExtension(),"
+entry.review,packages/cli/src/main-cli.ts,755,expression,"				{ name: ""jouzu-textguard-review"", factory: createTextGuardReviewExtension(nativeTextguard) },"
+host.policy,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/main.js,645,expression,"                contentPolicy: await options?.contentPolicyFactory?.({ cwd, sessionId: sessionManager.getSessionId() }),"
+session.before,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js,330,declaration,"    async _beforeToolCall({ toolCall, args }, parentToolCallId) {"
+session.after,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js,352,declaration,"    async _afterToolCall({ toolCall, args, result, isError }, parentToolCallId) {"
+session.replace,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js,389,expression,        const replaceInspectedResult = (admitted) => {
+session.nested,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js,425,declaration,"    async _executeNestedToolCall(parentToolCallId, name, args, options) {"
+session.events,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js,751,declaration,    _handleAgentEvent = async (event) => {
+session.message-filter,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js,810,expression,"                    const admitted = await policy.filterContext([event.message], this.agent.signal);"
+session.persist,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js,850,expression,                entryId = this.sessionManager.appendMessage(event.message);
+session.mutate,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js,966,declaration,"    _replaceMessageInPlace(target, replacement) {"
+session.message-hooks,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js,1023,expression,            const replacement = await this._extensionRunner.emitMessageEnd(extensionEvent);
+session.callable,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js,1252,declaration,    _getCallableTools(active = new Set(this.getActiveToolNames())) {
+session.declarable,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js,3129,declaration,    _isDeclarable(name) {
+session.registry,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js,3044,declaration,    _refreshToolRegistry(options) {
+session.command,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js,1812,declaration,    async _tryExecuteExtensionCommand(text) {
+session.bind,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js,2828,declaration,    async bindExtensions(bindings) {
+session.summary,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js,2344,declaration,"    async _filterSummarizationEntries(entries, signal, label) {"
+sdk.transform,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/sdk.js,290,expression,"        transformContext: async (messages, signal) => {"
+loop.projection,packages/cli/node_modules/@earendil-works/pi-agent-core/dist/agent-loop.js,266,declaration,"async function streamAssistantResponse(context, config, signal, emit, streamFunction) {"
+loop.prepare,packages/cli/node_modules/@earendil-works/pi-agent-core/dist/agent-loop.js,498,declaration,"async function prepareToolCall(currentContext, assistantMessage, toolCall, config, signal, tools = currentContext.tools ?? []) {"
+loop.execute,packages/cli/node_modules/@earendil-works/pi-agent-core/dist/agent-loop.js,585,declaration,"async function executePreparedToolCall(prepared, signal, onUpdate) {"
+loop.finalize,packages/cli/node_modules/@earendil-works/pi-agent-core/dist/agent-loop.js,615,declaration,"async function finalizeExecutedToolCall(currentContext, assistantMessage, prepared, executed, config, signal) {"
+loop.terminate,packages/cli/node_modules/@earendil-works/pi-agent-core/dist/agent-loop.js,482,declaration,function shouldTerminateToolBatch(finalizedCalls) {
+loop.events,packages/cli/node_modules/@earendil-works/pi-agent-core/dist/agent-loop.js,663,declaration,"async function emitToolExecutionEnd(finalized, emit) {"
+loop.message,packages/cli/node_modules/@earendil-works/pi-agent-core/dist/agent-loop.js,673,declaration,function createToolResultMessage(finalized) {
+agent.state,packages/cli/node_modules/@earendil-works/pi-agent-core/dist/agent.js,460,declaration,    async processEvents(event) {
+runner.toolcall,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/runner.js,958,declaration,    async emitToolCall(event) {
+runner.toolresult,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/runner.js,901,declaration,    async emitToolResult(event) {
+runner.message-end,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/runner.js,865,declaration,    async emitMessageEnd(event) {
+runner.emit,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/runner.js,814,declaration,    async emit(event) {
+runner.context,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/runner.js,1007,declaration,"    async emitContext(messages, afterClone) {"
+runner.nested,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/runner.js,697,declaration,"    createToolContext(toolCallId, signal) {"
+runner.renderers,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/runner.js,543,declaration,"    resolveToolRenderers(toolName, base) {"
+wrap.definition,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/tool-definition-wrapper.js,2,declaration,"export function wrapToolDefinition(definition, ctxFactory) {"
+history.persist,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/session-manager.js,838,declaration,"    _persistUnobserved(entry, force = false) {"
+history.append,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/session-manager.js,871,declaration,    appendMessage(message) {
+history.raw,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/session-manager.js,172,declaration,export function sessionEntryToContextMessages(entry) {
+history.projection,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/session-manager.js,268,declaration,"export function buildSessionProjection(entries, leafId, byId) {"
+ui.definition,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/interactive-mode.js,1747,declaration,    getRegisteredToolDefinition(toolName) {
+ui.start,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/interactive-mode.js,2918,expression,"            case ""tool_execution_start"": {"
+ui.end,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/interactive-mode.js,2945,expression,"            case ""tool_execution_end"": {"
+ui.history,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/interactive-mode.js,3233,declaration,"    renderSessionItems(items, options = {}) {"
+ui.entries,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/interactive-mode.js,3321,declaration,"    renderSessionEntries(entries, options = {}) {"
+ui.extension-error,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/interactive-mode.js,2399,declaration,"    showExtensionError(extensionPath, error, stack) {"
+ui.bind,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/interactive-mode.js,1516,declaration,    async bindCurrentSessionExtensions() {
+component.call,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/tool-execution.js,95,declaration,    createCallFallback() {
+component.result,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/tool-execution.js,98,declaration,    createResultFallback() {
+component.display,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/tool-execution.js,199,declaration,    updateDisplay() {
+renderers.merge,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/renderers/index.js,35,declaration,"export function withBuiltInRenderers(toolName, definition) {"
+render.text,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/render-utils.js,56,declaration,"export function getTextOutput(result, showImages) {"
+policy.withheld,packages/cli/src/textguard-policy.ts,303,declaration,	private withheld(review?: ContentReview): ToolResult {
+policy.check,packages/cli/src/textguard-policy.ts,370,declaration,	private async checkResult(
+policy.context,packages/cli/src/textguard-policy.ts,448,declaration,"	async filterContext(messages: Messages, signal?: AbortSignal): Promise<Messages> {"
+policy.tool,packages/cli/src/textguard-policy.ts,431,declaration,	async filterToolResult(event: ToolEvent): Promise<ToolResult> {
+nested.execute,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/nested-tool-calls.js,98,declaration,"    async execute(callerId, name, args, options = {}) {"
+nested.error,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/nested-tool-calls.js,56,declaration,"    finish(record, isError, errorText) {"
+nested.take,packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/nested-tool-calls.js,168,declaration,    takeRecord(toolCallId) {
+direct.policy,packages/cli/src/classic-host-policy.ts,26,declaration,export function createDirectToolPolicyExtension(): InlineExtension {
+child.policy,packages/cli/src/subagents/tool-policy.ts,4,declaration,export function createChildToolPolicy(options: { maxCalls: number; onExhausted(): void }): InlineExtension {
+context.tool,packages/cli/src/subagents/context.ts,136,declaration,"export function parentContextTool(path: string, catalog: CatalogBundle = defaultCatalog()): ToolDefinition {"
+context.execute,packages/cli/src/subagents/context.ts,155,expression,"			const result = await readSessionTrace(path, options, catalog);"
+trace.read,packages/cli/src/subagents/trace.ts,125,declaration,export async function readSessionTrace(
+worker.context,packages/cli/src/subagents/worker.ts,68,expression,		launch.context?.parentLookup && launch.parentContextFile ? [parentContextTool(launch.parentContextFile)] : [];
+worker.policy,packages/cli/src/subagents/worker.ts,109,expression,			createChildToolPolicy({
+worker.direct,packages/cli/src/subagents/worker.ts,115,expression,"			createDirectToolPolicyExtension(),"
+worker.bind,packages/cli/src/subagents/worker.ts,158,expression,"		await session.bindExtensions({ mode: ""print"", onError: (error) => failureController.abort(error) });"
+worker.message,packages/cli/src/subagents/worker.ts,212,expression,"						role: `tool:${message.toolName}`,"
+manager.receive,packages/cli/src/subagents/manager.ts,597,declaration,"	private receive(id: string, event: WorkerEvent): void {"
+manager.read,packages/cli/src/subagents/manager.ts,380,declaration,"	read(id: string, offset = 0, limit = 12_000): { text: string; nextOffset: number | null; totalBytes: number } {"
+manager.trace,packages/cli/src/subagents/manager.ts,407,declaration,"	async trace(id: string, options?: TraceQuery): Promise<TracePage> {"
+childrender.read,packages/cli/src/subagents/render.ts,183,expression,"			} else if (operation === ""read"" && typeof root.text === ""string"") {"
+childrender.parse,packages/cli/src/subagents/render.ts,299,declaration,export function parseSubagentResult(content: unknown): unknown {
+integration.trace,packages/cli/src/subagents/integration.ts,787,expression,"						case ""trace"":"
+integration.render,packages/cli/src/subagents/integration.ts,646,declaration,"				renderResult(result, { expanded }, theme, renderContext) {"
+integration.exposure,packages/cli/src/subagents/integration.ts,625,expression,"				name: ""subagent"","
+childrender.component,packages/cli/src/subagents/render.ts,50,declaration,export function subagentComponent(
+noreply.factory,packages/cli/src/flow-control/no-reply-tool.ts,36,declaration,export function createFlowNoReplyExtension(options: FlowNoReplyOptions): InlineExtension {
+noreply.exposure,packages/cli/src/flow-control/no-reply-tool.ts,43,expression,"				exposure: ""model-only"","
+noreply.body,packages/cli/src/flow-control/no-reply-tool.ts,61,expression,"						content: [{ type: ""text"" as const, text: ""Ended this turn without a reply."" }],"
+results.factory,packages/cli/src/flow-control/result-tools.ts,9,declaration,export function createFlowResultExtension(options: {
+waits.exposure,packages/cli/src/flow-control/wait-tools.ts,269,expression,"				name: ""agent_wait"","
+waits.cancel,packages/cli/src/flow-control/wait-tools.ts,397,expression,"				name: ""agent_wait_cancel"","
+models.sync,packages/cli/src/model-picker.ts,1284,declaration,	const syncSession = (ctx: ExtensionContext): void => {
+models.start,packages/cli/src/model-picker.ts,1405,expression,"			pi.on(""session_start"", async (event, ctx) => {"
+modelstate.load,packages/cli/src/model-picker-state.ts,356,declaration,export function loadModelPickerState(
+settings.plan,packages/cli/src/catalog-settings.ts,1257,expression,		this.languageConfirm = this.planLanguageChange(request);
+localize.patches,packages/cli/src/pi-ui-localization.ts,944,declaration,function installPrototypePatches(
+output.scope,packages/cli/src/runtime-output.ts,35,declaration,"export async function withJouzuOutput<T>(operation: () => Promise<T>, options: JouzuOutputOptions = {}): Promise<T> {"

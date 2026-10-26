@@ -1,0 +1,220 @@
+{
+  "baseline": "62dee0ff79ad83afa96947ea58e5c426bb1563e8",
+  "static_only": true,
+  "candidate_traces": 25,
+  "new_full_body_claims": 0,
+  "surface_families": 11,
+  "semantic_signoff": false,
+  "runtime_signoff": false,
+  "native_signoff": false,
+  "source_snapshots": {
+    "packages/cli/src/camoufox-adapter.ts": {
+      "lines": 1018,
+      "sha256": "8937b046351dc73280c82e408331c8f9c6c2f97b0e017c8fe535883b1599cfc9"
+    },
+    "packages/cli/src/catalog-command.ts": {
+      "lines": 296,
+      "sha256": "17dffb64279038d8c0f3c88b24975d48073f56b1b7d9b240c1cf19e83e1fe83e"
+    },
+    "packages/cli/src/catalog-failure.ts": {
+      "lines": 151,
+      "sha256": "fbba2c16776f1eda24626b7e708952253e17c85b54acb929dbb675ef5090f0bc"
+    },
+    "packages/cli/src/catalog-settings.ts": {
+      "lines": 2820,
+      "sha256": "3b72dfd0188414cfe3a34df00670dae6ff503d46283f4c7adadfa16f6197b7ce"
+    },
+    "packages/cli/src/catalog-sources.ts": {
+      "lines": 970,
+      "sha256": "7b71f89131ec9cd17e553133f4c1598e0a2e31c6edb5008cc488cdd11d23ea2f"
+    },
+    "packages/cli/src/cli.ts": {
+      "lines": 191,
+      "sha256": "2588ef3f3f7fc17a37af509068b9714d34b8794d14b70d37617fdbb72998ded7"
+    },
+    "packages/cli/src/command-report.ts": {
+      "lines": 609,
+      "sha256": "fc184615e363ed37fa8a5443cd4ebe3bd1a07cb3c65c237a8125edb52c1eff74"
+    },
+    "packages/cli/src/context-clamp.ts": {
+      "lines": 169,
+      "sha256": "d7b4556b0c9a740a70ee9b2c9e529583f1df1b7d4e59f17ee1c97fcd815a5f2c"
+    },
+    "packages/cli/src/dashboard-policy.ts": {
+      "lines": 59,
+      "sha256": "31d2469f713fc6fa0fdc80f36de213c69b8334906dacd04e776bc95d33cbbc98"
+    },
+    "packages/cli/src/flow-control/flow-runtime.ts": {
+      "lines": 297,
+      "sha256": "03a61841bd7577667f51fd4fc347f7a331e5c0a0961340c8760cd492a101f606"
+    },
+    "packages/cli/src/flow-control/flow-status-extension.ts": {
+      "lines": 460,
+      "sha256": "034e91e274616ab08d8954dcf4e3c82956c8fd3d3e3b4faa327565d1978506f3"
+    },
+    "packages/cli/src/flow-control/local-storage.ts": {
+      "lines": 108,
+      "sha256": "340e36261eaa7987f164157dcb60a45558766be7cf89e37a83f14a0d4076695b"
+    },
+    "packages/cli/src/flow-control/pi-attachment.ts": {
+      "lines": 103,
+      "sha256": "6cc49fe0cec0aff9693a63839c5e97edd789ebaf896167bdb6ff1ca2f12e0a5d"
+    },
+    "packages/cli/src/flow-control/pi-session-registry.ts": {
+      "lines": 493,
+      "sha256": "08453582bf42fa99982cdf6632ebda7a8a553bfbee6d34e6554b79a26811dc59"
+    },
+    "packages/cli/src/flow-control/subagent-observation-extension.ts": {
+      "lines": 132,
+      "sha256": "65f1203345927514b2ace668fccbb23cb1654fa9c2bc32d88163a015a42eb715"
+    },
+    "packages/cli/src/flow-control/subagent-waits.ts": {
+      "lines": 174,
+      "sha256": "d36af0f6a15ac31393c2d8c725db7b7fd888ce827dc88d8e7bc3ab246608c4ad"
+    },
+    "packages/cli/src/flow-control/user-input-adapters.ts": {
+      "lines": 461,
+      "sha256": "a316eb4b62260c633df55a49223e4f43c0a560f49055aeb1b1101dcf3a2944d0"
+    },
+    "packages/cli/src/flow-control/user-input-grants.ts": {
+      "lines": 283,
+      "sha256": "9d44fa38aed54c3a2bd36aeb39e26eda9951b02f8af800175f6c1db768c467ee"
+    },
+    "packages/cli/src/keybindings.ts": {
+      "lines": 791,
+      "sha256": "2150088e4dab7dc68a1c565d0629c58ef0b2ea45404b5918940a87b0ad72b4da"
+    },
+    "packages/cli/src/label-policy.ts": {
+      "lines": 56,
+      "sha256": "d481e09e217cdd5beadc194ebd39e54faccf887be92c435c690a7b54ca9cffbb"
+    },
+    "packages/cli/src/language-choice.ts": {
+      "lines": 246,
+      "sha256": "c69c9a44e727144dcc5c5fc9a4e926f57109f9d34d19e05812508b12843a7ff1"
+    },
+    "packages/cli/src/language-settings.ts": {
+      "lines": 440,
+      "sha256": "543e8b15e4150c78b9ed2d4e35e4321bd8a662f177287ec0c79be0caa1982a14"
+    },
+    "packages/cli/src/main-cli.ts": {
+      "lines": 858,
+      "sha256": "1504c1440bde5c660cae4bccb06a76ba52adbcd856516b91e91f705b3cb86385"
+    },
+    "packages/cli/src/metadata.ts": {
+      "lines": 112,
+      "sha256": "3a6a119d333bbd5789a18e57fcffa0debd55872fe4aa6bc98a300cf9f040d8d1"
+    },
+    "packages/cli/src/model-catalog-projection.ts": {
+      "lines": 683,
+      "sha256": "d30e80fcfffacf86b8b06e14619ffd71cdab995f92caa69baa1949187e7b378d"
+    },
+    "packages/cli/src/model-catalog-sync.ts": {
+      "lines": 1000,
+      "sha256": "b79b271b5b321b26d5a19936c07d345e1293c87c140e847950a594adaf5bc0b0"
+    },
+    "packages/cli/src/model-picker.ts": {
+      "lines": 2023,
+      "sha256": "64cc32fcdeb7fb6f465e989d5aaed85632b3beead2daaa913d5501f6bcd18f13"
+    },
+    "packages/cli/src/notifications/inbox.ts": {
+      "lines": 248,
+      "sha256": "9cd2328e8827917768a4221045daf7f754c7d3013c58697904cbf1038e088548"
+    },
+    "packages/cli/src/pi-import.ts": {
+      "lines": 340,
+      "sha256": "310e15c8eb30fdbe55f84f33cc503eaa70d57e4dfb67240131e29ed8bf183d8e"
+    },
+    "packages/cli/src/private-fs.ts": {
+      "lines": 155,
+      "sha256": "1857e06e9a4f5ee4a3664feee3aaf15ef8347e06629d863643ac6fa5ffce1bea"
+    },
+    "packages/cli/src/profile-choice.ts": {
+      "lines": 103,
+      "sha256": "5ddb753cbc89b91d2d84d28b2e8433498ba5647e5040cc32cd0940fcd304c7d1"
+    },
+    "packages/cli/src/profile-manager.ts": {
+      "lines": 455,
+      "sha256": "8d15a461dd8a3b8243891eb6ce1e7ded581a9639d71dd3179ad1c1feac766aae"
+    },
+    "packages/cli/src/profile-migration-command.ts": {
+      "lines": 350,
+      "sha256": "14b01b8f4c2856958501c64e69a81dddb1f0dbaac9d35f6da849a5bd254c184e"
+    },
+    "packages/cli/src/profile-migration.ts": {
+      "lines": 590,
+      "sha256": "5827c1d9f6df818fb88895a18239a331cbf1714b53a08c2adeb3f2bb4e98eb31"
+    },
+    "packages/cli/src/release-extensions.ts": {
+      "lines": 661,
+      "sha256": "97925bf47ab6eea4d15c845cd9437b2966c94e76f900687ae0bb9788ebe06a24"
+    },
+    "packages/cli/src/runtime-diagnostics.ts": {
+      "lines": 132,
+      "sha256": "a601239ff68bb4ae5ab3e71569742a3fbeeca9074263786855f2d06968563f87"
+    },
+    "packages/cli/src/runtime.ts": {
+      "lines": 90,
+      "sha256": "9460d7582f6e843f49ee69f11d3bb12a804cbf4ef3a948c87c4b7fa018f77bfd"
+    },
+    "packages/cli/src/session-labels.ts": {
+      "lines": 580,
+      "sha256": "98fae9aa4fac1a5190de97a9d4f96f77f61670a9cdab6a7c096456ebbeafdb03"
+    },
+    "packages/cli/src/shisa-link/credentials.ts": {
+      "lines": 109,
+      "sha256": "3a28768256ab45bf2512c123bde4d19622c5b7c307468037a9200595538acf71"
+    },
+    "packages/cli/src/shisa-link/extension.ts": {
+      "lines": 121,
+      "sha256": "4802324c0cd00fc61e77c2680ca0acb788b1583e47b64316ddac5709a52a27cc"
+    },
+    "packages/cli/src/shisa-link/onboarding.ts": {
+      "lines": 143,
+      "sha256": "16b7963dbbb77021464e3a06c62b0b23e40365ba9612a79ac5f2898a38ab4a33"
+    },
+    "packages/cli/src/shisa-link/state.ts": {
+      "lines": 160,
+      "sha256": "8ca046d85411132e1e9585892cb91b6fc9e586131d849b23018ba2c9e2c58256"
+    },
+    "packages/cli/src/startup-settings.ts": {
+      "lines": 77,
+      "sha256": "57c087aacfe1167b464acf129506df51a9ba0d78bf4e8561716fd7b7b0878fcd"
+    },
+    "packages/cli/src/state-lock.ts": {
+      "lines": 176,
+      "sha256": "aa5c44bdbd285dbd95e73b7b95df62718a11a357481a0e7e0632e4a9141d2ef2"
+    },
+    "packages/cli/src/subagents/dashboard.ts": {
+      "lines": 99,
+      "sha256": "818682e266585388297edf6b4c76c924d1e3cb1aaa102bb0bb39b8b84906a147"
+    },
+    "packages/cli/src/subagents/integration.ts": {
+      "lines": 838,
+      "sha256": "28088c381a74390664006b1456c1ab542438a0e355f29a1126126848abbea008"
+    },
+    "packages/cli/src/subagents/manager.ts": {
+      "lines": 780,
+      "sha256": "d9e019ab043318ab07e3bbbac724755394dc11a5ffa5fa834a8b2b526e6f7d1f"
+    },
+    "packages/cli/src/subagents/roles.ts": {
+      "lines": 386,
+      "sha256": "402c6f6710e1ac3d1ec11393154207fd7a69aebc0dbb7798a002fdf61526de56"
+    },
+    "packages/cli/src/tool-arguments.ts": {
+      "lines": 123,
+      "sha256": "603ce396c315d639f6746fa48f3aa6efbb94e2021821c350162b1e36d823796a"
+    },
+    "packages/cli/src/ui-locale.ts": {
+      "lines": 867,
+      "sha256": "41486f1d8c4cba582e2fc31c6d77f9ad728f8dfe807b3e0b0f418b5086c0ea4a"
+    },
+    "packages/cli/src/updater.ts": {
+      "lines": 958,
+      "sha256": "f2ebc2cb68b5272ee2cf95f7f74d533325661d74c9b2b54b4a3a160f495c63a0"
+    },
+    "packages/cli/src/workflow.ts": {
+      "lines": 1327,
+      "sha256": "23cfb6eba442ed8b7d67aa31532858e9c0753c33186b70916ca3029c103f8394"
+    }
+  }
+}

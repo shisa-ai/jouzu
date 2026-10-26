@@ -1,0 +1,7 @@
+surface_id,source_file,line,matched_line
+display-consumers.dashboard-counts,packages/session-ui/src/work-dashboard-renderer.ts,89,"		[running, `${running} running`, ""session.activity""],"
+display-consumers.dashboard-states,packages/session-ui/src/work-dashboard-renderer.ts,111,"	return [""failed"", ""cancelled"", ""waiting"", ""paused""].includes(unit.state) ? ` · ${unit.state}` : """";"
+display-consumers.flow-projection,packages/cli/src/work-dashboard-sources.ts,102,"			label: sanitizeTerminalText(work.description),"
+display-consumers.read-errors,packages/session-ui/src/work-dashboard-controller.ts,54,"							next = { availability: ""stale"", complete: false, units: [] };"
+display-consumers.receipt-seam,packages/cli/src/flow-control/user-input-adapters.ts,425,									listener(receipt);
+display-consumers.example-client,examples/user-input-adapter/extension.ts,52,	setReceipt(receipt: UserInputReceipt): void;

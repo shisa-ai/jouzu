@@ -1,0 +1,682 @@
+{
+  "baseline": "62dee0ff79ad83afa96947ea58e5c426bb1563e8",
+  "method": "static source inspection; intervals inclusive; no product imports or execution",
+  "semantic_whole_package_signoff": false,
+  "runtime_signoff": false,
+  "files": [
+    {
+      "key": "pin",
+      "source_file": "upstream/pi.lock.json",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          61
+        ]
+      ],
+      "line_count": 61,
+      "sha256": "41712f5bbec052aa8c0b8b47de988f03eacb27bbc5df07ebf4a67825c6c69822"
+    },
+    {
+      "key": "patch",
+      "source_file": "upstream/pi-content-policy/patch.lock.json",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          150
+        ]
+      ],
+      "line_count": 150,
+      "sha256": "46babe6d2031ef7c831a51d272a80061061fafbc2e70083f99fc04958e11eb2f"
+    },
+    {
+      "key": "apply",
+      "source_file": "scripts/apply-pi-content-policy.mjs",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          95
+        ]
+      ],
+      "line_count": 95,
+      "sha256": "c321a1a4230fac7688075b4078aa67493cf26b401beaec821955645aa68ca43d"
+    },
+    {
+      "key": "pkg",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-coding-agent/package.json",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          102
+        ]
+      ],
+      "line_count": 102,
+      "sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "key": "index",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/index.js",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          54
+        ]
+      ],
+      "line_count": 54,
+      "sha256": "4569157e6038be9840fa514db4b00a27fd0be9e3622cc7b49a281de6c027d7ff"
+    },
+    {
+      "key": "corepkg",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-agent-core/package.json",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          54
+        ]
+      ],
+      "line_count": 54,
+      "sha256": "97ddea9d15adf87a857b24f3bded6b47c080aba169df5fa61aeea0007ad5c252"
+    },
+    {
+      "key": "coreindex",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-agent-core/dist/index.js",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          6
+        ]
+      ],
+      "line_count": 6,
+      "sha256": "40cb358d7f05594e9b67845a78ae50ad05e8375f0cfa8cee8a74801556c09afd"
+    },
+    {
+      "key": "main",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/main.js",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          630,
+          689
+        ]
+      ],
+      "line_count": 838,
+      "sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0"
+    },
+    {
+      "key": "session",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          1,
+          45
+        ],
+        [
+          185,
+          229
+        ],
+        [
+          320,
+          539
+        ],
+        [
+          750,
+          1079
+        ],
+        [
+          1240,
+          1310
+        ],
+        [
+          1810,
+          1865
+        ],
+        [
+          2340,
+          2429
+        ],
+        [
+          2828,
+          3019
+        ],
+        [
+          3044,
+          3136
+        ]
+      ],
+      "line_count": 3816,
+      "sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a"
+    },
+    {
+      "key": "sdk",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/sdk.js",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          1,
+          100
+        ],
+        [
+          220,
+          357
+        ]
+      ],
+      "line_count": 357,
+      "sha256": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609"
+    },
+    {
+      "key": "agent",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-agent-core/dist/agent.js",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          1,
+          40
+        ],
+        [
+          400,
+          501
+        ]
+      ],
+      "line_count": 501,
+      "sha256": "ffb0ac1340aa4749b984640530e52edacd3e2f77db57972dbbbe22212f5984cf"
+    },
+    {
+      "key": "loop",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-agent-core/dist/agent-loop.js",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          250,
+          294
+        ],
+        [
+          340,
+          691
+        ]
+      ],
+      "line_count": 691,
+      "sha256": "f2b40fc13bfc2821966f57fce056b2f3fbb6f9cbf8eb60d9104ceed8f1a05908"
+    },
+    {
+      "key": "runner",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/runner.js",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          494,
+          501
+        ],
+        [
+          542,
+          547
+        ],
+        [
+          690,
+          734
+        ],
+        [
+          811,
+          974
+        ],
+        [
+          1003,
+          1067
+        ]
+      ],
+      "line_count": 1240,
+      "sha256": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7"
+    },
+    {
+      "key": "wrapper",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/wrapper.js",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          22
+        ]
+      ],
+      "line_count": 22,
+      "sha256": "ea82999a05ca0af25ed31e76aaaba6e5ce6b99b5fcde3681f0d74766e4935247"
+    },
+    {
+      "key": "definition",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/tool-definition-wrapper.js",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          38
+        ]
+      ],
+      "line_count": 38,
+      "sha256": "02fe785c52294d14216605d40d5592ac2accd1a3125891523e2a6c87feb5810c"
+    },
+    {
+      "key": "nested",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/nested-tool-calls.js",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          179
+        ]
+      ],
+      "line_count": 179,
+      "sha256": "62a69500b63b1967e350305aa5f6762345ceb397fe5c5e7f6e6ca6c8fc16c034"
+    },
+    {
+      "key": "history",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/session-manager.js",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          165,
+          304
+        ],
+        [
+          810,
+          884
+        ],
+        [
+          1118,
+          1133
+        ]
+      ],
+      "line_count": 1568,
+      "sha256": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a"
+    },
+    {
+      "key": "messages",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/messages.js",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          123
+        ]
+      ],
+      "line_count": 123,
+      "sha256": "5e3e23869301adc711db2011cf0b63bd9cc7b11fb26e5befc4cdd80e94b4ed29"
+    },
+    {
+      "key": "interactive",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/interactive-mode.js",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          1515,
+          1614
+        ],
+        [
+          1743,
+          1752
+        ],
+        [
+          2396,
+          2414
+        ],
+        [
+          2828,
+          2970
+        ],
+        [
+          3233,
+          3336
+        ],
+        [
+          3422,
+          3429
+        ],
+        [
+          3458,
+          3462
+        ]
+      ],
+      "line_count": 5977,
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c"
+    },
+    {
+      "key": "component",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/tool-execution.js",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          324
+        ]
+      ],
+      "line_count": 324,
+      "sha256": "fa47a6ec3aae07cd3ec5f84509f6553a342daf23fdb71afd75b6daa355a94e3f"
+    },
+    {
+      "key": "renderers",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/renderers/index.js",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          47
+        ]
+      ],
+      "line_count": 47,
+      "sha256": "e2f49f1778458397218f18227856e334457dd2a4c21ead9a892ce9349264efca"
+    },
+    {
+      "key": "renderutils",
+      "source_file": "packages/cli/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/render-utils.js",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          1,
+          90
+        ]
+      ],
+      "line_count": 158,
+      "sha256": "c7e09796db181e98e65698ff340c82e74788048cbf63034086189d81623a8ee7"
+    },
+    {
+      "key": "entry",
+      "source_file": "packages/cli/src/main-cli.ts",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          101,
+          103
+        ],
+        [
+          357,
+          365
+        ],
+        [
+          690,
+          810
+        ]
+      ],
+      "line_count": 858,
+      "sha256": "1504c1440bde5c660cae4bccb06a76ba52adbcd856516b91e91f705b3cb86385"
+    },
+    {
+      "key": "policy",
+      "source_file": "packages/cli/src/textguard-policy.ts",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          532
+        ]
+      ],
+      "line_count": 532,
+      "sha256": "16322c507662368353a312b0ce0c777ee7325e7e438aab107ef3a37b8fabdbac"
+    },
+    {
+      "key": "runtime",
+      "source_file": "packages/cli/src/textguard-runtime.ts",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          86
+        ]
+      ],
+      "line_count": 86,
+      "sha256": "3c425dc423b780545530f141abc1f7327a49570d7f34a438e8647dbc3db01476"
+    },
+    {
+      "key": "direct",
+      "source_file": "packages/cli/src/classic-host-policy.ts",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          53
+        ]
+      ],
+      "line_count": 53,
+      "sha256": "53181fdf481113b5e2eae162cc6e9f440650e87f55a03dc921baadeab0e2f367"
+    },
+    {
+      "key": "context",
+      "source_file": "packages/cli/src/subagents/context.ts",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          159
+        ]
+      ],
+      "line_count": 159,
+      "sha256": "9e967e973faf6d6fb9b7b11d99c7166477fb1762e286aba5cbd66282bc875e81"
+    },
+    {
+      "key": "childpolicy",
+      "source_file": "packages/cli/src/subagents/tool-policy.ts",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          20
+        ]
+      ],
+      "line_count": 20,
+      "sha256": "a200d03f7e43b5240700518df9829139fe94611fb38d0e38378588437b311e0b"
+    },
+    {
+      "key": "worker",
+      "source_file": "packages/cli/src/subagents/worker.ts",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          336
+        ]
+      ],
+      "line_count": 336,
+      "sha256": "4d1f96fd9adbcc47adefd290fd4dc033e9f6dd15f1db58a94e56af3a7a583019"
+    },
+    {
+      "key": "resources",
+      "source_file": "packages/cli/src/subagents/resources.ts",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          96,
+          179
+        ]
+      ],
+      "line_count": 218,
+      "sha256": "e9ec45241ad8da751e07bc0122f872220020a59fa2c4fe947f9e32b755f68118"
+    },
+    {
+      "key": "trace",
+      "source_file": "packages/cli/src/subagents/trace.ts",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          205
+        ]
+      ],
+      "line_count": 205,
+      "sha256": "dd8c5d13aa19d3c14de19faf6608877bde88aecbd6a21cd166db8a0178fded4e"
+    },
+    {
+      "key": "manager",
+      "source_file": "packages/cli/src/subagents/manager.ts",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          337,
+          416
+        ],
+        [
+          597,
+          624
+        ]
+      ],
+      "line_count": 780,
+      "sha256": "d9e019ab043318ab07e3bbbac724755394dc11a5ffa5fa834a8b2b526e6f7d1f"
+    },
+    {
+      "key": "integration",
+      "source_file": "packages/cli/src/subagents/integration.ts",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          620,
+          699
+        ],
+        [
+          757,
+          838
+        ]
+      ],
+      "line_count": 838,
+      "sha256": "28088c381a74390664006b1456c1ab542438a0e355f29a1126126848abbea008"
+    },
+    {
+      "key": "childrender",
+      "source_file": "packages/cli/src/subagents/render.ts",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          31,
+          110
+        ],
+        [
+          180,
+          310
+        ]
+      ],
+      "line_count": 310,
+      "sha256": "e4ea222a9986d1ca3f5f2bd936241a4af70b47717dfe1101a5209212ac2fb7fe"
+    },
+    {
+      "key": "noreply",
+      "source_file": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          69
+        ]
+      ],
+      "line_count": 69,
+      "sha256": "0efeff5e31f9b03884084fdd0cac583979e0dc5db272376101fb510dce73e090"
+    },
+    {
+      "key": "results",
+      "source_file": "packages/cli/src/flow-control/result-tools.ts",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          72
+        ]
+      ],
+      "line_count": 72,
+      "sha256": "39e4e6dd2861181ad22e480c23e5c11c198f44100c001b8be0dfc6a8e6221ea6"
+    },
+    {
+      "key": "waits",
+      "source_file": "packages/cli/src/flow-control/wait-tools.ts",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          250,
+          435
+        ]
+      ],
+      "line_count": 435,
+      "sha256": "f7f1e06d93e4be7b7eca4c77a9101223758c98cfdbad9efda84738d1c59738a7"
+    },
+    {
+      "key": "models",
+      "source_file": "packages/cli/src/model-picker.ts",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          1284,
+          1320
+        ],
+        [
+          1405,
+          1468
+        ]
+      ],
+      "line_count": 2023,
+      "sha256": "64cc32fcdeb7fb6f465e989d5aaed85632b3beead2daaa913d5501f6bcd18f13"
+    },
+    {
+      "key": "modelstate",
+      "source_file": "packages/cli/src/model-picker-state.ts",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          120,
+          146
+        ],
+        [
+          356,
+          391
+        ],
+        [
+          439,
+          441
+        ]
+      ],
+      "line_count": 631,
+      "sha256": "ed50db7f28d0208ab52d1e2f04b6d4daef21de7884f658c7f5daf9f0e522055b"
+    },
+    {
+      "key": "settings",
+      "source_file": "packages/cli/src/catalog-settings.ts",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          1241,
+          1260
+        ],
+        [
+          1741,
+          1746
+        ]
+      ],
+      "line_count": 2820,
+      "sha256": "3b72dfd0188414cfe3a34df00670dae6ff503d46283f4c7adadfa16f6197b7ce"
+    },
+    {
+      "key": "localize",
+      "source_file": "packages/cli/src/pi-ui-localization.ts",
+      "depth": "bounded-regions",
+      "ranges": [
+        [
+          944,
+          1180
+        ]
+      ],
+      "line_count": 1180,
+      "sha256": "6ed30ff4870add156a418f4cc060f65a1a6442ad96eb4d3ef8bf44da836d69de"
+    },
+    {
+      "key": "output",
+      "source_file": "packages/cli/src/runtime-output.ts",
+      "depth": "full-body",
+      "ranges": [
+        [
+          1,
+          53
+        ]
+      ],
+      "line_count": 53,
+      "sha256": "b7c16e4afb28b45a3293d630fe48880a3c23d20d34bbc3fb8d3b5cf8092f0ae6"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+source_file,disposition,evidence
+packages/cli/src/camoufox-adapter.ts,bounded-helper-consumer-trace,IC01: selected ranges 65-129; 210-489; 535-574; 670-749; 860-1018. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/catalog-sources.ts,bounded-helper-consumer-trace,IC02: selected ranges 350-774; 815-884. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/context-clamp.ts,bounded-helper-consumer-trace,IC03: selected ranges 1-169. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/dashboard-policy.ts,bounded-helper-consumer-trace,IC04: selected ranges 1-59. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/flow-control/local-storage.ts,bounded-helper-consumer-trace,IC05: selected ranges 1-108. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/flow-control/subagent-observation-extension.ts,bounded-helper-consumer-trace,IC06: selected ranges 1-132. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/flow-control/subagent-waits.ts,bounded-helper-consumer-trace,IC07: selected ranges 1-174. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/flow-control/user-input-grants.ts,bounded-helper-consumer-trace,IC08: selected ranges 1-89; 185-283. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/keybindings.ts,bounded-helper-consumer-trace,IC09: selected ranges 355-791. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/label-policy.ts,bounded-helper-consumer-trace,IC10: selected ranges 1-56. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/language-choice.ts,bounded-helper-consumer-trace,IC11: selected ranges 1-246. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/model-catalog-sync.ts,bounded-helper-consumer-trace,IC12: selected ranges 120-209; 235-289; 330-399; 540-794; 910-1000. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/pi-import.ts,bounded-helper-consumer-trace,IC13: selected ranges 100-209; 230-340. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/profile-choice.ts,bounded-helper-consumer-trace,IC14: selected ranges 1-103. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/profile-manager.ts,bounded-helper-consumer-trace,IC15: selected ranges 120-199; 255-319; 385-455. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/profile-migration-command.ts,bounded-helper-consumer-trace,IC16: selected ranges 100-350. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/profile-migration.ts,bounded-helper-consumer-trace,IC17: selected ranges 230-324; 425-589. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/runtime-diagnostics.ts,bounded-helper-consumer-trace,IC18: selected ranges 1-132. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/shisa-link/extension.ts,bounded-helper-consumer-trace,IC19: selected ranges 1-121. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/shisa-link/onboarding.ts,bounded-helper-consumer-trace,IC20: selected ranges 1-143. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/startup-settings.ts,bounded-helper-consumer-trace,IC21: selected ranges 1-77. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/subagents/dashboard.ts,bounded-helper-consumer-trace,IC22: selected ranges 1-99. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/subagents/roles.ts,bounded-helper-consumer-trace,IC23: selected ranges 315-386. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/ui-locale.ts,bounded-helper-consumer-trace,IC24: selected ranges 395-504; 550-704. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.
+packages/cli/src/updater.ts,bounded-helper-consumer-trace,IC25: selected ranges 250-349; 450-509; 570-958. Helper use/handling/consumer anchors are in traces.json; not a full importer-body claim.

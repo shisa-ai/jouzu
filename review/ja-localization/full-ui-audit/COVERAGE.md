@@ -1,4 +1,17 @@
-# Coverage and unfinished audit work
+# Coverage and remaining verification
+
+## Inventory cutoff
+
+The bounded source inventory is closed. [CHECKLIST.md](CHECKLIST.md) is the actionable translation backlog. This is not exhaustive semantic, runtime, native or language approval; the requirements below remain follow-up work, not automatically continuing audit passes.
+
+Final bounded additions:
+
+- `display-consumers/` establishes dashboard English count/state framing and traces the receipt API to a user-supplied transport, not a shipped receipt view.
+- `host-consumers/` closes selected TextGuard execution/storage/request ordering and direct/nested/model-only tool consumers in source. Settings keyboard callback handling, arbitrary parent renderers, native presentation and downstream clients remain open.
+- `import-consumers/` dispositions the exact 25 candidates and their named helper uses. It does not grant full importer-body approval. Settings remove/toggle/planning, Flow attachments, provider refusal and selected asynchronous callbacks retain explicit consumer limits.
+- `command-routes/` saves a selected registration/dispatch/resource graph with passing structural and mutation checks. Its final semantic mapping review/report was interrupted and remains incomplete. No restart or expanded command audit is part of this closure.
+
+The table below retains the broader evidence requirements; the additions above supersede its earlier pending-pass descriptions for those bounded subsets.
 
 ## What is established
 
@@ -40,6 +53,6 @@ No product translation, catalog, dependency lock, global setting, real account, 
 
 ## Completion rule
 
-This snapshot is suitable as a **full-scope inventory with confirmed gaps and an explicit unfinished-work ledger**, not as an exhaustive source-semantic or runtime sign-off. Close semantic pockets, reconcile registrations, execute reachable state fixtures and document native/auth/external-effect blockers before claiming completeness. Language and layout approval remain separate from all of these checks.
+This snapshot is suitable as a **bounded source inventory with confirmed gaps and an explicit remaining-verification ledger**, not as an exhaustive source-semantic or runtime sign-off. Inventory collection has stopped. Further completeness claims would require closing semantic pockets, reviewing the saved command mappings, executing reachable state fixtures and documenting native/auth/external-effect blockers. Language and layout approval remain separate from all of these checks.
 
 The structural validator deliberately reports `semantic_review_signoff` and `runtime_signoff` as unestablished. No claim of translated percentage, unique-defect total or cross-platform correctness is supported by these records.

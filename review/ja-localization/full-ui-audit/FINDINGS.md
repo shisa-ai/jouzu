@@ -1,4 +1,6 @@
-# Japanese UI gaps found so far
+# Japanese UI gaps found
+
+Start with [CHECKLIST.md](CHECKLIST.md) for recommended translation order. The bounded source inventory is closed at this snapshot; semantic/runtime follow-ups remain explicit.
 
 Product source: `fe0cf0878e35236ec9716f5d3ee237fff11c3480`. This is a prioritized reading guide to the source/state ledgers, **not a complete defect count or Japanese UI approval**. State families overlap, and extracted candidates still need semantic review. Runtime observations and source findings are deliberately separate.
 
@@ -30,6 +32,9 @@ Product source: `fe0cf0878e35236ec9716f5d3ee237fff11c3480`. This is a prioritize
 | Launcher close accessibility | Default dialog-close accessible text is literal `Close` in active dialogs. | `launcher-installer/README.md`, reviewed conclusion 3; `apps/launcher/src/components/ui/dialog.tsx`. A separate unused footer is not an active defect. No accessibility/native execution result is claimed. |
 | Launcher provider search | Empty provider search uses Japanese folder-specific wording: `一致するフォルダーはありません。`. | `launcher-installer/README.md`, reviewed conclusion 4. This is wrong-context Japanese rather than untranslated English. |
 | Launcher/installer errors | Local English helper/runtime-repair details can reach Japanese wrappers unchanged. Installer summaries and native validation framing differ from retained OS/source diagnostics. | `semantic-launcher/candidate-resolutions.csv` resolves the earlier 241 candidates through their callers. Many internal update errors are replaced; crash-dismiss errors are not routed to the visible alert; console-repair modal and System component alerts differ. Native execution is still unverified. |
+| Work dashboard | Section counts compose English `running`, `open`, `done`, `failed`; selected rows show raw state values, and Flow descriptions retain local `lane`/`task` prefixes. | `display-consumers/surfaces.csv`: dashboard counts/states and Flow projection. Section headings are catalog-backed; IDs and stored enums must remain stable. No live dashboard run. |
+| TextGuard/tool host | Fresh-result filtering can feed visible tool events and saved history. `model-only` Flow tools still use normal result/history rendering; generic tool and extension-error fallback framing remains English. | `host-consumers/surfaces.csv`; request-only restored-history filtering is separate. Renderer selection and later mutation can change presentation. No runtime fault injection. |
+| Helper defaults | Keybinding bootstrap, context-policy reload and catalog-refresh classification omit available catalog arguments on inspected paths. Other imported diagnostics are suppressed, replaced or forwarded depending on phase. | `import-consumers/README.md` and its exact candidate traces. These findings do not classify all importer bodies or callback consumers. |
 | Operator/development tools | The separate Python reservation CLI and development-launcher help/progress have English-only interface paths. | `operator-cli/surfaces.csv`; `launcher-installer/surfaces.csv`. They are not evidence that the distributable `jz` help uses English. |
 
 ## English that must not be counted automatically
@@ -38,7 +43,7 @@ Product source: `fe0cf0878e35236ec9716f5d3ee237fff11c3480`. This is a prioritize
 - Machine JSON, stable receipt codes, stored action/state values and parser tokens are not ordinary translated prose. A human view may still need a localized display label without changing the stored value.
 - Product nouns such as `Workflow`, `About` and `Jouzu Help`, tool names and language self-names have explicit preservation rules in `docs/localization-glossary.md`.
 - Unused dictionary keys do not establish active screens. A helper that supports Japanese does not establish that production supplied its catalog.
-- The Japanese catalog retains English receipt `reason.text` sentences. Those are human-readable prose, distinct from `reason.code`, but their final terminal visibility still needs consumer tracing. See `catalog-classifications.csv` and `packages/cli/src/flow-control/user-input-receipts.ts`.
+- The Japanese catalog retains English receipt `reason.text` sentences. Those are human-readable prose, distinct from `reason.code`. `display-consumers/` traces the inspected API to a user-supplied transport, not a shipped final receipt screen; external-client rendering remains outside this finite inventory. See `catalog-classifications.csv` and `packages/cli/src/flow-control/user-input-receipts.ts`.
 - Update notes are supplied content and have no Japanese-selection mechanism; distinguish this content policy from untranslated update controls.
 
 ## Evidence still needed

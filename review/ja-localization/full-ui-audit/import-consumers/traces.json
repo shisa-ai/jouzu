@@ -1,0 +1,1284 @@
+[
+  {
+    "source_file": "packages/cli/src/camoufox-adapter.ts",
+    "read_ranges": [
+      [
+        65,
+        129
+      ],
+      [
+        210,
+        489
+      ],
+      [
+        535,
+        574
+      ],
+      [
+        670,
+        749
+      ],
+      [
+        860,
+        1018
+      ]
+    ],
+    "classification": "mixed-forwarded-and-suppressed",
+    "local_handling": "runtimeIsInstalled catches directory validation and returns false; inspection catches it as invalid. Installation's initial ensurePrivateDirectory and later destination validation propagate. acquireStateLock busy failures are retried except invalid status, with a local timeout replacement; nonbusy path/OS failures escape. Release suppresses errors in state-lock. omitDeclinedArguments only copies/normalizes optional input; it does not translate schemas or result text.",
+    "immediate_consumer": "loadCamoufoxRuntime awaits installation; getRuntime clears its cached promise and rethrows; lazyTool.execute has finally but no replacing catch. Rejection crosses the Pi tool boundary, unlike successful content projection. No final host error renderer is claimed.",
+    "provenance": "PrivatePathError is owned English plus a protected path; OS/npm/library diagnostics have separate source provenance. Busy status is protocol data in owned English framing. Tool descriptions are model instructions; fetched text is external payload.",
+    "finding_refs": [
+      "terminal-owned:browser.tool-labels",
+      "terminal-owned:browser.screenshot-lines",
+      "import-consumers.browser.install-errors"
+    ],
+    "residual_ambiguity": "Host tool rejection conversion, rendering/persistence, optional installed runtime internals, timing and native installation remain unverified.",
+    "anchors": [
+      "packages/cli/src/camoufox-adapter.ts:75-80",
+      "packages/cli/src/camoufox-adapter.ts:228-282",
+      "packages/cli/src/camoufox-adapter.ts:346-420",
+      "packages/cli/src/camoufox-adapter.ts:537-541",
+      "packages/cli/src/camoufox-adapter.ts:719-737",
+      "packages/cli/src/camoufox-adapter.ts:908-972"
+    ],
+    "trace_id": "IC01",
+    "imports": [
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "ensurePrivateDirectory": [
+            353
+          ],
+          "validatePrivateDirectory": [
+            230,
+            231,
+            274,
+            276,
+            391
+          ]
+        }
+      },
+      {
+        "target": "packages/cli/src/state-lock.ts",
+        "symbols": {
+          "acquireStateLock": [
+            360
+          ]
+        }
+      },
+      {
+        "target": "packages/cli/src/tool-arguments.ts",
+        "symbols": {
+          "omitDeclinedArguments": [
+            949,
+            967
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/catalog-sources.ts",
+    "read_ranges": [
+      [
+        350,
+        774
+      ],
+      [
+        815,
+        884
+      ]
+    ],
+    "classification": "mixed-forwarded-and-suppressed",
+    "local_handling": "Registry/override/token loads validate directories before their parser catches. Atomic registry/override/token writes have no helper-error replacement. credentialState suppresses stored-token read errors, and readShisaLoginToken itself suppresses auth-file failures. isShisaSignedOut gates availability/source enablement and produces a catalog auth_required refusal at request resolution.",
+    "immediate_consumer": "Settings constructs CatalogSourceStore with its catalog; saveForm catches add/update/activation/token-write errors and displays sanitized Error.message. Remove and toggle invoke store methods without the same local catch; their final host handling is not established. Operator configuration failures can reach handleMainCliError's generic frame.",
+    "provenance": "Directory safety sentences are owned English, not OS text. Saved tokens never become display arguments here. Credential presence/sign-out flags and auth_required are machine state; catalog messages describe absence without exposing suppressed auth diagnostics.",
+    "finding_refs": [
+      "semantic-owned/files.csv:packages/cli/src/shisa-link/credentials.ts",
+      "import-consumers.catalog.mutations"
+    ],
+    "residual_ambiguity": "Remove/toggle host exception presentation and every other CatalogSourceStore importer are not closed. Credential-read evidence is separate from store writes.",
+    "anchors": [
+      "packages/cli/src/catalog-sources.ts:365-381",
+      "packages/cli/src/catalog-sources.ts:410-455",
+      "packages/cli/src/catalog-sources.ts:500-540",
+      "packages/cli/src/catalog-sources.ts:577-637",
+      "packages/cli/src/catalog-sources.ts:675-734",
+      "packages/cli/src/catalog-sources.ts:829-855",
+      "packages/cli/src/catalog-settings.ts:435-450",
+      "packages/cli/src/catalog-settings.ts:804-872",
+      "packages/cli/src/catalog-settings.ts:1842-1846",
+      "packages/cli/src/catalog-settings.ts:1926-1930",
+      "packages/cli/src/catalog-settings.ts:2754-2804",
+      "packages/cli/src/main-cli.ts:849-858"
+    ],
+    "trace_id": "IC02",
+    "imports": [
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "validatePrivateDirectory": [
+            371,
+            416,
+            584
+          ],
+          "writeFilePrivateAtomic": [
+            450,
+            615,
+            636,
+            689
+          ]
+        }
+      },
+      {
+        "target": "packages/cli/src/shisa-link/credentials.ts",
+        "symbols": {
+          "isShisaSignedOut": [
+            537,
+            676,
+            836
+          ],
+          "readShisaLoginToken": [
+            501
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/context-clamp.ts",
+    "read_ranges": [
+      [
+        1,
+        169
+      ]
+    ],
+    "classification": "forwarded-to-visible-wrapper",
+    "local_handling": "writeContextPolicy forwards writeFilePrivateAtomic failures unchanged; removing an off policy is a separate rmSync route. loadContextPolicy catches parsing/I/O into error but does not call the imported write helper. activeContextClamp selects only maxContextTokens.",
+    "immediate_consumer": "Settings stepContextLimit catches the write error and inserts sanitized message into settingsContextLimitNotSaved. reloadContextPolicy calls the read helper without catalog and wraps policy.error in settingsContextLimitNotApplied; that separate read route defaults English despite catalog-capable validators.",
+    "provenance": "Owned directory safety text remains English inside a catalog wrapper; OS detail/path are source data. Token limits are numeric identities, not translated prose. Read-default behavior substantively refines settings.context-policy.",
+    "finding_refs": [
+      "terminal-owned:settings.context-policy",
+      "import-consumers.settings.policy-errors"
+    ],
+    "residual_ambiguity": "Host callback after a successful write is outside the imported-helper failure trace; no renderer/native file conflict was exercised.",
+    "anchors": [
+      "packages/cli/src/context-clamp.ts:75-135",
+      "packages/cli/src/catalog-settings.ts:915-949",
+      "packages/cli/src/catalog-settings.ts:2754-2804"
+    ],
+    "trace_id": "IC03",
+    "imports": [
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "writeFilePrivateAtomic": [
+            125
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/dashboard-policy.ts",
+    "read_ranges": [
+      [
+        1,
+        59
+      ]
+    ],
+    "classification": "forwarded-to-visible-wrapper",
+    "local_handling": "writeDashboardPolicy rejects a loaded error with owned Cannot save dashboard policy framing, then forwards atomic-write failures. Load errors become compact plus error, except missing file which is compact without a diagnostic.",
+    "immediate_consumer": "Settings catches save failures into settingsDashboardNotSaved; main dashboard refresh separately notifies dashboardUnreadable with policy.error when resetVisibility is true. Initial mode-only reads drop error detail.",
+    "provenance": "Owned schema/recovery sentences and PrivatePathError differ from OS diagnostics. compact/expanded/hidden are policy enums inserted unchanged, not model content.",
+    "finding_refs": [
+      "terminal-owned:settings.dashboard-policy",
+      "import-consumers.settings.policy-errors"
+    ],
+    "residual_ambiguity": "Notification placement and all dashboard refresh timing/conditions are not executed or exhaustively traced.",
+    "anchors": [
+      "packages/cli/src/dashboard-policy.ts:14-43",
+      "packages/cli/src/catalog-settings.ts:1783-1802",
+      "packages/cli/src/main-cli.ts:552-568",
+      "packages/cli/src/main-cli.ts:663-671",
+      "packages/cli/src/catalog-settings.ts:2754-2804"
+    ],
+    "trace_id": "IC04",
+    "imports": [
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "writeFilePrivateAtomic": [
+            38
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/flow-control/local-storage.ts",
+    "read_ranges": [
+      [
+        1,
+        108
+      ]
+    ],
+    "classification": "existing-flow-boundary",
+    "local_handling": "ensurePrivateDirectory at root/folder is outside metadata replacement catch and propagates PrivatePathError or OS failure. Only the later header preflight replaces non-ENOENT errors with Flow session metadata is missing or inconsistent. Journal-open failures remain forwarded.",
+    "immediate_consumer": "PiFlowAttachment.open and PiFlowSessionRegistry.open await the opener, close ownership on failure, then rethrow or aggregate cleanup errors. Existing semantic-flow storage/runtime sink findings own the subsequent route; this pass does not claim all host attachment failures reach onError.",
+    "provenance": "Directory/root safety text and Flow preflight/aggregate framing are owned prose; journal payload and paths are preserved data.",
+    "finding_refs": [
+      "semantic-flow:semantic-flow.storage-diagnostics",
+      "semantic-flow:semantic-flow.runtime-error-sinks"
+    ],
+    "residual_ambiguity": "Final host attachment rejection display versus console callback is not uniformly established; no recursive service/host closure.",
+    "anchors": [
+      "packages/cli/src/flow-control/local-storage.ts:50-108",
+      "packages/cli/src/flow-control/pi-attachment.ts:29-82",
+      "packages/cli/src/flow-control/pi-session-registry.ts:76-101",
+      "packages/cli/src/main-cli.ts:720-734"
+    ],
+    "trace_id": "IC05",
+    "imports": [
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "ensurePrivateDirectory": [
+            55,
+            71
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/flow-control/subagent-observation-extension.ts",
+    "read_ranges": [
+      [
+        1,
+        132
+      ]
+    ],
+    "classification": "identity-only",
+    "local_handling": "notificationHash hashes tool content/markers for comparisons and stored receipt identity. It does not call inbox delivery/reportError or return the inbox's English diagnostics. No local hash-error replacement is installed; JSON serialization errors on abnormal values could reject the projection/request.",
+    "immediate_consumer": "observationProjections returns indices; event accept receives a promise of toolCallId/contentHash/markerHash records. These are machine observation evidence, not a visible message. The Flow runtime registers this extension.",
+    "provenance": "Hashes, indices and receipt keys are protocol data. No imported inbox human sentence is forwarded by these uses.",
+    "finding_refs": [
+      "semantic-owned:semantic-owned.notifications.delivery-errors"
+    ],
+    "residual_ambiguity": "Malformed nonserializable injected values and host event callback rejection handling remain outside the bounded normal-data trace.",
+    "anchors": [
+      "packages/cli/src/notifications/inbox.ts:11-12",
+      "packages/cli/src/flow-control/subagent-observation-extension.ts:23-80",
+      "packages/cli/src/flow-control/subagent-observation-extension.ts:82-121",
+      "packages/cli/src/flow-control/flow-runtime.ts:137-150"
+    ],
+    "trace_id": "IC06",
+    "imports": [
+      {
+        "target": "packages/cli/src/notifications/inbox.ts",
+        "symbols": {
+          "notificationHash": [
+            59,
+            63,
+            114
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/flow-control/subagent-waits.ts",
+    "read_ranges": [
+      [
+        1,
+        174
+      ]
+    ],
+    "classification": "predicate-only-with-existing-flow-framing",
+    "local_handling": "isActiveRun is a Set membership predicate used for wait state and retirement; it does not forward manager.result or its English lifecycle text. Registration failure appends the owned English retain-run-ID warning and forwards cause to onError; subscribed evidence failures also call onError.",
+    "immediate_consumer": "Successful results append JSON waitDependency to original content. Existing semantic-flow.subagent-receipt covers the local warning; flow-runtime forwards onError to main-cli's catalog-backed console error sink, not an assumed notification.",
+    "provenance": "Predicate states/revisions/dependencies are machine data. Existing original result content may be model/source payload; the appended failure guidance is separately owned prose.",
+    "finding_refs": [
+      "semantic-flow:semantic-flow.subagent-receipt",
+      "semantic-flow:semantic-flow.runtime-error-sinks"
+    ],
+    "residual_ambiguity": "Tool-result host fallback visibility/persistence remains unresolved; receipt error does not imply launch failure or justify repeating launch.",
+    "anchors": [
+      "packages/cli/src/subagents/manager.ts:86-89",
+      "packages/cli/src/flow-control/subagent-waits.ts:15-38",
+      "packages/cli/src/flow-control/subagent-waits.ts:76-117",
+      "packages/cli/src/flow-control/subagent-waits.ts:136-164",
+      "packages/cli/src/flow-control/flow-runtime.ts:109-110",
+      "packages/cli/src/main-cli.ts:728-734"
+    ],
+    "trace_id": "IC07",
+    "imports": [
+      {
+        "target": "packages/cli/src/subagents/manager.ts",
+        "symbols": {
+          "isActiveRun": [
+            22,
+            159
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/flow-control/user-input-grants.ts",
+    "read_ranges": [
+      [
+        1,
+        89
+      ],
+      [
+        185,
+        283
+      ]
+    ],
+    "classification": "replaced-before-api-boundary",
+    "local_handling": "readGrantsFile replaces PrivatePathError with a catalog directory-not-directory reason; other directory inspection failures become a different catalog reason. checkUserInputAdapterGrant returns invalid-config plus that reason, not the original path error.",
+    "immediate_consumer": "user-input-adapters.authorize supplies its session catalog but discards decision.reason and throws External input adapter is not authorized with the stable decision.code. The detailed private-fs sentence is not exposed on that exact route.",
+    "provenance": "Catalog denial prose, raw parser/race diagnostics and stable authorization codes are distinct. Paths/token/user submissions are not interpolated by this replacement.",
+    "finding_refs": [
+      "semantic-flow:semantic-flow.grant-denial-discard"
+    ],
+    "residual_ambiguity": "Ultimate external-client/API error presentation is not traced; no claim that every caller of checkUserInputAdapterGrant discards reasons.",
+    "anchors": [
+      "packages/cli/src/flow-control/user-input-grants.ts:209-227",
+      "packages/cli/src/flow-control/user-input-grants.ts:261-283",
+      "packages/cli/src/flow-control/user-input-adapters.ts:163-175"
+    ],
+    "trace_id": "IC08",
+    "imports": [
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "PrivatePathError": [
+            213
+          ],
+          "validatePrivateDirectory": [
+            211
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/keybindings.ts",
+    "read_ranges": [
+      [
+        355,
+        791
+      ]
+    ],
+    "classification": "mixed-visible-and-bootstrap-wrapper",
+    "local_handling": "planKeybindings wraps directory errors in KeybindingConfigError without translating detail. withLock uses a catalog busy error except invalid lock is literal English. Copy/write failures propagate; compensation writes in apply/reset/upgrade can themselves replace an earlier exception if restoration throws. State-lock release swallows errors.",
+    "immediate_consumer": "main-cli operator plans/applies use the active catalog and handleMainCliError displays domain or generic preserved detail. ensureDefaultKeybindings catches failures as a CatalogMessageRef with protectedSourceError; startup omits its catalog argument, so underlying catalog diagnostics may already be English when the outer reference resolves in Japanese.",
+    "provenance": "PrivatePathError/invalid-lock/recovery framing is owned prose, not all OS text. Binding/action/reason keys and stale threshold are machine identities; human plan formatter prints action reason keys unchanged.",
+    "finding_refs": [
+      "operator-cli:cli-runtime-errors",
+      "import-consumers.keybindings.storage"
+    ],
+    "residual_ambiguity": "Compensation precedence is source-established, not fault-injected. No broad keybinding parser/body audit or terminal input acceptance.",
+    "anchors": [
+      "packages/cli/src/keybindings.ts:375-385",
+      "packages/cli/src/keybindings.ts:431-458",
+      "packages/cli/src/keybindings.ts:487-524",
+      "packages/cli/src/keybindings.ts:576-593",
+      "packages/cli/src/keybindings.ts:606-610",
+      "packages/cli/src/keybindings.ts:662-680",
+      "packages/cli/src/keybindings.ts:693-718",
+      "packages/cli/src/main-cli.ts:216-239",
+      "packages/cli/src/main-cli.ts:351-354",
+      "packages/cli/src/main-cli.ts:815-829"
+    ],
+    "trace_id": "IC09",
+    "imports": [
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "copyPrivateFile": [
+            457
+          ],
+          "validatePrivateDirectory": [
+            381,
+            382,
+            607,
+            608
+          ],
+          "writeFilePrivateAtomic": [
+            432,
+            517,
+            590,
+            670
+          ]
+        }
+      },
+      {
+        "target": "packages/cli/src/state-lock.ts",
+        "symbols": {
+          "acquireStateLock": [
+            437
+          ],
+          "STATE_LOCK_STALE_MS": [
+            439
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/label-policy.ts",
+    "read_ranges": [
+      [
+        1,
+        56
+      ]
+    ],
+    "classification": "forwarded-to-visible-wrapper",
+    "local_handling": "write refuses existing load errors with owned Cannot save label settings framing; imported atomic-write errors are not caught. A successful write emits change callbacks, whose exceptions are a separate route from helper failure.",
+    "immediate_consumer": "Settings wraps sanitized write detail in settingsAutoLabelsNotSaved. /labels global on/off instead notifies sanitized Error.message directly. This differs from the count/state-only Settings row that shows error/on/off, not load.error detail.",
+    "provenance": "Owned validation/path/refusal prose and OS detail are mixed; boolean/state values remain data. Generated session labels are unrelated user/model content and must not be translated as errors.",
+    "finding_refs": [
+      "terminal-owned:labels.persistence-error",
+      "terminal-owned:settings.auto-label-policy",
+      "import-consumers.settings.policy-errors"
+    ],
+    "residual_ambiguity": "Listener failures after persistence and native label generation/tmux behavior are outside this imported-write failure trace.",
+    "anchors": [
+      "packages/cli/src/label-policy.ts:19-48",
+      "packages/cli/src/catalog-settings.ts:1756-1775",
+      "packages/cli/src/catalog-settings.ts:2496-2518",
+      "packages/cli/src/session-labels.ts:521-533",
+      "packages/cli/src/main-cli.ts:753-753"
+    ],
+    "trace_id": "IC10",
+    "imports": [
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "writeFilePrivateAtomic": [
+            46
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/language-choice.ts",
+    "read_ranges": [
+      [
+        1,
+        246
+      ]
+    ],
+    "classification": "constant-only",
+    "local_handling": "The only value import from a semantic-owned primary module is RESPONSE_LANGUAGES; map builds candidate tags/shipped flags. It imports no response resolver that could throw ResponseLanguageUsageError or produce fallback diagnostics. Type names carry no runtime behavior.",
+    "immediate_consumer": "promptForLanguageChoice maps tags through languageSelfName with the supplied bundle and writes self-names/catalog markers. saveLanguageChoice uses a different (ui-locale) module; its failure reaches the first-run save catch, independently dispositioned under ui-locale.",
+    "provenance": "Language tags/self-names are intentional identity, not English error propagation. UI/response selections are separate data fields; prompt text is catalog prose.",
+    "finding_refs": [
+      "semantic-owned:semantic-owned.language.resolver-boundaries",
+      "import-consumers.locale.save-errors"
+    ],
+    "residual_ambiguity": "Closed for the imported constant; no actual first-run interaction, language quality or persistence executed.",
+    "anchors": [
+      "packages/cli/src/language-settings.ts:31-35",
+      "packages/cli/src/language-choice.ts:39-66",
+      "packages/cli/src/language-choice.ts:145-166",
+      "packages/cli/src/language-choice.ts:232-246",
+      "packages/cli/src/main-cli.ts:271-301"
+    ],
+    "trace_id": "IC11",
+    "imports": [
+      {
+        "target": "packages/cli/src/language-settings.ts",
+        "symbols": {
+          "RESPONSE_LANGUAGES": [
+            58
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/model-catalog-sync.ts",
+    "read_ranges": [
+      [
+        120,
+        209
+      ],
+      [
+        235,
+        289
+      ],
+      [
+        330,
+        399
+      ],
+      [
+        540,
+        794
+      ],
+      [
+        910,
+        1000
+      ]
+    ],
+    "classification": "mixed-normalized-and-forwarded",
+    "local_handling": "refreshCatalogSource catches lock/private-write failures. CatalogSyncError busy text uses the supplied catalog; untyped PrivatePathError/OS failures go through describeCatalogFailure(error, phase) without its catalog, replacing raw detail with English cache/filesystem explanations. recordError failures are swallowed. activateDiscoveredCatalog and acceptQuarantinedCatalog instead propagate acquisition/private-write errors through finally release.",
+    "immediate_consumer": "Settings refresh prints result.message directly; activation/save catches also print Error.message. Operator refresh prints catalogStatus, not top-level result.message in human mode, so lastError appears only if recording succeeded; JSON preserves returned machine structure. Acceptance errors reach the generic main error wrapper. catalog-command displays stored lastError.code and message unchanged.",
+    "provenance": "Locally generated fallback English is not an OS/provider quote. Busy statuses/error codes/digests/revisions remain protocol data; persisted display messages are not retranslated by a later localized report.",
+    "finding_refs": [
+      "operator-cli:cli-catalog-network-errors",
+      "terminal-owned:settings.refresh",
+      "import-consumers.catalog.failure-normalization"
+    ],
+    "residual_ambiguity": "Error reclassification and failed persistence are source-only; no universal claim that every returned refresh message reaches human output, or that JSON schema/persisted text can be freely rewritten.",
+    "anchors": [
+      "packages/cli/src/model-catalog-sync.ts:355-357",
+      "packages/cli/src/model-catalog-sync.ts:555-678",
+      "packages/cli/src/model-catalog-sync.ts:686-777",
+      "packages/cli/src/model-catalog-sync.ts:930-1000",
+      "packages/cli/src/catalog-failure.ts:116-151",
+      "packages/cli/src/catalog-settings.ts:804-872",
+      "packages/cli/src/catalog-settings.ts:889-908",
+      "packages/cli/src/catalog-command.ts:157-161",
+      "packages/cli/src/catalog-command.ts:204-208",
+      "packages/cli/src/command-report.ts:403-405",
+      "packages/cli/src/command-report.ts:478-486",
+      "packages/cli/src/command-report.ts:504-598",
+      "packages/cli/src/main-cli.ts:161-199"
+    ],
+    "trace_id": "IC12",
+    "imports": [
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "ensurePrivateDirectory": [
+            696
+          ],
+          "writeFilePrivateAtomic": [
+            356,
+            728,
+            980
+          ]
+        }
+      },
+      {
+        "target": "packages/cli/src/state-lock.ts",
+        "symbols": {
+          "acquireStateLock": [
+            570,
+            665,
+            945
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/pi-import.ts",
+    "read_ranges": [
+      [
+        100,
+        209
+      ],
+      [
+        230,
+        340
+      ]
+    ],
+    "classification": "mixed-wrapped-and-forwarded",
+    "local_handling": "Receipt directory failure becomes PiImportError with unchanged detail; destination exclusive-write EEXIST becomes a catalog skipped message, other failures become PiImportError with a catalog importFailed frame and preserved detail. Receipt atomic write and lock acquisition can escape as ordinary errors; busy is a catalog PiImportError. Release is silent.",
+    "immediate_consumer": "Interactive startup awaits offerPiConfigurationImport with active catalog. handleMainCliError uses a piImport catalog wrapper for PiImportError, otherwise generic; both preserve detail. Copied models/auth bytes and receipt statuses are not translated.",
+    "provenance": "PrivatePathError is owned English with path, distinct from copied configuration and OS error diagnostics. imported/declined/destination-exists remain stable receipt data.",
+    "finding_refs": [
+      "operator-cli:cli-runtime-errors",
+      "import-consumers.import.storage"
+    ],
+    "residual_ambiguity": "No import/prompt or rollback executed; exact host stream behavior and partial receipt/write state remain unobserved.",
+    "anchors": [
+      "packages/cli/src/pi-import.ts:119-151",
+      "packages/cli/src/pi-import.ts:235-245",
+      "packages/cli/src/pi-import.ts:285-318",
+      "packages/cli/src/pi-import.ts:322-340",
+      "packages/cli/src/main-cli.ts:346-354",
+      "packages/cli/src/main-cli.ts:808-814",
+      "packages/cli/src/main-cli.ts:849-858"
+    ],
+    "trace_id": "IC13",
+    "imports": [
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "validatePrivateDirectory": [
+            121
+          ],
+          "writeFilePrivateAtomic": [
+            318
+          ],
+          "writeFilePrivateExclusive": [
+            286
+          ]
+        }
+      },
+      {
+        "target": "packages/cli/src/state-lock.ts",
+        "symbols": {
+          "acquireStateLock": [
+            329
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/profile-choice.ts",
+    "read_ranges": [
+      [
+        1,
+        103
+      ]
+    ],
+    "classification": "mixed-propagation-and-migration-suppression",
+    "local_handling": "readProfileChoice catches directory validation and wraps unchanged message in ProfileChoiceError; writeProfileChoice forwards atomic-write failures. Catalog-backed file/schema validators do not translate PrivatePathError. Neither class conversion nor active catalog changes inherited detail.",
+    "immediate_consumer": "resolveProfileSelection forwards reads to main-cli and the generic error wrapper; operator/startup writeProfileChoice calls also have no replacing catch. Migration safeReadProfileChoice suppresses the error in favor of profile-choice-unreadable conflict code, later shown in human plan or JSON.",
+    "provenance": "Owned path safety prose and OS/parser detail differ; profile ID/chosenAt/file bytes remain data. promptForJapaneseSupport is not the first-run consumer used by current main-cli.",
+    "finding_refs": [
+      "terminal-owned:startup.profile.legacy-question",
+      "import-consumers.profile.storage",
+      "import-consumers.migration.conflicts-and-receipt"
+    ],
+    "residual_ambiguity": "No persistence, malformed choice or interactive prompt exercised; other profile-choice consumers are not recursively enumerated.",
+    "anchors": [
+      "packages/cli/src/profile-choice.ts:36-79",
+      "packages/cli/src/runtime.ts:30-78",
+      "packages/cli/src/main-cli.ts:261-267",
+      "packages/cli/src/main-cli.ts:334-336",
+      "packages/cli/src/main-cli.ts:474-477",
+      "packages/cli/src/main-cli.ts:849-858",
+      "packages/cli/src/profile-migration.ts:231-242"
+    ],
+    "trace_id": "IC14",
+    "imports": [
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "validatePrivateDirectory": [
+            38
+          ],
+          "writeFilePrivateAtomic": [
+            77
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/profile-manager.ts",
+    "read_ranges": [
+      [
+        120,
+        199
+      ],
+      [
+        255,
+        319
+      ],
+      [
+        385,
+        455
+      ]
+    ],
+    "classification": "mixed-visible-and-migration-suppression",
+    "local_handling": "Read/plan directory failures become ProfileStateError retaining message. applyProfile ensures state root, uses catalog busy except literal invalid-lock English, then copies/writes with no replacement; finally releases silently. Private helpers need not produce ProfileStateError, so raw write/lock-preflight errors can take the generic handler.",
+    "immediate_consumer": "main-cli operator and startup applyProfile pass active catalog; handleMainCliError shows domain recovery or generic framing with unchanged detail. runtime profile selection forwards read errors. Migration safeReadProfileState instead replaces them with profile-state-unreadable conflict code.",
+    "provenance": "Owned safety/invalid-lock/recovery sentences differ from OS details. Asset bytes/hash/transaction IDs and plan action reasons are protected configuration data; catalog outer framing is not translation of prebuilt error text.",
+    "finding_refs": [
+      "operator-cli:cli-profile-apply",
+      "import-consumers.profile.storage",
+      "import-consumers.migration.conflicts-and-receipt"
+    ],
+    "residual_ambiguity": "No backup/write/install or source-body completeness claim; every plan action/parser path is outside this helper-focused read.",
+    "anchors": [
+      "packages/cli/src/profile-manager.ts:141-162",
+      "packages/cli/src/profile-manager.ts:269-282",
+      "packages/cli/src/profile-manager.ts:398-455",
+      "packages/cli/src/main-cli.ts:326-343",
+      "packages/cli/src/main-cli.ts:474-477",
+      "packages/cli/src/main-cli.ts:825-837",
+      "packages/cli/src/profile-migration.ts:245-257"
+    ],
+    "trace_id": "IC15",
+    "imports": [
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "copyPrivateFile": [
+            433
+          ],
+          "ensurePrivateDirectory": [
+            408
+          ],
+          "validatePrivateDirectory": [
+            143,
+            276
+          ],
+          "writeFilePrivateAtomic": [
+            443,
+            445
+          ]
+        }
+      },
+      {
+        "target": "packages/cli/src/state-lock.ts",
+        "symbols": {
+          "acquireStateLock": [
+            409
+          ],
+          "STATE_LOCK_STALE_MS": [
+            411
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/profile-migration-command.ts",
+    "read_ranges": [
+      [
+        100,
+        350
+      ]
+    ],
+    "classification": "receipt-read-replacement-write-forwarding",
+    "local_handling": "readStoredProfileMigrationReceipt catches directory validation as invalid, without exposing raw text. writeStoredProfileMigrationReceipt forwards private atomic-write errors. runApply catches only ProfileMigrationConflictError before receipt save, so a failed receipt write is not a success message; runRollback similarly forwards restore/remove failures.",
+    "immediate_consumer": "runRollback maps invalid receipt to catalog receiptUnreadable and return 1. Command dispatch receives active catalog and prints human notices; plan --json serializes stable structure. Receipt write failure escapes to main-cli's generic wrapper, possibly after migration effects completed.",
+    "provenance": "Receipt status/code/targets/transaction are machine evidence, not display sentences; invalid receipt details are intentionally suppressed. Owned path safety text can survive the write route, unlike the read route.",
+    "finding_refs": [
+      "operator-cli:cli-migration-rollback",
+      "import-consumers.migration.conflicts-and-receipt"
+    ],
+    "residual_ambiguity": "No apply/rollback or persistence failure induced; recovery after an applied migration with no saved receipt is not runtime-certified.",
+    "anchors": [
+      "packages/cli/src/profile-migration-command.ts:137-161",
+      "packages/cli/src/profile-migration-command.ts:176-194",
+      "packages/cli/src/profile-migration-command.ts:222-241",
+      "packages/cli/src/profile-migration-command.ts:279-350",
+      "packages/cli/src/main-cli.ts:242-257",
+      "packages/cli/src/main-cli.ts:849-858"
+    ],
+    "trace_id": "IC16",
+    "imports": [
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "validatePrivateDirectory": [
+            139
+          ],
+          "writeFilePrivateAtomic": [
+            193
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/profile-migration.ts",
+    "read_ranges": [
+      [
+        230,
+        324
+      ],
+      [
+        425,
+        589
+      ]
+    ],
+    "classification": "plan-suppression-apply-forwarding",
+    "local_handling": "planAssets replaces directory validation with agent-directory-unsafe. safe profile readers replace helper errors with profile-choice/state-unreadable. apply/rollback backup directory, copy, replacement and restoration writes do not catch private helper failures. saveLocalizationConfig is a separate catalog-aware shared writer, not a direct semantic-owned import.",
+    "immediate_consumer": "formatProfileMigrationPlan prints plan.conflicts as report entry keys; --json preserves the codes. runApply replaces only conflict exception with catalog conflict; other copy/write failures reach generic main error display. Receipt validation is separately dispositioned in profile-migration-command.",
+    "provenance": "Plan codes are machine state also rendered as technical keys. Actual private-fs path safety text is owned English; backing APPEND_SYSTEM.md/user edits, backup bytes and selected response language remain preserved model/configuration data.",
+    "finding_refs": [
+      "operator-cli:cli-migration-plan",
+      "import-consumers.migration.conflicts-and-receipt"
+    ],
+    "residual_ambiguity": "No full migration-body reread or transaction atomicity claim; source effects/rollback, especially missing backups, were not exercised.",
+    "anchors": [
+      "packages/cli/src/profile-migration.ts:231-257",
+      "packages/cli/src/profile-migration.ts:300-324",
+      "packages/cli/src/profile-migration.ts:444-453",
+      "packages/cli/src/profile-migration.ts:476-535",
+      "packages/cli/src/profile-migration.ts:563-585",
+      "packages/cli/src/profile-migration-command.ts:279-350",
+      "packages/cli/src/command-report.ts:403-405",
+      "packages/cli/src/command-report.ts:478-486",
+      "packages/cli/src/command-report.ts:541-598",
+      "packages/cli/src/main-cli.ts:849-858"
+    ],
+    "trace_id": "IC17",
+    "imports": [
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "copyPrivateFile": [
+            515,
+            521
+          ],
+          "ensurePrivateDirectory": [
+            511
+          ],
+          "validatePrivateDirectory": [
+            306
+          ],
+          "writeFilePrivateAtomic": [
+            534,
+            577
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/runtime-diagnostics.ts",
+    "read_ranges": [
+      [
+        1,
+        132
+      ]
+    ],
+    "classification": "metadata-diagnostic-replaced",
+    "local_handling": "installed() catches loadMetadata failure and returns undefined. report/about substitute the catalog versionUnavailable label; summary/warnings omit changed-build comparisons when installed metadata is unavailable. Original metadata validation/OS message is not printed by these rereads.",
+    "immediate_consumer": "main-cli constructs diagnostics without fourth catalog argument, so text defaults English. report reaches /flow runtime notify, about reaches /about notify outside TUI, summary is supplied as host footer, and warnings are forwarded by release diagnostics. This narrows existing default-locale finding rather than duplicating it.",
+    "provenance": "Version/path/hash/package/timestamp are identities; metadata diagnostic details are suppressed. Local unreadable hash sentinel and catalog unavailability text are owned diagnostic display, not provider prose.",
+    "finding_refs": [
+      "terminal-owned:startup.runtime.identity",
+      "terminal-owned:startup.runtime.warnings",
+      "semantic-owned:semantic-owned.metadata.failure"
+    ],
+    "residual_ambiguity": "Initial loadMetadata has a separate visible failure route; host footer placement/About rendering/native layout and all package-read failures were not executed.",
+    "anchors": [
+      "packages/cli/src/runtime-diagnostics.ts:54-90",
+      "packages/cli/src/runtime-diagnostics.ts:91-132",
+      "packages/cli/src/main-cli.ts:546-550",
+      "packages/cli/src/main-cli.ts:726-739",
+      "packages/cli/src/flow-control/flow-status-extension.ts:144-155",
+      "packages/cli/src/model-picker.ts:1389-1404",
+      "packages/cli/src/release-extensions.ts:441-456"
+    ],
+    "trace_id": "IC18",
+    "imports": [
+      {
+        "target": "packages/cli/src/metadata.ts",
+        "symbols": {
+          "loadMetadata": [
+            54
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/shisa-link/extension.ts",
+    "read_ranges": [
+      [
+        1,
+        121
+      ]
+    ],
+    "classification": "identity-and-auth-state-only",
+    "local_handling": "readShisaLinkState catches bad link files as undefined; providerConfig uses endpoint or gateway fallback without displaying parse/file errors. isShisaSignedOut returns process-local membership; getApiKey converts true to catalog signedOutReconnect. setShisaSignedOut catches listener failures; onShisaAuthChange registers/removes a listener and does not forward stored credential text.",
+    "immediate_consumer": "Provider API sees endpoint/credential or a catalog refusal; explicit /logout shisa catches signOut rejection as catalog shisaSignOutFailed. Main-cli passes the active bundle to this extension. There is no direct credentials read/write helper import on this path.",
+    "provenance": "Endpoint/access token are provider configuration/secret payload, never translation targets here. Local sign-out notice is catalog prose. Listener failures do not automatically become a toast.",
+    "finding_refs": [
+      "semantic-owned/files.csv:packages/cli/src/shisa-link/credentials.ts",
+      "semantic-owned/files.csv:packages/cli/src/shisa-link/state.ts"
+    ],
+    "residual_ambiguity": "Provider getApiKey refusal's final host presentation remains unresolved; no login/account/provider execution.",
+    "anchors": [
+      "packages/cli/src/shisa-link/credentials.ts:79-97",
+      "packages/cli/src/shisa-link/state.ts:125-138",
+      "packages/cli/src/shisa-link/extension.ts:43-63",
+      "packages/cli/src/shisa-link/extension.ts:87-119",
+      "packages/cli/src/main-cli.ts:763-769"
+    ],
+    "trace_id": "IC19",
+    "imports": [
+      {
+        "target": "packages/cli/src/shisa-link/credentials.ts",
+        "symbols": {
+          "isShisaSignedOut": [
+            53
+          ],
+          "onShisaAuthChange": [
+            108
+          ],
+          "setShisaSignedOut": [
+            46
+          ]
+        }
+      },
+      {
+        "target": "packages/cli/src/shisa-link/state.ts",
+        "symbols": {
+          "readShisaLinkState": [
+            60
+          ],
+          "shisaLinkStatePath": [
+            33
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/shisa-link/onboarding.ts",
+    "read_ranges": [
+      [
+        1,
+        143
+      ]
+    ],
+    "classification": "replaced-before-visible-output",
+    "local_handling": "writeFilePrivateExclusive EEXIST returns silently; other marker-write failures print catalog setupChoiceFailed plus later, discarding raw detail. Outer catch prints cancellation, exact catalog storageError, or generic couldNotComplete. setShisaSignedOut cannot propagate its listener failures, which credentials suppresses.",
+    "immediate_consumer": "write/writePoint sanitize and write catalog prompts/recovery to output; main-cli supplies selected catalog and interactive gate. Imported private-fs diagnostic is not the visible recovery sentence on this path.",
+    "provenance": "Choice/decidedAt JSON is machine state; verification URI/code are remote identity; login progress is outside the specific imported helper. No raw marker path or auth-file content is added to display.",
+    "finding_refs": [
+      "semantic-owned/files.csv:packages/cli/src/private-fs.ts",
+      "semantic-owned/files.csv:packages/cli/src/shisa-link/credentials.ts"
+    ],
+    "residual_ambiguity": "Closed for named helper errors; login protocol, browser and account operations were not exercised.",
+    "anchors": [
+      "packages/cli/src/shisa-link/onboarding.ts:57-73",
+      "packages/cli/src/shisa-link/onboarding.ts:90-104",
+      "packages/cli/src/shisa-link/onboarding.ts:124-143",
+      "packages/cli/src/shisa-link/credentials.ts:79-97",
+      "packages/cli/src/main-cli.ts:496-501"
+    ],
+    "trace_id": "IC20",
+    "imports": [
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "writeFilePrivateExclusive": [
+            91
+          ]
+        }
+      },
+      {
+        "target": "packages/cli/src/shisa-link/credentials.ts",
+        "symbols": {
+          "setShisaSignedOut": [
+            124
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/startup-settings.ts",
+    "read_ranges": [
+      [
+        1,
+        77
+      ]
+    ],
+    "classification": "uncaught-helper-forwarding",
+    "local_handling": "Missing settings uses exclusive write; existing usable settings uses atomic replacement. JSON parse/unusable shape returns false, but the private helper calls and I/O preflight have no local failure catch. No English success/notification sentence is created by the boolean return.",
+    "immediate_consumer": "main-cli interactive startup invokes both functions without using their boolean result or a local catch. Failure reaches bootstrap -> handleMainCliError generic catalog frame with preserved message, unlike quiet rejection of malformed settings JSON.",
+    "provenance": "quietStartup/version marker and settings bytes are machine configuration. Directory/root safety is owned English; OS failures/path/version are source data. A product-owned English sentence does not become external prose merely by entering protectedSourceError.",
+    "finding_refs": [
+      "operator-cli:cli-runtime-errors",
+      "import-consumers.startup.settings-write"
+    ],
+    "residual_ambiguity": "No startup settings or changelog state changed; exact startup stream/native exception timing remains unobserved.",
+    "anchors": [
+      "packages/cli/src/startup-settings.ts:8-32",
+      "packages/cli/src/startup-settings.ts:42-77",
+      "packages/cli/src/main-cli.ts:351-354",
+      "packages/cli/src/main-cli.ts:849-858",
+      "packages/cli/src/cli.ts:151-178",
+      "packages/cli/src/cli.ts:189-190"
+    ],
+    "trace_id": "IC21",
+    "imports": [
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "writeFilePrivateAtomic": [
+            31,
+            67,
+            75
+          ],
+          "writeFilePrivateExclusive": [
+            11,
+            47
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/subagents/dashboard.ts",
+    "read_ranges": [
+      [
+        1,
+        99
+      ]
+    ],
+    "classification": "predicate-only-conditional-view",
+    "local_handling": "isActiveRun only filters/selects styles/counts; it cannot forward the manager's stored result or errors. Renderer owns English Subagents/active/queued/finished and Details/Hide; raw status/role/model/cwd/tool are data. Existing native-widget finding already records these literals.",
+    "immediate_consumer": "SubagentDashboard.refresh installs setWidget only with TUI context, visibility and nonempty runs. Integration attaches it only without dashboardVisibility. Main-cli supplies dashboardVisibility via model-picker, so this standalone widget is not selected by that normal assembly; do not infer current display from the renderer export.",
+    "provenance": "Owned labels differ from run identity/status. Predicate import is not an error surface. No model answer/body is read by this widget.",
+    "finding_refs": [
+      "terminal-owned:subagents.native-widget"
+    ],
+    "residual_ambiguity": "Other callers can omit dashboardVisibility; host/native widget selection and the alternate Work dashboard text are not audited recursively.",
+    "anchors": [
+      "packages/cli/src/subagents/manager.ts:86-89",
+      "packages/cli/src/subagents/dashboard.ts:10-41",
+      "packages/cli/src/subagents/dashboard.ts:66-89",
+      "packages/cli/src/subagents/integration.ts:479-480",
+      "packages/cli/src/model-picker.ts:1141-1148",
+      "packages/cli/src/main-cli.ts:569-573"
+    ],
+    "trace_id": "IC22",
+    "imports": [
+      {
+        "target": "packages/cli/src/subagents/manager.ts",
+        "symbols": {
+          "isActiveRun": [
+            18,
+            23,
+            31
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/subagents/roles.ts",
+    "read_ranges": [
+      [
+        315,
+        386
+      ]
+    ],
+    "classification": "existing-role-consumer-closure",
+    "local_handling": "preferCatalogModels and catalogRuntimeIdentity only deduplicate/decode model identities; malformed identity decoding returns undefined, not a helper diagnostic. AgentRoleStore.save forwards atomic-write/preflight errors and uses its own English onBusy error; release is silent. resolveAgentModel composes catalog ambiguity/unavailable messages using protected selectors.",
+    "immediate_consumer": "semantic-roles already fully read the producer. This bounded pass rereads only helper sites: integration service.save forwards save; Workflow errorText/handleInput/render preserve ordinary Error.message. Startup instead catches role-load failure as catalog unreadable notice. No duplicate full-body credit.",
+    "provenance": "Owned Storage/Validation prose differs from filesystem errors, model identities and user role instructions. Imported projection helpers do not produce a model/provider diagnostic on these sites.",
+    "finding_refs": [
+      "semantic-roles:semantic-roles.storage",
+      "semantic-roles:semantic-roles.model-errors",
+      "semantic-roles:semantic-roles.defaults-and-contracts"
+    ],
+    "residual_ambiguity": "Every model resolution caller and native Workflow interaction remains outside this bounded trace; prior complete producer read is not a whole import graph sign-off.",
+    "anchors": [
+      "packages/cli/src/model-catalog-projection.ts:342-366",
+      "packages/cli/src/subagents/roles.ts:333-386",
+      "packages/cli/src/subagents/integration.ts:251-256",
+      "packages/cli/src/subagents/integration.ts:501-507",
+      "packages/cli/src/workflow.ts:215-218",
+      "packages/cli/src/workflow.ts:402-413",
+      "packages/cli/src/workflow.ts:1025-1029",
+      "packages/cli/src/workflow.ts:1288-1301"
+    ],
+    "trace_id": "IC23",
+    "imports": [
+      {
+        "target": "packages/cli/src/model-catalog-projection.ts",
+        "symbols": {
+          "catalogRuntimeIdentity": [
+            362
+          ],
+          "preferCatalogModels": [
+            359
+          ]
+        }
+      },
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "writeFilePrivateAtomic": [
+            347
+          ]
+        }
+      },
+      {
+        "target": "packages/cli/src/state-lock.ts",
+        "symbols": {
+          "acquireStateLock": [
+            339
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/ui-locale.ts",
+    "read_ranges": [
+      [
+        395,
+        504
+      ],
+      [
+        550,
+        704
+      ]
+    ],
+    "classification": "mixed-validation-data-and-forwarded-storage",
+    "local_handling": "isResponseLanguagePreference/parseArtifactPolicy return boolean/data/undefined; describeInvalidArtifactField supplies field/value data to a catalog validation sentence. No ResponseLanguageUsageError is imported. save/restore acquireStateLock maps busy/invalid to catalog errors; preflight/private writes propagate. Restore is used by localization-ops compensation, whose own recovery replacement is already audited.",
+    "immediate_consumer": "First-run save catches and prints languageChoiceSaveFailed with source detail. Settings apply/reset goes through localization-ops and existing recovery/store-failure findings. Parser failures become invalid state/reason; main-cli startup displays localizationInvalid, separate from stable configuration data.",
+    "provenance": "Field names/values are diagnostic data inside catalog framing, not model instructions. PrivatePathError owns English; save's own unsupported/refusal/size sentences also remain local English. OS/path detail is source payload, not all owned copy.",
+    "finding_refs": [
+      "semantic-owned:semantic-owned.language.recovery",
+      "semantic-owned:semantic-owned.language.store-failures",
+      "import-consumers.locale.save-errors"
+    ],
+    "residual_ambiguity": "Settings planLanguageChange pre-apply host catch remains unresolved in the prior ledger; no every-reader/UI-locale API closure or settings writes.",
+    "anchors": [
+      "packages/cli/src/language-settings.ts:114-153",
+      "packages/cli/src/language-settings.ts:430-440",
+      "packages/cli/src/ui-locale.ts:417-440",
+      "packages/cli/src/ui-locale.ts:565-608",
+      "packages/cli/src/ui-locale.ts:640-692",
+      "packages/cli/src/language-choice.ts:232-246",
+      "packages/cli/src/main-cli.ts:288-301",
+      "packages/cli/src/main-cli.ts:146-150"
+    ],
+    "trace_id": "IC24",
+    "imports": [
+      {
+        "target": "packages/cli/src/language-settings.ts",
+        "symbols": {
+          "describeInvalidArtifactField": [
+            438
+          ],
+          "isResponseLanguagePreference": [
+            417,
+            649
+          ],
+          "parseArtifactPolicy": [
+            431,
+            652
+          ]
+        }
+      },
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "validatePrivateDirectory": [
+            596
+          ],
+          "writeFilePrivateAtomic": [
+            601,
+            623,
+            687
+          ]
+        }
+      },
+      {
+        "target": "packages/cli/src/state-lock.ts",
+        "symbols": {
+          "acquireStateLock": [
+            566
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  },
+  {
+    "source_file": "packages/cli/src/updater.ts",
+    "read_ranges": [
+      [
+        250,
+        349
+      ],
+      [
+        450,
+        509
+      ],
+      [
+        570,
+        958
+      ]
+    ],
+    "classification": "phase-dependent-replacement",
+    "local_handling": "readUpdateState wraps directory validation as UpdateError invalid-state retaining detail; writeUpdateState forwards. setPolicy/status have no replacing catch. check normalizes non-UpdateError write failure to catalog checkFailed; recordFailure suppresses further failures. apply lock acquisition is before its try (raw preflight can escape); download-directory/private failures inside try become generic updateFailed. Successful install status-write failure emits catalog statusUnrecorded; startup read failure preserves detail in skipped, later check/apply failure notices usually expose code only.",
+    "immediate_consumer": "cli bootstrap supplies active catalog; UpdateError uses update wrapper with preserved message, raw pre-lock/path errors fall through generic main handling. Startup resolves its CatalogMessageRef to stderr. Human formatUpdateStatus includes lastResult/lastErrorCode; --json preserves stable state/result keys. No private helper body text is uniformly displayed across these phases.",
+    "provenance": "Owned invalid-lock/path safety and catalog recovery prose differ from OS/registry detail; machine error codes/state/version/hash remain exact. recordFailure writes only code, not a translated error body.",
+    "finding_refs": [
+      "operator-cli:cli-update-apply",
+      "operator-cli:cli-startup-update",
+      "import-consumers.update.phase-errors"
+    ],
+    "residual_ambiguity": "No updater, npm/process, registry/network, restart or install action executed; normalization/rollback/native behavior and concurrent file conflicts are static evidence only.",
+    "anchors": [
+      "packages/cli/src/updater.ts:265-323",
+      "packages/cli/src/updater.ts:468-483",
+      "packages/cli/src/updater.ts:572-586",
+      "packages/cli/src/updater.ts:621-680",
+      "packages/cli/src/updater.ts:729-745",
+      "packages/cli/src/updater.ts:794-902",
+      "packages/cli/src/updater.ts:928-958",
+      "packages/cli/src/cli.ts:84-154",
+      "packages/cli/src/cli.ts:157-178"
+    ],
+    "trace_id": "IC25",
+    "imports": [
+      {
+        "target": "packages/cli/src/private-fs.ts",
+        "symbols": {
+          "ensurePrivateDirectory": [
+            677
+          ],
+          "validatePrivateDirectory": [
+            267
+          ],
+          "writeFilePrivateAtomic": [
+            322
+          ]
+        }
+      },
+      {
+        "target": "packages/cli/src/state-lock.ts",
+        "symbols": {
+          "acquireStateLock": [
+            469
+          ],
+          "STATE_LOCK_STALE_MS": [
+            472
+          ]
+        }
+      }
+    ],
+    "read_depth": "bounded-helper-consumer-trace"
+  }
+]

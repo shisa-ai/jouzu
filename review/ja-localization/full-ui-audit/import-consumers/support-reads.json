@@ -1,0 +1,477 @@
+{
+  "packages/cli/src/catalog-settings.ts": {
+    "read_depth": "bounded-consumer-read",
+    "read_ranges": [
+      [
+        435,
+        450
+      ],
+      [
+        804,
+        872
+      ],
+      [
+        889,
+        908
+      ],
+      [
+        915,
+        949
+      ],
+      [
+        1756,
+        1775
+      ],
+      [
+        1783,
+        1802
+      ],
+      [
+        1842,
+        1846
+      ],
+      [
+        1926,
+        1930
+      ],
+      [
+        2496,
+        2518
+      ],
+      [
+        2754,
+        2804
+      ]
+    ]
+  },
+  "packages/cli/src/main-cli.ts": {
+    "read_depth": "bounded-consumer-read",
+    "read_ranges": [
+      [
+        146,
+        150
+      ],
+      [
+        161,
+        199
+      ],
+      [
+        216,
+        239
+      ],
+      [
+        242,
+        257
+      ],
+      [
+        261,
+        267
+      ],
+      [
+        271,
+        301
+      ],
+      [
+        288,
+        301
+      ],
+      [
+        326,
+        343
+      ],
+      [
+        334,
+        336
+      ],
+      [
+        346,
+        354
+      ],
+      [
+        351,
+        354
+      ],
+      [
+        474,
+        477
+      ],
+      [
+        496,
+        501
+      ],
+      [
+        546,
+        550
+      ],
+      [
+        552,
+        568
+      ],
+      [
+        569,
+        573
+      ],
+      [
+        663,
+        671
+      ],
+      [
+        720,
+        734
+      ],
+      [
+        726,
+        739
+      ],
+      [
+        728,
+        734
+      ],
+      [
+        753,
+        753
+      ],
+      [
+        763,
+        769
+      ],
+      [
+        808,
+        814
+      ],
+      [
+        815,
+        829
+      ],
+      [
+        825,
+        837
+      ],
+      [
+        849,
+        858
+      ]
+    ]
+  },
+  "packages/cli/src/flow-control/pi-attachment.ts": {
+    "read_depth": "bounded-consumer-read",
+    "read_ranges": [
+      [
+        29,
+        82
+      ]
+    ]
+  },
+  "packages/cli/src/flow-control/pi-session-registry.ts": {
+    "read_depth": "bounded-consumer-read",
+    "read_ranges": [
+      [
+        76,
+        101
+      ]
+    ]
+  },
+  "packages/cli/src/notifications/inbox.ts": {
+    "read_depth": "bounded-helper-read",
+    "read_ranges": [
+      [
+        1,
+        25
+      ],
+      [
+        11,
+        12
+      ]
+    ]
+  },
+  "packages/cli/src/flow-control/flow-runtime.ts": {
+    "read_depth": "bounded-consumer-read",
+    "read_ranges": [
+      [
+        109,
+        110
+      ],
+      [
+        137,
+        150
+      ]
+    ]
+  },
+  "packages/cli/src/subagents/manager.ts": {
+    "read_depth": "bounded-helper-read",
+    "read_ranges": [
+      [
+        80,
+        104
+      ],
+      [
+        86,
+        89
+      ]
+    ]
+  },
+  "packages/cli/src/flow-control/user-input-adapters.ts": {
+    "read_depth": "bounded-consumer-read",
+    "read_ranges": [
+      [
+        163,
+        175
+      ]
+    ]
+  },
+  "packages/cli/src/session-labels.ts": {
+    "read_depth": "bounded-consumer-read",
+    "read_ranges": [
+      [
+        521,
+        533
+      ]
+    ]
+  },
+  "packages/cli/src/language-settings.ts": {
+    "read_depth": "bounded-helper-read",
+    "read_ranges": [
+      [
+        30,
+        39
+      ],
+      [
+        31,
+        35
+      ],
+      [
+        110,
+        154
+      ],
+      [
+        114,
+        153
+      ],
+      [
+        425,
+        440
+      ],
+      [
+        430,
+        440
+      ]
+    ]
+  },
+  "packages/cli/src/catalog-failure.ts": {
+    "read_depth": "bounded-consumer-read",
+    "read_ranges": [
+      [
+        116,
+        151
+      ]
+    ]
+  },
+  "packages/cli/src/catalog-command.ts": {
+    "read_depth": "bounded-consumer-read",
+    "read_ranges": [
+      [
+        157,
+        161
+      ],
+      [
+        204,
+        208
+      ]
+    ]
+  },
+  "packages/cli/src/command-report.ts": {
+    "read_depth": "bounded-consumer-read",
+    "read_ranges": [
+      [
+        403,
+        405
+      ],
+      [
+        478,
+        486
+      ],
+      [
+        504,
+        598
+      ],
+      [
+        541,
+        598
+      ]
+    ]
+  },
+  "packages/cli/src/runtime.ts": {
+    "read_depth": "bounded-consumer-read",
+    "read_ranges": [
+      [
+        30,
+        78
+      ]
+    ]
+  },
+  "packages/cli/src/flow-control/flow-status-extension.ts": {
+    "read_depth": "bounded-consumer-read",
+    "read_ranges": [
+      [
+        144,
+        155
+      ]
+    ]
+  },
+  "packages/cli/src/model-picker.ts": {
+    "read_depth": "bounded-consumer-read",
+    "read_ranges": [
+      [
+        1141,
+        1148
+      ],
+      [
+        1389,
+        1404
+      ]
+    ]
+  },
+  "packages/cli/src/release-extensions.ts": {
+    "read_depth": "bounded-consumer-read",
+    "read_ranges": [
+      [
+        441,
+        456
+      ]
+    ]
+  },
+  "packages/cli/src/shisa-link/credentials.ts": {
+    "read_depth": "complete-helper-read",
+    "read_ranges": [
+      [
+        1,
+        109
+      ],
+      [
+        79,
+        97
+      ]
+    ]
+  },
+  "packages/cli/src/shisa-link/state.ts": {
+    "read_depth": "complete-helper-read",
+    "read_ranges": [
+      [
+        1,
+        160
+      ],
+      [
+        125,
+        138
+      ]
+    ]
+  },
+  "packages/cli/src/cli.ts": {
+    "read_depth": "bounded-consumer-read",
+    "read_ranges": [
+      [
+        84,
+        154
+      ],
+      [
+        151,
+        178
+      ],
+      [
+        157,
+        178
+      ],
+      [
+        189,
+        190
+      ]
+    ]
+  },
+  "packages/cli/src/subagents/integration.ts": {
+    "read_depth": "bounded-consumer-read",
+    "read_ranges": [
+      [
+        251,
+        256
+      ],
+      [
+        479,
+        480
+      ],
+      [
+        501,
+        507
+      ]
+    ]
+  },
+  "packages/cli/src/model-catalog-projection.ts": {
+    "read_depth": "bounded-helper-read",
+    "read_ranges": [
+      [
+        335,
+        394
+      ],
+      [
+        342,
+        366
+      ]
+    ]
+  },
+  "packages/cli/src/workflow.ts": {
+    "read_depth": "bounded-consumer-read",
+    "read_ranges": [
+      [
+        215,
+        218
+      ],
+      [
+        402,
+        413
+      ],
+      [
+        1025,
+        1029
+      ],
+      [
+        1288,
+        1301
+      ]
+    ]
+  },
+  "packages/cli/src/private-fs.ts": {
+    "read_depth": "complete-helper-read",
+    "read_ranges": [
+      [
+        1,
+        155
+      ]
+    ]
+  },
+  "packages/cli/src/state-lock.ts": {
+    "read_depth": "complete-helper-read",
+    "read_ranges": [
+      [
+        1,
+        176
+      ]
+    ]
+  },
+  "packages/cli/src/metadata.ts": {
+    "read_depth": "complete-helper-read",
+    "read_ranges": [
+      [
+        1,
+        112
+      ]
+    ]
+  },
+  "packages/cli/src/tool-arguments.ts": {
+    "read_depth": "bounded-helper-read",
+    "read_ranges": [
+      [
+        1,
+        100
+      ]
+    ]
+  }
+}
