@@ -1,0 +1,604 @@
+{
+  "source_revision": "52171752ca6b0a03bf5b6e8cda4f796fb10d3d62",
+  "inspection_checkout_revision": "39a34b0cd9659d9d1c9c3d7b3ad3b4f3cb1d039d",
+  "universe": "terminal-owned/files.csv: flow-control prefix and disposition contains excerpt or partial",
+  "primary_files": 84,
+  "primary_lines": 21872,
+  "full_body_files": 84,
+  "full_body_lines": 21872,
+  "residual_files": 0,
+  "residual_lines": 0,
+  "primary_body_set_complete": true,
+  "semantic_signoff": false,
+  "native_rendering_signoff": false,
+  "files": [
+    {
+      "source_file": "packages/cli/src/flow-control/admission.ts",
+      "lines": 227,
+      "sha256": "f3fb097fedf110a52f32cb175e308e2acfd734ef089a74ed5f140689cfadfaf1",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/attempt-retention.ts",
+      "lines": 138,
+      "sha256": "3cc811c6b67dfd8c4480916fc529af8683359afcee56e0a36f0c99afbc608a9c",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/automatic-work.ts",
+      "lines": 31,
+      "sha256": "485a56605eea2633a16662602ab89976173924538b9ca0ad310acaa371ec5ba6",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/background-adapter.ts",
+      "lines": 48,
+      "sha256": "43981adbd2fee6b021411aee1131d27a62808336bb55820e852bc794afd52da8",
+      "full_body_read": true,
+      "prior_disposition": "producer-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/background-extension.ts",
+      "lines": 170,
+      "sha256": "465ded17291a32eb3b93198fd15c39473b233d22245b901e39280a21e12623cf",
+      "full_body_read": true,
+      "prior_disposition": "producer-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/background-results.ts",
+      "lines": 134,
+      "sha256": "b1b2d5e3f8a5ff34294538604d501ed012cf64513ffb5342cf8aba3f215ca387",
+      "full_body_read": true,
+      "prior_disposition": "producer-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/cache-warm-admission.ts",
+      "lines": 131,
+      "sha256": "0f1a057097c87cc201aefe811fd0a5d6d51fc82dba7d08f159398aa24d2e06be",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/compaction-boundary.ts",
+      "lines": 10,
+      "sha256": "75086c2493e59c55797c53f15b83b19a13e5366d1ad12b30461366f807853da8",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/compaction-extension.ts",
+      "lines": 72,
+      "sha256": "2d745eb6c1370e2a2b19fcb8b6d805ecd152e09ffd41596af8d665c48fe6695f",
+      "full_body_read": true,
+      "prior_disposition": "producer-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/controller.ts",
+      "lines": 668,
+      "sha256": "a73e457af9909428586b0f796365825be3c677cd56c36a0837c7613fb65d4bf8",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/diagnostic-text.ts",
+      "lines": 19,
+      "sha256": "725abb6d3f0c78c3e66b513a6dd63257474cd5ba333a907eb22ae66ae754db95",
+      "full_body_read": true,
+      "prior_disposition": "diagnostic-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/flow-status-context.ts",
+      "lines": 286,
+      "sha256": "310aea4e1ac9ff4b91ab9fa8227d6b5910454bee5be8e8706e27d86f81c2b73f",
+      "full_body_read": true,
+      "prior_disposition": "ui-data-projection-partial-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/journal-checkpoint.ts",
+      "lines": 81,
+      "sha256": "c64c021f3019616334e2e749cf1d5ad6d8a8daa5d201c4a25b1da40025f2ea45",
+      "full_body_read": true,
+      "prior_disposition": "storage-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/journal-storage.ts",
+      "lines": 345,
+      "sha256": "96138394f0a2c29e8ed404060e8e8e9102a15ab8bf20655b5b5f9178208503cf",
+      "full_body_read": true,
+      "prior_disposition": "storage-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/local-storage.ts",
+      "lines": 108,
+      "sha256": "340e36261eaa7987f164157dcb60a45558766be7cf89e37a83f14a0d4076695b",
+      "full_body_read": true,
+      "prior_disposition": "storage-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/model-input.ts",
+      "lines": 290,
+      "sha256": "c059b4f1a222986e8078fcd050a87799dbc7981072f950a27524d561ab511b62",
+      "full_body_read": true,
+      "prior_disposition": "model-content-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/multiloop-extension.ts",
+      "lines": 168,
+      "sha256": "ae42b5604118db1515c6bc8bf299e71eb8a946cb7e75386cabba9c3166760614",
+      "full_body_read": true,
+      "prior_disposition": "producer-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/multiloop-producer.ts",
+      "lines": 223,
+      "sha256": "35fc6f9f6ff8a6464cb3ad1ad91b477e7b0e33a93985dca023eed6be876bba9e",
+      "full_body_read": true,
+      "prior_disposition": "producer-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/native-admission.ts",
+      "lines": 181,
+      "sha256": "88a5150de9beb50e98cb134cf9bc8dee0dd39d89521c98e1a1ed31762d8877a3",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/native-context-projections.ts",
+      "lines": 162,
+      "sha256": "ec63859d00d9ce0f8f3fc2a097b95c03af80d63c166a0a06f1c1fa4a6845f866",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/native-inclusion.ts",
+      "lines": 41,
+      "sha256": "2c87a75e4a71586084a9d9326da16d7c5de997272e28fa4cb726cf89b8ae125b",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/native-request-retention.ts",
+      "lines": 178,
+      "sha256": "81504b815b19f99fe01cf62f12dac5e233188aa5c93ba2d33204a3712631f845",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/native-request-store.ts",
+      "lines": 967,
+      "sha256": "d70deaa8e5df9921b7689c557d3d6fc8c2ddf02256116e5fac2b043c239201e9",
+      "full_body_read": true,
+      "prior_disposition": "storage-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/native-source-reconciliation.ts",
+      "lines": 74,
+      "sha256": "0aaf71bd8888e41feccb926b9b9eeeb6b1050f49441fb31d36d2b118b4d2c1a0",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/native-submission-view.ts",
+      "lines": 136,
+      "sha256": "cebd9eeee286a184e26b21d2042ae09e88fa6a24f390b94ffc3301a600208d42",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/no-reply.ts",
+      "lines": 73,
+      "sha256": "aec9f9a9cd966382b40b54e7e62a3ce7d9c59a1ef623c9e14279739814179278",
+      "full_body_read": true,
+      "prior_disposition": "model-tool-diagnostic-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/observation.ts",
+      "lines": 72,
+      "sha256": "96f6b8a552df46018c3af8a3c4e85b3557521c05f19817a70d03be1a747a34d5",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/ownership.ts",
+      "lines": 149,
+      "sha256": "34007f7f13409cdc863f4f067136a0f2cf3166ed30262416f183179ee5462392",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/payload-copy.ts",
+      "lines": 117,
+      "sha256": "d8ded2084b2acdc27d28f64ab62eec51e4cda36a5258f273e7f7b4cb6155ca3b",
+      "full_body_read": true,
+      "prior_disposition": "transport-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/persisted-agent-message.ts",
+      "lines": 15,
+      "sha256": "787925b7da585040585d100b006fb679f442eadc70b7add20930acb3a9b23177",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-attachment.ts",
+      "lines": 103,
+      "sha256": "6cc49fe0cec0aff9693a63839c5e97edd789ebaf896167bdb6ff1ca2f12e0a5d",
+      "full_body_read": true,
+      "prior_disposition": "lifecycle-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-branch-binding.ts",
+      "lines": 320,
+      "sha256": "0bcc6dd612a93bbf60478b15031b50541281c7a59bff91e6419a05823393031d",
+      "full_body_read": true,
+      "prior_disposition": "lifecycle-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-compaction-receipts.ts",
+      "lines": 70,
+      "sha256": "7a7bdb607eed12b86bc50cdabb21c6a020d6b2f7f88ff5b8be7e8bfd7288e1d9",
+      "full_body_read": true,
+      "prior_disposition": "receipt-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-controller-host.ts",
+      "lines": 311,
+      "sha256": "1ebaa34a570040a586de5d1889fb6b8558dfe597dc3186f2d52349d8e8b892b0",
+      "full_body_read": true,
+      "prior_disposition": "host-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-history-reader.ts",
+      "lines": 308,
+      "sha256": "0def8b81b0723ddf97eae4c8e1995de4bf814e9b973257d95382122def014692",
+      "full_body_read": true,
+      "prior_disposition": "storage-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-history-receipts.ts",
+      "lines": 120,
+      "sha256": "ce50645d75f6ab3fdde4a4cf75368a0896e416f0b3a3aaf51b2c2362f7e73591",
+      "full_body_read": true,
+      "prior_disposition": "receipt-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-history-recovery.ts",
+      "lines": 95,
+      "sha256": "4b8962cb0b3da1b627c1fb0c32f3bcc9eb520804dce03158baa18d07947442b2",
+      "full_body_read": true,
+      "prior_disposition": "receipt-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-host-boundary.ts",
+      "lines": 458,
+      "sha256": "d84866c44668003900d08c914582342778da434d322c228009835fc5c7e7464d",
+      "full_body_read": true,
+      "prior_disposition": "host-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-host-hooks.ts",
+      "lines": 14,
+      "sha256": "520c73c5045b24c7bf3a8480875ad98a386155b7a0dc7d3239fda3b06046ecea",
+      "full_body_read": true,
+      "prior_disposition": "host-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "lines": 190,
+      "sha256": "134ccc5517f94be86e7a660a4f8417a94c76c127d6eae6a67c36b48db22d0f86",
+      "full_body_read": true,
+      "prior_disposition": "storage-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-native-dispatch.ts",
+      "lines": 714,
+      "sha256": "8ead36027394abf1300cdcff7604cb5f6f4a33b1aa330d3c76a495e95d64833f",
+      "full_body_read": true,
+      "prior_disposition": "host-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-native-history.ts",
+      "lines": 274,
+      "sha256": "561ee05426ecf74c386c83ad580dbe843a6435530c00ee7fa78851e036ce9a8d",
+      "full_body_read": true,
+      "prior_disposition": "receipt-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-native-requests.ts",
+      "lines": 859,
+      "sha256": "ba579fa8d5a6c1779f903da6d34e4f1107e1c34b29ba04afd1db709def2a8568",
+      "full_body_read": true,
+      "prior_disposition": "transport-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-native-source-recovery.ts",
+      "lines": 225,
+      "sha256": "eac316f49631a58dcb4038d3c70e5f89ba4e661d1bcd032c3b5a5b8989ef391e",
+      "full_body_read": true,
+      "prior_disposition": "receipt-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-navigation-guard.ts",
+      "lines": 98,
+      "sha256": "a4a9be00a8a78f210cabd9a491b50ebf23154e0051edb7b41e60e3fd68cb3017",
+      "full_body_read": true,
+      "prior_disposition": "host-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-provider-route.ts",
+      "lines": 55,
+      "sha256": "fde99af870b9ed9fd09482b38f5a82cf03449e99881daf19cab840a7180c6abb",
+      "full_body_read": true,
+      "prior_disposition": "transport-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-queue-receipts.ts",
+      "lines": 142,
+      "sha256": "0ddf5f978991fc51f08043ddafca96a5d1c3e619d6db32066f30a1aeecb1de09",
+      "full_body_read": true,
+      "prior_disposition": "receipt-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-request-receipts.ts",
+      "lines": 120,
+      "sha256": "4de139a5483eb298851aa8d62d26c4625056fa7354a1d3e0e541162a2d9ef2d5",
+      "full_body_read": true,
+      "prior_disposition": "receipt-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-session-ingress.ts",
+      "lines": 1614,
+      "sha256": "df031819ee5c4d4edb397b1b394e41202a1043a093c9b759daedb4f4ff72937b",
+      "full_body_read": true,
+      "prior_disposition": "host-wiring-partial-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-session-registry.ts",
+      "lines": 493,
+      "sha256": "08453582bf42fa99982cdf6632ebda7a8a553bfbee6d34e6554b79a26811dc59",
+      "full_body_read": true,
+      "prior_disposition": "storage-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/pi-session-service.ts",
+      "lines": 769,
+      "sha256": "d716873401e222e0f1d58bbf1b752516307fed0c5edb4f32be56879d8b962494",
+      "full_body_read": true,
+      "prior_disposition": "lifecycle-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "lines": 786,
+      "sha256": "f8926e482d43a93ee5ced150063d6b0511c4eac012d50dc3e7adb3662cc1fe7c",
+      "full_body_read": true,
+      "prior_disposition": "storage-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/request-retention.ts",
+      "lines": 92,
+      "sha256": "1b2ba14ed4de3b027c0313f95ae51e4c0009cfe38e22c5bfa37236752e007679",
+      "full_body_read": true,
+      "prior_disposition": "receipt-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/result-envelope.ts",
+      "lines": 102,
+      "sha256": "2646f8b45f888af7c219343b256937bc17ca5dc04aee0dd0f9fdc4afe2a4f6a9",
+      "full_body_read": true,
+      "prior_disposition": "model-result-infrastructure-partial-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/result-manifest.ts",
+      "lines": 273,
+      "sha256": "d99677c69d4e2bdecd6d6c2d6c001c39aeee540b4fb6cba5a8bebf7d7bf7c3b4",
+      "full_body_read": true,
+      "prior_disposition": "storage-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/result-order.ts",
+      "lines": 48,
+      "sha256": "fff01f59250b04aca0919ea72edf28a47c60f010847068702d5447a1483ea52b",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/result-types.ts",
+      "lines": 48,
+      "sha256": "61d38402bafb4f4fb9ea4270ed2474500d8da5fe3446a653afafaade117266c2",
+      "full_body_read": true,
+      "prior_disposition": "protocol-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "lines": 63,
+      "sha256": "b6256144cd8925c22477c8f3da38d4d682f9d1ec9dcfac93c432ffc4ab772446",
+      "full_body_read": true,
+      "prior_disposition": "storage-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/retired-identities.ts",
+      "lines": 8,
+      "sha256": "f3b2028f4805f6f830875883e87fe4ba66a1c2d1c14935e55f50cf76d68f2e95",
+      "full_body_read": true,
+      "prior_disposition": "identity-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/run-input.ts",
+      "lines": 40,
+      "sha256": "0efb1f94882971e0cfed9656ecc0ffe0b09502e540e9534ee6a2ea008c66c8c1",
+      "full_body_read": true,
+      "prior_disposition": "protocol-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/scalar-storage.ts",
+      "lines": 417,
+      "sha256": "c2bfd18c1d27f82b122a9834daa17a159c6cb42b25cf75253a927cf5e5500cd5",
+      "full_body_read": true,
+      "prior_disposition": "storage-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/schedule-waits.ts",
+      "lines": 246,
+      "sha256": "5be1ab80baffd8dc380ca4f274f245e8e2a5fe40246b99bc4c3c488bf20738bd",
+      "full_body_read": true,
+      "prior_disposition": "producer-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/subagent-observation-extension.ts",
+      "lines": 132,
+      "sha256": "65f1203345927514b2ace668fccbb23cb1654fa9c2bc32d88163a015a42eb715",
+      "full_body_read": true,
+      "prior_disposition": "receipt-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/subagent-waits.ts",
+      "lines": 174,
+      "sha256": "d36af0f6a15ac31393c2d8c725db7b7fd888ce827dc88d8e7bc3ab246608c4ad",
+      "full_body_read": true,
+      "prior_disposition": "producer-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/submission-store.ts",
+      "lines": 1628,
+      "sha256": "12bd7a7960054d1c25f6ef12d533e86df8abe474b5b93b7af814f22b2021e41e",
+      "full_body_read": true,
+      "prior_disposition": "storage-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/submission-view.ts",
+      "lines": 210,
+      "sha256": "fca27d3ef2998a6aea3a9b844c0b97c5c44ff021398ba037f45339eb5143a990",
+      "full_body_read": true,
+      "prior_disposition": "ui-data-projection-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/task-extension.ts",
+      "lines": 197,
+      "sha256": "47f43bf0abd0bfbe955ec27a02a0c5e6ee4d6e9395ec3470d6186ca8a3053a98",
+      "full_body_read": true,
+      "prior_disposition": "producer-wiring-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/task-producer.ts",
+      "lines": 208,
+      "sha256": "ccf31785d5130fe0195dbc0cbddb091cb57b81fe7dfc0ee60ca698a7a87bd073",
+      "full_body_read": true,
+      "prior_disposition": "producer-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/tool-history.ts",
+      "lines": 97,
+      "sha256": "da0c56b020660c766c8a0ec2ce3d981ff86a8652362e3297e76d17759de398d8",
+      "full_body_read": true,
+      "prior_disposition": "model-history-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/user-input-adapters.ts",
+      "lines": 461,
+      "sha256": "a316eb4b62260c633df55a49223e4f43c0a560f49055aeb1b1101dcf3a2944d0",
+      "full_body_read": true,
+      "prior_disposition": "receipt-caller-partial-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/user-input-grants.ts",
+      "lines": 283,
+      "sha256": "9d44fa38aed54c3a2bd36aeb39e26eda9951b02f8af800175f6c1db768c467ee",
+      "full_body_read": true,
+      "prior_disposition": "authorization-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/user-input-receipts.ts",
+      "lines": 342,
+      "sha256": "1a36a33cf7ee7e51483e53b9405d0c82fe38e4f18c204c0535bea4403e1112d2",
+      "full_body_read": true,
+      "prior_disposition": "receipt-reason-producer-partial-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/user-work-retention.ts",
+      "lines": 82,
+      "sha256": "e5cf5ee42bb3df8ffb353b73bf3d7fe8fa001457669a82f9b7316f88e38aa45e",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/user-work.ts",
+      "lines": 87,
+      "sha256": "a2da918f527938dd98e8b1ad67dc106ff1e109c553e9ae99ac0fca2e427acc84",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/wait-authority.ts",
+      "lines": 391,
+      "sha256": "583a6541c2a611e4bfaeeebf70f827c398a26dfd4c488ba14101b98c545488a7",
+      "full_body_read": true,
+      "prior_disposition": "authorization-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/wait-deadlines.ts",
+      "lines": 82,
+      "sha256": "7c3cc2744eb65d370c9511537eb5fdc9775c89bc5acb47c8c8a10280d188ddaf",
+      "full_body_read": true,
+      "prior_disposition": "lifecycle-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/wait-decisions.ts",
+      "lines": 222,
+      "sha256": "3ed926753fc9d1c4c1546e7da016c04806791a4bc11e3a6706675025a3217bea",
+      "full_body_read": true,
+      "prior_disposition": "producer-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/wait-health-monitor.ts",
+      "lines": 182,
+      "sha256": "b54215a5d470cb03b4a271c5814c98f2c228b9074dfe76f60aec0f037c9d9e35",
+      "full_body_read": true,
+      "prior_disposition": "lifecycle-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/wait-health.ts",
+      "lines": 149,
+      "sha256": "cbe48d2a33c52ef10724b61eaed2afb6bb75b5fbf4b48d0e1125c4960a745838",
+      "full_body_read": true,
+      "prior_disposition": "infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/wait-producers.ts",
+      "lines": 782,
+      "sha256": "2153e7bd9bf31826bd09b3f1b96ec790fe3f5a4d3ee495c01bc4aab149dcb21a",
+      "full_body_read": true,
+      "prior_disposition": "producer-registry-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/wait-retirement-index.ts",
+      "lines": 77,
+      "sha256": "4a96d7301e4e315dcc0f535e7fcf652a6e3529affc78d216d6b3d448141226a5",
+      "full_body_read": true,
+      "prior_disposition": "storage-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/wait-state.ts",
+      "lines": 169,
+      "sha256": "46f7f2a866eab08af8fbe1d9edc42df63c59a8e3831a49dcaf317f6c3428fadc",
+      "full_body_read": true,
+      "prior_disposition": "state-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/wait-store.ts",
+      "lines": 972,
+      "sha256": "dbe546607ce6e85d792687984d35fa05c47cf84a6057f4f5680f5fd75b048d46",
+      "full_body_read": true,
+      "prior_disposition": "storage-infrastructure-excerpt-review"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/work-context.ts",
+      "lines": 156,
+      "sha256": "aa33d7ce029a18735984ac2cf50e3c721f0d77671d88d797cbc61525e2c9b4da",
+      "full_body_read": true,
+      "prior_disposition": "ownership-infrastructure-excerpt-review"
+    }
+  ]
+}

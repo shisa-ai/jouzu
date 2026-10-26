@@ -1,0 +1,11 @@
+{
+  "primary_files": 2,
+  "primary_lines": 912,
+  "source_sha256": {
+    "packages/cli/src/release-extensions.ts": "97925bf47ab6eea4d15c845cd9437b2966c94e76f900687ae0bb9788ebe06a24",
+    "packages/cli/src/release-surface-record.ts": "7aec2d3af4fbca8ede0e7f16f26e9beba5fb5a44a52629e5c15c2cdc9cdfd976"
+  },
+  "bounded_consumers": 2,
+  "families": 5,
+  "runtime_signoff": false
+}

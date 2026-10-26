@@ -1,0 +1,43 @@
+{
+  "evidence": "source-and-structure-only",
+  "product_runtime_tests_run": false,
+  "checks": [
+    {
+      "command": "python3 -B review/ja-localization/full-ui-audit/semantic-dependencies/build-ledger.py --check",
+      "exit_code": 0,
+      "result": {
+        "primary_candidate_files": 27,
+        "primary_candidate_files_dispositioned": 27,
+        "surface_state_families": 73,
+        "immediate_export_implementation_assets_dispositioned": 9,
+        "verified_route_anchors": 37,
+        "verified_surface_anchors": 73,
+        "errors": []
+      }
+    },
+    {
+      "command": "python3 -B review/ja-localization/full-ui-audit/semantic-dependencies/validate.py",
+      "exit_code": 0,
+      "result": {
+        "primary_candidate_files": 27,
+        "primary_candidate_files_dispositioned": 27,
+        "surface_state_families": 73,
+        "immediate_export_implementation_assets_dispositioned": 9,
+        "verified_route_anchors": 37,
+        "verified_surface_anchors": 73,
+        "errors": []
+      }
+    },
+    {
+      "command": "python3 -B review/ja-localization/full-ui-audit/validate.py",
+      "exit_code": 0,
+      "result": {
+        "candidate_source_files": 500,
+        "dispositioned_candidate_files": 500,
+        "surface_state_rows": 1583,
+        "undispositioned_sources": [],
+        "errors": []
+      }
+    }
+  ]
+}

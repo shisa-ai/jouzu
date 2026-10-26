@@ -1,0 +1,33 @@
+{
+  "source_revision": "52171752ca6b0a03bf5b6e8cda4f796fb10d3d62",
+  "inspection_checkout_revision": "39a34b0cd9659d9d1c9c3d7b3ad3b4f3cb1d039d",
+  "universe": "Explicit finite addition: no-reply-tool.ts, result-tools.ts, wait-tools.ts; outside fixed84 predicate",
+  "additional_producer_files": 3,
+  "additional_producer_lines": 576,
+  "primary_count_contribution": 0,
+  "semantic_signoff": false,
+  "native_rendering_signoff": false,
+  "files": [
+    {
+      "source_file": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "lines": 69,
+      "sha256": "0efeff5e31f9b03884084fdd0cac583979e0dc5db272376101fb510dce73e090",
+      "full_body_read": true,
+      "review_depth": "full-body-read-immediate-consumers-traced"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/result-tools.ts",
+      "lines": 72,
+      "sha256": "39e4e6dd2861181ad22e480c23e5c11c198f44100c001b8be0dfc6a8e6221ea6",
+      "full_body_read": true,
+      "review_depth": "full-body-read-immediate-consumers-traced"
+    },
+    {
+      "source_file": "packages/cli/src/flow-control/wait-tools.ts",
+      "lines": 435,
+      "sha256": "f7f1e06d93e4be7b7eca4c77a9101223758c98cfdbad9efda84738d1c59738a7",
+      "full_body_read": true,
+      "review_depth": "full-body-read-immediate-consumers-traced"
+    }
+  ]
+}

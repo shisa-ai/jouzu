@@ -1,0 +1,48 @@
+{
+  "source_revision": "52171752ca6b0a03bf5b6e8cda4f796fb10d3d62",
+  "inspection_checkout_revision": "39a34b0cd9659d9d1c9c3d7b3ad3b4f3cb1d039d",
+  "starting_accounting": {
+    "primary_files": 84,
+    "primary_lines": 21872,
+    "full_body_files": 60,
+    "full_body_lines": 10033,
+    "residual_files": 24,
+    "residual_lines": 11839
+  },
+  "initial_primary_hash_comparison": {
+    "unchanged": 84,
+    "changed": []
+  },
+  "selection": "Exact source_file membership of semantic-flow/residual.csv at the start of this bounded continuation; no new primary files.",
+  "method": "Read each complete original implementation with the read tool, through EOF. Inclusive source-line ranges below describe the inspected bodies, clipped to the source line count; the larger requested tail ranges reached EOF. Immediate consumer evidence is in full-read-findings.json, surfaces.csv and traced-files.csv.",
+  "files": [
+    {"source_file": "packages/cli/src/flow-control/journal-storage.ts", "read_ranges": [[1, 345]]},
+    {"source_file": "packages/cli/src/flow-control/native-request-retention.ts", "read_ranges": [[1, 178]]},
+    {"source_file": "packages/cli/src/flow-control/native-request-store.ts", "read_ranges": [[1, 510], [511, 967]]},
+    {"source_file": "packages/cli/src/flow-control/pi-branch-binding.ts", "read_ranges": [[1, 320]]},
+    {"source_file": "packages/cli/src/flow-control/pi-compaction-receipts.ts", "read_ranges": [[1, 70]]},
+    {"source_file": "packages/cli/src/flow-control/pi-controller-host.ts", "read_ranges": [[1, 311]]},
+    {"source_file": "packages/cli/src/flow-control/pi-history-reader.ts", "read_ranges": [[1, 308]]},
+    {"source_file": "packages/cli/src/flow-control/pi-history-receipts.ts", "read_ranges": [[1, 120]]},
+    {"source_file": "packages/cli/src/flow-control/pi-host-boundary.ts", "read_ranges": [[1, 458]]},
+    {"source_file": "packages/cli/src/flow-control/pi-ledger-store.ts", "read_ranges": [[1, 190]]},
+    {"source_file": "packages/cli/src/flow-control/pi-native-dispatch.ts", "read_ranges": [[1, 390], [391, 714]]},
+    {"source_file": "packages/cli/src/flow-control/pi-native-history.ts", "read_ranges": [[1, 274]]},
+    {"source_file": "packages/cli/src/flow-control/pi-native-requests.ts", "read_ranges": [[1, 440], [441, 859]]},
+    {"source_file": "packages/cli/src/flow-control/pi-native-source-recovery.ts", "read_ranges": [[1, 225]]},
+    {"source_file": "packages/cli/src/flow-control/pi-queue-receipts.ts", "read_ranges": [[1, 142]]},
+    {"source_file": "packages/cli/src/flow-control/pi-request-receipts.ts", "read_ranges": [[1, 120]]},
+    {"source_file": "packages/cli/src/flow-control/pi-session-registry.ts", "read_ranges": [[1, 493]]},
+    {"source_file": "packages/cli/src/flow-control/pi-session-service.ts", "read_ranges": [[1, 420], [421, 769]]},
+    {"source_file": "packages/cli/src/flow-control/receipt-ledger.ts", "read_ranges": [[1, 786]]},
+    {"source_file": "packages/cli/src/flow-control/scalar-storage.ts", "read_ranges": [[1, 417]]},
+    {"source_file": "packages/cli/src/flow-control/submission-store.ts", "read_ranges": [[1, 520], [521, 1040], [1041, 1628]]},
+    {"source_file": "packages/cli/src/flow-control/wait-authority.ts", "read_ranges": [[1, 391]]},
+    {"source_file": "packages/cli/src/flow-control/wait-producers.ts", "read_ranges": [[1, 420], [421, 782]]},
+    {"source_file": "packages/cli/src/flow-control/wait-store.ts", "read_ranges": [[1, 520], [521, 972]]}
+  ],
+  "primary_body_set_complete": true,
+  "consumer_completeness_signoff": false,
+  "native_rendering_signoff": false,
+  "claim_limit": "Read-range declarations record the inspection, not independent proof of reading or semantic correctness. Structural checks validate source identity, membership and range/count arithmetic; they cannot prove exhaustive consumers, runtime behavior or Japanese rendering."
+}

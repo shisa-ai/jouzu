@@ -1,0 +1,35 @@
+{
+  "no-reply-tool.ts": {
+    "review_depth": "full-body-read-immediate-consumers-traced",
+    "source_finding": "Entire factory/schema/execute body read through EOF. createFlowControlRuntime installs createFlowNoReplyExtension with the active catalog and enabled/ingress callbacks. The agent_no_reply label is catalog-backed, but description, promptSnippet and FLOW_NO_REPLY_GUIDANCE are fixed English model guidance. Disabled flow throws the shared English FLOW_OFF_MESSAGE; mismatched session throws owned English scope error; every checkFlowNoReply refusal throws NO_REPLY_REFUSALS English text. Success returns fixed English Ended this turn without a reply. content, details.run and terminate:true. It does not declare renderCall or renderResult. A tool-result body is returned to the host as well as being model-facing data; model-only exposure does not establish that the result is hidden from terminal history.",
+    "immediate_consumers": [
+      "packages/cli/src/flow-control/flow-runtime.ts",
+      "packages/cli/src/flow-control/no-reply.ts",
+      "packages/cli/src/flow-control/flow-off-message.ts"
+    ],
+    "coverage_limit": "Pi batch termination, result persistence, native tool fallback/error rendering and terminal visibility were not executed or fully source-audited. The source comment calls success a visible result, but this audit does not turn that comment into observed native behavior. Tokens, attempt identity and terminate are protocol data, not translation labels."
+  },
+  "result-tools.ts": {
+    "review_depth": "full-body-read-immediate-consumers-traced",
+    "source_finding": "Entire factory/schema/execute body read through EOF. background-extension.ts installs createFlowResultExtension when ingress exists, forwarding the catalog; flow-runtime.ts includes that background extension. agent_results has a catalog label and fixed English model description. Disabled-flow, malformed top-level argument/limit and changed attachment/session branches throw owned English diagnostics. Abort reason is preserved via signal.throwIfAborted. results.page validates reference/cursor and returns retained metadata; execute checks identity both before and after the await and returns JSON.stringify(page) content with empty details. It declares no custom call/result renderer. Stable references, cursor/count/status fields and producer titles/warnings are not invented display copy, and metadata retrieval is not output acknowledgement.",
+    "immediate_consumers": [
+      "packages/cli/src/flow-control/background-extension.ts",
+      "packages/cli/src/flow-control/flow-runtime.ts",
+      "packages/cli/src/flow-control/result-manifest.ts",
+      "packages/cli/src/flow-control/flow-off-message.ts"
+    ],
+    "coverage_limit": "No metadata retrieval or tool call executed. All imported Pi tool registration/execution/error/fallback-rendering behavior remains outside the source closure. JSON tool-result content could be exposed by host fallback; model-only exposure is not proof of invisible result content."
+  },
+  "wait-tools.ts": {
+    "review_depth": "full-body-read-immediate-consumers-traced",
+    "source_finding": "Entire guidance/schema/parser/factory/execute body read through EOF in this continuation. Runtime installs the extension with catalog and max duration. Labels are catalog-backed; description, promptSnippet, schema descriptions, FLOW_WAIT_GUIDANCE and validation/refusal text are fixed English model instructions or local diagnostics. before_agent_start injects guidance through setPromptSections only when enabled and agent_wait is active. Execute normalizes optional fields, checks scope, resolves exact producer dependency/health policy, binds subscriptions, calls wait-store.declareOwned and rethrows after rollback on failure. Cancel checks the token and calls cancelOwned. Both return waitToolResponse; that helper's English framing/adjustment notices and preserved source reasons are content-hashed by the store and observed by ingress/wait-decisions. No custom call/result renderer is declared.",
+    "immediate_consumers": [
+      "packages/cli/src/flow-control/flow-runtime.ts",
+      "packages/cli/src/flow-control/wait-store.ts",
+      "packages/cli/src/flow-control/wait-producers.ts",
+      "packages/cli/src/flow-control/wait-tool-response.ts",
+      "packages/cli/src/flow-control/flow-off-message.ts"
+    ],
+    "coverage_limit": "No tool/timer/subscription/probe operation executed and no transitive prompt-section or native tool fallback implementation audit. Prompt guidance is not terminal chrome; returned response text is tool-result framing, not guaranteed invisible because the tool is model-only. Native display/error handling and Japanese terminal width/quality remain unestablished."
+  }
+}

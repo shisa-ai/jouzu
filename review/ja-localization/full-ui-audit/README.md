@@ -32,6 +32,9 @@ Partitions:
 - `semantic-launcher/`: full-read caller tracing and candidate-by-candidate dispositions for the earlier launcher diagnostic extraction.
 - `semantic-owned/`: full reads of the 38 non-Flow files previously labelled partial/excerpt, with separately bounded consumer traces and explicit remaining edges.
 - `semantic-roles/`: complete role-parser/store read and bounded Workflow error consumers, a gap not selected by that earlier disposition-name filter.
+- `semantic-release/`: complete release-resource and versioned-record reads, with startup catalog omissions and diagnostic provenance separated.
+- `semantic-flow/`: all 84 fixed primary bodies and three additional tool producers read; external receipt, host and native limits remain explicit.
+- `semantic-dependencies/`: 27 original candidates, the immediate exported-viewer graph and bounded diagnostic continuations; runtime and arbitrary extension producer boundaries remain open.
 
 `owned-command-coverage.csv` reconciles literal Jouzu-owned `registerCommand` calls against named source families. It does not cover dynamic, dependency, builtin, resource-derived or Session UI interception routes, and a mapped family is not exhaustive branch coverage.
 

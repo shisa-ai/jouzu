@@ -1,0 +1,37 @@
+{
+  "runs": [
+    {
+      "command": "python3 -B review/ja-localization/full-ui-audit/semantic-flow/build-ledger.py",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "python3 -B review/ja-localization/full-ui-audit/semantic-flow/build-ledger.py",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "before": {
+    "files.csv": "d7d51355c6fff541ef0fb170de98f6939beddc7bb813f435d9bee16c249fe5b5",
+    "residual.csv": "390829a7937dfc68837a284b3f90538347275e47135adf6cfb1a50205276ce96",
+    "source-read-receipt.json": "ec3c097992c8f0ef04311b2d340a04f0f77ba74f48a34ce6aba2633f2dd2f731",
+    "additional-source-read-receipt.json": "77decd7c1c0795deb1a05cbed38c3a5d94d04d01c4fa8a19d14eec8eacfa9ef9"
+  },
+  "after_first": {
+    "files.csv": "d7d51355c6fff541ef0fb170de98f6939beddc7bb813f435d9bee16c249fe5b5",
+    "residual.csv": "390829a7937dfc68837a284b3f90538347275e47135adf6cfb1a50205276ce96",
+    "source-read-receipt.json": "d5e60549d2381c7f00218511e981e18d1d7d5bea2c352444ae3340b0cc1d055a",
+    "additional-source-read-receipt.json": "64356e6d9d0c0d9b6a70c2605c1c7798356e05ae58f0977900c2c57c7283f377"
+  },
+  "after_second": {
+    "files.csv": "d7d51355c6fff541ef0fb170de98f6939beddc7bb813f435d9bee16c249fe5b5",
+    "residual.csv": "390829a7937dfc68837a284b3f90538347275e47135adf6cfb1a50205276ce96",
+    "source-read-receipt.json": "d5e60549d2381c7f00218511e981e18d1d7d5bea2c352444ae3340b0cc1d055a",
+    "additional-source-read-receipt.json": "64356e6d9d0c0d9b6a70c2605c1c7798356e05ae58f0977900c2c57c7283f377"
+  },
+  "unchanged_from_saved": false,
+  "repeat_identical": true,
+  "scope_limit": "Audit artifact regeneration only; equal bytes do not prove reading or semantic correctness."
+}

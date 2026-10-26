@@ -1,0 +1,30 @@
+{
+  "command": "python3 -B review/ja-localization/full-ui-audit/semantic-flow/check.py",
+  "exit_code": 0,
+  "stdout": "{\n  \"errors\": [],\n  \"primary_files\": 84,\n  \"primary_lines\": 21872,\n  \"full_body_files\": 84,\n  \"full_body_lines\": 21872,\n  \"residual_files\": 0,\n  \"residual_lines\": 0,\n  \"additional_scoped_files\": 16,\n  \"additional_producer_files\": 3,\n  \"additional_producer_lines\": 576,\n  \"nonprimary_ledger_files\": 19,\n  \"continuation_primary_files\": 24,\n  \"continuation_primary_lines\": 11839,\n  \"primary_body_set_complete\": true,\n  \"surface_state_families\": 32,\n  \"checked_pointer_paths\": 103,\n  \"receipt_states\": 7,\n  \"receipt_reason_codes\": 12,\n  \"ja_namespace_receipt_entries\": 11,\n  \"ja_namespace_grant_entries\": 6,\n  \"claim_limit\": \"Structural checks cannot establish that source bodies were read, consumer completeness, Japanese quality, or native rendering.\"\n}\n",
+  "stderr": "",
+  "result": {
+    "errors": [],
+    "primary_files": 84,
+    "primary_lines": 21872,
+    "full_body_files": 84,
+    "full_body_lines": 21872,
+    "residual_files": 0,
+    "residual_lines": 0,
+    "additional_scoped_files": 16,
+    "additional_producer_files": 3,
+    "additional_producer_lines": 576,
+    "nonprimary_ledger_files": 19,
+    "continuation_primary_files": 24,
+    "continuation_primary_lines": 11839,
+    "primary_body_set_complete": true,
+    "surface_state_families": 32,
+    "checked_pointer_paths": 103,
+    "receipt_states": 7,
+    "receipt_reason_codes": 12,
+    "ja_namespace_receipt_entries": 11,
+    "ja_namespace_grant_entries": 6,
+    "claim_limit": "Structural checks cannot establish that source bodies were read, consumer completeness, Japanese quality, or native rendering."
+  },
+  "scope_limit": "Structural check only; no semantic, runtime, consumer-completeness or native-rendering approval."
+}
