@@ -243,6 +243,7 @@ def build():
     statuses = Counter(row["status"] for row in rows)
     report = dict(existing_status_counts=dict(sorted(statuses.items())), existing_gap_rows=statuses["remaining_gap"],
                   existing_unique_wording_entries=len(group_existing(rows)), new_proposal_rows=len(proposals),
+                  new_proposal_kinds=dict(sorted(Counter(p["kind"] for p in proposals).items())),
                   new_proposals_merged_with_existing_or_other_new=merged_new, unique_wording_entries=len(items),
                   final_finding_groups=len(findings), coverage_counts=dict(sorted(Counter(f["coverage"] for f in findings).items())),
                   row_followups=len(followups), exact_fix_count=None, all_final_strings_translation_complete=False,

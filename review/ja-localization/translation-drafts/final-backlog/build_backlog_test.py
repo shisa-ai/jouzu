@@ -71,6 +71,13 @@ class BacklogTests(unittest.TestCase):
         for reference in expected:
             self.assertEqual(references.count(reference), 1, reference)
 
+    def test_csv_line_endings_are_canonical_and_occurrence_payload_survives(self):
+        text = audit.csv_text(["wording", "occurrences"], [{"wording": "first\r\nsecond", "occurrences": json.dumps({"original": "first\r\nsecond"})}])
+        self.assertNotIn("\r", text)
+        row = next(csv.DictReader(io.StringIO(text)))
+        self.assertEqual(row["wording"], "first\nsecond")
+        self.assertEqual(json.loads(row["occurrences"])["original"], "first\r\nsecond")
+
     def test_source_anchor_and_placeholder_guards(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

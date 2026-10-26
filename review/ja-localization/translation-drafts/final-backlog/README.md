@@ -4,9 +4,11 @@ This directory combines the current-source draft rows with translation reconcili
 
 ## Status: consolidated backlog; additional drafting remains
 
-The snapshot contains **1,614 wording entries with Japanese proposals**: 1,309 conservatively deduplicated existing entries plus 305 source-anchored supplements. All 28 confirmed finding groups have implementation mappings. The 37 row-level follow-ups retain context/source-change questions and already wired wording concerns; they are not additional confirmed English leaks.
+The snapshot contains **2,084 wording and display-reference entries**: 1,309 conservatively deduplicated existing entries plus 775 source-anchored supplements. The supplements comprise 319 translation proposals, 422 display-only proposals or preservation references, and 34 exact existing-Japanese reuse references. They are not 775 newly untranslated strings. All 28 confirmed finding groups have implementation mappings. The 37 row-level follow-ups retain context/source-change questions and already wired wording concerns; they are not additional confirmed English leaks.
 
 **Not all remaining messages have drafts.** The `limits` column in `findings.csv` names the undrafted diagnostic/control families and compatibility or policy decisions. A finding marked `matched` or `supplemented` records reconciliation work, not complete translation coverage. These counts cannot establish an exact total number of code fixes.
+
+The completed dependency and launcher/operator passes close only their named finite residual sets. Remaining undrafted coverage includes Flow's `Producer snapshot timed out.` message and native admission/recovery, queue/receipt, store/journal and wait-store/authority diagnostic families. About metadata-parser and browser runtime-install/path/extraction diagnostics are not exhaustively drafted. Python's library-generated argparse labels require a separate locale/library strategy. These are explicit limits of this snapshot, not completed translations. Fixed-English model content, persisted history/hashes, default-role metadata and public report language also retain their recorded implementation or policy boundaries.
 
 ## Files to use
 
@@ -44,6 +46,6 @@ python -B review/ja-localization/translation-drafts/final-backlog/build_backlog.
 python -B review/ja-localization/translation-drafts/validate_current.py
 ```
 
-The builder checks finding membership, source-line anchors, row links, exact catalog reuse, proposal identity, placeholder preservation and deterministic derived artifacts. Eleven regression tests cover these guards and preservation of all existing gap-row references. Six reviewed display-literal substitutions inside JavaScript expressions are explicitly allowlisted; conditions, escaping and dynamic identities remain unchanged. These are documented composition changes, not literal placeholder identity. Use `--write` only after inspecting input changes. The current-source draft validator retains its documented normalization warnings.
+The builder checks finding membership, source-line anchors, row links, exact catalog reuse, proposal identity, placeholder preservation and deterministic derived artifacts. Twelve regression tests cover these guards, canonical CSV line endings and preservation of all existing gap-row references. Six reviewed display-literal substitutions inside JavaScript expressions are explicitly allowlisted; conditions, escaping and dynamic identities remain unchanged. These are documented composition changes, not literal placeholder identity. Use `--write` only after inspecting input changes. The current-source draft validator retains its documented normalization warnings.
 
 These checks do not approve natural Japanese, semantic coverage of an entire family, Fluent rendering, terminal layout or native behavior. Read each finding's `limits`; representative proposals must not be treated as complete wording coverage. The remaining boundaries in [COVERAGE.md](../../full-ui-audit/COVERAGE.md) still apply. No runtime, catalog, dependency or global-setting change is made here.
