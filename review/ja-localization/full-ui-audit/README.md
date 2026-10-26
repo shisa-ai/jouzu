@@ -31,6 +31,7 @@ Partitions:
 - `operator-cli/`: noninteractive command reports, parser failures, diagnostics, migration/update/profile/keybinding commands and the separate Python reservation CLI.
 - `semantic-launcher/`: full-read caller tracing and candidate-by-candidate dispositions for the earlier launcher diagnostic extraction.
 - `semantic-owned/`: full reads of the 38 non-Flow files previously labelled partial/excerpt, with separately bounded consumer traces and explicit remaining edges.
+- `semantic-roles/`: complete role-parser/store read and bounded Workflow error consumers, a gap not selected by that earlier disposition-name filter.
 
 `owned-command-coverage.csv` reconciles literal Jouzu-owned `registerCommand` calls against named source families. It does not cover dynamic, dependency, builtin, resource-derived or Session UI interception routes, and a mapped family is not exhaustive branch coverage.
 
