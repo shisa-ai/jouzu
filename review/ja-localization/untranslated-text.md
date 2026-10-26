@@ -1,5 +1,7 @@
 # English remaining in the Japanese interface
 
+**Historical inventory.** For source `ff6e6bb` (v0.2.3), use the [current-source reconciliation](translation-drafts/CURRENT.md). Several findings below have been fixed or changed on `main`; this pinned inventory is preserved for traceability, not presented as the current backlog.
+
 Static inventory for source commit `a5a33f775c32c0b6ad8f5675c20c2c0b9db1320d` (`jouzu-ja`), inspected on 2026-10-26. No localization fixes are included in this inventory.
 
 This list covers untranslated **user-visible product text**, including nested menus and bundled dependencies. It groups related strings rather than claiming a count of individual untranslated sentences. It is not an exhaustive export of every English literal in the repository. Comments, tests, documentation, model instructions, user content, and raw external errors are separate boundaries, not missing interface translations.

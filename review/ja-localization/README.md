@@ -1,5 +1,7 @@
 # Japanese localization review
 
+For the v0.2.3 source reconciliation of remaining English and translation drafts, start with [the current-source review](translation-drafts/CURRENT.md). The catalog export described below is pinned to its own older candidate and is not refreshed by that review.
+
 The source links identify the exact candidate commit. This inventory does not
 approve a release or a translation.
 
