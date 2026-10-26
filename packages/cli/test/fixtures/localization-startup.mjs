@@ -44,6 +44,7 @@ InteractiveMode.prototype.run = async function () {
 	});
 	try {
 		await this.bindCurrentSessionExtensions();
+		observations.runtimeSummary = this.options.sessionInfoFooter();
 		// Open the real /settings selector and discover its rows and submenus.
 		// No value is accepted, and every submenu is cancelled after inspection.
 		this.showSelector = (create) => {

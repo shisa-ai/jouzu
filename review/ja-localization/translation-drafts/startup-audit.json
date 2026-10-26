@@ -282,12 +282,12 @@
       "command": "labels",
       "registered_extension": true,
       "english": "Configure automatic session names and tmux pane labels",
-      "japanese": "Configure automatic session names and tmux pane labels",
+      "japanese": "セッション名の自動設定と tmux ペインラベルを構成します",
       "catalog": "translation-exists",
       "message_ids": [
         "jouzu.cli.sessionLabels.command.description"
       ],
-      "startup_description": "english-observed",
+      "startup_description": "catalog-japanese-observed",
       "detail_surfaces": "selected-paths-exercised"
     },
     {
@@ -618,12 +618,12 @@
       "command": "textguard",
       "registered_extension": true,
       "english": "Review TextGuard findings, or set scanning to on, strict, or off",
-      "japanese": "Review TextGuard findings, or set scanning to on, strict, or off",
+      "japanese": "TextGuard の検出内容を確認するか、走査を on、strict、off に設定します",
       "catalog": "translation-exists",
       "message_ids": [
         "jouzu.cli.textguard.commandDescription"
       ],
-      "startup_description": "english-observed",
+      "startup_description": "catalog-japanese-observed",
       "detail_surfaces": "selected-paths-exercised"
     },
     {
@@ -987,29 +987,29 @@
       "surface": "labels.status-help",
       "kind": "notification",
       "english": "Automatic naming: on. Global: on; session: on.\nNaming model: selected model at the first naming request.\nSession name: automatic. Pane: guarded (unknown titles are protected).\nNaming requests: 0/20.\nNaming runs after a completed task turn; saved labels are checked on resume.\n\n/labels — Show status and commands.\n/labels global on|off — Save the global naming setting.\n/labels on — Enable naming with the selected model.\n/labels off — Cancel pending naming and stop requests.\n/labels pin — Protect the session name.\n/labels auto — Allow automatic session-name changes.\n/labels pane pin — Protect this pane's title.\n/labels pane auto — Allow replacing this tmux pane's title.",
-      "japanese": "Automatic naming: on. Global: on; session: on.\nNaming model: selected model at the first naming request.\nSession name: automatic. Pane: guarded (unknown titles are protected).\nNaming requests: 0/20.\nNaming runs after a completed task turn; saved labels are checked on resume.\n\n/labels — Show status and commands.\n/labels global on|off — Save the global naming setting.\n/labels on — Enable naming with the selected model.\n/labels off — Cancel pending naming and stop requests.\n/labels pin — Protect the session name.\n/labels auto — Allow automatic session-name changes.\n/labels pane pin — Protect this pane's title.\n/labels pane auto — Allow replacing this tmux pane's title.",
-      "startup_output": "english-observed"
+      "japanese": "自動命名: オン。全体: オン、セッション: オン。\n命名モデル: 最初の命名リクエスト時の選択モデル。\nセッション名: 自動。ペイン: 保護（不明なタイトルは保護されます）。\n命名リクエスト: 0/20。\n命名は完了したタスクターンの後に実行されます。保存済みのラベルは再開時に確認されます。\n\n/labels — 状態とコマンドを表示します。\n/labels global on|off — 全体の命名設定を保存します。\n/labels on — 選択中のモデルで命名を有効にします。\n/labels off — 保留中の命名を取り消し、リクエストを停止します。\n/labels pin — セッション名を保護します。\n/labels auto — セッション名の自動変更を許可します。\n/labels pane pin — このペインのタイトルを保護します。\n/labels pane auto — この tmux ペインのタイトルを置き換えられるようにします。",
+      "startup_output": "changed-needs-review"
     },
     {
       "surface": "labels.invalid-argument",
       "kind": "notification",
       "english": "Use /labels to see status and commands.",
-      "japanese": "Use /labels to see status and commands.",
-      "startup_output": "english-observed"
+      "japanese": "状態とコマンドを確認するには `/labels` を使用してください。",
+      "startup_output": "changed-needs-review"
     },
     {
       "surface": "textguard.invalid-argument",
       "kind": "notification",
       "english": "Use /textguard to review findings, /textguard reports for findings that did not block anything, or /textguard on, strict, or off to set scanning.",
-      "japanese": "Use /textguard to review findings, /textguard reports for findings that did not block anything, or /textguard on, strict, or off to set scanning.",
-      "startup_output": "english-observed"
+      "japanese": "`/textguard` で検出を確認し、`/textguard reports` で内容をブロックしなかった検出を表示し、`/textguard on`、`strict`、`off` で走査を設定します。",
+      "startup_output": "changed-needs-review"
     },
     {
       "surface": "textguard.reports-empty",
       "kind": "notification",
       "english": "TextGuard has no findings to show for content that was not blocked.",
-      "japanese": "TextGuard has no findings to show for content that was not blocked.",
-      "startup_output": "english-observed"
+      "japanese": "TextGuard に、内容をブロックしなかった検出はありません。",
+      "startup_output": "changed-needs-review"
     },
     {
       "surface": "voice.invalid-argument",

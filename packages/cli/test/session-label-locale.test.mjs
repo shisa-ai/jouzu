@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { createDisplayCatalog } from "../dist/display-catalog.js";
 import { loadCatalog } from "../dist/locale-catalog.js";
 import { createSessionLabelsExtension } from "../dist/session-labels.js";
 
@@ -67,6 +68,17 @@ test("the labels status block renders from the ja catalog", async () => {
 test("the command description renders from the ja catalog", () => {
 	const f = fixture(loadCatalog("ja"));
 	assert.equal(f.description(), "セッション名の自動設定と tmux ペインラベルを構成します");
+});
+
+test("labels notifications follow confirmed locale changes without rebuilding the extension", async () => {
+	const controller = createDisplayCatalog(loadCatalog("ja"));
+	const f = fixture(controller.bundle);
+	for (const locale of ["ja", "en", "ja"]) {
+		const catalog = loadCatalog(locale);
+		controller.update(catalog);
+		await f.command("unknown");
+		assert.equal(f.notifications.at(-1), catalog.format("jouzu.cli.sessionLabels.notify.useCommand"));
+	}
 });
 
 test("the labels notices render from the ja catalog", async () => {

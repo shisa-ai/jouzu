@@ -565,6 +565,8 @@ export async function runMainCli(args: string[]): Promise<void> {
 	const runtimeDiagnostics = createRuntimeDiagnostics(
 		metadata,
 		usesReleaseExtensions(parsed.args) ? releaseExtensionStatus.resolvedPackageRoots : {},
+		{},
+		preRuntime.catalog.bundle,
 	);
 	const releaseDiagnostics = createReleaseExtensionDiagnostics(releaseExtensionStatus, runtimeDiagnostics);
 	const dashboardController = new WorkDashboardController();
@@ -769,9 +771,12 @@ export async function runMainCli(args: string[]): Promise<void> {
 						dashboardEvents = api.events;
 					},
 				},
-				createSessionLabelsExtension(undefined, undefined, createLabelPolicy(paths)),
+				createSessionLabelsExtension(undefined, undefined, createLabelPolicy(paths), preRuntime.catalog.bundle),
 				...(flow ? flow.extensions : []),
-				{ name: "jouzu-textguard-review", factory: createTextGuardReviewExtension(nativeTextguard) },
+				{
+					name: "jouzu-textguard-review",
+					factory: createTextGuardReviewExtension(nativeTextguard, { catalog: preRuntime.catalog.bundle }),
+				},
 				languageContract.extension,
 				presentation.createJouzuPresentationExtension(metadata, profile, {
 					catalog: preRuntime.catalog.bundle,

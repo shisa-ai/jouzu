@@ -1,26 +1,26 @@
 # Japanese startup wiring audit
 
-This supplements [the source reconciliation](CURRENT.md) with observations from the actual CLI startup wiring at product source `b703b9e` (v0.2.3). It does not replace the historical CSVs or change their row totals. No runtime translations are changed by this audit.
+This supplements [the source reconciliation](CURRENT.md) with observations from the actual CLI startup wiring. The reviewed JSON includes the shared catalog propagation for Labels, TextGuard review and runtime diagnostics. It does not replace the historical CSVs or change their row totals.
 
 ## Findings
 
-In a fresh Core session, the active slash-completion provider returns **57 entries**. All 57 have matching English/Japanese catalog patterns. **55 descriptions match Japanese catalog output at startup; two remain English:**
+In a fresh Core session, the active slash-completion provider returns **57 entries**. All 57 have matching English/Japanese catalog patterns, and **all 57 descriptions match Japanese catalog output at startup**.
 
-| Surface | Observed English | Existing Japanese message ID | Cause |
-| --- | --- | --- | --- |
-| `/labels` description | Configure automatic session names and tmux pane labels | `jouzu.cli.sessionLabels.command.description` | `main-cli.ts` constructs `createSessionLabelsExtension` without its catalog argument |
-| `/textguard` description | Review TextGuard findings, or set scanning to on, strict, or off | `jouzu.cli.textguard.commandDescription` | `main-cli.ts` constructs `createTextGuardReviewExtension` without `options.catalog` |
+| Surface | Japanese message ID | Startup wiring |
+| --- | --- | --- |
+| `/labels` description | `jouzu.cli.sessionLabels.command.description` | `createSessionLabelsExtension` receives the selected forwarding catalog |
+| `/textguard` description | `jouzu.cli.textguard.commandDescription` | `createTextGuardReviewExtension` receives the selected forwarding catalog in `options.catalog` |
 
-Both constructors fall back to `defaultCatalog()`, which resolves English. The slash-description localizer has no entry for either command to replace that output. The required change is catalog propagation, not new translation wording.
+The runtime summary supplied to the session-information footer also renders in the selected locale. The startup test checks its Japanese prefix independently of the snapshot, while component tests cover runtime summary/About/report text after catalog updates. These changes reuse existing Japanese patterns; they do not translate versions, package identities or model-facing TextGuard results.
 
 Seven command-detail scenarios were exercised through their registered startup handlers:
 
 | Scenario | Observed result in Japanese startup |
 | --- | --- |
-| Labels status and help | English status block and command explanations |
-| Labels invalid argument | English usage notice |
-| TextGuard invalid argument | English usage notice |
-| TextGuard empty reports | English empty-report notice |
+| Labels status and help | Japanese status block and command explanations |
+| Labels invalid argument | Japanese usage notice; command syntax preserved |
+| TextGuard invalid argument | Japanese usage notice; command syntax preserved |
+| TextGuard empty reports | Japanese empty-report notice |
 | Voice invalid argument | Japanese usage notice; command syntax preserved |
 | Subagents invalid argument | Japanese usage notice; command syntax preserved |
 | Workflow invalid argument | Japanese usage notice; command syntax preserved |

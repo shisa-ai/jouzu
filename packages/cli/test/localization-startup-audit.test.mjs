@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { analyzeStartup, compareAudit, observeStartup } from "../../../scripts/audit-ja-startup.mjs";
+import { loadCatalog } from "../dist/locale-catalog.js";
 
 const reviewed = JSON.parse(
 	readFileSync(
@@ -10,9 +11,24 @@ const reviewed = JSON.parse(
 	),
 );
 
-test("real Japanese startup matches the reviewed command inventory and explicitly recorded English gaps", () => {
+test("real Japanese startup localizes shared extension commands and matches reviewed coverage", () => {
 	const english = observeStartup("en");
 	const japanese = observeStartup("ja");
+	const catalog = loadCatalog("ja");
+	assert.match(english.runtimeSummary, /^Runtime: Jouzu /u);
+	assert.match(japanese.runtimeSummary, /^実行環境: Jouzu /u);
+	for (const [name, id] of [
+		["labels", "jouzu.cli.sessionLabels.command.description"],
+		["textguard", "jouzu.cli.textguard.commandDescription"],
+	]) {
+		assert.equal(japanese.commands.find((row) => row.name === name).description, catalog.format(id));
+	}
+	for (const [surface, id] of [
+		["labels.invalid-argument", "jouzu.cli.sessionLabels.notify.useCommand"],
+		["textguard.reports-empty", "jouzu.cli.textguard.reports.empty"],
+	]) {
+		assert.equal(japanese.surfaces.find((row) => row.surface === surface).text, catalog.format(id));
+	}
 	const actual = analyzeStartup(english, japanese);
 	assert.deepEqual(
 		compareAudit(actual, reviewed),
@@ -21,11 +37,12 @@ test("real Japanese startup matches the reviewed command inventory and explicitl
 	);
 	assert.deepEqual(
 		actual.commands.filter((row) => row.startup_description === "english-observed").map((row) => row.command),
-		["labels", "textguard"],
+		[],
 	);
 	for (const name of ["labels", "textguard"]) {
 		const command = actual.commands.find((row) => row.command === name);
 		assert.equal(command.catalog, "translation-exists", "catalog presence is not startup wiring evidence");
+		assert.equal(command.startup_description, "catalog-japanese-observed");
 	}
 	const fields = actual.surfaces.filter((row) => row.kind === "setting-fields");
 	assert.ok(fields.length, "discover real settings rows");
@@ -66,9 +83,9 @@ test("the audit flags broken Japanese wiring, a missing command, and changed det
 	]);
 });
 
-test("a repaired known gap also requires updating its reviewed classification", () => {
+test("a repaired gap regressing to English requires updating its reviewed classification", () => {
 	const candidate = structuredClone(reviewed);
-	candidate.commands.find((row) => row.command === "labels").startup_description = "catalog-japanese-observed";
+	candidate.commands.find((row) => row.command === "labels").startup_description = "english-observed";
 	assert.deepEqual(compareAudit(candidate, reviewed), ["changed commands: labels"]);
 });
 

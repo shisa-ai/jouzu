@@ -6,7 +6,9 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { stripVTControlCharacters } from "node:util";
 import { InteractiveMode, initTheme } from "@earendil-works/pi-coding-agent";
+import { createDisplayCatalog } from "../dist/display-catalog.js";
 import { createFlowStatusExtension } from "../dist/flow-control/flow-status-extension.js";
+import { loadCatalog } from "../dist/locale-catalog.js";
 import { createReleaseExtensionDiagnostics } from "../dist/release-extensions.js";
 import { createRuntimeDiagnostics } from "../dist/runtime-diagnostics.js";
 
@@ -98,6 +100,29 @@ test("unreadable build metadata never blocks diagnostics and does not claim an u
 	assert.equal(diagnostics.summary(), "Runtime: Jouzu test-build · Pi test-pi");
 	assert.match(diagnostics.about(), /Installed Jouzu unavailable/);
 });
+test("runtime display follows the active catalog while preserving version identities", () => {
+	const controller = createDisplayCatalog(loadCatalog("ja"));
+	const diagnostics = createRuntimeDiagnostics(
+		metadata,
+		{},
+		{ readMetadata: () => metadata, readPatches: () => [] },
+		controller.bundle,
+	);
+	for (const locale of ["ja", "en", "ja"]) {
+		const catalog = loadCatalog(locale);
+		controller.update(catalog);
+		assert.equal(
+			diagnostics.summary(),
+			catalog.format("jouzu.cli.runtime.summary", { version: metadata.displayVersion, pi: metadata.piVersion }),
+		);
+		assert.ok(
+			diagnostics.about().includes(catalog.format("jouzu.cli.runtime.running", { version: metadata.displayVersion })),
+		);
+		assert.ok(diagnostics.report().includes(catalog.format("jouzu.cli.runtime.reportHeading")));
+		assert.ok(diagnostics.about().includes(metadata.piVersion));
+	}
+});
+
 test("runtime warnings are once per session and use stderr outside the UI", async (t) => {
 	const handlers = new Map(),
 		notices = [];
