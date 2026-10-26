@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "messages_per_locale": 1799,
+  "identical_source_candidates": 45,
+  "receipts": [
+    {
+      "source_file": "packages/cli/locales/en/cli.ftl",
+      "sha256": "4e86bc0d254dcbf0bb06a198ad8096d8e1e312edc2bbbf92affc1c2958f292b9"
+    },
+    {
+      "source_file": "packages/cli/locales/en/localization-deferral.ftl",
+      "sha256": "8a609fcd4f5bfe420f0f399cbe5cca1dab3d1617c46c26a8ba29308508febece"
+    },
+    {
+      "source_file": "packages/cli/locales/en/localization-settings.ftl",
+      "sha256": "e8d1a7fa300bda060f2d50c0ba9a78d8a03bd83afcd9e0517b2e41d92f7c6ddc"
+    },
+    {
+      "source_file": "packages/cli/locales/en/palette-navigation.ftl",
+      "sha256": "40b6d41fff6e38cf508353ca6fb36a18a4aaac3a9e34457bc1f191778a679d46"
+    },
+    {
+      "source_file": "packages/cli/locales/en/pi-ui.ftl",
+      "sha256": "8c435bd02f307ed0e809fd6f4db863a4d25c112ca8526d5a2ba09e8d0a498255"
+    },
+    {
+      "source_file": "packages/cli/locales/en/profile-migration-command.ftl",
+      "sha256": "3e1ed9789c9f80c9f9c4d8076b3115425a5e82a5a975e1d1cea6397e7d1166e9"
+    },
+    {
+      "source_file": "packages/cli/locales/en/runtime.ftl",
+      "sha256": "d49b400423cfc04a8405b6ec66a0678dbc929a8f5255d4ce132bb0db722add52"
+    },
+    {
+      "source_file": "packages/cli/locales/en/slash-commands.ftl",
+      "sha256": "8649c1f0d1ef064b941fa4706fc99f6a1395ffd3034ea44fe2e3d27a7cf20ad4"
+    },
+    {
+      "source_file": "packages/cli/locales/en/user-input.ftl",
+      "sha256": "0ba85cac7baace66ce14ef3666f162db7e2457c159db73d01b797f1f6ad20a92"
+    },
+    {
+      "source_file": "packages/cli/locales/ja/cli.ftl",
+      "sha256": "eeeade80f25cb95d6b84de098a2ec6f66f305d3b80c9f8f5494d055a7781c2a7"
+    },
+    {
+      "source_file": "packages/cli/locales/ja/localization-deferral.ftl",
+      "sha256": "5d1ff4ae935ece7c906119bbd45a6e4a87727b25132e8965d5e4b68671940179"
+    },
+    {
+      "source_file": "packages/cli/locales/ja/localization-settings.ftl",
+      "sha256": "3e2f0680f52e5c7977aebf9d833226c0d7dd7d352e99482a6997f197482600d3"
+    },
+    {
+      "source_file": "packages/cli/locales/ja/palette-navigation.ftl",
+      "sha256": "052cdb7a97409c52dc3e1f73d06c322a7151701fb81267fca1c70fd376be04d8"
+    },
+    {
+      "source_file": "packages/cli/locales/ja/pi-ui.ftl",
+      "sha256": "d5cf510665735d1a9b16a724b7610c3c62cbf71132d6a00d1d8651818552abb0"
+    },
+    {
+      "source_file": "packages/cli/locales/ja/profile-migration-command.ftl",
+      "sha256": "6b5683a0923c48a69d1521e0d1d7bfda8b0b734a921133a2f33563ee80aa496e"
+    },
+    {
+      "source_file": "packages/cli/locales/ja/runtime.ftl",
+      "sha256": "70b495087ea56094dd8f0a0bf76fecb2bb71818fb9161c47ae8c634de6469824"
+    },
+    {
+      "source_file": "packages/cli/locales/ja/slash-commands.ftl",
+      "sha256": "c55e3442d918f1f840965efa2cbc1b299e5bd1348068f951a8bb7c58f8c8b34c"
+    },
+    {
+      "source_file": "packages/cli/locales/ja/user-input.ftl",
+      "sha256": "121191b999beebfd34bb9ba0b8126de320a46fb9914e2cc26b72c9053ae1398f"
+    }
+  ]
+}

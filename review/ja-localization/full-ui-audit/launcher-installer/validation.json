@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "source_commit": "fe0cf0878e35236ec9716f5d3ee237fff11c3480",
+  "source_branch": "jouzu-ja",
+  "checks": {
+    "csv_columns_and_nonempty_cells": "pass",
+    "unique_surface_ids_and_file_paths": "pass",
+    "all_scoped_tracked_files_have_dispositions": "pass",
+    "surface_source_paths_and_line_bounds": "pass",
+    "diagnostic_exact_line_numbers": "pass",
+    "candidate_extraction_separated": "pass",
+    "existing_test_reference_paths": "pass",
+    "document_and_package_bootstrap_dispositions": "pass",
+    "delegated_acceptance_boundary": "pass"
+  },
+  "surface_rows": 487,
+  "candidate_extraction_rows": 241,
+  "noncandidate_source_entries": 246,
+  "file_rows": 165,
+  "tracked_tree_files": 157,
+  "additional_development_files": 8,
+  "missing_tracked_tree_files": [],
+  "by_owner": {
+    "development-launcher": 66,
+    "installer": 38,
+    "launcher-frontend": 151,
+    "launcher-native": 142,
+    "launcher-scripts": 90
+  },
+  "by_evidence_level": {
+    "source-candidate": 241,
+    "source-internal": 1,
+    "source-unreferenced": 49,
+    "source-wired": 196
+  },
+  "by_disposition": {
+    "delegated": 1,
+    "exclusion:documentation": 2,
+    "exclusion:test": 41,
+    "exclusion:unreferenced-runtime-helper": 3,
+    "exclusion:unreferenced-ui-adapter": 2,
+    "infrastructure:build-test-asset": 11,
+    "infrastructure:release-build": 15,
+    "ui-producer": 51,
+    "ui-producer:document-bootstrap": 1,
+    "wiring:bootstrap-version": 1,
+    "wiring:configuration": 4,
+    "wiring:internal-diagnostics": 16,
+    "wiring:release-notes": 1,
+    "wiring:runtime": 6,
+    "wiring:ui-primitive": 10
+  },
+  "dictionary_only_keys": 44,
+  "delegated_files": [
+    "packaging/launcher/network-acceptance.mjs"
+  ],
+  "census_sha256": "9d5fbb62ee7749a3febca5e8a2601a3229027f9a664f12ecf5cddf26db6f4a7a",
+  "artifact_sha256": {
+    "surfaces.csv": "55b29de0cca061fc34a577348286cc7663c19d270416af0b31261e153f8f3c00",
+    "files.csv": "a9ccc27e6468c86a4d38e1315300f239cf736828f62a6cf96339eceb67c1d2aa"
+  },
+  "working_tree_tracked_changes": [],
+  "product_tests_run": [],
+  "native_execution_performed": false,
+  "limits": [
+    "Static source inspection only; no native/browser runtime verified.",
+    "No package install/build, external network/account operation, installer execution, global setting change, broad test suite, or commit.",
+    "Cross-partition CLI/terminal/pinned reporter content requires substantive evidence from the owning audit."
+  ]
+}

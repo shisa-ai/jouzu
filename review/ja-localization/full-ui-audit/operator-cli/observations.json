@@ -1,0 +1,455 @@
+{
+  "schema_version": 1,
+  "observations": [
+    {
+      "scenario": "help",
+      "locale": "en",
+      "args": [
+        "--help"
+      ],
+      "exit_status": 0,
+      "stdout": "Jouzu agentic AI environment\n\nUsage:\n  jouzu [--jouzu-home <path>] [--jouzu-profile <core|ja>] [Pi arguments...]\n  jouzu --session <id> [Pi arguments...]\n  jouzu [Jouzu options] pi [Pi arguments...]\n  jouzu [Jouzu options] -- [Pi arguments...]\n  jouzu [Jouzu options] doctor [--json]\n  jouzu catalog status [source-id] [--json]\n  jouzu catalog refresh [source-id] [--json]\n  jouzu catalog accept <revision> --digest <sha256> [--source <source-id>]\n  jouzu catalog validate <file> [--json]\n  jouzu catalog conformance <file> [--json]\n  jouzu profile plan [--profile <core|ja>] [--json]\n  jouzu profile apply [--profile <core|ja>]\n  jouzu profile-migration plan [--json]\n  jouzu profile-migration apply [--yes]\n  jouzu profile-migration rollback\n  jouzu keybindings status [--json]\n  jouzu keybindings plan [--json]\n  jouzu keybindings apply\n  jouzu keybindings reset\n  jouzu self-update status [--json]\n  jouzu self-update check [--json]\n  jouzu self-update apply\n  jouzu self-update policy <auto-restart|notify|off>\n  jouzu [Jouzu options] --version\n\nCommands:\n  doctor        Show non-mutating runtime and isolation diagnostics\n  catalog       Inspect optional catalog setup or validate a catalog file\n  profile plan  Preview safe Core/JA profile changes without writing\n  profile apply Apply the selected profile with conflicts and backups\n  keybindings   Inspect, apply, or reset Jouzu's Pi-compatible key defaults\n  self-update   Inspect, check, apply, or configure Jouzu npm updates\n  pi, --        Explicitly pass all remaining arguments to pinned Pi\n\nTextGuard scans skills and web content locally by default.\nFlagged web results reach the model labelled as untrusted data; flagged skills stay withheld until you approve them.\nUse /textguard in an interactive session to review findings, and /textguard on, /textguard strict, or /textguard off to change scanning for that session.\n  --jouzu-textguard-strict                  Withhold every flagged input until approved\n  --jouzu-textguard-off                     Start with scanning off\n  --jouzu-textguard-files                   Also scan ordinary read-tool content\n  --jouzu-ui-locale <auto|en|ja|zh-Hans|zh-Hant>\n                                            UI language; auto follows the OS locale\n\nThe jz command behaves identically to jouzu.\nResume with the jz --session command printed on exit; Jouzu resolves its isolated session root.\nThe first interactive launch asks before enabling the optional JA profile; Core is the fallback.\nInteractive launches clear the viewport and show the Jouzu header; set JOUZU_NO_CLEAR=1 to preserve the existing screen.\nOpen the Jouzu Palette through /model or Ctrl+L.\n/catalogs opens Settings / Catalogs directly.\nTab or Shift+Tab switches Palette sections in browse mode.\nUse jouzu pi --help for Pi CLI help.\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "help",
+      "locale": "ja",
+      "args": [
+        "--help"
+      ],
+      "exit_status": 0,
+      "stdout": "Jouzu エージェント型 AI 環境\n\n使用方法:\n  jouzu [--jouzu-home <path>] [--jouzu-profile <core|ja>] [Pi arguments...]\n  jouzu --session <id> [Pi arguments...]\n  jouzu [Jouzu options] pi [Pi arguments...]\n  jouzu [Jouzu options] -- [Pi arguments...]\n  jouzu [Jouzu options] doctor [--json]\n  jouzu catalog status [source-id] [--json]\n  jouzu catalog refresh [source-id] [--json]\n  jouzu catalog accept <revision> --digest <sha256> [--source <source-id>]\n  jouzu catalog validate <file> [--json]\n  jouzu catalog conformance <file> [--json]\n  jouzu profile plan [--profile <core|ja>] [--json]\n  jouzu profile apply [--profile <core|ja>]\n  jouzu profile-migration plan [--json]\n  jouzu profile-migration apply [--yes]\n  jouzu profile-migration rollback\n  jouzu keybindings status [--json]\n  jouzu keybindings plan [--json]\n  jouzu keybindings apply\n  jouzu keybindings reset\n  jouzu self-update status [--json]\n  jouzu self-update check [--json]\n  jouzu self-update apply\n  jouzu self-update policy <auto-restart|notify|off>\n  jouzu [Jouzu options] --version\n\nコマンド:\n  doctor        変更を加えない実行環境と分離の診断を表示します\n  catalog       任意のカタログ設定を調べるか、カタログファイルを検証します\n  profile plan  書き込みせずに Core/JA プロファイルの安全な変更を確認します\n  profile apply 選択したプロファイルを競合とバックアップとともに適用します\n  keybindings   Jouzu の Pi 互換キー既定を調べる、適用する、またはリセットします\n  self-update   Jouzu の npm 更新を調べる、確認する、適用する、または設定します\n  pi, --        残りの引数をすべて固定した Pi へ明示的に渡します\n\nTextGuard は既定でスキルとウェブ内容をローカルで走査します。\nフラグが付いたウェブ結果は信頼できないデータとしてラベル付けされてモデルに届きます。フラグが付いたスキルは、承認するまで差し止められます。\n対話セッションで `/textguard` を使うと検出内容を確認でき、`/textguard on`、`/textguard strict`、`/textguard off` でそのセッションの走査を変更できます。\n  --jouzu-textguard-strict                  フラグが付いたすべての入力を承認まで差し止めます\n  --jouzu-textguard-off                     走査をオフにして開始します\n  --jouzu-textguard-files                   通常の読み取りツールの内容も走査します\n  --jouzu-ui-locale <auto|en|ja|zh-Hans|zh-Hant>\n                                            表示言語。auto は OS ロケールに従います\n\n`jz` は `jouzu` と同じ動作をする別名です。\n終了時に表示される `jz --session` コマンドで再開します。Jouzu は分離されたセッションルートを解決します。\n最初の対話起動では、任意の JA プロファイルを有効にする前に確認します。Core がフォールバックです。\n対話起動ではビューポートを消去し、Jouzu ヘッダーを表示します。`JOUZU_NO_CLEAR=1` を設定すると既存の画面を保持します。\n`/model` または Ctrl+L で Jouzu Palette を開きます。\n`/catalogs` は設定 / カタログを直接開きます。\n閲覧モードでは Tab または Shift+Tab で Palette のセクションを切り替えます。\nPi の CLI ヘルプには `jouzu pi --help` を使用します。\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "version",
+      "locale": "en",
+      "args": [
+        "--version"
+      ],
+      "exit_status": 0,
+      "stdout": "jouzu 0.2.3-dev.20261026-085553+gb703b9ea\npi 1.4.0\nprofile schema 1\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "version",
+      "locale": "ja",
+      "args": [
+        "--version"
+      ],
+      "exit_status": 0,
+      "stdout": "jouzu 0.2.3-dev.20261026-085553+gb703b9ea\npi 1.4.0\nプロファイルスキーマ 1\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "doctor-human",
+      "locale": "en",
+      "args": [
+        "doctor"
+      ],
+      "exit_status": 0,
+      "stdout": "Jouzu doctor 0.2.3-dev.20261026-085553+gb703b9ea · pi 1.4.0 · win32 x64\n\nNotes\n   ⚠ provider  No obvious provider credential or custom model configuration was\n               found; use /login or provider environment variables\n   ⚠ profile   The selected profile has not been applied; run \"jouzu profile\n               apply\"\n────────────────────────────────────────────────────────────────────────────────\n\nRuntime\n   Jouzu version                  0.2.3-dev.20261026-085553+gb703b9ea\n   Pi runtime                     1.4.0\n   Pi upstream                    v1.4.0\n                                  (4a080252f06caf63a525d7873c5d94d3c23887e0)\n   Pi qualification               qualified; deviations=10\n   Profile schema                 1\n   Release-owned extensions       9 selected; 9 ready; 0 optional unavailable\n   Package-owned skills           1 selected; 1 ready\n   Compatibility dependencies     4 selected\n   Optional Camoufox runtime      not installed; installs on first browser tool\n                                  use\n   Install channel                source checkout\n   Executable                     <checkout-root>\\packages\\cli\\dist\\cli.js\n   Self-update policy             off\n   Self-update channel            source\n   Automatic startup update       not eligible\n   Last update check              never\n   Latest observed Jouzu          not checked\n   Keybinding defaults            uninitialized\n   Keybinding policy              unset\n   Jouzu default follow-up key    ctrl+enter\n   Jouzu default dequeue key      ctrl+up\n   Keybinding config              <temporary-root>\\home\\agent\\keybindings.json\n\nModel catalog\n   Active catalogs                0\n   Offerings                      0\n   Model registration             no active catalog\n   Thinking levels                no active catalog\n\nPlatform\n   Platform                       win32 x64\n   Node                           v26.12.1 (supported)\n   Locale                         ja-JP\n   Git                            C:\\Program Files\\Git\\mingw64\\bin\\git.EXE\n   Bash                           C:\\Program Files\\Git\\usr\\bin\\bash.EXE\n   npm                            <node-directory>\\npm.CMD\n   Proxy configured               no\n   Additional CA configured       no\n\nLocalization\n   UI locale requested            en\n   UI locale effective            en\n   UI locale source               cli\n   UI locale fallback reason      none\n   UI catalog version             2\n   UI catalog digest              4e86bc0d254dcbf0bb06a198ad8096d8e1e312edc2bbbf92affc1c2958f292b9\n   UI catalog fallback reason     none\n   UI catalog support state       complete\n   Recorded UI catalog states     en=complete; ja=stale; zh-Hans=unsupported;\n                                  zh-Hant=unsupported\n   Response language requested    auto\n   Response language effective    auto\n   Response language source       builtin\n   Artifact policy requested      comments=preserve documentation=project\n                                  commits=project reviews=project\n   Artifact policy effective      comments=preserve documentation=project\n                                  commits=project reviews=project\n   Artifact policy source         builtin\n   Project language policy        untrusted\n\nUpstream boundary\n   Recorded surfaces              53\n   Translated surfaces            1\n   Upstream-owned surfaces        42\n   Not-inspected surfaces         1\n   Out-of-scope surfaces          9\n   Support stage                  The Jouzu-owned UI is available in English and\n                                  Japanese, and the Jouzu-owned browser adapter\n                                  renders its tool labels from the Jouzu\n                                  catalog. The pinned Pi and the third-party\n                                  bundled extensions render their own English.\n\nRoots\n   Agent/config root              <temporary-root>\\home\\agent\n   State root                     <temporary-root>\\home\\state\n   Session root                   <temporary-root>\\home\\state\\sessions\n   Cache root                     <temporary-root>\\home\\cache\n   Model picker state             absent\n   Pi agent root replaced         not set\n   Pi session root replaced       not set\n   Profile lock                   free\n   Pi import lock                 free\n   Keybinding lock                free\n   Model picker lock              free\n   Update lock                    free\n   Camoufox runtime install lock  free\n   Shared cross-harness skills    <temporary-root>\\.agents\\skills\n                                  (absent)\n\nProfile\n   Selected profile               core (default)\n   Bundled profile manifest       e5e2884d65e26fa2d652d928c25ef2f8118d987e4b5ddcb1ae173d47318781fc\n   Applied profile manifest       not applied\n   Configured Pi packages         0\n   Provider auth file             absent\n   Custom models file             absent\n   Provider environment           not detected\n\n   Isolation: stock Pi global config, auth, packages, and sessions are not\n   imported. Project resources and ~/.agents/skills remain shared Pi\n   compatibility surfaces.\n\n   Upstream text constraint: the pinned Pi and the third-party bundled\n   extensions render their own English that Jouzu does not translate or replace,\n   while the Jouzu-owned browser adapter renders its tool labels from the Jouzu\n   catalog. A surface that could not be inspected stays unverified and is not\n   counted as translated. Recheck when the Pi pin or an extension version\n   changes.\n\n   The surface record was inspected against Pi 1.0.0, not the running Pi 1.4.0.\n   Its counts describe that inspection, not verification of this runtime.\n   Recheck changed Pi and extension surfaces before claiming coverage.\n\n────────────────────────────────────────────────────────────────────────────────\n✓ 0 problems · ⚠ 2 warnings\n\n   Run \"jz doctor --json\" for the same report as JSON, or \"jz catalog status\"\n   for catalog detail.\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "doctor-human",
+      "locale": "ja",
+      "args": [
+        "doctor"
+      ],
+      "exit_status": 0,
+      "stdout": "Jouzu 診断 0.2.3-dev.20261026-085553+gb703b9ea · pi 1.4.0 · win32 x64\n\n注意\n   ⚠ provider  プロバイダーの資格情報、カスタムモデル設定が見つかりませんでし\n               た。`/login` またはプロバイダーの環境変数を使用してください\n   ⚠ profile   選択したプロファイルはまだ適用されていません。`jouzu profile\n               apply` を実行してください\n────────────────────────────────────────────────────────────────────────────────\n\n実行環境\n   Jouzu バージョン                0.2.3-dev.20261026-085553+gb703b9ea\n   Pi 実行環境                     1.4.0\n   Pi 上流                         v1.4.0\n                                   (4a080252f06caf63a525d7873c5d94d3c23887e0)\n   Pi 適格性                       qualified; deviations=10\n   プロファイルスキーマ            1\n   同梱の拡張機能                  選択 9 件、準備完了 9 件、利用不可（任意） 0\n                                   件\n   パッケージ同梱のスキル          選択 1 件、準備完了 1 件\n   互換性依存関係                  選択 4 件\n   任意の Camoufox 実行環境        未インストール。最初のブラウザーツール使用時にインストールされます\n   インストール方法                ソースチェックアウト\n   実行ファイル                    <checkout-root>\\packages\\cli\\dist\\cli.js\n   自己更新ポリシー                オフ\n   自己更新のインストール方法      ソースチェックアウト\n   自動起動時更新                  対象外\n   最後の更新確認                  なし\n   最後に確認した Jouzu            未確認\n   キーバインド既定                未初期化\n   キーバインドポリシー            未設定\n   Jouzu の既定フォローアップキー  ctrl+enter\n   Jouzu の既定デキューキー        ctrl+up\n   キーバインド設定                <temporary-root>\\home\\agent\\keybindings.json\n\nモデルカタログ\n   有効なカタログ                  0\n   提供モデル数                    0\n   モデル登録                      有効なカタログなし\n   思考レベル                      有効なカタログなし\n\nプラットフォーム\n   プラットフォーム                win32 x64\n   Node                            v26.12.1（サポート対象）\n   ロケール                        ja-JP\n   Git                             C:\\Program Files\\Git\\mingw64\\bin\\git.EXE\n   Bash                            C:\\Program Files\\Git\\usr\\bin\\bash.EXE\n   npm                             <node-directory>\\npm.CMD\n   プロキシ設定                    いいえ\n   追加 CA 設定                    いいえ\n\nローカライズ\n   要求した表示言語                ja\n   有効な表示言語                  ja\n   表示言語の取得元                cli\n   表示言語のフォールバック理由    なし\n   UI カタログバージョン           2\n   UI カタログダイジェスト         eeeade80f25cb95d6b84de098a2ec6f66f305d3b80c9f8f5494d055a7781c2a7\n   UI カタログのフォールバック理由\n                                   なし\n   UI カタログの対応状態           stale\n   記録済みの UI カタログ状態      en=complete; ja=stale; zh-Hans=unsupported;\n                                   zh-Hant=unsupported\n   要求した回答言語                auto\n   有効な回答言語                  auto\n   回答言語の取得元                builtin\n   要求した成果物ポリシー          comments=preserve documentation=project\n                                   commits=project reviews=project\n   有効な成果物ポリシー            comments=preserve documentation=project\n                                   commits=project reviews=project\n   成果物ポリシーの取得元          builtin\n   プロジェクト言語ポリシー        untrusted\n\n上流境界\n   記録済みの表示面                53\n   翻訳済みの表示面                1\n   上流所有の表示面                42\n   未確認の表示面                  1\n   対象外の表示面                  9\n   対応段階                        Jouzu 所有の UI\n                                   は英語と日本語で利用でき、Jouzu\n                                   所有のブラウザーアダプターはツールのラベルを\n                                   Jouzu カタログから表示します。固定版の Pi\n                                   と第三者の同梱拡張は独自の英語で表示します。\n\nルート\n   エージェント/設定ルート         <temporary-root>\\home\\agent\n   状態ルート                      <temporary-root>\\home\\state\n   セッションルート                <temporary-root>\\home\\state\\sessions\n   キャッシュルート                <temporary-root>\\home\\cache\n   モデルピッカー状態              なし\n   Pi エージェントルートの置き換え\n                                   未設定\n   Pi セッションルートの置き換え   未設定\n   プロファイルロック              空き\n   Pi 取り込みロック               空き\n   キーバインドロック              空き\n   モデルピッカーロック            空き\n   更新ロック                      空き\n   Camoufox 実行環境インストールロック\n                                   空き\n   共有クロスハーネススキル        <temporary-root>\\.agents\\skills（なし）\n\nプロファイル\n   選択したプロファイル            core (default)\n   同梱プロファイルマニフェスト    e5e2884d65e26fa2d652d928c25ef2f8118d987e4b5ddcb1ae173d47318781fc\n   適用済みプロファイルマニフェスト\n                                   未適用\n   設定済み Pi パッケージ          0\n   プロバイダー認証ファイル        なし\n   カスタムモデルファイル          なし\n   プロバイダー環境変数            検出されません\n\n   分離: Pi の標準のグローバル設定、認証、パッケージ、セッションは取り込まれませ\n   ん。プロジェクトのリソースと `~/.agents/skills` は共有の Pi 互換面として残り\n   ます。\n\n   上流の表示に関する制約: 固定版の Pi と第三者の同梱拡張は独自の英語で表示し、\n   Jouzu はこれを翻訳も置換もしません。Jouzu 所有のブラウザーアダプターはツール\n   のラベルを Jouzu カタログから表示します。確認できなかった表示面は未確認のまま\n   となり、翻訳済みには数えません。Pi の固定版または拡張の版が変わったときに再確\n   認します。\n\n   表示面の記録は Pi 1.0.0 で確認したもので、実行中の Pi 1.4.0 では未確認です。\n   件数はその確認時点の値であり、この実行環境の検証結果ではありません。対応範囲\n   を示す前に、変更された Pi と拡張の表示面を再確認してください。\n\n────────────────────────────────────────────────────────────────────────────────\n✓ 0 件の問題 · ⚠ 2 件の警告\n\n   同じレポートを JSON で得るには `jz doctor --json`、カタログの詳細には `jz\n   catalog status` を実行してください。\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "doctor-json",
+      "locale": "en",
+      "args": [
+        "doctor",
+        "--json"
+      ],
+      "exit_status": 0,
+      "stdout": "{\n  \"schemaVersion\": 1,\n  \"experimental\": true,\n  \"healthy\": true,\n  \"fields\": [\n    {\n      \"id\": \"jouzu.version\",\n      \"section\": \"runtime\",\n      \"label\": \"Jouzu version\",\n      \"value\": \"0.2.3-dev.20261026-085553+gb703b9ea\"\n    },\n    {\n      \"id\": \"pi.runtime\",\n      \"section\": \"runtime\",\n      \"label\": \"Pi runtime\",\n      \"value\": \"1.4.0\"\n    },\n    {\n      \"id\": \"pi.upstream\",\n      \"section\": \"runtime\",\n      \"label\": \"Pi upstream\",\n      \"value\": \"v1.4.0 (4a080252f06caf63a525d7873c5d94d3c23887e0)\"\n    },\n    {\n      \"id\": \"pi.qualification\",\n      \"section\": \"runtime\",\n      \"label\": \"Pi qualification\",\n      \"value\": \"qualified; deviations=10\"\n    },\n    {\n      \"id\": \"profile.schema\",\n      \"section\": \"runtime\",\n      \"label\": \"Profile schema\",\n      \"value\": \"1\"\n    },\n    {\n      \"id\": \"extensions.releaseOwned\",\n      \"section\": \"runtime\",\n      \"label\": \"Release-owned extensions\",\n      \"value\": \"9 selected; 9 ready; 0 optional unavailable\"\n    },\n    {\n      \"id\": \"skills.packageOwned\",\n      \"section\": \"runtime\",\n      \"label\": \"Package-owned skills\",\n      \"value\": \"1 selected; 1 ready\"\n    },\n    {\n      \"id\": \"extensions.compatibilityDependencies\",\n      \"section\": \"runtime\",\n      \"label\": \"Compatibility dependencies\",\n      \"value\": \"4 selected\"\n    },\n    {\n      \"id\": \"camoufox.runtime\",\n      \"section\": \"runtime\",\n      \"label\": \"Optional Camoufox runtime\",\n      \"value\": \"not installed; installs on first browser tool use\"\n    },\n    {\n      \"id\": \"update.installChannel\",\n      \"section\": \"runtime\",\n      \"label\": \"Install channel\",\n      \"value\": \"source checkout\"\n    },\n    {\n      \"id\": \"executable\",\n      \"section\": \"runtime\",\n      \"label\": \"Executable\",\n      \"value\": \"<checkout-root>\\\\packages\\\\cli\\\\dist\\\\cli.js\"\n    },\n    {\n      \"id\": \"catalog.sources\",\n      \"section\": \"catalog\",\n      \"label\": \"Active catalogs\",\n      \"value\": \"0\"\n    },\n    {\n      \"id\": \"catalog.offerings\",\n      \"section\": \"catalog\",\n      \"label\": \"Offerings\",\n      \"value\": \"0\"\n    },\n    {\n      \"id\": \"catalog.registration\",\n      \"section\": \"catalog\",\n      \"label\": \"Model registration\",\n      \"value\": \"no active catalog\"\n    },\n    {\n      \"id\": \"catalog.thinkingLevels\",\n      \"section\": \"catalog\",\n      \"label\": \"Thinking levels\",\n      \"value\": \"no active catalog\"\n    },\n    {\n      \"id\": \"update.policy\",\n      \"section\": \"runtime\",\n      \"label\": \"Self-update policy\",\n      \"value\": \"off\"\n    },\n    {\n      \"id\": \"update.channel\",\n      \"section\": \"runtime\",\n      \"label\": \"Self-update channel\",\n      \"value\": \"source\"\n    },\n    {\n      \"id\": \"update.startupEligible\",\n      \"section\": \"runtime\",\n      \"label\": \"Automatic startup update\",\n      \"value\": \"not eligible\"\n    },\n    {\n      \"id\": \"update.lastCheckedAt\",\n      \"section\": \"runtime\",\n      \"label\": \"Last update check\",\n      \"value\": \"never\"\n    },\n    {\n      \"id\": \"update.latestVersion\",\n      \"section\": \"runtime\",\n      \"label\": \"Latest observed Jouzu\",\n      \"value\": \"not checked\"\n    },\n    {\n      \"id\": \"keybindings.status\",\n      \"section\": \"runtime\",\n      \"label\": \"Keybinding defaults\",\n      \"value\": \"uninitialized\"\n    },\n    {\n      \"id\": \"keybindings.policy\",\n      \"section\": \"runtime\",\n      \"label\": \"Keybinding policy\",\n      \"value\": \"unset\"\n    },\n    {\n      \"id\": \"keybindings.followUpKey\",\n      \"section\": \"runtime\",\n      \"label\": \"Jouzu default follow-up key\",\n      \"value\": \"ctrl+enter\"\n    },\n    {\n      \"id\": \"keybindings.dequeueKey\",\n      \"section\": \"runtime\",\n      \"label\": \"Jouzu default dequeue key\",\n      \"value\": \"ctrl+up\"\n    },\n    {\n      \"id\": \"keybindings.configPath\",\n      \"section\": \"runtime\",\n      \"label\": \"Keybinding config\",\n      \"value\": \"<temporary-root>\\\\home\\\\agent\\\\keybindings.json\"\n    },\n    {\n      \"id\": \"platform\",\n      \"section\": \"platform\",\n      \"label\": \"Platform\",\n      \"value\": \"win32 x64\"\n    },\n    {\n      \"id\": \"node\",\n      \"section\": \"platform\",\n      \"label\": \"Node\",\n      \"value\": \"v26.12.1 (supported)\"\n    },\n    {\n      \"id\": \"locale\",\n      \"section\": \"platform\",\n      \"label\": \"Locale\",\n      \"value\": \"ja-JP\"\n    },\n    {\n      \"id\": \"git\",\n      \"section\": \"platform\",\n      \"label\": \"Git\",\n      \"value\": \"C:\\\\Program Files\\\\Git\\\\mingw64\\\\bin\\\\git.EXE\"\n    },\n    {\n      \"id\": \"bash\",\n      \"section\": \"platform\",\n      \"label\": \"Bash\",\n      \"value\": \"C:\\\\Program Files\\\\Git\\\\usr\\\\bin\\\\bash.EXE\"\n    },\n    {\n      \"id\": \"npm\",\n      \"section\": \"platform\",\n      \"label\": \"npm\",\n      \"value\": \"<node-directory>\\\\npm.CMD\"\n    },\n    {\n      \"id\": \"proxy\",\n      \"section\": \"platform\",\n      \"label\": \"Proxy configured\",\n      \"value\": \"no\"\n    },\n    {\n      \"id\": \"extraCaCerts\",\n      \"section\": \"platform\",\n      \"label\": \"Additional CA configured\",\n      \"value\": \"no\"\n    },\n    {\n      \"id\": \"localization.requested\",\n      \"section\": \"localization\",\n      \"label\": \"UI locale requested\",\n      \"value\": \"en\"\n    },\n    {\n      \"id\": \"localization.effective\",\n      \"section\": \"localization\",\n      \"label\": \"UI locale effective\",\n      \"value\": \"en\"\n    },\n    {\n      \"id\": \"localization.source\",\n      \"section\": \"localization\",\n      \"label\": \"UI locale source\",\n      \"value\": \"cli\"\n    },\n    {\n      \"id\": \"localization.fallback\",\n      \"section\": \"localization\",\n      \"label\": \"UI locale fallback reason\",\n      \"value\": \"none\"\n    },\n    {\n      \"id\": \"localization.catalogVersion\",\n      \"section\": \"localization\",\n      \"label\": \"UI catalog version\",\n      \"value\": \"2\"\n    },\n    {\n      \"id\": \"localization.catalogDigest\",\n      \"section\": \"localization\",\n      \"label\": \"UI catalog digest\",\n      \"value\": \"4e86bc0d254dcbf0bb06a198ad8096d8e1e312edc2bbbf92affc1c2958f292b9\"\n    },\n    {\n      \"id\": \"localization.catalogFallback\",\n      \"section\": \"localization\",\n      \"label\": \"UI catalog fallback reason\",\n      \"value\": \"none\"\n    },\n    {\n      \"id\": \"localization.catalogState\",\n      \"section\": \"localization\",\n      \"label\": \"UI catalog support state\",\n      \"value\": \"complete\"\n    },\n    {\n      \"id\": \"localization.supportStates\",\n      \"section\": \"localization\",\n      \"label\": \"Recorded UI catalog states\",\n      \"value\": \"en=complete; ja=stale; zh-Hans=unsupported; zh-Hant=unsupported\"\n    },\n    {\n      \"id\": \"language.responseLanguage.requested\",\n      \"section\": \"localization\",\n      \"label\": \"Response language requested\",\n      \"value\": \"auto\"\n    },\n    {\n      \"id\": \"language.responseLanguage.effective\",\n      \"section\": \"localization\",\n      \"label\": \"Response language effective\",\n      \"value\": \"auto\"\n    },\n    {\n      \"id\": \"language.responseLanguage.source\",\n      \"section\": \"localization\",\n      \"label\": \"Response language source\",\n      \"value\": \"builtin\"\n    },\n    {\n      \"id\": \"language.artifactPolicy.requested\",\n      \"section\": \"localization\",\n      \"label\": \"Artifact policy requested\",\n      \"value\": \"comments=preserve documentation=project commits=project reviews=project\"\n    },\n    {\n      \"id\": \"language.artifactPolicy.effective\",\n      \"section\": \"localization\",\n      \"label\": \"Artifact policy effective\",\n      \"value\": \"comments=preserve documentation=project commits=project reviews=project\"\n    },\n    {\n      \"id\": \"language.artifactPolicy.source\",\n      \"section\": \"localization\",\n      \"label\": \"Artifact policy source\",\n      \"value\": \"builtin\"\n    },\n    {\n      \"id\": \"language.projectPolicy\",\n      \"section\": \"localization\",\n      \"label\": \"Project language policy\",\n      \"value\": \"untrusted\"\n    },\n    {\n      \"id\": \"upstream.surfaces.total\",\n      \"section\": \"upstream\",\n      \"label\": \"Recorded surfaces\",\n      \"value\": \"53\"\n    },\n    {\n      \"id\": \"upstream.surfaces.translated\",\n      \"section\": \"upstream\",\n      \"label\": \"Translated surfaces\",\n      \"value\": \"1\"\n    },\n    {\n      \"id\": \"upstream.surfaces.upstreamOwned\",\n      \"section\": \"upstream\",\n      \"label\": \"Upstream-owned surfaces\",\n      \"value\": \"42\"\n    },\n    {\n      \"id\": \"upstream.surfaces.notInspected\",\n      \"section\": \"upstream\",\n      \"label\": \"Not-inspected surfaces\",\n      \"value\": \"1\"\n    },\n    {\n      \"id\": \"upstream.surfaces.outOfScope\",\n      \"section\": \"upstream\",\n      \"label\": \"Out-of-scope surfaces\",\n      \"value\": \"9\"\n    },\n    {\n      \"id\": \"upstream.supportStage\",\n      \"section\": \"upstream\",\n      \"label\": \"Support stage\",\n      \"value\": \"The Jouzu-owned UI is available in English and Japanese, and the Jouzu-owned browser adapter renders its tool labels from the Jouzu catalog. The pinned Pi and the third-party bundled extensions render their own English.\"\n    },\n    {\n      \"id\": \"paths.agentDir\",\n      \"section\": \"roots\",\n      \"label\": \"Agent/config root\",\n      \"value\": \"<temporary-root>\\\\home\\\\agent\"\n    },\n    {\n      \"id\": \"paths.stateDir\",\n      \"section\": \"roots\",\n      \"label\": \"State root\",\n      \"value\": \"<temporary-root>\\\\home\\\\state\"\n    },\n    {\n      \"id\": \"paths.sessionDir\",\n      \"section\": \"roots\",\n      \"label\": \"Session root\",\n      \"value\": \"<temporary-root>\\\\home\\\\state\\\\sessions\"\n    },\n    {\n      \"id\": \"paths.cacheDir\",\n      \"section\": \"roots\",\n      \"label\": \"Cache root\",\n      \"value\": \"<temporary-root>\\\\home\\\\cache\"\n    },\n    {\n      \"id\": \"modelPicker.state\",\n      \"section\": \"roots\",\n      \"label\": \"Model picker state\",\n      \"value\": \"absent\"\n    },\n    {\n      \"id\": \"isolation.piAgentDir\",\n      \"section\": \"roots\",\n      \"label\": \"Pi agent root replaced\",\n      \"value\": \"not set\"\n    },\n    {\n      \"id\": \"isolation.piSessionDir\",\n      \"section\": \"roots\",\n      \"label\": \"Pi session root replaced\",\n      \"value\": \"not set\"\n    },\n    {\n      \"id\": \"lock.profile\",\n      \"section\": \"roots\",\n      \"label\": \"Profile lock\",\n      \"value\": \"free\"\n    },\n    {\n      \"id\": \"lock.piImport\",\n      \"section\": \"roots\",\n      \"label\": \"Pi import lock\",\n      \"value\": \"free\"\n    },\n    {\n      \"id\": \"lock.keybindings\",\n      \"section\": \"roots\",\n      \"label\": \"Keybinding lock\",\n      \"value\": \"free\"\n    },\n    {\n      \"id\": \"lock.modelPicker\",\n      \"section\": \"roots\",\n      \"label\": \"Model picker lock\",\n      \"value\": \"free\"\n    },\n    {\n      \"id\": \"lock.update\",\n      \"section\": \"roots\",\n      \"label\": \"Update lock\",\n      \"value\": \"free\"\n    },\n    {\n      \"id\": \"lock.camoufoxRuntime\",\n      \"section\": \"roots\",\n      \"label\": \"Camoufox runtime install lock\",\n      \"value\": \"free\"\n    },\n    {\n      \"id\": \"skills.shared\",\n      \"section\": \"roots\",\n      \"label\": \"Shared cross-harness skills\",\n      \"value\": \"<temporary-root>\\\\.agents\\\\skills (absent)\"\n    },\n    {\n      \"id\": \"profile.selected\",\n      \"section\": \"profile\",\n      \"label\": \"Selected profile\",\n      \"value\": \"core (default)\"\n    },\n    {\n      \"id\": \"profile.bundledManifest\",\n      \"section\": \"profile\",\n      \"label\": \"Bundled profile manifest\",\n      \"value\": \"e5e2884d65e26fa2d652d928c25ef2f8118d987e4b5ddcb1ae173d47318781fc\"\n    },\n    {\n      \"id\": \"profile.appliedManifest\",\n      \"section\": \"profile\",\n      \"label\": \"Applied profile manifest\",\n      \"value\": \"not applied\"\n    },\n    {\n      \"id\": \"packages.count\",\n      \"section\": \"profile\",\n      \"label\": \"Configured Pi packages\",\n      \"value\": \"0\"\n    },\n    {\n      \"id\": \"provider.authFile\",\n      \"section\": \"profile\",\n      \"label\": \"Provider auth file\",\n      \"value\": \"absent\"\n    },\n    {\n      \"id\": \"provider.modelsFile\",\n      \"section\": \"profile\",\n      \"label\": \"Custom models file\",\n      \"value\": \"absent\"\n    },\n    {\n      \"id\": \"provider.environment\",\n      \"section\": \"profile\",\n      \"label\": \"Provider environment\",\n      \"value\": \"not detected\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"provider.unconfigured\",\n      \"severity\": \"warning\",\n      \"message\": \"No obvious provider credential or custom model configuration was found; use /login or provider environment variables\"\n    },\n    {\n      \"id\": \"profile.notApplied\",\n      \"severity\": \"warning\",\n      \"message\": \"The selected profile has not been applied; run \\\"jouzu profile apply\\\"\"\n    }\n  ],\n  \"notes\": [\n    \"Isolation: stock Pi global config, auth, packages, and sessions are not imported. Project resources and ~/.agents/skills remain shared Pi compatibility surfaces.\"\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "doctor-json",
+      "locale": "ja",
+      "args": [
+        "doctor",
+        "--json"
+      ],
+      "exit_status": 0,
+      "stdout": "{\n  \"schemaVersion\": 1,\n  \"experimental\": true,\n  \"healthy\": true,\n  \"fields\": [\n    {\n      \"id\": \"jouzu.version\",\n      \"section\": \"runtime\",\n      \"label\": \"Jouzu version\",\n      \"value\": \"0.2.3-dev.20261026-085553+gb703b9ea\"\n    },\n    {\n      \"id\": \"pi.runtime\",\n      \"section\": \"runtime\",\n      \"label\": \"Pi runtime\",\n      \"value\": \"1.4.0\"\n    },\n    {\n      \"id\": \"pi.upstream\",\n      \"section\": \"runtime\",\n      \"label\": \"Pi upstream\",\n      \"value\": \"v1.4.0 (4a080252f06caf63a525d7873c5d94d3c23887e0)\"\n    },\n    {\n      \"id\": \"pi.qualification\",\n      \"section\": \"runtime\",\n      \"label\": \"Pi qualification\",\n      \"value\": \"qualified; deviations=10\"\n    },\n    {\n      \"id\": \"profile.schema\",\n      \"section\": \"runtime\",\n      \"label\": \"Profile schema\",\n      \"value\": \"1\"\n    },\n    {\n      \"id\": \"extensions.releaseOwned\",\n      \"section\": \"runtime\",\n      \"label\": \"Release-owned extensions\",\n      \"value\": \"9 selected; 9 ready; 0 optional unavailable\"\n    },\n    {\n      \"id\": \"skills.packageOwned\",\n      \"section\": \"runtime\",\n      \"label\": \"Package-owned skills\",\n      \"value\": \"1 selected; 1 ready\"\n    },\n    {\n      \"id\": \"extensions.compatibilityDependencies\",\n      \"section\": \"runtime\",\n      \"label\": \"Compatibility dependencies\",\n      \"value\": \"4 selected\"\n    },\n    {\n      \"id\": \"camoufox.runtime\",\n      \"section\": \"runtime\",\n      \"label\": \"Optional Camoufox runtime\",\n      \"value\": \"not installed; installs on first browser tool use\"\n    },\n    {\n      \"id\": \"update.installChannel\",\n      \"section\": \"runtime\",\n      \"label\": \"Install channel\",\n      \"value\": \"source checkout\"\n    },\n    {\n      \"id\": \"executable\",\n      \"section\": \"runtime\",\n      \"label\": \"Executable\",\n      \"value\": \"<checkout-root>\\\\packages\\\\cli\\\\dist\\\\cli.js\"\n    },\n    {\n      \"id\": \"catalog.sources\",\n      \"section\": \"catalog\",\n      \"label\": \"Active catalogs\",\n      \"value\": \"0\"\n    },\n    {\n      \"id\": \"catalog.offerings\",\n      \"section\": \"catalog\",\n      \"label\": \"Offerings\",\n      \"value\": \"0\"\n    },\n    {\n      \"id\": \"catalog.registration\",\n      \"section\": \"catalog\",\n      \"label\": \"Model registration\",\n      \"value\": \"no active catalog\"\n    },\n    {\n      \"id\": \"catalog.thinkingLevels\",\n      \"section\": \"catalog\",\n      \"label\": \"Thinking levels\",\n      \"value\": \"no active catalog\"\n    },\n    {\n      \"id\": \"update.policy\",\n      \"section\": \"runtime\",\n      \"label\": \"Self-update policy\",\n      \"value\": \"off\"\n    },\n    {\n      \"id\": \"update.channel\",\n      \"section\": \"runtime\",\n      \"label\": \"Self-update channel\",\n      \"value\": \"source\"\n    },\n    {\n      \"id\": \"update.startupEligible\",\n      \"section\": \"runtime\",\n      \"label\": \"Automatic startup update\",\n      \"value\": \"not eligible\"\n    },\n    {\n      \"id\": \"update.lastCheckedAt\",\n      \"section\": \"runtime\",\n      \"label\": \"Last update check\",\n      \"value\": \"never\"\n    },\n    {\n      \"id\": \"update.latestVersion\",\n      \"section\": \"runtime\",\n      \"label\": \"Latest observed Jouzu\",\n      \"value\": \"not checked\"\n    },\n    {\n      \"id\": \"keybindings.status\",\n      \"section\": \"runtime\",\n      \"label\": \"Keybinding defaults\",\n      \"value\": \"uninitialized\"\n    },\n    {\n      \"id\": \"keybindings.policy\",\n      \"section\": \"runtime\",\n      \"label\": \"Keybinding policy\",\n      \"value\": \"unset\"\n    },\n    {\n      \"id\": \"keybindings.followUpKey\",\n      \"section\": \"runtime\",\n      \"label\": \"Jouzu default follow-up key\",\n      \"value\": \"ctrl+enter\"\n    },\n    {\n      \"id\": \"keybindings.dequeueKey\",\n      \"section\": \"runtime\",\n      \"label\": \"Jouzu default dequeue key\",\n      \"value\": \"ctrl+up\"\n    },\n    {\n      \"id\": \"keybindings.configPath\",\n      \"section\": \"runtime\",\n      \"label\": \"Keybinding config\",\n      \"value\": \"<temporary-root>\\\\home\\\\agent\\\\keybindings.json\"\n    },\n    {\n      \"id\": \"platform\",\n      \"section\": \"platform\",\n      \"label\": \"Platform\",\n      \"value\": \"win32 x64\"\n    },\n    {\n      \"id\": \"node\",\n      \"section\": \"platform\",\n      \"label\": \"Node\",\n      \"value\": \"v26.12.1 (supported)\"\n    },\n    {\n      \"id\": \"locale\",\n      \"section\": \"platform\",\n      \"label\": \"Locale\",\n      \"value\": \"ja-JP\"\n    },\n    {\n      \"id\": \"git\",\n      \"section\": \"platform\",\n      \"label\": \"Git\",\n      \"value\": \"C:\\\\Program Files\\\\Git\\\\mingw64\\\\bin\\\\git.EXE\"\n    },\n    {\n      \"id\": \"bash\",\n      \"section\": \"platform\",\n      \"label\": \"Bash\",\n      \"value\": \"C:\\\\Program Files\\\\Git\\\\usr\\\\bin\\\\bash.EXE\"\n    },\n    {\n      \"id\": \"npm\",\n      \"section\": \"platform\",\n      \"label\": \"npm\",\n      \"value\": \"<node-directory>\\\\npm.CMD\"\n    },\n    {\n      \"id\": \"proxy\",\n      \"section\": \"platform\",\n      \"label\": \"Proxy configured\",\n      \"value\": \"no\"\n    },\n    {\n      \"id\": \"extraCaCerts\",\n      \"section\": \"platform\",\n      \"label\": \"Additional CA configured\",\n      \"value\": \"no\"\n    },\n    {\n      \"id\": \"localization.requested\",\n      \"section\": \"localization\",\n      \"label\": \"UI locale requested\",\n      \"value\": \"ja\"\n    },\n    {\n      \"id\": \"localization.effective\",\n      \"section\": \"localization\",\n      \"label\": \"UI locale effective\",\n      \"value\": \"ja\"\n    },\n    {\n      \"id\": \"localization.source\",\n      \"section\": \"localization\",\n      \"label\": \"UI locale source\",\n      \"value\": \"cli\"\n    },\n    {\n      \"id\": \"localization.fallback\",\n      \"section\": \"localization\",\n      \"label\": \"UI locale fallback reason\",\n      \"value\": \"none\"\n    },\n    {\n      \"id\": \"localization.catalogVersion\",\n      \"section\": \"localization\",\n      \"label\": \"UI catalog version\",\n      \"value\": \"2\"\n    },\n    {\n      \"id\": \"localization.catalogDigest\",\n      \"section\": \"localization\",\n      \"label\": \"UI catalog digest\",\n      \"value\": \"eeeade80f25cb95d6b84de098a2ec6f66f305d3b80c9f8f5494d055a7781c2a7\"\n    },\n    {\n      \"id\": \"localization.catalogFallback\",\n      \"section\": \"localization\",\n      \"label\": \"UI catalog fallback reason\",\n      \"value\": \"none\"\n    },\n    {\n      \"id\": \"localization.catalogState\",\n      \"section\": \"localization\",\n      \"label\": \"UI catalog support state\",\n      \"value\": \"stale\"\n    },\n    {\n      \"id\": \"localization.supportStates\",\n      \"section\": \"localization\",\n      \"label\": \"Recorded UI catalog states\",\n      \"value\": \"en=complete; ja=stale; zh-Hans=unsupported; zh-Hant=unsupported\"\n    },\n    {\n      \"id\": \"language.responseLanguage.requested\",\n      \"section\": \"localization\",\n      \"label\": \"Response language requested\",\n      \"value\": \"auto\"\n    },\n    {\n      \"id\": \"language.responseLanguage.effective\",\n      \"section\": \"localization\",\n      \"label\": \"Response language effective\",\n      \"value\": \"auto\"\n    },\n    {\n      \"id\": \"language.responseLanguage.source\",\n      \"section\": \"localization\",\n      \"label\": \"Response language source\",\n      \"value\": \"builtin\"\n    },\n    {\n      \"id\": \"language.artifactPolicy.requested\",\n      \"section\": \"localization\",\n      \"label\": \"Artifact policy requested\",\n      \"value\": \"comments=preserve documentation=project commits=project reviews=project\"\n    },\n    {\n      \"id\": \"language.artifactPolicy.effective\",\n      \"section\": \"localization\",\n      \"label\": \"Artifact policy effective\",\n      \"value\": \"comments=preserve documentation=project commits=project reviews=project\"\n    },\n    {\n      \"id\": \"language.artifactPolicy.source\",\n      \"section\": \"localization\",\n      \"label\": \"Artifact policy source\",\n      \"value\": \"builtin\"\n    },\n    {\n      \"id\": \"language.projectPolicy\",\n      \"section\": \"localization\",\n      \"label\": \"Project language policy\",\n      \"value\": \"untrusted\"\n    },\n    {\n      \"id\": \"upstream.surfaces.total\",\n      \"section\": \"upstream\",\n      \"label\": \"Recorded surfaces\",\n      \"value\": \"53\"\n    },\n    {\n      \"id\": \"upstream.surfaces.translated\",\n      \"section\": \"upstream\",\n      \"label\": \"Translated surfaces\",\n      \"value\": \"1\"\n    },\n    {\n      \"id\": \"upstream.surfaces.upstreamOwned\",\n      \"section\": \"upstream\",\n      \"label\": \"Upstream-owned surfaces\",\n      \"value\": \"42\"\n    },\n    {\n      \"id\": \"upstream.surfaces.notInspected\",\n      \"section\": \"upstream\",\n      \"label\": \"Not-inspected surfaces\",\n      \"value\": \"1\"\n    },\n    {\n      \"id\": \"upstream.surfaces.outOfScope\",\n      \"section\": \"upstream\",\n      \"label\": \"Out-of-scope surfaces\",\n      \"value\": \"9\"\n    },\n    {\n      \"id\": \"upstream.supportStage\",\n      \"section\": \"upstream\",\n      \"label\": \"Support stage\",\n      \"value\": \"The Jouzu-owned UI is available in English and Japanese, and the Jouzu-owned browser adapter renders its tool labels from the Jouzu catalog. The pinned Pi and the third-party bundled extensions render their own English.\"\n    },\n    {\n      \"id\": \"paths.agentDir\",\n      \"section\": \"roots\",\n      \"label\": \"Agent/config root\",\n      \"value\": \"<temporary-root>\\\\home\\\\agent\"\n    },\n    {\n      \"id\": \"paths.stateDir\",\n      \"section\": \"roots\",\n      \"label\": \"State root\",\n      \"value\": \"<temporary-root>\\\\home\\\\state\"\n    },\n    {\n      \"id\": \"paths.sessionDir\",\n      \"section\": \"roots\",\n      \"label\": \"Session root\",\n      \"value\": \"<temporary-root>\\\\home\\\\state\\\\sessions\"\n    },\n    {\n      \"id\": \"paths.cacheDir\",\n      \"section\": \"roots\",\n      \"label\": \"Cache root\",\n      \"value\": \"<temporary-root>\\\\home\\\\cache\"\n    },\n    {\n      \"id\": \"modelPicker.state\",\n      \"section\": \"roots\",\n      \"label\": \"Model picker state\",\n      \"value\": \"absent\"\n    },\n    {\n      \"id\": \"isolation.piAgentDir\",\n      \"section\": \"roots\",\n      \"label\": \"Pi agent root replaced\",\n      \"value\": \"not set\"\n    },\n    {\n      \"id\": \"isolation.piSessionDir\",\n      \"section\": \"roots\",\n      \"label\": \"Pi session root replaced\",\n      \"value\": \"not set\"\n    },\n    {\n      \"id\": \"lock.profile\",\n      \"section\": \"roots\",\n      \"label\": \"Profile lock\",\n      \"value\": \"free\"\n    },\n    {\n      \"id\": \"lock.piImport\",\n      \"section\": \"roots\",\n      \"label\": \"Pi import lock\",\n      \"value\": \"free\"\n    },\n    {\n      \"id\": \"lock.keybindings\",\n      \"section\": \"roots\",\n      \"label\": \"Keybinding lock\",\n      \"value\": \"free\"\n    },\n    {\n      \"id\": \"lock.modelPicker\",\n      \"section\": \"roots\",\n      \"label\": \"Model picker lock\",\n      \"value\": \"free\"\n    },\n    {\n      \"id\": \"lock.update\",\n      \"section\": \"roots\",\n      \"label\": \"Update lock\",\n      \"value\": \"free\"\n    },\n    {\n      \"id\": \"lock.camoufoxRuntime\",\n      \"section\": \"roots\",\n      \"label\": \"Camoufox runtime install lock\",\n      \"value\": \"free\"\n    },\n    {\n      \"id\": \"skills.shared\",\n      \"section\": \"roots\",\n      \"label\": \"Shared cross-harness skills\",\n      \"value\": \"<temporary-root>\\\\.agents\\\\skills (absent)\"\n    },\n    {\n      \"id\": \"profile.selected\",\n      \"section\": \"profile\",\n      \"label\": \"Selected profile\",\n      \"value\": \"core (default)\"\n    },\n    {\n      \"id\": \"profile.bundledManifest\",\n      \"section\": \"profile\",\n      \"label\": \"Bundled profile manifest\",\n      \"value\": \"e5e2884d65e26fa2d652d928c25ef2f8118d987e4b5ddcb1ae173d47318781fc\"\n    },\n    {\n      \"id\": \"profile.appliedManifest\",\n      \"section\": \"profile\",\n      \"label\": \"Applied profile manifest\",\n      \"value\": \"not applied\"\n    },\n    {\n      \"id\": \"packages.count\",\n      \"section\": \"profile\",\n      \"label\": \"Configured Pi packages\",\n      \"value\": \"0\"\n    },\n    {\n      \"id\": \"provider.authFile\",\n      \"section\": \"profile\",\n      \"label\": \"Provider auth file\",\n      \"value\": \"absent\"\n    },\n    {\n      \"id\": \"provider.modelsFile\",\n      \"section\": \"profile\",\n      \"label\": \"Custom models file\",\n      \"value\": \"absent\"\n    },\n    {\n      \"id\": \"provider.environment\",\n      \"section\": \"profile\",\n      \"label\": \"Provider environment\",\n      \"value\": \"not detected\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"provider.unconfigured\",\n      \"severity\": \"warning\",\n      \"message\": \"No obvious provider credential or custom model configuration was found; use /login or provider environment variables\"\n    },\n    {\n      \"id\": \"profile.notApplied\",\n      \"severity\": \"warning\",\n      \"message\": \"The selected profile has not been applied; run \\\"jouzu profile apply\\\"\"\n    }\n  ],\n  \"notes\": [\n    \"Isolation: stock Pi global config, auth, packages, and sessions are not imported. Project resources and ~/.agents/skills remain shared Pi compatibility surfaces.\"\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "catalog-status",
+      "locale": "en",
+      "args": [
+        "catalog",
+        "status"
+      ],
+      "exit_status": 0,
+      "stdout": "Jouzu model catalogs empty · 0 of 1 sources active\n\nNotes\n   ⚠ shisa-api  token variable SHISA_API_KEY is not set and no token is saved\n                for this source; refreshes are skipped until one is available.\n────────────────────────────────────────────────────────────────────────────────\n\n○ Shisa API [shisa-api] · empty\n   Endpoint    https://api.shisa.ai/v1/jouzu/model-catalog\n   Credential  environment variable SHISA_API_KEY (not set)\n\n────────────────────────────────────────────────────────────────────────────────\n✓ 0 problems · ⚠ 1 warning\n\n   Run \"jz catalog status <source-id>\" for one source, or add --json for the\n   stored record.\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "catalog-status",
+      "locale": "ja",
+      "args": [
+        "catalog",
+        "status"
+      ],
+      "exit_status": 0,
+      "stdout": "Jouzu モデルカタログ 空 · 1 ソース中 0 ソースが有効\n\n注意\n   ⚠ shisa-api  トークン変数 SHISA_API_KEY が設定されておらず、このソースに保存\n                されたトークンもありません。トークンが利用可能になるまで更新はス\n                キップされます。\n────────────────────────────────────────────────────────────────────────────────\n\n○ Shisa API [shisa-api] · 空\n   エンドポイント  https://api.shisa.ai/v1/jouzu/model-catalog\n   資格情報        環境変数 SHISA_API_KEY（未設定）\n\n────────────────────────────────────────────────────────────────────────────────\n✓ 0 件の問題 · ⚠ 1 件の警告\n\n   1 つのソースには `jz catalog status <source-id>`、保存された記録には --json\n   を追加してください。\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "catalog-status-json",
+      "locale": "en",
+      "args": [
+        "catalog",
+        "status",
+        "--json"
+      ],
+      "exit_status": 0,
+      "stdout": "{\n  \"schemaVersion\": 1,\n  \"status\": \"empty\",\n  \"configured\": 1,\n  \"active\": 0,\n  \"sources\": [\n    {\n      \"schemaVersion\": 1,\n      \"status\": \"empty\",\n      \"configured\": true,\n      \"sourceId\": \"shisa-api\",\n      \"label\": \"Shisa API\",\n      \"enabled\": true,\n      \"endpoint\": \"https://api.shisa.ai/v1/jouzu/model-catalog\",\n      \"credentialName\": \"SHISA_API_KEY\",\n      \"credentialAvailable\": false,\n      \"credentialEnv\": false,\n      \"credentialStored\": false,\n      \"quarantined\": 0\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "catalog-status-json",
+      "locale": "ja",
+      "args": [
+        "catalog",
+        "status",
+        "--json"
+      ],
+      "exit_status": 0,
+      "stdout": "{\n  \"schemaVersion\": 1,\n  \"status\": \"empty\",\n  \"configured\": 1,\n  \"active\": 0,\n  \"sources\": [\n    {\n      \"schemaVersion\": 1,\n      \"status\": \"empty\",\n      \"configured\": true,\n      \"sourceId\": \"shisa-api\",\n      \"label\": \"Shisa API\",\n      \"enabled\": true,\n      \"endpoint\": \"https://api.shisa.ai/v1/jouzu/model-catalog\",\n      \"credentialName\": \"SHISA_API_KEY\",\n      \"credentialAvailable\": false,\n      \"credentialEnv\": false,\n      \"credentialStored\": false,\n      \"quarantined\": 0\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "catalog-missing-file",
+      "locale": "en",
+      "args": [
+        "catalog",
+        "validate",
+        "missing.json"
+      ],
+      "exit_status": 1,
+      "stdout": "Model catalog is invalid: catalog file does not exist: missing.json\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "catalog-missing-file",
+      "locale": "ja",
+      "args": [
+        "catalog",
+        "validate",
+        "missing.json"
+      ],
+      "exit_status": 1,
+      "stdout": "モデルカタログが無効です: カタログファイルが存在しません: missing.json\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "catalog-invalid-record",
+      "locale": "en",
+      "args": [
+        "catalog",
+        "validate",
+        "invalid-catalog.json"
+      ],
+      "exit_status": 1,
+      "stdout": "Model catalog is invalid: $.format: must equal jouzu.model-catalog\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "catalog-invalid-record",
+      "locale": "ja",
+      "args": [
+        "catalog",
+        "validate",
+        "invalid-catalog.json"
+      ],
+      "exit_status": 1,
+      "stdout": "モデルカタログが無効です: $.format: must equal jouzu.model-catalog\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "catalog-conformance-invalid-record",
+      "locale": "en",
+      "args": [
+        "catalog",
+        "conformance",
+        "invalid-catalog.json"
+      ],
+      "exit_status": 1,
+      "stdout": "Model catalog is invalid: $.format: must equal jouzu.model-catalog\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "catalog-conformance-invalid-record",
+      "locale": "ja",
+      "args": [
+        "catalog",
+        "conformance",
+        "invalid-catalog.json"
+      ],
+      "exit_status": 1,
+      "stdout": "モデルカタログが無効です: $.format: must equal jouzu.model-catalog\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "keybindings-status",
+      "locale": "en",
+      "args": [
+        "keybindings",
+        "status"
+      ],
+      "exit_status": 0,
+      "stdout": "Jouzu keybinding plan defaults v2 · uninitialized\n\nNotes\n   ⚠ portability  ctrl+enter requires the terminal to report modified Enter keys\n                  through the Kitty keyboard protocol or modifyOtherKeys\n   ⚠ portability  ctrl+up requires the terminal to report modified arrow keys;\n                  tmux users should enable extended-keys with\n                  extended-keys-format csi-u\n   ⚠ portability  TERM=dumb cannot provide reliable interactive key events\n────────────────────────────────────────────────────────────────────────────────\n\nPlan\n   Policy                unset\n   Config                <temporary-root>\\home\\agent\\keybindings.json\n\nDesired bindings\n   app.message.followUp  ctrl+enter\n   app.message.dequeue   ctrl+up\n\nActions\n   ↑ set          app.message.followUp (new-config)\n   ↑ set          app.message.dequeue (new-config)\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "keybindings-status",
+      "locale": "ja",
+      "args": [
+        "keybindings",
+        "status"
+      ],
+      "exit_status": 0,
+      "stdout": "Jouzu キーバインドプラン defaults v2 · 未初期化\n\n注意\n   ⚠ portability  ctrl+enter は、ターミナルが Kitty キーボードプロトコルまたは\n                  modifyOtherKeys で修飾された Enter キーを報告する必要がありま\n                  す\n   ⚠ portability  ctrl+up は、ターミナルが修飾された矢印キーを報告する必要があり\n                  ます。tmux ユーザーは extended-keys と extended-keys-format\n                  csi-u を有効にしてください\n   ⚠ portability  TERM=dumb では信頼できる対話的なキーイベントを提供できません\n────────────────────────────────────────────────────────────────────────────────\n\nプラン\n   ポリシー              未設定\n   設定                  <temporary-root>\\home\\agent\\keybindings.json\n\n適用するバインド\n   app.message.followUp  ctrl+enter\n   app.message.dequeue   ctrl+up\n\n操作\n   ↑ set          app.message.followUp (new-config)\n   ↑ set          app.message.dequeue (new-config)\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "keybindings-plan",
+      "locale": "en",
+      "args": [
+        "keybindings",
+        "plan"
+      ],
+      "exit_status": 0,
+      "stdout": "Jouzu keybinding plan defaults v2 · uninitialized\n\nNotes\n   ⚠ portability  ctrl+enter requires the terminal to report modified Enter keys\n                  through the Kitty keyboard protocol or modifyOtherKeys\n   ⚠ portability  ctrl+up requires the terminal to report modified arrow keys;\n                  tmux users should enable extended-keys with\n                  extended-keys-format csi-u\n   ⚠ portability  TERM=dumb cannot provide reliable interactive key events\n────────────────────────────────────────────────────────────────────────────────\n\nPlan\n   Policy                unset\n   Config                <temporary-root>\\home\\agent\\keybindings.json\n\nDesired bindings\n   app.message.followUp  ctrl+enter\n   app.message.dequeue   ctrl+up\n\nActions\n   ↑ set          app.message.followUp (new-config)\n   ↑ set          app.message.dequeue (new-config)\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "keybindings-plan",
+      "locale": "ja",
+      "args": [
+        "keybindings",
+        "plan"
+      ],
+      "exit_status": 0,
+      "stdout": "Jouzu キーバインドプラン defaults v2 · 未初期化\n\n注意\n   ⚠ portability  ctrl+enter は、ターミナルが Kitty キーボードプロトコルまたは\n                  modifyOtherKeys で修飾された Enter キーを報告する必要がありま\n                  す\n   ⚠ portability  ctrl+up は、ターミナルが修飾された矢印キーを報告する必要があり\n                  ます。tmux ユーザーは extended-keys と extended-keys-format\n                  csi-u を有効にしてください\n   ⚠ portability  TERM=dumb では信頼できる対話的なキーイベントを提供できません\n────────────────────────────────────────────────────────────────────────────────\n\nプラン\n   ポリシー              未設定\n   設定                  <temporary-root>\\home\\agent\\keybindings.json\n\n適用するバインド\n   app.message.followUp  ctrl+enter\n   app.message.dequeue   ctrl+up\n\n操作\n   ↑ set          app.message.followUp (new-config)\n   ↑ set          app.message.dequeue (new-config)\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "profile-plan",
+      "locale": "en",
+      "args": [
+        "profile",
+        "plan",
+        "--profile",
+        "ja"
+      ],
+      "exit_status": 0,
+      "stdout": "Jouzu profile plan ja v7\n\nProfile\n   Manifest    fc63a5a4d50c11d7ffc01d53e404a210b32c557aee14ce807cc2537f6f4ae9d8\n   Agent root  <temporary-root>\\home\\agent\n\nActions\n   ↑ create        APPEND_SYSTEM.md (missing)\n   ↑ state-update  profile-state.json (state-missing)\n   ↑ create        prompts/jouzu-review.md (missing)\n   ↑ create        skills/jouzu-anti-slop/SKILL.md (missing)\n   ↑ create        skills/jouzu-clear-writing/SKILL.md (missing)\n   ↑ create        skills/jouzu-delegation/SKILL.md (missing)\n   ↑ create        skills/jouzu-reference/references/configuration.md (missing)\n   ↑ create        skills/jouzu-reference/references/controls.md (missing)\n   ↑ create        skills/jouzu-reference/references/history.md (missing)\n   ↑ create        skills/jouzu-reference/references/models.md (missing)\n   ↑ create        skills/jouzu-reference/SKILL.md (missing)\n   ↑ create        skills/jouzu-source-check/SKILL.md (missing)\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "profile-plan",
+      "locale": "ja",
+      "args": [
+        "profile",
+        "plan",
+        "--profile",
+        "ja"
+      ],
+      "exit_status": 0,
+      "stdout": "Jouzu プロファイルプラン ja v7\n\nプロファイル\n   マニフェスト        fc63a5a4d50c11d7ffc01d53e404a210b32c557aee14ce807cc2537f6f4ae9d8\n   エージェントルート  <temporary-root>\\home\\agent\n\n操作\n   ↑ create        APPEND_SYSTEM.md (missing)\n   ↑ state-update  profile-state.json (state-missing)\n   ↑ create        prompts/jouzu-review.md (missing)\n   ↑ create        skills/jouzu-anti-slop/SKILL.md (missing)\n   ↑ create        skills/jouzu-clear-writing/SKILL.md (missing)\n   ↑ create        skills/jouzu-delegation/SKILL.md (missing)\n   ↑ create        skills/jouzu-reference/references/configuration.md (missing)\n   ↑ create        skills/jouzu-reference/references/controls.md (missing)\n   ↑ create        skills/jouzu-reference/references/history.md (missing)\n   ↑ create        skills/jouzu-reference/references/models.md (missing)\n   ↑ create        skills/jouzu-reference/SKILL.md (missing)\n   ↑ create        skills/jouzu-source-check/SKILL.md (missing)\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "migration-plan",
+      "locale": "en",
+      "args": [
+        "profile-migration",
+        "plan"
+      ],
+      "exit_status": 0,
+      "stdout": "Jouzu profile migration plan\n\nMigration\n   From  core (default)\n   To    response language auto; display language auto\nConfirming this plan saves it to the user-wide settings.\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "migration-plan",
+      "locale": "ja",
+      "args": [
+        "profile-migration",
+        "plan"
+      ],
+      "exit_status": 0,
+      "stdout": "Jouzu プロファイル移行プラン\n\n移行\n   移行元  core（default）\n   移行先  回答言語 auto、表示言語 auto\nこのプランを確定すると、ユーザー全体の設定へ保存されます。\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "migration-confirmation-required",
+      "locale": "en",
+      "args": [
+        "profile-migration",
+        "apply"
+      ],
+      "exit_status": 0,
+      "stdout": "Jouzu profile migration plan\n\nMigration\n   From  core (default)\n   To    response language auto; display language auto\nConfirming this plan saves it to the user-wide settings.\nThis run is not interactive, so nothing was written. Re-run with --yes to confirm the migration.\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "migration-confirmation-required",
+      "locale": "ja",
+      "args": [
+        "profile-migration",
+        "apply"
+      ],
+      "exit_status": 0,
+      "stdout": "Jouzu プロファイル移行プラン\n\n移行\n   移行元  core（default）\n   移行先  回答言語 auto、表示言語 auto\nこのプランを確定すると、ユーザー全体の設定へ保存されます。\nこの実行は対話的ではないため、何も書き込みませんでした。移行を確定するには --yes を付けて再実行してください。\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "migration-no-rollback-receipt",
+      "locale": "en",
+      "args": [
+        "profile-migration",
+        "rollback"
+      ],
+      "exit_status": 1,
+      "stdout": "There is no recorded profile migration to roll back.\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "migration-no-rollback-receipt",
+      "locale": "ja",
+      "args": [
+        "profile-migration",
+        "rollback"
+      ],
+      "exit_status": 1,
+      "stdout": "ロールバックできるプロファイル移行の記録がありません。\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "update-status",
+      "locale": "en",
+      "args": [
+        "self-update",
+        "status"
+      ],
+      "exit_status": 0,
+      "stdout": "Jouzu self-update status\nPolicy: off\nInstall channel: source\nAutomatic startup update: not eligible\nInstalled version: 0.2.3\nLatest observed version: not checked\nLast result: never\nLast checked: never\nNext check: due\nLast updated: never\nPrevious version: none\nLast error: none\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "update-status",
+      "locale": "ja",
+      "args": [
+        "self-update",
+        "status"
+      ],
+      "exit_status": 0,
+      "stdout": "Jouzu 自己更新ステータス\nポリシー: オフ\nインストール方法: ソースチェックアウト\n自動起動時更新: 対象外\nインストール済みバージョン: 0.2.3\n最後に確認したバージョン: 未確認\n最後の結果: never\n最後の確認: なし\n次の確認: 予定あり\n最後の更新: なし\n前のバージョン: なし\n最後のエラー: なし\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "invalid-profile",
+      "locale": "en",
+      "args": [
+        "profile",
+        "plan",
+        "--profile",
+        "audit-invalid"
+      ],
+      "exit_status": 2,
+      "stdout": "",
+      "stderr": "Error: --profile must be one of: core, ja\nRun \"jouzu --help\" for Jouzu usage or \"jouzu pi --help\" for Pi usage.\n"
+    },
+    {
+      "scenario": "invalid-profile",
+      "locale": "ja",
+      "args": [
+        "profile",
+        "plan",
+        "--profile",
+        "audit-invalid"
+      ],
+      "exit_status": 2,
+      "stdout": "",
+      "stderr": "エラー: --profile は次のいずれかでなければなりません: core, ja\nJouzu の使い方は `jouzu --help`、Pi の使い方は `jouzu pi --help` を実行してください。\n"
+    },
+    {
+      "scenario": "invalid-catalog-operation",
+      "locale": "en",
+      "args": [
+        "catalog",
+        "audit-invalid"
+      ],
+      "exit_status": 2,
+      "stdout": "",
+      "stderr": "Error: catalog requires \"status\", \"refresh\", \"accept\", \"validate\", or \"conformance\"\nRun \"jouzu --help\" for Jouzu usage or \"jouzu pi --help\" for Pi usage.\n"
+    },
+    {
+      "scenario": "invalid-catalog-operation",
+      "locale": "ja",
+      "args": [
+        "catalog",
+        "audit-invalid"
+      ],
+      "exit_status": 2,
+      "stdout": "",
+      "stderr": "エラー: catalog には \"status\"、\"refresh\"、\"accept\"、\"validate\"、\"conformance\" のいずれかが必要です\nJouzu の使い方は `jouzu --help`、Pi の使い方は `jouzu pi --help` を実行してください。\n"
+    },
+    {
+      "scenario": "missing-option-value",
+      "locale": "en",
+      "args": [
+        "--jouzu-profile"
+      ],
+      "exit_status": 2,
+      "stdout": "",
+      "stderr": "Error: --jouzu-profile requires a value\nRun \"jouzu --help\" for Jouzu usage or \"jouzu pi --help\" for Pi usage.\n"
+    },
+    {
+      "scenario": "missing-option-value",
+      "locale": "ja",
+      "args": [
+        "--jouzu-profile"
+      ],
+      "exit_status": 2,
+      "stdout": "",
+      "stderr": "エラー: --jouzu-profile には値が必要です\nJouzu の使い方は `jouzu --help`、Pi の使い方は `jouzu pi --help` を実行してください。\n"
+    },
+    {
+      "scenario": "pinned-pi-update",
+      "locale": "en",
+      "args": [
+        "pi",
+        "update",
+        "--self"
+      ],
+      "exit_status": 2,
+      "stdout": "",
+      "stderr": "Error: Jouzu pins its Pi runtime and cannot run Pi self-update. Upgrade Jouzu instead; package-only updates such as `jz update --extensions` remain available.\nRun \"jouzu --help\" for Jouzu usage or \"jouzu pi --help\" for Pi usage.\n"
+    },
+    {
+      "scenario": "pinned-pi-update",
+      "locale": "ja",
+      "args": [
+        "pi",
+        "update",
+        "--self"
+      ],
+      "exit_status": 2,
+      "stdout": "",
+      "stderr": "エラー: Jouzu は Pi 実行環境を固定しているため、Pi の自己更新を実行できません。代わりに Jouzu を更新してください。`jz update --extensions` などのパッケージのみの更新は引き続き利用できます。\nJouzu の使い方は `jouzu --help`、Pi の使い方は `jouzu pi --help` を実行してください。\n"
+    }
+  ]
+}

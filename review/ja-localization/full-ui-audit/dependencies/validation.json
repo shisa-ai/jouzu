@@ -1,0 +1,65 @@
+{
+  "basis_commit": "fe0cf0878e35236ec9716f5d3ee237fff11c3480",
+  "pi_version": "1.4.0",
+  "surface_rows": 704,
+  "surface_source_files": 138,
+  "file_rows": 847,
+  "package_rows": 34,
+  "release_extension_records": 9,
+  "third_party_extension_records": 8,
+  "compatibility_dependency_records": 4,
+  "pi_lock_package_records": 2,
+  "registered_slash_description_rows": 40,
+  "source_sink_records": 670,
+  "unresolved_candidate_files": 27,
+  "reviewed_family_source_files": 114,
+  "source_anchor_records": 704,
+  "source_anchor_kinds": {
+    "implementation:class": 110,
+    "implementation:function": 104,
+    "implementation:method": 42,
+    "declaration:initializer": 12,
+    "textual-reference": 122,
+    "source-expression": 314
+  },
+  "exported_html_viewer_semantic_inventory": "unfinished; no terminal sink match is not exclusion",
+  "optional_runtime_direct_package_records": 7,
+  "transform_rows": 101,
+  "transform_results": {
+    "match": 101
+  },
+  "evidence_levels": {
+    "reviewed-source-family": 275,
+    "reviewed-route-scope; details-unresolved": 10,
+    "extracted-provider-expression": 88,
+    "extracted-setting-field": 65,
+    "extracted-command-registration": 40,
+    "extracted-input-branch": 27,
+    "mechanical-dynamic-candidate": 37,
+    "mechanical-notification-candidate": 162
+  },
+  "owners": {
+    "@earendil-works/pi-coding-agent": 374,
+    "@earendil-works/pi-tui": 15,
+    "pi-schedule-prompt": 22,
+    "@vanillagreen/pi-background-tasks": 37,
+    "@lhl/pi-tasks": 26,
+    "pi-multiloop": 57,
+    "@sting8k/pi-vcc": 13,
+    "pi-skill-dollar": 2,
+    "pi-webaio": 9,
+    "pi-code-previews": 45,
+    "@earendil-works/pi-ai": 89,
+    "Jouzu transform": 15
+  },
+  "checks": {
+    "unique_surface_ids": true,
+    "all_surface_sources_in_files": true,
+    "source_anchor_ids_match_surfaces": true,
+    "all_source_paths_exist": true,
+    "required_cells_nonempty": true
+  },
+  "runtime_execution": "none; source audit only; prior startup observations cited separately",
+  "completion_assessment": "Primary panel/state families reviewed; exhaustive semantic audit is NOT closed. See unresolved-candidates.csv and README.md.",
+  "limitations": "See README.md; mechanical source scan is not full semantic review or runtime rendering proof."
+}

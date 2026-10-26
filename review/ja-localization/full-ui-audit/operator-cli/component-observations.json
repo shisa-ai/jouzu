@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "evidence_level": "component-reproduction-not-real-startup-or-native-runtime",
+  "runtime_diagnostics": {
+    "source_evidence": "packages/cli/src/main-cli.ts createRuntimeDiagnostics omits catalog argument",
+    "production_arguments": "Running Jouzu 0.2.3-dev.20261026-085553+gb703b9ea\nPi 1.4.0\nStarted <start-time>\nInstalled Jouzu 0.2.3-dev.20261026-085553+gb703b9ea",
+    "explicit_japanese_catalog": "実行中の Jouzu 0.2.3-dev.20261026-085553+gb703b9ea\nPi 1.4.0\n開始 <start-time>\nインストール済み Jouzu 0.2.3-dev.20261026-085553+gb703b9ea"
+  },
+  "subagent_widget": [
+    {
+      "locale": "en",
+      "width": 48,
+      "text": "Subagents · 1 active · 0 queued · 0 finished\nrunning · audit-role · audit-provider/audit-mod…\n  <fixture-workspace>\nDetails: /subagents · Hide: /subagents hide"
+    },
+    {
+      "locale": "en",
+      "width": 100,
+      "text": "Subagents · 1 active · 0 queued · 0 finished\nrunning · audit-role · audit-provider/audit-model\n  <fixture-workspace>\nDetails: /subagents · Hide: /subagents hide"
+    },
+    {
+      "locale": "ja",
+      "width": 48,
+      "text": "Subagents · 1 active · 0 queued · 0 finished\nrunning · audit-role · audit-provider/audit-mod…\n  <fixture-workspace>\nDetails: /subagents · Hide: /subagents hide"
+    },
+    {
+      "locale": "ja",
+      "width": 100,
+      "text": "Subagents · 1 active · 0 queued · 0 finished\nrunning · audit-role · audit-provider/audit-model\n  <fixture-workspace>\nDetails: /subagents · Hide: /subagents hide"
+    }
+  ]
+}

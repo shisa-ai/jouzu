@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "command": "npm run check && npm run test:affected",
+  "exit_code": 0,
+  "platform": "Windows local",
+  "results_in_invocation_order": {
+    "tests": [
+      255,
+      15,
+      22
+    ],
+    "pass": [
+      251,
+      15,
+      22
+    ],
+    "fail": [
+      0,
+      0,
+      0
+    ],
+    "skipped": [
+      4,
+      0,
+      0
+    ]
+  },
+  "evidence_level": "repository-checks-not-semantic-or-runtime-UI-signoff"
+}
