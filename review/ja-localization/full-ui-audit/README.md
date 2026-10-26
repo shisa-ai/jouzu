@@ -29,6 +29,9 @@ Partitions:
 - `dependencies/`: Pi interactive components and shipped extension panels, plus applied text transforms and package ownership.
 - `launcher-installer/`: launcher frontend/backend, recovery/update paths, native dialogs and installer/development-launcher text.
 - `operator-cli/`: noninteractive command reports, parser failures, diagnostics, migration/update/profile/keybinding commands and the separate Python reservation CLI.
+- `semantic-launcher/`: full-read caller tracing and candidate-by-candidate dispositions for the earlier launcher diagnostic extraction.
+
+`owned-command-coverage.csv` reconciles literal Jouzu-owned `registerCommand` calls against named source families. It does not cover dynamic, dependency, builtin, resource-derived or Session UI interception routes, and a mapped family is not exhaustive branch coverage.
 
 Each partition has a source disposition table and surface/state ledger. Existing tests are pointers, not assertions that every listed state was run or that a test checks Japanese. Combined state names describe families, not exhaustive permutations.
 
@@ -40,6 +43,7 @@ From the repository root:
 python review/ja-localization/full-ui-audit/census.py --output review/ja-localization/full-ui-audit/source-census.json
 node review/ja-localization/full-ui-audit/catalog-candidates.mjs
 python review/ja-localization/full-ui-audit/classify_catalog.py
+python review/ja-localization/full-ui-audit/reconcile_commands.py
 python -m unittest discover -s review/ja-localization/full-ui-audit -p '*_test.py' -v
 python review/ja-localization/full-ui-audit/validate.py
 ```
