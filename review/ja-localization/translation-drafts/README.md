@@ -4,6 +4,8 @@
 
 These review files propose Japanese for the English inventory at `review/ja-localization/untranslated-text.md`, using source revision `c0caa9950988a4b6a41f40e6005d913d282df7a1`. They do not change runtime code, live catalogs, stored identifiers, or dependency packages.
 
+The [startup wiring audit](STARTUP-AUDIT.md) supplements the drafts with runtime-discovered commands and selected detail paths. Its JSON evidence keeps existing translations, startup output, and exercised/unexercised paths separate; it is not included in the historical CSV counts below.
+
 ## Draft files and counts
 
 | File | Rows | Scope |

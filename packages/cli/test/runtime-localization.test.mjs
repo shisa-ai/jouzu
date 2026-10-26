@@ -107,7 +107,7 @@ test("Japanese transcript export localizes labels without translating stored too
 	}
 });
 
-test("every built-in Pi slash command and bundled command has a localized Japanese autocomplete description", async () => {
+test("every upstream built-in Pi slash command has a Japanese catalog description", async () => {
 	const { BUILTIN_SLASH_COMMANDS } = await import(
 		"../node_modules/@earendil-works/pi-coding-agent/dist/core/slash-commands.js"
 	);

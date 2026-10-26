@@ -1,6 +1,6 @@
 # Japanese localization review
 
-For the v0.2.3 source reconciliation of remaining English and translation drafts, start with [the current-source review](translation-drafts/CURRENT.md). The catalog export described below is pinned to its own older candidate and is not refreshed by that review.
+For the v0.2.3 source reconciliation of remaining English and translation drafts, start with [the current-source review](translation-drafts/CURRENT.md). For independently discovered command descriptions and selected help, error, and settings output, see [the startup wiring audit](translation-drafts/STARTUP-AUDIT.md). Neither is an exhaustive UI inventory. The catalog export described below is pinned to its own older candidate and is not refreshed by those reviews.
 
 The source links identify the exact candidate commit. This inventory does not
 approve a release or a translation.

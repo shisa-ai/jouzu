@@ -1,0 +1,1036 @@
+{
+  "schemaVersion": 1,
+  "scenario": "fresh-core-interactive-startup",
+  "commands": [
+    {
+      "command": "about",
+      "registered_extension": true,
+      "english": "Show Jouzu runtime and installed builds",
+      "japanese": "Jouzu の実行中ビルドとインストール済みビルドを表示",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.about"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "bg",
+      "registered_extension": true,
+      "english": "Background shell task dashboard and controls.",
+      "japanese": "バックグラウンドシェルタスクのダッシュボードと操作",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.bg"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "bg:clear",
+      "registered_extension": true,
+      "english": "Remove finished background tasks",
+      "japanese": "完了したバックグラウンドタスクを削除",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.bgClear"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "bg:list",
+      "registered_extension": true,
+      "english": "Show tracked background tasks",
+      "japanese": "追跡中のバックグラウンドタスクを表示",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.bgList"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "bg:next",
+      "registered_extension": true,
+      "english": "Move the next bash command to a background task",
+      "japanese": "次の bash コマンドをバックグラウンドタスクに移行",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.bgNext"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "bg:run",
+      "registered_extension": true,
+      "english": "Spawn a background shell task: /bg:run <command>",
+      "japanese": "バックグラウンドシェルタスクを起動: /bg:run <command>",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.bgRun"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "bg:stop",
+      "registered_extension": true,
+      "english": "Terminate a running background task: /bg:stop <id>",
+      "japanese": "実行中のバックグラウンドタスクを終了: /bg:stop <id>",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.bgStop"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "bug",
+      "registered_extension": false,
+      "english": "Draft a bug report for Jouzu",
+      "japanese": "Jouzu のバグ報告を作成",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.bug"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "catalogs",
+      "registered_extension": true,
+      "english": "Open Jouzu catalog settings",
+      "japanese": "Jouzu カタログ設定を開く",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.catalogs"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "changelog",
+      "registered_extension": false,
+      "english": "Show changelog entries",
+      "japanese": "変更履歴を表示",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.changelog"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "clone",
+      "registered_extension": false,
+      "english": "Duplicate the current session at the current position",
+      "japanese": "現在位置でセッションを複製",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.clone"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "code-preview-health",
+      "registered_extension": true,
+      "english": "Show code preview renderer health and settings",
+      "japanese": "コードプレビュー描画の状態と設定を表示",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.codePreviewHealth"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "code-preview-settings",
+      "registered_extension": true,
+      "english": "Configure code preview settings",
+      "japanese": "コードプレビューの設定を変更",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.codePreviewSettings"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "compact",
+      "registered_extension": false,
+      "english": "Manually compact the session context",
+      "japanese": "セッションコンテキストを手動で圧縮",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.compact"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "copy",
+      "registered_extension": false,
+      "english": "Copy last agent message to clipboard",
+      "japanese": "直前のエージェント応答をクリップボードにコピー",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.copy"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "export",
+      "registered_extension": false,
+      "english": "Export session (HTML default, or specify path: .html/.jsonl)",
+      "japanese": "セッションをエクスポート（既定は HTML、またはパスを指定: .html/.jsonl）",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.export"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "fast",
+      "registered_extension": true,
+      "english": "Show Fast mode; on/off changes it for this session",
+      "japanese": "高速モードを表示（on/off でこのセッションの設定を変更）",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.fast"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "flow",
+      "registered_extension": true,
+      "english": "Show held, withheld, and waiting flow-control work, and repair a hold",
+      "japanese": "保留・差し止め・待機中のフロー制御作業を表示し、保留を修復",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.flow"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "fork",
+      "registered_extension": false,
+      "english": "Create a new fork from a previous user message",
+      "japanese": "過去のユーザーメッセージから新しいフォークを作成",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.fork"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "goal",
+      "registered_extension": true,
+      "english": "Set one objective and work toward it; a lightweight multiloop run",
+      "japanese": "目標を 1 つ設定して達成まで作業を実行（軽量な multiloop 実行）",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.goal"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "hotkeys",
+      "registered_extension": false,
+      "english": "Show all keyboard shortcuts",
+      "japanese": "すべてのキーボードショートカットを表示",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.hotkeys"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "import",
+      "registered_extension": false,
+      "english": "Import and resume a session from a JSONL file",
+      "japanese": "JSONL ファイルからセッションをインポートして再開",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.import"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "jouzu-review",
+      "registered_extension": false,
+      "english": "Review the current change for correctness, regressions, data safety, tests, and documentation parity",
+      "japanese": "現在の変更の正確性、リグレッション、データ安全性、テスト、ドキュメント整合性をレビュー",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.jouzuReview"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "labels",
+      "registered_extension": true,
+      "english": "Configure automatic session names and tmux pane labels",
+      "japanese": "Configure automatic session names and tmux pane labels",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.sessionLabels.command.description"
+      ],
+      "startup_description": "english-observed",
+      "detail_surfaces": "selected-paths-exercised"
+    },
+    {
+      "command": "llama",
+      "registered_extension": true,
+      "english": "Manage llama.cpp router models",
+      "japanese": "llama.cpp ルーターのモデルを管理",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.llama"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "login",
+      "registered_extension": false,
+      "english": "Configure provider authentication",
+      "japanese": "プロバイダー認証を設定",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.login"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "logout",
+      "registered_extension": false,
+      "english": "Remove provider authentication",
+      "japanese": "プロバイダー認証を削除",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.logout"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "mcp",
+      "registered_extension": true,
+      "english": "Manage MCP servers: sign in, reconnect, enable or disable, and change exposure",
+      "japanese": "MCP サーバーを管理（サインイン、再接続、有効/無効の切り替え、公開設定の変更）",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.mcp"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "model",
+      "registered_extension": false,
+      "english": "Select model (opens selector UI)",
+      "japanese": "モデルを選択（セレクター UI を開く）",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.model"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "multiloop",
+      "registered_extension": true,
+      "english": "Start, resume, or manage autonomous iteration loops",
+      "japanese": "自律反復ループを開始・再開・管理",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.multiloop"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "name",
+      "registered_extension": false,
+      "english": "Set session display name",
+      "japanese": "セッションの表示名を設定",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.name"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "new",
+      "registered_extension": false,
+      "english": "Start a new session",
+      "japanese": "新しいセッションを開始",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.new"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "pi-vcc",
+      "registered_extension": true,
+      "english": "Compact conversation with pi-vcc structured summary",
+      "japanese": "pi-vcc の構造化要約で会話を圧縮",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.piVcc"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "pi-vcc-recall",
+      "registered_extension": true,
+      "english": "Recall earlier parts of this session. Plain keywords work best; add scope:all to reach edited or retried turns.",
+      "japanese": "このセッションの過去のやり取りを検索（キーワード検索、scope:all で編集・再試行されたターンも検索）",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.piVccRecall"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "quit",
+      "registered_extension": false,
+      "english": "Quit Jouzu",
+      "japanese": "Jouzu を終了",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.quit"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "reload",
+      "registered_extension": false,
+      "english": "Reload keybindings, extensions, skills, prompts, themes, and context files",
+      "japanese": "キーバインド、拡張機能、スキル、プロンプト、テーマ、コンテキストファイルを再読み込み",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.reload"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "resume",
+      "registered_extension": false,
+      "english": "Resume a different session",
+      "japanese": "別のセッションを再開",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.resume"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "schedule-prompt",
+      "registered_extension": true,
+      "english": "Manage scheduled prompts interactively",
+      "japanese": "スケジュールされたプロンプトを対話形式で管理",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.schedulePrompt"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "scrollback",
+      "registered_extension": true,
+      "english": "Export the active transcript to the terminal scrollback",
+      "japanese": "現在の会話履歴を端末のスクロールバックに出力",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.scrollback"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "session",
+      "registered_extension": false,
+      "english": "Show session info and stats",
+      "japanese": "セッション情報と統計を表示",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.session"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "settings",
+      "registered_extension": false,
+      "english": "Open settings menu",
+      "japanese": "設定メニューを開く",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.settings"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "selected-paths-exercised"
+    },
+    {
+      "command": "share",
+      "registered_extension": false,
+      "english": "Share session via a Radius artifact or a GitHub gist",
+      "japanese": "Radius アーティファクトまたは GitHub Gist でセッションを共有",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.share"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "skill:jouzu-anti-slop",
+      "registered_extension": false,
+      "english": "Remove filler, marketing language, and unsupported emphasis from existing prose without losing facts",
+      "japanese": "事実や条件を失わずに既存の文章から冗長な表現や宣伝文句を除去",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.skillJouzuAntiSlop"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "skill:jouzu-clear-writing",
+      "registered_extension": false,
+      "english": "Draft, revise, or audit durable user-facing technical artifacts without changing facts",
+      "japanese": "事実を変えずに利用者向けの技術文書やメッセージを作成・改稿・監査",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.skillJouzuClearWriting"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "skill:jouzu-delegation",
+      "registered_extension": false,
+      "english": "Write and review subagent assignments, steering messages, and resume handoffs",
+      "japanese": "サブエージェントへの指示、軌道修正メッセージ、再開時の引き継ぎを作成・確認",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.skillJouzuDelegation"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "skill:jouzu-reference",
+      "registered_extension": false,
+      "english": "Look up Jouzu settings, language, models/catalogs, profiles, session and trace locations, controls, and troubleshooting",
+      "japanese": "Jouzu の設定、言語、モデル/カタログ、プロファイル、セッション・トレースの場所、操作、トラブルシューティングを参照",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.skillJouzuReference"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "skill:jouzu-source-check",
+      "registered_extension": false,
+      "english": "Research and fact-check claims or sources through primary evidence, counterevidence, and confidence",
+      "japanese": "一次根拠、反証、確信度に基づいて主張や情報源を調査・ファクトチェック",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.skillJouzuSourceCheck"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "skill:multiloop",
+      "registered_extension": false,
+      "english": "Run and manage autonomous work — quick goals through /goal and measured loops through /multiloop",
+      "japanese": "/goal による目標実行や /multiloop による計測ループなどの自律作業を実行・管理",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.skillMultiloop"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "status",
+      "registered_extension": true,
+      "english": "Show the current Jouzu session, model, context, and profile status",
+      "japanese": "現在の Jouzu セッション、モデル、コンテキスト、プロファイルの状態を表示します",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.presentation.command.statusDescription"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "subagents",
+      "registered_extension": true,
+      "english": "Open child runs; use show or hide for the dashboard",
+      "japanese": "サブエージェントの実行を開く。ダッシュボードには show または hide を使用",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.subagent.commandDescription"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "selected-paths-exercised"
+    },
+    {
+      "command": "tasks",
+      "registered_extension": true,
+      "english": "Manage tasks — view, create, clear completed. '/tasks auto' enters auto-advance mode.",
+      "japanese": "タスクを管理（表示、作成、完了済みの消去。'/tasks auto' で自動進行モード）",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.tasks"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "textguard",
+      "registered_extension": true,
+      "english": "Review TextGuard findings, or set scanning to on, strict, or off",
+      "japanese": "Review TextGuard findings, or set scanning to on, strict, or off",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.textguard.commandDescription"
+      ],
+      "startup_description": "english-observed",
+      "detail_surfaces": "selected-paths-exercised"
+    },
+    {
+      "command": "thinking",
+      "registered_extension": false,
+      "english": "Set thinking level",
+      "japanese": "思考レベルを設定",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.thinking"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "tree",
+      "registered_extension": false,
+      "english": "Navigate session tree (switch branches)",
+      "japanese": "セッションツリーを移動（ブランチを切り替え）",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.tree"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "trust",
+      "registered_extension": false,
+      "english": "Save project trust decision for future sessions",
+      "japanese": "今後のセッション用にプロジェクトの信頼設定を保存",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.trust"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
+      "command": "voice",
+      "registered_extension": true,
+      "english": "Dictate into the prompt; start, stop, cancel, or configure voice",
+      "japanese": "プロンプトへ音声入力します。開始、停止、キャンセル、設定を行います",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.voice.commandDescription"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "selected-paths-exercised"
+    },
+    {
+      "command": "workflow",
+      "registered_extension": true,
+      "english": "Open agents and runs; on/off/toggle controls subagents for this session",
+      "japanese": "エージェントと実行を開く。on/off/toggle でこのセッションのサブエージェントを制御",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.subagent.workflowCommandDescription"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "selected-paths-exercised"
+    }
+  ],
+  "surfaces": [
+    {
+      "surface": "settings.root",
+      "kind": "view",
+      "width": 48,
+      "english": "────────────────────────────────────────────────\n>                                               \n\n→ Auto-compact                      true\n  Auto-resize images                true\n  Block images                      false\n  Skill commands                    true\n  Show hardware cursor              false\n  Editor padding                    0\n  Output padding                    1\n  Autocomplete max items            5\n  Clear on shrink                   false\n  Terminal progress                 false\n  (1/33)\n\n  Automatically compact context when it gets\n  too large\n\n  Type to search · Enter/Space to change · Es...\n────────────────────────────────────────────────",
+      "japanese": "────────────────────────────────────────────────\n>                                               \n\n→ 自動圧縮                              true\n  画像の自動リサイズ                    true\n  画像の送信をブロック                  false\n  スキルコマンド                        true\n  ハードウェアカーソルを表示            false\n  エディターの余白                      0\n  出力の余白                            1\n  自動補完の最大表示件数                5\n  縮小時に空行を消去                    false\n  端末の進行状況表示                    false\n  (1/33)\n\n  コンテキストが大きくなったときに自動で圧縮し\n  ます\n\n  入力して検索 · Enter/Space で変更 · Esc で...\n────────────────────────────────────────────────",
+      "startup_output": "changed-needs-review"
+    },
+    {
+      "surface": "settings.root",
+      "kind": "view",
+      "width": 100,
+      "english": "────────────────────────────────────────────────────────────────────────────────────────────────────\n>                                                                                                   \n\n→ Auto-compact                      true\n  Auto-resize images                true\n  Block images                      false\n  Skill commands                    true\n  Show hardware cursor              false\n  Editor padding                    0\n  Output padding                    1\n  Autocomplete max items            5\n  Clear on shrink                   false\n  Terminal progress                 false\n  (1/33)\n\n  Automatically compact context when it gets too large\n\n  Type to search · Enter/Space to change · Esc to cancel\n────────────────────────────────────────────────────────────────────────────────────────────────────",
+      "japanese": "────────────────────────────────────────────────────────────────────────────────────────────────────\n>                                                                                                   \n\n→ 自動圧縮                              true\n  画像の自動リサイズ                    true\n  画像の送信をブロック                  false\n  スキルコマンド                        true\n  ハードウェアカーソルを表示            false\n  エディターの余白                      0\n  出力の余白                            1\n  自動補完の最大表示件数                5\n  縮小時に空行を消去                    false\n  端末の進行状況表示                    false\n  (1/33)\n\n  コンテキストが大きくなったときに自動で圧縮します\n\n  入力して検索 · Enter/Space で変更 · Esc でキャンセル\n────────────────────────────────────────────────────────────────────────────────────────────────────",
+      "startup_output": "changed-needs-review"
+    },
+    {
+      "surface": "settings.fields.autocompact",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Auto-compact\",\"description\":\"Automatically compact context when it gets too large\",\"value\":\"true\",\"values\":[\"true\",\"false\"]}",
+      "japanese": "{\"label\":\"Auto-compact\",\"description\":\"Automatically compact context when it gets too large\",\"value\":\"true\",\"values\":[\"true\",\"false\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.auto-resize-images",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Auto-resize images\",\"description\":\"Resize large images to 2000x2000 max for better model compatibility\",\"value\":\"true\",\"values\":[\"true\",\"false\"]}",
+      "japanese": "{\"label\":\"Auto-resize images\",\"description\":\"Resize large images to 2000x2000 max for better model compatibility\",\"value\":\"true\",\"values\":[\"true\",\"false\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.block-images",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Block images\",\"description\":\"Prevent images from being sent to LLM providers\",\"value\":\"false\",\"values\":[\"true\",\"false\"]}",
+      "japanese": "{\"label\":\"Block images\",\"description\":\"Prevent images from being sent to LLM providers\",\"value\":\"false\",\"values\":[\"true\",\"false\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.skill-commands",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Skill commands\",\"description\":\"Register skills as /skill:name commands\",\"value\":\"true\",\"values\":[\"true\",\"false\"]}",
+      "japanese": "{\"label\":\"Skill commands\",\"description\":\"Register skills as /skill:name commands\",\"value\":\"true\",\"values\":[\"true\",\"false\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.show-hardware-cursor",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Show hardware cursor\",\"description\":\"Use the terminal cursor instead of Pi's drawn cursor\",\"value\":\"false\",\"values\":[\"true\",\"false\"]}",
+      "japanese": "{\"label\":\"Show hardware cursor\",\"description\":\"Use the terminal cursor instead of Pi's drawn cursor\",\"value\":\"false\",\"values\":[\"true\",\"false\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.editor-padding",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Editor padding\",\"description\":\"Horizontal padding for input editor (0-3)\",\"value\":\"0\",\"values\":[\"0\",\"1\",\"2\",\"3\"]}",
+      "japanese": "{\"label\":\"Editor padding\",\"description\":\"Horizontal padding for input editor (0-3)\",\"value\":\"0\",\"values\":[\"0\",\"1\",\"2\",\"3\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.output-padding",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Output padding\",\"description\":\"Horizontal padding for messages, tool output, and command output\",\"value\":\"1\",\"values\":[\"0\",\"1\"]}",
+      "japanese": "{\"label\":\"Output padding\",\"description\":\"Horizontal padding for messages, tool output, and command output\",\"value\":\"1\",\"values\":[\"0\",\"1\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.autocomplete-max-visible",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Autocomplete max items\",\"description\":\"Max visible items in autocomplete dropdown (3-20)\",\"value\":\"5\",\"values\":[\"3\",\"5\",\"7\",\"10\",\"15\",\"20\"]}",
+      "japanese": "{\"label\":\"Autocomplete max items\",\"description\":\"Max visible items in autocomplete dropdown (3-20)\",\"value\":\"5\",\"values\":[\"3\",\"5\",\"7\",\"10\",\"15\",\"20\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.clear-on-shrink",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Clear on shrink\",\"description\":\"Clear empty rows when content shrinks (may cause flicker)\",\"value\":\"false\",\"values\":[\"true\",\"false\"]}",
+      "japanese": "{\"label\":\"Clear on shrink\",\"description\":\"Clear empty rows when content shrinks (may cause flicker)\",\"value\":\"false\",\"values\":[\"true\",\"false\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.terminal-progress",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Terminal progress\",\"description\":\"Show OSC 9;4 progress indicators in the terminal tab bar\",\"value\":\"false\",\"values\":[\"true\",\"false\"]}",
+      "japanese": "{\"label\":\"Terminal progress\",\"description\":\"Show OSC 9;4 progress indicators in the terminal tab bar\",\"value\":\"false\",\"values\":[\"true\",\"false\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.steering-mode",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Steering mode\",\"description\":\"Enter while streaming queues steering messages. 'one-at-a-time': deliver one, wait for response. 'all': deliver all at once.\",\"value\":\"one-at-a-time\",\"values\":[\"one-at-a-time\",\"all\"]}",
+      "japanese": "{\"label\":\"Steering mode\",\"description\":\"Enter while streaming queues steering messages. 'one-at-a-time': deliver one, wait for response. 'all': deliver all at once.\",\"value\":\"one-at-a-time\",\"values\":[\"one-at-a-time\",\"all\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.follow-up-mode",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Follow-up mode\",\"description\":\"Ctrl+Enter queues follow-up messages until agent stops. 'one-at-a-time': deliver one, wait for response. 'all': deliver all at once.\",\"value\":\"one-at-a-time\",\"values\":[\"one-at-a-time\",\"all\"]}",
+      "japanese": "{\"label\":\"Follow-up mode\",\"description\":\"Ctrl+Enter queues follow-up messages until agent stops. 'one-at-a-time': deliver one, wait for response. 'all': deliver all at once.\",\"value\":\"one-at-a-time\",\"values\":[\"one-at-a-time\",\"all\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.transport",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Transport\",\"description\":\"Preferred transport for providers that support multiple transports\",\"value\":\"auto\",\"values\":[\"sse\",\"websocket\",\"websocket-cached\",\"auto\"]}",
+      "japanese": "{\"label\":\"Transport\",\"description\":\"Preferred transport for providers that support multiple transports\",\"value\":\"auto\",\"values\":[\"sse\",\"websocket\",\"websocket-cached\",\"auto\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.share-destination",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Session share destination\",\"description\":\"Where to upload sessions with /share (auto prefers Radius when authenticated, otherwise GitHub Gist)\",\"value\":\"auto\",\"values\":[\"auto\",\"gist\",\"radius\"]}",
+      "japanese": "{\"label\":\"Session share destination\",\"description\":\"Where to upload sessions with /share (auto prefers Radius when authenticated, otherwise GitHub Gist)\",\"value\":\"auto\",\"values\":[\"auto\",\"gist\",\"radius\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.http-idle-timeout",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"HTTP idle timeout\",\"description\":\"Maximum idle gap while waiting for HTTP headers or body chunks. Disable for local models that pause longer than five minutes.\",\"value\":\"5 min\",\"values\":[\"30 sec\",\"1 min\",\"2 min\",\"5 min\",\"disabled\"]}",
+      "japanese": "{\"label\":\"HTTP idle timeout\",\"description\":\"Maximum idle gap while waiting for HTTP headers or body chunks. Disable for local models that pause longer than five minutes.\",\"value\":\"5 min\",\"values\":[\"30 sec\",\"1 min\",\"2 min\",\"5 min\",\"disabled\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.cache-warming-mode",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Cache warming\",\"description\":\"off; streaming while the agent runs; idle also between runs while continuation stays profitable\",\"value\":\"off\",\"values\":[\"off\",\"streaming\",\"idle\"]}",
+      "japanese": "{\"label\":\"Cache warming\",\"description\":\"off; streaming while the agent runs; idle also between runs while continuation stays profitable\",\"value\":\"off\",\"values\":[\"off\",\"streaming\",\"idle\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.hide-thinking",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Hide thinking\",\"description\":\"Hide thinking blocks in assistant responses\",\"value\":\"false\",\"values\":[\"true\",\"false\"]}",
+      "japanese": "{\"label\":\"Hide thinking\",\"description\":\"Hide thinking blocks in assistant responses\",\"value\":\"false\",\"values\":[\"true\",\"false\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.mermaid-rendering",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Mermaid diagrams\",\"description\":\"Render Mermaid code blocks as Unicode diagrams\",\"value\":\"streaming\",\"values\":[\"off\",\"final\",\"streaming\"]}",
+      "japanese": "{\"label\":\"Mermaid diagrams\",\"description\":\"Render Mermaid code blocks as Unicode diagrams\",\"value\":\"streaming\",\"values\":[\"off\",\"final\",\"streaming\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.cache-miss-notices",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Cache miss notices\",\"description\":\"Show transcript notices for cache costs and provider recovery diagnostics\",\"value\":\"false\",\"values\":[\"true\",\"false\"]}",
+      "japanese": "{\"label\":\"Cache miss notices\",\"description\":\"Show transcript notices for cache costs and provider recovery diagnostics\",\"value\":\"false\",\"values\":[\"true\",\"false\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.collapse-changelog",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Collapse changelog\",\"description\":\"Show condensed changelog after updates\",\"value\":\"false\",\"values\":[\"true\",\"false\"]}",
+      "japanese": "{\"label\":\"Collapse changelog\",\"description\":\"Show condensed changelog after updates\",\"value\":\"false\",\"values\":[\"true\",\"false\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.quiet-startup",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Quiet startup\",\"description\":\"Disable verbose printing at startup (header: keep only the startup header)\",\"value\":\"true\",\"values\":[\"true\",\"header\",\"false\"]}",
+      "japanese": "{\"label\":\"Quiet startup\",\"description\":\"Disable verbose printing at startup (header: keep only the startup header)\",\"value\":\"true\",\"values\":[\"true\",\"header\",\"false\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.install-telemetry",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Install telemetry\",\"description\":\"Send an anonymous version/update ping after changelog-detected updates\",\"value\":\"true\",\"values\":[\"true\",\"false\"]}",
+      "japanese": "{\"label\":\"Install telemetry\",\"description\":\"Send an anonymous version/update ping after changelog-detected updates\",\"value\":\"true\",\"values\":[\"true\",\"false\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.default-project-trust",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Default project trust\",\"description\":\"Fallback behavior when no extension or saved trust decision decides project trust\",\"value\":\"Ask\",\"values\":[\"Ask\",\"Always trust\",\"Never trust\"]}",
+      "japanese": "{\"label\":\"Default project trust\",\"description\":\"Fallback behavior when no extension or saved trust decision decides project trust\",\"value\":\"Ask\",\"values\":[\"Ask\",\"Always trust\",\"Never trust\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.double-escape-action",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Double-escape action\",\"description\":\"Action when pressing Escape twice with empty editor\",\"value\":\"tree\",\"values\":[\"tree\",\"fork\",\"none\"]}",
+      "japanese": "{\"label\":\"Double-escape action\",\"description\":\"Action when pressing Escape twice with empty editor\",\"value\":\"tree\",\"values\":[\"tree\",\"fork\",\"none\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.tree-filter-mode",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Tree filter mode\",\"description\":\"Default filter when opening /tree\",\"value\":\"default\",\"values\":[\"default\",\"no-tools\",\"user-only\",\"labeled-only\",\"all\"]}",
+      "japanese": "{\"label\":\"Tree filter mode\",\"description\":\"Default filter when opening /tree\",\"value\":\"default\",\"values\":[\"default\",\"no-tools\",\"user-only\",\"labeled-only\",\"all\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.warnings",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Warnings\",\"description\":\"Enable or disable individual warnings\",\"value\":\"configure\"}",
+      "japanese": "{\"label\":\"Warnings\",\"description\":\"Enable or disable individual warnings\",\"value\":\"configure\"}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.submenu.warnings",
+      "kind": "view",
+      "width": 48,
+      "english": "────────────────────────────────────────────────\n→ Anthropic extra usage  true\n\n  Warn when Anthropic subscription auth may\n  use paid extra usage\n\n  Enter/Space to change · Esc to cancel\n────────────────────────────────────────────────",
+      "japanese": "────────────────────────────────────────────────\n→ Anthropic 追加利用の警告  true\n\n  Anthropic サブスクリプション認証で従量課金の\n  追加利用が発生する可能性があるときに警告しま\n  す\n\n  Enter/Space で変更 · Esc でキャンセル\n────────────────────────────────────────────────",
+      "startup_output": "changed-needs-review"
+    },
+    {
+      "surface": "settings.submenu.warnings",
+      "kind": "view",
+      "width": 100,
+      "english": "────────────────────────────────────────────────────────────────────────────────────────────────────\n→ Anthropic extra usage  true\n\n  Warn when Anthropic subscription auth may use paid extra usage\n\n  Enter/Space to change · Esc to cancel\n────────────────────────────────────────────────────────────────────────────────────────────────────",
+      "japanese": "────────────────────────────────────────────────────────────────────────────────────────────────────\n→ Anthropic 追加利用の警告  true\n\n  Anthropic サブスクリプション認証で従量課金の追加利用が発生する可能性があるときに警告します\n\n  Enter/Space で変更 · Esc でキャンセル\n────────────────────────────────────────────────────────────────────────────────────────────────────",
+      "startup_output": "changed-needs-review"
+    },
+    {
+      "surface": "settings.fields.model-thinking",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Default thinking level per model\",\"description\":\"Override the default thinking level for specific models. Shift+Tab cycles in-session.\",\"value\":\"none\"}",
+      "japanese": "{\"label\":\"Default thinking level per model\",\"description\":\"Override the default thinking level for specific models. Shift+Tab cycles in-session.\",\"value\":\"none\"}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.submenu.model-thinking",
+      "kind": "view",
+      "width": 48,
+      "english": "────────────────────────────────────────────────\nPer-Model Thinking Level                        \n\nStep 1/2 · Select a model to configure          \n\n>                                               \n\n→ No models available  Log in to a provider or\n\n  Type to filter · Enter to select · Esc to go  \nback                                            \n────────────────────────────────────────────────",
+      "japanese": "────────────────────────────────────────────────\nモデル別の思考レベル                            \n\nStep 1/2 · Select a model to configure          \n\n>                                               \n\n→ 利用できるモデルがありません  先にプロバイダ\n\n  入力して絞り込み · Enter で選択 · Esc で戻る  \n────────────────────────────────────────────────",
+      "startup_output": "changed-needs-review"
+    },
+    {
+      "surface": "settings.submenu.model-thinking",
+      "kind": "view",
+      "width": 100,
+      "english": "────────────────────────────────────────────────────────────────────────────────────────────────────\nPer-Model Thinking Level                                                                            \n\nStep 1/2 · Select a model to configure                                                              \n\n>                                                                                                   \n\n→ No models available  Log in to a provider or configure an API key first\n\n  Type to filter · Enter to select · Esc to go back                                                 \n────────────────────────────────────────────────────────────────────────────────────────────────────",
+      "japanese": "────────────────────────────────────────────────────────────────────────────────────────────────────\nモデル別の思考レベル                                                                                \n\nStep 1/2 · Select a model to configure                                                              \n\n>                                                                                                   \n\n→ 利用できるモデルがありません  先にプロバイダーにログインするか API キーを設定してください\n\n  入力して絞り込み · Enter で選択 · Esc で戻る                                                      \n────────────────────────────────────────────────────────────────────────────────────────────────────",
+      "startup_output": "changed-needs-review"
+    },
+    {
+      "surface": "settings.fields.tui-mode",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"TUI mode\",\"description\":\"Interface layout; regular mode uses the terminal's normal scrollback\",\"value\":\"fullscreen\",\"values\":[\"regular\",\"fullscreen\"]}",
+      "japanese": "{\"label\":\"TUI mode\",\"description\":\"Interface layout; regular mode uses the terminal's normal scrollback\",\"value\":\"fullscreen\",\"values\":[\"regular\",\"fullscreen\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.fullscreen-exit-output",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Fullscreen exit output\",\"description\":\"Print the transcript or only a session resume hint when exiting fullscreen mode\",\"value\":\"transcript\",\"values\":[\"transcript\",\"resume-hint\"]}",
+      "japanese": "{\"label\":\"Fullscreen exit output\",\"description\":\"Print the transcript or only a session resume hint when exiting fullscreen mode\",\"value\":\"transcript\",\"values\":[\"transcript\",\"resume-hint\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.fullscreen-scrollbar",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Fullscreen scrollbar\",\"description\":\"Scrollbar behavior in fullscreen mode; has no effect in regular mode\",\"value\":\"auto\",\"values\":[\"auto\",\"always\",\"hidden\"]}",
+      "japanese": "{\"label\":\"Fullscreen scrollbar\",\"description\":\"Scrollbar behavior in fullscreen mode; has no effect in regular mode\",\"value\":\"auto\",\"values\":[\"auto\",\"always\",\"hidden\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.fullscreen-copy-on-select",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Fullscreen copy on select\",\"description\":\"Automatically copy selected text in fullscreen mode; disable to copy selections with Ctrl+X\",\"value\":\"true\",\"values\":[\"true\",\"false\"]}",
+      "japanese": "{\"label\":\"Fullscreen copy on select\",\"description\":\"Automatically copy selected text in fullscreen mode; disable to copy selections with Ctrl+X\",\"value\":\"true\",\"values\":[\"true\",\"false\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.fullscreen-wheel-scroll-lines",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Fullscreen wheel scrolling\",\"description\":\"Lines per mouse-wheel event in fullscreen mode; 'auto' speeds up fast wheel spins where the terminal does not\",\"value\":\"auto\",\"values\":[\"auto\",\"1\",\"2\",\"3\",\"5\",\"10\"]}",
+      "japanese": "{\"label\":\"Fullscreen wheel scrolling\",\"description\":\"Lines per mouse-wheel event in fullscreen mode; 'auto' speeds up fast wheel spins where the terminal does not\",\"value\":\"auto\",\"values\":[\"auto\",\"1\",\"2\",\"3\",\"5\",\"10\"]}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.fields.theme",
+      "kind": "setting-fields",
+      "english": "{\"label\":\"Theme\",\"description\":\"Color theme for the interface\",\"value\":\"system\"}",
+      "japanese": "{\"label\":\"Theme\",\"description\":\"Color theme for the interface\",\"value\":\"system\"}",
+      "startup_output": "source-data-not-rendered"
+    },
+    {
+      "surface": "settings.submenu.theme",
+      "kind": "view",
+      "width": 48,
+      "english": "────────────────────────────────────────────────\nTheme                                           \n\nSelect a theme, or choose automatic to follow   \nterminal appearance.                            \n\n→ ✓ system     Theme created from your termina\n    automatic  Use separate themes for light a\n    dark\n    light\n\n  Enter to select · Esc to go back              \n────────────────────────────────────────────────",
+      "japanese": "────────────────────────────────────────────────\nテーマ                                          \n\nテーマを選択するか、端末の外観に合わせる自動モー\nドを選択してください。                          \n\n→ ✓ system    端末の配色から作成されたテーマ\n    自動      ライト外観とダーク外観で別々のテ\n    dark\n    light\n\n  Enter で選択 · Esc で戻る                     \n────────────────────────────────────────────────",
+      "startup_output": "changed-needs-review"
+    },
+    {
+      "surface": "settings.submenu.theme",
+      "kind": "view",
+      "width": 100,
+      "english": "────────────────────────────────────────────────────────────────────────────────────────────────────\nTheme                                                                                               \n\nSelect a theme, or choose automatic to follow terminal appearance.                                  \n\n→ ✓ system     Theme created from your terminal's colors\n    automatic  Use separate themes for light and dark terminal appearance\n    dark\n    light\n\n  Enter to select · Esc to go back                                                                  \n────────────────────────────────────────────────────────────────────────────────────────────────────",
+      "japanese": "────────────────────────────────────────────────────────────────────────────────────────────────────\nテーマ                                                                                              \n\nテーマを選択するか、端末の外観に合わせる自動モードを選択してください。                              \n\n→ ✓ system    端末の配色から作成されたテーマ\n    自動      ライト外観とダーク外観で別々のテーマを使用\n    dark\n    light\n\n  Enter で選択 · Esc で戻る                                                                         \n────────────────────────────────────────────────────────────────────────────────────────────────────",
+      "startup_output": "changed-needs-review"
+    },
+    {
+      "surface": "labels.status-help",
+      "kind": "notification",
+      "english": "Automatic naming: on. Global: on; session: on.\nNaming model: selected model at the first naming request.\nSession name: automatic. Pane: guarded (unknown titles are protected).\nNaming requests: 0/20.\nNaming runs after a completed task turn; saved labels are checked on resume.\n\n/labels — Show status and commands.\n/labels global on|off — Save the global naming setting.\n/labels on — Enable naming with the selected model.\n/labels off — Cancel pending naming and stop requests.\n/labels pin — Protect the session name.\n/labels auto — Allow automatic session-name changes.\n/labels pane pin — Protect this pane's title.\n/labels pane auto — Allow replacing this tmux pane's title.",
+      "japanese": "Automatic naming: on. Global: on; session: on.\nNaming model: selected model at the first naming request.\nSession name: automatic. Pane: guarded (unknown titles are protected).\nNaming requests: 0/20.\nNaming runs after a completed task turn; saved labels are checked on resume.\n\n/labels — Show status and commands.\n/labels global on|off — Save the global naming setting.\n/labels on — Enable naming with the selected model.\n/labels off — Cancel pending naming and stop requests.\n/labels pin — Protect the session name.\n/labels auto — Allow automatic session-name changes.\n/labels pane pin — Protect this pane's title.\n/labels pane auto — Allow replacing this tmux pane's title.",
+      "startup_output": "english-observed"
+    },
+    {
+      "surface": "labels.invalid-argument",
+      "kind": "notification",
+      "english": "Use /labels to see status and commands.",
+      "japanese": "Use /labels to see status and commands.",
+      "startup_output": "english-observed"
+    },
+    {
+      "surface": "textguard.invalid-argument",
+      "kind": "notification",
+      "english": "Use /textguard to review findings, /textguard reports for findings that did not block anything, or /textguard on, strict, or off to set scanning.",
+      "japanese": "Use /textguard to review findings, /textguard reports for findings that did not block anything, or /textguard on, strict, or off to set scanning.",
+      "startup_output": "english-observed"
+    },
+    {
+      "surface": "textguard.reports-empty",
+      "kind": "notification",
+      "english": "TextGuard has no findings to show for content that was not blocked.",
+      "japanese": "TextGuard has no findings to show for content that was not blocked.",
+      "startup_output": "english-observed"
+    },
+    {
+      "surface": "voice.invalid-argument",
+      "kind": "notification",
+      "english": "Use /voice [start|stop|cancel|devices|language auto|language ja|language en|language zh].",
+      "japanese": "`/voice [start|stop|cancel|devices|language auto|language ja|language en|language zh]` を使用してください。",
+      "startup_output": "changed-needs-review"
+    },
+    {
+      "surface": "subagents.invalid-argument",
+      "kind": "notification",
+      "english": "Use /subagents, /subagents show, or /subagents hide.",
+      "japanese": "`/subagents`、`/subagents show`、`/subagents hide` のいずれかを使用してください。",
+      "startup_output": "changed-needs-review"
+    },
+    {
+      "surface": "workflow.invalid-argument",
+      "kind": "notification",
+      "english": "Use /workflow, /workflow on, /workflow off, or /workflow toggle.",
+      "japanese": "`/workflow`、`/workflow on`、`/workflow off`、`/workflow toggle` のいずれかを使用してください。",
+      "startup_output": "changed-needs-review"
+    }
+  ]
+}

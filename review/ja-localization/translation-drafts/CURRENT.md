@@ -4,6 +4,8 @@ This review compares the translation drafts at `2251cb9fc106df2f5478d4158d02d5e4
 
 The original inventory, translation CSVs, coverage files, and `glossary.csv` are historical snapshots. Do not treat every original row as an outstanding translation request. Use the reconciliation files and `current-glossary.csv` for this source revision. No runtime translation or product-glossary edits are made by this review.
 
+**Runtime supplement:** [the startup wiring audit](STARTUP-AUDIT.md) independently discovers the active slash-menu entries and exercises selected help, error, and settings paths. It confirms gaps missing from these CSVs, including English `/labels` and `/textguard` descriptions despite existing Japanese translations. Historical-row completeness is not complete UI coverage; keep catalog presence, startup wiring, rendered output, and language review separate.
+
 ## Files
 
 | File | Purpose |
