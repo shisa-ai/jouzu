@@ -171,3 +171,100 @@ test("OpenAI-compatible usage preserves top-level reasoning and nested precedenc
 		});
 	}
 });
+
+for (const signatureTiming of ["first", "last"])
+	test(`OpenAI-compatible Gemini tool calls replay signatures received in the ${signatureTiming} delta`, async () => {
+		const { stream } = await import("@earendil-works/pi-ai/api/openai-completions");
+		const model = {
+			id: "gemini-4-argon",
+			name: "Gemini 4 Argon",
+			api: "openai-completions",
+			provider: "fixture-gateway",
+			baseUrl: "https://fixture.invalid/v1",
+			reasoning: true,
+			input: ["text"],
+			contextWindow: 4096,
+			maxTokens: 32,
+			cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+		};
+		const signature = "Z2VtaW5pLXRvb2wtc2lnbmF0dXJl";
+		const extra_content = { google: { thought_signature: signature } };
+		const deltas = [
+			{
+				tool_calls: [
+					{
+						index: 0,
+						id: "call_read",
+						type: "function",
+						function: { name: "read", arguments: "{}" },
+						...(signatureTiming === "first" ? { extra_content } : {}),
+					},
+				],
+			},
+			{ tool_calls: [{ index: 1, id: "call_other", type: "function", function: { name: "read", arguments: "{}" } }] },
+			{ tool_calls: [{ index: 0, ...(signatureTiming === "last" ? { extra_content } : {}) }] },
+			{ tool_calls: [{ index: 0, extra_content: { google: { thought_signature: "" } } }] },
+		];
+		const result = await stream(
+			model,
+			{ messages: [{ role: "user", content: "Read files", timestamp: 1 }] },
+			{
+				apiKey: "fixture",
+				fetch: async () =>
+					new Response(
+						`${deltas.map((delta) => `data: ${JSON.stringify({ choices: [{ index: 0, delta, finish_reason: null }] })}\n\n`).join("")}data: ${JSON.stringify({ choices: [{ index: 0, delta: {}, finish_reason: "tool_calls" }] })}\n\ndata: [DONE]\n\n`,
+						{ headers: { "Content-Type": "text/event-stream" } },
+					),
+			},
+		).result();
+		assert.equal(result.stopReason, "toolUse", result.errorMessage);
+		assert.equal(result.content[0].thoughtSignature, signature);
+		assert.equal(result.content[1].thoughtSignature, undefined);
+		// Session persistence must retain metadata without requiring live adapter state.
+		const saved = JSON.parse(JSON.stringify(result));
+		const messages = [
+			saved,
+			...saved.content.map((call) => ({
+				role: "toolResult",
+				toolCallId: call.id,
+				toolName: call.name,
+				content: [{ type: "text", text: "File contents" }],
+				isError: false,
+				timestamp: 2,
+			})),
+		];
+		for (const selected of [model, { ...model, id: "another-model" }, { ...model, provider: "another-provider" }]) {
+			let payload;
+			await stream(
+				selected,
+				{ messages },
+				{
+					apiKey: "fixture",
+					onPayload(value) {
+						payload = value;
+						throw new Error("fixture-before-network");
+					},
+				},
+			).result();
+			const calls = payload.messages.find((message) => message.role === "assistant").tool_calls;
+			assert.deepEqual(calls[0].extra_content, selected === model ? extra_content : undefined);
+			assert.equal(calls[1].extra_content, undefined);
+		}
+		const encrypted = { type: "reasoning.encrypted", id: "call_read", data: "opaque-provider-state" };
+		saved.content[0].thoughtSignature = JSON.stringify(encrypted);
+		let payload;
+		await stream(
+			model,
+			{ messages },
+			{
+				apiKey: "fixture",
+				onPayload(value) {
+					payload = value;
+					throw new Error("fixture-before-network");
+				},
+			},
+		).result();
+		const replayed = payload.messages.find((message) => message.role === "assistant");
+		assert.deepEqual(replayed.reasoning_details, [encrypted]);
+		assert.equal(replayed.tool_calls[0].extra_content, undefined);
+	});

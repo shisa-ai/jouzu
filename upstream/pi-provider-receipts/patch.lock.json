@@ -13,7 +13,7 @@
 		},
 		"dist/api/openai-completions.js": {
 			"before": "106eb312121137abbe9ad8050e2c9baa1ea27315233c7b8bee8c7820c8b3a6cf",
-			"after": "6d22aaa0f56fd33641a6cdf04e74564ebcccb65932df2ee0d7f5e461fee884ea"
+			"after": "41397ad02120f534c33aea5a467729ac223474a33bbba89304ad0b168ee336b2"
 		},
 		"dist/api/openai-completions.d.ts": {
 			"before": "552baa4343275a20df53734e5aa12f46cb8648ca28421adf1318b199eae69a05",
