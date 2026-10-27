@@ -248,6 +248,34 @@ test("command reload retires held callbacks and permits replacement registration
 	assert.equal(f.sent.length, 1);
 });
 
+test("a failed release with automatic release disabled reports no error", async (t) => {
+	// `autoRelease: false` has no error channel, so a release failure must be dropped rather than
+	// reported through a callback that does not exist. The release runs after `submit` returns, so
+	// capture process-level rejections the way the host would see them.
+	const unhandled = [];
+	const listener = (reason) => unhandled.push(reason);
+	process.on("unhandledRejection", listener);
+	t.after(() => process.off("unhandledRejection", listener));
+	let admissions = 0;
+	const releasing = deferred();
+	const f = await commandFixture(t, {
+		admit: async () => {
+			// The retain decision holds the message; the release that follows asks again and fails.
+			if (++admissions === 1) return false;
+			releasing.resolve();
+			throw new Error("release admission failed");
+		},
+	});
+	const submitted = input(f.binding, "failed-release");
+	assert.equal((await f.adapter.submit(submitted)).state, "held");
+	await releasing.promise;
+	// Let the detached release reject and its report settle before asserting the process is quiet.
+	await new Promise((resolve) => setTimeout(resolve, 50));
+	assert.deepEqual(unhandled, []);
+	assert.equal(f.sent.length, 0);
+	assert.equal((await f.adapter.lookup({ target: f.binding.target, messageId: submitted.messageId })).state, "held");
+});
+
 test("old runtime registration during command reload cannot reserve the replacement identity", async (t) => {
 	const root = await mkdtemp(join(tmpdir(), "jouzu-adapter-reload-"));
 	afterCleanup(t, () => rm(root, { recursive: true, force: true }));

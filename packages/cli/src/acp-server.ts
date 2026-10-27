@@ -1,5 +1,5 @@
-import { statSync } from "node:fs";
-import { isAbsolute, resolve } from "node:path";
+import { realpathSync, statSync } from "node:fs";
+import { isAbsolute } from "node:path";
 import { Readable, Writable } from "node:stream";
 import {
 	type AgentContext,
@@ -168,7 +168,7 @@ class AcpServer {
 			if (stored.cwd.length === 0 || !isAbsolute(stored.cwd)) {
 				throw RequestError.invalidParams(undefined, "Stored session has no absolute working directory");
 			}
-			if (resolve(stored.cwd) !== resolve(cwd)) {
+			if (this.requireCwd(stored.cwd) !== cwd) {
 				throw RequestError.invalidParams(undefined, "Session working directory does not match the request");
 			}
 			const session = await this.openSession({
@@ -293,11 +293,11 @@ class AcpServer {
 			if (!statSync(cwd).isDirectory()) {
 				throw RequestError.invalidParams(undefined, "Session working directory is not a directory");
 			}
+			return realpathSync(cwd);
 		} catch (error) {
 			if (error instanceof RequestError) throw error;
 			throw RequestError.invalidParams(undefined, "Session working directory is unavailable");
 		}
-		return cwd;
 	}
 
 	private rejectUnsupportedSessionOptions(

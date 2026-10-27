@@ -33,10 +33,19 @@ import { observedWaitToolReceipt } from "./wait-tool-response.js";
 
 type Ingress = NonNullable<CreateAgentSessionOptions["flowIngress"]>;
 type Submission = Parameters<Ingress["submit"]>[0];
+/** Host-boundary automatic release; `false` is the explicit disabled spelling. */
+interface AutomaticRelease {
+	onError(error: unknown): void;
+	clock?: FlowWaitClock;
+	retireHistory?: boolean;
+}
 export interface PiFlowIngressOptions extends Omit<PiFlowSessionOptions, "admitNativeQueue" | "decorateNativeContext"> {
 	agentDir?: string;
-	/** Opt in to host-boundary release; failures require visible host reporting. */
-	autoRelease?: { onError(error: unknown): void; clock?: FlowWaitClock; retireHistory?: boolean };
+	/**
+	 * Opt in to host-boundary release; failures require visible host reporting. `false` disables automatic
+	 * release explicitly, the same as omitting it: no release is scheduled and no error callback exists.
+	 */
+	autoRelease?: AutomaticRelease | false;
 	/** Called when an interrupted turn newly pauses automated work, so the user can be told once. */
 	onAutomatedPause?(): void;
 	/**
@@ -109,7 +118,10 @@ export class PiSessionFlowIngress implements Ingress {
 	private releasing?: Promise<{ released: string[]; held: string[] }>;
 	private readonly external: UserInputAdapters;
 	private readonly catalog: CatalogBundle;
+	/** Normalized automatic release, so a disabled `false` never reaches an optional callback call. */
+	private readonly automatic?: AutomaticRelease;
 	constructor(private readonly options: PiFlowIngressOptions) {
+		this.automatic = options.autoRelease || undefined;
 		this.external = new UserInputAdapters({
 			agentDir: options.agentDir,
 			branch: () => this.branch(),
@@ -117,7 +129,7 @@ export class PiSessionFlowIngress implements Ingress {
 			liveQueue: () => this.liveQueue() ?? new Map(),
 			catalog: () => this.catalog,
 			pending: (id) => this.pending.has(id),
-			onError: (error) => this.options.autoRelease?.onError(error),
+			onError: (error) => this.automatic?.onError(error),
 			retain: (submission, digest, epoch, dispatch) =>
 				this.track(async () => {
 					const branch = this.branch();
@@ -158,7 +170,7 @@ export class PiSessionFlowIngress implements Ingress {
 					await this.admit(submission, branch, "submission", undefined, true);
 					// release owns model execution; admission returns without joining the provider.
 					if (!this.suspended && this.pending.has(saved.id))
-						void this.release(saved.id, saved.revision).catch((error) => this.options.autoRelease?.onError(error));
+						void this.release(saved.id, saved.revision).catch((error) => this.automatic?.onError(error));
 				}),
 		});
 		this.options = {
@@ -185,7 +197,7 @@ export class PiSessionFlowIngress implements Ingress {
 				await this.endExtensionRuntime();
 			} catch (error) {
 				// Reload still has to run: the alternative is a session whose extensions cannot be replaced.
-				this.options.autoRelease?.onError(error);
+				this.automatic?.onError(error);
 			}
 			return reload(options);
 		});
@@ -425,7 +437,7 @@ export class PiSessionFlowIngress implements Ingress {
 		try {
 			await this.options.detachProducers?.();
 		} catch (error) {
-			this.options.autoRelease?.onError(error);
+			this.automatic?.onError(error);
 		}
 		return { flushed, waits };
 	}
@@ -449,7 +461,7 @@ export class PiSessionFlowIngress implements Ingress {
 			try {
 				await this.cancelWait(wait.token, "Flow control was turned off.");
 			} catch (error) {
-				this.options.autoRelease?.onError(error);
+				this.automatic?.onError(error);
 			}
 		}
 		return waiting.length;
@@ -468,7 +480,7 @@ export class PiSessionFlowIngress implements Ingress {
 				try {
 					await pending.running;
 				} catch (error) {
-					this.options.autoRelease?.onError(error);
+					this.automatic?.onError(error);
 				}
 			}
 			if (this.pending.get(id) !== pending) continue;
@@ -477,7 +489,7 @@ export class PiSessionFlowIngress implements Ingress {
 				await pending.dispatch();
 				flushed++;
 			} catch (error) {
-				this.options.autoRelease?.onError(error);
+				this.automatic?.onError(error);
 			}
 		}
 		this.retainedUserInput.clear();
@@ -551,7 +563,7 @@ export class PiSessionFlowIngress implements Ingress {
 				}
 				await branch.attachment.submissions.cancelPending(record.id, record.revision);
 			} catch (error) {
-				this.options.autoRelease?.onError(error);
+				this.automatic?.onError(error);
 			}
 		}
 	}
@@ -570,14 +582,14 @@ export class PiSessionFlowIngress implements Ingress {
 		);
 		this.replayIds = inherited.length ? new Set(inherited.map((record) => record.id)) : undefined;
 		if (!this.replayIds) return;
-		if (this.options.autoRelease) {
+		if (this.automatic) {
 			this.queueRelease(true);
 			return;
 		}
 		// A host without automatic release still gets its retained continuations back at the same boundary.
 		setImmediate(() => {
 			if (!this.replayIds?.size || this.disposed || this.fenced || this.suspended) return;
-			this.track(() => this.replayContinuations()).catch((error: unknown) => this.options.autoRelease?.onError(error));
+			this.track(() => this.replayContinuations()).catch((error: unknown) => this.automatic?.onError(error));
 		});
 	}
 
@@ -674,7 +686,7 @@ export class PiSessionFlowIngress implements Ingress {
 	 * belongs to the first call, since neither was stopped.
 	 */
 	private async startScheduling(resumed = false): Promise<void> {
-		const automatic = this.options.autoRelease;
+		const automatic = this.automatic;
 		if (!automatic) return;
 		const branch = this.branch();
 		let ready = false;
@@ -722,7 +734,8 @@ export class PiSessionFlowIngress implements Ingress {
 		this.queueRelease(true);
 	}
 	private queueRelease(semantic: boolean): void {
-		if (!this.options.autoRelease || this.disposed || this.fenced || this.suspended) return;
+		const automatic = this.automatic;
+		if (!automatic || this.disposed || this.fenced || this.suspended) return;
 		this.releaseRequested = true;
 		this.semanticReleaseRequested ||= semantic;
 		if (this.scheduledRelease || this.automaticReleaseRunning) return;
@@ -741,12 +754,12 @@ export class PiSessionFlowIngress implements Ingress {
 					Promise.resolve().then(async () => {
 						// Drain an already admitted native pass before considering another dispatch.
 						await this.releasing;
-						if (wakeSemantic && this.options.autoRelease?.retireHistory && !this.disposed && !this.fenced) {
+						if (wakeSemantic && automatic?.retireHistory && !this.disposed && !this.fenced) {
 							try {
 								await this.service?.retireFlowHistory();
 							} catch (error) {
 								if (error instanceof FlowLedgerError && error.code === "capacity")
-									this.options.autoRelease.onError(error);
+									automatic?.onError(error);
 								else if (!(error instanceof FlowLedgerError) || !["busy", "stale"].includes(error.code)) throw error;
 							}
 						}
@@ -770,7 +783,7 @@ export class PiSessionFlowIngress implements Ingress {
 					})
 					.catch((error: unknown) => {
 						if ((this.disposed || this.fenced) && error instanceof FlowLedgerError && error.code === "stale") return;
-						this.options.autoRelease?.onError(error);
+						automatic?.onError(error);
 					});
 			}),
 		);
@@ -861,12 +874,12 @@ export class PiSessionFlowIngress implements Ingress {
 
 	changeWorkStatus(id: string, status: FlowWorkStatus, reason: string) {
 		return this.manage((service) =>
-			service.changeWorkStatus(id, status, reason, this.options.autoRelease?.clock?.now() ?? Date.now()),
+			service.changeWorkStatus(id, status, reason, this.automatic?.clock?.now() ?? Date.now()),
 		);
 	}
 	changeWork(id: string, owner: string, revision: number, status: FlowWorkStatus, reason: string) {
 		return this.manage((service) =>
-			service.changeWork(id, owner, revision, status, reason, this.options.autoRelease?.clock?.now() ?? Date.now()),
+			service.changeWork(id, owner, revision, status, reason, this.automatic?.clock?.now() ?? Date.now()),
 		);
 	}
 	cancelNativeQueue(id: string, revision: number): Promise<void> {
@@ -938,7 +951,7 @@ export class PiSessionFlowIngress implements Ingress {
 	}
 	cancelWait(token: string, reason: string) {
 		return this.manage((service) =>
-			service.cancelWait(token, reason, this.options.autoRelease?.clock?.now() ?? Date.now()),
+			service.cancelWait(token, reason, this.automatic?.clock?.now() ?? Date.now()),
 		);
 	}
 	cancelNativeSources(id: string, expectedHash: string, indices: number[]): Promise<void> {
@@ -1144,7 +1157,7 @@ export class PiSessionFlowIngress implements Ingress {
 		try {
 			await branch.native.cancelQueue(queue.id, queue.revision);
 		} catch (error) {
-			this.options.autoRelease?.onError(error);
+			this.automatic?.onError(error);
 		}
 	}
 
@@ -1317,7 +1330,7 @@ export class PiSessionFlowIngress implements Ingress {
 	): Promise<string | undefined> {
 		const session = this.session!;
 		const signal = new AbortController().signal;
-		const capturedAt = this.options.autoRelease?.clock?.now() ?? Date.now();
+		const capturedAt = this.automatic?.clock?.now() ?? Date.now();
 		if (!Number.isSafeInteger(capturedAt) || capturedAt < 0)
 			throw new FlowLedgerError("schema", "Invalid wait context time.");
 		const waits = await branch.attachment.waits.snapshot();

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -29,9 +29,11 @@ const cli = fileURLToPath(new URL("../dist/cli.js", import.meta.url));
 test("ACP CLI drives real Jouzu RPC tools and reloads persisted sessions", { timeout: 60_000 }, async () => {
 	const root = await mkdtemp(join(tmpdir(), "jouzu-acp-cli-"));
 	const home = join(root, "home");
-	const cwd = join(root, "workspace");
+	const workspace = join(root, "workspace");
+	const cwd = join(root, "workspace-alias");
 	await mkdir(join(home, "agent"), { recursive: true });
-	await mkdir(cwd);
+	await mkdir(workspace);
+	await symlink(workspace, cwd, process.platform === "win32" ? "junction" : "dir");
 	await writeFile(join(cwd, "evidence.txt"), "ACP_REAL_RPC_EVIDENCE");
 	const requests = [];
 	const server = createServer(async (req, res) => {
@@ -152,6 +154,10 @@ test("ACP CLI drives real Jouzu RPC tools and reloads persisted sessions", { tim
 		assert.equal(text, "ACP answer: 日本語\u2028jouzu --session preserved.");
 		await disconnect(first);
 		const second = await connect();
+		await assert.rejects(
+			second.request("session/load", { sessionId: session.sessionId, cwd: root, mcpServers: [] }),
+			/Session working directory does not match/u,
+		);
 		await second.request("session/load", { sessionId: session.sessionId, cwd, mcpServers: [] });
 		assert.match(JSON.stringify(second.updates), /ACP answer/u);
 		assert.equal(
