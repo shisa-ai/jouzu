@@ -183,6 +183,18 @@
       "detail_surfaces": "not-exercised"
     },
     {
+      "command": "exit",
+      "registered_extension": false,
+      "english": "Quit Jouzu",
+      "japanese": "Jouzu を終了",
+      "catalog": "translation-exists",
+      "message_ids": [
+        "jouzu.cli.session.slash.quit"
+      ],
+      "startup_description": "catalog-japanese-observed",
+      "detail_surfaces": "not-exercised"
+    },
+    {
       "command": "export",
       "registered_extension": false,
       "english": "Export session (HTML default, or specify path: .html/.jsonl)",
