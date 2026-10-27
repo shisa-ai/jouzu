@@ -1,5 +1,12 @@
 import { CustomEditor, type KeybindingsManager } from "@earendil-works/pi-coding-agent";
-import type { AutocompleteProvider, Component, EditorTheme, TUI } from "@earendil-works/pi-tui";
+import type {
+	AutocompleteItem,
+	AutocompleteProvider,
+	AutocompleteSuggestions,
+	Component,
+	EditorTheme,
+	TUI,
+} from "@earendil-works/pi-tui";
 import {
 	SESSION_UI_BUILTIN_SLASH_COMMANDS,
 	SESSION_UI_BUNDLED_SLASH_COMMAND_DESCRIPTIONS,
@@ -10,6 +17,8 @@ import {
 } from "./contracts.js";
 import { fillTerminalColumns, fitTerminalText, padTerminalText, terminalTextWidth } from "./layout.js";
 import type { SessionUiStyles } from "./styles.js";
+
+const EXIT_ALIAS_COMMAND = "exit";
 
 export interface PromptFrameStyle {
 	border(value: string): string;
@@ -57,6 +66,10 @@ export interface SessionPromptEditorOptions {
 	onModelPicker?: (query?: string) => Promise<boolean>;
 	onModelCycle?: (direction: ModelCycleDirection) => Promise<boolean>;
 	onScopedModelsCommand?: () => Promise<boolean>;
+	/** Whether an exact `/exit` submission should submit as `/quit`; read on each submission. */
+	exitAlias?: () => boolean;
+	/** The localized description for the `/exit` autocomplete alias; read on each completion. */
+	exitAliasDescription?: () => string | undefined;
 }
 
 /** One command registration as Pi reports it to an extension. */
@@ -264,6 +277,65 @@ export class SessionPromptEditor extends CustomEditor {
 	) {
 		super(tui, theme, keybindingsManager, { paddingX: 0 });
 		this.borderColor = (value: string) => styles.apply("prompt.border", value);
+		// Pi assigns onSubmit after constructing a custom editor. Replace the base data
+		// property with an accessor so every assignment, including Pi's, crosses the exact
+		// /exit alias before the interactive handler sees the submitted text.
+		let submitHandler: ((text: string) => void) | undefined;
+		Object.defineProperty(this, "onSubmit", {
+			configurable: true,
+			enumerable: true,
+			get: () => submitHandler,
+			set: (handler: ((text: string) => void) | undefined) => {
+				submitHandler = handler ? (text) => handler(this.mapExitAlias(text)) : undefined;
+			},
+		});
+	}
+
+	private exitAliasEnabled(): boolean {
+		try {
+			return this.options.exitAlias?.() ?? true;
+		} catch {
+			return false;
+		}
+	}
+
+	private mapExitAlias(text: string): string {
+		if (!this.exitAliasEnabled()) return text;
+		const command = text.trim().replace(/^\uFF0F/u, "/");
+		return command === "/exit" ? "/quit" : text;
+	}
+
+	private withExitAlias(
+		lines: string[],
+		cursorLine: number,
+		cursorCol: number,
+		suggestions: AutocompleteSuggestions | null,
+		items: AutocompleteItem[],
+	): AutocompleteSuggestions | null {
+		const base = suggestions ? { ...suggestions, items } : { prefix: "", items };
+		if (!this.exitAliasEnabled()) return items.length > 0 ? base : null;
+		const commandText = (lines[cursorLine] ?? "")
+			.slice(0, cursorCol)
+			.trimStart()
+			.replace(/^\uFF0F/u, "/");
+		if (!commandText.startsWith("/")) return items.length > 0 ? base : null;
+		const prefix = commandText.slice(1);
+		if (prefix.includes(" ") || !EXIT_ALIAS_COMMAND.startsWith(prefix.toLowerCase()))
+			return items.length > 0 ? base : null;
+		if (items.some((item) => item.value === EXIT_ALIAS_COMMAND)) return base;
+		let description: string | undefined;
+		try {
+			description = this.options.exitAliasDescription?.();
+		} catch {
+			description = undefined;
+		}
+		return {
+			prefix: base.prefix || commandText,
+			items: [
+				...items,
+				{ value: EXIT_ALIAS_COMMAND, label: EXIT_ALIAS_COMMAND, ...(description ? { description } : {}) },
+			],
+		};
 	}
 
 	private async openModelPicker(query?: string): Promise<boolean> {
@@ -288,15 +360,15 @@ export class SessionPromptEditor extends CustomEditor {
 			...(provider.triggerCharacters ? { triggerCharacters: provider.triggerCharacters } : {}),
 			getSuggestions: async (lines, cursorLine, cursorCol, options) => {
 				const suggestions = await provider.getSuggestions(lines, cursorLine, cursorCol, options);
-				if (!suggestions?.prefix.startsWith("/")) return suggestions;
-				const items = suggestions.items
+				if (suggestions && !suggestions.prefix.startsWith("/")) return suggestions;
+				const items = [...(suggestions?.items ?? [])]
 					.filter((item) => item.value !== "scoped-models")
 					.map((item) => {
 						const localized = this.options.slashCommandLocalizer?.(item.value, item.description);
 						if (localized === undefined || localized === item.description) return item;
 						return { ...item, description: localized };
 					});
-				return items.length > 0 ? { ...suggestions, items } : null;
+				return this.withExitAlias(lines, cursorLine, cursorCol, suggestions, items);
 			},
 			applyCompletion: (lines, cursorLine, cursorCol, item, prefix) =>
 				provider.applyCompletion(lines, cursorLine, cursorCol, item, prefix),

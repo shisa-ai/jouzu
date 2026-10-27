@@ -310,6 +310,97 @@ test("removes /scoped-models from autocomplete and intercepts exact manual submi
 	assert.equal(editor.getText(), "");
 });
 
+test("maps an exact /exit submission to /quit and leaves other text alone", () => {
+	const submitted = [];
+	const editor = new SessionPromptEditor(tui, editorTheme, { matches: editorKeybindings }, plainStyles);
+	editor.onSubmit = (value) => submitted.push(value);
+	for (const text of ["/exit", "/quit", "/exit now", "exit", "／exit"]) {
+		editor.setText(text);
+		editor.handleInput("\r");
+	}
+	assert.deepEqual(submitted, ["/quit", "/quit", "/exit now", "exit", "/quit"]);
+});
+
+test("offers a localized /exit alias in slash autocomplete and maps its completion", async () => {
+	let description = "Quit Jouzu";
+	let submitted;
+	const editor = new SessionPromptEditor(tui, editorTheme, { matches: editorKeybindings }, plainStyles, {
+		exitAliasDescription: () => description,
+	});
+	editor.onSubmit = (value) => {
+		submitted = value;
+	};
+	editor.setAutocompleteProvider({
+		triggerCharacters: ["/"],
+		async getSuggestions() {
+			return null;
+		},
+		applyCompletion(lines, cursorLine, cursorCol, item, prefix) {
+			const line = lines[cursorLine] ?? "";
+			const before = line.slice(0, cursorCol - prefix.length);
+			return {
+				lines: [`${before}/${item.value} `],
+				cursorLine,
+				cursorCol: before.length + item.value.length + 2,
+			};
+		},
+	});
+	const signal = new AbortController().signal;
+	const english = await editor.autocompleteProvider.getSuggestions(["/ex"], 0, 3, { signal });
+	assert.deepEqual(
+		english.items.find((item) => item.value === "exit"),
+		{ value: "exit", label: "exit", description: "Quit Jouzu" },
+	);
+	description = "Jouzu を終了";
+	const japanese = await editor.autocompleteProvider.getSuggestions(["/ex"], 0, 3, { signal });
+	assert.equal(japanese.items.find((item) => item.value === "exit")?.description, "Jouzu を終了");
+
+	editor.setText("/ex");
+	editor.handleInput("\t");
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(editor.isShowingAutocomplete(), true);
+	editor.handleInput("\r");
+	await new Promise((resolve) => setImmediate(resolve));
+	assert.equal(submitted, "/quit");
+	assert.equal(editor.getText(), "");
+});
+
+test("keeps another /exit owner and maps only while the alias is available", async () => {
+	let enabled = false;
+	let submitted;
+	const ownerItem = { value: "exit", label: "exit", description: "My own exit command" };
+	const editor = new SessionPromptEditor(tui, editorTheme, { matches: editorKeybindings }, plainStyles, {
+		exitAlias: () => enabled,
+		exitAliasDescription: () => "Quit Jouzu",
+	});
+	editor.onSubmit = (value) => {
+		submitted = value;
+	};
+	editor.setAutocompleteProvider({
+		triggerCharacters: ["/"],
+		async getSuggestions() {
+			return { prefix: "/ex", items: [ownerItem] };
+		},
+		applyCompletion(lines, cursorLine, cursorCol) {
+			return { lines, cursorLine, cursorCol };
+		},
+	});
+	const signal = new AbortController().signal;
+	const suggestions = await editor.autocompleteProvider.getSuggestions(["/ex"], 0, 3, { signal });
+	assert.deepEqual(suggestions.items, [ownerItem]);
+
+	editor.setText("/exit");
+	editor.handleInput("\r");
+	assert.equal(submitted, "/exit");
+
+	enabled = true;
+	const enabledSuggestions = await editor.autocompleteProvider.getSuggestions(["/ex"], 0, 3, { signal });
+	assert.deepEqual(enabledSuggestions.items, [ownerItem]);
+	editor.setText("/exit");
+	editor.handleInput("\r");
+	assert.equal(submitted, "/quit");
+});
+
 test("exact Pi autocomplete rows stay outside the prompt leader", async () => {
 	const markedStyles = {
 		apply: (role, value) => (role === "prompt.leader" ? `<leader>${value}</leader>` : value),
@@ -577,7 +668,8 @@ test("updates slash descriptions and chrome without resetting editor input", asy
 	assert.equal(argumentResult.items[0], argumentItem);
 
 	suggestions = { prefix: "/", items: [{ value: "scoped-models", label: "scoped-models" }] };
-	assert.equal(await editor.autocompleteProvider.getSuggestions(["/"], 0, 1, { signal }), null);
+	const filtered = await editor.autocompleteProvider.getSuggestions(["/"], 0, 1, { signal });
+	assert.deepEqual(filtered.items, [{ value: "exit", label: "exit" }]);
 });
 
 test("reads localized Session UI chrome from the current catalog", () => {

@@ -4,6 +4,7 @@
 
 ### Added
 
+- Add exact `/exit` as an alias for `/quit` in the interactive prompt, using the same immediate shutdown path while idle or busy. A third-party `/exit` command keeps its meaning.
 - Add `jouzu acp` for Agent Client Protocol hosts, using Jouzu RPC child sessions for streamed text and tools, persisted session loading, cancellation, model selection, and extension dialogs. See [ACP hosts](docs/acp.md) for setup, host capabilities, and permission limits.
 
 ## 0.2.3 - 2026-10-25

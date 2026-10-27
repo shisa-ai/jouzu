@@ -240,12 +240,16 @@ class AcpServer {
 		if (params.cursor) {
 			throw RequestError.invalidParams(undefined, "Session list pagination is not supported");
 		}
-		const sessions = params.cwd
-			? await SessionManager.list(this.requireCwd(params.cwd), this.options.sessionDir, undefined, undefined, true)
-			: await SessionManager.listAll(this.options.sessionDir, undefined, undefined, true);
+		const cwd = params.cwd ? this.requireCwd(params.cwd) : undefined;
+		// SessionManager.list compares cwd lexically, so a persisted symlink path would not
+		// match its real path. List the directory and compare canonical paths ourselves.
+		const sessions = await SessionManager.listAll(this.options.sessionDir, undefined, undefined, true);
 		return {
 			sessions: sessions
-				.filter((session) => session.cwd.length > 0 && isAbsolute(session.cwd))
+				.filter((session) => {
+					if (session.cwd.length === 0 || !isAbsolute(session.cwd)) return false;
+					return cwd === undefined || this.canonicalCwd(session.cwd) === cwd;
+				})
 				.map((session) => ({
 					sessionId: session.id,
 					cwd: session.cwd,
@@ -283,6 +287,14 @@ class AcpServer {
 		const session = this.sessions.get(sessionId);
 		if (!session) throw RequestError.invalidParams(undefined, "Unknown session ID");
 		return session;
+	}
+
+	private canonicalCwd(cwd: string): string | undefined {
+		try {
+			return realpathSync(cwd);
+		} catch {
+			return undefined;
+		}
 	}
 
 	private requireCwd(cwd: string): string {

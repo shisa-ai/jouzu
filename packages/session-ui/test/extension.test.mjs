@@ -193,6 +193,37 @@ test("installs one editor, Session Line, and Status Bar owner and cleans up", as
 	}
 });
 
+test("maps an exact /exit submission unless another command owns the name", async () => {
+	const install = async (commands) => {
+		const handlers = new Map();
+		const calls = { widgets: [], footers: [], editors: [] };
+		createSessionUiExtension({ catalog, colorEnabled: false }).factory({
+			on(name, handler) {
+				handlers.set(name, handler);
+			},
+			getCommands: () => commands,
+			exec: async () => ({ stdout: "", stderr: "", code: 0, killed: false }),
+		});
+		await handlers.get("session_start")({}, context("/tmp", calls));
+		const keybindings = { matches: (data, action) => data === "\r" && action === "tui.input.submit" };
+		return calls.editors[0]({ requestRender() {}, terminal: { rows: 30, columns: 80 } }, theme, keybindings);
+	};
+
+	const free = await install([]);
+	const freeSubmissions = [];
+	free.onSubmit = (value) => freeSubmissions.push(value);
+	free.setText("/exit");
+	free.handleInput("\r");
+	assert.deepEqual(freeSubmissions, ["/quit"]);
+
+	const owned = await install([{ name: "exit", description: "My own exit command", source: "prompt" }]);
+	const ownedSubmissions = [];
+	owned.onSubmit = (value) => ownedSubmissions.push(value);
+	owned.setText("/exit");
+	owned.handleInput("\r");
+	assert.deepEqual(ownedSubmissions, ["/exit"]);
+});
+
 test("does not install terminal surfaces outside TUI mode", async () => {
 	const handlers = new Map();
 	createSessionUiExtension({ catalog, colorEnabled: false }).factory({

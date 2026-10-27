@@ -57,6 +57,14 @@ export function createSessionUiExtension(options: SessionUiExtensionOptions): In
 			let editorInstalled = false;
 			const slashCommandOwnership = createSlashCommandOwnershipState();
 			let localizeSlashCommand = createSlashCommandLocalizer(options.catalog, [], slashCommandOwnership);
+			// A command with the same name keeps its meaning; the alias only fills a free name.
+			const exitAliasAvailable = () => {
+				try {
+					return !pi.getCommands().some((command) => command.name === "exit");
+				} catch {
+					return true;
+				}
+			};
 			// The Session Line renders as the prompt editor's first line. Pi moves a widget directly above
 			// the editor whenever it is registered again, so a widget cannot hold that position.
 			let sessionLine: SessionLineComponent | undefined;
@@ -153,6 +161,8 @@ export function createSessionUiExtension(options: SessionUiExtensionOptions): In
 								...(options.onModelPicker ? { onModelPicker: options.onModelPicker } : {}),
 								...(options.onModelCycle ? { onModelCycle: options.onModelCycle } : {}),
 								...(options.onScopedModelsCommand ? { onScopedModelsCommand: options.onScopedModelsCommand } : {}),
+								exitAlias: exitAliasAvailable,
+								exitAliasDescription: () => text.slashCommands?.quit,
 							}),
 					);
 					editorInstalled = true;

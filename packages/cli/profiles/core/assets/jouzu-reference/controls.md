@@ -10,6 +10,7 @@
 | Runtime settings/theme/cache warming | `/settings` |
 | Running/installed version | `/about` |
 | Session identity/details | `/status`, `/session` |
+| Session exit | `/quit`, `/exit` |
 | Background jobs | `/bg`, `/bg watch <task>`, `Alt+Shift+H` |
 | Automatic session names | `/labels` |
 | MCP connections | `/mcp` |

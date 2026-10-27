@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, symlinkSync, writeFileSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -149,7 +149,7 @@ async function harness(t, options = {}) {
 	};
 }
 
-function writeLoadSession(h, id, messageCount = 1) {
+function writeLoadSession(h, id, messageCount = 1, cwd = h.cwd) {
 	const timestamp = new Date().toISOString();
 	const path = join(h.sessionDir, `${id}.jsonl`);
 	const messages = Array.from({ length: messageCount }, (_, index) =>
@@ -163,7 +163,7 @@ function writeLoadSession(h, id, messageCount = 1) {
 	);
 	writeFileSync(
 		path,
-		[JSON.stringify({ type: "session", version: 3, id, timestamp, cwd: h.cwd }), ...messages, ""].join("\n"),
+		[JSON.stringify({ type: "session", version: 3, id, timestamp, cwd }), ...messages, ""].join("\n"),
 	);
 	return path;
 }
@@ -496,6 +496,7 @@ test("ACP lists and reloads a persisted session", async (t) => {
 		].join("\n"),
 	);
 	const listed = await h.request("session/list", { cwd: h.cwd });
+	assert.equal(listed.sessions.length, 1);
 	assert.equal(listed.sessions[0].sessionId, "load-session");
 	assert.equal(listed.sessions[0].cwd, h.cwd);
 	const loaded = await h.request("session/load", {
@@ -513,6 +514,48 @@ test("ACP lists and reloads a persisted session", async (t) => {
 	await h.request("session/close", { sessionId: "load-session" });
 	await h.close();
 	assert.ok(readLog(h.logPath).some((entry) => entry.type === "exit"));
+});
+
+test("ACP lists and loads a persisted session through a symlinked working directory", async (t) => {
+	const h = await harness(t);
+	const privateRoot = join(h.root, "private", "var");
+	const varRoot = join(h.root, "var");
+	const realCwd = join(privateRoot, "workspace");
+	const aliasCwd = join(varRoot, "workspace");
+	const otherCwd = join(privateRoot, "other");
+	mkdirSync(realCwd, { recursive: true });
+	mkdirSync(otherCwd, { recursive: true });
+	// Reproduce the macOS /var -> /private/var symlink with an explicit alias.
+	symlinkSync(privateRoot, varRoot, process.platform === "win32" ? "junction" : "dir");
+	writeLoadSession(h, "load-symlink", 1, aliasCwd);
+	writeLoadSession(h, "load-other", 1, otherCwd);
+
+	const fromAlias = await h.request("session/list", { cwd: aliasCwd });
+	assert.equal(fromAlias.sessions.length, 1);
+	assert.equal(fromAlias.sessions[0].sessionId, "load-symlink");
+	assert.equal(fromAlias.sessions[0].cwd, aliasCwd);
+
+	const fromReal = await h.request("session/list", { cwd: realCwd });
+	assert.equal(fromReal.sessions.length, 1);
+	assert.equal(fromReal.sessions[0].sessionId, "load-symlink");
+	assert.equal(fromReal.sessions[0].cwd, aliasCwd);
+
+	const fromOther = await h.request("session/list", { cwd: otherCwd });
+	assert.equal(fromOther.sessions.length, 1);
+	assert.equal(fromOther.sessions[0].sessionId, "load-other");
+	assert.equal(fromOther.sessions[0].cwd, otherCwd);
+
+	const all = await h.request("session/list", {});
+	assert.deepEqual(all.sessions.map((session) => session.sessionId).sort(), ["load-other", "load-symlink"]);
+
+	const loaded = await h.request("session/load", {
+		sessionId: "load-symlink",
+		cwd: realCwd,
+		mcpServers: [],
+	});
+	assert.equal(loaded.configOptions.find((option) => option.id === "model").currentValue, "fake/model-a");
+	assert.match(JSON.stringify(h.updates), /Earlier question 1/u);
+	await h.request("session/close", { sessionId: "load-symlink" });
 });
 
 test("ACP rejects a concurrent load of the same session", async (t) => {
