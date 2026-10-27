@@ -59,6 +59,10 @@ The first launch asks for interface and response languages separately and offers
 | `/scrollback` | Export the conversation to terminal scrollback for search and selection |
 | `Ctrl+/` or `/hotkeys` | Help and shortcuts |
 
+## ACP hosts
+
+Run `jouzu acp` to let an Agent Client Protocol host drive Jouzu sessions over standard input and output. It uses your Jouzu model settings, credentials, tools, and session storage. See [ACP setup and permissions](https://github.com/shisa-ai/jouzu/blob/main/docs/acp.md).
+
 ## Profiles
 
 `core` is the default. `ja` adds Japanese responses while leaving code, commands, and paths unchanged.

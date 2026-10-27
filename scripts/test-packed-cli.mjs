@@ -487,6 +487,17 @@ try {
 		const env = { ...baseEnv, JOUZU_HOME: consumer };
 		const version = run(process.execPath, [installedCli, "--version"], { cwd: temp, env }).stdout.trim();
 		assert.equal(version, `jouzu ${packageJson.version}\npi ${piVersion}\nprofile schema 1`);
+		const acp = run(process.execPath, [installedCli, "acp"], {
+			cwd: temp,
+			env,
+			input: `${JSON.stringify({ jsonrpc: "2.0", id: "packed-acp", method: "initialize", params: { protocolVersion: 1, clientCapabilities: {} } })}\n`,
+		})
+			.stdout.trim()
+			.split("\n")
+			.map(JSON.parse);
+		const initializedAcp = acp.find((record) => record.id === "packed-acp");
+		assert.equal(initializedAcp?.result?.agentInfo?.version, packageJson.version);
+		assert.equal(initializedAcp?.result?.agentCapabilities?.loadSession, true);
 		const packedHelp = run(process.execPath, [installedCli, "--help"], { cwd: temp, env }).stdout;
 		assert.match(packedHelp, /Jouzu agentic AI environment/u);
 		assert.match(packedHelp, /--jouzu-ui-locale/u);

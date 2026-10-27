@@ -31,6 +31,18 @@ test("supports explicit Pi escape forms and leading Jouzu options", () => {
 	});
 });
 
+test("parses ACP without starting an interactive Pi session", () => {
+	assert.deepEqual(parseJouzuArgs(["acp"]), { kind: "acp", options: {} });
+	assert.deepEqual(parseJouzuArgs(["--jouzu-home", "/tmp/ACP home", "--jouzu-profile", "ja", "acp"]), {
+		kind: "acp",
+		options: { home: "/tmp/ACP home", profile: "ja" },
+	});
+	assert.deepEqual(parseJouzuArgs(["acp", "--help"]), { kind: "help", options: {} });
+	assert.deepEqual(parseJouzuArgs(["pi", "acp"]), { kind: "pi", options: {}, args: ["acp"] });
+	assert.throws(() => parseJouzuArgs(["acp", "--mode", "rpc"]), UsageError);
+	assert.match(formatHelp(), /jouzu \[Jouzu options\] acp/u);
+});
+
 test("reserves Jouzu diagnostics while allowing escaped Pi collisions", () => {
 	assert.deepEqual(parseJouzuArgs(["doctor"]), { kind: "doctor", options: {}, json: false });
 	assert.deepEqual(parseJouzuArgs(["doctor", "--json"]), { kind: "doctor", options: {}, json: true });

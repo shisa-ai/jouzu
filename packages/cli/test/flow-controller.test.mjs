@@ -281,6 +281,135 @@ test("Pi multiloop adapter holds three continuations and accounts once at native
 	assert.equal(f.calls.length, 2);
 });
 
+for (const earlySnapshot of [false, true])
+	test(`multiloop continuation submitted before settlement advances: early snapshot=${earlySnapshot}`, async (t) => {
+		let adapter,
+			submitted = false;
+		const f = await fixture(t, true, {
+			consumedAttempt: (attempt) => adapter.admitted(attempt),
+			extensions: [
+				{
+					name: "next-loop-continuation",
+					factory(pi) {
+						pi.on("agent_end", async () => {
+							if (submitted) return;
+							submitted = true;
+							adapter.submit(input);
+							// History retention can inspect descriptors before the controller settles this turn.
+							if (earlySnapshot) await f.controller.retentionReferences();
+						});
+					},
+				},
+			],
+		});
+		const work = await f.attachment.waits.registerWork("campaign", "multiloop", Date.now());
+		const lane = { lane: "work", runTag: "run" };
+		let admitted = 0;
+		const input = { lane, reason: "continue", build: () => "Continue campaign", admitted: () => admitted++ };
+		adapter = new MultiloopFlowProducer(
+			f.attachment,
+			async () => work,
+			() => work.id,
+			() => {},
+		);
+		afterCleanup(t, () => adapter.close());
+		f.controller.register(adapter);
+		await f.session.bindExtensions({
+			onError: (error) => {
+				throw error;
+			},
+		});
+		adapter.submit(input);
+		await f.controller.wake();
+		assert.equal(f.calls.length, 2, "the next continuation runs without another external wake");
+		assert.equal(admitted, 2);
+		assert.equal(adapter.retained(lane), false);
+		assert.deepEqual(
+			(await f.ledger.snapshot()).attempts.map((attempt) => attempt.admission.choice.intent.revision),
+			["1", "2"],
+		);
+		await f.controller.wake();
+		assert.equal(f.calls.length, 2, "consumed continuations do not replay");
+		await f.ledger.retire(0);
+		adapter.submit(input);
+		const [next] = await adapter.snapshot(new AbortController().signal);
+		assert.equal(next.revision, "3", "successful retirement preserves numbering");
+		await f.controller.wake();
+		assert.equal(f.calls.length, 3);
+	});
+
+test("an early observed multiloop successor stays blocked after predecessor failure and retirement", async (t) => {
+	let adapter;
+	const f = await fixture(t, true, {
+		fetch: async () => new Response("unavailable", { status: 400 }),
+		consumedAttempt: (attempt) => adapter.admitted(attempt),
+		extensions: [
+			{
+				name: "observe-before-failure-settlement",
+				factory(pi) {
+					pi.on("agent_end", async () => {
+						adapter.submit(input);
+						await f.controller.retentionReferences();
+					});
+				},
+			},
+		],
+	});
+	const work = await f.attachment.waits.registerWork("campaign", "multiloop", Date.now());
+	const input = { lane: { lane: "work", runTag: "run" }, reason: "continue", build: () => "Continue", admitted() {} };
+	adapter = new MultiloopFlowProducer(
+		f.attachment,
+		async () => work,
+		() => work.id,
+		() => {},
+	);
+	afterCleanup(t, () => adapter.close());
+	f.controller.register(adapter);
+	await f.session.bindExtensions({
+		onError: (error) => {
+			throw error;
+		},
+	});
+	adapter.submit(input);
+	await f.controller.wake();
+	const snapshot = () => adapter.snapshot(new AbortController().signal);
+	assert.equal((await f.ledger.snapshot()).attempts[0].outcome, "failure");
+	// A pending successor keeps the failed predecessor's identity until a success advances it,
+	// so the failure receipt fences it instead of pinning a reservation above the failure.
+	assert.equal((await snapshot())[0].revision, "1");
+	assert.equal((await snapshot())[0].runnable, false);
+	await f.ledger.retire(0);
+	assert.equal((await f.ledger.snapshot()).attempts.length, 0, "the failure is represented by retired receipts");
+	assert.equal((await snapshot())[0].revision, "1", "retirement preserves the failed identity");
+	assert.equal((await snapshot())[0].runnable, false, "retirement cannot authorize the fenced successor");
+	await f.controller.wake();
+	assert.equal((await f.ledger.snapshot()).attempts.length, 0);
+});
+
+test("a retained multiloop continuation with a consumed identity exposes a recoverable hold", async (t) => {
+	const f = await fixture(t, true);
+	const work = await f.attachment.waits.registerWork("campaign", "multiloop", Date.now());
+	const lane = { lane: "work", runTag: "run" };
+	const adapter = new MultiloopFlowProducer(
+		f.attachment,
+		async () => work,
+		() => work.id,
+		() => {},
+	);
+	afterCleanup(t, () => adapter.close());
+	const registration = f.controller.register(adapter);
+	const input = { lane, reason: "continue", build: () => "Continue", admitted() {} };
+	// Omit the consumption callback to model a retained entry whose identity has already run.
+	adapter.submit(input);
+	await f.controller.wake();
+	assert.equal(adapter.retained(lane), true);
+	assert.equal(f.calls.length, 1);
+	assert.match(f.controller.view().held[0].reason, /reuses consumed input.*Resume the loop/);
+	adapter.submit(input);
+	await registration.changed();
+	assert.equal(f.calls.length, 2, "an explicit replacement obtains a fresh revision");
+});
+
 test("a synthetic second producer drives one owner-scoped binding campaign through the shared controller", async (t) => {
 	const f = await fixture(t, true, {});
 	const binding = { producer: "sweep", key: ["nightly", "scan"] };

@@ -68,6 +68,8 @@ test("the release manifest and bundle list contain the selected extension set", 
 	assert.deepEqual(
 		[...packageJson.bundleDependencies].sort(),
 		[
+			"@agentclientprotocol/sdk",
+			"zod",
 			"@earendil-works/pi-agent-core",
 			"@earendil-works/pi-ai",
 			"@earendil-works/pi-codemode",

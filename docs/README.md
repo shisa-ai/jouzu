@@ -12,6 +12,7 @@ Install and first steps are in the [project README](../README.md).
 | [Flow control](flow-control.md) | Inspect, pause, resume, or recover automatic work |
 | [Built-in tools](tools.md) | Use tools, goals, loops, and conversation compaction |
 | [Web tools](web.md) | Read websites, search the web, and troubleshoot browser setup |
+| [ACP hosts](acp.md) | Drive Jouzu from an Agent Client Protocol host |
 | [Agents and runs](subagents.md) | Configure child agents and manage their work |
 | [TextGuard](textguard.md) | Understand content scanning and review withheld results |
 | [Voice input](voice.md) | Set up a microphone and dictate a prompt |

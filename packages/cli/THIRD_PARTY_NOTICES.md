@@ -20,6 +20,15 @@ Jouzu distributes the following release-owned Pi extensions and their default ru
 
 The bundled `pi-webaio` entrypoint supplies Jouzu's static `web_fetch` and `batch_web_fetch` tools without starting a browser. The package bundle also contains transitive dependencies. Their package metadata and included license or notice files remain with their source files under `node_modules`.
 
+## Agent Client Protocol
+
+| Package | Version | License evidence |
+| --- | --- | --- |
+| `@agentclientprotocol/sdk` | 2.0.2 | Apache-2.0; `LICENSE` |
+| `zod` | 4.6.7 | MIT; `LICENSE` |
+
+The inbound ACP adapter uses the SDK's stable v1 interface and Zod schema validation. Both packages are bundled with the CLI.
+
 ## CLI localization catalogs
 
 | Package | Version | License evidence |

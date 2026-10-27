@@ -127,7 +127,7 @@ export async function runMainCli(args: string[]): Promise<void> {
 	// refreshes it before any session extensions capture the display language.
 	let preRuntime = buildPreRuntimeContext({
 		uiLocale,
-		machineReadable: parsed.kind === "pi" && usesMachineReadableStdout(parsed.args),
+		machineReadable: parsed.kind === "acp" || (parsed.kind === "pi" && usesMachineReadableStdout(parsed.args)),
 	});
 	// One renderer option object and one message helper for every human output
 	// below, so no command re-resolves the locale or reads `process` again.
@@ -151,6 +151,25 @@ export async function runMainCli(args: string[]): Promise<void> {
 	const metadata = loadMetadata();
 	const interactiveStartup = parsed.kind === "pi" && isInteractivePiStartup(parsed.args);
 	const executable = process.argv[1] ?? fileURLToPath(import.meta.url);
+
+	if (parsed.kind === "acp") {
+		const { runAcpServer } = await import("./acp.js");
+		const childArgs = [executable];
+		if (parsed.options.home || process.env.JOUZU_HOME) childArgs.push("--jouzu-home", paths.configDir);
+		if (parsed.options.profile) childArgs.push("--jouzu-profile", parsed.options.profile);
+		if (parsed.options.uiLocale) childArgs.push("--jouzu-ui-locale", parsed.options.uiLocale);
+		if (parsed.options.textguardFiles) childArgs.push("--jouzu-textguard-files");
+		if (parsed.options.textguardStrict) childArgs.push("--jouzu-textguard-strict");
+		if (parsed.options.textguardOff) childArgs.push("--jouzu-textguard-off");
+		await runAcpServer({
+			executable: process.execPath,
+			args: childArgs,
+			sessionDir: paths.sessionDir,
+			version: metadata.jouzuVersion,
+			catalog: preRuntime.catalog.bundle,
+		});
+		return;
+	}
 
 	if (parsed.kind === "catalog") {
 		if (parsed.operation === "status") {

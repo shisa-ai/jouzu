@@ -71,6 +71,7 @@ export interface JouzuOptions {
 
 export type ParsedCommand =
 	| { kind: "pi"; options: JouzuOptions; args: string[] }
+	| { kind: "acp"; options: JouzuOptions }
 	| { kind: "doctor"; options: JouzuOptions; json: boolean }
 	| { kind: "version"; options: JouzuOptions }
 	| { kind: "help"; options: JouzuOptions }
@@ -362,6 +363,12 @@ export function parseJouzuArgs(args: string[]): ParsedCommand {
 	const remaining = args.slice(index);
 	const [command, ...rest] = remaining;
 	if (command === "pi" || command === "--") return { kind: "pi", options, args: rest };
+	if (command === "acp") {
+		if (rest.length === 1 && (rest[0] === "--help" || rest[0] === "-h")) return { kind: "help", options };
+		if (rest.length > 0)
+			throw new UsageError(humanMessage(CliMessageId.versionHelpArguments, { command: protectedCommand(command) }));
+		return { kind: "acp", options };
+	}
 	if (command === "doctor") {
 		let json = false;
 		for (const token of rest) {
@@ -428,6 +435,7 @@ const HELP_USAGE_LINES = [
 	"  jouzu --session <id> [Pi arguments...]",
 	"  jouzu [Jouzu options] pi [Pi arguments...]",
 	"  jouzu [Jouzu options] -- [Pi arguments...]",
+	"  jouzu [Jouzu options] acp",
 	"  jouzu [Jouzu options] doctor [--json]",
 	"  jouzu catalog status [source-id] [--json]",
 	"  jouzu catalog refresh [source-id] [--json]",
@@ -452,6 +460,7 @@ const HELP_USAGE_LINES = [
 
 /** The command table: the protected label and the catalog ID for its description. */
 const HELP_COMMANDS: ReadonlyArray<readonly [string, CatalogMessageId]> = [
+	["acp", CatalogMessageId.helpCommandAcp],
 	["doctor", CatalogMessageId.helpCommandDoctor],
 	["catalog", CatalogMessageId.helpCommandCatalog],
 	["profile plan", CatalogMessageId.helpCommandProfilePlan],

@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import type { FlowIntent } from "./admission.js";
-import { retiredSettledCount } from "./attempt-retention.js";
+import { retiredMemberHash, retiredSettledCount, retiredWorkHash } from "./attempt-retention.js";
 import type { FlowProducer } from "./controller.js";
 import type { FlowInputItem } from "./model-input.js";
 import type { PiFlowAttachment } from "./pi-attachment.js";
@@ -22,6 +22,8 @@ interface Entry {
 	continuation?: MultiloopContinuation;
 	/** A continuation the controller has not admitted yet, so a cleared gate still has something to release. */
 	retained?: boolean;
+	/** Revision handed to the controller by build; a retained entry must not offer it again once consumed. */
+	issuedRevision?: string;
 	revision?: string;
 	workId?: string;
 }
@@ -155,7 +157,10 @@ export class MultiloopFlowProducer implements FlowProducer {
 				throw new FlowLedgerError("stale", "Multiloop campaign binding is no longer current.");
 			if (!work.participants.includes(this.namespace))
 				throw new FlowLedgerError("identity", "Multiloop is not authorized for this campaign.");
-			if (entry.workId !== work.id) entry.revision = undefined;
+			if (entry.workId !== work.id) {
+				entry.revision = undefined;
+				entry.issuedRevision = undefined;
+			}
 			entry.workId = work.id;
 			const id = this.id(entry.lane, work.id);
 			const attempts = ledger.attempts.filter(
@@ -163,13 +168,59 @@ export class MultiloopFlowProducer implements FlowProducer {
 					attempt.admission?.choice.intent.id === id && !(attempt.phase === "cancelled" && attempt.consumed === false),
 			);
 			const settled = attempts.filter((attempt) => attempt.phase === "settled" && attempt.outcome === "success");
-			const retired = await this.attachment.ledger.retired({ settled: [id] });
+			const cached = entry.revision;
+			const issued = entry.issuedRevision;
+			const retiredMembers = new Set<string>();
+			const retiredWork = new Set<string>();
+			for (const revision of [cached, issued])
+				if (revision !== undefined) {
+					retiredMembers.add(retiredMemberHash(id, revision));
+					retiredWork.add(retiredWorkHash(work.id, `${work.revision}:${revision}`));
+				}
+			let retired = await this.attachment.ledger.retired({
+				settled: [id],
+				...(retiredMembers.size ? { members: [...retiredMembers], work: [...retiredWork] } : {}),
+			});
+			const issuedFenced =
+				issued !== undefined &&
+				(retired.members.includes(retiredMemberHash(id, issued)) ||
+					retired.work.includes(retiredWorkHash(work.id, `${work.revision}:${issued}`)));
+			// A continuation built from this entry was consumed without the host reporting it. Offering
+			// the same input again would replay it; expose a hold so an explicit replacement can win.
+			if (
+				entry.retained &&
+				issued !== undefined &&
+				(issuedFenced ||
+					attempts.some(
+						(attempt) =>
+							attempt.id !== ledger.activeAttemptId &&
+							attempt.consumed === true &&
+							attempt.members.some((member) => member.id === id && member.revision === issued),
+					))
+			)
+				throw new FlowLedgerError(
+					"stale",
+					"Multiloop continuation reuses consumed input. Resume the loop to submit a fresh continuation.",
+				);
 			// A pending successor can be observed before its predecessor settles. Recompute
 			// until consumption so that early read cannot pin it to an already spent revision.
 			// Once admitted, keep the revision fixed so later snapshots cannot replay it.
-			if (entry.retained || entry.revision === undefined)
-				entry.revision = String(settled.length + retiredSettledCount(retired, id) + 1);
-			const revision = entry.revision;
+			let revision = cached;
+			if (entry.retained || revision === undefined) {
+				revision = String(settled.length + retiredSettledCount(retired, id) + 1);
+				entry.revision = revision;
+			}
+			if (revision !== cached && revision !== issued)
+				retired = await this.attachment.ledger.retired({
+					settled: [id],
+					members: [retiredMemberHash(id, revision)],
+					work: [retiredWorkHash(work.id, `${work.revision}:${revision}`)],
+				});
+			// Retirement folds a failed or cancelled attempt into exact identity fences. A pending
+			// successor that still carries one must stay blocked even though the attempt is gone.
+			const fenced =
+				retired.members.includes(retiredMemberHash(id, revision)) ||
+				retired.work.includes(retiredWorkHash(work.id, `${work.revision}:${revision}`));
 			intents.push({
 				id,
 				revision,
@@ -181,6 +232,7 @@ export class MultiloopFlowProducer implements FlowProducer {
 				independent: false,
 				runnable:
 					!!entry.continuation &&
+					!fenced &&
 					!attempts.some(
 						(attempt) =>
 							attempt.id !== ledger.activeAttemptId && !(attempt.phase === "settled" && attempt.outcome === "success"),
@@ -203,6 +255,7 @@ export class MultiloopFlowProducer implements FlowProducer {
 			current.workRevision !== intent.workRevision
 		)
 			throw new FlowLedgerError("stale", "Multiloop continuation changed before build.");
+		entry.issuedRevision = intent.revision;
 		return { id: intent.id, revision: intent.revision, kind: "work", text: entry.continuation.build() };
 	}
 	/** Called only for this controller's durable native queue claim. */
