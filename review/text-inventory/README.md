@@ -399,6 +399,14 @@ the dependency pass below supplies their individual dispositions.
 [launcher-scope.csv](launcher-scope.csv) distinguishes
 inspected source from pending helper messages, support logging and report facts.
 
+[launcher-config-text.csv](launcher-config-text.csv) accounts for all sixteen
+technical tokens in five full launcher build/test configuration sources (29
+lines), plus one external-diagnostics boundary. The
+[scope](launcher-config-text-scope.csv) pins Git blobs and source hashes. These
+are module/path/glob/alias/bind/type values and a Cargo rebuild directive, with no
+new authored runtime sentence. Compiler, framework, browser and OS messages keep
+their external producer boundaries. No build, config, package or test executes.
+
 [launcher-helpers.csv](launcher-helpers.csv) supplies the follow-on helper pass:
 278 fixed source occurrences and 37 dynamic forwarding/masking records from all
 43 packaging PowerShell/MJS helpers. Its
@@ -1515,6 +1523,7 @@ python -B review/text-inventory/verify-auth-account.py
 python -B review/text-inventory/verify-launcher.py
 python -B review/text-inventory/verify-launcher-helpers.py
 python -B review/text-inventory/verify-launcher-support.py
+python -B review/text-inventory/verify-launcher-config-text.py
 python -B review/text-inventory/verify-installer-dependencies.py --cache-dir <archive-directory>
 python -B review/text-inventory/verify-flow.py
 python -B review/text-inventory/verify-flow-report.py
