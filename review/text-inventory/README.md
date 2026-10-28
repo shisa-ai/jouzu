@@ -495,6 +495,20 @@ Thirteen corruption controls pass. These five bodies follow the frozen runtime
 census; imported validators, native libraries and broader resources remain open.
 No theme, terminal, watcher, browser, export or user-state producer was executed.
 
+[pi-os-support.csv](pi-os-support.csv) adds nine conditional error definitions
+with nine [boundaries](pi-os-support-boundaries.csv). Eight complete clipboard,
+browser, abort, watcher and sleep bodies cover 567 lines. All 154 string/template
+occurrences are partitioned against 145 [exclusions](pi-os-support-exclusions.csv).
+The [scope](pi-os-support-scope.csv) accounts for nine Error constructors and ten
+catches. Clipboard failures keep backend priority and actual copy-action/editor
+wiring; success means accepted delivery, not verified desktop clipboard state.
+Child streams may be captured or ignored, browser launch errors are often silent,
+and normal retry sleep suppresses its own abort error. The copied tmux helper
+keeps prior producer ownership and exact added-file linkage. Canonical checks
+cover forty assets: 36 match archives and four pinned patches, plus the separately
+verified addition. Fourteen corruption controls pass. No OS, clipboard, browser,
+child, native image, watcher or abort producer was executed.
+
 [pi-tools.csv](pi-tools.csv) supplies 172 inherited tool/helper occurrences,
 with 27 [payload boundaries](pi-tools-boundaries.csv). Its
 [scope table](pi-tools-scope.csv) covers 37 complete source bodies: 24 tool and
@@ -1297,6 +1311,7 @@ node review/text-inventory/verify-pi-tui-input.cjs --node-modules <root-node-mod
 node review/text-inventory/verify-pi-tui-text-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-interactive-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-theme-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-os-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 

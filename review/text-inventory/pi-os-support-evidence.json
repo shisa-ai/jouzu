@@ -1,0 +1,2766 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "487b93f5b7c4558984544f336578272039abaf58",
+  "inventory_file": "pi-os-support.csv",
+  "scope_file": "pi-os-support-scope.csv",
+  "boundary_file": "pi-os-support-boundaries.csv",
+  "exclusion_file": "pi-os-support-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    },
+    {
+      "source": "packages/session-ui/src/extension.ts",
+      "sha256": "3c146dab00f8280d63c339e08a48a2953add3659b01a20f650dc21c7d14efe8a"
+    },
+    {
+      "source": "packages/session-ui/src/prompt-frame.ts",
+      "sha256": "b5fcb9be2f808cefae43af09a69d4b8222623b24901961e3e2f4660ab32fc68e"
+    },
+    {
+      "source": "upstream/pi-terminal-clipboard/patch.mjs",
+      "sha256": "4899da79346b0bbd30f7d6b8be4d8c6bde6a99d1e347e70e7f32e2b36ad46781"
+    },
+    {
+      "source": "upstream/pi-terminal-clipboard/clipboard-tmux.js",
+      "sha256": "ed688a76a83d90afce5d8e0cc63b26c5b806111798be697ef2ab6d3aedb503d4"
+    },
+    {
+      "source": "upstream/pi-terminal-clipboard/patch.lock.json",
+      "sha256": "835c09341f8feddee7b88d14c8146693cefec5781753505f4a849c7b9f5af619"
+    },
+    {
+      "source": "scripts/apply-pi-terminal-clipboard.mjs",
+      "sha256": "7badd334e4f7bf415f27a2ce9c8376f23d6a681ad37e77c88e9b14e43b2d829e"
+    },
+    {
+      "source": "review/text-inventory/copied-bootstrap.csv",
+      "sha256": "340c7986949bb49773668c7dd7590442f2a011adb8eabb495f213a14733ea4d3"
+    },
+    {
+      "source": "review/text-inventory/copied-bootstrap-scope.csv",
+      "sha256": "3c8bb7c770e5ec065317fcf7b773792f350819ba6a84ce63b92513ae6bed0ae8"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          2248,
+          2297
+        ],
+        [
+          2463,
+          2465
+        ],
+        [
+          2484,
+          2537
+        ],
+        [
+          4750,
+          4761
+        ],
+        [
+          5557,
+          5581
+        ]
+      ],
+      "purpose": "Bounded actual native/Jouzu clipboard/rejection/catch/callback route; prior full producer body inventories remain independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/tui-renderer.js",
+      "sha256": "4c420a641ee6c0cb4b22677f97a11bc2da580b2b1f31ba56ac6f4e8df7bbd429",
+      "cli_nested_sha256": "4c420a641ee6c0cb4b22677f97a11bc2da580b2b1f31ba56ac6f4e8df7bbd429",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          8,
+          32
+        ]
+      ],
+      "purpose": "Bounded actual native/Jouzu clipboard/rejection/catch/callback route; prior full producer body inventories remain independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/auth-url.js",
+      "sha256": "a1f0b220b97462299118a66a3284961b6756f9fa623f07eacc4d89ee99609131",
+      "cli_nested_sha256": "a1f0b220b97462299118a66a3284961b6756f9fa623f07eacc4d89ee99609131",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          27,
+          35
+        ]
+      ],
+      "purpose": "Bounded actual native/Jouzu clipboard/rejection/catch/callback route; prior full producer body inventories remain independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+      "sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          3283,
+          3305
+        ]
+      ],
+      "purpose": "Bounded actual native/Jouzu clipboard/rejection/catch/callback route; prior full producer body inventories remain independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-runtime.js",
+      "sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+      "cli_nested_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          417,
+          425
+        ]
+      ],
+      "purpose": "Bounded actual native/Jouzu clipboard/rejection/catch/callback route; prior full producer body inventories remain independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/models-store.js",
+      "sha256": "acef4e29470ea2ed5adc4f8e8d4981e9214c79ebf4e7eba4ad705ff81da68ed4",
+      "cli_nested_sha256": "acef4e29470ea2ed5adc4f8e8d4981e9214c79ebf4e7eba4ad705ff81da68ed4",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          74,
+          85
+        ]
+      ],
+      "purpose": "Bounded actual native/Jouzu clipboard/rejection/catch/callback route; prior full producer body inventories remain independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/auth-storage.js",
+      "sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+      "cli_nested_sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          5,
+          10
+        ],
+        [
+          255,
+          264
+        ]
+      ],
+      "purpose": "Bounded actual native/Jouzu clipboard/rejection/catch/callback route; prior full producer body inventories remain independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.js",
+      "sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+      "cli_nested_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1230,
+          1249
+        ]
+      ],
+      "purpose": "Bounded prior full engine true/string and bare OSC API route; no desktop state confirmation."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-tmux.js",
+      "sha256": "ed688a76a83d90afce5d8e0cc63b26c5b806111798be697ef2ab6d3aedb503d4",
+      "cli_nested_sha256": "ed688a76a83d90afce5d8e0cc63b26c5b806111798be697ef2ab6d3aedb503d4",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          15,
+          20
+        ],
+        [
+          202,
+          241
+        ]
+      ],
+      "purpose": "Bounded parent-owned copied helper API/status contract only; pinned addition absent npm archive, independently verified below."
+    }
+  ],
+  "nonruntime_assets": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.d.ts",
+      "sha256": "22bc33a5696352e162f690d80e050d3f14f631338df5fcad338505b1ec94c3ca",
+      "cli_nested_sha256": "22bc33a5696352e162f690d80e050d3f14f631338df5fcad338505b1ec94c3ca",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.d.ts.map",
+      "sha256": "1c8a99afb16e38399e70e6f42a3e92e49580a3ce590c223892f9bf87e5053f02",
+      "cli_nested_sha256": "1c8a99afb16e38399e70e6f42a3e92e49580a3ce590c223892f9bf87e5053f02",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.js.map",
+      "sha256": "74126bd3f5a6ebd3fb3fa0491412f98b5ddac7a81e4570a65c2b83139163a8e2",
+      "cli_nested_sha256": "74126bd3f5a6ebd3fb3fa0491412f98b5ddac7a81e4570a65c2b83139163a8e2",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-command.d.ts",
+      "sha256": "7a9f62321cdb28bedc782a18eb71c0cc96585abb19693b6f3d0adb14c6f433a9",
+      "cli_nested_sha256": "7a9f62321cdb28bedc782a18eb71c0cc96585abb19693b6f3d0adb14c6f433a9",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-command.d.ts.map",
+      "sha256": "9c15e170b738ca4c66796d939331807be15dc2bcf93edf5a84f86e73374d2bf0",
+      "cli_nested_sha256": "9c15e170b738ca4c66796d939331807be15dc2bcf93edf5a84f86e73374d2bf0",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-command.js.map",
+      "sha256": "f89aa0ee8be59ae063a64976ae80d0d82d704d425087db9836764d2b7b78183a",
+      "cli_nested_sha256": "f89aa0ee8be59ae063a64976ae80d0d82d704d425087db9836764d2b7b78183a",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-image.d.ts",
+      "sha256": "ecdddd7b986581fa974287cc847ba518174cd6be8d9390f3a06fc370bba5455b",
+      "cli_nested_sha256": "ecdddd7b986581fa974287cc847ba518174cd6be8d9390f3a06fc370bba5455b",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-image.d.ts.map",
+      "sha256": "6560dbf3fb0ae54089272ec29fe0d84f90e8136177c61c3d8b2494eccea54478",
+      "cli_nested_sha256": "6560dbf3fb0ae54089272ec29fe0d84f90e8136177c61c3d8b2494eccea54478",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-image.js.map",
+      "sha256": "680a5b3d7263cc002bf1fab8c5c619ffe071782524a2e5cd461f4bb32f32bd9d",
+      "cli_nested_sha256": "680a5b3d7263cc002bf1fab8c5c619ffe071782524a2e5cd461f4bb32f32bd9d",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/open-browser.d.ts",
+      "sha256": "faaae9e0895ceae5dc114dc9f63959787d7238bafc520039337ef3d58de21638",
+      "cli_nested_sha256": "faaae9e0895ceae5dc114dc9f63959787d7238bafc520039337ef3d58de21638",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/open-browser.d.ts.map",
+      "sha256": "f9b287354051710630b14f239c7a17b16f210b22d5c35cbedc4b7d4c042a52a5",
+      "cli_nested_sha256": "f9b287354051710630b14f239c7a17b16f210b22d5c35cbedc4b7d4c042a52a5",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/open-browser.js.map",
+      "sha256": "42112ff9c21c87abc829486012647a2f9d35aeafc2914fa4438cedf8a968e04a",
+      "cli_nested_sha256": "42112ff9c21c87abc829486012647a2f9d35aeafc2914fa4438cedf8a968e04a",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/wsl.d.ts",
+      "sha256": "68ba0c60fd59d16624d405902ab2a53873b8194a1c401d42db38ecc9cecf11b7",
+      "cli_nested_sha256": "68ba0c60fd59d16624d405902ab2a53873b8194a1c401d42db38ecc9cecf11b7",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/wsl.d.ts.map",
+      "sha256": "52f0287284fc4c2b61d5f2a3501e1dd8d95fdf25dfc1acafe253e40080e7a73c",
+      "cli_nested_sha256": "52f0287284fc4c2b61d5f2a3501e1dd8d95fdf25dfc1acafe253e40080e7a73c",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/wsl.js.map",
+      "sha256": "e96916f5eda034b7719159fffb129f9c1293a019d21f7e73ce1e149065a2a971",
+      "cli_nested_sha256": "e96916f5eda034b7719159fffb129f9c1293a019d21f7e73ce1e149065a2a971",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/abort.d.ts",
+      "sha256": "d0bf50239f7412a19adb46c6e73105765a6f15ee711cb3452beda42a4583610a",
+      "cli_nested_sha256": "d0bf50239f7412a19adb46c6e73105765a6f15ee711cb3452beda42a4583610a",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/abort.d.ts.map",
+      "sha256": "0418a1f84b5b825e0e9041a3b543148f7be5401c30583ef6721e210ed706d6db",
+      "cli_nested_sha256": "0418a1f84b5b825e0e9041a3b543148f7be5401c30583ef6721e210ed706d6db",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/abort.js.map",
+      "sha256": "11771c6e13af7f89b7caa441e74ce3be8233c7ee014711a4cd0061e2823c3c07",
+      "cli_nested_sha256": "11771c6e13af7f89b7caa441e74ce3be8233c7ee014711a4cd0061e2823c3c07",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/fs-watch.d.ts",
+      "sha256": "e7a6b0c4659c382ff1f9df1cf2d89a0f00e62acfc656284eeaede804d598c0c5",
+      "cli_nested_sha256": "e7a6b0c4659c382ff1f9df1cf2d89a0f00e62acfc656284eeaede804d598c0c5",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/fs-watch.d.ts.map",
+      "sha256": "163dd6c35b19f22e781122d7d8af95f22d0780225755c1fc61739583e1ef4d60",
+      "cli_nested_sha256": "163dd6c35b19f22e781122d7d8af95f22d0780225755c1fc61739583e1ef4d60",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/fs-watch.js.map",
+      "sha256": "6fb3f2de6b95cc70e6001730f0851bbf4f47b8a3a168cf453009bdc999479c68",
+      "cli_nested_sha256": "6fb3f2de6b95cc70e6001730f0851bbf4f47b8a3a168cf453009bdc999479c68",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/sleep.d.ts",
+      "sha256": "02ed5098c6c14958d1a69fa390ab6b498c3ca548c571b7a9168dd570f8db103e",
+      "cli_nested_sha256": "02ed5098c6c14958d1a69fa390ab6b498c3ca548c571b7a9168dd570f8db103e",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/sleep.d.ts.map",
+      "sha256": "ce318306053dd1b09237bdbe2c0e21cbf61c3990ac668de0fb8282148dea9d77",
+      "cli_nested_sha256": "ce318306053dd1b09237bdbe2c0e21cbf61c3990ac668de0fb8282148dea9d77",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/sleep.js.map",
+      "sha256": "8c834335ed809b67e260779ab49795289170c3c24bce8fe448536b1cdd37b8df",
+      "cli_nested_sha256": "8c834335ed809b67e260779ab49795289170c3c24bce8fe448536b1cdd37b8df",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    }
+  ],
+  "archive_support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/tui-renderer.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/auth-url.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-runtime.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/models-store.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/auth-storage.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-command.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-command.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-command.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-image.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-image.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-image.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/open-browser.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/open-browser.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/open-browser.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/wsl.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/wsl.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/wsl.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/abort.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/abort.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/abort.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/fs-watch.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/fs-watch.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/fs-watch.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/sleep.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/sleep.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/sleep.js.map"
+    }
+  ],
+  "counts": {
+    "rows": 9,
+    "proofs": 9,
+    "scopes": 8,
+    "external_boundaries": 9,
+    "excluded_occurrences": 145,
+    "dispositioned_source_files": 8,
+    "string_template_occurrences": 154,
+    "protected_regex_literals": 3,
+    "error_constructors": 9,
+    "catch_clauses": 10,
+    "throw_statements": 6,
+    "all_new_expressions": 14,
+    "protected_control_occurrences": 1,
+    "full_runtime_lines": 567,
+    "runtime_source_bytes": 20454,
+    "nonruntime_assets": 24,
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "statusCounts": {
+      "source-read-local-producers": 8
+    }
+  },
+  "proofs": [
+    {
+      "item_id": "pi.os-support.clipboard.162.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.js",
+      "line": 162,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Clipboard unavailable: tmux forwarding failed (${tmuxStatus ?? \"unavailable\"})",
+      "evidence": "`Clipboard unavailable: tmux forwarding failed (${tmuxStatus ?? \"unavailable\"})`"
+    },
+    {
+      "item_id": "pi.os-support.clipboard.164.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.js",
+      "line": 164,
+      "column": 25,
+      "kind": "string-literal",
+      "english": "Clipboard unavailable: text exceeds the OSC 52 size limit",
+      "evidence": "\"Clipboard unavailable: text exceeds the OSC 52 size limit\""
+    },
+    {
+      "item_id": "pi.os-support.clipboard.166.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.js",
+      "line": 166,
+      "column": 25,
+      "kind": "string-literal",
+      "english": "Clipboard unavailable: install the Termux:API app and `termux-api` package",
+      "evidence": "\"Clipboard unavailable: install the Termux:API app and `termux-api` package\""
+    },
+    {
+      "item_id": "pi.os-support.clipboard.170.29",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.js",
+      "line": 170,
+      "column": 29,
+      "kind": "string-literal",
+      "english": "Clipboard unavailable: install `wl-clipboard` (`wl-copy`) or check Wayland access",
+      "evidence": "\"Clipboard unavailable: install `wl-clipboard` (`wl-copy`) or check Wayland access\""
+    },
+    {
+      "item_id": "pi.os-support.clipboard.173.29",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.js",
+      "line": 173,
+      "column": 29,
+      "kind": "string-literal",
+      "english": "Clipboard unavailable: install `xclip` or `xsel`, or check X11 access",
+      "evidence": "\"Clipboard unavailable: install `xclip` or `xsel`, or check X11 access\""
+    },
+    {
+      "item_id": "pi.os-support.clipboard.176.21",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.js",
+      "line": 176,
+      "column": 21,
+      "kind": "string-literal",
+      "english": "Clipboard unavailable",
+      "evidence": "\"Clipboard unavailable\""
+    },
+    {
+      "item_id": "pi.os-support.abort.4.29",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/abort.js",
+      "line": 4,
+      "column": 29,
+      "kind": "string-literal",
+      "english": "The operation was aborted",
+      "evidence": "\"The operation was aborted\""
+    },
+    {
+      "item_id": "pi.os-support.sleep.7.30",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/sleep.js",
+      "line": 7,
+      "column": 30,
+      "kind": "string-literal",
+      "english": "Aborted",
+      "evidence": "\"Aborted\""
+    },
+    {
+      "item_id": "pi.os-support.sleep.13.30",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/sleep.js",
+      "line": 13,
+      "column": 30,
+      "kind": "string-literal",
+      "english": "Aborted",
+      "evidence": "\"Aborted\""
+    }
+  ],
+  "public_clipboard_lineage": {
+    "manifest": "upstream/pi-terminal-clipboard/patch.lock.json",
+    "manifest_sha256": "835c09341f8feddee7b88d14c8146693cefec5781753505f4a849c7b9f5af619",
+    "patched_source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.js",
+    "before_sha256": "0b296fef43d637ac463a5be20702118400a73eec6fbf9fb6986c1febbb089909",
+    "after_sha256": "e41b1212f49be33a7aa1a1d4aa97eb653ad08fe85da8e0743c3d728597eb76b7",
+    "addition": {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-tmux.js",
+      "repo_source": "upstream/pi-terminal-clipboard/clipboard-tmux.js",
+      "sha256": "ed688a76a83d90afce5d8e0cc63b26c5b806111798be697ef2ab6d3aedb503d4",
+      "parent_scope_source": "review/text-inventory/copied-bootstrap-scope.csv",
+      "parent_scope_status": "fully-read-copied-bootstrap-unit",
+      "parent_scope_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "parent_definition_rows": 121,
+      "new_full_body_claim": false,
+      "read_ranges": [
+        [
+          15,
+          20
+        ],
+        [
+          202,
+          241
+        ]
+      ]
+    },
+    "inserted_error_crosslink": {
+      "item_id": "pi.os-support.clipboard.162.25",
+      "parent_item_id": "COPIED-BOOTSTRAP-0319",
+      "parent_location": "upstream/pi-terminal-clipboard/patch.mjs:84",
+      "parent_evidence": {
+        "path": "upstream/pi-terminal-clipboard/patch.mjs",
+        "start": 3154,
+        "end": 3233,
+        "kind": "nested-template",
+        "role": "fixed-generated-clipboard-error",
+        "parent_start": 3074,
+        "parent_end": 3257,
+        "patch_role": [
+          "after",
+          "replace",
+          2999,
+          3261,
+          2
+        ],
+        "projected_start": 78,
+        "projected_end": 156,
+        "projected_payload": "Clipboard unavailable: tmux forwarding failed (${tmuxStatus ?? \"unavailable\"})",
+        "guards": [
+          {
+            "kind": "if",
+            "start": 40,
+            "end": 51,
+            "raw": "tmuxEnabled"
+          }
+        ]
+      },
+      "parent_english": "Clipboard unavailable: tmux forwarding failed (\\${tmuxStatus ?? \"unavailable\"})",
+      "projected_payload": "Clipboard unavailable: tmux forwarding failed (${tmuxStatus ?? \"unavailable\"})"
+    }
+  },
+  "jouzu_editor_bridge": {
+    "repo_sources": [
+      "packages/session-ui/src/extension.ts:155",
+      "packages/session-ui/src/prompt-frame.ts:385"
+    ],
+    "native_callback_bridge": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js:2276",
+    "route": "SessionPromptEditor extends CustomEditor, native setCustomEditorComponent copies actions and paste callback; prompt priority sends clipboard paste tosuper. No default-footer assumption needed."
+  },
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.js",
+        "read_lines": [
+          1,
+          178
+        ],
+        "string_template_occurrences": 59,
+        "fixed_rows": 6,
+        "excluded_occurrences": 53,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 162,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Clipboard unavailable: tmux forwarding failed (${tmuxStatus ?? \"unavailable\"})`"
+          },
+          {
+            "line": 164,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"Clipboard unavailable: text exceeds the OSC 52 size limit\""
+          },
+          {
+            "line": 166,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"Clipboard unavailable: install the Termux:API app and `termux-api` package\""
+          },
+          {
+            "line": 170,
+            "column": 19,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"Clipboard unavailable: install `wl-clipboard` (`wl-copy`) or check Wayland access\""
+          },
+          {
+            "line": 173,
+            "column": 19,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"Clipboard unavailable: install `xclip` or `xsel`, or check X11 access\""
+          },
+          {
+            "line": 176,
+            "column": 11,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"Clipboard unavailable\""
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 162,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Clipboard unavailable: tmux forwarding failed (${tmuxStatus ?? \"unavailable\"})`)"
+          },
+          {
+            "line": 164,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(\"Clipboard unavailable: text exceeds the OSC 52 size limit\")"
+          },
+          {
+            "line": 166,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(\"Clipboard unavailable: install the Termux:API app and `termux-api` package\")"
+          },
+          {
+            "line": 170,
+            "column": 19,
+            "callee": "Error",
+            "source": "new Error(\"Clipboard unavailable: install `wl-clipboard` (`wl-copy`) or check Wayland access\")"
+          },
+          {
+            "line": 173,
+            "column": 19,
+            "callee": "Error",
+            "source": "new Error(\"Clipboard unavailable: install `xclip` or `xsel`, or check X11 access\")"
+          },
+          {
+            "line": 176,
+            "column": 11,
+            "callee": "Error",
+            "source": "new Error(\"Clipboard unavailable\")"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 162,
+            "column": 9,
+            "expression": "new Error(`Clipboard unavailable: tmux forwarding failed (${tmuxStatus ?? \"unavailable\"})`)"
+          },
+          {
+            "line": 164,
+            "column": 9,
+            "expression": "new Error(\"Clipboard unavailable: text exceeds the OSC 52 size limit\")"
+          },
+          {
+            "line": 166,
+            "column": 9,
+            "expression": "new Error(\"Clipboard unavailable: install the Termux:API app and `termux-api` package\")"
+          },
+          {
+            "line": 170,
+            "column": 13,
+            "expression": "new Error(\"Clipboard unavailable: install `wl-clipboard` (`wl-copy`) or check Wayland access\")"
+          },
+          {
+            "line": 173,
+            "column": 13,
+            "expression": "new Error(\"Clipboard unavailable: install `xclip` or `xsel`, or check X11 access\")"
+          },
+          {
+            "line": 176,
+            "column": 5,
+            "expression": "new Error(\"Clipboard unavailable\")"
+          }
+        ],
+        "catch_clauses": [
+          {
+            "line": 46,
+            "column": 5,
+            "source": "catch {\n        return false;\n    }"
+          },
+          {
+            "line": 53,
+            "column": 9,
+            "source": "catch {\n            // The file may not have been created.\n        }"
+          },
+          {
+            "line": 79,
+            "column": 5,
+            "source": "catch {\n        return null;\n    }"
+          },
+          {
+            "line": 103,
+            "column": 9,
+            "source": "catch {\n            // Try platform commands next.\n        }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "node:crypto"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "node:fs"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "node:os"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "node:path"
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "@earendil-works/pi-tui"
+          },
+          {
+            "line": 6,
+            "column": 1,
+            "specifier": "./clipboard-command.js"
+          },
+          {
+            "line": 7,
+            "column": 1,
+            "specifier": "./wsl.js"
+          },
+          {
+            "line": 8,
+            "column": 1,
+            "specifier": "./clipboard-tmux.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 16,
+            "column": 12,
+            "callee": "Boolean",
+            "arguments": [
+              "env.SSH_CONNECTION || env.SSH_CLIENT || env.MOSH_CONNECTION || env.PI_CLIPBOARD_OSC52 === \"1\""
+            ]
+          },
+          {
+            "line": 19,
+            "column": 21,
+            "callee": "Buffer.from(text).toString",
+            "arguments": [
+              "\"base64\""
+            ]
+          },
+          {
+            "line": 19,
+            "column": 21,
+            "callee": "Buffer.from",
+            "arguments": [
+              "text"
+            ]
+          },
+          {
+            "line": 23,
+            "column": 5,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "`\\x1b]52;c;${encoded}\\x07`"
+            ]
+          },
+          {
+            "line": 32,
+            "column": 21,
+            "callee": "join",
+            "arguments": [
+              "tmpdir()",
+              "`pi-wsl-clip-${randomUUID()}.txt`"
+            ]
+          },
+          {
+            "line": 32,
+            "column": 26,
+            "callee": "tmpdir",
+            "arguments": []
+          },
+          {
+            "line": 32,
+            "column": 51,
+            "callee": "randomUUID",
+            "arguments": []
+          },
+          {
+            "line": 34,
+            "column": 9,
+            "callee": "writeFileSync",
+            "arguments": [
+              "tmpFile",
+              "text",
+              "{ encoding: \"utf8\", mode: 0o600 }"
+            ]
+          },
+          {
+            "line": 35,
+            "column": 25,
+            "callee": "(await runClipboardCommand(\"wslpath\", [\"-w\", tmpFile], { timeoutMs: 1000 }))\n            ?.toString(\"utf8\")\n            .trim",
+            "arguments": []
+          },
+          {
+            "line": 35,
+            "column": 25,
+            "callee": "(await runClipboardCommand(\"wslpath\", [\"-w\", tmpFile], { timeoutMs: 1000 }))\n            ?.toString",
+            "arguments": [
+              "\"utf8\""
+            ]
+          },
+          {
+            "line": 35,
+            "column": 32,
+            "callee": "runClipboardCommand",
+            "arguments": [
+              "\"wslpath\"",
+              "[\"-w\", tmpFile]",
+              "{ timeoutMs: 1000 }"
+            ]
+          },
+          {
+            "line": 40,
+            "column": 80,
+            "callee": "winPath.replaceAll",
+            "arguments": [
+              "\"'\"",
+              "\"''\""
+            ]
+          },
+          {
+            "line": 41,
+            "column": 30,
+            "callee": "runClipboardCommand",
+            "arguments": [
+              "\"powershell.exe\"",
+              "[\"-NoProfile\", \"-Command\", script]",
+              "{\n            timeoutMs: 5000,\n        }"
+            ]
+          },
+          {
+            "line": 51,
+            "column": 13,
+            "callee": "unlinkSync",
+            "arguments": [
+              "tmpFile"
+            ]
+          },
+          {
+            "line": 63,
+            "column": 9,
+            "callee": "commands.push",
+            "arguments": [
+              "[\"termux-clipboard-get\", []]"
+            ]
+          },
+          {
+            "line": 64,
+            "column": 9,
+            "callee": "platform",
+            "arguments": []
+          },
+          {
+            "line": 66,
+            "column": 13,
+            "callee": "commands.push",
+            "arguments": [
+              "[\"wl-paste\", [\"--no-newline\", \"--type\", \"text\"]]"
+            ]
+          },
+          {
+            "line": 68,
+            "column": 13,
+            "callee": "commands.push",
+            "arguments": [
+              "[\"xclip\", [\"-selection\", \"clipboard\", \"-out\"]]",
+              "[\"xsel\", [\"--clipboard\", \"--output\"]]"
+            ]
+          },
+          {
+            "line": 72,
+            "column": 29,
+            "callee": "runClipboardCommand",
+            "arguments": [
+              "command",
+              "args",
+              "{ timeoutMs: 5000 }"
+            ]
+          },
+          {
+            "line": 74,
+            "column": 20,
+            "callee": "bytes.toString",
+            "arguments": [
+              "\"utf8\""
+            ]
+          },
+          {
+            "line": 77,
+            "column": 23,
+            "callee": "getNativeClipboard()?.getText",
+            "arguments": []
+          },
+          {
+            "line": 77,
+            "column": 23,
+            "callee": "getNativeClipboard",
+            "arguments": []
+          },
+          {
+            "line": 85,
+            "column": 25,
+            "callee": "getNativeClipboard()?.getFilePaths",
+            "arguments": []
+          },
+          {
+            "line": 85,
+            "column": 25,
+            "callee": "getNativeClipboard",
+            "arguments": []
+          },
+          {
+            "line": 89,
+            "column": 15,
+            "callee": "platform",
+            "arguments": []
+          },
+          {
+            "line": 92,
+            "column": 25,
+            "callee": "isTmuxClipboardEnabled",
+            "arguments": [
+              "env"
+            ]
+          },
+          {
+            "line": 97,
+            "column": 31,
+            "callee": "getNativeClipboard",
+            "arguments": []
+          },
+          {
+            "line": 99,
+            "column": 23,
+            "callee": "clipboard.setText",
+            "arguments": [
+              "text"
+            ]
+          },
+          {
+            "line": 110,
+            "column": 13,
+            "callee": "commands.push",
+            "arguments": [
+              "[\"pbcopy\", []]"
+            ]
+          },
+          {
+            "line": 112,
+            "column": 13,
+            "callee": "commands.push",
+            "arguments": [
+              "[\"clip\", []]"
+            ]
+          },
+          {
+            "line": 115,
+            "column": 17,
+            "callee": "commands.push",
+            "arguments": [
+              "[\"termux-clipboard-set\", []]"
+            ]
+          },
+          {
+            "line": 117,
+            "column": 17,
+            "callee": "commands.push",
+            "arguments": [
+              "[\"wl-copy\", []]"
+            ]
+          },
+          {
+            "line": 119,
+            "column": 17,
+            "callee": "commands.push",
+            "arguments": [
+              "[\"xclip\", [\"-selection\", \"clipboard\"]]",
+              "[\"xsel\", [\"--clipboard\", \"--input\"]]"
+            ]
+          },
+          {
+            "line": 123,
+            "column": 24,
+            "callee": "runClipboardCommand",
+            "arguments": [
+              "command",
+              "args",
+              "{ input: text, timeoutMs: 5000 }"
+            ]
+          },
+          {
+            "line": 130,
+            "column": 37,
+            "callee": "isWSL",
+            "arguments": [
+              "env"
+            ]
+          },
+          {
+            "line": 133,
+            "column": 28,
+            "callee": "emitOsc52",
+            "arguments": [
+              "text"
+            ]
+          },
+          {
+            "line": 134,
+            "column": 41,
+            "callee": "copyViaWindowsClipboard",
+            "arguments": [
+              "text"
+            ]
+          },
+          {
+            "line": 141,
+            "column": 28,
+            "callee": "copyToTmuxClipboard",
+            "arguments": [
+              "text",
+              "{ env }"
+            ]
+          },
+          {
+            "line": 153,
+            "column": 43,
+            "callee": "isRemoteSession",
+            "arguments": [
+              "env"
+            ]
+          },
+          {
+            "line": 154,
+            "column": 13,
+            "callee": "emitOsc52",
+            "arguments": [
+              "text"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [
+          {
+            "line": 23,
+            "column": 26,
+            "kind": "template-expression",
+            "text": "\\x1b]52;c;${encoded}\\x07"
+          }
+        ],
+        "review": "Full178-line installed patched body read. Six final failure definitions positive with exact priority/copy/OS/env/OSC/tmux gates. Native/direct command success, Windows temp-file interop, OSC52 and parent tmux accepted request are not desktop confirmation. Read text catches native fallback, file-path read may reject. PowerShell/command/temp/OSC syntax and dynamic clipboard payload protected. Public before/after and copied helper lineage independently proved; no added helper re-audit closure claimed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-command.js",
+        "read_lines": [
+          1,
+          48
+        ],
+        "string_template_occurrences": 11,
+        "fixed_rows": 0,
+        "excluded_occurrences": 11,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 4,
+            "column": 12,
+            "callee": "Promise",
+            "source": "new Promise((resolve) => {\n        // Clipboard writers can daemonize. Do not give them output pipes to retain.\n        // Detach on POSIX so the daemon leaves pi's process group and Ctrl+Z suspend\n        // (SIGTSTP to the group) does not stop the clipboard owner (#11179).\n        const child = spawn(command, args, {\n            stdio: [\"pipe\", options?.input === undefined ? \"pipe\" : \"ignore\", \"ignore\"],\n            detached: process.platform !== \"win32\",\n            windowsHide: true,\n        });\n        const chunks = [];\n        let length = 0;\n        let settled = false;\n        const finish = (result) => {\n            if (settled)\n                return;\n            settled = true;\n            clearTimeout(timer);\n            resolve(result);\n        };\n        const abort = () => {\n            child.kill(\"SIGKILL\");\n            child.stdout?.destroy();\n            child.stdin?.destroy();\n            finish(undefined);\n        };\n        const timer = setTimeout(abort, options?.timeoutMs ?? 3000);\n        child.on(\"error\", () => finish(undefined));\n        child.on(\"close\", (code) => {\n            if (!settled)\n                finish(code === 0 ? Buffer.concat(chunks, length) : undefined);\n        });\n        child.stdout?.on(\"data\", (chunk) => {\n            if (settled)\n                return;\n            length += chunk.length;\n            if (length > (options?.maxBufferBytes ?? 50 * 1024 * 1024))\n                abort();\n            else\n                chunks.push(chunk);\n        });\n        child.stdin?.on(\"error\", () => { }); // A writer may exit before consuming all input.\n        child.stdin?.end(options?.input);\n    })"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "node:child_process"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 8,
+            "column": 23,
+            "callee": "spawn",
+            "arguments": [
+              "command",
+              "args",
+              "{\n            stdio: [\"pipe\", options?.input === undefined ? \"pipe\" : \"ignore\", \"ignore\"],\n            detached: process.platform !== \"win32\",\n            windowsHide: true,\n        }"
+            ]
+          },
+          {
+            "line": 20,
+            "column": 13,
+            "callee": "clearTimeout",
+            "arguments": [
+              "timer"
+            ]
+          },
+          {
+            "line": 21,
+            "column": 13,
+            "callee": "resolve",
+            "arguments": [
+              "result"
+            ]
+          },
+          {
+            "line": 24,
+            "column": 13,
+            "callee": "child.kill",
+            "arguments": [
+              "\"SIGKILL\""
+            ]
+          },
+          {
+            "line": 25,
+            "column": 13,
+            "callee": "child.stdout?.destroy",
+            "arguments": []
+          },
+          {
+            "line": 26,
+            "column": 13,
+            "callee": "child.stdin?.destroy",
+            "arguments": []
+          },
+          {
+            "line": 27,
+            "column": 13,
+            "callee": "finish",
+            "arguments": [
+              "undefined"
+            ]
+          },
+          {
+            "line": 29,
+            "column": 23,
+            "callee": "setTimeout",
+            "arguments": [
+              "abort",
+              "options?.timeoutMs ?? 3000"
+            ]
+          },
+          {
+            "line": 30,
+            "column": 9,
+            "callee": "child.on",
+            "arguments": [
+              "\"error\"",
+              "() => finish(undefined)"
+            ]
+          },
+          {
+            "line": 30,
+            "column": 33,
+            "callee": "finish",
+            "arguments": [
+              "undefined"
+            ]
+          },
+          {
+            "line": 31,
+            "column": 9,
+            "callee": "child.on",
+            "arguments": [
+              "\"close\"",
+              "(code) => {\n            if (!settled)\n                finish(code === 0 ? Buffer.concat(chunks, length) : undefined);\n        }"
+            ]
+          },
+          {
+            "line": 33,
+            "column": 17,
+            "callee": "finish",
+            "arguments": [
+              "code === 0 ? Buffer.concat(chunks, length) : undefined"
+            ]
+          },
+          {
+            "line": 33,
+            "column": 37,
+            "callee": "Buffer.concat",
+            "arguments": [
+              "chunks",
+              "length"
+            ]
+          },
+          {
+            "line": 35,
+            "column": 9,
+            "callee": "child.stdout?.on",
+            "arguments": [
+              "\"data\"",
+              "(chunk) => {\n            if (settled)\n                return;\n            length += chunk.length;\n            if (length > (options?.maxBufferBytes ?? 50 * 1024 * 1024))\n                abort();\n            else\n                chunks.push(chunk);\n        }"
+            ]
+          },
+          {
+            "line": 40,
+            "column": 17,
+            "callee": "abort",
+            "arguments": []
+          },
+          {
+            "line": 42,
+            "column": 17,
+            "callee": "chunks.push",
+            "arguments": [
+              "chunk"
+            ]
+          },
+          {
+            "line": 44,
+            "column": 9,
+            "callee": "child.stdin?.on",
+            "arguments": [
+              "\"error\"",
+              "() => { }"
+            ]
+          },
+          {
+            "line": 45,
+            "column": 9,
+            "callee": "child.stdin?.end",
+            "arguments": [
+              "options?.input"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full48 lines read. No human prose/Error/throw; promise resolves captured bytes (empty success) vsundefined failure. Writers inputprovided ignore stdout; all stderr ignored, readers stdoutcaptured not painted here. Error/close/nonzero/timeout/buffer/stdin paths read. Synchronous spawn/options/kill/native stream callback failures can still reject/escape; no command run."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard-image.js",
+        "read_lines": [
+          1,
+          214
+        ],
+        "string_template_occurrences": 63,
+        "fixed_rows": 0,
+        "excluded_occurrences": 63,
+        "protected_regex_literals": 2,
+        "regex_census_sha256": "7291720e6d0abac38a2e33c2eb5a374edb1bf43e137ee7d2d0594959a811a8ab",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 135,
+            "column": 25,
+            "callee": "Uint8Array",
+            "source": "new Uint8Array(bytes)"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 69,
+            "column": 5,
+            "source": "catch {\n        return null;\n    }"
+          },
+          {
+            "line": 137,
+            "column": 5,
+            "source": "catch {\n        return null;\n    }"
+          },
+          {
+            "line": 144,
+            "column": 9,
+            "source": "catch {\n            // Ignore cleanup errors.\n        }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "@earendil-works/pi-tui"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "crypto"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "fs"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "os"
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "path"
+          },
+          {
+            "line": 6,
+            "column": 1,
+            "specifier": "./clipboard-command.js"
+          },
+          {
+            "line": 7,
+            "column": 1,
+            "specifier": "./mime.js"
+          },
+          {
+            "line": 8,
+            "column": 1,
+            "specifier": "./photon.js"
+          },
+          {
+            "line": 9,
+            "column": 1,
+            "specifier": "./wsl.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 14,
+            "column": 12,
+            "callee": "Boolean",
+            "arguments": [
+              "env.WAYLAND_DISPLAY"
+            ]
+          },
+          {
+            "line": 17,
+            "column": 12,
+            "callee": "mimeType.split(\";\")[0]?.trim().toLowerCase",
+            "arguments": []
+          },
+          {
+            "line": 17,
+            "column": 12,
+            "callee": "mimeType.split(\";\")[0]?.trim",
+            "arguments": []
+          },
+          {
+            "line": 17,
+            "column": 12,
+            "callee": "mimeType.split",
+            "arguments": [
+              "\";\""
+            ]
+          },
+          {
+            "line": 17,
+            "column": 60,
+            "callee": "mimeType.toLowerCase",
+            "arguments": []
+          },
+          {
+            "line": 20,
+            "column": 13,
+            "callee": "baseMimeType",
+            "arguments": [
+              "mimeType"
+            ]
+          },
+          {
+            "line": 34,
+            "column": 24,
+            "callee": "mimeTypes\n        .map((t) => t.trim())\n        .filter(Boolean)\n        .map",
+            "arguments": [
+              "(t) => ({ raw: t, base: baseMimeType(t) })"
+            ]
+          },
+          {
+            "line": 34,
+            "column": 24,
+            "callee": "mimeTypes\n        .map((t) => t.trim())\n        .filter",
+            "arguments": [
+              "Boolean"
+            ]
+          },
+          {
+            "line": 34,
+            "column": 24,
+            "callee": "mimeTypes\n        .map",
+            "arguments": [
+              "(t) => t.trim()"
+            ]
+          },
+          {
+            "line": 35,
+            "column": 21,
+            "callee": "t.trim",
+            "arguments": []
+          },
+          {
+            "line": 37,
+            "column": 38,
+            "callee": "baseMimeType",
+            "arguments": [
+              "t"
+            ]
+          },
+          {
+            "line": 39,
+            "column": 23,
+            "callee": "normalized.find",
+            "arguments": [
+              "(t) => t.base === preferred"
+            ]
+          },
+          {
+            "line": 44,
+            "column": 22,
+            "callee": "normalized.find",
+            "arguments": [
+              "(t) => t.base.startsWith(\"image/\")"
+            ]
+          },
+          {
+            "line": 44,
+            "column": 45,
+            "callee": "t.base.startsWith",
+            "arguments": [
+              "\"image/\""
+            ]
+          },
+          {
+            "line": 48,
+            "column": 18,
+            "callee": "baseMimeType",
+            "arguments": [
+              "mimeType"
+            ]
+          },
+          {
+            "line": 49,
+            "column": 12,
+            "callee": "SUPPORTED_IMAGE_MIME_TYPES.some",
+            "arguments": [
+              "(t) => t === base"
+            ]
+          },
+          {
+            "line": 56,
+            "column": 26,
+            "callee": "loadPhoton",
+            "arguments": []
+          },
+          {
+            "line": 61,
+            "column": 23,
+            "callee": "photon.PhotonImage.new_from_byteslice",
+            "arguments": [
+              "bytes"
+            ]
+          },
+          {
+            "line": 63,
+            "column": 20,
+            "callee": "image.get_bytes",
+            "arguments": []
+          },
+          {
+            "line": 66,
+            "column": 13,
+            "callee": "image.free",
+            "arguments": []
+          },
+          {
+            "line": 76,
+            "column": 24,
+            "callee": "runClipboardCommand",
+            "arguments": [
+              "\"wl-paste\"",
+              "[\"--list-types\"]",
+              "{ timeoutMs: DEFAULT_LIST_TIMEOUT_MS }"
+            ]
+          },
+          {
+            "line": 79,
+            "column": 19,
+            "callee": "list\n        .toString(\"utf-8\")\n        .split(/\\r?\\n/)\n        .map((t) => t.trim())\n        .filter",
+            "arguments": [
+              "Boolean"
+            ]
+          },
+          {
+            "line": 79,
+            "column": 19,
+            "callee": "list\n        .toString(\"utf-8\")\n        .split(/\\r?\\n/)\n        .map",
+            "arguments": [
+              "(t) => t.trim()"
+            ]
+          },
+          {
+            "line": 79,
+            "column": 19,
+            "callee": "list\n        .toString(\"utf-8\")\n        .split",
+            "arguments": [
+              "/\\r?\\n/"
+            ]
+          },
+          {
+            "line": 79,
+            "column": 19,
+            "callee": "list\n        .toString",
+            "arguments": [
+              "\"utf-8\""
+            ]
+          },
+          {
+            "line": 82,
+            "column": 21,
+            "callee": "t.trim",
+            "arguments": []
+          },
+          {
+            "line": 84,
+            "column": 26,
+            "callee": "selectPreferredImageMimeType",
+            "arguments": [
+              "types"
+            ]
+          },
+          {
+            "line": 88,
+            "column": 24,
+            "callee": "runClipboardCommand",
+            "arguments": [
+              "\"wl-paste\"",
+              "[\"--type\", selectedType, \"--no-newline\"]"
+            ]
+          },
+          {
+            "line": 93,
+            "column": 37,
+            "callee": "baseMimeType",
+            "arguments": [
+              "selectedType"
+            ]
+          },
+          {
+            "line": 101,
+            "column": 21,
+            "callee": "join",
+            "arguments": [
+              "tmpdir()",
+              "`pi-wsl-clip-${randomUUID()}.png`"
+            ]
+          },
+          {
+            "line": 101,
+            "column": 26,
+            "callee": "tmpdir",
+            "arguments": []
+          },
+          {
+            "line": 101,
+            "column": 51,
+            "callee": "randomUUID",
+            "arguments": []
+          },
+          {
+            "line": 103,
+            "column": 37,
+            "callee": "runClipboardCommand",
+            "arguments": [
+              "\"wslpath\"",
+              "[\"-w\", tmpFile]",
+              "{\n            timeoutMs: DEFAULT_LIST_TIMEOUT_MS,\n        }"
+            ]
+          },
+          {
+            "line": 109,
+            "column": 25,
+            "callee": "winPathResult.toString(\"utf-8\").trim",
+            "arguments": []
+          },
+          {
+            "line": 109,
+            "column": 25,
+            "callee": "winPathResult.toString",
+            "arguments": [
+              "\"utf-8\""
+            ]
+          },
+          {
+            "line": 113,
+            "column": 33,
+            "callee": "winPath.replaceAll",
+            "arguments": [
+              "\"'\"",
+              "\"''\""
+            ]
+          },
+          {
+            "line": 114,
+            "column": 26,
+            "callee": "[\n            \"Add-Type -AssemblyName System.Windows.Forms\",\n            \"Add-Type -AssemblyName System.Drawing\",\n            `$path = '${psQuotedWinPath}'`,\n            \"$img = [System.Windows.Forms.Clipboard]::GetImage()\",\n            \"if ($img) { $img.Save($path, [System.Drawing.Imaging.ImageFormat]::Png); Write-Output 'ok' } else { Write-Output 'empty' }\",\n        ].join",
+            "arguments": [
+              "\"; \""
+            ]
+          },
+          {
+            "line": 121,
+            "column": 30,
+            "callee": "runClipboardCommand",
+            "arguments": [
+              "\"powershell.exe\"",
+              "[\"-NoProfile\", \"-Command\", psScript]",
+              "{\n            timeoutMs: DEFAULT_POWERSHELL_TIMEOUT_MS,\n        }"
+            ]
+          },
+          {
+            "line": 127,
+            "column": 24,
+            "callee": "result.toString(\"utf-8\").trim",
+            "arguments": []
+          },
+          {
+            "line": 127,
+            "column": 24,
+            "callee": "result.toString",
+            "arguments": [
+              "\"utf-8\""
+            ]
+          },
+          {
+            "line": 131,
+            "column": 23,
+            "callee": "readFileSync",
+            "arguments": [
+              "tmpFile"
+            ]
+          },
+          {
+            "line": 142,
+            "column": 13,
+            "callee": "unlinkSync",
+            "arguments": [
+              "tmpFile"
+            ]
+          },
+          {
+            "line": 150,
+            "column": 27,
+            "callee": "runClipboardCommand",
+            "arguments": [
+              "\"xclip\"",
+              "[\"-selection\", \"clipboard\", \"-t\", \"TARGETS\", \"-o\"]",
+              "{\n        timeoutMs: DEFAULT_LIST_TIMEOUT_MS,\n    }"
+            ]
+          },
+          {
+            "line": 155,
+            "column": 28,
+            "callee": "targets\n        .toString(\"utf-8\")\n        .split(/\\r?\\n/)\n        .map((t) => t.trim())\n        .filter",
+            "arguments": [
+              "Boolean"
+            ]
+          },
+          {
+            "line": 155,
+            "column": 28,
+            "callee": "targets\n        .toString(\"utf-8\")\n        .split(/\\r?\\n/)\n        .map",
+            "arguments": [
+              "(t) => t.trim()"
+            ]
+          },
+          {
+            "line": 155,
+            "column": 28,
+            "callee": "targets\n        .toString(\"utf-8\")\n        .split",
+            "arguments": [
+              "/\\r?\\n/"
+            ]
+          },
+          {
+            "line": 155,
+            "column": 28,
+            "callee": "targets\n        .toString",
+            "arguments": [
+              "\"utf-8\""
+            ]
+          },
+          {
+            "line": 158,
+            "column": 21,
+            "callee": "t.trim",
+            "arguments": []
+          },
+          {
+            "line": 160,
+            "column": 23,
+            "callee": "selectPreferredImageMimeType",
+            "arguments": [
+              "candidateTypes"
+            ]
+          },
+          {
+            "line": 163,
+            "column": 24,
+            "callee": "runClipboardCommand",
+            "arguments": [
+              "\"xclip\"",
+              "[\"-selection\", \"clipboard\", \"-t\", preferred, \"-o\"]"
+            ]
+          },
+          {
+            "line": 168,
+            "column": 37,
+            "callee": "baseMimeType",
+            "arguments": [
+              "preferred"
+            ]
+          },
+          {
+            "line": 171,
+            "column": 25,
+            "callee": "getNativeClipboard()?.getImage",
+            "arguments": []
+          },
+          {
+            "line": 171,
+            "column": 25,
+            "callee": "getNativeClipboard",
+            "arguments": []
+          },
+          {
+            "line": 176,
+            "column": 31,
+            "callee": "detectSupportedImageMimeType",
+            "arguments": [
+              "bytes"
+            ]
+          },
+          {
+            "line": 186,
+            "column": 21,
+            "callee": "isWSL",
+            "arguments": [
+              "env"
+            ]
+          },
+          {
+            "line": 187,
+            "column": 13,
+            "callee": "isWaylandSession",
+            "arguments": [
+              "env"
+            ]
+          },
+          {
+            "line": 188,
+            "column": 27,
+            "callee": "readClipboardImageViaWlPaste",
+            "arguments": []
+          },
+          {
+            "line": 191,
+            "column": 27,
+            "callee": "readClipboardImageViaXclip",
+            "arguments": []
+          },
+          {
+            "line": 194,
+            "column": 28,
+            "callee": "readClipboardImageViaPowerShell",
+            "arguments": []
+          },
+          {
+            "line": 196,
+            "column": 27,
+            "callee": "readClipboardImageViaNativeClipboard",
+            "arguments": []
+          },
+          {
+            "line": 199,
+            "column": 23,
+            "callee": "readClipboardImageViaNativeClipboard",
+            "arguments": []
+          },
+          {
+            "line": 205,
+            "column": 10,
+            "callee": "isSupportedImageMimeType",
+            "arguments": [
+              "image.mimeType"
+            ]
+          },
+          {
+            "line": 206,
+            "column": 32,
+            "callee": "convertToPng",
+            "arguments": [
+              "image.bytes"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full214 lines read. No own human headline/Error/throw. MIME priority/normalization, Wayland undefined vsnull avoiding stale X11, WSL fallback, native reads and unsupported Photon conversion fully traced. PowerShell ok/empty are captured control markers, scripts/MIME/extensions/path IDs protected. Native getImage/loadPhoton/runners can reject outside local conversion/fs catches; codec free errors caught with conversion. No image/native execution."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/open-browser.js",
+        "read_lines": [
+          1,
+          22
+        ],
+        "string_template_occurrences": 9,
+        "fixed_rows": 0,
+        "excluded_occurrences": 9,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "node:child_process"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 18,
+            "column": 5,
+            "callee": "spawn(cmd, args, { stdio: \"ignore\", detached: true })\n        .on(\"error\", () => { })\n        .unref",
+            "arguments": []
+          },
+          {
+            "line": 18,
+            "column": 5,
+            "callee": "spawn(cmd, args, { stdio: \"ignore\", detached: true })\n        .on",
+            "arguments": [
+              "\"error\"",
+              "() => { }"
+            ]
+          },
+          {
+            "line": 18,
+            "column": 5,
+            "callee": "spawn",
+            "arguments": [
+              "cmd",
+              "args",
+              "{ stdio: \"ignore\", detached: true }"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full22 lines read. Only platform command/API identities and caller target; no own Error/caption. Detached spawn stdioignore, error-event callback empty, unref; no shell option. Best-effort command launch does not prove browser opened. Synchronous spawn/type/unref errors/native process output independent; no open executed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/wsl.js",
+        "read_lines": [
+          1,
+          15
+        ],
+        "string_template_occurrences": 3,
+        "fixed_rows": 0,
+        "excluded_occurrences": 3,
+        "protected_regex_literals": 1,
+        "regex_census_sha256": "9ab1941f26aba55c9fe5cd519cc2df5fbfc93a08f10a4ad0b8510664aeef756c",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 11,
+            "column": 5,
+            "source": "catch {\n        return false;\n    }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "node:fs"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 8,
+            "column": 25,
+            "callee": "readFileSync",
+            "arguments": [
+              "\"/proc/version\"",
+              "\"utf-8\""
+            ]
+          },
+          {
+            "line": 9,
+            "column": 16,
+            "callee": "/microsoft|wsl/i.test",
+            "arguments": [
+              "release"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full15 lines read. Env WSL_DISTRO_NAME/WSLENV or /proc/version regex determines boolean; file error caughtfalse, no caption. Platform/env/fs/native diagnostics separate; no /proc probe executed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/abort.js",
+        "read_lines": [
+          1,
+          48
+        ],
+        "string_template_occurrences": 4,
+        "fixed_rows": 1,
+        "excluded_occurrences": 3,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 4,
+            "column": 19,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"The operation was aborted\""
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 4,
+            "column": 19,
+            "callee": "Error",
+            "source": "new Error(\"The operation was aborted\")"
+          },
+          {
+            "line": 10,
+            "column": 22,
+            "callee": "AbortController",
+            "source": "new AbortController()"
+          },
+          {
+            "line": 20,
+            "column": 12,
+            "callee": "Promise",
+            "source": "new Promise((resolve, reject) => {\n        let settled = false;\n        const cleanup = () => signal.removeEventListener(\"abort\", onAbort);\n        const onAbort = () => {\n            if (settled)\n                return;\n            settled = true;\n            cleanup();\n            reject(abortReason(signal));\n        };\n        signal.addEventListener(\"abort\", onAbort, { once: true });\n        void operation.then((value) => {\n            if (settled)\n                return;\n            settled = true;\n            cleanup();\n            resolve(value);\n        }, (error) => {\n            if (settled)\n                return;\n            settled = true;\n            cleanup();\n            reject(error);\n        });\n        if (signal.aborted)\n            onAbort();\n    })"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 17,
+            "column": 14,
+            "callee": "operation.catch",
+            "arguments": [
+              "() => { }"
+            ]
+          },
+          {
+            "line": 18,
+            "column": 16,
+            "callee": "Promise.reject",
+            "arguments": [
+              "abortReason(signal)"
+            ]
+          },
+          {
+            "line": 18,
+            "column": 31,
+            "callee": "abortReason",
+            "arguments": [
+              "signal"
+            ]
+          },
+          {
+            "line": 22,
+            "column": 31,
+            "callee": "signal.removeEventListener",
+            "arguments": [
+              "\"abort\"",
+              "onAbort"
+            ]
+          },
+          {
+            "line": 27,
+            "column": 13,
+            "callee": "cleanup",
+            "arguments": []
+          },
+          {
+            "line": 28,
+            "column": 13,
+            "callee": "reject",
+            "arguments": [
+              "abortReason(signal)"
+            ]
+          },
+          {
+            "line": 28,
+            "column": 20,
+            "callee": "abortReason",
+            "arguments": [
+              "signal"
+            ]
+          },
+          {
+            "line": 30,
+            "column": 9,
+            "callee": "signal.addEventListener",
+            "arguments": [
+              "\"abort\"",
+              "onAbort",
+              "{ once: true }"
+            ]
+          },
+          {
+            "line": 31,
+            "column": 14,
+            "callee": "operation.then",
+            "arguments": [
+              "(value) => {\n            if (settled)\n                return;\n            settled = true;\n            cleanup();\n            resolve(value);\n        }",
+              "(error) => {\n            if (settled)\n                return;\n            settled = true;\n            cleanup();\n            reject(error);\n        }"
+            ]
+          },
+          {
+            "line": 35,
+            "column": 13,
+            "callee": "cleanup",
+            "arguments": []
+          },
+          {
+            "line": 36,
+            "column": 13,
+            "callee": "resolve",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 41,
+            "column": 13,
+            "callee": "cleanup",
+            "arguments": []
+          },
+          {
+            "line": 42,
+            "column": 13,
+            "callee": "reject",
+            "arguments": [
+              "error"
+            ]
+          },
+          {
+            "line": 45,
+            "column": 13,
+            "callee": "onAbort",
+            "arguments": []
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full48 lines read. One conditional reasonundefined Error fallback positive; AbortError/event names protected identities. Existing reason and underlying operation error preserved. Already-aborted abandons operation with observed catch, listener/settlement cleanup and post-registration abort recheck read. No time limit imposed; no normal fallback UI publisher assumed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/fs-watch.js",
+        "read_lines": [
+          1,
+          25
+        ],
+        "string_template_occurrences": 2,
+        "fixed_rows": 0,
+        "excluded_occurrences": 2,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 10,
+            "column": 5,
+            "source": "catch {\n        // Ignore watcher close errors\n    }"
+          },
+          {
+            "line": 20,
+            "column": 5,
+            "source": "catch {\n        onError();\n        return null;\n    }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "node:fs"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 8,
+            "column": 9,
+            "callee": "watcher.close",
+            "arguments": []
+          },
+          {
+            "line": 16,
+            "column": 25,
+            "callee": "watch",
+            "arguments": [
+              "path",
+              "listener"
+            ]
+          },
+          {
+            "line": 17,
+            "column": 9,
+            "callee": "watcher.on",
+            "arguments": [
+              "\"error\"",
+              "onError"
+            ]
+          },
+          {
+            "line": 21,
+            "column": 9,
+            "callee": "onError",
+            "arguments": []
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full25 lines read. Two catches: close errors ignored; watch creation/registration failure calls supplied onError and returnsnull, listener error event forwarded. No prose/Error/throw. Supplied listener/onError exceptions can propagate; no watcher executed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/sleep.js",
+        "read_lines": [
+          1,
+          17
+        ],
+        "string_template_occurrences": 3,
+        "fixed_rows": 2,
+        "excluded_occurrences": 1,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 7,
+            "column": 20,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"Aborted\""
+          },
+          {
+            "line": 13,
+            "column": 20,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"Aborted\""
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 5,
+            "column": 12,
+            "callee": "Promise",
+            "source": "new Promise((resolve, reject) => {\n        if (signal?.aborted) {\n            reject(new Error(\"Aborted\"));\n            return;\n        }\n        const timeout = setTimeout(resolve, ms);\n        signal?.addEventListener(\"abort\", () => {\n            clearTimeout(timeout);\n            reject(new Error(\"Aborted\"));\n        });\n    })"
+          },
+          {
+            "line": 7,
+            "column": 20,
+            "callee": "Error",
+            "source": "new Error(\"Aborted\")"
+          },
+          {
+            "line": 13,
+            "column": 20,
+            "callee": "Error",
+            "source": "new Error(\"Aborted\")"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 7,
+            "column": 13,
+            "callee": "reject",
+            "arguments": [
+              "new Error(\"Aborted\")"
+            ]
+          },
+          {
+            "line": 10,
+            "column": 25,
+            "callee": "setTimeout",
+            "arguments": [
+              "resolve",
+              "ms"
+            ]
+          },
+          {
+            "line": 11,
+            "column": 9,
+            "callee": "signal?.addEventListener",
+            "arguments": [
+              "\"abort\"",
+              "() => {\n            clearTimeout(timeout);\n            reject(new Error(\"Aborted\"));\n        }"
+            ]
+          },
+          {
+            "line": 12,
+            "column": 13,
+            "callee": "clearTimeout",
+            "arguments": [
+              "timeout"
+            ]
+          },
+          {
+            "line": 13,
+            "column": 13,
+            "callee": "reject",
+            "arguments": [
+              "new Error(\"Aborted\")"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full17 lines read. Two Error Aborted source occurrences positive conditional API rejection; native retry consumer catches without publishing text. Abort listener remains after resolution but Promise ignores later reject. Runtime timers/signals/errors external; no timers/abort triggered."
+      }
+    ],
+    "method": "Full8 local installed bodies manually read; all literals/templates partitioned, full call expression plus Error/new/throw/catch/regex/import/export/control census. Source-only metadata/archive/proofs, no audited module/OS/child/clipboard/image/browser/watcher/timer/abort execution."
+  },
+  "remaining_partial_sources": [],
+  "scope_census": {
+    "package": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0",
+    "runtime_files": [
+      "dist/utils/abort.js",
+      "dist/utils/clipboard-command.js",
+      "dist/utils/clipboard-image.js",
+      "dist/utils/clipboard.js",
+      "dist/utils/fs-watch.js",
+      "dist/utils/open-browser.js",
+      "dist/utils/sleep.js",
+      "dist/utils/wsl.js"
+    ],
+    "associated_nonruntime_files": [
+      "dist/utils/abort.d.ts",
+      "dist/utils/abort.d.ts.map",
+      "dist/utils/abort.js.map",
+      "dist/utils/clipboard-command.d.ts",
+      "dist/utils/clipboard-command.d.ts.map",
+      "dist/utils/clipboard-command.js.map",
+      "dist/utils/clipboard-image.d.ts",
+      "dist/utils/clipboard-image.d.ts.map",
+      "dist/utils/clipboard-image.js.map",
+      "dist/utils/clipboard.d.ts",
+      "dist/utils/clipboard.d.ts.map",
+      "dist/utils/clipboard.js.map",
+      "dist/utils/fs-watch.d.ts",
+      "dist/utils/fs-watch.d.ts.map",
+      "dist/utils/fs-watch.js.map",
+      "dist/utils/open-browser.d.ts",
+      "dist/utils/open-browser.d.ts.map",
+      "dist/utils/open-browser.js.map",
+      "dist/utils/sleep.d.ts",
+      "dist/utils/sleep.d.ts.map",
+      "dist/utils/sleep.js.map",
+      "dist/utils/wsl.d.ts",
+      "dist/utils/wsl.d.ts.map",
+      "dist/utils/wsl.js.map"
+    ]
+  },
+  "pending_producer_boundaries": [
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/native",
+      "status": "native-addon-OS-source-binary-producers-pending"
+    },
+    {
+      "source": "external:clipboard-commands-tmux-powershell-browser-fs-node-stream-timer-abort-runtime",
+      "status": "external-implementation-and-payload-boundary"
+    },
+    {
+      "source": "external:Photon-WASM-native-image-codec",
+      "status": "codec-implementation-pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/photon.js",
+      "status": "prior-full-pi-tools-source-owner-transitive-wasm-pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/mime.js",
+      "status": "prior-full-pi-tools-source-owner"
+    },
+    {
+      "source": "external:optional-rejection-proxy-API-consumers",
+      "status": "extra-display-and-catch-consumers-pending"
+    }
+  ],
+  "limits": [
+    "Eight finite full local bodies closed; theme/interactive prior units/historical census unchanged. Native addons/OS/browser/child/tool/codec/runtime and external consumer graph remains open.",
+    "Six copy failures have exact priority and OS/env/tmux/OSC gates; copied request is not desktop confirmation. Native TUI factory returns true/string, raw APIs differ. No exact inherited helper-sentence catalog mapping established.",
+    "Patched clipboard full178-line installed body proven against canonical before hash and pinned after. Added clipboard-tmux remains parent copied-bootstrap full owner, crosslinked only for bounded API/status/inserted-error proof; no duplicated full body/literal partition.",
+    "Child stderr always ignored in runClipboardCommand, stdout ignored forinput writer or captured forreader; browser stdio ignored/error-event empty. Sync spawn/options/kill/stream/onError and native errors outside guards not blanket suppressed.",
+    "Clipboard text/images/paths/tempfiles/OSC bytes and scripts/commands/MIME/status/code identities are data. Temp file inspection requires user/editor open before cleanup; no prose added by read/image/browser/watch helpers.",
+    "Abort fallback requires reasonundefined; existing reason forwarded. utils/sleep two source Errors are suppressed by native retry catch; Node timers/promises auth sleep distinct. Direct/legacy/custom API delivery and runtime reason/timer diagnostics remain pending.",
+    "Normal strings TypeScript decoded; templates preserve source escapes/interpolation. Exact exclusions JSON preserve whitespace/characters. No old/shared/product/dependency/census/git writes or audited module/native/process/image/browser/watch/model execution."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-os-support.cjs",
+  "reviewed_artifact_sha256": {
+    "pi-os-support.csv": "267b55b0fb2cf634e0a7f6b5c26c1b718f0d6adfa7f524d424cbf2906a437f82",
+    "pi-os-support-boundaries.csv": "4f96738f7343670a4a874c60ea0c05dea83a4aa0b2221a07b991f53d894b1e90",
+    "pi-os-support-scope.csv": "65b75a77539e7f2dc16eb8b5ff485d93d9609c1340ccc45f21129a25c7a46013",
+    "pi-os-support-exclusions.csv": "c93900f0915e1dc67736ce8d96b3c288f9eb235f65a7a755f482b0d7dc257ced"
+  },
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/utils/clipboard.js",
+            "archive_sha256": "0b296fef43d637ac463a5be20702118400a73eec6fbf9fb6986c1febbb089909",
+            "root_sha256": "e41b1212f49be33a7aa1a1d4aa97eb653ad08fe85da8e0743c3d728597eb76b7",
+            "cli_nested_sha256": "e41b1212f49be33a7aa1a1d4aa97eb653ad08fe85da8e0743c3d728597eb76b7",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-terminal-clipboard/patch.lock.json"
+          },
+          {
+            "source": "dist/utils/clipboard-command.js",
+            "archive_sha256": "10e41ba8b85eab8b19a162e8255ee214eb359af2c06645fbae53d0493a4e6e51",
+            "root_sha256": "10e41ba8b85eab8b19a162e8255ee214eb359af2c06645fbae53d0493a4e6e51",
+            "cli_nested_sha256": "10e41ba8b85eab8b19a162e8255ee214eb359af2c06645fbae53d0493a4e6e51",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/clipboard-image.js",
+            "archive_sha256": "0e0f313764903cbfbeda9ba255231114cd42c0064527f70225b96b2431554090",
+            "root_sha256": "0e0f313764903cbfbeda9ba255231114cd42c0064527f70225b96b2431554090",
+            "cli_nested_sha256": "0e0f313764903cbfbeda9ba255231114cd42c0064527f70225b96b2431554090",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/open-browser.js",
+            "archive_sha256": "1268b4e07acbeff18bc8f7e4b39dbf19acd5be4f67f061fd5c17cac29646dfc2",
+            "root_sha256": "1268b4e07acbeff18bc8f7e4b39dbf19acd5be4f67f061fd5c17cac29646dfc2",
+            "cli_nested_sha256": "1268b4e07acbeff18bc8f7e4b39dbf19acd5be4f67f061fd5c17cac29646dfc2",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/wsl.js",
+            "archive_sha256": "d2201ad21e1adc5acbce11f8fc9ef865abe6d71071010f6cfbf169a086b1217a",
+            "root_sha256": "d2201ad21e1adc5acbce11f8fc9ef865abe6d71071010f6cfbf169a086b1217a",
+            "cli_nested_sha256": "d2201ad21e1adc5acbce11f8fc9ef865abe6d71071010f6cfbf169a086b1217a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/abort.js",
+            "archive_sha256": "597948e1f340dae1a5c0b6830395e1adce847122c00e6ceacb3e4cb94472684b",
+            "root_sha256": "597948e1f340dae1a5c0b6830395e1adce847122c00e6ceacb3e4cb94472684b",
+            "cli_nested_sha256": "597948e1f340dae1a5c0b6830395e1adce847122c00e6ceacb3e4cb94472684b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/fs-watch.js",
+            "archive_sha256": "63dd709b28ea300f7200d236154f21ccc31a174a6052ca46a9be8064e2bd44e3",
+            "root_sha256": "63dd709b28ea300f7200d236154f21ccc31a174a6052ca46a9be8064e2bd44e3",
+            "cli_nested_sha256": "63dd709b28ea300f7200d236154f21ccc31a174a6052ca46a9be8064e2bd44e3",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/sleep.js",
+            "archive_sha256": "927f6c162c69ca902c8ab3d35b96f8cef831448de364cf4d8054d32fec310de4",
+            "root_sha256": "927f6c162c69ca902c8ab3d35b96f8cef831448de364cf4d8054d32fec310de4",
+            "cli_nested_sha256": "927f6c162c69ca902c8ab3d35b96f8cef831448de364cf4d8054d32fec310de4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/interactive-mode.js",
+            "archive_sha256": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+            "root_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/tui-renderer.js",
+            "archive_sha256": "4c420a641ee6c0cb4b22677f97a11bc2da580b2b1f31ba56ac6f4e8df7bbd429",
+            "root_sha256": "4c420a641ee6c0cb4b22677f97a11bc2da580b2b1f31ba56ac6f4e8df7bbd429",
+            "cli_nested_sha256": "4c420a641ee6c0cb4b22677f97a11bc2da580b2b1f31ba56ac6f4e8df7bbd429",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/components/auth-url.js",
+            "archive_sha256": "a1f0b220b97462299118a66a3284961b6756f9fa623f07eacc4d89ee99609131",
+            "root_sha256": "a1f0b220b97462299118a66a3284961b6756f9fa623f07eacc4d89ee99609131",
+            "cli_nested_sha256": "a1f0b220b97462299118a66a3284961b6756f9fa623f07eacc4d89ee99609131",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/agent-session.js",
+            "archive_sha256": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
+            "root_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/model-runtime.js",
+            "archive_sha256": "44d8017928eff6721d5a56b4e71f98bcafb124f5aa6e7d3f016491e11fcf6461",
+            "root_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+            "cli_nested_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/models-store.js",
+            "archive_sha256": "acef4e29470ea2ed5adc4f8e8d4981e9214c79ebf4e7eba4ad705ff81da68ed4",
+            "root_sha256": "acef4e29470ea2ed5adc4f8e8d4981e9214c79ebf4e7eba4ad705ff81da68ed4",
+            "cli_nested_sha256": "acef4e29470ea2ed5adc4f8e8d4981e9214c79ebf4e7eba4ad705ff81da68ed4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/auth-storage.js",
+            "archive_sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+            "root_sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+            "cli_nested_sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/clipboard.d.ts",
+            "archive_sha256": "22bc33a5696352e162f690d80e050d3f14f631338df5fcad338505b1ec94c3ca",
+            "root_sha256": "22bc33a5696352e162f690d80e050d3f14f631338df5fcad338505b1ec94c3ca",
+            "cli_nested_sha256": "22bc33a5696352e162f690d80e050d3f14f631338df5fcad338505b1ec94c3ca",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/clipboard.d.ts.map",
+            "archive_sha256": "1c8a99afb16e38399e70e6f42a3e92e49580a3ce590c223892f9bf87e5053f02",
+            "root_sha256": "1c8a99afb16e38399e70e6f42a3e92e49580a3ce590c223892f9bf87e5053f02",
+            "cli_nested_sha256": "1c8a99afb16e38399e70e6f42a3e92e49580a3ce590c223892f9bf87e5053f02",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/clipboard.js.map",
+            "archive_sha256": "74126bd3f5a6ebd3fb3fa0491412f98b5ddac7a81e4570a65c2b83139163a8e2",
+            "root_sha256": "74126bd3f5a6ebd3fb3fa0491412f98b5ddac7a81e4570a65c2b83139163a8e2",
+            "cli_nested_sha256": "74126bd3f5a6ebd3fb3fa0491412f98b5ddac7a81e4570a65c2b83139163a8e2",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/clipboard-command.d.ts",
+            "archive_sha256": "7a9f62321cdb28bedc782a18eb71c0cc96585abb19693b6f3d0adb14c6f433a9",
+            "root_sha256": "7a9f62321cdb28bedc782a18eb71c0cc96585abb19693b6f3d0adb14c6f433a9",
+            "cli_nested_sha256": "7a9f62321cdb28bedc782a18eb71c0cc96585abb19693b6f3d0adb14c6f433a9",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/clipboard-command.d.ts.map",
+            "archive_sha256": "9c15e170b738ca4c66796d939331807be15dc2bcf93edf5a84f86e73374d2bf0",
+            "root_sha256": "9c15e170b738ca4c66796d939331807be15dc2bcf93edf5a84f86e73374d2bf0",
+            "cli_nested_sha256": "9c15e170b738ca4c66796d939331807be15dc2bcf93edf5a84f86e73374d2bf0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/clipboard-command.js.map",
+            "archive_sha256": "f89aa0ee8be59ae063a64976ae80d0d82d704d425087db9836764d2b7b78183a",
+            "root_sha256": "f89aa0ee8be59ae063a64976ae80d0d82d704d425087db9836764d2b7b78183a",
+            "cli_nested_sha256": "f89aa0ee8be59ae063a64976ae80d0d82d704d425087db9836764d2b7b78183a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/clipboard-image.d.ts",
+            "archive_sha256": "ecdddd7b986581fa974287cc847ba518174cd6be8d9390f3a06fc370bba5455b",
+            "root_sha256": "ecdddd7b986581fa974287cc847ba518174cd6be8d9390f3a06fc370bba5455b",
+            "cli_nested_sha256": "ecdddd7b986581fa974287cc847ba518174cd6be8d9390f3a06fc370bba5455b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/clipboard-image.d.ts.map",
+            "archive_sha256": "6560dbf3fb0ae54089272ec29fe0d84f90e8136177c61c3d8b2494eccea54478",
+            "root_sha256": "6560dbf3fb0ae54089272ec29fe0d84f90e8136177c61c3d8b2494eccea54478",
+            "cli_nested_sha256": "6560dbf3fb0ae54089272ec29fe0d84f90e8136177c61c3d8b2494eccea54478",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/clipboard-image.js.map",
+            "archive_sha256": "680a5b3d7263cc002bf1fab8c5c619ffe071782524a2e5cd461f4bb32f32bd9d",
+            "root_sha256": "680a5b3d7263cc002bf1fab8c5c619ffe071782524a2e5cd461f4bb32f32bd9d",
+            "cli_nested_sha256": "680a5b3d7263cc002bf1fab8c5c619ffe071782524a2e5cd461f4bb32f32bd9d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/open-browser.d.ts",
+            "archive_sha256": "faaae9e0895ceae5dc114dc9f63959787d7238bafc520039337ef3d58de21638",
+            "root_sha256": "faaae9e0895ceae5dc114dc9f63959787d7238bafc520039337ef3d58de21638",
+            "cli_nested_sha256": "faaae9e0895ceae5dc114dc9f63959787d7238bafc520039337ef3d58de21638",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/open-browser.d.ts.map",
+            "archive_sha256": "f9b287354051710630b14f239c7a17b16f210b22d5c35cbedc4b7d4c042a52a5",
+            "root_sha256": "f9b287354051710630b14f239c7a17b16f210b22d5c35cbedc4b7d4c042a52a5",
+            "cli_nested_sha256": "f9b287354051710630b14f239c7a17b16f210b22d5c35cbedc4b7d4c042a52a5",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/open-browser.js.map",
+            "archive_sha256": "42112ff9c21c87abc829486012647a2f9d35aeafc2914fa4438cedf8a968e04a",
+            "root_sha256": "42112ff9c21c87abc829486012647a2f9d35aeafc2914fa4438cedf8a968e04a",
+            "cli_nested_sha256": "42112ff9c21c87abc829486012647a2f9d35aeafc2914fa4438cedf8a968e04a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/wsl.d.ts",
+            "archive_sha256": "68ba0c60fd59d16624d405902ab2a53873b8194a1c401d42db38ecc9cecf11b7",
+            "root_sha256": "68ba0c60fd59d16624d405902ab2a53873b8194a1c401d42db38ecc9cecf11b7",
+            "cli_nested_sha256": "68ba0c60fd59d16624d405902ab2a53873b8194a1c401d42db38ecc9cecf11b7",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/wsl.d.ts.map",
+            "archive_sha256": "52f0287284fc4c2b61d5f2a3501e1dd8d95fdf25dfc1acafe253e40080e7a73c",
+            "root_sha256": "52f0287284fc4c2b61d5f2a3501e1dd8d95fdf25dfc1acafe253e40080e7a73c",
+            "cli_nested_sha256": "52f0287284fc4c2b61d5f2a3501e1dd8d95fdf25dfc1acafe253e40080e7a73c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/wsl.js.map",
+            "archive_sha256": "e96916f5eda034b7719159fffb129f9c1293a019d21f7e73ce1e149065a2a971",
+            "root_sha256": "e96916f5eda034b7719159fffb129f9c1293a019d21f7e73ce1e149065a2a971",
+            "cli_nested_sha256": "e96916f5eda034b7719159fffb129f9c1293a019d21f7e73ce1e149065a2a971",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/abort.d.ts",
+            "archive_sha256": "d0bf50239f7412a19adb46c6e73105765a6f15ee711cb3452beda42a4583610a",
+            "root_sha256": "d0bf50239f7412a19adb46c6e73105765a6f15ee711cb3452beda42a4583610a",
+            "cli_nested_sha256": "d0bf50239f7412a19adb46c6e73105765a6f15ee711cb3452beda42a4583610a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/abort.d.ts.map",
+            "archive_sha256": "0418a1f84b5b825e0e9041a3b543148f7be5401c30583ef6721e210ed706d6db",
+            "root_sha256": "0418a1f84b5b825e0e9041a3b543148f7be5401c30583ef6721e210ed706d6db",
+            "cli_nested_sha256": "0418a1f84b5b825e0e9041a3b543148f7be5401c30583ef6721e210ed706d6db",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/abort.js.map",
+            "archive_sha256": "11771c6e13af7f89b7caa441e74ce3be8233c7ee014711a4cd0061e2823c3c07",
+            "root_sha256": "11771c6e13af7f89b7caa441e74ce3be8233c7ee014711a4cd0061e2823c3c07",
+            "cli_nested_sha256": "11771c6e13af7f89b7caa441e74ce3be8233c7ee014711a4cd0061e2823c3c07",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/fs-watch.d.ts",
+            "archive_sha256": "e7a6b0c4659c382ff1f9df1cf2d89a0f00e62acfc656284eeaede804d598c0c5",
+            "root_sha256": "e7a6b0c4659c382ff1f9df1cf2d89a0f00e62acfc656284eeaede804d598c0c5",
+            "cli_nested_sha256": "e7a6b0c4659c382ff1f9df1cf2d89a0f00e62acfc656284eeaede804d598c0c5",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/fs-watch.d.ts.map",
+            "archive_sha256": "163dd6c35b19f22e781122d7d8af95f22d0780225755c1fc61739583e1ef4d60",
+            "root_sha256": "163dd6c35b19f22e781122d7d8af95f22d0780225755c1fc61739583e1ef4d60",
+            "cli_nested_sha256": "163dd6c35b19f22e781122d7d8af95f22d0780225755c1fc61739583e1ef4d60",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/fs-watch.js.map",
+            "archive_sha256": "6fb3f2de6b95cc70e6001730f0851bbf4f47b8a3a168cf453009bdc999479c68",
+            "root_sha256": "6fb3f2de6b95cc70e6001730f0851bbf4f47b8a3a168cf453009bdc999479c68",
+            "cli_nested_sha256": "6fb3f2de6b95cc70e6001730f0851bbf4f47b8a3a168cf453009bdc999479c68",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/sleep.d.ts",
+            "archive_sha256": "02ed5098c6c14958d1a69fa390ab6b498c3ca548c571b7a9168dd570f8db103e",
+            "root_sha256": "02ed5098c6c14958d1a69fa390ab6b498c3ca548c571b7a9168dd570f8db103e",
+            "cli_nested_sha256": "02ed5098c6c14958d1a69fa390ab6b498c3ca548c571b7a9168dd570f8db103e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/sleep.d.ts.map",
+            "archive_sha256": "ce318306053dd1b09237bdbe2c0e21cbf61c3990ac668de0fb8282148dea9d77",
+            "root_sha256": "ce318306053dd1b09237bdbe2c0e21cbf61c3990ac668de0fb8282148dea9d77",
+            "cli_nested_sha256": "ce318306053dd1b09237bdbe2c0e21cbf61c3990ac668de0fb8282148dea9d77",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/sleep.js.map",
+            "archive_sha256": "8c834335ed809b67e260779ab49795289170c3c24bce8fe448536b1cdd37b8df",
+            "root_sha256": "8c834335ed809b67e260779ab49795289170c3c24bce8fe448536b1cdd37b8df",
+            "cli_nested_sha256": "8c834335ed809b67e260779ab49795289170c3c24bce8fe448536b1cdd37b8df",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/tui-alt-screen.js",
+            "archive_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+            "root_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+            "cli_nested_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      }
+    ],
+    "scoped_file_count": 40,
+    "byte_identical_scope_files": 36,
+    "pinned_patch_scope_files": 4,
+    "unresolved_scope_differences": 0
+  }
+}
