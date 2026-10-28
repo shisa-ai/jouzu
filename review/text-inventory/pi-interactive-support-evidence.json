@@ -1,0 +1,3146 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "48364e48ef82750034f9b794191a8aadfebf899c",
+  "inventory_file": "pi-interactive-support.csv",
+  "scope_file": "pi-interactive-support-scope.csv",
+  "boundary_file": "pi-interactive-support-boundaries.csv",
+  "exclusion_file": "pi-interactive-support-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    },
+    {
+      "source": "packages/cli/src/runtime-output.ts",
+      "sha256": "b7c16e4afb28b45a3293d630fe48880a3c23d20d34bbc3fb8d3b5cf8092f0ae6"
+    },
+    {
+      "source": "packages/session-ui/src/extension.ts",
+      "sha256": "3c146dab00f8280d63c339e08a48a2953add3659b01a20f650dc21c7d14efe8a"
+    },
+    {
+      "source": "packages/session-ui/src/controller.ts",
+      "sha256": "ecb04db145e2d6b7b9425a643c66b29311ea9819047f06642aa8b491ed86fae1"
+    },
+    {
+      "source": "packages/session-ui/src/status-bar.ts",
+      "sha256": "068158e5ebd98c5a3e5280aedc5271d622daeb3c59412aac33ee5aef16c94787"
+    },
+    {
+      "source": "packages/session-ui/src/sources/git.ts",
+      "sha256": "f2865b1d36d323c5a450795afb499740503f40c24298f1bfc448d5c48d69f90d"
+    },
+    {
+      "source": "packages/session-ui/src/contracts.ts",
+      "sha256": "2b6af569cddb423e942b58eda3dca87b7e2fc73e9f79bf7fd9102baddc6808e1"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "sha256": "46d494b2493cd9fcf957d352aac653fe6f04121254f34033a5664e7c8f9928aa",
+      "cli_nested_sha256": "46d494b2493cd9fcf957d352aac653fe6f04121254f34033a5664e7c8f9928aa",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          198,
+          394
+        ]
+      ],
+      "purpose": "Bounded actual schema/association/interactive/native error-display routes only; prior full component/InteractiveMode definitions independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/docs/keybindings.md",
+      "sha256": "413aa1c5e95a934d216aa5aba20052fa2cf35940ba5f02d1f4b22ff53c6ec678",
+      "cli_nested_sha256": "413aa1c5e95a934d216aa5aba20052fa2cf35940ba5f02d1f4b22ff53c6ec678",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          24
+        ]
+      ],
+      "purpose": "Bounded actual schema/association/interactive/native error-display routes only; prior full component/InteractiveMode definitions independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          361,
+          361
+        ],
+        [
+          404,
+          451
+        ],
+        [
+          650,
+          689
+        ],
+        [
+          717,
+          737
+        ],
+        [
+          832,
+          841
+        ],
+        [
+          870,
+          878
+        ],
+        [
+          1998,
+          2014
+        ],
+        [
+          2463,
+          2463
+        ],
+        [
+          2745,
+          2751
+        ],
+        [
+          3772,
+          3788
+        ],
+        [
+          4346,
+          4373
+        ],
+        [
+          4538,
+          4572
+        ]
+      ],
+      "purpose": "Bounded actual schema/association/interactive/native error-display routes only; prior full component/InteractiveMode definitions independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/footer.js",
+      "sha256": "55b8492fb4ccda5e8f53a3a1882f091157dd85e08c9577db2f05e36020b22b88",
+      "cli_nested_sha256": "55b8492fb4ccda5e8f53a3a1882f091157dd85e08c9577db2f05e36020b22b88",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          132,
+          148
+        ]
+      ],
+      "purpose": "Bounded actual schema/association/interactive/native error-display routes only; prior full component/InteractiveMode definitions independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/custom-editor.js",
+      "sha256": "7e939c3aa80b1d5503b43731acb09a28110a5af1b2278960f3ecc58637a0d113",
+      "cli_nested_sha256": "7e939c3aa80b1d5503b43731acb09a28110a5af1b2278960f3ecc58637a0d113",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          108,
+          116
+        ]
+      ],
+      "purpose": "Bounded actual schema/association/interactive/native error-display routes only; prior full component/InteractiveMode definitions independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js",
+      "sha256": "b1ab2e6efd1511f70f32a1c1530f01c782aa0e661ab9ead6e38a1c3735b667eb",
+      "cli_nested_sha256": "b1ab2e6efd1511f70f32a1c1530f01c782aa0e661ab9ead6e38a1c3735b667eb",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          94,
+          102
+        ],
+        [
+          125,
+          169
+        ]
+      ],
+      "purpose": "Bounded actual schema/association/interactive/native error-display routes only; prior full component/InteractiveMode definitions independent."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.js",
+      "sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+      "cli_nested_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1406,
+          1430
+        ]
+      ],
+      "purpose": "Bounded prior full TUI callback/protocol/manager consumer; external terminal/native graph remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal.js",
+      "sha256": "e70c20799ef55ae4606c72f96658731d85921f5987a0d8edc0e8ef010bb51466",
+      "cli_nested_sha256": "e70c20799ef55ae4606c72f96658731d85921f5987a0d8edc0e8ef010bb51466",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          204,
+          211
+        ],
+        [
+          477,
+          485
+        ]
+      ],
+      "purpose": "Bounded prior full TUI callback/protocol/manager consumer; external terminal/native graph remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/program-status.js",
+      "sha256": "e38a5f11b3cbfc3bcd66a56252f9ab3fcfdd1fac5d997cbd2db2393ce4d85acf",
+      "cli_nested_sha256": "e38a5f11b3cbfc3bcd66a56252f9ab3fcfdd1fac5d997cbd2db2393ce4d85acf",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          31,
+          42
+        ]
+      ],
+      "purpose": "Bounded prior full TUI callback/protocol/manager consumer; external terminal/native graph remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "sha256": "651b2366750b9149a0841c2dc9d84f5c854bae53a82b8e98eba07c0e662086a8",
+      "cli_nested_sha256": "651b2366750b9149a0841c2dc9d84f5c854bae53a82b8e98eba07c0e662086a8",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          201,
+          225
+        ]
+      ],
+      "purpose": "Bounded prior full TUI callback/protocol/manager consumer; external terminal/native graph remains pending."
+    }
+  ],
+  "nonruntime_assets": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.d.ts",
+      "sha256": "fc8dfd4fcbdb7c5bdb17c5b5eccc22555ef089365358e25b89c02ba6c3a74e82",
+      "cli_nested_sha256": "fc8dfd4fcbdb7c5bdb17c5b5eccc22555ef089365358e25b89c02ba6c3a74e82",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.d.ts.map",
+      "sha256": "698007e08876c54778867e909d09d41d5addf1975466ec95dc1bfca6d95a0bb4",
+      "cli_nested_sha256": "698007e08876c54778867e909d09d41d5addf1975466ec95dc1bfca6d95a0bb4",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js.map",
+      "sha256": "66485538e944436b01709108fa57a8388d8646c2267377af6f5ecfabca3b161d",
+      "cli_nested_sha256": "66485538e944436b01709108fa57a8388d8646c2267377af6f5ecfabca3b161d",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings-schema.d.ts",
+      "sha256": "ccdef4092518e8ec691e7ca3eeaa846a72e19b36aa8025bd39443e0ebe5fe90c",
+      "cli_nested_sha256": "ccdef4092518e8ec691e7ca3eeaa846a72e19b36aa8025bd39443e0ebe5fe90c",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings-schema.d.ts.map",
+      "sha256": "534ad0ca5b52ef7a0d6744d48d49a60747a674c786299faf506759678f2b5374",
+      "cli_nested_sha256": "534ad0ca5b52ef7a0d6744d48d49a60747a674c786299faf506759678f2b5374",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings-schema.js.map",
+      "sha256": "e7fc366f3213910155ce41d4717e28619b818688edd44462c322cc2abedad21a",
+      "cli_nested_sha256": "e7fc366f3213910155ce41d4717e28619b818688edd44462c322cc2abedad21a",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/key-id-schema.d.ts",
+      "sha256": "e394c96c87d963aa387568fdd343b4fc61a32d05c06182306939612d5f6b6bb9",
+      "cli_nested_sha256": "e394c96c87d963aa387568fdd343b4fc61a32d05c06182306939612d5f6b6bb9",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/key-id-schema.d.ts.map",
+      "sha256": "f7e5fd54aafc35573dda6e6495d097dc7c1b709b5e074984b644a9b38276c65a",
+      "cli_nested_sha256": "f7e5fd54aafc35573dda6e6495d097dc7c1b709b5e074984b644a9b38276c65a",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/key-id-schema.js.map",
+      "sha256": "81a461983a2ae043b8371579549a4004abb4e4bd1f8993b447c0b08a80e4201e",
+      "cli_nested_sha256": "81a461983a2ae043b8371579549a4004abb4e4bd1f8993b447c0b08a80e4201e",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/footer-data-provider.d.ts",
+      "sha256": "2649afb926e5f78694e61faa65f5427dd1c2bc257b6b48588b71259c7c89ba3b",
+      "cli_nested_sha256": "2649afb926e5f78694e61faa65f5427dd1c2bc257b6b48588b71259c7c89ba3b",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/footer-data-provider.d.ts.map",
+      "sha256": "0deef3b1adac44cf1be885782e86b1f58f4f32163463e46baff3e11dbb4494be",
+      "cli_nested_sha256": "0deef3b1adac44cf1be885782e86b1f58f4f32163463e46baff3e11dbb4494be",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/footer-data-provider.js.map",
+      "sha256": "207c04b88fae5728bb256cb17042e631bcf208d49b3259325b6544d942fd68bf",
+      "cli_nested_sha256": "207c04b88fae5728bb256cb17042e631bcf208d49b3259325b6544d942fd68bf",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/program-status-reporter.d.ts",
+      "sha256": "6086d35eff6ed1df541b3c418181eec729236eb06e46072be217ce92918cc292",
+      "cli_nested_sha256": "6086d35eff6ed1df541b3c418181eec729236eb06e46072be217ce92918cc292",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/program-status-reporter.d.ts.map",
+      "sha256": "93b72db713e855775c5369f2081f99265ea9aaa2d05ac1caca801b540d2c4a43",
+      "cli_nested_sha256": "93b72db713e855775c5369f2081f99265ea9aaa2d05ac1caca801b540d2c4a43",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/program-status-reporter.js.map",
+      "sha256": "945b81be211d6bae7cf8317885ed40c0603d062dd42c33a4a907fe46b0d1a767",
+      "cli_nested_sha256": "945b81be211d6bae7cf8317885ed40c0603d062dd42c33a4a907fe46b0d1a767",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/tui-renderer.d.ts",
+      "sha256": "2587efa14f18c4f213b614c52af1278d384cb874cd6984942a9c4ef59c99e0de",
+      "cli_nested_sha256": "2587efa14f18c4f213b614c52af1278d384cb874cd6984942a9c4ef59c99e0de",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/tui-renderer.d.ts.map",
+      "sha256": "003fe2e120e111ff6963fcbae0743b8381127eedbfead6546081ff52d4a29b7f",
+      "cli_nested_sha256": "003fe2e120e111ff6963fcbae0743b8381127eedbfead6546081ff52d4a29b7f",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/tui-renderer.js.map",
+      "sha256": "66a87a5e831415b5fa7d2a124a7e5730154183525e65c8a21c54c0aca6c75072",
+      "cli_nested_sha256": "66a87a5e831415b5fa7d2a124a7e5730154183525e65c8a21c54c0aca6c75072",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/chat-viewport.d.ts",
+      "sha256": "9f953b8f56eee16e96b11552343209f0e663e3bbd9c92197c7bbb60dc6612a3d",
+      "cli_nested_sha256": "9f953b8f56eee16e96b11552343209f0e663e3bbd9c92197c7bbb60dc6612a3d",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/chat-viewport.d.ts.map",
+      "sha256": "619a67566ca7e953319c4e7dc8ba01165584ab166415a42c0cfb60ac974e7d33",
+      "cli_nested_sha256": "619a67566ca7e953319c4e7dc8ba01165584ab166415a42c0cfb60ac974e7d33",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/chat-viewport.js.map",
+      "sha256": "9668f85a3b81f3e3bccf47994f8b454a45544463e82bc2ab0a0eda0c0076002b",
+      "cli_nested_sha256": "9668f85a3b81f3e3bccf47994f8b454a45544463e82bc2ab0a0eda0c0076002b",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/model-catalog-refresh.d.ts",
+      "sha256": "4fdfb5ce998fef78312e3aca58dbe4f2c04070e26934ecf818a2d39545b418cd",
+      "cli_nested_sha256": "4fdfb5ce998fef78312e3aca58dbe4f2c04070e26934ecf818a2d39545b418cd",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/model-catalog-refresh.d.ts.map",
+      "sha256": "b545d9345e885f6f546d04aa6ca70aeec25fec66fc83dcd2a1bfe3d21be6fe69",
+      "cli_nested_sha256": "b545d9345e885f6f546d04aa6ca70aeec25fec66fc83dcd2a1bfe3d21be6fe69",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/model-catalog-refresh.js.map",
+      "sha256": "71b4f0e8fcb584abb3c3b720f44cbb573c243e2fbe2399eac4cab61c1b72ac48",
+      "cli_nested_sha256": "71b4f0e8fcb584abb3c3b720f44cbb573c243e2fbe2399eac4cab61c1b72ac48",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/model-search.d.ts",
+      "sha256": "6ee874987594ee89eef440b18f0cb18eea34ea24a1c7d309452bde3aebf5fd7f",
+      "cli_nested_sha256": "6ee874987594ee89eef440b18f0cb18eea34ea24a1c7d309452bde3aebf5fd7f",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/model-search.d.ts.map",
+      "sha256": "1aa024d85c86f90acd0332af4872200c900e8e39ac222de8cdb8ee9eef8d7545",
+      "cli_nested_sha256": "1aa024d85c86f90acd0332af4872200c900e8e39ac222de8cdb8ee9eef8d7545",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/model-search.js.map",
+      "sha256": "f4215380c32062c563c5e4e48cd7498c5f0dcd5adcb9b1705d05add066aba314",
+      "cli_nested_sha256": "f4215380c32062c563c5e4e48cd7498c5f0dcd5adcb9b1705d05add066aba314",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/external-editor.d.ts",
+      "sha256": "bcfb3c53a8ba2d089630fa9e54067f881827d7fd5abdf57d5eba6b5609eac8ed",
+      "cli_nested_sha256": "bcfb3c53a8ba2d089630fa9e54067f881827d7fd5abdf57d5eba6b5609eac8ed",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/external-editor.d.ts.map",
+      "sha256": "ba4ee9198b1088c0d5f4dffa616cf9e53c81d0adb10c883f2cd5da57d3de39d9",
+      "cli_nested_sha256": "ba4ee9198b1088c0d5f4dffa616cf9e53c81d0adb10c883f2cd5da57d3de39d9",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/external-editor.js.map",
+      "sha256": "44b99feac0a42f33f0c7a22408a600eafafea35c8bb1edf95fa7d8df2f5ce491",
+      "cli_nested_sha256": "44b99feac0a42f33f0c7a22408a600eafafea35c8bb1edf95fa7d8df2f5ce491",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    }
+  ],
+  "archive_support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/docs/keybindings.md"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/footer.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/custom-editor.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/program-status.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings-schema.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings-schema.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings-schema.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/key-id-schema.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/key-id-schema.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/key-id-schema.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/footer-data-provider.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/footer-data-provider.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/footer-data-provider.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/program-status-reporter.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/program-status-reporter.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/program-status-reporter.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/tui-renderer.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/tui-renderer.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/tui-renderer.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/chat-viewport.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/chat-viewport.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/chat-viewport.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/model-catalog-refresh.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/model-catalog-refresh.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/model-catalog-refresh.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/model-search.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/model-search.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/model-search.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/external-editor.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/external-editor.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/external-editor.js.map"
+    }
+  ],
+  "counts": {
+    "rows": 53,
+    "proofs": 53,
+    "scopes": 10,
+    "external_boundaries": 9,
+    "excluded_occurrences": 317,
+    "dispositioned_source_files": 10,
+    "string_template_occurrences": 370,
+    "protected_regex_literals": 4,
+    "error_constructors": 1,
+    "catch_clauses": 6,
+    "throw_statements": 1,
+    "all_new_expressions": 17,
+    "protected_control_occurrences": 0,
+    "full_runtime_lines": 986,
+    "runtime_source_bytes": 39068,
+    "nonruntime_assets": 30,
+    "schema_resource_rows": 44,
+    "schema_resource_facets": 45,
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "statusCounts": {
+      "source-read-local-producers": 10
+    }
+  },
+  "proofs": [
+    {
+      "item_id": "pi.interactive-support.core.keybindings.13.60",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 13,
+      "column": 60,
+      "kind": "string-literal",
+      "english": "Cancel or abort",
+      "evidence": "\"Cancel or abort\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.14.56",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 14,
+      "column": 56,
+      "kind": "string-literal",
+      "english": "Clear editor",
+      "evidence": "\"Clear editor\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.15.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 15,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "Exit when editor is empty",
+      "evidence": "\"Exit when editor is empty\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.18.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 18,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Suspend to background",
+      "evidence": "\"Suspend to background\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.22.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 22,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Cycle thinking level",
+      "evidence": "\"Cycle thinking level\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.26.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 26,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Save thinking level",
+      "evidence": "\"Save thinking level\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.30.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 30,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Cycle to next model",
+      "evidence": "\"Cycle to next model\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.34.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 34,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Cycle to previous model",
+      "evidence": "\"Cycle to previous model\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.36.63",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 36,
+      "column": 63,
+      "kind": "string-literal",
+      "english": "Open model selector",
+      "evidence": "\"Open model selector\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.37.63",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 37,
+      "column": 63,
+      "kind": "string-literal",
+      "english": "Toggle tool output",
+      "evidence": "\"Toggle tool output\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.40.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 40,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Toggle thinking blocks",
+      "evidence": "\"Toggle thinking blocks\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.44.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 44,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Toggle named session filter",
+      "evidence": "\"Toggle named session filter\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.48.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 48,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Open external editor",
+      "evidence": "\"Open external editor\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.52.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 52,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Copy selection or last assistant message",
+      "evidence": "\"Copy selection or last assistant message\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.56.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 56,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Queue follow-up message",
+      "evidence": "\"Queue follow-up message\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.60.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 60,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Restore queued messages",
+      "evidence": "\"Restore queued messages\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.64.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 64,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Paste files on macOS, images, or text from clipboard",
+      "evidence": "\"Paste files on macOS, images, or text from clipboard\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.66.56",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 66,
+      "column": 56,
+      "kind": "string-literal",
+      "english": "Start a new session",
+      "evidence": "\"Start a new session\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.67.57",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 67,
+      "column": 57,
+      "kind": "string-literal",
+      "english": "Open session tree",
+      "evidence": "\"Open session tree\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.68.57",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 68,
+      "column": 57,
+      "kind": "string-literal",
+      "english": "Fork current session",
+      "evidence": "\"Fork current session\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.69.59",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 69,
+      "column": 59,
+      "kind": "string-literal",
+      "english": "Resume a session",
+      "evidence": "\"Resume a session\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.72.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 72,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Fold tree branch or move up",
+      "evidence": "\"Fold tree branch or move up\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.76.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 76,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Unfold tree branch or move down",
+      "evidence": "\"Unfold tree branch or move down\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.80.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 80,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Edit tree label",
+      "evidence": "\"Edit tree label\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.84.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 84,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Toggle tree label timestamps",
+      "evidence": "\"Toggle tree label timestamps\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.88.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 88,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Toggle session path display",
+      "evidence": "\"Toggle session path display\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.92.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 92,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Toggle session sort mode",
+      "evidence": "\"Toggle session sort mode\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.96.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 96,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Rename session",
+      "evidence": "\"Rename session\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.100.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 100,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Delete session",
+      "evidence": "\"Delete session\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.104.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 104,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Delete session when query is empty",
+      "evidence": "\"Delete session when query is empty\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.108.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 108,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Save model selection",
+      "evidence": "\"Save model selection\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.112.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 112,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Enable all models",
+      "evidence": "\"Enable all models\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.116.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 116,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Clear all models",
+      "evidence": "\"Clear all models\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.120.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 120,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Toggle all models for provider",
+      "evidence": "\"Toggle all models for provider\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.124.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 124,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Move model up in order",
+      "evidence": "\"Move model up in order\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.128.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 128,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Move model down in order",
+      "evidence": "\"Move model down in order\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.132.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 132,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Tree filter: default view",
+      "evidence": "\"Tree filter: default view\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.136.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 136,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Tree filter: hide tool results",
+      "evidence": "\"Tree filter: hide tool results\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.140.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 140,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Tree filter: user messages only",
+      "evidence": "\"Tree filter: user messages only\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.144.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 144,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Tree filter: labeled entries only",
+      "evidence": "\"Tree filter: labeled entries only\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.148.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 148,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Tree filter: show all entries",
+      "evidence": "\"Tree filter: show all entries\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.152.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 152,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Tree filter: cycle forward",
+      "evidence": "\"Tree filter: cycle forward\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.156.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+      "line": 156,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Tree filter: cycle backward",
+      "evidence": "\"Tree filter: cycle backward\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.key_id_schema.10.18",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/key-id-schema.js",
+      "line": 10,
+      "column": 18,
+      "kind": "string-literal",
+      "english": "Key identifier with optional ctrl, shift, alt, or super modifiers.",
+      "evidence": "\"Key identifier with optional ctrl, shift, alt, or super modifiers.\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.footer_data_provider.222.100",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/footer-data-provider.js",
+      "line": 222,
+      "column": 100,
+      "kind": "string-literal",
+      "english": "detached",
+      "evidence": "\"detached\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.footer_data_provider.224.20",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/footer-data-provider.js",
+      "line": 224,
+      "column": 20,
+      "kind": "string-literal",
+      "english": "detached",
+      "evidence": "\"detached\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.footer_data_provider.238.84",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/footer-data-provider.js",
+      "line": 238,
+      "column": 84,
+      "kind": "string-literal",
+      "english": "detached",
+      "evidence": "\"detached\""
+    },
+    {
+      "item_id": "pi.interactive-support.core.footer_data_provider.241.20",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/footer-data-provider.js",
+      "line": 241,
+      "column": 20,
+      "kind": "string-literal",
+      "english": "detached",
+      "evidence": "\"detached\""
+    },
+    {
+      "item_id": "pi.interactive-support.modes.interactive.program_status_reporter.3.50",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/program-status-reporter.js",
+      "line": 3,
+      "column": 50,
+      "kind": "string-literal",
+      "english": "Error",
+      "evidence": "\"Error\""
+    },
+    {
+      "item_id": "pi.interactive-support.modes.interactive.program_status_reporter.103.49",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/program-status-reporter.js",
+      "line": 103,
+      "column": 49,
+      "kind": "string-literal",
+      "english": "Compacting context",
+      "evidence": "\"Compacting context\""
+    },
+    {
+      "item_id": "pi.interactive-support.modes.interactive.tui_renderer.16.31",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/tui-renderer.js",
+      "line": 16,
+      "column": 31,
+      "kind": "template-expression",
+      "english": " ↓ Jump to latest message${shortcut ? ` · ${shortcut}` : \"\"} ",
+      "evidence": "` ↓ Jump to latest message${shortcut ? ` · ${shortcut}` : \"\"} `"
+    },
+    {
+      "item_id": "pi.interactive-support.modes.interactive.tui_renderer.51.45",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/tui-renderer.js",
+      "line": 51,
+      "column": 45,
+      "kind": "template-expression",
+      "english": "TUI property ${String(property)} is not callable",
+      "evidence": "`TUI property ${String(property)} is not callable`"
+    },
+    {
+      "item_id": "pi.interactive-support.modes.interactive.external_editor.12.30",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/external-editor.js",
+      "line": 12,
+      "column": 30,
+      "kind": "template-expression",
+      "english": "Launching external editor: ${options.command}\\nPi will resume when the editor exits.\\n",
+      "evidence": "`Launching external editor: ${options.command}\\nPi will resume when the editor exits.\\n`"
+    }
+  ],
+  "schema_crosslinks": [
+    {
+      "item_id": "pi.interactive-support.core.keybindings.13.60",
+      "action": "app.interrupt",
+      "description": "Cancel or abort",
+      "source_line": 13,
+      "source_column": 60,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 200,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.14.56",
+      "action": "app.clear",
+      "description": "Clear editor",
+      "source_line": 14,
+      "source_column": 56,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 204,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.15.55",
+      "action": "app.exit",
+      "description": "Exit when editor is empty",
+      "source_line": 15,
+      "source_column": 55,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 208,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.18.22",
+      "action": "app.suspend",
+      "description": "Suspend to background",
+      "source_line": 18,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 212,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.22.22",
+      "action": "app.thinking.cycle",
+      "description": "Cycle thinking level",
+      "source_line": 22,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 216,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.26.22",
+      "action": "app.thinking.save",
+      "description": "Save thinking level",
+      "source_line": 26,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 220,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.30.22",
+      "action": "app.model.cycleForward",
+      "description": "Cycle to next model",
+      "source_line": 30,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 224,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.34.22",
+      "action": "app.model.cycleBackward",
+      "description": "Cycle to previous model",
+      "source_line": 34,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 228,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.36.63",
+      "action": "app.model.select",
+      "description": "Open model selector",
+      "source_line": 36,
+      "source_column": 63,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 232,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.37.63",
+      "action": "app.tools.expand",
+      "description": "Toggle tool output",
+      "source_line": 37,
+      "source_column": 63,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 236,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.40.22",
+      "action": "app.thinking.toggle",
+      "description": "Toggle thinking blocks",
+      "source_line": 40,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 240,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.44.22",
+      "action": "app.session.toggleNamedFilter",
+      "description": "Toggle named session filter",
+      "source_line": 44,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 244,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.48.22",
+      "action": "app.editor.external",
+      "description": "Open external editor",
+      "source_line": 48,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 248,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.52.22",
+      "action": "app.message.copy",
+      "description": "Copy selection or last assistant message",
+      "source_line": 52,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 252,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.56.22",
+      "action": "app.message.followUp",
+      "description": "Queue follow-up message",
+      "source_line": 56,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 256,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.60.22",
+      "action": "app.message.dequeue",
+      "description": "Restore queued messages",
+      "source_line": 60,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 260,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.64.22",
+      "action": "app.clipboard.pasteImage",
+      "description": "Paste files on macOS, images, or text from clipboard",
+      "source_line": 64,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 264,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.66.56",
+      "action": "app.session.new",
+      "description": "Start a new session",
+      "source_line": 66,
+      "source_column": 56,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 268,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.67.57",
+      "action": "app.session.tree",
+      "description": "Open session tree",
+      "source_line": 67,
+      "source_column": 57,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 272,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.68.57",
+      "action": "app.session.fork",
+      "description": "Fork current session",
+      "source_line": 68,
+      "source_column": 57,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 276,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.69.59",
+      "action": "app.session.resume",
+      "description": "Resume a session",
+      "source_line": 69,
+      "source_column": 59,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 280,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.72.22",
+      "action": "app.tree.foldOrUp",
+      "description": "Fold tree branch or move up",
+      "source_line": 72,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 284,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.76.22",
+      "action": "app.tree.unfoldOrDown",
+      "description": "Unfold tree branch or move down",
+      "source_line": 76,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 288,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.80.22",
+      "action": "app.tree.editLabel",
+      "description": "Edit tree label",
+      "source_line": 80,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 292,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.84.22",
+      "action": "app.tree.toggleLabelTimestamp",
+      "description": "Toggle tree label timestamps",
+      "source_line": 84,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 296,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.88.22",
+      "action": "app.session.togglePath",
+      "description": "Toggle session path display",
+      "source_line": 88,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 300,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.92.22",
+      "action": "app.session.toggleSort",
+      "description": "Toggle session sort mode",
+      "source_line": 92,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 304,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.96.22",
+      "action": "app.session.rename",
+      "description": "Rename session",
+      "source_line": 96,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 308,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.100.22",
+      "action": "app.session.delete",
+      "description": "Delete session",
+      "source_line": 100,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 312,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.104.22",
+      "action": "app.session.deleteNoninvasive",
+      "description": "Delete session when query is empty",
+      "source_line": 104,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 316,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.108.22",
+      "action": "app.models.save",
+      "description": "Save model selection",
+      "source_line": 108,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 320,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.112.22",
+      "action": "app.models.enableAll",
+      "description": "Enable all models",
+      "source_line": 112,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 324,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.116.22",
+      "action": "app.models.clearAll",
+      "description": "Clear all models",
+      "source_line": 116,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 328,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.120.22",
+      "action": "app.models.toggleProvider",
+      "description": "Toggle all models for provider",
+      "source_line": 120,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 332,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.124.22",
+      "action": "app.models.reorderUp",
+      "description": "Move model up in order",
+      "source_line": 124,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 336,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.128.22",
+      "action": "app.models.reorderDown",
+      "description": "Move model down in order",
+      "source_line": 128,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 340,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.132.22",
+      "action": "app.tree.filter.default",
+      "description": "Tree filter: default view",
+      "source_line": 132,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 344,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.136.22",
+      "action": "app.tree.filter.noTools",
+      "description": "Tree filter: hide tool results",
+      "source_line": 136,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 348,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.140.22",
+      "action": "app.tree.filter.userOnly",
+      "description": "Tree filter: user messages only",
+      "source_line": 140,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 352,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.144.22",
+      "action": "app.tree.filter.labeledOnly",
+      "description": "Tree filter: labeled entries only",
+      "source_line": 144,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 356,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.148.22",
+      "action": "app.tree.filter.all",
+      "description": "Tree filter: show all entries",
+      "source_line": 148,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 360,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.152.22",
+      "action": "app.tree.filter.cycleForward",
+      "description": "Tree filter: cycle forward",
+      "source_line": 152,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 364,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.keybindings.156.22",
+      "action": "app.tree.filter.cycleBackward",
+      "description": "Tree filter: cycle backward",
+      "source_line": 156,
+      "source_column": 22,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 368,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "item_id": "pi.interactive-support.core.key_id_schema.10.18",
+      "action": "$defs.KeybindingValue string and array-item facets",
+      "description": "Key identifier with optional ctrl, shift, alt, or super modifiers.",
+      "source_line": 10,
+      "source_column": 18,
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "artifact_occurrences": [
+        {
+          "line": 380,
+          "column": 26
+        },
+        {
+          "line": 387,
+          "column": 28
+        }
+      ]
+    }
+  ],
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings.js",
+        "read_lines": [
+          1,
+          324
+        ],
+        "string_template_occurrences": 230,
+        "fixed_rows": 43,
+        "excluded_occurrences": 187,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 307,
+            "column": 16,
+            "callee": "KeybindingsManager",
+            "source": "new KeybindingsManager(userBindings, configPath)"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 294,
+            "column": 5,
+            "source": "catch {\n        return undefined;\n    }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "@earendil-works/pi-tui"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "fs"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "path"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "typebox/compile"
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "../config.js"
+          },
+          {
+            "line": 6,
+            "column": 1,
+            "specifier": "../utils/text.js"
+          },
+          {
+            "line": 7,
+            "column": 1,
+            "specifier": "./key-id-schema.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 243,
+            "column": 33,
+            "callee": "Compile",
+            "arguments": [
+              "KeybindingValueSchema"
+            ]
+          },
+          {
+            "line": 249,
+            "column": 13,
+            "callee": "validateKeybindingValue.Check",
+            "arguments": [
+              "binding"
+            ]
+          },
+          {
+            "line": 289,
+            "column": 44,
+            "callee": "readFileSync",
+            "arguments": [
+              "path",
+              "\"utf-8\""
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full324 lines:43 APP descriptions positive via shipped resource, technical defaults/action migrations protected. Current platform/WSL affects keys only. File absent/malformed/invalid values silently filtered; Check false not Error. loadRawConfig catch suppresses JSON/read failure, existsSync outside catch can propagate native errors. Optional migration/type/caller/TypeBox errors external."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/keybindings-schema.js",
+        "read_lines": [
+          1,
+          16
+        ],
+        "string_template_occurrences": 4,
+        "fixed_rows": 0,
+        "excluded_occurrences": 4,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "typebox"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "./key-id-schema.js"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "./keybindings.js"
+          }
+        ],
+        "re_exports": [
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "./key-id-schema.js",
+            "source": "export { KeybindingValueSchema } from \"./key-id-schema.js\";"
+          }
+        ],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [],
+        "review": "Full16 lines:dynamic description assignment reuses source definitions (43APP here,47TUI prior unit). No independent literal prose/Error/throw/catch. TypeBox schema construction/native diagnostics pending; shipped facets matched, not assumed native UI."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/key-id-schema.js",
+        "read_lines": [
+          1,
+          16
+        ],
+        "string_template_occurrences": 15,
+        "fixed_rows": 1,
+        "excluded_occurrences": 14,
+        "protected_regex_literals": 1,
+        "regex_census_sha256": "167c72e1d44e40219650358553805188b921ce4db0f11bdfe717804b18c1e544",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "@earendil-works/pi-tui"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "typebox"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [],
+        "review": "Full16 lines:one description positive in two shipped facets; modifier/key patterns protected. No own Error/throw. keybindingValueSchema options/TypeBox compile/Check diagnostics API-only external; native Check false filters invalid values without printed label."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/footer-data-provider.js",
+        "read_lines": [
+          1,
+          338
+        ],
+        "string_template_occurrences": 43,
+        "fixed_rows": 4,
+        "excluded_occurrences": 39,
+        "protected_regex_literals": 1,
+        "regex_census_sha256": "ccda6987f6290a29337d74d3e41246b082cd3c90387b88607f43ea752a700c87",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 59,
+            "column": 12,
+            "callee": "Promise",
+            "source": "new Promise((resolvePromise) => {\n        execFile(\"git\", [\"--no-optional-locks\", \"symbolic-ref\", \"--quiet\", \"--short\", \"HEAD\"], {\n            cwd: repoDir,\n            encoding: \"utf8\",\n        }, (error, stdout) => {\n            if (error) {\n                resolvePromise(null);\n                return;\n            }\n            const branch = stdout.trim();\n            resolvePromise(branch || null);\n        });\n    })"
+          },
+          {
+            "line": 89,
+            "column": 25,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 98,
+            "column": 29,
+            "callee": "Set",
+            "source": "new Set()"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 37,
+            "column": 13,
+            "source": "catch {\n                return null;\n            }"
+          },
+          {
+            "line": 226,
+            "column": 9,
+            "source": "catch {\n            return null;\n        }"
+          },
+          {
+            "line": 243,
+            "column": 9,
+            "source": "catch {\n            return null;\n        }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "child_process"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "fs"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "path"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "../utils/fs-watch.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 15,
+            "column": 30,
+            "callee": "statSync",
+            "arguments": [
+              "gitPath"
+            ]
+          },
+          {
+            "line": 17,
+            "column": 37,
+            "callee": "readFileSync",
+            "arguments": [
+              "gitPath",
+              "\"utf8\""
+            ]
+          },
+          {
+            "line": 25,
+            "column": 47,
+            "callee": "readFileSync",
+            "arguments": [
+              "commonDirPath",
+              "\"utf8\""
+            ]
+          },
+          {
+            "line": 49,
+            "column": 20,
+            "callee": "spawnSync",
+            "arguments": [
+              "\"git\"",
+              "[\"--no-optional-locks\", \"symbolic-ref\", \"--quiet\", \"--short\", \"HEAD\"]",
+              "{\n        cwd: repoDir,\n        encoding: \"utf8\",\n        stdio: [\"ignore\", \"pipe\", \"ignore\"],\n    }"
+            ]
+          },
+          {
+            "line": 60,
+            "column": 9,
+            "callee": "execFile",
+            "arguments": [
+              "\"git\"",
+              "[\"--no-optional-locks\", \"symbolic-ref\", \"--quiet\", \"--short\", \"HEAD\"]",
+              "{\n            cwd: repoDir,\n            encoding: \"utf8\",\n        }",
+              "(error, stdout) => {\n            if (error) {\n                resolvePromise(null);\n                return;\n            }\n            const branch = stdout.trim();\n            resolvePromise(branch || null);\n        }"
+            ]
+          },
+          {
+            "line": 219,
+            "column": 29,
+            "callee": "readFileSync",
+            "arguments": [
+              "this.gitPaths.headPath",
+              "\"utf8\""
+            ]
+          },
+          {
+            "line": 234,
+            "column": 29,
+            "callee": "readFileSync",
+            "arguments": [
+              "this.gitPaths.headPath",
+              "\"utf8\""
+            ]
+          },
+          {
+            "line": 289,
+            "column": 28,
+            "callee": "watchWithErrorHandler",
+            "arguments": [
+              "dirname(this.gitPaths.headPath)",
+              "(_eventType, filename) => {\n            if (!filename || filename === \"HEAD\") {\n                this.scheduleRefresh();\n            }\n        }",
+              "() => this.handleGitWatcherError()"
+            ]
+          },
+          {
+            "line": 303,
+            "column": 13,
+            "callee": "watchFile",
+            "arguments": [
+              "this.headWatchFilePath",
+              "{ interval: 1000 }",
+              "this.headWatchFileListener"
+            ]
+          },
+          {
+            "line": 312,
+            "column": 36,
+            "callee": "watchWithErrorHandler",
+            "arguments": [
+              "reftableDir",
+              "() => {\n                this.scheduleRefresh();\n            }",
+              "() => this.handleGitWatcherError()"
+            ]
+          },
+          {
+            "line": 321,
+            "column": 50,
+            "callee": "watchWithErrorHandler",
+            "arguments": [
+              "tablesListPath",
+              "() => {\n                    this.scheduleRefresh();\n                }",
+              "() => this.handleGitWatcherError()"
+            ]
+          },
+          {
+            "line": 327,
+            "column": 17,
+            "callee": "watchFile",
+            "arguments": [
+              "tablesListPath",
+              "{ interval: 250 }",
+              "(current, previous) => {\n                    if (current.mtimeMs !== previous.mtimeMs ||\n                        current.ctimeMs !== previous.ctimeMs ||\n                        current.size !== previous.size) {\n                        this.scheduleRefresh();\n                    }\n                }"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full338 lines:four detached fallback occurrences positive. Git metadata identities/commands/branch/status payload protected. Three catches suppress fs/git resolution failure to null; execFile errors resolve null, spawnSync stderr ignored, branch callbacks/native watchers can produce external errors. Refresh/dispose/retry/WSL poll state fully read; no own Error headline. Default Jouzu TUI session_start replaces built-in footer; own StatusBar reads independent Git snapshot/catalog, so native fixed detached definitions are conditional native/API surface only."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/program-status-reporter.js",
+        "read_lines": [
+          1,
+          110
+        ],
+        "string_template_occurrences": 30,
+        "fixed_rows": 2,
+        "excluded_occurrences": 28,
+        "protected_regex_literals": 1,
+        "regex_census_sha256": "77fa7082636160657e86f2109d9f6dc124892270bca7044970785d87322c0281",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 21,
+            "column": 15,
+            "callee": "Map",
+            "source": "new Map()"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "../../config.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 96,
+            "column": 9,
+            "callee": "this.getTerminal().setProgramStatus",
+            "arguments": [
+              "status"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full110 lines:Error first-line fallback and Compacting context positive conditional OSC client messages. Run/compaction/latest-blocked/resting/reset/dedup state and session/dialog/error payloads fully read. Protocol state enums protected; no own Error/throw/catch; terminal client/OS payload behavior pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/tui-renderer.js",
+        "read_lines": [
+          1,
+          67
+        ],
+        "string_template_occurrences": 18,
+        "fixed_rows": 2,
+        "excluded_occurrences": 16,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 51,
+            "column": 31,
+            "constructor": "TypeError",
+            "message_argument": 0,
+            "message_expression": "`TUI property ${String(property)} is not callable`"
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 7,
+            "column": 42,
+            "callee": "ProcessTerminal",
+            "source": "new ProcessTerminal()"
+          },
+          {
+            "line": 10,
+            "column": 16,
+            "callee": "TuiAltScreen",
+            "source": "new TuiAltScreen(terminal, options.showHardwareCursor, options.logDirectory, {\n            searchMatchStyle: (text) => theme.underline(styleSearchMatch(text)),\n            searchCurrentMatchStyle: (text) => theme.bold(theme.inverse(styleSearchMatch(text))),\n            searchNavigationButtonStyle: (text, hovered) => (hovered ? theme.underline(text) : text),\n            scrollToEndIndicator: () => {\n                const shortcut = keyDisplayText(\"tui.altScreen.bottom\");\n                const label = ` ↓ Jump to latest message${shortcut ? ` · ${shortcut}` : \"\"} `;\n                return theme.bg(\"selectedBg\", theme.fg(\"text\", label));\n            },\n            openUrl: openBrowser,\n            onRightClickPaste: options.onRightClickPaste,\n            copyOnSelect: options.fullscreenCopyOnSelect,\n            wheelScrollLines: options.fullscreenWheelScrollLines ?? \"auto\",\n            copySelection: async (text) => {\n                try {\n                    await copyToClipboard(text);\n                    return true;\n                }\n                catch (error) {\n                    return error instanceof Error ? error.message : String(error);\n                }\n            },\n        })"
+          },
+          {
+            "line": 34,
+            "column": 12,
+            "callee": "TuiMainScreen",
+            "source": "new TuiMainScreen(terminal, options.showHardwareCursor, options.logDirectory)"
+          },
+          {
+            "line": 38,
+            "column": 12,
+            "callee": "Proxy",
+            "source": "new Proxy({}, {\n        get: (_target, property) => {\n            const tui = getTui();\n            const value = Reflect.get(tui, property, tui);\n            if (typeof value !== \"function\")\n                return value;\n            let methodTui = tui;\n            let method = value;\n            return (...args) => {\n                const currentTui = getTui();\n                if (currentTui !== methodTui) {\n                    const currentMethod = Reflect.get(currentTui, property, currentTui);\n                    if (typeof currentMethod !== \"function\") {\n                        throw new TypeError(`TUI property ${String(property)} is not callable`);\n                    }\n                    methodTui = currentTui;\n                    method = currentMethod;\n                }\n                return Reflect.apply(method, methodTui, args);\n            };\n        },\n        set: (_target, property, value) => {\n            const tui = getTui();\n            return Reflect.set(tui, property, value, tui);\n        },\n        has: (_target, property) => Reflect.has(getTui(), property),\n        getPrototypeOf: () => Reflect.getPrototypeOf(getTui()),\n    })"
+          },
+          {
+            "line": 51,
+            "column": 31,
+            "callee": "TypeError",
+            "source": "new TypeError(`TUI property ${String(property)} is not callable`)"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 51,
+            "column": 25,
+            "expression": "new TypeError(`TUI property ${String(property)} is not callable`)"
+          }
+        ],
+        "catch_clauses": [
+          {
+            "line": 28,
+            "column": 17,
+            "source": "catch (error) {\n                    return error instanceof Error ? error.message : String(error);\n                }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "@earendil-works/pi-tui"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "../../utils/clipboard.js"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "../../utils/open-browser.js"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "./components/keybinding-hints.js"
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "./theme/theme.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 56,
+            "column": 24,
+            "callee": "Reflect.apply",
+            "arguments": [
+              "method",
+              "methodTui",
+              "args"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full67 lines:fullscreen jump template and conditional stale-method TypeError positive. Search theme/callback/clipboard/url/paste proxies are payload/control. Clipboard catch returns true or error string, never native false. Proxy swap shared methods vs incompatible optional API qualified; no native addon/browser executed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/chat-viewport.js",
+        "read_lines": [
+          1,
+          28
+        ],
+        "string_template_occurrences": 5,
+        "fixed_rows": 0,
+        "excluded_occurrences": 5,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 4,
+            "column": 24,
+            "callee": "ScrollView",
+            "source": "new ScrollView(options.document, {\n        follow: \"end\",\n        primary: true,\n        overscroll: \"chain\",\n        scrollbar: options.scrollbar ?? \"auto\",\n        ...(options.scrollbarTrackStyle === undefined ? {} : { scrollbarTrackStyle: options.scrollbarTrackStyle }),\n        ...(options.scrollbarThumbStyle === undefined ? {} : { scrollbarThumbStyle: options.scrollbarThumbStyle }),\n    })"
+          },
+          {
+            "line": 12,
+            "column": 18,
+            "callee": "VStack",
+            "source": "new VStack([\n        { component: options.pendingMessages, shrink: 1, minSize: 0 },\n        { component: options.status, shrink: 1, minSize: 0 },\n        ...(options.widgetsAbove === undefined ? [] : [{ component: options.widgetsAbove, shrink: 1, minSize: 0 }]),\n        { component: options.editor, shrink: 1, minSize: 3 },\n        ...(options.widgetsBelow === undefined ? [] : [{ component: options.widgetsBelow, shrink: 1, minSize: 0 }]),\n        { component: options.footer, shrink: 1, minSize: 0 },\n    ])"
+          },
+          {
+            "line": 22,
+            "column": 15,
+            "callee": "VStack",
+            "source": "new VStack([\n            { component: transcript, basis: 0, grow: 1, shrink: 1, minSize: 1 },\n            { component: dock, basis: \"auto\", grow: 0, shrink: 1, minSize: 1 },\n        ])"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "@earendil-works/pi-tui"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [],
+        "review": "Full28 lines:ScrollView/VStack layout controls only, no local caption/error/catch. Pending/status/editor/widget/footer children own all text. Dynamic geometry/component callback/native TUI internals separate."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/model-catalog-refresh.js",
+        "read_lines": [
+          1,
+          34
+        ],
+        "string_template_occurrences": 1,
+        "fixed_rows": 0,
+        "excluded_occurrences": 1,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 3,
+            "column": 23,
+            "callee": "WeakMap",
+            "source": "new WeakMap()"
+          },
+          {
+            "line": 8,
+            "column": 32,
+            "callee": "AbortController",
+            "source": "new AbortController()"
+          },
+          {
+            "line": 29,
+            "column": 40,
+            "callee": "ModelCatalogRefreshCoordinator",
+            "source": "new ModelCatalogRefreshCoordinator()"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "../../utils/abort.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 10,
+            "column": 31,
+            "callee": "modelRuntime.refresh",
+            "arguments": [
+              "{ signal: controller.signal }"
+            ]
+          },
+          {
+            "line": 11,
+            "column": 29,
+            "callee": "raceWithAbortSignal",
+            "arguments": [
+              "operation",
+              "controller.signal"
+            ]
+          },
+          {
+            "line": 21,
+            "column": 16,
+            "callee": "raceWithAbortSignal",
+            "arguments": [
+              "active.promise",
+              "signal"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full34 lines:shared refresh per runtime, independent waiter cancellation, last waiter aborts underlying request. No literal/prose/Error/throw/catch. AbortSignal/race/provider errors inherited; startup suppresses catch, selectors/exact search display their own qualified errors."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/model-search.js",
+        "read_lines": [
+          1,
+          15
+        ],
+        "string_template_occurrences": 6,
+        "fixed_rows": 0,
+        "excluded_occurrences": 6,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [],
+        "review": "Full15 lines:four string/template combinations preserve caller id/provider/name for ranking, not displayed fixed prose. Actual model labels remain caller payload; no own Error/catch. Input/type/callback errors external."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/external-editor.js",
+        "read_lines": [
+          1,
+          38
+        ],
+        "string_template_occurrences": 18,
+        "fixed_rows": 1,
+        "excluded_occurrences": 17,
+        "protected_regex_literals": 1,
+        "regex_census_sha256": "1701901d97870729ec36f482e563527aeb108f85db89614bfeeb65c3bf807fc7",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 16,
+            "column": 32,
+            "callee": "Promise",
+            "source": "new Promise((resolve) => {\n            const child = spawn(editor, [...editorArgs, filePath], {\n                stdio: \"inherit\",\n                shell: process.platform === \"win32\",\n            });\n            child.on(\"error\", () => resolve(null));\n            child.on(\"close\", (code) => resolve(code));\n        })"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 33,
+            "column": 9,
+            "source": "catch {\n            // Cleanup is best effort.\n        }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "node:child_process"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "node:fs"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "node:os"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "node:path"
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "../../utils/text.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 7,
+            "column": 23,
+            "callee": "mkdtempSync",
+            "arguments": [
+              "join(tmpdir(), \"pi-editor-\")"
+            ]
+          },
+          {
+            "line": 10,
+            "column": 9,
+            "callee": "writeFileSync",
+            "arguments": [
+              "filePath",
+              "options.content",
+              "\"utf-8\""
+            ]
+          },
+          {
+            "line": 12,
+            "column": 9,
+            "callee": "process.stdout.write",
+            "arguments": [
+              "`Launching external editor: ${options.command}\\nPi will resume when the editor exits.\\n`"
+            ]
+          },
+          {
+            "line": 17,
+            "column": 27,
+            "callee": "spawn",
+            "arguments": [
+              "editor",
+              "[...editorArgs, filePath]",
+              "{\n                stdio: \"inherit\",\n                shell: process.platform === \"win32\",\n            }"
+            ]
+          },
+          {
+            "line": 21,
+            "column": 13,
+            "callee": "child.on",
+            "arguments": [
+              "\"error\"",
+              "() => resolve(null)"
+            ]
+          },
+          {
+            "line": 22,
+            "column": 13,
+            "callee": "child.on",
+            "arguments": [
+              "\"close\"",
+              "(code) => resolve(code)"
+            ]
+          },
+          {
+            "line": 27,
+            "column": 56,
+            "callee": "readFileSync",
+            "arguments": [
+              "filePath",
+              "\"utf-8\""
+            ]
+          },
+          {
+            "line": 31,
+            "column": 13,
+            "callee": "rmSync",
+            "arguments": [
+              "directory",
+              "{ recursive: true, force: true }"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full38 lines:one launch/resume stdout template positive; prompt content user-inspectable temp file payload, child inherit stdout/stderr external. Child error resolvesnull/nonzero ->failed status without own caption; ui caller ignores failed status. fs/native/synchronous spawn errors can reject, temp creation outside try; finallyrm catch suppresses cleanup only. No child/fs/native execution."
+      }
+    ],
+    "method": "All10 full source bodies manually read, every literal/template occurrence partitioned and Error/throw/catch/new/regex/import/export/selected native/output/control census recorded. Actual resource/native/optional API/client/caller gates traced. Source only; no producer/module/renderer/native/child/model execution."
+  },
+  "remaining_partial_sources": [],
+  "scope_census": {
+    "package": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0",
+    "runtime_files": [
+      "dist/core/footer-data-provider.js",
+      "dist/core/key-id-schema.js",
+      "dist/core/keybindings-schema.js",
+      "dist/core/keybindings.js",
+      "dist/modes/interactive/chat-viewport.js",
+      "dist/modes/interactive/external-editor.js",
+      "dist/modes/interactive/model-catalog-refresh.js",
+      "dist/modes/interactive/model-search.js",
+      "dist/modes/interactive/program-status-reporter.js",
+      "dist/modes/interactive/tui-renderer.js"
+    ],
+    "associated_nonruntime_files": [
+      "dist/core/footer-data-provider.d.ts",
+      "dist/core/footer-data-provider.d.ts.map",
+      "dist/core/footer-data-provider.js.map",
+      "dist/core/key-id-schema.d.ts",
+      "dist/core/key-id-schema.d.ts.map",
+      "dist/core/key-id-schema.js.map",
+      "dist/core/keybindings-schema.d.ts",
+      "dist/core/keybindings-schema.d.ts.map",
+      "dist/core/keybindings-schema.js.map",
+      "dist/core/keybindings.d.ts",
+      "dist/core/keybindings.d.ts.map",
+      "dist/core/keybindings.js.map",
+      "dist/modes/interactive/chat-viewport.d.ts",
+      "dist/modes/interactive/chat-viewport.d.ts.map",
+      "dist/modes/interactive/chat-viewport.js.map",
+      "dist/modes/interactive/external-editor.d.ts",
+      "dist/modes/interactive/external-editor.d.ts.map",
+      "dist/modes/interactive/external-editor.js.map",
+      "dist/modes/interactive/model-catalog-refresh.d.ts",
+      "dist/modes/interactive/model-catalog-refresh.d.ts.map",
+      "dist/modes/interactive/model-catalog-refresh.js.map",
+      "dist/modes/interactive/model-search.d.ts",
+      "dist/modes/interactive/model-search.d.ts.map",
+      "dist/modes/interactive/model-search.js.map",
+      "dist/modes/interactive/program-status-reporter.d.ts",
+      "dist/modes/interactive/program-status-reporter.d.ts.map",
+      "dist/modes/interactive/program-status-reporter.js.map",
+      "dist/modes/interactive/tui-renderer.d.ts",
+      "dist/modes/interactive/tui-renderer.d.ts.map",
+      "dist/modes/interactive/tui-renderer.js.map"
+    ]
+  },
+  "pending_producer_boundaries": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/fs-watch.js",
+      "status": "watcher-helper-body-pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/abort.js",
+      "status": "abort-helper-body-pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.js",
+      "status": "bounded-native-producer-body-pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/open-browser.js",
+      "status": "native-browser-body-pending"
+    },
+    {
+      "source": "external:typebox-schema-compiler-validator",
+      "status": "schema-compiler-validator-implementation-pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/config.js",
+      "status": "APP_NAME-and-agent-directory-config-producer-body-pending"
+    },
+    {
+      "source": "external:terminal-program-status-client-os-fs-git-editor-stdio",
+      "status": "external-native-client-or-payload-producers-pending"
+    },
+    {
+      "source": "external:optional-proxy-extension-API-consumers",
+      "status": "guard-delivery-catch-runtime-consumers-pending"
+    },
+    {
+      "source": "npm:get-east-asian-width@1.6.0/index.js",
+      "status": "transitive-width-body-archive-pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/keybindings.schema.json",
+      "status": "bounded-APP-KeyID-description-facets-only"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/docs/keybindings.md",
+      "status": "bounded-association-lines1-24-only"
+    }
+  ],
+  "limits": [
+    "Ten finite local bodies closed; frozen runtime census remains historical baseline and is not edited here. External/core/provider/native/non-JS graph remains open.",
+    "44 new schema definitions map45 shipped facets:43APP descriptions plus one KeyId description repeated for string/array items. User-opened resource/editor association is a sink; remote endpoint not verified, terminal/getDefinition/state.tools paint not assumed. Prior47TUI definitions remain in prior unit.",
+    "No own Error/throw in key-id/schema/config. TypeBox/Node/native API failures external; native Check false/config parse catch does not create headline. One own stale-proxy TypeError qualified API guard, not ordinary native renderer error.",
+    "ProgramStatus messages require state priority/dedup/supporting terminal client; protocol state values protected and payload session/dialog/error text external. Four detached source occurrences preserve distinct sync/async/ref fallback conditions and custom-footer gate.",
+    "External editor launch stdout exact template retains Pi wording; owned runtime-output only rewrites resume/title. Child inherit/temp-user-file sinks valid payload boundaries; error-event/null/nonzero suppressed tofailed, cleanup errors ignored, other rejections/host sinks pending.",
+    "Normal strings TypeScript-decoded; template bodies retain raw escape/interpolation spelling; exact exclusions JSON strings preserve source whitespace. No arbitrary payload translation or inferred catalog mapping.",
+    "Only source/JSON/archive reads and own six audit artifacts written; no old/shared/product/dependency/git writes, no audited module/parser/renderer/native/child/browser/model/state execution.",
+    "Default Jouzu Session UI footer suppresses native detached labels while active; four source occurrences remain qualified native/API definitions. Separate owned fallback jouzu.cli.session.status.detached is not a canonical mapping for them. Parent-owned Session UI bodies only bounded route support here."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-interactive-support.cjs",
+  "reviewed_artifact_sha256": {
+    "pi-interactive-support.csv": "8de8b024e272af2dc8709d0dedcb43bbf052d9ddb880797ba66ff1a9be53d6eb",
+    "pi-interactive-support-boundaries.csv": "12a91ccbe57da5758ad9726f9e6a9de1f1c5dc4e3c12c601f210144efb729648",
+    "pi-interactive-support-scope.csv": "772ed487f63bc1130d8456db07a675c19d5f614abc2b945efa90abe963c7f22c",
+    "pi-interactive-support-exclusions.csv": "807b521934e13698d7cb20862d0395ea0a38fa372536729d1c901ff2411cc735"
+  },
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/core/keybindings.js",
+            "archive_sha256": "0b66630b3aff6497ae0066feed179a9cff554d4a245c91629e55bc911fcf2db6",
+            "root_sha256": "0b66630b3aff6497ae0066feed179a9cff554d4a245c91629e55bc911fcf2db6",
+            "cli_nested_sha256": "0b66630b3aff6497ae0066feed179a9cff554d4a245c91629e55bc911fcf2db6",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/keybindings-schema.js",
+            "archive_sha256": "7b1ce599fbbb00c28942a076f9267ef26310a8817d8cb1b8ec30e2ba37780a4b",
+            "root_sha256": "7b1ce599fbbb00c28942a076f9267ef26310a8817d8cb1b8ec30e2ba37780a4b",
+            "cli_nested_sha256": "7b1ce599fbbb00c28942a076f9267ef26310a8817d8cb1b8ec30e2ba37780a4b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/key-id-schema.js",
+            "archive_sha256": "87a0cdcb0b8b7cdd45939b23862b2451d3505181fd6d38832abcc3cda97e37cc",
+            "root_sha256": "87a0cdcb0b8b7cdd45939b23862b2451d3505181fd6d38832abcc3cda97e37cc",
+            "cli_nested_sha256": "87a0cdcb0b8b7cdd45939b23862b2451d3505181fd6d38832abcc3cda97e37cc",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/footer-data-provider.js",
+            "archive_sha256": "cb31fe6973228249ad0b02d4ec79509a1f7c7e63c2c15df35bb5d5100685f2ac",
+            "root_sha256": "cb31fe6973228249ad0b02d4ec79509a1f7c7e63c2c15df35bb5d5100685f2ac",
+            "cli_nested_sha256": "cb31fe6973228249ad0b02d4ec79509a1f7c7e63c2c15df35bb5d5100685f2ac",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/program-status-reporter.js",
+            "archive_sha256": "df67168541ebcd4544f176b6976ac22aa30f6e68c7fb628338398201405e03d0",
+            "root_sha256": "df67168541ebcd4544f176b6976ac22aa30f6e68c7fb628338398201405e03d0",
+            "cli_nested_sha256": "df67168541ebcd4544f176b6976ac22aa30f6e68c7fb628338398201405e03d0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/tui-renderer.js",
+            "archive_sha256": "4c420a641ee6c0cb4b22677f97a11bc2da580b2b1f31ba56ac6f4e8df7bbd429",
+            "root_sha256": "4c420a641ee6c0cb4b22677f97a11bc2da580b2b1f31ba56ac6f4e8df7bbd429",
+            "cli_nested_sha256": "4c420a641ee6c0cb4b22677f97a11bc2da580b2b1f31ba56ac6f4e8df7bbd429",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/chat-viewport.js",
+            "archive_sha256": "77ff3d8a3f20950a95cc3b758ab04ee7cffdaba5a490a2390626e781ae30f70a",
+            "root_sha256": "77ff3d8a3f20950a95cc3b758ab04ee7cffdaba5a490a2390626e781ae30f70a",
+            "cli_nested_sha256": "77ff3d8a3f20950a95cc3b758ab04ee7cffdaba5a490a2390626e781ae30f70a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/model-catalog-refresh.js",
+            "archive_sha256": "e9947a5e9330b6ace4bcdf15aaadbe304eb0adff2e0928386b87e55485d2f2be",
+            "root_sha256": "e9947a5e9330b6ace4bcdf15aaadbe304eb0adff2e0928386b87e55485d2f2be",
+            "cli_nested_sha256": "e9947a5e9330b6ace4bcdf15aaadbe304eb0adff2e0928386b87e55485d2f2be",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/model-search.js",
+            "archive_sha256": "5fbe3c08cc30c21fe38bfb3a86bb790b020b8c4a2fec8e14e57419560f790a92",
+            "root_sha256": "5fbe3c08cc30c21fe38bfb3a86bb790b020b8c4a2fec8e14e57419560f790a92",
+            "cli_nested_sha256": "5fbe3c08cc30c21fe38bfb3a86bb790b020b8c4a2fec8e14e57419560f790a92",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/external-editor.js",
+            "archive_sha256": "27c7133602240acd07c849994a82058eb9ef3ae15299f386808c1dd0b85486d6",
+            "root_sha256": "27c7133602240acd07c849994a82058eb9ef3ae15299f386808c1dd0b85486d6",
+            "cli_nested_sha256": "27c7133602240acd07c849994a82058eb9ef3ae15299f386808c1dd0b85486d6",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "schemas/keybindings.schema.json",
+            "archive_sha256": "46d494b2493cd9fcf957d352aac653fe6f04121254f34033a5664e7c8f9928aa",
+            "root_sha256": "46d494b2493cd9fcf957d352aac653fe6f04121254f34033a5664e7c8f9928aa",
+            "cli_nested_sha256": "46d494b2493cd9fcf957d352aac653fe6f04121254f34033a5664e7c8f9928aa",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "docs/keybindings.md",
+            "archive_sha256": "413aa1c5e95a934d216aa5aba20052fa2cf35940ba5f02d1f4b22ff53c6ec678",
+            "root_sha256": "413aa1c5e95a934d216aa5aba20052fa2cf35940ba5f02d1f4b22ff53c6ec678",
+            "cli_nested_sha256": "413aa1c5e95a934d216aa5aba20052fa2cf35940ba5f02d1f4b22ff53c6ec678",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/interactive-mode.js",
+            "archive_sha256": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+            "root_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/components/footer.js",
+            "archive_sha256": "55b8492fb4ccda5e8f53a3a1882f091157dd85e08c9577db2f05e36020b22b88",
+            "root_sha256": "55b8492fb4ccda5e8f53a3a1882f091157dd85e08c9577db2f05e36020b22b88",
+            "cli_nested_sha256": "55b8492fb4ccda5e8f53a3a1882f091157dd85e08c9577db2f05e36020b22b88",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/components/custom-editor.js",
+            "archive_sha256": "000b0056f2bf645537537468bdd6f6ee0c82e4110f5417c1c70c2e8fefc04f29",
+            "root_sha256": "7e939c3aa80b1d5503b43731acb09a28110a5af1b2278960f3ecc58637a0d113",
+            "cli_nested_sha256": "7e939c3aa80b1d5503b43731acb09a28110a5af1b2278960f3ecc58637a0d113",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/components/model-selector.js",
+            "archive_sha256": "b1ab2e6efd1511f70f32a1c1530f01c782aa0e661ab9ead6e38a1c3735b667eb",
+            "root_sha256": "b1ab2e6efd1511f70f32a1c1530f01c782aa0e661ab9ead6e38a1c3735b667eb",
+            "cli_nested_sha256": "b1ab2e6efd1511f70f32a1c1530f01c782aa0e661ab9ead6e38a1c3735b667eb",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/keybindings.d.ts",
+            "archive_sha256": "fc8dfd4fcbdb7c5bdb17c5b5eccc22555ef089365358e25b89c02ba6c3a74e82",
+            "root_sha256": "fc8dfd4fcbdb7c5bdb17c5b5eccc22555ef089365358e25b89c02ba6c3a74e82",
+            "cli_nested_sha256": "fc8dfd4fcbdb7c5bdb17c5b5eccc22555ef089365358e25b89c02ba6c3a74e82",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/keybindings.d.ts.map",
+            "archive_sha256": "698007e08876c54778867e909d09d41d5addf1975466ec95dc1bfca6d95a0bb4",
+            "root_sha256": "698007e08876c54778867e909d09d41d5addf1975466ec95dc1bfca6d95a0bb4",
+            "cli_nested_sha256": "698007e08876c54778867e909d09d41d5addf1975466ec95dc1bfca6d95a0bb4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/keybindings.js.map",
+            "archive_sha256": "66485538e944436b01709108fa57a8388d8646c2267377af6f5ecfabca3b161d",
+            "root_sha256": "66485538e944436b01709108fa57a8388d8646c2267377af6f5ecfabca3b161d",
+            "cli_nested_sha256": "66485538e944436b01709108fa57a8388d8646c2267377af6f5ecfabca3b161d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/keybindings-schema.d.ts",
+            "archive_sha256": "ccdef4092518e8ec691e7ca3eeaa846a72e19b36aa8025bd39443e0ebe5fe90c",
+            "root_sha256": "ccdef4092518e8ec691e7ca3eeaa846a72e19b36aa8025bd39443e0ebe5fe90c",
+            "cli_nested_sha256": "ccdef4092518e8ec691e7ca3eeaa846a72e19b36aa8025bd39443e0ebe5fe90c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/keybindings-schema.d.ts.map",
+            "archive_sha256": "534ad0ca5b52ef7a0d6744d48d49a60747a674c786299faf506759678f2b5374",
+            "root_sha256": "534ad0ca5b52ef7a0d6744d48d49a60747a674c786299faf506759678f2b5374",
+            "cli_nested_sha256": "534ad0ca5b52ef7a0d6744d48d49a60747a674c786299faf506759678f2b5374",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/keybindings-schema.js.map",
+            "archive_sha256": "e7fc366f3213910155ce41d4717e28619b818688edd44462c322cc2abedad21a",
+            "root_sha256": "e7fc366f3213910155ce41d4717e28619b818688edd44462c322cc2abedad21a",
+            "cli_nested_sha256": "e7fc366f3213910155ce41d4717e28619b818688edd44462c322cc2abedad21a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/key-id-schema.d.ts",
+            "archive_sha256": "e394c96c87d963aa387568fdd343b4fc61a32d05c06182306939612d5f6b6bb9",
+            "root_sha256": "e394c96c87d963aa387568fdd343b4fc61a32d05c06182306939612d5f6b6bb9",
+            "cli_nested_sha256": "e394c96c87d963aa387568fdd343b4fc61a32d05c06182306939612d5f6b6bb9",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/key-id-schema.d.ts.map",
+            "archive_sha256": "f7e5fd54aafc35573dda6e6495d097dc7c1b709b5e074984b644a9b38276c65a",
+            "root_sha256": "f7e5fd54aafc35573dda6e6495d097dc7c1b709b5e074984b644a9b38276c65a",
+            "cli_nested_sha256": "f7e5fd54aafc35573dda6e6495d097dc7c1b709b5e074984b644a9b38276c65a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/key-id-schema.js.map",
+            "archive_sha256": "81a461983a2ae043b8371579549a4004abb4e4bd1f8993b447c0b08a80e4201e",
+            "root_sha256": "81a461983a2ae043b8371579549a4004abb4e4bd1f8993b447c0b08a80e4201e",
+            "cli_nested_sha256": "81a461983a2ae043b8371579549a4004abb4e4bd1f8993b447c0b08a80e4201e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/footer-data-provider.d.ts",
+            "archive_sha256": "2649afb926e5f78694e61faa65f5427dd1c2bc257b6b48588b71259c7c89ba3b",
+            "root_sha256": "2649afb926e5f78694e61faa65f5427dd1c2bc257b6b48588b71259c7c89ba3b",
+            "cli_nested_sha256": "2649afb926e5f78694e61faa65f5427dd1c2bc257b6b48588b71259c7c89ba3b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/footer-data-provider.d.ts.map",
+            "archive_sha256": "0deef3b1adac44cf1be885782e86b1f58f4f32163463e46baff3e11dbb4494be",
+            "root_sha256": "0deef3b1adac44cf1be885782e86b1f58f4f32163463e46baff3e11dbb4494be",
+            "cli_nested_sha256": "0deef3b1adac44cf1be885782e86b1f58f4f32163463e46baff3e11dbb4494be",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/footer-data-provider.js.map",
+            "archive_sha256": "207c04b88fae5728bb256cb17042e631bcf208d49b3259325b6544d942fd68bf",
+            "root_sha256": "207c04b88fae5728bb256cb17042e631bcf208d49b3259325b6544d942fd68bf",
+            "cli_nested_sha256": "207c04b88fae5728bb256cb17042e631bcf208d49b3259325b6544d942fd68bf",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/program-status-reporter.d.ts",
+            "archive_sha256": "6086d35eff6ed1df541b3c418181eec729236eb06e46072be217ce92918cc292",
+            "root_sha256": "6086d35eff6ed1df541b3c418181eec729236eb06e46072be217ce92918cc292",
+            "cli_nested_sha256": "6086d35eff6ed1df541b3c418181eec729236eb06e46072be217ce92918cc292",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/program-status-reporter.d.ts.map",
+            "archive_sha256": "93b72db713e855775c5369f2081f99265ea9aaa2d05ac1caca801b540d2c4a43",
+            "root_sha256": "93b72db713e855775c5369f2081f99265ea9aaa2d05ac1caca801b540d2c4a43",
+            "cli_nested_sha256": "93b72db713e855775c5369f2081f99265ea9aaa2d05ac1caca801b540d2c4a43",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/program-status-reporter.js.map",
+            "archive_sha256": "945b81be211d6bae7cf8317885ed40c0603d062dd42c33a4a907fe46b0d1a767",
+            "root_sha256": "945b81be211d6bae7cf8317885ed40c0603d062dd42c33a4a907fe46b0d1a767",
+            "cli_nested_sha256": "945b81be211d6bae7cf8317885ed40c0603d062dd42c33a4a907fe46b0d1a767",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/tui-renderer.d.ts",
+            "archive_sha256": "2587efa14f18c4f213b614c52af1278d384cb874cd6984942a9c4ef59c99e0de",
+            "root_sha256": "2587efa14f18c4f213b614c52af1278d384cb874cd6984942a9c4ef59c99e0de",
+            "cli_nested_sha256": "2587efa14f18c4f213b614c52af1278d384cb874cd6984942a9c4ef59c99e0de",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/tui-renderer.d.ts.map",
+            "archive_sha256": "003fe2e120e111ff6963fcbae0743b8381127eedbfead6546081ff52d4a29b7f",
+            "root_sha256": "003fe2e120e111ff6963fcbae0743b8381127eedbfead6546081ff52d4a29b7f",
+            "cli_nested_sha256": "003fe2e120e111ff6963fcbae0743b8381127eedbfead6546081ff52d4a29b7f",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/tui-renderer.js.map",
+            "archive_sha256": "66a87a5e831415b5fa7d2a124a7e5730154183525e65c8a21c54c0aca6c75072",
+            "root_sha256": "66a87a5e831415b5fa7d2a124a7e5730154183525e65c8a21c54c0aca6c75072",
+            "cli_nested_sha256": "66a87a5e831415b5fa7d2a124a7e5730154183525e65c8a21c54c0aca6c75072",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/chat-viewport.d.ts",
+            "archive_sha256": "9f953b8f56eee16e96b11552343209f0e663e3bbd9c92197c7bbb60dc6612a3d",
+            "root_sha256": "9f953b8f56eee16e96b11552343209f0e663e3bbd9c92197c7bbb60dc6612a3d",
+            "cli_nested_sha256": "9f953b8f56eee16e96b11552343209f0e663e3bbd9c92197c7bbb60dc6612a3d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/chat-viewport.d.ts.map",
+            "archive_sha256": "619a67566ca7e953319c4e7dc8ba01165584ab166415a42c0cfb60ac974e7d33",
+            "root_sha256": "619a67566ca7e953319c4e7dc8ba01165584ab166415a42c0cfb60ac974e7d33",
+            "cli_nested_sha256": "619a67566ca7e953319c4e7dc8ba01165584ab166415a42c0cfb60ac974e7d33",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/chat-viewport.js.map",
+            "archive_sha256": "9668f85a3b81f3e3bccf47994f8b454a45544463e82bc2ab0a0eda0c0076002b",
+            "root_sha256": "9668f85a3b81f3e3bccf47994f8b454a45544463e82bc2ab0a0eda0c0076002b",
+            "cli_nested_sha256": "9668f85a3b81f3e3bccf47994f8b454a45544463e82bc2ab0a0eda0c0076002b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/model-catalog-refresh.d.ts",
+            "archive_sha256": "4fdfb5ce998fef78312e3aca58dbe4f2c04070e26934ecf818a2d39545b418cd",
+            "root_sha256": "4fdfb5ce998fef78312e3aca58dbe4f2c04070e26934ecf818a2d39545b418cd",
+            "cli_nested_sha256": "4fdfb5ce998fef78312e3aca58dbe4f2c04070e26934ecf818a2d39545b418cd",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/model-catalog-refresh.d.ts.map",
+            "archive_sha256": "b545d9345e885f6f546d04aa6ca70aeec25fec66fc83dcd2a1bfe3d21be6fe69",
+            "root_sha256": "b545d9345e885f6f546d04aa6ca70aeec25fec66fc83dcd2a1bfe3d21be6fe69",
+            "cli_nested_sha256": "b545d9345e885f6f546d04aa6ca70aeec25fec66fc83dcd2a1bfe3d21be6fe69",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/model-catalog-refresh.js.map",
+            "archive_sha256": "71b4f0e8fcb584abb3c3b720f44cbb573c243e2fbe2399eac4cab61c1b72ac48",
+            "root_sha256": "71b4f0e8fcb584abb3c3b720f44cbb573c243e2fbe2399eac4cab61c1b72ac48",
+            "cli_nested_sha256": "71b4f0e8fcb584abb3c3b720f44cbb573c243e2fbe2399eac4cab61c1b72ac48",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/model-search.d.ts",
+            "archive_sha256": "6ee874987594ee89eef440b18f0cb18eea34ea24a1c7d309452bde3aebf5fd7f",
+            "root_sha256": "6ee874987594ee89eef440b18f0cb18eea34ea24a1c7d309452bde3aebf5fd7f",
+            "cli_nested_sha256": "6ee874987594ee89eef440b18f0cb18eea34ea24a1c7d309452bde3aebf5fd7f",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/model-search.d.ts.map",
+            "archive_sha256": "1aa024d85c86f90acd0332af4872200c900e8e39ac222de8cdb8ee9eef8d7545",
+            "root_sha256": "1aa024d85c86f90acd0332af4872200c900e8e39ac222de8cdb8ee9eef8d7545",
+            "cli_nested_sha256": "1aa024d85c86f90acd0332af4872200c900e8e39ac222de8cdb8ee9eef8d7545",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/model-search.js.map",
+            "archive_sha256": "f4215380c32062c563c5e4e48cd7498c5f0dcd5adcb9b1705d05add066aba314",
+            "root_sha256": "f4215380c32062c563c5e4e48cd7498c5f0dcd5adcb9b1705d05add066aba314",
+            "cli_nested_sha256": "f4215380c32062c563c5e4e48cd7498c5f0dcd5adcb9b1705d05add066aba314",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/external-editor.d.ts",
+            "archive_sha256": "bcfb3c53a8ba2d089630fa9e54067f881827d7fd5abdf57d5eba6b5609eac8ed",
+            "root_sha256": "bcfb3c53a8ba2d089630fa9e54067f881827d7fd5abdf57d5eba6b5609eac8ed",
+            "cli_nested_sha256": "bcfb3c53a8ba2d089630fa9e54067f881827d7fd5abdf57d5eba6b5609eac8ed",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/external-editor.d.ts.map",
+            "archive_sha256": "ba4ee9198b1088c0d5f4dffa616cf9e53c81d0adb10c883f2cd5da57d3de39d9",
+            "root_sha256": "ba4ee9198b1088c0d5f4dffa616cf9e53c81d0adb10c883f2cd5da57d3de39d9",
+            "cli_nested_sha256": "ba4ee9198b1088c0d5f4dffa616cf9e53c81d0adb10c883f2cd5da57d3de39d9",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/external-editor.js.map",
+            "archive_sha256": "44b99feac0a42f33f0c7a22408a600eafafea35c8bb1edf95fa7d8df2f5ce491",
+            "root_sha256": "44b99feac0a42f33f0c7a22408a600eafafea35c8bb1edf95fa7d8df2f5ce491",
+            "cli_nested_sha256": "44b99feac0a42f33f0c7a22408a600eafafea35c8bb1edf95fa7d8df2f5ce491",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/tui-alt-screen.js",
+            "archive_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+            "root_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+            "cli_nested_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/terminal.js",
+            "archive_sha256": "e70c20799ef55ae4606c72f96658731d85921f5987a0d8edc0e8ef010bb51466",
+            "root_sha256": "e70c20799ef55ae4606c72f96658731d85921f5987a0d8edc0e8ef010bb51466",
+            "cli_nested_sha256": "e70c20799ef55ae4606c72f96658731d85921f5987a0d8edc0e8ef010bb51466",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/program-status.js",
+            "archive_sha256": "e38a5f11b3cbfc3bcd66a56252f9ab3fcfdd1fac5d997cbd2db2393ce4d85acf",
+            "root_sha256": "e38a5f11b3cbfc3bcd66a56252f9ab3fcfdd1fac5d997cbd2db2393ce4d85acf",
+            "cli_nested_sha256": "e38a5f11b3cbfc3bcd66a56252f9ab3fcfdd1fac5d997cbd2db2393ce4d85acf",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/keybindings.js",
+            "archive_sha256": "651b2366750b9149a0841c2dc9d84f5c854bae53a82b8e98eba07c0e662086a8",
+            "root_sha256": "651b2366750b9149a0841c2dc9d84f5c854bae53a82b8e98eba07c0e662086a8",
+            "cli_nested_sha256": "651b2366750b9149a0841c2dc9d84f5c854bae53a82b8e98eba07c0e662086a8",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      }
+    ],
+    "scoped_file_count": 50,
+    "byte_identical_scope_files": 48,
+    "pinned_patch_scope_files": 2,
+    "unresolved_scope_differences": 0
+  },
+  "owned_footer_route": {
+    "default_tui_installation": "main-cli sessionUi extension -> session_start ctx.mode=tui -> ctx.ui.setFooter -> native customFooter replaces built-in child",
+    "native_suppression": "While default Jouzu custom footer active, native getGitBranch detached labels are not painted by active footer. Stock/restored/native/API consumers remain qualified; no pre-replacement native frame asserted.",
+    "owned_git_source": "SessionStatusController.readGit defaults readGitStatus; StatusBar uses snapshot.git.value.branch or text.statusDetached, not native getGitBranch.",
+    "owned_fallback_catalog_id": "jouzu.cli.session.status.detached",
+    "parent_source_owner": "Session UI full source inventories; this is bounded routing support only",
+    "proofs": [
+      {
+        "source": "packages/cli/src/main-cli.ts",
+        "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a",
+        "read_ranges": [
+          [
+            637,
+            639
+          ],
+          [
+            783,
+            786
+          ]
+        ],
+        "source_text_json": [
+          "\"\\tconst sessionUi = createSessionUiExtension({\\n\\t\\tcatalog: preRuntime.catalog.bundle,\\n\\t\\tdashboard: {\"",
+          "\"\\t\\t\\t\\t\\tresponseLanguageSection: () => languageContract.currentSection(),\\n\\t\\t\\t\\t}),\\n\\t\\t\\t\\tsessionUi,\\n\\t\\t\\t\\t// Account commands must run before model-availability input checks.\""
+        ]
+      },
+      {
+        "source": "packages/session-ui/src/extension.ts",
+        "sha256": "3c146dab00f8280d63c339e08a48a2953add3659b01a20f650dc21c7d14efe8a",
+        "read_ranges": [
+          [
+            84,
+            85
+          ],
+          [
+            139,
+            154
+          ]
+        ],
+        "source_text_json": [
+          "\"\\t\\t\\tpi.on(\\\"session_start\\\", (_event, ctx) => {\\n\\t\\t\\t\\tif (ctx.mode !== \\\"tui\\\") return;\"",
+          "\"\\t\\t\\t\\tctx.ui.setFooter((tui, theme, footerData) => {\\n\\t\\t\\t\\t\\trequestRender = () => tui.requestRender();\\n\\t\\t\\t\\t\\textensionStatuses = footerData.getExtensionStatuses();\\n\\t\\t\\t\\t\\tconst statusBar = new StatusBarComponent(activeController, stylesFor(theme), text, () => tui.requestRender());\\n\\t\\t\\t\\t\\tconst unsubscribeBranch = footerData.onBranchChange(() => {\\n\\t\\t\\t\\t\\t\\tvoid activeController.refreshGit(ctx);\\n\\t\\t\\t\\t\\t});\\n\\t\\t\\t\\t\\treturn {\\n\\t\\t\\t\\t\\t\\trender: (width) => statusBar.render(width),\\n\\t\\t\\t\\t\\t\\tinvalidate: () => statusBar.invalidate(),\\n\\t\\t\\t\\t\\t\\tdispose: () => {\\n\\t\\t\\t\\t\\t\\t\\tunsubscribeBranch();\\n\\t\\t\\t\\t\\t\\t\\tstatusBar.dispose();\\n\\t\\t\\t\\t\\t\\t},\\n\\t\\t\\t\\t\\t};\\n\\t\\t\\t\\t});\""
+        ]
+      },
+      {
+        "source": "packages/session-ui/src/controller.ts",
+        "sha256": "ecb04db145e2d6b7b9425a643c66b29311ea9819047f06642aa8b491ed86fae1",
+        "read_ranges": [
+          [
+            10,
+            10
+          ],
+          [
+            44,
+            44
+          ],
+          [
+            103,
+            114
+          ]
+        ],
+        "source_text_json": [
+          "\"import { type GitStatusSnapshot, readGitStatus } from \\\"./sources/git.js\\\";\"",
+          "\"\\t\\tthis.readGit = options.readGit ?? readGitStatus;\"",
+          "\"\\t\\t\\tconst [git, runtime] = await Promise.allSettled([\\n\\t\\t\\t\\trequest.git ? this.readGit(request.ctx.cwd, this.run, this.abortController.signal) : Promise.resolve(undefined),\\n\\t\\t\\t\\trequest.runtime\\n\\t\\t\\t\\t\\t? this.readRuntime(request.ctx.cwd, this.run, this.abortController.signal)\\n\\t\\t\\t\\t\\t: Promise.resolve(undefined),\\n\\t\\t\\t]);\\n\\t\\t\\tif (this.disposed) return;\\n\\t\\t\\tconst observedAt = this.clock.now();\\n\\t\\t\\tif (request.git) {\\n\\t\\t\\t\\tthis.git =\\n\\t\\t\\t\\t\\tgit.status === \\\"fulfilled\\\"\\n\\t\\t\\t\\t\\t\\t? { status: git.value ? \\\"known\\\" : \\\"unknown\\\", observedAt, ...(git.value ? { value: git.value } : {}) }\""
+        ]
+      },
+      {
+        "source": "packages/session-ui/src/status-bar.ts",
+        "sha256": "068158e5ebd98c5a3e5280aedc5271d622daeb3c59412aac33ee5aef16c94787",
+        "read_ranges": [
+          [
+            108,
+            111
+          ]
+        ],
+        "source_text_json": [
+          "\"\\tif (snapshot.git.value) {\\n\\t\\tconst flags = gitFlags(snapshot);\\n\\t\\tconst branch = sanitizeTerminalText(snapshot.git.value.branch ?? text.statusDetached);\\n\\t\\tconst changes = flags ? ` [${flags}]` : \\\"\\\";\""
+        ]
+      },
+      {
+        "source": "packages/session-ui/src/sources/git.ts",
+        "sha256": "f2865b1d36d323c5a450795afb499740503f40c24298f1bfc448d5c48d69f90d",
+        "read_ranges": [
+          [
+            82,
+            90
+          ]
+        ],
+        "source_text_json": [
+          "\"export async function readGitStatus(\\n\\tcwd: string,\\n\\trun: SessionUiCommandRunner,\\n\\tsignal?: AbortSignal,\\n): Promise<GitStatusSnapshot | undefined> {\\n\\tconst result = await run(\\\"git\\\", [...GIT_STATUS_ARGS], { cwd, timeout: 3000, ...(signal ? { signal } : {}) });\\n\\tif (result.code !== 0 || result.killed) return undefined;\\n\\treturn parseGitStatus(result.stdout);\\n}\""
+        ]
+      },
+      {
+        "source": "packages/session-ui/src/contracts.ts",
+        "sha256": "2b6af569cddb423e942b58eda3dca87b7e2fc73e9f79bf7fd9102baddc6808e1",
+        "read_ranges": [
+          [
+            47,
+            47
+          ],
+          [
+            350,
+            351
+          ]
+        ],
+        "source_text_json": [
+          "\"\\tstatusDetached: \\\"jouzu.cli.session.status.detached\\\",\"",
+          "\"\\t\\tget statusDetached() {\\n\\t\\t\\treturn catalog.format(ids.statusDetached);\""
+        ]
+      }
+    ]
+  },
+  "footer_route_correction": {
+    "rows": [
+      "pi.interactive-support.core.footer_data_provider.222.100",
+      "pi.interactive-support.core.footer_data_provider.224.20",
+      "pi.interactive-support.core.footer_data_provider.238.84",
+      "pi.interactive-support.core.footer_data_provider.241.20"
+    ],
+    "fields": [
+      "trigger",
+      "consumer_evidence",
+      "translation_boundary"
+    ],
+    "preserved_fields": [
+      "item_id",
+      "message_id",
+      "english",
+      "english_location",
+      "display_location",
+      "evidence"
+    ],
+    "boundary": "pi.interactive-support.boundary.3",
+    "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/footer-data-provider.js",
+    "reason": "Default owned Session UI footer suppression corrected; source strings/IDs/anchors preserved."
+  }
+}

@@ -66,7 +66,7 @@ and generated outputs need their separate provenance and consumer traces.
 Pi 1.4.0 installed JavaScript runtime universe: 382 canonical bodies and two
 pinned additions. Of the canonical bodies, 358 match npm archive bytes and 24
 match public source patches. Its frozen review baseline links 192 full Pi local
-body reviews and three full checked-in verbatim bodies; 189 bodies remain pending,
+body reviews and three full checked-in verbatim bodies; 189 were pending at that baseline,
 including 24 with bounded support only. All 46 terminal-library bodies have local
 reviews. The pending set contains 81 compiled bundles totaling 9,211,377 bytes;
 physical line counts alone understate that scope. The
@@ -75,6 +75,7 @@ physical line counts alone understate that scope. The
 hashes. Twelve corruption controls reject missing bodies and unsupported review
 promotions. These are local-body review references; resource, native, transitive
 dependency and complete consumer coverage remain open. No audited module is loaded.
+Follow-on local reviews retain their own scopes below; this baseline is frozen.
 
 The older [Japanese review](../ja-localization/README.md) retains its own source
 pin and translations; its counts must not be added to this inventory.
@@ -418,6 +419,22 @@ has no local forwarder. Canonical checks cover forty assets: 39 match archive
 bytes and one matches a pinned patch. Eleven corruption controls pass; external
 parsers, native/process/Intl and resolved width dependencies remain boundaries.
 No math renderer, autocomplete, child, native or callback code was executed.
+
+[pi-interactive-support.csv](pi-interactive-support.csv) adds 53 inherited
+occurrences, with nine [boundaries](pi-interactive-support-boundaries.csv).
+Ten complete keybinding, footer, status, viewport, search and editor helper bodies
+cover 986 lines. All 370 string/template occurrences are partitioned against
+317 [exclusions](pi-interactive-support-exclusions.csv). Forty-four schema
+definitions match 45 shipped facets; editor/resource delivery is distinct from
+terminal paint. Native detached labels are suppressed by Jouzu's active custom
+footer, which reads its own Git snapshot. OSC status messages, responsive jump
+hints, external-editor stdout and the stale-proxy API guard retain exact gates.
+The [scope](pi-interactive-support-scope.csv) accounts for four regexes, one
+TypeError/throw and six catches, with bounded proof of current footer replacement.
+Canonical checks cover fifty assets: 48 match archives and two match pinned
+patches. Thirteen corruption controls pass. This unit closes ten bodies pending
+in the frozen runtime census; Flow orchestration separately covers the event bus.
+No editor, terminal, native, child or user-state producer was executed.
 
 [pi-tools.csv](pi-tools.csv) supplies 172 inherited tool/helper occurrences,
 with 27 [payload boundaries](pi-tools-boundaries.csv). Its
@@ -1139,6 +1156,7 @@ node review/text-inventory/verify-pi-tui-utilities.cjs --node-modules <root-node
 node review/text-inventory/verify-pi-tui-engines.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-tui-input.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-tui-text-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-interactive-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
