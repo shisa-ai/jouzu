@@ -1,0 +1,19 @@
+{
+  "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "path": "apps/launcher/src-tauri/icons/icon.ico",
+  "git_blob": "174808ed705a01940ea63b17f34dbdb91401b1fe",
+  "source_sha256": "d6e7d9a3b312189099895d82ceda00b0b2e7336a6cd1ac1aa6b8f4d710eb8815",
+  "observation_extent": "Original embedded PNG frame only; other eight DIB frames retain opaque pixel status in resource-control-assets-snapshot.json.",
+  "frame_index_zero_based": 8,
+  "frame_width": 256,
+  "frame_height": 256,
+  "frame_bits_per_pixel": 32,
+  "frame_byte_offset": 110662,
+  "frame_byte_length": 4042,
+  "frame_sha256": "4dc6c8925c2e0371b90f30c47688089ae09f11c177f00dae8efc2a14ca2846e9",
+  "viewing_method": "Original PNG bytes extracted unchanged and opened with the image viewer; no image editing, regeneration or resampling.",
+  "visible_content": "Dotted JZ brand mark: cyan dots form J on the left; purple/pink dots form Z on the right.",
+  "fixed_English_sentence_observed": false,
+  "translation_boundary": "Brand glyph identity; no prose translation target observed in this frame. Raster paths, smaller frames and framework/OS selection remain separately qualified.",
+  "runtime_selection": "No native image/window operation executed; source observation alone does not establish current rendering route."
+}

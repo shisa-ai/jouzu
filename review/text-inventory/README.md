@@ -510,8 +510,12 @@ and does not claim test registration from selector data. Timing outputs use inpu
 record names, with exact suffix/key precedence and threshold conditions. The
 [snapshot](resource-control-assets-snapshot.json) also partitions the icon's
 114,704 bytes into nine frames and checks PNG structure/CRCs. The image viewer
-could not read the ICO; its pixels, visible text and runtime selection remain
-unknown. Seven corruption controls pass without decoding or native execution.
+could not read the ICO directly. A separate
+[visual observation](icon-visual-observation.json) views the unchanged embedded
+256-pixel PNG: a dotted JZ brand mark, with no English sentence observed. The
+other eight DIB frames and runtime selection remain unknown. Seven structural
+corruption controls pass; the observation checker verifies frame provenance and
+does not repeat the visual judgment or execute native rendering.
 
 [package-asset-text.csv](package-asset-text.csv) separates sixteen package,
 product, window-title and SVG annotations across eleven complete metadata/asset
@@ -1813,6 +1817,7 @@ python -B review/text-inventory/verify-resource-config-text.py
 python -B review/text-inventory/verify-license-source-text.py
 python -B review/text-inventory/verify-package-asset-text.py
 python -B review/text-inventory/verify-resource-control-assets.py
+python -B review/text-inventory/verify-icon-visual-observation.py
 python -B review/text-inventory/verify-installer-dependencies.py --cache-dir <archive-directory>
 python -B review/text-inventory/verify-flow.py
 python -B review/text-inventory/verify-flow-report.py
