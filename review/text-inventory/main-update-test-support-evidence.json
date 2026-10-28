@@ -1,0 +1,2039 @@
+{
+  "target_revision": "1fda3eb161b042aae66e4adcc07319f69946dadd",
+  "full_bodies": {
+    "packages/cli/test/cli-startup.test.mjs": 132,
+    "packages/cli/test/model-catalog-default.test.mjs": 66,
+    "packages/cli/test/pi-auth-completion.test.mjs": 77,
+    "packaging/launcher/export-recipe.test.mjs": 86
+  },
+  "full_lines": 361,
+  "test_titles": 16,
+  "fixture_error_occurrences": 4,
+  "boundaries": 2,
+  "lexical_occurrences": 224,
+  "excluded_occurrences": 205,
+  "partition": [
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 1,
+      "column": 20,
+      "start": 19,
+      "end": 39,
+      "expression": "\"node:assert/strict\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:1:20"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 2,
+      "column": 27,
+      "start": 67,
+      "end": 87,
+      "expression": "\"node:child_process\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:2:27"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 3,
+      "column": 77,
+      "start": 165,
+      "end": 174,
+      "expression": "\"node:fs\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:3:77"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 4,
+      "column": 24,
+      "start": 199,
+      "end": 208,
+      "expression": "\"node:os\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:4:24"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 5,
+      "column": 22,
+      "start": 231,
+      "end": 242,
+      "expression": "\"node:path\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:5:22"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 6,
+      "column": 22,
+      "start": 265,
+      "end": 276,
+      "expression": "\"node:test\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:6:22"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 7,
+      "column": 46,
+      "start": 323,
+      "end": 333,
+      "expression": "\"node:url\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:7:46"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 9,
+      "column": 35,
+      "start": 370,
+      "end": 386,
+      "expression": "\"../dist/cli.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:9:35"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 12,
+      "column": 42,
+      "start": 471,
+      "end": 487,
+      "expression": "\"jouzu-startup-\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:12:42"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 16,
+      "column": 16,
+      "start": 641,
+      "end": 720,
+      "expression": "/^(?:JOUZU_|PI_|NODE_COMPILE_CACHE$|NODE_DISABLE_COMPILE_CACHE$|NODE_OPTIONS$)/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:16:16"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 19,
+      "column": 55,
+      "start": 795,
+      "end": 801,
+      "expression": "\"home\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:19:55"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 19,
+      "column": 81,
+      "start": 821,
+      "end": 825,
+      "expression": "\"en\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:19:81"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 19,
+      "column": 99,
+      "start": 839,
+      "end": 842,
+      "expression": "\"1\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:19:99"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 23,
+      "column": 38,
+      "start": 923,
+      "end": 933,
+      "expression": "\"--import\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:23:38"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 24,
+      "column": 13,
+      "start": 993,
+      "end": 999,
+      "expression": "\"utf8\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:24:13"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 30,
+      "column": 6,
+      "start": 1040,
+      "end": 1115,
+      "expression": "\"help avoids the main runtime and preserves locale and argument validation\"",
+      "id": "MAIN-UPDATE-TEST-001"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 32,
+      "column": 29,
+      "start": 1189,
+      "end": 1205,
+      "expression": "\"no-runtime.mjs\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:32:29"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 35,
+      "column": 3,
+      "start": 1237,
+      "end": 1467,
+      "expression": "`import { registerHooks } from \"node:module\";\nregisterHooks({ resolve(specifier, context, nextResolve) {\n  if (specifier === \"./main-cli.js\") throw new Error(\"Main runtime loaded\");\n  return nextResolve(specifier, context);\n}});\n`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:35:3"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 42,
+      "column": 23,
+      "start": 1495,
+      "end": 1503,
+      "expression": "\"--help\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:42:23"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 42,
+      "column": 35,
+      "start": 1507,
+      "end": 1511,
+      "expression": "\"-h\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:42:35"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 42,
+      "column": 43,
+      "start": 1515,
+      "end": 1520,
+      "expression": "\"acp\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:42:43"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 42,
+      "column": 50,
+      "start": 1522,
+      "end": 1530,
+      "expression": "\"--help\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:42:50"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 42,
+      "column": 62,
+      "start": 1534,
+      "end": 1539,
+      "expression": "\"acp\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:42:62"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 42,
+      "column": 69,
+      "start": 1541,
+      "end": 1545,
+      "expression": "\"-h\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:42:69"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 45,
+      "column": 31,
+      "start": 1672,
+      "end": 1702,
+      "expression": "/Jouzu agentic AI environment/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:45:31"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 46,
+      "column": 31,
+      "start": 1735,
+      "end": 1737,
+      "expression": "\"\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:46:31"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 48,
+      "column": 18,
+      "start": 1760,
+      "end": 1779,
+      "expression": "\"--jouzu-ui-locale\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:48:18"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 48,
+      "column": 39,
+      "start": 1781,
+      "end": 1785,
+      "expression": "\"ja\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:48:39"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 48,
+      "column": 45,
+      "start": 1787,
+      "end": 1795,
+      "expression": "\"--help\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:48:45"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 50,
+      "column": 26,
+      "start": 1878,
+      "end": 1900,
+      "expression": "/Jouzu エージェント型 AI 環境/u",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:50:26"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 51,
+      "column": 23,
+      "start": 1925,
+      "end": 1933,
+      "expression": "\"--help\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:51:23"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 51,
+      "column": 33,
+      "start": 1935,
+      "end": 1947,
+      "expression": "\"unexpected\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:51:33"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 53,
+      "column": 31,
+      "start": 2045,
+      "end": 2047,
+      "expression": "\"\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:53:31"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 54,
+      "column": 38,
+      "start": 2087,
+      "end": 2108,
+      "expression": "/Main runtime loaded/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:54:38"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 55,
+      "column": 26,
+      "start": 2136,
+      "end": 2153,
+      "expression": "\"saved locale 上手\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:55:26"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 58,
+      "column": 65,
+      "start": 2276,
+      "end": 2280,
+      "expression": "\"ja\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:58:65"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 58,
+      "column": 76,
+      "start": 2287,
+      "end": 2309,
+      "expression": "/Jouzu エージェント型 AI 環境/u",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:58:76"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 59,
+      "column": 4,
+      "start": 2315,
+      "end": 2324,
+      "expression": "\"{broken\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:59:4"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 59,
+      "column": 15,
+      "start": 2326,
+      "end": 2356,
+      "expression": "/Jouzu agentic AI environment/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:59:15"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 60,
+      "column": 44,
+      "start": 2402,
+      "end": 2432,
+      "expression": "/Jouzu agentic AI environment/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:60:44"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 62,
+      "column": 28,
+      "start": 2468,
+      "end": 2487,
+      "expression": "\"localization.json\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:62:28"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 63,
+      "column": 22,
+      "start": 2522,
+      "end": 2536,
+      "expression": "\"--jouzu-home\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:63:22"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 63,
+      "column": 44,
+      "start": 2544,
+      "end": 2552,
+      "expression": "\"--help\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:63:44"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 66,
+      "column": 30,
+      "start": 2686,
+      "end": 2688,
+      "expression": "\"\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:66:30"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 70,
+      "column": 6,
+      "start": 2704,
+      "end": 2781,
+      "expression": "\"help validates locale inputs and version still validates the loaded runtime\"",
+      "id": "MAIN-UPDATE-TEST-002"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 72,
+      "column": 29,
+      "start": 2855,
+      "end": 2877,
+      "expression": "\"wrong-pi-version.mjs\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:72:29"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 75,
+      "column": 3,
+      "start": 2909,
+      "end": 3265,
+      "expression": "`import { registerHooks } from \"node:module\";\nregisterHooks({ resolve(specifier, context, nextResolve) {\n  if (specifier === \"@earendil-works/pi-coding-agent\" && context.parentURL.endsWith(\"/main-cli.js\")) {\n    return { shortCircuit: true, url: \"data:text/javascript,export const VERSION = '0.0.0';\" };\n  }\n  return nextResolve(specifier, context);\n}});\n`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:75:3"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 84,
+      "column": 23,
+      "start": 3293,
+      "end": 3312,
+      "expression": "\"--jouzu-ui-locale\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:84:23"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 84,
+      "column": 44,
+      "start": 3314,
+      "end": 3323,
+      "expression": "\"invalid\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:84:44"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 84,
+      "column": 55,
+      "start": 3325,
+      "end": 3333,
+      "expression": "\"--help\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:84:55"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 86,
+      "column": 31,
+      "start": 3431,
+      "end": 3433,
+      "expression": "\"\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:86:31"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 87,
+      "column": 31,
+      "start": 3466,
+      "end": 3501,
+      "expression": "/--jouzu-ui-locale must be one of:/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:87:31"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 88,
+      "column": 24,
+      "start": 3527,
+      "end": 3535,
+      "expression": "\"--help\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:88:24"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 88,
+      "column": 62,
+      "start": 3565,
+      "end": 3574,
+      "expression": "\"invalid\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:88:62"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 90,
+      "column": 32,
+      "start": 3671,
+      "end": 3701,
+      "expression": "/Jouzu agentic AI environment/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:90:32"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 91,
+      "column": 23,
+      "start": 3726,
+      "end": 3737,
+      "expression": "\"--version\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:91:23"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 93,
+      "column": 31,
+      "start": 3835,
+      "end": 3837,
+      "expression": "\"\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:93:31"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 94,
+      "column": 31,
+      "start": 3870,
+      "end": 3879,
+      "expression": "/0\\.0\\.0/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:94:31"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 95,
+      "column": 31,
+      "start": 3912,
+      "end": 3918,
+      "expression": "/pin/i",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:95:31"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 98,
+      "column": 6,
+      "start": 3931,
+      "end": 4013,
+      "expression": "\"the entry point enables Node's optional cache before loading application modules\"",
+      "id": "MAIN-UPDATE-TEST-003"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 100,
+      "column": 29,
+      "start": 4087,
+      "end": 4104,
+      "expression": "\"cache-probe.mjs\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:100:29"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 101,
+      "column": 32,
+      "start": 4138,
+      "end": 4156,
+      "expression": "\"cache-state.json\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:101:32"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 104,
+      "column": 3,
+      "start": 4188,
+      "end": 4561,
+      "expression": "`import { getCompileCacheDir, registerHooks } from \"node:module\";\nimport { writeFileSync } from \"node:fs\";\nregisterHooks({ resolve(specifier, context, nextResolve) {\n  if (specifier === \"./cli-bootstrap.js\") {\n    writeFileSync(${JSON.stringify(resultPath)}, JSON.stringify({ directory: getCompileCacheDir() ?? null }));\n  }\n  return nextResolve(specifier, context);\n}});\n`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:104:3"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 114,
+      "column": 29,
+      "start": 4595,
+      "end": 4612,
+      "expression": "\"not-a-directory\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:114:29"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 115,
+      "column": 25,
+      "start": 4639,
+      "end": 4648,
+      "expression": "\"blocked\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:115:25"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 116,
+      "column": 31,
+      "start": 4681,
+      "end": 4701,
+      "expression": "\"temporary cache 上手\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:116:31"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 119,
+      "column": 4,
+      "start": 4785,
+      "end": 4794,
+      "expression": "\"default\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:119:4"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 120,
+      "column": 4,
+      "start": 4873,
+      "end": 4883,
+      "expression": "\"override\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:120:4"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 120,
+      "column": 49,
+      "start": 4918,
+      "end": 4935,
+      "expression": "\"custom cache 上手\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:120:49"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 120,
+      "column": 88,
+      "start": 4957,
+      "end": 4974,
+      "expression": "\"custom cache 上手\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:120:88"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 121,
+      "column": 4,
+      "start": 4981,
+      "end": 4991,
+      "expression": "\"disabled\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:121:4"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 121,
+      "column": 46,
+      "start": 5023,
+      "end": 5026,
+      "expression": "\"1\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:121:46"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 122,
+      "column": 4,
+      "start": 5041,
+      "end": 5054,
+      "expression": "\"unavailable\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:122:4"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 124,
+      "column": 23,
+      "start": 5142,
+      "end": 5150,
+      "expression": "\"--help\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:124:23"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 125,
+      "column": 34,
+      "start": 5218,
+      "end": 5246,
+      "expression": "`${label}: ${result.stderr}`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:125:34"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 126,
+      "column": 31,
+      "start": 5279,
+      "end": 5281,
+      "expression": "\"\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:126:31"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 127,
+      "column": 31,
+      "start": 5321,
+      "end": 5329,
+      "expression": "/Usage:/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:127:31"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 128,
+      "column": 61,
+      "start": 5399,
+      "end": 5405,
+      "expression": "\"utf8\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:128:61"
+    },
+    {
+      "path": "packages/cli/test/cli-startup.test.mjs",
+      "line": 130,
+      "column": 62,
+      "start": 5522,
+      "end": 5546,
+      "expression": "`${label}: ${directory}`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/cli-startup.test.mjs:130:62"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 1,
+      "column": 20,
+      "start": 19,
+      "end": 39,
+      "expression": "\"node:assert/strict\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:1:20"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 2,
+      "column": 18,
+      "start": 58,
+      "end": 69,
+      "expression": "\"node:test\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:2:18"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 3,
+      "column": 42,
+      "start": 112,
+      "end": 146,
+      "expression": "\"../dist/model-catalog-default.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:3:42"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 5,
+      "column": 41,
+      "start": 189,
+      "end": 198,
+      "expression": "\"example\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:5:41"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 10,
+      "column": 17,
+      "start": 306,
+      "end": 315,
+      "expression": "\"gateway\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:10:17"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 20,
+      "column": 6,
+      "start": 486,
+      "end": 575,
+      "expression": "\"catalog defaults rank higher integer priorities first, independently of inventory order\"",
+      "id": "MAIN-UPDATE-TEST-004"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 22,
+      "column": 9,
+      "start": 614,
+      "end": 621,
+      "expression": "\"flash\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:22:9"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 23,
+      "column": 9,
+      "start": 660,
+      "end": 667,
+      "expression": "\"other\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:23:9"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 24,
+      "column": 9,
+      "start": 679,
+      "end": 691,
+      "expression": "\"flash-next\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:24:9"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 26,
+      "column": 47,
+      "start": 773,
+      "end": 785,
+      "expression": "\"flash-next\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:26:47"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 26,
+      "column": 61,
+      "start": 787,
+      "end": 794,
+      "expression": "\"flash\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:26:61"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 27,
+      "column": 62,
+      "start": 859,
+      "end": 871,
+      "expression": "\"flash-next\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:27:62"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 27,
+      "column": 76,
+      "start": 873,
+      "end": 880,
+      "expression": "\"flash\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:27:76"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 30,
+      "column": 6,
+      "start": 894,
+      "end": 966,
+      "expression": "\"missing, malformed, and unsafe priorities are ignored without coercion\"",
+      "id": "MAIN-UPDATE-TEST-005"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 31,
+      "column": 36,
+      "start": 1011,
+      "end": 1016,
+      "expression": "\"100\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:31:36"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 32,
+      "column": 57,
+      "start": 1137,
+      "end": 1155,
+      "expression": "`invalid-${index}`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:32:57"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 33,
+      "column": 23,
+      "start": 1213,
+      "end": 1220,
+      "expression": "\"array\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:33:23"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 33,
+      "column": 54,
+      "start": 1244,
+      "end": 1252,
+      "expression": "\"string\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:33:54"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 33,
+      "column": 74,
+      "start": 1264,
+      "end": 1269,
+      "expression": "\"100\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:33:74"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 37,
+      "column": 6,
+      "start": 1334,
+      "end": 1418,
+      "expression": "\"zero and negative integer priorities are valid explicit hints; absence is not zero\"",
+      "id": "MAIN-UPDATE-TEST-006"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 41,
+      "column": 11,
+      "start": 1478,
+      "end": 1488,
+      "expression": "\"negative\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:41:11"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 42,
+      "column": 11,
+      "start": 1529,
+      "end": 1537,
+      "expression": "\"absent\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:42:11"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 43,
+      "column": 11,
+      "start": 1551,
+      "end": 1557,
+      "expression": "\"zero\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:43:11"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 46,
+      "column": 4,
+      "start": 1603,
+      "end": 1609,
+      "expression": "\"zero\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:46:4"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 46,
+      "column": 12,
+      "start": 1611,
+      "end": 1621,
+      "expression": "\"negative\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:46:12"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 50,
+      "column": 6,
+      "start": 1638,
+      "end": 1720,
+      "expression": "\"unavailable offerings are skipped and ties use stable catalog-qualified identity\"",
+      "id": "MAIN-UPDATE-TEST-007"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 52,
+      "column": 9,
+      "start": 1763,
+      "end": 1766,
+      "expression": "\"z\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:52:9"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 53,
+      "column": 9,
+      "start": 1805,
+      "end": 1818,
+      "expression": "\"unavailable\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:53:9"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 53,
+      "column": 76,
+      "start": 1872,
+      "end": 1885,
+      "expression": "\"unavailable\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:53:76"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 54,
+      "column": 9,
+      "start": 1899,
+      "end": 1902,
+      "expression": "\"a\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:54:9"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 56,
+      "column": 32,
+      "start": 1969,
+      "end": 1972,
+      "expression": "\"z\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:56:32"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 56,
+      "column": 67,
+      "start": 2004,
+      "end": 2013,
+      "expression": "\"another\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:56:67"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 58,
+      "column": 34,
+      "start": 2154,
+      "end": 2157,
+      "expression": "\"a\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:58:34"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 58,
+      "column": 39,
+      "start": 2159,
+      "end": 2162,
+      "expression": "\"z\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:58:39"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 61,
+      "column": 14,
+      "start": 2333,
+      "end": 2342,
+      "expression": "\"example\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:61:14"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 62,
+      "column": 15,
+      "start": 2358,
+      "end": 2361,
+      "expression": "\"a\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:62:15"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 63,
+      "column": 13,
+      "start": 2375,
+      "end": 2384,
+      "expression": "\"gateway\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:63:13"
+    },
+    {
+      "path": "packages/cli/test/model-catalog-default.test.mjs",
+      "line": 64,
+      "column": 12,
+      "start": 2397,
+      "end": 2400,
+      "expression": "\"a\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-catalog-default.test.mjs:64:12"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 1,
+      "column": 20,
+      "start": 19,
+      "end": 39,
+      "expression": "\"node:assert/strict\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:1:20"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 2,
+      "column": 22,
+      "start": 62,
+      "end": 73,
+      "expression": "\"node:test\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:2:22"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 3,
+      "column": 33,
+      "start": 107,
+      "end": 140,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:3:33"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 4,
+      "column": 38,
+      "start": 179,
+      "end": 210,
+      "expression": "\"../dist/pi-auth-completion.js\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:4:38"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 5,
+      "column": 38,
+      "start": 249,
+      "end": 283,
+      "expression": "\"./fixtures/interactive-login.mjs\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:5:38"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 7,
+      "column": 29,
+      "start": 314,
+      "end": 323,
+      "expression": "\"unknown\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:7:29"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 7,
+      "column": 44,
+      "start": 329,
+      "end": 338,
+      "expression": "\"unknown\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:7:44"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 7,
+      "column": 60,
+      "start": 345,
+      "end": 354,
+      "expression": "\"unknown\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:7:60"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 8,
+      "column": 30,
+      "start": 387,
+      "end": 402,
+      "expression": "\"catalog:shisa\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:8:30"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 8,
+      "column": 51,
+      "start": 408,
+      "end": 420,
+      "expression": "\"flash-next\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:8:51"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 8,
+      "column": 70,
+      "start": 427,
+      "end": 447,
+      "expression": "\"openai-completions\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:8:70"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 12,
+      "column": 37,
+      "start": 565,
+      "end": 611,
+      "expression": "\"completion must not replace a selected model\"",
+      "id": "MAIN-UPDATE-TEST-008"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 23,
+      "column": 6,
+      "start": 764,
+      "end": 850,
+      "expression": "\"interactive Shisa login keeps an already selected catalog model and success feedback\"",
+      "id": "MAIN-UPDATE-TEST-009"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 30,
+      "column": 30,
+      "start": 1159,
+      "end": 1198,
+      "expression": "/Logged in to Shisa.*Credentials saved/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:30:30"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 35,
+      "column": 6,
+      "start": 1332,
+      "end": 1397,
+      "expression": "\"unchanged unknown models retain Pi's default-selection guidance\"",
+      "id": "MAIN-UPDATE-TEST-010"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 38,
+      "column": 28,
+      "start": 1537,
+      "end": 1569,
+      "expression": "/no default model is configured/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:38:28"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 41,
+      "column": 6,
+      "start": 1582,
+      "end": 1648,
+      "expression": "\"an existing real model and refresh warnings keep native behavior\"",
+      "id": "MAIN-UPDATE-TEST-011"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 43,
+      "column": 55,
+      "start": 1771,
+      "end": 1778,
+      "expression": "\"shisa\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:43:55"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 43,
+      "column": 74,
+      "start": 1790,
+      "end": 1799,
+      "expression": "\"offline\"",
+      "id": "MAIN-UPDATE-TEST-012"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 47,
+      "column": 30,
+      "start": 1921,
+      "end": 1959,
+      "expression": "/model catalog could not be refreshed/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:47:30"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 50,
+      "column": 6,
+      "start": 1972,
+      "end": 2035,
+      "expression": "\"other providers and API-key authentication are passed through\"",
+      "id": "MAIN-UPDATE-TEST-013"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 52,
+      "column": 4,
+      "start": 2088,
+      "end": 2095,
+      "expression": "\"other\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:52:4"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 52,
+      "column": 13,
+      "start": 2097,
+      "end": 2104,
+      "expression": "\"oauth\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:52:13"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 53,
+      "column": 4,
+      "start": 2110,
+      "end": 2117,
+      "expression": "\"shisa\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:53:4"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 53,
+      "column": 13,
+      "start": 2119,
+      "end": 2128,
+      "expression": "\"api_key\"",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:53:13"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 60,
+      "column": 29,
+      "start": 2403,
+      "end": 2435,
+      "expression": "/no default model is configured/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:60:29"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 64,
+      "column": 6,
+      "start": 2451,
+      "end": 2524,
+      "expression": "\"completion adapter restores ownership after nested calls and exceptions\"",
+      "id": "MAIN-UPDATE-TEST-014"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 72,
+      "column": 20,
+      "start": 2897,
+      "end": 2914,
+      "expression": "\"fixture failure\"",
+      "id": "MAIN-UPDATE-TEST-015"
+    },
+    {
+      "path": "packages/cli/test/pi-auth-completion.test.mjs",
+      "line": 74,
+      "column": 3,
+      "start": 2925,
+      "end": 2942,
+      "expression": "/fixture failure/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/pi-auth-completion.test.mjs:74:3"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 1,
+      "column": 18,
+      "start": 17,
+      "end": 28,
+      "expression": "'node:test'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:1:18"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 2,
+      "column": 20,
+      "start": 49,
+      "end": 69,
+      "expression": "'node:assert/strict'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:2:20"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 3,
+      "column": 104,
+      "start": 174,
+      "end": 183,
+      "expression": "'node:fs'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:3:104"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 4,
+      "column": 24,
+      "start": 208,
+      "end": 217,
+      "expression": "'node:os'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:4:24"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 5,
+      "column": 22,
+      "start": 240,
+      "end": 251,
+      "expression": "'node:path'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:5:22"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 6,
+      "column": 49,
+      "start": 301,
+      "end": 322,
+      "expression": "'./export-recipe.mjs'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:6:49"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 7,
+      "column": 39,
+      "start": 362,
+      "end": 384,
+      "expression": "'./verify-runtime.mjs'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:7:39"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 8,
+      "column": 30,
+      "start": 415,
+      "end": 438,
+      "expression": "'./prepare-starter.mjs'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:8:30"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 12,
+      "column": 27,
+      "start": 540,
+      "end": 554,
+      "expression": "'package.json'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:12:27"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 16,
+      "column": 28,
+      "start": 647,
+      "end": 671,
+      "expression": "'node_modules/pi-webaio'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:16:28"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 17,
+      "column": 32,
+      "start": 705,
+      "end": 728,
+      "expression": "'node_modules/defuddle'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:17:32"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 18,
+      "column": 26,
+      "start": 756,
+      "end": 767,
+      "expression": "'pi-webaio'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:18:26"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 18,
+      "column": 47,
+      "start": 777,
+      "end": 784,
+      "expression": "'0.0.0'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:18:47"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 19,
+      "column": 28,
+      "start": 815,
+      "end": 825,
+      "expression": "'defuddle'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:19:28"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 19,
+      "column": 48,
+      "start": 835,
+      "end": 842,
+      "expression": "'0.0.0'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:19:48"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 19,
+      "column": 64,
+      "start": 851,
+      "end": 857,
+      "expression": "'dist'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:19:64"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 20,
+      "column": 27,
+      "start": 888,
+      "end": 894,
+      "expression": "'dist'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:20:27"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 21,
+      "column": 31,
+      "start": 946,
+      "end": 974,
+      "expression": "'dist/jouzu-diagnostics.cjs'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:21:31"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 21,
+      "column": 62,
+      "start": 977,
+      "end": 994,
+      "expression": "'fixture sidecar'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:21:62"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 25,
+      "column": 6,
+      "start": 1033,
+      "end": 1107,
+      "expression": "'exported recipes pin the same private pnpm and ship the patched defuddle'",
+      "id": "MAIN-UPDATE-TEST-016"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 26,
+      "column": 42,
+      "start": 1157,
+      "end": 1180,
+      "expression": "'jouzu-export-manager-'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:26:42"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 28,
+      "column": 28,
+      "start": 1271,
+      "end": 1279,
+      "expression": "'source'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:28:28"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 29,
+      "column": 30,
+      "start": 1311,
+      "end": 1357,
+      "expression": "'node_modules/@earendil-works/pi-coding-agent'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:29:30"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 30,
+      "column": 28,
+      "start": 1387,
+      "end": 1431,
+      "expression": "'node_modules/@earendil-works/pi-agent-core'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:30:28"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 31,
+      "column": 39,
+      "start": 1472,
+      "end": 1479,
+      "expression": "'jouzu'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:31:39"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 31,
+      "column": 58,
+      "start": 1491,
+      "end": 1524,
+      "expression": "'@earendil-works/pi-coding-agent'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:31:58"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 31,
+      "column": 101,
+      "start": 1534,
+      "end": 1565,
+      "expression": "'@earendil-works/pi-agent-core'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:31:101"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 32,
+      "column": 34,
+      "start": 1604,
+      "end": 1611,
+      "expression": "'0.0.0'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:32:34"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 32,
+      "column": 60,
+      "start": 1630,
+      "end": 1657,
+      "expression": "'node -e \"process.exit(1)\"'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:32:60"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 34,
+      "column": 29,
+      "start": 1693,
+      "end": 1707,
+      "expression": "'package.json'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:34:29"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 34,
+      "column": 67,
+      "start": 1731,
+      "end": 1738,
+      "expression": "'jouzu'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:34:67"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 34,
+      "column": 84,
+      "start": 1748,
+      "end": 1755,
+      "expression": "'0.0.0'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:34:84"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 34,
+      "column": 113,
+      "start": 1777,
+      "end": 1810,
+      "expression": "'@earendil-works/pi-coding-agent'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:34:113"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 34,
+      "column": 147,
+      "start": 1811,
+      "end": 1822,
+      "expression": "'pi-webaio'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:34:147"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 36,
+      "column": 25,
+      "start": 1878,
+      "end": 1884,
+      "expression": "'dist'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:36:25"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 37,
+      "column": 29,
+      "start": 1916,
+      "end": 1929,
+      "expression": "'dist/cli.js'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:37:29"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 37,
+      "column": 45,
+      "start": 1932,
+      "end": 1941,
+      "expression": "'fixture'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:37:45"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 38,
+      "column": 28,
+      "start": 1971,
+      "end": 1979,
+      "expression": "'recipe'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:38:28"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 40,
+      "column": 38,
+      "start": 2065,
+      "end": 2087,
+      "expression": "`pnpm@${PNPM_VERSION}`",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:40:38"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 41,
+      "column": 56,
+      "start": 2145,
+      "end": 2159,
+      "expression": "'package.json'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:41:56"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 41,
+      "column": 73,
+      "start": 2162,
+      "end": 2168,
+      "expression": "'utf8'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:41:73"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 42,
+      "column": 49,
+      "start": 2229,
+      "end": 2246,
+      "expression": "'file:artifacts/'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:42:49"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 43,
+      "column": 55,
+      "start": 2304,
+      "end": 2321,
+      "expression": "'file:artifacts/'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:43:55"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 44,
+      "column": 37,
+      "start": 2361,
+      "end": 2372,
+      "expression": "'artifacts'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:44:37"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 44,
+      "column": 80,
+      "start": 2404,
+      "end": 2415,
+      "expression": "'defuddle-'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:44:80"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 47,
+      "column": 6,
+      "start": 2430,
+      "end": 2486,
+      "expression": "'older releases without a patched defuddle still export'",
+      "id": "MAIN-UPDATE-TEST-017"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 48,
+      "column": 42,
+      "start": 2536,
+      "end": 2558,
+      "expression": "'jouzu-export-legacy-'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:48:42"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 50,
+      "column": 28,
+      "start": 2649,
+      "end": 2657,
+      "expression": "'source'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:50:28"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 51,
+      "column": 30,
+      "start": 2689,
+      "end": 2735,
+      "expression": "'node_modules/@earendil-works/pi-coding-agent'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:51:30"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 52,
+      "column": 28,
+      "start": 2765,
+      "end": 2809,
+      "expression": "'node_modules/@earendil-works/pi-agent-core'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:52:28"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 53,
+      "column": 39,
+      "start": 2850,
+      "end": 2857,
+      "expression": "'jouzu'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:53:39"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 53,
+      "column": 58,
+      "start": 2869,
+      "end": 2902,
+      "expression": "'@earendil-works/pi-coding-agent'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:53:58"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 53,
+      "column": 101,
+      "start": 2912,
+      "end": 2943,
+      "expression": "'@earendil-works/pi-agent-core'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:53:101"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 53,
+      "column": 167,
+      "start": 2978,
+      "end": 2985,
+      "expression": "'0.0.0'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:53:167"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 54,
+      "column": 25,
+      "start": 3013,
+      "end": 3019,
+      "expression": "'dist'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:54:25"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 55,
+      "column": 29,
+      "start": 3051,
+      "end": 3064,
+      "expression": "'dist/cli.js'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:55:29"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 55,
+      "column": 45,
+      "start": 3067,
+      "end": 3076,
+      "expression": "'fixture'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:55:45"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 56,
+      "column": 49,
+      "start": 3127,
+      "end": 3135,
+      "expression": "'recipe'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:56:49"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 60,
+      "column": 6,
+      "start": 3207,
+      "end": 3278,
+      "expression": "'export uses coding-agent nested core, not a different root dependency'",
+      "id": "MAIN-UPDATE-TEST-018"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 61,
+      "column": 39,
+      "start": 3323,
+      "end": 3338,
+      "expression": "'jouzu-export-'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:61:39"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 62,
+      "column": 25,
+      "start": 3366,
+      "end": 3412,
+      "expression": "'node_modules/@earendil-works/pi-coding-agent'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:62:25"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 63,
+      "column": 27,
+      "start": 3441,
+      "end": 3485,
+      "expression": "'node_modules/@earendil-works/pi-agent-core'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:63:27"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 64,
+      "column": 22,
+      "start": 3509,
+      "end": 3553,
+      "expression": "'node_modules/@earendil-works/pi-agent-core'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:64:22"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 66,
+      "column": 37,
+      "start": 3598,
+      "end": 3631,
+      "expression": "'@earendil-works/pi-coding-agent'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:66:37"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 66,
+      "column": 80,
+      "start": 3641,
+      "end": 3672,
+      "expression": "'@earendil-works/pi-agent-core'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:66:80"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 66,
+      "column": 118,
+      "start": 3679,
+      "end": 3710,
+      "expression": "'@earendil-works/pi-agent-core'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:66:118"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 69,
+      "column": 39,
+      "start": 3784,
+      "end": 3815,
+      "expression": "'@earendil-works/pi-agent-core'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:69:39"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 71,
+      "column": 39,
+      "start": 3913,
+      "end": 3944,
+      "expression": "'@earendil-works/pi-agent-core'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:71:39"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 75,
+      "column": 6,
+      "start": 4029,
+      "end": 4113,
+      "expression": "'runtime verification rejects an installed defuddle without the diagnostics sidecar'",
+      "id": "MAIN-UPDATE-TEST-019"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 76,
+      "column": 42,
+      "start": 4163,
+      "end": 4187,
+      "expression": "'jouzu-verify-defuddle-'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:76:42"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 78,
+      "column": 25,
+      "start": 4275,
+      "end": 4280,
+      "expression": "'app'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:78:25"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 79,
+      "column": 22,
+      "start": 4304,
+      "end": 4324,
+      "expression": "'node_modules/jouzu'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:79:22"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 79,
+      "column": 51,
+      "start": 4333,
+      "end": 4340,
+      "expression": "'jouzu'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:79:51"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 81,
+      "column": 25,
+      "start": 4420,
+      "end": 4430,
+      "expression": "'dist/src'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:81:25"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 82,
+      "column": 29,
+      "start": 4480,
+      "end": 4506,
+      "expression": "'dist/src/webfetch-api.js'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:82:29"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 82,
+      "column": 58,
+      "start": 4509,
+      "end": 4552,
+      "expression": "'require(\"defuddle/jouzu-diagnostics.cjs\")'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:82:58"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 84,
+      "column": 24,
+      "start": 4634,
+      "end": 4662,
+      "expression": "'dist/jouzu-diagnostics.cjs'",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:84:24"
+    },
+    {
+      "path": "packaging/launcher/export-recipe.test.mjs",
+      "line": 85,
+      "column": 50,
+      "start": 4715,
+      "end": 4735,
+      "expression": "/sidecar is missing/",
+      "excluded": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packaging/launcher/export-recipe.test.mjs:85:50"
+    }
+  ],
+  "artifact_sha256_utf8_lf": {
+    "main-update-test-support.csv": "6dec49ffbf49ba97eb7e2cbe8fa74b8cc750c3690390f5e6219a2d281e826757",
+    "main-update-test-support-exclusions.csv": "d4de305e6545db039c12cdd6b3eaef451c2fe47f22930cd38cec48df64850161",
+    "main-update-test-support-scope.csv": "a6a6174be68df4d7d25b9fec4ce0b9db4d92c87a5328d7662c9edbdbc29cb4f6"
+  },
+  "interpretation": "Four full target test bodies only. Test names and fixture diagnostics are distinct from product runtime wording. No scenarios run; nine other target test bodies and base corpus remain open."
+}

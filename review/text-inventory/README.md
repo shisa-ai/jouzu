@@ -60,6 +60,20 @@ data transport; this source review does not qualify newly patched installed
 bytes. Six corruption/omission controls pass. Test bodies and wider target
 runtime delivery remain open.
 
+[main-update-test-support.csv](main-update-test-support.csv) records sixteen
+reporter/selector test names, four fixture diagnostic occurrences and two payload
+boundaries across four full target test bodies (361 lines). The
+[exclusions](main-update-test-support-exclusions.csv) retain 205 protected or
+fixture lexical values; all 224 top-level string/template/regex occurrences are
+partitioned. One diagnostic is explicitly nested in generated preload source.
+The [scope](main-update-test-support-scope.csv) and
+[evidence](main-update-test-support-evidence.json) pin source bytes and AST offsets.
+Passing tests do not independently display every captured native status or mock
+error; failed assertions may expose expected/actual values and captured child
+streams. Five corruption/omission controls pass. No test, hook, auth, model or
+packaging scenario was run. Nine other changed target test/fixture bodies and
+the wider base test corpus remain open.
+
 This inventory lists wording and the conditions under which it can reach a user,
 including errors and diagnostics. It is being assembled for a translation pass.
 The current snapshot is **incomplete**; catalog membership, source references and
@@ -1494,6 +1508,7 @@ python -B review/text-inventory/verify-main-update-documentation.py
 python -B review/text-inventory/verify-main-update-model-text.py
 python -B review/text-inventory/verify-main-update-startup-auth.py
 python -B review/text-inventory/verify-main-update-release-text.py
+node review/text-inventory/verify-main-update-test-support.cjs
 python -B review/text-inventory/verify-documentation-text.py
 python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-acp-dependencies.py
