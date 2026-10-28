@@ -4,10 +4,11 @@
   "changed_paths": 59,
   "paths_with_qualified_links": 59,
   "local_body_extents": {
-    "bounded-changed-source-or-metadata-only": 23,
+    "complete-byte-delta-only": 20,
     "full-document-source-export-only": 7,
     "full-English-source-export-only": 2,
     "full-local-product-source-only": 14,
+    "bounded-changed-source-or-metadata-only": 3,
     "full-test-source-only": 13
   },
   "input_sha256_utf8_lf": {
@@ -20,6 +21,7 @@
     "main-update-message-table-scope.csv": "eed460d431cf25c9811b6e90e1c5350346cb82a74e22c28cc798b173c7cf8e24",
     "main-update-model-text-scope.csv": "5bc986f8a428b46b1607da943802645528922a9d879df70caadf455ea9786658",
     "main-update-release-text-scope.csv": "7cfaf223c09767ab58f1c8c45de968117046ebf6fb57853df64196a5c2f94e43",
+    "main-update-resource-delta-scope.csv": "236c1facb7d025b5b9fb12b4fdd7df2361a1a7de23b7f5ee8dc1dd1c38d2ff98",
     "main-update-startup-auth-scope.csv": "13878c2b65cc46d660dd913798ea7e0e15c3c007eb28ef86589d753c4e738182",
     "main-update-test-fixtures-scope.csv": "1622de8e49d2633776a0b5cd51fe00d512cbf75a7f99443d5f0c75452ddc277a",
     "main-update-test-support-scope.csv": "a6a6174be68df4d7d25b9fec4ce0b9db4d92c87a5328d7662c9edbdbc29cb4f6"

@@ -27,11 +27,26 @@ review. No checkout or product operation is performed by this census.
 [main-update-review-links.csv](main-update-review-links.csv) reconciles all 59
 changed target paths to exact scope records and target Git hashes. Thirty-six
 have a complete local source export/read: fourteen product/packaging bodies,
-thirteen test bodies, seven documents and two changed English catalogs. The other
-23 retain bounded changed-source or metadata review. The
-[snapshot](main-update-review-links-snapshot.json) pins all eleven scope inputs;
+thirteen test bodies, seven documents and two changed English catalogs. Twenty
+resource paths have complete byte-delta proofs; three product source paths retain
+bounded changed-source review. The
+[snapshot](main-update-review-links-snapshot.json) pins all twelve scope inputs;
 these navigation links do not promote supporting records, close target callers
 or qualify newly patched dependencies. Existing base tables keep their source pin.
+
+[main-update-resource-delta.csv](main-update-resource-delta.csv) accounts for
+every changed byte in twenty fetched-main resource files: 31 hunks, with 25
+removed and 41 added lines. Applying the retained changes to the exact base
+blobs reconstructs all 1,195,218 target bytes. The rows separate protected
+version/digest values, twelve existing-locale counterpart definitions and four
+English-bearing test selectors whose bytes control tier matching. Their English
+definition and test-name owners remain separately linked. The
+[scope](main-update-resource-delta-scope.csv) and
+[snapshot](main-update-resource-delta-snapshot.json) retain exact source identities
+and the source-only boundary. Three corruption controls and independent reverse
+reconstruction/data-classification checks pass. This proof adds zero complete
+semantic reviews and does not retarget base caller evidence or qualify installed
+fetched-target patches.
 
 [main-update-message-table.csv](main-update-message-table.csv) maps all 1,113
 string occurrences in the complete fetched-main message-table body. Its 1,036
@@ -2031,6 +2046,7 @@ node review/text-inventory/verify-test-source-sites.cjs
 node review/text-inventory/verify-fixture-ipc-text.cjs
 python -B review/text-inventory/verify-data-fixture-text.py
 python -B review/text-inventory/verify-main-update-census.py
+python -B review/text-inventory/verify-main-update-resource-delta.py
 node review/text-inventory/verify-main-update-message-table.cjs
 python -B review/text-inventory/verify-main-update-review-links.py
 node review/text-inventory/verify-main-update-catalogs.cjs

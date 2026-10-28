@@ -1,0 +1,14 @@
+{
+  "base_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "target_revision": "1fda3eb161b042aae66e4adcc07319f69946dadd",
+  "paths": 20,
+  "changed_hunks": 31,
+  "removed_lines": 25,
+  "added_lines": 41,
+  "base_bytes": 1193802,
+  "target_bytes": 1195218,
+  "reconstructed_target_files": 20,
+  "negative_controls": 3,
+  "complete_semantic_reviews_added": 0,
+  "coverage_boundary": "Complete byte-delta proof only. Unchanged source remains at its BASE owner authority; source equality does not retarget caller/behavior evidence, grant a complete semantic body review or qualify target installed dependencies. No audited workflow, package, test or source runs."
+}

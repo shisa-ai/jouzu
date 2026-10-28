@@ -24,6 +24,7 @@ SCOPES = [
     'main-update-message-table-scope.csv',
     'main-update-model-text-scope.csv',
     'main-update-release-text-scope.csv',
+    'main-update-resource-delta-scope.csv',
     'main-update-startup-auth-scope.csv',
     'main-update-test-fixtures-scope.csv',
     'main-update-test-support-scope.csv',
@@ -87,12 +88,16 @@ def generate():
             path = source_path(row)
             if row.get('revision') != TARGET or path not in by_path:
                 continue
-            by_path[path].append(dict(
+            link = dict(
                 table=name, record_number=number,
                 declared_extent=row.get('status', row.get('review_extent',
                                                         row.get('coverage', ''))),
                 full_extent=full_extent(name, row),
-                sha256=row['sha256']))
+                sha256=row['sha256'])
+            if (name == 'main-update-resource-delta-scope.csv'
+                    and row.get('status') == 'complete-target-byte-delta-export'):
+                link['byte_delta_extent'] = 'complete-byte-delta-only'
+            by_path[path].append(link)
     rows = []
     for item in changed:
         path = item['path']
@@ -104,15 +109,18 @@ def generate():
         assert links and all(link['sha256'] == sha for link in links), path
         full = sorted({link['full_extent'] for link in links if link['full_extent']})
         assert len(full) <= 1, (path, full)
+        extent = full[0] if full else ('complete-byte-delta-only' if any(
+            link.get('byte_delta_extent') for link in links) else
+            'bounded-changed-source-or-metadata-only')
         rows.append(dict(zip(FIELDS, [
-            path, TARGET, blob, sha, item['path_category'],
-            full[0] if full else 'bounded-changed-source-or-metadata-only',
+            path, TARGET, blob, sha, item['path_category'], extent,
             json.dumps(links, ensure_ascii=False, separators=(',', ':')), LIMIT])))
     counts = {}
     for row in rows:
         counts[row['local_body_extent']] = counts.get(row['local_body_extent'], 0) + 1
     assert counts == {
-        'bounded-changed-source-or-metadata-only': 23,
+        'bounded-changed-source-or-metadata-only': 3,
+        'complete-byte-delta-only': 20,
         'full-document-source-export-only': 7,
         'full-English-source-export-only': 2,
         'full-local-product-source-only': 14,
