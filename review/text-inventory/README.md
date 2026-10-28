@@ -509,8 +509,21 @@ their conditions. Records distinguish storage failures, API/schema guards,
 delayed messages, raw/default-English model labels and active TUI labels. The
 standalone dashboard widget is guarded on the current main route. Standard
 print/json notify suppression and native onError stderr delivery remain separate.
-Worker/output/resource helper bodies continue in a follow-on unit. No worker,
+Worker/output/resource helper bodies are covered by the follow-on unit below. No worker,
 model, git snapshot, state or native operation was executed.
+
+[subagent-output.csv](subagent-output.csv) adds 197 output/context records:
+93 catalog occurrences across 64 IDs, 76 fixed occurrences and 28 payload
+boundaries. Ten complete bodies cover 1,972 lines. The
+[scope](subagent-output-scope.csv) accounts for 622 lexical tokens, 76 catalog
+references, 30 Error sites and 13 catches, with 27 pinned sources. Saved custom
+context has transcript/export consumers; structured system metadata is retained
+for export but omitted from trace text. Trace notices/errors reach the trace tool
+operation; child tool events have a separate indirect saved-trace route. Language
+report parsing couples its tag and contract/requested fields to control flow.
+Cancellation records qualify the receiver's terminal-state guard. Worker resource
+failures and provider causes retain their separate replacement/delivery rules.
+No worker, model, state, native or UI operation was executed.
 
 [flow-tools.csv](flow-tools.csv) supplies 36 wait/no-reply tool records: 24 fixed
 occurrences, three catalog labels and nine payload boundaries. Four full bodies
@@ -726,6 +739,7 @@ node review/text-inventory/verify-palette.cjs
 python -B review/text-inventory/verify-keybindings.py
 python -B review/text-inventory/verify-workflow.py
 python -B review/text-inventory/verify-subagent-runtime.py
+python -B review/text-inventory/verify-subagent-output.py
 python -B review/text-inventory/verify-model-catalog.py
 python -B review/text-inventory/verify-auth-account.py
 python -B review/text-inventory/verify-launcher.py
