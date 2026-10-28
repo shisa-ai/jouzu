@@ -276,6 +276,21 @@ This is source ownership navigation, preserving every unit's exclusions and
 API/dynamic/optional/caller/dependency limits. It does not reopen canonical archives
 or qualify fetched-target installed patches; those proofs remain separate.
 
+[pi-bundle-lexical.csv](pi-bundle-lexical.csv) retains all 92,338 parsed string/
+template occurrences across all 81 compiled bodies (9,211,377 source bytes),
+including empty values, single words and glyphs. Exact raw syntax and parsed static
+template parts are JSON-escaped; expression values are not evaluated. Separate
+[regex](pi-bundle-lexical-regex.csv), [constructor/catch leads](pi-bundle-lexical-leads.csv)
+and [context](pi-bundle-lexical-contexts.csv) tables retain 3,502 regexes, 7,892
+constructor sites, 1,141 catches and 39,530 deduplicated lexical contexts. Contexts
+are capped at one function and two guards with 80-unit excerpts; word/Error-name
+flags are navigation heuristics. The [scope](pi-bundle-lexical-scope.csv) marks
+every body lexical-only, with zero new semantic reviews. Its
+[snapshot](pi-bundle-lexical-snapshot.json) preserves the seven prior wrapper
+crosslinks; current local body owners remain in `pi-runtime-review-links.csv`.
+Canonical archive and both installed trees match. Ten corruption controls pass;
+no audited bundle or regular expression is evaluated.
+
 The older [Japanese review](../ja-localization/README.md) retains its own source
 pin and translations; its counts must not be added to this inventory.
 
@@ -1985,6 +2000,7 @@ python -B review/text-inventory/verify-pi-cli-support.py --node-modules <root-no
 python -B review/text-inventory/verify-pi-codemode-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-diagnostics-migration-share.py
 python -B review/text-inventory/verify-pi-bundle-entry-support.py
+node review/text-inventory/verify-pi-bundle-lexical.cjs
 node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
