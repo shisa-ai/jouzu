@@ -1,0 +1,2224 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "b0c5c8be0f82ea466abae317825e5a257a68db4b",
+  "inventory_file": "pi-tui-utilities.csv",
+  "scope_file": "pi-tui-utilities-scope.csv",
+  "boundary_file": "pi-tui-utilities-boundaries.csv",
+  "exclusion_file": "pi-tui-utilities-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    },
+    {
+      "source": "packages/cli/src/subagents/resources.ts",
+      "sha256": "e9ec45241ad8da751e07bc0122f872220020a59fa2c4fe947f9e32b755f68118"
+    },
+    {
+      "source": "packages/session-ui/src/layout.ts",
+      "sha256": "7dde7851cb79dda5ec3e95aa0a3080a65475add638496fb7b66104d8e511e5c3"
+    },
+    {
+      "source": "packages/cli/src/terminal-layout.ts",
+      "sha256": "6de3f7e4a0a25016bdcf7c07999d6ce163a4a3764d87fbf3a4801f4e3cc4ea5a"
+    },
+    {
+      "source": "packages/cli/src/session-ui/layout.ts",
+      "sha256": "b7a36732df560ed7cff45ee757fd51a8e8d0605c06cf6afcccb782c3d11c8d8b"
+    },
+    {
+      "source": "packages/cli/src/presentation.ts",
+      "sha256": "e188e7b636ab8a661fdcc32bc3aa1653969349925a85688c751d0ba4815ff039"
+    },
+    {
+      "source": "packages/cli/src/startup-settings.ts",
+      "sha256": "57c087aacfe1167b464acf129506df51a9ba0d78bf4e8561716fd7b7b0878fcd"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/image.js",
+      "sha256": "918d93b63767fd67543dc23c20709da6a621cd627b52f43e2f87d3b73ab0a9f2",
+      "cli_nested_sha256": "918d93b63767fd67543dc23c20709da6a621cd627b52f43e2f87d3b73ab0a9f2",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          123
+        ]
+      ],
+      "purpose": "Bounded caller/export/native writer or failure/suppression route only; full unclosed engine body not claimed. Image source has prior full local text inventory."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui.js",
+      "sha256": "e3246864ff8c94b71fb6e9cb6f9dfddcd64956370a259860d189d8d95ea773d9",
+      "cli_nested_sha256": "e3246864ff8c94b71fb6e9cb6f9dfddcd64956370a259860d189d8d95ea773d9",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          646,
+          712
+        ],
+        [
+          984,
+          1012
+        ]
+      ],
+      "purpose": "Bounded caller/export/native writer or failure/suppression route only; full unclosed engine body not claimed. Image source has prior full local text inventory."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.js",
+      "sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+      "cli_nested_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1449,
+          1560
+        ]
+      ],
+      "purpose": "Bounded caller/export/native writer or failure/suppression route only; full unclosed engine body not claimed. Image source has prior full local text inventory."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "sha256": "d993e3b50da2b10c1ca8774c75e8f678dba861e4ba870b9e67b34bbb23739f92",
+      "cli_nested_sha256": "d993e3b50da2b10c1ca8774c75e8f678dba861e4ba870b9e67b34bbb23739f92",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          463,
+          502
+        ]
+      ],
+      "purpose": "Bounded caller/export/native writer or failure/suppression route only; full unclosed engine body not claimed. Image source has prior full local text inventory."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/index.js",
+      "sha256": "6068ae4207de753d9ec00dbe14aee199e6160d1dea0db9c8a92f65d08ffc6e80",
+      "cli_nested_sha256": "6068ae4207de753d9ec00dbe14aee199e6160d1dea0db9c8a92f65d08ffc6e80",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          50
+        ]
+      ],
+      "purpose": "Bounded caller/export/native writer or failure/suppression route only; full unclosed engine body not claimed. Image source has prior full local text inventory."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/main.js",
+      "sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "cli_nested_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          448,
+          455
+        ],
+        [
+          630,
+          645
+        ]
+      ],
+      "purpose": "Bounded actual native consumer/guard/catch/policy route only; full source producer graph closed only in independent prior records or remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js",
+      "sha256": "8099c3916f52b2bd43757e2a397e292a7b922d81dbdc07bc3bed27000be26378",
+      "cli_nested_sha256": "8099c3916f52b2bd43757e2a397e292a7b922d81dbdc07bc3bed27000be26378",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          220
+        ],
+        [
+          395,
+          440
+        ],
+        [
+          533,
+          570
+        ],
+        [
+          604,
+          627
+        ],
+        [
+          662,
+          707
+        ]
+      ],
+      "purpose": "Bounded actual native consumer/guard/catch/policy route only; full source producer graph closed only in independent prior records or remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "sha256": "ce89ff25f82a2b840fe5d0bd3efa6870a9efb4ccfd2911468358ae401904ef7a",
+      "cli_nested_sha256": "ce89ff25f82a2b840fe5d0bd3efa6870a9efb4ccfd2911468358ae401904ef7a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          105
+        ]
+      ],
+      "purpose": "Bounded actual native consumer/guard/catch/policy route only; full source producer graph closed only in independent prior records or remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-controller.js",
+      "sha256": "a2eb66dbd859a12bdc5349731704d2fdcea4a3bd60b81091e42b4ea0f465de8e",
+      "cli_nested_sha256": "a2eb66dbd859a12bdc5349731704d2fdcea4a3bd60b81091e42b4ea0f465de8e",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          12,
+          21
+        ],
+        [
+          53,
+          79
+        ],
+        [
+          111,
+          145
+        ],
+        [
+          155,
+          181
+        ]
+      ],
+      "purpose": "Bounded actual native consumer/guard/catch/policy route only; full source producer graph closed only in independent prior records or remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/system-theme.js",
+      "sha256": "da08e8d7d95fad032e08de47a2848c497a0d9c90a00955142936ba30f09d69e8",
+      "cli_nested_sha256": "da08e8d7d95fad032e08de47a2848c497a0d9c90a00955142936ba30f09d69e8",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          294,
+          300
+        ],
+        [
+          354,
+          387
+        ],
+        [
+          480,
+          518
+        ]
+      ],
+      "purpose": "Bounded actual native consumer/guard/catch/policy route only; full source producer graph closed only in independent prior records or remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resource-loader.js",
+      "sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461",
+      "cli_nested_sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          695,
+          720
+        ],
+        [
+          824,
+          896
+        ]
+      ],
+      "purpose": "Bounded actual native consumer/guard/catch/policy route only; full source producer graph closed only in independent prior records or remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          450,
+          466
+        ],
+        [
+          1329,
+          1379
+        ],
+        [
+          1474,
+          1511
+        ],
+        [
+          1584,
+          1589
+        ],
+        [
+          2119,
+          2146
+        ],
+        [
+          5420,
+          5433
+        ],
+        [
+          5858,
+          5871
+        ],
+        [
+          114,
+          122
+        ],
+        [
+          748,
+          809
+        ],
+        [
+          1100,
+          1110
+        ],
+        [
+          2024,
+          2057
+        ],
+        [
+          2543,
+          2547
+        ],
+        [
+          2664,
+          2673
+        ]
+      ],
+      "purpose": "Bounded actual native consumer/guard/catch/policy route only; full source producer graph closed only in independent prior records or remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/easter-egg-3d.lazy.js",
+      "sha256": "92daf5cec1f63702b8d216b14ff793b29cee942148bd3ded97be2e0ddb60f3b6",
+      "cli_nested_sha256": "92daf5cec1f63702b8d216b14ff793b29cee942148bd3ded97be2e0ddb60f3b6",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          23
+        ]
+      ],
+      "purpose": "Bounded actual native consumer/guard/catch/policy route only; full source producer graph closed only in independent prior records or remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/easter-egg-3d.js",
+      "sha256": "7b4359a79a1c7993f9b3f68e4f363a42484f077d0a1855dc749a4db00930be27",
+      "cli_nested_sha256": "7b4359a79a1c7993f9b3f68e4f363a42484f077d0a1855dc749a4db00930be27",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          199,
+          316
+        ],
+        [
+          715,
+          737
+        ],
+        [
+          807,
+          817
+        ],
+        [
+          1079,
+          1090
+        ],
+        [
+          1125,
+          1139
+        ]
+      ],
+      "purpose": "Bounded actual native consumer/guard/catch/policy route only; full source producer graph closed only in independent prior records or remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/pi-logo.js",
+      "sha256": "10b6164c7a4bf4d94bb9a3975f82131ab02f294b3d60ed7ee225c7c5bf3bdae2",
+      "cli_nested_sha256": "10b6164c7a4bf4d94bb9a3975f82131ab02f294b3d60ed7ee225c7c5bf3bdae2",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          10
+        ]
+      ],
+      "purpose": "Bounded actual native consumer/guard/catch/policy route only; full source producer graph closed only in independent prior records or remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/radius-login-selector.js",
+      "sha256": "89dd826572f4905bab65e83fea6ed77605963344a6680152bab046fe9a4bcc1a",
+      "cli_nested_sha256": "89dd826572f4905bab65e83fea6ed77605963344a6680152bab046fe9a4bcc1a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          32
+        ]
+      ],
+      "purpose": "Bounded actual native consumer/guard/catch/policy route only; full source producer graph closed only in independent prior records or remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/render-utils.js",
+      "sha256": "c7e09796db181e98e65698ff340c82e74788048cbf63034086189d81623a8ee7",
+      "cli_nested_sha256": "c7e09796db181e98e65698ff340c82e74788048cbf63034086189d81623a8ee7",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          56,
+          74
+        ]
+      ],
+      "purpose": "Bounded actual native consumer/guard/catch/policy route only; full source producer graph closed only in independent prior records or remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/tool-execution.js",
+      "sha256": "fa47a6ec3aae07cd3ec5f84509f6553a342daf23fdb71afd75b6daa355a94e3f",
+      "cli_nested_sha256": "fa47a6ec3aae07cd3ec5f84509f6553a342daf23fdb71afd75b6daa355a94e3f",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          96,
+          104
+        ],
+        [
+          245,
+          315
+        ]
+      ],
+      "purpose": "Bounded actual native consumer/guard/catch/policy route only; full source producer graph closed only in independent prior records or remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/text.js",
+      "sha256": "89adac5c6e2be6afcdf99ca015943901bc676938fd0115326da5af78c930803c",
+      "cli_nested_sha256": "89adac5c6e2be6afcdf99ca015943901bc676938fd0115326da5af78c930803c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          41,
+          95
+        ]
+      ],
+      "purpose": "Prior full local component inventory; bounded width/wrap/default ellipsis consumers read here."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/truncated-text.js",
+      "sha256": "32c182d7faf44306d4e6937a0324a1f88b1acabbbe3fa8f385ef99ed9d9e090d",
+      "cli_nested_sha256": "32c182d7faf44306d4e6937a0324a1f88b1acabbbe3fa8f385ef99ed9d9e090d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          17,
+          51
+        ]
+      ],
+      "purpose": "Prior full local component inventory; bounded width/wrap/default ellipsis consumers read here."
+    }
+  ],
+  "nonruntime_assets": [
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/utils.d.ts",
+      "sha256": "88ba8d756f578e452b47517ff1c049c6da53b3b0ca34527815d5244e27066747",
+      "cli_nested_sha256": "88ba8d756f578e452b47517ff1c049c6da53b3b0ca34527815d5244e27066747",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/utils.d.ts.map",
+      "sha256": "c4246432cda20f47a86db585eeba8b0471fb8da9f5421f31fabba05c26053b22",
+      "cli_nested_sha256": "c4246432cda20f47a86db585eeba8b0471fb8da9f5421f31fabba05c26053b22",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/utils.js.map",
+      "sha256": "31c8e0c8911d5a7b51a1e0dba9cbe58d1607d8835acc0ae5e54febc5b6910b6e",
+      "cli_nested_sha256": "31c8e0c8911d5a7b51a1e0dba9cbe58d1607d8835acc0ae5e54febc5b6910b6e",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/layout.d.ts",
+      "sha256": "406b0243ae46076eec7eff133642ab8e3065ad6fdd91cc275492e3002eeddb6f",
+      "cli_nested_sha256": "406b0243ae46076eec7eff133642ab8e3065ad6fdd91cc275492e3002eeddb6f",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/layout.d.ts.map",
+      "sha256": "3ff5bbed9ca9a6ec0d9b18f7d557607957d376a2f866c7e75ea1117d05a4333f",
+      "cli_nested_sha256": "3ff5bbed9ca9a6ec0d9b18f7d557607957d376a2f866c7e75ea1117d05a4333f",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/layout.js.map",
+      "sha256": "788f7538e0d985b2a56a1ce8d873a34976be16f883aa9247dd937beb2cd9790e",
+      "cli_nested_sha256": "788f7538e0d985b2a56a1ce8d873a34976be16f883aa9247dd937beb2cd9790e",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/layout-node.d.ts",
+      "sha256": "8a19dd70f320755c3793cbec86902ad037afedd4151f1d174c0175cc281cf77d",
+      "cli_nested_sha256": "8a19dd70f320755c3793cbec86902ad037afedd4151f1d174c0175cc281cf77d",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/layout-node.d.ts.map",
+      "sha256": "98d22124691bb1b720e3afc3d0fa04a5446105356212eadc6af39efeb0a49562",
+      "cli_nested_sha256": "98d22124691bb1b720e3afc3d0fa04a5446105356212eadc6af39efeb0a49562",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/layout-node.js.map",
+      "sha256": "05a7a9ea641181acee544203a104b65647f08f9d9aa66d1c2283beed716f27d6",
+      "cli_nested_sha256": "05a7a9ea641181acee544203a104b65647f08f9d9aa66d1c2283beed716f27d6",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal-image.d.ts",
+      "sha256": "32138037c9c950d5536fdc28da552f045a1b23c1c2758edac590b86a05b056cf",
+      "cli_nested_sha256": "32138037c9c950d5536fdc28da552f045a1b23c1c2758edac590b86a05b056cf",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal-image.d.ts.map",
+      "sha256": "16d92ce47d2b9b99cb3339aa70702dde849b0570b929c4795cc4cb52f0b120a1",
+      "cli_nested_sha256": "16d92ce47d2b9b99cb3339aa70702dde849b0570b929c4795cc4cb52f0b120a1",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal-image.js.map",
+      "sha256": "aa3bc09f3b9b3ebe756a6aacfba8aa3d255571af75bd3b5c5d7e95da21127452",
+      "cli_nested_sha256": "aa3bc09f3b9b3ebe756a6aacfba8aa3d255571af75bd3b5c5d7e95da21127452",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/colors.d.ts",
+      "sha256": "0fc89bd3910065e58646c0e044ebd03503965fd9353fabb306a748a0c6c44ffa",
+      "cli_nested_sha256": "0fc89bd3910065e58646c0e044ebd03503965fd9353fabb306a748a0c6c44ffa",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/colors.d.ts.map",
+      "sha256": "643a2c558e5581e417f03b6f9c6081acb77c8102b261d4067d4e94bd37a968ac",
+      "cli_nested_sha256": "643a2c558e5581e417f03b6f9c6081acb77c8102b261d4067d4e94bd37a968ac",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/colors.js.map",
+      "sha256": "23b569a2a50106a4fb5f74af8b8f46a331e32ff3d45da59acfa1f2c49e85924e",
+      "cli_nested_sha256": "23b569a2a50106a4fb5f74af8b8f46a331e32ff3d45da59acfa1f2c49e85924e",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/oklab.d.ts",
+      "sha256": "1a5a420825582dc7bf567ba99189efd42591dd24ff26d1f8b07bf8f023651817",
+      "cli_nested_sha256": "1a5a420825582dc7bf567ba99189efd42591dd24ff26d1f8b07bf8f023651817",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/oklab.d.ts.map",
+      "sha256": "1ea19b69482046b65dcc8442c0395cf4a46dc0935cfc8905c3f73b0a83173749",
+      "cli_nested_sha256": "1ea19b69482046b65dcc8442c0395cf4a46dc0935cfc8905c3f73b0a83173749",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/oklab.js.map",
+      "sha256": "6fc06b0df153041f403bdcce03e94f9c48f7d18c8bc6c211fd6fce1df3132293",
+      "cli_nested_sha256": "6fc06b0df153041f403bdcce03e94f9c48f7d18c8bc6c211fd6fce1df3132293",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal-colors.d.ts",
+      "sha256": "4149af7b10f8b9bf9dc70d4c97a851a3c606d808e62b5c8d0cb9f462f28f2149",
+      "cli_nested_sha256": "4149af7b10f8b9bf9dc70d4c97a851a3c606d808e62b5c8d0cb9f462f28f2149",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal-colors.d.ts.map",
+      "sha256": "876856982f67c394f4b6f50e58444bd7564769794006fedda83ba38f2c001a94",
+      "cli_nested_sha256": "876856982f67c394f4b6f50e58444bd7564769794006fedda83ba38f2c001a94",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal-colors.js.map",
+      "sha256": "d54d1399e840a6aaa5a878c1710736cec5cc73e870637a032197e81726824329",
+      "cli_nested_sha256": "d54d1399e840a6aaa5a878c1710736cec5cc73e870637a032197e81726824329",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map",
+      "note": "Exact associated asset census/bytes only, no independently activated runtime body or embedded source-map text promotion."
+    }
+  ],
+  "archive_support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/image.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/index.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/main.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-controller.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/system-theme.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resource-loader.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/easter-egg-3d.lazy.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/easter-egg-3d.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/pi-logo.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/radius-login-selector.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/render-utils.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/tool-execution.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/text.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/truncated-text.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/utils.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/utils.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/utils.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/layout.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/layout.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/layout.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/layout-node.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/layout-node.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/layout-node.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal-image.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal-image.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal-image.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/colors.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/colors.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/colors.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/oklab.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/oklab.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/oklab.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal-colors.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal-colors.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal-colors.js.map"
+    }
+  ],
+  "counts": {
+    "rows": 8,
+    "proofs": 8,
+    "scopes": 7,
+    "external_boundaries": 11,
+    "excluded_occurrences": 368,
+    "dispositioned_source_files": 7,
+    "string_template_occurrences": 376,
+    "protected_regex_literals": 31,
+    "error_constructors": 9,
+    "catch_clauses": 5,
+    "full_runtime_lines": 2768,
+    "runtime_source_bytes": 109110,
+    "nonruntime_assets": 21,
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "statusCounts": {
+      "source-read-local-producers": 7
+    },
+    "protected_control_occurrences": 50,
+    "throw_statements": 9,
+    "all_new_expressions": 25
+  },
+  "proofs": [
+    {
+      "item_id": "pi.tui-utilities.colors.4.25",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/colors.js",
+      "line": 4,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "${name} must be finite",
+      "evidence": "`${name} must be finite`"
+    },
+    {
+      "item_id": "pi.tui-utilities.colors.8.25",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/colors.js",
+      "line": 8,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "ANSI color index must be an integer from 0 to 255: ${index}",
+      "evidence": "`ANSI color index must be an integer from 0 to 255: ${index}`"
+    },
+    {
+      "item_id": "pi.tui-utilities.colors.29.25",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/colors.js",
+      "line": 29,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "l must be between 0 and 1: ${l}",
+      "evidence": "`l must be between 0 and 1: ${l}`"
+    },
+    {
+      "item_id": "pi.tui-utilities.colors.31.25",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/colors.js",
+      "line": 31,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "c must not be negative: ${c}",
+      "evidence": "`c must not be negative: ${c}`"
+    },
+    {
+      "item_id": "pi.tui-utilities.colors.49.25",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/colors.js",
+      "line": 49,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "s must be between 0 and 1: ${s}",
+      "evidence": "`s must be between 0 and 1: ${s}`"
+    },
+    {
+      "item_id": "pi.tui-utilities.colors.51.25",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/colors.js",
+      "line": 51,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "l must be between 0 and 1: ${l}",
+      "evidence": "`l must be between 0 and 1: ${l}`"
+    },
+    {
+      "item_id": "pi.tui-utilities.colors.77.21",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/colors.js",
+      "line": 77,
+      "column": 21,
+      "kind": "template-expression",
+      "english": "Invalid color value: ${value}",
+      "evidence": "`Invalid color value: ${value}`"
+    },
+    {
+      "item_id": "pi.tui-utilities.terminal_image.606.12",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal-image.js",
+      "line": 606,
+      "column": 12,
+      "kind": "template-expression",
+      "english": "[Image: ${parts.join(\" \")}]",
+      "evidence": "`[Image: ${parts.join(\" \")}]`"
+    }
+  ],
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/utils.js",
+        "read_lines": [
+          1,
+          1263
+        ],
+        "string_template_occurrences": 135,
+        "fixed_rows": 0,
+        "excluded_occurrences": 135,
+        "protected_regex_literals": 15,
+        "regex_census_sha256": "ad608274529e9d4ca2d8d11458ff3b27baed22148fadbdf3f47d9bb952cf3f9b",
+        "error_constructors": [],
+        "catches": [],
+        "native_calls": [
+          {
+            "line": 180,
+            "column": 17,
+            "callee": "eastAsianWidth"
+          },
+          {
+            "line": 199,
+            "column": 26,
+            "callee": "eastAsianWidth"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "get-east-asian-width"
+          }
+        ],
+        "review": "Full1263-line width/grapheme/ANSI/OSC/APC utilities read: both Intl segmenters, ASCII/Unicode width paths, stripping/normalization, hyperlink/style tracking, wrapping, background fill, truncateToWidth and column/compositing slices.135 literal/template nodes, no own Error/throw/catch. Default dot marker is protected; external eastAsianWidth and native Intl/RegExp boundaries remain pending.",
+        "all_new_expressions": [
+          {
+            "line": 3,
+            "column": 27,
+            "callee": "Intl.Segmenter",
+            "source": "new Intl.Segmenter(undefined, { granularity: \"grapheme\" })"
+          },
+          {
+            "line": 4,
+            "column": 23,
+            "callee": "Intl.Segmenter",
+            "source": "new Intl.Segmenter(undefined, { granularity: \"word\" })"
+          },
+          {
+            "line": 44,
+            "column": 20,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 47,
+            "column": 36,
+            "callee": "RegExp",
+            "source": "new RegExp(`(?:(?=\\\\p{Punctuation})${cjkBreakRegex.source}|[，．：；！？（）［］｛｝“”‘’…—])`, \"u\")"
+          },
+          {
+            "line": 48,
+            "column": 43,
+            "callee": "RegExp",
+            "source": "new RegExp(`(?:\\\\s|${cjkPunctuationRegex.source})`, \"u\")"
+          },
+          {
+            "line": 49,
+            "column": 42,
+            "callee": "RegExp",
+            "source": "new RegExp(`(?:^|${autocompleteSeparatorRegex.source})`, \"u\")"
+          },
+          {
+            "line": 720,
+            "column": 21,
+            "callee": "AnsiCodeTracker",
+            "source": "new AnsiCodeTracker()"
+          },
+          {
+            "line": 831,
+            "column": 21,
+            "callee": "AnsiCodeTracker",
+            "source": "new AnsiCodeTracker()"
+          },
+          {
+            "line": 853,
+            "column": 21,
+            "callee": "AnsiCodeTracker",
+            "source": "new AnsiCodeTracker()"
+          },
+          {
+            "line": 1194,
+            "column": 28,
+            "callee": "AnsiCodeTracker",
+            "source": "new AnsiCodeTracker()"
+          }
+        ],
+        "throw_statements": [],
+        "protected_control_occurrences": [
+          {
+            "line": 67,
+            "column": 35,
+            "kind": "string-literal",
+            "text": "\u001b"
+          },
+          {
+            "line": 131,
+            "column": 19,
+            "kind": "string-literal",
+            "text": "\u001b[0m"
+          },
+          {
+            "line": 232,
+            "column": 37,
+            "kind": "string-literal",
+            "text": "\u001b"
+          },
+          {
+            "line": 249,
+            "column": 41,
+            "kind": "string-literal",
+            "text": "\u001b"
+          },
+          {
+            "line": 270,
+            "column": 23,
+            "kind": "string-literal",
+            "text": "\u001b"
+          },
+          {
+            "line": 435,
+            "column": 30,
+            "kind": "string-literal",
+            "text": "\u001b]8;"
+          },
+          {
+            "line": 438,
+            "column": 61,
+            "kind": "string-literal",
+            "text": "\u001b\\"
+          },
+          {
+            "line": 452,
+            "column": 12,
+            "kind": "template-expression",
+            "text": "\\x1b]8;${hyperlink.params};${hyperlink.url}${hyperlink.terminator}"
+          },
+          {
+            "line": 455,
+            "column": 12,
+            "kind": "template-expression",
+            "text": "\\x1b]8;;${terminator}"
+          },
+          {
+            "line": 458,
+            "column": 26,
+            "kind": "string-literal",
+            "text": "\u001b]8;"
+          },
+          {
+            "line": 665,
+            "column": 41,
+            "kind": "template-expression",
+            "text": "\\x1b[${codes.join(\";\")}m"
+          },
+          {
+            "line": 672,
+            "column": 31,
+            "kind": "template-expression",
+            "text": "\\x1b[${this.bgColor}m"
+          },
+          {
+            "line": 696,
+            "column": 23,
+            "kind": "string-literal",
+            "text": "\u001b[24m"
+          },
+          {
+            "line": 705,
+            "column": 26,
+            "kind": "string-literal",
+            "text": "\u001b"
+          },
+          {
+            "line": 715,
+            "column": 26,
+            "kind": "string-literal",
+            "text": "\u001b"
+          },
+          {
+            "line": 754,
+            "column": 32,
+            "kind": "string-literal",
+            "text": "\u001b"
+          },
+          {
+            "line": 756,
+            "column": 32,
+            "kind": "string-literal",
+            "text": "\u001b"
+          },
+          {
+            "line": 1052,
+            "column": 35,
+            "kind": "string-literal",
+            "text": "\u001b"
+          },
+          {
+            "line": 1219,
+            "column": 55,
+            "kind": "string-literal",
+            "text": "\u001b_"
+          }
+        ]
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/layout.js",
+        "read_lines": [
+          1,
+          344
+        ],
+        "string_template_occurrences": 30,
+        "fixed_rows": 0,
+        "excluded_occurrences": 30,
+        "protected_regex_literals": 1,
+        "regex_census_sha256": "2f1cbedd08c3d9f8eb397f22d8569b3eb1e26c532dc1f194d651aac7ecbffc39",
+        "error_constructors": [],
+        "catches": [],
+        "native_calls": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "./components/stack.js"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "./layout-node.js"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "./terminal-image.js"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "./tui.js"
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "./utils.js"
+          }
+        ],
+        "review": "Full344-line tree layout/measurement/cache, clipping, scrollbar geometry/painting, Kitty crop, composition and hit-path/scroll-view queries read.30 literal/template nodes; three visible scrollbar glyphs protected, other text is callback/component payload or control/state. No own Error/throw/catch; TUI engine activation only bounded.",
+        "all_new_expressions": [
+          {
+            "line": 18,
+            "column": 18,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 280,
+            "column": 22,
+            "callee": "Map",
+            "source": "new Map()"
+          }
+        ],
+        "throw_statements": [],
+        "protected_control_occurrences": [
+          {
+            "line": 180,
+            "column": 25,
+            "kind": "template-expression",
+            "text": "\\x1b[0m\\x1b]8;;\\x07${preserveTargetBackground ? getActiveBackgroundAnsi(targetPrefix) : \"\"}"
+          }
+        ]
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/layout-node.js",
+        "read_lines": [
+          1,
+          6
+        ],
+        "string_template_occurrences": 2,
+        "fixed_rows": 0,
+        "excluded_occurrences": 2,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "catches": [],
+        "native_calls": [],
+        "direct_imports": [],
+        "review": "Full six-line symbol-protocol accessor read. Two literal nodes are Symbol.for identity and typeof function guard; no human prose, error headline or output producer. Invalid component/runtime access diagnostics remain native payload.",
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "protected_control_occurrences": []
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal-image.js",
+        "read_lines": [
+          1,
+          608
+        ],
+        "string_template_occurrences": 139,
+        "fixed_rows": 1,
+        "excluded_occurrences": 138,
+        "protected_regex_literals": 8,
+        "regex_census_sha256": "89dbc1e9d5be5db4a8ef696e7cbd01e43760e3ac02ee06c84dca442840900642",
+        "error_constructors": [],
+        "catches": [
+          {
+            "line": 32,
+            "column": 5,
+            "source": "catch {\n        return false;\n    }"
+          },
+          {
+            "line": 417,
+            "column": 5,
+            "source": "catch {\n        return null;\n    }"
+          },
+          {
+            "line": 453,
+            "column": 5,
+            "source": "catch {\n        return null;\n    }"
+          },
+          {
+            "line": 471,
+            "column": 5,
+            "source": "catch {\n        return null;\n    }"
+          },
+          {
+            "line": 511,
+            "column": 5,
+            "source": "catch {\n        return null;\n    }"
+          }
+        ],
+        "native_calls": [
+          {
+            "line": 22,
+            "column": 30,
+            "callee": "execSync"
+          },
+          {
+            "line": 223,
+            "column": 17,
+            "callee": "Buffer.byteLength"
+          },
+          {
+            "line": 230,
+            "column": 28,
+            "callee": "Buffer.from"
+          },
+          {
+            "line": 406,
+            "column": 24,
+            "callee": "Buffer.from"
+          },
+          {
+            "line": 423,
+            "column": 24,
+            "callee": "Buffer.from"
+          },
+          {
+            "line": 459,
+            "column": 24,
+            "callee": "Buffer.from"
+          },
+          {
+            "line": 477,
+            "column": 24,
+            "callee": "Buffer.from"
+          },
+          {
+            "line": 581,
+            "column": 18,
+            "callee": "homedir"
+          },
+          {
+            "line": 596,
+            "column": 45,
+            "callee": "isAbsolute"
+          },
+          {
+            "line": 597,
+            "column": 43,
+            "callee": "pathToFileURL"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "node:child_process"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "node:os"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "node:path"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "node:url"
+          }
+        ],
+        "review": "Full608-line environment detection/override/cache, guarded tmux probe, Kitty/iTerm2 encode/upload/place/crop/delete/metadata, dimension parsers, geometry, renderImage, OSC hyperlink/home shortening and imageFallback read.139 nodes: one fixed caption +138 exact exclusions; five catches suppress probe or binary-parser details. Optional converter/native OS/child and terminal producers remain separate.",
+        "all_new_expressions": [
+          {
+            "line": 238,
+            "column": 28,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 280,
+            "column": 38,
+            "callee": "Set",
+            "source": "new Set([\n    \"i\",\n    \"p\",\n    \"x\",\n    \"y\",\n    \"w\",\n    \"h\",\n    \"X\",\n    \"Y\",\n    \"c\",\n    \"r\",\n    \"C\",\n    \"U\",\n    \"z\",\n    \"P\",\n    \"Q\",\n    \"H\",\n    \"V\",\n])"
+          }
+        ],
+        "throw_statements": [],
+        "protected_control_occurrences": [
+          {
+            "line": 149,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "\u001b_G"
+          },
+          {
+            "line": 150,
+            "column": 23,
+            "kind": "string-literal",
+            "text": "\u001b]1337;File="
+          },
+          {
+            "line": 180,
+            "column": 16,
+            "kind": "template-expression",
+            "text": "\\x1b_G${params.join(\",\")};${base64Data}\\x1b\\\\"
+          },
+          {
+            "line": 189,
+            "column": 25,
+            "kind": "template-expression",
+            "text": "\\x1b_G${params.join(\",\")},m=1;${chunk}\\x1b\\\\"
+          },
+          {
+            "line": 193,
+            "column": 25,
+            "kind": "template-expression",
+            "text": "\\x1b_Gm=0;${chunk}\\x1b\\\\"
+          },
+          {
+            "line": 196,
+            "column": 25,
+            "kind": "template-expression",
+            "text": "\\x1b_Gm=1;${chunk}\\x1b\\\\"
+          },
+          {
+            "line": 207,
+            "column": 12,
+            "kind": "template-expression",
+            "text": "\\x1b_Ga=d,d=I,i=${imageId},q=2\\x1b\\\\"
+          },
+          {
+            "line": 214,
+            "column": 12,
+            "kind": "string-literal",
+            "text": "\u001b_Ga=d,d=A,q=2\u001b\\"
+          },
+          {
+            "line": 218,
+            "column": 12,
+            "kind": "string-literal",
+            "text": "\u001b_Ga=d,d=a,q=2\u001b\\"
+          },
+          {
+            "line": 236,
+            "column": 12,
+            "kind": "template-expression",
+            "text": "\\x1b]1337;File=${params.join(\";\")}:${base64Data}\\x07"
+          },
+          {
+            "line": 321,
+            "column": 41,
+            "kind": "string-literal",
+            "text": "\u001b\\"
+          },
+          {
+            "line": 338,
+            "column": 22,
+            "kind": "template-expression",
+            "text": "\\x1b_Ga=p,q=2,${controls.join(\",\")}\\x1b\\\\"
+          },
+          {
+            "line": 362,
+            "column": 12,
+            "kind": "template-expression",
+            "text": "${line.slice(0, match.index)}\\x1b_G${controls.join(\",\")};${line.slice(match.index + match[0].length)}"
+          },
+          {
+            "line": 577,
+            "column": 12,
+            "kind": "template-expression",
+            "text": "\\x1b]8;;${url}\\x1b\\\\${text}\\x1b]8;;\\x1b\\\\"
+          }
+        ]
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/colors.js",
+        "read_lines": [
+          1,
+          273
+        ],
+        "string_template_occurrences": 59,
+        "fixed_rows": 7,
+        "excluded_occurrences": 52,
+        "protected_regex_literals": 1,
+        "regex_census_sha256": "9510bd532aa2f344863bb0bfb6d1605d861bdda593ee43acfbc5e5da5bb86a42",
+        "error_constructors": [
+          {
+            "line": 4,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`${name} must be finite`"
+          },
+          {
+            "line": 8,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`ANSI color index must be an integer from 0 to 255: ${index}`"
+          },
+          {
+            "line": 20,
+            "column": 19,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`${name} must be between 0 and 255: ${value}`"
+          },
+          {
+            "line": 29,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`l must be between 0 and 1: ${l}`"
+          },
+          {
+            "line": 31,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`c must not be negative: ${c}`"
+          },
+          {
+            "line": 49,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`s must be between 0 and 1: ${s}`"
+          },
+          {
+            "line": 51,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`l must be between 0 and 1: ${l}`"
+          },
+          {
+            "line": 77,
+            "column": 11,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Invalid color value: ${value}`"
+          },
+          {
+            "line": 168,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`amount must be between 0 and 1: ${amount}`"
+          }
+        ],
+        "catches": [],
+        "native_calls": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "./oklab.js"
+          }
+        ],
+        "review": "Full273-line finite/range/parser guards, indexed/RGB/OKLCH/OKHSL conversion, mixing, ANSI/CSS encoding and text styles read.59 nodes: seven conditional fixed validation definitions +52 exclusions. Nine Error constructors/throws: two explicit exported API guard exclusions with inspected native input invariants. Native theme diagnostics and raw-screen palette parser traced separately.",
+        "all_new_expressions": [
+          {
+            "line": 4,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`${name} must be finite`)"
+          },
+          {
+            "line": 8,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`ANSI color index must be an integer from 0 to 255: ${index}`)"
+          },
+          {
+            "line": 20,
+            "column": 19,
+            "callee": "Error",
+            "source": "new Error(`${name} must be between 0 and 255: ${value}`)"
+          },
+          {
+            "line": 29,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`l must be between 0 and 1: ${l}`)"
+          },
+          {
+            "line": 31,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`c must not be negative: ${c}`)"
+          },
+          {
+            "line": 35,
+            "column": 23,
+            "callee": "RegExp",
+            "source": "new RegExp(`^oklch\\\\(\\\\s*(${NUMBER_PATTERN})(%)?\\\\s+(${NUMBER_PATTERN})\\\\s+(${NUMBER_PATTERN})(?:deg)?\\\\s*\\\\)$`, \"i\")"
+          },
+          {
+            "line": 36,
+            "column": 23,
+            "callee": "RegExp",
+            "source": "new RegExp(`^okhsl\\\\(\\\\s*(${NUMBER_PATTERN})(?:deg)?\\\\s+(${NUMBER_PATTERN})(%)?\\\\s+(${NUMBER_PATTERN})(%)?\\\\s*\\\\)$`, \"i\")"
+          },
+          {
+            "line": 49,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`s must be between 0 and 1: ${s}`)"
+          },
+          {
+            "line": 51,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`l must be between 0 and 1: ${l}`)"
+          },
+          {
+            "line": 77,
+            "column": 11,
+            "callee": "Error",
+            "source": "new Error(`Invalid color value: ${value}`)"
+          },
+          {
+            "line": 168,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`amount must be between 0 and 1: ${amount}`)"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 4,
+            "column": 9,
+            "expression": "new Error(`${name} must be finite`)"
+          },
+          {
+            "line": 8,
+            "column": 9,
+            "expression": "new Error(`ANSI color index must be an integer from 0 to 255: ${index}`)"
+          },
+          {
+            "line": 20,
+            "column": 13,
+            "expression": "new Error(`${name} must be between 0 and 255: ${value}`)"
+          },
+          {
+            "line": 29,
+            "column": 9,
+            "expression": "new Error(`l must be between 0 and 1: ${l}`)"
+          },
+          {
+            "line": 31,
+            "column": 9,
+            "expression": "new Error(`c must not be negative: ${c}`)"
+          },
+          {
+            "line": 49,
+            "column": 9,
+            "expression": "new Error(`s must be between 0 and 1: ${s}`)"
+          },
+          {
+            "line": 51,
+            "column": 9,
+            "expression": "new Error(`l must be between 0 and 1: ${l}`)"
+          },
+          {
+            "line": 77,
+            "column": 5,
+            "expression": "new Error(`Invalid color value: ${value}`)"
+          },
+          {
+            "line": 168,
+            "column": 9,
+            "expression": "new Error(`amount must be between 0 and 1: ${amount}`)"
+          }
+        ],
+        "protected_control_occurrences": [
+          {
+            "line": 217,
+            "column": 16,
+            "kind": "template-expression",
+            "text": "\\x1b[${background ? 48 : 38};5;${color.index}m"
+          },
+          {
+            "line": 220,
+            "column": 16,
+            "kind": "template-expression",
+            "text": "\\x1b[${background ? 48 : 38};2;${Math.round(rgb.r)};${Math.round(rgb.g)};${Math.round(rgb.b)}m"
+          },
+          {
+            "line": 222,
+            "column": 12,
+            "kind": "template-expression",
+            "text": "\\x1b[${background ? 48 : 38};5;${rgbToAnsi256(rgb)}m"
+          },
+          {
+            "line": 243,
+            "column": 18,
+            "kind": "string-literal",
+            "text": "\u001b[39m"
+          },
+          {
+            "line": 247,
+            "column": 18,
+            "kind": "template-expression",
+            "text": "\\x1b[49m${suffix}"
+          },
+          {
+            "line": 250,
+            "column": 19,
+            "kind": "string-literal",
+            "text": "\u001b[1m"
+          },
+          {
+            "line": 252,
+            "column": 19,
+            "kind": "string-literal",
+            "text": "\u001b[2m"
+          },
+          {
+            "line": 254,
+            "column": 18,
+            "kind": "template-expression",
+            "text": "\\x1b[22m${suffix}"
+          },
+          {
+            "line": 256,
+            "column": 19,
+            "kind": "string-literal",
+            "text": "\u001b[3m"
+          },
+          {
+            "line": 257,
+            "column": 18,
+            "kind": "template-expression",
+            "text": "\\x1b[23m${suffix}"
+          },
+          {
+            "line": 260,
+            "column": 19,
+            "kind": "string-literal",
+            "text": "\u001b[4m"
+          },
+          {
+            "line": 261,
+            "column": 18,
+            "kind": "template-expression",
+            "text": "\\x1b[24m${suffix}"
+          },
+          {
+            "line": 264,
+            "column": 19,
+            "kind": "string-literal",
+            "text": "\u001b[7m"
+          },
+          {
+            "line": 265,
+            "column": 18,
+            "kind": "template-expression",
+            "text": "\\x1b[27m${suffix}"
+          },
+          {
+            "line": 268,
+            "column": 19,
+            "kind": "string-literal",
+            "text": "\u001b[9m"
+          },
+          {
+            "line": 269,
+            "column": 18,
+            "kind": "template-expression",
+            "text": "\\x1b[29m${suffix}"
+          }
+        ]
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/oklab.js",
+        "read_lines": [
+          1,
+          210
+        ],
+        "string_template_occurrences": 0,
+        "fixed_rows": 0,
+        "excluded_occurrences": 0,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "catches": [],
+        "native_calls": [],
+        "direct_imports": [],
+        "review": "Full210-line Oklab/OKHSL numerical reference conversion read: matrices, transfer/lightness functions, saturation/cusp/chroma/gamut math, forward/reverse conversion and clamping. Zero runtime string/template/regex literals, Error constructors, throws or catches. License/provenance comments are nonruntime, not display labels.",
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "protected_control_occurrences": []
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal-colors.js",
+        "read_lines": [
+          1,
+          64
+        ],
+        "string_template_occurrences": 11,
+        "fixed_rows": 0,
+        "excluded_occurrences": 11,
+        "protected_regex_literals": 6,
+        "regex_census_sha256": "cf417762ed1d0be3267d6e8c4c5823369b26f698c64502b624ea6fcd75034c33",
+        "error_constructors": [],
+        "catches": [],
+        "native_calls": [],
+        "direct_imports": [],
+        "review": "Full64-line OSC10/11/4 matching, hex/rgb channel scaling, target resolution and mode997 light/dark scheme parsing read.11 literal nodes and six regex literals are protected protocol/delimiter/state identities; no human prose/error/catch. Reported values flow as terminal/theme payload through bounded engine/controller consumers.",
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "protected_control_occurrences": []
+      }
+    ],
+    "method": "Full seven local bodies read as source only. Every string/template node partitioned; protected regexes separately hashed. Error and AggregateError/AggregateException message-argument rule, all catches/direct imports and selected native call sites recorded. Actual bounded callers distinguish native warnings/uncaught diagnostics, prevalidated API guards and control/payload output. No audited module/parser/render/image/native/API evaluation."
+  },
+  "remaining_partial_sources": [],
+  "scope_census": {
+    "package": "@earendil-works/pi-tui",
+    "version": "1.4.0",
+    "runtime_files": [
+      "dist/colors.js",
+      "dist/layout-node.js",
+      "dist/layout.js",
+      "dist/oklab.js",
+      "dist/terminal-colors.js",
+      "dist/terminal-image.js",
+      "dist/utils.js"
+    ],
+    "associated_nonruntime_files": [
+      "dist/colors.d.ts",
+      "dist/colors.d.ts.map",
+      "dist/colors.js.map",
+      "dist/layout-node.d.ts",
+      "dist/layout-node.d.ts.map",
+      "dist/layout-node.js.map",
+      "dist/layout.d.ts",
+      "dist/layout.d.ts.map",
+      "dist/layout.js.map",
+      "dist/oklab.d.ts",
+      "dist/oklab.d.ts.map",
+      "dist/oklab.js.map",
+      "dist/terminal-colors.d.ts",
+      "dist/terminal-colors.d.ts.map",
+      "dist/terminal-colors.js.map",
+      "dist/terminal-image.d.ts",
+      "dist/terminal-image.d.ts.map",
+      "dist/terminal-image.js.map",
+      "dist/utils.d.ts",
+      "dist/utils.d.ts.map",
+      "dist/utils.js.map"
+    ]
+  },
+  "pending_producer_boundaries": [
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui.js",
+      "status": "bounded-routes-only",
+      "reason": "Full TuiBase input/color/cursor/overlay/render implementation and native/internal errors remain pending; bounded render callback lacks catch for indexedColor failure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.js",
+      "status": "bounded-lines1449-1560-only",
+      "reason": "Full engine/layout/selection/search/native producers pending; output write route inspected."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "status": "bounded-lines463-502-only",
+      "reason": "Oversized-line fatal guard is a separate source-defined headline pending engine unit; this utility unit does not claim it."
+    },
+    {
+      "source": "npm:get-east-asian-width@1.6.0/index.js",
+      "status": "external-direct-import-body-and-archive-pending",
+      "reason": "utils.js imports eastAsianWidth; installed dependency package identity/hashes can be recorded separately, but full producer/API errors are not closed here."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js",
+      "status": "bounded-consumer-routes-only",
+      "reason": "Theme token/reference/JSON/fs/typebox/schema/controller/system-theme text producers outside exact utility definitions remain pending separate full family review."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/system-theme.js",
+      "status": "bounded-numeric-input-lineage-only",
+      "reason": "Native color derivation passes parsed terminal RGB and converts/clamps values; full local producer inventory not completed."
+    },
+    {
+      "source": "external:node-os-path-url-buffer-child-intl-regexp-terminal-image-transcoder",
+      "status": "native-or-optional-producer-boundary",
+      "reason": "Native/runtime diagnostics, raw terminal replies, child implementation and custom converter/callback API publication remain explicit pending. No external capability was invoked."
+    }
+  ],
+  "limits": [
+    "Finite seven runtime bodies plus21 associated nonruntime census assets only; broader Pi and native TUI engine/package graph remains open.",
+    "Seven inherited color-validation source occurrences and image fallback wrapper are conditional positives. Two exact API Error headlines are exclusions with specific inspected-native input invariants; no universal API invisibility claim.",
+    "indexedColor positive identifies actual native fullscreen raw-screen parser and uncaught render path, not an observed invalid default producer or painted UI card. Raw input producer and runtime diagnostic formatter remain external.",
+    "Owned Session UI fit helper explicitly supplies its marker default empty; inherited default ellipsis does not automatically appear in all Jouzu-owned views.",
+    "Graphic scrollbar/dimension/MIME/path/truncation/control/encoding identifiers remain protected exact exclusions even where visible; arbitrary caller/model/OS text is payload.",
+    "Template expressions preserve raw source escape spelling; ordinary literals are TypeScript-decoded. JSON source values preserve exact whitespace/codepoints.",
+    "No source/product/dependency/old/shared inventory changes; no model/parser/browser/DOM/render/image/native/OS/child/API/network execution or state mutation.",
+    "Actual utils import resolves get-east-asian-width1.6.0 in both trees with identical entry bytes. CLI top-level1.7.0 is shadowed by a pi-tui-local1.6.0 installation whose exact path is absent from the main lock. Metadata/path/entry hashes recorded; no canonical transitive archive or full dependency body claim.",
+    "Jouzu session_start replaces the stock clickable Pi header; exact /arminsayshi/fullscreen native path remains separately qualified. No default Jouzu logo-click animation claim."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-tui-utilities.cjs",
+  "external_dependency_resolution": [
+    {
+      "tree": "root",
+      "name": "get-east-asian-width",
+      "version": "1.6.0",
+      "resolved_entry": "get-east-asian-width/index.js",
+      "package_json_sha256": "d263e50dd1a43aee9acda4d7f066e66b0d0bde1f2852ea6e7153750a5e3a3e52",
+      "entry_sha256": "d7b1ba05914c0fc311c20e5618bf8d0893c9c74078a07975e2df981445e64887",
+      "lock_records": [
+        {
+          "source": "node_modules/get-east-asian-width",
+          "version": "1.6.0",
+          "integrity": "sha512-QRbvDIbx6YklUe6RxeTeleMR0yv3cYH6PsPZHcnVn7xv7zO1BHN8r0XETu8n6Ye3Q+ahtSarc3WgtNWmehIBfA=="
+        },
+        {
+          "source": "packages/cli/node_modules/get-east-asian-width",
+          "version": "1.7.0",
+          "integrity": "sha512-XjH1AECxf0giL2V1aU8vKyRR2ppRUb5c0EvT7zuJTokQ74bNo52zOtghqdWIqrhUD79fo3x0WfKZdOqxF6LG1Q=="
+        }
+      ],
+      "canonical_archive_available": false,
+      "status": "resolved external body not reviewed; metadata/hash comparison only",
+      "main_lock_exact_path": "node_modules/get-east-asian-width",
+      "exact_path_lock_record": {
+        "source": "node_modules/get-east-asian-width",
+        "version": "1.6.0",
+        "integrity": "sha512-QRbvDIbx6YklUe6RxeTeleMR0yv3cYH6PsPZHcnVn7xv7zO1BHN8r0XETu8n6Ye3Q+ahtSarc3WgtNWmehIBfA=="
+      },
+      "path_lock_disposition": "resolved package path/version matches this main-lock record"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "get-east-asian-width",
+      "version": "1.6.0",
+      "resolved_entry": "@earendil-works/pi-tui/node_modules/get-east-asian-width/index.js",
+      "package_json_sha256": "61f4c4194938a9dd225d1871d743e5266c63fb4faad133802579f21bbaead41a",
+      "entry_sha256": "d7b1ba05914c0fc311c20e5618bf8d0893c9c74078a07975e2df981445e64887",
+      "lock_records": [
+        {
+          "source": "node_modules/get-east-asian-width",
+          "version": "1.6.0",
+          "integrity": "sha512-QRbvDIbx6YklUe6RxeTeleMR0yv3cYH6PsPZHcnVn7xv7zO1BHN8r0XETu8n6Ye3Q+ahtSarc3WgtNWmehIBfA=="
+        },
+        {
+          "source": "packages/cli/node_modules/get-east-asian-width",
+          "version": "1.7.0",
+          "integrity": "sha512-XjH1AECxf0giL2V1aU8vKyRR2ppRUb5c0EvT7zuJTokQ74bNo52zOtghqdWIqrhUD79fo3x0WfKZdOqxF6LG1Q=="
+        }
+      ],
+      "canonical_archive_available": false,
+      "status": "resolved external body not reviewed; metadata/hash comparison only",
+      "main_lock_exact_path": "packages/cli/node_modules/@earendil-works/pi-tui/node_modules/get-east-asian-width",
+      "exact_path_lock_record": null,
+      "path_lock_disposition": "shadowed pi-tui-local1.6.0 path has no exact main-lock entry; CLI top-level1.7.0 record is not the import resolution target"
+    }
+  ],
+  "reviewed_artifact_sha256": {
+    "pi-tui-utilities.csv": "ac3275821225cd3e9e50cbb4ed8e8e279283194657d57a7b5083834727b24055",
+    "pi-tui-utilities-boundaries.csv": "1dd4f787a4e5d7387e5a536c7c4dd9b9aa7fdb466cce04b33eb29b061b7b6634",
+    "pi-tui-utilities-scope.csv": "e432aa730c7ae92d6b3617fd797f10ea6cc6ac32f500be9e62f57827bf487975",
+    "pi-tui-utilities-exclusions.csv": "f77b64ac94bb3b05ef0f8eb1d58a70fd37d431ab6df15943ce38af29c2112d1a"
+  },
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/main.js",
+            "archive_sha256": "08b91f9eb3adf9a5027c18732d1e4de70999bd15c445b65cb0ddd0cd68f2746b",
+            "root_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+            "cli_nested_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme.js",
+            "archive_sha256": "8099c3916f52b2bd43757e2a397e292a7b922d81dbdc07bc3bed27000be26378",
+            "root_sha256": "8099c3916f52b2bd43757e2a397e292a7b922d81dbdc07bc3bed27000be26378",
+            "cli_nested_sha256": "8099c3916f52b2bd43757e2a397e292a7b922d81dbdc07bc3bed27000be26378",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme-schema.js",
+            "archive_sha256": "ce89ff25f82a2b840fe5d0bd3efa6870a9efb4ccfd2911468358ae401904ef7a",
+            "root_sha256": "ce89ff25f82a2b840fe5d0bd3efa6870a9efb4ccfd2911468358ae401904ef7a",
+            "cli_nested_sha256": "ce89ff25f82a2b840fe5d0bd3efa6870a9efb4ccfd2911468358ae401904ef7a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme-controller.js",
+            "archive_sha256": "a2eb66dbd859a12bdc5349731704d2fdcea4a3bd60b81091e42b4ea0f465de8e",
+            "root_sha256": "a2eb66dbd859a12bdc5349731704d2fdcea4a3bd60b81091e42b4ea0f465de8e",
+            "cli_nested_sha256": "a2eb66dbd859a12bdc5349731704d2fdcea4a3bd60b81091e42b4ea0f465de8e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/system-theme.js",
+            "archive_sha256": "da08e8d7d95fad032e08de47a2848c497a0d9c90a00955142936ba30f09d69e8",
+            "root_sha256": "da08e8d7d95fad032e08de47a2848c497a0d9c90a00955142936ba30f09d69e8",
+            "cli_nested_sha256": "da08e8d7d95fad032e08de47a2848c497a0d9c90a00955142936ba30f09d69e8",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/resource-loader.js",
+            "archive_sha256": "ad50235884ea6d5ee14cdae1efcfe6afef58b22b18ce574e81886d57ca9f4642",
+            "root_sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461",
+            "cli_nested_sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/interactive-mode.js",
+            "archive_sha256": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+            "root_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/components/easter-egg-3d.lazy.js",
+            "archive_sha256": "92daf5cec1f63702b8d216b14ff793b29cee942148bd3ded97be2e0ddb60f3b6",
+            "root_sha256": "92daf5cec1f63702b8d216b14ff793b29cee942148bd3ded97be2e0ddb60f3b6",
+            "cli_nested_sha256": "92daf5cec1f63702b8d216b14ff793b29cee942148bd3ded97be2e0ddb60f3b6",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/components/easter-egg-3d.js",
+            "archive_sha256": "7b4359a79a1c7993f9b3f68e4f363a42484f077d0a1855dc749a4db00930be27",
+            "root_sha256": "7b4359a79a1c7993f9b3f68e4f363a42484f077d0a1855dc749a4db00930be27",
+            "cli_nested_sha256": "7b4359a79a1c7993f9b3f68e4f363a42484f077d0a1855dc749a4db00930be27",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/components/pi-logo.js",
+            "archive_sha256": "10b6164c7a4bf4d94bb9a3975f82131ab02f294b3d60ed7ee225c7c5bf3bdae2",
+            "root_sha256": "10b6164c7a4bf4d94bb9a3975f82131ab02f294b3d60ed7ee225c7c5bf3bdae2",
+            "cli_nested_sha256": "10b6164c7a4bf4d94bb9a3975f82131ab02f294b3d60ed7ee225c7c5bf3bdae2",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/components/radius-login-selector.js",
+            "archive_sha256": "89dd826572f4905bab65e83fea6ed77605963344a6680152bab046fe9a4bcc1a",
+            "root_sha256": "89dd826572f4905bab65e83fea6ed77605963344a6680152bab046fe9a4bcc1a",
+            "cli_nested_sha256": "89dd826572f4905bab65e83fea6ed77605963344a6680152bab046fe9a4bcc1a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/render-utils.js",
+            "archive_sha256": "c7e09796db181e98e65698ff340c82e74788048cbf63034086189d81623a8ee7",
+            "root_sha256": "c7e09796db181e98e65698ff340c82e74788048cbf63034086189d81623a8ee7",
+            "cli_nested_sha256": "c7e09796db181e98e65698ff340c82e74788048cbf63034086189d81623a8ee7",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/components/tool-execution.js",
+            "archive_sha256": "fa47a6ec3aae07cd3ec5f84509f6553a342daf23fdb71afd75b6daa355a94e3f",
+            "root_sha256": "fa47a6ec3aae07cd3ec5f84509f6553a342daf23fdb71afd75b6daa355a94e3f",
+            "cli_nested_sha256": "fa47a6ec3aae07cd3ec5f84509f6553a342daf23fdb71afd75b6daa355a94e3f",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/utils.js",
+            "archive_sha256": "275c8400c37c09a7cc106445e27f676aa320c6a024dc89b540b97e1357e90e55",
+            "root_sha256": "275c8400c37c09a7cc106445e27f676aa320c6a024dc89b540b97e1357e90e55",
+            "cli_nested_sha256": "275c8400c37c09a7cc106445e27f676aa320c6a024dc89b540b97e1357e90e55",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/layout.js",
+            "archive_sha256": "b20cb0b156e506b4639b789be8688fe9dd38d42d15746ae82e69fcd250e42147",
+            "root_sha256": "b20cb0b156e506b4639b789be8688fe9dd38d42d15746ae82e69fcd250e42147",
+            "cli_nested_sha256": "b20cb0b156e506b4639b789be8688fe9dd38d42d15746ae82e69fcd250e42147",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/layout-node.js",
+            "archive_sha256": "73c3942b68d52ed29072f1f78184c99d405f9259bb4e24a1b6b0e3688381f7f5",
+            "root_sha256": "73c3942b68d52ed29072f1f78184c99d405f9259bb4e24a1b6b0e3688381f7f5",
+            "cli_nested_sha256": "73c3942b68d52ed29072f1f78184c99d405f9259bb4e24a1b6b0e3688381f7f5",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/terminal-image.js",
+            "archive_sha256": "af7d4478fad5d67dfbb2694a232c5f97e68fa2fb9e178805803ed95fb04ed646",
+            "root_sha256": "af7d4478fad5d67dfbb2694a232c5f97e68fa2fb9e178805803ed95fb04ed646",
+            "cli_nested_sha256": "af7d4478fad5d67dfbb2694a232c5f97e68fa2fb9e178805803ed95fb04ed646",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/colors.js",
+            "archive_sha256": "330cc45db7f9d6f2987ec939075f9142fdad58bc77989e2d0b2204389c5e0370",
+            "root_sha256": "330cc45db7f9d6f2987ec939075f9142fdad58bc77989e2d0b2204389c5e0370",
+            "cli_nested_sha256": "330cc45db7f9d6f2987ec939075f9142fdad58bc77989e2d0b2204389c5e0370",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/oklab.js",
+            "archive_sha256": "9aa1e62e9770e7f6f81b204c9d0f039d5f0b5cef017920f6d3e5368520428bfe",
+            "root_sha256": "9aa1e62e9770e7f6f81b204c9d0f039d5f0b5cef017920f6d3e5368520428bfe",
+            "cli_nested_sha256": "9aa1e62e9770e7f6f81b204c9d0f039d5f0b5cef017920f6d3e5368520428bfe",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/terminal-colors.js",
+            "archive_sha256": "ea51c6eb2eb2101b7f57895936e22b72b6caa8e86125dfa024c0312c285faeaa",
+            "root_sha256": "ea51c6eb2eb2101b7f57895936e22b72b6caa8e86125dfa024c0312c285faeaa",
+            "cli_nested_sha256": "ea51c6eb2eb2101b7f57895936e22b72b6caa8e86125dfa024c0312c285faeaa",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/components/image.js",
+            "archive_sha256": "918d93b63767fd67543dc23c20709da6a621cd627b52f43e2f87d3b73ab0a9f2",
+            "root_sha256": "918d93b63767fd67543dc23c20709da6a621cd627b52f43e2f87d3b73ab0a9f2",
+            "cli_nested_sha256": "918d93b63767fd67543dc23c20709da6a621cd627b52f43e2f87d3b73ab0a9f2",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/tui.js",
+            "archive_sha256": "e3246864ff8c94b71fb6e9cb6f9dfddcd64956370a259860d189d8d95ea773d9",
+            "root_sha256": "e3246864ff8c94b71fb6e9cb6f9dfddcd64956370a259860d189d8d95ea773d9",
+            "cli_nested_sha256": "e3246864ff8c94b71fb6e9cb6f9dfddcd64956370a259860d189d8d95ea773d9",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/tui-alt-screen.js",
+            "archive_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+            "root_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+            "cli_nested_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/tui-main-screen.js",
+            "archive_sha256": "d993e3b50da2b10c1ca8774c75e8f678dba861e4ba870b9e67b34bbb23739f92",
+            "root_sha256": "d993e3b50da2b10c1ca8774c75e8f678dba861e4ba870b9e67b34bbb23739f92",
+            "cli_nested_sha256": "d993e3b50da2b10c1ca8774c75e8f678dba861e4ba870b9e67b34bbb23739f92",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/index.js",
+            "archive_sha256": "6068ae4207de753d9ec00dbe14aee199e6160d1dea0db9c8a92f65d08ffc6e80",
+            "root_sha256": "6068ae4207de753d9ec00dbe14aee199e6160d1dea0db9c8a92f65d08ffc6e80",
+            "cli_nested_sha256": "6068ae4207de753d9ec00dbe14aee199e6160d1dea0db9c8a92f65d08ffc6e80",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/components/text.js",
+            "archive_sha256": "89adac5c6e2be6afcdf99ca015943901bc676938fd0115326da5af78c930803c",
+            "root_sha256": "89adac5c6e2be6afcdf99ca015943901bc676938fd0115326da5af78c930803c",
+            "cli_nested_sha256": "89adac5c6e2be6afcdf99ca015943901bc676938fd0115326da5af78c930803c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/components/truncated-text.js",
+            "archive_sha256": "32c182d7faf44306d4e6937a0324a1f88b1acabbbe3fa8f385ef99ed9d9e090d",
+            "root_sha256": "32c182d7faf44306d4e6937a0324a1f88b1acabbbe3fa8f385ef99ed9d9e090d",
+            "cli_nested_sha256": "32c182d7faf44306d4e6937a0324a1f88b1acabbbe3fa8f385ef99ed9d9e090d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils.d.ts",
+            "archive_sha256": "88ba8d756f578e452b47517ff1c049c6da53b3b0ca34527815d5244e27066747",
+            "root_sha256": "88ba8d756f578e452b47517ff1c049c6da53b3b0ca34527815d5244e27066747",
+            "cli_nested_sha256": "88ba8d756f578e452b47517ff1c049c6da53b3b0ca34527815d5244e27066747",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils.d.ts.map",
+            "archive_sha256": "c4246432cda20f47a86db585eeba8b0471fb8da9f5421f31fabba05c26053b22",
+            "root_sha256": "c4246432cda20f47a86db585eeba8b0471fb8da9f5421f31fabba05c26053b22",
+            "cli_nested_sha256": "c4246432cda20f47a86db585eeba8b0471fb8da9f5421f31fabba05c26053b22",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils.js.map",
+            "archive_sha256": "31c8e0c8911d5a7b51a1e0dba9cbe58d1607d8835acc0ae5e54febc5b6910b6e",
+            "root_sha256": "31c8e0c8911d5a7b51a1e0dba9cbe58d1607d8835acc0ae5e54febc5b6910b6e",
+            "cli_nested_sha256": "31c8e0c8911d5a7b51a1e0dba9cbe58d1607d8835acc0ae5e54febc5b6910b6e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/layout.d.ts",
+            "archive_sha256": "406b0243ae46076eec7eff133642ab8e3065ad6fdd91cc275492e3002eeddb6f",
+            "root_sha256": "406b0243ae46076eec7eff133642ab8e3065ad6fdd91cc275492e3002eeddb6f",
+            "cli_nested_sha256": "406b0243ae46076eec7eff133642ab8e3065ad6fdd91cc275492e3002eeddb6f",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/layout.d.ts.map",
+            "archive_sha256": "3ff5bbed9ca9a6ec0d9b18f7d557607957d376a2f866c7e75ea1117d05a4333f",
+            "root_sha256": "3ff5bbed9ca9a6ec0d9b18f7d557607957d376a2f866c7e75ea1117d05a4333f",
+            "cli_nested_sha256": "3ff5bbed9ca9a6ec0d9b18f7d557607957d376a2f866c7e75ea1117d05a4333f",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/layout.js.map",
+            "archive_sha256": "788f7538e0d985b2a56a1ce8d873a34976be16f883aa9247dd937beb2cd9790e",
+            "root_sha256": "788f7538e0d985b2a56a1ce8d873a34976be16f883aa9247dd937beb2cd9790e",
+            "cli_nested_sha256": "788f7538e0d985b2a56a1ce8d873a34976be16f883aa9247dd937beb2cd9790e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/layout-node.d.ts",
+            "archive_sha256": "8a19dd70f320755c3793cbec86902ad037afedd4151f1d174c0175cc281cf77d",
+            "root_sha256": "8a19dd70f320755c3793cbec86902ad037afedd4151f1d174c0175cc281cf77d",
+            "cli_nested_sha256": "8a19dd70f320755c3793cbec86902ad037afedd4151f1d174c0175cc281cf77d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/layout-node.d.ts.map",
+            "archive_sha256": "98d22124691bb1b720e3afc3d0fa04a5446105356212eadc6af39efeb0a49562",
+            "root_sha256": "98d22124691bb1b720e3afc3d0fa04a5446105356212eadc6af39efeb0a49562",
+            "cli_nested_sha256": "98d22124691bb1b720e3afc3d0fa04a5446105356212eadc6af39efeb0a49562",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/layout-node.js.map",
+            "archive_sha256": "05a7a9ea641181acee544203a104b65647f08f9d9aa66d1c2283beed716f27d6",
+            "root_sha256": "05a7a9ea641181acee544203a104b65647f08f9d9aa66d1c2283beed716f27d6",
+            "cli_nested_sha256": "05a7a9ea641181acee544203a104b65647f08f9d9aa66d1c2283beed716f27d6",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/terminal-image.d.ts",
+            "archive_sha256": "32138037c9c950d5536fdc28da552f045a1b23c1c2758edac590b86a05b056cf",
+            "root_sha256": "32138037c9c950d5536fdc28da552f045a1b23c1c2758edac590b86a05b056cf",
+            "cli_nested_sha256": "32138037c9c950d5536fdc28da552f045a1b23c1c2758edac590b86a05b056cf",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/terminal-image.d.ts.map",
+            "archive_sha256": "16d92ce47d2b9b99cb3339aa70702dde849b0570b929c4795cc4cb52f0b120a1",
+            "root_sha256": "16d92ce47d2b9b99cb3339aa70702dde849b0570b929c4795cc4cb52f0b120a1",
+            "cli_nested_sha256": "16d92ce47d2b9b99cb3339aa70702dde849b0570b929c4795cc4cb52f0b120a1",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/terminal-image.js.map",
+            "archive_sha256": "aa3bc09f3b9b3ebe756a6aacfba8aa3d255571af75bd3b5c5d7e95da21127452",
+            "root_sha256": "aa3bc09f3b9b3ebe756a6aacfba8aa3d255571af75bd3b5c5d7e95da21127452",
+            "cli_nested_sha256": "aa3bc09f3b9b3ebe756a6aacfba8aa3d255571af75bd3b5c5d7e95da21127452",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/colors.d.ts",
+            "archive_sha256": "0fc89bd3910065e58646c0e044ebd03503965fd9353fabb306a748a0c6c44ffa",
+            "root_sha256": "0fc89bd3910065e58646c0e044ebd03503965fd9353fabb306a748a0c6c44ffa",
+            "cli_nested_sha256": "0fc89bd3910065e58646c0e044ebd03503965fd9353fabb306a748a0c6c44ffa",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/colors.d.ts.map",
+            "archive_sha256": "643a2c558e5581e417f03b6f9c6081acb77c8102b261d4067d4e94bd37a968ac",
+            "root_sha256": "643a2c558e5581e417f03b6f9c6081acb77c8102b261d4067d4e94bd37a968ac",
+            "cli_nested_sha256": "643a2c558e5581e417f03b6f9c6081acb77c8102b261d4067d4e94bd37a968ac",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/colors.js.map",
+            "archive_sha256": "23b569a2a50106a4fb5f74af8b8f46a331e32ff3d45da59acfa1f2c49e85924e",
+            "root_sha256": "23b569a2a50106a4fb5f74af8b8f46a331e32ff3d45da59acfa1f2c49e85924e",
+            "cli_nested_sha256": "23b569a2a50106a4fb5f74af8b8f46a331e32ff3d45da59acfa1f2c49e85924e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/oklab.d.ts",
+            "archive_sha256": "1a5a420825582dc7bf567ba99189efd42591dd24ff26d1f8b07bf8f023651817",
+            "root_sha256": "1a5a420825582dc7bf567ba99189efd42591dd24ff26d1f8b07bf8f023651817",
+            "cli_nested_sha256": "1a5a420825582dc7bf567ba99189efd42591dd24ff26d1f8b07bf8f023651817",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/oklab.d.ts.map",
+            "archive_sha256": "1ea19b69482046b65dcc8442c0395cf4a46dc0935cfc8905c3f73b0a83173749",
+            "root_sha256": "1ea19b69482046b65dcc8442c0395cf4a46dc0935cfc8905c3f73b0a83173749",
+            "cli_nested_sha256": "1ea19b69482046b65dcc8442c0395cf4a46dc0935cfc8905c3f73b0a83173749",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/oklab.js.map",
+            "archive_sha256": "6fc06b0df153041f403bdcce03e94f9c48f7d18c8bc6c211fd6fce1df3132293",
+            "root_sha256": "6fc06b0df153041f403bdcce03e94f9c48f7d18c8bc6c211fd6fce1df3132293",
+            "cli_nested_sha256": "6fc06b0df153041f403bdcce03e94f9c48f7d18c8bc6c211fd6fce1df3132293",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/terminal-colors.d.ts",
+            "archive_sha256": "4149af7b10f8b9bf9dc70d4c97a851a3c606d808e62b5c8d0cb9f462f28f2149",
+            "root_sha256": "4149af7b10f8b9bf9dc70d4c97a851a3c606d808e62b5c8d0cb9f462f28f2149",
+            "cli_nested_sha256": "4149af7b10f8b9bf9dc70d4c97a851a3c606d808e62b5c8d0cb9f462f28f2149",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/terminal-colors.d.ts.map",
+            "archive_sha256": "876856982f67c394f4b6f50e58444bd7564769794006fedda83ba38f2c001a94",
+            "root_sha256": "876856982f67c394f4b6f50e58444bd7564769794006fedda83ba38f2c001a94",
+            "cli_nested_sha256": "876856982f67c394f4b6f50e58444bd7564769794006fedda83ba38f2c001a94",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/terminal-colors.js.map",
+            "archive_sha256": "d54d1399e840a6aaa5a878c1710736cec5cc73e870637a032197e81726824329",
+            "root_sha256": "d54d1399e840a6aaa5a878c1710736cec5cc73e870637a032197e81726824329",
+            "cli_nested_sha256": "d54d1399e840a6aaa5a878c1710736cec5cc73e870637a032197e81726824329",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      }
+    ],
+    "scoped_file_count": 48,
+    "byte_identical_scope_files": 45,
+    "pinned_patch_scope_files": 3,
+    "unresolved_scope_differences": 0
+  }
+}

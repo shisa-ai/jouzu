@@ -315,6 +315,22 @@ compaction-end painting from independent callback notifications/RPC rejection.
 Seven in-memory corruption controls pass. No model, native, parser, export or
 state operation was executed; provider/retry/transitive helper bodies remain open.
 
+[pi-tui-utilities.csv](pi-tui-utilities.csv) adds eight inherited utility
+occurrences: seven conditional colour diagnostics and one image fallback wrapper,
+with eleven [boundaries](pi-tui-utilities-boundaries.csv). Seven complete bodies
+cover 2,768 lines; 376 string/template occurrences are partitioned against 368
+[exclusions](pi-tui-utilities-exclusions.csv). The
+[scope](pi-tui-utilities-scope.csv) also records 31 protected regexes, 50 control
+literals, 25 new expressions, nine Error/throw sites and five catches. Theme
+string validation, guarded numeric APIs, fullscreen screen parsing and image
+fallbacks keep their distinct activation conditions. Jouzu's replacement header
+does not provide the stock logo click activation. Canonical checks cover 48
+runtime/support/nonruntime assets: 45 match archive bytes and three match pinned
+patches. The resolved external width helper is 1.6.0 in both installed trees; the
+shadowed CLI dependency path lacks an exact entry in the main lockfile, so its body/archive and
+broader dependency coverage remain open. Eight corruption controls pass; no
+terminal, image, child, native or rendering operation was executed.
+
 [pi-tools.csv](pi-tools.csv) supplies 172 inherited tool/helper occurrences,
 with 27 [payload boundaries](pi-tools-boundaries.csv). Its
 [scope table](pi-tools-scope.csv) covers 37 complete source bodies: 24 tool and
@@ -881,6 +897,7 @@ node review/text-inventory/verify-pi-export-metadata.cjs --node-modules <root-no
 node review/text-inventory/verify-pi-export-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-export-vendor.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-compaction-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-tui-utilities.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
 The exporter uses `@fluent/syntax` and TypeScript from the repository dependency
