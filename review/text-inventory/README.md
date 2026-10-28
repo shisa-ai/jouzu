@@ -84,6 +84,16 @@ JSON result. Raw diagnostic producers remain explicit boundaries; caught errors
 that are replaced or suppressed have separate dispositions. This pass reads
 source without running doctor filesystem probes.
 
+[updater.csv](updater.csv) records 212 update occurrences: 74 catalog occurrences
+across 55 IDs, 108 fixed or protected machine occurrences and 30 dynamic
+boundaries. The [scope table](updater-scope.csv) accounts for all 35 updater error
+constructors and separates check/apply, startup, status, JSON, doctor and restart
+consumers. Installed-verification errors are replaced by outcome messages;
+ordinary startup failures report codes rather than their underlying messages.
+The relaunch failure's inner sentence uses the default English catalog because
+its caller omits the catalog argument. Child-process output and native/dependency
+error producers remain explicit boundaries. No update operation was executed.
+
 [launcher.csv](launcher.csv) records 406 occurrences and boundary records across
 launcher dictionaries, frontend consumers, Rust failures and installer text.
 Inactive dictionary entries are identified explicitly. Thirty-six native or
@@ -197,6 +207,7 @@ python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-startup-language.py
 python -B review/text-inventory/verify-cli-entry.py
 python -B review/text-inventory/verify-doctor.py
+python -B review/text-inventory/verify-updater.py
 python -B review/text-inventory/verify-launcher.py
 python -B review/text-inventory/verify-launcher-helpers.py
 python -B review/text-inventory/verify-installer-dependencies.py --cache-dir <archive-directory>
