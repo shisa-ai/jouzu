@@ -1,0 +1,3333 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "anchors": [
+    {
+      "item_id": "FLOW-RECEIPTS-EX-001",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 1,
+      "column": 63,
+      "expression": "\"../cli-messages.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-002",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 2,
+      "column": 36,
+      "expression": "\"../locale-catalog.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-003",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 9,
+      "column": 8,
+      "expression": "\"./admission.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-004",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 17,
+      "column": 8,
+      "expression": "\"./attempt-retention.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-005",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 24,
+      "column": 8,
+      "expression": "\"./request-retention.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-006",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 25,
+      "column": 39,
+      "expression": "\"./result-order.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-007",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 35,
+      "column": 8,
+      "expression": "\"work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-008",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 35,
+      "column": 17,
+      "expression": "\"result\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-009",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 35,
+      "column": 28,
+      "expression": "\"wait\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-010",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 35,
+      "column": 37,
+      "expression": "\"user\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-011",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 35,
+      "column": 46,
+      "expression": "\"alert\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-012",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 45,
+      "column": 15,
+      "expression": "\"included\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-013",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 45,
+      "column": 28,
+      "expression": "\"replaced\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-014",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 45,
+      "column": 41,
+      "expression": "\"omitted\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-015",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 45,
+      "column": 53,
+      "expression": "\"rejected\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-016",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 50,
+      "column": 4,
+      "expression": "\"selected\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-017",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 51,
+      "column": 4,
+      "expression": "\"queued\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-018",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 52,
+      "column": 4,
+      "expression": "\"claimed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-019",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 53,
+      "column": 4,
+      "expression": "\"prepared\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-020",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 54,
+      "column": 4,
+      "expression": "\"handed-off\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-021",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 55,
+      "column": 4,
+      "expression": "\"running\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-022",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 56,
+      "column": 4,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-023",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 57,
+      "column": 4,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-024",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 58,
+      "column": 4,
+      "expression": "\"withheld\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-025",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 59,
+      "column": 4,
+      "expression": "\"uncertain\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-026",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 61,
+      "column": 27,
+      "expression": "\"success\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-027",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 61,
+      "column": 39,
+      "expression": "\"transient-failure\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-028",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 61,
+      "column": 61,
+      "expression": "\"failure\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-029",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 61,
+      "column": 73,
+      "expression": "\"aborted\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-030",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 62,
+      "column": 29,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-031",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 62,
+      "column": 43,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-032",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 62,
+      "column": 55,
+      "expression": "\"uncertain\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-033",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 123,
+      "column": 18,
+      "expression": "\"scope\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-034",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 123,
+      "column": 28,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-035",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 123,
+      "column": 39,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-036",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 123,
+      "column": 49,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-037",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 123,
+      "column": 58,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-038",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 123,
+      "column": 71,
+      "expression": "\"transition\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-039",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 123,
+      "column": 86,
+      "expression": "\"capacity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-040",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 127,
+      "column": 15,
+      "expression": "\"FlowLedgerError\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-041",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 131,
+      "column": 45,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-042",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 131,
+      "column": 56,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-043",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 131,
+      "column": 69,
+      "expression": "\"withheld\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-044",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 131,
+      "column": 81,
+      "expression": "\"uncertain\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-045",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 136,
+      "column": 23,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-046",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 137,
+      "column": 29,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-001",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 137,
+      "column": 41,
+      "expression": "\"Flow identities must contain 1–512 characters.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-047",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 142,
+      "column": 29,
+      "expression": "\"capacity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-002",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 142,
+      "column": 41,
+      "expression": "\"Flow attempts require 1–1024 members.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-048",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 145,
+      "column": 36,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-049",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 145,
+      "column": 72,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-003",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 145,
+      "column": 82,
+      "expression": "\"Invalid flow member.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-050",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 151,
+      "column": 31,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-004",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 151,
+      "column": 43,
+      "expression": "\"Invalid source submission revision.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-051",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 159,
+      "column": 84,
+      "expression": "\"boolean\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-052",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 161,
+      "column": 31,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-005",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 161,
+      "column": 43,
+      "expression": "\"Invalid persisted input frame.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-053",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 164,
+      "column": 30,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-006",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 164,
+      "column": 42,
+      "expression": "\"Flow members require a SHA-256 content identity.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-054",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 165,
+      "column": 9,
+      "expression": "\"work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-055",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 165,
+      "column": 17,
+      "expression": "\"result\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-056",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 165,
+      "column": 27,
+      "expression": "\"wait\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-057",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 165,
+      "column": 35,
+      "expression": "\"user\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-058",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 165,
+      "column": 43,
+      "expression": "\"alert\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-059",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 165,
+      "column": 104,
+      "expression": "\"boolean\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-060",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 166,
+      "column": 30,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-007",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 166,
+      "column": 42,
+      "expression": "\"Invalid flow member classification.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-061",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 167,
+      "column": 23,
+      "expression": "\"result\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-062",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 168,
+      "column": 30,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-008",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 168,
+      "column": 42,
+      "expression": "\"Instructions and decisions must be required input.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-063",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 169,
+      "column": 62,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-009",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 169,
+      "column": 74,
+      "expression": "\"Duplicate flow attempt member.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-064",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 174,
+      "column": 68,
+      "expression": "\"history\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-065",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 178,
+      "column": 30,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-010",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 178,
+      "column": 42,
+      "expression": "\"Invalid history content hash.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-066",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 180,
+      "column": 30,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-011",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 180,
+      "column": 42,
+      "expression": "\"History receipt has unknown membership.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-067",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 189,
+      "column": 30,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-012",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 189,
+      "column": 42,
+      "expression": "\"History receipt identity changed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-068",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 215,
+      "column": 31,
+      "expression": "\"capacity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-013",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 215,
+      "column": 43,
+      "expression": "\"Invalid flow ledger limit.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-069",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 232,
+      "column": 47,
+      "expression": "\"uncertain\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-070",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 232,
+      "column": 61,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-071",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 234,
+      "column": 24,
+      "expression": "\"uncertain\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-072",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 254,
+      "column": 60,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-014",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 254,
+      "column": 70,
+      "expression": "\"Unsupported flow ledger schema.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-073",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 256,
+      "column": 30,
+      "expression": "\"scope\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-015",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 256,
+      "column": 39,
+      "expression": "\"Flow ledger belongs to another session or branch.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-074",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 264,
+      "column": 30,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-016",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 264,
+      "column": 40,
+      "expression": "\"Invalid flow ledger state.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-075",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 269,
+      "column": 30,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-017",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 269,
+      "column": 40,
+      "expression": "\"Invalid active flow reservation.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-076",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 271,
+      "column": 39,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-077",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 271,
+      "column": 75,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-018",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 271,
+      "column": 85,
+      "expression": "\"Invalid flow attempt.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-078",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 273,
+      "column": 62,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-019",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 273,
+      "column": 72,
+      "expression": "\"Duplicate flow attempt identity.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-079",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 282,
+      "column": 6,
+      "expression": "\"selected\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-080",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 283,
+      "column": 6,
+      "expression": "\"queued\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-081",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 284,
+      "column": 6,
+      "expression": "\"claimed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-082",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 285,
+      "column": 6,
+      "expression": "\"prepared\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-083",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 286,
+      "column": 6,
+      "expression": "\"handed-off\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-084",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 287,
+      "column": 6,
+      "expression": "\"running\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-085",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 288,
+      "column": 6,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-086",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 289,
+      "column": 6,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-087",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 290,
+      "column": 6,
+      "expression": "\"withheld\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-088",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 291,
+      "column": 6,
+      "expression": "\"uncertain\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-089",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 294,
+      "column": 31,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-020",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 294,
+      "column": 41,
+      "expression": "\"Invalid flow attempt state.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-090",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 297,
+      "column": 31,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-021",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 297,
+      "column": 41,
+      "expression": "\"Invalid flow receipts.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-091",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 301,
+      "column": 32,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-022",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 301,
+      "column": 42,
+      "expression": "\"Invalid persisted queue revision.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-092",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 310,
+      "column": 32,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-023",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 310,
+      "column": 42,
+      "expression": "\"Invalid persisted history membership.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-093",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 313,
+      "column": 32,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-024",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 313,
+      "column": 44,
+      "expression": "\"Invalid history content hash.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-094",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 317,
+      "column": 40,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-095",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 317,
+      "column": 76,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-025",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 317,
+      "column": 86,
+      "expression": "\"Invalid persisted request.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-096",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 319,
+      "column": 63,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-026",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 319,
+      "column": 73,
+      "expression": "\"Duplicate request identity.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-097",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 322,
+      "column": 35,
+      "expression": "\"boolean\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-098",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 323,
+      "column": 43,
+      "expression": "\"boolean\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-099",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 326,
+      "column": 32,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-027",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 326,
+      "column": 42,
+      "expression": "\"Invalid persisted request state.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-100",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 334,
+      "column": 10,
+      "expression": "\"included\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-101",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 334,
+      "column": 22,
+      "expression": "\"replaced\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-102",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 334,
+      "column": 34,
+      "expression": "\"omitted\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-103",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 334,
+      "column": 45,
+      "expression": "\"rejected\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-104",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 335,
+      "column": 33,
+      "expression": "\"included\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-105",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 337,
+      "column": 34,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-028",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 337,
+      "column": 44,
+      "expression": "\"Invalid persisted inclusion.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-106",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 341,
+      "column": 33,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-029",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 341,
+      "column": 43,
+      "expression": "\"Incomplete persisted inclusion.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-107",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 345,
+      "column": 9,
+      "expression": "\"success\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-108",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 345,
+      "column": 20,
+      "expression": "\"transient-failure\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-109",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 345,
+      "column": 41,
+      "expression": "\"failure\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-110",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 345,
+      "column": 52,
+      "expression": "\"aborted\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-111",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 347,
+      "column": 32,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-030",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 347,
+      "column": 42,
+      "expression": "\"Invalid persisted request outcome.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-112",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 351,
+      "column": 7,
+      "expression": "\"success\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-113",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 351,
+      "column": 18,
+      "expression": "\"transient-failure\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-114",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 351,
+      "column": 39,
+      "expression": "\"failure\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-115",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 351,
+      "column": 50,
+      "expression": "\"aborted\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-116",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 353,
+      "column": 31,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-031",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 353,
+      "column": 41,
+      "expression": "\"Invalid run outcome.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-117",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 356,
+      "column": 46,
+      "expression": "\"boolean\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-118",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 357,
+      "column": 32,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-032",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 357,
+      "column": 42,
+      "expression": "\"Invalid admission charge receipt.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-119",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 359,
+      "column": 70,
+      "expression": "\"boolean\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-120",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 360,
+      "column": 31,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-033",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 360,
+      "column": 41,
+      "expression": "\"Invalid native consumption fact.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-121",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 365,
+      "column": 6,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-122",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 376,
+      "column": 7,
+      "expression": "\"claimed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-123",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 376,
+      "column": 18,
+      "expression": "\"prepared\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-124",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 376,
+      "column": 30,
+      "expression": "\"handed-off\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-125",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 376,
+      "column": 44,
+      "expression": "\"running\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-126",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 376,
+      "column": 55,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-127",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 378,
+      "column": 31,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-034",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 378,
+      "column": 41,
+      "expression": "\"Native consumption fact contradicts request receipts.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-128",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 381,
+      "column": 24,
+      "expression": "\"handed-off\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-129",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 382,
+      "column": 24,
+      "expression": "\"prepared\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-130",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 383,
+      "column": 24,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-131",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 385,
+      "column": 31,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-035",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 385,
+      "column": 41,
+      "expression": "\"Inconsistent persisted request phase.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-132",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 392,
+      "column": 6,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-133",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 407,
+      "column": 30,
+      "expression": "\"capacity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-036",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 407,
+      "column": 42,
+      "expression": "\"Flow receipt retention limit reached; work remains held.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-134",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 426,
+      "column": 41,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-037",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 426,
+      "column": 51,
+      "expression": "\"Flow ledger is missing.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-135",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 435,
+      "column": 41,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-038",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 435,
+      "column": 51,
+      "expression": "\"Flow ledger is missing.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-136",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 452,
+      "column": 42,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-039",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 452,
+      "column": 52,
+      "expression": "\"Flow ledger is missing.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-137",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 455,
+      "column": 31,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-040",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 455,
+      "column": 40,
+      "expression": "\"Flow attachment has been replaced.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-138",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 467,
+      "column": 30,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-041",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 467,
+      "column": 42,
+      "expression": "\"Unknown flow attempt for this attachment.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-139",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 468,
+      "column": 66,
+      "expression": "\"transition\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-042",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 468,
+      "column": 80,
+      "expression": "`Flow attempt is ${attempt.phase}.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-140",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 479,
+      "column": 57,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-043",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 479,
+      "column": 65,
+      "expression": "\"A flow handoff is already active.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-141",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 481,
+      "column": 31,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-044",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 481,
+      "column": 43,
+      "expression": "\"Flow attempt ID was already used.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-142",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 489,
+      "column": 31,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-045",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 489,
+      "column": 40,
+      "expression": "\"Admission choice no longer matches policy or selected membership.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-143",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 493,
+      "column": 12,
+      "expression": "\"selected\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-144",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 507,
+      "column": 30,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-046",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 507,
+      "column": 42,
+      "expression": "\"Invalid queue revision.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-145",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 510,
+      "column": 45,
+      "expression": "\"selected\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-146",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 512,
+      "column": 20,
+      "expression": "\"queued\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-147",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 519,
+      "column": 45,
+      "expression": "\"queued\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-148",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 521,
+      "column": 31,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-047",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 521,
+      "column": 40,
+      "expression": "\"Queue item changed before claim.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-149",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 522,
+      "column": 20,
+      "expression": "\"claimed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-150",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 527,
+      "column": 44,
+      "expression": "\"history\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-151",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 530,
+      "column": 45,
+      "expression": "\"claimed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-152",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 530,
+      "column": 56,
+      "expression": "\"prepared\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-153",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 530,
+      "column": 68,
+      "expression": "\"handed-off\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-154",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 530,
+      "column": 82,
+      "expression": "\"running\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-155",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 530,
+      "column": 93,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-156",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 530,
+      "column": 104,
+      "expression": "\"withheld\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-157",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 536,
+      "column": 51,
+      "expression": "\"history\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-158",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 539,
+      "column": 57,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-048",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 539,
+      "column": 65,
+      "expression": "\"History recovery requires an idle ledger.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-159",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 542,
+      "column": 31,
+      "expression": "\"transition\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-049",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 542,
+      "column": 45,
+      "expression": "\"History recovery requires an inactive consumed attempt.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-160",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 544,
+      "column": 31,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-050",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 544,
+      "column": 43,
+      "expression": "\"Recovered history requires verified content hashes.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-161",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 554,
+      "column": 38,
+      "expression": "\"id\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-162",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 554,
+      "column": 45,
+      "expression": "\"revision\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-163",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 560,
+      "column": 45,
+      "expression": "\"claimed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-164",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 560,
+      "column": 56,
+      "expression": "\"running\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-165",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 561,
+      "column": 50,
+      "expression": "\"transition\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-051",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 561,
+      "column": 64,
+      "expression": "\"Filtered run must settle before correction.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-166",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 563,
+      "column": 31,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-052",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 563,
+      "column": 43,
+      "expression": "\"Request ID was already used.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-167",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 570,
+      "column": 31,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-053",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 570,
+      "column": 43,
+      "expression": "\"Final inclusion must describe every member exactly once.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-168",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 572,
+      "column": 11,
+      "expression": "\"included\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-169",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 572,
+      "column": 23,
+      "expression": "\"replaced\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-170",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 572,
+      "column": 35,
+      "expression": "\"omitted\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-171",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 572,
+      "column": 46,
+      "expression": "\"rejected\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-172",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 573,
+      "column": 32,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-054",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 573,
+      "column": 44,
+      "expression": "\"Invalid inclusion disposition.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-173",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 575,
+      "column": 33,
+      "expression": "\"included\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-174",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 576,
+      "column": 32,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-055",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 576,
+      "column": 44,
+      "expression": "\"Included content does not match its membership identity.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-175",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 582,
+      "column": 85,
+      "expression": "\"omitted\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-176",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 585,
+      "column": 85,
+      "expression": "\"included\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-177",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 593,
+      "column": 60,
+      "expression": "\"replaced\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-178",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 593,
+      "column": 72,
+      "expression": "\"rejected\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-179",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 597,
+      "column": 40,
+      "expression": "\"withheld\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-180",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 597,
+      "column": 53,
+      "expression": "\"prepared\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-181",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 600,
+      "column": 26,
+      "expression": "\"prepared\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-182",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 603,
+      "column": 32,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-056",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 603,
+      "column": 41,
+      "expression": "\"Admission policy changed before final inclusion.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-183",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 609,
+      "column": 29,
+      "expression": "\"included\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-184",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 616,
+      "column": 26,
+      "expression": "\"withheld\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-185",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 620,
+      "column": 50,
+      "expression": "\"running\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-186",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 623,
+      "column": 29,
+      "expression": "\"prepared\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-187",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 631,
+      "column": 45,
+      "expression": "\"prepared\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-188",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 634,
+      "column": 31,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-057",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 634,
+      "column": 43,
+      "expression": "\"Unknown unsent request.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-189",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 636,
+      "column": 46,
+      "expression": "\"running\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-190",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 636,
+      "column": 58,
+      "expression": "\"withheld\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-191",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 637,
+      "column": 26,
+      "expression": "\"withheld\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-192",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 643,
+      "column": 45,
+      "expression": "\"prepared\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-193",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 646,
+      "column": 31,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-058",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 646,
+      "column": 43,
+      "expression": "\"Request identity changed before handoff.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-194",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 648,
+      "column": 20,
+      "expression": "\"handed-off\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-195",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 654,
+      "column": 45,
+      "expression": "\"handed-off\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-196",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 656,
+      "column": 72,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-059",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 656,
+      "column": 84,
+      "expression": "\"Unknown request outcome.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-197",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 658,
+      "column": 20,
+      "expression": "\"running\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-198",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 666,
+      "column": 45,
+      "expression": "\"handed-off\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-199",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 667,
+      "column": 20,
+      "expression": "\"uncertain\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-200",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 684,
+      "column": 43,
+      "expression": "\"retry\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-201",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 684,
+      "column": 53,
+      "expression": "\"discard\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-202",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 686,
+      "column": 22,
+      "expression": "\"retry\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-203",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 686,
+      "column": 48,
+      "expression": "\"discard\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-204",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 687,
+      "column": 30,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-060",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 687,
+      "column": 40,
+      "expression": "\"Invalid uncertain resolution.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-205",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 690,
+      "column": 44,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-061",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 690,
+      "column": 56,
+      "expression": "\"Unknown flow attempt for this attachment.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-206",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 691,
+      "column": 26,
+      "expression": "\"uncertain\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-207",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 691,
+      "column": 65,
+      "expression": "\"transition\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-062",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 691,
+      "column": 79,
+      "expression": "`Flow attempt is ${attempt.phase}.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-208",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 693,
+      "column": 23,
+      "expression": "\"discard\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-209",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 694,
+      "column": 23,
+      "expression": "\"failure\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-210",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 695,
+      "column": 21,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-211",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 699,
+      "column": 21,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-212",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 708,
+      "column": 45,
+      "expression": "\"running\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-213",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 710,
+      "column": 20,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-214",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 719,
+      "column": 45,
+      "expression": "\"selected\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-215",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 719,
+      "column": 57,
+      "expression": "\"queued\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-216",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 719,
+      "column": 67,
+      "expression": "\"claimed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-217",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 719,
+      "column": 78,
+      "expression": "\"prepared\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-218",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 719,
+      "column": 90,
+      "expression": "\"handed-off\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-219",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 719,
+      "column": 104,
+      "expression": "\"running\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-220",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 721,
+      "column": 31,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-063",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 721,
+      "column": 43,
+      "expression": "\"The flow attempt is not the active reservation.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-221",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 724,
+      "column": 21,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-222",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 727,
+      "column": 12,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-223",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 730,
+      "column": 26,
+      "expression": "\"prepared\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-224",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 731,
+      "column": 21,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-225",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 732,
+      "column": 23,
+      "expression": "\"failure\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-226",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 735,
+      "column": 12,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-227",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 737,
+      "column": 20,
+      "expression": "\"uncertain\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-228",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 740,
+      "column": 11,
+      "expression": "\"uncertain\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-229",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 753,
+      "column": 74,
+      "expression": "\"capacity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-064",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 753,
+      "column": 86,
+      "expression": "\"Invalid retention window.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-230",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 765,
+      "column": 31,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-065",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 765,
+      "column": 39,
+      "expression": "\"Producer round retirement requires a terminal history prefix.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-231",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 778,
+      "column": 45,
+      "expression": "\"selected\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-232",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 778,
+      "column": 57,
+      "expression": "\"queued\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-233",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 778,
+      "column": 67,
+      "expression": "\"claimed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-234",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 778,
+      "column": 78,
+      "expression": "\"prepared\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-235",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 778,
+      "column": 90,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-236",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 780,
+      "column": 31,
+      "expression": "\"transition\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-066",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 780,
+      "column": 45,
+      "expression": "\"Started runs require host settlement before cancellation.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-237",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 781,
+      "column": 20,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-238",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 1,
+      "column": 57,
+      "expression": "\"./attempt-retention.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-239",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 8,
+      "column": 8,
+      "expression": "\"./receipt-ledger.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-240",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 9,
+      "column": 62,
+      "expression": "\"./retired-attempt-index.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-241",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 18,
+      "column": 8,
+      "expression": "\"./scalar-storage.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-242",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 20,
+      "column": 37,
+      "expression": "\"attempts\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-243",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 25,
+      "column": 37,
+      "expression": "\"jouzu.flow.receipts\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-244",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 25,
+      "column": 60,
+      "expression": "\"v1\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-245",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 26,
+      "column": 59,
+      "expression": "\"jouzu.flow.attempt\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-246",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 28,
+      "column": 21,
+      "expression": "\"jouzu.flow.attempt-history\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-247",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 30,
+      "column": 53,
+      "expression": "\"jouzu.flow.request-history\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-248",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 40,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-067",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 40,
+      "column": 39,
+      "expression": "\"Invalid flow receipt manifest.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-249",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 43,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-068",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 43,
+      "column": 39,
+      "expression": "\"Invalid flow retirement generation.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-250",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 46,
+      "column": 22,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-251",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 47,
+      "column": 31,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-069",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 47,
+      "column": 41,
+      "expression": "\"Invalid flow receipt identity.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-252",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 50,
+      "column": 31,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-070",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 50,
+      "column": 41,
+      "expression": "\"Flow receipt manifest has missing membership.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-253",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 60,
+      "column": 53,
+      "expression": "\"archivesRequests\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-254",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 60,
+      "column": 74,
+      "expression": "\"retired\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-255",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 60,
+      "column": 86,
+      "expression": "\"readContext\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-256",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 69,
+      "column": 44,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-257",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 69,
+      "column": 54,
+      "expression": "\"Flow ledger is missing.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-258",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 77,
+      "column": 56,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-071",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 77,
+      "column": 68,
+      "expression": "\"Archived flow attempt identity changed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-259",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 89,
+      "column": 26,
+      "expression": "\"jouzu.flow.attempt-history\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-260",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 96,
+      "column": 34,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-072",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 96,
+      "column": 44,
+      "expression": "\"Invalid archived attempt identity.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-261",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 103,
+      "column": 26,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-262",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 105,
+      "column": 34,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-073",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 105,
+      "column": 44,
+      "expression": "\"Invalid archived attempt identity.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-263",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 109,
+      "column": 34,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-074",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 109,
+      "column": 44,
+      "expression": "\"Invalid archived attempt identity.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-264",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 135,
+      "column": 32,
+      "expression": "\"capacity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-075",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 135,
+      "column": 44,
+      "expression": "\"Flow retirement generation exceeds safe integer range.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-265",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 161,
+      "column": 33,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-076",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 161,
+      "column": 45,
+      "expression": "\"Request ID was already used.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-266",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 175,
+      "column": 33,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-077",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 175,
+      "column": 45,
+      "expression": "\"Flow attempt ID was already used.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-267",
+      "path": "packages/cli/src/flow-control/request-retention.ts",
+      "line": 1,
+      "column": 46,
+      "expression": "\"./receipt-ledger.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-268",
+      "path": "packages/cli/src/flow-control/request-retention.ts",
+      "line": 24,
+      "column": 27,
+      "expression": "\"id\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-269",
+      "path": "packages/cli/src/flow-control/request-retention.ts",
+      "line": 24,
+      "column": 34,
+      "expression": "\"revision\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-270",
+      "path": "packages/cli/src/flow-control/request-retention.ts",
+      "line": 29,
+      "column": 44,
+      "expression": "\"succeeded\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-271",
+      "path": "packages/cli/src/flow-control/request-retention.ts",
+      "line": 29,
+      "column": 58,
+      "expression": "\"included\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-272",
+      "path": "packages/cli/src/flow-control/request-retention.ts",
+      "line": 32,
+      "column": 62,
+      "expression": "\"success\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-273",
+      "path": "packages/cli/src/flow-control/request-retention.ts",
+      "line": 37,
+      "column": 27,
+      "expression": "\"included\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-274",
+      "path": "packages/cli/src/flow-control/request-retention.ts",
+      "line": 61,
+      "column": 29,
+      "expression": "\"included\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-078",
+      "path": "packages/cli/src/flow-control/request-retention.ts",
+      "line": 63,
+      "column": 45,
+      "expression": "\"Unknown summarized flow member.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-275",
+      "path": "packages/cli/src/flow-control/request-retention.ts",
+      "line": 65,
+      "column": 28,
+      "expression": "\"success\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-276",
+      "path": "packages/cli/src/flow-control/request-retention.ts",
+      "line": 86,
+      "column": 40,
+      "expression": "\"boolean\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-079",
+      "path": "packages/cli/src/flow-control/request-retention.ts",
+      "line": 91,
+      "column": 19,
+      "expression": "\"Invalid completed flow request summary.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-277",
+      "path": "packages/cli/src/flow-control/attempt-retention.ts",
+      "line": 1,
+      "column": 51,
+      "expression": "\"./receipt-ledger.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-278",
+      "path": "packages/cli/src/flow-control/attempt-retention.ts",
+      "line": 2,
+      "column": 36,
+      "expression": "\"./request-retention.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-279",
+      "path": "packages/cli/src/flow-control/attempt-retention.ts",
+      "line": 3,
+      "column": 92,
+      "expression": "\"./retired-identities.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-280",
+      "path": "packages/cli/src/flow-control/attempt-retention.ts",
+      "line": 40,
+      "column": 19,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-080",
+      "path": "packages/cli/src/flow-control/attempt-retention.ts",
+      "line": 69,
+      "column": 19,
+      "expression": "\"Invalid retired attempt summary.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-281",
+      "path": "packages/cli/src/flow-control/attempt-retention.ts",
+      "line": 72,
+      "column": 88,
+      "expression": "\"attempt-member\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-282",
+      "path": "packages/cli/src/flow-control/attempt-retention.ts",
+      "line": 74,
+      "column": 22,
+      "expression": "\"attempt-work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-283",
+      "path": "packages/cli/src/flow-control/attempt-retention.ts",
+      "line": 91,
+      "column": 23,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-284",
+      "path": "packages/cli/src/flow-control/attempt-retention.ts",
+      "line": 92,
+      "column": 23,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-285",
+      "path": "packages/cli/src/flow-control/attempt-retention.ts",
+      "line": 93,
+      "column": 43,
+      "expression": "\"withheld\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-286",
+      "path": "packages/cli/src/flow-control/attempt-retention.ts",
+      "line": 120,
+      "column": 25,
+      "expression": "\"cancelled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-287",
+      "path": "packages/cli/src/flow-control/attempt-retention.ts",
+      "line": 127,
+      "column": 37,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-288",
+      "path": "packages/cli/src/flow-control/attempt-retention.ts",
+      "line": 127,
+      "column": 70,
+      "expression": "\"success\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-289",
+      "path": "packages/cli/src/flow-control/result-order.ts",
+      "line": 1,
+      "column": 33,
+      "expression": "\"./admission.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-290",
+      "path": "packages/cli/src/flow-control/result-order.ts",
+      "line": 2,
+      "column": 38,
+      "expression": "\"./receipt-ledger.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-291",
+      "path": "packages/cli/src/flow-control/result-order.ts",
+      "line": 3,
+      "column": 36,
+      "expression": "\"./request-retention.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-292",
+      "path": "packages/cli/src/flow-control/result-order.ts",
+      "line": 20,
+      "column": 24,
+      "expression": "\"result\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-293",
+      "path": "packages/cli/src/flow-control/retired-identities.ts",
+      "line": 1,
+      "column": 28,
+      "expression": "\"node:crypto\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-294",
+      "path": "packages/cli/src/flow-control/retired-identities.ts",
+      "line": 6,
+      "column": 13,
+      "expression": "\"sha256\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-295",
+      "path": "packages/cli/src/flow-control/retired-identities.ts",
+      "line": 6,
+      "column": 63,
+      "expression": "\"hex\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-296",
+      "path": "packages/cli/src/flow-control/retired-identities.ts",
+      "line": 8,
+      "column": 19,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-297",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 1,
+      "column": 90,
+      "expression": "\"./attempt-retention.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-298",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 2,
+      "column": 33,
+      "expression": "\"./receipt-ledger.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-299",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 3,
+      "column": 85,
+      "expression": "\"./scalar-storage.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-300",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 5,
+      "column": 24,
+      "expression": "\"members\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-301",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 5,
+      "column": 36,
+      "expression": "\"work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-302",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 5,
+      "column": 45,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-303",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 5,
+      "column": 57,
+      "expression": "\"triggers\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-304",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 6,
+      "column": 16,
+      "expression": "`jouzu.flow.retired-${kind}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-305",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 10,
+      "column": 8,
+      "expression": "\"members\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-306",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 10,
+      "column": 20,
+      "expression": "\"work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-307",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 10,
+      "column": 29,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-308",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 10,
+      "column": 41,
+      "expression": "\"triggers\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-309",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 16,
+      "column": 75,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-310",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 17,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-081",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 17,
+      "column": 39,
+      "expression": "\"Invalid archived flow identity.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-311",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 32,
+      "column": 68,
+      "expression": "\"triggers\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-312",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 35,
+      "column": 22,
+      "expression": "\"members\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-313",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 35,
+      "column": 33,
+      "expression": "\"work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-314",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 40,
+      "column": 94,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-315",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 53,
+      "column": 73,
+      "expression": "\"triggers\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-316",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 54,
+      "column": 22,
+      "expression": "\"members\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-317",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 54,
+      "column": 33,
+      "expression": "\"work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-318",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 57,
+      "column": 56,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-319",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 59,
+      "column": 30,
+      "expression": "\"capacity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-082",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 59,
+      "column": 42,
+      "expression": "\"Flow iteration count exceeds safe integer range.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-EX-320",
+      "path": "packages/cli/src/flow-control/retired-attempt-index.ts",
+      "line": 60,
+      "column": 32,
+      "expression": "\"settled\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-083",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 235,
+      "column": 30,
+      "expression": "CatalogMessageId.flowLedgerOutcomeUnknown",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-084",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 236,
+      "column": 30,
+      "expression": "CatalogMessageId.flowLedgerHandoffCancelled",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-085",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 618,
+      "column": 34,
+      "expression": "CatalogMessageId.flowLedgerRequiredFiltered",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-086",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 619,
+      "column": 34,
+      "expression": "CatalogMessageId.flowLedgerNoComposedInput",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-087",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 362,
+      "column": 5,
+      "expression": "validateFlowRequestSummary(attempt)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-088",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 389,
+      "column": 5,
+      "expression": "validateRetiredAttempts(state.retiredAttempts)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-089",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 253,
+      "column": 38,
+      "expression": "validateFlowAdmission(state.admission)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-090",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 355,
+      "column": 5,
+      "expression": "validateFlowChoice(attempt.admission.choice)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-091",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 631,
+      "column": 20,
+      "expression": "this.attempt(state, id, [\"prepared\"])",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-092",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 755,
+      "column": 21,
+      "expression": "retirableAttempts(state, keep, !!this.store.readContext)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-093",
+      "path": "packages/cli/src/flow-control/receipt-ledger.ts",
+      "line": 758,
+      "column": 4,
+      "expression": "assertCurrent()",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-094",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 126,
+      "column": 45,
+      "expression": "update(structuredClone(previous))",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-095",
+      "path": "packages/cli/src/flow-control/pi-ledger-store.ts",
+      "line": 184,
+      "column": 5,
+      "expression": "beforeCommit?.()",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-RECEIPTS-096",
+      "path": "packages/cli/src/flow-control/retired-identities.ts",
+      "line": 6,
+      "column": 30,
+      "expression": "JSON.stringify(identity)",
+      "kind": "boundary"
+    }
+  ]
+}

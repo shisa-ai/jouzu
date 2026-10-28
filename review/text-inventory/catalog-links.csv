@@ -374,12 +374,12 @@ jouzu.cli.flow.ingress.recoveryReconciliation,packages/cli/locales/en/cli.ftl:16
 jouzu.cli.flow.ingress.semanticAdmission,packages/cli/locales/en/cli.ftl:1666,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.flow.input.continueAfterCompaction,packages/cli/locales/en/cli.ftl:1538,caller-trace-required,0,1,"[{""table"":""flow-report.csv"",""item_id"":""FLOW-REPORT-001""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.flow.input.multiloopResume,packages/cli/locales/en/cli.ftl:1539,caller-trace-required,0,1,"[{""table"":""flow-report.csv"",""item_id"":""FLOW-REPORT-002""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.flow.ledger.handoffCancelled,packages/cli/locales/en/cli.ftl:1675,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.flow.ledger.handoffCancelled,packages/cli/locales/en/cli.ftl:1675,caller-trace-required,0,1,"[{""table"":""flow-receipts.csv"",""item_id"":""FLOW-RECEIPTS-084""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.flow.ledger.invalidRequestSummary,packages/cli/locales/en/cli.ftl:1670,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.flow.ledger.invalidRetiredAttempts,packages/cli/locales/en/cli.ftl:1671,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.flow.ledger.noComposedInput,packages/cli/locales/en/cli.ftl:1672,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.flow.ledger.outcomeUnknown,packages/cli/locales/en/cli.ftl:1673,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.flow.ledger.requiredFiltered,packages/cli/locales/en/cli.ftl:1674,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.flow.ledger.noComposedInput,packages/cli/locales/en/cli.ftl:1672,caller-trace-required,0,1,"[{""table"":""flow-receipts.csv"",""item_id"":""FLOW-RECEIPTS-086""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.flow.ledger.outcomeUnknown,packages/cli/locales/en/cli.ftl:1673,caller-trace-required,0,1,"[{""table"":""flow-receipts.csv"",""item_id"":""FLOW-RECEIPTS-083""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.flow.ledger.requiredFiltered,packages/cli/locales/en/cli.ftl:1674,caller-trace-required,0,1,"[{""table"":""flow-receipts.csv"",""item_id"":""FLOW-RECEIPTS-085""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.flow.message.alert,packages/cli/locales/en/cli.ftl:1649,caller-trace-required,0,1,"[{""table"":""flow-display.csv"",""item_id"":""FLOW-077""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.flow.message.reviewNote,packages/cli/locales/en/cli.ftl:1685,caller-trace-required,0,1,"[{""table"":""flow-display.csv"",""item_id"":""FLOW-079""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.flow.message.work,packages/cli/locales/en/cli.ftl:1648,caller-trace-required,0,1,"[{""table"":""flow-display.csv"",""item_id"":""FLOW-078""}]",occurrence-records-present; exhaustive-caller-review-open

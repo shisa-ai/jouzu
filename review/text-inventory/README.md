@@ -222,6 +222,17 @@ Rows distinguish the original append failure from later fence errors, cleanup
 headlines from retained causes, and sanitized `/flow` notifications from raw
 stderr messages. This does not close the other stores or native error producers.
 
+[flow-receipts.csv](flow-receipts.csv) supplies 96 receipt/retention records:
+82 fixed errors, four stored catalog reasons and ten payload boundaries. Seven
+complete ledger, adapter, retention and identity-helper bodies are covered in
+the [scope table](flow-receipts-scope.csv), with all 402 lexical occurrences
+partitioned between fixed records and
+[exclusions](flow-receipts-exclusions.csv). Validator errors retain their own
+messages through the ledger wrapper; two non-Error fallback catalog branches
+have no current plain-state producer. A serialized second-header-read guard is
+also excluded with its storage precondition. Stored caller reasons and imported
+admission/request/tool failures still require their own producer traces.
+
 [python-console.csv](python-console.csv) records 30 occurrences and boundaries
 for the separate Python console package, including 11 inherited `argparse`
 patterns. [python-console-observations.json](python-console-observations.json)
@@ -259,6 +270,7 @@ python -B review/text-inventory/verify-installer-dependencies.py --cache-dir <ar
 python -B review/text-inventory/verify-flow.py
 python -B review/text-inventory/verify-flow-report.py
 node review/text-inventory/verify-flow-storage.cjs
+node review/text-inventory/verify-flow-receipts.cjs
 python -B review/text-inventory/verify-python-console.py --observe
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>
 ```
