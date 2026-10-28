@@ -352,6 +352,22 @@ suppressed probes and inherited child output have separate conditions. The
 bytes. Git/version/config, npm/native/installer, skill/prompt and extension error
 producers remain separate; no package operation was executed.
 
+[pi-resource-text.csv](pi-resource-text.csv) records 71 inherited resource and
+extension occurrences and 23 [payload boundaries](pi-resource-text-boundaries.csv).
+Fourteen complete bodies contain 543 lexical occurrences, partitioned with 472
+[exclusions](pi-resource-text-exclusions.csv). The
+[scope](pi-resource-text-scope.csv) includes the entire eight-file core extensions
+JavaScript directory plus skills, prompt templates, MCP server discovery,
+execution, source information and frontmatter helpers. Eleven bodies match the
+locked archive and three match pinned patches. Conditions distinguish retained
+versus content-policy-suppressed resource warnings, extension callbacks and schema
+validation. Five skill instruction fragments have persisted System Prompt export
+routes; forced request text and recorded sections remain distinct. The
+[evidence](pi-resource-text-evidence.json) keeps bounded export support separate
+from full export-template coverage. Tool metadata corrections in earlier Pi
+partitions and transitive loaders, parsers and native errors remain open. No
+extension, command, server or resource execution was performed.
+
 [flow-display.csv](flow-display.csv) records 94 occurrences in the Flow status
 extension and message renderer: 57 direct wording occurrences, 29 catalog
 occurrences and eight dynamic boundaries. It includes notices, invalid-command
@@ -580,6 +596,7 @@ node review/text-inventory/verify-pi-runtime.cjs --node-modules <root-node-modul
 node review/text-inventory/verify-pi-auth-model.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-session-config.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-packages.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-resource-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
 The exporter uses `@fluent/syntax` and TypeScript from the repository dependency

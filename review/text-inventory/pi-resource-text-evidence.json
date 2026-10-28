@@ -1,0 +1,943 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "6baefbf8dc6e382f3dc5bbe33b7ede7ca94cd6fa",
+  "inventory_file": "pi-resource-text.csv",
+  "scope_file": "pi-resource-text-scope.csv",
+  "boundary_file": "pi-resource-text-boundaries.csv",
+  "exclusion_file": "pi-resource-text-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "counts": {
+    "rows": 71,
+    "scopes": 14,
+    "proofs": 71,
+    "statusCounts": {
+      "source-read-conditional-resource-text": 14
+    },
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "external_boundaries": 23,
+    "excluded_occurrences": 472,
+    "dispositioned_source_files": 14
+  },
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    },
+    {
+      "source": "packages/cli/src/textguard-runtime.ts",
+      "sha256": "3c425dc423b780545530f141abc1f7327a49570d7f34a438e8647dbc3db01476"
+    },
+    {
+      "source": "packages/cli/src/release-extensions.ts",
+      "sha256": "97925bf47ab6eea4d15c845cd9437b2966c94e76f900687ae0bb9788ebe06a24"
+    },
+    {
+      "source": "packages/cli/src/classic-host-policy.ts",
+      "sha256": "53181fdf481113b5e2eae162cc6e9f440650e87f55a03dc921baadeab0e2f367"
+    },
+    {
+      "source": "packages/cli/src/mcp.ts",
+      "sha256": "486cc72a172378788d453b2f2a30d1ff51e2ec72ec0a07457424ee626773850c"
+    },
+    {
+      "source": "packages/cli/src/subagents/resources.ts",
+      "sha256": "e9ec45241ad8da751e07bc0122f872220020a59fa2c4fe947f9e32b755f68118"
+    },
+    {
+      "source": "packages/cli/src/presentation.ts",
+      "sha256": "e188e7b636ab8a661fdcc32bc3aa1653969349925a85688c751d0ba4815ff039"
+    },
+    {
+      "source": "packages/cli/src/prompt-sections.ts",
+      "sha256": "0f958701c4dc82b5a9dfe4f3ec21b62ad5024d2b0caf29f4495931cd795dd760"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/main.js",
+      "sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "cli_nested_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          69,
+          75
+        ],
+        [
+          649,
+          660
+        ],
+        [
+          744,
+          760
+        ]
+      ],
+      "purpose": "Bounded actual producer/consumer/suppression/export support read (some previously body-closed); not independent full-source inventory/canonical archive proof of imported module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-agent-core@1.4.0/dist/agent.js",
+      "sha256": "ffb0ac1340aa4749b984640530e52edacd3e2f77db57972dbbbe22212f5984cf",
+      "cli_nested_sha256": "ffb0ac1340aa4749b984640530e52edacd3e2f77db57972dbbbe22212f5984cf",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          8
+        ],
+        [
+          30,
+          52
+        ]
+      ],
+      "purpose": "Bounded actual producer/consumer/suppression/export support read (some previously body-closed); not independent full-source inventory/canonical archive proof of imported module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/transcript.js",
+      "sha256": "c14b3b49d72cf18f62e99398c6f75d289899efdc2d187c3596dbd05dd6e0698c",
+      "cli_nested_sha256": "c14b3b49d72cf18f62e99398c6f75d289899efdc2d187c3596dbd05dd6e0698c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          54,
+          94
+        ]
+      ],
+      "purpose": "Bounded actual producer/consumer/suppression/export support read (some previously body-closed); not independent full-source inventory/canonical archive proof of imported module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "sha256": "95037d5b787075ffb951cdeaf3b93aeb89735d10b31b82e19d2921f505ac2b04",
+      "cli_nested_sha256": "95037d5b787075ffb951cdeaf3b93aeb89735d10b31b82e19d2921f505ac2b04",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          20
+        ]
+      ],
+      "purpose": "Bounded actual producer/consumer/suppression/export support read (some previously body-closed); not independent full-source inventory/canonical archive proof of imported module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+      "sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          818,
+          857
+        ],
+        [
+          1095,
+          1112
+        ],
+        [
+          1124,
+          1135
+        ],
+        [
+          1278,
+          1311
+        ],
+        [
+          1354,
+          1418
+        ],
+        [
+          1455,
+          1470
+        ],
+        [
+          1625,
+          1633
+        ],
+        [
+          1745,
+          1808
+        ],
+        [
+          1812,
+          1905
+        ],
+        [
+          2839,
+          2855
+        ],
+        [
+          2912,
+          2935
+        ],
+        [
+          2964,
+          3020
+        ],
+        [
+          3060,
+          3090
+        ],
+        [
+          3718,
+          3747
+        ]
+      ],
+      "purpose": "Bounded actual producer/consumer/suppression/export support read (some previously body-closed); not independent full-source inventory/canonical archive proof of imported module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/system-prompt.js",
+      "sha256": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a",
+      "cli_nested_sha256": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          152
+        ]
+      ],
+      "purpose": "Bounded actual producer/consumer/suppression/export support read (some previously body-closed); not independent full-source inventory/canonical archive proof of imported module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/index.js",
+      "sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "cli_nested_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          157,
+          194
+        ]
+      ],
+      "purpose": "Bounded actual producer/consumer/suppression/export support read (some previously body-closed); not independent full-source inventory/canonical archive proof of imported module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.js",
+      "sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+      "cli_nested_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1428,
+          1482
+        ]
+      ],
+      "purpose": "Bounded actual producer/consumer/suppression/export support read (some previously body-closed); not independent full-source inventory/canonical archive proof of imported module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/session-export.js",
+      "sha256": "cb5debe26dbad9fb650bffc70e2c5fb81fb773ae5e8d6ac5bb6a3d2179c6b47d",
+      "cli_nested_sha256": "cb5debe26dbad9fb650bffc70e2c5fb81fb773ae5e8d6ac5bb6a3d2179c6b47d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          33
+        ]
+      ],
+      "purpose": "Bounded actual producer/consumer/suppression/export support read (some previously body-closed); not independent full-source inventory/canonical archive proof of imported module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resource-loader.js",
+      "sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461",
+      "cli_nested_sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          414,
+          454
+        ],
+        [
+          627,
+          694
+        ]
+      ],
+      "purpose": "Bounded actual producer/consumer/suppression/export support read (some previously body-closed); not independent full-source inventory/canonical archive proof of imported module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/timings.js",
+      "sha256": "9bec37f6fcacd80ca07ad7bafdc6aec91821f691698aa9d81dcdd2d7d5b08531",
+      "cli_nested_sha256": "9bec37f6fcacd80ca07ad7bafdc6aec91821f691698aa9d81dcdd2d7d5b08531",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          41
+        ]
+      ],
+      "purpose": "Bounded actual producer/consumer/suppression/export support read (some previously body-closed); not independent full-source inventory/canonical archive proof of imported module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          548,
+          600
+        ],
+        [
+          1329,
+          1368
+        ],
+        [
+          1474,
+          1512
+        ],
+        [
+          1575,
+          1588
+        ],
+        [
+          1750,
+          1766
+        ],
+        [
+          1794,
+          1804
+        ],
+        [
+          5443,
+          5469
+        ],
+        [
+          5797,
+          5820
+        ]
+      ],
+      "purpose": "Bounded actual producer/consumer/suppression/export support read (some previously body-closed); not independent full-source inventory/canonical archive proof of imported module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js",
+      "sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          72,
+          84
+        ]
+      ],
+      "purpose": "Bounded actual producer/consumer/suppression/export support read (some previously body-closed); not independent full-source inventory/canonical archive proof of imported module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js",
+      "sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          279,
+          286
+        ],
+        [
+          621,
+          653
+        ]
+      ],
+      "purpose": "Bounded actual producer/consumer/suppression/export support read (some previously body-closed); not independent full-source inventory/canonical archive proof of imported module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/config.js",
+      "sha256": "9cf28bcb84556828c8ae2b24c769df293fe3dc37ca8057920b28e91273657332",
+      "cli_nested_sha256": "9cf28bcb84556828c8ae2b24c769df293fe3dc37ca8057920b28e91273657332",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          46,
+          115
+        ]
+      ],
+      "purpose": "Bounded actual producer/consumer/suppression/export support read (some previously body-closed); not independent full-source inventory/canonical archive proof of imported module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/cli.js",
+      "sha256": "e079aa618d451a566328ba134dd922c1f72ff9b14237ecbedb00010323e9e236",
+      "cli_nested_sha256": "e079aa618d451a566328ba134dd922c1f72ff9b14237ecbedb00010323e9e236",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          119,
+          132
+        ],
+        [
+          278,
+          307
+        ]
+      ],
+      "purpose": "Bounded actual producer/consumer/suppression/export support read (some previously body-closed); not independent full-source inventory/canonical archive proof of imported module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/index.js",
+      "sha256": "c0570b9d256120a1df9b65a015964076dff6a3710646e041fcb2770ae7132fde",
+      "cli_nested_sha256": "c0570b9d256120a1df9b65a015964076dff6a3710646e041fcb2770ae7132fde",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          524,
+          541
+        ],
+        [
+          666,
+          684
+        ],
+        [
+          881,
+          909
+        ],
+        [
+          970,
+          995
+        ],
+        [
+          1130,
+          1160
+        ]
+      ],
+      "purpose": "Bounded actual producer/consumer/suppression/export support read (some previously body-closed); not independent full-source inventory/canonical archive proof of imported module."
+    }
+  ],
+  "scope_census": {
+    "package": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0",
+    "exact_files": [
+      "dist/core/exec.js",
+      "dist/core/extensions/index.js",
+      "dist/core/extensions/jiti-loader.js",
+      "dist/core/extensions/jiti-static-loader.js",
+      "dist/core/extensions/loader.js",
+      "dist/core/extensions/runner.js",
+      "dist/core/extensions/types.js",
+      "dist/core/extensions/virtual-modules.js",
+      "dist/core/extensions/wrapper.js",
+      "dist/core/mcp-servers.js",
+      "dist/core/prompt-templates.js",
+      "dist/core/skills.js",
+      "dist/core/source-info.js",
+      "dist/utils/frontmatter.js"
+    ],
+    "extension_directory": "dist/core/extensions",
+    "extension_files": [
+      "dist/core/extensions/index.js",
+      "dist/core/extensions/jiti-loader.js",
+      "dist/core/extensions/jiti-static-loader.js",
+      "dist/core/extensions/loader.js",
+      "dist/core/extensions/runner.js",
+      "dist/core/extensions/types.js",
+      "dist/core/extensions/virtual-modules.js",
+      "dist/core/extensions/wrapper.js"
+    ]
+  },
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/skills.js",
+        "sha256": "9179973966ef44cf9a9fd47461f6b4f144c8cd8652fdf10e40d36c09a39df8b5",
+        "read_lines": [
+          1,
+          591
+        ],
+        "string_template_occurrences": 115,
+        "fixed_rows": 16,
+        "excluded_occurrences": 99,
+        "disposition": "source-read-conditional-resource-text",
+        "source_review": "Full 591-line body read manually; 115 string/template occurrences partitioned into 16 fixed and 99 exact exclusions. Skill policy clearing, prompt/editor/export, MCP validation, loader defaults and runner TUI/print/RPC/callback conditions traced. Whole local body only; MCP connector/export viewer/model/native/extension payload graph remains explicit pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/prompt-templates.js",
+        "sha256": "7661704470a957c98d63132b178cb4b8238a268ff9ad25c1ad2a3e705ec4e41c",
+        "read_lines": [
+          1,
+          267
+        ],
+        "string_template_occurrences": 45,
+        "fixed_rows": 3,
+        "excluded_occurrences": 42,
+        "disposition": "source-read-conditional-resource-text",
+        "source_review": "Full 267-line body read manually; 45 string/template occurrences partitioned into 3 fixed and 42 exact exclusions. Skill policy clearing, prompt/editor/export, MCP validation, loader defaults and runner TUI/print/RPC/callback conditions traced. Whole local body only; MCP connector/export viewer/model/native/extension payload graph remains explicit pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/loader.js",
+        "sha256": "d6e2d202c2b32e724bfcc270d942b1a7278a1ffebd19a2138bb94c43f8972d57",
+        "read_lines": [
+          1,
+          741
+        ],
+        "string_template_occurrences": 106,
+        "fixed_rows": 14,
+        "excluded_occurrences": 92,
+        "disposition": "source-read-conditional-resource-text",
+        "source_review": "Full 741-line body read manually; 106 string/template occurrences partitioned into 14 fixed and 92 exact exclusions. Skill policy clearing, prompt/editor/export, MCP validation, loader defaults and runner TUI/print/RPC/callback conditions traced. Whole local body only; MCP connector/export viewer/model/native/extension payload graph remains explicit pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/runner.js",
+        "sha256": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7",
+        "read_lines": [
+          1,
+          1241
+        ],
+        "string_template_occurrences": 113,
+        "fixed_rows": 8,
+        "excluded_occurrences": 105,
+        "disposition": "source-read-conditional-resource-text",
+        "source_review": "Full 1241-line body read manually; 113 string/template occurrences partitioned into 8 fixed and 105 exact exclusions. Skill policy clearing, prompt/editor/export, MCP validation, loader defaults and runner TUI/print/RPC/callback conditions traced. Whole local body only; MCP connector/export viewer/model/native/extension payload graph remains explicit pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/wrapper.js",
+        "sha256": "ea82999a05ca0af25ed31e76aaaba6e5ce6b99b5fcde3681f0d74766e4935247",
+        "read_lines": [
+          1,
+          22
+        ],
+        "string_template_occurrences": 1,
+        "fixed_rows": 0,
+        "excluded_occurrences": 1,
+        "disposition": "source-read-conditional-resource-text",
+        "source_review": "Full 22-line body read manually; 1 string/template occurrences partitioned into 0 fixed and 1 exact exclusions. Skill policy clearing, prompt/editor/export, MCP validation, loader defaults and runner TUI/print/RPC/callback conditions traced. Whole local body only; MCP connector/export viewer/model/native/extension payload graph remains explicit pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/jiti-loader.js",
+        "sha256": "6b788f3d3f567f7f76f68c21c9327147572402452470fc22a8d89542ecaf57b0",
+        "read_lines": [
+          1,
+          4
+        ],
+        "string_template_occurrences": 1,
+        "fixed_rows": 0,
+        "excluded_occurrences": 1,
+        "disposition": "source-read-conditional-resource-text",
+        "source_review": "Full 4-line body read manually; 1 string/template occurrences partitioned into 0 fixed and 1 exact exclusions. Skill policy clearing, prompt/editor/export, MCP validation, loader defaults and runner TUI/print/RPC/callback conditions traced. Whole local body only; MCP connector/export viewer/model/native/extension payload graph remains explicit pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/jiti-static-loader.js",
+        "sha256": "cef599ba10a21d50f93b2d284e0b41d464bc852a0d6c9b5e45e4048291e24dd0",
+        "read_lines": [
+          1,
+          4
+        ],
+        "string_template_occurrences": 1,
+        "fixed_rows": 0,
+        "excluded_occurrences": 1,
+        "disposition": "source-read-conditional-resource-text",
+        "source_review": "Full 4-line body read manually; 1 string/template occurrences partitioned into 0 fixed and 1 exact exclusions. Skill policy clearing, prompt/editor/export, MCP validation, loader defaults and runner TUI/print/RPC/callback conditions traced. Whole local body only; MCP connector/export viewer/model/native/extension payload graph remains explicit pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/virtual-modules.js",
+        "sha256": "9742c3576adb6799a42015e328f4ddaf74d85fa3502f271bf247fb836769a17b",
+        "read_lines": [
+          1,
+          41
+        ],
+        "string_template_occurrences": 31,
+        "fixed_rows": 0,
+        "excluded_occurrences": 31,
+        "disposition": "source-read-conditional-resource-text",
+        "source_review": "Full 41-line body read manually; 31 string/template occurrences partitioned into 0 fixed and 31 exact exclusions. Skill policy clearing, prompt/editor/export, MCP validation, loader defaults and runner TUI/print/RPC/callback conditions traced. Whole local body only; MCP connector/export viewer/model/native/extension payload graph remains explicit pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/index.js",
+        "sha256": "9a99fd14edb60079a3c604d6045cbad7d461c3ba1ce88331f5d549372f14c46d",
+        "read_lines": [
+          1,
+          9
+        ],
+        "string_template_occurrences": 4,
+        "fixed_rows": 0,
+        "excluded_occurrences": 4,
+        "disposition": "source-read-conditional-resource-text",
+        "source_review": "Full 9-line body read manually; 4 string/template occurrences partitioned into 0 fixed and 4 exact exclusions. Skill policy clearing, prompt/editor/export, MCP validation, loader defaults and runner TUI/print/RPC/callback conditions traced. Whole local body only; MCP connector/export viewer/model/native/extension payload graph remains explicit pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/types.js",
+        "sha256": "447039081a7808371e07d85bacc719a11eea7b66f291b9949de33ef952a809fc",
+        "read_lines": [
+          1,
+          48
+        ],
+        "string_template_occurrences": 8,
+        "fixed_rows": 0,
+        "excluded_occurrences": 8,
+        "disposition": "source-read-conditional-resource-text",
+        "source_review": "Full 48-line body read manually; 8 string/template occurrences partitioned into 0 fixed and 8 exact exclusions. Skill policy clearing, prompt/editor/export, MCP validation, loader defaults and runner TUI/print/RPC/callback conditions traced. Whole local body only; MCP connector/export viewer/model/native/extension payload graph remains explicit pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/mcp-servers.js",
+        "sha256": "b099709521b4c4aa118704762b807247ebccfc0ba4962f3a06055b17bb72d3ea",
+        "read_lines": [
+          1,
+          232
+        ],
+        "string_template_occurrences": 89,
+        "fixed_rows": 30,
+        "excluded_occurrences": 59,
+        "disposition": "source-read-conditional-resource-text",
+        "source_review": "Full 232-line body read manually; 89 string/template occurrences partitioned into 30 fixed and 59 exact exclusions. Skill policy clearing, prompt/editor/export, MCP validation, loader defaults and runner TUI/print/RPC/callback conditions traced. Whole local body only; MCP connector/export viewer/model/native/extension payload graph remains explicit pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/exec.js",
+        "sha256": "6aed92abe5273445a9bddcd92d4178264d0a23890b54b175a0efc73b20cdf53f",
+        "read_lines": [
+          1,
+          75
+        ],
+        "string_template_occurrences": 14,
+        "fixed_rows": 0,
+        "excluded_occurrences": 14,
+        "disposition": "source-read-conditional-resource-text",
+        "source_review": "Full 75-line body read manually; 14 string/template occurrences partitioned into 0 fixed and 14 exact exclusions. Skill policy clearing, prompt/editor/export, MCP validation, loader defaults and runner TUI/print/RPC/callback conditions traced. Whole local body only; MCP connector/export viewer/model/native/extension payload graph remains explicit pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/source-info.js",
+        "sha256": "67562eea112e99f4a7880913143730bd90e3655381c0f353e3dd18c5e9f1ef07",
+        "read_lines": [
+          1,
+          35
+        ],
+        "string_template_occurrences": 9,
+        "fixed_rows": 0,
+        "excluded_occurrences": 9,
+        "disposition": "source-read-conditional-resource-text",
+        "source_review": "Full 35-line body read manually; 9 string/template occurrences partitioned into 0 fixed and 9 exact exclusions. Skill policy clearing, prompt/editor/export, MCP validation, loader defaults and runner TUI/print/RPC/callback conditions traced. Whole local body only; MCP connector/export viewer/model/native/extension payload graph remains explicit pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/frontmatter.js",
+        "sha256": "3e1a0e99ecc419748d87202a342dd315160764cf8588551cefcf780208165da5",
+        "read_lines": [
+          1,
+          27
+        ],
+        "string_template_occurrences": 6,
+        "fixed_rows": 0,
+        "excluded_occurrences": 6,
+        "disposition": "source-read-conditional-resource-text",
+        "source_review": "Full 27-line body read manually; 6 string/template occurrences partitioned into 0 fixed and 6 exact exclusions. Skill policy clearing, prompt/editor/export, MCP validation, loader defaults and runner TUI/print/RPC/callback conditions traced. Whole local body only; MCP connector/export viewer/model/native/extension payload graph remains explicit pending."
+      }
+    ],
+    "scope": "Exactly14 full local bodies3337 lines, including entire8-file core/extensions JS directory. No whole dependency/extension/MCP/export graph closure.",
+    "error_constructor_messages": [
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/loader.js:111",
+        "source_column": 25,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Extension runtime not initialized. Action methods cannot be called during extension loading.\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/loader.js:135",
+        "source_column": 50,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Extension runtime not initialized\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/loader.js:200",
+        "source_column": 29,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Extension \\\"${extension.path}\\\" failed to load and its API is no longer active.\"",
+        "disposition": "failed-api-consumer-pending"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/loader.js:238",
+        "source_column": 33,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Tool \\\"${tool.name}\\\" registered by extension \\\"${extension.path}\\\" must define an object parameter schema.\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/loader.js:249",
+        "source_column": 33,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Command registered by extension \\\"${extension.path}\\\" must have a non-empty string name. Use pi.registerCommand(\\\"name\\\", { description, handler }).\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/loader.js:252",
+        "source_column": 33,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Command \\\"/${name}\\\" registered by extension \\\"${extension.path}\\\" must define handler().\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/loader.js:268",
+        "source_column": 33,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Invalid default for flag \\\"${name}\\\": expected ${options.type}, got ${typeof options.default}\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/loader.js:406",
+        "source_column": 37,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Provider config is required when registering by name\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/loader.js:420",
+        "source_column": 33,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Invalid MCP server registered by extension \\\"${extension.path}\\\": ${validated}\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/loader.js:424",
+        "source_column": 33,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"MCP server \\\"${name}\\\" is already registered by extension \\\"${owner}\\\"\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/loader.js:431",
+        "source_column": 33,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"MCP server \\\"${name}\\\" conflicts with registered server \\\"${clash.name}\\\"\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/runner.js:212",
+        "source_column": 131,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"External user input is unavailable.\"",
+        "disposition": "custom-bind-core-adapter-api-fallback"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/runner.js:983",
+        "source_column": 41,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Invalid user_bash handler result: return undefined for local execution or exactly one valid { operations } or { result } object\"",
+        "disposition": "fixed"
+      }
+    ],
+    "aggregate_constructor_calls": 0
+  },
+  "export_metadata_lineage": {
+    "own_promoted_sources": [
+      "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/skills.js:450",
+      "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/skills.js:452",
+      "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/skills.js:454",
+      "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/skills.js:455",
+      "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/skills.js:456"
+    ],
+    "route": "formatSkillsForPrompt -> system-prompt.js105-108 skills section -> AgentSession1412-1417 structured section diff,1628-1631 system message,845-850 persistence -> pi-agent-core agent.js30-39 state.systemPrompt getter -> pi-ai utils/transcript.js58-91 + text.js11-18 replay/concatenate sections -> AgentSession.exportToHtml3730 -> export-html/index.js188 -> template.js1432-1448 escaped visible System Prompt. /export with non-jsonl path invokes HTML; JSONL/native JSON/RPC can also retain system entries. Current persisted section must still contain these skills; later override/removal can replace it. buildSystemPromptSections deliberately ignores forceSystemPrompt and still persists underlying structured sections; forced request text is projected without recording, not the same as persisted state.",
+    "active_gates": [
+      "AgentSession3074-3085 normalizes snippet whitespace and guideline trimming/dedup from registered definitions. _rebuildSystemPrompt1376-1400 fills base options.",
+      "_applyToolLoadout1285-1309 prepareLoadout may replace active description and hide declarations. state.tools export uses resulting active description/parameters directly.",
+      "system-prompt76 selects declared=selected minus hidden; snippets require nonempty value84-85, tool guidelines only declared names57-59; all these default rules/snippets/docs suppressed when customPrompt truthy. promptGuidelines appended then deduped.",
+      "Skill section105-108 independently requires selected read/bash, hidden readers choose indirect; visible skills excludes disableModelInvocation. Later customSections.skills can replace/remove intended content.",
+      "AgentSession1412-1417 diffs structured sections,1628-1631 injects system message,845-850 persists; agent-core30-39 state.systemPrompt getter uses pi-ai transcript58-91/text11-18 replay.",
+      "Native HTML export requires persisted session/file; System Prompt is escaped/previews10 lines then expandable full text. State tool descriptions and top-level parameter descriptions shown1453-1476. JSONL/current state data are separate raw export routes.",
+      "buildSystemPromptSections ignores forceSystemPrompt and persists underlying structured sections even under forced request. forceSystemPrompt (including force-only appended text) is request-only projection and not the same as agent.state.systemPrompt replay; do not infer every forced/inactive/hidden tool snippet reaches export. Owned presentation adds sections via prompt-sections without removing native skill section by default."
+    ],
+    "broader_export_scope": "Only bounded supporting viewer/producer ranges inspected; full export resources and corrections across prior inventories remain separate parent-owned work."
+  },
+  "remaining_partial_sources": [],
+  "verification_script": "review/text-inventory/verify-pi-resource-text.cjs",
+  "checks": [
+    "Full AST lexical partition/source anchors/hashes543 occurrences,14 bodies3337 lines; per-occurrence local triggers plus source-traced TUI/print/RPC/export/API routes.",
+    "Error/Exception constructor argument census; AggregateError/AggregateException message index1. No error headline excluded as mechanism.",
+    "Canonical archive SHA512/pins/two installed trees and checked-in source patch before-after proofs, with bounded support hashes for actual export lineage.",
+    "Four in-memory negative controls reject omission, corrupted fixed English, consumer hash drift and canonical archive proof drift; no audited extension/network/child/native operation executed."
+  ],
+  "limits": [
+    "Finite14 bodies only. Full system-prompt/export HTML/MCP connector/config/CLI/runtime/provider/Jiti/TypeBox/YAML/native OS/child-process graphs not closed by supporting reads; source text versus dynamic payload boundaries explicit.",
+    "Jouzu contentPolicy clears all discovered skill diagnostics, including admission-limit budget diagnostics. Stock no-policy TUI can render validation warnings; budget-only diagnostics have API-only pending consumers. Collision.message skipped in favor of metadata name/path.",
+    "Loader/runtime/runner default stale strings not selected by native AgentSession which passes explicit prior source wording; failed/unbound/custom API result errors remain exact exclusions and boundaries.",
+    "Active native MCP factory keeps config errors while deferring exposure and disabling codemode; root native CLI validator errors to stderr, TUI manager/notifications and RPC frames distinct; print noOp UI can suppress notifications.",
+    "Five formatSkillsForPrompt instruction literals confirmed export-visible and fixed. External prompt/skill/command descriptions, arguments/content, renderer callbacks and tool metadata remain data boundaries with actual autocomplete/editor/export consumers. No blanket model-only metadata classification.",
+    "HTML metadata proof requires active declared tool/noncustom prompt gates for snippets/guidelines and reflects persisted replay; request forced prompt can differ. Full viewer not audited here and prior committed inventories unchanged.",
+    "Native PI_TIMING=1 labels extension factory/module import printed only if later printTimings reached; fatal startup can suppress recorded debug labels.",
+    "String literals decoded by TypeScript; template bodies exact escapes/interpolations, exclusions JSON exact including whitespace. Intro skills block trimmed before persisted composition, transformations explicitly noted.",
+    "No live skills/prompts/config/accounts read; only shipped source. No product/dependency/source edits, installs, audited extension/network/child/native execution, runtime screenshots or cross-platform rendering claims."
+  ],
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/core/skills.js",
+            "archive_sha256": "0e20ec500ed9783d5b01b5399e6600134fc3fdd10e6dc46c9113bc01565c9aa5",
+            "root_sha256": "9179973966ef44cf9a9fd47461f6b4f144c8cd8652fdf10e40d36c09a39df8b5",
+            "cli_nested_sha256": "9179973966ef44cf9a9fd47461f6b4f144c8cd8652fdf10e40d36c09a39df8b5",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/prompt-templates.js",
+            "archive_sha256": "7661704470a957c98d63132b178cb4b8238a268ff9ad25c1ad2a3e705ec4e41c",
+            "root_sha256": "7661704470a957c98d63132b178cb4b8238a268ff9ad25c1ad2a3e705ec4e41c",
+            "cli_nested_sha256": "7661704470a957c98d63132b178cb4b8238a268ff9ad25c1ad2a3e705ec4e41c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/extensions/loader.js",
+            "archive_sha256": "c63226a56ab2f4f9e4e6c8ea97e4bcb9c71d723b38eba1ee3569559bba21a666",
+            "root_sha256": "d6e2d202c2b32e724bfcc270d942b1a7278a1ffebd19a2138bb94c43f8972d57",
+            "cli_nested_sha256": "d6e2d202c2b32e724bfcc270d942b1a7278a1ffebd19a2138bb94c43f8972d57",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/extensions/runner.js",
+            "archive_sha256": "0e659fb4338069d91c4d0a3b032b51bf8d179a99e6417bc3e39e59b672aaec76",
+            "root_sha256": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7",
+            "cli_nested_sha256": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/extensions/wrapper.js",
+            "archive_sha256": "ea82999a05ca0af25ed31e76aaaba6e5ce6b99b5fcde3681f0d74766e4935247",
+            "root_sha256": "ea82999a05ca0af25ed31e76aaaba6e5ce6b99b5fcde3681f0d74766e4935247",
+            "cli_nested_sha256": "ea82999a05ca0af25ed31e76aaaba6e5ce6b99b5fcde3681f0d74766e4935247",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/extensions/jiti-loader.js",
+            "archive_sha256": "6b788f3d3f567f7f76f68c21c9327147572402452470fc22a8d89542ecaf57b0",
+            "root_sha256": "6b788f3d3f567f7f76f68c21c9327147572402452470fc22a8d89542ecaf57b0",
+            "cli_nested_sha256": "6b788f3d3f567f7f76f68c21c9327147572402452470fc22a8d89542ecaf57b0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/extensions/jiti-static-loader.js",
+            "archive_sha256": "cef599ba10a21d50f93b2d284e0b41d464bc852a0d6c9b5e45e4048291e24dd0",
+            "root_sha256": "cef599ba10a21d50f93b2d284e0b41d464bc852a0d6c9b5e45e4048291e24dd0",
+            "cli_nested_sha256": "cef599ba10a21d50f93b2d284e0b41d464bc852a0d6c9b5e45e4048291e24dd0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/extensions/virtual-modules.js",
+            "archive_sha256": "9742c3576adb6799a42015e328f4ddaf74d85fa3502f271bf247fb836769a17b",
+            "root_sha256": "9742c3576adb6799a42015e328f4ddaf74d85fa3502f271bf247fb836769a17b",
+            "cli_nested_sha256": "9742c3576adb6799a42015e328f4ddaf74d85fa3502f271bf247fb836769a17b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/extensions/index.js",
+            "archive_sha256": "9a99fd14edb60079a3c604d6045cbad7d461c3ba1ce88331f5d549372f14c46d",
+            "root_sha256": "9a99fd14edb60079a3c604d6045cbad7d461c3ba1ce88331f5d549372f14c46d",
+            "cli_nested_sha256": "9a99fd14edb60079a3c604d6045cbad7d461c3ba1ce88331f5d549372f14c46d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/extensions/types.js",
+            "archive_sha256": "447039081a7808371e07d85bacc719a11eea7b66f291b9949de33ef952a809fc",
+            "root_sha256": "447039081a7808371e07d85bacc719a11eea7b66f291b9949de33ef952a809fc",
+            "cli_nested_sha256": "447039081a7808371e07d85bacc719a11eea7b66f291b9949de33ef952a809fc",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/mcp-servers.js",
+            "archive_sha256": "b099709521b4c4aa118704762b807247ebccfc0ba4962f3a06055b17bb72d3ea",
+            "root_sha256": "b099709521b4c4aa118704762b807247ebccfc0ba4962f3a06055b17bb72d3ea",
+            "cli_nested_sha256": "b099709521b4c4aa118704762b807247ebccfc0ba4962f3a06055b17bb72d3ea",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/exec.js",
+            "archive_sha256": "6aed92abe5273445a9bddcd92d4178264d0a23890b54b175a0efc73b20cdf53f",
+            "root_sha256": "6aed92abe5273445a9bddcd92d4178264d0a23890b54b175a0efc73b20cdf53f",
+            "cli_nested_sha256": "6aed92abe5273445a9bddcd92d4178264d0a23890b54b175a0efc73b20cdf53f",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/source-info.js",
+            "archive_sha256": "67562eea112e99f4a7880913143730bd90e3655381c0f353e3dd18c5e9f1ef07",
+            "root_sha256": "67562eea112e99f4a7880913143730bd90e3655381c0f353e3dd18c5e9f1ef07",
+            "cli_nested_sha256": "67562eea112e99f4a7880913143730bd90e3655381c0f353e3dd18c5e9f1ef07",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/frontmatter.js",
+            "archive_sha256": "3e1a0e99ecc419748d87202a342dd315160764cf8588551cefcf780208165da5",
+            "root_sha256": "3e1a0e99ecc419748d87202a342dd315160764cf8588551cefcf780208165da5",
+            "cli_nested_sha256": "3e1a0e99ecc419748d87202a342dd315160764cf8588551cefcf780208165da5",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": []
+      }
+    ],
+    "scoped_file_count": 14,
+    "byte_identical_scope_files": 11,
+    "pinned_patch_scope_files": 3,
+    "unresolved_scope_differences": 0
+  },
+  "archive_artifacts": [
+    {
+      "flag": "agent-archive",
+      "artifact": "test-results/earendil-works-pi-coding-agent-1.4.0.tgz",
+      "sha512": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg=="
+    },
+    {
+      "flag": "tui-archive",
+      "artifact": "test-results/earendil-works-pi-tui-1.4.0.tgz",
+      "sha512": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg=="
+    }
+  ]
+}
