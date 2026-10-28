@@ -46,6 +46,8 @@ assert(new Set(rows.map((r) => r.item_id)).size === rows.length, 'Duplicate fixe
 assert(new Set(boundaries.map((r) => r.item_id)).size === boundaries.length, 'Duplicate boundary item IDs');
 assert(rows.length === evidence.counts.rows && scopes.length === evidence.counts.scopes, 'Recorded count mismatch');
 const parseLocation = (location) => {
+  const owned = /^repo:((?:packages|scripts|upstream|docs)\/[^:]+):(\d+)$/.exec(location);
+  if (owned) return { repoSource: true, packageName: 'repo', source: owned[1], line: Number(owned[2]) };
   const match = /^npm:(@earendil-works\/(?:pi-coding-agent|pi-tui))@1\.4\.0\/(.+?)(?::(\d+))?$/.exec(location);
   assert(match, `Invalid npm source notation: ${location}`);
   return { packageName: match[1], source: match[2], line: match[3] ? Number(match[3]) : undefined };
@@ -72,6 +74,24 @@ for (const [tree, base] of [['root', nodeModules], ['cli-nested', cliNodeModules
     }
   }
 }
+for (const record of evidence.repo_trace_sources || []) {
+  assert(sha(path.join(repo, record.source)) === record.sha256, 'Repo consumer source snapshot drift: ' + record.source);
+}
+for (const record of evidence.agent_session_source_review?.support_sources || []) {
+  const parsed = /^npm:(@earendil-works\/[^@]+)@([^/]+)\/(.+)$/.exec(record.source);
+  assert(parsed, 'Invalid supplemental source notation: ' + record.source);
+  const [, packageName, version, sourcePath] = parsed;
+  const rootPath = path.join(nodeModules, packageName, sourcePath), nestedPath = path.join(cliNodeModules, packageName, sourcePath);
+  for (const base of [nodeModules, cliNodeModules]) {
+    const metadata = JSON.parse(read(path.join(base, packageName, 'package.json')));
+    assert(metadata.name === packageName && metadata.version === version, 'Supplemental package identity drift: ' + record.source);
+  }
+  const rootHash = sha(rootPath), nestedHash = sha(nestedPath);
+  assert(rootHash === record.sha256 && nestedHash === record.cli_nested_sha256 && (rootHash === nestedHash) === record.root_nested_equal, 'Supplemental consumer source snapshot drift: ' + record.source);
+  const lineCount = read(rootPath).split('\n').length;
+  assert(record.read_ranges.every(([start, end]) => start >= 1 && end >= start && end <= lineCount), 'Supplemental source-read range mismatch: ' + record.source);
+}
+
 const catalogs = fs.readdirSync(path.join(repo, 'packages/cli/locales/en')).filter((p) => p.endsWith('.ftl'))
   .map((p) => read(path.join(repo, 'packages/cli/locales/en', p))).join('\n');
 for (const row of rows) if (row.message_id) {
@@ -82,7 +102,7 @@ const sourceCache = new Map();
 function source(location) {
   const parsed = parseLocation(location), key = parsed.packageName + '/' + parsed.source;
   if (!sourceCache.has(key)) {
-    const body = read(path.join(nodeModules, parsed.packageName, parsed.source));
+    const body = read(parsed.repoSource ? path.join(repo, parsed.source) : path.join(nodeModules, parsed.packageName, parsed.source));
     const ast = ts.createSourceFile(parsed.source, body, ts.ScriptTarget.Latest, true), nodes = [];
     function walk(node) {
       if (ts.isStringLiteralLike(node) || ts.isTemplateExpression(node)) nodes.push({
@@ -107,6 +127,8 @@ for (const row of rows) {
 for (const row of boundaries) {
   const parsed = source(row.source_location);
   assert(parsed.body.split('\n')[parsed.line - 1]?.includes(row.evidence), `Boundary source anchor mismatch: ${row.item_id}`);
+  const display = source(row.display_location);
+  assert(display.line >= 1 && display.line <= display.body.split('\n').length, 'Boundary display location out of range: ' + row.item_id);
 }
 
 assert(new Set(exclusions.map((row) => row.item_id)).size === exclusions.length, 'Duplicate exclusion item IDs');
@@ -127,7 +149,7 @@ for (const record of evidence.finite_subset_source_review?.reclassified_fixed_ro
   assert(row && row.source_location === record.english_location && JSON.parse(row.source_text_json) === record.english && row.disposition === record.disposition, 'Control/initializer exclusion mismatch: ' + record.former_item_id);
 }
 
-const dispositionedFiles = [...(evidence.additional_source_review?.files || []), ...(evidence.partial_source_review?.files || []), ...(evidence.selector_editor_source_review?.files || []), ...(evidence.finite_subset_source_review?.files || [])];
+const dispositionedFiles = [...(evidence.additional_source_review?.files || []), ...(evidence.partial_source_review?.files || []), ...(evidence.selector_editor_source_review?.files || []), ...(evidence.finite_subset_source_review?.files || []), ...(evidence.agent_session_source_review?.files || [])];
 assert(new Set(dispositionedFiles.map((record) => record.source)).size === dispositionedFiles.length, 'Duplicate reviewed-source records');
 for (const record of dispositionedFiles) {
   const parsed = source(record.source), sourceScope = scopes.find((row) => row.source === record.source);

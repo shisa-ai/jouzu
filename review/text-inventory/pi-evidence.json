@@ -5,24 +5,24 @@
   "scope_file": "pi-scope.csv",
   "boundary_file": "pi-boundaries.csv",
   "counts": {
-    "rows": 657,
+    "rows": 706,
     "scopes": 69,
-    "proofs": 657,
+    "proofs": 706,
     "statusCounts": {
-      "partial": 2,
+      "source-read-conditional-errors": 2,
       "source-read-trust-errors-and-options": 1,
       "source-read-text-dispositioned": 37,
       "source-read-no-local-prose": 25,
       "source-read-native-startup-gated": 1,
       "source-read-exported-consumer-pending": 2,
-      "source-read-conditional-errors": 1
+      "partial": 1
     },
     "sourceAnchorsVerified": true,
     "catalog_linked_rows": 155,
     "distinct_catalog_ids": 146,
-    "external_boundaries": 112,
-    "excluded_occurrences": 2439,
-    "dispositioned_source_files": 67
+    "external_boundaries": 135,
+    "excluded_occurrences": 2814,
+    "dispositioned_source_files": 68
   },
   "pin": {
     "source": "upstream/pi.lock.json",
@@ -709,6 +709,30 @@
     {
       "source": "scripts/apply-code-previews.mjs",
       "sha256": "b3719710491070832012e13a7a17eb999131b4362b29c471b71d245d28ac4dac"
+    },
+    {
+      "source": "packages/cli/src/flow-control/pi-controller-host.ts",
+      "sha256": "1ebaa34a570040a586de5d1889fb6b8558dfe597dc3186f2d52349d8e8b892b0"
+    },
+    {
+      "source": "packages/cli/src/flow-control/controller.ts",
+      "sha256": "a73e457af9909428586b0f796365825be3c677cd56c36a0837c7613fb65d4bf8"
+    },
+    {
+      "source": "packages/cli/src/flow-control/pi-session-ingress.ts",
+      "sha256": "216f115d8c9b94e0f40a283513c8a4fce1102f8dccb4a5e9100f06bfac96b805"
+    },
+    {
+      "source": "packages/cli/src/compaction-request.ts",
+      "sha256": "f62c742dc29a7db0bfe57f27d4d148e2e41df01c843772e7c6c1609eecfa674f"
+    },
+    {
+      "source": "packages/cli/src/model-picker.ts",
+      "sha256": "1982d0383ae5df2ba1d0f8cf1ded89f0edcb4e8e0cac8947db9f540e88c7586c"
+    },
+    {
+      "source": "packages/cli/src/cli-messages.ts",
+      "sha256": "4cc3acc3f5a3f1bb9c51683aeb3f3cf48f751a6053db6022bab3f27fdcdb5e31"
     }
   ],
   "checks": [
@@ -724,18 +748,20 @@
     "Read seven previously partial sources fully, traced native/startup/exported consumers, and recorded exact corrections to routing/trigger metadata without changing prior English/IDs.",
     "All615 prior fixed IDs, English source values, catalog IDs, source locations and order preserved;78 existing rows have explicitly logged trigger/route/boundary/display-location metadata corrections. Prior51 boundaries and990 exclusions preserved exactly.",
     "Read SettingsSelector/TreeSelector/TUI Editor fully; source-partition every string/template, trace actual list/selector/editor rendering conditions, preserve canonical English adapter boundaries and explicitly reclassify four search-only occurrences.",
-    "Read original19 finite-subset bodies fully and source-partition every string/template; actual native consumers suppress2 Login cancelled control signals and overwrite1 Loader initializer, now explicitly reclassified. Default/empty SDK branches and transitive prose remain explicit boundaries."
+    "Read original19 finite-subset bodies fully and source-partition every string/template; actual native consumers suppress2 Login cancelled control signals and overwrite1 Loader initializer, now explicitly reclassified. Default/empty SDK branches and transitive prose remain explicit boundaries.",
+    "Read all3817 AgentSession lines and actual consumer paths; partition every local literal/template, distinguish raw protocol-only/suppressed/native/UI errors and keep model/exported viewer/SDK/transitive text boundaries explicit."
   ],
   "limits": [
-    "All67 local source files other than AgentSession and InteractiveMode now have full string/template dispositions; no original finite-subset statuses remain. Those2 large bodies remain partial. Exported-only/default/empty branches and external producers retain explicit activation/reporting limits even where local bodies are fully read;2 exported resources still have no shipped constructor consumer.",
-    "Only two explicitly traced source error sentences from core/agent-session.js are inventoried. Remaining core errors and transitive dependency messages are pending.",
+    "All68 local files except InteractiveMode have complete string/template dispositions. InteractiveMode5978-line body remains partial. External producer/SDK activation/error consumers remain explicit, including optional AgentSession summarizeForBugReport and malformed-manager guard;2 exported resources still have no shipped constructor consumer.",
+    "AgentSession complete local body/errors now dispositioned; only failures actually forwarded through traced UI/print/JSON/RPC/Flow routes are fixed rows. Caught/control/invariant/SDK-only strings are exact exclusions with boundaries; transitive error producer modules remain pending.",
     "Fresh exact archives were verified against lockfile SHA512 integrity and compared with every scoped installed file in both trees. This establishes provenance for the 69 scoped files and dispositions their three pinned-patch differences. No full installed-package comparison or online git tag verification was performed.",
     "No runtime screenshots, locale rendering tests, cross-platform behavior tests or installations were performed. Native constructor and wrapper callsites establish conditional consumers; host policy can intercept routes.",
     "Catalog-linked row means a related existing ID was identified. translation_boundary states whether the scoped consumer actually receives adapter localization.",
     "A row represents a source occurrence; repeated English and nested fixed template fragments can have separate source rows. Numeric counters, punctuation-only layout, style/key identifiers and variable-only payloads are outside the fixed-human-text rows.",
     "Trigger fields name per-occurrence enclosing source method and exact enclosing if/conditional/switch branch conditions. Rows marked trigger pending require caller activation-policy tracing; their files have partial scope status. Constructors and helpers can have additional callsite guards outside their source body.",
     "English string literals use the TypeScript-decoded literal value. Template expressions preserve their exact source body without backticks, including source escape spellings such as \\n or \\u00b7 and the original interpolation expressions. Evidence snippets preserve source notation and compact whitespace; they are not rendered screenshots.",
-    "Local-source dispositions distinguish non-displayed parser errors, payload widgets, structural glyphs and code constants. Imported formatter text and raster contents remain explicit producer boundaries outside this finite set."
+    "Local-source dispositions distinguish non-displayed parser errors, payload widgets, structural glyphs and code constants. Imported formatter text and raster contents remain explicit producer boundaries outside this finite set.",
+    "repo:path:line display notation identifies Jouzu-owned final publishers; npm:package@version/dist/path:line remains exact pinned Pi English-source notation. Supplemental installed consumer hashes outside original69 source set do not expand archive provenance claim."
   ],
   "verification_script": "review/text-inventory/verify-pi.cjs",
   "archive_provenance": {
@@ -1769,7 +1795,6 @@
     "review_method": "Read each complete source body and traced display/error/caller paths. Literal enumeration cross-checks disposition coverage; syntax detection alone does not establish semantic completeness."
   },
   "remaining_partial_sources": [
-    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
     "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js"
   ],
   "partial_source_review": {
@@ -10523,5 +10548,241 @@
       }
     ],
     "read_method": "Read all19 complete source bodies and traced native/CLI/patched/callback/list/event consumers manually; lexical partition detects omissions but is not the semantic review."
+  },
+  "agent_session_source_review": {
+    "unit_source_commit": "2135121e5bcd558dc8c82ab394a31fcdf877bf49",
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+        "sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+        "read_lines": [
+          1,
+          3817
+        ],
+        "string_template_occurrences": 426,
+        "fixed_rows": 51,
+        "excluded_occurrences": 375,
+        "disposition": "source-read-conditional-errors",
+        "source_review": "Read complete3817-line AgentSession body: agent lifecycle/hooks, policy/tool/result/error paths, session persistence, queues, prompts/skills/images, model/thinking changes, manual/auto compaction/retry, extension binding/resources, shell, navigation/stats/export and SDK methods. Human text classified via actual interactive/print/JSON/RPC/Jouzu flow callers. Caught guard errors, auto-cancel and pre-start history failures excluded; optional SDK summary/header guards retain explicit consumer/invariant boundaries. Prompt/resource/model/OS/exporter/callback producers remain finite transitive boundaries; no whole-package text closure claimed."
+      }
+    ],
+    "new_fixed_rows": 49,
+    "new_payload_boundaries": 23,
+    "new_exclusions": 375,
+    "corrected_existing_rows": [
+      {
+        "item_id": "pi.agent.agent-session.2418.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js:2418",
+        "reason": "Full AgentSession/read consumer tracing replaces finite error metadata; exact English/ID/catalog/source preserved.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Compaction request attempts source operation; error propagated through session event to native terminal; source AgentSession.compact; only when !preparation",
+            "after": "Manual compact has model and prepared/filtered branch; prepareCompaction returns falsy AND last entry?.type!==compaction. Throws before summary hooks; catch wraps only when signal not aborted and not cancelledByExtension."
+          },
+          "consumer_evidence": {
+            "before": "AgentSession compact throws -> agent-session.js:2502 wraps Compaction failed -> compaction event.errorMessage -> InteractiveMode.handleEvent:3025",
+            "after": "Summary auth/history/default generator failure -> manual AgentSession.compact catch:2499-2519 emits compaction_end.errorMessage only when not aborted -> InteractiveMode:3023-3030 displays it. navigateTree has no catch, so caller InteractiveMode:4734-4735 shows error. Print session.prompt errors:print-mode.js:134-136 stderr; JSON events:84-87; RPC compact:rpc-mode.js:504 + outer command catch:782-786 serializes original rejection. Summarization SDK callbacks may handle/suppress errors separately."
+          },
+          "translation_boundary": {
+            "before": "catalog-rendered by packages/cli/src/pi-ui-localization.ts:1189; canonical English is an adapter match value; interpolated payloads preserved",
+            "after": "Only composed native Error: Compaction failed: Nothing to compact (session too small) is matched by pi-ui-localization.ts:1189-1213 -> jouzu.cli.piUi.compaction.tooSmallError. RPC original rejection and SDK callback details are not globally replaced."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.agent-session.2502.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js:2502",
+        "reason": "Full AgentSession/read consumer tracing replaces finite error metadata; exact English/ID/catalog/source preserved.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Compaction request attempts source operation; error propagated through session event to native terminal; source AgentSession.compact; only when enclosing try block throws AND not (aborted)",
+            "after": "Manual compact try throws; aborted=(signal.aborted OR cancelledByExtension) false. errorMessage uses this wrapper; when aborted true it is undefined. Detail can be local guard, auth/imported provider/OS/extension error."
+          },
+          "consumer_evidence": {
+            "before": "AgentSession compaction catch emits errorMessage -> InteractiveMode.handleEvent:3025",
+            "after": "Summary auth/history/default generator failure -> manual AgentSession.compact catch:2499-2519 emits compaction_end.errorMessage only when not aborted -> InteractiveMode:3023-3030 displays it. navigateTree has no catch, so caller InteractiveMode:4734-4735 shows error. Print session.prompt errors:print-mode.js:134-136 stderr; JSON events:84-87; RPC compact:rpc-mode.js:504 + outer command catch:782-786 serializes original rejection. Summarization SDK callbacks may handle/suppress errors separately."
+          },
+          "translation_boundary": {
+            "before": "native fixed text; no applicable localization branch identified in packages/cli/src/pi-ui-localization.ts:940",
+            "after": "Generic wrapper/detail remain native English except exact full too-small combination, localized via pi-ui-localization.ts:1189-1213 and jouzu.cli.piUi.compaction.tooSmallError. Canonical source matcher is covered for that combination; other details not translated."
+          }
+        }
+      }
+    ],
+    "reclassified_fixed_rows": [],
+    "support_sources": [
+      {
+        "source": "npm:@earendil-works/pi-agent-core@1.4.0/dist/agent-loop.js",
+        "sha256": "f2b40fc13bfc2821966f57fce056b2f3fbb6f9cbf8eb60d9104ceed8f1a05908",
+        "cli_nested_sha256": "f2b40fc13bfc2821966f57fce056b2f3fbb6f9cbf8eb60d9104ceed8f1a05908",
+        "root_nested_equal": true,
+        "read_ranges": [
+          [
+            119,
+            143
+          ],
+          [
+            498,
+            565
+          ],
+          [
+            576,
+            668
+          ]
+        ],
+        "purpose": "Partial consumer routing support only; no complete human-text inventory of this transitive module is claimed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-agent-core@1.4.0/dist/agent.js",
+        "sha256": "ffb0ac1340aa4749b984640530e52edacd3e2f77db57972dbbbe22212f5984cf",
+        "cli_nested_sha256": "ffb0ac1340aa4749b984640530e52edacd3e2f77db57972dbbbe22212f5984cf",
+        "root_nested_equal": true,
+        "read_ranges": [
+          [
+            406,
+            445
+          ]
+        ],
+        "purpose": "Partial consumer routing support only; no complete human-text inventory of this transitive module is claimed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/runner.js",
+        "sha256": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7",
+        "cli_nested_sha256": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7",
+        "root_nested_equal": true,
+        "read_ranges": [
+          [
+            483,
+            502
+          ],
+          [
+            760,
+            806
+          ],
+          [
+            958,
+            973
+          ]
+        ],
+        "purpose": "Partial consumer routing support only; no complete human-text inventory of this transitive module is claimed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/loader.js",
+        "sha256": "d6e2d202c2b32e724bfcc270d942b1a7278a1ffebd19a2138bb94c43f8972d57",
+        "cli_nested_sha256": "d6e2d202c2b32e724bfcc270d942b1a7278a1ffebd19a2138bb94c43f8972d57",
+        "root_nested_equal": true,
+        "read_ranges": [
+          [
+            113,
+            156
+          ],
+          [
+            300,
+            323
+          ]
+        ],
+        "purpose": "Partial consumer routing support only; no complete human-text inventory of this transitive module is claimed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/nested-tool-calls.js",
+        "sha256": "62a69500b63b1967e350305aa5f6762345ceb397fe5c5e7f6e6ca6c8fc16c034",
+        "cli_nested_sha256": "62a69500b63b1967e350305aa5f6762345ceb397fe5c5e7f6e6ca6c8fc16c034",
+        "root_nested_equal": true,
+        "read_ranges": [
+          [
+            1,
+            178
+          ]
+        ],
+        "purpose": "Partial consumer routing support only; no complete human-text inventory of this transitive module is claimed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/session-manager.js",
+        "sha256": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a",
+        "cli_nested_sha256": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a",
+        "root_nested_equal": true,
+        "read_ranges": [
+          [
+            681,
+            747
+          ],
+          [
+            1128,
+            1141
+          ]
+        ],
+        "purpose": "Partial consumer routing support only; no complete human-text inventory of this transitive module is claimed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js",
+        "sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+        "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+        "root_nested_equal": true,
+        "read_ranges": [
+          [
+            1,
+            146
+          ]
+        ],
+        "purpose": "Partial consumer routing support only; no complete human-text inventory of this transitive module is claimed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js",
+        "sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+        "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+        "root_nested_equal": true,
+        "read_ranges": [
+          [
+            23,
+            39
+          ],
+          [
+            245,
+            292
+          ],
+          [
+            380,
+            411
+          ],
+          [
+            670,
+            723
+          ],
+          [
+            756,
+            786
+          ]
+        ],
+        "purpose": "Partial consumer routing support only; no complete human-text inventory of this transitive module is claimed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/json-event.js",
+        "sha256": "5f3756470739fa4a1595feeaf1ce2dfd29e36a2cffd9e642f914fc23f540d606",
+        "cli_nested_sha256": "5f3756470739fa4a1595feeaf1ce2dfd29e36a2cffd9e642f914fc23f540d606",
+        "root_nested_equal": true,
+        "read_ranges": [
+          [
+            1,
+            29
+          ]
+        ],
+        "purpose": "Partial consumer routing support only; no complete human-text inventory of this transitive module is claimed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/bug-report.js",
+        "sha256": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b",
+        "cli_nested_sha256": "8d6c43f56046a442a1a4b62b4f646854c5373f56af39c507a2785d7baffb881b",
+        "root_nested_equal": true,
+        "read_ranges": [
+          [
+            1,
+            124
+          ]
+        ],
+        "purpose": "Partial consumer routing support only; no complete human-text inventory of this transitive module is claimed."
+      }
+    ],
+    "support_scope_limit": "Additional installed consumer sources are version/hash/equality snapshots, outside canonical69 archive byte comparison. Repo consumer hashes verified separately. Partial consumer reads do not close their English text or imported/model/viewer/SDK producer boundaries.",
+    "read_method": "Full local body read manually before lexical extraction; traced actual control/event/catch/display paths for local prose and errors, including suppressed and SDK-only cases. Source partition guards omission, not semantic truth."
   }
 }
