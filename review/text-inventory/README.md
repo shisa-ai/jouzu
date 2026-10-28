@@ -864,6 +864,19 @@ lifetime tracking is not treated as a mutex. Revocation before enqueue remains a
 real awaited boundary. No service, host, queue, storage, callback, model or
 native/UI operation was executed.
 
+[flow-native-history.csv](flow-native-history.csv) records 82 fixed occurrences,
+four catalog consumers and 21 payload boundaries across six complete native
+history/queue/recovery bodies (1,783 lines). The
+[scope](flow-native-history-scope.csv) pins 31 sources, including ten native
+support bodies; it accounts for 82 Error constructors, thirteen catches and all
+424 lexical tokens. One private total-evidence invariant is retained as an
+exclusion. The four held-map catalog values have no current first-party reader;
+they do not establish ordinary Flow display. Invalid complete history parsing
+replaces the original cause, while closing the file can replace an earlier
+failure. Queue-removal failure generation and later reconciliation notices have
+separate conditions. Thirteen prior full-body links preserve ownership. No
+history scanner, queue, source recovery, storage or native/UI operation executed.
+
 [flow-wait-bridges.csv](flow-wait-bridges.csv) adds twenty fixed occurrences
 and eight boundaries across the complete 420-line schedule/subagent wait pair.
 All 142 AST string/template occurrences are partitioned with 122
@@ -1450,6 +1463,7 @@ python -B review/text-inventory/verify-flow-user-work.py
 python -B review/text-inventory/verify-flow-submission-text.py
 python -B review/text-inventory/verify-flow-ingress-text.py
 python -B review/text-inventory/verify-flow-session-service.py
+python -B review/text-inventory/verify-flow-native-history.py
 node review/text-inventory/verify-flow-wait-bridges.cjs
 node review/text-inventory/verify-input-example-text.cjs
 python -B review/text-inventory/verify-web-adapter-text.py
