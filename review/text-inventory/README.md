@@ -354,6 +354,16 @@ and validated-snapshot preconditions exclude two internal errors. Serialized wai
 decisions are model input; arbitrary stored reasons and imported producer errors
 remain separately qualified.
 
+[flow-tools.csv](flow-tools.csv) supplies 36 wait/no-reply tool records: 24 fixed
+occurrences, three catalog labels and nine payload boundaries. Four full bodies
+and all 234 lexical occurrences are accounted for in the
+[scope](flow-tools-scope.csv) and [exclusions](flow-tools-exclusions.csv).
+Validation conditions identify argument fields, deadlines, copied dependency
+identity, branch changes and cancellation. The success result of no-reply remains
+visible transcript text. Parsed-dependency and nonempty-ledger preconditions
+exclude two guarded diagnostics. Model guidance and schema descriptions have
+their own dispositions; optional metadata/client presentation remains open.
+
 [python-console.csv](python-console.csv) records 30 occurrences and boundaries
 for the separate Python console package, including 11 inherited `argparse`
 patterns. [python-console-observations.json](python-console-observations.json)
@@ -432,6 +442,7 @@ node review/text-inventory/verify-flow-receipts.cjs
 node review/text-inventory/verify-flow-waits.cjs
 node review/text-inventory/verify-flow-wait-authority.cjs
 node review/text-inventory/verify-flow-wait-producers.cjs
+node review/text-inventory/verify-flow-tools.cjs
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-textguard-native.py

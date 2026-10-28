@@ -14,7 +14,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 PARTITIONS = [
     'acp.csv', 'acp-dependencies.csv', 'startup-language.csv', 'cli-entry.csv', 'doctor.csv', 'updater.csv', 'profiles.csv', 'profile-migration.csv', 'catalog-settings.csv',
-    'model-picker.csv', 'model-catalog.csv', 'flow-display.csv', 'flow-report.csv', 'flow-storage.csv', 'flow-receipts.csv', 'flow-waits.csv', 'flow-wait-authority.csv', 'flow-wait-producers.csv', 'pi.csv', 'pi-tools.csv', 'pi-runtime.csv', 'pi-auth-model.csv',
+    'model-picker.csv', 'model-catalog.csv', 'flow-display.csv', 'flow-report.csv', 'flow-storage.csv', 'flow-receipts.csv', 'flow-waits.csv', 'flow-wait-authority.csv', 'flow-wait-producers.csv', 'flow-tools.csv', 'pi.csv', 'pi-tools.csv', 'pi-runtime.csv', 'pi-auth-model.csv',
     'launcher.csv', 'launcher-helpers.csv', 'launcher-support.csv', 'installer-dependencies.csv', 'python-console.csv', 'operator-scripts.csv', 'textguard-native.csv', 'textguard-dependencies.csv',
 ]
 COLUMNS = ['message_id', 'english_location', 'primary_trigger_status',

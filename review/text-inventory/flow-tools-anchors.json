@@ -1,0 +1,1973 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "anchors": [
+    {
+      "item_id": "FLOW-TOOLS-EX-001",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 1,
+      "column": 28,
+      "expression": "\"node:crypto\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-002",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 2,
+      "column": 54,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-003",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 3,
+      "column": 63,
+      "expression": "\"../cli-messages.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-004",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 4,
+      "column": 36,
+      "expression": "\"../locale-catalog.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-005",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 5,
+      "column": 35,
+      "expression": "\"../prompt-sections.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-006",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 6,
+      "column": 37,
+      "expression": "\"./automatic-work.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-007",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 7,
+      "column": 34,
+      "expression": "\"./flow-off-message.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-008",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 8,
+      "column": 39,
+      "expression": "\"./pi-attachment.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-009",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 9,
+      "column": 33,
+      "expression": "\"./receipt-ledger.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-010",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 10,
+      "column": 37,
+      "expression": "\"./wait-state.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-011",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 11,
+      "column": 59,
+      "expression": "\"./wait-tool-response.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-012",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 14,
+      "column": 2,
+      "expression": "\"Flow control coordinates automated continuations, dependency waits, and completion notifications. Workflow tools track the requested work; a wait holds its next automatic turn while a dependency runs. Ending your turn leaves that work and its background jobs in place. A user message whose text is a JSON object with flowInput is a flow delivery: kind user carries what the user typed; work, result, wait, and alert come from Jouzu, not the user.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-013",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 15,
+      "column": 2,
+      "expression": "\"Continue independent work while dependencies run. When remaining work depends on asynchronous execution, copy the producer's waitDependency into agent_wait.on and supply a bounded deadline. Omit work to suspend the current task or session; dependency work metadata does not restrict which task can wait on it. A refused wait installs nothing and does not suspend work.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-014",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 16,
+      "column": 2,
+      "expression": "\"After agent_wait returns waiting and no independent work remains, briefly state what is running, what will unblock you, and what you will verify, then end the turn. Trust completion delivery; do not poll status, add timer-based checks, or create extra continuations merely to stay active. Inspect logs for a concrete diagnostic question or an explicit user request. For a system without completion notifications, poll on a bounded schedule and explain the limit.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-015",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 17,
+      "column": 2,
+      "expression": "\"On a wake, match each result's producer and execution identity to the work you are waiting for. A stopped or completed older job does not describe its replacement. Notifications can be batched; inspect every relevant result and retrieve omitted details when needed. Verify output and completion criteria before marking requested work complete.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-016",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 18,
+      "column": 2,
+      "expression": "\"After user input or context restoration, use the supplied wait state and preserve pending work. A status question does not renew or replace a wait. At expiry or dependency failure, decide whether to repair, stop, or declare a new wait; do not retry the wait automatically.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-017",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 19,
+      "column": 2,
+      "expression": "\"When work changes, cancel or explicitly replace its affected wait and update the owning work. agent_wait_cancel removes only the dependency gate; it does not stop the process or complete the work.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-018",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 20,
+      "column": 2,
+      "expression": "\"The user can inspect holds with /flow and build identity with /flow runtime, pause or resume automation, or use /flow clear to release a stuck hold. These are user slash commands, not shell commands or agent tools. Report remaining blockers; do not claim reset delivered pending work.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-019",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 26,
+      "column": 17,
+      "expression": "\"agent_wait\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-020",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 29,
+      "column": 17,
+      "expression": "\"bg_task\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-021",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 31,
+      "column": 6,
+      "expression": "\"With bg_task, keep exit notifications enabled when relying on its completion wake; notifyOnExit: false suppresses that result notification. Copy the returned Wait dependency object into agent_wait.on, including its work and scope; omit agent_wait.work so the current task waits. The dependency work identifies the job owner, not the task to suspend.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-022",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 34,
+      "column": 17,
+      "expression": "\"TaskUpdate\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-023",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 36,
+      "column": 6,
+      "expression": "\"For a task awaiting a person, use TaskUpdate waitForUser: true; for an explicit task pause, use paused: true. Clear the corresponding field when ready to resume.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-024",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 57,
+      "column": 9,
+      "expression": "\"all\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-025",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 57,
+      "column": 17,
+      "expression": "\"any\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-026",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 61,
+      "column": 24,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-027",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 63,
+      "column": 8,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-028",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 66,
+      "column": 15,
+      "expression": "\"The dependency being waited for, stated so a later reader knows what unblocks the work.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-029",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 69,
+      "column": 8,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-030",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 71,
+      "column": 13,
+      "expression": "\"reason\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-031",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 71,
+      "column": 23,
+      "expression": "\"deadline\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-032",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 71,
+      "column": 35,
+      "expression": "\"on\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-033",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 75,
+      "column": 11,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-034",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 75,
+      "column": 21,
+      "expression": "\"null\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-035",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 77,
+      "column": 5,
+      "expression": "\"Work to suspend. Omit or pass null to use the current task or session. This is attribution, not permission to use a dependency.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-036",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 81,
+      "column": 10,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-037",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 82,
+      "column": 13,
+      "expression": "\"^[1-9][0-9]*(ms|s|m|h|d)$\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-038",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 84,
+      "column": 5,
+      "expression": "\"Hard deadline with bounded slack for the expected duration, such as 30m or 8h. The returned expiresAt is the effective deadline after the session cap; expiry is a decision point, not proof the job stopped.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-039",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 87,
+      "column": 11,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-040",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 87,
+      "column": 21,
+      "expression": "\"null\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-041",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 88,
+      "column": 13,
+      "expression": "\"^[1-9][0-9]*(ms|s|m|h|d)$\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-042",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 90,
+      "column": 5,
+      "expression": "\"Omit or pass null unless a dependency supplies a health policy; without one the wait is deadline-only. Must be shorter than deadline.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-043",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 93,
+      "column": 11,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-044",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 93,
+      "column": 21,
+      "expression": "\"null\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-045",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 94,
+      "column": 11,
+      "expression": "\"all\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-046",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 94,
+      "column": 18,
+      "expression": "\"any\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-047",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 95,
+      "column": 17,
+      "expression": "\"Defaults to all when omitted or null.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-048",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 99,
+      "column": 11,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-049",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 99,
+      "column": 21,
+      "expression": "\"null\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-050",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 101,
+      "column": 5,
+      "expression": "\"Omit or pass null for a new wait ('none' also works). Unknown placeholders are ignored only when no live wait exists. A retained finished token is rejected; omit it to start a new wait. To replace a live wait, copy its exact returned token.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-051",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 104,
+      "column": 10,
+      "expression": "\"array\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-052",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 108,
+      "column": 11,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-053",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 110,
+      "column": 16,
+      "expression": "\"producer\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-054",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 110,
+      "column": 28,
+      "expression": "\"handle\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-055",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 110,
+      "column": 38,
+      "expression": "\"execution\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-056",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 110,
+      "column": 51,
+      "expression": "\"until\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-057",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 118,
+      "column": 14,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-058",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 118,
+      "column": 24,
+      "expression": "\"null\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-059",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 120,
+      "column": 8,
+      "expression": "\"Copy only a health policy offered by the producer; otherwise omit or pass null. Do not copy until here. Health may end a wait early as unhealthy or health-unknown; it never extends the deadline.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-060",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 123,
+      "column": 14,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-061",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 123,
+      "column": 24,
+      "expression": "\"null\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-062",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 125,
+      "column": 18,
+      "expression": "\"id\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-063",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 125,
+      "column": 24,
+      "expression": "\"revision\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-064",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 126,
+      "column": 51,
+      "expression": "\"integer\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-065",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 127,
+      "column": 20,
+      "expression": "\"Execution owner. Copy only when returned in the dependency; otherwise omit or pass null.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-066",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 130,
+      "column": 14,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-067",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 130,
+      "column": 24,
+      "expression": "\"null\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-068",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 132,
+      "column": 8,
+      "expression": "\"Copy only when returned in the dependency; otherwise omit or pass null. Do not infer from session metadata.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-069",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 134,
+      "column": 18,
+      "expression": "\"sessionId\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-070",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 134,
+      "column": 31,
+      "expression": "\"branchId\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-071",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 141,
+      "column": 32,
+      "expression": "\"parameters\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-072",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 143,
+      "column": 8,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-073",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 145,
+      "column": 13,
+      "expression": "\"token\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-074",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 145,
+      "column": 22,
+      "expression": "\"reason\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-075",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 147,
+      "column": 32,
+      "expression": "\"parameters\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-076",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 152,
+      "column": 20,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-077",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 157,
+      "column": 4,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-001",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 158,
+      "column": 4,
+      "expression": "\"Unsupported wait arguments. Use only the documented wait and dependency fields.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-078",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 162,
+      "column": 23,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-079",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 163,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-002",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 163,
+      "column": 39,
+      "expression": "\"Wait identity or reason is empty or too long.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-080",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 168,
+      "column": 72,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-081",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 171,
+      "column": 33,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-082",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 173,
+      "column": 27,
+      "expression": "\"none\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-083",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 174,
+      "column": 23,
+      "expression": "\"work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-084",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 174,
+      "column": 31,
+      "expression": "\"checkAfter\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-085",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 174,
+      "column": 45,
+      "expression": "\"mode\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-086",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 174,
+      "column": 53,
+      "expression": "\"replaceToken\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-087",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 177,
+      "column": 36,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-088",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 178,
+      "column": 29,
+      "expression": "\"health\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-089",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 178,
+      "column": 39,
+      "expression": "\"work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-090",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 178,
+      "column": 47,
+      "expression": "\"scope\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-091",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 184,
+      "column": 23,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-092",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 185,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-003",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 185,
+      "column": 39,
+      "expression": "\"Wait deadline requires a duration such as 30m or 8h.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-093",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 190,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-004",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 190,
+      "column": 39,
+      "expression": "\"Invalid wait deadline duration.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-094",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 194,
+      "column": 15,
+      "expression": "\"work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-095",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 194,
+      "column": 23,
+      "expression": "\"reason\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-096",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 194,
+      "column": 33,
+      "expression": "\"deadline\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-097",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 194,
+      "column": 45,
+      "expression": "\"checkAfter\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-098",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 194,
+      "column": 59,
+      "expression": "\"on\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-099",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 194,
+      "column": 65,
+      "expression": "\"mode\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-100",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 194,
+      "column": 73,
+      "expression": "\"replaceToken\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-101",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 196,
+      "column": 27,
+      "expression": "\"none\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-102",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 197,
+      "column": 23,
+      "expression": "\"work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-103",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 197,
+      "column": 31,
+      "expression": "\"checkAfter\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-104",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 197,
+      "column": 45,
+      "expression": "\"mode\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-105",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 197,
+      "column": 53,
+      "expression": "\"replaceToken\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-106",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 201,
+      "column": 34,
+      "expression": "\"all\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-107",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 201,
+      "column": 41,
+      "expression": "\"any\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-108",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 202,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-005",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 202,
+      "column": 39,
+      "expression": "\"Invalid wait mode.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-109",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 205,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-006",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 205,
+      "column": 39,
+      "expression": "\"An expected check must fall before the wait deadline.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-110",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 207,
+      "column": 29,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-007",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 207,
+      "column": 39,
+      "expression": "\"A wait requires 1 to 64 exact dependencies.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-111",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 210,
+      "column": 19,
+      "expression": "\"producer\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-112",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 210,
+      "column": 31,
+      "expression": "\"handle\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-113",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 210,
+      "column": 41,
+      "expression": "\"execution\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-114",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 210,
+      "column": 54,
+      "expression": "\"until\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-115",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 210,
+      "column": 63,
+      "expression": "\"health\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-116",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 210,
+      "column": 73,
+      "expression": "\"work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-117",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 210,
+      "column": 81,
+      "expression": "\"scope\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-118",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 211,
+      "column": 27,
+      "expression": "\"health\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-119",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 211,
+      "column": 37,
+      "expression": "\"work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-120",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 211,
+      "column": 45,
+      "expression": "\"scope\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-121",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 213,
+      "column": 25,
+      "expression": "\"id\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-122",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 213,
+      "column": 31,
+      "expression": "\"revision\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-123",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 216,
+      "column": 31,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-008",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 216,
+      "column": 41,
+      "expression": "\"Invalid execution owner revision.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-124",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 219,
+      "column": 26,
+      "expression": "\"sessionId\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-125",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 219,
+      "column": 39,
+      "expression": "\"branchId\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-126",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 223,
+      "column": 23,
+      "expression": "\"producer\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-127",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 223,
+      "column": 35,
+      "expression": "\"handle\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-128",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 223,
+      "column": 45,
+      "expression": "\"execution\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-129",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 223,
+      "column": 58,
+      "expression": "\"until\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-130",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 226,
+      "column": 48,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-009",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 226,
+      "column": 60,
+      "expression": "\"Wait dependencies must be unique.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-131",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 234,
+      "column": 29,
+      "expression": "\"capacity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-010",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 234,
+      "column": 41,
+      "expression": "\"Invalid session wait duration limit.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-132",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 239,
+      "column": 72,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-133",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 244,
+      "column": 6,
+      "expression": "\"stopped\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-134",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 244,
+      "column": 17,
+      "expression": "\"completed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-135",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 244,
+      "column": 64,
+      "expression": "\"active\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-136",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 253,
+      "column": 71,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-011",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 253,
+      "column": 80,
+      "expression": "\"Wait tool attachment changed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-137",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 259,
+      "column": 9,
+      "expression": "\"jouzu-flow-waits\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-138",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 261,
+      "column": 10,
+      "expression": "\"before_agent_start\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-139",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 266,
+      "column": 66,
+      "expression": "\"\\n\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-140",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 269,
+      "column": 11,
+      "expression": "\"agent_wait\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-141",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 270,
+      "column": 15,
+      "expression": "\"model-only\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-142",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 273,
+      "column": 6,
+      "expression": "\"Wait for asynchronous dependencies as the current task or invocation. Copy each producer's waitDependency into on and supply reason and deadline. Omit optional fields, or use null if the interface requires them. Top-level work selects the work to suspend, not the child/job to wait for; normally omit it or pass null. Never invent dependency metadata or use until as a health policy. A waiting result holds this work until completion, failure, cancellation, a health decision, or the capped deadline. Replacing a live wait requires its exact replaceToken.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-143",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 274,
+      "column": 20,
+      "expression": "\"agent_wait: wait for exact asynchronous dependencies with a hard deadline.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-144",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 281,
+      "column": 34,
+      "expression": "\"json_schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-145",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 281,
+      "column": 57,
+      "expression": "\"prefer\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-146",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 288,
+      "column": 33,
+      "expression": "\"scope\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-012",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 288,
+      "column": 42,
+      "expression": "\"Wait tool belongs to another session.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-147",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 298,
+      "column": 9,
+      "expression": "\"scope\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-013",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 299,
+      "column": 9,
+      "expression": "\"Dependency belongs to another session or branch. Copy the producer's dependency unchanged. Omit on[].scope or pass null unless the producer returned it; do not infer it from session metadata. If the returned scope differs, report the blocker. No wait was installed.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-148",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 304,
+      "column": 33,
+      "expression": "\"schema\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-014",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 304,
+      "column": 43,
+      "expression": "\"Wait expiry exceeds the supported time range.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-149",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 318,
+      "column": 34,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-015",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 318,
+      "column": 46,
+      "expression": "\"Wait predicates disagree on execution ownership.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-150",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 350,
+      "column": 35,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-151",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 350,
+      "column": 47,
+      "expression": "\"Monitored dependency has no captured owner or health policy.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-152",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 372,
+      "column": 29,
+      "expression": "\"all\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-153",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 381,
+      "column": 33,
+      "expression": "\"agent_wait\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-154",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 397,
+      "column": 11,
+      "expression": "\"agent_wait_cancel\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-155",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 398,
+      "column": 15,
+      "expression": "\"model-only\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-156",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 401,
+      "column": 6,
+      "expression": "\"Idempotently remove a wait gate by token and reason. This leaves its process and requested work active.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-157",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 402,
+      "column": 20,
+      "expression": "\"agent_wait_cancel: remove a dependency gate without stopping its job or completing its work.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-158",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 406,
+      "column": 19,
+      "expression": "\"token\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-159",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 406,
+      "column": 28,
+      "expression": "\"reason\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-160",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 412,
+      "column": 33,
+      "expression": "\"scope\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-016",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 412,
+      "column": 42,
+      "expression": "\"Wait tool belongs to another session.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-161",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 416,
+      "column": 8,
+      "expression": "\"identity\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-017",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 417,
+      "column": 8,
+      "expression": "\"Wait token is not registered in this branch. Copy the token returned by agent_wait in this branch; do not use a job ID or a token from another session.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-162",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 428,
+      "column": 32,
+      "expression": "\"agent_wait_cancel\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-163",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 1,
+      "column": 28,
+      "expression": "\"node:crypto\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-164",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 2,
+      "column": 50,
+      "expression": "\"./receipt-ledger.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-165",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 3,
+      "column": 34,
+      "expression": "\"./request-retention.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-166",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 19,
+      "column": 47,
+      "expression": "\"result\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-167",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 22,
+      "column": 20,
+      "expression": "\"sha256\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-168",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 23,
+      "column": 27,
+      "expression": "\"jouzu-flow-no-reply\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-169",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 24,
+      "column": 11,
+      "expression": "\"hex\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-170",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 30,
+      "column": 37,
+      "expression": "\"kind\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-171",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 39,
+      "column": 4,
+      "expression": "\"unknown-run\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-172",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 40,
+      "column": 4,
+      "expression": "\"stale-run\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-173",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 41,
+      "column": 4,
+      "expression": "\"carries-user-input\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-174",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 42,
+      "column": 4,
+      "expression": "\"carries-requested-work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-175",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 43,
+      "column": 4,
+      "expression": "\"empty-run\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-176",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 54,
+      "column": 35,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-177",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 54,
+      "column": 88,
+      "expression": "\"unknown-run\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-178",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 56,
+      "column": 49,
+      "expression": "\"unknown-run\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-179",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 57,
+      "column": 79,
+      "expression": "\"stale-run\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-180",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 60,
+      "column": 66,
+      "expression": "\"carries-user-input\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-181",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 61,
+      "column": 64,
+      "expression": "\"empty-run\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-182",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 63,
+      "column": 36,
+      "expression": "\"carries-requested-work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-183",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 68,
+      "column": 2,
+      "expression": "\"unknown-run\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-018",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 68,
+      "column": 17,
+      "expression": "\"This turn has no current flow run, so there is nothing to end without replying.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-184",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 69,
+      "column": 2,
+      "expression": "\"stale-run\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-019",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 69,
+      "column": 15,
+      "expression": "\"That permission belongs to an earlier run. Answer this turn instead.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-185",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 70,
+      "column": 2,
+      "expression": "\"carries-user-input\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-020",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 70,
+      "column": 24,
+      "expression": "\"This run carries user input, which is owed a reply.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-186",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 71,
+      "column": 2,
+      "expression": "\"carries-requested-work\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-021",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 71,
+      "column": 28,
+      "expression": "\"This run carries requested work or a wait decision, which is owed a reply.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-187",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 72,
+      "column": 2,
+      "expression": "\"empty-run\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-188",
+      "path": "packages/cli/src/flow-control/no-reply.ts",
+      "line": 72,
+      "column": 15,
+      "expression": "\"This run carries nothing to notify about.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-189",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 1,
+      "column": 54,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-190",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 2,
+      "column": 63,
+      "expression": "\"../cli-messages.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-191",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 3,
+      "column": 36,
+      "expression": "\"../locale-catalog.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-192",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 4,
+      "column": 34,
+      "expression": "\"./flow-off-message.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-193",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 5,
+      "column": 53,
+      "expression": "\"./no-reply.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-194",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 6,
+      "column": 43,
+      "expression": "\"./pi-session-ingress.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-195",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 7,
+      "column": 33,
+      "expression": "\"./receipt-ledger.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-196",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 10,
+      "column": 2,
+      "expression": "\"A delivered result that needs no answer may end the turn with agent_no_reply, using the permission the result itself carried. Anything else — a lane instruction, a wait decision, or user input — is owed a reply, and the permission is refused for those runs.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-197",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 11,
+      "column": 2,
+      "expression": "\"agent_no_reply is not a silence filter. It does not acknowledge other pending results, complete requested work, or carry over to a later turn.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-198",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 15,
+      "column": 8,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-199",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 17,
+      "column": 13,
+      "expression": "\"permission\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-200",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 18,
+      "column": 36,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-201",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 19,
+      "column": 32,
+      "expression": "\"parameters\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-202",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 39,
+      "column": 9,
+      "expression": "\"jouzu-flow-no-reply\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-203",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 42,
+      "column": 11,
+      "expression": "\"agent_no_reply\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-204",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 43,
+      "column": 15,
+      "expression": "\"model-only\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-205",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 46,
+      "column": 6,
+      "expression": "\"End this turn without a reply, for a delivered result that needs no answer. Requires the exact permission that result carried. Refused for any run carrying user input, requested work, or a wait decision.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-206",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 47,
+      "column": 20,
+      "expression": "\"agent_no_reply: end a notification-only turn without replying.\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-207",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 51,
+      "column": 75,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-208",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 56,
+      "column": 33,
+      "expression": "\"scope\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-022",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 56,
+      "column": 42,
+      "expression": "\"No-reply permission belongs to another session.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-209",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 58,
+      "column": 54,
+      "expression": "\"stale\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-EX-210",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 61,
+      "column": 25,
+      "expression": "\"text\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "FLOW-TOOLS-023",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 61,
+      "column": 48,
+      "expression": "\"Ended this turn without a reply.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-024",
+      "path": "packages/cli/src/flow-control/flow-off-message.ts",
+      "line": 3,
+      "column": 2,
+      "expression": "\"Flow control is off for this session; run /flow on to use flow tools. Producer tools and their own delivery paths still work.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "FLOW-TOOLS-025",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 271,
+      "column": 33,
+      "expression": "CatalogMessageId.flowWaitLabel",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "FLOW-TOOLS-026",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 399,
+      "column": 33,
+      "expression": "CatalogMessageId.flowWaitCancelLabel",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "FLOW-TOOLS-027",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 44,
+      "column": 33,
+      "expression": "CatalogMessageId.flowNoReplyLabel",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "FLOW-TOOLS-028",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 172,
+      "column": 14,
+      "expression": "structuredClone(input)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-TOOLS-029",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 242,
+      "column": 20,
+      "expression": "await attachment.waits.authoritySnapshot()",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-TOOLS-030",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 364,
+      "column": 8,
+      "expression": "await attachment.waits.declareOwned(",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-TOOLS-031",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 391,
+      "column": 7,
+      "expression": "await Promise.all(rollback.map((close) => close()))",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-TOOLS-032",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 421,
+      "column": 7,
+      "expression": "await attachment.waits.cancelOwned(",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-TOOLS-033",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 57,
+      "column": 22,
+      "expression": "checkFlowNoReply(await branch.attachment.ledger.snapshot(), permission)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-TOOLS-034",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 266,
+      "column": 12,
+      "expression": "setPromptSections(event,",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-TOOLS-035",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 282,
+      "column": 5,
+      "expression": "prepareArguments: prepareWaitArguments",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "FLOW-TOOLS-036",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 60,
+      "column": 6,
+      "expression": "return {",
+      "kind": "boundary"
+    }
+  ]
+}
