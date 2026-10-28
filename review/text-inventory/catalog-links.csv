@@ -1362,70 +1362,70 @@ jouzu.cli.shisa.signIn.timedOut,packages/cli/locales/en/cli.ftl:1331,caller-trac
 jouzu.cli.shisa.signIn.unexpectedResponse,packages/cli/locales/en/cli.ftl:1321,caller-trace-required,0,1,"[{""table"":""auth-account.csv"",""item_id"":""AUTH-ACCOUNT-001""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.shisa.signIn.unexpectedStart,packages/cli/locales/en/cli.ftl:1330,caller-trace-required,0,1,"[{""table"":""auth-account.csv"",""item_id"":""AUTH-ACCOUNT-010""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.shisa.signOutFailed,packages/cli/locales/en/cli.ftl:1342,caller-trace-required,0,1,"[{""table"":""auth-account.csv"",""item_id"":""AUTH-ACCOUNT-041""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.subagent.agentDefinitionNotFound,packages/cli/locales/en/cli.ftl:1469,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.agentNotRunning,packages/cli/locales/en/cli.ftl:1491,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.agentsOwnedByAnotherProcess,packages/cli/locales/en/cli.ftl:1494,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.agentDefinitionNotFound,packages/cli/locales/en/cli.ftl:1469,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-083""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.agentNotRunning,packages/cli/locales/en/cli.ftl:1491,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-038""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.agentsOwnedByAnotherProcess,packages/cli/locales/en/cli.ftl:1494,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-042""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.assignmentLabel,packages/cli/locales/en/cli.ftl:1386,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.assistantLabel,packages/cli/locales/en/cli.ftl:1378,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.authenticationApiKeyProvider,packages/cli/locales/en/cli.ftl:1475,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.authenticationSignIn,packages/cli/locales/en/cli.ftl:1474,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.authenticationApiKeyProvider,packages/cli/locales/en/cli.ftl:1475,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-089""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.authenticationSignIn,packages/cli/locales/en/cli.ftl:1474,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-088""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.batchOmitted,packages/cli/locales/en/cli.ftl:1451,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.batchSummary,packages/cli/locales/en/cli.ftl:1450,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.cacheWarmingSettingsUnreadable,packages/cli/locales/en/cli.ftl:1476,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.callLabel,packages/cli/locales/en/cli.ftl:1489,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.callPreparing,packages/cli/locales/en/cli.ftl:1490,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.cacheWarmingSettingsUnreadable,packages/cli/locales/en/cli.ftl:1476,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-090""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.callLabel,packages/cli/locales/en/cli.ftl:1489,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-111""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.callPreparing,packages/cli/locales/en/cli.ftl:1490,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-110""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.cancellationRequested,packages/cli/locales/en/cli.ftl:1397,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.candidateHeadLabel,packages/cli/locales/en/cli.ftl:1364,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.candidateIdentityLabel,packages/cli/locales/en/cli.ftl:1363,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.childFollowUpActive,packages/cli/locales/en/cli.ftl:1510,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.childPlacementRequired,packages/cli/locales/en/cli.ftl:1504,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.childSessionMissing,packages/cli/locales/en/cli.ftl:1511,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.childFollowUpActive,packages/cli/locales/en/cli.ftl:1510,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-056""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.childPlacementRequired,packages/cli/locales/en/cli.ftl:1504,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-051""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.childSessionMissing,packages/cli/locales/en/cli.ftl:1511,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-057""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.childSessionReady,packages/cli/locales/en/cli.ftl:1383,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.childSessionUnavailable,packages/cli/locales/en/cli.ftl:1502,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.commandDescription,packages/cli/locales/en/cli.ftl:1487,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.commandHint,packages/cli/locales/en/cli.ftl:1431,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.completionRecordNotFound,packages/cli/locales/en/cli.ftl:1498,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.childSessionUnavailable,packages/cli/locales/en/cli.ftl:1502,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-049""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.commandDescription,packages/cli/locales/en/cli.ftl:1487,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-097""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.commandHint,packages/cli/locales/en/cli.ftl:1431,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-098""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.completionRecordNotFound,packages/cli/locales/en/cli.ftl:1498,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-045""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.contextEntryIdsMode,packages/cli/locales/en/cli.ftl:1529,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.contextMode,packages/cli/locales/en/cli.ftl:1527,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.contextParentLookup,packages/cli/locales/en/cli.ftl:1528,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.contextSpliceIds,packages/cli/locales/en/cli.ftl:1530,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.cost,packages/cli/locales/en/cli.ftl:1361,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.costUnknown,packages/cli/locales/en/cli.ftl:1362,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.dashboardHidden,packages/cli/locales/en/cli.ftl:1433,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.dashboardMore,packages/cli/locales/en/cli.ftl:1449,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.dashboardRestored,packages/cli/locales/en/cli.ftl:1432,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.dashboardHidden,packages/cli/locales/en/cli.ftl:1433,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-100""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.dashboardMore,packages/cli/locales/en/cli.ftl:1449,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-166""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.dashboardRestored,packages/cli/locales/en/cli.ftl:1432,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-099""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.deliveryUnconfirmed,packages/cli/locales/en/cli.ftl:1395,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.disabledForSession,packages/cli/locales/en/cli.ftl:1470,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.disabledNotice,packages/cli/locales/en/cli.ftl:1437,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.disabledForSession,packages/cli/locales/en/cli.ftl:1470,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-084""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.disabledNotice,packages/cli/locales/en/cli.ftl:1437,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-106""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.earlierEvents,packages/cli/locales/en/cli.ftl:1388,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.elapsed,packages/cli/locales/en/cli.ftl:1358,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.enabled.off,packages/cli/locales/en/cli.ftl:1370,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.enabled.on,packages/cli/locales/en/cli.ftl:1369,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.enabledNotice,packages/cli/locales/en/cli.ftl:1436,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.enabledNotice,packages/cli/locales/en/cli.ftl:1436,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-105""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.endOfOutput,packages/cli/locales/en/cli.ftl:1393,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.event,packages/cli/locales/en/cli.ftl:1387,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.eventOnPage,packages/cli/locales/en/cli.ftl:1375,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.eventsOnPage,packages/cli/locales/en/cli.ftl:1376,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.fieldHint.batchId,packages/cli/locales/en/cli.ftl:1447,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.fieldHint.role,packages/cli/locales/en/cli.ftl:1445,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.fieldHint.runId,packages/cli/locales/en/cli.ftl:1446,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.fieldHint.task,packages/cli/locales/en/cli.ftl:1448,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.fieldRequired,packages/cli/locales/en/cli.ftl:1444,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.fieldHint.batchId,packages/cli/locales/en/cli.ftl:1447,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-131""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.fieldHint.role,packages/cli/locales/en/cli.ftl:1445,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-115""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.fieldHint.runId,packages/cli/locales/en/cli.ftl:1446,caller-trace-required,0,4,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-119""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-121""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-123""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-127""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.fieldHint.task,packages/cli/locales/en/cli.ftl:1448,caller-trace-required,0,3,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-117""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-125""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-129""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.fieldRequired,packages/cli/locales/en/cli.ftl:1444,caller-trace-required,0,9,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-116""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-118""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-120""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-122""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-124""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-126""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-128""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-130""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-132""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.identityStability,packages/cli/locales/en/cli.ftl:1365,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.invalidEventFile,packages/cli/locales/en/cli.ftl:1496,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.invalidRunDirectory,packages/cli/locales/en/cli.ftl:1495,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.lockReleaseFailed,packages/cli/locales/en/cli.ftl:1518,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.mainPlacementRequired,packages/cli/locales/en/cli.ftl:1479,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.mainRoleIdleRequired,packages/cli/locales/en/cli.ftl:1480,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.invalidEventFile,packages/cli/locales/en/cli.ftl:1496,caller-trace-required,0,2,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-043""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-046""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.invalidRunDirectory,packages/cli/locales/en/cli.ftl:1495,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-040""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.lockReleaseFailed,packages/cli/locales/en/cli.ftl:1518,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-064""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.mainPlacementRequired,packages/cli/locales/en/cli.ftl:1479,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-093""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.mainRoleIdleRequired,packages/cli/locales/en/cli.ftl:1480,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-094""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.messageAccepted,packages/cli/locales/en/cli.ftl:1394,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.messageFallback,packages/cli/locales/en/cli.ftl:1379,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.messageLabel,packages/cli/locales/en/cli.ftl:1384,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.messageLength,packages/cli/locales/en/cli.ftl:1513,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.modelAmbiguous,packages/cli/locales/en/cli.ftl:1458,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.modelAmbiguousMore,packages/cli/locales/en/cli.ftl:1459,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.messageLength,packages/cli/locales/en/cli.ftl:1513,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-060""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.modelAmbiguous,packages/cli/locales/en/cli.ftl:1458,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-035""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.modelAmbiguousMore,packages/cli/locales/en/cli.ftl:1459,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-036""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.modelArgumentUserOnly,packages/cli/locales/en/cli.ftl:1482,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.modelIdLabel,packages/cli/locales/en/cli.ftl:1359,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.modelUnavailable,packages/cli/locales/en/cli.ftl:1457,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.modelUnavailable,packages/cli/locales/en/cli.ftl:1457,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-037""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.moreOutput,packages/cli/locales/en/cli.ftl:1391,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.moreRoles,packages/cli/locales/en/cli.ftl:1373,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.moreRuns,packages/cli/locales/en/cli.ftl:1366,caller-trace-required,0,0,[],caller-trace-required
@@ -1434,47 +1434,47 @@ jouzu.cli.subagent.nextOffset,packages/cli/locales/en/cli.ftl:1368,caller-trace-
 jouzu.cli.subagent.noChildRuns,packages/cli/locales/en/cli.ftl:1367,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.noOutputYet,packages/cli/locales/en/cli.ftl:1389,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.noResult,packages/cli/locales/en/cli.ftl:1398,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.notificationDeliveryFailed,packages/cli/locales/en/cli.ftl:1442,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.notRunningUseResume,packages/cli/locales/en/cli.ftl:1514,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.notificationDeliveryFailed,packages/cli/locales/en/cli.ftl:1442,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-096""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.notRunningUseResume,packages/cli/locales/en/cli.ftl:1514,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-061""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.offsetNonnegative,packages/cli/locales/en/cli.ftl:1485,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.operationFailed,packages/cli/locales/en/cli.ftl:1399,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.operationUnsupported,packages/cli/locales/en/cli.ftl:1486,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.outputPage,packages/cli/locales/en/cli.ftl:1374,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.outputReceived,packages/cli/locales/en/cli.ftl:1380,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.paneEnabled,packages/cli/locales/en/cli.ftl:1434,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.paneHidden,packages/cli/locales/en/cli.ftl:1435,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.parentContextUnavailable,packages/cli/locales/en/cli.ftl:1509,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.parentSnapshotTooLarge,packages/cli/locales/en/cli.ftl:1512,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.parentTranscriptUnavailable,packages/cli/locales/en/cli.ftl:1478,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.paneEnabled,packages/cli/locales/en/cli.ftl:1434,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-101""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.paneHidden,packages/cli/locales/en/cli.ftl:1435,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-102""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.parentContextUnavailable,packages/cli/locales/en/cli.ftl:1509,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-055""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.parentSnapshotTooLarge,packages/cli/locales/en/cli.ftl:1512,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-058""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.parentTranscriptUnavailable,packages/cli/locales/en/cli.ftl:1478,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-092""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.partialRecords,packages/cli/locales/en/cli.ftl:1390,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.placementLabel,packages/cli/locales/en/cli.ftl:1371,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.providerInProcess,packages/cli/locales/en/cli.ftl:1471,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.queueFull,packages/cli/locales/en/cli.ftl:1505,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.providerInProcess,packages/cli/locales/en/cli.ftl:1471,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-085""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.queueFull,packages/cli/locales/en/cli.ftl:1505,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-052""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.readBounds,packages/cli/locales/en/cli.ftl:1499,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.readCharacterBoundary,packages/cli/locales/en/cli.ftl:1501,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.readPastEnd,packages/cli/locales/en/cli.ftl:1500,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.readCharacterBoundary,packages/cli/locales/en/cli.ftl:1501,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-048""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.readPastEnd,packages/cli/locales/en/cli.ftl:1500,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-047""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.receiptLabel,packages/cli/locales/en/cli.ftl:1396,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.result,packages/cli/locales/en/cli.ftl:1381,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.resultLabel,packages/cli/locales/en/cli.ftl:1377,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.resumeActiveRun,packages/cli/locales/en/cli.ftl:1507,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.resumeContextOmit,packages/cli/locales/en/cli.ftl:1483,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.resumeIdentityRequired,packages/cli/locales/en/cli.ftl:1508,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.resumeActiveRun,packages/cli/locales/en/cli.ftl:1507,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-053""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.resumeContextOmit,packages/cli/locales/en/cli.ftl:1483,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-112""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.resumeIdentityRequired,packages/cli/locales/en/cli.ftl:1508,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-054""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.resumeParentContextKeep,packages/cli/locales/en/cli.ftl:1506,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.resumeWorkspaceKeep,packages/cli/locales/en/cli.ftl:1484,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.resumeWorkspaceKeep,packages/cli/locales/en/cli.ftl:1484,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-113""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.reviewCandidateWarning,packages/cli/locales/en/cli.ftl:1452,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.roleAuthenticationUnavailable,packages/cli/locales/en/cli.ftl:1481,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.roleAuthenticationUnavailable,packages/cli/locales/en/cli.ftl:1481,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-095""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.roleFallback,packages/cli/locales/en/cli.ftl:1355,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.rolesDisabledReason,packages/cli/locales/en/cli.ftl:1443,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.rolesDisabledReason,packages/cli/locales/en/cli.ftl:1443,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-114""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.runEnded,packages/cli/locales/en/cli.ftl:1385,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.runLabel,packages/cli/locales/en/cli.ftl:1356,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.runNotFound,packages/cli/locales/en/cli.ftl:1515,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.runNotFoundInSession,packages/cli/locales/en/cli.ftl:1497,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.sameModelNoSession,packages/cli/locales/en/cli.ftl:1468,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.sessionChangedBeforeStart,packages/cli/locales/en/cli.ftl:1472,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.sessionClosed,packages/cli/locales/en/cli.ftl:1493,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.settingChangedBeforeLaunch,packages/cli/locales/en/cli.ftl:1473,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.settingChangeFailed,packages/cli/locales/en/cli.ftl:1439,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.settingChangeInProgress,packages/cli/locales/en/cli.ftl:1477,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.runNotFound,packages/cli/locales/en/cli.ftl:1515,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-062""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.runNotFoundInSession,packages/cli/locales/en/cli.ftl:1497,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-044""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.sameModelNoSession,packages/cli/locales/en/cli.ftl:1468,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-082""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.sessionChangedBeforeStart,packages/cli/locales/en/cli.ftl:1472,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-086""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.sessionClosed,packages/cli/locales/en/cli.ftl:1493,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-041""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.settingChangedBeforeLaunch,packages/cli/locales/en/cli.ftl:1473,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-087""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.settingChangeFailed,packages/cli/locales/en/cli.ftl:1439,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-107""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.settingChangeInProgress,packages/cli/locales/en/cli.ftl:1477,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-091""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.status.cancelled,packages/cli/locales/en/cli.ftl:1352,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.status.completed,packages/cli/locales/en/cli.ftl:1350,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.status.failed,packages/cli/locales/en/cli.ftl:1351,caller-trace-required,0,0,[],caller-trace-required
@@ -1483,10 +1483,10 @@ jouzu.cli.subagent.status.queued,packages/cli/locales/en/cli.ftl:1347,caller-tra
 jouzu.cli.subagent.status.running,packages/cli/locales/en/cli.ftl:1349,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.status.starting,packages/cli/locales/en/cli.ftl:1348,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.status.unknown,packages/cli/locales/en/cli.ftl:1354,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.stopIncomplete,packages/cli/locales/en/cli.ftl:1516,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.storageRecordUnreadable,packages/cli/locales/en/cli.ftl:1492,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.storageSaveFailed,packages/cli/locales/en/cli.ftl:1517,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.taskLength,packages/cli/locales/en/cli.ftl:1503,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.stopIncomplete,packages/cli/locales/en/cli.ftl:1516,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-063""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.storageRecordUnreadable,packages/cli/locales/en/cli.ftl:1492,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-039""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.storageSaveFailed,packages/cli/locales/en/cli.ftl:1517,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-059""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.taskLength,packages/cli/locales/en/cli.ftl:1503,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-050""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.thinkingRequired,packages/cli/locales/en/runtime.ftl:3,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.tokensLabel,packages/cli/locales/en/cli.ftl:1360,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.toolLabel,packages/cli/locales/en/cli.ftl:1382,caller-trace-required,0,0,[],caller-trace-required
@@ -1499,18 +1499,18 @@ jouzu.cli.subagent.traceMalformedEntry,packages/cli/locales/en/cli.ftl:1525,call
 jouzu.cli.subagent.traceNotRegularFile,packages/cli/locales/en/cli.ftl:1522,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.tracePastEnd,packages/cli/locales/en/cli.ftl:1523,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.subagent.traceQuery,packages/cli/locales/en/cli.ftl:1521,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.validationLength,packages/cli/locales/en/cli.ftl:1460,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.validationLengthMax,packages/cli/locales/en/cli.ftl:1461,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.workflowAgentsUnreadable,packages/cli/locales/en/cli.ftl:1441,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.workflowCommandDescription,packages/cli/locales/en/cli.ftl:1488,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.workflowCommandHint,packages/cli/locales/en/cli.ftl:1438,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.workflowRequiresSession,packages/cli/locales/en/cli.ftl:1467,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.workflowStorageUnavailable,packages/cli/locales/en/cli.ftl:1440,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.workspaceError,packages/cli/locales/en/cli.ftl:1453,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.workspaceInaccessible,packages/cli/locales/en/cli.ftl:1455,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.validationLength,packages/cli/locales/en/cli.ftl:1460,caller-trace-required,0,3,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-007""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-011""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-013""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.validationLengthMax,packages/cli/locales/en/cli.ftl:1461,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-009""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.workflowAgentsUnreadable,packages/cli/locales/en/cli.ftl:1441,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-108""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.workflowCommandDescription,packages/cli/locales/en/cli.ftl:1488,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-103""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.workflowCommandHint,packages/cli/locales/en/cli.ftl:1438,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-104""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.workflowRequiresSession,packages/cli/locales/en/cli.ftl:1467,caller-trace-required,0,2,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-080""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-081""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.workflowStorageUnavailable,packages/cli/locales/en/cli.ftl:1440,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-109""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.workspaceError,packages/cli/locales/en/cli.ftl:1453,caller-trace-required,0,3,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-159""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-161""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-163""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.workspaceInaccessible,packages/cli/locales/en/cli.ftl:1455,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-160""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.subagent.workspaceLabel,packages/cli/locales/en/cli.ftl:1357,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.workspaceMissing,packages/cli/locales/en/cli.ftl:1454,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.subagent.workspaceNotDirectory,packages/cli/locales/en/cli.ftl:1456,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.subagent.workspaceMissing,packages/cli/locales/en/cli.ftl:1454,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-158""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.subagent.workspaceNotDirectory,packages/cli/locales/en/cli.ftl:1456,caller-trace-required,0,1,"[{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-162""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.textguard.action.allowAlways,packages/cli/locales/en/cli.ftl:876,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.textguard.action.allowSession,packages/cli/locales/en/cli.ftl:875,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.textguard.action.back,packages/cli/locales/en/cli.ftl:879,caller-trace-required,0,0,[],caller-trace-required
@@ -1772,7 +1772,7 @@ jouzu.cli.workflow.row.readOutput,packages/cli/locales/en/cli.ftl:776,caller-tra
 jouzu.cli.workflow.row.resumeWithTask,packages/cli/locales/en/cli.ftl:780,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-116""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.workflow.row.reviewOnly,packages/cli/locales/en/cli.ftl:760,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-066""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.workflow.row.roleId,packages/cli/locales/en/cli.ftl:756,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-061""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.workflow.row.sameAsThisSession,packages/cli/locales/en/cli.ftl:773,caller-trace-required,0,3,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-092""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-166""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-167""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.sameAsThisSession,packages/cli/locales/en/cli.ftl:773,caller-trace-required,0,4,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-092""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-166""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-167""},{""table"":""subagent-runtime.csv"",""item_id"":""SUBAGENT-RUNTIME-191""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.workflow.row.save,packages/cli/locales/en/cli.ftl:766,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-077""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-089""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.workflow.row.sendMessage,packages/cli/locales/en/cli.ftl:777,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-112""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.workflow.row.stopAgent,packages/cli/locales/en/cli.ftl:778,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-113""}]",occurrence-records-present; exhaustive-caller-review-open

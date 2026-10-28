@@ -1,8 +1,8 @@
 {
   "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
   "tracked_blobs": 1206,
-  "paths_with_scope_references": 580,
-  "paths_without_scope_references": 626,
+  "paths_with_scope_references": 592,
+  "paths_without_scope_references": 614,
   "path_categories": {
     "configuration-lock-resource-or-other": 79,
     "ci-workflow": 10,
@@ -29,7 +29,8 @@
     "flow-display-scope.csv": "c796f103bdae2dfc628a4a2522f09ecd1d9303b2f813496372021bbc63a277b4",
     "model-picker-scope.csv": "9917a983f8a397c59d66ee38e2eb61d3576f23129d53053bc402d12d2d2fb066",
     "palette-scope.csv": "acab38c1e66423f284f8941193220c24921efcc064672c236ebbacea14727039",
-    "workflow-scope.csv": "f82748771a4c2b8879c4bf96a3c2c0ae9fbfc1d2774c0fca4949a99d44877bf1",
+    "workflow-scope.csv": "e474d578789c4116105568090e5cd2f2090d07ec7df175377d4f33143acd5749",
+    "subagent-runtime-scope.csv": "fce47f1c02cee8a65569622ffe25f83225fd93e4fcb2c95ee21a769addd2ce69",
     "keybindings-scope.csv": "29fa749da4b68787f88420b0c22aec7ebd12c0871198e8636bb84c8fdc44aede",
     "model-catalog-scope.csv": "48a734220679b0e74a31aa522a2e33afbfd916c6959d9738ba25fc86ba7fbf84",
     "pi-tools-scope.csv": "b30b1e8859726b34e2ff2c502b1fe2543c069a952554f9be119f10f211b38ef5",

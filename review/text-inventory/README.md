@@ -480,10 +480,23 @@ remain separately qualified.
 model-display helper, including every catalog use, five Error sites and eight
 catches. Conditions distinguish empty configurations, model fallback labels,
 transcript detail, copied agent IDs and required-form invariants. Default role
-descriptions and instructions have editor consumers; their producer bodies remain
-separately pending. The component does not own a stdout route: bounded integration
+descriptions and instructions have editor consumers; their producer definitions
+follow in the subagent unit below. The component does not own a stdout route: bounded integration
 traces distinguish the non-TUI `/workflow` notification from the `/subagents`
 print-mode JSON summary. No UI, worker, state or native operation was executed.
+
+[subagent-runtime.csv](subagent-runtime.csv) adds 199 role/manager/integration
+records: 95 catalog occurrences across 76 IDs, 73 fixed occurrences and 31 payload
+boundaries. Seven complete bodies cover 2,224 lines. The
+[scope](subagent-runtime-scope.csv) accounts for 764 lexical tokens, 85 catalog
+references, 77 Error sites and 23 catches, with 29 pinned sources. Default role
+instructions/descriptions have editor consumers; prompt/tool export routes retain
+their conditions. Records distinguish storage failures, API/schema guards,
+delayed messages, raw/default-English model labels and active TUI labels. The
+standalone dashboard widget is guarded on the current main route. Standard
+print/json notify suppression and native onError stderr delivery remain separate.
+Worker/output/resource helper bodies continue in a follow-on unit. No worker,
+model, git snapshot, state or native operation was executed.
 
 [flow-tools.csv](flow-tools.csv) supplies 36 wait/no-reply tool records: 24 fixed
 occurrences, three catalog labels and nine payload boundaries. Four full bodies
@@ -672,6 +685,7 @@ python -B review/text-inventory/verify-model-picker.py
 node review/text-inventory/verify-palette.cjs
 python -B review/text-inventory/verify-keybindings.py
 python -B review/text-inventory/verify-workflow.py
+python -B review/text-inventory/verify-subagent-runtime.py
 python -B review/text-inventory/verify-model-catalog.py
 python -B review/text-inventory/verify-auth-account.py
 python -B review/text-inventory/verify-launcher.py
