@@ -761,6 +761,19 @@ Provider-schema normalization introduces no prose and retains external payload
 and native error boundaries. Four corruption controls pass. No compaction,
 extension, model, provider, user-state or schema payload was executed.
 
+[prose-wrapping-text.csv](prose-wrapping-text.csv) adds two qualified API error
+headlines and nine boundaries across the complete 1,466-line adapter/wrapper
+pair. All 172 AST occurrences, including 46 empty literals and five regexes, are
+partitioned with 170 [exclusions](prose-wrapping-text-exclusions.csv). The
+[scope](prose-wrapping-text-scope.csv) records two Error constructors and seven
+catches. The normal root helper suppresses setup errors and runs without wrapping;
+direct API consumers can receive them. Rendering and restoration errors have
+separate propagation, and module evaluation happens before the cosmetic catch.
+Supplied English/CJK, math, URLs, punctuation sets and ANSI/OSC controls retain
+their producer/data boundaries. Four corruption controls pass. No renderer,
+module resolution, native width helper, prototype installation or user-state
+operation was executed.
+
 [flow-model-input.csv](flow-model-input.csv) adds 46 composition/request-helper
 records: 29 fixed error definitions, two protected JSON frame templates, five
 diagnostic replacement/suffix formats, one retained reason and nine boundaries.
@@ -1238,6 +1251,7 @@ python -B review/text-inventory/verify-flow-controller-core.py
 python -B review/text-inventory/verify-flow-user-work.py
 python -B review/text-inventory/verify-localization-ops-text.py
 node review/text-inventory/verify-context-adjunct-text.cjs
+node review/text-inventory/verify-prose-wrapping-text.cjs
 node review/text-inventory/verify-flow-model-input.cjs
 node review/text-inventory/verify-native-request-state.cjs
 node review/text-inventory/verify-flow-request-policy.cjs

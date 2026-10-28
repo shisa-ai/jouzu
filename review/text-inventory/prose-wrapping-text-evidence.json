@@ -1,0 +1,1729 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "full_bodies": {
+    "packages/cli/src/pi-prose-wrapping.ts": 625,
+    "packages/cli/src/prose-wrap.ts": 841
+  },
+  "anchors": [
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 1,
+      "column": 31,
+      "expression": "\"node:module\"",
+      "item_id": "PROSE-WRAPPING-X-001",
+      "kind": "excluded",
+      "english": "node:module"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 2,
+      "column": 31,
+      "expression": "\"node:url\"",
+      "item_id": "PROSE-WRAPPING-X-002",
+      "kind": "excluded",
+      "english": "node:url"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 7,
+      "column": 8,
+      "expression": "\"@earendil-works/pi-tui\"",
+      "item_id": "PROSE-WRAPPING-X-003",
+      "kind": "excluded",
+      "english": "@earendil-works/pi-tui"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 14,
+      "column": 8,
+      "expression": "\"./prose-wrap.js\"",
+      "item_id": "PROSE-WRAPPING-X-004",
+      "kind": "excluded",
+      "english": "./prose-wrap.js"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 96,
+      "column": 27,
+      "expression": "\"function\"",
+      "item_id": "PROSE-WRAPPING-X-005",
+      "kind": "excluded",
+      "english": "function"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 97,
+      "column": 37,
+      "expression": "\"function\"",
+      "item_id": "PROSE-WRAPPING-X-006",
+      "kind": "excluded",
+      "english": "function"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 98,
+      "column": 31,
+      "expression": "\"function\"",
+      "item_id": "PROSE-WRAPPING-X-007",
+      "kind": "excluded",
+      "english": "function"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 108,
+      "column": 37,
+      "expression": "\"function\"",
+      "item_id": "PROSE-WRAPPING-X-008",
+      "kind": "excluded",
+      "english": "function"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 122,
+      "column": 37,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "item_id": "PROSE-WRAPPING-X-009",
+      "kind": "excluded",
+      "english": "@earendil-works/pi-coding-agent"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 124,
+      "column": 49,
+      "expression": "\"@earendil-works/pi-tui\"",
+      "item_id": "PROSE-WRAPPING-X-010",
+      "kind": "excluded",
+      "english": "@earendil-works/pi-tui"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 129,
+      "column": 39,
+      "expression": "\"@earendil-works/pi-tui\"",
+      "item_id": "PROSE-WRAPPING-X-011",
+      "kind": "excluded",
+      "english": "@earendil-works/pi-tui"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 142,
+      "column": 40,
+      "expression": "\"./latex.js\"",
+      "item_id": "PROSE-WRAPPING-X-012",
+      "kind": "excluded",
+      "english": "./latex.js"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 145,
+      "column": 40,
+      "expression": "\"function\"",
+      "item_id": "PROSE-WRAPPING-X-013",
+      "kind": "excluded",
+      "english": "function"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 157,
+      "column": 33,
+      "expression": "\"Could not resolve Pi's Markdown component for prose wrapping.\"",
+      "item_id": "PROSE-WRAPPING-001",
+      "kind": "fixed",
+      "english": "Could not resolve Pi's Markdown component for prose wrapping."
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 187,
+      "column": 9,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-014",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 212,
+      "column": 9,
+      "expression": "/^(?:[a-z][a-z0-9+.-]*:\\/\\/|www\\.|mailto:)/iu",
+      "item_id": "PROSE-WRAPPING-X-015",
+      "kind": "excluded",
+      "english": "/^(?:[a-z][a-z0-9+.-]*:\\/\\/|www\\.|mailto:)/iu"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 212,
+      "column": 69,
+      "expression": "/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/u",
+      "item_id": "PROSE-WRAPPING-X-016",
+      "kind": "excluded",
+      "english": "/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/u"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 219,
+      "column": 9,
+      "expression": "\"latex\"",
+      "item_id": "PROSE-WRAPPING-X-017",
+      "kind": "excluded",
+      "english": "latex"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 222,
+      "column": 89,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-018",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 223,
+      "column": 66,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-019",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 226,
+      "column": 9,
+      "expression": "\"escape\"",
+      "item_id": "PROSE-WRAPPING-X-020",
+      "kind": "excluded",
+      "english": "escape"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 227,
+      "column": 74,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-021",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 227,
+      "column": 95,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-022",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 229,
+      "column": 9,
+      "expression": "\"text\"",
+      "item_id": "PROSE-WRAPPING-X-023",
+      "kind": "excluded",
+      "english": "text"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 231,
+      "column": 44,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-024",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 233,
+      "column": 9,
+      "expression": "\"paragraph\"",
+      "item_id": "PROSE-WRAPPING-X-025",
+      "kind": "excluded",
+      "english": "paragraph"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 236,
+      "column": 9,
+      "expression": "\"strong\"",
+      "item_id": "PROSE-WRAPPING-X-026",
+      "kind": "excluded",
+      "english": "strong"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 237,
+      "column": 9,
+      "expression": "\"em\"",
+      "item_id": "PROSE-WRAPPING-X-027",
+      "kind": "excluded",
+      "english": "em"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 238,
+      "column": 9,
+      "expression": "\"del\"",
+      "item_id": "PROSE-WRAPPING-X-028",
+      "kind": "excluded",
+      "english": "del"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 241,
+      "column": 9,
+      "expression": "\"codespan\"",
+      "item_id": "PROSE-WRAPPING-X-029",
+      "kind": "excluded",
+      "english": "codespan"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 243,
+      "column": 41,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-030",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 245,
+      "column": 9,
+      "expression": "\"link\"",
+      "item_id": "PROSE-WRAPPING-X-031",
+      "kind": "excluded",
+      "english": "link"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 250,
+      "column": 32,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-032",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 251,
+      "column": 32,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-033",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 252,
+      "column": 47,
+      "expression": "\"mailto:\"",
+      "item_id": "PROSE-WRAPPING-X-034",
+      "kind": "excluded",
+      "english": "mailto:"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 257,
+      "column": 26,
+      "expression": "\" (\"",
+      "item_id": "PROSE-WRAPPING-X-035",
+      "kind": "excluded",
+      "english": " ("
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 259,
+      "column": 26,
+      "expression": "\")\"",
+      "item_id": "PROSE-WRAPPING-X-036",
+      "kind": "excluded",
+      "english": ")"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 263,
+      "column": 9,
+      "expression": "\"br\"",
+      "item_id": "PROSE-WRAPPING-X-037",
+      "kind": "excluded",
+      "english": "br"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 264,
+      "column": 25,
+      "expression": "\"\\n\"",
+      "item_id": "PROSE-WRAPPING-X-038",
+      "kind": "excluded",
+      "english": "\n"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 266,
+      "column": 9,
+      "expression": "\"html\"",
+      "item_id": "PROSE-WRAPPING-X-039",
+      "kind": "excluded",
+      "english": "html"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 267,
+      "column": 38,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-040",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 270,
+      "column": 31,
+      "expression": "\"string\"",
+      "item_id": "PROSE-WRAPPING-X-041",
+      "kind": "excluded",
+      "english": "string"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 283,
+      "column": 18,
+      "expression": "\"heading\"",
+      "item_id": "PROSE-WRAPPING-X-042",
+      "kind": "excluded",
+      "english": "heading"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 283,
+      "column": 54,
+      "expression": "\"number\"",
+      "item_id": "PROSE-WRAPPING-X-043",
+      "kind": "excluded",
+      "english": "number"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 284,
+      "column": 6,
+      "expression": "`${\"#\".repeat(token.depth)} `",
+      "item_id": "PROSE-WRAPPING-X-044",
+      "kind": "excluded",
+      "english": "${\"#\".repeat(token.depth)} "
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 284,
+      "column": 9,
+      "expression": "\"#\"",
+      "item_id": "PROSE-WRAPPING-X-045",
+      "kind": "excluded",
+      "english": "#"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 285,
+      "column": 6,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-046",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 292,
+      "column": 32,
+      "expression": "\"text\"",
+      "item_id": "PROSE-WRAPPING-X-047",
+      "kind": "excluded",
+      "english": "text"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 318,
+      "column": 40,
+      "expression": "\"\\n\"",
+      "item_id": "PROSE-WRAPPING-X-048",
+      "kind": "excluded",
+      "english": "\n"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 331,
+      "column": 69,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-049",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 359,
+      "column": 42,
+      "expression": "\"\\n\"",
+      "item_id": "PROSE-WRAPPING-X-050",
+      "kind": "excluded",
+      "english": "\n"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 363,
+      "column": 58,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-051",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 370,
+      "column": 58,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-052",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 370,
+      "column": 66,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-053",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 381,
+      "column": 35,
+      "expression": "/\\r\\n?/gu",
+      "item_id": "PROSE-WRAPPING-X-054",
+      "kind": "excluded",
+      "english": "/\\r\\n?/gu"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 381,
+      "column": 46,
+      "expression": "\"\\n\"",
+      "item_id": "PROSE-WRAPPING-X-055",
+      "kind": "excluded",
+      "english": "\n"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 384,
+      "column": 36,
+      "expression": "\"\\n\"",
+      "item_id": "PROSE-WRAPPING-X-056",
+      "kind": "excluded",
+      "english": "\n"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 398,
+      "column": 21,
+      "expression": "\"paragraph\"",
+      "item_id": "PROSE-WRAPPING-X-057",
+      "kind": "excluded",
+      "english": "paragraph"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 398,
+      "column": 51,
+      "expression": "\"heading\"",
+      "item_id": "PROSE-WRAPPING-X-058",
+      "kind": "excluded",
+      "english": "heading"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 398,
+      "column": 79,
+      "expression": "\"text\"",
+      "item_id": "PROSE-WRAPPING-X-059",
+      "kind": "excluded",
+      "english": "text"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 412,
+      "column": 45,
+      "expression": "\"render\"",
+      "item_id": "PROSE-WRAPPING-X-060",
+      "kind": "excluded",
+      "english": "render"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 437,
+      "column": 38,
+      "expression": "\"function\"",
+      "item_id": "PROSE-WRAPPING-X-061",
+      "kind": "excluded",
+      "english": "function"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 462,
+      "column": 24,
+      "expression": "\"function\"",
+      "item_id": "PROSE-WRAPPING-X-062",
+      "kind": "excluded",
+      "english": "function"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 462,
+      "column": 70,
+      "expression": "\"function\"",
+      "item_id": "PROSE-WRAPPING-X-063",
+      "kind": "excluded",
+      "english": "function"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 476,
+      "column": 36,
+      "expression": "\"function\"",
+      "item_id": "PROSE-WRAPPING-X-064",
+      "kind": "excluded",
+      "english": "function"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 529,
+      "column": 38,
+      "expression": "\"renderToken\"",
+      "item_id": "PROSE-WRAPPING-X-065",
+      "kind": "excluded",
+      "english": "renderToken"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 546,
+      "column": 39,
+      "expression": "\"function\"",
+      "item_id": "PROSE-WRAPPING-X-066",
+      "kind": "excluded",
+      "english": "function"
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 547,
+      "column": 19,
+      "expression": "\"Pi's Markdown prototype has no renderToken method.\"",
+      "item_id": "PROSE-WRAPPING-002",
+      "kind": "fixed",
+      "english": "Pi's Markdown prototype has no renderToken method."
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 1,
+      "column": 72,
+      "expression": "\"@earendil-works/pi-tui\"",
+      "item_id": "PROSE-WRAPPING-X-067",
+      "kind": "excluded",
+      "english": "@earendil-works/pi-tui"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 32,
+      "column": 72,
+      "expression": "\"grapheme\"",
+      "item_id": "PROSE-WRAPPING-X-068",
+      "kind": "excluded",
+      "english": "grapheme"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 42,
+      "column": 3,
+      "expression": "\"、。，．：；？！）］｝〕〉》」』】〙〗〟｠»\"",
+      "item_id": "PROSE-WRAPPING-X-069",
+      "kind": "excluded",
+      "english": "、。，．：；？！）］｝〕〉》」』】〙〗〟｠»"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 43,
+      "column": 3,
+      "expression": "\"ぁぃぅぇぉっゃゅょゎゕゖァィゥェォッャュョヮヵヶ\"",
+      "item_id": "PROSE-WRAPPING-X-070",
+      "kind": "excluded",
+      "english": "ぁぃぅぇぉっゃゅょゎゕゖァィゥェォッャュョヮヵヶ"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 44,
+      "column": 3,
+      "expression": "\"ゝゞヽヾ々ー\"",
+      "item_id": "PROSE-WRAPPING-X-071",
+      "kind": "excluded",
+      "english": "ゝゞヽヾ々ー"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 45,
+      "column": 3,
+      "expression": "\")]}>,.;:!?\"",
+      "item_id": "PROSE-WRAPPING-X-072",
+      "kind": "excluded",
+      "english": ")]}>,.;:!?"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 46,
+      "column": 9,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-073",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 50,
+      "column": 41,
+      "expression": "\"（［｛〔〈《「『【〘〖〝｟«([{<\"",
+      "item_id": "PROSE-WRAPPING-X-074",
+      "kind": "excluded",
+      "english": "（［｛〔〈《「『【〘〖〝｟«([{<"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 83,
+      "column": 30,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-075",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 88,
+      "column": 46,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-076",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 95,
+      "column": 40,
+      "expression": "\"\\x1b\"",
+      "item_id": "PROSE-WRAPPING-X-077",
+      "kind": "excluded",
+      "english": "\u001b"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 109,
+      "column": 15,
+      "expression": "\"[\"",
+      "item_id": "PROSE-WRAPPING-X-078",
+      "kind": "excluded",
+      "english": "["
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 118,
+      "column": 15,
+      "expression": "\"]\"",
+      "item_id": "PROSE-WRAPPING-X-079",
+      "kind": "excluded",
+      "english": "]"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 118,
+      "column": 31,
+      "expression": "\"P\"",
+      "item_id": "PROSE-WRAPPING-X-080",
+      "kind": "excluded",
+      "english": "P"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 118,
+      "column": 47,
+      "expression": "\"_\"",
+      "item_id": "PROSE-WRAPPING-X-081",
+      "kind": "excluded",
+      "english": "_"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 118,
+      "column": 63,
+      "expression": "\"^\"",
+      "item_id": "PROSE-WRAPPING-X-082",
+      "kind": "excluded",
+      "english": "^"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 118,
+      "column": 79,
+      "expression": "\"X\"",
+      "item_id": "PROSE-WRAPPING-X-083",
+      "kind": "excluded",
+      "english": "X"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 121,
+      "column": 25,
+      "expression": "\"\\x07\"",
+      "item_id": "PROSE-WRAPPING-X-084",
+      "kind": "excluded",
+      "english": "\u0007"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 122,
+      "column": 25,
+      "expression": "\"\\x1b\"",
+      "item_id": "PROSE-WRAPPING-X-085",
+      "kind": "excluded",
+      "english": "\u001b"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 122,
+      "column": 56,
+      "expression": "\"\\\\\"",
+      "item_id": "PROSE-WRAPPING-X-086",
+      "kind": "excluded",
+      "english": "\\"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 127,
+      "column": 15,
+      "expression": "\"(\"",
+      "item_id": "PROSE-WRAPPING-X-087",
+      "kind": "excluded",
+      "english": "("
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 127,
+      "column": 31,
+      "expression": "\")\"",
+      "item_id": "PROSE-WRAPPING-X-088",
+      "kind": "excluded",
+      "english": ")"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 127,
+      "column": 47,
+      "expression": "\"*\"",
+      "item_id": "PROSE-WRAPPING-X-089",
+      "kind": "excluded",
+      "english": "*"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 127,
+      "column": 63,
+      "expression": "\"+\"",
+      "item_id": "PROSE-WRAPPING-X-090",
+      "kind": "excluded",
+      "english": "+"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 134,
+      "column": 17,
+      "expression": "\"ansi\"",
+      "item_id": "PROSE-WRAPPING-X-091",
+      "kind": "excluded",
+      "english": "ansi"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 139,
+      "column": 17,
+      "expression": "\"text\"",
+      "item_id": "PROSE-WRAPPING-X-092",
+      "kind": "excluded",
+      "english": "text"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 149,
+      "column": 16,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-093",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 152,
+      "column": 24,
+      "expression": "\"\\x1b\"",
+      "item_id": "PROSE-WRAPPING-X-094",
+      "kind": "excluded",
+      "english": "\u001b"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 155,
+      "column": 24,
+      "expression": "\"ansi\"",
+      "item_id": "PROSE-WRAPPING-X-095",
+      "kind": "excluded",
+      "english": "ansi"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 161,
+      "column": 51,
+      "expression": "\"\\x1b\"",
+      "item_id": "PROSE-WRAPPING-X-096",
+      "kind": "excluded",
+      "english": "\u001b"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 163,
+      "column": 22,
+      "expression": "\"text\"",
+      "item_id": "PROSE-WRAPPING-X-097",
+      "kind": "excluded",
+      "english": "text"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 177,
+      "column": 27,
+      "expression": "\"\\x1b]8;\"",
+      "item_id": "PROSE-WRAPPING-X-098",
+      "kind": "excluded",
+      "english": "\u001b]8;"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 179,
+      "column": 33,
+      "expression": "\";\"",
+      "item_id": "PROSE-WRAPPING-X-099",
+      "kind": "excluded",
+      "english": ";"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 184,
+      "column": 20,
+      "expression": "\"\\x07\"",
+      "item_id": "PROSE-WRAPPING-X-100",
+      "kind": "excluded",
+      "english": "\u0007"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 185,
+      "column": 16,
+      "expression": "\"\\x07\"",
+      "item_id": "PROSE-WRAPPING-X-101",
+      "kind": "excluded",
+      "english": "\u0007"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 187,
+      "column": 27,
+      "expression": "\"\\x1b\\\\\"",
+      "item_id": "PROSE-WRAPPING-X-102",
+      "kind": "excluded",
+      "english": "\u001b\\"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 188,
+      "column": 16,
+      "expression": "\"\\x1b\\\\\"",
+      "item_id": "PROSE-WRAPPING-X-103",
+      "kind": "excluded",
+      "english": "\u001b\\"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 210,
+      "column": 16,
+      "expression": "\"5\"",
+      "item_id": "PROSE-WRAPPING-X-104",
+      "kind": "excluded",
+      "english": "5"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 211,
+      "column": 20,
+      "expression": "`${code}:5:${subparts[2]}`",
+      "item_id": "PROSE-WRAPPING-X-105",
+      "kind": "excluded",
+      "english": "${code}:5:${subparts[2]}"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 213,
+      "column": 16,
+      "expression": "\"2\"",
+      "item_id": "PROSE-WRAPPING-X-106",
+      "kind": "excluded",
+      "english": "2"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 216,
+      "column": 13,
+      "expression": "`${code}:2:${subparts[2]}:${subparts[3]}:${subparts[4]}:${subparts[5]}`",
+      "item_id": "PROSE-WRAPPING-X-107",
+      "kind": "excluded",
+      "english": "${code}:2:${subparts[2]}:${subparts[3]}:${subparts[4]}:${subparts[5]}"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 221,
+      "column": 21,
+      "expression": "`${code}:2:${subparts[2]}:${subparts[3]}:${subparts[4]}`",
+      "item_id": "PROSE-WRAPPING-X-108",
+      "kind": "excluded",
+      "english": "${code}:2:${subparts[2]}:${subparts[3]}:${subparts[4]}"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 228,
+      "column": 15,
+      "expression": "\"5\"",
+      "item_id": "PROSE-WRAPPING-X-109",
+      "kind": "excluded",
+      "english": "5"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 229,
+      "column": 19,
+      "expression": "`${code};5;${groups[index + 2]}`",
+      "item_id": "PROSE-WRAPPING-X-110",
+      "kind": "excluded",
+      "english": "${code};5;${groups[index + 2]}"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 231,
+      "column": 15,
+      "expression": "\"2\"",
+      "item_id": "PROSE-WRAPPING-X-111",
+      "kind": "excluded",
+      "english": "2"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 232,
+      "column": 40,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-112",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 237,
+      "column": 20,
+      "expression": "`${code};2;${red};${green};${blue}`",
+      "item_id": "PROSE-WRAPPING-X-113",
+      "kind": "excluded",
+      "english": "${code};2;${red};${green};${blue}"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 262,
+      "column": 36,
+      "expression": "\"\\x1b\"",
+      "item_id": "PROSE-WRAPPING-X-114",
+      "kind": "excluded",
+      "english": "\u001b"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 275,
+      "column": 27,
+      "expression": "\"\\x1b]8;\"",
+      "item_id": "PROSE-WRAPPING-X-115",
+      "kind": "excluded",
+      "english": "\u001b]8;"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 280,
+      "column": 28,
+      "expression": "\"\\x1b[\"",
+      "item_id": "PROSE-WRAPPING-X-116",
+      "kind": "excluded",
+      "english": "\u001b["
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 280,
+      "column": 59,
+      "expression": "\"m\"",
+      "item_id": "PROSE-WRAPPING-X-117",
+      "kind": "excluded",
+      "english": "m"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 282,
+      "column": 16,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-118",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 282,
+      "column": 31,
+      "expression": "\"0\"",
+      "item_id": "PROSE-WRAPPING-X-119",
+      "kind": "excluded",
+      "english": "0"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 286,
+      "column": 29,
+      "expression": "\";\"",
+      "item_id": "PROSE-WRAPPING-X-120",
+      "kind": "excluded",
+      "english": ";"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 288,
+      "column": 35,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-121",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 289,
+      "column": 18,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-122",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 294,
+      "column": 33,
+      "expression": "\":\"",
+      "item_id": "PROSE-WRAPPING-X-123",
+      "kind": "excluded",
+      "english": ":"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 295,
+      "column": 48,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-124",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 309,
+      "column": 20,
+      "expression": "\"0\"",
+      "item_id": "PROSE-WRAPPING-X-125",
+      "kind": "excluded",
+      "english": "0"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 312,
+      "column": 50,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-126",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 424,
+      "column": 29,
+      "expression": "\"1\"",
+      "item_id": "PROSE-WRAPPING-X-127",
+      "kind": "excluded",
+      "english": "1"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 425,
+      "column": 28,
+      "expression": "\"2\"",
+      "item_id": "PROSE-WRAPPING-X-128",
+      "kind": "excluded",
+      "english": "2"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 426,
+      "column": 31,
+      "expression": "\"3\"",
+      "item_id": "PROSE-WRAPPING-X-129",
+      "kind": "excluded",
+      "english": "3"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 427,
+      "column": 57,
+      "expression": "\"4\"",
+      "item_id": "PROSE-WRAPPING-X-130",
+      "kind": "excluded",
+      "english": "4"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 428,
+      "column": 30,
+      "expression": "\"5\"",
+      "item_id": "PROSE-WRAPPING-X-131",
+      "kind": "excluded",
+      "english": "5"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 429,
+      "column": 32,
+      "expression": "\"7\"",
+      "item_id": "PROSE-WRAPPING-X-132",
+      "kind": "excluded",
+      "english": "7"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 430,
+      "column": 31,
+      "expression": "\"8\"",
+      "item_id": "PROSE-WRAPPING-X-133",
+      "kind": "excluded",
+      "english": "8"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 431,
+      "column": 38,
+      "expression": "\"9\"",
+      "item_id": "PROSE-WRAPPING-X-134",
+      "kind": "excluded",
+      "english": "9"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 435,
+      "column": 35,
+      "expression": "`\\x1b[${codes.join(\";\")}m`",
+      "item_id": "PROSE-WRAPPING-X-135",
+      "kind": "excluded",
+      "english": "\\x1b[${codes.join(\";\")}m"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 435,
+      "column": 54,
+      "expression": "\";\"",
+      "item_id": "PROSE-WRAPPING-X-136",
+      "kind": "excluded",
+      "english": ";"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 435,
+      "column": 64,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-137",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 437,
+      "column": 14,
+      "expression": "`\\x1b]8;${this.hyperlink.params};${this.hyperlink.url}${this.hyperlink.terminator}`",
+      "item_id": "PROSE-WRAPPING-X-138",
+      "kind": "excluded",
+      "english": "\\x1b]8;${this.hyperlink.params};${this.hyperlink.url}${this.hyperlink.terminator}"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 443,
+      "column": 39,
+      "expression": "\"\\x1b[0m\"",
+      "item_id": "PROSE-WRAPPING-X-139",
+      "kind": "excluded",
+      "english": "\u001b[0m"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 443,
+      "column": 51,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-140",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 444,
+      "column": 33,
+      "expression": "`\\x1b]8;;${this.hyperlink.terminator}`",
+      "item_id": "PROSE-WRAPPING-X-141",
+      "kind": "excluded",
+      "english": "\\x1b]8;;${this.hyperlink.terminator}"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 487,
+      "column": 21,
+      "expression": "\"text\"",
+      "item_id": "PROSE-WRAPPING-X-142",
+      "kind": "excluded",
+      "english": "text"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 515,
+      "column": 35,
+      "expression": "\"\\n\"",
+      "item_id": "PROSE-WRAPPING-X-143",
+      "kind": "excluded",
+      "english": "\n"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 515,
+      "column": 59,
+      "expression": "\"\\r\"",
+      "item_id": "PROSE-WRAPPING-X-144",
+      "kind": "excluded",
+      "english": "\r"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 515,
+      "column": 83,
+      "expression": "\"\\r\\n\"",
+      "item_id": "PROSE-WRAPPING-X-145",
+      "kind": "excluded",
+      "english": "\r\n"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 524,
+      "column": 32,
+      "expression": "\" \"",
+      "item_id": "PROSE-WRAPPING-X-146",
+      "kind": "excluded",
+      "english": " "
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 524,
+      "column": 47,
+      "expression": "\" \"",
+      "item_id": "PROSE-WRAPPING-X-147",
+      "kind": "excluded",
+      "english": " "
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 635,
+      "column": 64,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-148",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 636,
+      "column": 65,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-149",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 715,
+      "column": 28,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-150",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 721,
+      "column": 72,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-151",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 726,
+      "column": 13,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-152",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 733,
+      "column": 57,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-153",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 734,
+      "column": 22,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-154",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 734,
+      "column": 27,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-155",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 748,
+      "column": 37,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-156",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 767,
+      "column": 15,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-157",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 767,
+      "column": 27,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-158",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 768,
+      "column": 34,
+      "expression": "/\\r\\n?/gu",
+      "item_id": "PROSE-WRAPPING-X-159",
+      "kind": "excluded",
+      "english": "/\\r\\n?/gu"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 768,
+      "column": 45,
+      "expression": "\"\\n\"",
+      "item_id": "PROSE-WRAPPING-X-160",
+      "kind": "excluded",
+      "english": "\n"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 772,
+      "column": 36,
+      "expression": "\"\\n\"",
+      "item_id": "PROSE-WRAPPING-X-161",
+      "kind": "excluded",
+      "english": "\n"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 785,
+      "column": 38,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-162",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 786,
+      "column": 45,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-163",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 792,
+      "column": 19,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-164",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 792,
+      "column": 25,
+      "expression": "/^ +$/u",
+      "item_id": "PROSE-WRAPPING-X-165",
+      "kind": "excluded",
+      "english": "/^ +$/u"
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 794,
+      "column": 16,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-166",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 799,
+      "column": 59,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-167",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 808,
+      "column": 41,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-168",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 832,
+      "column": 16,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-169",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 840,
+      "column": 39,
+      "expression": "\"\"",
+      "item_id": "PROSE-WRAPPING-X-170",
+      "kind": "excluded",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 107,
+      "column": 3,
+      "expression": "const module =",
+      "item_id": "PROSE-WRAPPING-003",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 614,
+      "column": 3,
+      "expression": "const resolved =",
+      "item_id": "PROSE-WRAPPING-004",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 223,
+      "column": 5,
+      "expression": "builder.appendLiteral(rendered",
+      "item_id": "PROSE-WRAPPING-005",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 398,
+      "column": 2,
+      "expression": "if (token.type !==",
+      "item_id": "PROSE-WRAPPING-006",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 437,
+      "column": 3,
+      "expression": "if (typeof instance.invalidate",
+      "item_id": "PROSE-WRAPPING-007",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 589,
+      "column": 3,
+      "expression": "restoreToken();",
+      "item_id": "PROSE-WRAPPING-008",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 767,
+      "column": 2,
+      "expression": "if (text ===",
+      "item_id": "PROSE-WRAPPING-009",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 32,
+      "column": 1,
+      "expression": "const graphemeSegmenter",
+      "item_id": "PROSE-WRAPPING-010",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/prose-wrap.ts",
+      "line": 435,
+      "column": 3,
+      "expression": "let result =",
+      "item_id": "PROSE-WRAPPING-011",
+      "kind": "boundary",
+      "english": ""
+    }
+  ],
+  "controls": [
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 109,
+      "column": 4,
+      "expression": "catch {\n\t\treturn undefined;\n\t}",
+      "kind": "catch",
+      "disposition": "Import catch suppresses failure; no log."
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 125,
+      "column": 4,
+      "expression": "catch {\n\t\t// Fall through to Jouzu's own resolution.\n\t}",
+      "kind": "catch",
+      "disposition": "Pi-relative resolution catch falls through to local resolution."
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 130,
+      "column": 4,
+      "expression": "catch {\n\t\t// The injected constructor can still be used without a resolvable module.\n\t}",
+      "kind": "catch",
+      "disposition": "Local resolution catch suppressed; injected constructor can still work."
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 146,
+      "column": 4,
+      "expression": "catch {\n\t\treturn undefined;\n\t}",
+      "kind": "catch",
+      "disposition": "Latex sibling import failure suppressed."
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 157,
+      "column": 23,
+      "expression": "new Error(\"Could not resolve Pi's Markdown component for prose wrapping.\")",
+      "kind": "error",
+      "disposition": "Own guard visible only to direct API; default helper setup catch suppresses."
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 438,
+      "column": 4,
+      "expression": "catch {\n\t\t// Cache invalidation is best-effort; never let restore mask the operation result.\n\t}",
+      "kind": "catch",
+      "disposition": "Best-effort invalidate failure suppressed; epoch deletion in finally."
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 547,
+      "column": 9,
+      "expression": "new Error(\"Pi's Markdown prototype has no renderToken method.\")",
+      "kind": "error",
+      "disposition": "Own direct install API guard; helper setup catch suppresses."
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 588,
+      "column": 4,
+      "expression": "catch (error) {\n\t\trestoreToken();\n\t\tthrow error;\n\t}",
+      "kind": "catch",
+      "disposition": "Attempt token restore and rethrow; helper setup catch catches it."
+    },
+    {
+      "path": "packages/cli/src/pi-prose-wrapping.ts",
+      "line": 616,
+      "column": 4,
+      "expression": "catch {\n\t\t// This is a cosmetic wrapper; an unavailable runtime must not stop Pi from starting.\n\t\treturn operation();\n\t}",
+      "kind": "catch",
+      "disposition": "All setup failure discarded, operation invoked without wrapper."
+    }
+  ],
+  "counts": {
+    "primary": 11,
+    "fixed": 2,
+    "boundaries": 9,
+    "excluded": 170,
+    "nodes": 172,
+    "regexes": 5,
+    "empty": 46,
+    "errors": 2,
+    "catches": 7,
+    "scope": 3
+  },
+  "reviewed_data": {
+    "prose-wrapping-text.csv": "b7aa41b9754c970af5891e23d9aa8e212c01b5aab971839004cad57607d3e2ae",
+    "prose-wrapping-text-exclusions.csv": "ce9c656e4f09c955d880acb1b758ea9e25721637a4b531004971ebb85e956bff",
+    "prose-wrapping-text-scope.csv": "571cd418fe22fac9fe1824d8454ede7554b207746c091894415652e9d7db8e0a"
+  }
+}
