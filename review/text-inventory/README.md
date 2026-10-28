@@ -25,13 +25,27 @@ identity, while changed callers, configuration and upstream patches need separat
 review. No checkout or product operation is performed by this census.
 
 [main-update-review-links.csv](main-update-review-links.csv) reconciles all 59
-changed target paths to exact scope records and target Git hashes. Thirty-five
-have a complete local source export/read: thirteen product/packaging bodies,
+changed target paths to exact scope records and target Git hashes. Thirty-six
+have a complete local source export/read: fourteen product/packaging bodies,
 thirteen test bodies, seven documents and two changed English catalogs. The other
-24 retain bounded changed-source or metadata review. The
-[snapshot](main-update-review-links-snapshot.json) pins all ten scope inputs;
+23 retain bounded changed-source or metadata review. The
+[snapshot](main-update-review-links-snapshot.json) pins all eleven scope inputs;
 these navigation links do not promote supporting records, close target callers
 or qualify newly patched dependencies. Existing base tables keep their source pin.
+
+[main-update-message-table.csv](main-update-message-table.csv) maps all 1,113
+string occurrences in the complete fetched-main message-table body. Its 1,036
+catalog references link 1,025 distinct IDs to their exact target English patterns
+and locations; 77 import, field-key, locale/type and error-identity tokens remain
+protected. These are definition/map references, not automatic display sites.
+The [line export](main-update-message-table-lines.csv) reconstructs all 1,277
+source lines, and [helpers](main-update-message-table-helpers.csv) retain seven
+formatting/reference/cache/error-class conditions. The only source delta is one
+added catalog-ID property; deleting that exact line restores the complete base
+blob. The [scope](main-update-message-table-scope.csv) and
+[snapshot](main-update-message-table-snapshot.json) pin the target source and
+catalog export. Imported formatter behavior and wider target callers retain
+separate boundaries. No product source is evaluated.
 
 [main-update-model-text.csv](main-update-model-text.csv) records 25 fetched-main
 Models delta occurrences: fifteen catalog consumers (three new headings), four
@@ -1970,6 +1984,7 @@ node review/text-inventory/verify-test-source-sites.cjs
 node review/text-inventory/verify-fixture-ipc-text.cjs
 python -B review/text-inventory/verify-data-fixture-text.py
 python -B review/text-inventory/verify-main-update-census.py
+node review/text-inventory/verify-main-update-message-table.cjs
 python -B review/text-inventory/verify-main-update-review-links.py
 node review/text-inventory/verify-main-update-catalogs.cjs
 python -B review/text-inventory/verify-main-update-documentation.py

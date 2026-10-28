@@ -1,0 +1,30 @@
+{
+  "source_revision": "1fda3eb161b042aae66e4adcc07319f69946dadd",
+  "source": "packages/cli/src/cli-messages.ts",
+  "sha256": "bf14b81ac879002b88f380d8f8b0bccea356d4589d7d3d517748768c3572975b",
+  "bytes": 80504,
+  "physical_lines": 1277,
+  "base_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "base_sha256": "4cc3acc3f5a3f1bb9c51683aeb3f3cf48f751a6053db6022bab3f27fdcdb5e31",
+  "exact_delta": "One CatalogMessageId property addition; deleting its exact line restores the complete BASE blob.",
+  "target_catalog_sha256": "8b2eab5c52be1a587f3ed0b7d514274c65196160f76ed3cf1a5bb84d6c18181f",
+  "string_tokens": 1113,
+  "catalog_reference_occurrences": 1036,
+  "bounded_resolver_source": "packages/cli/src/locale-catalog.ts",
+  "bounded_resolver_sha256": "9fd058c1837e56ccbcb6f2ab94a4b2d7305cdb229e5047b5bf84be4d8cf49111",
+  "bounded_resolver_base_target_equal": true,
+  "unique_catalog_ids": 1025,
+  "local_helpers_and_class": 7,
+  "protected_tokens": 77,
+  "conditions": {
+    "defaultCatalog": "On API call, nullish cached defaultBundle requests the English bundle once; returned bundle is reused. The bounded imported resolver can return its English recovery bundle when catalog loading fails, and that result is cached too. Only uncaught resolver failures escape without populating this cache. No terminal output here.",
+    "plainArguments": "Undefined args returns undefined; otherwise Object.entries values with typeof object supply value.value, other values pass through. No recursive formatting, escaping or wrapping here; malformed runtime inputs/getters/native failures are external payload.",
+    "catalogText": "API call delegates bundle.format(id, plainArguments(args)); locale and formatting/fallback behavior belong to supplied bundle. No local wrapping, stdout/stderr or catch.",
+    "catalogMessage": "Builds reference with id only when args is undefined, otherwise id and original args. Does not format or render.",
+    "catalogMessageText": "API call passes message.id and message.args into catalogText using the supplied bundle. Missing/malformed input or formatter failures escape; no independent fixed English.",
+    "CatalogError": "Constructor formats the reference through defaultCatalog before super, then sets technical name CatalogError and stores catalogMessage. Error.message uses the resulting English/recovery text; formatter failure can preempt construction. Locale-aware outer handling can reformat descriptor. Native stack/inspection and caller rendering remain separate conditions.",
+    "catalogFieldLabel": "Doctor field map takes nullish precedence over catalog field map. Undefined mapping returns caller fallback unchanged; mapped ID formats through supplied bundle. Ordinary inherited-property lookup is not an own-property guard; malformed/adversarial field identifiers and formatter failures remain external."
+  },
+  "audited_execution": false,
+  "coverage": "Local definition and helper source review only. Imported formatter implementation, wider target callers, terminal/native behavior and transitive payloads remain qualified by separate owners."
+}

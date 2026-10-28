@@ -21,6 +21,7 @@ SCOPES = [
     'main-update-documentation-scope.csv',
     'main-update-model-picker-tests-scope.csv',
     'main-update-model-ranking-tests-scope.csv',
+    'main-update-message-table-scope.csv',
     'main-update-model-text-scope.csv',
     'main-update-release-text-scope.csv',
     'main-update-startup-auth-scope.csv',
@@ -111,10 +112,10 @@ def generate():
     for row in rows:
         counts[row['local_body_extent']] = counts.get(row['local_body_extent'], 0) + 1
     assert counts == {
-        'bounded-changed-source-or-metadata-only': 24,
+        'bounded-changed-source-or-metadata-only': 23,
         'full-document-source-export-only': 7,
         'full-English-source-export-only': 2,
-        'full-local-product-source-only': 13,
+        'full-local-product-source-only': 14,
         'full-test-source-only': 13,
     }, counts
     snapshot = dict(base_revision=BASE, target_revision=TARGET, changed_paths=59,
