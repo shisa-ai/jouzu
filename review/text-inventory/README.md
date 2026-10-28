@@ -412,9 +412,20 @@ literals across twelve complete bodies are anchored in the
 [scope table](operator-scripts-scope.csv). Conditions distinguish child TAP and
 native errors, replaced smoke-test details, saved timing/build/path facts and
 GitHub output values. The root candidate census identifies 81 command/helper
-paths: these twelve, one separately covered TextGuard build helper and 68 pending
-paths. Scope references for pending paths do not claim their text is reviewed.
+paths: these twelve, one separately covered TextGuard build helper and 68
+candidates addressed by follow-on passes below. Scope references for pending
+paths do not claim their text is reviewed.
 No operator scripts, CI setup or native security commands were executed.
+
+[build-scripts.csv](build-scripts.csv) adds 1,136 build/patch records: 844
+top-level literal occurrences, 268 individually anchored nested generated-code
+literals and 24 payload boundaries. The [scope](build-scripts-scope.csv) covers
+18 complete bodies, eight locked patch manifests and 13 copied-source hashes.
+Records distinguish operator errors/status, old match anchors, installed generated
+wording, protected code/state values and unused-helper APIs. Nested literals retain
+their exact escaped locations without evaluating interpolations or transforms.
+This leaves 50 root candidates pending; the copied runtime bodies and delegated
+branding/error producers retain separate wording boundaries.
 
 [textguard-native.csv](textguard-native.csv) records 418 native TextGuard
 occurrences and boundaries, including 122 native English occurrences, protected
@@ -477,6 +488,7 @@ node review/text-inventory/verify-flow-wait-producers.cjs
 node review/text-inventory/verify-flow-tools.cjs
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-operator-scripts.py
+python -B review/text-inventory/verify-build-scripts.py
 python -B review/text-inventory/verify-textguard-native.py
 python -B review/text-inventory/verify-textguard-dependencies.py
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>

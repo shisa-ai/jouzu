@@ -1,8 +1,8 @@
 {
   "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
   "tracked_blobs": 1206,
-  "paths_with_scope_references": 534,
-  "paths_without_scope_references": 672,
+  "paths_with_scope_references": 557,
+  "paths_without_scope_references": 649,
   "path_categories": {
     "configuration-lock-resource-or-other": 79,
     "ci-workflow": 10,
@@ -45,6 +45,7 @@
     "installer-dependencies-scope.csv": "d7029caef18c55372665644dd50a938b96aba6c103821edd99d0bd87fe246316",
     "python-console-scope.csv": "b33435dd93a5da7d140fe862d6330faa8bfbc11d83e1b0b322e4e9982326132e",
     "operator-scripts-scope.csv": "a8a0d7fbeb35ef7c96e318e28c0f1940dbf8cb08505051b853227f76825a0c08",
+    "build-scripts-scope.csv": "5ad0d49a28d7f9a6df95c8405cb4327e21cdb09f4bfc4f558b7e000eceef2a19",
     "textguard-native-scope.csv": "6391a10548dcfbd36c11ebeb9fe5e1b8e43dd85afa2a1c804392a918803d0c6a",
     "textguard-dependencies-scope.csv": "34233fa2246a5ce90a43203dc608f05d92833f8296f293f7af9d92f3d7851770",
     "catalog-snapshot.json": "2ead66b940219e429137498a54fa692d914079b558c376ce34e38bbddae0dd79"

@@ -20,7 +20,7 @@ SCOPES = [
     'doctor-scope.csv', 'updater-scope.csv', 'profiles-scope.csv', 'profile-migration-scope.csv', 'catalog-settings-scope.csv', 'flow-display-scope.csv',
     'model-picker-scope.csv', 'palette-scope.csv', 'model-catalog-scope.csv', 'pi-tools-scope.csv', 'pi-runtime-scope.csv', 'pi-auth-model-scope.csv', 'pi-session-config-scope.csv', 'flow-report-scope.csv', 'flow-storage-scope.csv', 'flow-receipts-scope.csv', 'flow-waits-scope.csv', 'flow-wait-authority-scope.csv', 'flow-wait-producers-scope.csv', 'flow-tools-scope.csv',
     'launcher-scope.csv', 'launcher-helpers-scope.csv', 'launcher-support-scope.csv',
-    'installer-dependencies-scope.csv', 'python-console-scope.csv', 'operator-scripts-scope.csv', 'textguard-native-scope.csv', 'textguard-dependencies-scope.csv',
+    'installer-dependencies-scope.csv', 'python-console-scope.csv', 'operator-scripts-scope.csv', 'build-scripts-scope.csv', 'textguard-native-scope.csv', 'textguard-dependencies-scope.csv',
 ]
 FIELDS = ['path', 'git_mode', 'git_blob', 'path_category', 'scope_reference_status', 'scope_records_json']
 

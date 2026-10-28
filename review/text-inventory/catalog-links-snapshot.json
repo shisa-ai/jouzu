@@ -39,6 +39,7 @@
     "installer-dependencies.csv": 0,
     "python-console.csv": 0,
     "operator-scripts.csv": 0,
+    "build-scripts.csv": 0,
     "textguard-native.csv": 0,
     "textguard-dependencies.csv": 0
   },
@@ -78,6 +79,7 @@
     "installer-dependencies.csv": "94c5852dbdcb47da2ba76a55f75d925c98229472adb451c8a4fde6b87946e5cd",
     "python-console.csv": "aaac9b9f131b7b9c0a411c5ddec42c1139056fc46eaf9348ccc7d9673a98f48e",
     "operator-scripts.csv": "98d2fe6a0bf02fd30bb73b6dd0f1f0e3c14a37e1103b1d37a428a58fb652f984",
+    "build-scripts.csv": "68befe3a4f96d55edc573b5ad3098e94b9ff33a4c4fe0f852d884ee948773e85",
     "textguard-native.csv": "08467f86575d3192cfceb3dd8bd2b656708b74c4f3ca385e8ddeeab8501a57ed",
     "textguard-dependencies.csv": "d4c96fa7aa75e2f90566abace6eea342d42519bdc9a0c3bb2c5dc79da4ef3d19"
   },
