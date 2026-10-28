@@ -501,6 +501,18 @@ are module/path/glob/alias/bind/type values and a Cargo rebuild directive, with 
 new authored runtime sentence. Compiler, framework, browser and OS messages keep
 their external producer boundaries. No build, config, package or test executes.
 
+[resource-control-assets.csv](resource-control-assets.csv) records two complete
+control-resource text bodies (206 lines), with one source description, 175 exact
+test-budget selectors, four tier identities and four external/opaque boundaries.
+The [line export](resource-control-assets-lines.csv) reconstructs their bytes;
+[scope](resource-control-assets-scope.csv) keeps timing helper/CI consumers bounded
+and does not claim test registration from selector data. Timing outputs use input
+record names, with exact suffix/key precedence and threshold conditions. The
+[snapshot](resource-control-assets-snapshot.json) also partitions the icon's
+114,704 bytes into nine frames and checks PNG structure/CRCs. The image viewer
+could not read the ICO; its pixels, visible text and runtime selection remain
+unknown. Seven corruption controls pass without decoding or native execution.
+
 [package-asset-text.csv](package-asset-text.csv) separates sixteen package,
 product, window-title and SVG annotations across eleven complete metadata/asset
 sources (644 lines). The [line export](package-asset-lines.csv) preserves all
@@ -1775,6 +1787,7 @@ python -B review/text-inventory/verify-launcher-config-text.py
 python -B review/text-inventory/verify-resource-config-text.py
 python -B review/text-inventory/verify-license-source-text.py
 python -B review/text-inventory/verify-package-asset-text.py
+python -B review/text-inventory/verify-resource-control-assets.py
 python -B review/text-inventory/verify-installer-dependencies.py --cache-dir <archive-directory>
 python -B review/text-inventory/verify-flow.py
 python -B review/text-inventory/verify-flow-report.py
