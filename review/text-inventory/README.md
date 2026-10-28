@@ -172,14 +172,14 @@ and backend report facts. The Report action opens the issues page; the backend
 draft-facts API has no active frontend caller. Log retention and crash-file
 limits are qualified by their actual best-effort I/O and naming behavior.
 
-[pi.csv](pi.csv) records 706 inherited Pi source occurrences, with per-occurrence
+[pi.csv](pi.csv) records 925 inherited Pi source occurrences, with per-occurrence
 conditions and 155 links to Jouzu catalog IDs.
-[pi-boundaries.csv](pi-boundaries.csv) records 135 dynamic content boundaries.
-[pi-scope.csv](pi-scope.csv) covers 69 candidate files: one partial file and
-68 fully read source bodies with explicit text,
+[pi-boundaries.csv](pi-boundaries.csv) records 166 dynamic content boundaries.
+[pi-scope.csv](pi-scope.csv) covers the 69 original candidate files, all with
+fully read source bodies and explicit text,
 no-prose, startup-gated or conditional-error dispositions.
-[pi-exclusions.csv](pi-exclusions.csv) accounts for 2,814 exact lexical occurrences
-in those 68 bodies, including imports, code tokens, layout and native output
+[pi-exclusions.csv](pi-exclusions.csv) accounts for 3,725 exact lexical occurrences
+in those 69 bodies, including imports, code tokens, layout and native output
 suppressed by Jouzu's startup configuration. These dispositions do not establish
 whole-product or runtime coverage. `source_text_json` preserves source whitespace
 and control characters as a JSON string. [pi-evidence.json](pi-evidence.json) records the
@@ -188,8 +188,8 @@ exact Pi 1.4.0 archive integrity and comparisons with both installed trees:
 Canonical English used by Jouzu's adapter is distinguished from untranslated
 display text; command names and payloads retain their ownership boundaries.
 Selector records distinguish host fallbacks, native startup and exported
-consumers. Show-images/theme exported activation remains qualified; the large
-InteractiveMode source and transitive text producers still need further coverage.
+consumers. Show-images/theme exported activation remains qualified; the wider
+tool, RPC, SDK, export/viewer and other imported producer graph remains open.
 Editor records distinguish content-row paste markers from border labels that
 Jouzu's prompt frame replaces at widths of four columns or more. Tree search
 aliases are excluded from visible wording when their only consumer is filtering.
@@ -200,6 +200,9 @@ AgentSession records distinguish manual and automatic compaction, extension
 errors, retry protocol fields and prompt content shown only in an expanded skill
 invocation. Supplemental consumer hashes are recorded separately from the 69-file
 canonical archive comparison.
+InteractiveMode records include native help/session/debug-file prose, constructor
+and event dispatch, startup/version gates and host overrides. Manual compaction
+error, automatic status and migration-warning sinks have separate conditions.
 
 [flow-display.csv](flow-display.csv) records 94 occurrences in the Flow status
 extension and message renderer: 57 direct wording occurrences, 29 catalog

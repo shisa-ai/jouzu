@@ -45,6 +45,11 @@ assert(sha(path.join(repo, 'upstream/pi.lock.json')) === evidence.pin.sha256, 'P
 assert(new Set(rows.map((r) => r.item_id)).size === rows.length, 'Duplicate fixed-text item IDs');
 assert(new Set(boundaries.map((r) => r.item_id)).size === boundaries.length, 'Duplicate boundary item IDs');
 assert(rows.length === evidence.counts.rows && scopes.length === evidence.counts.scopes, 'Recorded count mismatch');
+assert(boundaries.length === evidence.counts.external_boundaries && exclusions.length === evidence.counts.excluded_occurrences, 'Boundary/exclusion count differs from evidence');
+assert(evidence.counts.proofs === rows.length, 'Proof count differs from fixed rows');
+assert(evidence.counts.catalog_linked_rows === rows.filter((row) => row.message_id).length && evidence.counts.distinct_catalog_ids === new Set(rows.map((row) => row.message_id).filter(Boolean)).size, 'Catalog-link count differs from evidence');
+assert(JSON.stringify(evidence.counts.statusCounts) === JSON.stringify(scopes.reduce((counts, row) => { counts[row.status] = (counts[row.status] || 0) + 1; return counts; }, {})), 'Source-status counts differ from evidence');
+assert(JSON.stringify(evidence.remaining_partial_sources) === JSON.stringify(scopes.filter((row) => row.status === 'partial').map((row) => row.source)), 'Remaining partial-source list differs from scopes');
 const parseLocation = (location) => {
   const owned = /^repo:((?:packages|scripts|upstream|docs)\/[^:]+):(\d+)$/.exec(location);
   if (owned) return { repoSource: true, packageName: 'repo', source: owned[1], line: Number(owned[2]) };
@@ -77,7 +82,7 @@ for (const [tree, base] of [['root', nodeModules], ['cli-nested', cliNodeModules
 for (const record of evidence.repo_trace_sources || []) {
   assert(sha(path.join(repo, record.source)) === record.sha256, 'Repo consumer source snapshot drift: ' + record.source);
 }
-for (const record of evidence.agent_session_source_review?.support_sources || []) {
+for (const record of [...(evidence.agent_session_source_review?.support_sources || []), ...(evidence.interactive_mode_source_review?.support_sources || [])]) {
   const parsed = /^npm:(@earendil-works\/[^@]+)@([^/]+)\/(.+)$/.exec(record.source);
   assert(parsed, 'Invalid supplemental source notation: ' + record.source);
   const [, packageName, version, sourcePath] = parsed;
@@ -149,7 +154,7 @@ for (const record of evidence.finite_subset_source_review?.reclassified_fixed_ro
   assert(row && row.source_location === record.english_location && JSON.parse(row.source_text_json) === record.english && row.disposition === record.disposition, 'Control/initializer exclusion mismatch: ' + record.former_item_id);
 }
 
-const dispositionedFiles = [...(evidence.additional_source_review?.files || []), ...(evidence.partial_source_review?.files || []), ...(evidence.selector_editor_source_review?.files || []), ...(evidence.finite_subset_source_review?.files || []), ...(evidence.agent_session_source_review?.files || [])];
+const dispositionedFiles = [...(evidence.additional_source_review?.files || []), ...(evidence.partial_source_review?.files || []), ...(evidence.selector_editor_source_review?.files || []), ...(evidence.finite_subset_source_review?.files || []), ...(evidence.agent_session_source_review?.files || []), ...(evidence.interactive_mode_source_review?.files || [])];
 assert(new Set(dispositionedFiles.map((record) => record.source)).size === dispositionedFiles.length, 'Duplicate reviewed-source records');
 for (const record of dispositionedFiles) {
   const parsed = source(record.source), sourceScope = scopes.find((row) => row.source === record.source);
