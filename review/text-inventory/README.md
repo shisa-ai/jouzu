@@ -963,6 +963,21 @@ failure. Queue-removal failure generation and later reconciliation notices have
 separate conditions. Thirteen prior full-body links preserve ownership. No
 history scanner, queue, source recovery, storage or native/UI operation executed.
 
+[flow-lifecycle-history.csv](flow-lifecycle-history.csv) adds 79 fixed occurrences
+and fifteen payload boundaries across five complete boundary/navigation/registry/
+binding/recovery bodies (1,464 lines). The
+[scope](flow-lifecycle-history-scope.csv) pins 21 sources, including six native
+support bodies, and accounts for 78 Error constructors, two private invariant
+exclusions, four catches, 168 helper-call lines and 421 lexical tokens. Public
+malformed-API guards stay qualified; private validated-state guards do not become
+ordinary CLI triggers. Native tree navigation can display surviving errors;
+extension navigation keeps its caller boundary. Cancelled/settled reasons are
+distinct from the uncertain-outcome reason rendered by Flow. Backup failures
+can be discarded before a no-path recovery notice; disposal rollback catches
+synchronous throws, with separate asynchronous rejection behavior. Six prior
+full-body links preserve ownership. No registry, navigation, storage, callback,
+model or native/UI operation was executed.
+
 [flow-wait-bridges.csv](flow-wait-bridges.csv) adds twenty fixed occurrences
 and eight boundaries across the complete 420-line schedule/subagent wait pair.
 All 142 AST string/template occurrences are partitioned with 122
@@ -1555,6 +1570,7 @@ python -B review/text-inventory/verify-flow-submission-text.py
 python -B review/text-inventory/verify-flow-ingress-text.py
 python -B review/text-inventory/verify-flow-session-service.py
 python -B review/text-inventory/verify-flow-native-history.py
+python -B review/text-inventory/verify-flow-lifecycle-history.py
 node review/text-inventory/verify-flow-wait-bridges.cjs
 node review/text-inventory/verify-input-example-text.cjs
 python -B review/text-inventory/verify-web-adapter-text.py

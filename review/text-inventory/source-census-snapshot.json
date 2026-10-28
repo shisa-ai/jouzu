@@ -84,6 +84,7 @@
     "flow-ingress-text-scope.csv": "22abe72a1a0b5d23922ca69215251387af3609739ea53b5471d11cf6a6916e0c",
     "flow-session-service-scope.csv": "853c5018501ddd07ae9dea5ce4cd4c322fc1f6fa289e58b7bf5f5ec5c4526d0c",
     "flow-native-history-scope.csv": "a4140a36477d1b7fed111e786ff6a025f0bacfb4ab6348a34ff4e48a4d648672",
+    "flow-lifecycle-history-scope.csv": "2b9b6e456cf904b0fa0121925b570b552cb3c0fa7f4447b3f445b3b4c1478aea",
     "flow-wait-bridges-scope.csv": "05782a8e2ffd693310cb084f64066d75bfc2ba365e72e6d0f3b036c70fe8eb0f",
     "input-example-text-scope.csv": "19e79b5ba6dbc5ab65b88fe23f3b751f1bf0902a44ee94d970869ff46db7bbc7",
     "context-adjunct-text-scope.csv": "0c84a529730447971bcb26c2508e2495dbe17c488428dc3c623a58ba23c7ae75",
