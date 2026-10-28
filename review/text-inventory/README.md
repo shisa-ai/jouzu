@@ -105,14 +105,14 @@ verbosity and forwarded in verbose builds. Native Windows resource wording and
 remote response payloads remain explicit external boundaries. These are source
 traces; no installer, compiler or native dialog was executed.
 
-[pi.csv](pi.csv) records 660 inherited Pi source occurrences, with per-occurrence
+[pi.csv](pi.csv) records 657 inherited Pi source occurrences, with per-occurrence
 conditions and 155 links to Jouzu catalog IDs.
-[pi-boundaries.csv](pi-boundaries.csv) records 81 dynamic content boundaries.
-[pi-scope.csv](pi-scope.csv) covers 69 candidate files: 19 finite inspected
-subsets, two partial files, and 48 fully read source bodies with explicit text,
+[pi-boundaries.csv](pi-boundaries.csv) records 112 dynamic content boundaries.
+[pi-scope.csv](pi-scope.csv) covers 69 candidate files: two partial files and
+67 fully read source bodies with explicit text,
 no-prose, startup-gated or conditional-error dispositions.
-[pi-exclusions.csv](pi-exclusions.csv) accounts for 2,026 exact lexical occurrences
-in those 48 bodies, including imports, code tokens, layout and native output
+[pi-exclusions.csv](pi-exclusions.csv) accounts for 2,439 exact lexical occurrences
+in those 67 bodies, including imports, code tokens, layout and native output
 suppressed by Jouzu's startup configuration. These dispositions do not establish
 whole-product or runtime coverage. `source_text_json` preserves source whitespace
 and control characters as a JSON string. [pi-evidence.json](pi-evidence.json) records the
@@ -122,10 +122,13 @@ Canonical English used by Jouzu's adapter is distinguished from untranslated
 display text; command names and payloads retain their ownership boundaries.
 Selector records distinguish host fallbacks, native startup and exported
 consumers. Show-images/theme exported activation remains qualified; two large
-sources and the earlier finite subsets still need further coverage.
+sources and transitive text producers still need further coverage.
 Editor records distinguish content-row paste markers from border labels that
 Jouzu's prompt frame replaces at widths of four columns or more. Tree search
 aliases are excluded from visible wording when their only consumer is filtering.
+Native login cancellation control signals and an overwritten loader initializer
+also remain in the exclusions; exported callback/default activation is qualified
+separately from the shipped consumers.
 
 [flow-display.csv](flow-display.csv) records 94 occurrences in the Flow status
 extension and message renderer: 57 direct wording occurrences, 29 catalog

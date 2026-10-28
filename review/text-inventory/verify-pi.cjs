@@ -121,7 +121,13 @@ for (const record of evidence.selector_editor_source_review?.reclassified_fixed_
   assert(row && row.source_location === record.english_location && JSON.parse(row.source_text_json) === record.english && row.disposition === 'search-only-token', 'Reclassification exclusion mismatch: ' + record.former_item_id);
 }
 
-const dispositionedFiles = [...(evidence.additional_source_review?.files || []), ...(evidence.partial_source_review?.files || []), ...(evidence.selector_editor_source_review?.files || [])];
+for (const record of evidence.finite_subset_source_review?.reclassified_fixed_rows || []) {
+  assert(!rows.some((row) => row.item_id === record.former_item_id), 'Reclassified control/initializer item remains fixed: ' + record.former_item_id);
+  const row = exclusions.find((item) => item.item_id === record.exclusion_id);
+  assert(row && row.source_location === record.english_location && JSON.parse(row.source_text_json) === record.english && row.disposition === record.disposition, 'Control/initializer exclusion mismatch: ' + record.former_item_id);
+}
+
+const dispositionedFiles = [...(evidence.additional_source_review?.files || []), ...(evidence.partial_source_review?.files || []), ...(evidence.selector_editor_source_review?.files || []), ...(evidence.finite_subset_source_review?.files || [])];
 assert(new Set(dispositionedFiles.map((record) => record.source)).size === dispositionedFiles.length, 'Duplicate reviewed-source records');
 for (const record of dispositionedFiles) {
   const parsed = source(record.source), sourceScope = scopes.find((row) => row.source === record.source);
