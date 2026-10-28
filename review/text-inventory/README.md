@@ -741,7 +741,7 @@ view data is distinct from persisted native admission reasons. Result review-not
 English can survive in saved/raw/expanded/exported content while compact summary
 uses a catalog label. Manifest input limits, cursor errors, retention/attachment
 routes and complete-member byte budgets retain their precise guards. Wider
-ingress, service, host and schedule bodies remain pending; submission, user-input
+ingress, service and host bodies remain pending; submission, user-input
 and work helpers follow below.
 No controller, queue, tool, model, native or user-state producer was executed.
 
@@ -756,7 +756,7 @@ receipt view. Consumption, cancellation evidence, admission holds and unknown
 states retain exact precedence. Queue/context-only cancellation can evaluate a
 catalog lookup whose text is discarded. Submitted user text has its own guarded
 native/model/saved/export route, separate from receipt text. Wider native,
-ingress, service and schedule producers remain open; submission follows below. No grants,
+ingress and service producers remain open; submission and wait bridges follow below. No grants,
 input, private state, model, native or tool producer was executed.
 
 [flow-submission-text.csv](flow-submission-text.csv) adds 117 durable-submission
@@ -771,6 +771,21 @@ consumer. Validation-only placeholders are not saved. Ingress can suppress
 transition/stale failures, while other errors reach qualified API, tool or current
 notification paths. No native queue/archive command sink is inferred from the
 management API. No journal, queue, private state, native or UI producer executed.
+
+[flow-wait-bridges.csv](flow-wait-bridges.csv) adds twenty fixed occurrences
+and eight boundaries across the complete 420-line schedule/subagent wait pair.
+All 142 AST string/template occurrences are partitioned with 122
+[exclusions](flow-wait-bridges-exclusions.csv). The
+[scope](flow-wait-bridges-scope.csv) pins thirteen sources and accounts for
+seventeen Error constructors and five catches. Exact job/run identity, attachment,
+first-trigger/terminal evidence and registration guards remain separate from
+rendered text. A successful launch can receive an error-marked wait-registration
+warning without undoing the effect; the reporter must return before the warning
+is appended. Surviving content has conditional model/saved/export routes, while
+later handlers, content policy and tool renderers can suppress display. Native
+handshake listener errors and tool-call/result exceptions have distinct catches.
+Four corruption controls pass. No schedule, subagent, file, event, model, native
+or UI operation was executed.
 
 [input-example-text.csv](input-example-text.csv) adds 127 example/guide records:
 eight conditional English occurrences, six boundaries, 75 nonblank guide lines
@@ -1323,6 +1338,7 @@ python -B review/text-inventory/verify-flow-orchestration.py
 python -B review/text-inventory/verify-flow-controller-core.py
 python -B review/text-inventory/verify-flow-user-work.py
 python -B review/text-inventory/verify-flow-submission-text.py
+node review/text-inventory/verify-flow-wait-bridges.cjs
 node review/text-inventory/verify-input-example-text.cjs
 python -B review/text-inventory/verify-pi-import-message-api.py
 python -B review/text-inventory/verify-localization-ops-text.py

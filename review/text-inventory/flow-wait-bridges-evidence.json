@@ -1,0 +1,1552 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "full_bodies": {
+    "packages/cli/src/flow-control/schedule-waits.ts": 246,
+    "packages/cli/src/flow-control/subagent-waits.ts": 174
+  },
+  "anchors": [
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 1,
+      "column": 26,
+      "expression": "\"node:fs/promises\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-001",
+      "kind": "excluded",
+      "english": "node:fs/promises"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 2,
+      "column": 22,
+      "expression": "\"node:path\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-002",
+      "kind": "excluded",
+      "english": "node:path"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 3,
+      "column": 52,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-003",
+      "kind": "excluded",
+      "english": "@earendil-works/pi-coding-agent"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 4,
+      "column": 37,
+      "expression": "\"./automatic-work.js\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-004",
+      "kind": "excluded",
+      "english": "./automatic-work.js"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 5,
+      "column": 39,
+      "expression": "\"./pi-attachment.js\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-005",
+      "kind": "excluded",
+      "english": "./pi-attachment.js"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 6,
+      "column": 43,
+      "expression": "\"./pi-session-ingress.js\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-006",
+      "kind": "excluded",
+      "english": "./pi-session-ingress.js"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 7,
+      "column": 33,
+      "expression": "\"./receipt-ledger.js\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-007",
+      "kind": "excluded",
+      "english": "./receipt-ledger.js"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 8,
+      "column": 92,
+      "expression": "\"./wait-producers.js\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-008",
+      "kind": "excluded",
+      "english": "./wait-producers.js"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 16,
+      "column": 15,
+      "expression": "\"running\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-009",
+      "kind": "excluded",
+      "english": "running"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 16,
+      "column": 27,
+      "expression": "\"success\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-010",
+      "kind": "excluded",
+      "english": "success"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 16,
+      "column": 39,
+      "expression": "\"error\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-011",
+      "kind": "excluded",
+      "english": "error"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 29,
+      "column": 21,
+      "expression": "\"string\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-012",
+      "kind": "excluded",
+      "english": "string"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 31,
+      "column": 28,
+      "expression": "\"string\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-013",
+      "kind": "excluded",
+      "english": "string"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 33,
+      "column": 26,
+      "expression": "\"boolean\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-014",
+      "kind": "excluded",
+      "english": "boolean"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 36,
+      "column": 56,
+      "expression": "\"string\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-015",
+      "kind": "excluded",
+      "english": "string"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 37,
+      "column": 38,
+      "expression": "\"running\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-016",
+      "kind": "excluded",
+      "english": "running"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 37,
+      "column": 49,
+      "expression": "\"success\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-017",
+      "kind": "excluded",
+      "english": "success"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 37,
+      "column": 60,
+      "expression": "\"error\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-018",
+      "kind": "excluded",
+      "english": "error"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 38,
+      "column": 57,
+      "expression": "\"string\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-019",
+      "kind": "excluded",
+      "english": "string"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 40,
+      "column": 29,
+      "expression": "\"schema\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-020",
+      "kind": "excluded",
+      "english": "schema"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 40,
+      "column": 39,
+      "expression": "\"Scheduled prompt storage contains an invalid job.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-001",
+      "kind": "fixed",
+      "english": "Scheduled prompt storage contains an invalid job."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 46,
+      "column": 23,
+      "expression": "\"events\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-021",
+      "kind": "excluded",
+      "english": "events"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 51,
+      "column": 60,
+      "expression": "\"pending\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-022",
+      "kind": "excluded",
+      "english": "pending"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 51,
+      "column": 72,
+      "expression": "\"satisfied\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-023",
+      "kind": "excluded",
+      "english": "satisfied"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 51,
+      "column": 86,
+      "expression": "\"failed\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-024",
+      "kind": "excluded",
+      "english": "failed"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 51,
+      "column": 97,
+      "expression": "\"cancelled\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-025",
+      "kind": "excluded",
+      "english": "cancelled"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 56,
+      "column": 24,
+      "expression": "\"pending\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-026",
+      "kind": "excluded",
+      "english": "pending"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 57,
+      "column": 26,
+      "expression": "\"first-trigger\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-027",
+      "kind": "excluded",
+      "english": "first-trigger"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 59,
+      "column": 17,
+      "expression": "\"pending\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-028",
+      "kind": "excluded",
+      "english": "pending"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 64,
+      "column": 26,
+      "expression": "`${job.id}@${job.createdAt}`",
+      "item_id": "FLOW-WAIT-BRIDGES-X-029",
+      "kind": "excluded",
+      "english": "${job.id}@${job.createdAt}"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 68,
+      "column": 14,
+      "expression": "\"schedule\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-030",
+      "kind": "excluded",
+      "english": "schedule"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 71,
+      "column": 42,
+      "expression": "\"cron:change\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-031",
+      "kind": "excluded",
+      "english": "cron:change"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 78,
+      "column": 35,
+      "expression": "\"cancelled\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-032",
+      "kind": "excluded",
+      "english": "cancelled"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 82,
+      "column": 25,
+      "expression": "\"fire\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-033",
+      "kind": "excluded",
+      "english": "fire"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 82,
+      "column": 73,
+      "expression": "\"satisfied\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-034",
+      "kind": "excluded",
+      "english": "satisfied"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 83,
+      "column": 30,
+      "expression": "\"error\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-035",
+      "kind": "excluded",
+      "english": "error"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 83,
+      "column": 66,
+      "expression": "\"failed\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-036",
+      "kind": "excluded",
+      "english": "failed"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 84,
+      "column": 30,
+      "expression": "\"remove\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-037",
+      "kind": "excluded",
+      "english": "remove"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 84,
+      "column": 58,
+      "expression": "\"update\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-038",
+      "kind": "excluded",
+      "english": "update"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 85,
+      "column": 34,
+      "expression": "\"cancelled\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-039",
+      "kind": "excluded",
+      "english": "cancelled"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 98,
+      "column": 44,
+      "expression": "\".pi/schedule-prompts.json\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-040",
+      "kind": "excluded",
+      "english": ".pi/schedule-prompts.json"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 98,
+      "column": 74,
+      "expression": "\"utf8\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-041",
+      "kind": "excluded",
+      "english": "utf8"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 100,
+      "column": 51,
+      "expression": "\"ENOENT\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-042",
+      "kind": "excluded",
+      "english": "ENOENT"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 101,
+      "column": 11,
+      "expression": "'{\"version\":1,\"jobs\":[]}'",
+      "item_id": "FLOW-WAIT-BRIDGES-X-043",
+      "kind": "excluded",
+      "english": "{\"version\":1,\"jobs\":[]}"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 105,
+      "column": 31,
+      "expression": "\"schema\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-044",
+      "kind": "excluded",
+      "english": "schema"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 105,
+      "column": 41,
+      "expression": "\"Scheduled prompt storage has an unsupported format.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-002",
+      "kind": "fixed",
+      "english": "Scheduled prompt storage has an unsupported format."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 109,
+      "column": 31,
+      "expression": "\"identity\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-045",
+      "kind": "excluded",
+      "english": "identity"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 109,
+      "column": 43,
+      "expression": "\"Scheduled prompt storage repeats a job identity.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-003",
+      "kind": "fixed",
+      "english": "Scheduled prompt storage repeats a job identity."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 114,
+      "column": 25,
+      "expression": "\"schedule\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-046",
+      "kind": "excluded",
+      "english": "schedule"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 119,
+      "column": 43,
+      "expression": "\"identity\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-047",
+      "kind": "excluded",
+      "english": "identity"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 119,
+      "column": 55,
+      "expression": "\"Scheduled prompt wait does not name an owned schedule.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-004",
+      "kind": "fixed",
+      "english": "Scheduled prompt wait does not name an owned schedule."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 120,
+      "column": 31,
+      "expression": "\"cancelled\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-048",
+      "kind": "excluded",
+      "english": "cancelled"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 124,
+      "column": 59,
+      "expression": "\"running\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-049",
+      "kind": "excluded",
+      "english": "running"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 125,
+      "column": 8,
+      "expression": "\"satisfied\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-050",
+      "kind": "excluded",
+      "english": "satisfied"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 126,
+      "column": 27,
+      "expression": "\"error\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-051",
+      "kind": "excluded",
+      "english": "error"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 127,
+      "column": 9,
+      "expression": "\"failed\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-052",
+      "kind": "excluded",
+      "english": "failed"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 129,
+      "column": 10,
+      "expression": "\"pending\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-053",
+      "kind": "excluded",
+      "english": "pending"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 130,
+      "column": 10,
+      "expression": "\"cancelled\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-054",
+      "kind": "excluded",
+      "english": "cancelled"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 151,
+      "column": 27,
+      "expression": "\"events\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-055",
+      "kind": "excluded",
+      "english": "events"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 153,
+      "column": 48,
+      "expression": "\"waitProducers\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-056",
+      "kind": "excluded",
+      "english": "waitProducers"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 153,
+      "column": 65,
+      "expression": "\"register\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-057",
+      "kind": "excluded",
+      "english": "register"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 156,
+      "column": 9,
+      "expression": "\"jouzu-schedule-waits\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-058",
+      "kind": "excluded",
+      "english": "jouzu-schedule-waits"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 159,
+      "column": 10,
+      "expression": "\"tool_call\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-059",
+      "kind": "excluded",
+      "english": "tool_call"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 160,
+      "column": 28,
+      "expression": "\"schedule_prompt\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-060",
+      "kind": "excluded",
+      "english": "schedule_prompt"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 160,
+      "column": 72,
+      "expression": "\"add\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-061",
+      "kind": "excluded",
+      "english": "add"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 163,
+      "column": 67,
+      "expression": "\"stale\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-062",
+      "kind": "excluded",
+      "english": "stale"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 163,
+      "column": 76,
+      "expression": "\"Scheduled prompt wait branch changed.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-005",
+      "kind": "fixed",
+      "english": "Scheduled prompt wait branch changed."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 167,
+      "column": 87,
+      "expression": "\"schedule\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-063",
+      "kind": "excluded",
+      "english": "schedule"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 170,
+      "column": 10,
+      "expression": "\"tool_result\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-064",
+      "kind": "excluded",
+      "english": "tool_result"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 171,
+      "column": 28,
+      "expression": "\"schedule_prompt\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-065",
+      "kind": "excluded",
+      "english": "schedule_prompt"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 185,
+      "column": 30,
+      "expression": "\"add\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-066",
+      "kind": "excluded",
+      "english": "add"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 186,
+      "column": 33,
+      "expression": "\"schema\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-067",
+      "kind": "excluded",
+      "english": "schema"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 186,
+      "column": 43,
+      "expression": "\"Scheduled prompt creation returned no job identity.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-006",
+      "kind": "fixed",
+      "english": "Scheduled prompt creation returned no job identity."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 190,
+      "column": 33,
+      "expression": "\"identity\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-068",
+      "kind": "excluded",
+      "english": "identity"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 190,
+      "column": 45,
+      "expression": "\"Scheduled prompt creation returned inconsistent identities.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-007",
+      "kind": "fixed",
+      "english": "Scheduled prompt creation returned inconsistent identities."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 191,
+      "column": 24,
+      "expression": "`${job.id}@${job.createdAt}`",
+      "item_id": "FLOW-WAIT-BRIDGES-X-069",
+      "kind": "excluded",
+      "english": "${job.id}@${job.createdAt}"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 196,
+      "column": 44,
+      "expression": "\"stale\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-070",
+      "kind": "excluded",
+      "english": "stale"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 196,
+      "column": 53,
+      "expression": "\"Scheduled prompt wait source detached before registration.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-008",
+      "kind": "fixed",
+      "english": "Scheduled prompt wait source detached before registration."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 199,
+      "column": 33,
+      "expression": "\"stale\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-071",
+      "kind": "excluded",
+      "english": "stale"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 199,
+      "column": 42,
+      "expression": "\"Scheduled prompt wait source changed during registration.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-009",
+      "kind": "fixed",
+      "english": "Scheduled prompt wait source changed during registration."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 200,
+      "column": 41,
+      "expression": "\"schedule\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-072",
+      "kind": "excluded",
+      "english": "schedule"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 200,
+      "column": 87,
+      "expression": "\"first-trigger\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-073",
+      "kind": "excluded",
+      "english": "first-trigger"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 205,
+      "column": 15,
+      "expression": "\"text\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-074",
+      "kind": "excluded",
+      "english": "text"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 206,
+      "column": 15,
+      "expression": "`${JSON.stringify({ waitDependency })}\\nThis waits for the schedule's first trigger, not completion of the prompt. Omit health and checkAfter; provide a deadline.`",
+      "item_id": "FLOW-WAIT-BRIDGES-010",
+      "kind": "fixed",
+      "english": "${JSON.stringify({ waitDependency })}\\nThis waits for the schedule's first trigger, not completion of the prompt. Omit health and checkAfter; provide a deadline."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 217,
+      "column": 15,
+      "expression": "\"text\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-075",
+      "kind": "excluded",
+      "english": "text"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 218,
+      "column": 15,
+      "expression": "\"The scheduled prompt was created, but its wait receipt could not be registered. Retain the job ID and rely on scheduled delivery; do not create a duplicate schedule.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-011",
+      "kind": "fixed",
+      "english": "The scheduled prompt was created, but its wait receipt could not be registered. Retain the job ID and rely on scheduled delivery; do not create a duplicate schedule."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 225,
+      "column": 10,
+      "expression": "\"agent_end\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-076",
+      "kind": "excluded",
+      "english": "agent_end"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 231,
+      "column": 43,
+      "expression": "\"stale\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-077",
+      "kind": "excluded",
+      "english": "stale"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 231,
+      "column": 52,
+      "expression": "\"Scheduled prompt wait extension is not loaded.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-012",
+      "kind": "fixed",
+      "english": "Scheduled prompt wait extension is not loaded."
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 1,
+      "column": 68,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-078",
+      "kind": "excluded",
+      "english": "@earendil-works/pi-coding-agent"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 2,
+      "column": 44,
+      "expression": "\"../subagents/manager.js\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-079",
+      "kind": "excluded",
+      "english": "../subagents/manager.js"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 3,
+      "column": 37,
+      "expression": "\"./automatic-work.js\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-080",
+      "kind": "excluded",
+      "english": "./automatic-work.js"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 4,
+      "column": 39,
+      "expression": "\"./pi-attachment.js\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-081",
+      "kind": "excluded",
+      "english": "./pi-attachment.js"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 5,
+      "column": 43,
+      "expression": "\"./pi-session-ingress.js\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-082",
+      "kind": "excluded",
+      "english": "./pi-session-ingress.js"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 6,
+      "column": 33,
+      "expression": "\"./receipt-ledger.js\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-083",
+      "kind": "excluded",
+      "english": "./receipt-ledger.js"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 7,
+      "column": 67,
+      "expression": "\"./wait-producers.js\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-084",
+      "kind": "excluded",
+      "english": "./wait-producers.js"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 9,
+      "column": 37,
+      "expression": "\"jouzu:subagent-wait-source\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-085",
+      "kind": "excluded",
+      "english": "jouzu:subagent-wait-source"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 21,
+      "column": 29,
+      "expression": "\"identity\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-086",
+      "kind": "excluded",
+      "english": "identity"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 21,
+      "column": 41,
+      "expression": "\"Subagent wait does not name this session's exact run.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-013",
+      "kind": "fixed",
+      "english": "Subagent wait does not name this session's exact run."
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 28,
+      "column": 12,
+      "expression": "\"terminal\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-087",
+      "kind": "excluded",
+      "english": "terminal"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 30,
+      "column": 8,
+      "expression": "\"pending\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-088",
+      "kind": "excluded",
+      "english": "pending"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 31,
+      "column": 23,
+      "expression": "\"completed\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-089",
+      "kind": "excluded",
+      "english": "completed"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 32,
+      "column": 9,
+      "expression": "\"satisfied\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-090",
+      "kind": "excluded",
+      "english": "satisfied"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 33,
+      "column": 24,
+      "expression": "\"cancelled\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-091",
+      "kind": "excluded",
+      "english": "cancelled"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 34,
+      "column": 10,
+      "expression": "\"cancelled\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-092",
+      "kind": "excluded",
+      "english": "cancelled"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 35,
+      "column": 10,
+      "expression": "\"failed\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-093",
+      "kind": "excluded",
+      "english": "failed"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 50,
+      "column": 27,
+      "expression": "\"events\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-094",
+      "kind": "excluded",
+      "english": "events"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 52,
+      "column": 48,
+      "expression": "\"waitProducers\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-095",
+      "kind": "excluded",
+      "english": "waitProducers"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 52,
+      "column": 65,
+      "expression": "\"register\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-096",
+      "kind": "excluded",
+      "english": "register"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 55,
+      "column": 9,
+      "expression": "\"jouzu-subagent-waits\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-097",
+      "kind": "excluded",
+      "english": "jouzu-subagent-waits"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 58,
+      "column": 10,
+      "expression": "\"tool_call\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-098",
+      "kind": "excluded",
+      "english": "tool_call"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 60,
+      "column": 25,
+      "expression": "\"subagent\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-099",
+      "kind": "excluded",
+      "english": "subagent"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 61,
+      "column": 8,
+      "expression": "\"launch\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-100",
+      "kind": "excluded",
+      "english": "launch"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 61,
+      "column": 18,
+      "expression": "\"resume\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-101",
+      "kind": "excluded",
+      "english": "resume"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 67,
+      "column": 67,
+      "expression": "\"stale\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-102",
+      "kind": "excluded",
+      "english": "stale"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 67,
+      "column": 76,
+      "expression": "\"Subagent wait branch changed.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-014",
+      "kind": "fixed",
+      "english": "Subagent wait branch changed."
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 71,
+      "column": 87,
+      "expression": "\"subagent\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-103",
+      "kind": "excluded",
+      "english": "subagent"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 74,
+      "column": 10,
+      "expression": "\"tool_result\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-104",
+      "kind": "excluded",
+      "english": "tool_result"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 75,
+      "column": 28,
+      "expression": "\"subagent\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-105",
+      "kind": "excluded",
+      "english": "subagent"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 86,
+      "column": 62,
+      "expression": "\"text\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-106",
+      "kind": "excluded",
+      "english": "text"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 87,
+      "column": 47,
+      "expression": "\"text\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-107",
+      "kind": "excluded",
+      "english": "text"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 87,
+      "column": 68,
+      "expression": "\"null\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-108",
+      "kind": "excluded",
+      "english": "null"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 88,
+      "column": 42,
+      "expression": "\"string\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-109",
+      "kind": "excluded",
+      "english": "string"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 89,
+      "column": 33,
+      "expression": "\"schema\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-110",
+      "kind": "excluded",
+      "english": "schema"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 89,
+      "column": 43,
+      "expression": "\"Subagent launch returned no run identity.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-015",
+      "kind": "fixed",
+      "english": "Subagent launch returned no run identity."
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 94,
+      "column": 44,
+      "expression": "\"stale\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-111",
+      "kind": "excluded",
+      "english": "stale"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 94,
+      "column": 53,
+      "expression": "\"Subagent wait source detached before registration.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-016",
+      "kind": "fixed",
+      "english": "Subagent wait source detached before registration."
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 97,
+      "column": 33,
+      "expression": "\"stale\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-112",
+      "kind": "excluded",
+      "english": "stale"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 97,
+      "column": 42,
+      "expression": "\"Subagent wait source changed during registration.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-017",
+      "kind": "fixed",
+      "english": "Subagent wait source changed during registration."
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 98,
+      "column": 41,
+      "expression": "\"subagent\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-113",
+      "kind": "excluded",
+      "english": "subagent"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 98,
+      "column": 101,
+      "expression": "\"terminal\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-114",
+      "kind": "excluded",
+      "english": "terminal"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 100,
+      "column": 43,
+      "expression": "\"text\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-115",
+      "kind": "excluded",
+      "english": "text"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 101,
+      "column": 64,
+      "expression": "\"object\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-116",
+      "kind": "excluded",
+      "english": "object"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 109,
+      "column": 15,
+      "expression": "\"text\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-117",
+      "kind": "excluded",
+      "english": "text"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 110,
+      "column": 15,
+      "expression": "\"The subagent launch succeeded, but its wait receipt could not be registered. Retain the run ID and use its completion notification; do not repeat the launch.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-018",
+      "kind": "fixed",
+      "english": "The subagent launch succeeded, but its wait receipt could not be registered. Retain the run ID and use its completion notification; do not repeat the launch."
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 117,
+      "column": 10,
+      "expression": "\"agent_end\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-118",
+      "kind": "excluded",
+      "english": "agent_end"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 125,
+      "column": 43,
+      "expression": "\"stale\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-119",
+      "kind": "excluded",
+      "english": "stale"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 125,
+      "column": 52,
+      "expression": "\"Subagent wait extension is not loaded.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-019",
+      "kind": "fixed",
+      "english": "Subagent wait extension is not loaded."
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 126,
+      "column": 53,
+      "expression": "\"accept\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-120",
+      "kind": "excluded",
+      "english": "accept"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 132,
+      "column": 33,
+      "expression": "\"identity\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-121",
+      "kind": "excluded",
+      "english": "identity"
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 132,
+      "column": 45,
+      "expression": "\"Subagent wait handshake is closed or repeated.\"",
+      "item_id": "FLOW-WAIT-BRIDGES-020",
+      "kind": "fixed",
+      "english": "Subagent wait handshake is closed or repeated."
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 144,
+      "column": 17,
+      "expression": "\"subagent\"",
+      "item_id": "FLOW-WAIT-BRIDGES-X-122",
+      "kind": "excluded",
+      "english": "subagent"
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 98,
+      "column": 5,
+      "expression": "raw = await readFile",
+      "item_id": "FLOW-WAIT-BRIDGES-021",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 76,
+      "column": 7,
+      "expression": "assertScheduleJob(event.job)",
+      "item_id": "FLOW-WAIT-BRIDGES-022",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 203,
+      "column": 8,
+      "expression": "...event.content",
+      "item_id": "FLOW-WAIT-BRIDGES-023",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 86,
+      "column": 6,
+      "expression": "const text = event.content.find",
+      "item_id": "FLOW-WAIT-BRIDGES-024",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 128,
+      "column": 4,
+      "expression": "events.emit(SUBAGENT_WAIT_SOURCE",
+      "item_id": "FLOW-WAIT-BRIDGES-025",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 147,
+      "column": 7,
+      "expression": "selected.subscribe",
+      "item_id": "FLOW-WAIT-BRIDGES-026",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 243,
+      "column": 4,
+      "expression": "await previous?.close()",
+      "item_id": "FLOW-WAIT-BRIDGES-027",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 209,
+      "column": 7,
+      "expression": "details: { ...details, waitDependency }",
+      "item_id": "FLOW-WAIT-BRIDGES-028",
+      "kind": "boundary",
+      "english": ""
+    }
+  ],
+  "controls": [
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 40,
+      "column": 9,
+      "expression": "new FlowLedgerError(\"schema\", \"Scheduled prompt storage contains an invalid job.\")",
+      "kind": "error",
+      "disposition": "Own fixed FlowLedgerError, raw API/callback paths qualified individually."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 86,
+      "column": 7,
+      "expression": "catch (error) {\n\t\t\t\t\toptions.onError(error);\n\t\t\t\t}",
+      "kind": "catch",
+      "disposition": "Read catch suppresses only ENOENT; event/result callback catches route through onError, result fallback requires reporter success. See exact source and primary/boundary record."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 99,
+      "column": 6,
+      "expression": "catch (error) {\n\t\t\t\tif ((error as NodeJS.ErrnoException).code !== \"ENOENT\") throw error;\n\t\t\t\traw = '{\"version\":1,\"jobs\":[]}';\n\t\t\t}",
+      "kind": "catch",
+      "disposition": "Read catch suppresses only ENOENT; event/result callback catches route through onError, result fallback requires reporter success. See exact source and primary/boundary record."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 105,
+      "column": 11,
+      "expression": "new FlowLedgerError(\"schema\", \"Scheduled prompt storage has an unsupported format.\")",
+      "kind": "error",
+      "disposition": "Own fixed FlowLedgerError, raw API/callback paths qualified individually."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 109,
+      "column": 11,
+      "expression": "new FlowLedgerError(\"identity\", \"Scheduled prompt storage repeats a job identity.\")",
+      "kind": "error",
+      "disposition": "Own fixed FlowLedgerError, raw API/callback paths qualified individually."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 119,
+      "column": 23,
+      "expression": "new FlowLedgerError(\"identity\", \"Scheduled prompt wait does not name an owned schedule.\")",
+      "kind": "error",
+      "disposition": "Own fixed FlowLedgerError, raw API/callback paths qualified individually."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 163,
+      "column": 47,
+      "expression": "new FlowLedgerError(\"stale\", \"Scheduled prompt wait branch changed.\")",
+      "kind": "error",
+      "disposition": "Own fixed FlowLedgerError, raw API/callback paths qualified individually."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 186,
+      "column": 13,
+      "expression": "new FlowLedgerError(\"schema\", \"Scheduled prompt creation returned no job identity.\")",
+      "kind": "error",
+      "disposition": "Own fixed FlowLedgerError, raw API/callback paths qualified individually."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 190,
+      "column": 13,
+      "expression": "new FlowLedgerError(\"identity\", \"Scheduled prompt creation returned inconsistent identities.\")",
+      "kind": "error",
+      "disposition": "Own fixed FlowLedgerError, raw API/callback paths qualified individually."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 196,
+      "column": 24,
+      "expression": "new FlowLedgerError(\"stale\", \"Scheduled prompt wait source detached before registration.\")",
+      "kind": "error",
+      "disposition": "Own fixed FlowLedgerError, raw API/callback paths qualified individually."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 199,
+      "column": 13,
+      "expression": "new FlowLedgerError(\"stale\", \"Scheduled prompt wait source changed during registration.\")",
+      "kind": "error",
+      "disposition": "Own fixed FlowLedgerError, raw API/callback paths qualified individually."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 211,
+      "column": 7,
+      "expression": "catch (error) {\n\t\t\t\t\toptions.onError(error);\n\t\t\t\t\treturn {\n\t\t\t\t\t\tcontent: [\n\t\t\t\t\t\t\t...event.content,\n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\ttype: \"text\" as const,\n\t\t\t\t\t\t\t\ttext: \"The scheduled prompt was created, but its wait receipt could not be registered. Retain the job ID and rely on scheduled delivery; do not create a duplicate schedule.\",\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t],\n\t\t\t\t\t\tisError: true,\n\t\t\t\t\t};\n\t\t\t\t}",
+      "kind": "catch",
+      "disposition": "Read catch suppresses only ENOENT; event/result callback catches route through onError, result fallback requires reporter success. See exact source and primary/boundary record."
+    },
+    {
+      "path": "packages/cli/src/flow-control/schedule-waits.ts",
+      "line": 231,
+      "column": 23,
+      "expression": "new FlowLedgerError(\"stale\", \"Scheduled prompt wait extension is not loaded.\")",
+      "kind": "error",
+      "disposition": "Own fixed FlowLedgerError, raw API/callback paths qualified individually."
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 21,
+      "column": 9,
+      "expression": "new FlowLedgerError(\"identity\", \"Subagent wait does not name this session's exact run.\")",
+      "kind": "error",
+      "disposition": "Own fixed FlowLedgerError, raw API/callback paths qualified individually."
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 67,
+      "column": 47,
+      "expression": "new FlowLedgerError(\"stale\", \"Subagent wait branch changed.\")",
+      "kind": "error",
+      "disposition": "Own fixed FlowLedgerError, raw API/callback paths qualified individually."
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 89,
+      "column": 13,
+      "expression": "new FlowLedgerError(\"schema\", \"Subagent launch returned no run identity.\")",
+      "kind": "error",
+      "disposition": "Own fixed FlowLedgerError, raw API/callback paths qualified individually."
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 94,
+      "column": 24,
+      "expression": "new FlowLedgerError(\"stale\", \"Subagent wait source detached before registration.\")",
+      "kind": "error",
+      "disposition": "Own fixed FlowLedgerError, raw API/callback paths qualified individually."
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 97,
+      "column": 13,
+      "expression": "new FlowLedgerError(\"stale\", \"Subagent wait source changed during registration.\")",
+      "kind": "error",
+      "disposition": "Own fixed FlowLedgerError, raw API/callback paths qualified individually."
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 103,
+      "column": 7,
+      "expression": "catch (error) {\n\t\t\t\t\toptions.onError(error);\n\t\t\t\t\treturn {\n\t\t\t\t\t\tcontent: [\n\t\t\t\t\t\t\t...event.content,\n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\ttype: \"text\" as const,\n\t\t\t\t\t\t\t\ttext: \"The subagent launch succeeded, but its wait receipt could not be registered. Retain the run ID and use its completion notification; do not repeat the launch.\",\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t],\n\t\t\t\t\t\tisError: true,\n\t\t\t\t\t};\n\t\t\t\t}",
+      "kind": "catch",
+      "disposition": "Read catch suppresses only ENOENT; event/result callback catches route through onError, result fallback requires reporter success. See exact source and primary/boundary record."
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 125,
+      "column": 23,
+      "expression": "new FlowLedgerError(\"stale\", \"Subagent wait extension is not loaded.\")",
+      "kind": "error",
+      "disposition": "Own fixed FlowLedgerError, raw API/callback paths qualified individually."
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 132,
+      "column": 13,
+      "expression": "new FlowLedgerError(\"identity\", \"Subagent wait handshake is closed or repeated.\")",
+      "kind": "error",
+      "disposition": "Own fixed FlowLedgerError, raw API/callback paths qualified individually."
+    },
+    {
+      "path": "packages/cli/src/flow-control/subagent-waits.ts",
+      "line": 150,
+      "column": 10,
+      "expression": "catch (error) {\n\t\t\t\t\t\t\t\toptions.onError(error);\n\t\t\t\t\t\t\t}",
+      "kind": "catch",
+      "disposition": "Read catch suppresses only ENOENT; event/result callback catches route through onError, result fallback requires reporter success. See exact source and primary/boundary record."
+    }
+  ],
+  "counts": {
+    "primary": 28,
+    "fixed": 20,
+    "boundaries": 8,
+    "excluded": 122,
+    "nodes": 142,
+    "errors": 17,
+    "catches": 5,
+    "scope": 13
+  },
+  "reviewed_data": {
+    "flow-wait-bridges.csv": "3582dc510f51fa6fad46e0432d7b976e5bd28b772e62be23074f2d11c1f5195c",
+    "flow-wait-bridges-exclusions.csv": "b52ad3802d70b4b0ffc1aacd023a64fd360f5e8d27510bf8709197a5e32d32eb",
+    "flow-wait-bridges-scope.csv": "05782a8e2ffd693310cb084f64066d75bfc2ba365e72e6d0f3b036c70fe8eb0f"
+  }
+}
