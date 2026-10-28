@@ -445,7 +445,19 @@ Validation conditions identify argument fields, deadlines, copied dependency
 identity, branch changes and cancellation. The success result of no-reply remains
 visible transcript text. Parsed-dependency and nonempty-ledger preconditions
 exclude two guarded diagnostics. Model guidance and schema descriptions have
-their own dispositions; optional metadata/client presentation remains open.
+conditional export routes in the follow-up below; optional client presentation
+remains separate.
+
+[flow-metadata.csv](flow-metadata.csv) follows 26 earlier model-metadata records
+through native live-session HTML export: 23 conditional visual occurrences and
+three nested parameter descriptions retained in embedded data without native
+visual rendering. Exact prior IDs and English are preserved. Active tool
+selection, allowed/excluded filters, description replacements, hidden declarations,
+custom prompts and later section overrides have distinct conditions. Exported
+System Prompt text comes from persisted transcript state; a forced request prompt
+can differ. The [scope](flow-metadata-scope.csv) pins 14 bounded producer/consumer
+sources. It does not close the full HTML template, standalone export or optional
+client rendering. No product or browser code was executed.
 
 [python-console.csv](python-console.csv) records 30 occurrences and boundaries
 for the separate Python console package, including 11 inherited `argparse`
@@ -555,6 +567,7 @@ node review/text-inventory/verify-flow-waits.cjs
 node review/text-inventory/verify-flow-wait-authority.cjs
 node review/text-inventory/verify-flow-wait-producers.cjs
 node review/text-inventory/verify-flow-tools.cjs
+python -B review/text-inventory/verify-flow-metadata.py
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-build-scripts.py

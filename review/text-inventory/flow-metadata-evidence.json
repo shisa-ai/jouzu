@@ -1,0 +1,243 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "anchors": [
+    {
+      "item_id": "FLOW-METADATA-012",
+      "prior_item_id": "FLOW-TOOLS-EX-012",
+      "kind": "prompt-guidance",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 14,
+      "column": 2,
+      "expression": "\"Flow control coordinates automated continuations, dependency waits, and completion notifications. Workflow tools track the requested work; a wait holds its next automatic turn while a dependency runs. Ending your turn leaves that work and its background jobs in place. A user message whose text is a JSON object with flowInput is a flow delivery: kind user carries what the user typed; work, result, wait, and alert come from Jouzu, not the user.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-013",
+      "prior_item_id": "FLOW-TOOLS-EX-013",
+      "kind": "prompt-guidance",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 15,
+      "column": 2,
+      "expression": "\"Continue independent work while dependencies run. When remaining work depends on asynchronous execution, copy the producer's waitDependency into agent_wait.on and supply a bounded deadline. Omit work to suspend the current task or session; dependency work metadata does not restrict which task can wait on it. A refused wait installs nothing and does not suspend work.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-014",
+      "prior_item_id": "FLOW-TOOLS-EX-014",
+      "kind": "prompt-guidance",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 16,
+      "column": 2,
+      "expression": "\"After agent_wait returns waiting and no independent work remains, briefly state what is running, what will unblock you, and what you will verify, then end the turn. Trust completion delivery; do not poll status, add timer-based checks, or create extra continuations merely to stay active. Inspect logs for a concrete diagnostic question or an explicit user request. For a system without completion notifications, poll on a bounded schedule and explain the limit.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-015",
+      "prior_item_id": "FLOW-TOOLS-EX-015",
+      "kind": "prompt-guidance",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 17,
+      "column": 2,
+      "expression": "\"On a wake, match each result's producer and execution identity to the work you are waiting for. A stopped or completed older job does not describe its replacement. Notifications can be batched; inspect every relevant result and retrieve omitted details when needed. Verify output and completion criteria before marking requested work complete.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-016",
+      "prior_item_id": "FLOW-TOOLS-EX-016",
+      "kind": "prompt-guidance",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 18,
+      "column": 2,
+      "expression": "\"After user input or context restoration, use the supplied wait state and preserve pending work. A status question does not renew or replace a wait. At expiry or dependency failure, decide whether to repair, stop, or declare a new wait; do not retry the wait automatically.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-017",
+      "prior_item_id": "FLOW-TOOLS-EX-017",
+      "kind": "prompt-guidance",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 19,
+      "column": 2,
+      "expression": "\"When work changes, cancel or explicitly replace its affected wait and update the owning work. agent_wait_cancel removes only the dependency gate; it does not stop the process or complete the work.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-018",
+      "prior_item_id": "FLOW-TOOLS-EX-018",
+      "kind": "prompt-guidance",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 20,
+      "column": 2,
+      "expression": "\"The user can inspect holds with /flow and build identity with /flow runtime, pause or resume automation, or use /flow clear to release a stuck hold. These are user slash commands, not shell commands or agent tools. Report remaining blockers; do not claim reset delivered pending work.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-021",
+      "prior_item_id": "FLOW-TOOLS-EX-021",
+      "kind": "prompt-guidance",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 31,
+      "column": 6,
+      "expression": "\"With bg_task, keep exit notifications enabled when relying on its completion wake; notifyOnExit: false suppresses that result notification. Copy the returned Wait dependency object into agent_wait.on, including its work and scope; omit agent_wait.work so the current task waits. The dependency work identifies the job owner, not the task to suspend.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-023",
+      "prior_item_id": "FLOW-TOOLS-EX-023",
+      "kind": "prompt-guidance",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 36,
+      "column": 6,
+      "expression": "\"For a task awaiting a person, use TaskUpdate waitForUser: true; for an explicit task pause, use paused: true. Clear the corresponding field when ready to resume.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-028",
+      "prior_item_id": "FLOW-TOOLS-EX-028",
+      "kind": "parameter-description",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 66,
+      "column": 15,
+      "expression": "\"The dependency being waited for, stated so a later reader knows what unblocks the work.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-035",
+      "prior_item_id": "FLOW-TOOLS-EX-035",
+      "kind": "parameter-description",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 77,
+      "column": 5,
+      "expression": "\"Work to suspend. Omit or pass null to use the current task or session. This is attribution, not permission to use a dependency.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-038",
+      "prior_item_id": "FLOW-TOOLS-EX-038",
+      "kind": "parameter-description",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 84,
+      "column": 5,
+      "expression": "\"Hard deadline with bounded slack for the expected duration, such as 30m or 8h. The returned expiresAt is the effective deadline after the session cap; expiry is a decision point, not proof the job stopped.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-042",
+      "prior_item_id": "FLOW-TOOLS-EX-042",
+      "kind": "parameter-description",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 90,
+      "column": 5,
+      "expression": "\"Omit or pass null unless a dependency supplies a health policy; without one the wait is deadline-only. Must be shorter than deadline.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-047",
+      "prior_item_id": "FLOW-TOOLS-EX-047",
+      "kind": "parameter-description",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 95,
+      "column": 17,
+      "expression": "\"Defaults to all when omitted or null.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-050",
+      "prior_item_id": "FLOW-TOOLS-EX-050",
+      "kind": "parameter-description",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 101,
+      "column": 5,
+      "expression": "\"Omit or pass null for a new wait ('none' also works). Unknown placeholders are ignored only when no live wait exists. A retained finished token is rejected; omit it to start a new wait. To replace a live wait, copy its exact returned token.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-059",
+      "prior_item_id": "FLOW-TOOLS-EX-059",
+      "kind": "nested-schema-data",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 120,
+      "column": 8,
+      "expression": "\"Copy only a health policy offered by the producer; otherwise omit or pass null. Do not copy until here. Health may end a wait early as unhealthy or health-unknown; it never extends the deadline.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-065",
+      "prior_item_id": "FLOW-TOOLS-EX-065",
+      "kind": "nested-schema-data",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 127,
+      "column": 20,
+      "expression": "\"Execution owner. Copy only when returned in the dependency; otherwise omit or pass null.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-068",
+      "prior_item_id": "FLOW-TOOLS-EX-068",
+      "kind": "nested-schema-data",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 132,
+      "column": 8,
+      "expression": "\"Copy only when returned in the dependency; otherwise omit or pass null. Do not infer from session metadata.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-142",
+      "prior_item_id": "FLOW-TOOLS-EX-142",
+      "kind": "tool-description",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 273,
+      "column": 6,
+      "expression": "\"Wait for asynchronous dependencies as the current task or invocation. Copy each producer's waitDependency into on and supply reason and deadline. Omit optional fields, or use null if the interface requires them. Top-level work selects the work to suspend, not the child/job to wait for; normally omit it or pass null. Never invent dependency metadata or use until as a health policy. A waiting result holds this work until completion, failure, cancellation, a health decision, or the capped deadline. Replacing a live wait requires its exact replaceToken.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-143",
+      "prior_item_id": "FLOW-TOOLS-EX-143",
+      "kind": "prompt-snippet",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 274,
+      "column": 20,
+      "expression": "\"agent_wait: wait for exact asynchronous dependencies with a hard deadline.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-156",
+      "prior_item_id": "FLOW-TOOLS-EX-156",
+      "kind": "tool-description",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 401,
+      "column": 6,
+      "expression": "\"Idempotently remove a wait gate by token and reason. This leaves its process and requested work active.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-157",
+      "prior_item_id": "FLOW-TOOLS-EX-157",
+      "kind": "prompt-snippet",
+      "path": "packages/cli/src/flow-control/wait-tools.ts",
+      "line": 402,
+      "column": 20,
+      "expression": "\"agent_wait_cancel: remove a dependency gate without stopping its job or completing its work.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-196",
+      "prior_item_id": "FLOW-TOOLS-EX-196",
+      "kind": "prompt-guidance",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 10,
+      "column": 2,
+      "expression": "\"A delivered result that needs no answer may end the turn with agent_no_reply, using the permission the result itself carried. Anything else — a lane instruction, a wait decision, or user input — is owed a reply, and the permission is refused for those runs.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-197",
+      "prior_item_id": "FLOW-TOOLS-EX-197",
+      "kind": "prompt-guidance",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 11,
+      "column": 2,
+      "expression": "\"agent_no_reply is not a silence filter. It does not acknowledge other pending results, complete requested work, or carry over to a later turn.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-205",
+      "prior_item_id": "FLOW-TOOLS-EX-205",
+      "kind": "tool-description",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 46,
+      "column": 6,
+      "expression": "\"End this turn without a reply, for a delivered result that needs no answer. Requires the exact permission that result carried. Refused for any run carrying user input, requested work, or a wait decision.\""
+    },
+    {
+      "item_id": "FLOW-METADATA-206",
+      "prior_item_id": "FLOW-TOOLS-EX-206",
+      "kind": "prompt-snippet",
+      "path": "packages/cli/src/flow-control/no-reply-tool.ts",
+      "line": 47,
+      "column": 20,
+      "expression": "\"agent_no_reply: end a notification-only turn without replying.\""
+    }
+  ],
+  "reviewed_data": {
+    "flow-metadata.csv": "a8e88168cc416a474ae8741eedb97385ef782bb2a0eb287ce32cf11d9d24a4f3",
+    "flow-metadata-scope.csv": "89b5d378721d94275bc71b97b77ba46c3c1e128cf28225642bacf73cbba037f1"
+  }
+}

@@ -148,9 +148,9 @@ for (const name of fullBodies) {
 
 
 const reviewedData = {
-  "flow-tools.csv": "29ea3dbd1d6f3391748a3670c933cb55b8cad5a85ddbd17f8fa45324677c2e20",
-  "flow-tools-exclusions.csv": "fb0428ce5e666d3071e07748d4975bfcff9ab60835c232b9da8751f1c5e451e4",
-  "flow-tools-scope.csv": "6f14fa6f2f21b3a878f2297e642b83699b1d56df9976669ffb7d5ba0ce7a5c12",
+  "flow-tools.csv": "10536cd0a888c38f66bf2f8cfbb656caeba2ee26c0c1274b3bb1b3119a775478",
+  "flow-tools-exclusions.csv": "8d9cfdb2ca3e845e91e8bdb939d7a0254ac11cbfe7e5edfc2357bca9b79407e2",
+  "flow-tools-scope.csv": "bdc7e82494a4dbcab8b8ca0ce2a99668efd32d9aa916684068ef1ebc43ed514e",
   "flow-tools-anchors.json": "9a91baebf4f6e6c25fdf2042ff1b24dc4958f9c1a2928793f65ca0b0924dac89"
 };
 for (const [name, digest] of Object.entries(reviewedData)) {
@@ -172,6 +172,7 @@ for(const name of fullBodies){const parsed=source(name);function visit(node){
 const errors=fullBodies.flatMap(name=>source(name).nodes.filter(node=>node.errorMessage));
 assert(errors.length===19 && rows.length===36 && excluded.length===210 && lexicalCount===234 && catalogSites===3,'Finite census drift');
 console.log(JSON.stringify({rows:rows.length,fixed_occurrences:24,catalog_occurrences:catalogSites,payload_boundaries:9,
- source_exclusions:excluded.length,model_metadata_exclusions:excluded.filter(r=>r.disposition==='model-input-metadata').length,
+ source_exclusions:excluded.length,export_metadata_records:excluded.filter(r=>r.disposition==='export-recorded-metadata').length,
+ nested_schema_export_data:excluded.filter(r=>r.disposition==='nested-schema-export-data-only').length,
  exact_source_anchors:anchors.size,lexical_occurrences_partitioned:lexicalCount,error_message_sites:errors.length,
  full_source_bodies:fullBodies.length,pinned_files:pinned.size,checked_references:checkedReferences,product_runtime_executed:false},null,2));
