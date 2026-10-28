@@ -878,6 +878,23 @@ sources have exact versions/import routes/two-tree hashes, without canonical
 archive or full-body promotion. Twenty corruption controls pass. No shell,
 config, search execution, activation, transcript, model or UI operation executed.
 
+[pi-ai-model-auth.csv](pi-ai-model-auth.csv) records 39 qualified error,
+auth-source and thinking-level definitions across seven complete Pi AI bodies
+(1,051 lines). The 84 [exclusions](pi-ai-model-auth-exclusions.csv) account for
+the remaining literal/template occurrences; twelve
+[boundaries](pi-ai-model-auth-boundaries.csv) retain cause, cancellation, store,
+refresh and caller conditions. Native model authentication, catalog and refresh
+methods use this collection; native requests invoke providers directly, so the
+collection's duplicate request guards retain SDK/custom-caller conditions.
+`ModelsError` uses argument one as its message and can append nonduplicate cause
+detail. Typical terminal refresh notices omit provider error details, while the
+permitted models-refresh command can include them. The
+[scope](pi-ai-model-auth-scope.csv) pins the seven local bodies; supporting
+consumers remain bounded. All three canonical package archives and both installed
+trees are checked, including the exact public nested AI package-list transform.
+Twenty-five corruption controls pass. This unit does not extend the separate
+384-source coding-agent/TUI census or execute authentication/model operations.
+
 [pi-bundle-provider-adapters.csv](pi-bundle-provider-adapters.csv) records 92
 qualified error, prompt and exported-API definitions across nine complete compiled
 provider/OAuth adapters (50,659 bytes). The 418
@@ -2030,6 +2047,7 @@ python -B review/text-inventory/verify-pi-cli-support.py --node-modules <root-no
 python -B review/text-inventory/verify-pi-codemode-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-diagnostics-migration-share.py
 python -B review/text-inventory/verify-pi-bundle-entry-support.py
+node review/text-inventory/verify-pi-ai-model-auth.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-bundle-provider-adapters.py
 node review/text-inventory/verify-pi-bundle-lexical.cjs
 node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1

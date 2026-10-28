@@ -1,0 +1,5377 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "5ea5d7101d70a3dc4eb99539e479ee4fb5d51a08",
+  "inventory_file": "pi-ai-model-auth.csv",
+  "scope_file": "pi-ai-model-auth-scope.csv",
+  "boundary_file": "pi-ai-model-auth-boundaries.csv",
+  "exclusion_file": "pi-ai-model-auth-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-ai",
+      "version": "1.4.0",
+      "package_json_sha256": "36df91142c18a5912eafab0f2783bb4d88cdd101c5c5e7fd9173d4387cc5cced"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-ai",
+      "version": "1.4.0",
+      "package_json_sha256": "18dae6817d231c86756c904eacf80a04c625041a30a9bd6dfccd841ece2dab54"
+    }
+  ],
+  "ai_archive_pin": {
+    "source": "package-lock.json",
+    "entry": "node_modules/@earendil-works/pi-ai",
+    "version": "1.4.0",
+    "resolved": "https://registry.npmjs.org/@earendil-works/pi-ai/-/pi-ai-1.4.0.tgz",
+    "integrity": "sha512-hQM/C4+1w8rHYACzDDf+0vQMnEnpzIop1tptIERVgR3ZeT/hHSzBNG8PaWPgxWQjqSeKCyBZSyp8uTT6eKK1pQ==",
+    "root_lock_sha256": "4859c6a277d7b4649c78f4460fe84e447f75cb9f358f1d0e70191a36d8f01a76",
+    "upstream_pin_separately_names_ai": false,
+    "authority": "BASE346 exact transitive pi-ai1.4.0 lock; pinned coding-agent metadata declares exact1.4.0 dependency. Upstream/pi.lock Agent/TUI/deviations still verified, no invented AI package integrity field."
+  },
+  "metadata_transform": {
+    "source": "scripts/configure-release-packlists.mjs",
+    "sha256": "d06885cca4c6bc2083bdf4331d6db4610d63f66542fc9777a76cfc7c889705ab",
+    "read_ranges": [
+      [
+        7,
+        18
+      ],
+      [
+        48,
+        58
+      ]
+    ],
+    "root_disposition": "canonical-archive-package-json-byte-exact",
+    "cli_nested_disposition": "exact-public-releaseDependencyFiles-and-JSON2-newline-transform-only-files-changed",
+    "exclusions": [
+      "!**/*.map",
+      "!**/*.d.ts",
+      "!**/*.d.mts",
+      "!**/*.d.cts"
+    ]
+  },
+  "repo_trace_sources": [
+    {
+      "source": "package-lock.json",
+      "sha256": "4859c6a277d7b4649c78f4460fe84e447f75cb9f358f1d0e70191a36d8f01a76"
+    },
+    {
+      "source": "scripts/configure-release-packlists.mjs",
+      "sha256": "d06885cca4c6bc2083bdf4331d6db4610d63f66542fc9777a76cfc7c889705ab"
+    },
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/args.ts",
+      "sha256": "ba6b4a474a3fb7ddd859efdefc6217335283e11fbc298487db9c4bbfd11d8cce"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    },
+    {
+      "source": "packages/cli/src/subagents/integration.ts",
+      "sha256": "28088c381a74390664006b1456c1ab542438a0e355f29a1126126848abbea008"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-runtime.js",
+      "sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+      "cli_nested_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          21,
+          34
+        ],
+        [
+          90,
+          122
+        ],
+        [
+          235,
+          248
+        ],
+        [
+          294,
+          346
+        ],
+        [
+          355,
+          365
+        ],
+        [
+          392,
+          405
+        ],
+        [
+          407,
+          443
+        ],
+        [
+          464,
+          505
+        ],
+        [
+          509,
+          602
+        ],
+        [
+          604,
+          662
+        ]
+      ],
+      "purpose": "Bounded actual default/native/API/store/error/print/TUI/protocol/HTML/formatter import support; not whole-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/runtime-credentials.js",
+      "sha256": "2bf389ca2b04bd4dcee56433ca845cd8d9d96d0ccf84d2d0e9ad2a5e3957bda1",
+      "cli_nested_sha256": "2bf389ca2b04bd4dcee56433ca845cd8d9d96d0ccf84d2d0e9ad2a5e3957bda1",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          17,
+          37
+        ]
+      ],
+      "purpose": "Bounded actual default/native/API/store/error/print/TUI/protocol/HTML/formatter import support; not whole-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/auth-storage.js",
+      "sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+      "cli_nested_sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          123,
+          154
+        ],
+        [
+          251,
+          264
+        ],
+        [
+          385,
+          415
+        ]
+      ],
+      "purpose": "Bounded actual default/native/API/store/error/print/TUI/protocol/HTML/formatter import support; not whole-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-registry.js",
+      "sha256": "588fa2d8df563fe0f41c99e54ecad1473cd325937b208cc1c3e103a8a032d0a1",
+      "cli_nested_sha256": "588fa2d8df563fe0f41c99e54ecad1473cd325937b208cc1c3e103a8a032d0a1",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          34,
+          61
+        ],
+        [
+          99,
+          111
+        ]
+      ],
+      "purpose": "Bounded actual default/native/API/store/error/print/TUI/protocol/HTML/formatter import support; not whole-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+      "sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          277,
+          281
+        ],
+        [
+          2285,
+          2288
+        ]
+      ],
+      "purpose": "Bounded actual default/native/API/store/error/print/TUI/protocol/HTML/formatter import support; not whole-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js",
+      "sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+      "cli_nested_sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          540,
+          556
+        ]
+      ],
+      "purpose": "Bounded actual default/native/API/store/error/print/TUI/protocol/HTML/formatter import support; not whole-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          922,
+          925
+        ],
+        [
+          4314,
+          4317
+        ],
+        [
+          4361,
+          4363
+        ],
+        [
+          4566,
+          4568
+        ],
+        [
+          5132,
+          5134
+        ],
+        [
+          5429,
+          5432
+        ],
+        [
+          5013,
+          5053
+        ],
+        [
+          5148,
+          5204
+        ],
+        [
+          5276,
+          5321
+        ]
+      ],
+      "purpose": "Bounded actual default/native/API/store/error/print/TUI/protocol/HTML/formatter import support; not whole-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/thinking-selector.js",
+      "sha256": "e89933c8746f64e996ffbe7e71dc8e034182d14a5a7e60c4ef3da4c2266d2841",
+      "cli_nested_sha256": "e89933c8746f64e996ffbe7e71dc8e034182d14a5a7e60c4ef3da4c2266d2841",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          42,
+          45
+        ]
+      ],
+      "purpose": "Bounded actual default/native/API/store/error/print/TUI/protocol/HTML/formatter import support; not whole-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/settings-selector.js",
+      "sha256": "4d50aef1f9cc3579bcb1300f090036b590e5cc8fad0b32f63dc26ec282f11109",
+      "cli_nested_sha256": "4d50aef1f9cc3579bcb1300f090036b590e5cc8fad0b32f63dc26ec282f11109",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          449,
+          454
+        ]
+      ],
+      "purpose": "Bounded actual default/native/API/store/error/print/TUI/protocol/HTML/formatter import support; not whole-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/oauth-selector.js",
+      "sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+      "cli_nested_sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          17,
+          25
+        ]
+      ],
+      "purpose": "Bounded actual default/native/API/store/error/print/TUI/protocol/HTML/formatter import support; not whole-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/assistant-message.js",
+      "sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+      "cli_nested_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          133,
+          154
+        ]
+      ],
+      "purpose": "Bounded actual default/native/API/store/error/print/TUI/protocol/HTML/formatter import support; not whole-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js",
+      "sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          84,
+          94
+        ],
+        [
+          110,
+          117
+        ]
+      ],
+      "purpose": "Bounded actual default/native/API/store/error/print/TUI/protocol/HTML/formatter import support; not whole-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js",
+      "sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          288,
+          291
+        ]
+      ],
+      "purpose": "Bounded actual default/native/API/store/error/print/TUI/protocol/HTML/formatter import support; not whole-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.js",
+      "sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+      "cli_nested_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1289,
+          1293
+        ]
+      ],
+      "purpose": "Bounded actual default/native/API/store/error/print/TUI/protocol/HTML/formatter import support; not whole-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/index.js",
+      "sha256": "7808fc618b4c816322005628af2726a53c4db678b37fb311163210c4fbab5ed0",
+      "cli_nested_sha256": "7808fc618b4c816322005628af2726a53c4db678b37fb311163210c4fbab5ed0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          10
+        ]
+      ],
+      "purpose": "Bounded actual default/native/API/store/error/print/TUI/protocol/HTML/formatter import support; not whole-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/lazy.js",
+      "sha256": "2dcf7b7d3d0ffc77b2be37b2a7ad184503a2b680b159e44c283738b28118aebe",
+      "cli_nested_sha256": "2dcf7b7d3d0ffc77b2be37b2a7ad184503a2b680b159e44c283738b28118aebe",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          20
+        ],
+        [
+          44,
+          65
+        ]
+      ],
+      "purpose": "Bounded actual default/native/API/store/error/print/TUI/protocol/HTML/formatter import support; not whole-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/model-operations.js",
+      "sha256": "56264f6289f4822db8bed91a2e47aee387bfa70383b724e58f6aa6b96a0f4358",
+      "cli_nested_sha256": "56264f6289f4822db8bed91a2e47aee387bfa70383b724e58f6aa6b96a0f4358",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          30,
+          51
+        ]
+      ],
+      "purpose": "Bounded actual default/native/API/store/error/print/TUI/protocol/HTML/formatter import support; not whole-body ownership."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/diagnostics.js",
+      "sha256": "698070e564b12f303927b0c28845a0ec51f2f3dd29434724dcdffddd31b0b469",
+      "cli_nested_sha256": "698070e564b12f303927b0c28845a0ec51f2f3dd29434724dcdffddd31b0b469",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          7
+        ]
+      ],
+      "purpose": "Bounded actual default/native/API/store/error/print/TUI/protocol/HTML/formatter import support; not whole-body ownership."
+    }
+  ],
+  "nonruntime_assets": [
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.d.ts",
+      "sha256": "55ffdf866c03e198a14c6ad6c7bf5910ad846220f48069069fd3ccf70947089c",
+      "cli_nested_sha256": "55ffdf866c03e198a14c6ad6c7bf5910ad846220f48069069fd3ccf70947089c",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.d.ts.map",
+      "sha256": "cd792345b72cfc0de0b5d641c810b7098124d21e9a6f269160e28790bdfcbea4",
+      "cli_nested_sha256": "cd792345b72cfc0de0b5d641c810b7098124d21e9a6f269160e28790bdfcbea4",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js.map",
+      "sha256": "624606131305d9e22c5258083a1f68954cb23ff654e1d7463091bd78733c7b0e",
+      "cli_nested_sha256": "624606131305d9e22c5258083a1f68954cb23ff654e1d7463091bd78733c7b0e",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models-store.d.ts",
+      "sha256": "fc8bf1e6bf781a08453a257292c50c80a9874d1092b310e4803ee6ea2d60cb39",
+      "cli_nested_sha256": "fc8bf1e6bf781a08453a257292c50c80a9874d1092b310e4803ee6ea2d60cb39",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models-store.d.ts.map",
+      "sha256": "a12cbf36a427c7e35c7e383bd46ed4c490b49f5922b5ac642ca89fb97dc6af6f",
+      "cli_nested_sha256": "a12cbf36a427c7e35c7e383bd46ed4c490b49f5922b5ac642ca89fb97dc6af6f",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models-store.js.map",
+      "sha256": "cb07464e2cfa73db7801ed21d1fcbdec4e827885e6bcaf11d5282c2e47d8e417",
+      "cli_nested_sha256": "cb07464e2cfa73db7801ed21d1fcbdec4e827885e6bcaf11d5282c2e47d8e417",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/resolve.d.ts",
+      "sha256": "a6a80f0abf9a23f48e1fc5ec482eeea0c9bc305589c8dec060559285a6c0d4b7",
+      "cli_nested_sha256": "a6a80f0abf9a23f48e1fc5ec482eeea0c9bc305589c8dec060559285a6c0d4b7",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/resolve.d.ts.map",
+      "sha256": "a8954bc0c16e81ab44f326b42478a79e86a7762b17a13fcff8ab6f10dfb6c859",
+      "cli_nested_sha256": "a8954bc0c16e81ab44f326b42478a79e86a7762b17a13fcff8ab6f10dfb6c859",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/resolve.js.map",
+      "sha256": "5f1856dc93b1267213824ee430f6f75448659048401754f972ad3d45a3d5d55a",
+      "cli_nested_sha256": "5f1856dc93b1267213824ee430f6f75448659048401754f972ad3d45a3d5d55a",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/context.d.ts",
+      "sha256": "bd367078d6292cadb85522ac72ca4d733b8506a5390359fbfd9dd681bbbce48d",
+      "cli_nested_sha256": "bd367078d6292cadb85522ac72ca4d733b8506a5390359fbfd9dd681bbbce48d",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/context.d.ts.map",
+      "sha256": "bb2297d9ef3dc72299a77d671c040143645208271e04bd0db0a11e12b2c8ec23",
+      "cli_nested_sha256": "bb2297d9ef3dc72299a77d671c040143645208271e04bd0db0a11e12b2c8ec23",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/context.js.map",
+      "sha256": "16295717c47225ad2bf6f1c2f0a865ab6b9b089050b8d5ddf143d074735c81bd",
+      "cli_nested_sha256": "16295717c47225ad2bf6f1c2f0a865ab6b9b089050b8d5ddf143d074735c81bd",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/credential-store.d.ts",
+      "sha256": "b30029a6b8d93d65dd5b164fa563346009bcf47f674b28367ac08c0f111fcfb1",
+      "cli_nested_sha256": "b30029a6b8d93d65dd5b164fa563346009bcf47f674b28367ac08c0f111fcfb1",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/credential-store.d.ts.map",
+      "sha256": "95dfe7767de324797258dee3617a72524d1ddf8b5a043d2dcd5e378bef944e94",
+      "cli_nested_sha256": "95dfe7767de324797258dee3617a72524d1ddf8b5a043d2dcd5e378bef944e94",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/credential-store.js.map",
+      "sha256": "4100d4eaf63b4c2507f3c035c2793f185fbec622090afbf754e11bae05dcfa8d",
+      "cli_nested_sha256": "4100d4eaf63b4c2507f3c035c2793f185fbec622090afbf754e11bae05dcfa8d",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/models-error.d.ts",
+      "sha256": "19c3f342e7533faa66ab18d00ca6b82b7f79cfbba3a1b02ed206295d34b5697f",
+      "cli_nested_sha256": "19c3f342e7533faa66ab18d00ca6b82b7f79cfbba3a1b02ed206295d34b5697f",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/models-error.d.ts.map",
+      "sha256": "d8a80e1ac136d5e70460a3f438f9a678278f68aea00472bb3799501e99f940f4",
+      "cli_nested_sha256": "d8a80e1ac136d5e70460a3f438f9a678278f68aea00472bb3799501e99f940f4",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/models-error.js.map",
+      "sha256": "2b9a1d95a3808255baea0f9d7a63f222881f89ee89cadc2b78dd3f73d5b84dee",
+      "cli_nested_sha256": "2b9a1d95a3808255baea0f9d7a63f222881f89ee89cadc2b78dd3f73d5b84dee",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/abort.d.ts",
+      "sha256": "2b79d404f940a30ea6798a38092c9c86ff60a62341b10f803c06596138bad018",
+      "cli_nested_sha256": "2b79d404f940a30ea6798a38092c9c86ff60a62341b10f803c06596138bad018",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/abort.d.ts.map",
+      "sha256": "cc13ef52e1bc7fcfff3060c604f1d22cb186500260a2ed4aed5683c4f4c8696d",
+      "cli_nested_sha256": "cc13ef52e1bc7fcfff3060c604f1d22cb186500260a2ed4aed5683c4f4c8696d",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/abort.js.map",
+      "sha256": "3b2adf431faf3b838cebfa66b7b51e031043e9bd5a7fcbced2b3a766f13f692b",
+      "cli_nested_sha256": "3b2adf431faf3b838cebfa66b7b51e031043e9bd5a7fcbced2b3a766f13f692b",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    }
+  ],
+  "archive_support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-runtime.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/runtime-credentials.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/auth-storage.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-registry.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/thinking-selector.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/settings-selector.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/oauth-selector.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/assistant-message.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/index.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/lazy.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/model-operations.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/diagnostics.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models-store.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models-store.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models-store.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/resolve.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/resolve.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/resolve.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/context.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/context.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/context.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/credential-store.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/credential-store.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/credential-store.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/models-error.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/models-error.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/models-error.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/abort.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/abort.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/abort.js.map"
+    }
+  ],
+  "counts": {
+    "rows": 39,
+    "proofs": 39,
+    "scopes": 7,
+    "external_boundaries": 12,
+    "excluded_occurrences": 84,
+    "dispositioned_source_files": 7,
+    "string_template_occurrences": 123,
+    "protected_regex_literals": 2,
+    "error_constructors": 26,
+    "models_error_constructors": 24,
+    "aggregate_error_constructors": 0,
+    "error_super_calls": 1,
+    "catch_clauses": 19,
+    "throw_statements": 25,
+    "all_new_expressions": 47,
+    "protected_control_occurrences": 0,
+    "full_runtime_lines": 1051,
+    "runtime_source_bytes": 45972,
+    "nonruntime_assets": 21,
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "statusCounts": {
+      "source-read-local-producers": 7
+    }
+  },
+  "proofs": [
+    {
+      "item_id": "pi.ai-model-auth.models.218.59",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 218,
+      "column": 59,
+      "kind": "template-expression",
+      "english": "Model refresh failed for ${provider.id}",
+      "evidence": "`Model refresh failed for ${provider.id}`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.263.43",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 263,
+      "column": 43,
+      "kind": "template-expression",
+      "english": "Credential store read failed for ${providerId}",
+      "evidence": "`Credential store read failed for ${providerId}`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.268.52",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 268,
+      "column": 52,
+      "kind": "string-literal",
+      "english": "OAuth",
+      "evidence": "\"OAuth\""
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.282.47",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 282,
+      "column": 47,
+      "kind": "template-expression",
+      "english": "API key auth check failed for provider ${provider.id}",
+      "evidence": "`API key auth check failed for provider ${provider.id}`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.362.47",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 362,
+      "column": 47,
+      "kind": "template-expression",
+      "english": "Unknown provider: ${providerId}",
+      "evidence": "`Unknown provider: ${providerId}`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.365.43",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 365,
+      "column": 43,
+      "kind": "template-expression",
+      "english": "${provider.name} does not support ${type} login",
+      "evidence": "`${provider.name} does not support ${type} login`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.401.43",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 401,
+      "column": 43,
+      "kind": "template-expression",
+      "english": "Credential store modify failed for ${providerId}",
+      "evidence": "`Credential store modify failed for ${providerId}`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.413.43",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 413,
+      "column": 43,
+      "kind": "template-expression",
+      "english": "Credential store delete failed for ${providerId}",
+      "evidence": "`Credential store delete failed for ${providerId}`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.419.47",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 419,
+      "column": 47,
+      "kind": "template-expression",
+      "english": "Unknown provider: ${model.provider}",
+      "evidence": "`Unknown provider: ${model.provider}`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.435.43",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 435,
+      "column": 43,
+      "kind": "template-expression",
+      "english": "Provider is not configured: ${model.provider}",
+      "evidence": "`Provider is not configured: ${model.provider}`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.483.51",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 483,
+      "column": 51,
+      "kind": "template-expression",
+      "english": "Provider ${model.provider} does not support deferred responses",
+      "evidence": "`Provider ${model.provider} does not support deferred responses`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.495.47",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 495,
+      "column": 47,
+      "kind": "template-expression",
+      "english": "Provider ${model.provider} does not support deferred responses",
+      "evidence": "`Provider ${model.provider} does not support deferred responses`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.505.51",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 505,
+      "column": 51,
+      "kind": "template-expression",
+      "english": "Provider ${model.provider} does not support image generation",
+      "evidence": "`Provider ${model.provider} does not support image generation`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.520.51",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 520,
+      "column": 51,
+      "kind": "template-expression",
+      "english": "Provider ${model.provider} does not support classification",
+      "evidence": "`Provider ${model.provider} does not support classification`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.552.25",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 552,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Provider ${input.id}: at least one of \"api\", \"images\", or \"classifiers\" is required.",
+      "evidence": "`Provider ${input.id}: at least one of \"api\", \"images\", or \"classifiers\" is required.`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.573.49",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 573,
+      "column": 49,
+      "kind": "template-expression",
+      "english": "Provider ${input.id} has no API implementation for \"${model.api}\"",
+      "evidence": "`Provider ${input.id} has no API implementation for \"${model.api}\"`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.623.51",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 623,
+      "column": 51,
+      "kind": "template-expression",
+      "english": "Provider ${input.id} does not support deferred responses for \"${model.api}\"",
+      "evidence": "`Provider ${input.id} does not support deferred responses for \"${model.api}\"`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.632.51",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 632,
+      "column": 51,
+      "kind": "template-expression",
+      "english": "Provider ${input.id} cannot cancel deferred responses for \"${model.api}\"",
+      "evidence": "`Provider ${input.id} cannot cancel deferred responses for \"${model.api}\"`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.641.76",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 641,
+      "column": 76,
+      "kind": "template-expression",
+      "english": "Provider ${input.id} has no image generation implementation for \"${model.api}\"",
+      "evidence": "`Provider ${input.id} has no image generation implementation for \"${model.api}\"`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.650.81",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 650,
+      "column": 81,
+      "kind": "template-expression",
+      "english": "Provider ${input.id} has no classifier implementation for \"${model.api}\"",
+      "evidence": "`Provider ${input.id} has no classifier implementation for \"${model.api}\"`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.692.35",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 692,
+      "column": 35,
+      "kind": "string-literal",
+      "english": "off",
+      "evidence": "\"off\""
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.692.42",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 692,
+      "column": 42,
+      "kind": "string-literal",
+      "english": "minimal",
+      "evidence": "\"minimal\""
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.692.53",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 692,
+      "column": 53,
+      "kind": "string-literal",
+      "english": "low",
+      "evidence": "\"low\""
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.692.60",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 692,
+      "column": 60,
+      "kind": "string-literal",
+      "english": "medium",
+      "evidence": "\"medium\""
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.692.70",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 692,
+      "column": 70,
+      "kind": "string-literal",
+      "english": "high",
+      "evidence": "\"high\""
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.692.78",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 692,
+      "column": 78,
+      "kind": "string-literal",
+      "english": "xhigh",
+      "evidence": "\"xhigh\""
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.692.87",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 692,
+      "column": 87,
+      "kind": "string-literal",
+      "english": "max",
+      "evidence": "\"max\""
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.695.17",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 695,
+      "column": 17,
+      "kind": "string-literal",
+      "english": "off",
+      "evidence": "\"off\""
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.711.38",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 711,
+      "column": 38,
+      "kind": "string-literal",
+      "english": "off",
+      "evidence": "\"off\""
+    },
+    {
+      "item_id": "pi.ai-model-auth.models.722.34",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "line": 722,
+      "column": 34,
+      "kind": "string-literal",
+      "english": "off",
+      "evidence": "\"off\""
+    },
+    {
+      "item_id": "pi.ai-model-auth.resolve.81.48",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/resolve.js",
+      "line": 81,
+      "column": 48,
+      "kind": "template-expression",
+      "english": "OAuth refresh failed for ${providerId}",
+      "evidence": "`OAuth refresh failed for ${providerId}`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.resolve.89.39",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/resolve.js",
+      "line": 89,
+      "column": 39,
+      "kind": "template-expression",
+      "english": "Credential store modify failed for ${providerId}",
+      "evidence": "`Credential store modify failed for ${providerId}`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.resolve.114.44",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/resolve.js",
+      "line": 114,
+      "column": 44,
+      "kind": "template-expression",
+      "english": "OAuth refresh returned a token that expires too soon for ${providerId}",
+      "evidence": "`OAuth refresh returned a token that expires too soon for ${providerId}`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.resolve.118.64",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/resolve.js",
+      "line": 118,
+      "column": 64,
+      "kind": "string-literal",
+      "english": "OAuth",
+      "evidence": "\"OAuth\""
+    },
+    {
+      "item_id": "pi.ai-model-auth.resolve.121.40",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/resolve.js",
+      "line": 121,
+      "column": 40,
+      "kind": "template-expression",
+      "english": "OAuth auth derivation failed for ${providerId}",
+      "evidence": "`OAuth auth derivation failed for ${providerId}`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.resolve.129.39",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/resolve.js",
+      "line": 129,
+      "column": 39,
+      "kind": "template-expression",
+      "english": "API key auth failed for provider ${providerId}",
+      "evidence": "`API key auth failed for provider ${providerId}`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.resolve.137.39",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/resolve.js",
+      "line": 137,
+      "column": 39,
+      "kind": "template-expression",
+      "english": "Credential store read failed for ${providerId}",
+      "evidence": "`Credential store read failed for ${providerId}`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.error.17.12",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/models-error.js",
+      "line": 17,
+      "column": 12,
+      "kind": "template-expression",
+      "english": "${message}: ${detail}",
+      "evidence": "`${message}: ${detail}`"
+    },
+    {
+      "item_id": "pi.ai-model-auth.abort.4.29",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/abort.js",
+      "line": 4,
+      "column": 29,
+      "kind": "string-literal",
+      "english": "The operation was aborted",
+      "evidence": "\"The operation was aborted\""
+    }
+  ],
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+        "read_lines": [
+          1,
+          733
+        ],
+        "string_template_occurrences": 82,
+        "fixed_rows": 30,
+        "excluded_occurrences": 52,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 218,
+            "column": 27,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Model refresh failed for ${provider.id}`"
+          },
+          {
+            "line": 263,
+            "column": 19,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Credential store read failed for ${providerId}`"
+          },
+          {
+            "line": 282,
+            "column": 23,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`API key auth check failed for provider ${provider.id}`"
+          },
+          {
+            "line": 362,
+            "column": 19,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Unknown provider: ${providerId}`"
+          },
+          {
+            "line": 365,
+            "column": 19,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`${provider.name} does not support ${type} login`"
+          },
+          {
+            "line": 401,
+            "column": 19,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Credential store modify failed for ${providerId}`"
+          },
+          {
+            "line": 413,
+            "column": 19,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Credential store delete failed for ${providerId}`"
+          },
+          {
+            "line": 419,
+            "column": 19,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Unknown provider: ${model.provider}`"
+          },
+          {
+            "line": 435,
+            "column": 19,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Provider is not configured: ${model.provider}`"
+          },
+          {
+            "line": 483,
+            "column": 23,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Provider ${model.provider} does not support deferred responses`"
+          },
+          {
+            "line": 495,
+            "column": 19,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Provider ${model.provider} does not support deferred responses`"
+          },
+          {
+            "line": 505,
+            "column": 23,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Provider ${model.provider} does not support image generation`"
+          },
+          {
+            "line": 520,
+            "column": 23,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Provider ${model.provider} does not support classification`"
+          },
+          {
+            "line": 552,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Provider ${input.id}: at least one of \"api\", \"images\", or \"classifiers\" is required.`"
+          },
+          {
+            "line": 573,
+            "column": 23,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Provider ${input.id} has no API implementation for \"${model.api}\"`"
+          },
+          {
+            "line": 623,
+            "column": 23,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Provider ${input.id} does not support deferred responses for \"${model.api}\"`"
+          },
+          {
+            "line": 632,
+            "column": 23,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Provider ${input.id} cannot cancel deferred responses for \"${model.api}\"`"
+          },
+          {
+            "line": 641,
+            "column": 48,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Provider ${input.id} has no image generation implementation for \"${model.api}\"`"
+          },
+          {
+            "line": 650,
+            "column": 53,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Provider ${input.id} has no classifier implementation for \"${model.api}\"`"
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 38,
+            "column": 17,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 43,
+            "column": 26,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 44,
+            "column": 26,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 45,
+            "column": 25,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 47,
+            "column": 52,
+            "callee": "InMemoryCredentialStore",
+            "source": "new InMemoryCredentialStore()"
+          },
+          {
+            "line": 48,
+            "column": 52,
+            "callee": "InMemoryModelsStore",
+            "source": "new InMemoryModelsStore()"
+          },
+          {
+            "line": 61,
+            "column": 26,
+            "callee": "Set",
+            "source": "new Set([...this.providers.keys(), ...this.refreshControllers.keys()])"
+          },
+          {
+            "line": 139,
+            "column": 28,
+            "callee": "AbortController",
+            "source": "new AbortController()"
+          },
+          {
+            "line": 183,
+            "column": 24,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 186,
+            "column": 46,
+            "callee": "Set",
+            "source": "new Set(options.providers)"
+          },
+          {
+            "line": 218,
+            "column": 27,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"model_source\", `Model refresh failed for ${provider.id}`, { cause: error })"
+          },
+          {
+            "line": 234,
+            "column": 57,
+            "callee": "Map",
+            "source": "new Map(errors)"
+          },
+          {
+            "line": 263,
+            "column": 19,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"auth\", `Credential store read failed for ${providerId}`, { cause: error })"
+          },
+          {
+            "line": 282,
+            "column": 23,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"auth\", `API key auth check failed for provider ${provider.id}`, { cause: error })"
+          },
+          {
+            "line": 334,
+            "column": 42,
+            "callee": "Set",
+            "source": "new Set(provider.filterModels(provider.getModels(), credential).map((model) => model.id))"
+          },
+          {
+            "line": 362,
+            "column": 19,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"provider\", `Unknown provider: ${providerId}`)"
+          },
+          {
+            "line": 365,
+            "column": 19,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"auth\", `${provider.name} does not support ${type} login`)"
+          },
+          {
+            "line": 371,
+            "column": 25,
+            "callee": "Promise",
+            "source": "new Promise((resolve) => {\n            markMutationStarted = resolve;\n        })"
+          },
+          {
+            "line": 381,
+            "column": 19,
+            "callee": "Promise",
+            "source": "new Promise((resolve, reject) => {\n                const onAbort = () => {\n                    if (!mutationStarted)\n                        reject(signal.reason);\n                };\n                signal.addEventListener(\"abort\", onAbort, { once: true });\n                void Promise.race([started, mutation]).then(() => {\n                    signal.removeEventListener(\"abort\", onAbort);\n                    resolve();\n                }, (error) => {\n                    signal.removeEventListener(\"abort\", onAbort);\n                    reject(error);\n                });\n                if (signal.aborted)\n                    onAbort();\n            })"
+          },
+          {
+            "line": 401,
+            "column": 19,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"auth\", `Credential store modify failed for ${providerId}`, { cause: error })"
+          },
+          {
+            "line": 413,
+            "column": 19,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"auth\", `Credential store delete failed for ${providerId}`, { cause: error })"
+          },
+          {
+            "line": 419,
+            "column": 19,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"provider\", `Unknown provider: ${model.provider}`)"
+          },
+          {
+            "line": 435,
+            "column": 19,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"auth\", `Provider is not configured: ${model.provider}`)"
+          },
+          {
+            "line": 483,
+            "column": 23,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"provider\", `Provider ${model.provider} does not support deferred responses`)"
+          },
+          {
+            "line": 495,
+            "column": 19,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"provider\", `Provider ${model.provider} does not support deferred responses`)"
+          },
+          {
+            "line": 505,
+            "column": 23,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"provider\", `Provider ${model.provider} does not support image generation`)"
+          },
+          {
+            "line": 520,
+            "column": 23,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"provider\", `Provider ${model.provider} does not support classification`)"
+          },
+          {
+            "line": 531,
+            "column": 12,
+            "callee": "ModelsImpl",
+            "source": "new ModelsImpl(options)"
+          },
+          {
+            "line": 552,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Provider ${input.id}: at least one of \"api\", \"images\", or \"classifiers\" is required.`)"
+          },
+          {
+            "line": 573,
+            "column": 23,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"stream\", `Provider ${input.id} has no API implementation for \"${model.api}\"`)"
+          },
+          {
+            "line": 623,
+            "column": 23,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"provider\", `Provider ${input.id} does not support deferred responses for \"${model.api}\"`)"
+          },
+          {
+            "line": 632,
+            "column": 23,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"provider\", `Provider ${input.id} cannot cancel deferred responses for \"${model.api}\"`)"
+          },
+          {
+            "line": 641,
+            "column": 48,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"provider\", `Provider ${input.id} has no image generation implementation for \"${model.api}\"`)"
+          },
+          {
+            "line": 650,
+            "column": 53,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"provider\", `Provider ${input.id} has no classifier implementation for \"${model.api}\"`)"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 203,
+            "column": 21,
+            "expression": "credentialError"
+          },
+          {
+            "line": 232,
+            "column": 17,
+            "expression": "error"
+          },
+          {
+            "line": 263,
+            "column": 13,
+            "expression": "new ModelsError(\"auth\", `Credential store read failed for ${providerId}`, { cause: error })"
+          },
+          {
+            "line": 282,
+            "column": 17,
+            "expression": "new ModelsError(\"auth\", `API key auth check failed for provider ${provider.id}`, { cause: error })"
+          },
+          {
+            "line": 362,
+            "column": 13,
+            "expression": "new ModelsError(\"provider\", `Unknown provider: ${providerId}`)"
+          },
+          {
+            "line": 365,
+            "column": 13,
+            "expression": "new ModelsError(\"auth\", `${provider.name} does not support ${type} login`)"
+          },
+          {
+            "line": 401,
+            "column": 13,
+            "expression": "new ModelsError(\"auth\", `Credential store modify failed for ${providerId}`, { cause: error })"
+          },
+          {
+            "line": 413,
+            "column": 13,
+            "expression": "new ModelsError(\"auth\", `Credential store delete failed for ${providerId}`, { cause: error })"
+          },
+          {
+            "line": 419,
+            "column": 13,
+            "expression": "new ModelsError(\"provider\", `Unknown provider: ${model.provider}`)"
+          },
+          {
+            "line": 435,
+            "column": 13,
+            "expression": "new ModelsError(\"auth\", `Provider is not configured: ${model.provider}`)"
+          },
+          {
+            "line": 483,
+            "column": 17,
+            "expression": "new ModelsError(\"provider\", `Provider ${model.provider} does not support deferred responses`)"
+          },
+          {
+            "line": 495,
+            "column": 13,
+            "expression": "new ModelsError(\"provider\", `Provider ${model.provider} does not support deferred responses`)"
+          },
+          {
+            "line": 505,
+            "column": 17,
+            "expression": "new ModelsError(\"provider\", `Provider ${model.provider} does not support image generation`)"
+          },
+          {
+            "line": 520,
+            "column": 17,
+            "expression": "new ModelsError(\"provider\", `Provider ${model.provider} does not support classification`)"
+          },
+          {
+            "line": 552,
+            "column": 9,
+            "expression": "new Error(`Provider ${input.id}: at least one of \"api\", \"images\", or \"classifiers\" is required.`)"
+          },
+          {
+            "line": 573,
+            "column": 17,
+            "expression": "new ModelsError(\"stream\", `Provider ${input.id} has no API implementation for \"${model.api}\"`)"
+          },
+          {
+            "line": 623,
+            "column": 17,
+            "expression": "new ModelsError(\"provider\", `Provider ${input.id} does not support deferred responses for \"${model.api}\"`)"
+          },
+          {
+            "line": 632,
+            "column": 17,
+            "expression": "new ModelsError(\"provider\", `Provider ${input.id} cannot cancel deferred responses for \"${model.api}\"`)"
+          }
+        ],
+        "catch_clauses": [
+          {
+            "line": 80,
+            "column": 13,
+            "source": "catch {\n                return [];\n            }"
+          },
+          {
+            "line": 89,
+            "column": 13,
+            "source": "catch {\n                // Best-effort: ill-behaved providers yield no models.\n            }"
+          },
+          {
+            "line": 103,
+            "column": 13,
+            "source": "catch {\n                return [];\n            }"
+          },
+          {
+            "line": 112,
+            "column": 13,
+            "source": "catch {\n                // Best-effort: ill-behaved providers yield no models.\n            }"
+          },
+          {
+            "line": 197,
+            "column": 17,
+            "source": "catch (error) {\n                    credentialError = error;\n                }"
+          },
+          {
+            "line": 214,
+            "column": 13,
+            "source": "catch (error) {\n                if (!signal.aborted) {\n                    errors.set(provider.id, error instanceof Error\n                        ? error\n                        : new ModelsError(\"model_source\", `Model refresh failed for ${provider.id}`, { cause: error }));\n                }\n            }"
+          },
+          {
+            "line": 230,
+            "column": 9,
+            "source": "catch (error) {\n            if (!callerSignal.aborted)\n                throw error;\n        }"
+          },
+          {
+            "line": 262,
+            "column": 9,
+            "source": "catch (error) {\n            throw new ModelsError(\"auth\", `Credential store read failed for ${providerId}`, { cause: error });\n        }"
+          },
+          {
+            "line": 281,
+            "column": 13,
+            "source": "catch (error) {\n                throw new ModelsError(\"auth\", `API key auth check failed for provider ${provider.id}`, { cause: error });\n            }"
+          },
+          {
+            "line": 399,
+            "column": 9,
+            "source": "catch (error) {\n            signal.throwIfAborted();\n            throw new ModelsError(\"auth\", `Credential store modify failed for ${providerId}`, { cause: error });\n        }"
+          },
+          {
+            "line": 411,
+            "column": 9,
+            "source": "catch (error) {\n            signal.throwIfAborted();\n            throw new ModelsError(\"auth\", `Credential store delete failed for ${providerId}`, { cause: error });\n        }"
+          },
+          {
+            "line": 510,
+            "column": 9,
+            "source": "catch (error) {\n            return imageErrorResult(model, error, options?.signal?.aborted);\n        }"
+          },
+          {
+            "line": 525,
+            "column": 9,
+            "source": "catch (error) {\n            return classifierErrorResult(model, error, options?.signal?.aborted);\n        }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "./api/lazy.js"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "./auth/context.js"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "./auth/credential-store.js"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "./auth/resolve.js"
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "./models-store.js"
+          },
+          {
+            "line": 6,
+            "column": 1,
+            "specifier": "./telemetry.js"
+          },
+          {
+            "line": 7,
+            "column": 1,
+            "specifier": "./utils/abort.js"
+          },
+          {
+            "line": 8,
+            "column": 1,
+            "specifier": "./utils/identity.js"
+          },
+          {
+            "line": 9,
+            "column": 1,
+            "specifier": "./utils/model-operations.js"
+          },
+          {
+            "line": 10,
+            "column": 1,
+            "specifier": "./utils/transcript.js"
+          }
+        ],
+        "re_exports": [
+          {
+            "line": 11,
+            "column": 1,
+            "specifier": "./auth/resolve.js",
+            "source": "export { ModelsError } from \"./auth/resolve.js\";"
+          },
+          {
+            "line": 12,
+            "column": 1,
+            "specifier": "./telemetry.js",
+            "source": "export { AI_TELEMETRY_SCHEMA } from \"./telemetry.js\";"
+          },
+          {
+            "line": 13,
+            "column": 1,
+            "specifier": "./utils/model-operations.js",
+            "source": "export { getModelType, isModelType } from \"./utils/model-operations.js\";"
+          }
+        ],
+        "output_or_native_callback_calls": [
+          {
+            "line": 17,
+            "column": 12,
+            "callee": "Object.hasOwn",
+            "arguments": [
+              "KNOWN_MODEL_TYPES",
+              "getModelType(model)"
+            ]
+          },
+          {
+            "line": 17,
+            "column": 45,
+            "callee": "getModelType",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 21,
+            "column": 32,
+            "callee": "entry.models.filter",
+            "arguments": [
+              "hasKnownModelType"
+            ]
+          },
+          {
+            "line": 27,
+            "column": 33,
+            "callee": "Object.entries",
+            "arguments": [
+              "override ?? {}"
+            ]
+          },
+          {
+            "line": 28,
+            "column": 27,
+            "callee": "name.toLowerCase",
+            "arguments": []
+          },
+          {
+            "line": 29,
+            "column": 36,
+            "callee": "Object.keys",
+            "arguments": [
+              "merged"
+            ]
+          },
+          {
+            "line": 30,
+            "column": 17,
+            "callee": "existingName.toLowerCase",
+            "arguments": []
+          },
+          {
+            "line": 49,
+            "column": 52,
+            "callee": "defaultAuthContext",
+            "arguments": []
+          },
+          {
+            "line": 53,
+            "column": 9,
+            "callee": "this.supersedeProviderRefresh",
+            "arguments": [
+              "provider.id"
+            ]
+          },
+          {
+            "line": 54,
+            "column": 9,
+            "callee": "this.providers.set",
+            "arguments": [
+              "provider.id",
+              "provider"
+            ]
+          },
+          {
+            "line": 57,
+            "column": 9,
+            "callee": "this.supersedeProviderRefresh",
+            "arguments": [
+              "id"
+            ]
+          },
+          {
+            "line": 58,
+            "column": 9,
+            "callee": "this.providers.delete",
+            "arguments": [
+              "id"
+            ]
+          },
+          {
+            "line": 61,
+            "column": 38,
+            "callee": "this.providers.keys",
+            "arguments": []
+          },
+          {
+            "line": 61,
+            "column": 64,
+            "callee": "this.refreshControllers.keys",
+            "arguments": []
+          },
+          {
+            "line": 62,
+            "column": 13,
+            "callee": "this.supersedeProviderRefresh",
+            "arguments": [
+              "id"
+            ]
+          },
+          {
+            "line": 64,
+            "column": 9,
+            "callee": "this.providers.clear",
+            "arguments": []
+          },
+          {
+            "line": 67,
+            "column": 16,
+            "callee": "Array.from",
+            "arguments": [
+              "this.providers.values()"
+            ]
+          },
+          {
+            "line": 67,
+            "column": 27,
+            "callee": "this.providers.values",
+            "arguments": []
+          },
+          {
+            "line": 70,
+            "column": 16,
+            "callee": "this.providers.get",
+            "arguments": [
+              "id"
+            ]
+          },
+          {
+            "line": 74,
+            "column": 27,
+            "callee": "this.providers.get",
+            "arguments": [
+              "provider"
+            ]
+          },
+          {
+            "line": 78,
+            "column": 24,
+            "callee": "entry.getModels",
+            "arguments": []
+          },
+          {
+            "line": 85,
+            "column": 29,
+            "callee": "this.providers.values",
+            "arguments": []
+          },
+          {
+            "line": 87,
+            "column": 17,
+            "callee": "models.push",
+            "arguments": [
+              "...entry.getModels()"
+            ]
+          },
+          {
+            "line": 87,
+            "column": 32,
+            "callee": "entry.getModels",
+            "arguments": []
+          },
+          {
+            "line": 97,
+            "column": 27,
+            "callee": "this.providers.get",
+            "arguments": [
+              "provider"
+            ]
+          },
+          {
+            "line": 101,
+            "column": 24,
+            "callee": "entry.getAllModels",
+            "arguments": []
+          },
+          {
+            "line": 101,
+            "column": 50,
+            "callee": "entry.getModels",
+            "arguments": []
+          },
+          {
+            "line": 108,
+            "column": 29,
+            "callee": "this.providers.values",
+            "arguments": []
+          },
+          {
+            "line": 110,
+            "column": 17,
+            "callee": "models.push",
+            "arguments": [
+              "...(entry.getAllModels?.() ?? entry.getModels())"
+            ]
+          },
+          {
+            "line": 110,
+            "column": 33,
+            "callee": "entry.getAllModels",
+            "arguments": []
+          },
+          {
+            "line": 110,
+            "column": 59,
+            "callee": "entry.getModels",
+            "arguments": []
+          },
+          {
+            "line": 119,
+            "column": 16,
+            "callee": "this.getAllModels(provider).filter",
+            "arguments": [
+              "(model) => isModelType(model, type)"
+            ]
+          },
+          {
+            "line": 119,
+            "column": 16,
+            "callee": "this.getAllModels",
+            "arguments": [
+              "provider"
+            ]
+          },
+          {
+            "line": 119,
+            "column": 62,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "type"
+            ]
+          },
+          {
+            "line": 122,
+            "column": 16,
+            "callee": "this.getModels(provider).find",
+            "arguments": [
+              "(model) => model.id === id"
+            ]
+          },
+          {
+            "line": 122,
+            "column": 16,
+            "callee": "this.getModels",
+            "arguments": [
+              "provider"
+            ]
+          },
+          {
+            "line": 125,
+            "column": 16,
+            "callee": "this.getModelsOfType(type, provider).find",
+            "arguments": [
+              "(model) => model.id === id"
+            ]
+          },
+          {
+            "line": 125,
+            "column": 16,
+            "callee": "this.getModelsOfType",
+            "arguments": [
+              "type",
+              "provider"
+            ]
+          },
+          {
+            "line": 128,
+            "column": 29,
+            "callee": "this.refreshGenerations.get",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 129,
+            "column": 9,
+            "callee": "this.refreshGenerations.set",
+            "arguments": [
+              "providerId",
+              "generation"
+            ]
+          },
+          {
+            "line": 130,
+            "column": 26,
+            "callee": "this.refreshControllers.get",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 132,
+            "column": 13,
+            "callee": "this.refreshControllers.delete",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 133,
+            "column": 13,
+            "callee": "previous.abort",
+            "arguments": []
+          },
+          {
+            "line": 138,
+            "column": 28,
+            "callee": "this.supersedeProviderRefresh",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 140,
+            "column": 9,
+            "callee": "this.refreshControllers.set",
+            "arguments": [
+              "providerId",
+              "controller"
+            ]
+          },
+          {
+            "line": 144,
+            "column": 26,
+            "callee": "this.publicationChains.get",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 144,
+            "column": 68,
+            "callee": "Promise.resolve",
+            "arguments": []
+          },
+          {
+            "line": 145,
+            "column": 24,
+            "callee": "(async () => {\n            await previous.catch(() => { });\n            if (signal.aborted || this.refreshGenerations.get(providerId) !== generation)\n                return false;\n            if (publication.persist === null) {\n                await this.modelsStore.delete(providerId, { signal });\n            }\n            else if (publication.persist !== undefined) {\n                await this.modelsStore.write(providerId, structuredClone(publication.persist), { signal });\n            }\n            if (signal.aborted || this.refreshGenerations.get(providerId) !== generation)\n                return false;\n            publication.update?.();\n            return true;\n        })",
+            "arguments": []
+          },
+          {
+            "line": 146,
+            "column": 19,
+            "callee": "previous.catch",
+            "arguments": [
+              "() => { }"
+            ]
+          },
+          {
+            "line": 147,
+            "column": 35,
+            "callee": "this.refreshGenerations.get",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 150,
+            "column": 23,
+            "callee": "this.modelsStore.delete",
+            "arguments": [
+              "providerId",
+              "{ signal }"
+            ]
+          },
+          {
+            "line": 153,
+            "column": 23,
+            "callee": "this.modelsStore.write",
+            "arguments": [
+              "providerId",
+              "structuredClone(publication.persist)",
+              "{ signal }"
+            ]
+          },
+          {
+            "line": 153,
+            "column": 58,
+            "callee": "structuredClone",
+            "arguments": [
+              "publication.persist"
+            ]
+          },
+          {
+            "line": 155,
+            "column": 35,
+            "callee": "this.refreshGenerations.get",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 157,
+            "column": 13,
+            "callee": "publication.update",
+            "arguments": []
+          },
+          {
+            "line": 160,
+            "column": 22,
+            "callee": "queued.catch",
+            "arguments": [
+              "() => { }"
+            ]
+          },
+          {
+            "line": 161,
+            "column": 9,
+            "callee": "this.publicationChains.set",
+            "arguments": [
+              "providerId",
+              "tail"
+            ]
+          },
+          {
+            "line": 162,
+            "column": 14,
+            "callee": "tail.then",
+            "arguments": [
+              "() => {\n            if (this.publicationChains.get(providerId) === tail)\n                this.publicationChains.delete(providerId);\n        }"
+            ]
+          },
+          {
+            "line": 163,
+            "column": 17,
+            "callee": "this.publicationChains.get",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 164,
+            "column": 17,
+            "callee": "this.publicationChains.delete",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 166,
+            "column": 16,
+            "callee": "raceWithAbortSignal",
+            "arguments": [
+              "queued",
+              "signal"
+            ]
+          },
+          {
+            "line": 169,
+            "column": 30,
+            "callee": "this.modelsStore.read",
+            "arguments": [
+              "provider.id",
+              "{ signal }"
+            ]
+          },
+          {
+            "line": 170,
+            "column": 15,
+            "callee": "provider.refreshModels",
+            "arguments": [
+              "{\n            credential,\n            stored: stored ? withKnownModelTypes(structuredClone(stored)) : undefined,\n            publish: (publication) => this.publishProviderModels(provider.id, generation, signal, publication),\n            allowNetwork,\n            force: allowNetwork ? force : undefined,\n            signal,\n            baseUrl: provider.baseUrl,\n        }"
+            ]
+          },
+          {
+            "line": 172,
+            "column": 30,
+            "callee": "withKnownModelTypes",
+            "arguments": [
+              "structuredClone(stored)"
+            ]
+          },
+          {
+            "line": 172,
+            "column": 50,
+            "callee": "structuredClone",
+            "arguments": [
+              "stored"
+            ]
+          },
+          {
+            "line": 173,
+            "column": 39,
+            "callee": "this.publishProviderModels",
+            "arguments": [
+              "provider.id",
+              "generation",
+              "signal",
+              "publication"
+            ]
+          },
+          {
+            "line": 182,
+            "column": 30,
+            "callee": "operationSignal",
+            "arguments": [
+              "options.signal"
+            ]
+          },
+          {
+            "line": 187,
+            "column": 29,
+            "callee": "Array.from(this.providers.values()).filter",
+            "arguments": [
+              "(provider) => provider.refreshModels !== undefined && (!selected || selected.has(provider.id))"
+            ]
+          },
+          {
+            "line": 187,
+            "column": 29,
+            "callee": "Array.from",
+            "arguments": [
+              "this.providers.values()"
+            ]
+          },
+          {
+            "line": 187,
+            "column": 40,
+            "callee": "this.providers.values",
+            "arguments": []
+          },
+          {
+            "line": 187,
+            "column": 140,
+            "callee": "selected.has",
+            "arguments": [
+              "provider.id"
+            ]
+          },
+          {
+            "line": 188,
+            "column": 25,
+            "callee": "Promise.all",
+            "arguments": [
+              "refreshable.map(async (provider) => {\n            const { generation, controller } = this.beginProviderRefresh(provider.id);\n            const signal = AbortSignal.any([callerSignal, controller.signal]);\n            const operation = (async () => {\n                let storedCredential;\n                let credentialError;\n                try {\n                    storedCredential = await this.readCredential(provider.id, signal);\n                }\n                catch (error) {\n                    credentialError = error;\n                }\n                // Restore cached provider state before auth resolution or network access.\n                await this.runProviderRefreshPhase(provider, storedCredential, false, undefined, generation, signal);\n                if (credentialError !== undefined)\n                    throw credentialError;\n                if (!allowNetwork || signal.aborted)\n                    return;\n                const credential = await this.resolveRefreshCredential(provider, storedCredential, signal);\n                if (!credential)\n                    return;\n                await this.runProviderRefreshPhase(provider, credential, true, options.force, generation, signal);\n            })();\n            try {\n                await raceWithAbortSignal(operation, signal);\n            }\n            catch (error) {\n                if (!signal.aborted) {\n                    errors.set(provider.id, error instanceof Error\n                        ? error\n                        : new ModelsError(\"model_source\", `Model refresh failed for ${provider.id}`, { cause: error }));\n                }\n            }\n            finally {\n                if (this.refreshControllers.get(provider.id) === controller) {\n                    this.refreshControllers.delete(provider.id);\n                }\n            }\n        })"
+            ]
+          },
+          {
+            "line": 188,
+            "column": 37,
+            "callee": "refreshable.map",
+            "arguments": [
+              "async (provider) => {\n            const { generation, controller } = this.beginProviderRefresh(provider.id);\n            const signal = AbortSignal.any([callerSignal, controller.signal]);\n            const operation = (async () => {\n                let storedCredential;\n                let credentialError;\n                try {\n                    storedCredential = await this.readCredential(provider.id, signal);\n                }\n                catch (error) {\n                    credentialError = error;\n                }\n                // Restore cached provider state before auth resolution or network access.\n                await this.runProviderRefreshPhase(provider, storedCredential, false, undefined, generation, signal);\n                if (credentialError !== undefined)\n                    throw credentialError;\n                if (!allowNetwork || signal.aborted)\n                    return;\n                const credential = await this.resolveRefreshCredential(provider, storedCredential, signal);\n                if (!credential)\n                    return;\n                await this.runProviderRefreshPhase(provider, credential, true, options.force, generation, signal);\n            })();\n            try {\n                await raceWithAbortSignal(operation, signal);\n            }\n            catch (error) {\n                if (!signal.aborted) {\n                    errors.set(provider.id, error instanceof Error\n                        ? error\n                        : new ModelsError(\"model_source\", `Model refresh failed for ${provider.id}`, { cause: error }));\n                }\n            }\n            finally {\n                if (this.refreshControllers.get(provider.id) === controller) {\n                    this.refreshControllers.delete(provider.id);\n                }\n            }\n        }"
+            ]
+          },
+          {
+            "line": 189,
+            "column": 48,
+            "callee": "this.beginProviderRefresh",
+            "arguments": [
+              "provider.id"
+            ]
+          },
+          {
+            "line": 190,
+            "column": 28,
+            "callee": "AbortSignal.any",
+            "arguments": [
+              "[callerSignal, controller.signal]"
+            ]
+          },
+          {
+            "line": 191,
+            "column": 31,
+            "callee": "(async () => {\n                let storedCredential;\n                let credentialError;\n                try {\n                    storedCredential = await this.readCredential(provider.id, signal);\n                }\n                catch (error) {\n                    credentialError = error;\n                }\n                // Restore cached provider state before auth resolution or network access.\n                await this.runProviderRefreshPhase(provider, storedCredential, false, undefined, generation, signal);\n                if (credentialError !== undefined)\n                    throw credentialError;\n                if (!allowNetwork || signal.aborted)\n                    return;\n                const credential = await this.resolveRefreshCredential(provider, storedCredential, signal);\n                if (!credential)\n                    return;\n                await this.runProviderRefreshPhase(provider, credential, true, options.force, generation, signal);\n            })",
+            "arguments": []
+          },
+          {
+            "line": 195,
+            "column": 46,
+            "callee": "this.readCredential",
+            "arguments": [
+              "provider.id",
+              "signal"
+            ]
+          },
+          {
+            "line": 201,
+            "column": 23,
+            "callee": "this.runProviderRefreshPhase",
+            "arguments": [
+              "provider",
+              "storedCredential",
+              "false",
+              "undefined",
+              "generation",
+              "signal"
+            ]
+          },
+          {
+            "line": 206,
+            "column": 42,
+            "callee": "this.resolveRefreshCredential",
+            "arguments": [
+              "provider",
+              "storedCredential",
+              "signal"
+            ]
+          },
+          {
+            "line": 209,
+            "column": 23,
+            "callee": "this.runProviderRefreshPhase",
+            "arguments": [
+              "provider",
+              "credential",
+              "true",
+              "options.force",
+              "generation",
+              "signal"
+            ]
+          },
+          {
+            "line": 212,
+            "column": 23,
+            "callee": "raceWithAbortSignal",
+            "arguments": [
+              "operation",
+              "signal"
+            ]
+          },
+          {
+            "line": 216,
+            "column": 21,
+            "callee": "errors.set",
+            "arguments": [
+              "provider.id",
+              "error instanceof Error\n                        ? error\n                        : new ModelsError(\"model_source\", `Model refresh failed for ${provider.id}`, { cause: error })"
+            ]
+          },
+          {
+            "line": 222,
+            "column": 21,
+            "callee": "this.refreshControllers.get",
+            "arguments": [
+              "provider.id"
+            ]
+          },
+          {
+            "line": 223,
+            "column": 21,
+            "callee": "this.refreshControllers.delete",
+            "arguments": [
+              "provider.id"
+            ]
+          },
+          {
+            "line": 228,
+            "column": 19,
+            "callee": "raceWithAbortSignal",
+            "arguments": [
+              "refresh",
+              "callerSignal"
+            ]
+          },
+          {
+            "line": 241,
+            "column": 17,
+            "callee": "Date.now",
+            "arguments": []
+          },
+          {
+            "line": 247,
+            "column": 20,
+            "callee": "refreshStoredOAuthCredential",
+            "arguments": [
+              "this.credentials",
+              "provider.id",
+              "oauth",
+              "(current) => Date.now() >= current.expires",
+              "signal"
+            ]
+          },
+          {
+            "line": 247,
+            "column": 100,
+            "callee": "Date.now",
+            "arguments": []
+          },
+          {
+            "line": 253,
+            "column": 30,
+            "callee": "apiKey.resolve",
+            "arguments": [
+              "{ ctx: this.authContext, credential, signal }"
+            ]
+          },
+          {
+            "line": 260,
+            "column": 26,
+            "callee": "this.credentials.read",
+            "arguments": [
+              "providerId",
+              "{ signal }"
+            ]
+          },
+          {
+            "line": 275,
+            "column": 30,
+            "callee": "apiKey.check",
+            "arguments": [
+              "{\n                    ctx: this.authContext,\n                    credential: credential?.type === \"api_key\" ? credential : undefined,\n                    signal,\n                }"
+            ]
+          },
+          {
+            "line": 285,
+            "column": 34,
+            "callee": "resolveProviderAuth",
+            "arguments": [
+              "provider",
+              "this.credentials",
+              "this.authContext",
+              "{ signal }"
+            ]
+          },
+          {
+            "line": 289,
+            "column": 24,
+            "callee": "operationSignal",
+            "arguments": [
+              "options?.signal"
+            ]
+          },
+          {
+            "line": 290,
+            "column": 23,
+            "callee": "(async () => {\n            signal.throwIfAborted();\n            const provider = this.providers.get(providerId);\n            if (!provider)\n                return undefined;\n            return this.checkProviderAuth(provider, await this.readCredential(providerId, signal), signal);\n        })",
+            "arguments": []
+          },
+          {
+            "line": 291,
+            "column": 13,
+            "callee": "signal.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 292,
+            "column": 30,
+            "callee": "this.providers.get",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 295,
+            "column": 20,
+            "callee": "this.checkProviderAuth",
+            "arguments": [
+              "provider",
+              "await this.readCredential(providerId, signal)",
+              "signal"
+            ]
+          },
+          {
+            "line": 295,
+            "column": 59,
+            "callee": "this.readCredential",
+            "arguments": [
+              "providerId",
+              "signal"
+            ]
+          },
+          {
+            "line": 297,
+            "column": 16,
+            "callee": "raceWithAbortSignal",
+            "arguments": [
+              "check",
+              "signal"
+            ]
+          },
+          {
+            "line": 300,
+            "column": 9,
+            "callee": "signal.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 302,
+            "column": 15,
+            "callee": "[this.providers.get(providerId)].filter",
+            "arguments": [
+              "(entry) => entry !== undefined"
+            ]
+          },
+          {
+            "line": 302,
+            "column": 16,
+            "callee": "this.providers.get",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 303,
+            "column": 15,
+            "callee": "this.getProviders",
+            "arguments": []
+          },
+          {
+            "line": 304,
+            "column": 30,
+            "callee": "Promise.all",
+            "arguments": [
+              "providers.map(async (provider) => {\n            const credential = await this.readCredential(provider.id, signal);\n            return { provider, credential, auth: await this.checkProviderAuth(provider, credential, signal) };\n        })"
+            ]
+          },
+          {
+            "line": 304,
+            "column": 42,
+            "callee": "providers.map",
+            "arguments": [
+              "async (provider) => {\n            const credential = await this.readCredential(provider.id, signal);\n            return { provider, credential, auth: await this.checkProviderAuth(provider, credential, signal) };\n        }"
+            ]
+          },
+          {
+            "line": 305,
+            "column": 38,
+            "callee": "this.readCredential",
+            "arguments": [
+              "provider.id",
+              "signal"
+            ]
+          },
+          {
+            "line": 306,
+            "column": 56,
+            "callee": "this.checkProviderAuth",
+            "arguments": [
+              "provider",
+              "credential",
+              "signal"
+            ]
+          },
+          {
+            "line": 308,
+            "column": 16,
+            "callee": "checks.filter",
+            "arguments": [
+              "(entry) => entry.auth !== undefined"
+            ]
+          },
+          {
+            "line": 311,
+            "column": 24,
+            "callee": "operationSignal",
+            "arguments": [
+              "options?.signal"
+            ]
+          },
+          {
+            "line": 312,
+            "column": 27,
+            "callee": "(async () => {\n            const providers = await this.getAuthenticatedProviders(providerId, signal);\n            return providers.flatMap(({ provider, credential }) => {\n                const models = provider.getModels();\n                return provider.filterModels?.(models, credential) ?? models;\n            });\n        })",
+            "arguments": []
+          },
+          {
+            "line": 313,
+            "column": 37,
+            "callee": "this.getAuthenticatedProviders",
+            "arguments": [
+              "providerId",
+              "signal"
+            ]
+          },
+          {
+            "line": 314,
+            "column": 20,
+            "callee": "providers.flatMap",
+            "arguments": [
+              "({ provider, credential }) => {\n                const models = provider.getModels();\n                return provider.filterModels?.(models, credential) ?? models;\n            }"
+            ]
+          },
+          {
+            "line": 315,
+            "column": 32,
+            "callee": "provider.getModels",
+            "arguments": []
+          },
+          {
+            "line": 316,
+            "column": 24,
+            "callee": "provider.filterModels",
+            "arguments": [
+              "models",
+              "credential"
+            ]
+          },
+          {
+            "line": 319,
+            "column": 16,
+            "callee": "raceWithAbortSignal",
+            "arguments": [
+              "available",
+              "signal"
+            ]
+          },
+          {
+            "line": 322,
+            "column": 16,
+            "callee": "(await this.getAllAvailable(providerId, options)).filter",
+            "arguments": [
+              "(model) => isModelType(model, type)"
+            ]
+          },
+          {
+            "line": 322,
+            "column": 23,
+            "callee": "this.getAllAvailable",
+            "arguments": [
+              "providerId",
+              "options"
+            ]
+          },
+          {
+            "line": 322,
+            "column": 84,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "type"
+            ]
+          },
+          {
+            "line": 325,
+            "column": 24,
+            "callee": "operationSignal",
+            "arguments": [
+              "options?.signal"
+            ]
+          },
+          {
+            "line": 326,
+            "column": 27,
+            "callee": "(async () => {\n            const providers = await this.getAuthenticatedProviders(providerId, signal);\n            return providers.flatMap(({ provider, credential }) => {\n                const models = provider.getAllModels?.() ?? provider.getModels();\n                if (provider.filterAllModels)\n                    return provider.filterAllModels(models, credential);\n                if (!provider.filterModels)\n                    return models;\n                const availableChatIds = new Set(provider.filterModels(provider.getModels(), credential).map((model) => model.id));\n                return models.filter((model) => !isModelType(model, \"chat\") || availableChatIds.has(model.id));\n            });\n        })",
+            "arguments": []
+          },
+          {
+            "line": 327,
+            "column": 37,
+            "callee": "this.getAuthenticatedProviders",
+            "arguments": [
+              "providerId",
+              "signal"
+            ]
+          },
+          {
+            "line": 328,
+            "column": 20,
+            "callee": "providers.flatMap",
+            "arguments": [
+              "({ provider, credential }) => {\n                const models = provider.getAllModels?.() ?? provider.getModels();\n                if (provider.filterAllModels)\n                    return provider.filterAllModels(models, credential);\n                if (!provider.filterModels)\n                    return models;\n                const availableChatIds = new Set(provider.filterModels(provider.getModels(), credential).map((model) => model.id));\n                return models.filter((model) => !isModelType(model, \"chat\") || availableChatIds.has(model.id));\n            }"
+            ]
+          },
+          {
+            "line": 329,
+            "column": 32,
+            "callee": "provider.getAllModels",
+            "arguments": []
+          },
+          {
+            "line": 329,
+            "column": 61,
+            "callee": "provider.getModels",
+            "arguments": []
+          },
+          {
+            "line": 331,
+            "column": 28,
+            "callee": "provider.filterAllModels",
+            "arguments": [
+              "models",
+              "credential"
+            ]
+          },
+          {
+            "line": 334,
+            "column": 50,
+            "callee": "provider.filterModels(provider.getModels(), credential).map",
+            "arguments": [
+              "(model) => model.id"
+            ]
+          },
+          {
+            "line": 334,
+            "column": 50,
+            "callee": "provider.filterModels",
+            "arguments": [
+              "provider.getModels()",
+              "credential"
+            ]
+          },
+          {
+            "line": 334,
+            "column": 72,
+            "callee": "provider.getModels",
+            "arguments": []
+          },
+          {
+            "line": 335,
+            "column": 24,
+            "callee": "models.filter",
+            "arguments": [
+              "(model) => !isModelType(model, \"chat\") || availableChatIds.has(model.id)"
+            ]
+          },
+          {
+            "line": 335,
+            "column": 50,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"chat\""
+            ]
+          },
+          {
+            "line": 335,
+            "column": 80,
+            "callee": "availableChatIds.has",
+            "arguments": [
+              "model.id"
+            ]
+          },
+          {
+            "line": 338,
+            "column": 16,
+            "callee": "raceWithAbortSignal",
+            "arguments": [
+              "available",
+              "signal"
+            ]
+          },
+          {
+            "line": 341,
+            "column": 24,
+            "callee": "operationSignal",
+            "arguments": [
+              "overrides?.signal"
+            ]
+          },
+          {
+            "line": 343,
+            "column": 26,
+            "callee": "this.providers.get",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 346,
+            "column": 30,
+            "callee": "resolveProviderAuth",
+            "arguments": [
+              "provider",
+              "this.credentials",
+              "this.authContext",
+              "{ ...overrides, signal }"
+            ]
+          },
+          {
+            "line": 353,
+            "column": 26,
+            "callee": "mergeHeaders",
+            "arguments": [
+              "result.auth.headers",
+              "providerOrModel.headers"
+            ]
+          },
+          {
+            "line": 358,
+            "column": 24,
+            "callee": "operationSignal",
+            "arguments": [
+              "interaction.signal"
+            ]
+          },
+          {
+            "line": 359,
+            "column": 9,
+            "callee": "signal.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 360,
+            "column": 26,
+            "callee": "this.providers.get",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 367,
+            "column": 32,
+            "callee": "method.login",
+            "arguments": [
+              "{ ...interaction, signal }",
+              "options"
+            ]
+          },
+          {
+            "line": 368,
+            "column": 34,
+            "callee": "raceWithAbortSignal",
+            "arguments": [
+              "loginOperation",
+              "signal"
+            ]
+          },
+          {
+            "line": 374,
+            "column": 26,
+            "callee": "this.credentials.modify",
+            "arguments": [
+              "providerId",
+              "async () => {\n            mutationStarted = true;\n            markMutationStarted?.();\n            return credential;\n        }",
+              "{ signal }"
+            ]
+          },
+          {
+            "line": 376,
+            "column": 13,
+            "callee": "markMutationStarted",
+            "arguments": []
+          },
+          {
+            "line": 379,
+            "column": 14,
+            "callee": "mutation.catch",
+            "arguments": [
+              "() => { }"
+            ]
+          },
+          {
+            "line": 384,
+            "column": 25,
+            "callee": "reject",
+            "arguments": [
+              "signal.reason"
+            ]
+          },
+          {
+            "line": 386,
+            "column": 17,
+            "callee": "signal.addEventListener",
+            "arguments": [
+              "\"abort\"",
+              "onAbort",
+              "{ once: true }"
+            ]
+          },
+          {
+            "line": 387,
+            "column": 22,
+            "callee": "Promise.race([started, mutation]).then",
+            "arguments": [
+              "() => {\n                    signal.removeEventListener(\"abort\", onAbort);\n                    resolve();\n                }",
+              "(error) => {\n                    signal.removeEventListener(\"abort\", onAbort);\n                    reject(error);\n                }"
+            ]
+          },
+          {
+            "line": 387,
+            "column": 22,
+            "callee": "Promise.race",
+            "arguments": [
+              "[started, mutation]"
+            ]
+          },
+          {
+            "line": 388,
+            "column": 21,
+            "callee": "signal.removeEventListener",
+            "arguments": [
+              "\"abort\"",
+              "onAbort"
+            ]
+          },
+          {
+            "line": 389,
+            "column": 21,
+            "callee": "resolve",
+            "arguments": []
+          },
+          {
+            "line": 391,
+            "column": 21,
+            "callee": "signal.removeEventListener",
+            "arguments": [
+              "\"abort\"",
+              "onAbort"
+            ]
+          },
+          {
+            "line": 392,
+            "column": 21,
+            "callee": "reject",
+            "arguments": [
+              "error"
+            ]
+          },
+          {
+            "line": 395,
+            "column": 21,
+            "callee": "onAbort",
+            "arguments": []
+          },
+          {
+            "line": 400,
+            "column": 13,
+            "callee": "signal.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 406,
+            "column": 24,
+            "callee": "operationSignal",
+            "arguments": [
+              "options?.signal"
+            ]
+          },
+          {
+            "line": 407,
+            "column": 9,
+            "callee": "signal.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 409,
+            "column": 19,
+            "callee": "this.credentials.delete",
+            "arguments": [
+              "providerId",
+              "{ signal }"
+            ]
+          },
+          {
+            "line": 412,
+            "column": 13,
+            "callee": "signal.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 417,
+            "column": 26,
+            "callee": "this.providers.get",
+            "arguments": [
+              "model.provider"
+            ]
+          },
+          {
+            "line": 424,
+            "column": 9,
+            "callee": "assertChatModel",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 425,
+            "column": 16,
+            "callee": "this.requireProvider",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 428,
+            "column": 9,
+            "callee": "this.requireProvider",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 429,
+            "column": 34,
+            "callee": "this.getAuth",
+            "arguments": [
+              "model",
+              "{\n            apiKey: options?.apiKey,\n            env: options?.env,\n            signal: options?.signal,\n        }"
+            ]
+          },
+          {
+            "line": 442,
+            "column": 23,
+            "callee": "mergeHeaders",
+            "arguments": [
+              "mergeHeaders(getOpenCodeSessionHeaders(requestModel, sessionId), auth.headers)",
+              "options?.headers"
+            ]
+          },
+          {
+            "line": 442,
+            "column": 36,
+            "callee": "mergeHeaders",
+            "arguments": [
+              "getOpenCodeSessionHeaders(requestModel, sessionId)",
+              "auth.headers"
+            ]
+          },
+          {
+            "line": 442,
+            "column": 49,
+            "callee": "getOpenCodeSessionHeaders",
+            "arguments": [
+              "requestModel",
+              "sessionId"
+            ]
+          },
+          {
+            "line": 444,
+            "column": 29,
+            "callee": "options.transformHeaders",
+            "arguments": [
+              "headers ?? {}"
+            ]
+          },
+          {
+            "line": 446,
+            "column": 26,
+            "callee": "mergeClientIdentity",
+            "arguments": [
+              "this.identity",
+              "options?.identity"
+            ]
+          },
+          {
+            "line": 458,
+            "column": 28,
+            "callee": "normalizeContext",
+            "arguments": [
+              "context"
+            ]
+          },
+          {
+            "line": 459,
+            "column": 16,
+            "callee": "lazyStream",
+            "arguments": [
+              "model",
+              "async () => {\n            const provider = this.requireChatProvider(model);\n            const { requestModel, requestOptions } = await this.applyAuth(model, options);\n            return provider.stream(requestModel, transcript, requestOptions);\n        }",
+              "observeModelRequest(model, options, false)"
+            ]
+          },
+          {
+            "line": 460,
+            "column": 30,
+            "callee": "this.requireChatProvider",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 461,
+            "column": 60,
+            "callee": "this.applyAuth",
+            "arguments": [
+              "model",
+              "options"
+            ]
+          },
+          {
+            "line": 462,
+            "column": 20,
+            "callee": "provider.stream",
+            "arguments": [
+              "requestModel",
+              "transcript",
+              "requestOptions"
+            ]
+          },
+          {
+            "line": 463,
+            "column": 12,
+            "callee": "observeModelRequest",
+            "arguments": [
+              "model",
+              "options",
+              "false"
+            ]
+          },
+          {
+            "line": 466,
+            "column": 16,
+            "callee": "this.stream(model, context, options).result",
+            "arguments": []
+          },
+          {
+            "line": 466,
+            "column": 16,
+            "callee": "this.stream",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 469,
+            "column": 28,
+            "callee": "normalizeContext",
+            "arguments": [
+              "context"
+            ]
+          },
+          {
+            "line": 470,
+            "column": 16,
+            "callee": "lazyStream",
+            "arguments": [
+              "model",
+              "async () => {\n            const provider = this.requireChatProvider(model);\n            const { requestModel, requestOptions } = await this.applyAuth(model, options);\n            return provider.streamSimple(requestModel, transcript, requestOptions);\n        }",
+              "observeModelRequest(model, options, false)"
+            ]
+          },
+          {
+            "line": 471,
+            "column": 30,
+            "callee": "this.requireChatProvider",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 472,
+            "column": 60,
+            "callee": "this.applyAuth",
+            "arguments": [
+              "model",
+              "options"
+            ]
+          },
+          {
+            "line": 473,
+            "column": 20,
+            "callee": "provider.streamSimple",
+            "arguments": [
+              "requestModel",
+              "transcript",
+              "requestOptions"
+            ]
+          },
+          {
+            "line": 474,
+            "column": 12,
+            "callee": "observeModelRequest",
+            "arguments": [
+              "model",
+              "options",
+              "false"
+            ]
+          },
+          {
+            "line": 477,
+            "column": 16,
+            "callee": "this.streamSimple(model, context, options).result",
+            "arguments": []
+          },
+          {
+            "line": 477,
+            "column": 16,
+            "callee": "this.streamSimple",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 480,
+            "column": 16,
+            "callee": "lazyStream",
+            "arguments": [
+              "model",
+              "async () => {\n            const provider = this.requireChatProvider(model);\n            if (!provider.fetchDeferred) {\n                throw new ModelsError(\"provider\", `Provider ${model.provider} does not support deferred responses`);\n            }\n            const { requestModel, requestOptions } = await this.applyAuth(model, options);\n            return provider.fetchDeferred(requestModel, handle, requestOptions);\n        }",
+              "observeModelRequest(model, options, true)"
+            ]
+          },
+          {
+            "line": 481,
+            "column": 30,
+            "callee": "this.requireChatProvider",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 485,
+            "column": 60,
+            "callee": "this.applyAuth",
+            "arguments": [
+              "model",
+              "options"
+            ]
+          },
+          {
+            "line": 486,
+            "column": 20,
+            "callee": "provider.fetchDeferred",
+            "arguments": [
+              "requestModel",
+              "handle",
+              "requestOptions"
+            ]
+          },
+          {
+            "line": 487,
+            "column": 12,
+            "callee": "observeModelRequest",
+            "arguments": [
+              "model",
+              "options",
+              "true"
+            ]
+          },
+          {
+            "line": 490,
+            "column": 16,
+            "callee": "this.streamDeferred(model, handle, options).result",
+            "arguments": []
+          },
+          {
+            "line": 490,
+            "column": 16,
+            "callee": "this.streamDeferred",
+            "arguments": [
+              "model",
+              "handle",
+              "options"
+            ]
+          },
+          {
+            "line": 493,
+            "column": 26,
+            "callee": "this.requireChatProvider",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 497,
+            "column": 56,
+            "callee": "this.applyAuth",
+            "arguments": [
+              "model",
+              "options"
+            ]
+          },
+          {
+            "line": 498,
+            "column": 15,
+            "callee": "provider.cancelDeferred",
+            "arguments": [
+              "requestModel",
+              "handle",
+              "requestOptions"
+            ]
+          },
+          {
+            "line": 502,
+            "column": 13,
+            "callee": "assertImageModel",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 503,
+            "column": 30,
+            "callee": "this.requireProvider",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 507,
+            "column": 60,
+            "callee": "this.applyAuth",
+            "arguments": [
+              "model",
+              "options"
+            ]
+          },
+          {
+            "line": 508,
+            "column": 26,
+            "callee": "provider.generateImages",
+            "arguments": [
+              "requestModel",
+              "context",
+              "requestOptions"
+            ]
+          },
+          {
+            "line": 511,
+            "column": 20,
+            "callee": "imageErrorResult",
+            "arguments": [
+              "model",
+              "error",
+              "options?.signal?.aborted"
+            ]
+          },
+          {
+            "line": 516,
+            "column": 13,
+            "callee": "assertClassifierModel",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 517,
+            "column": 13,
+            "callee": "assertClassifierInputSupported",
+            "arguments": [
+              "model",
+              "context"
+            ]
+          },
+          {
+            "line": 518,
+            "column": 30,
+            "callee": "this.requireProvider",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 522,
+            "column": 60,
+            "callee": "this.applyAuth",
+            "arguments": [
+              "model",
+              "options"
+            ]
+          },
+          {
+            "line": 523,
+            "column": 26,
+            "callee": "provider.classify",
+            "arguments": [
+              "requestModel",
+              "context",
+              "requestOptions"
+            ]
+          },
+          {
+            "line": 526,
+            "column": 20,
+            "callee": "classifierErrorResult",
+            "arguments": [
+              "model",
+              "error",
+              "options?.signal?.aborted"
+            ]
+          },
+          {
+            "line": 548,
+            "column": 41,
+            "callee": "Object.values(byApi ?? {}).filter",
+            "arguments": [
+              "(entry) => entry !== undefined"
+            ]
+          },
+          {
+            "line": 548,
+            "column": 41,
+            "callee": "Object.values",
+            "arguments": [
+              "byApi ?? {}"
+            ]
+          },
+          {
+            "line": 549,
+            "column": 34,
+            "callee": "Object.values(images ?? {}).filter",
+            "arguments": [
+              "(entry) => entry !== undefined"
+            ]
+          },
+          {
+            "line": 549,
+            "column": 34,
+            "callee": "Object.values",
+            "arguments": [
+              "images ?? {}"
+            ]
+          },
+          {
+            "line": 550,
+            "column": 39,
+            "callee": "Object.values(classifiers ?? {}).filter",
+            "arguments": [
+              "(entry) => entry !== undefined"
+            ]
+          },
+          {
+            "line": 550,
+            "column": 39,
+            "callee": "Object.values",
+            "arguments": [
+              "classifiers ?? {}"
+            ]
+          },
+          {
+            "line": 560,
+            "column": 27,
+            "callee": "merged.findIndex",
+            "arguments": [
+              "(entry) => getModelType(entry) === getModelType(model) && entry.id === model.id"
+            ]
+          },
+          {
+            "line": 560,
+            "column": 55,
+            "callee": "getModelType",
+            "arguments": [
+              "entry"
+            ]
+          },
+          {
+            "line": 560,
+            "column": 79,
+            "callee": "getModelType",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 564,
+            "column": 17,
+            "callee": "merged.push",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 570,
+            "column": 25,
+            "callee": "apiFor",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 572,
+            "column": 20,
+            "callee": "lazyStream",
+            "arguments": [
+              "model",
+              "async () => {\n                throw new ModelsError(\"stream\", `Provider ${input.id} has no API implementation for \"${model.api}\"`);\n            }"
+            ]
+          },
+          {
+            "line": 576,
+            "column": 16,
+            "callee": "run",
+            "arguments": [
+              "streams"
+            ]
+          },
+          {
+            "line": 584,
+            "column": 26,
+            "callee": "currentModels().filter",
+            "arguments": [
+              "(model) => isModelType(model, \"chat\")"
+            ]
+          },
+          {
+            "line": 584,
+            "column": 26,
+            "callee": "currentModels",
+            "arguments": []
+          },
+          {
+            "line": 584,
+            "column": 60,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"chat\""
+            ]
+          },
+          {
+            "line": 589,
+            "column": 38,
+            "callee": "context.stored.models\n                        .filter((model) => model.provider === input.id)\n                        .map",
+            "arguments": [
+              "(model) => model"
+            ]
+          },
+          {
+            "line": 589,
+            "column": 38,
+            "callee": "context.stored.models\n                        .filter",
+            "arguments": [
+              "(model) => model.provider === input.id"
+            ]
+          },
+          {
+            "line": 592,
+            "column": 33,
+            "callee": "context.publish",
+            "arguments": [
+              "{\n                        update: () => {\n                            dynamicModels = restored;\n                        },\n                    }"
+            ]
+          },
+          {
+            "line": 602,
+            "column": 39,
+            "callee": "fetchModels",
+            "arguments": [
+              "context"
+            ]
+          },
+          {
+            "line": 605,
+            "column": 35,
+            "callee": "fetched.filter",
+            "arguments": [
+              "hasKnownModelType"
+            ]
+          },
+          {
+            "line": 606,
+            "column": 23,
+            "callee": "context.publish",
+            "arguments": [
+              "{\n                    persist: { models: refreshed, checkedAt: Date.now() },\n                    update: () => {\n                        dynamicModels = refreshed;\n                    },\n                }"
+            ]
+          },
+          {
+            "line": 607,
+            "column": 62,
+            "callee": "Date.now",
+            "arguments": []
+          },
+          {
+            "line": 616,
+            "column": 46,
+            "callee": "dispatch",
+            "arguments": [
+              "model",
+              "(streams) => streams.stream(model, context, options)"
+            ]
+          },
+          {
+            "line": 616,
+            "column": 75,
+            "callee": "streams.stream",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 617,
+            "column": 52,
+            "callee": "dispatch",
+            "arguments": [
+              "model",
+              "(streams) => streams.streamSimple(model, context, options)"
+            ]
+          },
+          {
+            "line": 617,
+            "column": 81,
+            "callee": "streams.streamSimple",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 619,
+            "column": 9,
+            "callee": "streams.some",
+            "arguments": [
+              "(entry) => entry.fetchDeferred !== undefined"
+            ]
+          },
+          {
+            "line": 620,
+            "column": 62,
+            "callee": "lazyStream",
+            "arguments": [
+              "model",
+              "async () => {\n            const implementation = apiFor(model);\n            if (!implementation?.fetchDeferred) {\n                throw new ModelsError(\"provider\", `Provider ${input.id} does not support deferred responses for \"${model.api}\"`);\n            }\n            return implementation.fetchDeferred(model, handle, options);\n        }"
+            ]
+          },
+          {
+            "line": 621,
+            "column": 36,
+            "callee": "apiFor",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 625,
+            "column": 20,
+            "callee": "implementation.fetchDeferred",
+            "arguments": [
+              "model",
+              "handle",
+              "options"
+            ]
+          },
+          {
+            "line": 628,
+            "column": 9,
+            "callee": "streams.some",
+            "arguments": [
+              "(entry) => entry.cancelDeferred !== undefined"
+            ]
+          },
+          {
+            "line": 630,
+            "column": 36,
+            "callee": "apiFor",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 634,
+            "column": 19,
+            "callee": "implementation.cancelDeferred",
+            "arguments": [
+              "model",
+              "handle",
+              "options"
+            ]
+          },
+          {
+            "line": 641,
+            "column": 24,
+            "callee": "imageErrorResult",
+            "arguments": [
+              "model",
+              "new ModelsError(\"provider\", `Provider ${input.id} has no image generation implementation for \"${model.api}\"`)"
+            ]
+          },
+          {
+            "line": 643,
+            "column": 20,
+            "callee": "implementation.generateImages",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 650,
+            "column": 24,
+            "callee": "classifierErrorResult",
+            "arguments": [
+              "model",
+              "new ModelsError(\"provider\", `Provider ${input.id} has no classifier implementation for \"${model.api}\"`)"
+            ]
+          },
+          {
+            "line": 652,
+            "column": 20,
+            "callee": "implementation.classify",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 670,
+            "column": 12,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"chat\""
+            ]
+          },
+          {
+            "line": 696,
+            "column": 12,
+            "callee": "EXTENDED_THINKING_LEVELS.filter",
+            "arguments": [
+              "(level) => {\n        const mapped = model.thinkingLevelMap?.[level];\n        if (mapped === null)\n            return false;\n        if (level === \"xhigh\" || level === \"max\")\n            return mapped !== undefined;\n        return true;\n    }"
+            ]
+          },
+          {
+            "line": 706,
+            "column": 29,
+            "callee": "getSupportedThinkingLevels",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 707,
+            "column": 9,
+            "callee": "availableLevels.includes",
+            "arguments": [
+              "level"
+            ]
+          },
+          {
+            "line": 709,
+            "column": 28,
+            "callee": "EXTENDED_THINKING_LEVELS.indexOf",
+            "arguments": [
+              "level"
+            ]
+          },
+          {
+            "line": 714,
+            "column": 13,
+            "callee": "availableLevels.includes",
+            "arguments": [
+              "candidate"
+            ]
+          },
+          {
+            "line": 719,
+            "column": 13,
+            "callee": "availableLevels.includes",
+            "arguments": [
+              "candidate"
+            ]
+          },
+          {
+            "line": 731,
+            "column": 12,
+            "callee": "getModelType",
+            "arguments": [
+              "a"
+            ]
+          },
+          {
+            "line": 731,
+            "column": 32,
+            "callee": "getModelType",
+            "arguments": [
+              "b"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [],
+        "review": "Full733 lines. All collection/provider factory Error headlines, authsource metadata and thinking displaytokens tracked; ModelsError messageargument1/codearg0. Native collection auth/catalog/refresh active, native chat/nonchat uses providerdirect so duplicatecollection stream guards qualifiedSDK/custom. Catalog getters suppress provider errors, availability doesnot; refresh generations/serialization/abort/cache restore and error map branches exact. Provider factory/data/cost/thinking helpers complete localbody, imported request/telemetry/provider graph open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models-store.js",
+        "read_lines": [
+          1,
+          17
+        ],
+        "string_template_occurrences": 0,
+        "fixed_rows": 0,
+        "excluded_occurrences": 0,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 2,
+            "column": 15,
+            "callee": "Map",
+            "source": "new Map()"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 4,
+            "column": 9,
+            "callee": "options?.signal?.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 5,
+            "column": 23,
+            "callee": "this.entries.get",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 6,
+            "column": 24,
+            "callee": "structuredClone",
+            "arguments": [
+              "entry"
+            ]
+          },
+          {
+            "line": 9,
+            "column": 9,
+            "callee": "options?.signal?.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 10,
+            "column": 9,
+            "callee": "this.entries.set",
+            "arguments": [
+              "providerId",
+              "structuredClone(entry)"
+            ]
+          },
+          {
+            "line": 10,
+            "column": 38,
+            "callee": "structuredClone",
+            "arguments": [
+              "entry"
+            ]
+          },
+          {
+            "line": 13,
+            "column": 9,
+            "callee": "options?.signal?.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 14,
+            "column": 9,
+            "callee": "this.entries.delete",
+            "arguments": [
+              "providerId"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [],
+        "review": "Full17 lines. Optional SDK in-memory modelstore clones read/write via structuredClone, delete byprovider. One pre-operation signal check, no own prose/Error. Native default ModelRuntime supplies own FileModelsStore or InMemoryCodingAgentModelsStore, not this fallback. Native clone/abort payload errors external."
+      },
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/resolve.js",
+        "read_lines": [
+          1,
+          140
+        ],
+        "string_template_occurrences": 24,
+        "fixed_rows": 7,
+        "excluded_occurrences": 17,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 81,
+            "column": 23,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`OAuth refresh failed for ${providerId}`"
+          },
+          {
+            "line": 89,
+            "column": 15,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Credential store modify failed for ${providerId}`"
+          },
+          {
+            "line": 114,
+            "column": 19,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`OAuth refresh returned a token that expires too soon for ${providerId}`"
+          },
+          {
+            "line": 121,
+            "column": 15,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`OAuth auth derivation failed for ${providerId}`"
+          },
+          {
+            "line": 129,
+            "column": 15,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`API key auth failed for provider ${providerId}`"
+          },
+          {
+            "line": 137,
+            "column": 15,
+            "constructor": "ModelsError",
+            "message_argument": 1,
+            "message_expression": "`Credential store read failed for ${providerId}`"
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 64,
+            "column": 22,
+            "callee": "AbortController",
+            "source": "new AbortController()"
+          },
+          {
+            "line": 81,
+            "column": 23,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"oauth\", `OAuth refresh failed for ${providerId}`, { cause: error })"
+          },
+          {
+            "line": 89,
+            "column": 15,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"auth\", `Credential store modify failed for ${providerId}`, { cause: error })"
+          },
+          {
+            "line": 114,
+            "column": 19,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"oauth\", `OAuth refresh returned a token that expires too soon for ${providerId}`)"
+          },
+          {
+            "line": 121,
+            "column": 15,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"oauth\", `OAuth auth derivation failed for ${providerId}`, { cause: error })"
+          },
+          {
+            "line": 129,
+            "column": 15,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"auth\", `API key auth failed for provider ${providerId}`, { cause: error })"
+          },
+          {
+            "line": 137,
+            "column": 15,
+            "callee": "ModelsError",
+            "source": "new ModelsError(\"auth\", `Credential store read failed for ${providerId}`, { cause: error })"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 81,
+            "column": 17,
+            "expression": "new ModelsError(\"oauth\", `OAuth refresh failed for ${providerId}`, { cause: error })"
+          },
+          {
+            "line": 87,
+            "column": 13,
+            "expression": "error"
+          },
+          {
+            "line": 89,
+            "column": 9,
+            "expression": "new ModelsError(\"auth\", `Credential store modify failed for ${providerId}`, { cause: error })"
+          },
+          {
+            "line": 114,
+            "column": 13,
+            "expression": "new ModelsError(\"oauth\", `OAuth refresh returned a token that expires too soon for ${providerId}`)"
+          },
+          {
+            "line": 121,
+            "column": 9,
+            "expression": "new ModelsError(\"oauth\", `OAuth auth derivation failed for ${providerId}`, { cause: error })"
+          },
+          {
+            "line": 129,
+            "column": 9,
+            "expression": "new ModelsError(\"auth\", `API key auth failed for provider ${providerId}`, { cause: error })"
+          },
+          {
+            "line": 137,
+            "column": 9,
+            "expression": "new ModelsError(\"auth\", `Credential store read failed for ${providerId}`, { cause: error })"
+          }
+        ],
+        "catch_clauses": [
+          {
+            "line": 80,
+            "column": 13,
+            "source": "catch (error) {\n                throw new ModelsError(\"oauth\", `OAuth refresh failed for ${providerId}`, { cause: error });\n            }"
+          },
+          {
+            "line": 85,
+            "column": 5,
+            "source": "catch (error) {\n        if (error instanceof ModelsError)\n            throw error;\n        signal.throwIfAborted();\n        throw new ModelsError(\"auth\", `Credential store modify failed for ${providerId}`, { cause: error });\n    }"
+          },
+          {
+            "line": 120,
+            "column": 5,
+            "source": "catch (error) {\n        throw new ModelsError(\"oauth\", `OAuth auth derivation failed for ${providerId}`, { cause: error });\n    }"
+          },
+          {
+            "line": 128,
+            "column": 5,
+            "source": "catch (error) {\n        throw new ModelsError(\"auth\", `API key auth failed for provider ${providerId}`, { cause: error });\n    }"
+          },
+          {
+            "line": 136,
+            "column": 5,
+            "source": "catch (error) {\n        throw new ModelsError(\"auth\", `Credential store read failed for ${providerId}`, { cause: error });\n    }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "../utils/abort.js"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "../utils/models-error.js"
+          }
+        ],
+        "re_exports": [
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "../utils/models-error.js",
+            "source": "export { ModelsError } from \"../utils/models-error.js\";"
+          }
+        ],
+        "output_or_native_callback_calls": [
+          {
+            "line": 11,
+            "column": 20,
+            "callee": "operationSignal",
+            "arguments": [
+              "overrides?.signal"
+            ]
+          },
+          {
+            "line": 12,
+            "column": 12,
+            "callee": "raceWithAbortSignal",
+            "arguments": [
+              "resolveProviderAuthWithSignal(provider, credentials, authContext, overrides, signal)",
+              "signal"
+            ]
+          },
+          {
+            "line": 12,
+            "column": 32,
+            "callee": "resolveProviderAuthWithSignal",
+            "arguments": [
+              "provider",
+              "credentials",
+              "authContext",
+              "overrides",
+              "signal"
+            ]
+          },
+          {
+            "line": 15,
+            "column": 5,
+            "callee": "signal.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 16,
+            "column": 49,
+            "callee": "overlayEnvAuthContext",
+            "arguments": [
+              "authContext",
+              "overrides.env"
+            ]
+          },
+          {
+            "line": 18,
+            "column": 16,
+            "callee": "resolveApiKey",
+            "arguments": [
+              "requestAuthContext",
+              "provider.auth.apiKey",
+              "provider.id",
+              "{\n            type: \"api_key\",\n            key: overrides.apiKey,\n            env: overrides.env,\n        }",
+              "signal"
+            ]
+          },
+          {
+            "line": 24,
+            "column": 26,
+            "callee": "readCredential",
+            "arguments": [
+              "credentials",
+              "provider.id",
+              "signal"
+            ]
+          },
+          {
+            "line": 27,
+            "column": 20,
+            "callee": "resolveStoredOAuth",
+            "arguments": [
+              "credentials",
+              "provider.id",
+              "provider.auth.oauth",
+              "stored",
+              "signal",
+              "overrides?.minOAuthValidityMs"
+            ]
+          },
+          {
+            "line": 31,
+            "column": 20,
+            "callee": "resolveApiKey",
+            "arguments": [
+              "requestAuthContext",
+              "provider.auth.apiKey",
+              "provider.id",
+              "credential",
+              "signal"
+            ]
+          },
+          {
+            "line": 37,
+            "column": 11,
+            "callee": "resolveApiKey",
+            "arguments": [
+              "requestAuthContext",
+              "provider.auth.apiKey",
+              "provider.id",
+              "undefined",
+              "signal"
+            ]
+          },
+          {
+            "line": 42,
+            "column": 50,
+            "callee": "base.env",
+            "arguments": [
+              "name"
+            ]
+          },
+          {
+            "line": 43,
+            "column": 31,
+            "callee": "base.fileExists",
+            "arguments": [
+              "path"
+            ]
+          },
+          {
+            "line": 65,
+            "column": 34,
+            "callee": "lockWait.abort",
+            "arguments": [
+              "signal.reason"
+            ]
+          },
+          {
+            "line": 66,
+            "column": 5,
+            "callee": "signal.addEventListener",
+            "arguments": [
+              "\"abort\"",
+              "cancelLockWait",
+              "{ once: true }"
+            ]
+          },
+          {
+            "line": 68,
+            "column": 9,
+            "callee": "cancelLockWait",
+            "arguments": []
+          },
+          {
+            "line": 70,
+            "column": 22,
+            "callee": "credentials.modify",
+            "arguments": [
+              "providerId",
+              "async (current) => {\n            signal.removeEventListener(\"abort\", cancelLockWait);\n            signal.throwIfAborted();\n            if (current?.type !== \"oauth\")\n                return undefined; // logged out meanwhile\n            if (!needsRefresh(current))\n                return undefined; // another process/request refreshed\n            try {\n                return await oauth.refresh(current, AbortSignal.timeout(DEFAULT_OAUTH_REFRESH_TIMEOUT_MS));\n            }\n            catch (error) {\n                throw new ModelsError(\"oauth\", `OAuth refresh failed for ${providerId}`, { cause: error });\n            }\n        }",
+              "{ signal: lockWait.signal }"
+            ]
+          },
+          {
+            "line": 71,
+            "column": 13,
+            "callee": "signal.removeEventListener",
+            "arguments": [
+              "\"abort\"",
+              "cancelLockWait"
+            ]
+          },
+          {
+            "line": 72,
+            "column": 13,
+            "callee": "signal.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 75,
+            "column": 18,
+            "callee": "needsRefresh",
+            "arguments": [
+              "current"
+            ]
+          },
+          {
+            "line": 78,
+            "column": 30,
+            "callee": "oauth.refresh",
+            "arguments": [
+              "current",
+              "AbortSignal.timeout(DEFAULT_OAUTH_REFRESH_TIMEOUT_MS)"
+            ]
+          },
+          {
+            "line": 78,
+            "column": 53,
+            "callee": "AbortSignal.timeout",
+            "arguments": [
+              "DEFAULT_OAUTH_REFRESH_TIMEOUT_MS"
+            ]
+          },
+          {
+            "line": 88,
+            "column": 9,
+            "callee": "signal.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 92,
+            "column": 9,
+            "callee": "signal.removeEventListener",
+            "arguments": [
+              "\"abort\"",
+              "cancelLockWait"
+            ]
+          },
+          {
+            "line": 101,
+            "column": 31,
+            "callee": "Math.max",
+            "arguments": [
+              "DEFAULT_OAUTH_MINIMUM_VALIDITY_MS",
+              "minOAuthValidityMs ?? 0"
+            ]
+          },
+          {
+            "line": 102,
+            "column": 41,
+            "callee": "Date.now",
+            "arguments": []
+          },
+          {
+            "line": 104,
+            "column": 9,
+            "callee": "expiresSoon",
+            "arguments": [
+              "credential"
+            ]
+          },
+          {
+            "line": 106,
+            "column": 28,
+            "callee": "refreshStoredOAuthCredential",
+            "arguments": [
+              "credentials",
+              "providerId",
+              "oauth",
+              "expiresSoon",
+              "signal"
+            ]
+          },
+          {
+            "line": 113,
+            "column": 49,
+            "callee": "expiresSoon",
+            "arguments": [
+              "credential"
+            ]
+          },
+          {
+            "line": 118,
+            "column": 30,
+            "callee": "oauth.toAuth",
+            "arguments": [
+              "credential"
+            ]
+          },
+          {
+            "line": 126,
+            "column": 22,
+            "callee": "apiKey.resolve",
+            "arguments": [
+              "{ ctx: authContext, credential, signal }"
+            ]
+          },
+          {
+            "line": 134,
+            "column": 22,
+            "callee": "credentials.read",
+            "arguments": [
+              "providerId",
+              "{ signal }"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [],
+        "review": "Full140 lines. Stored credential ownership/request overrides/env overlay, OAuth near-expiry lock-wait/independentrefresh timeout, cause wrappers and explicit minpostrefresh guard tracked. Caller cancellation can stop waiting while started refresh continues with store lock signal detached. Native store/result/cause/API message suppression qualified; no credentials/refresh/native execution."
+      },
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/context.js",
+        "read_lines": [
+          1,
+          42
+        ],
+        "string_template_occurrences": 9,
+        "fixed_rows": 0,
+        "excluded_occurrences": 9,
+        "protected_regex_literals": 2,
+        "regex_census_sha256": "bd36557b2958f1023a92e87d8a40ed30281da3e0dcd3fd0d0efcf514e9a75cbf",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 36,
+            "column": 13,
+            "source": "catch {\n                return false;\n            }"
+          }
+        ],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 2,
+            "column": 37,
+            "callee": "/^\\.\\.?\\//.test",
+            "arguments": [
+              "path"
+            ]
+          },
+          {
+            "line": 3,
+            "column": 16,
+            "callee": "path.replace",
+            "arguments": [
+              "/\\.(tsx)$|((?:\\.d)?)((?:\\.[^./]+?)?)\\.([cm]?)ts$/i",
+              "function (m, tsx, d, ext, cm) {\n            return tsx ? preserveJsx ? \".jsx\" : \".js\" : d && (!ext || !cm) ? m : (d + ext + \".\" + cm.toLowerCase() + \"js\");\n        }"
+            ]
+          },
+          {
+            "line": 4,
+            "column": 99,
+            "callee": "cm.toLowerCase",
+            "arguments": []
+          },
+          {
+            "line": 10,
+            "column": 41,
+            "callee": "import",
+            "arguments": [
+              "__rewriteRelativeImportExtension(specifier)"
+            ]
+          },
+          {
+            "line": 10,
+            "column": 48,
+            "callee": "__rewriteRelativeImportExtension",
+            "arguments": [
+              "specifier"
+            ]
+          },
+          {
+            "line": 22,
+            "column": 27,
+            "callee": "getProcessEnv",
+            "arguments": []
+          },
+          {
+            "line": 23,
+            "column": 49,
+            "callee": "value.trim",
+            "arguments": []
+          },
+          {
+            "line": 27,
+            "column": 35,
+            "callee": "importNodeModule",
+            "arguments": [
+              "\"node:fs/promises\""
+            ]
+          },
+          {
+            "line": 29,
+            "column": 21,
+            "callee": "resolved.startsWith",
+            "arguments": [
+              "\"~\""
+            ]
+          },
+          {
+            "line": 30,
+            "column": 39,
+            "callee": "importNodeModule",
+            "arguments": [
+              "\"node:os\""
+            ]
+          },
+          {
+            "line": 31,
+            "column": 32,
+            "callee": "os.homedir",
+            "arguments": []
+          },
+          {
+            "line": 31,
+            "column": 47,
+            "callee": "resolved.slice",
+            "arguments": [
+              "1"
+            ]
+          },
+          {
+            "line": 33,
+            "column": 23,
+            "callee": "fs.access",
+            "arguments": [
+              "resolved"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [],
+        "review": "Full42 lines. Default auth context active when native createModels supplies noauthContext. Env returns original string if trim nonempty, fileExists dynamicnode imports+leadingtilde expansion catches failuresfalse. Generated relative TS import extension rewrite strings/regex protected code; browser/native/import/filesystem errors payload pending. No own prose/Error."
+      },
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/auth/credential-store.js",
+        "read_lines": [
+          1,
+          51
+        ],
+        "string_template_occurrences": 1,
+        "fixed_rows": 0,
+        "excluded_occurrences": 1,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 8,
+            "column": 19,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 9,
+            "column": 14,
+            "callee": "Map",
+            "source": "new Map()"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "../utils/abort.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 12,
+            "column": 24,
+            "callee": "operationSignal",
+            "arguments": [
+              "options?.signal"
+            ]
+          },
+          {
+            "line": 13,
+            "column": 26,
+            "callee": "this.chains.get",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 13,
+            "column": 57,
+            "callee": "Promise.resolve",
+            "arguments": []
+          },
+          {
+            "line": 14,
+            "column": 24,
+            "callee": "(async () => {\n            await previous.catch(() => { });\n            signal.throwIfAborted();\n            return task();\n        })",
+            "arguments": []
+          },
+          {
+            "line": 15,
+            "column": 19,
+            "callee": "previous.catch",
+            "arguments": [
+              "() => { }"
+            ]
+          },
+          {
+            "line": 16,
+            "column": 13,
+            "callee": "signal.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 17,
+            "column": 20,
+            "callee": "task",
+            "arguments": []
+          },
+          {
+            "line": 19,
+            "column": 22,
+            "callee": "queued.catch",
+            "arguments": [
+              "() => { }"
+            ]
+          },
+          {
+            "line": 20,
+            "column": 9,
+            "callee": "this.chains.set",
+            "arguments": [
+              "providerId",
+              "tail"
+            ]
+          },
+          {
+            "line": 21,
+            "column": 14,
+            "callee": "tail.then",
+            "arguments": [
+              "() => {\n            if (this.chains.get(providerId) === tail)\n                this.chains.delete(providerId);\n        }"
+            ]
+          },
+          {
+            "line": 22,
+            "column": 17,
+            "callee": "this.chains.get",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 23,
+            "column": 17,
+            "callee": "this.chains.delete",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 25,
+            "column": 16,
+            "callee": "raceWithAbortSignal",
+            "arguments": [
+              "queued",
+              "signal"
+            ]
+          },
+          {
+            "line": 28,
+            "column": 9,
+            "callee": "options?.signal?.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 29,
+            "column": 16,
+            "callee": "this.credentials.get",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 32,
+            "column": 9,
+            "callee": "options?.signal?.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 33,
+            "column": 16,
+            "callee": "[...this.credentials].map",
+            "arguments": [
+              "([providerId, credential]) => ({ providerId, type: credential.type })"
+            ]
+          },
+          {
+            "line": 36,
+            "column": 16,
+            "callee": "this.enqueue",
+            "arguments": [
+              "providerId",
+              "async () => {\n            const current = this.credentials.get(providerId);\n            const next = await fn(current);\n            options?.signal?.throwIfAborted();\n            if (next !== undefined)\n                this.credentials.set(providerId, next);\n            return next ?? current;\n        }",
+              "options"
+            ]
+          },
+          {
+            "line": 37,
+            "column": 29,
+            "callee": "this.credentials.get",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 38,
+            "column": 32,
+            "callee": "fn",
+            "arguments": [
+              "current"
+            ]
+          },
+          {
+            "line": 39,
+            "column": 13,
+            "callee": "options?.signal?.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 41,
+            "column": 17,
+            "callee": "this.credentials.set",
+            "arguments": [
+              "providerId",
+              "next"
+            ]
+          },
+          {
+            "line": 46,
+            "column": 16,
+            "callee": "this.enqueue",
+            "arguments": [
+              "providerId",
+              "async () => {\n            this.credentials.delete(providerId);\n        }",
+              "options"
+            ]
+          },
+          {
+            "line": 47,
+            "column": 13,
+            "callee": "this.credentials.delete",
+            "arguments": [
+              "providerId"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [],
+        "review": "Full51 lines. Optional SDK default in-memory store perprovider promisechain with race cancellation; rawcredential readreference, listmetadata, fnundefined retains current, no clone/persistence. Postfn signalcheck, delete separate. Native supplies RuntimeCredentials/AuthStorage, not this default instance. Signal/callback/native failures propagate/suppression on tailonly; no own prose."
+      },
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/models-error.js",
+        "read_lines": [
+          1,
+          19
+        ],
+        "string_template_occurrences": 3,
+        "fixed_rows": 1,
+        "excluded_occurrences": 2,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "./diagnostics.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 5,
+            "column": 9,
+            "callee": "super",
+            "arguments": [
+              "withCauseDetail(message, options?.cause)",
+              "options"
+            ]
+          },
+          {
+            "line": 5,
+            "column": 15,
+            "callee": "withCauseDetail",
+            "arguments": [
+              "message",
+              "options?.cause"
+            ]
+          },
+          {
+            "line": 14,
+            "column": 20,
+            "callee": "formatThrownValue(cause).trim",
+            "arguments": []
+          },
+          {
+            "line": 14,
+            "column": 20,
+            "callee": "formatThrownValue",
+            "arguments": [
+              "cause"
+            ]
+          },
+          {
+            "line": 15,
+            "column": 20,
+            "callee": "message.includes",
+            "arguments": [
+              "detail"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [
+          {
+            "line": 5,
+            "column": 9,
+            "callee": "super",
+            "arguments": [
+              "withCauseDetail(message, options?.cause)",
+              "options"
+            ]
+          }
+        ],
+        "review": "Full19 lines. ModelsError extendsError, super receives withCauseDetail message; name/code technicalidentity. One conditional message:cause template positive, formatter source boundedsupport only. Duplicate/empty/null cause preemption and potential getter/String formatting failure explicit, no whole diagnostics producer closure."
+      },
+      {
+        "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/abort.js",
+        "read_lines": [
+          1,
+          49
+        ],
+        "string_template_occurrences": 4,
+        "fixed_rows": 1,
+        "excluded_occurrences": 3,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 4,
+            "column": 19,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"The operation was aborted\""
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 4,
+            "column": 19,
+            "callee": "Error",
+            "source": "new Error(\"The operation was aborted\")"
+          },
+          {
+            "line": 10,
+            "column": 22,
+            "callee": "AbortController",
+            "source": "new AbortController()"
+          },
+          {
+            "line": 21,
+            "column": 12,
+            "callee": "Promise",
+            "source": "new Promise((resolve, reject) => {\n        let settled = false;\n        const cleanup = () => signal.removeEventListener(\"abort\", onAbort);\n        const onAbort = () => {\n            if (settled)\n                return;\n            settled = true;\n            cleanup();\n            reject(abortReason(signal));\n        };\n        signal.addEventListener(\"abort\", onAbort, { once: true });\n        void operation.then((value) => {\n            if (settled)\n                return;\n            settled = true;\n            cleanup();\n            resolve(value);\n        }, (error) => {\n            if (settled)\n                return;\n            settled = true;\n            cleanup();\n            reject(error);\n        });\n        if (signal.aborted)\n            onAbort();\n    })"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 18,
+            "column": 14,
+            "callee": "operation.catch",
+            "arguments": [
+              "() => { }"
+            ]
+          },
+          {
+            "line": 19,
+            "column": 16,
+            "callee": "Promise.reject",
+            "arguments": [
+              "abortReason(signal)"
+            ]
+          },
+          {
+            "line": 19,
+            "column": 31,
+            "callee": "abortReason",
+            "arguments": [
+              "signal"
+            ]
+          },
+          {
+            "line": 23,
+            "column": 31,
+            "callee": "signal.removeEventListener",
+            "arguments": [
+              "\"abort\"",
+              "onAbort"
+            ]
+          },
+          {
+            "line": 28,
+            "column": 13,
+            "callee": "cleanup",
+            "arguments": []
+          },
+          {
+            "line": 29,
+            "column": 13,
+            "callee": "reject",
+            "arguments": [
+              "abortReason(signal)"
+            ]
+          },
+          {
+            "line": 29,
+            "column": 20,
+            "callee": "abortReason",
+            "arguments": [
+              "signal"
+            ]
+          },
+          {
+            "line": 31,
+            "column": 9,
+            "callee": "signal.addEventListener",
+            "arguments": [
+              "\"abort\"",
+              "onAbort",
+              "{ once: true }"
+            ]
+          },
+          {
+            "line": 32,
+            "column": 14,
+            "callee": "operation.then",
+            "arguments": [
+              "(value) => {\n            if (settled)\n                return;\n            settled = true;\n            cleanup();\n            resolve(value);\n        }",
+              "(error) => {\n            if (settled)\n                return;\n            settled = true;\n            cleanup();\n            reject(error);\n        }"
+            ]
+          },
+          {
+            "line": 36,
+            "column": 13,
+            "callee": "cleanup",
+            "arguments": []
+          },
+          {
+            "line": 37,
+            "column": 13,
+            "callee": "resolve",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 42,
+            "column": 13,
+            "callee": "cleanup",
+            "arguments": []
+          },
+          {
+            "line": 43,
+            "column": 13,
+            "callee": "reject",
+            "arguments": [
+              "error"
+            ]
+          },
+          {
+            "line": 46,
+            "column": 13,
+            "callee": "onAbort",
+            "arguments": []
+          }
+        ],
+        "protected_control_occurrences": [],
+        "error_super_calls": [],
+        "review": "Full49 lines. operationSignal nullish new localnonaborted signal; race preaborted observes operation rejection, abort/success/error firstsettlement listenercleanup, abandonedoperation continuesobserved. One custom/legacy undefined-reason Error fallback positive, AbortError name technicalcontrol. RealNode reason ordinarilyprovided; no automatic UIabortcaption."
+      }
+    ],
+    "method": "Full7 finite local Pi AI runtime bodies1051 lines read; every literal/template occurrence partitioned plus Error/ModelsError/AggregateError argument positions, superclass/allnew/throw/catch/regex/import/export/control/all-call census. Exact native versus SDK/default stores/cancellation/auth/refresh/availability/header/request/provider/error/cause/thinking boundaries qualified. No audited module/store/auth/provider/model/request/native/IO/runtime execution."
+  },
+  "remaining_partial_sources": [],
+  "scope_census": {
+    "package": "@earendil-works/pi-ai",
+    "version": "1.4.0",
+    "runtime_files": [
+      "dist/auth/context.js",
+      "dist/auth/credential-store.js",
+      "dist/auth/resolve.js",
+      "dist/models-store.js",
+      "dist/models.js",
+      "dist/utils/abort.js",
+      "dist/utils/models-error.js"
+    ],
+    "associated_nonruntime_files": [
+      "dist/auth/context.d.ts",
+      "dist/auth/context.d.ts.map",
+      "dist/auth/context.js.map",
+      "dist/auth/credential-store.d.ts",
+      "dist/auth/credential-store.d.ts.map",
+      "dist/auth/credential-store.js.map",
+      "dist/auth/resolve.d.ts",
+      "dist/auth/resolve.d.ts.map",
+      "dist/auth/resolve.js.map",
+      "dist/models-store.d.ts",
+      "dist/models-store.d.ts.map",
+      "dist/models-store.js.map",
+      "dist/models.d.ts",
+      "dist/models.d.ts.map",
+      "dist/models.js.map",
+      "dist/utils/abort.d.ts",
+      "dist/utils/abort.d.ts.map",
+      "dist/utils/abort.js.map",
+      "dist/utils/models-error.d.ts",
+      "dist/utils/models-error.d.ts.map",
+      "dist/utils/models-error.js.map"
+    ],
+    "status": "seven-canonical-full-local-bodies-only-not-whole-pi-ai-package-census-or-closure"
+  },
+  "prior_scope_references": [
+    {
+      "owner": "main-update-startup-auth-scope.csv",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "status": "bounded-installed-signal-bridge"
+    },
+    {
+      "owner": "main-update-startup-auth-scope.csv",
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/abort.js",
+      "status": "bounded-installed-signal-bridge"
+    }
+  ],
+  "prior_full_body_owners": [],
+  "pending_producer_boundaries": [
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/lazy.js",
+      "status": "90line-body-pending-bounded-setup-error-packet-support-only"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/telemetry.js",
+      "status": "191line-body-pending-import-edge-pre-lazy-observer/request/protocol/file-native-producers-unclosed"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/identity.js",
+      "status": "141line-body-pending-header/identity-import-edge-only"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/model-operations.js",
+      "status": "53line-body-pending-bounded-nonchat-error-result-support-only"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/transcript.js",
+      "status": "218line-body-pending-normalizeContext-pre-lazy-import-edge-only"
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/diagnostics.js",
+      "status": "25line-body-pending-bounded-formatThrownValue1-7-only"
+    },
+    {
+      "source": "external:pi-ai-provider-implementations-client-model-native-auth-store-fs-import-JSON-clone-OS",
+      "status": "implementation/payload/callback/extra-renderer/native-error/package-graph-pending"
+    }
+  ],
+  "limits": [
+    "Seven finite Pi AI local runtime bodies1051 lines45972 bytes immutable BASE346 exact1.4.0, freshly downloaded canonical archive SHA512 matches transitivepackage-lock SRI. All7 root/nested bodies archive-identical. No wholePiAI/SDK/provider/compiled/package/graph closure; existing Agent/TUI census remains frozen and has no AI members.",
+    "Root AI package.json canonical bytes; nested metadata differs exactly public configure-release-packlists function/files globs/JSON2newline, verified without importing/running product script. Both AI versions1.4.0; native nearest-module metadata resolution direct package checked. Agent/TUI/pin manifests plus22AIprovider-receipts after-files checked bothtrees118total, not target1fda patch retarget.",
+    "ModelsError message argument1/code0, AggregateError/Exception messagearg1, superclass message/cause composition recorded. Every Error definition delivery qualified; model/provider nativepayload can append cause or wrappers/preemption can replace/suppress. No Errorarg0 mechanism blindly promoted.",
+    "Native ModelRuntime collection catalogs/auth/check/refresh active, persistentstores supplied; foreign in-memory defaults optionalSDK. Native request methods providerdirect rather than ModelsImpl duplicates. createProvider factory dispatch can be nativeactive but ordinaryvalidbuiltin maps preempt defensive guards.",
+    "Refresh generation/cancel/publication races, cachedrestore beforecapturedcredentialfailure, nonError-only fallback218, calleraborted map suppression exact. Typical TUI refresh hides individualheadline but permitted update --models joins actualmessages into stderr. Superseded refresh not necessarily result.aborted.",
+    "OAuth stored ownership/noambientfallback; request apiKeyoverride precedence; env overlay falsyfallback/rawdefaultenvvalue; startedrefresh independent15s maypersist aftercallerabort. Login waitsstartedmutation but storespostcheckcallersignal, no unconditionalcommitguarantee. Explicit minimumTTLpostrefreshguard distinctfromdefault5minrefreshwindow.",
+    "Modelserror cause detail trimmed/deduplicated; custom formatting/exception/nativepayload open. Default browser/fileExists catchesfalse, envgettersoutsidecatch; memorymodelsclone vsmemorycredentialsreference semantics explicit. No FS/store/refresh/cancel/headers/credentials/native operations executed.",
+    "Thinking levels directly feed selectedmodel/nativeUI values; xhigh/max capabilitydefinedguard and emptyfallbackoff; descriptionslocalizedseparately, rawprotocoltokenspreserved. Numericcost/model/catalogdata protected, no providercapability or pricing accuracy claim.",
+    "Imported lazy/telemetry/identity/model-operations/transcript/diagnostics bodies remain explicitpending except boundedpacket/formatter support. normalizeContext/observeModelRequest are evaluated before collection lazywrap and mayfail outside ownsetupcatch; no blanket SDKerrorpacket claim.",
+    "Source/own evidence parsing only; npm pack source download --ignore-scripts isolatedcache/destination with per-command min-release-age0, no install/globalconfig/productdependency edits. No previous/shared/census/index/bundle/product/git changes."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-ai-model-auth.cjs",
+  "reviewed_artifact_sha256": {
+    "pi-ai-model-auth.csv": "76be30c8882becdf6a23a0bd529195426a1ca93079e97f040f15ef3c5abf4cf6",
+    "pi-ai-model-auth-boundaries.csv": "b237a5dcd3d26438a181b5428a3150566ad5026a372a77f26c2347d720dbdebc",
+    "pi-ai-model-auth-scope.csv": "f2d604651785a90908a2943a3ef184a2a3dfcc43f0c44b9fcac8d679fadcd55e",
+    "pi-ai-model-auth-exclusions.csv": "d459e9e10099dd970dd566d8d9561aaaa4471b7a6888d6e8ace9ea58ba8c827e"
+  },
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/core/model-runtime.js",
+            "archive_sha256": "44d8017928eff6721d5a56b4e71f98bcafb124f5aa6e7d3f016491e11fcf6461",
+            "root_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+            "cli_nested_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/runtime-credentials.js",
+            "archive_sha256": "2bf389ca2b04bd4dcee56433ca845cd8d9d96d0ccf84d2d0e9ad2a5e3957bda1",
+            "root_sha256": "2bf389ca2b04bd4dcee56433ca845cd8d9d96d0ccf84d2d0e9ad2a5e3957bda1",
+            "cli_nested_sha256": "2bf389ca2b04bd4dcee56433ca845cd8d9d96d0ccf84d2d0e9ad2a5e3957bda1",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/auth-storage.js",
+            "archive_sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+            "root_sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+            "cli_nested_sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/model-registry.js",
+            "archive_sha256": "588fa2d8df563fe0f41c99e54ecad1473cd325937b208cc1c3e103a8a032d0a1",
+            "root_sha256": "588fa2d8df563fe0f41c99e54ecad1473cd325937b208cc1c3e103a8a032d0a1",
+            "cli_nested_sha256": "588fa2d8df563fe0f41c99e54ecad1473cd325937b208cc1c3e103a8a032d0a1",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/agent-session.js",
+            "archive_sha256": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
+            "root_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/package-manager-cli.js",
+            "archive_sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+            "root_sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+            "cli_nested_sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/interactive-mode.js",
+            "archive_sha256": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+            "root_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/components/thinking-selector.js",
+            "archive_sha256": "e89933c8746f64e996ffbe7e71dc8e034182d14a5a7e60c4ef3da4c2266d2841",
+            "root_sha256": "e89933c8746f64e996ffbe7e71dc8e034182d14a5a7e60c4ef3da4c2266d2841",
+            "cli_nested_sha256": "e89933c8746f64e996ffbe7e71dc8e034182d14a5a7e60c4ef3da4c2266d2841",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/components/settings-selector.js",
+            "archive_sha256": "4d50aef1f9cc3579bcb1300f090036b590e5cc8fad0b32f63dc26ec282f11109",
+            "root_sha256": "4d50aef1f9cc3579bcb1300f090036b590e5cc8fad0b32f63dc26ec282f11109",
+            "cli_nested_sha256": "4d50aef1f9cc3579bcb1300f090036b590e5cc8fad0b32f63dc26ec282f11109",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/components/oauth-selector.js",
+            "archive_sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+            "root_sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+            "cli_nested_sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/components/assistant-message.js",
+            "archive_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+            "root_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+            "cli_nested_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/print-mode.js",
+            "archive_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "root_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/rpc/rpc-mode.js",
+            "archive_sha256": "631697cd35928fc827f4a423538c43ff227b8cbf63c2a2f11060616f55eba6db",
+            "root_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+            "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/export-html/template.js",
+            "archive_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "root_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "cli_nested_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": []
+      },
+      {
+        "name": "@earendil-works/pi-ai",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-hQM/C4+1w8rHYACzDDf+0vQMnEnpzIop1tptIERVgR3ZeT/hHSzBNG8PaWPgxWQjqSeKCyBZSyp8uTT6eKK1pQ==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/models.js",
+            "archive_sha256": "de6323034ca216eefecdfc44dd5c93f22713b34a01f2eb21a6d0a5ce85f9bb19",
+            "root_sha256": "de6323034ca216eefecdfc44dd5c93f22713b34a01f2eb21a6d0a5ce85f9bb19",
+            "cli_nested_sha256": "de6323034ca216eefecdfc44dd5c93f22713b34a01f2eb21a6d0a5ce85f9bb19",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/models-store.js",
+            "archive_sha256": "bbce61b3123d849c711a64051b37166a2180ba379bc6c8e20b360f08787d2b5d",
+            "root_sha256": "bbce61b3123d849c711a64051b37166a2180ba379bc6c8e20b360f08787d2b5d",
+            "cli_nested_sha256": "bbce61b3123d849c711a64051b37166a2180ba379bc6c8e20b360f08787d2b5d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/auth/resolve.js",
+            "archive_sha256": "3fcec09018831324d9c7fb02f4aea707e8a9e4fec5a2bdf1b3d84d716fd3091e",
+            "root_sha256": "3fcec09018831324d9c7fb02f4aea707e8a9e4fec5a2bdf1b3d84d716fd3091e",
+            "cli_nested_sha256": "3fcec09018831324d9c7fb02f4aea707e8a9e4fec5a2bdf1b3d84d716fd3091e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/auth/context.js",
+            "archive_sha256": "5d0ea91a2fd2acf84e3b9717ce59e75006933c68d8efa91873894a9d963d41a0",
+            "root_sha256": "5d0ea91a2fd2acf84e3b9717ce59e75006933c68d8efa91873894a9d963d41a0",
+            "cli_nested_sha256": "5d0ea91a2fd2acf84e3b9717ce59e75006933c68d8efa91873894a9d963d41a0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/auth/credential-store.js",
+            "archive_sha256": "7e47b1a35815d04d9798ba7d8b9870409eeb522c36752c97a4c67416caaf2358",
+            "root_sha256": "7e47b1a35815d04d9798ba7d8b9870409eeb522c36752c97a4c67416caaf2358",
+            "cli_nested_sha256": "7e47b1a35815d04d9798ba7d8b9870409eeb522c36752c97a4c67416caaf2358",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/models-error.js",
+            "archive_sha256": "7c8f802c2c77671f4b1721a07f3fefd007a2b332b222cd644ba285b3a74d9693",
+            "root_sha256": "7c8f802c2c77671f4b1721a07f3fefd007a2b332b222cd644ba285b3a74d9693",
+            "cli_nested_sha256": "7c8f802c2c77671f4b1721a07f3fefd007a2b332b222cd644ba285b3a74d9693",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/abort.js",
+            "archive_sha256": "17326034a23e443ca216f0b6ecb73db1dfd36a06698643ef77dc3ba9401f0636",
+            "root_sha256": "17326034a23e443ca216f0b6ecb73db1dfd36a06698643ef77dc3ba9401f0636",
+            "cli_nested_sha256": "17326034a23e443ca216f0b6ecb73db1dfd36a06698643ef77dc3ba9401f0636",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/index.js",
+            "archive_sha256": "7808fc618b4c816322005628af2726a53c4db678b37fb311163210c4fbab5ed0",
+            "root_sha256": "7808fc618b4c816322005628af2726a53c4db678b37fb311163210c4fbab5ed0",
+            "cli_nested_sha256": "7808fc618b4c816322005628af2726a53c4db678b37fb311163210c4fbab5ed0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/api/lazy.js",
+            "archive_sha256": "2dcf7b7d3d0ffc77b2be37b2a7ad184503a2b680b159e44c283738b28118aebe",
+            "root_sha256": "2dcf7b7d3d0ffc77b2be37b2a7ad184503a2b680b159e44c283738b28118aebe",
+            "cli_nested_sha256": "2dcf7b7d3d0ffc77b2be37b2a7ad184503a2b680b159e44c283738b28118aebe",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/model-operations.js",
+            "archive_sha256": "56264f6289f4822db8bed91a2e47aee387bfa70383b724e58f6aa6b96a0f4358",
+            "root_sha256": "56264f6289f4822db8bed91a2e47aee387bfa70383b724e58f6aa6b96a0f4358",
+            "cli_nested_sha256": "56264f6289f4822db8bed91a2e47aee387bfa70383b724e58f6aa6b96a0f4358",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/diagnostics.js",
+            "archive_sha256": "698070e564b12f303927b0c28845a0ec51f2f3dd29434724dcdffddd31b0b469",
+            "root_sha256": "698070e564b12f303927b0c28845a0ec51f2f3dd29434724dcdffddd31b0b469",
+            "cli_nested_sha256": "698070e564b12f303927b0c28845a0ec51f2f3dd29434724dcdffddd31b0b469",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/models.d.ts",
+            "archive_sha256": "55ffdf866c03e198a14c6ad6c7bf5910ad846220f48069069fd3ccf70947089c",
+            "root_sha256": "55ffdf866c03e198a14c6ad6c7bf5910ad846220f48069069fd3ccf70947089c",
+            "cli_nested_sha256": "55ffdf866c03e198a14c6ad6c7bf5910ad846220f48069069fd3ccf70947089c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/models.d.ts.map",
+            "archive_sha256": "cd792345b72cfc0de0b5d641c810b7098124d21e9a6f269160e28790bdfcbea4",
+            "root_sha256": "cd792345b72cfc0de0b5d641c810b7098124d21e9a6f269160e28790bdfcbea4",
+            "cli_nested_sha256": "cd792345b72cfc0de0b5d641c810b7098124d21e9a6f269160e28790bdfcbea4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/models.js.map",
+            "archive_sha256": "624606131305d9e22c5258083a1f68954cb23ff654e1d7463091bd78733c7b0e",
+            "root_sha256": "624606131305d9e22c5258083a1f68954cb23ff654e1d7463091bd78733c7b0e",
+            "cli_nested_sha256": "624606131305d9e22c5258083a1f68954cb23ff654e1d7463091bd78733c7b0e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/models-store.d.ts",
+            "archive_sha256": "fc8bf1e6bf781a08453a257292c50c80a9874d1092b310e4803ee6ea2d60cb39",
+            "root_sha256": "fc8bf1e6bf781a08453a257292c50c80a9874d1092b310e4803ee6ea2d60cb39",
+            "cli_nested_sha256": "fc8bf1e6bf781a08453a257292c50c80a9874d1092b310e4803ee6ea2d60cb39",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/models-store.d.ts.map",
+            "archive_sha256": "a12cbf36a427c7e35c7e383bd46ed4c490b49f5922b5ac642ca89fb97dc6af6f",
+            "root_sha256": "a12cbf36a427c7e35c7e383bd46ed4c490b49f5922b5ac642ca89fb97dc6af6f",
+            "cli_nested_sha256": "a12cbf36a427c7e35c7e383bd46ed4c490b49f5922b5ac642ca89fb97dc6af6f",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/models-store.js.map",
+            "archive_sha256": "cb07464e2cfa73db7801ed21d1fcbdec4e827885e6bcaf11d5282c2e47d8e417",
+            "root_sha256": "cb07464e2cfa73db7801ed21d1fcbdec4e827885e6bcaf11d5282c2e47d8e417",
+            "cli_nested_sha256": "cb07464e2cfa73db7801ed21d1fcbdec4e827885e6bcaf11d5282c2e47d8e417",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/auth/resolve.d.ts",
+            "archive_sha256": "a6a80f0abf9a23f48e1fc5ec482eeea0c9bc305589c8dec060559285a6c0d4b7",
+            "root_sha256": "a6a80f0abf9a23f48e1fc5ec482eeea0c9bc305589c8dec060559285a6c0d4b7",
+            "cli_nested_sha256": "a6a80f0abf9a23f48e1fc5ec482eeea0c9bc305589c8dec060559285a6c0d4b7",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/auth/resolve.d.ts.map",
+            "archive_sha256": "a8954bc0c16e81ab44f326b42478a79e86a7762b17a13fcff8ab6f10dfb6c859",
+            "root_sha256": "a8954bc0c16e81ab44f326b42478a79e86a7762b17a13fcff8ab6f10dfb6c859",
+            "cli_nested_sha256": "a8954bc0c16e81ab44f326b42478a79e86a7762b17a13fcff8ab6f10dfb6c859",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/auth/resolve.js.map",
+            "archive_sha256": "5f1856dc93b1267213824ee430f6f75448659048401754f972ad3d45a3d5d55a",
+            "root_sha256": "5f1856dc93b1267213824ee430f6f75448659048401754f972ad3d45a3d5d55a",
+            "cli_nested_sha256": "5f1856dc93b1267213824ee430f6f75448659048401754f972ad3d45a3d5d55a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/auth/context.d.ts",
+            "archive_sha256": "bd367078d6292cadb85522ac72ca4d733b8506a5390359fbfd9dd681bbbce48d",
+            "root_sha256": "bd367078d6292cadb85522ac72ca4d733b8506a5390359fbfd9dd681bbbce48d",
+            "cli_nested_sha256": "bd367078d6292cadb85522ac72ca4d733b8506a5390359fbfd9dd681bbbce48d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/auth/context.d.ts.map",
+            "archive_sha256": "bb2297d9ef3dc72299a77d671c040143645208271e04bd0db0a11e12b2c8ec23",
+            "root_sha256": "bb2297d9ef3dc72299a77d671c040143645208271e04bd0db0a11e12b2c8ec23",
+            "cli_nested_sha256": "bb2297d9ef3dc72299a77d671c040143645208271e04bd0db0a11e12b2c8ec23",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/auth/context.js.map",
+            "archive_sha256": "16295717c47225ad2bf6f1c2f0a865ab6b9b089050b8d5ddf143d074735c81bd",
+            "root_sha256": "16295717c47225ad2bf6f1c2f0a865ab6b9b089050b8d5ddf143d074735c81bd",
+            "cli_nested_sha256": "16295717c47225ad2bf6f1c2f0a865ab6b9b089050b8d5ddf143d074735c81bd",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/auth/credential-store.d.ts",
+            "archive_sha256": "b30029a6b8d93d65dd5b164fa563346009bcf47f674b28367ac08c0f111fcfb1",
+            "root_sha256": "b30029a6b8d93d65dd5b164fa563346009bcf47f674b28367ac08c0f111fcfb1",
+            "cli_nested_sha256": "b30029a6b8d93d65dd5b164fa563346009bcf47f674b28367ac08c0f111fcfb1",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/auth/credential-store.d.ts.map",
+            "archive_sha256": "95dfe7767de324797258dee3617a72524d1ddf8b5a043d2dcd5e378bef944e94",
+            "root_sha256": "95dfe7767de324797258dee3617a72524d1ddf8b5a043d2dcd5e378bef944e94",
+            "cli_nested_sha256": "95dfe7767de324797258dee3617a72524d1ddf8b5a043d2dcd5e378bef944e94",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/auth/credential-store.js.map",
+            "archive_sha256": "4100d4eaf63b4c2507f3c035c2793f185fbec622090afbf754e11bae05dcfa8d",
+            "root_sha256": "4100d4eaf63b4c2507f3c035c2793f185fbec622090afbf754e11bae05dcfa8d",
+            "cli_nested_sha256": "4100d4eaf63b4c2507f3c035c2793f185fbec622090afbf754e11bae05dcfa8d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/models-error.d.ts",
+            "archive_sha256": "19c3f342e7533faa66ab18d00ca6b82b7f79cfbba3a1b02ed206295d34b5697f",
+            "root_sha256": "19c3f342e7533faa66ab18d00ca6b82b7f79cfbba3a1b02ed206295d34b5697f",
+            "cli_nested_sha256": "19c3f342e7533faa66ab18d00ca6b82b7f79cfbba3a1b02ed206295d34b5697f",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/models-error.d.ts.map",
+            "archive_sha256": "d8a80e1ac136d5e70460a3f438f9a678278f68aea00472bb3799501e99f940f4",
+            "root_sha256": "d8a80e1ac136d5e70460a3f438f9a678278f68aea00472bb3799501e99f940f4",
+            "cli_nested_sha256": "d8a80e1ac136d5e70460a3f438f9a678278f68aea00472bb3799501e99f940f4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/models-error.js.map",
+            "archive_sha256": "2b9a1d95a3808255baea0f9d7a63f222881f89ee89cadc2b78dd3f73d5b84dee",
+            "root_sha256": "2b9a1d95a3808255baea0f9d7a63f222881f89ee89cadc2b78dd3f73d5b84dee",
+            "cli_nested_sha256": "2b9a1d95a3808255baea0f9d7a63f222881f89ee89cadc2b78dd3f73d5b84dee",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/abort.d.ts",
+            "archive_sha256": "2b79d404f940a30ea6798a38092c9c86ff60a62341b10f803c06596138bad018",
+            "root_sha256": "2b79d404f940a30ea6798a38092c9c86ff60a62341b10f803c06596138bad018",
+            "cli_nested_sha256": "2b79d404f940a30ea6798a38092c9c86ff60a62341b10f803c06596138bad018",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/abort.d.ts.map",
+            "archive_sha256": "cc13ef52e1bc7fcfff3060c604f1d22cb186500260a2ed4aed5683c4f4c8696d",
+            "root_sha256": "cc13ef52e1bc7fcfff3060c604f1d22cb186500260a2ed4aed5683c4f4c8696d",
+            "cli_nested_sha256": "cc13ef52e1bc7fcfff3060c604f1d22cb186500260a2ed4aed5683c4f4c8696d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/abort.js.map",
+            "archive_sha256": "3b2adf431faf3b838cebfa66b7b51e031043e9bd5a7fcbced2b3a766f13f692b",
+            "root_sha256": "3b2adf431faf3b838cebfa66b7b51e031043e9bd5a7fcbced2b3a766f13f692b",
+            "cli_nested_sha256": "3b2adf431faf3b838cebfa66b7b51e031043e9bd5a7fcbced2b3a766f13f692b",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      }
+    ],
+    "scoped_file_count": 46,
+    "byte_identical_scope_files": 42,
+    "pinned_patch_scope_files": 4,
+    "unresolved_scope_differences": 0
+  },
+  "ai_metadata_proof": {
+    "canonical_package_json_sha256": "36df91142c18a5912eafab0f2783bb4d88cdd101c5c5e7fd9173d4387cc5cced",
+    "root_package_json_sha256": "36df91142c18a5912eafab0f2783bb4d88cdd101c5c5e7fd9173d4387cc5cced",
+    "cli_nested_package_json_sha256": "18dae6817d231c86756c904eacf80a04c625041a30a9bd6dfccd841ece2dab54",
+    "expected_release_package_json_sha256": "18dae6817d231c86756c904eacf80a04c625041a30a9bd6dfccd841ece2dab54",
+    "changed_fields": [
+      "files"
+    ],
+    "source": "scripts/configure-release-packlists.mjs",
+    "source_sha256": "d06885cca4c6bc2083bdf4331d6db4610d63f66542fc9777a76cfc7c889705ab",
+    "canonical_archive_integrity": "sha512-hQM/C4+1w8rHYACzDDf+0vQMnEnpzIop1tptIERVgR3ZeT/hHSzBNG8PaWPgxWQjqSeKCyBZSyp8uTT6eKK1pQ=="
+  },
+  "route_refinements": [
+    {
+      "records": [
+        "pi.ai-model-auth.models.362.47",
+        "pi.ai-model-auth.models.365.43",
+        "pi.ai-model-auth.models.401.43",
+        "pi.ai-model-auth.models.413.43",
+        "pi.ai-model-auth.boundary.6"
+      ],
+      "change": "Before freeze, replaced generic auth/check/availability consumer boilerplate with exact login/logout enqueue/dialog/timeout/error/cancellation routes; no English, IDs or source anchors changed."
+    }
+  ]
+}
