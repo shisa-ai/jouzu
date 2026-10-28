@@ -160,6 +160,14 @@ Presence in this index does not certify complete caller coverage or visibility.
 [catalog-links-snapshot.json](catalog-links-snapshot.json) pins the inputs and
 records the overlap counts; these are navigation counts, not unique fixes.
 
+[catalog-disposition-links.csv](catalog-disposition-links.csv) separately accounts
+for the frozen seventy BASE definitions without a primary context or occurrence:
+49 IDs link to 55 retained semantic records, and 21 have bounded definition,
+alias or test-format evidence. These rows explicitly add zero primary display
+occurrences. The [scope](catalog-disposition-links-scope.csv) pins the static
+search universe and retained qualifications. Dynamic, reflective and external
+catalog access remain open; a missing named reference is not a reachability proof.
+
 [catalog-contexts.json](catalog-contexts.json) supplies the traced display
 locations, trigger conditions, consumer anchors and translation boundaries.
 [catalog-references.jsonl](catalog-references.jsonl) contains **3,506 source
@@ -1667,6 +1675,7 @@ Recheck this catalog snapshot from the repository root:
 node review/text-inventory/catalog-export.mjs
 python -B review/text-inventory/verify-catalog.py
 python -B review/text-inventory/catalog-links.py
+python -B review/text-inventory/verify-catalog-disposition-links.py
 python -B review/text-inventory/source-census.py
 python -B review/text-inventory/verify-main-update-census.py
 node review/text-inventory/verify-main-update-catalogs.cjs
