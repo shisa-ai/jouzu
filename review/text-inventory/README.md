@@ -160,6 +160,16 @@ retain those details. Recovery also matches `/regular file/` against an error
 message, so translating that message requires preserving its control behavior.
 Injected API guards and registration labels retain their qualified consumers.
 
+[palette.csv](palette.csv) adds 66 frame/key-hint records: 57 fixed display,
+glyph or format occurrences, four catalog definitions and five payload
+boundaries. Two complete helper bodies and all 148 lexical occurrences are
+accounted for in the [scope](palette-scope.csv) and
+[exclusions](palette-exclusions.csv). Records distinguish rendered text from
+width-only measurements, active tabs, scrolling markers and compact footer
+fallbacks. `Unbound` is both a formatter result and a caller control sentinel;
+translating its definition alone changes filtering/replacement behavior. Unknown
+counts and missing factories retain their exported-helper activation conditions.
+
 [model-catalog.csv](model-catalog.csv) supplies 490 source/catalog/sync/projection
 records: 116 catalog occurrences across 89 IDs, 344 fixed or protected machine
 occurrences and 30 payload boundaries. The
@@ -440,6 +450,7 @@ python -B review/text-inventory/verify-profiles.py
 python -B review/text-inventory/verify-profile-migration.py
 python -B review/text-inventory/verify-catalog-settings.py
 python -B review/text-inventory/verify-model-picker.py
+node review/text-inventory/verify-palette.cjs
 python -B review/text-inventory/verify-model-catalog.py
 python -B review/text-inventory/verify-auth-account.py
 python -B review/text-inventory/verify-launcher.py
