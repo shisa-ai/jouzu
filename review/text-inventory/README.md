@@ -1,13 +1,25 @@
 # User-visible English text inventory
 
-Source: [GitHub main at `346d1e4`](https://github.com/shisa-ai/jouzu/tree/346d1e481757a55eb62fc066e43bbc7999b8e6dd).
+Base source: [GitHub main at `346d1e4`](https://github.com/shisa-ai/jouzu/tree/346d1e481757a55eb62fc066e43bbc7999b8e6dd).
+Fetched follow-on target: [GitHub main at `1fda3eb`](https://github.com/shisa-ai/jouzu/tree/1fda3eb161b042aae66e4adcc07319f69946dadd).
+
+[main-update-paths.csv](main-update-paths.csv) records all 59 changed paths across
+fourteen commits: 48 modified and eleven added. The target has 1,217 blobs;
+[main-update-unchanged.csv](main-update-unchanged.csv) proves identical Git mode
+and blob for 1,158 paths. The [snapshot](main-update-snapshot.json) pins both trees,
+changed-file SHA-256 values and the complete partition. Four corruption controls
+pass. Follow-on text and condition review remains open. Existing detailed tables
+and checks retain their base source authority; equal source blobs establish
+identity, while changed callers, configuration and upstream patches need separate
+review. No checkout or product operation is performed by this census.
+
 This inventory lists wording and the conditions under which it can reach a user,
 including errors and diagnostics. It is being assembled for a translation pass.
 The current snapshot is **incomplete**; catalog membership, source references and
 runtime visibility are separate claims.
 
 Start with [catalogs.csv](catalogs.csv). It contains all **1,804 English Fluent
-messages** at this source commit, with exact English patterns, file and line,
+messages** at the base source commit, with exact English patterns, file and line,
 attributes, variables, and trigger status. **110** messages currently have
 source-traced trigger descriptions: CLI help, argument-parser errors, and
 slash-command autocomplete descriptions. Other messages explicitly retain
@@ -1343,6 +1355,7 @@ node review/text-inventory/catalog-export.mjs
 python -B review/text-inventory/verify-catalog.py
 python -B review/text-inventory/catalog-links.py
 python -B review/text-inventory/source-census.py
+python -B review/text-inventory/verify-main-update-census.py
 python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-acp-dependencies.py
 python -B review/text-inventory/verify-startup-language.py

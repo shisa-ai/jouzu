@@ -1,0 +1,43 @@
+{
+  "base_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "target_revision": "1fda3eb161b042aae66e4adcc07319f69946dadd",
+  "base_tree": "5c10cff2d551d8ac10c05be0f57583cfb1483d92",
+  "target_tree": "1d60cae700114f3883fe46889567ca4b55f49496",
+  "base_blobs": 1206,
+  "target_blobs": 1217,
+  "changed_paths": 59,
+  "unchanged_paths": 1158,
+  "changes": {
+    "modified": 48,
+    "added": 11
+  },
+  "changed_categories": {
+    "ci-workflow": 1,
+    "documentation-or-instructions": 7,
+    "configuration-lock-resource-or-other": 13,
+    "locale-catalog": 8,
+    "source-or-command": 17,
+    "test-fixture-or-evaluation": 13
+  },
+  "forward_commits": [
+    "be1358c18ac197ac4c72479a3d51d96fb5e37bcc",
+    "3d3771c8cc23f6f4b1eb9d3e40e1c282562970ee",
+    "f00934a21536b1d1bd7741390572ad7666ee8bcb",
+    "5ae380847baca82c1a650ab1302d219cded76cae",
+    "38312cd084d1fd96ac143721426a185231962c77",
+    "9f8dc7d962b47fef8c86b7af02ad24b5a40f99cc",
+    "2062c5af940bf784476dcc4937e82d8d8a3df69a",
+    "5925a75bb9d4d15832f9093270f55ad3989a527f",
+    "232e48c206c71244684d1d3c05dbc23e12c7c67e",
+    "3a771c27f92c5efe34c39b778146fc585973e66c",
+    "4a850853122882c764d6ab91f51e5ed3f3a4bf8f",
+    "d15d777c69102aa41319cb5832a1bd90878919e7",
+    "7535ee8ceab9f4a229cd2377caca968eb6a62c32",
+    "1fda3eb161b042aae66e4adcc07319f69946dadd"
+  ],
+  "artifact_sha256_utf8_lf": {
+    "main-update-paths.csv": "02ee72ba7a768d850ba03dabfdf3e1ded35ad30cba84d03f7732dde2b199de2e",
+    "main-update-unchanged.csv": "402f134eda8be7be7737aa2b776c022b66bd619d26e46dc5aa756f81419a8cf8"
+  },
+  "interpretation": "Finite source-identity census for the fetched target, not a claim all changed text or conditions are reviewed. Base346 inventory/checkers keep their original authority. Same blobs do not prove unchanged transitive behavior. No checkout, install, audited module or product operation executed."
+}
