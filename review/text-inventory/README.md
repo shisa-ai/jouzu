@@ -745,6 +745,22 @@ native/model/saved/export route, separate from receipt text. Wider native,
 ingress, service, submission and schedule producers remain open. No grants,
 input, private state, model, native or tool producer was executed.
 
+[pi-import-message-api.csv](pi-import-message-api.csv) adds 1,268 source/API
+records across two complete bodies totaling 1,616 lines: 1,212 lexical
+occurrences, seventeen bare field keys, ten catalog consumers and 29 boundaries.
+Seven importer error definitions include two private consistency guards with no
+supported current trigger; these are excluded from normal translation targets.
+The [scope](pi-import-message-api-scope.csv) pins seventeen sources plus main
+identities. Its 947 aliases and 88 report mappings link existing definitions for
+1,033 distinct IDs without treating declarations as visible runtime occurrences.
+Import prompts require the actual startup/TTY gates; the trimmed answer must
+match y or yes under the exact source regex. Existing receipts, source selection,
+invalid input suppression, raw-byte copying, partial persistence and finally
+replacement errors remain separately qualified. Plain PiImportError messages
+retain their creation language; CatalogError retains a descriptor for re-rendering.
+No import, credentials, configuration, lock, prompt or user-state operation was
+executed.
+
 [localization-ops-text.csv](localization-ops-text.csv) adds 182 operations
 records: fifteen fixed English error occurrences, 120 protected lexical values,
 nine existing Settings catalog sinks and 38 bounded proofs. The complete
@@ -1265,6 +1281,7 @@ node review/text-inventory/verify-flow-tools.cjs
 python -B review/text-inventory/verify-flow-orchestration.py
 python -B review/text-inventory/verify-flow-controller-core.py
 python -B review/text-inventory/verify-flow-user-work.py
+python -B review/text-inventory/verify-pi-import-message-api.py
 python -B review/text-inventory/verify-localization-ops-text.py
 node review/text-inventory/verify-context-adjunct-text.cjs
 node review/text-inventory/verify-prose-wrapping-text.cjs
