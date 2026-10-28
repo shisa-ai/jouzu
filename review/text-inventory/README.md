@@ -120,6 +120,16 @@ target/root-escape diagnostics from catalog errors. Three prompt patterns are
 explicitly API-only because their helper has no production caller. Migration
 and copied asset bodies retain separate producer boundaries.
 
+[profile-migration.csv](profile-migration.csv) adds 133 migration records:
+48 catalog occurrences across 32 IDs, 52 fixed or protected machine occurrences
+and 33 payload boundaries. Both migration bodies are fully read in the
+[scope table](profile-migration-scope.csv). It records plan/apply/rollback,
+confirmation and receipt-validation conditions, plus the distinction between raw
+JSON file-content lines and cleaned human previews. Rollback computes a fresh
+plan before reading its receipt; failures in that preliminary work can prevent
+the later notices. Renderer branches without a current planner producer and
+settings-helper guards with proved caller preconditions remain excluded.
+
 [launcher.csv](launcher.csv) records 406 occurrences and boundary records across
 launcher dictionaries, frontend consumers, Rust failures and installer text.
 Inactive dictionary entries are identified explicitly. Thirty-six native or
@@ -263,6 +273,7 @@ python -B review/text-inventory/verify-cli-entry.py
 python -B review/text-inventory/verify-doctor.py
 python -B review/text-inventory/verify-updater.py
 python -B review/text-inventory/verify-profiles.py
+python -B review/text-inventory/verify-profile-migration.py
 python -B review/text-inventory/verify-launcher.py
 python -B review/text-inventory/verify-launcher-helpers.py
 python -B review/text-inventory/verify-launcher-support.py
