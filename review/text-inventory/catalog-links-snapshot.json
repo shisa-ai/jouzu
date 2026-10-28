@@ -57,6 +57,7 @@
     "build-scripts.csv": 0,
     "copied-runtime.csv": 0,
     "release-scripts.csv": 0,
+    "build-integration.csv": 0,
     "textguard-native.csv": 0,
     "textguard-dependencies.csv": 0
   },
@@ -114,6 +115,7 @@
     "build-scripts.csv": "68befe3a4f96d55edc573b5ad3098e94b9ff33a4c4fe0f852d884ee948773e85",
     "copied-runtime.csv": "2787f1dfc42c4543a4709d8df807e78a70ad60d938adf2f76989e85ed5c0b6df",
     "release-scripts.csv": "ea1906615a302252e0eea7c01bd7cccfcc3b6540a92df8a0932b0b33f1bb28d7",
+    "build-integration.csv": "bfc2cd486579e3d04392d373846e4fdeceae68688440652477514528490c2998",
     "textguard-native.csv": "08467f86575d3192cfceb3dd8bd2b656708b74c4f3ca385e8ddeeab8501a57ed",
     "textguard-dependencies.csv": "d4c96fa7aa75e2f90566abace6eea342d42519bdc9a0c3bb2c5dc79da4ef3d19"
   },

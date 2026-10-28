@@ -646,9 +646,21 @@ The [scope](release-scripts-scope.csv) covers 18 complete bodies, 2,092 lines an
 receipt/fingerprint fields, input-source match guards, registry checks, retries,
 child output and the deliberate broken-CLI smoke fixture. Native assertions and
 JSON/filesystem/network exceptions retain their exact call/argument boundaries.
-The root census partitions 81 scripts into these 18, 31 previously covered bodies
-and 32 pending candidates. No publication, registry, install, native or network
+Its root census snapshot partitions 81 scripts into these 18, 31 previously covered
+bodies and 32 candidates continued in following units. No publication, registry, install, native or network
 operation was executed.
+
+[build-integration.csv](build-integration.csv) adds 1,237 integration/build records:
+875 primary literal/regex occurrences, 11 protected hashbangs, 315 nested source
+occurrences and 36 delivery boundaries. The
+[scope](build-integration-scope.csv) covers 15 complete bodies, 3,083 lines and
+140 source hashes. It distinguishes old patch matches, generated installed text,
+String.raw regex fragments, copied data, operator failures and diagnostics
+replaced by runtime catches. Thirty-five policy targets and exact deviation,
+after/copy hashes are checked. No default Node assertion producer occurs in these
+bodies. The root partition now has 64 covered scripts and 17 pending; six upstream
+copied/delegated bodies retain explicit separate boundaries. No transform,
+installation, runtime, native or network operation was executed.
 
 [textguard-native.csv](textguard-native.csv) records 418 native TextGuard
 occurrences and boundaries, including 122 native English occurrences, protected
@@ -725,6 +737,7 @@ python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-build-scripts.py
 python -B review/text-inventory/verify-copied-runtime.py
 python -B review/text-inventory/verify-release-scripts.py
+python -B review/text-inventory/verify-build-integration.py
 python -B review/text-inventory/verify-textguard-native.py
 python -B review/text-inventory/verify-textguard-dependencies.py
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>
