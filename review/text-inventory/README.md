@@ -27,6 +27,22 @@ rejected automatic attempt. Five corruption/omission controls pass. Existing
 base wording is linked by catalog ID without retargeting its earlier evidence.
 Target caller coverage remains open beyond these bounded conditions.
 
+[main-update-startup-auth.csv](main-update-startup-auth.csv) records the eight
+complete target startup/auth/updater bodies (2,342 lines). Its 832 rows separate
+24 fixed English source occurrences, 490 protected lexical values, 107 catalog
+references, 139 control/sink sites, 23 semantic proofs and 49 bounded native
+tokens (21 fixed English). Use JSON `evidence.kind` to distinguish prose from
+protected code/data; row totals are not unique translation counts. The
+[scope](main-update-startup-auth-scope.csv) pins 32 immutable Git objects, six
+bounded installed native sources and four prior-artifact links, with two explicit
+external/other-owner gaps. Bootstrap help now precedes the main import. Shisa's
+new cancellation status requires the saved marker to exist when the native
+login catch runs, on the same aborted signal; a later save does not satisfy that
+condition. Completion consumes its host marker before count/footer/border/status
+work, so subsequent failure can prevent the status. Native abort races, original
+completion feedback and lazy npm-root diagnostics retain separate routes.
+These source checks do not execute authentication, startup or dependency code.
+
 [main-update-release-text.csv](main-update-release-text.csv) records eleven fixed
 packaging/contract occurrences and four payload boundaries at the target revision.
 Two full packaging bodies cover 127 lines. The
@@ -1468,6 +1484,7 @@ python -B review/text-inventory/source-census.py
 python -B review/text-inventory/verify-main-update-census.py
 python -B review/text-inventory/verify-main-update-documentation.py
 python -B review/text-inventory/verify-main-update-model-text.py
+python -B review/text-inventory/verify-main-update-startup-auth.py
 python -B review/text-inventory/verify-main-update-release-text.py
 python -B review/text-inventory/verify-documentation-text.py
 python -B review/text-inventory/verify-acp.py
