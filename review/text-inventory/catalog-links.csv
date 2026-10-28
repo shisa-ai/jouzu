@@ -37,32 +37,32 @@ jouzu.cli.args.unknownJouzuOption,packages/cli/locales/en/cli.ftl:45,source-trac
 jouzu.cli.args.versionHelpArguments,packages/cli/locales/en/cli.ftl:49,source-traced,1,0,[],occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.camoufox.result.screenshotAttached,packages/cli/locales/en/cli.ftl:1739,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.camoufox.result.screenshotOmitted,packages/cli/locales/en/cli.ftl:1738,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.attempt.http,packages/cli/locales/en/cli.ftl:305,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.attempt.timedOut,packages/cli/locales/en/cli.ftl:306,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.catalog.attempt.http,packages/cli/locales/en/cli.ftl:305,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0045""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.attempt.timedOut,packages/cli/locales/en/cli.ftl:306,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0049""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.catalog.credential.environmentNotSet,packages/cli/locales/en/cli.ftl:300,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.catalog.credential.environmentSet,packages/cli/locales/en/cli.ftl:298,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.catalog.credential.savedToken,packages/cli/locales/en/cli.ftl:299,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.discovery.accessDenied,packages/cli/locales/en/cli.ftl:308,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.discovery.accessDeniedBearer,packages/cli/locales/en/cli.ftl:310,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.discovery.authFailed,packages/cli/locales/en/cli.ftl:307,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.discovery.authFailedBearer,packages/cli/locales/en/cli.ftl:309,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.failure.bodyTimeout,packages/cli/locales/en/cli.ftl:411,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.failure.cache,packages/cli/locales/en/cli.ftl:417,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.failure.certificate,packages/cli/locales/en/cli.ftl:415,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.failure.connectionClosed,packages/cli/locales/en/cli.ftl:405,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.failure.connectionRefused,packages/cli/locales/en/cli.ftl:403,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.failure.connectionReset,packages/cli/locales/en/cli.ftl:404,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.failure.connectTimeout,packages/cli/locales/en/cli.ftl:409,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.failure.dnsHostname,packages/cli/locales/en/cli.ftl:401,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.failure.dnsLookup,packages/cli/locales/en/cli.ftl:402,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.failure.filesystem,packages/cli/locales/en/cli.ftl:414,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.failure.headersTimeout,packages/cli/locales/en/cli.ftl:410,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.failure.hostUnreachable,packages/cli/locales/en/cli.ftl:407,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.failure.network,packages/cli/locales/en/cli.ftl:416,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.failure.networkPermission,packages/cli/locales/en/cli.ftl:412,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.failure.networkUnreachable,packages/cli/locales/en/cli.ftl:406,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.failure.redirectBlocked,packages/cli/locales/en/cli.ftl:413,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.failure.timeout,packages/cli/locales/en/cli.ftl:408,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.catalog.discovery.accessDenied,packages/cli/locales/en/cli.ftl:308,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0052""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.discovery.accessDeniedBearer,packages/cli/locales/en/cli.ftl:310,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0053""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.discovery.authFailed,packages/cli/locales/en/cli.ftl:307,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0050""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.discovery.authFailedBearer,packages/cli/locales/en/cli.ftl:309,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0051""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.failure.bodyTimeout,packages/cli/locales/en/cli.ftl:411,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0398""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.failure.cache,packages/cli/locales/en/cli.ftl:417,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0417""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.failure.certificate,packages/cli/locales/en/cli.ftl:415,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0415""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.failure.connectionClosed,packages/cli/locales/en/cli.ftl:405,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0401""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.failure.connectionRefused,packages/cli/locales/en/cli.ftl:403,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0377""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.failure.connectionReset,packages/cli/locales/en/cli.ftl:404,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0380""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.failure.connectTimeout,packages/cli/locales/en/cli.ftl:409,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0392""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.failure.dnsHostname,packages/cli/locales/en/cli.ftl:401,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0371""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.failure.dnsLookup,packages/cli/locales/en/cli.ftl:402,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0374""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.failure.filesystem,packages/cli/locales/en/cli.ftl:414,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0414""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.failure.headersTimeout,packages/cli/locales/en/cli.ftl:410,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0395""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.failure.hostUnreachable,packages/cli/locales/en/cli.ftl:407,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0386""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.failure.network,packages/cli/locales/en/cli.ftl:416,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0416""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.failure.networkPermission,packages/cli/locales/en/cli.ftl:412,caller-trace-required,0,2,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0404""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0407""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.failure.networkUnreachable,packages/cli/locales/en/cli.ftl:406,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0383""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.failure.redirectBlocked,packages/cli/locales/en/cli.ftl:413,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0410""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.failure.timeout,packages/cli/locales/en/cli.ftl:408,caller-trace-required,0,2,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0389""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0413""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.catalog.fallback.canonical,packages/cli/locales/en/cli.ftl:421,caller-trace-required,0,1,"[{""table"":""startup-language.csv"",""item_id"":""STARTUP-LANGUAGE-045""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.catalog.fallback.noCatalog,packages/cli/locales/en/cli.ftl:419,caller-trace-required,0,1,"[{""table"":""startup-language.csv"",""item_id"":""STARTUP-LANGUAGE-046""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.catalog.fallback.unsupported,packages/cli/locales/en/cli.ftl:420,caller-trace-required,0,1,"[{""table"":""startup-language.csv"",""item_id"":""STARTUP-LANGUAGE-047""}]",occurrence-records-present; exhaustive-caller-review-open
@@ -82,9 +82,9 @@ jouzu.cli.catalog.field.validated,packages/cli/locales/en/cli.ftl:286,caller-tra
 jouzu.cli.catalog.fileNotFound,packages/cli/locales/en/cli.ftl:640,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.catalog.fileNotRegular,packages/cli/locales/en/cli.ftl:641,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.catalog.hint,packages/cli/locales/en/cli.ftl:268,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.insecureTransport,packages/cli/locales/en/cli.ftl:311,caller-trace-required,0,1,"[{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-270""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.insecureTransport,packages/cli/locales/en/cli.ftl:311,caller-trace-required,0,4,"[{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-270""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0010""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0487""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0488""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.catalog.invalid,packages/cli/locales/en/cli.ftl:291,caller-trace-required,0,1,"[{""table"":""cli-entry.csv"",""item_id"":""CLI-ENTRY-018""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.catalog.listSeparator,packages/cli/locales/en/cli.ftl:319,caller-trace-required,0,1,"[{""table"":""doctor.csv"",""item_id"":""DOCTOR-442""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.listSeparator,packages/cli/locales/en/cli.ftl:319,caller-trace-required,0,4,"[{""table"":""doctor.csv"",""item_id"":""DOCTOR-442""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0062""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0068""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0073""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.catalog.note.quarantined,packages/cli/locales/en/cli.ftl:295,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.catalog.note.registrationGaps,packages/cli/locales/en/cli.ftl:293,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.catalog.note.thinkingLevels,packages/cli/locales/en/cli.ftl:294,caller-trace-required,0,0,[],caller-trace-required
@@ -92,15 +92,15 @@ jouzu.cli.catalog.note.tokenMissing,packages/cli/locales/en/cli.ftl:292,caller-t
 jouzu.cli.catalog.notes,packages/cli/locales/en/cli.ftl:267,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.catalog.problem,packages/cli/locales/en/cli.ftl:275,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.catalog.problems,packages/cli/locales/en/cli.ftl:276,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.registrationEffect,packages/cli/locales/en/cli.ftl:312,caller-trace-required,0,1,"[{""table"":""doctor.csv"",""item_id"":""DOCTOR-443""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.catalog.registrationField.contextWindow,packages/cli/locales/en/cli.ftl:317,caller-trace-required,0,1,"[{""table"":""doctor.csv"",""item_id"":""DOCTOR-438""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.catalog.registrationField.maxOutputTokens,packages/cli/locales/en/cli.ftl:318,caller-trace-required,0,1,"[{""table"":""doctor.csv"",""item_id"":""DOCTOR-440""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.catalog.registrationField.textModality,packages/cli/locales/en/cli.ftl:316,caller-trace-required,0,1,"[{""table"":""doctor.csv"",""item_id"":""DOCTOR-436""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.catalog.registrationGap.count,packages/cli/locales/en/cli.ftl:314,caller-trace-required,0,3,"[{""table"":""doctor.csv"",""item_id"":""DOCTOR-437""},{""table"":""doctor.csv"",""item_id"":""DOCTOR-439""},{""table"":""doctor.csv"",""item_id"":""DOCTOR-441""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.registrationEffect,packages/cli/locales/en/cli.ftl:312,caller-trace-required,0,3,"[{""table"":""doctor.csv"",""item_id"":""DOCTOR-443""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0061""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0067""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.registrationField.contextWindow,packages/cli/locales/en/cli.ftl:317,caller-trace-required,0,4,"[{""table"":""doctor.csv"",""item_id"":""DOCTOR-438""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0059""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0065""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0071""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.registrationField.maxOutputTokens,packages/cli/locales/en/cli.ftl:318,caller-trace-required,0,4,"[{""table"":""doctor.csv"",""item_id"":""DOCTOR-440""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0060""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0066""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0072""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.registrationField.textModality,packages/cli/locales/en/cli.ftl:316,caller-trace-required,0,4,"[{""table"":""doctor.csv"",""item_id"":""DOCTOR-436""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0058""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0064""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0070""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.registrationGap.count,packages/cli/locales/en/cli.ftl:314,caller-trace-required,0,5,"[{""table"":""doctor.csv"",""item_id"":""DOCTOR-437""},{""table"":""doctor.csv"",""item_id"":""DOCTOR-439""},{""table"":""doctor.csv"",""item_id"":""DOCTOR-441""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0063""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0069""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.catalog.registrationGap.detail,packages/cli/locales/en/cli.ftl:315,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.registrationGap.field,packages/cli/locales/en/cli.ftl:313,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.sourceNotFound,packages/cli/locales/en/cli.ftl:302,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.sourceNotFoundOrDisabled,packages/cli/locales/en/cli.ftl:418,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.catalog.registrationGap.field,packages/cli/locales/en/cli.ftl:313,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0074""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.sourceNotFound,packages/cli/locales/en/cli.ftl:302,caller-trace-required,0,3,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0040""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0041""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0042""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.sourceNotFoundOrDisabled,packages/cli/locales/en/cli.ftl:418,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0335""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.catalog.sourcesActive,packages/cli/locales/en/cli.ftl:266,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.catalog.state.active,packages/cli/locales/en/cli.ftl:272,caller-trace-required,0,1,"[{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-152""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.catalog.state.degraded,packages/cli/locales/en/cli.ftl:274,caller-trace-required,0,0,[],caller-trace-required
@@ -108,70 +108,70 @@ jouzu.cli.catalog.state.empty,packages/cli/locales/en/cli.ftl:271,caller-trace-r
 jouzu.cli.catalog.state.stale,packages/cli/locales/en/cli.ftl:273,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.catalog.state.unconfigured,packages/cli/locales/en/cli.ftl:270,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.catalog.status.disabled,packages/cli/locales/en/cli.ftl:301,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.sync.accessDenied,packages/cli/locales/en/cli.ftl:382,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.sync.authFailed,packages/cli/locales/en/cli.ftl:381,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.sync.httpError,packages/cli/locales/en/cli.ftl:384,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.sync.noActiveAccount,packages/cli/locales/en/cli.ftl:385,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.sync.operationBusy,packages/cli/locales/en/cli.ftl:380,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.sync.proxyAuth,packages/cli/locales/en/cli.ftl:383,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.sync.refreshBusy,packages/cli/locales/en/cli.ftl:379,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.catalog.sync.accessDenied,packages/cli/locales/en/cli.ftl:382,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0329""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.sync.authFailed,packages/cli/locales/en/cli.ftl:381,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0328""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.sync.httpError,packages/cli/locales/en/cli.ftl:384,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0331""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.sync.noActiveAccount,packages/cli/locales/en/cli.ftl:385,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0334""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.sync.operationBusy,packages/cli/locales/en/cli.ftl:380,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0333""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.sync.proxyAuth,packages/cli/locales/en/cli.ftl:383,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0330""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.sync.refreshBusy,packages/cli/locales/en/cli.ftl:379,caller-trace-required,0,2,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0327""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0332""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.catalog.title,packages/cli/locales/en/cli.ftl:264,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.catalog.title.plural,packages/cli/locales/en/cli.ftl:265,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.catalog.tokenMissing,packages/cli/locales/en/cli.ftl:303,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.tokenMissingWithSaved,packages/cli/locales/en/cli.ftl:304,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalog.unconfigured,packages/cli/locales/en/cli.ftl:269,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.catalog.tokenMissingWithSaved,packages/cli/locales/en/cli.ftl:304,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0044""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalog.unconfigured,packages/cli/locales/en/cli.ftl:269,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0326""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.catalog.valid,packages/cli/locales/en/cli.ftl:290,caller-trace-required,0,1,"[{""table"":""cli-entry.csv"",""item_id"":""CLI-ENTRY-017""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.catalog.warning,packages/cli/locales/en/cli.ftl:277,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.catalog.warnings,packages/cli/locales/en/cli.ftl:278,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.catalogSource.attemptValid,packages/cli/locales/en/cli.ftl:373,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.authBearerCredentialRef,packages/cli/locales/en/cli.ftl:346,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.authInvalidCredentialRef,packages/cli/locales/en/cli.ftl:347,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.authType,packages/cli/locales/en/cli.ftl:348,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.builtinImmutableEdit,packages/cli/locales/en/cli.ftl:366,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.builtinImmutableRemove,packages/cli/locales/en/cli.ftl:367,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.context.credentials,packages/cli/locales/en/cli.ftl:334,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.context.override,packages/cli/locales/en/cli.ftl:331,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.context.overrides,packages/cli/locales/en/cli.ftl:333,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.context.registry,packages/cli/locales/en/cli.ftl:332,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.context.source,packages/cli/locales/en/cli.ftl:327,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.context.sourceAuth,packages/cli/locales/en/cli.ftl:328,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.context.sourceLabel,packages/cli/locales/en/cli.ftl:329,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.context.sourceLabelBare,packages/cli/locales/en/cli.ftl:330,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.context.token,packages/cli/locales/en/cli.ftl:336,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.context.tokenFor,packages/cli/locales/en/cli.ftl:337,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.context.url,packages/cli/locales/en/cli.ftl:335,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.credentialsNotObject,packages/cli/locales/en/cli.ftl:362,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.credentialsNotRegularFile,packages/cli/locales/en/cli.ftl:364,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.credentialsSchema,packages/cli/locales/en/cli.ftl:363,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.catalogSource.authBearerCredentialRef,packages/cli/locales/en/cli.ftl:346,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0007""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.authInvalidCredentialRef,packages/cli/locales/en/cli.ftl:347,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0008""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.authType,packages/cli/locales/en/cli.ftl:348,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0009""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.builtinImmutableEdit,packages/cli/locales/en/cli.ftl:366,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0489""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.builtinImmutableRemove,packages/cli/locales/en/cli.ftl:367,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0490""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.context.credentials,packages/cli/locales/en/cli.ftl:334,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0034""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.context.override,packages/cli/locales/en/cli.ftl:331,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0004""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.context.overrides,packages/cli/locales/en/cli.ftl:333,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0029""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.context.registry,packages/cli/locales/en/cli.ftl:332,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0020""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.context.source,packages/cli/locales/en/cli.ftl:327,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0001""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.context.sourceAuth,packages/cli/locales/en/cli.ftl:328,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0002""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.context.sourceLabel,packages/cli/locales/en/cli.ftl:329,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0003""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.context.sourceLabelBare,packages/cli/locales/en/cli.ftl:330,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0039""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.context.token,packages/cli/locales/en/cli.ftl:336,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0032""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.context.tokenFor,packages/cli/locales/en/cli.ftl:337,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0037""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.context.url,packages/cli/locales/en/cli.ftl:335,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0011""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.credentialsNotObject,packages/cli/locales/en/cli.ftl:362,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0033""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.credentialsNotRegularFile,packages/cli/locales/en/cli.ftl:364,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0038""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.credentialsSchema,packages/cli/locales/en/cli.ftl:363,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0035""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.catalogSource.discoveryCanceled,packages/cli/locales/en/cli.ftl:370,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.duplicateId,packages/cli/locales/en/cli.ftl:355,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.duplicateUrl,packages/cli/locales/en/cli.ftl:356,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.invalidSourceId,packages/cli/locales/en/cli.ftl:341,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.mediaTypeMissing,packages/cli/locales/en/cli.ftl:372,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.noCatalogFound,packages/cli/locales/en/cli.ftl:375,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.notBoundedText,packages/cli/locales/en/cli.ftl:340,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.notObject,packages/cli/locales/en/cli.ftl:339,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.overrideEnabledBoolean,packages/cli/locales/en/cli.ftl:358,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.overrideNotObject,packages/cli/locales/en/cli.ftl:357,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.overridesNotObject,packages/cli/locales/en/cli.ftl:359,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.overridesNotRegularFile,packages/cli/locales/en/cli.ftl:361,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.overridesSchema,packages/cli/locales/en/cli.ftl:360,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.registryNotObject,packages/cli/locales/en/cli.ftl:352,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.registryNotRegularFile,packages/cli/locales/en/cli.ftl:354,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.registrySchema,packages/cli/locales/en/cli.ftl:353,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.reservedId,packages/cli/locales/en/cli.ftl:368,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.responseTooLarge,packages/cli/locales/en/cli.ftl:374,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.signedOut,packages/cli/locales/en/cli.ftl:369,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.sourceEnabledBoolean,packages/cli/locales/en/cli.ftl:351,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.sourceNotObject,packages/cli/locales/en/cli.ftl:349,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.sourceRequiresFields,packages/cli/locales/en/cli.ftl:350,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.tokenNotString,packages/cli/locales/en/cli.ftl:365,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.unknownField,packages/cli/locales/en/cli.ftl:338,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.unsupportedContentType,packages/cli/locales/en/cli.ftl:371,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.urlAbsolute,packages/cli/locales/en/cli.ftl:342,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.urlCredentials,packages/cli/locales/en/cli.ftl:343,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.urlQueryOrFragment,packages/cli/locales/en/cli.ftl:344,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.catalogSource.urlScheme,packages/cli/locales/en/cli.ftl:345,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.catalogSource.duplicateId,packages/cli/locales/en/cli.ftl:355,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0022""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.duplicateUrl,packages/cli/locales/en/cli.ftl:356,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0023""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.invalidSourceId,packages/cli/locales/en/cli.ftl:341,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0005""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.mediaTypeMissing,packages/cli/locales/en/cli.ftl:372,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0046""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.noCatalogFound,packages/cli/locales/en/cli.ftl:375,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0054""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.notBoundedText,packages/cli/locales/en/cli.ftl:340,caller-trace-required,0,5,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0476""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0477""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0478""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0479""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0480""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.notObject,packages/cli/locales/en/cli.ftl:339,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0006""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.overrideEnabledBoolean,packages/cli/locales/en/cli.ftl:358,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0026""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.overrideNotObject,packages/cli/locales/en/cli.ftl:357,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0025""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.overridesNotObject,packages/cli/locales/en/cli.ftl:359,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0028""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.overridesNotRegularFile,packages/cli/locales/en/cli.ftl:361,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0027""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.overridesSchema,packages/cli/locales/en/cli.ftl:360,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0030""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.registryNotObject,packages/cli/locales/en/cli.ftl:352,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0019""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.registryNotRegularFile,packages/cli/locales/en/cli.ftl:354,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0024""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.registrySchema,packages/cli/locales/en/cli.ftl:353,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0021""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.reservedId,packages/cli/locales/en/cli.ftl:368,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0031""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.responseTooLarge,packages/cli/locales/en/cli.ftl:374,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0048""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.signedOut,packages/cli/locales/en/cli.ftl:369,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0043""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.sourceEnabledBoolean,packages/cli/locales/en/cli.ftl:351,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0018""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.sourceNotObject,packages/cli/locales/en/cli.ftl:349,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0016""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.sourceRequiresFields,packages/cli/locales/en/cli.ftl:350,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0017""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.tokenNotString,packages/cli/locales/en/cli.ftl:365,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0036""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.unknownField,packages/cli/locales/en/cli.ftl:338,caller-trace-required,0,7,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0469""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0470""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0471""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0472""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0473""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0474""},{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0475""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.unsupportedContentType,packages/cli/locales/en/cli.ftl:371,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0047""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.urlAbsolute,packages/cli/locales/en/cli.ftl:342,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0012""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.urlCredentials,packages/cli/locales/en/cli.ftl:343,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0013""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.urlQueryOrFragment,packages/cli/locales/en/cli.ftl:344,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0014""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.catalogSource.urlScheme,packages/cli/locales/en/cli.ftl:345,caller-trace-required,0,1,"[{""table"":""model-catalog.csv"",""item_id"":""MODEL-CATALOG-0015""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.classicHost.mcpUnavailable,packages/cli/locales/en/cli.ftl:1764,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.compaction.continueFailed,packages/cli/locales/en/cli.ftl:1788,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.compaction.outcome,packages/cli/locales/en/cli.ftl:1786,caller-trace-required,0,0,[],caller-trace-required

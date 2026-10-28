@@ -160,6 +160,18 @@ retain those details. Recovery also matches `/regular file/` against an error
 message, so translating that message requires preserving its control behavior.
 Injected API guards and registration labels retain their qualified consumers.
 
+[model-catalog.csv](model-catalog.csv) supplies 490 source/catalog/sync/projection
+records: 116 catalog occurrences across 89 IDs, 344 fixed or protected machine
+occurrences and 30 payload boundaries. The
+[scope table](model-catalog-scope.csv) covers four complete producer bodies and
+two failure/response helpers, all 131 error/fail sites and 19 catches. It expands
+schema diagnostics by their concrete field callers and distinguishes refresh
+JSON, persisted human status, picker failed-source summaries and Settings
+cancellation replacement. Several classifier calls use default English.
+An exact `unexpected redirect` message comparison is recorded as translation
+control coupling. Parser postconditions and returned-only diagnostics retain
+explicit dispositions; account/token/OS/remote producers remain separate.
+
 [launcher.csv](launcher.csv) records 406 occurrences and boundary records across
 launcher dictionaries, frontend consumers, Rust failures and installer text.
 Inactive dictionary entries are identified explicitly. Thirty-six native or
@@ -365,6 +377,7 @@ python -B review/text-inventory/verify-profiles.py
 python -B review/text-inventory/verify-profile-migration.py
 python -B review/text-inventory/verify-catalog-settings.py
 python -B review/text-inventory/verify-model-picker.py
+python -B review/text-inventory/verify-model-catalog.py
 python -B review/text-inventory/verify-launcher.py
 python -B review/text-inventory/verify-launcher-helpers.py
 python -B review/text-inventory/verify-launcher-support.py
