@@ -172,6 +172,16 @@ An exact `unexpected redirect` message comparison is recorded as translation
 control coupling. Parser postconditions and returned-only diagnostics retain
 explicit dispositions; account/token/OS/remote producers remain separate.
 
+[auth-account.csv](auth-account.csv) records 65 Shisa account/auth occurrences:
+42 catalog occurrences across 33 IDs, eight protected names/link/marker values
+and 15 payload boundaries. Nine complete bodies and 12 supplemental native
+consumers are pinned in the [scope table](auth-account-scope.csv). Settings login
+progress and logout formatting include calls that default to English; outer
+Settings errors can replace the underlying message. Onboarding compares a
+storage error to the same catalog rendering, and its confirmation accepts English
+`y`/`yes` tokens. Both translation-sensitive controls are recorded. Browser,
+remote, filesystem and arbitrary callback wording remains separately bounded.
+
 [launcher.csv](launcher.csv) records 406 occurrences and boundary records across
 launcher dictionaries, frontend consumers, Rust failures and installer text.
 Inactive dictionary entries are identified explicitly. Thirty-six native or
@@ -431,6 +441,7 @@ python -B review/text-inventory/verify-profile-migration.py
 python -B review/text-inventory/verify-catalog-settings.py
 python -B review/text-inventory/verify-model-picker.py
 python -B review/text-inventory/verify-model-catalog.py
+python -B review/text-inventory/verify-auth-account.py
 python -B review/text-inventory/verify-launcher.py
 python -B review/text-inventory/verify-launcher-helpers.py
 python -B review/text-inventory/verify-launcher-support.py

@@ -16,7 +16,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 PIN = '346d1e481757a55eb62fc066e43bbc7999b8e6dd'
 SCOPES = [
-    'acp-scope.csv', 'acp-dependencies-scope.csv', 'startup-language-scope.csv', 'cli-entry-scope.csv',
+    'acp-scope.csv', 'acp-dependencies-scope.csv', 'startup-language-scope.csv', 'cli-entry-scope.csv', 'auth-account-scope.csv',
     'doctor-scope.csv', 'updater-scope.csv', 'profiles-scope.csv', 'profile-migration-scope.csv', 'catalog-settings-scope.csv', 'flow-display-scope.csv',
     'model-picker-scope.csv', 'model-catalog-scope.csv', 'pi-tools-scope.csv', 'pi-runtime-scope.csv', 'pi-auth-model-scope.csv', 'flow-report-scope.csv', 'flow-storage-scope.csv', 'flow-receipts-scope.csv', 'flow-waits-scope.csv', 'flow-wait-authority-scope.csv', 'flow-wait-producers-scope.csv', 'flow-tools-scope.csv',
     'launcher-scope.csv', 'launcher-helpers-scope.csv', 'launcher-support-scope.csv',
