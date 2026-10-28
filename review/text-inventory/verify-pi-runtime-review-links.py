@@ -13,7 +13,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 SCOPES = [
-    'pi-bundle-entry-support-scope.csv', 'pi-bundle-small-helpers-scope.csv', 'pi-bundle-oauth-providers-scope.csv', 'pi-bundle-stream-adapters-scope.csv', 'pi-bundle-provider-adapters-scope.csv', 'pi-cli-support-scope.csv', 'pi-codemode-support-scope.csv',
+    'pi-bundle-entry-support-scope.csv', 'pi-bundle-response-helpers-scope.csv', 'pi-bundle-small-helpers-scope.csv', 'pi-bundle-oauth-providers-scope.csv', 'pi-bundle-stream-adapters-scope.csv', 'pi-bundle-provider-adapters-scope.csv', 'pi-cli-support-scope.csv', 'pi-codemode-support-scope.csv',
     'pi-compaction-text-scope.csv', 'pi-config-discovery-scope.csv',
     'pi-core-config-support-scope.csv', 'pi-diagnostics-migration-share-scope.csv',
     'pi-distribution-support-scope.csv', 'pi-interactive-support-scope.csv',
@@ -86,11 +86,11 @@ def generate(root_modules, nested_modules):
             json.dumps(baseline, ensure_ascii=False, separators=(',', ':')),
             json.dumps(followon[source], ensure_ascii=False, separators=(',', ':')), LIMIT])))
     pending = [row for row in rows if row['local_source_status'] == 'local-source-body-pending']
-    assert len(pending) == 40 and all(row['runtime_family'] == 'compiled-bundle-source' for row in pending)
+    assert len(pending) == 37 and all(row['runtime_family'] == 'compiled-bundle-source' for row in pending)
     snapshot = dict(source_revision='346d1e481757a55eb62fc066e43bbc7999b8e6dd',
-                    runtime_sources=384, local_source_owners_present=344,
-                    noncompiled_local_owners=303, compiled_local_owners=41,
-                    pending_compiled_bodies=40, pending_other_local_bodies=0,
+                    runtime_sources=384, local_source_owners_present=347,
+                    noncompiled_local_owners=303, compiled_local_owners=44,
+                    pending_compiled_bodies=37, pending_other_local_bodies=0,
                     pending_compiled_bytes=sum(int(by_source[row['source']]['bytes']) for row in pending),
                     original_census_unchanged=True, input_sha256_utf8_lf=inputs,
                     interpretation=LIMIT,

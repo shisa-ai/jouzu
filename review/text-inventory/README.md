@@ -353,9 +353,9 @@ dependency and complete consumer coverage remain open. No audited module is load
 Follow-on local reviews retain their own scopes below; this baseline is frozen.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 26 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 41 compiled bodies;
-40 compiled bodies remain pending. The
+universe with 27 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 44 compiled bodies;
+37 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -1028,6 +1028,23 @@ consumers remain bounded. All three canonical package archives and both installe
 trees are checked, including the exact public nested AI package-list transform.
 Twenty-five corruption controls pass. This unit does not extend the separate
 384-source coding-agent/TUI census or execute authentication/model operations.
+
+[pi-bundle-response-helpers.csv](pi-bundle-response-helpers.csv) records 44
+qualified error and request-context expressions across three complete compiled
+response/JSON/grammar helper bodies (45,311 bytes). Their 49 component tokens
+and 363 [exclusions](pi-bundle-response-helpers-exclusions.csv) account for all
+412 literal/template/regex nodes. Fifteen exclusions retain unpublished or
+internally caught wording. Twenty-five
+[boundaries](pi-bundle-response-helpers-boundaries.csv) distinguish request tool
+updates, terminal response events, schema/grammar validation, partial arguments
+and final tool-result errors. Received-arguments diagnostics have bounded
+validation, immediate-result, sequential/parallel emission and persistence routes;
+private partial-JSON parser diagnostics are discarded. The
+[scope](pi-bundle-response-helpers-scope.csv) grants complete local review only to
+three helpers; 53 imported-call snippets and the import graph remain bounded.
+Canonical archive, both installed trees and twelve corruption controls pass.
+Compiled entry/API conditions remain separate from ordinary unbundled Jouzu;
+no request, tool, model or native operation runs.
 
 [pi-bundle-small-helpers.csv](pi-bundle-small-helpers.csv) records twelve
 qualified error/source expressions across fifteen complete compiled helpers
@@ -2237,6 +2254,7 @@ node review/text-inventory/verify-pi-ai-lexical.cjs
 python -B review/text-inventory/verify-pi-ai-runtime-census.py
 node review/text-inventory/verify-pi-ai-request-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-ai-model-auth.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-bundle-response-helpers.cjs
 node review/text-inventory/verify-pi-bundle-small-helpers.cjs
 python -B review/text-inventory/verify-pi-bundle-oauth-providers.py
 python -B review/text-inventory/verify-pi-bundle-stream-adapters.py
