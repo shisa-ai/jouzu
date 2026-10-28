@@ -1,0 +1,22 @@
+{
+  "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "full_fixtures": 5,
+  "physical_line_rows": 465,
+  "full_fixture_bytes": 18949,
+  "source_description": 1,
+  "fixture_prompt_rows": 20,
+  "fixture_names": 2,
+  "mixed_language_fixture_labels": 2,
+  "control_data_boundaries": 2,
+  "rows": 27,
+  "JSON_string_tokens": 989,
+  "bounded_support_sources": 8,
+  "offsets": "Line table uses UTF8 byte offsets; token table uses Unicode codepoint offsets. JSON serialization preserves raw/decoded text.",
+  "interpretation": "Full local fixture data-source read only; no new runtime/catalog/English-language/model-compliance or platform claim. Consumers are bounded and no scenario executes.",
+  "artifact_sha256_utf8_lf": {
+    "data-fixture-text.csv": "be65f40cc207e8c3de13336e731ec8c7c9dc9bd9d372ad2c3979b2f247025180",
+    "data-fixture-lines.csv": "270e4b141cf5fdf01a41957d3d14fc91bdb25a94b4e9852091a00f6c9b879a59",
+    "data-fixture-tokens.csv": "457c720be7be0a0c85dfc94f97c8c1ada3ce77913fce17a56c4a8011fcaa09a6",
+    "data-fixture-text-scope.csv": "1d5982690a57b9ee9e66dd92f813b6d84e10ac40e010b55985cd7faf3d30fb80"
+  }
+}

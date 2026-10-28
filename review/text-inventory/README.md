@@ -236,6 +236,19 @@ excluded or pending; its presence is not a completed file review. Path categorie
 are navigation aids and do not exclude wording from review. Installed dependencies
 and generated outputs need their separate provenance and consumer traces.
 
+[data-fixture-text.csv](data-fixture-text.csv) records 25 qualified source/data
+wording entries and two control-data boundaries across five complete fixtures
+(465 lines, 18,949 bytes). The [line export](data-fixture-lines.csv) reconstructs
+all bytes, and [token ledger](data-fixture-tokens.csv) retains 989 JSON strings.
+Twenty evaluation prompts are task data; the inspected routing test checks schema
+and expectations without sending them to a model. Catalog fixture names remain
+protected metadata; the recursive build copy can package both JSON examples.
+The mixed CJK fixture retains exact byte/normalization requirements. The versioned
+journal fixture contains protected storage data and can surface through failed
+byte/state comparisons. The [scope](data-fixture-text-scope.csv) keeps eight
+consumer sources bounded; [snapshot](data-fixture-text-snapshot.json) records
+source-only evidence, with no test/build/model/server operation executed.
+
 [test-source-sites.csv](test-source-sites.csv) indexes 23,377 lexical call and
 expression sites across 423 BASE JavaScript/TypeScript test/fixture sources:
 4,069 imported-framework/callback call candidates, 18,467 assertion sites,
@@ -1865,6 +1878,7 @@ python -B review/text-inventory/catalog-links.py
 python -B review/text-inventory/verify-catalog-disposition-links.py
 python -B review/text-inventory/source-census.py
 node review/text-inventory/verify-test-source-sites.cjs
+python -B review/text-inventory/verify-data-fixture-text.py
 python -B review/text-inventory/verify-main-update-census.py
 python -B review/text-inventory/verify-main-update-review-links.py
 node review/text-inventory/verify-main-update-catalogs.cjs
