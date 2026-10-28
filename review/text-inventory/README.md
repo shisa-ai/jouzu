@@ -280,9 +280,9 @@ dependency and complete consumer coverage remain open. No audited module is load
 Follow-on local reviews retain their own scopes below; this baseline is frozen.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 22 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside seven compiled entry/shim bodies;
-74 compiled bodies remain pending. The
+universe with 23 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside sixteen compiled bodies;
+65 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -875,6 +875,20 @@ and five pinned support patches, with 74 patch after-hashes. Seven supplementary
 sources have exact versions/import routes/two-tree hashes, without canonical
 archive or full-body promotion. Twenty corruption controls pass. No shell,
 config, search execution, activation, transcript, model or UI operation executed.
+
+[pi-bundle-provider-adapters.csv](pi-bundle-provider-adapters.csv) records 94
+qualified error, prompt and exported-API definitions across nine complete compiled
+provider/OAuth adapters (50,659 bytes). The 416
+[exclusions](pi-bundle-provider-adapters-exclusions.csv) retain protected syntax
+and internal retry/fallback wording with no publication route. Thirty-one
+[boundaries](pi-bundle-provider-adapters-boundaries.csv) distinguish fifteen catches,
+two Promise catches, partial error packets, classifier/image results, OAuth
+notifications and cancellation replacement. Loaded OAuth object labels retain
+API-only conditions; outer native wrappers supply separate labels. The
+[scope](pi-bundle-provider-adapters-scope.csv) keeps lazy API/registry/helper calls
+bounded. Twenty-five corruption controls pass against canonical archive and both
+installed trees. No compiled/unbundled equivalence or default Jouzu activation
+is inferred, and no request/auth/provider/native operation executes.
 
 [pi-bundle-entry-support.csv](pi-bundle-entry-support.csv) records no authored
 fixed English in seven complete compiled entry/shim bodies (11,967 bytes).
@@ -2014,6 +2028,7 @@ python -B review/text-inventory/verify-pi-cli-support.py --node-modules <root-no
 python -B review/text-inventory/verify-pi-codemode-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-diagnostics-migration-share.py
 python -B review/text-inventory/verify-pi-bundle-entry-support.py
+python -B review/text-inventory/verify-pi-bundle-provider-adapters.py
 node review/text-inventory/verify-pi-bundle-lexical.cjs
 node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
