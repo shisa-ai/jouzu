@@ -657,11 +657,24 @@ payload boundaries. The [scope](session-ui-components-scope.csv) covers nine
 complete editor, dashboard and probe-source bodies, 1,215 lines and 18 pinned
 sources. It accounts for 401 lexical tokens, one Error site and eleven catches.
 Together with the preceding two units this covers all twenty Session UI source
-bodies; CLI activity and work-source producers remain separate. Slash-description
+bodies; CLI activity and work-source producers follow below. Slash-description
 ownership, dashboard counts and state words, duplicate-source API errors and
 probe rejection versus nonzero-exit behavior retain distinct conditions. The
 default editor bypasses its SessionLine callback below four columns; standalone
 formatters have separate width guards. No UI, probe or native code was executed.
+
+[session-ui-producers.csv](session-ui-producers.csv) adds 28 CLI activity and work
+projection records: three catalog calls, twelve fixed/protected occurrences and
+thirteen payload boundaries. The [scope](session-ui-producers-scope.csv) covers
+two complete bodies, 327 lines, seventeen source hashes and 124 lexical tokens.
+Twenty-one prior full-body crosslinks preserve Session UI and subagent dashboard
+ownership. Plural subagent/job text and the English loop-status regex have
+separate translation/control conditions. Stale retained units can still affect
+counts; swallowed claim/release errors, task detachment, source-read retention,
+responsive detail slots and snapshot-time labels keep their distinct guards.
+These bodies add no direct print/JSON/RPC writer. Flow/task/background upstream
+orchestration remains separately bounded; no UI, callback, claim event, inventory
+read, child or native producer was executed.
 
 [workflow.csv](workflow.csv) records 210 Workflow items: 167 catalog occurrences,
 11 fixed or protected occurrences and 32 payload boundaries. The
@@ -1021,6 +1034,7 @@ node review/text-inventory/verify-human-fallback.cjs
 node review/text-inventory/verify-session-primitives.cjs
 python -B review/text-inventory/verify-session-ui-text.py
 python -B review/text-inventory/verify-session-ui-components.py
+python -B review/text-inventory/verify-session-ui-producers.py
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-build-scripts.py

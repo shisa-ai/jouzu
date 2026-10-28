@@ -1699,9 +1699,9 @@ jouzu.cli.voice.transcriptTooLarge,packages/cli/locales/en/cli.ftl:1299,caller-t
 jouzu.cli.voice.uploadFailed,packages/cli/locales/en/cli.ftl:1287,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-056""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.voice.uploadSlow,packages/cli/locales/en/cli.ftl:1286,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-055""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.voice.usage,packages/cli/locales/en/cli.ftl:1282,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-044""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.work.jobExit,packages/cli/locales/en/cli.ftl:645,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.work.outcomeUnknown,packages/cli/locales/en/cli.ftl:644,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.work.withheldRequest,packages/cli/locales/en/cli.ftl:643,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.work.jobExit,packages/cli/locales/en/cli.ftl:645,caller-trace-required,0,1,"[{""table"":""session-ui-producers.csv"",""item_id"":""SESSION-UI-PRODUCERS-006""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.work.outcomeUnknown,packages/cli/locales/en/cli.ftl:644,caller-trace-required,0,1,"[{""table"":""session-ui-producers.csv"",""item_id"":""SESSION-UI-PRODUCERS-005""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.work.withheldRequest,packages/cli/locales/en/cli.ftl:643,caller-trace-required,0,1,"[{""table"":""session-ui-producers.csv"",""item_id"":""SESSION-UI-PRODUCERS-004""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.workflow.action.applyingAgent,packages/cli/locales/en/cli.ftl:854,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-080""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.workflow.action.disablingSubagents,packages/cli/locales/en/cli.ftl:823,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-037""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.workflow.action.enablingSubagents,packages/cli/locales/en/cli.ftl:822,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-036""}]",occurrence-records-present; exhaustive-caller-review-open

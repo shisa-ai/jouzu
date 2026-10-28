@@ -1,8 +1,8 @@
 {
   "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
   "tracked_blobs": 1206,
-  "paths_with_scope_references": 655,
-  "paths_without_scope_references": 551,
+  "paths_with_scope_references": 656,
+  "paths_without_scope_references": 550,
   "path_categories": {
     "configuration-lock-resource-or-other": 79,
     "ci-workflow": 10,
@@ -67,6 +67,7 @@
     "session-primitives-scope.csv": "6c25421319798aa09fc51704937c4f19ebedefa828b391ed44c6b795abf9059c",
     "session-ui-text-scope.csv": "d1caebdf9d9a33f2270053af35751d48ebf7684e44bac904ac2f6016ae89f651",
     "session-ui-components-scope.csv": "4b04a433a37d94c7fd3de14eb04baca8d68b3ee162e0343dbb61b256c6b7af6b",
+    "session-ui-producers-scope.csv": "3d7d6da803406af8e2836166b94a79e55c518776d70e440229b288daa21120c3",
     "pi-tui-input-scope.csv": "e8b71f0b5e6279586d2b9f93edeba91200b15ed6dc0fe70e59e0d7395c5430c5",
     "pi-tui-text-support-scope.csv": "6abd9d23a65d0ef01425da770156f149b4d919b761663899af6121339c48c805",
     "copied-bootstrap-scope.csv": "3c8bb7c770e5ec065317fcf7b773792f350819ba6a84ce63b92513ae6bed0ae8",
