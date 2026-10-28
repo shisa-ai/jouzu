@@ -1,8 +1,8 @@
 {
   "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
   "tracked_blobs": 1206,
-  "paths_with_scope_references": 696,
-  "paths_without_scope_references": 510,
+  "paths_with_scope_references": 704,
+  "paths_without_scope_references": 502,
   "path_categories": {
     "configuration-lock-resource-or-other": 79,
     "ci-workflow": 10,
@@ -74,6 +74,7 @@
     "release-surface-text-scope.csv": "16bcbefd5ba773c26533728e8483b06d560e4cbfe5b7c8bd4b788d08e1db3e1b",
     "profile-resources-scope.csv": "3695d75263c3c11775c29d72e188d0c821bd38bc2d24ef3f1fadcb1bca660b1e",
     "flow-orchestration-scope.csv": "d0ac1120db81047ef5c018798bc186d3ea53c594105dcf3e34c10f134b803f52",
+    "flow-controller-core-scope.csv": "d1a72ec4b9761fef240c719ac73487d4e167cd2bbb70de00efe2848239dd61a3",
     "pi-tui-input-scope.csv": "e8b71f0b5e6279586d2b9f93edeba91200b15ed6dc0fe70e59e0d7395c5430c5",
     "pi-tui-text-support-scope.csv": "6abd9d23a65d0ef01425da770156f149b4d919b761663899af6121339c48c805",
     "pi-interactive-support-scope.csv": "772ed487f63bc1130d8456db07a675c19d5f614abc2b945efa90abe963c7f22c",

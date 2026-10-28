@@ -361,13 +361,13 @@ jouzu.cli.fast.off,packages/cli/locales/en/runtime.ftl:19,caller-trace-required,
 jouzu.cli.fast.on,packages/cli/locales/en/runtime.ftl:17,caller-trace-required,0,1,"[{""table"":""cli-startup-support.csv"",""item_id"":""CLI-STARTUP-SUPPORT-024""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.fast.usage,packages/cli/locales/en/runtime.ftl:14,caller-trace-required,0,1,"[{""table"":""cli-startup-support.csv"",""item_id"":""CLI-STARTUP-SUPPORT-021""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.flow.compaction.label,packages/cli/locales/en/cli.ftl:1647,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.flow.controller.aggregateCapacity,packages/cli/locales/en/cli.ftl:1691,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.flow.controller.producerInput,packages/cli/locales/en/cli.ftl:1686,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.flow.controller.producerState,packages/cli/locales/en/cli.ftl:1687,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.flow.controller.resultCapacity,packages/cli/locales/en/cli.ftl:1692,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.flow.controller.resultInput,packages/cli/locales/en/cli.ftl:1688,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.flow.controller.resultMetadata,packages/cli/locales/en/cli.ftl:1689,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.flow.controller.waitDecisionInput,packages/cli/locales/en/cli.ftl:1690,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.flow.controller.aggregateCapacity,packages/cli/locales/en/cli.ftl:1691,caller-trace-required,0,1,"[{""table"":""flow-controller-core.csv"",""item_id"":""FLOW-CONTROLLER-CORE-022""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.flow.controller.producerInput,packages/cli/locales/en/cli.ftl:1686,caller-trace-required,0,1,"[{""table"":""flow-controller-core.csv"",""item_id"":""FLOW-CONTROLLER-CORE-025""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.flow.controller.producerState,packages/cli/locales/en/cli.ftl:1687,caller-trace-required,0,1,"[{""table"":""flow-controller-core.csv"",""item_id"":""FLOW-CONTROLLER-CORE-019""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.flow.controller.resultCapacity,packages/cli/locales/en/cli.ftl:1692,caller-trace-required,0,1,"[{""table"":""flow-controller-core.csv"",""item_id"":""FLOW-CONTROLLER-CORE-023""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.flow.controller.resultInput,packages/cli/locales/en/cli.ftl:1688,caller-trace-required,0,1,"[{""table"":""flow-controller-core.csv"",""item_id"":""FLOW-CONTROLLER-CORE-024""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.flow.controller.resultMetadata,packages/cli/locales/en/cli.ftl:1689,caller-trace-required,0,1,"[{""table"":""flow-controller-core.csv"",""item_id"":""FLOW-CONTROLLER-CORE-021""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.flow.controller.waitDecisionInput,packages/cli/locales/en/cli.ftl:1690,caller-trace-required,0,1,"[{""table"":""flow-controller-core.csv"",""item_id"":""FLOW-CONTROLLER-CORE-020""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.flow.ingress.hostAdmission,packages/cli/locales/en/cli.ftl:1664,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.flow.ingress.providerOutcomeUnknown,packages/cli/locales/en/cli.ftl:1667,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.flow.ingress.recoveryReconciliation,packages/cli/locales/en/cli.ftl:1665,caller-trace-required,0,0,[],caller-trace-required

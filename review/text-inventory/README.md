@@ -683,9 +683,23 @@ expanded or no summary exists. Saved/exported text retains the body, while task
 cancellation context has no default saved-body claim. Read-observation stale/scope
 failures are swallowed. The native event bus logs its own English prefix and raw
 error object to stderr, separately from localized root notices. Twenty-two prior
-full-body crosslinks preserve ownership; core controller, admission, result and
-session/wait producers remain bounded follow-ups. No runtime, event, callback,
+full-body crosslinks preserve ownership; controller/admission/result helpers
+follow below, while session/wait producers remain bounded follow-ups. No runtime, event, callback,
 model, native or user-state producer was executed.
+
+[flow-controller-core.csv](flow-controller-core.csv) adds 84 core records:
+seven catalog occurrences, 65 fixed/protected occurrences and twelve payload
+boundaries. Ten complete controller, admission, observation, work and result
+bodies cover 1,627 lines. The [scope](flow-controller-core-scope.csv) pins 38
+sources and accounts for 54 Error constructors, eleven catches and 373 lexical
+tokens, with fourteen prior full-body crosslinks. Defensive/private guards and
+host-prevalidated queue/consumption paths keep explicit exclusions. Held/deferred
+view data is distinct from persisted native admission reasons. Result review-note
+English can survive in saved/raw/expanded/exported content while compact summary
+uses a catalog label. Manifest input limits, cursor errors, retention/attachment
+routes and complete-member byte budgets retain their precise guards. Wider
+ingress, service, host, submission, user-input and schedule bodies remain pending.
+No controller, queue, tool, model, native or user-state producer was executed.
 
 [flow-model-input.csv](flow-model-input.csv) adds 46 composition/request-helper
 records: 29 fixed error definitions, two protected JSON frame templates, five
@@ -1160,6 +1174,7 @@ node review/text-inventory/verify-flow-wait-authority.cjs
 node review/text-inventory/verify-flow-wait-producers.cjs
 node review/text-inventory/verify-flow-tools.cjs
 python -B review/text-inventory/verify-flow-orchestration.py
+python -B review/text-inventory/verify-flow-controller-core.py
 node review/text-inventory/verify-flow-model-input.cjs
 node review/text-inventory/verify-native-request-state.cjs
 node review/text-inventory/verify-flow-request-policy.cjs
