@@ -1054,24 +1054,24 @@ jouzu.cli.runtime.running,packages/cli/locales/en/cli.ftl:1776,caller-trace-requ
 jouzu.cli.runtime.started,packages/cli/locales/en/cli.ftl:1778,caller-trace-required,0,3,"[{""table"":""cli-entry.csv"",""item_id"":""CLI-ENTRY-088""},{""table"":""cli-entry.csv"",""item_id"":""CLI-ENTRY-089""},{""table"":""cli-entry.csv"",""item_id"":""CLI-ENTRY-090""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.runtime.summary,packages/cli/locales/en/cli.ftl:1782,caller-trace-required,0,1,"[{""table"":""cli-entry.csv"",""item_id"":""CLI-ENTRY-109""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.runtime.versionUnavailable,packages/cli/locales/en/cli.ftl:1780,caller-trace-required,0,3,"[{""table"":""cli-entry.csv"",""item_id"":""CLI-ENTRY-094""},{""table"":""cli-entry.csv"",""item_id"":""CLI-ENTRY-095""},{""table"":""cli-entry.csv"",""item_id"":""CLI-ENTRY-096""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.scrollback.alreadyOpen,packages/cli/locales/en/runtime.ftl:25,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.scrollback.busy,packages/cli/locales/en/runtime.ftl:24,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.scrollback.dumb,packages/cli/locales/en/runtime.ftl:28,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.scrollback.emptySummary,packages/cli/locales/en/runtime.ftl:33,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.scrollback.alreadyOpen,packages/cli/locales/en/runtime.ftl:25,caller-trace-required,0,1,"[{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-088""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.scrollback.busy,packages/cli/locales/en/runtime.ftl:24,caller-trace-required,0,2,"[{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-083""},{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-089""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.scrollback.dumb,packages/cli/locales/en/runtime.ftl:28,caller-trace-required,0,1,"[{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-086""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.scrollback.emptySummary,packages/cli/locales/en/runtime.ftl:33,caller-trace-required,0,4,"[{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-071""},{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-072""},{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-074""},{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-075""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.scrollback.failure,packages/cli/locales/en/runtime.ftl:41,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.scrollback.failureDetail,packages/cli/locales/en/runtime.ftl:39,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.scrollback.fullscreen,packages/cli/locales/en/runtime.ftl:26,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.scrollback.interactive,packages/cli/locales/en/runtime.ftl:27,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.scrollback.noOutput,packages/cli/locales/en/runtime.ftl:34,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.scrollback.session,packages/cli/locales/en/runtime.ftl:37,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.scrollback.sessionNamed,packages/cli/locales/en/runtime.ftl:36,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.scrollback.title,packages/cli/locales/en/runtime.ftl:35,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.scrollback.toolCall,packages/cli/locales/en/runtime.ftl:30,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.scrollback.toolError,packages/cli/locales/en/runtime.ftl:32,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.scrollback.toolResult,packages/cli/locales/en/runtime.ftl:31,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.scrollback.tty,packages/cli/locales/en/runtime.ftl:29,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.scrollback.unknownError,packages/cli/locales/en/runtime.ftl:40,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.scrollback.unserializable,packages/cli/locales/en/runtime.ftl:38,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.scrollback.failureDetail,packages/cli/locales/en/runtime.ftl:39,caller-trace-required,0,1,"[{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-081""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.scrollback.fullscreen,packages/cli/locales/en/runtime.ftl:26,caller-trace-required,0,1,"[{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-090""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.scrollback.interactive,packages/cli/locales/en/runtime.ftl:27,caller-trace-required,0,1,"[{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-085""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.scrollback.noOutput,packages/cli/locales/en/runtime.ftl:34,caller-trace-required,0,1,"[{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-073""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.scrollback.session,packages/cli/locales/en/runtime.ftl:37,caller-trace-required,0,1,"[{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-078""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.scrollback.sessionNamed,packages/cli/locales/en/runtime.ftl:36,caller-trace-required,0,1,"[{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-077""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.scrollback.title,packages/cli/locales/en/runtime.ftl:35,caller-trace-required,0,1,"[{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-076""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.scrollback.toolCall,packages/cli/locales/en/runtime.ftl:30,caller-trace-required,0,1,"[{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-068""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.scrollback.toolError,packages/cli/locales/en/runtime.ftl:32,caller-trace-required,0,1,"[{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-069""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.scrollback.toolResult,packages/cli/locales/en/runtime.ftl:31,caller-trace-required,0,1,"[{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-070""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.scrollback.tty,packages/cli/locales/en/runtime.ftl:29,caller-trace-required,0,1,"[{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-087""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.scrollback.unknownError,packages/cli/locales/en/runtime.ftl:40,caller-trace-required,0,1,"[{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-082""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.scrollback.unserializable,packages/cli/locales/en/runtime.ftl:38,caller-trace-required,0,2,"[{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-079""},{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-080""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.selfUpdate.alreadyCurrent,packages/cli/locales/en/cli.ftl:498,caller-trace-required,0,2,"[{""table"":""cli-entry.csv"",""item_id"":""CLI-ENTRY-006""},{""table"":""updater.csv"",""item_id"":""UPDATER-176""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.selfUpdate.applied,packages/cli/locales/en/cli.ftl:497,caller-trace-required,0,2,"[{""table"":""cli-entry.csv"",""item_id"":""CLI-ENTRY-005""},{""table"":""updater.csv"",""item_id"":""UPDATER-175""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.selfUpdate.automatic,packages/cli/locales/en/cli.ftl:480,caller-trace-required,0,1,"[{""table"":""updater.csv"",""item_id"":""UPDATER-028""}]",occurrence-records-present; exhaustive-caller-review-open
@@ -1181,7 +1181,7 @@ jouzu.cli.session.slash.quit,packages/cli/locales/en/slash-commands.ftl:26,sourc
 jouzu.cli.session.slash.reload,packages/cli/locales/en/slash-commands.ftl:25,source-traced,1,0,[],occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.session.slash.resume,packages/cli/locales/en/slash-commands.ftl:24,source-traced,1,0,[],occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.session.slash.schedulePrompt,packages/cli/locales/en/slash-commands.ftl:37,source-traced,1,0,[],occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.session.slash.scrollback,packages/cli/locales/en/slash-commands.ftl:30,source-traced,1,0,[],occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.session.slash.scrollback,packages/cli/locales/en/slash-commands.ftl:30,source-traced,1,1,"[{""table"":""scrollback.csv"",""item_id"":""SCROLLBACK-084""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.session.slash.session,packages/cli/locales/en/slash-commands.ftl:14,source-traced,1,0,[],occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.session.slash.settings,packages/cli/locales/en/slash-commands.ftl:4,source-traced,1,0,[],occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.session.slash.share,packages/cli/locales/en/slash-commands.ftl:10,source-traced,1,0,[],occurrence-records-present; exhaustive-caller-review-open

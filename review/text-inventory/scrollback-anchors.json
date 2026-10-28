@@ -1,0 +1,2125 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "anchors": [
+    {
+      "item_id": "SCROLLBACK-EX-001",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 1,
+      "column": 70,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-002",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 9,
+      "column": 8,
+      "expression": "\"@earendil-works/pi-tui\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-003",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 10,
+      "column": 45,
+      "expression": "\"./cli-messages.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-004",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 11,
+      "column": 36,
+      "expression": "\"./locale-catalog.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-005",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 21,
+      "column": 22,
+      "expression": "\"jouzu.cli.scrollback.busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-006",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 22,
+      "column": 30,
+      "expression": "\"jouzu.cli.scrollback.alreadyOpen\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-007",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 23,
+      "column": 28,
+      "expression": "\"jouzu.cli.scrollback.fullscreen\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-008",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 70,
+      "column": 30,
+      "expression": "\"return\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-009",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 70,
+      "column": 41,
+      "expression": "\"session\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-010",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 70,
+      "column": 53,
+      "expression": "\"agent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-011",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 70,
+      "column": 63,
+      "expression": "\"shutdown\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-012",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 70,
+      "column": 76,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-013",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 70,
+      "column": 85,
+      "expression": "\"failure\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-014",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 70,
+      "column": 97,
+      "expression": "\"dispose\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-015",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 71,
+      "column": 19,
+      "expression": "\"info\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-016",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 71,
+      "column": 28,
+      "expression": "\"warning\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-017",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 71,
+      "column": 40,
+      "expression": "\"error\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-018",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 117,
+      "column": 15,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-019",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 123,
+      "column": 17,
+      "expression": "\"[\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-020",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 127,
+      "column": 17,
+      "expression": "\"]\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-021",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 127,
+      "column": 33,
+      "expression": "\"P\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-022",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 127,
+      "column": 49,
+      "expression": "\"_\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-023",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 127,
+      "column": 65,
+      "expression": "\"^\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-024",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 127,
+      "column": 81,
+      "expression": "\"X\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-025",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 153,
+      "column": 14,
+      "expression": "\"\\n\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-026",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 158,
+      "column": 14,
+      "expression": "\"    \"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-001",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 173,
+      "column": 14,
+      "expression": "\"\\uFFFD\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-002",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 178,
+      "column": 14,
+      "expression": "\"\\uFFFD\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-027",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 189,
+      "column": 15,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-028",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 194,
+      "column": 14,
+      "expression": "\"\\n\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-029",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 198,
+      "column": 14,
+      "expression": "\"\\n\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-030",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 222,
+      "column": 45,
+      "expression": "\"\\\\\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-031",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 233,
+      "column": 9,
+      "expression": "\" \"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-003",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 240,
+      "column": 21,
+      "expression": "`${indent}${line}`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-032",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 245,
+      "column": 75,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-033",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 245,
+      "column": 97,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-034",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 251,
+      "column": 26,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-035",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 255,
+      "column": 25,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-036",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 269,
+      "column": 23,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-037",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 274,
+      "column": 33,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-038",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 276,
+      "column": 15,
+      "expression": "\"text\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-039",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 278,
+      "column": 23,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-040",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 282,
+      "column": 15,
+      "expression": "\"thinking\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-004",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 286,
+      "column": 20,
+      "expression": "\"Thinking\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-041",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 288,
+      "column": 27,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-005",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 289,
+      "column": 39,
+      "expression": "\"[redacted thinking]\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-006",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 290,
+      "column": 25,
+      "expression": "\"(empty)\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-042",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 293,
+      "column": 15,
+      "expression": "\"toolCall\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-007",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 294,
+      "column": 67,
+      "expression": "\"tool\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-043",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 296,
+      "column": 42,
+      "expression": "\"jouzu.cli.scrollback.toolCall\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-008",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 297,
+      "column": 22,
+      "expression": "`${namespace}.${name}`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-044",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 305,
+      "column": 15,
+      "expression": "\"image\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-009",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 306,
+      "column": 79,
+      "expression": "\"image\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-010",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 309,
+      "column": 20,
+      "expression": "`[image: ${mimeType}, ${formatBytes(base64Bytes(data))}]`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-045",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 312,
+      "column": 32,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-011",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 312,
+      "column": 69,
+      "expression": "\"unknown\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-012",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 313,
+      "column": 19,
+      "expression": "`[unsupported content: ${label}]`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-046",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 318,
+      "column": 37,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-013",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 319,
+      "column": 19,
+      "expression": "\"Message\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-014",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 320,
+      "column": 20,
+      "expression": "\"[invalid message]\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-047",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 325,
+      "column": 15,
+      "expression": "\"system\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-048",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 329,
+      "column": 15,
+      "expression": "\"user\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-015",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 330,
+      "column": 19,
+      "expression": "\"User\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-016",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 332,
+      "column": 21,
+      "expression": "\"(no content)\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-049",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 336,
+      "column": 15,
+      "expression": "\"assistant\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-017",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 337,
+      "column": 19,
+      "expression": "\"Assistant\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-018",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 342,
+      "column": 21,
+      "expression": "`[error: ${errorMessage}]`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-050",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 345,
+      "column": 22,
+      "expression": "\"aborted\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-019",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 345,
+      "column": 50,
+      "expression": "\"[aborted]\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-051",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 346,
+      "column": 27,
+      "expression": "\"length\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-020",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 346,
+      "column": 54,
+      "expression": "\"[response truncated]\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-052",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 347,
+      "column": 52,
+      "expression": "\"aborted\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-053",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 347,
+      "column": 80,
+      "expression": "\"length\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-021",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 348,
+      "column": 21,
+      "expression": "\"(no content)\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-054",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 352,
+      "column": 15,
+      "expression": "\"toolResult\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-022",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 353,
+      "column": 81,
+      "expression": "\"tool\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-055",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 357,
+      "column": 39,
+      "expression": "\"jouzu.cli.scrollback.toolError\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-056",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 357,
+      "column": 74,
+      "expression": "\"jouzu.cli.scrollback.toolResult\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-023",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 362,
+      "column": 21,
+      "expression": "\"(no output)\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-057",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 366,
+      "column": 15,
+      "expression": "\"bashExecution\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-058",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 370,
+      "column": 15,
+      "expression": "\"custom\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-024",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 371,
+      "column": 87,
+      "expression": "\"custom\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-025",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 372,
+      "column": 19,
+      "expression": "`Custom message (${customType})`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-026",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 374,
+      "column": 21,
+      "expression": "\"[not shown in the interactive transcript]\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-027",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 377,
+      "column": 21,
+      "expression": "\"(no content)\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-059",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 381,
+      "column": 15,
+      "expression": "\"branchSummary\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-028",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 382,
+      "column": 19,
+      "expression": "\"Branch summary\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-060",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 384,
+      "column": 56,
+      "expression": "\"jouzu.cli.scrollback.emptySummary\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-029",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 386,
+      "column": 32,
+      "expression": "`[from ${fromId}]`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-061",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 389,
+      "column": 15,
+      "expression": "\"compactionSummary\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-030",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 390,
+      "column": 19,
+      "expression": "\"Compaction summary\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-062",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 392,
+      "column": 56,
+      "expression": "\"jouzu.cli.scrollback.emptySummary\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-031",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 394,
+      "column": 52,
+      "expression": "`[${tokensBefore} tokens before]`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-032",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 397,
+      "column": 37,
+      "expression": "\"unknown\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-033",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 398,
+      "column": 18,
+      "expression": "`Message (${label})`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-034",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 400,
+      "column": 20,
+      "expression": "\"(no content)\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-035",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 405,
+      "column": 18,
+      "expression": "\"Bash\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-036",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 407,
+      "column": 32,
+      "expression": "`$ ${command}`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-063",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 409,
+      "column": 54,
+      "expression": "\"jouzu.cli.scrollback.noOutput\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-037",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 412,
+      "column": 42,
+      "expression": "`exit code ${exitCode}`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-038",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 413,
+      "column": 75,
+      "expression": "\"cancelled\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-039",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 414,
+      "column": 75,
+      "expression": "\"output truncated\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-040",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 415,
+      "column": 93,
+      "expression": "\"not sent to the model\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-041",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 417,
+      "column": 34,
+      "expression": "`full output: ${fullOutputPath}`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-042",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 418,
+      "column": 42,
+      "expression": "`[${status.join(\"; \")}]`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-043",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 418,
+      "column": 58,
+      "expression": "\"; \"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-064",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 421,
+      "column": 85,
+      "expression": "\"custom_message\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-044",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 422,
+      "column": 54,
+      "expression": "\"custom\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-045",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 424,
+      "column": 18,
+      "expression": "`Custom message (${customType})`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-046",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 425,
+      "column": 48,
+      "expression": "\"[not shown in the interactive transcript]\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-047",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 426,
+      "column": 67,
+      "expression": "\"(no content)\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-065",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 429,
+      "column": 82,
+      "expression": "\"compaction\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-048",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 431,
+      "column": 18,
+      "expression": "\"Compaction summary\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-066",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 432,
+      "column": 74,
+      "expression": "\"jouzu.cli.scrollback.emptySummary\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-067",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 433,
+      "column": 36,
+      "expression": "\"number\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-049",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 433,
+      "column": 63,
+      "expression": "`[${entry.tokensBefore} tokens before]`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-068",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 436,
+      "column": 85,
+      "expression": "\"branch_summary\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-050",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 438,
+      "column": 18,
+      "expression": "\"Branch summary\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-069",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 439,
+      "column": 74,
+      "expression": "\"jouzu.cli.scrollback.emptySummary\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-051",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 441,
+      "column": 31,
+      "expression": "`[from ${fromId}]`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-070",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 446,
+      "column": 8,
+      "expression": "\"message\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-071",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 449,
+      "column": 8,
+      "expression": "\"custom_message\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-072",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 452,
+      "column": 8,
+      "expression": "\"compaction\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-073",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 455,
+      "column": 8,
+      "expression": "\"branch_summary\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-074",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 475,
+      "column": 51,
+      "expression": "\"jouzu.cli.scrollback.title\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-075",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 475,
+      "column": 82,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-052",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 478,
+      "column": 6,
+      "expression": "`${options.sessionName} (${options.sessionId})`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-076",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 482,
+      "column": 42,
+      "expression": "\"jouzu.cli.scrollback.sessionNamed\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-077",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 482,
+      "column": 80,
+      "expression": "\"jouzu.cli.scrollback.session\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-078",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 485,
+      "column": 3,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-053",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 487,
+      "column": 22,
+      "expression": "`Exported: ${options.exportedAt}`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-079",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 487,
+      "column": 57,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-054",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 488,
+      "column": 22,
+      "expression": "\"Scope: stored entries on the active branch, including entries before compaction.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-080",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 488,
+      "column": 106,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-055",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 491,
+      "column": 3,
+      "expression": "\"Limits: system prompts, tool details, and raw image data are not included; images appear as placeholders.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-081",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 492,
+      "column": 3,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-056",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 496,
+      "column": 3,
+      "expression": "`Active branch: ${options.entryCount} entries | ${options.imageCount} image placeholders | ${options.omittedSystem} system messages | ${options.omittedState} state entries omitted`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-082",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 497,
+      "column": 3,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-057",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 499,
+      "column": 22,
+      "expression": "\"-\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-083",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 499,
+      "column": 49,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-084",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 523,
+      "column": 69,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-085",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 528,
+      "column": 58,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-086",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 529,
+      "column": 62,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-087",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 536,
+      "column": 28,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-058",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 539,
+      "column": 22,
+      "expression": "\"No transcript content is stored on this branch yet.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-088",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 539,
+      "column": 77,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-059",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 544,
+      "column": 22,
+      "expression": "\"-\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-089",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 544,
+      "column": 41,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-060",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 545,
+      "column": 22,
+      "expression": "\"Press Enter, Escape, or Ctrl+C to return to Jouzu.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-090",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 545,
+      "column": 76,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-061",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 546,
+      "column": 22,
+      "expression": "\"Scroll and copy with your terminal or tmux.\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-091",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 546,
+      "column": 69,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-092",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 547,
+      "column": 13,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-093",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 564,
+      "column": 23,
+      "expression": "\"\\x1b[200~\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-094",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 566,
+      "column": 24,
+      "expression": "\"enter\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-095",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 566,
+      "column": 53,
+      "expression": "\"escape\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-096",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 566,
+      "column": 83,
+      "expression": "\"ctrl+c\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-097",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 567,
+      "column": 36,
+      "expression": "\"tui.select.confirm\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-098",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 567,
+      "column": 87,
+      "expression": "\"tui.select.cancel\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-099",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 574,
+      "column": 26,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-100",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 574,
+      "column": 45,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-101",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 578,
+      "column": 26,
+      "expression": "\"number\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-062",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 585,
+      "column": 10,
+      "expression": "\"unknown\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-102",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 591,
+      "column": 32,
+      "expression": "\"==\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-103",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 591,
+      "column": 58,
+      "expression": "\"=\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-063",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 596,
+      "column": 52,
+      "expression": "\"0 B\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-064",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 597,
+      "column": 27,
+      "expression": "`${Math.round(bytes)} B`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-065",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 598,
+      "column": 34,
+      "expression": "`${(bytes / 1024).toFixed(1)} KiB`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-066",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 599,
+      "column": 9,
+      "expression": "`${(bytes / (1024 * 1024)).toFixed(1)} MiB`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-067",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 603,
+      "column": 34,
+      "expression": "\"{}\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-104",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 606,
+      "column": 26,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-105",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 606,
+      "column": 65,
+      "expression": "\"jouzu.cli.scrollback.unserializable\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-106",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 608,
+      "column": 31,
+      "expression": "\"jouzu.cli.scrollback.unserializable\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-107",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 614,
+      "column": 63,
+      "expression": "\" \"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-108",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 616,
+      "column": 33,
+      "expression": "\"jouzu.cli.scrollback.failureDetail\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-109",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 617,
+      "column": 42,
+      "expression": "\"jouzu.cli.scrollback.unknownError\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-110",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 619,
+      "column": 9,
+      "expression": "\"error\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-111",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 630,
+      "column": 35,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-112",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 631,
+      "column": 29,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-113",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 633,
+      "column": 41,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-114",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 647,
+      "column": 26,
+      "expression": "\"\\r\\n\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-115",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 650,
+      "column": 17,
+      "expression": "\"\\r\\n\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-116",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 667,
+      "column": 34,
+      "expression": "\"\\r\\n\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-117",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 737,
+      "column": 18,
+      "expression": "\"shutdown\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-118",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 758,
+      "column": 19,
+      "expression": "\"session\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-119",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 768,
+      "column": 24,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-120",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 768,
+      "column": 99,
+      "expression": "\"warning\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-121",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 769,
+      "column": 24,
+      "expression": "\"failure\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-122",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 770,
+      "column": 51,
+      "expression": "\"jouzu.cli.scrollback.failure\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-123",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 770,
+      "column": 90,
+      "expression": "\"error\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-124",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 772,
+      "column": 18,
+      "expression": "\"return\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-125",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 786,
+      "column": 25,
+      "expression": "\"\\r\\n\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-126",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 800,
+      "column": 24,
+      "expression": "\"\\r\\n\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-127",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 820,
+      "column": 56,
+      "expression": "\"return\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-128",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 826,
+      "column": 11,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-129",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 839,
+      "column": 11,
+      "expression": "\"failure\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-130",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 844,
+      "column": 11,
+      "expression": "\"busy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-131",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 859,
+      "column": 11,
+      "expression": "\"failure\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-132",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 867,
+      "column": 40,
+      "expression": "\"failure\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-133",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 878,
+      "column": 9,
+      "expression": "\"jouzu-scrollback\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-134",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 883,
+      "column": 10,
+      "expression": "\"session_shutdown\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-135",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 883,
+      "column": 70,
+      "expression": "\"reload\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-136",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 883,
+      "column": 81,
+      "expression": "\"session\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-137",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 883,
+      "column": 93,
+      "expression": "\"shutdown\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-138",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 884,
+      "column": 10,
+      "expression": "\"session_before_switch\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-139",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 884,
+      "column": 53,
+      "expression": "\"session\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-140",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 885,
+      "column": 10,
+      "expression": "\"session_start\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-141",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 885,
+      "column": 45,
+      "expression": "\"session\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-142",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 886,
+      "column": 10,
+      "expression": "\"agent_start\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-143",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 886,
+      "column": 43,
+      "expression": "\"agent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-144",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 887,
+      "column": 10,
+      "expression": "\"user_bash\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-145",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 887,
+      "column": 41,
+      "expression": "\"agent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-146",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 889,
+      "column": 23,
+      "expression": "\"scrollback\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-147",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 890,
+      "column": 44,
+      "expression": "\"jouzu.cli.session.slash.scrollback\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-148",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 894,
+      "column": 50,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-149",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 899,
+      "column": 23,
+      "expression": "\"tui\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-150",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 900,
+      "column": 40,
+      "expression": "\"jouzu.cli.scrollback.interactive\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-151",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 900,
+      "column": 77,
+      "expression": "\"warning\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-152",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 903,
+      "column": 43,
+      "expression": "\"dumb\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-153",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 904,
+      "column": 40,
+      "expression": "\"jouzu.cli.scrollback.dumb\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-154",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 904,
+      "column": 70,
+      "expression": "\"warning\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-155",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 908,
+      "column": 40,
+      "expression": "\"jouzu.cli.scrollback.tty\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-156",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 908,
+      "column": 69,
+      "expression": "\"warning\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-157",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 913,
+      "column": 63,
+      "expression": "\"warning\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-158",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 917,
+      "column": 55,
+      "expression": "\"warning\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-159",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 923,
+      "column": 26,
+      "expression": "\"fullscreen\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-160",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 924,
+      "column": 64,
+      "expression": "\"warning\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-161",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 949,
+      "column": 46,
+      "expression": "\"dispose\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-162",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 956,
+      "column": 33,
+      "expression": "\"failure\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-163",
+      "path": "packages/cli/src/scrollback-session.ts",
+      "line": 1,
+      "column": 62,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-EX-164",
+      "path": "packages/cli/src/scrollback-session.ts",
+      "line": 3,
+      "column": 58,
+      "expression": "\"flowIngress\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "SCROLLBACK-068",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 296,
+      "column": 42,
+      "expression": "\"jouzu.cli.scrollback.toolCall\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-069",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 357,
+      "column": 39,
+      "expression": "\"jouzu.cli.scrollback.toolError\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-070",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 357,
+      "column": 74,
+      "expression": "\"jouzu.cli.scrollback.toolResult\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-071",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 384,
+      "column": 56,
+      "expression": "\"jouzu.cli.scrollback.emptySummary\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-072",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 392,
+      "column": 56,
+      "expression": "\"jouzu.cli.scrollback.emptySummary\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-073",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 409,
+      "column": 54,
+      "expression": "\"jouzu.cli.scrollback.noOutput\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-074",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 432,
+      "column": 74,
+      "expression": "\"jouzu.cli.scrollback.emptySummary\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-075",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 439,
+      "column": 74,
+      "expression": "\"jouzu.cli.scrollback.emptySummary\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-076",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 475,
+      "column": 51,
+      "expression": "\"jouzu.cli.scrollback.title\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-077",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 482,
+      "column": 42,
+      "expression": "\"jouzu.cli.scrollback.sessionNamed\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-078",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 482,
+      "column": 80,
+      "expression": "\"jouzu.cli.scrollback.session\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-079",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 606,
+      "column": 65,
+      "expression": "\"jouzu.cli.scrollback.unserializable\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-080",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 608,
+      "column": 31,
+      "expression": "\"jouzu.cli.scrollback.unserializable\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-081",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 616,
+      "column": 33,
+      "expression": "\"jouzu.cli.scrollback.failureDetail\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-082",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 617,
+      "column": 42,
+      "expression": "\"jouzu.cli.scrollback.unknownError\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-083",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 768,
+      "column": 78,
+      "expression": "BUSY_MESSAGE",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-084",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 890,
+      "column": 44,
+      "expression": "\"jouzu.cli.session.slash.scrollback\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-085",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 900,
+      "column": 40,
+      "expression": "\"jouzu.cli.scrollback.interactive\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-086",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 904,
+      "column": 40,
+      "expression": "\"jouzu.cli.scrollback.dumb\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-087",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 908,
+      "column": 40,
+      "expression": "\"jouzu.cli.scrollback.tty\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-088",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 913,
+      "column": 40,
+      "expression": "ALREADY_OPEN_MESSAGE",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-089",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 917,
+      "column": 40,
+      "expression": "BUSY_MESSAGE",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-090",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 924,
+      "column": 43,
+      "expression": "FULLSCREEN_MESSAGE",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "SCROLLBACK-091",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 257,
+      "column": 3,
+      "expression": "pushWrapped(ctx, content, indent)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "SCROLLBACK-092",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 302,
+      "column": 20,
+      "expression": "formatJson((block as",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "SCROLLBACK-093",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 614,
+      "column": 15,
+      "expression": "sanitizeScrollbackText(message)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "SCROLLBACK-094",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 630,
+      "column": 49,
+      "expression": "deps.isShellBusy()",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "SCROLLBACK-095",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 662,
+      "column": 3,
+      "expression": "terminal.write(text.slice(start, end))",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "SCROLLBACK-096",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 718,
+      "column": 4,
+      "expression": "if (!notice) notice = failureNotice",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "SCROLLBACK-097",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 894,
+      "column": 62,
+      "expression": "ctx.ui.notify(message, type)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "SCROLLBACK-098",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 907,
+      "column": 6,
+      "expression": "if (!deps.isTTY())",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "SCROLLBACK-099",
+      "path": "packages/cli/src/scrollback.ts",
+      "line": 808,
+      "column": 5,
+      "expression": "done()",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "SCROLLBACK-100",
+      "path": "packages/cli/src/scrollback-session.ts",
+      "line": 19,
+      "column": 6,
+      "expression": "await delegate?.attach?.(session)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "SCROLLBACK-101",
+      "path": "packages/cli/src/scrollback-session.ts",
+      "line": 26,
+      "column": 6,
+      "expression": "await delegate?.dispose?.()",
+      "kind": "boundary"
+    }
+  ]
+}

@@ -111,6 +111,17 @@ result text through the native before-call hook. Argument compatibility defines
 no own diagnostic prose; tool-list refresh failures are suppressed and other
 callback/schema/native messages retain explicit boundaries.
 
+[scrollback.csv](scrollback.csv) records 101 transcript-export occurrences:
+67 fixed labels/placeholders/formats, 23 catalog occurrences and 11 payload
+boundaries. Two complete bodies and all 231 lexical occurrences are covered in
+the [scope](scrollback-scope.csv) and [exclusions](scrollback-exclusions.csv).
+Conditions cover stored message roles, summaries, image placeholders, empty
+content, capability/busy gates and terminal recovery. Custom messages marked
+`display:false` still enter this export with a notice. System prompts, tool details
+and raw image data are omitted from this plain-text route. Failure details are
+cleaned and bounded; earlier notices or unavailable UI can suppress them. Native
+HTML export has its own separate visibility and producer graph.
+
 [doctor.csv](doctor.csv) supplies 548 report records: 287 catalog occurrences
 across 185 IDs, 149 fixed or protected machine occurrences and 112 computed or
 payload boundaries. It traces all 77 field labels, diagnoses, six lock contexts
@@ -497,6 +508,7 @@ python -B review/text-inventory/verify-acp-dependencies.py
 python -B review/text-inventory/verify-startup-language.py
 python -B review/text-inventory/verify-cli-entry.py
 node review/text-inventory/verify-host-ui.cjs
+node review/text-inventory/verify-scrollback.cjs
 python -B review/text-inventory/verify-doctor.py
 python -B review/text-inventory/verify-updater.py
 python -B review/text-inventory/verify-profiles.py
