@@ -776,6 +776,17 @@ sources have exact versions/import routes/two-tree hashes, without canonical
 archive or full-body promotion. Twenty corruption controls pass. No shell,
 config, search execution, activation, transcript, model or UI operation executed.
 
+[pi-core-config-support.csv](pi-core-config-support.csv) records 78 qualified
+native config, command, event and timing definitions across nine complete bodies
+(664 lines), with 200 [exclusions](pi-core-config-support-exclusions.csv) and
+thirteen [boundaries](pi-core-config-support-boundaries.csv). Twenty-three command
+descriptions link to their catalog owners; names and argument hints remain
+protected command syntax. Update-helper text retains direct API/native caller
+conditions and the Jouzu updater boundary. Debug timing output requires the flag
+at module evaluation and writes stderr, including in JSON/RPC modes. Package
+metadata errors, dynamic event payloads and foreign provider/worker code retain
+separate provenance in the [scope](pi-core-config-support-scope.csv).
+
 [pi-provider-support.csv](pi-provider-support.csv) adds 83 qualified provider,
 credential, remote-catalog, cache and client-identity definitions, with eleven
 [boundaries](pi-provider-support-boundaries.csv). Six full bodies cover 1,242
@@ -1798,6 +1809,7 @@ node review/text-inventory/verify-pi-mcp-support.cjs --node-modules <root-node-m
 node review/text-inventory/verify-pi-mcp-interface.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-config-discovery.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-provider-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-core-config-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
