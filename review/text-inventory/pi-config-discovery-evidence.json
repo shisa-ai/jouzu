@@ -1,0 +1,2528 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "b169d1274889d7a6fd8c6c768d4b68c6e02405c8",
+  "inventory_file": "pi-config-discovery.csv",
+  "scope_file": "pi-config-discovery-scope.csv",
+  "boundary_file": "pi-config-discovery-boundaries.csv",
+  "exclusion_file": "pi-config-discovery-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    },
+    {
+      "source": "packages/cli/src/mcp.ts",
+      "sha256": "486cc72a172378788d453b2f2a30d1ff51e2ec72ec0a07457424ee626773850c"
+    },
+    {
+      "source": "packages/cli/src/classic-host-policy.ts",
+      "sha256": "53181fdf481113b5e2eae162cc6e9f440650e87f55a03dc921baadeab0e2f367"
+    },
+    {
+      "source": "packages/cli/src/textguard-policy.ts",
+      "sha256": "16322c507662368353a312b0ce0c777ee7325e7e438aab107ef3a37b8fabdbac"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/auth-storage.js",
+      "sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+      "cli_nested_sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          214,
+          224
+        ],
+        [
+          376,
+          384
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/activation/recording/HTML source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "sha256": "7ec4af06726158fa34377bed34fbb378d2d39c5c9d51ae5640ac459a4c78bec4",
+      "cli_nested_sha256": "7ec4af06726158fa34377bed34fbb378d2d39c5c9d51ae5640ac459a4c78bec4",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          5
+        ],
+        [
+          244,
+          324
+        ],
+        [
+          468,
+          476
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/activation/recording/HTML source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-registry.js",
+      "sha256": "588fa2d8df563fe0f41c99e54ecad1473cd325937b208cc1c3e103a8a032d0a1",
+      "cli_nested_sha256": "588fa2d8df563fe0f41c99e54ecad1473cd325937b208cc1c3e103a8a032d0a1",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          34,
+          61
+        ],
+        [
+          105,
+          111
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/activation/recording/HTML source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-runtime.js",
+      "sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+      "cli_nested_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          21,
+          32
+        ],
+        [
+          379,
+          405
+        ],
+        [
+          475,
+          518
+        ],
+        [
+          544,
+          551
+        ],
+        [
+          577,
+          602
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/activation/recording/HTML source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+      "sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          221,
+          281
+        ],
+        [
+          351,
+          418
+        ],
+        [
+          576,
+          607
+        ],
+        [
+          1176,
+          1243
+        ],
+        [
+          1264,
+          1310
+        ],
+        [
+          1354,
+          1417
+        ],
+        [
+          1478,
+          1501
+        ],
+        [
+          1628,
+          1632
+        ],
+        [
+          3044,
+          3079
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/activation/recording/HTML source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/system-prompt.js",
+      "sha256": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a",
+      "cli_nested_sha256": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          68,
+          120
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/activation/recording/HTML source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/index.js",
+      "sha256": "c0570b9d256120a1df9b65a015964076dff6a3710646e041fcb2770ae7132fde",
+      "cli_nested_sha256": "c0570b9d256120a1df9b65a015964076dff6a3710646e041fcb2770ae7132fde",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          389,
+          427
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/activation/recording/HTML source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/runtime.js",
+      "sha256": "be9e8eea88363f2fefaea2c25c854845393f112394ee5989d22facd2f1acea6e",
+      "cli_nested_sha256": "be9e8eea88363f2fefaea2c25c854845393f112394ee5989d22facd2f1acea6e",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          51,
+          70
+        ],
+        [
+          149,
+          168
+        ],
+        [
+          332,
+          340
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/activation/recording/HTML source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/wrapper.js",
+      "sha256": "ea82999a05ca0af25ed31e76aaaba6e5ce6b99b5fcde3681f0d74766e4935247",
+      "cli_nested_sha256": "ea82999a05ca0af25ed31e76aaaba6e5ce6b99b5fcde3681f0d74766e4935247",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          7,
+          16
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/activation/recording/HTML source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/tool-definition-wrapper.js",
+      "sha256": "02fe785c52294d14216605d40d5592ac2accd1a3125891523e2a6c87feb5810c",
+      "cli_nested_sha256": "02fe785c52294d14216605d40d5592ac2accd1a3125891523e2a6c87feb5810c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          13
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/activation/recording/HTML source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          3260,
+          3304
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/activation/recording/HTML source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/tool-execution.js",
+      "sha256": "fa47a6ec3aae07cd3ec5f84509f6553a342daf23fdb71afd75b6daa355a94e3f",
+      "cli_nested_sha256": "fa47a6ec3aae07cd3ec5f84509f6553a342daf23fdb71afd75b6daa355a94e3f",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          6
+        ],
+        [
+          98,
+          110
+        ],
+        [
+          232,
+          263
+        ],
+        [
+          308,
+          321
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/activation/recording/HTML source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/assistant-message.js",
+      "sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+      "cli_nested_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          133,
+          154
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/activation/recording/HTML source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js",
+      "sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          78,
+          94
+        ],
+        [
+          103,
+          123
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/activation/recording/HTML source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js",
+      "sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          280,
+          294
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/activation/recording/HTML source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/index.js",
+      "sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "cli_nested_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          165,
+          190
+        ],
+        [
+          202,
+          219
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/activation/recording/HTML source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.js",
+      "sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+      "cli_nested_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          918,
+          927
+        ],
+        [
+          1049,
+          1080
+        ],
+        [
+          1433,
+          1476
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/activation/recording/HTML source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.css",
+      "sha256": "8ee19851f8e583277ed396cbb76496687aa556707fdfc1f78d1118bff87c740a",
+      "cli_nested_sha256": "8ee19851f8e583277ed396cbb76496687aa556707fdfc1f78d1118bff87c740a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          658,
+          688
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/activation/recording/HTML source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-agent-core@1.4.0/dist/agent.js",
+      "sha256": "ffb0ac1340aa4749b984640530e52edacd3e2f77db57972dbbbe22212f5984cf",
+      "cli_nested_sha256": "ffb0ac1340aa4749b984640530e52edacd3e2f77db57972dbbbe22212f5984cf",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          2
+        ],
+        [
+          30,
+          45
+        ]
+      ],
+      "purpose": "Supplementary exact1.4.0/two-tree bounded execution/getter/replay/error support; supplied canonical archives exclude this package.",
+      "canonical_archive_proof": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-agent-core@1.4.0/dist/index.js",
+      "sha256": "40cb358d7f05594e9b67845a78ae50ad05e8375f0cfa8cee8a74801556c09afd",
+      "cli_nested_sha256": "40cb358d7f05594e9b67845a78ae50ad05e8375f0cfa8cee8a74801556c09afd",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          2
+        ]
+      ],
+      "purpose": "Supplementary exact1.4.0/two-tree bounded execution/getter/replay/error support; supplied canonical archives exclude this package.",
+      "canonical_archive_proof": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/transcript.js",
+      "sha256": "c14b3b49d72cf18f62e99398c6f75d289899efdc2d187c3596dbd05dd6e0698c",
+      "cli_nested_sha256": "c14b3b49d72cf18f62e99398c6f75d289899efdc2d187c3596dbd05dd6e0698c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          1
+        ],
+        [
+          55,
+          95
+        ]
+      ],
+      "purpose": "Supplementary exact1.4.0/two-tree bounded execution/getter/replay/error support; supplied canonical archives exclude this package.",
+      "canonical_archive_proof": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/index.js",
+      "sha256": "7808fc618b4c816322005628af2726a53c4db678b37fb311163210c4fbab5ed0",
+      "cli_nested_sha256": "7808fc618b4c816322005628af2726a53c4db678b37fb311163210c4fbab5ed0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          2,
+          2
+        ],
+        [
+          18,
+          19
+        ]
+      ],
+      "purpose": "Supplementary exact1.4.0/two-tree bounded execution/getter/replay/error support; supplied canonical archives exclude this package.",
+      "canonical_archive_proof": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "sha256": "95037d5b787075ffb951cdeaf3b93aeb89735d10b31b82e19d2921f505ac2b04",
+      "cli_nested_sha256": "95037d5b787075ffb951cdeaf3b93aeb89735d10b31b82e19d2921f505ac2b04",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          18
+        ]
+      ],
+      "purpose": "Supplementary exact1.4.0/two-tree bounded execution/getter/replay/error support; supplied canonical archives exclude this package.",
+      "canonical_archive_proof": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/lazy.js",
+      "sha256": "2dcf7b7d3d0ffc77b2be37b2a7ad184503a2b680b159e44c283738b28118aebe",
+      "cli_nested_sha256": "2dcf7b7d3d0ffc77b2be37b2a7ad184503a2b680b159e44c283738b28118aebe",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          20
+        ],
+        [
+          44,
+          65
+        ]
+      ],
+      "purpose": "Supplementary exact1.4.0/two-tree bounded execution/getter/replay/error support; supplied canonical archives exclude this package.",
+      "canonical_archive_proof": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-agent-core@1.4.0/dist/agent-loop.js",
+      "sha256": "f2b40fc13bfc2821966f57fce056b2f3fbb6f9cbf8eb60d9104ceed8f1a05908",
+      "cli_nested_sha256": "f2b40fc13bfc2821966f57fce056b2f3fbb6f9cbf8eb60d9104ceed8f1a05908",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          481,
+          555
+        ],
+        [
+          585,
+          610
+        ],
+        [
+          615,
+          692
+        ]
+      ],
+      "purpose": "Supplementary exact1.4.0/two-tree bounded execution/getter/replay/error support; supplied canonical archives exclude this package.",
+      "canonical_archive_proof": false
+    }
+  ],
+  "nonruntime_assets": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resolve-config-value.d.ts",
+      "sha256": "4cfbc127ab697ad63496c3c6b092b810c30a445af5894d9a16ff0e170860a6eb",
+      "cli_nested_sha256": "4cfbc127ab697ad63496c3c6b092b810c30a445af5894d9a16ff0e170860a6eb",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resolve-config-value.d.ts.map",
+      "sha256": "c3aa58e257b327364351837c87c85ac3a1d7ef7f17e5d8a94d9cde96eb07ead2",
+      "cli_nested_sha256": "c3aa58e257b327364351837c87c85ac3a1d7ef7f17e5d8a94d9cde96eb07ead2",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resolve-config-value.js.map",
+      "sha256": "6f256b2504001b137fb2b0a67a62001e5156d108957c3e61edab256db281b975",
+      "cli_nested_sha256": "6f256b2504001b137fb2b0a67a62001e5156d108957c3e61edab256db281b975",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.d.ts",
+      "sha256": "6ab969722a967bd296bb0fb1bb4074c0d0b3a111fda9118a339af12524a22922",
+      "cli_nested_sha256": "6ab969722a967bd296bb0fb1bb4074c0d0b3a111fda9118a339af12524a22922",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.d.ts.map",
+      "sha256": "d6f08e36f5b2442337ec7fc69a41ea78b249d7f0bee08c8de9748fd8934d4dfa",
+      "cli_nested_sha256": "d6f08e36f5b2442337ec7fc69a41ea78b249d7f0bee08c8de9748fd8934d4dfa",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.js.map",
+      "sha256": "f1e0b8a584fe96d3d893e53f7ea7190880fbd4042812200283e1c82bf8e764e4",
+      "cli_nested_sha256": "f1e0b8a584fe96d3d893e53f7ea7190880fbd4042812200283e1c82bf8e764e4",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/index.d.ts",
+      "sha256": "1c79cf17317789a2a3efe9d27e9c55ae08b47704bf3fa4218103d6439a774ca3",
+      "cli_nested_sha256": "1c79cf17317789a2a3efe9d27e9c55ae08b47704bf3fa4218103d6439a774ca3",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/index.d.ts.map",
+      "sha256": "7a440ac830e32d958ef0d8c37cfcf967a2b772902f1564256384fd6817b1b440",
+      "cli_nested_sha256": "7a440ac830e32d958ef0d8c37cfcf967a2b772902f1564256384fd6817b1b440",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/index.js.map",
+      "sha256": "c48c67a0b28bd1f737a22c8f786aaec5804410b387998758052e5c94189324e9",
+      "cli_nested_sha256": "c48c67a0b28bd1f737a22c8f786aaec5804410b387998758052e5c94189324e9",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    }
+  ],
+  "archive_support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/auth-storage.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-registry.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-runtime.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/system-prompt.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/index.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/mcp/runtime.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/wrapper.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/tool-definition-wrapper.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/tool-execution.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/assistant-message.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/index.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.css"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resolve-config-value.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resolve-config-value.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resolve-config-value.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/index.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/index.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/index.js.map"
+    }
+  ],
+  "counts": {
+    "rows": 13,
+    "proofs": 13,
+    "scopes": 3,
+    "external_boundaries": 10,
+    "excluded_occurrences": 92,
+    "dispositioned_source_files": 3,
+    "string_template_occurrences": 105,
+    "protected_regex_literals": 7,
+    "error_constructors": 6,
+    "catch_clauses": 2,
+    "throw_statements": 6,
+    "all_new_expressions": 12,
+    "protected_control_occurrences": 0,
+    "full_runtime_lines": 449,
+    "runtime_source_bytes": 17982,
+    "nonruntime_assets": 9,
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "statusCounts": {
+      "source-read-local-producers": 3
+    }
+  },
+  "proofs": [
+    {
+      "item_id": "pi.config-discovery.resolver.206.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resolve-config-value.js",
+      "line": 206,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Failed to resolve ${description} from shell command: ${reference.config.slice(1)}",
+      "evidence": "`Failed to resolve ${description} from shell command: ${reference.config.slice(1)}`"
+    },
+    {
+      "item_id": "pi.config-discovery.resolver.211.29",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resolve-config-value.js",
+      "line": 211,
+      "column": 29,
+      "kind": "template-expression",
+      "english": "Failed to resolve ${description} from environment variable: ${missingEnvVars[0]}",
+      "evidence": "`Failed to resolve ${description} from environment variable: ${missingEnvVars[0]}`"
+    },
+    {
+      "item_id": "pi.config-discovery.resolver.214.29",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resolve-config-value.js",
+      "line": 214,
+      "column": 29,
+      "kind": "template-expression",
+      "english": "Failed to resolve ${description} from environment variables: ${missingEnvVars.join(\", \")}",
+      "evidence": "`Failed to resolve ${description} from environment variables: ${missingEnvVars.join(\", \")}`"
+    },
+    {
+      "item_id": "pi.config-discovery.resolver.217.21",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resolve-config-value.js",
+      "line": 217,
+      "column": 21,
+      "kind": "template-expression",
+      "english": "Failed to resolve ${description}",
+      "evidence": "`Failed to resolve ${description}`"
+    },
+    {
+      "item_id": "pi.config-discovery.resolver.239.58",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resolve-config-value.js",
+      "line": 239,
+      "column": 58,
+      "kind": "template-expression",
+      "english": "${description} header \"${key}\"",
+      "evidence": "`${description} header \"${key}\"`"
+    },
+    {
+      "item_id": "pi.config-discovery.tool.132.39",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.js",
+      "line": 132,
+      "column": 39,
+      "kind": "string-literal",
+      "english": "Search query for deferred tools.",
+      "evidence": "\"Search query for deferred tools.\""
+    },
+    {
+      "item_id": "pi.config-discovery.tool.133.53",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.js",
+      "line": 133,
+      "column": 53,
+      "kind": "template-expression",
+      "english": "Maximum number of tools to return. Defaults to ${DEFAULT_TOOL_SEARCH_LIMIT}.",
+      "evidence": "`Maximum number of tools to return. Defaults to ${DEFAULT_TOOL_SEARCH_LIMIT}.`"
+    },
+    {
+      "item_id": "pi.config-discovery.tool.159.40",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.js",
+      "line": 159,
+      "column": 40,
+      "kind": "template-expression",
+      "english": "# Tool discovery\\n\\nSearches over deferred tool metadata with BM25 and exposes matching tools for the next model call.\\n\\nSome of the tools, such as tools of MCP servers, may not have been provided to you upfront, and you should use this tool (\\`${TOOL_SEARCH_TOOL_NAME}\\`) to search for the required tools. For MCP tool discovery, always use \\`${TOOL_SEARCH_TOOL_NAME}\\`.",
+      "evidence": "`# Tool discovery\\n\\nSearches over deferred tool metadata with BM25 and exposes matching tools for the next model call.\\n\\nSome of the tools, such as tools of MCP servers, may not have been provided to you upfront, and y"
+    },
+    {
+      "item_id": "pi.config-discovery.tool.165.24",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.js",
+      "line": 165,
+      "column": 24,
+      "kind": "string-literal",
+      "english": "Search for tools that are not loaded yet and load the matches",
+      "evidence": "\"Search for tools that are not loaded yet and load the matches\""
+    },
+    {
+      "item_id": "pi.config-discovery.tool.173.33",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.js",
+      "line": 173,
+      "column": 33,
+      "kind": "string-literal",
+      "english": "query must not be empty",
+      "evidence": "\"query must not be empty\""
+    },
+    {
+      "item_id": "pi.config-discovery.tool.176.33",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.js",
+      "line": 176,
+      "column": 33,
+      "kind": "string-literal",
+      "english": "limit must be a positive integer",
+      "evidence": "\"limit must be a positive integer\""
+    },
+    {
+      "item_id": "pi.config-discovery.tool.179.19",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.js",
+      "line": 179,
+      "column": 19,
+      "kind": "string-literal",
+      "english": "No matching tools found.",
+      "evidence": "\"No matching tools found.\""
+    },
+    {
+      "item_id": "pi.config-discovery.tool.180.19",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.js",
+      "line": 180,
+      "column": 19,
+      "kind": "template-expression",
+      "english": "Loaded ${tools.length} tool${tools.length === 1 ? \"\" : \"s\"}. They are available from your next call:\\n${tools\n                    .map((tool) => `- ${tool.name}: ${tool.description.trim().split(/\\r?\\n/)[0]}`)\n                    .join(\"\\n\")}",
+      "evidence": "`Loaded ${tools.length} tool${tools.length === 1 ? \"\" : \"s\"}. They are available from your next call:\\n${tools"
+    }
+  ],
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resolve-config-value.js",
+        "read_lines": [
+          1,
+          247
+        ],
+        "string_template_occurrences": 46,
+        "fixed_rows": 5,
+        "excluded_occurrences": 41,
+        "protected_regex_literals": 2,
+        "regex_census_sha256": "1cb584e1043ec19415b61b4bdb8cd71d24ccbbd85891e14c26a71788e641b68f",
+        "error_constructors": [
+          {
+            "line": 206,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Failed to resolve ${description} from shell command: ${reference.config.slice(1)}`"
+          },
+          {
+            "line": 211,
+            "column": 19,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Failed to resolve ${description} from environment variable: ${missingEnvVars[0]}`"
+          },
+          {
+            "line": 214,
+            "column": 19,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Failed to resolve ${description} from environment variables: ${missingEnvVars.join(\", \")}`"
+          },
+          {
+            "line": 217,
+            "column": 11,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Failed to resolve ${description}`"
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 8,
+            "column": 28,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 206,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Failed to resolve ${description} from shell command: ${reference.config.slice(1)}`)"
+          },
+          {
+            "line": 211,
+            "column": 19,
+            "callee": "Error",
+            "source": "new Error(`Failed to resolve ${description} from environment variable: ${missingEnvVars[0]}`)"
+          },
+          {
+            "line": 214,
+            "column": 19,
+            "callee": "Error",
+            "source": "new Error(`Failed to resolve ${description} from environment variables: ${missingEnvVars.join(\", \")}`)"
+          },
+          {
+            "line": 217,
+            "column": 11,
+            "callee": "Error",
+            "source": "new Error(`Failed to resolve ${description}`)"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 206,
+            "column": 9,
+            "expression": "new Error(`Failed to resolve ${description} from shell command: ${reference.config.slice(1)}`)"
+          },
+          {
+            "line": 211,
+            "column": 13,
+            "expression": "new Error(`Failed to resolve ${description} from environment variable: ${missingEnvVars[0]}`)"
+          },
+          {
+            "line": 214,
+            "column": 13,
+            "expression": "new Error(`Failed to resolve ${description} from environment variables: ${missingEnvVars.join(\", \")}`)"
+          },
+          {
+            "line": 217,
+            "column": 5,
+            "expression": "new Error(`Failed to resolve ${description}`)"
+          }
+        ],
+        "catch_clauses": [
+          {
+            "line": 155,
+            "column": 5,
+            "source": "catch {\n        return { executed: false, value: undefined };\n    }"
+          },
+          {
+            "line": 168,
+            "column": 5,
+            "source": "catch {\n        return undefined;\n    }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "child_process"
+          },
+          {
+            "line": 6,
+            "column": 1,
+            "specifier": "../utils/shell.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 19,
+            "column": 5,
+            "callee": "parts.push",
+            "arguments": [
+              "{ type: \"literal\", value }"
+            ]
+          },
+          {
+            "line": 25,
+            "column": 29,
+            "callee": "config.indexOf",
+            "arguments": [
+              "\"$\"",
+              "index"
+            ]
+          },
+          {
+            "line": 27,
+            "column": 13,
+            "callee": "appendLiteral",
+            "arguments": [
+              "parts",
+              "config.slice(index)"
+            ]
+          },
+          {
+            "line": 27,
+            "column": 34,
+            "callee": "config.slice",
+            "arguments": [
+              "index"
+            ]
+          },
+          {
+            "line": 30,
+            "column": 9,
+            "callee": "appendLiteral",
+            "arguments": [
+              "parts",
+              "config.slice(index, dollarIndex)"
+            ]
+          },
+          {
+            "line": 30,
+            "column": 30,
+            "callee": "config.slice",
+            "arguments": [
+              "index",
+              "dollarIndex"
+            ]
+          },
+          {
+            "line": 33,
+            "column": 13,
+            "callee": "appendLiteral",
+            "arguments": [
+              "parts",
+              "nextChar"
+            ]
+          },
+          {
+            "line": 38,
+            "column": 30,
+            "callee": "config.indexOf",
+            "arguments": [
+              "\"}\"",
+              "dollarIndex + 2"
+            ]
+          },
+          {
+            "line": 40,
+            "column": 17,
+            "callee": "appendLiteral",
+            "arguments": [
+              "parts",
+              "\"$\""
+            ]
+          },
+          {
+            "line": 44,
+            "column": 26,
+            "callee": "config.slice",
+            "arguments": [
+              "dollarIndex + 2",
+              "endIndex"
+            ]
+          },
+          {
+            "line": 45,
+            "column": 17,
+            "callee": "ENV_VAR_NAME_RE.test",
+            "arguments": [
+              "name"
+            ]
+          },
+          {
+            "line": 46,
+            "column": 17,
+            "callee": "parts.push",
+            "arguments": [
+              "{ type: \"env\", name }"
+            ]
+          },
+          {
+            "line": 49,
+            "column": 17,
+            "callee": "appendLiteral",
+            "arguments": [
+              "parts",
+              "config.slice(dollarIndex, endIndex + 1)"
+            ]
+          },
+          {
+            "line": 49,
+            "column": 38,
+            "callee": "config.slice",
+            "arguments": [
+              "dollarIndex",
+              "endIndex + 1"
+            ]
+          },
+          {
+            "line": 54,
+            "column": 23,
+            "callee": "config.slice(dollarIndex + 1).match",
+            "arguments": [
+              "ENV_VAR_NAME_PREFIX_RE"
+            ]
+          },
+          {
+            "line": 54,
+            "column": 23,
+            "callee": "config.slice",
+            "arguments": [
+              "dollarIndex + 1"
+            ]
+          },
+          {
+            "line": 56,
+            "column": 13,
+            "callee": "parts.push",
+            "arguments": [
+              "{ type: \"env\", name: match[0] }"
+            ]
+          },
+          {
+            "line": 60,
+            "column": 9,
+            "callee": "appendLiteral",
+            "arguments": [
+              "parts",
+              "\"$\""
+            ]
+          },
+          {
+            "line": 66,
+            "column": 9,
+            "callee": "config.startsWith",
+            "arguments": [
+              "\"!\""
+            ]
+          },
+          {
+            "line": 69,
+            "column": 39,
+            "callee": "parseConfigValueTemplate",
+            "arguments": [
+              "config"
+            ]
+          },
+          {
+            "line": 77,
+            "column": 36,
+            "callee": "names.includes",
+            "arguments": [
+              "part.name"
+            ]
+          },
+          {
+            "line": 79,
+            "column": 9,
+            "callee": "names.push",
+            "arguments": [
+              "part.name"
+            ]
+          },
+          {
+            "line": 90,
+            "column": 26,
+            "callee": "resolveEnvConfigValue",
+            "arguments": [
+              "part.name",
+              "env"
+            ]
+          },
+          {
+            "line": 98,
+            "column": 23,
+            "callee": "parseConfigValueReference",
+            "arguments": [
+              "config"
+            ]
+          },
+          {
+            "line": 104,
+            "column": 23,
+            "callee": "parseConfigValueReference",
+            "arguments": [
+              "config"
+            ]
+          },
+          {
+            "line": 105,
+            "column": 44,
+            "callee": "getTemplateEnvVarNames",
+            "arguments": [
+              "reference.parts"
+            ]
+          },
+          {
+            "line": 108,
+            "column": 12,
+            "callee": "getConfigValueEnvVarNames(config).filter",
+            "arguments": [
+              "(name) => resolveEnvConfigValue(name, env) === undefined"
+            ]
+          },
+          {
+            "line": 108,
+            "column": 12,
+            "callee": "getConfigValueEnvVarNames",
+            "arguments": [
+              "config"
+            ]
+          },
+          {
+            "line": 108,
+            "column": 63,
+            "callee": "resolveEnvConfigValue",
+            "arguments": [
+              "name",
+              "env"
+            ]
+          },
+          {
+            "line": 111,
+            "column": 12,
+            "callee": "parseConfigValueReference",
+            "arguments": [
+              "config"
+            ]
+          },
+          {
+            "line": 114,
+            "column": 12,
+            "callee": "getMissingConfigValueEnvVarNames",
+            "arguments": [
+              "config",
+              "env"
+            ]
+          },
+          {
+            "line": 124,
+            "column": 23,
+            "callee": "parseConfigValueReference",
+            "arguments": [
+              "config"
+            ]
+          },
+          {
+            "line": 126,
+            "column": 16,
+            "callee": "executeCommand",
+            "arguments": [
+              "reference.config"
+            ]
+          },
+          {
+            "line": 128,
+            "column": 12,
+            "callee": "resolveTemplate",
+            "arguments": [
+              "reference.parts",
+              "env"
+            ]
+          },
+          {
+            "line": 132,
+            "column": 51,
+            "callee": "getShellConfig",
+            "arguments": []
+          },
+          {
+            "line": 134,
+            "column": 24,
+            "callee": "spawnSync",
+            "arguments": [
+              "shell",
+              "commandFromStdin ? args : [...args, command]",
+              "{\n            encoding: \"utf-8\",\n            input: commandFromStdin ? command : undefined,\n            timeout: 10000,\n            stdio: [commandFromStdin ? \"pipe\" : \"ignore\", \"pipe\", \"ignore\"],\n            shell: false,\n            windowsHide: true,\n        }"
+            ]
+          },
+          {
+            "line": 152,
+            "column": 23,
+            "callee": "(result.stdout ?? \"\").trim",
+            "arguments": []
+          },
+          {
+            "line": 161,
+            "column": 24,
+            "callee": "execSync",
+            "arguments": [
+              "command",
+              "{\n            encoding: \"utf-8\",\n            timeout: 10000,\n            stdio: [\"ignore\", \"pipe\", \"ignore\"],\n        }"
+            ]
+          },
+          {
+            "line": 166,
+            "column": 16,
+            "callee": "output.trim",
+            "arguments": []
+          },
+          {
+            "line": 173,
+            "column": 21,
+            "callee": "commandConfig.slice",
+            "arguments": [
+              "1"
+            ]
+          },
+          {
+            "line": 175,
+            "column": 11,
+            "callee": "(() => {\n            const configuredResult = executeWithConfiguredShell(command);\n            return configuredResult.executed ? configuredResult.value : executeWithDefaultShell(command);\n        })",
+            "arguments": []
+          },
+          {
+            "line": 176,
+            "column": 38,
+            "callee": "executeWithConfiguredShell",
+            "arguments": [
+              "command"
+            ]
+          },
+          {
+            "line": 177,
+            "column": 73,
+            "callee": "executeWithDefaultShell",
+            "arguments": [
+              "command"
+            ]
+          },
+          {
+            "line": 179,
+            "column": 11,
+            "callee": "executeWithDefaultShell",
+            "arguments": [
+              "command"
+            ]
+          },
+          {
+            "line": 182,
+            "column": 9,
+            "callee": "commandResultCache.has",
+            "arguments": [
+              "commandConfig"
+            ]
+          },
+          {
+            "line": 183,
+            "column": 16,
+            "callee": "commandResultCache.get",
+            "arguments": [
+              "commandConfig"
+            ]
+          },
+          {
+            "line": 185,
+            "column": 20,
+            "callee": "executeCommandUncached",
+            "arguments": [
+              "commandConfig"
+            ]
+          },
+          {
+            "line": 186,
+            "column": 5,
+            "callee": "commandResultCache.set",
+            "arguments": [
+              "commandConfig",
+              "result"
+            ]
+          },
+          {
+            "line": 193,
+            "column": 23,
+            "callee": "parseConfigValueReference",
+            "arguments": [
+              "config"
+            ]
+          },
+          {
+            "line": 195,
+            "column": 16,
+            "callee": "executeCommandUncached",
+            "arguments": [
+              "reference.config"
+            ]
+          },
+          {
+            "line": 197,
+            "column": 12,
+            "callee": "resolveTemplate",
+            "arguments": [
+              "reference.parts",
+              "env"
+            ]
+          },
+          {
+            "line": 200,
+            "column": 27,
+            "callee": "resolveConfigValueUncached",
+            "arguments": [
+              "config",
+              "env"
+            ]
+          },
+          {
+            "line": 204,
+            "column": 23,
+            "callee": "parseConfigValueReference",
+            "arguments": [
+              "config"
+            ]
+          },
+          {
+            "line": 206,
+            "column": 81,
+            "callee": "reference.config.slice",
+            "arguments": [
+              "1"
+            ]
+          },
+          {
+            "line": 209,
+            "column": 32,
+            "callee": "getMissingConfigValueEnvVarNames",
+            "arguments": [
+              "config",
+              "env"
+            ]
+          },
+          {
+            "line": 214,
+            "column": 93,
+            "callee": "missingEnvVars.join",
+            "arguments": [
+              "\", \""
+            ]
+          },
+          {
+            "line": 226,
+            "column": 32,
+            "callee": "Object.entries",
+            "arguments": [
+              "headers"
+            ]
+          },
+          {
+            "line": 227,
+            "column": 31,
+            "callee": "resolveConfigValue",
+            "arguments": [
+              "value",
+              "env"
+            ]
+          },
+          {
+            "line": 232,
+            "column": 12,
+            "callee": "Object.keys",
+            "arguments": [
+              "resolved"
+            ]
+          },
+          {
+            "line": 238,
+            "column": 32,
+            "callee": "Object.entries",
+            "arguments": [
+              "headers"
+            ]
+          },
+          {
+            "line": 239,
+            "column": 25,
+            "callee": "resolveConfigValueOrThrow",
+            "arguments": [
+              "value",
+              "`${description} header \"${key}\"`",
+              "env"
+            ]
+          },
+          {
+            "line": 241,
+            "column": 12,
+            "callee": "Object.keys",
+            "arguments": [
+              "resolved"
+            ]
+          },
+          {
+            "line": 245,
+            "column": 5,
+            "callee": "commandResultCache.clear",
+            "arguments": []
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full247 lines. Five own failure/context templates tracked, all other strings protocol/command/env parsing/stdio/control/data. Leading ! command detection before template parsing; $$/$! escape only within noncommand templates. Provided env falsy fallback process.env; names unique. Cached resolve saves undefined failure too, OrThrow uncached. Windows configured-shell ENOENT/caught setup failure allows default fallback; nonzero/other spawn error/empty output do not. Stderr ignored, stdout captured/trimmed. Fallback217 defensive changing-input/API, not ordinary stable env error."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.js",
+        "read_lines": [
+          1,
+          187
+        ],
+        "string_template_occurrences": 58,
+        "fixed_rows": 8,
+        "excluded_occurrences": 50,
+        "protected_regex_literals": 5,
+        "regex_census_sha256": "c20eaa59836256163eb9702192510787a92a048c39d9ac57571b72af81223865",
+        "error_constructors": [
+          {
+            "line": 173,
+            "column": 23,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"query must not be empty\""
+          },
+          {
+            "line": 176,
+            "column": 23,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"limit must be a positive integer\""
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 13,
+            "column": 20,
+            "callee": "Set",
+            "source": "new Set([\n    \"a\",\n    \"an\",\n    \"and\",\n    \"are\",\n    \"as\",\n    \"at\",\n    \"be\",\n    \"by\",\n    \"for\",\n    \"from\",\n    \"in\",\n    \"is\",\n    \"it\",\n    \"of\",\n    \"on\",\n    \"or\",\n    \"that\",\n    \"the\",\n    \"this\",\n    \"to\",\n    \"with\",\n])"
+          },
+          {
+            "line": 100,
+            "column": 32,
+            "callee": "Set",
+            "source": "new Set(tokenize(query))"
+          },
+          {
+            "line": 104,
+            "column": 28,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 111,
+            "column": 21,
+            "callee": "Map",
+            "source": "new Map(queryTerms.map((term) => {\n            const frequency = termCounts.filter((counts) => counts.has(term)).length;\n            return [term, Math.log(1 + (documents.length - frequency + 0.5) / (frequency + 0.5))];\n        }))"
+          },
+          {
+            "line": 147,
+            "column": 21,
+            "callee": "Bm25Ranker",
+            "source": "new Bm25Ranker()"
+          },
+          {
+            "line": 173,
+            "column": 23,
+            "callee": "Error",
+            "source": "new Error(\"query must not be empty\")"
+          },
+          {
+            "line": 176,
+            "column": 23,
+            "callee": "Error",
+            "source": "new Error(\"limit must be a positive integer\")"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 173,
+            "column": 17,
+            "expression": "new Error(\"query must not be empty\")"
+          },
+          {
+            "line": 176,
+            "column": 17,
+            "expression": "new Error(\"limit must be a positive integer\")"
+          }
+        ],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 10,
+            "column": 1,
+            "specifier": "typebox"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 38,
+            "column": 28,
+            "callee": "term.endsWith",
+            "arguments": [
+              "\"ies\""
+            ]
+          },
+          {
+            "line": 39,
+            "column": 19,
+            "callee": "term.slice",
+            "arguments": [
+              "0",
+              "-3"
+            ]
+          },
+          {
+            "line": 40,
+            "column": 28,
+            "callee": "/(ches|shes|sses|xes|zes)$/.test",
+            "arguments": [
+              "term"
+            ]
+          },
+          {
+            "line": 41,
+            "column": 16,
+            "callee": "term.slice",
+            "arguments": [
+              "0",
+              "-2"
+            ]
+          },
+          {
+            "line": 42,
+            "column": 28,
+            "callee": "term.endsWith",
+            "arguments": [
+              "\"s\""
+            ]
+          },
+          {
+            "line": 42,
+            "column": 51,
+            "callee": "term.endsWith",
+            "arguments": [
+              "\"ss\""
+            ]
+          },
+          {
+            "line": 43,
+            "column": 16,
+            "callee": "term.slice",
+            "arguments": [
+              "0",
+              "-1"
+            ]
+          },
+          {
+            "line": 48,
+            "column": 12,
+            "callee": "text\n        .replace(/([a-z0-9])([A-Z])/g, \"$1 $2\")\n        .replace(/([A-Z]+)([A-Z][a-z])/g, \"$1 $2\")\n        .toLowerCase()\n        .split(/[^a-z0-9]+/)\n        .filter((term) => term.length > 0 && !STOP_WORDS.has(term))\n        .map",
+            "arguments": [
+              "stem"
+            ]
+          },
+          {
+            "line": 48,
+            "column": 12,
+            "callee": "text\n        .replace(/([a-z0-9])([A-Z])/g, \"$1 $2\")\n        .replace(/([A-Z]+)([A-Z][a-z])/g, \"$1 $2\")\n        .toLowerCase()\n        .split(/[^a-z0-9]+/)\n        .filter",
+            "arguments": [
+              "(term) => term.length > 0 && !STOP_WORDS.has(term)"
+            ]
+          },
+          {
+            "line": 48,
+            "column": 12,
+            "callee": "text\n        .replace(/([a-z0-9])([A-Z])/g, \"$1 $2\")\n        .replace(/([A-Z]+)([A-Z][a-z])/g, \"$1 $2\")\n        .toLowerCase()\n        .split",
+            "arguments": [
+              "/[^a-z0-9]+/"
+            ]
+          },
+          {
+            "line": 48,
+            "column": 12,
+            "callee": "text\n        .replace(/([a-z0-9])([A-Z])/g, \"$1 $2\")\n        .replace(/([A-Z]+)([A-Z][a-z])/g, \"$1 $2\")\n        .toLowerCase",
+            "arguments": []
+          },
+          {
+            "line": 48,
+            "column": 12,
+            "callee": "text\n        .replace(/([a-z0-9])([A-Z])/g, \"$1 $2\")\n        .replace",
+            "arguments": [
+              "/([A-Z]+)([A-Z][a-z])/g",
+              "\"$1 $2\""
+            ]
+          },
+          {
+            "line": 48,
+            "column": 12,
+            "callee": "text\n        .replace",
+            "arguments": [
+              "/([a-z0-9])([A-Z])/g",
+              "\"$1 $2\""
+            ]
+          },
+          {
+            "line": 53,
+            "column": 47,
+            "callee": "STOP_WORDS.has",
+            "arguments": [
+              "term"
+            ]
+          },
+          {
+            "line": 57,
+            "column": 60,
+            "callee": "Array.isArray",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 61,
+            "column": 10,
+            "callee": "isObject",
+            "arguments": [
+              "schema"
+            ]
+          },
+          {
+            "line": 64,
+            "column": 9,
+            "callee": "parts.push",
+            "arguments": [
+              "schema.description"
+            ]
+          },
+          {
+            "line": 65,
+            "column": 9,
+            "callee": "isObject",
+            "arguments": [
+              "schema.properties"
+            ]
+          },
+          {
+            "line": 66,
+            "column": 40,
+            "callee": "Object.entries",
+            "arguments": [
+              "schema.properties"
+            ]
+          },
+          {
+            "line": 67,
+            "column": 13,
+            "callee": "parts.push",
+            "arguments": [
+              "name"
+            ]
+          },
+          {
+            "line": 68,
+            "column": 13,
+            "callee": "schemaText",
+            "arguments": [
+              "property",
+              "parts"
+            ]
+          },
+          {
+            "line": 71,
+            "column": 5,
+            "callee": "schemaText",
+            "arguments": [
+              "schema.items",
+              "parts"
+            ]
+          },
+          {
+            "line": 74,
+            "column": 13,
+            "callee": "Array.isArray",
+            "arguments": [
+              "variants"
+            ]
+          },
+          {
+            "line": 76,
+            "column": 17,
+            "callee": "schemaText",
+            "arguments": [
+              "variant",
+              "parts"
+            ]
+          },
+          {
+            "line": 85,
+            "column": 31,
+            "callee": "tool.name.replaceAll",
+            "arguments": [
+              "\"_\"",
+              "\" \""
+            ]
+          },
+          {
+            "line": 86,
+            "column": 5,
+            "callee": "schemaText",
+            "arguments": [
+              "tool.parameters",
+              "parts"
+            ]
+          },
+          {
+            "line": 88,
+            "column": 9,
+            "callee": "parts.push",
+            "arguments": [
+              "namespace.name",
+              "namespace.description ?? \"\"",
+              "namespace.instructions ?? \"\""
+            ]
+          },
+          {
+            "line": 89,
+            "column": 37,
+            "callee": "parts.filter((part) => part.trim()).join",
+            "arguments": [
+              "\" \""
+            ]
+          },
+          {
+            "line": 89,
+            "column": 37,
+            "callee": "parts.filter",
+            "arguments": [
+              "(part) => part.trim()"
+            ]
+          },
+          {
+            "line": 89,
+            "column": 60,
+            "callee": "part.trim",
+            "arguments": []
+          },
+          {
+            "line": 100,
+            "column": 40,
+            "callee": "tokenize",
+            "arguments": [
+              "query"
+            ]
+          },
+          {
+            "line": 103,
+            "column": 28,
+            "callee": "documents.map",
+            "arguments": [
+              "(document) => {\n            const counts = new Map();\n            for (const term of tokenize(document.text))\n                counts.set(term, (counts.get(term) ?? 0) + 1);\n            return counts;\n        }"
+            ]
+          },
+          {
+            "line": 105,
+            "column": 32,
+            "callee": "tokenize",
+            "arguments": [
+              "document.text"
+            ]
+          },
+          {
+            "line": 106,
+            "column": 17,
+            "callee": "counts.set",
+            "arguments": [
+              "term",
+              "(counts.get(term) ?? 0) + 1"
+            ]
+          },
+          {
+            "line": 106,
+            "column": 35,
+            "callee": "counts.get",
+            "arguments": [
+              "term"
+            ]
+          },
+          {
+            "line": 109,
+            "column": 25,
+            "callee": "termCounts.map",
+            "arguments": [
+              "(counts) => [...counts.values()].reduce((sum, count) => sum + count, 0)"
+            ]
+          },
+          {
+            "line": 109,
+            "column": 52,
+            "callee": "[...counts.values()].reduce",
+            "arguments": [
+              "(sum, count) => sum + count",
+              "0"
+            ]
+          },
+          {
+            "line": 109,
+            "column": 56,
+            "callee": "counts.values",
+            "arguments": []
+          },
+          {
+            "line": 110,
+            "column": 31,
+            "callee": "lengths.reduce",
+            "arguments": [
+              "(sum, length) => sum + length",
+              "0"
+            ]
+          },
+          {
+            "line": 111,
+            "column": 29,
+            "callee": "queryTerms.map",
+            "arguments": [
+              "(term) => {\n            const frequency = termCounts.filter((counts) => counts.has(term)).length;\n            return [term, Math.log(1 + (documents.length - frequency + 0.5) / (frequency + 0.5))];\n        }"
+            ]
+          },
+          {
+            "line": 112,
+            "column": 31,
+            "callee": "termCounts.filter",
+            "arguments": [
+              "(counts) => counts.has(term)"
+            ]
+          },
+          {
+            "line": 112,
+            "column": 61,
+            "callee": "counts.has",
+            "arguments": [
+              "term"
+            ]
+          },
+          {
+            "line": 113,
+            "column": 27,
+            "callee": "Math.log",
+            "arguments": [
+              "1 + (documents.length - frequency + 0.5) / (frequency + 0.5)"
+            ]
+          },
+          {
+            "line": 116,
+            "column": 9,
+            "callee": "documents.forEach",
+            "arguments": [
+              "(document, index) => {\n            let score = 0;\n            for (const term of queryTerms) {\n                const count = termCounts[index].get(term);\n                if (!count)\n                    continue;\n                const norm = this.k1 * (1 - this.b + (this.b * lengths[index]) / averageLength);\n                score += (idf.get(term) ?? 0) * ((count * (this.k1 + 1)) / (count + norm));\n            }\n            if (score > 0)\n                matches.push({ name: document.name, score });\n        }"
+            ]
+          },
+          {
+            "line": 119,
+            "column": 31,
+            "callee": "termCounts[index].get",
+            "arguments": [
+              "term"
+            ]
+          },
+          {
+            "line": 123,
+            "column": 27,
+            "callee": "idf.get",
+            "arguments": [
+              "term"
+            ]
+          },
+          {
+            "line": 126,
+            "column": 17,
+            "callee": "matches.push",
+            "arguments": [
+              "{ name: document.name, score }"
+            ]
+          },
+          {
+            "line": 128,
+            "column": 16,
+            "callee": "matches.sort((a, b) => b.score - a.score).slice",
+            "arguments": [
+              "0",
+              "limit"
+            ]
+          },
+          {
+            "line": 128,
+            "column": 16,
+            "callee": "matches.sort",
+            "arguments": [
+              "(a, b) => b.score - a.score"
+            ]
+          },
+          {
+            "line": 131,
+            "column": 33,
+            "callee": "Type.Object",
+            "arguments": [
+              "{\n    query: Type.String({ description: \"Search query for deferred tools.\" }),\n    limit: Type.Optional(Type.Number({ description: `Maximum number of tools to return. Defaults to ${DEFAULT_TOOL_SEARCH_LIMIT}.` })),\n}"
+            ]
+          },
+          {
+            "line": 132,
+            "column": 12,
+            "callee": "Type.String",
+            "arguments": [
+              "{ description: \"Search query for deferred tools.\" }"
+            ]
+          },
+          {
+            "line": 133,
+            "column": 12,
+            "callee": "Type.Optional",
+            "arguments": [
+              "Type.Number({ description: `Maximum number of tools to return. Defaults to ${DEFAULT_TOOL_SEARCH_LIMIT}.` })"
+            ]
+          },
+          {
+            "line": 133,
+            "column": 26,
+            "callee": "Type.Number",
+            "arguments": [
+              "{ description: `Maximum number of tools to return. Defaults to ${DEFAULT_TOOL_SEARCH_LIMIT}.` }"
+            ]
+          },
+          {
+            "line": 144,
+            "column": 20,
+            "callee": "tools.getActiveTools",
+            "arguments": []
+          },
+          {
+            "line": 145,
+            "column": 24,
+            "callee": "tools.getAllTools().filter",
+            "arguments": [
+              "(tool) => isSearchable(tool.exposure) && !active.includes(tool.name)"
+            ]
+          },
+          {
+            "line": 145,
+            "column": 24,
+            "callee": "tools.getAllTools",
+            "arguments": []
+          },
+          {
+            "line": 145,
+            "column": 61,
+            "callee": "isSearchable",
+            "arguments": [
+              "tool.exposure"
+            ]
+          },
+          {
+            "line": 145,
+            "column": 93,
+            "callee": "active.includes",
+            "arguments": [
+              "tool.name"
+            ]
+          },
+          {
+            "line": 146,
+            "column": 23,
+            "callee": "candidates.map",
+            "arguments": [
+              "(tool) => createToolSearchDocument(tool, tool.namespace)"
+            ]
+          },
+          {
+            "line": 146,
+            "column": 48,
+            "callee": "createToolSearchDocument",
+            "arguments": [
+              "tool",
+              "tool.namespace"
+            ]
+          },
+          {
+            "line": 147,
+            "column": 21,
+            "callee": "new Bm25Ranker().rank",
+            "arguments": [
+              "query",
+              "documents",
+              "limit"
+            ]
+          },
+          {
+            "line": 149,
+            "column": 9,
+            "callee": "tools.setActiveTools",
+            "arguments": [
+              "[...active, ...matches.map((match) => match.name)]"
+            ]
+          },
+          {
+            "line": 149,
+            "column": 45,
+            "callee": "matches.map",
+            "arguments": [
+              "(match) => match.name"
+            ]
+          },
+          {
+            "line": 150,
+            "column": 12,
+            "callee": "matches.map",
+            "arguments": [
+              "(match) => ({\n        name: match.name,\n        description: candidates.find((tool) => tool.name === match.name)?.description ?? \"\",\n    })"
+            ]
+          },
+          {
+            "line": 152,
+            "column": 22,
+            "callee": "candidates.find",
+            "arguments": [
+              "(tool) => tool.name === match.name"
+            ]
+          },
+          {
+            "line": 172,
+            "column": 17,
+            "callee": "query.trim",
+            "arguments": []
+          },
+          {
+            "line": 175,
+            "column": 18,
+            "callee": "Number.isInteger",
+            "arguments": [
+              "max"
+            ]
+          },
+          {
+            "line": 177,
+            "column": 43,
+            "callee": "searchAndLoad",
+            "arguments": [
+              "options.tools",
+              "query",
+              "max"
+            ]
+          },
+          {
+            "line": 180,
+            "column": 124,
+            "callee": "tools\n                    .map((tool) => `- ${tool.name}: ${tool.description.trim().split(/\\r?\\n/)[0]}`)\n                    .join",
+            "arguments": [
+              "\"\\n\""
+            ]
+          },
+          {
+            "line": 180,
+            "column": 124,
+            "callee": "tools\n                    .map",
+            "arguments": [
+              "(tool) => `- ${tool.name}: ${tool.description.trim().split(/\\r?\\n/)[0]}`"
+            ]
+          },
+          {
+            "line": 181,
+            "column": 55,
+            "callee": "tool.description.trim().split",
+            "arguments": [
+              "/\\r?\\n/"
+            ]
+          },
+          {
+            "line": 181,
+            "column": 55,
+            "callee": "tool.description.trim",
+            "arguments": []
+          },
+          {
+            "line": 183,
+            "column": 76,
+            "callee": "tools.map",
+            "arguments": [
+              "(tool) => tool.name"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full187 lines. Eight own definition/schema/prompt/result/error strings/templates. ASCII camel-case tokenization, English stop-word dictionary and stemming suffixes are algorithm data, not captions. BM25 uses input parameter descriptions recursively, namespace data; success output only matched name and original top description first line. Selected live metadata versus later actual persisted declaration/prompt distinct. Default TextGuard does not inspect tool_search; plain print does not directly emit tool result. TypeBox/protocol/custom callbacks remain pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/index.js",
+        "read_lines": [
+          1,
+          15
+        ],
+        "string_template_occurrences": 1,
+        "fixed_rows": 0,
+        "excluded_occurrences": 1,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 8,
+            "column": 1,
+            "specifier": "./tool.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 11,
+            "column": 9,
+            "callee": "pi.registerTool",
+            "arguments": [
+              "{ ...createToolSearchToolDefinition({ tools: pi }), defaultActive: false }"
+            ]
+          },
+          {
+            "line": 11,
+            "column": 30,
+            "callee": "createToolSearchToolDefinition",
+            "arguments": [
+              "{ tools: pi }"
+            ]
+          },
+          {
+            "line": 14,
+            "column": 16,
+            "callee": "createToolSearchExtension",
+            "arguments": []
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full15 lines. Reexports factory via default(createToolSearchExtension()) but no tool registration until returned extension factory invoked with pi. Registers definition with options.tools=pi and defaultActivefalse; activation from CLI/defaultTools/session APIs/MCP policy separate. No own prose/Error/catch."
+      }
+    ],
+    "method": "Full3 finite local bodies449 lines read; every string/template partitioned, full Error/new/throw/catch/regex/import/export/control/all-call census. Caller-specific silent resolver/API/MCP/provider/result/print/JSON/RPC/HTML/selection/recorded-state routes qualified. No audited module/schema/command/TTY/config/env/network/native/model execution."
+  },
+  "remaining_partial_sources": [],
+  "scope_census": {
+    "package": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0",
+    "runtime_files": [
+      "dist/core/resolve-config-value.js",
+      "dist/extensions/tool-search/index.js",
+      "dist/extensions/tool-search/tool.js"
+    ],
+    "associated_nonruntime_files": [
+      "dist/core/resolve-config-value.d.ts",
+      "dist/core/resolve-config-value.d.ts.map",
+      "dist/core/resolve-config-value.js.map",
+      "dist/extensions/tool-search/index.d.ts",
+      "dist/extensions/tool-search/index.d.ts.map",
+      "dist/extensions/tool-search/index.js.map",
+      "dist/extensions/tool-search/tool.d.ts",
+      "dist/extensions/tool-search/tool.d.ts.map",
+      "dist/extensions/tool-search/tool.js.map"
+    ]
+  },
+  "prior_ownership": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resolve-config-value.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0159",
+      "new_full_body_owner": "pi-config-discovery-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/tool.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0227",
+      "new_full_body_owner": "pi-config-discovery-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/tool-search/index.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0226",
+      "new_full_body_owner": "pi-config-discovery-scope.csv",
+      "prior_full_body_claim": false
+    }
+  ],
+  "historical_ownership_census": {
+    "source": "review/text-inventory/pi-runtime-census.csv",
+    "sha256": "773f21e9b105575038010c6cd30dafa70f396105fd579adeca11299007863225",
+    "status": "historical pending snapshot unchanged"
+  },
+  "pending_producer_boundaries": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "status": "492-line-full-provider/auth/registry-producer-body-pending-bounded-resolution-calls-only"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-registry.js",
+      "status": "144-line-full-compatibility-API-producer-body-pending-bounded-error/suppression-only"
+    },
+    {
+      "source": "external:@earendil-works/pi-agent-core-and-pi-ai",
+      "status": "seven-bounded-two-tree-hash-support-files-no-supplied-canonical-archives-or-full-body-closure"
+    },
+    {
+      "source": "external:typebox-constructor-schema-validator-Node-OS-shell-model-provider-runtime",
+      "status": "dependency-implementation-and-error-text-extra-consumers-pending"
+    }
+  ],
+  "limits": [
+    "Three full local bodies449 lines only, immutable BASE346/new fetch not retargeted. Provider-composer492/ModelRegistry144 and transitive native/provider/TypeBox/compiled copies/external runtime remain pending. No old/shared/census/product/index edits.",
+    "Four own OrThrow Error templates plus header-context fragment differ quiet cached resolver. Captured stdout/ignored stderr, Windows fallback only executedfalse, failure cached includingundefined, OrThrow bypasses cache. Empty literal returnsdefined; missing env deduplicated, defensive fallback217 not ordinary stable-env failure.",
+    "Definition/schema description/success/error text and snippet conditional current/persisted HTML/native API routes; registration inactive, MCP discovery/defaultTools/CLI/API can activate. TypeBox implementation pending; no schema/definition/provider executed.",
+    "Live selection change does not itself persist transcript toolsAdded or prompt. Actual next-turn/start preparation writes delta; viewer may see live metadata before prompt replay updated. Force projection is request-only, customPrompt/custom tools override can preempt snippet.",
+    "Tool result original matched description first line can differ from prepared live declaration description. Nested input schema/namespace used ranking only; outputSchema not searched or printed. Stopwords/stemming are algorithm data. No extra schema/namespace visual promotion.",
+    "Default TextGuard tool_search uninspected, custom hooks may replace; plain print does not directly print result, JSON/RPC event/client and TUI/HTML expansion fields distinct. Provider-key getter and nondefault summary auth may suppress resolver errors; ModelRegistry can return ok:false/error.",
+    "Seven supplementary agent-core/pi-ai exact1.4.0/two-tree source hashes and metadata-only nearest-package routes, outside supplied canonical Agent/TUI archives. Bounded catch/getter/replay support not whole extra-package source closure.",
+    "Normal strings TypeScript decoded, templates preserve source escapes/interpolation. Protected command/env/headers/credentials/tool/schema/namespace payload never executed or inspected as runtime state; no extra module/child/native/network/model/config/cache operations."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-config-discovery.cjs",
+  "reviewed_artifact_sha256": {
+    "pi-config-discovery.csv": "e9a274e29c4291084e206a3ade1ab73e586f16c370227c86c6e66e3fa85817b5",
+    "pi-config-discovery-boundaries.csv": "abbe72f21e954c6a1a793ec29b67e6df359383a0359c0f4a10518be42d9ac176",
+    "pi-config-discovery-scope.csv": "d9858190769953211e29a776aa92a819f656d7e7bf588ad06b62f8e31434880a",
+    "pi-config-discovery-exclusions.csv": "2de3d4f6f6dd448abe04381359972912803fef81ec31cf2d3e13d60a351dee50"
+  },
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/core/resolve-config-value.js",
+            "archive_sha256": "01fdb1673990635bb419c7418eefa298b6a1c6fbb3c6193d3b05a4902e51992d",
+            "root_sha256": "01fdb1673990635bb419c7418eefa298b6a1c6fbb3c6193d3b05a4902e51992d",
+            "cli_nested_sha256": "01fdb1673990635bb419c7418eefa298b6a1c6fbb3c6193d3b05a4902e51992d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/extensions/tool-search/tool.js",
+            "archive_sha256": "187336777248b8b5cce52a904d7c341e10be9842543cac4a98992027a8d39aa5",
+            "root_sha256": "187336777248b8b5cce52a904d7c341e10be9842543cac4a98992027a8d39aa5",
+            "cli_nested_sha256": "187336777248b8b5cce52a904d7c341e10be9842543cac4a98992027a8d39aa5",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/extensions/tool-search/index.js",
+            "archive_sha256": "1b989bcfd70485fc71535c33b3c1d02e12ec7450589e5b9da3fccbdf7f8451d7",
+            "root_sha256": "1b989bcfd70485fc71535c33b3c1d02e12ec7450589e5b9da3fccbdf7f8451d7",
+            "cli_nested_sha256": "1b989bcfd70485fc71535c33b3c1d02e12ec7450589e5b9da3fccbdf7f8451d7",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/auth-storage.js",
+            "archive_sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+            "root_sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+            "cli_nested_sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/provider-composer.js",
+            "archive_sha256": "7ec4af06726158fa34377bed34fbb378d2d39c5c9d51ae5640ac459a4c78bec4",
+            "root_sha256": "7ec4af06726158fa34377bed34fbb378d2d39c5c9d51ae5640ac459a4c78bec4",
+            "cli_nested_sha256": "7ec4af06726158fa34377bed34fbb378d2d39c5c9d51ae5640ac459a4c78bec4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/model-registry.js",
+            "archive_sha256": "588fa2d8df563fe0f41c99e54ecad1473cd325937b208cc1c3e103a8a032d0a1",
+            "root_sha256": "588fa2d8df563fe0f41c99e54ecad1473cd325937b208cc1c3e103a8a032d0a1",
+            "cli_nested_sha256": "588fa2d8df563fe0f41c99e54ecad1473cd325937b208cc1c3e103a8a032d0a1",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/model-runtime.js",
+            "archive_sha256": "44d8017928eff6721d5a56b4e71f98bcafb124f5aa6e7d3f016491e11fcf6461",
+            "root_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+            "cli_nested_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/agent-session.js",
+            "archive_sha256": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
+            "root_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/system-prompt.js",
+            "archive_sha256": "ab02924fa078eef81addcf39bc0e43d3663f06d627cb42ead403662a004a9e5c",
+            "root_sha256": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a",
+            "cli_nested_sha256": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/extensions/mcp/index.js",
+            "archive_sha256": "c0570b9d256120a1df9b65a015964076dff6a3710646e041fcb2770ae7132fde",
+            "root_sha256": "c0570b9d256120a1df9b65a015964076dff6a3710646e041fcb2770ae7132fde",
+            "cli_nested_sha256": "c0570b9d256120a1df9b65a015964076dff6a3710646e041fcb2770ae7132fde",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/extensions/mcp/runtime.js",
+            "archive_sha256": "be9e8eea88363f2fefaea2c25c854845393f112394ee5989d22facd2f1acea6e",
+            "root_sha256": "be9e8eea88363f2fefaea2c25c854845393f112394ee5989d22facd2f1acea6e",
+            "cli_nested_sha256": "be9e8eea88363f2fefaea2c25c854845393f112394ee5989d22facd2f1acea6e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/extensions/wrapper.js",
+            "archive_sha256": "ea82999a05ca0af25ed31e76aaaba6e5ce6b99b5fcde3681f0d74766e4935247",
+            "root_sha256": "ea82999a05ca0af25ed31e76aaaba6e5ce6b99b5fcde3681f0d74766e4935247",
+            "cli_nested_sha256": "ea82999a05ca0af25ed31e76aaaba6e5ce6b99b5fcde3681f0d74766e4935247",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/tool-definition-wrapper.js",
+            "archive_sha256": "02fe785c52294d14216605d40d5592ac2accd1a3125891523e2a6c87feb5810c",
+            "root_sha256": "02fe785c52294d14216605d40d5592ac2accd1a3125891523e2a6c87feb5810c",
+            "cli_nested_sha256": "02fe785c52294d14216605d40d5592ac2accd1a3125891523e2a6c87feb5810c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/interactive-mode.js",
+            "archive_sha256": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+            "root_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/components/tool-execution.js",
+            "archive_sha256": "fa47a6ec3aae07cd3ec5f84509f6553a342daf23fdb71afd75b6daa355a94e3f",
+            "root_sha256": "fa47a6ec3aae07cd3ec5f84509f6553a342daf23fdb71afd75b6daa355a94e3f",
+            "cli_nested_sha256": "fa47a6ec3aae07cd3ec5f84509f6553a342daf23fdb71afd75b6daa355a94e3f",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/components/assistant-message.js",
+            "archive_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+            "root_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+            "cli_nested_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/print-mode.js",
+            "archive_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "root_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/rpc/rpc-mode.js",
+            "archive_sha256": "631697cd35928fc827f4a423538c43ff227b8cbf63c2a2f11060616f55eba6db",
+            "root_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+            "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/export-html/index.js",
+            "archive_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "root_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "cli_nested_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/export-html/template.js",
+            "archive_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "root_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "cli_nested_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/export-html/template.css",
+            "archive_sha256": "8ee19851f8e583277ed396cbb76496687aa556707fdfc1f78d1118bff87c740a",
+            "root_sha256": "8ee19851f8e583277ed396cbb76496687aa556707fdfc1f78d1118bff87c740a",
+            "cli_nested_sha256": "8ee19851f8e583277ed396cbb76496687aa556707fdfc1f78d1118bff87c740a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/resolve-config-value.d.ts",
+            "archive_sha256": "4cfbc127ab697ad63496c3c6b092b810c30a445af5894d9a16ff0e170860a6eb",
+            "root_sha256": "4cfbc127ab697ad63496c3c6b092b810c30a445af5894d9a16ff0e170860a6eb",
+            "cli_nested_sha256": "4cfbc127ab697ad63496c3c6b092b810c30a445af5894d9a16ff0e170860a6eb",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/resolve-config-value.d.ts.map",
+            "archive_sha256": "c3aa58e257b327364351837c87c85ac3a1d7ef7f17e5d8a94d9cde96eb07ead2",
+            "root_sha256": "c3aa58e257b327364351837c87c85ac3a1d7ef7f17e5d8a94d9cde96eb07ead2",
+            "cli_nested_sha256": "c3aa58e257b327364351837c87c85ac3a1d7ef7f17e5d8a94d9cde96eb07ead2",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/resolve-config-value.js.map",
+            "archive_sha256": "6f256b2504001b137fb2b0a67a62001e5156d108957c3e61edab256db281b975",
+            "root_sha256": "6f256b2504001b137fb2b0a67a62001e5156d108957c3e61edab256db281b975",
+            "cli_nested_sha256": "6f256b2504001b137fb2b0a67a62001e5156d108957c3e61edab256db281b975",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/extensions/tool-search/tool.d.ts",
+            "archive_sha256": "6ab969722a967bd296bb0fb1bb4074c0d0b3a111fda9118a339af12524a22922",
+            "root_sha256": "6ab969722a967bd296bb0fb1bb4074c0d0b3a111fda9118a339af12524a22922",
+            "cli_nested_sha256": "6ab969722a967bd296bb0fb1bb4074c0d0b3a111fda9118a339af12524a22922",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/extensions/tool-search/tool.d.ts.map",
+            "archive_sha256": "d6f08e36f5b2442337ec7fc69a41ea78b249d7f0bee08c8de9748fd8934d4dfa",
+            "root_sha256": "d6f08e36f5b2442337ec7fc69a41ea78b249d7f0bee08c8de9748fd8934d4dfa",
+            "cli_nested_sha256": "d6f08e36f5b2442337ec7fc69a41ea78b249d7f0bee08c8de9748fd8934d4dfa",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/extensions/tool-search/tool.js.map",
+            "archive_sha256": "f1e0b8a584fe96d3d893e53f7ea7190880fbd4042812200283e1c82bf8e764e4",
+            "root_sha256": "f1e0b8a584fe96d3d893e53f7ea7190880fbd4042812200283e1c82bf8e764e4",
+            "cli_nested_sha256": "f1e0b8a584fe96d3d893e53f7ea7190880fbd4042812200283e1c82bf8e764e4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/extensions/tool-search/index.d.ts",
+            "archive_sha256": "1c79cf17317789a2a3efe9d27e9c55ae08b47704bf3fa4218103d6439a774ca3",
+            "root_sha256": "1c79cf17317789a2a3efe9d27e9c55ae08b47704bf3fa4218103d6439a774ca3",
+            "cli_nested_sha256": "1c79cf17317789a2a3efe9d27e9c55ae08b47704bf3fa4218103d6439a774ca3",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/extensions/tool-search/index.d.ts.map",
+            "archive_sha256": "7a440ac830e32d958ef0d8c37cfcf967a2b772902f1564256384fd6817b1b440",
+            "root_sha256": "7a440ac830e32d958ef0d8c37cfcf967a2b772902f1564256384fd6817b1b440",
+            "cli_nested_sha256": "7a440ac830e32d958ef0d8c37cfcf967a2b772902f1564256384fd6817b1b440",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/extensions/tool-search/index.js.map",
+            "archive_sha256": "c48c67a0b28bd1f737a22c8f786aaec5804410b387998758052e5c94189324e9",
+            "root_sha256": "c48c67a0b28bd1f737a22c8f786aaec5804410b387998758052e5c94189324e9",
+            "cli_nested_sha256": "c48c67a0b28bd1f737a22c8f786aaec5804410b387998758052e5c94189324e9",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": []
+      }
+    ],
+    "scoped_file_count": 30,
+    "byte_identical_scope_files": 25,
+    "pinned_patch_scope_files": 5,
+    "unresolved_scope_differences": 0
+  }
+}

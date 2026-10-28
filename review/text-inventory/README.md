@@ -665,9 +665,9 @@ remain qualified. OAuth browser success has a distinct actual HTML sink; tokens,
 remote content, errors and log data keep external payload boundaries. Canonical
 checks cover 51 assets: 46 match archives and five pinned support deviations.
 Sixteen corruption controls pass. The native MCP interface has a follow-on unit
-below; resolver, discovery and external protocol/native bodies remain open. No
-server, OAuth, token store, log, transport, browser, UI or user-state operation
-was executed.
+below; configuration/discovery local bodies have another unit below. External
+protocol/native bodies remain open. No server, OAuth, token store, log, transport,
+browser, UI or user-state operation was executed.
 
 [pi-mcp-interface.csv](pi-mcp-interface.csv) adds 153 native MCP interface/CLI
 definitions and nine [boundaries](pi-mcp-interface-boundaries.csv). Two complete
@@ -681,9 +681,28 @@ Export previews longer than ten lines require expansion for the remaining text.
 Canonical checks cover 22 assets: sixteen archive matches and six pinned support
 patches, with 74 patch after-hashes checked. Five supplementary sources have
 version, import-resolution and two-tree hashes, without canonical archive or
-full-body promotion. Twenty corruption controls pass. Resolver, discovery,
-protocol/native dependencies and bundle entry graphs remain open. No config,
+full-body promotion. Twenty corruption controls pass. Configuration/discovery
+local bodies have the follow-on unit below; protocol/native dependencies and
+bundle entry graphs remain open. No config,
 server, OAuth, child process, callback, browser or UI operation was executed.
+
+[pi-config-discovery.csv](pi-config-discovery.csv) adds thirteen inherited
+configuration/tool-search definitions and ten
+[boundaries](pi-config-discovery-boundaries.csv). Three full bodies cover 449
+lines; all 105 string/template occurrences are partitioned against 92
+[exclusions](pi-config-discovery-exclusions.csv). The
+[scope](pi-config-discovery-scope.csv) accounts for six Error constructors and
+two catches. Cached missing resolution differs from uncached throwing resolution;
+Windows fallback and ignored child stderr retain exact gates. Tool-search ranking
+uses metadata/schema text, while its successful result prints tool names and
+original description first lines. Its loaded count does not independently verify
+custom activation callbacks. Live tool selection and actual recorded declaration
+patches have different timing; current HTML metadata and saved prompt snippets
+retain their own guards. Canonical checks cover thirty assets: 25 archive matches
+and five pinned support patches, with 74 patch after-hashes. Seven supplementary
+sources have exact versions/import routes/two-tree hashes, without canonical
+archive or full-body promotion. Twenty corruption controls pass. No shell,
+config, search execution, activation, transcript, model or UI operation executed.
 
 [pi-tools.csv](pi-tools.csv) supplies 172 inherited tool/helper occurrences,
 with 27 [payload boundaries](pi-tools-boundaries.csv). Its
@@ -1657,6 +1676,7 @@ node review/text-inventory/verify-pi-render-utilities.cjs --node-modules <root-n
 node review/text-inventory/verify-pi-distribution-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-mcp-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-mcp-interface.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-config-discovery.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
