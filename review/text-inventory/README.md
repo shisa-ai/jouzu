@@ -488,6 +488,18 @@ and validated-snapshot preconditions exclude two internal errors. Serialized wai
 decisions are model input; arbitrary stored reasons and imported producer errors
 remain separately qualified.
 
+[session-primitives.csv](session-primitives.csv) adds 26 formatting/boundary
+records: 18 protected frame/spacing/ANSI compositions and eight caller, native,
+callback or forwarding boundaries. The
+[scope](session-primitives-scope.csv) covers seven complete helper/barrel/shim
+bodies, 517 lines and 14 pinned sources. All 297 string/template/regex nodes are
+partitioned, with 279 [exclusions](session-primitives-exclusions.csv); these bodies
+have no own Error constructors or catches. Frame defaults, tiny/zero widths,
+terminal-control removal, optional colour probes and live appearance lookup keep
+their conditions. Helper composition introduces no fixed English words. Caller
+labels and native Pi width/theme implementations remain separate producers.
+Four in-memory corruption controls verify rejection without executing renderers.
+
 [workflow.csv](workflow.csv) records 210 Workflow items: 167 catalog occurrences,
 11 fixed or protected occurrences and 32 payload boundaries. The
 [scope](workflow-scope.csv) covers the complete 1,327-line component and 35-line
@@ -771,6 +783,7 @@ node review/text-inventory/verify-language-contract-text.cjs
 node review/text-inventory/verify-pi-ui-adapter.cjs
 node review/text-inventory/verify-session-label-text.cjs
 node review/text-inventory/verify-human-fallback.cjs
+node review/text-inventory/verify-session-primitives.cjs
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-build-scripts.py

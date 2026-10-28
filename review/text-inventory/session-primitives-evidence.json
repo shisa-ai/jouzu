@@ -1,0 +1,3069 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "full_bodies": [
+    "packages/session-ui/src/layout.ts",
+    "packages/session-ui/src/color.ts",
+    "packages/session-ui/src/styles.ts",
+    "packages/session-ui/src/index.ts",
+    "packages/cli/src/session-ui/layout.ts",
+    "packages/cli/src/session-ui/color.ts",
+    "packages/cli/src/session-ui/index.ts"
+  ],
+  "anchors": [
+    {
+      "item_id": "SESSION-PRIMITIVES-001",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 1,
+      "column": 47,
+      "expression": "\"@earendil-works/pi-tui\"",
+      "english": "@earendil-works/pi-tui",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-002",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 3,
+      "column": 37,
+      "expression": "\"left\"",
+      "english": "left",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-003",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 3,
+      "column": 46,
+      "expression": "\"center\"",
+      "english": "center",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-004",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 3,
+      "column": 57,
+      "expression": "\"right\"",
+      "english": "right",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-005",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 31,
+      "column": 15,
+      "expression": "\"\"",
+      "english": "",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-006",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 36,
+      "column": 17,
+      "expression": "\"[\"",
+      "english": "[",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-007",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 41,
+      "column": 17,
+      "expression": "\"]\"",
+      "english": "]",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-008",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 41,
+      "column": 33,
+      "expression": "\"_\"",
+      "english": "_",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-009",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 41,
+      "column": 49,
+      "expression": "\"P\"",
+      "english": "P",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-010",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 41,
+      "column": 65,
+      "expression": "\"^\"",
+      "english": "^",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-011",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 45,
+      "column": 67,
+      "expression": "\"\\\\\"",
+      "english": "\\",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-012",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 79,
+      "column": 77,
+      "expression": "\"\"",
+      "english": "",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-013",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 81,
+      "column": 21,
+      "expression": "\"\\u001b\"",
+      "english": "\u001b",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-014",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 81,
+      "column": 53,
+      "expression": "\"\\u001b\"",
+      "english": "\u001b",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-015",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 82,
+      "column": 22,
+      "expression": "\"\\u001b[0m\"",
+      "english": "\u001b[0m",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-016",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 82,
+      "column": 40,
+      "expression": "\"\"",
+      "english": "",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-017",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 92,
+      "column": 69,
+      "expression": "\"\"",
+      "english": "",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-018",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 94,
+      "column": 41,
+      "expression": "\"left\"",
+      "english": "left",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-019",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 95,
+      "column": 20,
+      "expression": "\"right\"",
+      "english": "right",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-020",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 95,
+      "column": 36,
+      "expression": "`${\" \".repeat(padding)}${fitted}`",
+      "english": "${\" \".repeat(padding)}${fitted}",
+      "kind": "template",
+      "disposition": "protected-visible-format"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-021",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 95,
+      "column": 39,
+      "expression": "\" \"",
+      "english": " ",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-022",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 96,
+      "column": 20,
+      "expression": "\"center\"",
+      "english": "center",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-023",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 98,
+      "column": 10,
+      "expression": "`${\" \".repeat(left)}${fitted}${\" \".repeat(padding - left)}`",
+      "english": "${\" \".repeat(left)}${fitted}${\" \".repeat(padding - left)}",
+      "kind": "template",
+      "disposition": "protected-visible-format"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-024",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 98,
+      "column": 13,
+      "expression": "\" \"",
+      "english": " ",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-025",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 98,
+      "column": 41,
+      "expression": "\" \"",
+      "english": " ",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-026",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 100,
+      "column": 9,
+      "expression": "`${fitted}${\" \".repeat(padding)}`",
+      "english": "${fitted}${\" \".repeat(padding)}",
+      "kind": "template",
+      "disposition": "protected-visible-format"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-027",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 100,
+      "column": 21,
+      "expression": "\" \"",
+      "english": " ",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-028",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 106,
+      "column": 27,
+      "expression": "\"\"",
+      "english": "",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-029",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 108,
+      "column": 30,
+      "expression": "\" \"",
+      "english": " ",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-030",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 111,
+      "column": 9,
+      "expression": "`${value}${\" \".repeat(Math.max(0, target - terminalTextWidth(value)))}`",
+      "english": "${value}${\" \".repeat(Math.max(0, target - terminalTextWidth(value)))}",
+      "kind": "template",
+      "disposition": "protected-visible-format"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-031",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 111,
+      "column": 20,
+      "expression": "\" \"",
+      "english": " ",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-032",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 129,
+      "column": 27,
+      "expression": "\"\"",
+      "english": "",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-033",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 131,
+      "column": 43,
+      "expression": "\"─\"",
+      "english": "─",
+      "kind": "literal",
+      "disposition": "protected-visible-format"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-034",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 132,
+      "column": 29,
+      "expression": "\" \"",
+      "english": " ",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-035",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 133,
+      "column": 38,
+      "expression": "\"╭─\"",
+      "english": "╭─",
+      "kind": "literal",
+      "disposition": "protected-visible-format"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-036",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 134,
+      "column": 40,
+      "expression": "\"╮\"",
+      "english": "╮",
+      "kind": "literal",
+      "disposition": "protected-visible-format"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-037",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 136,
+      "column": 66,
+      "expression": "`${left}${right}`",
+      "english": "${left}${right}",
+      "kind": "template",
+      "disposition": "protected-visible-format"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-038",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 139,
+      "column": 9,
+      "expression": "`${left}${gap}${fittedTitle}${gap}${border(fillTerminalColumns(horizontal, fillWidth))}${right}`",
+      "english": "${left}${gap}${fittedTitle}${gap}${border(fillTerminalColumns(horizontal, fillWidth))}${right}",
+      "kind": "template",
+      "disposition": "protected-visible-format"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-039",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 145,
+      "column": 27,
+      "expression": "\"\"",
+      "english": "",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-040",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 147,
+      "column": 39,
+      "expression": "\"│\"",
+      "english": "│",
+      "kind": "literal",
+      "disposition": "protected-visible-format"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-041",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 151,
+      "column": 66,
+      "expression": "`${left}${right}`",
+      "english": "${left}${right}",
+      "kind": "template",
+      "disposition": "protected-visible-format"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-042",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 152,
+      "column": 9,
+      "expression": "`${left} ${padTerminalText(value, target - fixedWidth)} ${right}`",
+      "english": "${left} ${padTerminalText(value, target - fixedWidth)} ${right}",
+      "kind": "template",
+      "disposition": "protected-visible-format"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-043",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 158,
+      "column": 27,
+      "expression": "\"\"",
+      "english": "",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-044",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 163,
+      "column": 66,
+      "expression": "`${left}${right}`",
+      "english": "${left}${right}",
+      "kind": "template",
+      "disposition": "protected-visible-format"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-045",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 165,
+      "column": 9,
+      "expression": "`${left}${border(fillTerminalColumns(options.horizontal ?? \"─\", fillWidth))}${right}`",
+      "english": "${left}${border(fillTerminalColumns(options.horizontal ?? \"─\", fillWidth))}${right}",
+      "kind": "template",
+      "disposition": "protected-visible-format"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-046",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 165,
+      "column": 68,
+      "expression": "\"─\"",
+      "english": "─",
+      "kind": "literal",
+      "disposition": "protected-visible-format"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-047",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 1,
+      "column": 33,
+      "expression": "\"truecolor\"",
+      "english": "truecolor",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-048",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 1,
+      "column": 47,
+      "expression": "\"256\"",
+      "english": "256",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-049",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 1,
+      "column": 55,
+      "expression": "\"16\"",
+      "english": "16",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-050",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 1,
+      "column": 62,
+      "expression": "\"none\"",
+      "english": "none",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-051",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 64,
+      "column": 49,
+      "expression": "\"dumb\"",
+      "english": "dumb",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-052",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 64,
+      "column": 64,
+      "expression": "\"none\"",
+      "english": "none",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-053",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 67,
+      "column": 102,
+      "expression": "\"function\"",
+      "english": "function",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-054",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 70,
+      "column": 33,
+      "expression": "/^(truecolor|24bit)$/i",
+      "english": "/^(truecolor|24bit)$/i",
+      "kind": "regex",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-055",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 70,
+      "column": 78,
+      "expression": "\"\"",
+      "english": "",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-056",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 70,
+      "column": 90,
+      "expression": "\"truecolor\"",
+      "english": "truecolor",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-057",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 71,
+      "column": 32,
+      "expression": "/256color/i",
+      "english": "/256color/i",
+      "kind": "regex",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-058",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 71,
+      "column": 61,
+      "expression": "\"\"",
+      "english": "",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-059",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 71,
+      "column": 73,
+      "expression": "\"256\"",
+      "english": "256",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-060",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 72,
+      "column": 49,
+      "expression": "\"16\"",
+      "english": "16",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-061",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 73,
+      "column": 9,
+      "expression": "\"none\"",
+      "english": "none",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-062",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 81,
+      "column": 25,
+      "expression": "\"none\"",
+      "english": "none",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-063",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 82,
+      "column": 15,
+      "expression": "\"truecolor\"",
+      "english": "truecolor",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-064",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 82,
+      "column": 35,
+      "expression": "`\\u001b[38;2;${color.red};${color.green};${color.blue}m${value}\\u001b[39m`",
+      "english": "\\u001b[38;2;${color.red};${color.green};${color.blue}m${value}\\u001b[39m",
+      "kind": "template",
+      "disposition": "protected-visible-format"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-065",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 83,
+      "column": 15,
+      "expression": "\"256\"",
+      "english": "256",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-066",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 83,
+      "column": 29,
+      "expression": "`\\u001b[38;5;${rgbToAnsi256(color.red, color.green, color.blue)}m${value}\\u001b[39m`",
+      "english": "\\u001b[38;5;${rgbToAnsi256(color.red, color.green, color.blue)}m${value}\\u001b[39m",
+      "kind": "template",
+      "disposition": "protected-visible-format"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-067",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 84,
+      "column": 9,
+      "expression": "`\\u001b[${rgbToAnsi16(color.red, color.green, color.blue)}m${value}\\u001b[39m`",
+      "english": "\\u001b[${rgbToAnsi16(color.red, color.green, color.blue)}m${value}\\u001b[39m",
+      "kind": "template",
+      "disposition": "protected-visible-format"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-068",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 1,
+      "column": 28,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "english": "@earendil-works/pi-coding-agent",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-069",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 2,
+      "column": 84,
+      "expression": "\"./color.js\"",
+      "english": "./color.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-070",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 5,
+      "column": 4,
+      "expression": "\"prompt.border\"",
+      "english": "prompt.border",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-071",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 6,
+      "column": 4,
+      "expression": "\"prompt.leader\"",
+      "english": "prompt.leader",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-072",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 7,
+      "column": 4,
+      "expression": "\"session.hint.text\"",
+      "english": "session.hint.text",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-073",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 8,
+      "column": 4,
+      "expression": "\"session.hint.muted\"",
+      "english": "session.hint.muted",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-074",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 9,
+      "column": 4,
+      "expression": "\"session.hint.accent\"",
+      "english": "session.hint.accent",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-075",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 10,
+      "column": 4,
+      "expression": "\"session.hint.success\"",
+      "english": "session.hint.success",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-076",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 11,
+      "column": 4,
+      "expression": "\"session.hint.warning\"",
+      "english": "session.hint.warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-077",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 12,
+      "column": 4,
+      "expression": "\"session.hint.error\"",
+      "english": "session.hint.error",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-078",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 13,
+      "column": 4,
+      "expression": "\"session.activity\"",
+      "english": "session.activity",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-079",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 14,
+      "column": 4,
+      "expression": "\"session.activity.idle\"",
+      "english": "session.activity.idle",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-080",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 15,
+      "column": 4,
+      "expression": "\"session.provider\"",
+      "english": "session.provider",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-081",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 16,
+      "column": 4,
+      "expression": "\"session.model\"",
+      "english": "session.model",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-082",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 17,
+      "column": 4,
+      "expression": "\"status.text\"",
+      "english": "status.text",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-083",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 18,
+      "column": 4,
+      "expression": "\"status.muted\"",
+      "english": "status.muted",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-084",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 19,
+      "column": 4,
+      "expression": "\"status.accent\"",
+      "english": "status.accent",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-085",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 20,
+      "column": 4,
+      "expression": "\"status.success\"",
+      "english": "status.success",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-086",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 21,
+      "column": 4,
+      "expression": "\"status.warning\"",
+      "english": "status.warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-087",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 22,
+      "column": 4,
+      "expression": "\"status.error\"",
+      "english": "status.error",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-088",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 23,
+      "column": 4,
+      "expression": "\"status.workspace\"",
+      "english": "status.workspace",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-089",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 24,
+      "column": 4,
+      "expression": "\"status.git.branch\"",
+      "english": "status.git.branch",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-090",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 25,
+      "column": 4,
+      "expression": "\"status.git.changes\"",
+      "english": "status.git.changes",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-091",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 26,
+      "column": 4,
+      "expression": "\"status.runtime.default\"",
+      "english": "status.runtime.default",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-092",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 27,
+      "column": 4,
+      "expression": "\"status.runtime.node\"",
+      "english": "status.runtime.node",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-093",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 28,
+      "column": 4,
+      "expression": "\"status.runtime.deno\"",
+      "english": "status.runtime.deno",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-094",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 29,
+      "column": 4,
+      "expression": "\"status.runtime.bun\"",
+      "english": "status.runtime.bun",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-095",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 30,
+      "column": 4,
+      "expression": "\"status.runtime.python\"",
+      "english": "status.runtime.python",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-096",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 31,
+      "column": 4,
+      "expression": "\"status.runtime.java\"",
+      "english": "status.runtime.java",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-097",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 32,
+      "column": 4,
+      "expression": "\"status.runtime.rust\"",
+      "english": "status.runtime.rust",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-098",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 33,
+      "column": 4,
+      "expression": "\"status.runtime.ruby\"",
+      "english": "status.runtime.ruby",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-099",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 34,
+      "column": 4,
+      "expression": "\"status.runtime.go\"",
+      "english": "status.runtime.go",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-100",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 35,
+      "column": 4,
+      "expression": "\"status.runtime.lua\"",
+      "english": "status.runtime.lua",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-101",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 36,
+      "column": 4,
+      "expression": "\"status.runtime.php\"",
+      "english": "status.runtime.php",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-102",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 37,
+      "column": 4,
+      "expression": "\"status.context.normal\"",
+      "english": "status.context.normal",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-103",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 38,
+      "column": 4,
+      "expression": "\"status.context.warning\"",
+      "english": "status.context.warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-104",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 39,
+      "column": 4,
+      "expression": "\"status.context.error\"",
+      "english": "status.context.error",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-105",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 40,
+      "column": 4,
+      "expression": "\"status.tokens\"",
+      "english": "status.tokens",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-106",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 41,
+      "column": 4,
+      "expression": "\"status.separator\"",
+      "english": "status.separator",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-107",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 42,
+      "column": 4,
+      "expression": "\"status.health\"",
+      "english": "status.health",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-108",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 43,
+      "column": 4,
+      "expression": "\"status.unknown\"",
+      "english": "status.unknown",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-109",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 44,
+      "column": 4,
+      "expression": "\"palette.border\"",
+      "english": "palette.border",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-110",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 45,
+      "column": 4,
+      "expression": "\"palette.title\"",
+      "english": "palette.title",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-111",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 46,
+      "column": 4,
+      "expression": "\"palette.count\"",
+      "english": "palette.count",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-112",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 47,
+      "column": 4,
+      "expression": "\"palette.marker\"",
+      "english": "palette.marker",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-113",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 48,
+      "column": 4,
+      "expression": "\"palette.identity\"",
+      "english": "palette.identity",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-114",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 49,
+      "column": 4,
+      "expression": "\"palette.identity.selected\"",
+      "english": "palette.identity.selected",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-115",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 50,
+      "column": 4,
+      "expression": "\"palette.favorite\"",
+      "english": "palette.favorite",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-116",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 51,
+      "column": 4,
+      "expression": "\"palette.default\"",
+      "english": "palette.default",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-117",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 52,
+      "column": 4,
+      "expression": "\"palette.unavailable\"",
+      "english": "palette.unavailable",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-118",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 53,
+      "column": 4,
+      "expression": "\"palette.context.small\"",
+      "english": "palette.context.small",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-119",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 54,
+      "column": 4,
+      "expression": "\"palette.section\"",
+      "english": "palette.section",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-120",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 55,
+      "column": 4,
+      "expression": "\"palette.section.current\"",
+      "english": "palette.section.current",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-121",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 56,
+      "column": 4,
+      "expression": "\"palette.detail\"",
+      "english": "palette.detail",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-122",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 57,
+      "column": 4,
+      "expression": "\"palette.tab.active\"",
+      "english": "palette.tab.active",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-123",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 58,
+      "column": 4,
+      "expression": "\"palette.tab.inactive\"",
+      "english": "palette.tab.inactive",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-124",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 59,
+      "column": 4,
+      "expression": "\"palette.heading\"",
+      "english": "palette.heading",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-125",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 60,
+      "column": 4,
+      "expression": "\"palette.rule\"",
+      "english": "palette.rule",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-126",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 61,
+      "column": 4,
+      "expression": "\"palette.key\"",
+      "english": "palette.key",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-127",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 62,
+      "column": 4,
+      "expression": "\"palette.label\"",
+      "english": "palette.label",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-128",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 63,
+      "column": 4,
+      "expression": "\"palette.value\"",
+      "english": "palette.value",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-129",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 64,
+      "column": 4,
+      "expression": "\"palette.status.ready\"",
+      "english": "palette.status.ready",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-130",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 65,
+      "column": 4,
+      "expression": "\"palette.status.attention\"",
+      "english": "palette.status.attention",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-131",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 66,
+      "column": 4,
+      "expression": "\"palette.status.off\"",
+      "english": "palette.status.off",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-132",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 67,
+      "column": 4,
+      "expression": "\"palette.empty\"",
+      "english": "palette.empty",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-133",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 68,
+      "column": 4,
+      "expression": "\"palette.message.error\"",
+      "english": "palette.message.error",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-134",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 69,
+      "column": 4,
+      "expression": "\"palette.message.warning\"",
+      "english": "palette.message.warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-135",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 70,
+      "column": 4,
+      "expression": "\"palette.message.info\"",
+      "english": "palette.message.info",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-136",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 71,
+      "column": 4,
+      "expression": "\"palette.hint\"",
+      "english": "palette.hint",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-137",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 73,
+      "column": 36,
+      "expression": "\"fg\"",
+      "english": "fg",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-138",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 76,
+      "column": 23,
+      "expression": "\"theme\"",
+      "english": "theme",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-139",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 77,
+      "column": 23,
+      "expression": "\"rgb\"",
+      "english": "rgb",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-140",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 81,
+      "column": 78,
+      "expression": "\"theme\"",
+      "english": "theme",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-141",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 83,
+      "column": 26,
+      "expression": "\"rgb\"",
+      "english": "rgb",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-142",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 85,
+      "column": 35,
+      "expression": "\"dark\"",
+      "english": "dark",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-143",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 85,
+      "column": 44,
+      "expression": "\"light\"",
+      "english": "light",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-144",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 119,
+      "column": 3,
+      "expression": "\"prompt.border\"",
+      "english": "prompt.border",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-145",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 119,
+      "column": 26,
+      "expression": "\"borderMuted\"",
+      "english": "borderMuted",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-146",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 120,
+      "column": 3,
+      "expression": "\"prompt.leader\"",
+      "english": "prompt.leader",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-147",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 121,
+      "column": 3,
+      "expression": "\"session.hint.text\"",
+      "english": "session.hint.text",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-148",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 121,
+      "column": 30,
+      "expression": "\"text\"",
+      "english": "text",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-149",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 122,
+      "column": 3,
+      "expression": "\"session.hint.muted\"",
+      "english": "session.hint.muted",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-150",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 122,
+      "column": 31,
+      "expression": "\"muted\"",
+      "english": "muted",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-151",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 123,
+      "column": 3,
+      "expression": "\"session.hint.accent\"",
+      "english": "session.hint.accent",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-152",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 123,
+      "column": 32,
+      "expression": "\"accent\"",
+      "english": "accent",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-153",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 124,
+      "column": 3,
+      "expression": "\"session.hint.success\"",
+      "english": "session.hint.success",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-154",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 124,
+      "column": 33,
+      "expression": "\"success\"",
+      "english": "success",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-155",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 125,
+      "column": 3,
+      "expression": "\"session.hint.warning\"",
+      "english": "session.hint.warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-156",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 125,
+      "column": 33,
+      "expression": "\"warning\"",
+      "english": "warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-157",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 126,
+      "column": 3,
+      "expression": "\"session.hint.error\"",
+      "english": "session.hint.error",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-158",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 126,
+      "column": 31,
+      "expression": "\"error\"",
+      "english": "error",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-159",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 127,
+      "column": 3,
+      "expression": "\"session.activity\"",
+      "english": "session.activity",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-160",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 127,
+      "column": 29,
+      "expression": "\"accent\"",
+      "english": "accent",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-161",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 128,
+      "column": 3,
+      "expression": "\"session.activity.idle\"",
+      "english": "session.activity.idle",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-162",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 128,
+      "column": 34,
+      "expression": "\"dim\"",
+      "english": "dim",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-163",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 129,
+      "column": 3,
+      "expression": "\"session.provider\"",
+      "english": "session.provider",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-164",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 129,
+      "column": 29,
+      "expression": "\"dim\"",
+      "english": "dim",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-165",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 130,
+      "column": 3,
+      "expression": "\"session.model\"",
+      "english": "session.model",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-166",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 131,
+      "column": 3,
+      "expression": "\"status.text\"",
+      "english": "status.text",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-167",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 131,
+      "column": 24,
+      "expression": "\"text\"",
+      "english": "text",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-168",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 132,
+      "column": 3,
+      "expression": "\"status.muted\"",
+      "english": "status.muted",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-169",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 132,
+      "column": 25,
+      "expression": "\"muted\"",
+      "english": "muted",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-170",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 133,
+      "column": 3,
+      "expression": "\"status.accent\"",
+      "english": "status.accent",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-171",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 133,
+      "column": 26,
+      "expression": "\"accent\"",
+      "english": "accent",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-172",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 134,
+      "column": 3,
+      "expression": "\"status.success\"",
+      "english": "status.success",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-173",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 134,
+      "column": 27,
+      "expression": "\"success\"",
+      "english": "success",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-174",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 135,
+      "column": 3,
+      "expression": "\"status.warning\"",
+      "english": "status.warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-175",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 135,
+      "column": 27,
+      "expression": "\"warning\"",
+      "english": "warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-176",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 136,
+      "column": 3,
+      "expression": "\"status.error\"",
+      "english": "status.error",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-177",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 136,
+      "column": 25,
+      "expression": "\"error\"",
+      "english": "error",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-178",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 137,
+      "column": 3,
+      "expression": "\"status.workspace\"",
+      "english": "status.workspace",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-179",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 138,
+      "column": 3,
+      "expression": "\"status.git.branch\"",
+      "english": "status.git.branch",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-180",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 138,
+      "column": 30,
+      "expression": "\"syntaxKeyword\"",
+      "english": "syntaxKeyword",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-181",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 139,
+      "column": 3,
+      "expression": "\"status.git.changes\"",
+      "english": "status.git.changes",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-182",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 139,
+      "column": 31,
+      "expression": "\"error\"",
+      "english": "error",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-183",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 140,
+      "column": 3,
+      "expression": "\"status.runtime.default\"",
+      "english": "status.runtime.default",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-184",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 140,
+      "column": 35,
+      "expression": "\"text\"",
+      "english": "text",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-185",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 141,
+      "column": 3,
+      "expression": "\"status.runtime.node\"",
+      "english": "status.runtime.node",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-186",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 141,
+      "column": 32,
+      "expression": "\"success\"",
+      "english": "success",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-187",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 142,
+      "column": 3,
+      "expression": "\"status.runtime.deno\"",
+      "english": "status.runtime.deno",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-188",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 142,
+      "column": 32,
+      "expression": "\"syntaxType\"",
+      "english": "syntaxType",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-189",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 143,
+      "column": 3,
+      "expression": "\"status.runtime.bun\"",
+      "english": "status.runtime.bun",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-190",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 143,
+      "column": 31,
+      "expression": "\"warning\"",
+      "english": "warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-191",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 144,
+      "column": 3,
+      "expression": "\"status.runtime.python\"",
+      "english": "status.runtime.python",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-192",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 144,
+      "column": 34,
+      "expression": "\"warning\"",
+      "english": "warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-193",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 145,
+      "column": 3,
+      "expression": "\"status.runtime.java\"",
+      "english": "status.runtime.java",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-194",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 145,
+      "column": 32,
+      "expression": "\"warning\"",
+      "english": "warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-195",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 146,
+      "column": 3,
+      "expression": "\"status.runtime.rust\"",
+      "english": "status.runtime.rust",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-196",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 146,
+      "column": 32,
+      "expression": "\"error\"",
+      "english": "error",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-197",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 147,
+      "column": 3,
+      "expression": "\"status.runtime.ruby\"",
+      "english": "status.runtime.ruby",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-198",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 147,
+      "column": 32,
+      "expression": "\"error\"",
+      "english": "error",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-199",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 148,
+      "column": 3,
+      "expression": "\"status.runtime.go\"",
+      "english": "status.runtime.go",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-200",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 148,
+      "column": 30,
+      "expression": "\"syntaxType\"",
+      "english": "syntaxType",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-201",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 149,
+      "column": 3,
+      "expression": "\"status.runtime.lua\"",
+      "english": "status.runtime.lua",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-202",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 149,
+      "column": 31,
+      "expression": "\"accent\"",
+      "english": "accent",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-203",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 150,
+      "column": 3,
+      "expression": "\"status.runtime.php\"",
+      "english": "status.runtime.php",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-204",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 150,
+      "column": 31,
+      "expression": "\"accent\"",
+      "english": "accent",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-205",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 151,
+      "column": 3,
+      "expression": "\"status.context.normal\"",
+      "english": "status.context.normal",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-206",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 152,
+      "column": 3,
+      "expression": "\"status.context.warning\"",
+      "english": "status.context.warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-207",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 152,
+      "column": 35,
+      "expression": "\"warning\"",
+      "english": "warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-208",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 153,
+      "column": 3,
+      "expression": "\"status.context.error\"",
+      "english": "status.context.error",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-209",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 153,
+      "column": 33,
+      "expression": "\"error\"",
+      "english": "error",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-210",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 154,
+      "column": 3,
+      "expression": "\"status.tokens\"",
+      "english": "status.tokens",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-211",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 155,
+      "column": 3,
+      "expression": "\"status.separator\"",
+      "english": "status.separator",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-212",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 155,
+      "column": 29,
+      "expression": "\"borderMuted\"",
+      "english": "borderMuted",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-213",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 156,
+      "column": 3,
+      "expression": "\"status.health\"",
+      "english": "status.health",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-214",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 156,
+      "column": 26,
+      "expression": "\"error\"",
+      "english": "error",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-215",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 157,
+      "column": 3,
+      "expression": "\"status.unknown\"",
+      "english": "status.unknown",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-216",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 157,
+      "column": 27,
+      "expression": "\"warning\"",
+      "english": "warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-217",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 158,
+      "column": 3,
+      "expression": "\"palette.border\"",
+      "english": "palette.border",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-218",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 158,
+      "column": 27,
+      "expression": "\"borderAccent\"",
+      "english": "borderAccent",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-219",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 159,
+      "column": 3,
+      "expression": "\"palette.title\"",
+      "english": "palette.title",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-220",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 159,
+      "column": 26,
+      "expression": "\"accent\"",
+      "english": "accent",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-221",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 160,
+      "column": 3,
+      "expression": "\"palette.count\"",
+      "english": "palette.count",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-222",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 160,
+      "column": 26,
+      "expression": "\"muted\"",
+      "english": "muted",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-223",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 161,
+      "column": 3,
+      "expression": "\"palette.marker\"",
+      "english": "palette.marker",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-224",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 162,
+      "column": 3,
+      "expression": "\"palette.identity\"",
+      "english": "palette.identity",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-225",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 162,
+      "column": 29,
+      "expression": "\"text\"",
+      "english": "text",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-226",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 163,
+      "column": 3,
+      "expression": "\"palette.identity.selected\"",
+      "english": "palette.identity.selected",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-227",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 164,
+      "column": 3,
+      "expression": "\"palette.favorite\"",
+      "english": "palette.favorite",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-228",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 164,
+      "column": 29,
+      "expression": "\"warning\"",
+      "english": "warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-229",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 165,
+      "column": 3,
+      "expression": "\"palette.default\"",
+      "english": "palette.default",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-230",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 165,
+      "column": 28,
+      "expression": "\"success\"",
+      "english": "success",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-231",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 166,
+      "column": 3,
+      "expression": "\"palette.unavailable\"",
+      "english": "palette.unavailable",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-232",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 166,
+      "column": 32,
+      "expression": "\"error\"",
+      "english": "error",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-233",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 167,
+      "column": 3,
+      "expression": "\"palette.context.small\"",
+      "english": "palette.context.small",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-234",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 167,
+      "column": 34,
+      "expression": "\"warning\"",
+      "english": "warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-235",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 168,
+      "column": 3,
+      "expression": "\"palette.section\"",
+      "english": "palette.section",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-236",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 168,
+      "column": 28,
+      "expression": "\"muted\"",
+      "english": "muted",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-237",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 169,
+      "column": 3,
+      "expression": "\"palette.section.current\"",
+      "english": "palette.section.current",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-238",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 170,
+      "column": 3,
+      "expression": "\"palette.detail\"",
+      "english": "palette.detail",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-239",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 171,
+      "column": 3,
+      "expression": "\"palette.tab.active\"",
+      "english": "palette.tab.active",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-240",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 171,
+      "column": 31,
+      "expression": "\"accent\"",
+      "english": "accent",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-241",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 172,
+      "column": 3,
+      "expression": "\"palette.tab.inactive\"",
+      "english": "palette.tab.inactive",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-242",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 172,
+      "column": 33,
+      "expression": "\"muted\"",
+      "english": "muted",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-243",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 173,
+      "column": 3,
+      "expression": "\"palette.heading\"",
+      "english": "palette.heading",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-244",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 174,
+      "column": 3,
+      "expression": "\"palette.rule\"",
+      "english": "palette.rule",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-245",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 174,
+      "column": 25,
+      "expression": "\"borderMuted\"",
+      "english": "borderMuted",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-246",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 175,
+      "column": 3,
+      "expression": "\"palette.key\"",
+      "english": "palette.key",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-247",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 175,
+      "column": 24,
+      "expression": "\"accent\"",
+      "english": "accent",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-248",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 176,
+      "column": 3,
+      "expression": "\"palette.label\"",
+      "english": "palette.label",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-249",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 176,
+      "column": 26,
+      "expression": "\"muted\"",
+      "english": "muted",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-250",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 177,
+      "column": 3,
+      "expression": "\"palette.value\"",
+      "english": "palette.value",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-251",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 177,
+      "column": 26,
+      "expression": "\"text\"",
+      "english": "text",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-252",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 178,
+      "column": 3,
+      "expression": "\"palette.status.ready\"",
+      "english": "palette.status.ready",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-253",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 178,
+      "column": 33,
+      "expression": "\"success\"",
+      "english": "success",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-254",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 179,
+      "column": 3,
+      "expression": "\"palette.status.attention\"",
+      "english": "palette.status.attention",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-255",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 179,
+      "column": 37,
+      "expression": "\"warning\"",
+      "english": "warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-256",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 180,
+      "column": 3,
+      "expression": "\"palette.status.off\"",
+      "english": "palette.status.off",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-257",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 180,
+      "column": 31,
+      "expression": "\"dim\"",
+      "english": "dim",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-258",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 181,
+      "column": 3,
+      "expression": "\"palette.empty\"",
+      "english": "palette.empty",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-259",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 181,
+      "column": 26,
+      "expression": "\"muted\"",
+      "english": "muted",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-260",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 182,
+      "column": 3,
+      "expression": "\"palette.message.error\"",
+      "english": "palette.message.error",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-261",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 182,
+      "column": 34,
+      "expression": "\"error\"",
+      "english": "error",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-262",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 183,
+      "column": 3,
+      "expression": "\"palette.message.warning\"",
+      "english": "palette.message.warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-263",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 183,
+      "column": 36,
+      "expression": "\"warning\"",
+      "english": "warning",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-264",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 184,
+      "column": 3,
+      "expression": "\"palette.message.info\"",
+      "english": "palette.message.info",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-265",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 184,
+      "column": 33,
+      "expression": "\"muted\"",
+      "english": "muted",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-266",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 185,
+      "column": 3,
+      "expression": "\"palette.hint\"",
+      "english": "palette.hint",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-267",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 185,
+      "column": 25,
+      "expression": "\"dim\"",
+      "english": "dim",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-268",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 212,
+      "column": 53,
+      "expression": "\"fg\"",
+      "english": "fg",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-269",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 213,
+      "column": 16,
+      "expression": "\"jouzu-color-probe\"",
+      "english": "jouzu-color-probe",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-270",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 214,
+      "column": 23,
+      "expression": "\"accent\"",
+      "english": "accent",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-271",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 218,
+      "column": 26,
+      "expression": "\"fg\"",
+      "english": "fg",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-272",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 223,
+      "column": 71,
+      "expression": "\"dumb\"",
+      "english": "dumb",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-273",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 230,
+      "column": 75,
+      "expression": "\"none\"",
+      "english": "none",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-274",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 230,
+      "column": 84,
+      "expression": "\"truecolor\"",
+      "english": "truecolor",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-275",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 233,
+      "column": 97,
+      "expression": "\"dark\"",
+      "english": "dark",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-276",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 241,
+      "column": 25,
+      "expression": "\"theme\"",
+      "english": "theme",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-277",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 1,
+      "column": 15,
+      "expression": "\"./color.js\"",
+      "english": "./color.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-278",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 2,
+      "column": 15,
+      "expression": "\"./contracts.js\"",
+      "english": "./contracts.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-279",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 3,
+      "column": 15,
+      "expression": "\"./controller.js\"",
+      "english": "./controller.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-280",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 4,
+      "column": 15,
+      "expression": "\"./extension.js\"",
+      "english": "./extension.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-281",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 5,
+      "column": 15,
+      "expression": "\"./identity.js\"",
+      "english": "./identity.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-282",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 6,
+      "column": 15,
+      "expression": "\"./layout.js\"",
+      "english": "./layout.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-283",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 7,
+      "column": 15,
+      "expression": "\"./prompt-frame.js\"",
+      "english": "./prompt-frame.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-284",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 8,
+      "column": 15,
+      "expression": "\"./session-line.js\"",
+      "english": "./session-line.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-285",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 9,
+      "column": 15,
+      "expression": "\"./snapshot.js\"",
+      "english": "./snapshot.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-286",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 10,
+      "column": 15,
+      "expression": "\"./sources/command.js\"",
+      "english": "./sources/command.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-287",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 11,
+      "column": 15,
+      "expression": "\"./sources/git.js\"",
+      "english": "./sources/git.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-288",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 12,
+      "column": 15,
+      "expression": "\"./sources/runtime.js\"",
+      "english": "./sources/runtime.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-289",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 13,
+      "column": 15,
+      "expression": "\"./status-bar.js\"",
+      "english": "./status-bar.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-290",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 14,
+      "column": 15,
+      "expression": "\"./styles.js\"",
+      "english": "./styles.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-291",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 15,
+      "column": 15,
+      "expression": "\"./work-dashboard.js\"",
+      "english": "./work-dashboard.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-292",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 16,
+      "column": 15,
+      "expression": "\"./work-dashboard-component.js\"",
+      "english": "./work-dashboard-component.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-293",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 17,
+      "column": 15,
+      "expression": "\"./work-dashboard-controller.js\"",
+      "english": "./work-dashboard-controller.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-294",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 18,
+      "column": 15,
+      "expression": "\"./work-dashboard-renderer.js\"",
+      "english": "./work-dashboard-renderer.js",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-295",
+      "path": "packages/cli/src/session-ui/layout.ts",
+      "line": 1,
+      "column": 15,
+      "expression": "\"@shisa-ai/jouzu-session-ui/layout\"",
+      "english": "@shisa-ai/jouzu-session-ui/layout",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-296",
+      "path": "packages/cli/src/session-ui/color.ts",
+      "line": 1,
+      "column": 15,
+      "expression": "\"@shisa-ai/jouzu-session-ui/color\"",
+      "english": "@shisa-ai/jouzu-session-ui/color",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-297",
+      "path": "packages/cli/src/session-ui/index.ts",
+      "line": 1,
+      "column": 15,
+      "expression": "\"@shisa-ai/jouzu-session-ui\"",
+      "english": "@shisa-ai/jouzu-session-ui",
+      "kind": "literal",
+      "disposition": "excluded"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-BOUNDARY-01",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 30,
+      "column": 1,
+      "expression": "export function sanitizeTerminalText",
+      "english": "",
+      "kind": "boundary",
+      "disposition": "boundary"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-BOUNDARY-02",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 71,
+      "column": 1,
+      "expression": "return visibleWidth(value)",
+      "english": "",
+      "kind": "boundary",
+      "disposition": "boundary"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-BOUNDARY-03",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 110,
+      "column": 1,
+      "expression": "const value = token.repeat(repetitions)",
+      "english": "",
+      "kind": "boundary",
+      "disposition": "boundary"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-BOUNDARY-04",
+      "path": "packages/session-ui/src/layout.ts",
+      "line": 130,
+      "column": 1,
+      "expression": "const border = options.border",
+      "english": "",
+      "kind": "boundary",
+      "disposition": "boundary"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-BOUNDARY-05",
+      "path": "packages/session-ui/src/color.ts",
+      "line": 65,
+      "column": 1,
+      "expression": "const colorDepth =",
+      "english": "",
+      "kind": "boundary",
+      "disposition": "boundary"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-BOUNDARY-06",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 214,
+      "column": 1,
+      "expression": "return themeValue.fg(\"accent\", probe)",
+      "english": "",
+      "kind": "boundary",
+      "disposition": "boundary"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-BOUNDARY-07",
+      "path": "packages/session-ui/src/styles.ts",
+      "line": 233,
+      "column": 1,
+      "expression": "const activeScheme =",
+      "english": "",
+      "kind": "boundary",
+      "disposition": "boundary"
+    },
+    {
+      "item_id": "SESSION-PRIMITIVES-BOUNDARY-08",
+      "path": "packages/session-ui/src/index.ts",
+      "line": 7,
+      "column": 1,
+      "expression": "export * from \"./prompt-frame.js\"",
+      "english": "",
+      "kind": "boundary",
+      "disposition": "boundary"
+    }
+  ],
+  "reviewed_data": {
+    "session-primitives.csv": "b3eea0ce41c6d8960372b627fe71807ca7bbfbdbeca499e9378e7f1342f28863",
+    "session-primitives-exclusions.csv": "b2a896eeb9e5eb61aafe27a283ed12ae239c31ce74d9291632b721a394345573",
+    "session-primitives-scope.csv": "6c25421319798aa09fc51704937c4f19ebedefa828b391ed44c6b795abf9059c"
+  }
+}

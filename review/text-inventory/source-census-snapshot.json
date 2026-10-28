@@ -1,8 +1,8 @@
 {
   "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
   "tracked_blobs": 1206,
-  "paths_with_scope_references": 608,
-  "paths_without_scope_references": 598,
+  "paths_with_scope_references": 614,
+  "paths_without_scope_references": 592,
   "path_categories": {
     "configuration-lock-resource-or-other": 79,
     "ci-workflow": 10,
@@ -56,6 +56,7 @@
     "pi-ui-adapter-scope.csv": "9193942a55081b49ccd2e1f8cb4050fe10b8b96e9093aa05d752d42619271bb6",
     "session-label-text-scope.csv": "57f7f4267806d251dc715ab15e1aa89e6a93ca98804ef60b7e5e79fae24bf349",
     "human-fallback-scope.csv": "ee148447c7893a57005095795a4055250cf0a140f2d6061514d14cd3d0d59207",
+    "session-primitives-scope.csv": "6c25421319798aa09fc51704937c4f19ebedefa828b391ed44c6b795abf9059c",
     "launcher-scope.csv": "fb455a291626a6e037f891b012f1e7d06425cdda7e4ea16c63ac2f0ada0f6e7d",
     "launcher-helpers-scope.csv": "8199e90f089627e9671adc53aa6055407e4290c4982fd33f6619d9d5668dc3f0",
     "launcher-support-scope.csv": "bbc05ce3aa8842966efeb0b2dda5796e0cce70cfc05ce99c631b8b9d3c051f40",
