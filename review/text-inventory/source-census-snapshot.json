@@ -32,6 +32,7 @@
     "installer-dependencies-scope.csv": "d7029caef18c55372665644dd50a938b96aba6c103821edd99d0bd87fe246316",
     "python-console-scope.csv": "b33435dd93a5da7d140fe862d6330faa8bfbc11d83e1b0b322e4e9982326132e",
     "textguard-native-scope.csv": "6391a10548dcfbd36c11ebeb9fe5e1b8e43dd85afa2a1c804392a918803d0c6a",
+    "textguard-dependencies-scope.csv": "34233fa2246a5ce90a43203dc608f05d92833f8296f293f7af9d92f3d7851770",
     "catalog-snapshot.json": "2ead66b940219e429137498a54fa692d914079b558c376ce34e38bbddae0dd79"
   },
   "interpretation": "Navigation only. Scope references can be partial, supporting, excluded or pending. Path categories do not exclude text from review. External installed dependencies and generated outputs require separate scope records."

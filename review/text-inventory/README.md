@@ -275,8 +275,18 @@ non-vendored Go bodies and 13 bundled rule bodies. Generic bridge errors have
 separate conditions from the production helper, which returns structured
 evidence/reason codes; the JavaScript supervisor discards helper stderr.
 Admission's reparse and later abort/generation checks can replace those codes
-again. Vendored wording and broader policy/review UI producers remain separate
-pending scopes. No scanner, compiler or rules were executed.
+again. The vendor runtime pass follows below; broader policy/review UI producers
+remain pending. No scanner, compiler or rules were executed.
+
+[textguard-dependencies.csv](textguard-dependencies.csv) adds 423 vendor records:
+149 diagnostic/help occurrences, 256 technical/format tokens, six table versions
+and 12 payload boundaries. The
+[scope table](textguard-dependencies-scope.csv) covers 30 ordinary Go bodies and
+six generated Unicode tables with complete lexical/data censuses. It supersedes
+the native pass's pending vendor dispositions for those exact source hashes.
+TOML, IDNA, normalization and bidi errors are qualified by library/API callers
+and production suppression. Compiler/stdlib/OS wording and arbitrary input
+excerpts remain external boundaries; generated mapping data is not prose.
 
 Counts describe records in each table. Catalog links, repeated wording,
 different consumers and dynamic boundaries overlap; do not add these counts as
@@ -309,6 +319,7 @@ node review/text-inventory/verify-flow-storage.cjs
 node review/text-inventory/verify-flow-receipts.cjs
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-textguard-native.py
+python -B review/text-inventory/verify-textguard-dependencies.py
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>
 ```
 
