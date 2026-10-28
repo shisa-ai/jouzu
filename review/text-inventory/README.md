@@ -395,10 +395,24 @@ search and filter text, titles, placeholders, accessibility labels, role/summary
 captions, hidden/expanded state, parameter hints and all four Error constructor
 headlines with their actual CLI/TUI/RPC/API sinks. Clipboard console diagnostics
 are console-only. [Scope](pi-export-text-scope.csv) pins 19 assets: seven full native
-bodies, nine nonruntime declaration/maps and three pending vendor bodies. Eighteen
+bodies, nine nonruntime declaration/maps and three vendor bodies followed below. Eighteen
 assets match the locked archive and system-prompt matches the pinned patch. The
-Markdown parser/highlighter bodies remain a separate review; no browser, DOM,
+Markdown parser/highlighter body review follows below; no browser, DOM,
 renderer or parser code was executed.
+
+[pi-export-vendor.csv](pi-export-vendor.csv) records 11 conditional browser
+console/error definitions and ten [boundaries](pi-export-vendor-boundaries.csv)
+from three complete vendor bodies: 1,300 lines and 171,121 bytes. All 4,869
+string/template nodes are partitioned with 4,858
+[exclusions](pi-export-vendor-exclusions.csv); 1,028 regex literals and 36 grammar
+factories have independent protected censuses. Twenty-three Error constructors
+and composed-message builders are accounted for. Eight actual viewer API calls
+bound the routes. Library/custom-grammar diagnostics retain their guarded
+conditions; inactive silent/DOM/deprecated APIs are qualified separately. Native
+highlight catches, console output and unhandled Markdown type guards have distinct
+sinks. [Scope](pi-export-vendor-scope.csv) closes the earlier three vendor-body
+boundaries and pins four supporting native sources, with exact archive/pinned-patch
+proof for all seven. No parser, highlighter, DOM or browser code was executed.
 
 [flow-display.csv](flow-display.csv) records 94 occurrences in the Flow status
 extension and message renderer: 57 direct wording occurrences, 29 catalog
@@ -749,6 +763,7 @@ node review/text-inventory/verify-pi-packages.cjs --node-modules <root-node-modu
 node review/text-inventory/verify-pi-resource-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-export-metadata.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-export-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-export-vendor.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
 The exporter uses `@fluent/syntax` and TypeScript from the repository dependency

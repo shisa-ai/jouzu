@@ -1,0 +1,1148 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "f3f6669bd2d6ee8e0d702b54cd12cdd2cc516028",
+  "inventory_file": "pi-export-vendor.csv",
+  "scope_file": "pi-export-vendor-scope.csv",
+  "boundary_file": "pi-export-vendor-boundaries.csv",
+  "exclusion_file": "pi-export-vendor-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/classic-host-policy.ts",
+      "sha256": "53181fdf481113b5e2eae162cc6e9f440650e87f55a03dc921baadeab0e2f367"
+    },
+    {
+      "source": "packages/cli/src/responses-tool-schema.ts",
+      "sha256": "9fd3d6023a2deba28fa6bd8a6408ff7bdfb08b576dcdcfe0ba05327b1e079cd6"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/index.js",
+      "sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "cli_nested_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          89,
+          118
+        ],
+        [
+          165,
+          228
+        ]
+      ],
+      "purpose": "Bounded actual native caller/asset injection/data ingress route only; full body inventories belong to earlier Pi units."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.js",
+      "sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+      "cli_nested_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          20
+        ],
+        [
+          837,
+          890
+        ],
+        [
+          918,
+          1008
+        ],
+        [
+          1200,
+          1344
+        ],
+        [
+          1593,
+          1679
+        ]
+      ],
+      "purpose": "Bounded actual native caller/asset injection/data ingress route only; full body inventories belong to earlier Pi units."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.html",
+      "sha256": "47d208235b066c856dae69c60281a3b99d164b99be9b81153d880375c9327105",
+      "cli_nested_sha256": "47d208235b066c856dae69c60281a3b99d164b99be9b81153d880375c9327105",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          42,
+          54
+        ]
+      ],
+      "purpose": "Bounded actual native caller/asset injection/data ingress route only; full body inventories belong to earlier Pi units."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/session-manager.js",
+      "sha256": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a",
+      "cli_nested_sha256": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          106
+        ],
+        [
+          325,
+          389
+        ],
+        [
+          674,
+          705
+        ],
+        [
+          706,
+          777
+        ],
+        [
+          1370,
+          1408
+        ]
+      ],
+      "purpose": "Bounded actual native caller/asset injection/data ingress route only; full body inventories belong to earlier Pi units."
+    }
+  ],
+  "archive_support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/index.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.html"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/session-manager.js"
+    }
+  ],
+  "counts": {
+    "rows": 11,
+    "proofs": 11,
+    "scopes": 3,
+    "external_boundaries": 10,
+    "excluded_occurrences": 4858,
+    "dispositioned_source_files": 3,
+    "string_template_occurrences": 4869,
+    "protected_regex_literals": 1028,
+    "error_constructors": 23,
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "statusCounts": {
+      "source-read-conditional-vendor-producers": 3
+    },
+    "full_vendor_lines": 1300,
+    "vendor_source_bytes": 171121
+  },
+  "proofs": [
+    {
+      "item_id": "pi.export-vendor.highlight_min_js.116.50",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/highlight.min.js",
+      "line": 116,
+      "column": 50,
+      "kind": "string-literal",
+      "english": "skip, excludeBegin, returnBegin not compatible with beginScope: {}",
+      "evidence": "\"skip, excludeBegin, returnBegin not compatible with beginScope: {}\""
+    },
+    {
+      "item_id": "pi.export-vendor.highlight_min_js.118.64",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/highlight.min.js",
+      "line": 118,
+      "column": 64,
+      "kind": "string-literal",
+      "english": "beginScope must be object",
+      "evidence": "\"beginScope must be object\""
+    },
+    {
+      "item_id": "pi.export-vendor.highlight_min_js.121.46",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/highlight.min.js",
+      "line": 121,
+      "column": 46,
+      "kind": "string-literal",
+      "english": "skip, excludeEnd, returnEnd not compatible with endScope: {}",
+      "evidence": "\"skip, excludeEnd, returnEnd not compatible with endScope: {}\""
+    },
+    {
+      "item_id": "pi.export-vendor.highlight_min_js.123.60",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/highlight.min.js",
+      "line": 123,
+      "column": 60,
+      "kind": "string-literal",
+      "english": "endScope must be object",
+      "evidence": "\"endScope must be object\""
+    },
+    {
+      "item_id": "pi.export-vendor.highlight_min_js.176.10",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/highlight.min.js",
+      "line": 176,
+      "column": 10,
+      "kind": "string-literal",
+      "english": "Could not find the language '{}', did you forget to load/include a language module?",
+      "evidence": "\"Could not find the language '{}', did you forget to load/include a language module?\""
+    },
+    {
+      "item_id": "pi.export-vendor.highlight_min_js.293.6",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/highlight.min.js",
+      "line": 293,
+      "column": 6,
+      "kind": "string-literal",
+      "english": "Language definition for '{}' could not be registered.",
+      "evidence": "\"Language definition for '{}' could not be registered.\""
+    },
+    {
+      "item_id": "pi.export-vendor.marked_min_js.58.3020",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/marked.min.js",
+      "line": 58,
+      "column": 3020,
+      "kind": "string-literal",
+      "english": "Infinite loop on byte: ",
+      "evidence": "\"Infinite loop on byte: \""
+    },
+    {
+      "item_id": "pi.export-vendor.marked_min_js.76.7390",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/marked.min.js",
+      "line": 76,
+      "column": 7390,
+      "kind": "string-literal",
+      "english": "marked(): input parameter is undefined or null",
+      "evidence": "\"marked(): input parameter is undefined or null\""
+    },
+    {
+      "item_id": "pi.export-vendor.marked_min_js.76.7482",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/marked.min.js",
+      "line": 76,
+      "column": 7482,
+      "kind": "string-literal",
+      "english": "marked(): input parameter is of type ",
+      "evidence": "\"marked(): input parameter is of type \""
+    },
+    {
+      "item_id": "pi.export-vendor.marked_min_js.76.7556",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/marked.min.js",
+      "line": 76,
+      "column": 7556,
+      "kind": "string-literal",
+      "english": ", string expected",
+      "evidence": "\", string expected\""
+    },
+    {
+      "item_id": "pi.export-vendor.marked_min_js.76.8385",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/marked.min.js",
+      "line": 76,
+      "column": 8385,
+      "kind": "no-substitution-template",
+      "english": "\nPlease report this to https://github.com/markedjs/marked.",
+      "evidence": "`"
+    }
+  ],
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/highlight.min.js",
+        "read_lines": [
+          1,
+          1213
+        ],
+        "string_template_occurrences": 4321,
+        "fixed_rows": 6,
+        "excluded_occurrences": 4315,
+        "protected_regular_expression_occurrences": 867,
+        "regular_expression_census_sha256": "24487926e6a8e139c91917115a10884898e95e710b8ee9011a7b16ef9bf18cc5",
+        "review": "Full Highlight.js core compiler, safe/debug handling, logging, registration, DOM/deprecated APIs,36 grammar factories and common grammar/CSS/keyword helpers read as source. Conditional console publishers separated from caught/errorRaised-only details and inactive API notices."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/marked.min.js",
+        "read_lines": [
+          1,
+          80
+        ],
+        "string_template_occurrences": 517,
+        "fixed_rows": 5,
+        "excluded_occurrences": 512,
+        "protected_regular_expression_occurrences": 161,
+        "regular_expression_census_sha256": "a4f57a30d32c05421af36bf3f755bf06883681ee404c269e0b6a82f77c9219e8",
+        "review": "Full UMD setup, regex/rule builders, tokenizer, lexer/progress guards, renderer, parser/token switches, hooks/use/options and sync/async/silent error paths read as source. Native caller options/catch and JSON session ingress traced."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/marked-cjk-friendly.min.js",
+        "read_lines": [
+          1,
+          7
+        ],
+        "string_template_occurrences": 31,
+        "fixed_rows": 0,
+        "excluded_occurrences": 31,
+        "protected_regular_expression_occurrences": 0,
+        "regular_expression_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "review": "Full Unicode-range/regex setup, CJK boundary/delimiter checks and emStrong/del tokenizer factory read as source. No local English labels or diagnostics;31 exact string/template nodes protected as code."
+      }
+    ],
+    "error_constructor_census": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/highlight.min.js",
+        "constructors": [
+          {
+            "line": 8,
+            "column": 7,
+            "kind": "CallExpression",
+            "constructor": "Error",
+            "message_expression": "\"map is read-only\"",
+            "resolved_message_expression": "\"map is read-only\"",
+            "literal_refs": [
+              {
+                "line": 8,
+                "column": 13,
+                "kind": "string-literal",
+                "text": "map is read-only"
+              }
+            ]
+          },
+          {
+            "line": 9,
+            "column": 7,
+            "kind": "CallExpression",
+            "constructor": "Error",
+            "message_expression": "\"set is read-only\"",
+            "resolved_message_expression": "\"set is read-only\"",
+            "literal_refs": [
+              {
+                "line": 9,
+                "column": 13,
+                "kind": "string-literal",
+                "text": "set is read-only"
+              }
+            ]
+          },
+          {
+            "line": 92,
+            "column": 25,
+            "kind": "CallExpression",
+            "constructor": "Error",
+            "message_expression": "\"begin & end are not supported with match\"",
+            "resolved_message_expression": "\"begin & end are not supported with match\"",
+            "literal_refs": [
+              {
+                "line": 92,
+                "column": 31,
+                "kind": "string-literal",
+                "text": "begin & end are not supported with match"
+              }
+            ]
+          },
+          {
+            "line": 95,
+            "column": 20,
+            "kind": "CallExpression",
+            "constructor": "Error",
+            "message_expression": "\"beforeMatch cannot be used with starts\"",
+            "resolved_message_expression": "\"beforeMatch cannot be used with starts\"",
+            "literal_refs": [
+              {
+                "line": 95,
+                "column": 26,
+                "kind": "string-literal",
+                "text": "beforeMatch cannot be used with starts"
+              }
+            ]
+          },
+          {
+            "line": 109,
+            "column": 5,
+            "kind": "CallExpression",
+            "constructor": "Error",
+            "message_expression": null,
+            "resolved_message_expression": null,
+            "literal_refs": []
+          },
+          {
+            "line": 151,
+            "column": 47,
+            "kind": "CallExpression",
+            "constructor": "Error",
+            "message_expression": "\"ERR: contains `self` is not supported at the top-level of a language.  See documentation.\"",
+            "resolved_message_expression": "\"ERR: contains `self` is not supported at the top-level of a language.  See documentation.\"",
+            "literal_refs": [
+              {
+                "line": 151,
+                "column": 53,
+                "kind": "string-literal",
+                "text": "ERR: contains `self` is not supported at the top-level of a language.  See documentation."
+              }
+            ]
+          },
+          {
+            "line": 225,
+            "column": 46,
+            "kind": "CallExpression",
+            "constructor": "Error",
+            "message_expression": "`0 width match regex (${e})`",
+            "resolved_message_expression": "`0 width match regex (${e})`",
+            "literal_refs": [
+              {
+                "line": 225,
+                "column": 52,
+                "kind": "template-expression",
+                "text": "0 width match regex (${e})"
+              }
+            ]
+          },
+          {
+            "line": 233,
+            "column": 9,
+            "kind": "CallExpression",
+            "constructor": "Error",
+            "message_expression": "'Illegal lexeme \"'+o+'\" for mode \"'+(x.scope||\"<unnamed>\")+'\"'",
+            "resolved_message_expression": "'Illegal lexeme \"'+o+'\" for mode \"'+(x.scope||\"<unnamed>\")+'\"'",
+            "literal_refs": [
+              {
+                "line": 233,
+                "column": 15,
+                "kind": "string-literal",
+                "text": "Illegal lexeme \""
+              },
+              {
+                "line": 233,
+                "column": 36,
+                "kind": "string-literal",
+                "text": "\" for mode \""
+              },
+              {
+                "line": 233,
+                "column": 61,
+                "kind": "string-literal",
+                "text": "<unnamed>"
+              },
+              {
+                "line": 233,
+                "column": 74,
+                "kind": "string-literal",
+                "text": "\""
+              }
+            ]
+          },
+          {
+            "line": 236,
+            "column": 30,
+            "kind": "CallExpression",
+            "constructor": "Error",
+            "message_expression": "\"potential infinite loop, way more iterations than matches\"",
+            "resolved_message_expression": "\"potential infinite loop, way more iterations than matches\"",
+            "literal_refs": [
+              {
+                "line": 236,
+                "column": 36,
+                "kind": "string-literal",
+                "text": "potential infinite loop, way more iterations than matches"
+              }
+            ]
+          },
+          {
+            "line": 238,
+            "column": 35,
+            "kind": "CallExpression",
+            "constructor": "Error",
+            "message_expression": "'Unknown language: \"'+e+'\"'",
+            "resolved_message_expression": "'Unknown language: \"'+e+'\"'",
+            "literal_refs": [
+              {
+                "line": 238,
+                "column": 41,
+                "kind": "string-literal",
+                "text": "Unknown language: \""
+              },
+              {
+                "line": 238,
+                "column": 65,
+                "kind": "string-literal",
+                "text": "\""
+              }
+            ]
+          },
+          {
+            "line": 269,
+            "column": 46,
+            "kind": "NewExpression",
+            "constructor": "V",
+            "message_expression": "\"One of your code blocks includes unescaped HTML.\"",
+            "resolved_message_expression": "\"One of your code blocks includes unescaped HTML.\"",
+            "literal_refs": [
+              {
+                "line": 269,
+                "column": 52,
+                "kind": "string-literal",
+                "text": "One of your code blocks includes unescaped HTML."
+              }
+            ]
+          },
+          {
+            "line": 1119,
+            "column": 18,
+            "kind": "CallExpression",
+            "constructor": "Error",
+            "message_expression": "\"can not find mode to replace\"",
+            "resolved_message_expression": "\"can not find mode to replace\"",
+            "literal_refs": [
+              {
+                "line": 1119,
+                "column": 24,
+                "kind": "string-literal",
+                "text": "can not find mode to replace"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/marked.min.js",
+        "constructors": [
+          {
+            "line": 58,
+            "column": 3099,
+            "kind": "NewExpression",
+            "constructor": "Error",
+            "message_expression": "t",
+            "resolved_message_expression": "\"Infinite loop on byte: \"+e",
+            "literal_refs": [
+              {
+                "line": 58,
+                "column": 3020,
+                "kind": "string-literal",
+                "text": "Infinite loop on byte: "
+              }
+            ]
+          },
+          {
+            "line": 76,
+            "column": 2434,
+            "kind": "NewExpression",
+            "constructor": "Error",
+            "message_expression": "i",
+            "resolved_message_expression": "'Token with \"'+r.type+'\" type was not found.'",
+            "literal_refs": [
+              {
+                "line": 76,
+                "column": 2332,
+                "kind": "string-literal",
+                "text": "Token with \""
+              },
+              {
+                "line": 76,
+                "column": 2354,
+                "kind": "string-literal",
+                "text": "\" type was not found."
+              }
+            ]
+          },
+          {
+            "line": 76,
+            "column": 3313,
+            "kind": "NewExpression",
+            "constructor": "Error",
+            "message_expression": "o",
+            "resolved_message_expression": "'Token with \"'+i.type+'\" type was not found.'",
+            "literal_refs": [
+              {
+                "line": 76,
+                "column": 3211,
+                "kind": "string-literal",
+                "text": "Token with \""
+              },
+              {
+                "line": 76,
+                "column": 3233,
+                "kind": "string-literal",
+                "text": "\" type was not found."
+              }
+            ]
+          },
+          {
+            "line": 76,
+            "column": 4770,
+            "kind": "NewExpression",
+            "constructor": "Error",
+            "message_expression": "\"extension name required\"",
+            "resolved_message_expression": "\"extension name required\"",
+            "literal_refs": [
+              {
+                "line": 76,
+                "column": 4780,
+                "kind": "string-literal",
+                "text": "extension name required"
+              }
+            ]
+          },
+          {
+            "line": 76,
+            "column": 5066,
+            "kind": "NewExpression",
+            "constructor": "Error",
+            "message_expression": "\"extension level must be 'block' or 'inline'\"",
+            "resolved_message_expression": "\"extension level must be 'block' or 'inline'\"",
+            "literal_refs": [
+              {
+                "line": 76,
+                "column": 5076,
+                "kind": "string-literal",
+                "text": "extension level must be 'block' or 'inline'"
+              }
+            ]
+          },
+          {
+            "line": 76,
+            "column": 5567,
+            "kind": "NewExpression",
+            "constructor": "Error",
+            "message_expression": "`renderer '${i}' does not exist`",
+            "resolved_message_expression": "`renderer '${i}' does not exist`",
+            "literal_refs": [
+              {
+                "line": 76,
+                "column": 5577,
+                "kind": "template-expression",
+                "text": "renderer '${i}' does not exist"
+              }
+            ]
+          },
+          {
+            "line": 76,
+            "column": 5885,
+            "kind": "NewExpression",
+            "constructor": "Error",
+            "message_expression": "`tokenizer '${i}' does not exist`",
+            "resolved_message_expression": "`tokenizer '${i}' does not exist`",
+            "literal_refs": [
+              {
+                "line": 76,
+                "column": 5895,
+                "kind": "template-expression",
+                "text": "tokenizer '${i}' does not exist"
+              }
+            ]
+          },
+          {
+            "line": 76,
+            "column": 6182,
+            "kind": "NewExpression",
+            "constructor": "Error",
+            "message_expression": "`hook '${i}' does not exist`",
+            "resolved_message_expression": "`hook '${i}' does not exist`",
+            "literal_refs": [
+              {
+                "line": 76,
+                "column": 6192,
+                "kind": "template-expression",
+                "text": "hook '${i}' does not exist"
+              }
+            ]
+          },
+          {
+            "line": 76,
+            "column": 7200,
+            "kind": "NewExpression",
+            "constructor": "Error",
+            "message_expression": "\"marked(): The async option was set to true by an extension. Remove async: false from the parse options object to return a Promise.\"",
+            "resolved_message_expression": "\"marked(): The async option was set to true by an extension. Remove async: false from the parse options object to return a Promise.\"",
+            "literal_refs": [
+              {
+                "line": 76,
+                "column": 7210,
+                "kind": "string-literal",
+                "text": "marked(): The async option was set to true by an extension. Remove async: false from the parse options object to return a Promise."
+              }
+            ]
+          },
+          {
+            "line": 76,
+            "column": 7380,
+            "kind": "NewExpression",
+            "constructor": "Error",
+            "message_expression": "\"marked(): input parameter is undefined or null\"",
+            "resolved_message_expression": "\"marked(): input parameter is undefined or null\"",
+            "literal_refs": [
+              {
+                "line": 76,
+                "column": 7390,
+                "kind": "string-literal",
+                "text": "marked(): input parameter is undefined or null"
+              }
+            ]
+          },
+          {
+            "line": 76,
+            "column": 7472,
+            "kind": "NewExpression",
+            "constructor": "Error",
+            "message_expression": "\"marked(): input parameter is of type \"+Object.prototype.toString.call(n)+\", string expected\"",
+            "resolved_message_expression": "\"marked(): input parameter is of type \"+Object.prototype.toString.call(n)+\", string expected\"",
+            "literal_refs": [
+              {
+                "line": 76,
+                "column": 7482,
+                "kind": "string-literal",
+                "text": "marked(): input parameter is of type "
+              },
+              {
+                "line": 76,
+                "column": 7556,
+                "kind": "string-literal",
+                "text": ", string expected"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/marked-cjk-friendly.min.js",
+        "constructors": []
+      }
+    ],
+    "protected_grammar_factories": [
+      {
+        "name": "grmr_bash",
+        "line": 405,
+        "start": 39712,
+        "end": 42690
+      },
+      {
+        "name": "grmr_c",
+        "line": 423,
+        "start": 42692,
+        "end": 46472
+      },
+      {
+        "name": "grmr_cpp",
+        "line": 460,
+        "start": 46473,
+        "end": 52058
+      },
+      {
+        "name": "grmr_csharp",
+        "line": 504,
+        "start": 52059,
+        "end": 55938
+      },
+      {
+        "name": "grmr_css",
+        "line": 548,
+        "start": 55939,
+        "end": 57285
+      },
+      {
+        "name": "grmr_diff",
+        "line": 567,
+        "start": 57286,
+        "end": 57778
+      },
+      {
+        "name": "grmr_go",
+        "line": 575,
+        "start": 57779,
+        "end": 58862
+      },
+      {
+        "name": "grmr_graphql",
+        "line": 587,
+        "start": 58864,
+        "end": 59566
+      },
+      {
+        "name": "grmr_ini",
+        "line": 596,
+        "start": 59567,
+        "end": 60488
+      },
+      {
+        "name": "grmr_java",
+        "line": 609,
+        "start": 60489,
+        "end": 62520
+      },
+      {
+        "name": "grmr_javascript",
+        "line": 634,
+        "start": 62521,
+        "end": 62539
+      },
+      {
+        "name": "grmr_json",
+        "line": 635,
+        "start": 62541,
+        "end": 62913
+      },
+      {
+        "name": "grmr_kotlin",
+        "line": 640,
+        "start": 62914,
+        "end": 65729
+      },
+      {
+        "name": "grmr_less",
+        "line": 675,
+        "start": 65730,
+        "end": 68065
+      },
+      {
+        "name": "grmr_lua",
+        "line": 708,
+        "start": 68067,
+        "end": 69905
+      },
+      {
+        "name": "grmr_makefile",
+        "line": 719,
+        "start": 69906,
+        "end": 70941
+      },
+      {
+        "name": "grmr_markdown",
+        "line": 730,
+        "start": 70942,
+        "end": 72932
+      },
+      {
+        "name": "grmr_objectivec",
+        "line": 758,
+        "start": 72933,
+        "end": 75752
+      },
+      {
+        "name": "grmr_perl",
+        "line": 779,
+        "start": 75753,
+        "end": 79597
+      },
+      {
+        "name": "grmr_php",
+        "line": 813,
+        "start": 79598,
+        "end": 85872
+      },
+      {
+        "name": "grmr_php_template",
+        "line": 869,
+        "start": 85873,
+        "end": 86269
+      },
+      {
+        "name": "grmr_plaintext",
+        "line": 874,
+        "start": 86270,
+        "end": 86354
+      },
+      {
+        "name": "grmr_python",
+        "line": 875,
+        "start": 86355,
+        "end": 89757
+      },
+      {
+        "name": "grmr_python_repl",
+        "line": 914,
+        "start": 89759,
+        "end": 89958
+      },
+      {
+        "name": "grmr_r",
+        "line": 916,
+        "start": 89959,
+        "end": 92867
+      },
+      {
+        "name": "grmr_ruby",
+        "line": 940,
+        "start": 92868,
+        "end": 96780
+      },
+      {
+        "name": "grmr_rust",
+        "line": 992,
+        "start": 96782,
+        "end": 99602
+      },
+      {
+        "name": "grmr_scss",
+        "line": 1017,
+        "start": 99604,
+        "end": 102061
+      },
+      {
+        "name": "grmr_shell",
+        "line": 1037,
+        "start": 102062,
+        "end": 102266
+      },
+      {
+        "name": "grmr_sql",
+        "line": 1040,
+        "start": 102267,
+        "end": 108688
+      },
+      {
+        "name": "grmr_swift",
+        "line": 1055,
+        "start": 108689,
+        "end": 112570
+      },
+      {
+        "name": "grmr_typescript",
+        "line": 1110,
+        "start": 112571,
+        "end": 113677
+      },
+      {
+        "name": "grmr_vbnet",
+        "line": 1125,
+        "start": 113678,
+        "end": 116281
+      },
+      {
+        "name": "grmr_wasm",
+        "line": 1148,
+        "start": 116282,
+        "end": 117923
+      },
+      {
+        "name": "grmr_xml",
+        "line": 1160,
+        "start": 117924,
+        "end": 119825
+      },
+      {
+        "name": "grmr_yaml",
+        "line": 1187,
+        "start": 119826,
+        "end": 121512
+      }
+    ],
+    "embedded_versions": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/highlight.min.js",
+        "banner_version": "Highlight.js11.9.0",
+        "line": 2
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/marked.min.js",
+        "banner_version": "marked18.0.11",
+        "line": 2
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/marked-cjk-friendly.min.js",
+        "banner_version": "marked-cjk-friendly0.1.2",
+        "line": 2
+      }
+    ],
+    "method": "Full3 original bodies read as source; TypeScript printer used only for ignored readable source formatting, never evaluation. All36 Highlight.js factories and shared grammar helpers read; Marked tokenizer/lexer/renderer/parser/use/options/error paths and full CJK tokenizer read. Native template caller bodies traced separately. Regex and programmer language tables protected as code."
+  },
+  "native_viewer_api_calls": [
+    {
+      "object": "hljs",
+      "method": "highlight",
+      "line": 871,
+      "column": 27,
+      "source": "hljs.highlight"
+    },
+    {
+      "object": "hljs",
+      "method": "highlight",
+      "line": 880,
+      "column": 36,
+      "source": "hljs.highlight"
+    },
+    {
+      "object": "marked",
+      "method": "use",
+      "line": 1596,
+      "column": 7,
+      "source": "marked.use"
+    },
+    {
+      "object": "global",
+      "method": "markedCjkFriendly",
+      "line": 1618,
+      "column": 21,
+      "source": "markedCjkFriendly"
+    },
+    {
+      "object": "hljs",
+      "method": "getLanguage",
+      "line": 1653,
+      "column": 25,
+      "source": "hljs.getLanguage"
+    },
+    {
+      "object": "hljs",
+      "method": "highlight",
+      "line": 1655,
+      "column": 31,
+      "source": "hljs.highlight"
+    },
+    {
+      "object": "hljs",
+      "method": "highlightAuto",
+      "line": 1662,
+      "column": 31,
+      "source": "hljs.highlightAuto"
+    },
+    {
+      "object": "marked",
+      "method": "parse",
+      "line": 1678,
+      "column": 16,
+      "source": "marked.parse"
+    }
+  ],
+  "remaining_partial_sources": [],
+  "supersedes_pending_source_review": {
+    "prior_scope_file": "pi-export-text-scope.csv",
+    "sources": [
+      "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/highlight.min.js",
+      "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/marked.min.js",
+      "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/vendor/marked-cjk-friendly.min.js"
+    ],
+    "note": "This separate full vendor3 unit closes those local body partitions. Earlier native7 unit remains unchanged and retains its historical pending/vendor boundary statements; it did not claim vendor text closure."
+  },
+  "scope_census": {
+    "package": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0",
+    "complete_directory": "dist/core/export-html/vendor",
+    "directory_files": [
+      "dist/core/export-html/vendor/highlight.min.js",
+      "dist/core/export-html/vendor/marked-cjk-friendly.min.js",
+      "dist/core/export-html/vendor/marked.min.js"
+    ]
+  },
+  "limits": [
+    "Full vendor3 local text/condition review only; broader Pi compaction/branch-summary/provider/SDK/optional extension and browser/platform producer graph remains open.",
+    "Fixed rows are conditional console or uncaught-error diagnostics; no vendor-defined painted native card/title/aria/tooltip text established. Inactive silent-error HTML is an explicit exclusion.",
+    "Native grammar invariants/API prevalidation are source proofs, not runtime failure observations. External callers can enable DOM/deprecated/debug/silent/async APIs, but their activation/display remains pending.",
+    "Native input-type guard route is summary0/false; truthy non-string summary fails earlier in sidebar normalization. Missing/null summary reaches separate missing-input guard.",
+    "No audited vendor module was required/imported/evaluated; no parser/highlighter calls, browser/DOM/model/network/state/export executions occurred. Installed trees and package/deviation bodies remained read-only.",
+    "String literals are TypeScript-decoded; template-expression body escapes remain raw source spelling. Source locations/columns preserve individual minified occurrences; evidence is exact bounded source prefix, not the entire long minified line."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-export-vendor.cjs",
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/core/export-html/vendor/highlight.min.js",
+            "archive_sha256": "837a6fa5b0c736b52bbde2b2b6190f305da3fc9ed41681db5321507057b5c846",
+            "root_sha256": "837a6fa5b0c736b52bbde2b2b6190f305da3fc9ed41681db5321507057b5c846",
+            "cli_nested_sha256": "837a6fa5b0c736b52bbde2b2b6190f305da3fc9ed41681db5321507057b5c846",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/export-html/vendor/marked.min.js",
+            "archive_sha256": "438eedfcf932a414d0d0bfeea32dc365c063563b8ca713b4687fc8f8b501e5e4",
+            "root_sha256": "438eedfcf932a414d0d0bfeea32dc365c063563b8ca713b4687fc8f8b501e5e4",
+            "cli_nested_sha256": "438eedfcf932a414d0d0bfeea32dc365c063563b8ca713b4687fc8f8b501e5e4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/export-html/vendor/marked-cjk-friendly.min.js",
+            "archive_sha256": "93d2c938754cb24eef5b9ffecc268a98ef6beeb75dad614b0e874176aeeba565",
+            "root_sha256": "93d2c938754cb24eef5b9ffecc268a98ef6beeb75dad614b0e874176aeeba565",
+            "cli_nested_sha256": "93d2c938754cb24eef5b9ffecc268a98ef6beeb75dad614b0e874176aeeba565",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/export-html/index.js",
+            "archive_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "root_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "cli_nested_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/export-html/template.js",
+            "archive_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "root_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "cli_nested_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/export-html/template.html",
+            "archive_sha256": "47d208235b066c856dae69c60281a3b99d164b99be9b81153d880375c9327105",
+            "root_sha256": "47d208235b066c856dae69c60281a3b99d164b99be9b81153d880375c9327105",
+            "cli_nested_sha256": "47d208235b066c856dae69c60281a3b99d164b99be9b81153d880375c9327105",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/session-manager.js",
+            "archive_sha256": "046b6a1109ac3f0ed893bb85bf0648709362fa926a5da75761216cf2fcf9d926",
+            "root_sha256": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a",
+            "cli_nested_sha256": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": []
+      }
+    ],
+    "scoped_file_count": 7,
+    "byte_identical_scope_files": 6,
+    "pinned_patch_scope_files": 1,
+    "unresolved_scope_differences": 0
+  }
+}
