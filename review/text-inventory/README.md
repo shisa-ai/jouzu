@@ -77,8 +77,9 @@ invalid-argument response.
 [launcher.csv](launcher.csv) records 406 occurrences and boundary records across
 launcher dictionaries, frontend consumers, Rust failures and installer text.
 Inactive dictionary entries are identified explicitly. Thirty-six native or
-generated dependency boundaries still lack an exact English definition; their
-English field is blank. [launcher-scope.csv](launcher-scope.csv) distinguishes
+generated dependency boundaries have blank English fields in that initial table;
+the dependency pass below supplies their individual dispositions.
+[launcher-scope.csv](launcher-scope.csv) distinguishes
 inspected source from pending helper messages, support logging and report facts.
 
 [launcher-helpers.csv](launcher-helpers.csv) supplies the follow-on helper pass:
@@ -90,6 +91,19 @@ Rows preserve raw source escapes, interpolations and the two constructed log
 expressions rather than inventing flattened English. Conditions distinguish
 direct operator output, frontend replacement messages, retained diagnostics and
 acceptance-only fixtures. Generated installer dependencies remain separate.
+
+[installer-dependencies.csv](installer-dependencies.csv) adds 234 records: 228
+individual dependency definitions or raw compiler formats and six ownership or
+substitution boundaries. All 36 original dependency boundaries are linked.
+The [scope table](installer-dependencies-scope.csv) pins seven inert archives
+through the locked Tauri, NSIS and dialog dependency chains. Each definition
+records its page, feature, compile-time or runtime conditions; inactive defaults
+remain identified. One misspelled LangString reference resolves to an empty
+subtitle if compilation continues, rather than its similarly named upstream
+English definition. Its compiler warning is suppressed at default Tauri
+verbosity and forwarded in verbose builds. Native Windows resource wording and
+remote response payloads remain explicit external boundaries. These are source
+traces; no installer, compiler or native dialog was executed.
 
 [pi.csv](pi.csv) records 660 inherited Pi source occurrences, with per-occurrence
 conditions and 155 links to Jouzu catalog IDs.
@@ -159,6 +173,7 @@ python -B review/text-inventory/verify-startup-language.py
 python -B review/text-inventory/verify-cli-entry.py
 python -B review/text-inventory/verify-launcher.py
 python -B review/text-inventory/verify-launcher-helpers.py
+python -B review/text-inventory/verify-installer-dependencies.py --cache-dir <archive-directory>
 python -B review/text-inventory/verify-flow.py
 python -B review/text-inventory/verify-flow-report.py
 python -B review/text-inventory/verify-python-console.py --observe
