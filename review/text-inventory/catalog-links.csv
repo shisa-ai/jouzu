@@ -1648,57 +1648,57 @@ jouzu.cli.usage.selfUpdatePolicyValue,packages/cli/locales/en/cli.ftl:634,caller
 jouzu.cli.version.jouzu,packages/cli/locales/en/cli.ftl:85,caller-trace-required,0,1,"[{""table"":""cli-entry.csv"",""item_id"":""CLI-ENTRY-076""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.version.pi,packages/cli/locales/en/cli.ftl:86,caller-trace-required,0,1,"[{""table"":""cli-entry.csv"",""item_id"":""CLI-ENTRY-077""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.version.profileSchema,packages/cli/locales/en/cli.ftl:87,caller-trace-required,0,1,"[{""table"":""cli-entry.csv"",""item_id"":""CLI-ENTRY-078""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.voice.accessDenied,packages/cli/locales/en/cli.ftl:1289,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.alreadyActive,packages/cli/locales/en/cli.ftl:1271,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.authFailed,packages/cli/locales/en/cli.ftl:1288,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.cancelled,packages/cli/locales/en/cli.ftl:1277,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.captureFailed,packages/cli/locales/en/cli.ftl:1283,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.captureStartTimeout,packages/cli/locales/en/cli.ftl:1284,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.voice.accessDenied,packages/cli/locales/en/cli.ftl:1289,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-058""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.alreadyActive,packages/cli/locales/en/cli.ftl:1271,caller-trace-required,0,2,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-026""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-027""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.authFailed,packages/cli/locales/en/cli.ftl:1288,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-057""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.cancelled,packages/cli/locales/en/cli.ftl:1277,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-033""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.captureFailed,packages/cli/locales/en/cli.ftl:1283,caller-trace-required,0,7,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-047""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-048""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-049""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-050""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-051""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-052""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-053""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.captureStartTimeout,packages/cli/locales/en/cli.ftl:1284,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-054""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.voice.captureStopTimeout,packages/cli/locales/en/cli.ftl:1285,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.commandDescription,packages/cli/locales/en/cli.ftl:1300,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.connectionEnded,packages/cli/locales/en/cli.ftl:1294,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.connectionFailed,packages/cli/locales/en/cli.ftl:1291,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.connectionRejected,packages/cli/locales/en/cli.ftl:1290,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.connectionStartFailed,packages/cli/locales/en/cli.ftl:1295,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.devices.default,packages/cli/locales/en/cli.ftl:1264,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.devices.title,packages/cli/locales/en/cli.ftl:1265,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.devicesBusy,packages/cli/locales/en/cli.ftl:1278,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.devicesFailed,packages/cli/locales/en/cli.ftl:1279,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.endpointInvalid,packages/cli/locales/en/cli.ftl:1274,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.finishFailed,packages/cli/locales/en/cli.ftl:1269,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.hint.idle,packages/cli/locales/en/cli.ftl:1252,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.hint.recording,packages/cli/locales/en/cli.ftl:1251,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.inserted,packages/cli/locales/en/cli.ftl:1267,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.inserted.garbled,packages/cli/locales/en/cli.ftl:1266,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.label,packages/cli/locales/en/cli.ftl:1247,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.languageBusy,packages/cli/locales/en/cli.ftl:1280,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.languageSet,packages/cli/locales/en/cli.ftl:1281,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.nonInteractive,packages/cli/locales/en/cli.ftl:1276,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.noSpeech,packages/cli/locales/en/cli.ftl:1268,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.requiresLogin,packages/cli/locales/en/cli.ftl:1273,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.segment.failed,packages/cli/locales/en/cli.ftl:1256,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.segment.final,packages/cli/locales/en/cli.ftl:1253,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.segment.live,packages/cli/locales/en/cli.ftl:1255,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.segment.pending,packages/cli/locales/en/cli.ftl:1254,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.segment.progress,packages/cli/locales/en/cli.ftl:1257,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.segment.retained,packages/cli/locales/en/cli.ftl:1258,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.shortcutDescription,packages/cli/locales/en/cli.ftl:1301,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.signedOut,packages/cli/locales/en/cli.ftl:1272,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.startFailed,packages/cli/locales/en/cli.ftl:1275,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.state.connecting,packages/cli/locales/en/cli.ftl:1248,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.state.finishing,packages/cli/locales/en/cli.ftl:1250,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.state.recording,packages/cli/locales/en/cli.ftl:1249,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.status,packages/cli/locales/en/cli.ftl:1259,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.stillFinishing,packages/cli/locales/en/cli.ftl:1270,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.transcriptInvalid,packages/cli/locales/en/cli.ftl:1293,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.voice.commandDescription,packages/cli/locales/en/cli.ftl:1300,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-045""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.connectionEnded,packages/cli/locales/en/cli.ftl:1294,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-062""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.connectionFailed,packages/cli/locales/en/cli.ftl:1291,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-060""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.connectionRejected,packages/cli/locales/en/cli.ftl:1290,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-059""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.connectionStartFailed,packages/cli/locales/en/cli.ftl:1295,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-063""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.devices.default,packages/cli/locales/en/cli.ftl:1264,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-036""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.devices.title,packages/cli/locales/en/cli.ftl:1265,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-037""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.devicesBusy,packages/cli/locales/en/cli.ftl:1278,caller-trace-required,0,2,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-034""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-035""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.devicesFailed,packages/cli/locales/en/cli.ftl:1279,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-038""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.endpointInvalid,packages/cli/locales/en/cli.ftl:1274,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-030""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.finishFailed,packages/cli/locales/en/cli.ftl:1269,caller-trace-required,0,2,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-024""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-025""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.hint.idle,packages/cli/locales/en/cli.ftl:1252,caller-trace-required,0,2,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-006""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-007""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.hint.recording,packages/cli/locales/en/cli.ftl:1251,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-005""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.inserted,packages/cli/locales/en/cli.ftl:1267,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-022""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.inserted.garbled,packages/cli/locales/en/cli.ftl:1266,caller-trace-required,0,3,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-017""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-018""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-019""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.label,packages/cli/locales/en/cli.ftl:1247,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-001""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.languageBusy,packages/cli/locales/en/cli.ftl:1280,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-039""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.languageSet,packages/cli/locales/en/cli.ftl:1281,caller-trace-required,0,4,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-040""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-041""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-042""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-043""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.nonInteractive,packages/cli/locales/en/cli.ftl:1276,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-032""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.noSpeech,packages/cli/locales/en/cli.ftl:1268,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-023""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.requiresLogin,packages/cli/locales/en/cli.ftl:1273,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-029""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.segment.failed,packages/cli/locales/en/cli.ftl:1256,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-011""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.segment.final,packages/cli/locales/en/cli.ftl:1253,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-008""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.segment.live,packages/cli/locales/en/cli.ftl:1255,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-010""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.segment.pending,packages/cli/locales/en/cli.ftl:1254,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-009""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.segment.progress,packages/cli/locales/en/cli.ftl:1257,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-012""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.segment.retained,packages/cli/locales/en/cli.ftl:1258,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-013""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.shortcutDescription,packages/cli/locales/en/cli.ftl:1301,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-046""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.signedOut,packages/cli/locales/en/cli.ftl:1272,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-028""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.startFailed,packages/cli/locales/en/cli.ftl:1275,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-031""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.state.connecting,packages/cli/locales/en/cli.ftl:1248,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-002""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.state.finishing,packages/cli/locales/en/cli.ftl:1250,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-004""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.state.recording,packages/cli/locales/en/cli.ftl:1249,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-003""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.status,packages/cli/locales/en/cli.ftl:1259,caller-trace-required,0,3,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-014""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-015""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-016""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.stillFinishing,packages/cli/locales/en/cli.ftl:1270,caller-trace-required,0,2,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-020""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-021""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.transcriptInvalid,packages/cli/locales/en/cli.ftl:1293,caller-trace-required,0,3,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-064""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-065""},{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-066""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.voice.transcriptInvalidAudioRange,packages/cli/locales/en/cli.ftl:1297,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.voice.transcriptInvalidIdentifier,packages/cli/locales/en/cli.ftl:1296,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.voice.transcriptInvalidReplacementRange,packages/cli/locales/en/cli.ftl:1298,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.transcriptionFailed,packages/cli/locales/en/cli.ftl:1292,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.voice.transcriptionFailed,packages/cli/locales/en/cli.ftl:1292,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-061""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.voice.transcriptTooLarge,packages/cli/locales/en/cli.ftl:1299,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.uploadFailed,packages/cli/locales/en/cli.ftl:1287,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.uploadSlow,packages/cli/locales/en/cli.ftl:1286,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.voice.usage,packages/cli/locales/en/cli.ftl:1282,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.voice.uploadFailed,packages/cli/locales/en/cli.ftl:1287,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-056""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.uploadSlow,packages/cli/locales/en/cli.ftl:1286,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-055""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.voice.usage,packages/cli/locales/en/cli.ftl:1282,caller-trace-required,0,1,"[{""table"":""voice-text.csv"",""item_id"":""VOICE-TEXT-044""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.work.jobExit,packages/cli/locales/en/cli.ftl:645,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.work.outcomeUnknown,packages/cli/locales/en/cli.ftl:644,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.work.withheldRequest,packages/cli/locales/en/cli.ftl:643,caller-trace-required,0,0,[],caller-trace-required

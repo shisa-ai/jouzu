@@ -537,6 +537,19 @@ Cancellation records qualify the receiver's terminal-state guard. Worker resourc
 failures and provider causes retain their separate replacement/delivery rules.
 No worker, model, state, native or UI operation was executed.
 
+[voice-text.csv](voice-text.csv) adds 95 voice records: 66 catalog occurrences
+across 46 IDs, 11 fixed/protected occurrences and 18 payload boundaries. The
+[scope](voice-text-scope.csv) covers all six voice bodies, 1,076 lines and 16
+pinned sources, accounting for 279 lexical tokens, 54 catalog references, 42 error
+producers and 13 catches. Records distinguish active-catalog VoiceError rendering
+from replacement/suppression during cancellation, capture stop and transcript
+review. Footer status selects display text through Fluent branches; its state
+keys stay protected. Draft markers, redaction, argument completions and native
+hotkey help retain concrete consumers. TUI/terminal guards and non-TUI notification
+behavior remain explicit. ASR text, device names and native/provider errors are
+separate payload/dependency boundaries. No microphone, worker, WebSocket, model,
+native or UI operation was executed.
+
 [flow-tools.csv](flow-tools.csv) supplies 36 wait/no-reply tool records: 24 fixed
 occurrences, three catalog labels and nine payload boundaries. Four full bodies
 and all 234 lexical occurrences are accounted for in the
@@ -763,6 +776,7 @@ python -B review/text-inventory/verify-keybindings.py
 python -B review/text-inventory/verify-workflow.py
 python -B review/text-inventory/verify-subagent-runtime.py
 python -B review/text-inventory/verify-subagent-output.py
+python -B review/text-inventory/verify-voice-text.py
 python -B review/text-inventory/verify-model-catalog.py
 python -B review/text-inventory/verify-auth-account.py
 python -B review/text-inventory/verify-launcher.py
