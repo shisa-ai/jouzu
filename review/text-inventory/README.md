@@ -823,6 +823,19 @@ sources have exact versions/import routes/two-tree hashes, without canonical
 archive or full-body promotion. Twenty corruption controls pass. No shell,
 config, search execution, activation, transcript, model or UI operation executed.
 
+[pi-llama-support.csv](pi-llama-support.csv) adds 107 qualified local-model,
+server, download and custom-view definitions across five complete bodies (1,325
+lines), with 275 [exclusions](pi-llama-support-exclusions.csv) and fourteen
+[boundaries](pi-llama-support-boundaries.csv). The built-in can register by default,
+but configuration, resource loading, mode, authentication and model selection
+constrain each route. A default loopback URL alone does not establish configured
+auth. One command description links to its catalog owner; custom dialog captions
+and notifications retain their own display conditions. Polling/SSE failures,
+search staleness, cancellation/restore ordering and headless notification handling
+remain separate. The [scope](pi-llama-support-scope.csv) pins two foreign sources
+as bounded support only. Twenty-four corruption controls pass with canonical
+archive and installed-tree provenance; no server/model/native/UI operation runs.
+
 [pi-diagnostics-migration-share.csv](pi-diagnostics-migration-share.csv) records
 49 qualified definitions across six complete diagnostic, trust, migration and
 share bodies (991 lines), with nineteen
@@ -1927,6 +1940,7 @@ node review/text-inventory/verify-pi-provider-support.cjs --node-modules <root-n
 node review/text-inventory/verify-pi-core-config-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-rpc-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-request-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-llama-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-cli-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-codemode-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-diagnostics-migration-share.py
