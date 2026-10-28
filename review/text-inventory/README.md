@@ -307,9 +307,9 @@ dependency and complete consumer coverage remain open. No audited module is load
 Follow-on local reviews retain their own scopes below; this baseline is frozen.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 24 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside twenty compiled bodies;
-61 compiled bodies remain pending. The
+universe with 25 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 26 compiled bodies;
+55 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -965,6 +965,22 @@ consumers remain bounded. All three canonical package archives and both installe
 trees are checked, including the exact public nested AI package-list transform.
 Twenty-five corruption controls pass. This unit does not extend the separate
 384-source coding-agent/TUI census or execute authentication/model operations.
+
+[pi-bundle-oauth-providers.csv](pi-bundle-oauth-providers.csv) records 184
+qualified prompt, error, browser-page and exported-API definitions across six
+complete compiled OAuth/provider bodies (103,565 bytes). The 1,203
+[exclusions](pi-bundle-oauth-providers-exclusions.csv) complete the 1,387-occurrence
+literal/template/regex partition, including 23 explanations of unpublished or
+suppressed wording. Sixty-eight
+[boundaries](pi-bundle-oauth-providers-boundaries.csv) retain callback, manual
+input, progress, timeout, cleanup, credential and response conditions. Browser
+pages require their callback response route; loaded metadata can be replaced by
+outer provider labels. Radius error construction uses its fourth argument as the
+human prefix and appends conditional remote detail. The
+[scope](pi-bundle-oauth-providers-scope.csv) keeps the shared compiled caller
+bounded. Canonical archive, both installed trees and 27 corruption controls pass.
+No ordinary Jouzu activation or compiled/unbundled equivalence is inferred,
+and no OAuth, browser, request or native operation runs.
 
 [pi-bundle-stream-adapters.csv](pi-bundle-stream-adapters.csv) records 38
 qualified error and outgoing-request definitions across four complete compiled
@@ -2139,6 +2155,7 @@ node review/text-inventory/verify-pi-ai-lexical.cjs
 python -B review/text-inventory/verify-pi-ai-runtime-census.py
 node review/text-inventory/verify-pi-ai-request-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-ai-model-auth.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
+python -B review/text-inventory/verify-pi-bundle-oauth-providers.py
 python -B review/text-inventory/verify-pi-bundle-stream-adapters.py
 python -B review/text-inventory/verify-pi-bundle-provider-adapters.py
 node review/text-inventory/verify-pi-bundle-lexical.cjs
