@@ -934,8 +934,8 @@ non-vendored Go bodies and 13 bundled rule bodies. Generic bridge errors have
 separate conditions from the production helper, which returns structured
 evidence/reason codes; the JavaScript supervisor discards helper stderr.
 Admission's reparse and later abort/generation checks can replace those codes
-again. The vendor runtime pass follows below; broader policy/review UI producers
-remain pending. No scanner, compiler or rules were executed.
+again. The vendor runtime and policy/review passes follow below. No scanner,
+compiler or rules were executed.
 
 [textguard-dependencies.csv](textguard-dependencies.csv) adds 423 vendor records:
 149 diagnostic/help occurrences, 256 technical/format tokens, six table versions
@@ -946,6 +946,22 @@ the native pass's pending vendor dispositions for those exact source hashes.
 TOML, IDNA, normalization and bidi errors are qualified by library/API callers
 and production suppression. Compiler/stdlib/OS wording and arbitrary input
 excerpts remain external boundaries; generated mapping data is not prose.
+
+[textguard-owned.csv](textguard-owned.csv) adds 204 policy/review records:
+141 catalog occurrences across 126 IDs, 51 fixed/protected fragments and twelve
+delivery boundaries. Five complete policy, review, approval, payload and skill
+bodies cover 1,767 lines; the [scope](textguard-owned-scope.csv) pins nineteen
+sources. All 491 string/template/regex nodes are partitioned against 382
+[exclusions](textguard-owned-exclusions.csv), with 55 catalog aliases, twelve
+Error/SnapshotFailure constructors, nine catches and two suppressed catch callbacks.
+Together with the native unit this covers all ten CLI TextGuard source bodies.
+Fixed English tool-result banners retain conditional result, persistence and
+export sinks. Localized alerts use the active catalog and explicit non-TUI stderr
+delivery; overlay geometry, approval rechecks and source/body escaping remain
+separate. Warning-only summary branches and the off-list banner have no ordinary
+producer; skill framing is recognition-only. Native wrappers replace the original
+context-interruption headline. Five corruption controls pass without loading any
+policy, view, scanner, native producer or user state.
 
 Counts describe records in each table. Catalog links, repeated wording,
 different consumers and dynamic boundaries overlap; do not add these counts as
@@ -1017,6 +1033,7 @@ python -B review/text-inventory/verify-dev-build-text.py
 python -B review/text-inventory/verify-copied-bootstrap.py
 python -B review/text-inventory/verify-textguard-native.py
 python -B review/text-inventory/verify-textguard-dependencies.py
+node review/text-inventory/verify-textguard-owned.cjs
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>
 node review/text-inventory/verify-pi-tools.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-runtime.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
