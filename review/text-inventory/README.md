@@ -101,6 +101,16 @@ report/error producers. A catalog value used only in a proved unreachable
 guard remains in the English catalog rather than being counted as a normal
 invalid-argument response.
 
+[host-ui.csv](host-ui.csv) adds 30 help/host-policy records: 14 catalog
+occurrences, ten fixed or protected command/key/refusal occurrences and six
+payload boundaries. Three complete bodies and all 65 lexical occurrences are
+accounted for in the [scope](host-ui-scope.csv) and
+[exclusions](host-ui-exclusions.csv). Help shortcut descriptions can also enter
+native hotkeys after shortcut resolution. The nested-tool refusal becomes tool
+result text through the native before-call hook. Argument compatibility defines
+no own diagnostic prose; tool-list refresh failures are suppressed and other
+callback/schema/native messages retain explicit boundaries.
+
 [doctor.csv](doctor.csv) supplies 548 report records: 287 catalog occurrences
 across 185 IDs, 149 fixed or protected machine occurrences and 112 computed or
 payload boundaries. It traces all 77 field labels, diagnoses, six lock contexts
@@ -465,6 +475,7 @@ python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-acp-dependencies.py
 python -B review/text-inventory/verify-startup-language.py
 python -B review/text-inventory/verify-cli-entry.py
+node review/text-inventory/verify-host-ui.cjs
 python -B review/text-inventory/verify-doctor.py
 python -B review/text-inventory/verify-updater.py
 python -B review/text-inventory/verify-profiles.py

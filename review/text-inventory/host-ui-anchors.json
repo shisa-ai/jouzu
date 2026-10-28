@@ -1,0 +1,685 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "anchors": [
+    {
+      "item_id": "HOST-UI-EX-001",
+      "path": "packages/cli/src/help.ts",
+      "line": 1,
+      "column": 56,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-002",
+      "path": "packages/cli/src/help.ts",
+      "line": 2,
+      "column": 34,
+      "expression": "\"@earendil-works/pi-tui\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-003",
+      "path": "packages/cli/src/help.ts",
+      "line": 3,
+      "column": 63,
+      "expression": "\"./cli-messages.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-004",
+      "path": "packages/cli/src/help.ts",
+      "line": 4,
+      "column": 37,
+      "expression": "\"./human-messages.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-005",
+      "path": "packages/cli/src/help.ts",
+      "line": 5,
+      "column": 34,
+      "expression": "\"./human-messages.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-006",
+      "path": "packages/cli/src/help.ts",
+      "line": 6,
+      "column": 56,
+      "expression": "\"./keybinding-hints.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-007",
+      "path": "packages/cli/src/help.ts",
+      "line": 7,
+      "column": 36,
+      "expression": "\"./locale-catalog.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-001",
+      "path": "packages/cli/src/help.ts",
+      "line": 9,
+      "column": 25,
+      "expression": "\"ctrl+/\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HOST-UI-002",
+      "path": "packages/cli/src/help.ts",
+      "line": 9,
+      "column": 35,
+      "expression": "\"ctrl+?\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HOST-UI-EX-008",
+      "path": "packages/cli/src/help.ts",
+      "line": 22,
+      "column": 9,
+      "expression": "\"jouzu-help\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-009",
+      "path": "packages/cli/src/help.ts",
+      "line": 25,
+      "column": 22,
+      "expression": "\"tui\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-010",
+      "path": "packages/cli/src/help.ts",
+      "line": 30,
+      "column": 83,
+      "expression": "\"accent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-011",
+      "path": "packages/cli/src/help.ts",
+      "line": 31,
+      "column": 28,
+      "expression": "\"app.model.select\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-012",
+      "path": "packages/cli/src/help.ts",
+      "line": 31,
+      "column": 49,
+      "expression": "\"app.model.cycleForward\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-013",
+      "path": "packages/cli/src/help.ts",
+      "line": 31,
+      "column": 76,
+      "expression": "\"tui.select.cancel\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-014",
+      "path": "packages/cli/src/help.ts",
+      "line": 35,
+      "column": 29,
+      "expression": "\"accent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-015",
+      "path": "packages/cli/src/help.ts",
+      "line": 36,
+      "column": 9,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-016",
+      "path": "packages/cli/src/help.ts",
+      "line": 37,
+      "column": 77,
+      "expression": "\"app.model.select\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-017",
+      "path": "packages/cli/src/help.ts",
+      "line": 39,
+      "column": 19,
+      "expression": "\"app.model.cycleForward\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-003",
+      "path": "packages/cli/src/help.ts",
+      "line": 43,
+      "column": 26,
+      "expression": "\"/hotkeys\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HOST-UI-004",
+      "path": "packages/cli/src/help.ts",
+      "line": 46,
+      "column": 26,
+      "expression": "\"/session\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HOST-UI-EX-018",
+      "path": "packages/cli/src/help.ts",
+      "line": 48,
+      "column": 30,
+      "expression": "\"jouzu.cli.helpOverlay.fastMode\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-005",
+      "path": "packages/cli/src/help.ts",
+      "line": 48,
+      "column": 82,
+      "expression": "\"/fast on|off\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HOST-UI-006",
+      "path": "packages/cli/src/help.ts",
+      "line": 50,
+      "column": 26,
+      "expression": "\"/about\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HOST-UI-007",
+      "path": "packages/cli/src/help.ts",
+      "line": 53,
+      "column": 26,
+      "expression": "\"/workflow\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HOST-UI-008",
+      "path": "packages/cli/src/help.ts",
+      "line": 56,
+      "column": 26,
+      "expression": "\"/subagents\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HOST-UI-EX-019",
+      "path": "packages/cli/src/help.ts",
+      "line": 58,
+      "column": 30,
+      "expression": "\"jouzu.cli.helpOverlay.scrollback\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-009",
+      "path": "packages/cli/src/help.ts",
+      "line": 58,
+      "column": 84,
+      "expression": "\"/scrollback\"",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HOST-UI-EX-020",
+      "path": "packages/cli/src/help.ts",
+      "line": 59,
+      "column": 9,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-021",
+      "path": "packages/cli/src/help.ts",
+      "line": 61,
+      "column": 10,
+      "expression": "\"dim\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-022",
+      "path": "packages/cli/src/help.ts",
+      "line": 62,
+      "column": 77,
+      "expression": "\"tui.select.cancel\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-023",
+      "path": "packages/cli/src/help.ts",
+      "line": 64,
+      "column": 15,
+      "expression": "\"\\n\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-024",
+      "path": "packages/cli/src/help.ts",
+      "line": 73,
+      "column": 36,
+      "expression": "\"tui.select.cancel\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-025",
+      "path": "packages/cli/src/help.ts",
+      "line": 83,
+      "column": 59,
+      "expression": "\"center\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-026",
+      "path": "packages/cli/src/tool-arguments.ts",
+      "line": 1,
+      "column": 38,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-027",
+      "path": "packages/cli/src/tool-arguments.ts",
+      "line": 32,
+      "column": 33,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-028",
+      "path": "packages/cli/src/tool-arguments.ts",
+      "line": 38,
+      "column": 33,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-029",
+      "path": "packages/cli/src/tool-arguments.ts",
+      "line": 43,
+      "column": 99,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-030",
+      "path": "packages/cli/src/tool-arguments.ts",
+      "line": 54,
+      "column": 33,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-031",
+      "path": "packages/cli/src/tool-arguments.ts",
+      "line": 61,
+      "column": 24,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-032",
+      "path": "packages/cli/src/tool-arguments.ts",
+      "line": 77,
+      "column": 44,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-033",
+      "path": "packages/cli/src/tool-arguments.ts",
+      "line": 88,
+      "column": 38,
+      "expression": "\"string\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-034",
+      "path": "packages/cli/src/tool-arguments.ts",
+      "line": 95,
+      "column": 9,
+      "expression": "\"jouzu-tool-arguments\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-035",
+      "path": "packages/cli/src/tool-arguments.ts",
+      "line": 108,
+      "column": 10,
+      "expression": "\"session_start\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-036",
+      "path": "packages/cli/src/tool-arguments.ts",
+      "line": 109,
+      "column": 10,
+      "expression": "\"before_agent_start\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-037",
+      "path": "packages/cli/src/tool-arguments.ts",
+      "line": 110,
+      "column": 10,
+      "expression": "\"tool_call\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-038",
+      "path": "packages/cli/src/tool-arguments.ts",
+      "line": 118,
+      "column": 59,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-039",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 1,
+      "column": 38,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-040",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 2,
+      "column": 44,
+      "expression": "\"./mcp.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-041",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 8,
+      "column": 4,
+      "expression": "\"agent_wait\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-042",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 9,
+      "column": 4,
+      "expression": "\"agent_wait_cancel\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-043",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 10,
+      "column": 4,
+      "expression": "\"agent_no_reply\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-044",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 11,
+      "column": 4,
+      "expression": "\"agent_results\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-045",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 12,
+      "column": 4,
+      "expression": "\"subagent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-046",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 13,
+      "column": 4,
+      "expression": "\"bg_task\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-047",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 14,
+      "column": 4,
+      "expression": "\"bg_status\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-048",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 15,
+      "column": 4,
+      "expression": "\"schedule_prompt\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-049",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 16,
+      "column": 4,
+      "expression": "\"compact_context\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-050",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 17,
+      "column": 4,
+      "expression": "\"get_goal\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-051",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 18,
+      "column": 4,
+      "expression": "\"update_goal\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-052",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 21,
+      "column": 19,
+      "expression": "\"multiloop_\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-053",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 28,
+      "column": 9,
+      "expression": "\"jouzu-direct-tool-policy\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-EX-054",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 30,
+      "column": 10,
+      "expression": "\"tool_call\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-010",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 34,
+      "column": 15,
+      "expression": "`Call ${event.toolName} directly, not from another tool, so its result can be acknowledged.`",
+      "kind": "literal"
+    },
+    {
+      "item_id": "HOST-UI-EX-055",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 45,
+      "column": 10,
+      "expression": "\"codemode\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "HOST-UI-011",
+      "path": "packages/cli/src/help.ts",
+      "line": 28,
+      "column": 54,
+      "expression": "CatalogMessageId.helpOverlayShortcutSeparator",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "HOST-UI-012",
+      "path": "packages/cli/src/help.ts",
+      "line": 35,
+      "column": 60,
+      "expression": "CatalogMessageId.helpOverlayTitle",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "HOST-UI-013",
+      "path": "packages/cli/src/help.ts",
+      "line": 37,
+      "column": 30,
+      "expression": "CatalogMessageId.helpOverlayModels",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "HOST-UI-014",
+      "path": "packages/cli/src/help.ts",
+      "line": 38,
+      "column": 30,
+      "expression": "CatalogMessageId.helpOverlayCycleFavorites",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "HOST-UI-015",
+      "path": "packages/cli/src/help.ts",
+      "line": 41,
+      "column": 30,
+      "expression": "CatalogMessageId.helpOverlayHelp",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "HOST-UI-016",
+      "path": "packages/cli/src/help.ts",
+      "line": 42,
+      "column": 30,
+      "expression": "CatalogMessageId.helpOverlayAllShortcuts",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "HOST-UI-017",
+      "path": "packages/cli/src/help.ts",
+      "line": 45,
+      "column": 30,
+      "expression": "CatalogMessageId.helpOverlaySessionDetails",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "HOST-UI-018",
+      "path": "packages/cli/src/help.ts",
+      "line": 48,
+      "column": 30,
+      "expression": "\"jouzu.cli.helpOverlay.fastMode\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "HOST-UI-019",
+      "path": "packages/cli/src/help.ts",
+      "line": 49,
+      "column": 30,
+      "expression": "CatalogMessageId.helpOverlayRuntimeBuilds",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "HOST-UI-020",
+      "path": "packages/cli/src/help.ts",
+      "line": 52,
+      "column": 30,
+      "expression": "CatalogMessageId.helpOverlayAgentsRuns",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "HOST-UI-021",
+      "path": "packages/cli/src/help.ts",
+      "line": 55,
+      "column": 30,
+      "expression": "CatalogMessageId.helpOverlayChildDashboard",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "HOST-UI-022",
+      "path": "packages/cli/src/help.ts",
+      "line": 58,
+      "column": 30,
+      "expression": "\"jouzu.cli.helpOverlay.scrollback\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "HOST-UI-023",
+      "path": "packages/cli/src/help.ts",
+      "line": 62,
+      "column": 31,
+      "expression": "CatalogMessageId.helpOverlayClose",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "HOST-UI-024",
+      "path": "packages/cli/src/help.ts",
+      "line": 90,
+      "column": 40,
+      "expression": "CatalogMessageId.helpOverlayShortcutDescription",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "HOST-UI-025",
+      "path": "packages/cli/src/help.ts",
+      "line": 26,
+      "column": 5,
+      "expression": "await ctx.ui.custom<void>",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "HOST-UI-026",
+      "path": "packages/cli/src/help.ts",
+      "line": 32,
+      "column": 15,
+      "expression": "formatEffectiveKeybinding(keybindings, action)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "HOST-UI-027",
+      "path": "packages/cli/src/tool-arguments.ts",
+      "line": 78,
+      "column": 15,
+      "expression": "structuredClone(input)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "HOST-UI-028",
+      "path": "packages/cli/src/tool-arguments.ts",
+      "line": 100,
+      "column": 16,
+      "expression": "schemaIndex(pi.getAllTools())",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "HOST-UI-029",
+      "path": "packages/cli/src/tool-arguments.ts",
+      "line": 119,
+      "column": 5,
+      "expression": "omitDeclined(event.input, schema)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "HOST-UI-030",
+      "path": "packages/cli/src/classic-host-policy.ts",
+      "line": 51,
+      "column": 3,
+      "expression": "createDeferredMcpExtension()",
+      "kind": "boundary"
+    }
+  ]
+}

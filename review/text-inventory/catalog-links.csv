@@ -560,25 +560,25 @@ jouzu.cli.help.option.textguardFiles,packages/cli/locales/en/cli.ftl:74,source-t
 jouzu.cli.help.option.textguardOff,packages/cli/locales/en/cli.ftl:73,source-traced,1,0,[],occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.help.option.textguardStrict,packages/cli/locales/en/cli.ftl:72,source-traced,1,0,[],occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.help.option.uiLocale,packages/cli/locales/en/cli.ftl:75,source-traced,1,0,[],occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.help.overlay.agentsRuns,packages/cli/locales/en/cli.ftl:537,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.help.overlay.allShortcuts,packages/cli/locales/en/cli.ftl:534,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.help.overlay.childDashboard,packages/cli/locales/en/cli.ftl:538,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.help.overlay.close,packages/cli/locales/en/cli.ftl:539,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.help.overlay.cycleFavorites,packages/cli/locales/en/cli.ftl:532,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.help.overlay.help,packages/cli/locales/en/cli.ftl:533,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.help.overlay.models,packages/cli/locales/en/cli.ftl:531,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.help.overlay.runtimeBuilds,packages/cli/locales/en/cli.ftl:536,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.help.overlay.sessionDetails,packages/cli/locales/en/cli.ftl:535,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.help.overlay.shortcutDescription,packages/cli/locales/en/cli.ftl:541,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.help.overlay.shortcutSeparator,packages/cli/locales/en/cli.ftl:540,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.help.overlay.title,packages/cli/locales/en/cli.ftl:530,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.help.overlay.agentsRuns,packages/cli/locales/en/cli.ftl:537,caller-trace-required,0,1,"[{""table"":""host-ui.csv"",""item_id"":""HOST-UI-020""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.help.overlay.allShortcuts,packages/cli/locales/en/cli.ftl:534,caller-trace-required,0,1,"[{""table"":""host-ui.csv"",""item_id"":""HOST-UI-016""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.help.overlay.childDashboard,packages/cli/locales/en/cli.ftl:538,caller-trace-required,0,1,"[{""table"":""host-ui.csv"",""item_id"":""HOST-UI-021""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.help.overlay.close,packages/cli/locales/en/cli.ftl:539,caller-trace-required,0,1,"[{""table"":""host-ui.csv"",""item_id"":""HOST-UI-023""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.help.overlay.cycleFavorites,packages/cli/locales/en/cli.ftl:532,caller-trace-required,0,1,"[{""table"":""host-ui.csv"",""item_id"":""HOST-UI-014""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.help.overlay.help,packages/cli/locales/en/cli.ftl:533,caller-trace-required,0,1,"[{""table"":""host-ui.csv"",""item_id"":""HOST-UI-015""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.help.overlay.models,packages/cli/locales/en/cli.ftl:531,caller-trace-required,0,1,"[{""table"":""host-ui.csv"",""item_id"":""HOST-UI-013""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.help.overlay.runtimeBuilds,packages/cli/locales/en/cli.ftl:536,caller-trace-required,0,1,"[{""table"":""host-ui.csv"",""item_id"":""HOST-UI-019""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.help.overlay.sessionDetails,packages/cli/locales/en/cli.ftl:535,caller-trace-required,0,1,"[{""table"":""host-ui.csv"",""item_id"":""HOST-UI-017""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.help.overlay.shortcutDescription,packages/cli/locales/en/cli.ftl:541,caller-trace-required,0,1,"[{""table"":""host-ui.csv"",""item_id"":""HOST-UI-024""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.help.overlay.shortcutSeparator,packages/cli/locales/en/cli.ftl:540,caller-trace-required,0,1,"[{""table"":""host-ui.csv"",""item_id"":""HOST-UI-011""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.help.overlay.title,packages/cli/locales/en/cli.ftl:530,caller-trace-required,0,1,"[{""table"":""host-ui.csv"",""item_id"":""HOST-UI-012""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.help.textguard.controls,packages/cli/locales/en/cli.ftl:71,source-traced,1,0,[],occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.help.textguard.handling,packages/cli/locales/en/cli.ftl:70,source-traced,1,0,[],occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.help.textguard.scanning,packages/cli/locales/en/cli.ftl:69,source-traced,1,0,[],occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.help.title,packages/cli/locales/en/cli.ftl:55,source-traced,1,0,[],occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.help.usageHeading,packages/cli/locales/en/cli.ftl:56,source-traced,1,0,[],occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.helpOverlay.fastMode,packages/cli/locales/en/runtime.ftl:4,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.helpOverlay.scrollback,packages/cli/locales/en/runtime.ftl:5,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.helpOverlay.fastMode,packages/cli/locales/en/runtime.ftl:4,caller-trace-required,0,1,"[{""table"":""host-ui.csv"",""item_id"":""HOST-UI-018""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.helpOverlay.scrollback,packages/cli/locales/en/runtime.ftl:5,caller-trace-required,0,1,"[{""table"":""host-ui.csv"",""item_id"":""HOST-UI-022""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.keybindings.action.conflictDetail,packages/cli/locales/en/cli.ftl:1765,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.keybindings.action.currentDetail,packages/cli/locales/en/cli.ftl:1766,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.keybindings.actions,packages/cli/locales/en/cli.ftl:427,caller-trace-required,0,0,[],caller-trace-required
