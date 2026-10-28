@@ -951,6 +951,21 @@ sources have exact versions/import routes/two-tree hashes, without canonical
 archive or full-body promotion. Twenty corruption controls pass. No shell,
 config, search execution, activation, transcript, model or UI operation executed.
 
+[pi-agent-core-text.csv](pi-agent-core-text.csv) records 31 qualified error
+expressions across all six Agent Core runtime bodies (1,515 lines). The 273
+[exclusions](pi-agent-core-text-exclusions.csv) retain protected and unpublished
+source, with fifteen [boundaries](pi-agent-core-text-boundaries.csv) for stream,
+tool, event, proxy, cancellation and settlement behavior. The native SDK creates
+Agent with an explicit model-runtime stream function; proxy execution requires
+an opt-in caller. A private process-events invariant has no supported ordinary
+route. Custom low-level stream rejection can leave a then-only wait unsettled,
+and event callbacks can escape a planned tool-error path. The
+[scope](pi-agent-core-text-scope.csv) pins all six bodies: four canonical archive
+matches and two exact public flow-patch after-hashes. Locked SRI, both installed
+trees, the nested manifest transform and twelve corruption controls pass.
+This package is separate from the coding-agent/TUI and Pi AI censuses; no agent,
+proxy, tool or native operation runs.
+
 [pi-ai-provider-definitions.csv](pi-ai-provider-definitions.csv) records 130
 qualified provider-name, prompt, auth-source, API and error definitions across
 87 complete registry/catalog-loader bodies (1,792 lines). The 878
@@ -2265,6 +2280,7 @@ python -B review/text-inventory/verify-pi-cli-support.py --node-modules <root-no
 python -B review/text-inventory/verify-pi-codemode-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-diagnostics-migration-share.py
 python -B review/text-inventory/verify-pi-bundle-entry-support.py
+node review/text-inventory/verify-pi-agent-core-text.cjs
 node review/text-inventory/verify-pi-ai-provider-definitions.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-ai-lexical.cjs
 python -B review/text-inventory/verify-pi-ai-runtime-census.py
