@@ -1,0 +1,2403 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "5605285a6e16124f6e4fcdb55ae44dbdfab9d145",
+  "inventory_file": "pi-tui-engines.csv",
+  "scope_file": "pi-tui-engines-scope.csv",
+  "boundary_file": "pi-tui-engines-boundaries.csv",
+  "exclusion_file": "pi-tui-engines-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    },
+    {
+      "source": "packages/session-ui/src/layout.ts",
+      "sha256": "7dde7851cb79dda5ec3e95aa0a3080a65475add638496fb7b66104d8e511e5c3"
+    },
+    {
+      "source": "packages/cli/src/startup-settings.ts",
+      "sha256": "57c087aacfe1167b464acf129506df51a9ba0d78bf4e8561716fd7b7b0878fcd"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/alt-screen-flash.js",
+      "sha256": "6ca2016101ca570a94fdaa18bfe8edbc6734243cb5363d21110e809fcd47db12",
+      "cli_nested_sha256": "6ca2016101ca570a94fdaa18bfe8edbc6734243cb5363d21110e809fcd47db12",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          37
+        ]
+      ],
+      "purpose": "Bounded actual helper import/payload/control or child-display route; prior utilities/components have independent inventories, other helper bodies remain pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.js",
+      "sha256": "4ad2383b4a7480584d22ffcd6b472a7556fa54fd4516d9ab8ba16a846fe16cd0",
+      "cli_nested_sha256": "4ad2383b4a7480584d22ffcd6b472a7556fa54fd4516d9ab8ba16a846fe16cd0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          48
+        ]
+      ],
+      "purpose": "Bounded actual helper import/payload/control or child-display route; prior utilities/components have independent inventories, other helper bodies remain pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/utils.js",
+      "sha256": "275c8400c37c09a7cc106445e27f676aa320c6a024dc89b540b97e1357e90e55",
+      "cli_nested_sha256": "275c8400c37c09a7cc106445e27f676aa320c6a024dc89b540b97e1357e90e55",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1018,
+          1140
+        ]
+      ],
+      "purpose": "Bounded actual helper import/payload/control or child-display route; prior utilities/components have independent inventories, other helper bodies remain pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/layout.js",
+      "sha256": "b20cb0b156e506b4639b789be8688fe9dd38d42d15746ae82e69fcd250e42147",
+      "cli_nested_sha256": "b20cb0b156e506b4639b789be8688fe9dd38d42d15746ae82e69fcd250e42147",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          275,
+          298
+        ]
+      ],
+      "purpose": "Bounded actual helper import/payload/control or child-display route; prior utilities/components have independent inventories, other helper bodies remain pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal-image.js",
+      "sha256": "af7d4478fad5d67dfbb2694a232c5f97e68fa2fb9e178805803ed95fb04ed646",
+      "cli_nested_sha256": "af7d4478fad5d67dfbb2694a232c5f97e68fa2fb9e178805803ed95fb04ed646",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          102,
+          148
+        ],
+        [
+          530,
+          565
+        ]
+      ],
+      "purpose": "Bounded actual helper import/payload/control or child-display route; prior utilities/components have independent inventories, other helper bodies remain pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/tui-renderer.js",
+      "sha256": "4c420a641ee6c0cb4b22677f97a11bc2da580b2b1f31ba56ac6f4e8df7bbd429",
+      "cli_nested_sha256": "4c420a641ee6c0cb4b22677f97a11bc2da580b2b1f31ba56ac6f4e8df7bbd429",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          67
+        ]
+      ],
+      "purpose": "Bounded actual native mode/factory/clipboard/error consumer proof, not a new full local producer closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          384,
+          426
+        ],
+        [
+          654,
+          696
+        ],
+        [
+          2457,
+          2467
+        ],
+        [
+          2484,
+          2498
+        ],
+        [
+          5557,
+          5582
+        ]
+      ],
+      "purpose": "Bounded actual native mode/factory/clipboard/error consumer proof, not a new full local producer closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-manager.js",
+      "sha256": "6e60af97dd4f67b4bcc820b6c271a26df0bbcb7b7a4258f8cc771c1570b7c546",
+      "cli_nested_sha256": "6e60af97dd4f67b4bcc820b6c271a26df0bbcb7b7a4258f8cc771c1570b7c546",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          987,
+          993
+        ]
+      ],
+      "purpose": "Bounded actual native mode/factory/clipboard/error consumer proof, not a new full local producer closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-defaults.js",
+      "sha256": "592e953bfdf86c5c644354cdac4dad6dfd9b89f7914a10cb877dcd11ef885d33",
+      "cli_nested_sha256": "592e953bfdf86c5c644354cdac4dad6dfd9b89f7914a10cb877dcd11ef885d33",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          58,
+          65
+        ]
+      ],
+      "purpose": "Bounded actual native mode/factory/clipboard/error consumer proof, not a new full local producer closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.js",
+      "sha256": "e41b1212f49be33a7aa1a1d4aa97eb653ad08fe85da8e0743c3d728597eb76b7",
+      "cli_nested_sha256": "e41b1212f49be33a7aa1a1d4aa97eb653ad08fe85da8e0743c3d728597eb76b7",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          88,
+          178
+        ]
+      ],
+      "purpose": "Bounded actual native mode/factory/clipboard/error consumer proof, not a new full local producer closure."
+    }
+  ],
+  "nonruntime_assets": [
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui.d.ts",
+      "sha256": "a4d70e68030c4493caa1cb67c015720c688dd1dd668bfa5e6e188f095b4fcc9a",
+      "cli_nested_sha256": "a4d70e68030c4493caa1cb67c015720c688dd1dd668bfa5e6e188f095b4fcc9a",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui.d.ts.map",
+      "sha256": "a0ace95c396428c1396777e4628af2f1ffa372ce946f9d6215a8b41a875637f2",
+      "cli_nested_sha256": "a0ace95c396428c1396777e4628af2f1ffa372ce946f9d6215a8b41a875637f2",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui.js.map",
+      "sha256": "6bcc503dbd35ab111392c1aca66fcfc4c45da345d860eaebe1ca324c0be5b931",
+      "cli_nested_sha256": "6bcc503dbd35ab111392c1aca66fcfc4c45da345d860eaebe1ca324c0be5b931",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.d.ts",
+      "sha256": "2342ee7ba510b42015807f7a3644440c27fa52db3a2b3ff866cecf784b8dc9af",
+      "cli_nested_sha256": "2342ee7ba510b42015807f7a3644440c27fa52db3a2b3ff866cecf784b8dc9af",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.d.ts.map",
+      "sha256": "f39d7cd63ffce0de0df3584096633915e8bf72db070274b0558a26837408cc76",
+      "cli_nested_sha256": "f39d7cd63ffce0de0df3584096633915e8bf72db070274b0558a26837408cc76",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.js.map",
+      "sha256": "8be9f7b8420bbe5d7f832776929c250cbb203ac07d1acb1ce9e57fbc8188acd6",
+      "cli_nested_sha256": "8be9f7b8420bbe5d7f832776929c250cbb203ac07d1acb1ce9e57fbc8188acd6",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.d.ts",
+      "sha256": "f2441514370d3f5726347aa5c58a2215f3da70f708a33e4784545ef96224b73f",
+      "cli_nested_sha256": "f2441514370d3f5726347aa5c58a2215f3da70f708a33e4784545ef96224b73f",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.d.ts.map",
+      "sha256": "73e8f61678a002883be44a22de1a442d474115b8ec8c9c80a7c14fce5f86c9a1",
+      "cli_nested_sha256": "73e8f61678a002883be44a22de1a442d474115b8ec8c9c80a7c14fce5f86c9a1",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js.map",
+      "sha256": "1df1e452354c6f2514a59e45e962f2a2db44871b806ec91e9c5d3489a859bf9f",
+      "cli_nested_sha256": "1df1e452354c6f2514a59e45e962f2a2db44871b806ec91e9c5d3489a859bf9f",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    }
+  ],
+  "archive_support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/components/alt-screen-flash.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/utils.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/layout.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal-image.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/tui-renderer.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-manager.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-defaults.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js.map"
+    }
+  ],
+  "external_dependency_resolution": [
+    {
+      "tree": "root",
+      "name": "get-east-asian-width",
+      "version": "1.6.0",
+      "resolved_entry": "get-east-asian-width/index.js",
+      "package_json_sha256": "d263e50dd1a43aee9acda4d7f066e66b0d0bde1f2852ea6e7153750a5e3a3e52",
+      "entry_sha256": "d7b1ba05914c0fc311c20e5618bf8d0893c9c74078a07975e2df981445e64887",
+      "lock_records": [
+        {
+          "source": "node_modules/get-east-asian-width",
+          "version": "1.6.0",
+          "integrity": "sha512-QRbvDIbx6YklUe6RxeTeleMR0yv3cYH6PsPZHcnVn7xv7zO1BHN8r0XETu8n6Ye3Q+ahtSarc3WgtNWmehIBfA=="
+        },
+        {
+          "source": "packages/cli/node_modules/get-east-asian-width",
+          "version": "1.7.0",
+          "integrity": "sha512-XjH1AECxf0giL2V1aU8vKyRR2ppRUb5c0EvT7zuJTokQ74bNo52zOtghqdWIqrhUD79fo3x0WfKZdOqxF6LG1Q=="
+        }
+      ],
+      "canonical_archive_available": false,
+      "status": "resolved external body not reviewed; metadata/hash comparison only",
+      "main_lock_exact_path": "node_modules/get-east-asian-width",
+      "exact_path_lock_record": {
+        "source": "node_modules/get-east-asian-width",
+        "version": "1.6.0",
+        "integrity": "sha512-QRbvDIbx6YklUe6RxeTeleMR0yv3cYH6PsPZHcnVn7xv7zO1BHN8r0XETu8n6Ye3Q+ahtSarc3WgtNWmehIBfA=="
+      },
+      "path_lock_disposition": "resolved package path/version matches this main-lock record"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "get-east-asian-width",
+      "version": "1.6.0",
+      "resolved_entry": "@earendil-works/pi-tui/node_modules/get-east-asian-width/index.js",
+      "package_json_sha256": "61f4c4194938a9dd225d1871d743e5266c63fb4faad133802579f21bbaead41a",
+      "entry_sha256": "d7b1ba05914c0fc311c20e5618bf8d0893c9c74078a07975e2df981445e64887",
+      "lock_records": [
+        {
+          "source": "node_modules/get-east-asian-width",
+          "version": "1.6.0",
+          "integrity": "sha512-QRbvDIbx6YklUe6RxeTeleMR0yv3cYH6PsPZHcnVn7xv7zO1BHN8r0XETu8n6Ye3Q+ahtSarc3WgtNWmehIBfA=="
+        },
+        {
+          "source": "packages/cli/node_modules/get-east-asian-width",
+          "version": "1.7.0",
+          "integrity": "sha512-XjH1AECxf0giL2V1aU8vKyRR2ppRUb5c0EvT7zuJTokQ74bNo52zOtghqdWIqrhUD79fo3x0WfKZdOqxF6LG1Q=="
+        }
+      ],
+      "canonical_archive_available": false,
+      "status": "resolved external body not reviewed; metadata/hash comparison only",
+      "main_lock_exact_path": "packages/cli/node_modules/@earendil-works/pi-tui/node_modules/get-east-asian-width",
+      "exact_path_lock_record": null,
+      "path_lock_disposition": "shadowed pi-tui-local1.6.0 path has no exact main-lock entry; CLI top-level1.7.0 record is not the import resolution target"
+    }
+  ],
+  "counts": {
+    "rows": 21,
+    "proofs": 21,
+    "scopes": 3,
+    "external_boundaries": 11,
+    "excluded_occurrences": 346,
+    "dispositioned_source_files": 3,
+    "string_template_occurrences": 367,
+    "protected_regex_literals": 11,
+    "error_constructors": 1,
+    "catch_clauses": 3,
+    "throw_statements": 1,
+    "all_new_expressions": 26,
+    "protected_control_occurrences": 82,
+    "full_runtime_lines": 3276,
+    "runtime_source_bytes": 143451,
+    "nonruntime_assets": 9,
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "statusCounts": {
+      "source-read-local-producers": 3
+    },
+    "diagnostic_file_rows": 14,
+    "engine_or_thrown_error_rows": 7
+  },
+  "proofs": [
+    {
+      "item_id": "pi.tui-engines.tui_alt_screen.1244.29",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.js",
+      "line": 1244,
+      "column": 29,
+      "kind": "string-literal",
+      "english": "Copied!",
+      "evidence": "\"Copied!\""
+    },
+    {
+      "item_id": "pi.tui-engines.tui_alt_screen.1244.79",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.js",
+      "line": 1244,
+      "column": 79,
+      "kind": "string-literal",
+      "english": "Copy failed",
+      "evidence": "\"Copy failed\""
+    },
+    {
+      "item_id": "pi.tui-engines.tui_alt_screen.1248.20",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.js",
+      "line": 1248,
+      "column": 20,
+      "kind": "string-literal",
+      "english": "Copied!",
+      "evidence": "\"Copied!\""
+    },
+    {
+      "item_id": "pi.tui-engines.tui_main_screen.486.21",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "line": 486,
+      "column": 21,
+      "kind": "template-expression",
+      "english": "Rendered line ${i} exceeds terminal width (${visibleWidth(line)} > ${width}).",
+      "evidence": "`Rendered line ${i} exceeds terminal width (${visibleWidth(line)} > ${width}).`"
+    },
+    {
+      "item_id": "pi.tui-engines.tui_main_screen.488.21",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "line": 488,
+      "column": 21,
+      "kind": "string-literal",
+      "english": "This is likely caused by a custom TUI component not truncating its output.",
+      "evidence": "\"This is likely caused by a custom TUI component not truncating its output.\""
+    },
+    {
+      "item_id": "pi.tui-engines.tui_main_screen.489.21",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "line": 489,
+      "column": 21,
+      "kind": "string-literal",
+      "english": "Use visibleWidth() to measure and truncateToWidth() to truncate lines.",
+      "evidence": "\"Use visibleWidth() to measure and truncateToWidth() to truncate lines.\""
+    },
+    {
+      "item_id": "pi.tui-engines.tui_main_screen.491.21",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "line": 491,
+      "column": 21,
+      "kind": "template-expression",
+      "english": "Debug log written to: ${crashLogPath}",
+      "evidence": "`Debug log written to: ${crashLogPath}`"
+    },
+    {
+      "item_id": "pi.tui-engines.tui_main_screen.289.25",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "line": 289,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "[${new Date().toISOString()}] fullRender: ${reason} (prev=${this.previousLines.length}, new=${newLines.length}, height=${height})\\n",
+      "evidence": "`[${new Date().toISOString()}] fullRender: ${reason} (prev=${this.previousLines.length}, new=${newLines.length}, height=${height})\\n`"
+    },
+    {
+      "item_id": "pi.tui-engines.tui_main_screen.295.23",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "line": 295,
+      "column": 23,
+      "kind": "string-literal",
+      "english": "first render",
+      "evidence": "\"first render\""
+    },
+    {
+      "item_id": "pi.tui-engines.tui_main_screen.301.23",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "line": 301,
+      "column": 23,
+      "kind": "template-expression",
+      "english": "terminal width changed (${this.previousWidth} -> ${width})",
+      "evidence": "`terminal width changed (${this.previousWidth} -> ${width})`"
+    },
+    {
+      "item_id": "pi.tui-engines.tui_main_screen.309.23",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "line": 309,
+      "column": 23,
+      "kind": "template-expression",
+      "english": "terminal height changed (${this.previousHeight} -> ${height})",
+      "evidence": "`terminal height changed (${this.previousHeight} -> ${height})`"
+    },
+    {
+      "item_id": "pi.tui-engines.tui_main_screen.317.23",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "line": 317,
+      "column": 23,
+      "kind": "template-expression",
+      "english": "clearOnShrink (maxLinesRendered=${this.maxLinesRendered})",
+      "evidence": "`clearOnShrink (maxLinesRendered=${this.maxLinesRendered})`"
+    },
+    {
+      "item_id": "pi.tui-engines.tui_main_screen.364.31",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "line": 364,
+      "column": 31,
+      "kind": "template-expression",
+      "english": "deleted lines moved viewport up (${targetRow} < ${prevViewportTop})",
+      "evidence": "`deleted lines moved viewport up (${targetRow} < ${prevViewportTop})`"
+    },
+    {
+      "item_id": "pi.tui-engines.tui_main_screen.377.31",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "line": 377,
+      "column": 31,
+      "kind": "template-expression",
+      "english": "extraLines > height (${extraLines} > ${height})",
+      "evidence": "`extraLines > height (${extraLines} > ${height})`"
+    },
+    {
+      "item_id": "pi.tui-engines.tui_main_screen.410.23",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "line": 410,
+      "column": 23,
+      "kind": "template-expression",
+      "english": "firstChanged < viewportTop (${firstChanged} < ${prevViewportTop})",
+      "evidence": "`firstChanged < viewportTop (${firstChanged} < ${prevViewportTop})`"
+    },
+    {
+      "item_id": "pi.tui-engines.tui_main_screen.454.31",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "line": 454,
+      "column": 31,
+      "kind": "template-expression",
+      "english": "kitty image pre-clear would scroll (${imageStartScreenRow} + ${imageReservedRows} > ${height})",
+      "evidence": "`kitty image pre-clear would scroll (${imageStartScreenRow} + ${imageReservedRows} > ${height})`"
+    },
+    {
+      "item_id": "pi.tui-engines.tui_main_screen.473.21",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "line": 473,
+      "column": 21,
+      "kind": "template-expression",
+      "english": "Crash at ${new Date().toISOString()}",
+      "evidence": "`Crash at ${new Date().toISOString()}`"
+    },
+    {
+      "item_id": "pi.tui-engines.tui_main_screen.474.21",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "line": 474,
+      "column": 21,
+      "kind": "template-expression",
+      "english": "Terminal width: ${width}",
+      "evidence": "`Terminal width: ${width}`"
+    },
+    {
+      "item_id": "pi.tui-engines.tui_main_screen.475.21",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "line": 475,
+      "column": 21,
+      "kind": "template-expression",
+      "english": "Line ${i} visible width: ${visibleWidth(line)}",
+      "evidence": "`Line ${i} visible width: ${visibleWidth(line)}`"
+    },
+    {
+      "item_id": "pi.tui-engines.tui_main_screen.477.21",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "line": 477,
+      "column": 21,
+      "kind": "string-literal",
+      "english": "=== All rendered lines ===",
+      "evidence": "\"=== All rendered lines ===\""
+    },
+    {
+      "item_id": "pi.tui-engines.tui_main_screen.539.17",
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+      "line": 539,
+      "column": 17,
+      "kind": "template-expression",
+      "english": "[${output.length} chars written in bounded chunks]",
+      "evidence": "`[${output.length} chars written in bounded chunks]`"
+    }
+  ],
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui.js",
+        "read_lines": [
+          1,
+          1121
+        ],
+        "string_template_occurrences": 88,
+        "fixed_rows": 0,
+        "excluded_occurrences": 88,
+        "protected_regex_literals": 6,
+        "regex_census_sha256": "d1ce84c949c998498757fe7d18c9f1bdaffcc32d16a7fa8256162f330d26211c",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 186,
+            "column": 22,
+            "callee": "Set",
+            "source": "new Set()"
+          },
+          {
+            "line": 203,
+            "column": 36,
+            "callee": "Set",
+            "source": "new Set()"
+          },
+          {
+            "line": 362,
+            "column": 25,
+            "callee": "Set",
+            "source": "new Set()"
+          },
+          {
+            "line": 1104,
+            "column": 16,
+            "callee": "Promise",
+            "source": "new Promise((resolve) => {\n            const query = {\n                palette: Array.from({ length: TERMINAL_PALETTE_SIZE }, () => undefined),\n                replied: new Set(),\n                deliver: resolve,\n                timer: undefined,\n            };\n            // Resolve with the replies so far, and keep collecting late replies for `onLateReply`.\n            query.timer = setTimeout(() => {\n                query.deliver = onLateReply;\n                resolve(this.terminalColorQueryResult(query));\n            }, timeoutMs);\n            this.pendingTerminalColorQueries.push(query);\n            this.terminal.write(TERMINAL_COLOR_QUERY);\n        })"
+          },
+          {
+            "line": 1107,
+            "column": 26,
+            "callee": "Set",
+            "source": "new Set()"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 246,
+            "column": 9,
+            "source": "catch {\n            // Never throw from an exit handler.\n        }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "node:perf_hooks"
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "./keys.js"
+          },
+          {
+            "line": 6,
+            "column": 1,
+            "specifier": "./terminal-colors.js"
+          },
+          {
+            "line": 7,
+            "column": 1,
+            "specifier": "./terminal-image.js"
+          },
+          {
+            "line": 8,
+            "column": 1,
+            "specifier": "./utils.js"
+          }
+        ],
+        "output_or_callback_calls": [
+          {
+            "line": 244,
+            "column": 13,
+            "callee": "this.terminal.restoreOnExit",
+            "arguments": [
+              "this.getExitRestorePrefix()",
+              "this.getExitRestoreSuffix()"
+            ]
+          },
+          {
+            "line": 600,
+            "column": 13,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "\"\\x1b[?2031h\""
+            ]
+          },
+          {
+            "line": 626,
+            "column": 13,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "enabled ? \"\\x1b[?2031h\" : \"\\x1b[?2031l\""
+            ]
+          },
+          {
+            "line": 636,
+            "column": 9,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "\"\\x1b[16t\""
+            ]
+          },
+          {
+            "line": 643,
+            "column": 13,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "\"\\x1b[?2031l\""
+            ]
+          },
+          {
+            "line": 1117,
+            "column": 13,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "TERMINAL_COLOR_QUERY"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [
+          {
+            "line": 57,
+            "column": 30,
+            "kind": "template-expression",
+            "text": "\\x1b]10;?\\x07\\x1b]11;?\\x07${Array.from({ length: TERMINAL_PALETTE_SIZE }, (_, index) => `\\x1b]4;${index};?\\x07`).join(\"\")}\\x1b[c"
+          },
+          {
+            "line": 57,
+            "column": 119,
+            "kind": "template-expression",
+            "text": "\\x1b]4;${index};?\\x07"
+          },
+          {
+            "line": 69,
+            "column": 30,
+            "kind": "string-literal",
+            "text": "\u001b_pi:c\u0007"
+          },
+          {
+            "line": 71,
+            "column": 34,
+            "kind": "string-literal",
+            "text": "\u001b_pi:fc\u0007"
+          },
+          {
+            "line": 72,
+            "column": 32,
+            "kind": "string-literal",
+            "text": "\u001b_pi:/fc\u0007"
+          },
+          {
+            "line": 155,
+            "column": 23,
+            "kind": "string-literal",
+            "text": "\u001b[0m\u001b]8;;\u0007"
+          },
+          {
+            "line": 230,
+            "column": 16,
+            "kind": "template-expression",
+            "text": "${this.terminalColorSchemeNotificationsEnabled ? \"\\x1b[?2031l\" : \"\"}\\x1b[?25h"
+          },
+          {
+            "line": 230,
+            "column": 66,
+            "kind": "string-literal",
+            "text": "\u001b[?2031l"
+          },
+          {
+            "line": 600,
+            "column": 33,
+            "kind": "string-literal",
+            "text": "\u001b[?2031h"
+          },
+          {
+            "line": 626,
+            "column": 43,
+            "kind": "string-literal",
+            "text": "\u001b[?2031h"
+          },
+          {
+            "line": 626,
+            "column": 59,
+            "kind": "string-literal",
+            "text": "\u001b[?2031l"
+          },
+          {
+            "line": 636,
+            "column": 29,
+            "kind": "string-literal",
+            "text": "\u001b[16t"
+          },
+          {
+            "line": 643,
+            "column": 33,
+            "kind": "string-literal",
+            "text": "\u001b[?2031l"
+          },
+          {
+            "line": 1092,
+            "column": 59,
+            "kind": "string-literal",
+            "text": "\u001b[7m"
+          },
+          {
+            "line": 1092,
+            "column": 98,
+            "kind": "string-literal",
+            "text": "\u001b[27m"
+          }
+        ],
+        "review": "All base engine lines read: component/mouse dispatch, focus/overlay state, terminal start/stop/exit restore, render timers, input/key release handling, color/cell query state, overlay geometry/compositing, cursor resolution and resets. No local human prose/Error/throw; one synchronous exit-restore catch."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-alt-screen.js",
+        "read_lines": [
+          1,
+          1560
+        ],
+        "string_template_occurrences": 166,
+        "fixed_rows": 3,
+        "excluded_occurrences": 163,
+        "protected_regex_literals": 5,
+        "regex_census_sha256": "90ab6edd3dea2130dbea5493902c742472850da3f3249f383f83201f836cfc97",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 34,
+            "column": 41,
+            "callee": "Set",
+            "source": "new Set([\"/\", \"-\"])"
+          },
+          {
+            "line": 52,
+            "column": 27,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 93,
+            "column": 35,
+            "callee": "ScrollView",
+            "source": "new ScrollView(this.implicitDocument, { follow: \"end\", primary: true })"
+          },
+          {
+            "line": 94,
+            "column": 24,
+            "callee": "AltScreenFlashContainer",
+            "source": "new AltScreenFlashContainer(() => this.requestRender())"
+          },
+          {
+            "line": 95,
+            "column": 28,
+            "callee": "WheelScrollAccelerator",
+            "source": "new WheelScrollAccelerator(options.wheelScrollLines ?? 1)"
+          },
+          {
+            "line": 248,
+            "column": 33,
+            "callee": "Set",
+            "source": "new Set()"
+          },
+          {
+            "line": 332,
+            "column": 27,
+            "callee": "AltScreenSearchComponent",
+            "source": "new AltScreenSearchComponent((query) => this.updateSearchQuery(query), this.searchNavigationButtonStyle)"
+          },
+          {
+            "line": 335,
+            "column": 20,
+            "callee": "AltScreenSearchIndex",
+            "source": "new AltScreenSearchIndex()"
+          },
+          {
+            "line": 647,
+            "column": 25,
+            "callee": "Set",
+            "source": "new Set()"
+          },
+          {
+            "line": 808,
+            "column": 22,
+            "callee": "Set",
+            "source": "new Set()"
+          },
+          {
+            "line": 1280,
+            "column": 29,
+            "callee": "Map",
+            "source": "new Map()"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 843,
+            "column": 9,
+            "source": "catch {\n            // Clipboard paste is best-effort.\n        }"
+          },
+          {
+            "line": 1124,
+            "column": 17,
+            "source": "catch {\n                    // URL activation is best-effort.\n                }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "./alt-screen-search.js"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "./components/alt-screen-flash.js"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "./components/scroll-view.js"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "./keybindings.js"
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "./keys.js"
+          },
+          {
+            "line": 6,
+            "column": 1,
+            "specifier": "./layout.js"
+          },
+          {
+            "line": 7,
+            "column": 1,
+            "specifier": "./layout-node.js"
+          },
+          {
+            "line": 8,
+            "column": 1,
+            "specifier": "./terminal-image.js"
+          },
+          {
+            "line": 9,
+            "column": 1,
+            "specifier": "./tui.js"
+          },
+          {
+            "line": 10,
+            "column": 1,
+            "specifier": "./utils.js"
+          },
+          {
+            "line": 11,
+            "column": 1,
+            "specifier": "./wheel-scroll.js"
+          }
+        ],
+        "output_or_callback_calls": [
+          {
+            "line": 194,
+            "column": 9,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "`${ENTER_ALT_SCREEN}${DISABLE_AUTOWRAP}${this.mouseEnabled ? mouseSequence : \"\"}\\x1b[2J\\x1b[H\\x1b[?25l`"
+            ]
+          },
+          {
+            "line": 206,
+            "column": 9,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "`${BEGIN_SYNCHRONIZED_OUTPUT}${this.deleteKittyImages()}${this.mouseEnabled ? DISABLE_MOUSE : \"\"}${ENABLE_AUTOWRAP}${END_SYNCHRONIZED_OUTPUT}`"
+            ]
+          },
+          {
+            "line": 214,
+            "column": 13,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "`${BEGIN_SYNCHRONIZED_OUTPUT}${EXIT_ALT_SCREEN}\\x1b[?25h${END_SYNCHRONIZED_OUTPUT}`"
+            ]
+          },
+          {
+            "line": 227,
+            "column": 13,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "buffer"
+            ]
+          },
+          {
+            "line": 474,
+            "column": 9,
+            "callee": "this.flashes.flash",
+            "arguments": [
+              "message",
+              "durationMs"
+            ]
+          },
+          {
+            "line": 841,
+            "column": 13,
+            "callee": "this.onRightClickPaste",
+            "arguments": []
+          },
+          {
+            "line": 1122,
+            "column": 21,
+            "callee": "this.openUrl",
+            "arguments": [
+              "clickedUrl"
+            ]
+          },
+          {
+            "line": 1242,
+            "column": 34,
+            "callee": "this.copySelection",
+            "arguments": [
+              "text"
+            ]
+          },
+          {
+            "line": 1244,
+            "column": 13,
+            "callee": "this.flash",
+            "arguments": [
+              "ok ? \"Copied!\" : typeof result === \"string\" ? result : \"Copy failed\"",
+              "ok ? undefined : COPY_ERROR_FLASH_DURATION_MS"
+            ]
+          },
+          {
+            "line": 1247,
+            "column": 9,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "`\\x1b]52;c;${Buffer.from(text).toString(\"base64\")}\\x07`"
+            ]
+          },
+          {
+            "line": 1248,
+            "column": 9,
+            "callee": "this.flash",
+            "arguments": [
+              "\"Copied!\""
+            ]
+          },
+          {
+            "line": 1553,
+            "column": 9,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "buffer"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [
+          {
+            "line": 12,
+            "column": 26,
+            "kind": "string-literal",
+            "text": "\u001b[?1049h"
+          },
+          {
+            "line": 13,
+            "column": 25,
+            "kind": "string-literal",
+            "text": "\u001b[?1049l"
+          },
+          {
+            "line": 14,
+            "column": 26,
+            "kind": "string-literal",
+            "text": "\u001b[?7l"
+          },
+          {
+            "line": 15,
+            "column": 25,
+            "kind": "string-literal",
+            "text": "\u001b[?7h"
+          },
+          {
+            "line": 16,
+            "column": 36,
+            "kind": "string-literal",
+            "text": "\u001b[?1000h\u001b[?1002h\u001b[?1004h\u001b[?1006h"
+          },
+          {
+            "line": 17,
+            "column": 33,
+            "kind": "string-literal",
+            "text": "\u001b[?1000h\u001b[?1002h\u001b[?1003h\u001b[?1004h\u001b[?1006h"
+          },
+          {
+            "line": 18,
+            "column": 23,
+            "kind": "string-literal",
+            "text": "\u001b[?1006l\u001b[?1004l\u001b[?1003l\u001b[?1002l\u001b[?1000l"
+          },
+          {
+            "line": 19,
+            "column": 18,
+            "kind": "string-literal",
+            "text": "\u001b[I"
+          },
+          {
+            "line": 20,
+            "column": 19,
+            "kind": "string-literal",
+            "text": "\u001b[O"
+          },
+          {
+            "line": 21,
+            "column": 35,
+            "kind": "string-literal",
+            "text": "\u001b[?2026h"
+          },
+          {
+            "line": 22,
+            "column": 33,
+            "kind": "string-literal",
+            "text": "\u001b[?2026l"
+          },
+          {
+            "line": 97,
+            "column": 72,
+            "kind": "template-expression",
+            "text": "\\x1b[4m${text}\\x1b[24m"
+          },
+          {
+            "line": 98,
+            "column": 86,
+            "kind": "template-expression",
+            "text": "\\x1b[1;7m${text}\\x1b[22;27m"
+          },
+          {
+            "line": 194,
+            "column": 29,
+            "kind": "template-expression",
+            "text": "${ENTER_ALT_SCREEN}${DISABLE_AUTOWRAP}${this.mouseEnabled ? mouseSequence : \"\"}\\x1b[2J\\x1b[H\\x1b[?25l"
+          },
+          {
+            "line": 214,
+            "column": 33,
+            "kind": "template-expression",
+            "text": "${BEGIN_SYNCHRONIZED_OUTPUT}${EXIT_ALT_SCREEN}\\x1b[?25h${END_SYNCHRONIZED_OUTPUT}"
+          },
+          {
+            "line": 224,
+            "column": 27,
+            "kind": "template-expression",
+            "text": "\\r\\x1b[2K${this.lastDocument[row] ?? \"\"}"
+          },
+          {
+            "line": 226,
+            "column": 23,
+            "kind": "template-expression",
+            "text": "\\x1b[0m${ENABLE_AUTOWRAP}\\r\\n\\x1b[?25h${END_SYNCHRONIZED_OUTPUT}"
+          },
+          {
+            "line": 242,
+            "column": 16,
+            "kind": "template-expression",
+            "text": "${super.getExitRestoreSuffix()}${this.altScreenActive ? `${EXIT_ALT_SCREEN}\\x1b[?25h` : \"\"}"
+          },
+          {
+            "line": 242,
+            "column": 73,
+            "kind": "template-expression",
+            "text": "${EXIT_ALT_SCREEN}\\x1b[?25h"
+          },
+          {
+            "line": 790,
+            "column": 50,
+            "kind": "string-literal",
+            "text": "\u001b[M"
+          },
+          {
+            "line": 1247,
+            "column": 29,
+            "kind": "template-expression",
+            "text": "\\x1b]52;c;${Buffer.from(text).toString(\"base64\")}\\x07"
+          },
+          {
+            "line": 1337,
+            "column": 22,
+            "kind": "string-literal",
+            "text": "\u001b[7m"
+          },
+          {
+            "line": 1348,
+            "column": 27,
+            "kind": "string-literal",
+            "text": "\u001b[7m"
+          },
+          {
+            "line": 1351,
+            "column": 16,
+            "kind": "template-expression",
+            "text": "${result}\\x1b[27m"
+          },
+          {
+            "line": 1404,
+            "column": 95,
+            "kind": "string-literal",
+            "text": "\u001b[M"
+          },
+          {
+            "line": 1504,
+            "column": 23,
+            "kind": "template-expression",
+            "text": "${clearImages}\\x1b[2J"
+          },
+          {
+            "line": 1508,
+            "column": 27,
+            "kind": "string-literal",
+            "text": "\u001b[2J"
+          },
+          {
+            "line": 1521,
+            "column": 27,
+            "kind": "template-expression",
+            "text": "\\x1b[${row + 1};1H\\x1b[2K"
+          },
+          {
+            "line": 1528,
+            "column": 27,
+            "kind": "template-expression",
+            "text": "\\x1b[${row + 1};1H${preparedKittyScreen.lines[row] ?? \"\"}"
+          },
+          {
+            "line": 1535,
+            "column": 27,
+            "kind": "template-expression",
+            "text": "\\x1b[${row + 1};1H${preparedKittyScreen.lines[row] ?? \"\"}"
+          },
+          {
+            "line": 1542,
+            "column": 27,
+            "kind": "template-expression",
+            "text": "\\x1b[${row + 1};1H\\x1b[2K${preparedKittyScreen.lines[row] ?? \"\"}"
+          },
+          {
+            "line": 1546,
+            "column": 23,
+            "kind": "template-expression",
+            "text": "\\x1b[${cursorPos.row + 1};${Math.min(width, cursorPos.col) + 1}H"
+          },
+          {
+            "line": 1547,
+            "column": 54,
+            "kind": "string-literal",
+            "text": "\u001b[?25h"
+          },
+          {
+            "line": 1547,
+            "column": 68,
+            "kind": "string-literal",
+            "text": "\u001b[?25l"
+          },
+          {
+            "line": 1550,
+            "column": 23,
+            "kind": "string-literal",
+            "text": "\u001b[?25l"
+          }
+        ],
+        "review": "All fullscreen engine lines read: lifecycle, protocol/cache limits, scroll/search/mouse/selection/clipboard/URL/indicator/flash logic and complete frame writer. Three fixed flash source occurrences; synchronous right-click paste and URL callback errors suppressed. Search/flash child definitions and native callbacks bounded separately."
+      },
+      {
+        "source": "npm:@earendil-works/pi-tui@1.4.0/dist/tui-main-screen.js",
+        "read_lines": [
+          1,
+          595
+        ],
+        "string_template_occurrences": 113,
+        "fixed_rows": 18,
+        "excluded_occurrences": 95,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 493,
+            "column": 23,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "errorMsg",
+            "resolved_message_expression": "[\n                    `Rendered line ${i} exceeds terminal width (${visibleWidth(line)} > ${width}).`,\n                    \"\",\n                    \"This is likely caused by a custom TUI component not truncating its output.\",\n                    \"Use visibleWidth() to measure and truncateToWidth() to truncate lines.\",\n                    \"\",\n                    `Debug log written to: ${crashLogPath}`,\n                ].join(\"\\n\")",
+            "literal_refs": [
+              {
+                "line": 486,
+                "column": 21,
+                "kind": "template-expression",
+                "text": "Rendered line ${i} exceeds terminal width (${visibleWidth(line)} > ${width})."
+              },
+              {
+                "line": 487,
+                "column": 21,
+                "kind": "string-literal",
+                "text": ""
+              },
+              {
+                "line": 488,
+                "column": 21,
+                "kind": "string-literal",
+                "text": "This is likely caused by a custom TUI component not truncating its output."
+              },
+              {
+                "line": 489,
+                "column": 21,
+                "kind": "string-literal",
+                "text": "Use visibleWidth() to measure and truncateToWidth() to truncate lines."
+              },
+              {
+                "line": 490,
+                "column": 21,
+                "kind": "string-literal",
+                "text": ""
+              },
+              {
+                "line": 491,
+                "column": 21,
+                "kind": "template-expression",
+                "text": "Debug log written to: ${crashLogPath}"
+              },
+              {
+                "line": 492,
+                "column": 24,
+                "kind": "string-literal",
+                "text": "\n"
+              }
+            ]
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 103,
+            "column": 29,
+            "callee": "Set",
+            "source": "new Set()"
+          },
+          {
+            "line": 123,
+            "column": 38,
+            "callee": "Set",
+            "source": "new Set()"
+          },
+          {
+            "line": 153,
+            "column": 21,
+            "callee": "Set",
+            "source": "new Set()"
+          },
+          {
+            "line": 203,
+            "column": 21,
+            "callee": "Set",
+            "source": "new Set()"
+          },
+          {
+            "line": 241,
+            "column": 28,
+            "callee": "BoundedTerminalWriter",
+            "source": "new BoundedTerminalWriter((data) => this.terminal.write(data))"
+          },
+          {
+            "line": 289,
+            "column": 29,
+            "callee": "Date",
+            "source": "new Date()"
+          },
+          {
+            "line": 358,
+            "column": 32,
+            "callee": "BoundedTerminalWriter",
+            "source": "new BoundedTerminalWriter((data) => this.terminal.write(data))"
+          },
+          {
+            "line": 416,
+            "column": 24,
+            "callee": "BoundedTerminalWriter",
+            "source": "new BoundedTerminalWriter((data) => this.terminal.write(data))"
+          },
+          {
+            "line": 473,
+            "column": 33,
+            "callee": "Date",
+            "source": "new Date()"
+          },
+          {
+            "line": 493,
+            "column": 23,
+            "callee": "Error",
+            "source": "new Error(errorMsg)"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 493,
+            "column": 17,
+            "expression": "new Error(errorMsg)"
+          }
+        ],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "node:fs"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "node:os"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "node:path"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "./terminal-image.js"
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "./tui.js"
+          },
+          {
+            "line": 6,
+            "column": 1,
+            "specifier": "./utils.js"
+          }
+        ],
+        "output_or_callback_calls": [
+          {
+            "line": 58,
+            "column": 9,
+            "callee": "this.write",
+            "arguments": [
+              "this.buffer"
+            ]
+          },
+          {
+            "line": 143,
+            "column": 9,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "\" \""
+            ]
+          },
+          {
+            "line": 147,
+            "column": 13,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "`\\x1b[${lineDiff}B`"
+            ]
+          },
+          {
+            "line": 149,
+            "column": 13,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "`\\x1b[${-lineDiff}A`"
+            ]
+          },
+          {
+            "line": 150,
+            "column": 9,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "\"\\r\\n\""
+            ]
+          },
+          {
+            "line": 241,
+            "column": 64,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "data"
+            ]
+          },
+          {
+            "line": 242,
+            "column": 13,
+            "callee": "output.append",
+            "arguments": [
+              "\"\\x1b[?2026h\""
+            ]
+          },
+          {
+            "line": 244,
+            "column": 17,
+            "callee": "output.append",
+            "arguments": [
+              "this.deleteKittyImages(this.previousKittyImageIds)"
+            ]
+          },
+          {
+            "line": 245,
+            "column": 17,
+            "callee": "output.append",
+            "arguments": [
+              "\"\\x1b[2J\\x1b[H\\x1b[3J\""
+            ]
+          },
+          {
+            "line": 249,
+            "column": 21,
+            "callee": "output.append",
+            "arguments": [
+              "\"\\r\\n\""
+            ]
+          },
+          {
+            "line": 255,
+            "column": 25,
+            "callee": "output.append",
+            "arguments": [
+              "\"\\r\\n\""
+            ]
+          },
+          {
+            "line": 257,
+            "column": 21,
+            "callee": "output.append",
+            "arguments": [
+              "`\\x1b[${imageReservedRows - 1}A`"
+            ]
+          },
+          {
+            "line": 258,
+            "column": 21,
+            "callee": "output.append",
+            "arguments": [
+              "line"
+            ]
+          },
+          {
+            "line": 259,
+            "column": 21,
+            "callee": "output.append",
+            "arguments": [
+              "`\\x1b[${imageReservedRows - 1}B`"
+            ]
+          },
+          {
+            "line": 263,
+            "column": 17,
+            "callee": "output.append",
+            "arguments": [
+              "line"
+            ]
+          },
+          {
+            "line": 265,
+            "column": 13,
+            "callee": "output.append",
+            "arguments": [
+              "\"\\x1b[?2026l\""
+            ]
+          },
+          {
+            "line": 266,
+            "column": 13,
+            "callee": "output.flush",
+            "arguments": []
+          },
+          {
+            "line": 290,
+            "column": 13,
+            "callee": "fs.mkdirSync",
+            "arguments": [
+              "path.dirname(logPath)",
+              "{ recursive: true }"
+            ]
+          },
+          {
+            "line": 291,
+            "column": 13,
+            "callee": "fs.appendFileSync",
+            "arguments": [
+              "logPath",
+              "msg"
+            ]
+          },
+          {
+            "line": 358,
+            "column": 68,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "data"
+            ]
+          },
+          {
+            "line": 359,
+            "column": 17,
+            "callee": "output.append",
+            "arguments": [
+              "\"\\x1b[?2026h\""
+            ]
+          },
+          {
+            "line": 360,
+            "column": 17,
+            "callee": "output.append",
+            "arguments": [
+              "this.deleteChangedKittyImages(firstChanged, lastChanged)"
+            ]
+          },
+          {
+            "line": 370,
+            "column": 21,
+            "callee": "output.append",
+            "arguments": [
+              "`\\x1b[${lineDiff}B`"
+            ]
+          },
+          {
+            "line": 372,
+            "column": 21,
+            "callee": "output.append",
+            "arguments": [
+              "`\\x1b[${-lineDiff}A`"
+            ]
+          },
+          {
+            "line": 373,
+            "column": 17,
+            "callee": "output.append",
+            "arguments": [
+              "\"\\r\""
+            ]
+          },
+          {
+            "line": 383,
+            "column": 21,
+            "callee": "output.append",
+            "arguments": [
+              "`\\x1b[${clearStartOffset}B`"
+            ]
+          },
+          {
+            "line": 386,
+            "column": 21,
+            "callee": "output.append",
+            "arguments": [
+              "\"\\r\\x1b[2K\""
+            ]
+          },
+          {
+            "line": 388,
+            "column": 25,
+            "callee": "output.append",
+            "arguments": [
+              "\"\\x1b[1B\""
+            ]
+          },
+          {
+            "line": 392,
+            "column": 21,
+            "callee": "output.append",
+            "arguments": [
+              "`\\x1b[${moveBack}A`"
+            ]
+          },
+          {
+            "line": 394,
+            "column": 17,
+            "callee": "output.append",
+            "arguments": [
+              "\"\\x1b[?2026l\""
+            ]
+          },
+          {
+            "line": 395,
+            "column": 17,
+            "callee": "output.flush",
+            "arguments": []
+          },
+          {
+            "line": 416,
+            "column": 60,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "data"
+            ]
+          },
+          {
+            "line": 417,
+            "column": 9,
+            "callee": "output.append",
+            "arguments": [
+              "\"\\x1b[?2026h\""
+            ]
+          },
+          {
+            "line": 418,
+            "column": 9,
+            "callee": "output.append",
+            "arguments": [
+              "this.deleteChangedKittyImages(firstChanged, lastChanged)"
+            ]
+          },
+          {
+            "line": 425,
+            "column": 17,
+            "callee": "output.append",
+            "arguments": [
+              "`\\x1b[${moveToBottom}B`"
+            ]
+          },
+          {
+            "line": 428,
+            "column": 13,
+            "callee": "output.append",
+            "arguments": [
+              "\"\\r\\n\".repeat(scroll)"
+            ]
+          },
+          {
+            "line": 436,
+            "column": 13,
+            "callee": "output.append",
+            "arguments": [
+              "`\\x1b[${lineDiff}B`"
+            ]
+          },
+          {
+            "line": 439,
+            "column": 13,
+            "callee": "output.append",
+            "arguments": [
+              "`\\x1b[${-lineDiff}A`"
+            ]
+          },
+          {
+            "line": 441,
+            "column": 9,
+            "callee": "output.append",
+            "arguments": [
+              "appendStart ? \"\\r\\n\" : \"\\r\""
+            ]
+          },
+          {
+            "line": 447,
+            "column": 17,
+            "callee": "output.append",
+            "arguments": [
+              "\"\\r\\n\""
+            ]
+          },
+          {
+            "line": 458,
+            "column": 17,
+            "callee": "output.append",
+            "arguments": [
+              "\"\\x1b[2K\""
+            ]
+          },
+          {
+            "line": 460,
+            "column": 21,
+            "callee": "output.append",
+            "arguments": [
+              "\"\\r\\n\\x1b[2K\""
+            ]
+          },
+          {
+            "line": 462,
+            "column": 17,
+            "callee": "output.append",
+            "arguments": [
+              "`\\x1b[${imageReservedRows - 1}A`"
+            ]
+          },
+          {
+            "line": 463,
+            "column": 17,
+            "callee": "output.append",
+            "arguments": [
+              "line"
+            ]
+          },
+          {
+            "line": 464,
+            "column": 17,
+            "callee": "output.append",
+            "arguments": [
+              "`\\x1b[${imageReservedRows - 1}B`"
+            ]
+          },
+          {
+            "line": 468,
+            "column": 13,
+            "callee": "output.append",
+            "arguments": [
+              "\"\\x1b[2K\""
+            ]
+          },
+          {
+            "line": 481,
+            "column": 17,
+            "callee": "fs.mkdirSync",
+            "arguments": [
+              "path.dirname(crashLogPath)",
+              "{ recursive: true }"
+            ]
+          },
+          {
+            "line": 482,
+            "column": 17,
+            "callee": "fs.writeFileSync",
+            "arguments": [
+              "crashLogPath",
+              "crashData"
+            ]
+          },
+          {
+            "line": 495,
+            "column": 13,
+            "callee": "output.append",
+            "arguments": [
+              "line"
+            ]
+          },
+          {
+            "line": 504,
+            "column": 17,
+            "callee": "output.append",
+            "arguments": [
+              "`\\x1b[${moveDown}B`"
+            ]
+          },
+          {
+            "line": 509,
+            "column": 17,
+            "callee": "output.append",
+            "arguments": [
+              "\"\\r\\n\\x1b[2K\""
+            ]
+          },
+          {
+            "line": 512,
+            "column": 13,
+            "callee": "output.append",
+            "arguments": [
+              "`\\x1b[${extraLines}A`"
+            ]
+          },
+          {
+            "line": 514,
+            "column": 9,
+            "callee": "output.append",
+            "arguments": [
+              "\"\\x1b[?2026l\""
+            ]
+          },
+          {
+            "line": 517,
+            "column": 13,
+            "callee": "fs.mkdirSync",
+            "arguments": [
+              "debugDir",
+              "{ recursive: true }"
+            ]
+          },
+          {
+            "line": 541,
+            "column": 13,
+            "callee": "fs.writeFileSync",
+            "arguments": [
+              "debugPath",
+              "debugData"
+            ]
+          },
+          {
+            "line": 543,
+            "column": 9,
+            "callee": "output.flush",
+            "arguments": []
+          },
+          {
+            "line": 584,
+            "column": 13,
+            "callee": "this.terminal.write",
+            "arguments": [
+              "buffer"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [
+          {
+            "line": 7,
+            "column": 31,
+            "kind": "string-literal",
+            "text": "\u001b_G"
+          },
+          {
+            "line": 147,
+            "column": 33,
+            "kind": "template-expression",
+            "text": "\\x1b[${lineDiff}B"
+          },
+          {
+            "line": 149,
+            "column": 33,
+            "kind": "template-expression",
+            "text": "\\x1b[${-lineDiff}A"
+          },
+          {
+            "line": 242,
+            "column": 27,
+            "kind": "string-literal",
+            "text": "\u001b[?2026h"
+          },
+          {
+            "line": 245,
+            "column": 31,
+            "kind": "string-literal",
+            "text": "\u001b[2J\u001b[H\u001b[3J"
+          },
+          {
+            "line": 257,
+            "column": 35,
+            "kind": "template-expression",
+            "text": "\\x1b[${imageReservedRows - 1}A"
+          },
+          {
+            "line": 259,
+            "column": 35,
+            "kind": "template-expression",
+            "text": "\\x1b[${imageReservedRows - 1}B"
+          },
+          {
+            "line": 265,
+            "column": 27,
+            "kind": "string-literal",
+            "text": "\u001b[?2026l"
+          },
+          {
+            "line": 359,
+            "column": 31,
+            "kind": "string-literal",
+            "text": "\u001b[?2026h"
+          },
+          {
+            "line": 370,
+            "column": 35,
+            "kind": "template-expression",
+            "text": "\\x1b[${lineDiff}B"
+          },
+          {
+            "line": 372,
+            "column": 35,
+            "kind": "template-expression",
+            "text": "\\x1b[${-lineDiff}A"
+          },
+          {
+            "line": 383,
+            "column": 35,
+            "kind": "template-expression",
+            "text": "\\x1b[${clearStartOffset}B"
+          },
+          {
+            "line": 386,
+            "column": 35,
+            "kind": "string-literal",
+            "text": "\r\u001b[2K"
+          },
+          {
+            "line": 388,
+            "column": 39,
+            "kind": "string-literal",
+            "text": "\u001b[1B"
+          },
+          {
+            "line": 392,
+            "column": 35,
+            "kind": "template-expression",
+            "text": "\\x1b[${moveBack}A"
+          },
+          {
+            "line": 394,
+            "column": 31,
+            "kind": "string-literal",
+            "text": "\u001b[?2026l"
+          },
+          {
+            "line": 417,
+            "column": 23,
+            "kind": "string-literal",
+            "text": "\u001b[?2026h"
+          },
+          {
+            "line": 425,
+            "column": 31,
+            "kind": "template-expression",
+            "text": "\\x1b[${moveToBottom}B"
+          },
+          {
+            "line": 436,
+            "column": 27,
+            "kind": "template-expression",
+            "text": "\\x1b[${lineDiff}B"
+          },
+          {
+            "line": 439,
+            "column": 27,
+            "kind": "template-expression",
+            "text": "\\x1b[${-lineDiff}A"
+          },
+          {
+            "line": 458,
+            "column": 31,
+            "kind": "string-literal",
+            "text": "\u001b[2K"
+          },
+          {
+            "line": 460,
+            "column": 35,
+            "kind": "string-literal",
+            "text": "\r\n\u001b[2K"
+          },
+          {
+            "line": 462,
+            "column": 31,
+            "kind": "template-expression",
+            "text": "\\x1b[${imageReservedRows - 1}A"
+          },
+          {
+            "line": 464,
+            "column": 31,
+            "kind": "template-expression",
+            "text": "\\x1b[${imageReservedRows - 1}B"
+          },
+          {
+            "line": 468,
+            "column": 27,
+            "kind": "string-literal",
+            "text": "\u001b[2K"
+          },
+          {
+            "line": 504,
+            "column": 31,
+            "kind": "template-expression",
+            "text": "\\x1b[${moveDown}B"
+          },
+          {
+            "line": 509,
+            "column": 31,
+            "kind": "string-literal",
+            "text": "\r\n\u001b[2K"
+          },
+          {
+            "line": 512,
+            "column": 27,
+            "kind": "template-expression",
+            "text": "\\x1b[${extraLines}A"
+          },
+          {
+            "line": 514,
+            "column": 23,
+            "kind": "string-literal",
+            "text": "\u001b[?2026l"
+          },
+          {
+            "line": 576,
+            "column": 23,
+            "kind": "template-expression",
+            "text": "\\x1b[${rowDelta}B"
+          },
+          {
+            "line": 579,
+            "column": 23,
+            "kind": "template-expression",
+            "text": "\\x1b[${-rowDelta}A"
+          },
+          {
+            "line": 582,
+            "column": 19,
+            "kind": "template-expression",
+            "text": "\\x1b[${targetCol + 1}G"
+          }
+        ],
+        "review": "All regular engine lines read: bounded UTF-16 writer, Kitty headers/row reservations/cache, render-state capture/restore, full/differential redraw decisions, diagnostic files, conditional composed width Error and hardware cursor. Four Error-message fragments plus conditional diagnostic-file prose; technical source-state keys/layout/raw rendered-line dump remain exact protected exclusions. No local catches."
+      }
+    ],
+    "method": "Full three engine bodies read as source only. All local literal/template occurrences partitioned; regex/control/full new-expression/throw/catch/direct import and selected raw output/native callback call censuses retained. Error variable binding resolved to composed message array, including exact human fragments and protected separators. Actual mode, redraw, selection, clipboard and suppression guards traced, no audited source evaluated."
+  },
+  "remaining_partial_sources": [],
+  "scope_census": {
+    "package": "@earendil-works/pi-tui",
+    "version": "1.4.0",
+    "runtime_files": [
+      "dist/tui-alt-screen.js",
+      "dist/tui-main-screen.js",
+      "dist/tui.js"
+    ],
+    "associated_nonruntime_files": [
+      "dist/tui-alt-screen.d.ts",
+      "dist/tui-alt-screen.d.ts.map",
+      "dist/tui-alt-screen.js.map",
+      "dist/tui-main-screen.d.ts",
+      "dist/tui-main-screen.d.ts.map",
+      "dist/tui-main-screen.js.map",
+      "dist/tui.d.ts",
+      "dist/tui.d.ts.map",
+      "dist/tui.js.map"
+    ]
+  },
+  "pending_producer_boundaries": [
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/alt-screen-search.js",
+      "status": "bounded-lines1-48-only",
+      "reason": "Search placeholder/labels/count, corpus/index/key/navigation behavior still needs full282-line source inventory."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keys.js",
+      "status": "import-only-pending",
+      "reason": "Key/release/native parsing and diagnostic producers not closed here."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/keybindings.js",
+      "status": "import-only-pending",
+      "reason": "Action IDs and configured matching/key names/default metadata producers not closed here."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/wheel-scroll.js",
+      "status": "import-only-pending",
+      "reason": "Accelerator setting and native timing behavior body remains pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/terminal.js",
+      "status": "imported-through-native-factory-pending",
+      "reason": "ProcessTerminal OS/native/input/write/restore producers and dependency graph remain pending."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/tui-renderer.js",
+      "status": "bounded-factory-route-only",
+      "reason": "Full67-line body read for native factory/clipboard/mode/indicator guards, but its own Jump to latest message and stable-proxy TypeError source occurrences remain pending separate producer inventory."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/clipboard.js",
+      "status": "bounded-lines88-178-only",
+      "reason": "Native clipboard/platform/command/tmux/OSC52 error producer family and imported helpers remain pending, no clipboard acceptance observed."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/open-browser.js",
+      "status": "import-only-pending",
+      "reason": "Native URL/browser child/error implementation not closed by engine synchronous callback catch."
+    },
+    {
+      "source": "npm:get-east-asian-width@1.6.0/index.js",
+      "status": "metadata-resolution-only-pending",
+      "reason": "Actual utils import resolves1.6.0 in both trees, CLI-local shadow path absent from main lock; top-level CLI1.7.0 is not this import. No full body/archive claim."
+    },
+    {
+      "source": "external:runtime-os-fs-terminal-optional-component-callbacks",
+      "status": "native-or-optional-producer-boundary",
+      "reason": "Final uncaught/rejection stderr/stack formatting, OS/native/fs/terminal implementation diagnostics and arbitrary component/API text remain external. File log readers/publishers outside this finite family pending."
+    }
+  ],
+  "limits": [
+    "Finite full3 runtime bodies and9 exact associated nonruntime census assets only; no whole Pi/native/dependency graph completion claim.",
+    "Twenty-one fixed source occurrences: seven clipboard/Error fragments plus fourteen conditional diagnostic-file wrappers/reasons/headings/descriptions.",
+    "Native copy callback true means helper reported success; tmux/OSC52 forwarding and desktop clipboard acceptance are not verified by this audit or caption guard.",
+    "Width failure is specific to nonimage lines in the differential repaint range after all early redraw/return paths; full redraws bypass it. Crash file/native terminal stop failures can prevent the local headline.",
+    "Diagnostic file prose is positive output with exact append/overwrite/generated-file write guards and user read/open condition. Technical dump keys/layout and arbitrary source dump payload remain protected; no automatic terminal replay is assumed.",
+    "Fullscreen search and jump-indicator labels are imported/helper-defined pending producers; they are not implicitly covered by full engine bodies.",
+    "External get-east-asian-width1.6.0 actual path/entry metadata retained from utility unit; no top-level CLI1.7.0 lock equivalence or canonical transitive package claim.",
+    "String literals are TypeScript-decoded; template-expression bodies preserve raw escape spelling; exact exclusions are JSON strings.",
+    "Source parsing and metadata/filesystem reads only; no audited engine/terminal/fullscreen/clipboard/browser/model/native APIs, child/network capability probes or state writes. No product/dependency or old/shared audit edits."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-tui-engines.cjs",
+  "reviewed_artifact_sha256": {
+    "pi-tui-engines.csv": "b160007b4bf3c1338a25a266c5224b42a9eca276faaecdb3e7ef4af91e69ccae",
+    "pi-tui-engines-boundaries.csv": "b445e59396662bea16e1ef76c0bf3dd4f97c3d7c4891a6b17391a832ddc61a8a",
+    "pi-tui-engines-scope.csv": "95f8aefd1adbc6ddbacf2cf552aa211c0ad6444374ac3a6f18c0e441d383903d",
+    "pi-tui-engines-exclusions.csv": "21a4236f231ea3e912aae2b08936d849bf9895b36f9d5fc3b33c9a8e774a1e4d"
+  },
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/modes/interactive/tui-renderer.js",
+            "archive_sha256": "4c420a641ee6c0cb4b22677f97a11bc2da580b2b1f31ba56ac6f4e8df7bbd429",
+            "root_sha256": "4c420a641ee6c0cb4b22677f97a11bc2da580b2b1f31ba56ac6f4e8df7bbd429",
+            "cli_nested_sha256": "4c420a641ee6c0cb4b22677f97a11bc2da580b2b1f31ba56ac6f4e8df7bbd429",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/interactive-mode.js",
+            "archive_sha256": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+            "root_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/settings-manager.js",
+            "archive_sha256": "f3eeaadbc97b8c36acf98b1dd5894265f7f719bab95218e66dbc8c25658d5b12",
+            "root_sha256": "6e60af97dd4f67b4bcc820b6c271a26df0bbcb7b7a4258f8cc771c1570b7c546",
+            "cli_nested_sha256": "6e60af97dd4f67b4bcc820b6c271a26df0bbcb7b7a4258f8cc771c1570b7c546",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/settings-defaults.js",
+            "archive_sha256": "592e953bfdf86c5c644354cdac4dad6dfd9b89f7914a10cb877dcd11ef885d33",
+            "root_sha256": "592e953bfdf86c5c644354cdac4dad6dfd9b89f7914a10cb877dcd11ef885d33",
+            "cli_nested_sha256": "592e953bfdf86c5c644354cdac4dad6dfd9b89f7914a10cb877dcd11ef885d33",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/clipboard.js",
+            "archive_sha256": "0b296fef43d637ac463a5be20702118400a73eec6fbf9fb6986c1febbb089909",
+            "root_sha256": "e41b1212f49be33a7aa1a1d4aa97eb653ad08fe85da8e0743c3d728597eb76b7",
+            "cli_nested_sha256": "e41b1212f49be33a7aa1a1d4aa97eb653ad08fe85da8e0743c3d728597eb76b7",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-terminal-clipboard/patch.lock.json"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/tui.js",
+            "archive_sha256": "e3246864ff8c94b71fb6e9cb6f9dfddcd64956370a259860d189d8d95ea773d9",
+            "root_sha256": "e3246864ff8c94b71fb6e9cb6f9dfddcd64956370a259860d189d8d95ea773d9",
+            "cli_nested_sha256": "e3246864ff8c94b71fb6e9cb6f9dfddcd64956370a259860d189d8d95ea773d9",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/tui-alt-screen.js",
+            "archive_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+            "root_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+            "cli_nested_sha256": "ea5f52dc983f60c4354c674bd19f0d296fda8b5fa86185d4a4bdf0343b1ff92b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/tui-main-screen.js",
+            "archive_sha256": "d993e3b50da2b10c1ca8774c75e8f678dba861e4ba870b9e67b34bbb23739f92",
+            "root_sha256": "d993e3b50da2b10c1ca8774c75e8f678dba861e4ba870b9e67b34bbb23739f92",
+            "cli_nested_sha256": "d993e3b50da2b10c1ca8774c75e8f678dba861e4ba870b9e67b34bbb23739f92",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/components/alt-screen-flash.js",
+            "archive_sha256": "6ca2016101ca570a94fdaa18bfe8edbc6734243cb5363d21110e809fcd47db12",
+            "root_sha256": "6ca2016101ca570a94fdaa18bfe8edbc6734243cb5363d21110e809fcd47db12",
+            "cli_nested_sha256": "6ca2016101ca570a94fdaa18bfe8edbc6734243cb5363d21110e809fcd47db12",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/alt-screen-search.js",
+            "archive_sha256": "4ad2383b4a7480584d22ffcd6b472a7556fa54fd4516d9ab8ba16a846fe16cd0",
+            "root_sha256": "4ad2383b4a7480584d22ffcd6b472a7556fa54fd4516d9ab8ba16a846fe16cd0",
+            "cli_nested_sha256": "4ad2383b4a7480584d22ffcd6b472a7556fa54fd4516d9ab8ba16a846fe16cd0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils.js",
+            "archive_sha256": "275c8400c37c09a7cc106445e27f676aa320c6a024dc89b540b97e1357e90e55",
+            "root_sha256": "275c8400c37c09a7cc106445e27f676aa320c6a024dc89b540b97e1357e90e55",
+            "cli_nested_sha256": "275c8400c37c09a7cc106445e27f676aa320c6a024dc89b540b97e1357e90e55",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/layout.js",
+            "archive_sha256": "b20cb0b156e506b4639b789be8688fe9dd38d42d15746ae82e69fcd250e42147",
+            "root_sha256": "b20cb0b156e506b4639b789be8688fe9dd38d42d15746ae82e69fcd250e42147",
+            "cli_nested_sha256": "b20cb0b156e506b4639b789be8688fe9dd38d42d15746ae82e69fcd250e42147",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/terminal-image.js",
+            "archive_sha256": "af7d4478fad5d67dfbb2694a232c5f97e68fa2fb9e178805803ed95fb04ed646",
+            "root_sha256": "af7d4478fad5d67dfbb2694a232c5f97e68fa2fb9e178805803ed95fb04ed646",
+            "cli_nested_sha256": "af7d4478fad5d67dfbb2694a232c5f97e68fa2fb9e178805803ed95fb04ed646",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/tui.d.ts",
+            "archive_sha256": "a4d70e68030c4493caa1cb67c015720c688dd1dd668bfa5e6e188f095b4fcc9a",
+            "root_sha256": "a4d70e68030c4493caa1cb67c015720c688dd1dd668bfa5e6e188f095b4fcc9a",
+            "cli_nested_sha256": "a4d70e68030c4493caa1cb67c015720c688dd1dd668bfa5e6e188f095b4fcc9a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/tui.d.ts.map",
+            "archive_sha256": "a0ace95c396428c1396777e4628af2f1ffa372ce946f9d6215a8b41a875637f2",
+            "root_sha256": "a0ace95c396428c1396777e4628af2f1ffa372ce946f9d6215a8b41a875637f2",
+            "cli_nested_sha256": "a0ace95c396428c1396777e4628af2f1ffa372ce946f9d6215a8b41a875637f2",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/tui.js.map",
+            "archive_sha256": "6bcc503dbd35ab111392c1aca66fcfc4c45da345d860eaebe1ca324c0be5b931",
+            "root_sha256": "6bcc503dbd35ab111392c1aca66fcfc4c45da345d860eaebe1ca324c0be5b931",
+            "cli_nested_sha256": "6bcc503dbd35ab111392c1aca66fcfc4c45da345d860eaebe1ca324c0be5b931",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/tui-alt-screen.d.ts",
+            "archive_sha256": "2342ee7ba510b42015807f7a3644440c27fa52db3a2b3ff866cecf784b8dc9af",
+            "root_sha256": "2342ee7ba510b42015807f7a3644440c27fa52db3a2b3ff866cecf784b8dc9af",
+            "cli_nested_sha256": "2342ee7ba510b42015807f7a3644440c27fa52db3a2b3ff866cecf784b8dc9af",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/tui-alt-screen.d.ts.map",
+            "archive_sha256": "f39d7cd63ffce0de0df3584096633915e8bf72db070274b0558a26837408cc76",
+            "root_sha256": "f39d7cd63ffce0de0df3584096633915e8bf72db070274b0558a26837408cc76",
+            "cli_nested_sha256": "f39d7cd63ffce0de0df3584096633915e8bf72db070274b0558a26837408cc76",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/tui-alt-screen.js.map",
+            "archive_sha256": "8be9f7b8420bbe5d7f832776929c250cbb203ac07d1acb1ce9e57fbc8188acd6",
+            "root_sha256": "8be9f7b8420bbe5d7f832776929c250cbb203ac07d1acb1ce9e57fbc8188acd6",
+            "cli_nested_sha256": "8be9f7b8420bbe5d7f832776929c250cbb203ac07d1acb1ce9e57fbc8188acd6",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/tui-main-screen.d.ts",
+            "archive_sha256": "f2441514370d3f5726347aa5c58a2215f3da70f708a33e4784545ef96224b73f",
+            "root_sha256": "f2441514370d3f5726347aa5c58a2215f3da70f708a33e4784545ef96224b73f",
+            "cli_nested_sha256": "f2441514370d3f5726347aa5c58a2215f3da70f708a33e4784545ef96224b73f",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/tui-main-screen.d.ts.map",
+            "archive_sha256": "73e8f61678a002883be44a22de1a442d474115b8ec8c9c80a7c14fce5f86c9a1",
+            "root_sha256": "73e8f61678a002883be44a22de1a442d474115b8ec8c9c80a7c14fce5f86c9a1",
+            "cli_nested_sha256": "73e8f61678a002883be44a22de1a442d474115b8ec8c9c80a7c14fce5f86c9a1",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/tui-main-screen.js.map",
+            "archive_sha256": "1df1e452354c6f2514a59e45e962f2a2db44871b806ec91e9c5d3489a859bf9f",
+            "root_sha256": "1df1e452354c6f2514a59e45e962f2a2db44871b806ec91e9c5d3489a859bf9f",
+            "cli_nested_sha256": "1df1e452354c6f2514a59e45e962f2a2db44871b806ec91e9c5d3489a859bf9f",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      }
+    ],
+    "scoped_file_count": 22,
+    "byte_identical_scope_files": 19,
+    "pinned_patch_scope_files": 3,
+    "unresolved_scope_differences": 0
+  },
+  "routing_refinements": [
+    "Fourteen diagnostic-file definitions promoted from initial draft exclusions: redraw wrapper/reasons at289/295/301/309/317/364/377/410/454, crash headings/templates473/474/475/477, bounded-write description539. File delivery is a valid user-inspection sink; exact branch/write/read conditions and append/replace/generated basename semantics recorded.",
+    "Initial seven clipboard/Error IDs, English text and source anchors preserved. Technical source-dump keys, formatting and arbitrary rendered lines stay protected payload, with explicit file-readable conditions."
+  ]
+}
