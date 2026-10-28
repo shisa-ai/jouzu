@@ -14,7 +14,8 @@
     "vendored-source-or-resource": 44
   },
   "scope_inputs_sha256_utf8_lf": {
-    "acp-scope.csv": "63e50f684c02f9c9af94b067924cfd750676887df35a6d1079e80a167ff08495",
+    "acp-scope.csv": "91ed697fafdc0ca53cd0f098d354d391d11bcec556ab9252eac16b6b7c2aa8b9",
+    "acp-dependencies-scope.csv": "1843b2f11fbcc06729a2846aff8cbbaf723cee9300f295d46034c40b019d7923",
     "startup-language-scope.csv": "ecffa8ff5ce3bafca38dd5cd5e5fc5eacecbd3c69a3886daac81a54bb8bba481",
     "cli-entry-scope.csv": "57552b89d44273a3f1ad9a49b9ce66d72d5fd8ec04ba6ac5c733b4ce08d05ce5",
     "doctor-scope.csv": "83c51d8d37ac12a738a58f9b2e43078b066e434c54e13793c2072a62dc41d24d",

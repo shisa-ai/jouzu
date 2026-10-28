@@ -70,9 +70,19 @@ pin and translations; its counts must not be added to this inventory.
 records the protocol field or stderr sink and its trigger. Protocol fields are
 potentially visible: each ACP client controls which fields it renders.
 [acp-scope.csv](acp-scope.csv) pins the four reviewed ACP source modules and
-supporting files. SDK routing, schema and framing text remains pending beyond
-the specifically listed prefixes; suppressed internal labels and guards are
-recorded separately.
+supporting files; suppressed internal labels and guards are recorded separately.
+The dependency pass below supplies the SDK routing, schema and framing wording.
+
+[acp-dependencies.csv](acp-dependencies.csv) adds 386 dependency records: 377
+exact source occurrences and nine dynamic boundaries. The
+[scope table](acp-dependencies-scope.csv) covers all 43 SDK runtime JavaScript
+bodies and bounded Zod English validation support. The package root selects
+stable V1 with batches disabled; alternative API exports have separate conditions.
+Invalid parameters return a formatted issue tree, while stream and batch failures
+can close the connection without an automatic error response. SDK console output
+has its own stderr route. Client rendering, arbitrary values and native errors
+remain boundaries. Both locked npm archives are integrity checked; their code
+was read without executing the SDK or validation/compiler paths.
 
 [startup-language.csv](startup-language.csv) records 143 startup and language
 occurrences: 62 catalog occurrences across 48 IDs, 25 direct prose/layout
@@ -302,6 +312,7 @@ python -B review/text-inventory/verify-catalog.py
 python -B review/text-inventory/catalog-links.py
 python -B review/text-inventory/source-census.py
 python -B review/text-inventory/verify-acp.py
+python -B review/text-inventory/verify-acp-dependencies.py
 python -B review/text-inventory/verify-startup-language.py
 python -B review/text-inventory/verify-cli-entry.py
 python -B review/text-inventory/verify-doctor.py

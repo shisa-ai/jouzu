@@ -8,6 +8,7 @@
   "partition_occurrences": 1146,
   "partition_counts": {
     "acp.csv": 4,
+    "acp-dependencies.csv": 0,
     "startup-language.csv": 62,
     "cli-entry.csv": 122,
     "doctor.csv": 287,
@@ -32,7 +33,8 @@
   "inputs": {
     "catalogs.csv": "48edb34163b9050fdff777e401bbf31326d8412fe6c3bd6ce2f6b9ff6144f1c3",
     "catalog-contexts.json": "f1d0adde2ba7ae8c79e41da7c9624a6dd9eb5d5502f48046d18d952e3d7b96bd",
-    "acp.csv": "5188455498cb7bb90b89ad5039ac9a2421e17f0db5927dfc38a85be337bbf377",
+    "acp.csv": "7419222887abcd5518f175a33149ba1898dd08fbb3a86f47f4d914de384862b8",
+    "acp-dependencies.csv": "caf7ef7f13775e4da75137e990ebc350d7b9d26b384d12ca9591bc3a62064ae8",
     "startup-language.csv": "54b502ea268f88e6dbc8d67bb3918b706cf715320b0e777fbac6ce198333a3c3",
     "cli-entry.csv": "b418ef1f99aff8752dc6c711157c913db4889cd4f773ea9b98213ee4e827d622",
     "doctor.csv": "b6ab6929e6247d2ea268e41147a39689b446e6524ccbad374802c204df568549",

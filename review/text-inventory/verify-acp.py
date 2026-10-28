@@ -67,6 +67,12 @@ def main():
         hashes += 1
     metadata = json.loads((args.sdk_root / "package.json").read_text(encoding="utf-8"))
     assert metadata["name"] == "@agentclientprotocol/sdk" and metadata["version"] == "2.0.2"
+    assert metadata["exports"]["."]["import"] == "./dist/v1/stable/acp.js"
+    assert metadata["exports"]["."]["default"] == "./dist/v1/stable/acp.js"
+    root_app = "\n".join(lines(NPM + "dist/v1/stable/acp.js"))
+    assert "const stableConnectionOptions = { allowBatches: false };" in root_app
+    assert "const rawConnection = this.builder.connect(stream, stableConnectionOptions);" in root_app
+    assert next(r for r in scope if r["scope_id"] == "ACP-SCOPE-13")["path"] == NPM + "dist/v1/stable/acp.js"
     lock = json.loads((ROOT / "package-lock.json").read_text(encoding="utf-8"))
     pin = lock["packages"]["node_modules/@agentclientprotocol/sdk"]
     assert pin["version"] == "2.0.2"
@@ -121,14 +127,16 @@ def main():
     assert text.count("await child.start()") == 1
     assert "const child = new AcpChild(childOptions);" in source_line(SOURCES[2], 200)
     assert "await child.start();" in source_line(SOURCES[2], 203)
-    assert any(r["status"] == "pending-dependency-inventory" for r in scope)
+    assert not any(r["status"] == "pending-dependency-inventory" for r in scope)
+    assert next(r for r in scope if r["scope_id"] == "ACP-SCOPE-17")["status"] == "dependency-inventory-linked"
     assert (len(rows), fixed, dynamic, hashes, scanned) == (104, 62, 42, 14, 49)
     print(json.dumps({"result": "PASS", "rows": len(rows), "fixed": fixed,
                       "dynamic_boundaries": dynamic, "pinned_files": hashes,
                       "path_line_references": references,
                       "fixed_error_diagnostic_occurrences": scanned,
                       "excluded_internal_guard": "packages/cli/src/acp-child.ts:95",
-                      "SDK_full_text_inventory": "pending",
+                      "SDK_full_text_inventory": "separate acp-dependencies.csv; run verify-acp-dependencies.py",
+                      "SDK_root_export": "dist/v1/stable/acp.js; allowBatches:false",
                       "product_runtime_executed": False}, indent=2))
 
 
