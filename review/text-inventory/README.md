@@ -1463,6 +1463,18 @@ child output, input source and cleanup errors remain separate producers. Source
 expressions are not rendered Python strings. No helper, command, generated
 example or user-state operation was executed.
 
+[python-dev-build-tests.csv](python-dev-build-tests.csv) covers the full 873-line
+Python development-build test source. Its 965 records distinguish 35 unittest
+class/method selectors, three authored skip reasons, two explicit test failures,
+expected values, process/assertion calls and generated fixture text. The
+[scope](python-dev-build-tests-scope.csv) pins four Git sources and the prior
+operator owner, with a separate native boundary. All 522 AST candidates reconcile
+to 492 material occurrences and thirty structural f-string components. Generated
+shell/JavaScript source mappings remain inert. Captured child/PTY streams,
+timeouts, lock readiness and teardown/native errors retain their actual test
+conditions; operator error definitions remain with the operator unit. No test,
+build, generated code, process, PTY or native operation was executed.
+
 [python-console.csv](python-console.csv) records 30 occurrences and boundaries
 for the separate Python console package, including 11 inherited `argparse`
 patterns. [python-console-observations.json](python-console-observations.json)
@@ -1727,6 +1739,7 @@ python -B review/text-inventory/verify-session-ui-components.py
 python -B review/text-inventory/verify-session-ui-producers.py
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-python-review-tools.py
+python -B review/text-inventory/verify-python-dev-build-tests.py
 python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-build-scripts.py
 python -B review/text-inventory/verify-copied-runtime.py
