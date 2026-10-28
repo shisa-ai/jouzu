@@ -484,6 +484,18 @@ are module/path/glob/alias/bind/type values and a Cargo rebuild directive, with 
 new authored runtime sentence. Compiler, framework, browser and OS messages keep
 their external producer boundaries. No build, config, package or test executes.
 
+[resource-config-text.csv](resource-config-text.csv) separates five authored
+annotations and two external boundaries across thirteen complete configuration/
+resource sources (403 lines). The [line export](resource-config-lines.csv)
+retains all 397 nonblank source lines, with six blanks omitted; technical keys,
+paths, schema controls and source comments are not promoted to runtime prose.
+The [scope](resource-config-text-scope.csv) and
+[snapshot](resource-config-text-snapshot.json) pin exact Git bytes. The HTML title
+has document/browser metadata conditions; capability/schema descriptions have
+source or explicit external-inspector conditions, without inferred product UI
+rendering. Five corruption/omission controls pass. No config, browser, schema,
+compiler or native tool was executed.
+
 [launcher-helpers.csv](launcher-helpers.csv) supplies the follow-on helper pass:
 278 fixed source occurrences and 37 dynamic forwarding/masking records from all
 43 packaging PowerShell/MJS helpers. Its
@@ -1674,6 +1686,7 @@ python -B review/text-inventory/verify-launcher.py
 python -B review/text-inventory/verify-launcher-helpers.py
 python -B review/text-inventory/verify-launcher-support.py
 python -B review/text-inventory/verify-launcher-config-text.py
+python -B review/text-inventory/verify-resource-config-text.py
 python -B review/text-inventory/verify-installer-dependencies.py --cache-dir <archive-directory>
 python -B review/text-inventory/verify-flow.py
 python -B review/text-inventory/verify-flow-report.py

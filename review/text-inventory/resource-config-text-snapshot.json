@@ -1,0 +1,15 @@
+{
+  "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "full_sources": 13,
+  "physical_lines": 403,
+  "nonblank_source_rows": 397,
+  "blank_lines_omitted": 6,
+  "authored_annotations": 5,
+  "external_boundaries": 2,
+  "artifact_sha256_utf8_lf": {
+    "resource-config-text.csv": "196b7c43402dbcb60ee5d49b8e0b3899d6b32e2288f8c80ca0afa6fe1baf69ec",
+    "resource-config-lines.csv": "1e6cc48140ae15d57a7ea4a0d3add500ffe6e8b80e401c85fb9a71762b595580",
+    "resource-config-text-scope.csv": "b706f87ce3dac3525c47c25b040b6406dcb10038118932b97458101fd1800e2b"
+  },
+  "interpretation": "Complete source reading export of thirteen configuration/resource bodies. Five annotations retain metadata/document-title conditions; source identity is not native/tool/runtime closure."
+}
