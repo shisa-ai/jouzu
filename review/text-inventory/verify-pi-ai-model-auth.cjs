@@ -122,7 +122,49 @@ assert(b(1).trigger.includes('alwayssupplies RuntimeCredentials')&&b(1).trigger.
 assert(at('models',362).consumer_evidence.includes('InteractiveMode5276-5287')&&at('models',401).consumer_evidence.includes('OAuth dialog5302-5319')&&at('models',413).consumer_evidence.includes('InteractiveMode5025-5046')&&b(6).consumer_evidence.includes('15-second timeout'),'Login/logout exact dialog and suppression route lost');
 const supplemental=evidence.support_sources.filter(r=>r.canonical_archive_proof===false);assert(supplemental.length===0&&evidence.pending_producer_boundaries.some(r=>r.source===prefix+'utils/diagnostics.js'&&r.status.includes('pending'))&&evidence.limits.some(r=>r.includes('normalizeContext/observeModelRequest are evaluated before collection lazywrap')),'Canonical bounded-support versus full graph/pre-lazy closure lost');}
 verifySemantics();
-const priorScopes=[];for(const name of fs.readdirSync(inventoryDir).filter(f=>f.endsWith('-scope.csv')&&f!=='pi-ai-model-auth-scope.csv'))for(const r of csv(read(path.join(inventoryDir,name))))if(files.some(f=>r.source===prefix+f))priorScopes.push({owner:name,source:r.source,status:r.status});assert(JSON.stringify(priorScopes)===JSON.stringify(evidence.prior_scope_references)&&priorScopes.every(r=>r.status!=='source-read-local-producers'),'Prior AI bounded/full scope references drift');const fullOwners=[];for(const name of fs.readdirSync(inventoryDir).filter(f=>f.endsWith('-evidence.json')&&f!=='pi-ai-model-auth-evidence.json')){let e;try{e=JSON.parse(read(path.join(inventoryDir,name)));}catch{continue}for(const r of e.source_review?.files||[])if(files.some(f=>r.source===prefix+f)&&r.read_lines?.[0]===1)fullOwners.push({owner:name,source:r.source,read_lines:r.read_lines});}assert(evidence.prior_full_body_owners.length===0&&fullOwners.length===0,'Duplicate full AI source owner detected');
+// Prior ownership is historical evidence at the unit's immutable review commit.
+// Later lexical or semantic inventories must not change that recorded history.
+function historicalArtifacts() {
+  const run = require('node:child_process').execFileSync;
+  const patterns = files.flatMap(f => ['-e', prefix + f]);
+  let selected;
+  try {
+    selected = run('git', ['grep', '--no-color', '-z', '-l', '-F', ...patterns,
+      evidence.unit_source_commit, '--', 'review/text-inventory/*-scope.csv',
+      'review/text-inventory/*-evidence.json'], { cwd: repo, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
+  } catch (error) {
+    if (error.status === 1) return new Map();
+    throw error;
+  }
+  const specs = selected.split('\0').filter(Boolean);
+  if (!specs.length) return new Map();
+  const payload = run('git', ['cat-file', '--batch'], { cwd: repo,
+    input: specs.join('\n') + '\n', maxBuffer: 64 * 1024 * 1024 });
+  let cursor = 0;
+  return new Map(specs.map(spec => {
+    const end = payload.indexOf(10, cursor);
+    const [object, type, size] = payload.subarray(cursor, end).toString('ascii').split(' ');
+    assert(/^[a-f0-9]{40}$/.test(object) && type === 'blob' && /^\d+$/.test(size), 'Historical artifact blob');
+    cursor = end + 1;
+    const body = payload.subarray(cursor, cursor + Number(size)).toString('utf8');
+    cursor += Number(size) + 1;
+    assert(payload[cursor - 1] === 10, 'Historical artifact delimiter');
+    return [spec.slice(spec.lastIndexOf('/') + 1), body];
+  }));
+}
+const priorArtifacts = historicalArtifacts();
+const priorScopes=[];
+for(const [name,body] of priorArtifacts) if(name.endsWith('-scope.csv'))
+  for(const r of csv(body)) if(files.some(f=>r.source===prefix+f))
+    priorScopes.push({owner:name,source:r.source,status:r.status});
+assert(JSON.stringify(priorScopes)===JSON.stringify(evidence.prior_scope_references)&&priorScopes.every(r=>r.status!=='source-read-local-producers'),'Prior AI bounded/full scope references drift');
+const fullOwners=[];
+for(const [name,body] of priorArtifacts) if(name.endsWith('-evidence.json')) {
+  const e=JSON.parse(body);
+  for(const r of e.source_review?.files||[]) if(files.some(f=>r.source===prefix+f)&&r.read_lines?.[0]===1)
+    fullOwners.push({owner:name,source:r.source,read_lines:r.read_lines});
+}
+assert(JSON.stringify(fullOwners)===JSON.stringify(evidence.prior_full_body_owners),'Prior full AI source ownership history drift');
 assert(JSON.stringify(evidence.source_review.files.map(r=>parseLocation(r.source).source).sort())===JSON.stringify(files.map(f=>'dist/'+f).sort()),'Full local body membership drift');assert(evidence.source_review.files.every(r=>r.read_lines[0]===1&&r.read_lines[1]===source(r.source).body.split('\n').length),'Whole local body read ranges drift');assert(evidence.counts.full_runtime_lines===1051&&evidence.counts.runtime_source_bytes===45972&&files.reduce((a,f)=>a+asts.get(f).body.split('\n').length,0)===1051&&files.reduce((a,f)=>a+Buffer.byteLength(asts.get(f).body),0)===45972,'Full body line/byte census drift');
 const census=evidence.scope_census;assert(JSON.stringify(scopes.map(r=>parseLocation(r.source).source).sort())===JSON.stringify(census.runtime_files)&&JSON.stringify(census.runtime_files)===JSON.stringify(files.map(f=>'dist/'+f).sort()),'Seven-body finite scope membership drift');for(const r of scopes){const p=parseLocation(r.source),a=sha(path.join(nodeModules,p.packageName,p.source)),b=sha(path.join(cliNodeModules,p.packageName,p.source));assert(a===r.sha256&&b===r.cli_nested_sha256&&(a===b).toString()===r.root_nested_equal,'Scoped source hash/tree drift');assert(r.status==='source-read-local-producers'&&Number(r.rows)===rows.filter(q=>q.english_location.startsWith(r.source+':')).length,'Finite scope disposition/count drift');}
 assert(evidence.nonruntime_assets.length===21&&evidence.counts.nonruntime_assets===21,'Associated nonruntime asset census drift');const expectedAssets=files.flatMap(f=>['.d.ts','.d.ts.map','.js.map'].map(ext=>'dist/'+f.replace('.js',ext))).sort();assert(JSON.stringify(evidence.nonruntime_assets.map(r=>parseLocation(r.source).source).sort())===JSON.stringify(expectedAssets)&&JSON.stringify(census.associated_nonruntime_files)===JSON.stringify(expectedAssets),'Associated declaration/map membership drift');for(const r of evidence.nonruntime_assets){const p=parseLocation(r.source),a=sha(path.join(nodeModules,p.packageName,p.source)),b=sha(path.join(cliNodeModules,p.packageName,p.source));assert(a===r.sha256&&b===r.cli_nested_sha256&&(a===b)===r.root_nested_equal&&r.disposition==='nonruntime-declaration-or-source-map','Nonruntime asset source drift');}
