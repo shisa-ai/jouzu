@@ -25,12 +25,11 @@ identity, while changed callers, configuration and upstream patches need separat
 review. No checkout or product operation is performed by this census.
 
 [main-update-review-links.csv](main-update-review-links.csv) reconciles all 59
-changed target paths to exact scope records and target Git hashes. Thirty-eight
-have a complete local source export/read: sixteen product/packaging bodies,
+changed target paths to exact scope records and target Git hashes. Thirty-nine
+have a complete local source export/read: seventeen product/packaging bodies,
 thirteen test bodies, seven documents and two changed English catalogs. Twenty
-resource paths have complete byte-delta proofs; one product source path retains
-bounded changed-source review. The
-[snapshot](main-update-review-links-snapshot.json) pins all thirteen scope inputs;
+resource paths have complete byte-delta proofs. The
+[snapshot](main-update-review-links-snapshot.json) pins all fourteen scope inputs;
 these navigation links do not promote supporting records, close target callers
 or qualify newly patched dependencies. Existing base tables keep their source pin.
 
@@ -61,6 +60,21 @@ blob. The [scope](main-update-message-table-scope.csv) and
 [snapshot](main-update-message-table-snapshot.json) pin the target source and
 catalog export. Imported formatter behavior and wider target callers retain
 separate boundaries. No product source is evaluated.
+
+[main-update-model-picker-source.csv](main-update-model-picker-source.csv)
+records three compaction error templates and 100 qualified catalog consumers
+across the complete fetched-main picker body (2,221 lines). The 366
+[exclusions](main-update-model-picker-source-exclusions.csv) retain protected
+source, five width-measurement references and a fallback without a concrete
+current caller route. Forty-four
+[boundaries](main-update-model-picker-source-boundaries.csv) retain selection,
+compaction, catalog refresh, input, restore, persistence, cancellation and disposal
+conditions. Header/row width and clipping gates remain explicit. Two callback
+API-absence guards have no established ordinary steady-state trigger; teardown
+or retained-host callback routes require additional lifetime and disposal gates.
+The [scope](main-update-model-picker-source-scope.csv) pins one full target body
+and bounded consumers, without retargeting the base inventory. Twenty-four
+corruption controls pass. No UI, model, configuration or native scenario runs.
 
 [main-update-model-sync.csv](main-update-model-sync.csv) records 26 local
 source definitions and ten qualified catalog-call occurrences across the complete
@@ -2080,6 +2094,7 @@ node review/text-inventory/verify-test-source-sites.cjs
 node review/text-inventory/verify-fixture-ipc-text.cjs
 python -B review/text-inventory/verify-data-fixture-text.py
 python -B review/text-inventory/verify-main-update-census.py
+python -B review/text-inventory/verify-main-update-model-picker-source.py
 python -B review/text-inventory/verify-main-update-model-sync.py
 python -B review/text-inventory/verify-main-update-resource-delta.py
 node review/text-inventory/verify-main-update-message-table.cjs

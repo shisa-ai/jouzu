@@ -19,6 +19,7 @@ SCOPES = [
     'main-update-account-update-tests-scope.csv',
     'main-update-catalogs-scope.csv',
     'main-update-documentation-scope.csv',
+    'main-update-model-picker-source-scope.csv',
     'main-update-model-picker-tests-scope.csv',
     'main-update-model-ranking-tests-scope.csv',
     'main-update-message-table-scope.csv',
@@ -70,7 +71,7 @@ def full_extent(name, row):
             ('Full test source body/', 'Full source text/AST partition;',
              'Full source body. All literal/template/regex')):
         return 'full-test-source-only'
-    if name == 'main-update-model-sync-scope.csv' and status == 'full-source-body':
+    if name in ('main-update-model-sync-scope.csv', 'main-update-model-picker-source-scope.csv') and status == 'full-source-body':
         return 'full-local-product-source-only'
     if status == 'full-target-body-lexical-and-control-review' or extent.startswith(
             ('Full helper body;', 'Full packaging body')):
@@ -122,11 +123,10 @@ def generate():
     for row in rows:
         counts[row['local_body_extent']] = counts.get(row['local_body_extent'], 0) + 1
     assert counts == {
-        'bounded-changed-source-or-metadata-only': 1,
         'complete-byte-delta-only': 20,
         'full-document-source-export-only': 7,
         'full-English-source-export-only': 2,
-        'full-local-product-source-only': 16,
+        'full-local-product-source-only': 17,
         'full-test-source-only': 13,
     }, counts
     snapshot = dict(base_revision=BASE, target_revision=TARGET, changed_paths=59,

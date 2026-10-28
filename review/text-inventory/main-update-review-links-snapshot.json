@@ -7,8 +7,7 @@
     "complete-byte-delta-only": 20,
     "full-document-source-export-only": 7,
     "full-English-source-export-only": 2,
-    "full-local-product-source-only": 16,
-    "bounded-changed-source-or-metadata-only": 1,
+    "full-local-product-source-only": 17,
     "full-test-source-only": 13
   },
   "input_sha256_utf8_lf": {
@@ -16,6 +15,7 @@
     "main-update-account-update-tests-scope.csv": "2244d96b3d6539d103bcc86587bc7490aaef377cef279ed2cb659ad72fa608c2",
     "main-update-catalogs-scope.csv": "95b124c6c6668ecbc2f89ba7d2d897f9d7125b76e2278c7105ebf5a97d9e8389",
     "main-update-documentation-scope.csv": "989847673763c6447a9de8bc56f778372bc08df4df47e0304913afff3982704e",
+    "main-update-model-picker-source-scope.csv": "b21df0b2d82332dd5d80fbc4b0f2df3e118d0caf0c0d0b7a18d6215a7743dead",
     "main-update-model-picker-tests-scope.csv": "57b2de6e347f8364ea70c6a8ee31d5b983dbf29297f5ff9b14f24748f0323da5",
     "main-update-model-ranking-tests-scope.csv": "2da684b08607f1fa670f995935b15bd9dcb0779780faac5e119be5888e3e0fa0",
     "main-update-message-table-scope.csv": "eed460d431cf25c9811b6e90e1c5350346cb82a74e22c28cc798b173c7cf8e24",
