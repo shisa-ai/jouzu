@@ -565,6 +565,21 @@ those bodies reviewed. Seventeen corruption controls pass. Compiled CLI/RPC
 bundles, imported resources and wider dependency producers remain pending. No
 update, ZIP write, entrypoint, process, network or native operation was executed.
 
+[pi-mcp-support.csv](pi-mcp-support.csv) adds 65 qualified native MCP definitions
+and twelve [boundaries](pi-mcp-support-boundaries.csv). Nine complete config,
+transport, logging, tool/resource, OAuth, UI and lazy-loader bodies cover 1,829
+lines. All 407 string/template occurrences are partitioned against 342
+[exclusions](pi-mcp-support-exclusions.csv). The [scope](pi-mcp-support-scope.csv)
+accounts for twenty builtin Error constructors, one custom Error headline and
+fourteen catches. Deferred activation, selected/current metadata, output-schema
+API limits, inspected progress suppression and connection-state error visibility
+remain qualified. OAuth browser success has a distinct actual HTML sink; tokens,
+remote content, errors and log data keep external payload boundaries. Canonical
+checks cover 51 assets: 46 match archives and five pinned support deviations.
+Sixteen corruption controls pass. Native MCP index/CLI, resolver, discovery and
+external protocol/native bodies remain open. No server, OAuth, token store, log,
+transport, browser, UI or user-state operation was executed.
+
 [pi-tools.csv](pi-tools.csv) supplies 172 inherited tool/helper occurrences,
 with 27 [payload boundaries](pi-tools-boundaries.csv). Its
 [scope table](pi-tools-scope.csv) covers 37 complete source bodies: 24 tool and
@@ -1467,6 +1482,7 @@ node review/text-inventory/verify-pi-theme-text.cjs --node-modules <root-node-mo
 node review/text-inventory/verify-pi-os-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-render-utilities.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-distribution-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-mcp-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
