@@ -819,6 +819,19 @@ sources have exact versions/import routes/two-tree hashes, without canonical
 archive or full-body promotion. Twenty corruption controls pass. No shell,
 config, search execution, activation, transcript, model or UI operation executed.
 
+[pi-cli-support.csv](pi-cli-support.csv) adds twenty qualified native file,
+model-table and confirm-API definitions across six complete CLI helper bodies
+(287 lines), with 43 [exclusions](pi-cli-support-exclusions.csv) and eleven
+[boundaries](pi-cli-support-boundaries.csv). All file-access rejections use the
+not-found headline; later stat/image/native failures have separate paths. RPC
+rejects file arguments before that processor. Plain model-list metadata stays on
+stdout, while other noninteractive combinations can redirect it. Confirm labels
+require an API caller; the inspected trust resolver uses select. The
+[scope](pi-cli-support-scope.csv) retains fourteen partial supports, eighteen
+nonruntime assets and five repository traces/pins. Sixteen corruption controls
+pass against both installed trees and the locked canonical archive. Setup warning
+suppression is conditional on invoking the unbundled CLI setup helper.
+
 [pi-request-support.csv](pi-request-support.csv) records ten qualified HTTP and
 virtual-model definitions across six complete execution/request bodies (703
 lines), with 67 [exclusions](pi-request-support-exclusions.csv) and eleven
@@ -1882,6 +1895,7 @@ node review/text-inventory/verify-pi-provider-support.cjs --node-modules <root-n
 node review/text-inventory/verify-pi-core-config-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-rpc-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-request-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+python -B review/text-inventory/verify-pi-cli-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 

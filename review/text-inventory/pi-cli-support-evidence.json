@@ -1,0 +1,1149 @@
+{
+  "archive_provenance": {
+    "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "archive_name": "earendil-works-pi-coding-agent-1.4.0.tgz",
+    "archive_sha256": "d155c16ef6fa00960fbf58b2911536e80b05f33700e0b14fbd08967ede0c7428",
+    "integrity_authorities": [
+      "git:346d1e481757a55eb62fc066e43bbc7999b8e6dd:upstream/pi.lock.json",
+      "git:346d1e481757a55eb62fc066e43bbc7999b8e6dd:package-lock.json"
+    ],
+    "metadata_qualification": "Installed package.json copies pinned independently; file-level archive/patch provenance checked, not a claim every installed package byte equals pristine archive.",
+    "name": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0"
+  },
+  "boundary_file": "pi-cli-support-boundaries.csv",
+  "counts": {
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "excluded_occurrences": 43,
+    "external_boundaries": 11,
+    "proofs": 20,
+    "rows": 20,
+    "scopes": 43,
+    "whole_local_bodies": 6,
+    "whole_local_lines": 287
+  },
+  "exclusion_file": "pi-cli-support-exclusions.csv",
+  "inventory_file": "pi-cli-support.csv",
+  "limits": [
+    "Two installed trees, exact locked npm archive SRI and file-level byte/patch proof; no library/runtime/UI/files/model/network actions.",
+    "Full body closure limited to six CLI helpers; inherited auth/image/selector/native errors/OS/env/service data and plugin/API consumers remain bounded.",
+    "Current Jouzu main bypasses native setupCli and gates RPC @files; model list stdout redirection and project trust API-only confirm paths preserved.",
+    "Existing census pending statuses at assignment are contextual only; future mutable census/index hashes are not verifier dependencies."
+  ],
+  "nonruntime_assets": [
+    {
+      "archive_sha256": "089e61a714676641bbca423999d84f76abbb904e3cbffbe236cfefe50f1d9660",
+      "bytes": 5400,
+      "cli_nested_sha256": "089e61a714676641bbca423999d84f76abbb904e3cbffbe236cfefe50f1d9660",
+      "deviation_manifest": null,
+      "lines": 1,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "089e61a714676641bbca423999d84f76abbb904e3cbffbe236cfefe50f1d9660",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/file-processor.js.map"
+    },
+    {
+      "archive_sha256": "8481b60a063beca7fb2a0777ea9cd7f6b805f78ee939fc4ff646ea0f2c3a73f8",
+      "bytes": 584,
+      "cli_nested_sha256": "8481b60a063beca7fb2a0777ea9cd7f6b805f78ee939fc4ff646ea0f2c3a73f8",
+      "deviation_manifest": null,
+      "lines": 15,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "8481b60a063beca7fb2a0777ea9cd7f6b805f78ee939fc4ff646ea0f2c3a73f8",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/file-processor.d.ts"
+    },
+    {
+      "archive_sha256": "bac00e77806157c39de616b0ce9d145bbf90ad7915e88a1c3b77ccde97f51d98",
+      "bytes": 459,
+      "cli_nested_sha256": "bac00e77806157c39de616b0ce9d145bbf90ad7915e88a1c3b77ccde97f51d98",
+      "deviation_manifest": null,
+      "lines": 1,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "bac00e77806157c39de616b0ce9d145bbf90ad7915e88a1c3b77ccde97f51d98",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/file-processor.d.ts.map"
+    },
+    {
+      "archive_sha256": "b3f60c2583dbd4abb6e4460eb1e96ac9a0bc788122464debb1ae8a1941ce55f5",
+      "bytes": 1906,
+      "cli_nested_sha256": "b3f60c2583dbd4abb6e4460eb1e96ac9a0bc788122464debb1ae8a1941ce55f5",
+      "deviation_manifest": null,
+      "lines": 1,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "b3f60c2583dbd4abb6e4460eb1e96ac9a0bc788122464debb1ae8a1941ce55f5",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/initial-message.js.map"
+    },
+    {
+      "archive_sha256": "3f7018f72dcd76eb66f6c8f843e00de8365b1691e8338a3404672dd625308d11",
+      "bytes": 659,
+      "cli_nested_sha256": "3f7018f72dcd76eb66f6c8f843e00de8365b1691e8338a3404672dd625308d11",
+      "deviation_manifest": null,
+      "lines": 18,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "3f7018f72dcd76eb66f6c8f843e00de8365b1691e8338a3404672dd625308d11",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/initial-message.d.ts"
+    },
+    {
+      "archive_sha256": "4c27bb7db6f6db8de4ed1ef784890b89511564703bd051b2f478e37cf159fca9",
+      "bytes": 583,
+      "cli_nested_sha256": "4c27bb7db6f6db8de4ed1ef784890b89511564703bd051b2f478e37cf159fca9",
+      "deviation_manifest": null,
+      "lines": 1,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "4c27bb7db6f6db8de4ed1ef784890b89511564703bd051b2f478e37cf159fca9",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/initial-message.d.ts.map"
+    },
+    {
+      "archive_sha256": "7f2201bee9ee76cc3bd2a56c744aaa4b97de4862aad350c471f9e3050daa16c4",
+      "bytes": 8064,
+      "cli_nested_sha256": "7f2201bee9ee76cc3bd2a56c744aaa4b97de4862aad350c471f9e3050daa16c4",
+      "deviation_manifest": null,
+      "lines": 1,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "7f2201bee9ee76cc3bd2a56c744aaa4b97de4862aad350c471f9e3050daa16c4",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/list-models.js.map"
+    },
+    {
+      "archive_sha256": "f564f25542a9ad59f4fc3dda685cb2dcb91a47d6f0e114e2e04b1c6971b570e3",
+      "bytes": 360,
+      "cli_nested_sha256": "f564f25542a9ad59f4fc3dda685cb2dcb91a47d6f0e114e2e04b1c6971b570e3",
+      "deviation_manifest": null,
+      "lines": 9,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "f564f25542a9ad59f4fc3dda685cb2dcb91a47d6f0e114e2e04b1c6971b570e3",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/list-models.d.ts"
+    },
+    {
+      "archive_sha256": "155bdfe061c5c233fee898dfbb287f3cd24f6335f9e8da845da579a7a3760b75",
+      "bytes": 315,
+      "cli_nested_sha256": "155bdfe061c5c233fee898dfbb287f3cd24f6335f9e8da845da579a7a3760b75",
+      "deviation_manifest": null,
+      "lines": 1,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "155bdfe061c5c233fee898dfbb287f3cd24f6335f9e8da845da579a7a3760b75",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/list-models.d.ts.map"
+    },
+    {
+      "archive_sha256": "ca4d37be1e92f65f6648af704d4e174c75d01f5c2b15d3517790f7af37d6e853",
+      "bytes": 3977,
+      "cli_nested_sha256": "ca4d37be1e92f65f6648af704d4e174c75d01f5c2b15d3517790f7af37d6e853",
+      "deviation_manifest": null,
+      "lines": 1,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "ca4d37be1e92f65f6648af704d4e174c75d01f5c2b15d3517790f7af37d6e853",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/project-trust.js.map"
+    },
+    {
+      "archive_sha256": "1ce87bf042c7eacff91565e19ef589357bb9a9863e17fab5b3f1d89fdf3e1336",
+      "bytes": 420,
+      "cli_nested_sha256": "1ce87bf042c7eacff91565e19ef589357bb9a9863e17fab5b3f1d89fdf3e1336",
+      "deviation_manifest": null,
+      "lines": 10,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "1ce87bf042c7eacff91565e19ef589357bb9a9863e17fab5b3f1d89fdf3e1336",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/project-trust.d.ts"
+    },
+    {
+      "archive_sha256": "1544c7ecec7e3c4abe52c65616c8b2c1481baf032a7efb28ea0c767b4ee59e85",
+      "bytes": 432,
+      "cli_nested_sha256": "1544c7ecec7e3c4abe52c65616c8b2c1481baf032a7efb28ea0c767b4ee59e85",
+      "deviation_manifest": null,
+      "lines": 1,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "1544c7ecec7e3c4abe52c65616c8b2c1481baf032a7efb28ea0c767b4ee59e85",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/project-trust.d.ts.map"
+    },
+    {
+      "archive_sha256": "6a845bfb98a2f42b2ffd40a0524b5042e2e50b914011c6423700b2a4703b9d98",
+      "bytes": 3155,
+      "cli_nested_sha256": "6a845bfb98a2f42b2ffd40a0524b5042e2e50b914011c6423700b2a4703b9d98",
+      "deviation_manifest": null,
+      "lines": 1,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "6a845bfb98a2f42b2ffd40a0524b5042e2e50b914011c6423700b2a4703b9d98",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/session-picker.js.map"
+    },
+    {
+      "archive_sha256": "ceb19ff55fbeea924167a77fb7cb373e03a265226b6abec580c4f7046a831734",
+      "bytes": 621,
+      "cli_nested_sha256": "ceb19ff55fbeea924167a77fb7cb373e03a265226b6abec580c4f7046a831734",
+      "deviation_manifest": null,
+      "lines": 10,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "ceb19ff55fbeea924167a77fb7cb373e03a265226b6abec580c4f7046a831734",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/session-picker.d.ts"
+    },
+    {
+      "archive_sha256": "5c7443c002a7e7f32523534366aef2d2eaf60117d6e84df5e862c0afc4b52574",
+      "bytes": 495,
+      "cli_nested_sha256": "5c7443c002a7e7f32523534366aef2d2eaf60117d6e84df5e862c0afc4b52574",
+      "deviation_manifest": null,
+      "lines": 1,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "5c7443c002a7e7f32523534366aef2d2eaf60117d6e84df5e862c0afc4b52574",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/session-picker.d.ts.map"
+    },
+    {
+      "archive_sha256": "0fefaf5ea1d39562c991d321a1ccf97c5c497017ce60fa60df1d2812de79e767",
+      "bytes": 998,
+      "cli_nested_sha256": "0fefaf5ea1d39562c991d321a1ccf97c5c497017ce60fa60df1d2812de79e767",
+      "deviation_manifest": null,
+      "lines": 1,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "0fefaf5ea1d39562c991d321a1ccf97c5c497017ce60fa60df1d2812de79e767",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/setup.js.map"
+    },
+    {
+      "archive_sha256": "4c40c1e54bd3021cb06cda85f7271d2a1c18f95e3d95aba3e2c3da0254906695",
+      "bytes": 77,
+      "cli_nested_sha256": "4c40c1e54bd3021cb06cda85f7271d2a1c18f95e3d95aba3e2c3da0254906695",
+      "deviation_manifest": null,
+      "lines": 2,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "4c40c1e54bd3021cb06cda85f7271d2a1c18f95e3d95aba3e2c3da0254906695",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/setup.d.ts"
+    },
+    {
+      "archive_sha256": "ba55c502ab7ac55ca9534ee00ad54304a717f7f28c5ea3f4fa163987b4b303fa",
+      "bytes": 143,
+      "cli_nested_sha256": "ba55c502ab7ac55ca9534ee00ad54304a717f7f28c5ea3f4fa163987b4b303fa",
+      "deviation_manifest": null,
+      "lines": 1,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "ba55c502ab7ac55ca9534ee00ad54304a717f7f28c5ea3f4fa163987b4b303fa",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/setup.d.ts.map"
+    }
+  ],
+  "packages": [
+    {
+      "bin": {
+        "pi": "dist/bundle/cli.js"
+      },
+      "exports": {
+        ".": {
+          "import": "./dist/index.js",
+          "types": "./dist/index.d.ts"
+        },
+        "./rpc-entry": {
+          "import": "./dist/bundle/rpc-entry.js"
+        }
+      },
+      "name": "@earendil-works/pi-coding-agent",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e",
+      "tree": "root",
+      "version": "1.4.0"
+    },
+    {
+      "bin": {
+        "pi": "dist/bundle/cli.js"
+      },
+      "exports": {
+        ".": {
+          "import": "./dist/index.js",
+          "types": "./dist/index.d.ts"
+        },
+        "./rpc-entry": {
+          "import": "./dist/bundle/rpc-entry.js"
+        }
+      },
+      "name": "@earendil-works/pi-coding-agent",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532",
+      "tree": "cli-nested",
+      "version": "1.4.0"
+    }
+  ],
+  "pin": {
+    "integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "source": "upstream/pi.lock.json",
+    "version": "1.4.0"
+  },
+  "proofs": [
+    {
+      "column": 37,
+      "end": 1075,
+      "english": "Error: File not found: ${absolutePath}",
+      "guards": [
+        {
+          "end": 711,
+          "kind": "for",
+          "line": 16,
+          "polarity": "for-body",
+          "raw": "const fileArg of fileArgs",
+          "start": 686
+        }
+      ],
+      "item_id": "pi.cli-support.fixed.1",
+      "line": 24,
+      "path": "dist/cli/file-processor.js",
+      "raw_source": "`Error: File not found: ${absolutePath}`",
+      "start": 1035,
+      "token_kind": "template"
+    },
+    {
+      "column": 41,
+      "end": 2734,
+      "english": "Error: Could not read file ${absolutePath}: ${message}",
+      "guards": [
+        {
+          "end": 711,
+          "kind": "for",
+          "line": 16,
+          "polarity": "for-body",
+          "raw": "const fileArg of fileArgs",
+          "start": 686
+        },
+        {
+          "end": 1399,
+          "kind": "if",
+          "line": 34,
+          "polarity": "false/else",
+          "raw": "mimeType",
+          "start": 1391
+        }
+      ],
+      "item_id": "pi.cli-support.fixed.2",
+      "line": 64,
+      "path": "dist/cli/file-processor.js",
+      "raw_source": "`Error: Could not read file ${absolutePath}: ${message}`",
+      "start": 2678,
+      "token_kind": "template"
+    },
+    {
+      "column": 37,
+      "end": 462,
+      "english": "${millions}M",
+      "guards": [
+        {
+          "end": 364,
+          "kind": "if",
+          "line": 11,
+          "polarity": "true/body",
+          "raw": "count >= 1_000_000",
+          "start": 346
+        }
+      ],
+      "item_id": "pi.cli-support.fixed.3",
+      "line": 13,
+      "path": "dist/cli/list-models.js",
+      "raw_source": "`${millions}M`",
+      "start": 448,
+      "token_kind": "template"
+    },
+    {
+      "column": 54,
+      "end": 490,
+      "english": "${millions.toFixed(1)}M",
+      "guards": [
+        {
+          "end": 364,
+          "kind": "if",
+          "line": 11,
+          "polarity": "true/body",
+          "raw": "count >= 1_000_000",
+          "start": 346
+        }
+      ],
+      "item_id": "pi.cli-support.fixed.4",
+      "line": 13,
+      "path": "dist/cli/list-models.js",
+      "raw_source": "`${millions.toFixed(1)}M`",
+      "start": 465,
+      "token_kind": "template"
+    },
+    {
+      "column": 38,
+      "end": 617,
+      "english": "${thousands}K",
+      "guards": [
+        {
+          "end": 520,
+          "kind": "if",
+          "line": 15,
+          "polarity": "true/body",
+          "raw": "count >= 1_000",
+          "start": 506
+        }
+      ],
+      "item_id": "pi.cli-support.fixed.5",
+      "line": 17,
+      "path": "dist/cli/list-models.js",
+      "raw_source": "`${thousands}K`",
+      "start": 602,
+      "token_kind": "template"
+    },
+    {
+      "column": 56,
+      "end": 646,
+      "english": "${thousands.toFixed(1)}K",
+      "guards": [
+        {
+          "end": 520,
+          "kind": "if",
+          "line": 15,
+          "polarity": "true/body",
+          "raw": "count >= 1_000",
+          "start": 506
+        }
+      ],
+      "item_id": "pi.cli-support.fixed.6",
+      "line": 17,
+      "path": "dist/cli/list-models.js",
+      "raw_source": "`${thousands.toFixed(1)}K`",
+      "start": 620,
+      "token_kind": "template"
+    },
+    {
+      "column": 36,
+      "end": 984,
+      "english": "Warning: errors loading models.json:\\n${loadError}",
+      "guards": [
+        {
+          "end": 893,
+          "kind": "if",
+          "line": 26,
+          "polarity": "true/body",
+          "raw": "loadError",
+          "start": 884
+        }
+      ],
+      "item_id": "pi.cli-support.fixed.7",
+      "line": 27,
+      "path": "dist/cli/list-models.js",
+      "raw_source": "`Warning: errors loading models.json:\\n${loadError}`",
+      "start": 932,
+      "token_kind": "template"
+    },
+    {
+      "column": 21,
+      "end": 1492,
+      "english": "No models matching \"${searchPattern}\"",
+      "guards": [
+        {
+          "end": 1429,
+          "kind": "if",
+          "line": 39,
+          "polarity": "true/body",
+          "raw": "filteredModels.length === 0",
+          "start": 1402
+        }
+      ],
+      "item_id": "pi.cli-support.fixed.8",
+      "line": 40,
+      "path": "dist/cli/list-models.js",
+      "raw_source": "`No models matching \"${searchPattern}\"`",
+      "start": 1453,
+      "token_kind": "template"
+    },
+    {
+      "column": 33,
+      "end": 2037,
+      "english": "yes",
+      "guards": [],
+      "item_id": "pi.cli-support.fixed.9",
+      "line": 56,
+      "path": "dist/cli/list-models.js",
+      "raw_source": "\"yes\"",
+      "start": 2032,
+      "token_kind": "string"
+    },
+    {
+      "column": 41,
+      "end": 2044,
+      "english": "no",
+      "guards": [],
+      "item_id": "pi.cli-support.fixed.10",
+      "line": 56,
+      "path": "dist/cli/list-models.js",
+      "raw_source": "\"no\"",
+      "start": 2040,
+      "token_kind": "string"
+    },
+    {
+      "column": 45,
+      "end": 2095,
+      "english": "yes",
+      "guards": [],
+      "item_id": "pi.cli-support.fixed.11",
+      "line": 57,
+      "path": "dist/cli/list-models.js",
+      "raw_source": "\"yes\"",
+      "start": 2090,
+      "token_kind": "string"
+    },
+    {
+      "column": 53,
+      "end": 2102,
+      "english": "no",
+      "guards": [],
+      "item_id": "pi.cli-support.fixed.12",
+      "line": 57,
+      "path": "dist/cli/list-models.js",
+      "raw_source": "\"no\"",
+      "start": 2098,
+      "token_kind": "string"
+    },
+    {
+      "column": 19,
+      "end": 2163,
+      "english": "provider",
+      "guards": [],
+      "item_id": "pi.cli-support.fixed.13",
+      "line": 60,
+      "path": "dist/cli/list-models.js",
+      "raw_source": "\"provider\"",
+      "start": 2153,
+      "token_kind": "string"
+    },
+    {
+      "column": 16,
+      "end": 2187,
+      "english": "model",
+      "guards": [],
+      "item_id": "pi.cli-support.fixed.14",
+      "line": 61,
+      "path": "dist/cli/list-models.js",
+      "raw_source": "\"model\"",
+      "start": 2180,
+      "token_kind": "string"
+    },
+    {
+      "column": 18,
+      "end": 2215,
+      "english": "context",
+      "guards": [],
+      "item_id": "pi.cli-support.fixed.15",
+      "line": 62,
+      "path": "dist/cli/list-models.js",
+      "raw_source": "\"context\"",
+      "start": 2206,
+      "token_kind": "string"
+    },
+    {
+      "column": 17,
+      "end": 2242,
+      "english": "max-out",
+      "guards": [],
+      "item_id": "pi.cli-support.fixed.16",
+      "line": 63,
+      "path": "dist/cli/list-models.js",
+      "raw_source": "\"max-out\"",
+      "start": 2233,
+      "token_kind": "string"
+    },
+    {
+      "column": 19,
+      "end": 2272,
+      "english": "thinking",
+      "guards": [],
+      "item_id": "pi.cli-support.fixed.17",
+      "line": 64,
+      "path": "dist/cli/list-models.js",
+      "raw_source": "\"thinking\"",
+      "start": 2262,
+      "token_kind": "string"
+    },
+    {
+      "column": 17,
+      "end": 2298,
+      "english": "images",
+      "guards": [],
+      "item_id": "pi.cli-support.fixed.18",
+      "line": 65,
+      "path": "dist/cli/list-models.js",
+      "raw_source": "\"images\"",
+      "start": 2290,
+      "token_kind": "string"
+    },
+    {
+      "column": 30,
+      "end": 1102,
+      "english": "Yes",
+      "guards": [],
+      "item_id": "pi.cli-support.fixed.19",
+      "line": 26,
+      "path": "dist/cli/project-trust.js",
+      "raw_source": "\"Yes\"",
+      "start": 1097,
+      "token_kind": "string"
+    },
+    {
+      "column": 30,
+      "end": 1152,
+      "english": "No",
+      "guards": [],
+      "item_id": "pi.cli-support.fixed.20",
+      "line": 27,
+      "path": "dist/cli/project-trust.js",
+      "raw_source": "\"No\"",
+      "start": 1148,
+      "token_kind": "string"
+    }
+  ],
+  "remaining_partial_sources": [
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/main.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/index.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/args.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/startup-ui.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/output-guard.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/auth-guidance.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/image-process.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/config.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js"
+  ],
+  "repo_trace_sources": [
+    {
+      "git_blob_sha1": "97ef3313123007e937e6a52064ed6e089e250b57",
+      "read_ranges": [
+        [
+          101,
+          109
+        ],
+        [
+          750,
+          765
+        ]
+      ],
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a",
+      "source": "packages/cli/src/main-cli.ts",
+      "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd"
+    },
+    {
+      "git_blob_sha1": "8e32852be1ef8514f458fab89b8843da9a3da841",
+      "read_ranges": [
+        [
+          81,
+          90
+        ]
+      ],
+      "sha256": "9460d7582f6e843f49ee69f11d3bb12a804cbf4ef3a948c87c4b7fa018f77bfd",
+      "source": "packages/cli/src/runtime.ts",
+      "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd"
+    },
+    {
+      "git_blob_sha1": "7f11845de9fd30662b7af445e5e487a36296c49a",
+      "read_ranges": [
+        [
+          613,
+          622
+        ],
+        [
+          1156,
+          1165
+        ]
+      ],
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482",
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd"
+    },
+    {
+      "git_blob_sha1": "8fb30b6e5192d43ffcded8569a696565fb898788",
+      "read_ranges": null,
+      "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+      "source": "upstream/pi.lock.json",
+      "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd"
+    },
+    {
+      "git_blob_sha1": "b71bc0c61af4a1f4fe2b6abb986f1b9313ea46d4",
+      "read_ranges": null,
+      "sha256": "4859c6a277d7b4649c78f4460fe84e447f75cb9f358f1d0e70191a36d8f01a76",
+      "source": "package-lock.json",
+      "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd"
+    }
+  ],
+  "schema_version": 1,
+  "scope_file": "pi-cli-support-scope.csv",
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "source_provenance": [
+    {
+      "archive_sha256": "4946f4e3e193713135a4924982d31c9403190befd421b7be9893d0e5c65055ae",
+      "bytes": 2874,
+      "cli_nested_sha256": "4946f4e3e193713135a4924982d31c9403190befd421b7be9893d0e5c65055ae",
+      "deviation_manifest": null,
+      "lines": 71,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "4946f4e3e193713135a4924982d31c9403190befd421b7be9893d0e5c65055ae",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/file-processor.js"
+    },
+    {
+      "archive_sha256": "d15e1b6ff88ebf85944cce50f4eab219a36f3539e42a0ded19b8f5ff5308b29d",
+      "bytes": 711,
+      "cli_nested_sha256": "d15e1b6ff88ebf85944cce50f4eab219a36f3539e42a0ded19b8f5ff5308b29d",
+      "deviation_manifest": null,
+      "lines": 22,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "d15e1b6ff88ebf85944cce50f4eab219a36f3539e42a0ded19b8f5ff5308b29d",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/initial-message.js"
+    },
+    {
+      "archive_sha256": "7775957478370706d9859b6c992b74b5f24e6807254dba1a53531132a9240bad",
+      "bytes": 3690,
+      "cli_nested_sha256": "7775957478370706d9859b6c992b74b5f24e6807254dba1a53531132a9240bad",
+      "deviation_manifest": null,
+      "lines": 98,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "7775957478370706d9859b6c992b74b5f24e6807254dba1a53531132a9240bad",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/list-models.js"
+    },
+    {
+      "archive_sha256": "a71e512d81e49cb6f8e20b78677dce4b4ca19ee2c4b4c6f14a00411fb52bd3cc",
+      "bytes": 1934,
+      "cli_nested_sha256": "a71e512d81e49cb6f8e20b78677dce4b4ca19ee2c4b4c6f14a00411fb52bd3cc",
+      "deviation_manifest": null,
+      "lines": 48,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "a71e512d81e49cb6f8e20b78677dce4b4ca19ee2c4b4c6f14a00411fb52bd3cc",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/project-trust.js"
+    },
+    {
+      "archive_sha256": "b5b3cc89815cc11f4519af27b9abb5a972a110fcfa08096f70dc0623e763cd44",
+      "bytes": 1456,
+      "cli_nested_sha256": "b5b3cc89815cc11f4519af27b9abb5a972a110fcfa08096f70dc0623e763cd44",
+      "deviation_manifest": null,
+      "lines": 36,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "b5b3cc89815cc11f4519af27b9abb5a972a110fcfa08096f70dc0623e763cd44",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/session-picker.js"
+    },
+    {
+      "archive_sha256": "4a2a7a0dbf82e2e5d18cec90896b36cbedce78b3d09e78d4040ac94fa3fbeba8",
+      "bytes": 501,
+      "cli_nested_sha256": "4a2a7a0dbf82e2e5d18cec90896b36cbedce78b3d09e78d4040ac94fa3fbeba8",
+      "deviation_manifest": null,
+      "lines": 12,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "4a2a7a0dbf82e2e5d18cec90896b36cbedce78b3d09e78d4040ac94fa3fbeba8",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/setup.js"
+    },
+    {
+      "archive_sha256": "08b91f9eb3adf9a5027c18732d1e4de70999bd15c445b65cb0ddd0cd68f2746b",
+      "bytes": 38661,
+      "cli_nested_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "deviation_manifest": "upstream/pi-content-policy/patch.lock.json",
+      "lines": 838,
+      "provenance": "pinned-source-patch-after",
+      "root_nested_equal": true,
+      "root_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/main.js"
+    },
+    {
+      "archive_sha256": "4569157e6038be9840fa514db4b00a27fd0be9e3622cc7b49a281de6c027d7ff",
+      "bytes": 5194,
+      "cli_nested_sha256": "4569157e6038be9840fa514db4b00a27fd0be9e3622cc7b49a281de6c027d7ff",
+      "deviation_manifest": null,
+      "lines": 54,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "4569157e6038be9840fa514db4b00a27fd0be9e3622cc7b49a281de6c027d7ff",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/index.js"
+    },
+    {
+      "archive_sha256": "8189b66abc4f9f431dbb70941dcba690d76d040de1fbfff212886be35a53639d",
+      "bytes": 169,
+      "cli_nested_sha256": "8189b66abc4f9f431dbb70941dcba690d76d040de1fbfff212886be35a53639d",
+      "deviation_manifest": null,
+      "lines": 6,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "8189b66abc4f9f431dbb70941dcba690d76d040de1fbfff212886be35a53639d",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli.js"
+    },
+    {
+      "archive_sha256": "231eca0304b149165a35b12730052586603f23208667e3a57355638017450175",
+      "bytes": 21760,
+      "cli_nested_sha256": "231eca0304b149165a35b12730052586603f23208667e3a57355638017450175",
+      "deviation_manifest": null,
+      "lines": 473,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "231eca0304b149165a35b12730052586603f23208667e3a57355638017450175",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/args.js"
+    },
+    {
+      "archive_sha256": "f0fa56d9aeb064abfc0c0b1370140e7ff1925cc707fe6952815a8b5d96649b48",
+      "bytes": 7979,
+      "cli_nested_sha256": "f0fa56d9aeb064abfc0c0b1370140e7ff1925cc707fe6952815a8b5d96649b48",
+      "deviation_manifest": null,
+      "lines": 193,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "f0fa56d9aeb064abfc0c0b1370140e7ff1925cc707fe6952815a8b5d96649b48",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/startup-ui.js"
+    },
+    {
+      "archive_sha256": "da26783cf1b0c7d3024eb013d4912e77e88f08ea882df2772837133d4ffac469",
+      "bytes": 2516,
+      "cli_nested_sha256": "da26783cf1b0c7d3024eb013d4912e77e88f08ea882df2772837133d4ffac469",
+      "deviation_manifest": null,
+      "lines": 60,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "da26783cf1b0c7d3024eb013d4912e77e88f08ea882df2772837133d4ffac469",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js"
+    },
+    {
+      "archive_sha256": "e860db94650c57e07582c300983671737bf9e796682193b498f75e3dd72e9024",
+      "bytes": 2836,
+      "cli_nested_sha256": "e860db94650c57e07582c300983671737bf9e796682193b498f75e3dd72e9024",
+      "deviation_manifest": null,
+      "lines": 89,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "e860db94650c57e07582c300983671737bf9e796682193b498f75e3dd72e9024",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/output-guard.js"
+    },
+    {
+      "archive_sha256": "990e8295236ab4c87763b8e47e0ffa20c2958fd1827d17caf5ddf36d601e5fb4",
+      "bytes": 901,
+      "cli_nested_sha256": "990e8295236ab4c87763b8e47e0ffa20c2958fd1827d17caf5ddf36d601e5fb4",
+      "deviation_manifest": null,
+      "lines": 21,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "990e8295236ab4c87763b8e47e0ffa20c2958fd1827d17caf5ddf36d601e5fb4",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/auth-guidance.js"
+    },
+    {
+      "archive_sha256": "275b252679b76476d7f83042a9771c77d46321b9d7a3e20e1f8365b2eff2254e",
+      "bytes": 2772,
+      "cli_nested_sha256": "275b252679b76476d7f83042a9771c77d46321b9d7a3e20e1f8365b2eff2254e",
+      "deviation_manifest": null,
+      "lines": 83,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "275b252679b76476d7f83042a9771c77d46321b9d7a3e20e1f8365b2eff2254e",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/image-process.js"
+    },
+    {
+      "archive_sha256": "b53418ca3bc54b70e18ccb192eb471696f5211c5aa2e80d68fe6fe3851ff23ae",
+      "bytes": 22684,
+      "cli_nested_sha256": "b53418ca3bc54b70e18ccb192eb471696f5211c5aa2e80d68fe6fe3851ff23ae",
+      "deviation_manifest": null,
+      "lines": 534,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "b53418ca3bc54b70e18ccb192eb471696f5211c5aa2e80d68fe6fe3851ff23ae",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/config.js"
+    },
+    {
+      "archive_sha256": "926e788829f9cb8eb1792f56b5b23e74f575db88606968a60948e2ce45806296",
+      "bytes": 35762,
+      "cli_nested_sha256": "926e788829f9cb8eb1792f56b5b23e74f575db88606968a60948e2ce45806296",
+      "deviation_manifest": null,
+      "lines": 893,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "926e788829f9cb8eb1792f56b5b23e74f575db88606968a60948e2ce45806296",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js"
+    },
+    {
+      "archive_sha256": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+      "bytes": 283878,
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "deviation_manifest": "upstream/pi-content-policy/patch.lock.json",
+      "lines": 5977,
+      "provenance": "pinned-source-patch-after",
+      "root_nested_equal": true,
+      "root_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js"
+    },
+    {
+      "archive_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "bytes": 5604,
+      "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "deviation_manifest": null,
+      "lines": 146,
+      "provenance": "byte-identical-to-canonical-archive",
+      "root_nested_equal": true,
+      "root_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js"
+    },
+    {
+      "archive_sha256": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
+      "bytes": 181728,
+      "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "deviation_manifest": "upstream/pi-content-policy/patch.lock.json",
+      "lines": 3816,
+      "provenance": "pinned-source-patch-after",
+      "root_nested_equal": true,
+      "root_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js"
+    }
+  ],
+  "source_review": [
+    {
+      "comment_occurrences": 10,
+      "excluded_occurrences": 15,
+      "fixed_definitions": 2,
+      "full_body_ownership": "Only this six-file287LOC unit; inherited selector/image/auth/runtime helpers remain bounded/prior-owned.",
+      "lines": 71,
+      "literal_occurrences": 17,
+      "prior_status_at_assignment": "remaining body; no prior whole_body_reviews; list-models bounded supports only (pi-auth-model1-85/pi-session-config23-34)",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/file-processor.js",
+      "status": "full-body-source-read"
+    },
+    {
+      "comment_occurrences": 2,
+      "excluded_occurrences": 1,
+      "fixed_definitions": 0,
+      "full_body_ownership": "Only this six-file287LOC unit; inherited selector/image/auth/runtime helpers remain bounded/prior-owned.",
+      "lines": 22,
+      "literal_occurrences": 1,
+      "prior_status_at_assignment": "remaining body; no prior whole_body_reviews; list-models bounded supports only (pi-auth-model1-85/pi-session-config23-34)",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/initial-message.js",
+      "status": "full-body-source-read"
+    },
+    {
+      "comment_occurrences": 9,
+      "excluded_occurrences": 7,
+      "fixed_definitions": 16,
+      "full_body_ownership": "Only this six-file287LOC unit; inherited selector/image/auth/runtime helpers remain bounded/prior-owned.",
+      "lines": 98,
+      "literal_occurrences": 23,
+      "prior_status_at_assignment": "remaining body; no prior whole_body_reviews; list-models bounded supports only (pi-auth-model1-85/pi-session-config23-34)",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/list-models.js",
+      "status": "full-body-source-read"
+    },
+    {
+      "comment_occurrences": 1,
+      "excluded_occurrences": 12,
+      "fixed_definitions": 2,
+      "full_body_ownership": "Only this six-file287LOC unit; inherited selector/image/auth/runtime helpers remain bounded/prior-owned.",
+      "lines": 48,
+      "literal_occurrences": 14,
+      "prior_status_at_assignment": "remaining body; no prior whole_body_reviews; list-models bounded supports only (pi-auth-model1-85/pi-session-config23-34)",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/project-trust.js",
+      "status": "full-body-source-read"
+    },
+    {
+      "comment_occurrences": 3,
+      "excluded_occurrences": 4,
+      "fixed_definitions": 0,
+      "full_body_ownership": "Only this six-file287LOC unit; inherited selector/image/auth/runtime helpers remain bounded/prior-owned.",
+      "lines": 36,
+      "literal_occurrences": 4,
+      "prior_status_at_assignment": "remaining body; no prior whole_body_reviews; list-models bounded supports only (pi-auth-model1-85/pi-session-config23-34)",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/session-picker.js",
+      "status": "full-body-source-read"
+    },
+    {
+      "comment_occurrences": 3,
+      "excluded_occurrences": 4,
+      "fixed_definitions": 0,
+      "full_body_ownership": "Only this six-file287LOC unit; inherited selector/image/auth/runtime helpers remain bounded/prior-owned.",
+      "lines": 12,
+      "literal_occurrences": 4,
+      "prior_status_at_assignment": "remaining body; no prior whole_body_reviews; list-models bounded supports only (pi-auth-model1-85/pi-session-config23-34)",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/setup.js",
+      "status": "full-body-source-read"
+    }
+  ],
+  "support_sources": [
+    {
+      "read_ranges": [
+        [
+          15,
+          20
+        ],
+        [
+          93,
+          98
+        ],
+        [
+          171,
+          182
+        ],
+        [
+          328,
+          339
+        ],
+        [
+          521,
+          528
+        ],
+        [
+          584,
+          629
+        ],
+        [
+          724,
+          740
+        ],
+        [
+          782,
+          826
+        ]
+      ],
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/main.js"
+    },
+    {
+      "read_ranges": [
+        [
+          39,
+          39
+        ]
+      ],
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/index.js"
+    },
+    {
+      "read_ranges": [
+        [
+          1,
+          6
+        ]
+      ],
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli.js"
+    },
+    {
+      "read_ranges": [
+        [
+          22,
+          33
+        ],
+        [
+          57,
+          62
+        ],
+        [
+          200,
+          208
+        ],
+        [
+          238,
+          262
+        ]
+      ],
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/args.js"
+    },
+    {
+      "read_ranges": [
+        [
+          56,
+          73
+        ],
+        [
+          114,
+          131
+        ],
+        [
+          171,
+          191
+        ]
+      ],
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/startup-ui.js"
+    },
+    {
+      "read_ranges": [
+        [
+          5,
+          11
+        ],
+        [
+          18,
+          58
+        ]
+      ],
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/project-trust.js"
+    },
+    {
+      "read_ranges": [
+        [
+          38,
+          62
+        ]
+      ],
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/output-guard.js"
+    },
+    {
+      "read_ranges": [
+        [
+          4,
+          13
+        ]
+      ],
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/auth-guidance.js"
+    },
+    {
+      "read_ranges": [
+        [
+          36,
+          80
+        ]
+      ],
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/image-process.js"
+    },
+    {
+      "read_ranges": [
+        [
+          469,
+          476
+        ]
+      ],
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/config.js"
+    },
+    {
+      "read_ranges": [
+        [
+          645,
+          687
+        ]
+      ],
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js"
+    },
+    {
+      "read_ranges": [
+        [
+          935,
+          953
+        ]
+      ],
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js"
+    },
+    {
+      "read_ranges": [
+        [
+          103,
+          108
+        ]
+      ],
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js"
+    },
+    {
+      "read_ranges": [
+        [
+          1745,
+          1807
+        ]
+      ],
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js"
+    }
+  ]
+}
