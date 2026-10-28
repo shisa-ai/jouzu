@@ -1336,6 +1336,22 @@ adds no human prose and does not close its forwarded layout/color modules.
 [Scope](human-fallback-scope.csv) pins five source bodies. No resolver, parser or
 terminal code was executed.
 
+[python-review-tools.csv](python-review-tools.csv) records both complete Python
+review-helper bodies (1,717 lines). Its 1,534 rows distinguish raw source
+expressions for errors/help/output from protected values, controls, comments,
+embedded HTML/JavaScript and generated README fragments. The
+[scope](python-review-tools-scope.csv) pins nine Git sources and two explicit
+historical/external boundaries. All 1,398 original AST candidates reconcile to
+1,128 material occurrences, 265 static f-string components and five formatting
+mechanisms, preserving overlap rather than counting components as new messages.
+The helpers retain their historical source/count contract; the base snapshot is
+not that candidate, and CLI/API override limits remain explicit. Module docstring
+help, 107 error templates, 24 argparse-help templates, nested generated prose and
+log/error tails keep their actual output conditions. Native argparse/traceback,
+child output, input source and cleanup errors remain separate producers. Source
+expressions are not rendered Python strings. No helper, command, generated
+example or user-state operation was executed.
+
 [python-console.csv](python-console.csv) records 30 occurrences and boundaries
 for the separate Python console package, including 11 inherited `argparse`
 patterns. [python-console-observations.json](python-console-observations.json)
@@ -1593,6 +1609,7 @@ python -B review/text-inventory/verify-session-ui-text.py
 python -B review/text-inventory/verify-session-ui-components.py
 python -B review/text-inventory/verify-session-ui-producers.py
 python -B review/text-inventory/verify-python-console.py --observe
+python -B review/text-inventory/verify-python-review-tools.py
 python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-build-scripts.py
 python -B review/text-inventory/verify-copied-runtime.py
