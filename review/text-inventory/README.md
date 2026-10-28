@@ -716,6 +716,21 @@ routes and complete-member byte budgets retain their precise guards. Wider
 ingress, service, host, submission, user-input and schedule bodies remain pending.
 No controller, queue, tool, model, native or user-state producer was executed.
 
+[context-adjunct-text.csv](context-adjunct-text.csv) adds 22 compaction and
+provider-schema records: four catalog occurrences, ten fixed English fragments
+and eight boundaries. Two complete bodies cover 369 lines; all 97 AST
+string/template/regex occurrences are partitioned with 84
+[exclusions](context-adjunct-text-exclusions.csv) and a separate catalog alias.
+The [scope](context-adjunct-text-scope.csv) pins fourteen sources. Tool metadata,
+acknowledgements, outcome notices and saved continuation instructions have distinct
+sinks. Native interactive custom-message suppression does not suppress plain
+scrollback/exported content. Notification failures are discarded, with no stream
+fallback; the root injects its catalog while child registration uses English by
+default. Three English error matchers are preserved as recognition coupling.
+Provider-schema normalization introduces no prose and retains external payload
+and native error boundaries. Four corruption controls pass. No compaction,
+extension, model, provider, user-state or schema payload was executed.
+
 [flow-model-input.csv](flow-model-input.csv) adds 46 composition/request-helper
 records: 29 fixed error definitions, two protected JSON frame templates, five
 diagnostic replacement/suffix formats, one retained reason and nine boundaries.
@@ -1190,6 +1205,7 @@ node review/text-inventory/verify-flow-wait-producers.cjs
 node review/text-inventory/verify-flow-tools.cjs
 python -B review/text-inventory/verify-flow-orchestration.py
 python -B review/text-inventory/verify-flow-controller-core.py
+node review/text-inventory/verify-context-adjunct-text.cjs
 node review/text-inventory/verify-flow-model-input.cjs
 node review/text-inventory/verify-native-request-state.cjs
 node review/text-inventory/verify-flow-request-policy.cjs

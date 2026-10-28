@@ -1,0 +1,1112 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "full_bodies": {
+    "packages/cli/src/compaction-request.ts": 253,
+    "packages/cli/src/responses-tool-schema.ts": 116
+  },
+  "anchors": [
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 1,
+      "column": 69,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "item_id": "CONTEXT-ADJUNCT-X-001",
+      "kind": "excluded",
+      "english": "@earendil-works/pi-coding-agent",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 2,
+      "column": 63,
+      "expression": "\"./cli-messages.js\"",
+      "item_id": "CONTEXT-ADJUNCT-X-002",
+      "kind": "excluded",
+      "english": "./cli-messages.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 3,
+      "column": 36,
+      "expression": "\"./locale-catalog.js\"",
+      "item_id": "CONTEXT-ADJUNCT-X-003",
+      "kind": "excluded",
+      "english": "./locale-catalog.js",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 12,
+      "column": 38,
+      "expression": "\"__pi_vcc__\"",
+      "item_id": "CONTEXT-ADJUNCT-X-004",
+      "kind": "excluded",
+      "english": "__pi_vcc__",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 18,
+      "column": 48,
+      "expression": "\"jouzu-compaction-continue\"",
+      "item_id": "CONTEXT-ADJUNCT-X-005",
+      "kind": "excluded",
+      "english": "jouzu-compaction-continue",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 19,
+      "column": 41,
+      "expression": "\"Continue the current work from the compaction summary.\"",
+      "item_id": "CONTEXT-ADJUNCT-001",
+      "kind": "fixed",
+      "english": "Continue the current work from the compaction summary.",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 20,
+      "column": 38,
+      "expression": "\"jouzu:compaction-continuation\"",
+      "item_id": "CONTEXT-ADJUNCT-X-006",
+      "kind": "excluded",
+      "english": "jouzu:compaction-continuation",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 26,
+      "column": 37,
+      "expression": "\"compact_context\"",
+      "item_id": "CONTEXT-ADJUNCT-X-007",
+      "kind": "excluded",
+      "english": "compact_context",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 29,
+      "column": 2,
+      "expression": "\"Request that this session's earlier conversation be replaced with a summary so the current work can continue in a smaller context. \"",
+      "item_id": "CONTEXT-ADJUNCT-002",
+      "kind": "fixed",
+      "english": "Request that this session's earlier conversation be replaced with a summary so the current work can continue in a smaller context. ",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 30,
+      "column": 2,
+      "expression": "\"Compaction runs after the current turn ends, so finish the response you are writing after calling this, then continue the work. \"",
+      "item_id": "CONTEXT-ADJUNCT-003",
+      "kind": "fixed",
+      "english": "Compaction runs after the current turn ends, so finish the response you are writing after calling this, then continue the work. ",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 31,
+      "column": 2,
+      "expression": "\"Earlier messages stay on disk and remain searchable afterwards. \"",
+      "item_id": "CONTEXT-ADJUNCT-004",
+      "kind": "fixed",
+      "english": "Earlier messages stay on disk and remain searchable afterwards. ",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 32,
+      "column": 2,
+      "expression": "\"Request it when a long task needs room to continue, not on a fixed schedule.\"",
+      "item_id": "CONTEXT-ADJUNCT-005",
+      "kind": "fixed",
+      "english": "Request it when a long task needs room to continue, not on a fixed schedule.",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 35,
+      "column": 2,
+      "expression": "\"compact_context: request a summary of earlier conversation when a long task needs room to continue. It runs after the current turn.\"",
+      "item_id": "CONTEXT-ADJUNCT-006",
+      "kind": "fixed",
+      "english": "compact_context: request a summary of earlier conversation when a long task needs room to continue. It runs after the current turn.",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 38,
+      "column": 2,
+      "expression": "\"Compaction requested. It runs once this turn ends; finish your current response as normal, then continue the work.\"",
+      "item_id": "CONTEXT-ADJUNCT-007",
+      "kind": "fixed",
+      "english": "Compaction requested. It runs once this turn ends; finish your current response as normal, then continue the work.",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 41,
+      "column": 2,
+      "expression": "\"Compaction is already requested for the end of this turn. Finish your current response as normal.\"",
+      "item_id": "CONTEXT-ADJUNCT-008",
+      "kind": "fixed",
+      "english": "Compaction is already requested for the end of this turn. Finish your current response as normal.",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 43,
+      "column": 38,
+      "expression": "\"idle\"",
+      "item_id": "CONTEXT-ADJUNCT-X-008",
+      "kind": "excluded",
+      "english": "idle",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 43,
+      "column": 47,
+      "expression": "\"requested\"",
+      "item_id": "CONTEXT-ADJUNCT-X-009",
+      "kind": "excluded",
+      "english": "requested",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 43,
+      "column": 61,
+      "expression": "\"dispatching\"",
+      "item_id": "CONTEXT-ADJUNCT-X-010",
+      "kind": "excluded",
+      "english": "dispatching",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 54,
+      "column": 42,
+      "expression": "\"idle\"",
+      "item_id": "CONTEXT-ADJUNCT-X-011",
+      "kind": "excluded",
+      "english": "idle",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 55,
+      "column": 47,
+      "expression": "\"resume\"",
+      "item_id": "CONTEXT-ADJUNCT-X-012",
+      "kind": "excluded",
+      "english": "resume",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 61,
+      "column": 22,
+      "expression": "\"idle\"",
+      "item_id": "CONTEXT-ADJUNCT-X-013",
+      "kind": "excluded",
+      "english": "idle",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 70,
+      "column": 47,
+      "expression": "\"resume\"",
+      "item_id": "CONTEXT-ADJUNCT-X-014",
+      "kind": "excluded",
+      "english": "resume",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 71,
+      "column": 22,
+      "expression": "\"idle\"",
+      "item_id": "CONTEXT-ADJUNCT-X-015",
+      "kind": "excluded",
+      "english": "idle",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 73,
+      "column": 16,
+      "expression": "\"requested\"",
+      "item_id": "CONTEXT-ADJUNCT-X-016",
+      "kind": "excluded",
+      "english": "requested",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 82,
+      "column": 25,
+      "expression": "\"requested\"",
+      "item_id": "CONTEXT-ADJUNCT-X-017",
+      "kind": "excluded",
+      "english": "requested",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 86,
+      "column": 16,
+      "expression": "\"dispatching\"",
+      "item_id": "CONTEXT-ADJUNCT-X-018",
+      "kind": "excluded",
+      "english": "dispatching",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 89,
+      "column": 44,
+      "expression": "\"resume\"",
+      "item_id": "CONTEXT-ADJUNCT-X-019",
+      "kind": "excluded",
+      "english": "resume",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 97,
+      "column": 16,
+      "expression": "\"idle\"",
+      "item_id": "CONTEXT-ADJUNCT-X-020",
+      "kind": "excluded",
+      "english": "idle",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 110,
+      "column": 22,
+      "expression": "\"idle\"",
+      "item_id": "CONTEXT-ADJUNCT-X-021",
+      "kind": "excluded",
+      "english": "idle",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 117,
+      "column": 28,
+      "expression": "\"object\"",
+      "item_id": "CONTEXT-ADJUNCT-X-022",
+      "kind": "excluded",
+      "english": "object",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 117,
+      "column": 111,
+      "expression": "\"pi-vcc\"",
+      "item_id": "CONTEXT-ADJUNCT-X-023",
+      "kind": "excluded",
+      "english": "pi-vcc",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 126,
+      "column": 31,
+      "expression": "\"jouzu.cli.compaction.outcome\"",
+      "item_id": "CONTEXT-ADJUNCT-009",
+      "kind": "catalog",
+      "english": "Context compacted at the agent's request. Earlier messages remain searchable.",
+      "catalog_id": "jouzu.cli.compaction.outcome"
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 127,
+      "column": 38,
+      "expression": "\"jouzu.cli.compaction.outcome.piVcc\"",
+      "item_id": "CONTEXT-ADJUNCT-010",
+      "kind": "catalog",
+      "english": "Context compacted at the agent's request (pi-vcc summary). Earlier messages remain searchable.",
+      "catalog_id": "jouzu.cli.compaction.outcome.piVcc"
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 128,
+      "column": 39,
+      "expression": "\"jouzu.cli.compaction.continueFailed\"",
+      "item_id": "CONTEXT-ADJUNCT-011",
+      "kind": "catalog",
+      "english": "Could not continue after compaction: { $message }",
+      "catalog_id": "jouzu.cli.compaction.continueFailed"
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 142,
+      "column": 21,
+      "expression": "\"Compaction cancelled\"",
+      "item_id": "CONTEXT-ADJUNCT-X-024",
+      "kind": "excluded",
+      "english": "Compaction cancelled",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 143,
+      "column": 21,
+      "expression": "\"Already compacted\"",
+      "item_id": "CONTEXT-ADJUNCT-X-025",
+      "kind": "excluded",
+      "english": "Already compacted",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 144,
+      "column": 28,
+      "expression": "\"Nothing to compact\"",
+      "item_id": "CONTEXT-ADJUNCT-X-026",
+      "kind": "excluded",
+      "english": "Nothing to compact",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 145,
+      "column": 26,
+      "expression": "\"Nothing to compact; the agent's compaction request was skipped.\"",
+      "item_id": "CONTEXT-ADJUNCT-012",
+      "kind": "fixed",
+      "english": "Nothing to compact; the agent's compaction request was skipped.",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 146,
+      "column": 9,
+      "expression": "`The agent's compaction request failed: ${error.message}`",
+      "item_id": "CONTEXT-ADJUNCT-013",
+      "kind": "fixed",
+      "english": "The agent's compaction request failed: ${error.message}",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 153,
+      "column": 31,
+      "expression": "\"object\"",
+      "item_id": "CONTEXT-ADJUNCT-X-027",
+      "kind": "excluded",
+      "english": "object",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 153,
+      "column": 87,
+      "expression": "\"parameters\"",
+      "item_id": "CONTEXT-ADJUNCT-X-028",
+      "kind": "excluded",
+      "english": "parameters",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 167,
+      "column": 13,
+      "expression": "\"model-only\"",
+      "item_id": "CONTEXT-ADJUNCT-X-029",
+      "kind": "excluded",
+      "english": "model-only",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 174,
+      "column": 34,
+      "expression": "\"idle\"",
+      "item_id": "CONTEXT-ADJUNCT-X-030",
+      "kind": "excluded",
+      "english": "idle",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 175,
+      "column": 31,
+      "expression": "\"text\"",
+      "item_id": "CONTEXT-ADJUNCT-X-031",
+      "kind": "excluded",
+      "english": "text",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 179,
+      "column": 8,
+      "expression": "\"agent_settled\"",
+      "item_id": "CONTEXT-ADJUNCT-X-032",
+      "kind": "excluded",
+      "english": "agent_settled",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 205,
+      "column": 70,
+      "expression": "\"info\"",
+      "item_id": "CONTEXT-ADJUNCT-X-033",
+      "kind": "excluded",
+      "english": "info",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 210,
+      "column": 7,
+      "expression": "\"warning\"",
+      "item_id": "CONTEXT-ADJUNCT-X-034",
+      "kind": "excluded",
+      "english": "warning",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 220,
+      "column": 51,
+      "expression": "\"warning\"",
+      "item_id": "CONTEXT-ADJUNCT-X-035",
+      "kind": "excluded",
+      "english": "warning",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 225,
+      "column": 58,
+      "expression": "\"warning\"",
+      "item_id": "CONTEXT-ADJUNCT-X-036",
+      "kind": "excluded",
+      "english": "warning",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 233,
+      "column": 64,
+      "expression": "\"info\"",
+      "item_id": "CONTEXT-ADJUNCT-X-037",
+      "kind": "excluded",
+      "english": "info",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 233,
+      "column": 73,
+      "expression": "\"warning\"",
+      "item_id": "CONTEXT-ADJUNCT-X-038",
+      "kind": "excluded",
+      "english": "warning",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 242,
+      "column": 93,
+      "expression": "\"resume\"",
+      "item_id": "CONTEXT-ADJUNCT-X-039",
+      "kind": "excluded",
+      "english": "resume",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 251,
+      "column": 35,
+      "expression": "\"followUp\"",
+      "item_id": "CONTEXT-ADJUNCT-X-040",
+      "kind": "excluded",
+      "english": "followUp",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 1,
+      "column": 38,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "item_id": "CONTEXT-ADJUNCT-X-041",
+      "kind": "excluded",
+      "english": "@earendil-works/pi-coding-agent",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 7,
+      "column": 2,
+      "expression": "\"int8\"",
+      "item_id": "CONTEXT-ADJUNCT-X-042",
+      "kind": "excluded",
+      "english": "int8",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 8,
+      "column": 2,
+      "expression": "\"int16\"",
+      "item_id": "CONTEXT-ADJUNCT-X-043",
+      "kind": "excluded",
+      "english": "int16",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 9,
+      "column": 2,
+      "expression": "\"int32\"",
+      "item_id": "CONTEXT-ADJUNCT-X-044",
+      "kind": "excluded",
+      "english": "int32",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 10,
+      "column": 2,
+      "expression": "\"int64\"",
+      "item_id": "CONTEXT-ADJUNCT-X-045",
+      "kind": "excluded",
+      "english": "int64",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 11,
+      "column": 2,
+      "expression": "\"uint8\"",
+      "item_id": "CONTEXT-ADJUNCT-X-046",
+      "kind": "excluded",
+      "english": "uint8",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 12,
+      "column": 2,
+      "expression": "\"uint16\"",
+      "item_id": "CONTEXT-ADJUNCT-X-047",
+      "kind": "excluded",
+      "english": "uint16",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 13,
+      "column": 2,
+      "expression": "\"uint32\"",
+      "item_id": "CONTEXT-ADJUNCT-X-048",
+      "kind": "excluded",
+      "english": "uint32",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 14,
+      "column": 2,
+      "expression": "\"uint64\"",
+      "item_id": "CONTEXT-ADJUNCT-X-049",
+      "kind": "excluded",
+      "english": "uint64",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 15,
+      "column": 2,
+      "expression": "\"float\"",
+      "item_id": "CONTEXT-ADJUNCT-X-050",
+      "kind": "excluded",
+      "english": "float",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 16,
+      "column": 2,
+      "expression": "\"double\"",
+      "item_id": "CONTEXT-ADJUNCT-X-051",
+      "kind": "excluded",
+      "english": "double",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 19,
+      "column": 2,
+      "expression": "\"properties\"",
+      "item_id": "CONTEXT-ADJUNCT-X-052",
+      "kind": "excluded",
+      "english": "properties",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 20,
+      "column": 2,
+      "expression": "\"patternProperties\"",
+      "item_id": "CONTEXT-ADJUNCT-X-053",
+      "kind": "excluded",
+      "english": "patternProperties",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 21,
+      "column": 2,
+      "expression": "\"$defs\"",
+      "item_id": "CONTEXT-ADJUNCT-X-054",
+      "kind": "excluded",
+      "english": "$defs",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 22,
+      "column": 2,
+      "expression": "\"definitions\"",
+      "item_id": "CONTEXT-ADJUNCT-X-055",
+      "kind": "excluded",
+      "english": "definitions",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 23,
+      "column": 2,
+      "expression": "\"dependentSchemas\"",
+      "item_id": "CONTEXT-ADJUNCT-X-056",
+      "kind": "excluded",
+      "english": "dependentSchemas",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 24,
+      "column": 2,
+      "expression": "\"dependencies\"",
+      "item_id": "CONTEXT-ADJUNCT-X-057",
+      "kind": "excluded",
+      "english": "dependencies",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 26,
+      "column": 32,
+      "expression": "\"allOf\"",
+      "item_id": "CONTEXT-ADJUNCT-X-058",
+      "kind": "excluded",
+      "english": "allOf",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 26,
+      "column": 41,
+      "expression": "\"anyOf\"",
+      "item_id": "CONTEXT-ADJUNCT-X-059",
+      "kind": "excluded",
+      "english": "anyOf",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 26,
+      "column": 50,
+      "expression": "\"oneOf\"",
+      "item_id": "CONTEXT-ADJUNCT-X-060",
+      "kind": "excluded",
+      "english": "oneOf",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 26,
+      "column": 59,
+      "expression": "\"prefixItems\"",
+      "item_id": "CONTEXT-ADJUNCT-X-061",
+      "kind": "excluded",
+      "english": "prefixItems",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 28,
+      "column": 2,
+      "expression": "\"items\"",
+      "item_id": "CONTEXT-ADJUNCT-X-062",
+      "kind": "excluded",
+      "english": "items",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 29,
+      "column": 2,
+      "expression": "\"additionalItems\"",
+      "item_id": "CONTEXT-ADJUNCT-X-063",
+      "kind": "excluded",
+      "english": "additionalItems",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 30,
+      "column": 2,
+      "expression": "\"additionalProperties\"",
+      "item_id": "CONTEXT-ADJUNCT-X-064",
+      "kind": "excluded",
+      "english": "additionalProperties",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 31,
+      "column": 2,
+      "expression": "\"unevaluatedItems\"",
+      "item_id": "CONTEXT-ADJUNCT-X-065",
+      "kind": "excluded",
+      "english": "unevaluatedItems",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 32,
+      "column": 2,
+      "expression": "\"unevaluatedProperties\"",
+      "item_id": "CONTEXT-ADJUNCT-X-066",
+      "kind": "excluded",
+      "english": "unevaluatedProperties",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 33,
+      "column": 2,
+      "expression": "\"contains\"",
+      "item_id": "CONTEXT-ADJUNCT-X-067",
+      "kind": "excluded",
+      "english": "contains",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 34,
+      "column": 2,
+      "expression": "\"propertyNames\"",
+      "item_id": "CONTEXT-ADJUNCT-X-068",
+      "kind": "excluded",
+      "english": "propertyNames",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 35,
+      "column": 2,
+      "expression": "\"not\"",
+      "item_id": "CONTEXT-ADJUNCT-X-069",
+      "kind": "excluded",
+      "english": "not",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 36,
+      "column": 2,
+      "expression": "\"if\"",
+      "item_id": "CONTEXT-ADJUNCT-X-070",
+      "kind": "excluded",
+      "english": "if",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 37,
+      "column": 2,
+      "expression": "\"then\"",
+      "item_id": "CONTEXT-ADJUNCT-X-071",
+      "kind": "excluded",
+      "english": "then",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 38,
+      "column": 2,
+      "expression": "\"else\"",
+      "item_id": "CONTEXT-ADJUNCT-X-072",
+      "kind": "excluded",
+      "english": "else",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 39,
+      "column": 2,
+      "expression": "\"contentSchema\"",
+      "item_id": "CONTEXT-ADJUNCT-X-073",
+      "kind": "excluded",
+      "english": "contentSchema",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 43,
+      "column": 44,
+      "expression": "\"object\"",
+      "item_id": "CONTEXT-ADJUNCT-X-074",
+      "kind": "excluded",
+      "english": "object",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 51,
+      "column": 31,
+      "expression": "\"string\"",
+      "item_id": "CONTEXT-ADJUNCT-X-075",
+      "kind": "excluded",
+      "english": "string",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 80,
+      "column": 20,
+      "expression": "\"namespace\"",
+      "item_id": "CONTEXT-ADJUNCT-X-076",
+      "kind": "excluded",
+      "english": "namespace",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 81,
+      "column": 20,
+      "expression": "\"function\"",
+      "item_id": "CONTEXT-ADJUNCT-X-077",
+      "kind": "excluded",
+      "english": "function",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 94,
+      "column": 8,
+      "expression": "\"openai-responses\"",
+      "item_id": "CONTEXT-ADJUNCT-X-078",
+      "kind": "excluded",
+      "english": "openai-responses",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 94,
+      "column": 28,
+      "expression": "\"openai-codex-responses\"",
+      "item_id": "CONTEXT-ADJUNCT-X-079",
+      "kind": "excluded",
+      "english": "openai-codex-responses",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 94,
+      "column": 54,
+      "expression": "\"azure-openai-responses\"",
+      "item_id": "CONTEXT-ADJUNCT-X-080",
+      "kind": "excluded",
+      "english": "azure-openai-responses",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 99,
+      "column": 36,
+      "expression": "\"additional_tools\"",
+      "item_id": "CONTEXT-ADJUNCT-X-081",
+      "kind": "excluded",
+      "english": "additional_tools",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 99,
+      "column": 72,
+      "expression": "\"tool_search_output\"",
+      "item_id": "CONTEXT-ADJUNCT-X-082",
+      "kind": "excluded",
+      "english": "tool_search_output",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 108,
+      "column": 9,
+      "expression": "\"jouzu-responses-tool-schema\"",
+      "item_id": "CONTEXT-ADJUNCT-X-083",
+      "kind": "excluded",
+      "english": "jouzu-responses-tool-schema",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 110,
+      "column": 10,
+      "expression": "\"before_provider_request\"",
+      "item_id": "CONTEXT-ADJUNCT-X-084",
+      "kind": "excluded",
+      "english": "before_provider_request",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 168,
+      "column": 31,
+      "expression": "CatalogMessageId.flowCompactionLabel",
+      "item_id": "CONTEXT-ADJUNCT-014",
+      "kind": "alias",
+      "english": "Compact Context",
+      "catalog_id": "jouzu.cli.flow.compaction.label"
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 202,
+      "column": 4,
+      "expression": "customInstructions: PI_VCC_COMPACT_MARKER",
+      "item_id": "CONTEXT-ADJUNCT-015",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 209,
+      "column": 7,
+      "expression": "catalogText(catalog, COMPACTION_CONTINUE_FAILED_ID",
+      "item_id": "CONTEXT-ADJUNCT-016",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 220,
+      "column": 5,
+      "expression": "notify(ctx, describeCompactionFailure",
+      "item_id": "CONTEXT-ADJUNCT-017",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 235,
+      "column": 3,
+      "expression": "ctx.ui.notify(message, level)",
+      "item_id": "CONTEXT-ADJUNCT-018",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 243,
+      "column": 2,
+      "expression": "if (continuation && (await continuation()))",
+      "item_id": "CONTEXT-ADJUNCT-019",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 94,
+      "column": 2,
+      "expression": "if (![",
+      "item_id": "CONTEXT-ADJUNCT-020",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 51,
+      "column": 2,
+      "expression": "if (typeof schema.format",
+      "item_id": "CONTEXT-ADJUNCT-021",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    },
+    {
+      "path": "packages/cli/src/responses-tool-schema.ts",
+      "line": 112,
+      "column": 5,
+      "expression": "return normalizeResponsesToolSchemas",
+      "item_id": "CONTEXT-ADJUNCT-022",
+      "kind": "boundary",
+      "english": "",
+      "catalog_id": ""
+    }
+  ],
+  "controls": [
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 223,
+      "column": 4,
+      "expression": "catch (error) {\n\t\tcontroller.settle();\n\t\tnotify(ctx, describeCompactionFailure(asError(error)), \"warning\");\n\t}",
+      "kind": "catch",
+      "disposition": "Synchronous ctx.compact/stale-context/onComplete setup failure: settle and attempt warning through formatter; notify catches its own throws."
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 230,
+      "column": 42,
+      "expression": "new Error(String(value))",
+      "kind": "error",
+      "disposition": "No fixed constructor message: preserve Error or convert arbitrary value through String; conversion itself may throw."
+    },
+    {
+      "path": "packages/cli/src/compaction-request.ts",
+      "line": 236,
+      "column": 4,
+      "expression": "catch {\n\t\t// A notification failure must not strand the session.\n\t}",
+      "kind": "catch",
+      "disposition": "Notification throws discarded. No stream fallback."
+    }
+  ],
+  "counts": {
+    "primary": 22,
+    "catalog": 4,
+    "fixed": 10,
+    "boundaries": 8,
+    "excluded": 84,
+    "nodes": 97,
+    "aliases": 1,
+    "errors": 1,
+    "catches": 2,
+    "scope": 14
+  },
+  "reviewed_data": {
+    "context-adjunct-text.csv": "53f8ecb54268f5e4404d8ce323568630169f5cd4c810e0c97ae0ea6deb0de91d",
+    "context-adjunct-text-exclusions.csv": "badf37697dd074c62ad9dfa785b0f632f00d7e0282735bc55b03c1d74e492642",
+    "context-adjunct-text-scope.csv": "98364052b5ba2dc4043315e4964d042cb4929ffbd7b50adcbb26f5c56fcafa33"
+  }
+}
