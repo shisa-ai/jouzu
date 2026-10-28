@@ -342,6 +342,17 @@ the package permits Python >=3.10, so these observations do not qualify the
 whole supported interpreter range or its locale resources. Native exception and
 output-stream failures remain explicit runtime boundaries.
 
+[operator-scripts.csv](operator-scripts.csv) records 500 operator/test/CI script
+items: 98 wording occurrences, eight display-format templates, 361 protected or
+internal literal dispositions and 33 delivery boundaries. All 467 nonempty
+literals across twelve complete bodies are anchored in the
+[scope table](operator-scripts-scope.csv). Conditions distinguish child TAP and
+native errors, replaced smoke-test details, saved timing/build/path facts and
+GitHub output values. The root candidate census identifies 81 command/helper
+paths: these twelve, one separately covered TextGuard build helper and 68 pending
+paths. Scope references for pending paths do not claim their text is reviewed.
+No operator scripts, CI setup or native security commands were executed.
+
 [textguard-native.csv](textguard-native.csv) records 418 native TextGuard
 occurrences and boundaries, including 122 native English occurrences, protected
 protocol values, ignored rule metadata, build diagnostics and two JavaScript API
@@ -398,6 +409,7 @@ node review/text-inventory/verify-flow-receipts.cjs
 node review/text-inventory/verify-flow-waits.cjs
 node review/text-inventory/verify-flow-wait-authority.cjs
 python -B review/text-inventory/verify-python-console.py --observe
+python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-textguard-native.py
 python -B review/text-inventory/verify-textguard-dependencies.py
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>
