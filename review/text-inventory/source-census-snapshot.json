@@ -39,6 +39,7 @@
     "pi-packages-scope.csv": "3d005a2ea5e1808f197dcf60cee9069d936627de2af7c8c5025f022f06ed4418",
     "pi-resource-text-scope.csv": "d3be3ded4a77e3cca991ed3c7f1a338b31c3e70f4eafd0b92a03561f1ec25a9e",
     "pi-export-metadata-scope.csv": "2f8b42aefa778f7e60972249b77cc46c46cafa01e16d0fe911fad0116e6fdf6d",
+    "pi-export-text-scope.csv": "a4172ed835d2e7bfa386b92b7849aaeb248fa9d3d7ff728431e90afda0302a11",
     "flow-report-scope.csv": "71a0b3952ddf31780c4bbbb6ceaa3255d08aad9b8886642e320e9db57ad71196",
     "flow-storage-scope.csv": "a0069bc0317ffc0360b6541490d8f48b3b851d872982d8c1e0dc55c18bd4fc30",
     "flow-receipts-scope.csv": "569b404f202d669e3deef315254ca75421aae32826a41ad7836844704f9fb835",

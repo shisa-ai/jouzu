@@ -381,8 +381,24 @@ persisted prompt text, which may retain earlier recorded sections after a tool i
 deactivated. Section overrides, custom prompts, loadout replacements, guideline
 deduplication and viewer expansion are explicit. Twenty canonical source snapshots
 have archive or pinned-patch proof; these are bounded route sources, not new
-whole-body coverage. Full export assets and remaining prompt producers remain
-open. No product or browser code was executed.
+whole-body coverage. Export asset bodies continue in the next unit; other prompt
+producers remain open. No product or browser code was executed.
+
+[pi-export-text.csv](pi-export-text.csv) records 121 export/prompt occurrences:
+62 direct lexical nodes and 59 individually anchored embedded HTML captions or
+attributes. Seven complete native bodies cover 3,798 lines. All 802 JavaScript,
+static HTML and CSS occurrences are partitioned with 740
+[exclusions](pi-export-text-exclusions.csv); 13
+[payload boundaries](pi-export-text-boundaries.csv) distinguish file/live export,
+current prompt replay, renderer failures and browser/vendor data. Records include
+search and filter text, titles, placeholders, accessibility labels, role/summary
+captions, hidden/expanded state, parameter hints and all four Error constructor
+headlines with their actual CLI/TUI/RPC/API sinks. Clipboard console diagnostics
+are console-only. [Scope](pi-export-text-scope.csv) pins 19 assets: seven full native
+bodies, nine nonruntime declaration/maps and three pending vendor bodies. Eighteen
+assets match the locked archive and system-prompt matches the pinned patch. The
+Markdown parser/highlighter bodies remain a separate review; no browser, DOM,
+renderer or parser code was executed.
 
 [flow-display.csv](flow-display.csv) records 94 occurrences in the Flow status
 extension and message renderer: 57 direct wording occurrences, 29 catalog
@@ -674,6 +690,7 @@ node review/text-inventory/verify-pi-session-config.cjs --node-modules <root-nod
 node review/text-inventory/verify-pi-packages.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-resource-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-export-metadata.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-export-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
 The exporter uses `@fluent/syntax` and TypeScript from the repository dependency
