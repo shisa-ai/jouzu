@@ -713,8 +713,23 @@ view data is distinct from persisted native admission reasons. Result review-not
 English can survive in saved/raw/expanded/exported content while compact summary
 uses a catalog label. Manifest input limits, cursor errors, retention/attachment
 routes and complete-member byte budgets retain their precise guards. Wider
-ingress, service, host, submission, user-input and schedule bodies remain pending.
+ingress, service, host, submission and schedule bodies remain pending; user-input
+and work helpers follow below.
 No controller, queue, tool, model, native or user-state producer was executed.
+
+[flow-user-work.csv](flow-user-work.csv) adds 95 external-input and work records:
+twenty catalog occurrences, 66 fixed occurrences and nine payload boundaries.
+Six complete bodies cover 1,411 lines. The [scope](flow-user-work-scope.csv) pins
+21 sources and accounts for 33 Error constructors, 26 error-helper calls,
+fourteen catches and 458 lexical tokens, with fifteen prior full-body links.
+Detailed grant reasons are replaced by the current authorization consumer's
+generic sentence; receipt reasons go to extension APIs without a proved built-in
+receipt view. Consumption, cancellation evidence, admission holds and unknown
+states retain exact precedence. Queue/context-only cancellation can evaluate a
+catalog lookup whose text is discarded. Submitted user text has its own guarded
+native/model/saved/export route, separate from receipt text. Wider native,
+ingress, service, submission and schedule producers remain open. No grants,
+input, private state, model, native or tool producer was executed.
 
 [localization-ops-text.csv](localization-ops-text.csv) adds 182 operations
 records: fifteen fixed English error occurrences, 120 protected lexical values,
@@ -1220,6 +1235,7 @@ node review/text-inventory/verify-flow-wait-producers.cjs
 node review/text-inventory/verify-flow-tools.cjs
 python -B review/text-inventory/verify-flow-orchestration.py
 python -B review/text-inventory/verify-flow-controller-core.py
+python -B review/text-inventory/verify-flow-user-work.py
 python -B review/text-inventory/verify-localization-ops-text.py
 node review/text-inventory/verify-context-adjunct-text.cjs
 node review/text-inventory/verify-flow-model-input.cjs
