@@ -1,0 +1,51 @@
+{
+  "base_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "target_revision": "1fda3eb161b042aae66e4adcc07319f69946dadd",
+  "changed_paths": [
+    ".github/workflows/ci.yml",
+    "apps/launcher/package-lock.json",
+    "apps/launcher/package.json",
+    "apps/launcher/src-tauri/Cargo.lock",
+    "apps/launcher/src-tauri/Cargo.toml",
+    "package-lock.json",
+    "package.json",
+    "packages/cli/locales/catalog-status.json",
+    "packages/cli/locales/catalog.lock.json",
+    "packages/cli/locales/en/cli.ftl",
+    "packages/cli/locales/en/runtime.ftl",
+    "packages/cli/locales/ja/cli.ftl",
+    "packages/cli/locales/ja/runtime.ftl",
+    "packages/cli/locales/zh-Hans/cli.ftl",
+    "packages/cli/locales/zh-Hans/runtime.ftl",
+    "packages/cli/locales/zh-Hant/cli.ftl",
+    "packages/cli/locales/zh-Hant/runtime.ftl",
+    "packages/cli/package-lock.json",
+    "packages/cli/package.json",
+    "scripts/test-tiers.json",
+    "upstream/pi-provider-receipts/patch.lock.json",
+    "upstream/pi.lock.json",
+    "packaging/launcher/export-recipe.mjs",
+    "packaging/launcher/verify-runtime.mjs",
+    "scripts/pi-provider-receipts-transform.mjs"
+  ],
+  "occurrences": 15,
+  "fixed": 11,
+  "boundaries": 4,
+  "changed_line_rows": 108,
+  "locale_definition_rows": 16,
+  "new_english_definitions": 4,
+  "full_packaging_lines": 127,
+  "private_sentinel_exclusion": {
+    "path": "packaging/launcher/verify-runtime.mjs",
+    "line": 37,
+    "english": "Verification must not call a provider",
+    "reason": "Function supplied to Agent constructor; current verifier does not prompt/continue/stream. Constructor/guard/sidecar path does not invoke streamFn. No current runtime trigger in this program."
+  },
+  "artifact_sha256_utf8_lf": {
+    "main-update-release-text.csv": "0c0a850cfa2bd0e7ec201e67e4400a5489799df8d9d2c251df304b2d6a9977f3",
+    "main-update-release-source-delta.csv": "d6e504c74640ffa05c04b7dfec216a63f0d337d65d04b2796765131c27730f8c",
+    "main-update-release-text-scope.csv": "7cfaf223c09767ab58f1c8c45de968117046ebf6fb57853df64196a5c2f94e43",
+    "main-update-locale-definitions.csv": "89dff1ff7e228b56cc3b8289583dd49fded1babb7d89b26fe669f6e341a14bfe"
+  },
+  "interpretation": "Finite release/config/locale source delta plus full packaging bodies. Installed target provider bytes, test body delivery and wider native/runtime closures remain separate work."
+}

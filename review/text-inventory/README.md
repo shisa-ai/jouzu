@@ -27,6 +27,23 @@ rejected automatic attempt. Five corruption/omission controls pass. Existing
 base wording is linked by catalog ID without retargeting its earlier evidence.
 Target caller coverage remains open beyond these bounded conditions.
 
+[main-update-release-text.csv](main-update-release-text.csv) records eleven fixed
+packaging/contract occurrences and four payload boundaries at the target revision.
+Two full packaging bodies cover 127 lines. The
+[source delta](main-update-release-source-delta.csv) exports all 108 added/replaced
+lines across 25 changed packaging, CI, metadata and locale paths, with separate
+[scope](main-update-release-text-scope.csv) and
+[snapshot](main-update-release-text-snapshot.json) provenance.
+[Locale definitions](main-update-locale-definitions.csv) retain all four new
+English definitions and their twelve other-locale counterparts; their trigger
+owners are the Models and startup/auth units. The new missing-Defuddle-sidecar
+error can reject direct verification, while the startup health child wrapper
+replaces nonzero exit with its generic failure. Optional dependency probing
+suppresses broader resolution failures. The provider-signature patch adds opaque
+data transport; this source review does not qualify newly patched installed
+bytes. Six corruption/omission controls pass. Test bodies and wider target
+runtime delivery remain open.
+
 This inventory lists wording and the conditions under which it can reach a user,
 including errors and diagnostics. It is being assembled for a translation pass.
 The current snapshot is **incomplete**; catalog membership, source references and
@@ -1451,6 +1468,7 @@ python -B review/text-inventory/source-census.py
 python -B review/text-inventory/verify-main-update-census.py
 python -B review/text-inventory/verify-main-update-documentation.py
 python -B review/text-inventory/verify-main-update-model-text.py
+python -B review/text-inventory/verify-main-update-release-text.py
 python -B review/text-inventory/verify-documentation-text.py
 python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-acp-dependencies.py
