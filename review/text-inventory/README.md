@@ -71,7 +71,7 @@ The [scope](main-update-test-support-scope.csv) and
 Passing tests do not independently display every captured native status or mock
 error; failed assertions may expose expected/actual values and captured child
 streams. Five corruption/omission controls pass. No test, hook, auth, model or
-packaging scenario was run. Eight other changed target test/fixture bodies and
+packaging scenario was run. Six other changed target test/fixture bodies and
 the wider base test corpus remain open.
 
 [main-update-model-ranking-tests.csv](main-update-model-ranking-tests.csv) adds
@@ -84,6 +84,19 @@ source escapes for injected terminal controls. The
 [evidence](main-update-model-ranking-tests-evidence.json) pin target source and
 AST offsets. Five corruption/omission controls pass. These are conditional test
 reporter/diagnostic records, with no test or imported product operation executed.
+
+[main-update-account-update-tests.csv](main-update-account-update-tests.csv)
+records two full target account/update test bodies (1,544 lines). Its 836 rows
+separate 616 literal/template/regex occurrences from assertion/control/comment
+and capture-boundary records. Forty-six title declarations have 57 mechanically
+derived potential finite instances, conditional on reaching their registration
+loops. Fifty-six authored assertion diagnostics retain failure-only conditions.
+The [scope](main-update-account-update-tests-scope.csv) pins eleven target Git
+objects and two prior-owner artifacts, with an explicit runner/native/input
+boundary. Mock notification arrays, failed-install stderr replacement, platform
+skip conditions, generated child JSON and inherited stdio remain separate from
+product definitions. Raw fixture values and passing assertions are not promoted
+to product output. No test, fixture, auth, native or user-state operation ran.
 
 This inventory lists wording and the conditions under which it can reach a user,
 including errors and diagnostics. It is being assembled for a translation pass.
@@ -1571,6 +1584,7 @@ python -B review/text-inventory/verify-main-update-startup-auth.py
 python -B review/text-inventory/verify-main-update-release-text.py
 node review/text-inventory/verify-main-update-test-support.cjs
 node review/text-inventory/verify-main-update-model-ranking-tests.cjs
+python -B review/text-inventory/verify-main-update-account-update-tests.py
 python -B review/text-inventory/verify-documentation-text.py
 python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-acp-dependencies.py
