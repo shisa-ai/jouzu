@@ -353,9 +353,9 @@ dependency and complete consumer coverage remain open. No audited module is load
 Follow-on local reviews retain their own scopes below; this baseline is frozen.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 27 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 44 compiled bodies;
-37 compiled bodies remain pending. The
+universe with 28 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 46 compiled bodies;
+35 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -1028,6 +1028,22 @@ consumers remain bounded. All three canonical package archives and both installe
 trees are checked, including the exact public nested AI package-list transform.
 Twenty-five corruption controls pass. This unit does not extend the separate
 384-source coding-agent/TUI census or execute authentication/model operations.
+
+[pi-bundle-common-runtime.csv](pi-bundle-common-runtime.csv) records 109
+qualified model/auth/runtime, metadata and MCP-operator definitions across two
+complete compiled bodies (59,392 bytes). The 330
+[exclusions](pi-bundle-common-runtime-exclusions.csv) complete the 439-occurrence
+literal/template/regex partition. Fifty-three
+[boundaries](pi-bundle-common-runtime-boundaries.csv) retain model/credential
+lifetime, refresh, lazy packets, partial writes, cleanup, timeout and CLI routing.
+Twenty-five schema descriptions keep their exported-resource conditions;
+actual metric definitions can reach an explicit adapter, while span/event/status
+schemas are ignored by the inspected starter. MCP help/log/readline/JSON output
+requires the explicit compiled command route. The
+[scope](pi-bundle-common-runtime-scope.csv) keeps imported implementations and
+shared callers bounded. Canonical archive, both installed trees and thirty
+corruption controls pass. Ordinary Jouzu uses the separate unbundled entry;
+no CLI, provider, authentication, telemetry or native operation runs.
 
 [pi-bundle-response-helpers.csv](pi-bundle-response-helpers.csv) records 44
 qualified error and request-context expressions across three complete compiled
@@ -2254,6 +2270,7 @@ node review/text-inventory/verify-pi-ai-lexical.cjs
 python -B review/text-inventory/verify-pi-ai-runtime-census.py
 node review/text-inventory/verify-pi-ai-request-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-ai-model-auth.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
+python -B review/text-inventory/verify-pi-bundle-common-runtime.py
 node review/text-inventory/verify-pi-bundle-response-helpers.cjs
 node review/text-inventory/verify-pi-bundle-small-helpers.cjs
 python -B review/text-inventory/verify-pi-bundle-oauth-providers.py

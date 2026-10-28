@@ -114,6 +114,7 @@
     "pi-ai-provider-definitions-scope.csv": "e20a73bbd33b2d567c0ef20b473b90145c083a876e9450f43f73f5ed2f44a245",
     "pi-ai-request-text-scope.csv": "186226a506db80c9b177149664e1674e9c677a54470290d35007406b9d441324",
     "pi-ai-model-auth-scope.csv": "f2d604651785a90908a2943a3ef184a2a3dfcc43f0c44b9fcac8d679fadcd55e",
+    "pi-bundle-common-runtime-scope.csv": "677884251e594688fcdbe4e9aaabda773b67d8d67e5bd68a8886bec1c21721e2",
     "pi-bundle-response-helpers-scope.csv": "5c18eca36d0dcb949c24967392b3f773b251ea1f351e781d0d8fb8dc1e8a8ac8",
     "pi-bundle-small-helpers-scope.csv": "38fc4eef730251e1b014b178fc3d3731174e6a94714546a92fd3ef24b3a8b253",
     "pi-bundle-oauth-providers-scope.csv": "863d394b98cc09e09e660cfb8282004a2aba394b899c401f872efb0ff99fc1e9",
