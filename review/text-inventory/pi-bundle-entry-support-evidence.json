@@ -1,0 +1,2311 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "inventory_file": "pi-bundle-entry-support.csv",
+  "exclusion_file": "pi-bundle-entry-support-exclusions.csv",
+  "boundary_file": "pi-bundle-entry-support-boundaries.csv",
+  "scope_file": "pi-bundle-entry-support-scope.csv",
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e",
+      "exports": {
+        ".": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/index.js"
+        },
+        "./rpc-entry": {
+          "import": "./dist/bundle/rpc-entry.js"
+        }
+      },
+      "bin": {
+        "pi": "dist/bundle/cli.js"
+      }
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532",
+      "exports": {
+        ".": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/index.js"
+        },
+        "./rpc-entry": {
+          "import": "./dist/bundle/rpc-entry.js"
+        }
+      },
+      "bin": {
+        "pi": "dist/bundle/cli.js"
+      }
+    }
+  ],
+  "archive_provenance": {
+    "name": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0",
+    "archive_name": "earendil-works-pi-coding-agent-1.4.0.tgz",
+    "archive_sha256": "d155c16ef6fa00960fbf58b2911536e80b05f33700e0b14fbd08967ede0c7428",
+    "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "integrity_authorities": [
+      "git:346d1e481757a55eb62fc066e43bbc7999b8e6dd:upstream/pi.lock.json",
+      "git:346d1e481757a55eb62fc066e43bbc7999b8e6dd:package-lock.json"
+    ],
+    "metadata_qualification": "Installed package.json copies pinned independently; file-level archive/patch provenance checked, not a claim every installed package byte equals pristine archive."
+  },
+  "archive_package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e",
+  "source_provenance": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli.js",
+      "root_sha256": "e79626f2dd6f94aa45d30f3fa63cd84319a6eefcd150b353cfaf274366926774",
+      "cli_nested_sha256": "e79626f2dd6f94aa45d30f3fa63cd84319a6eefcd150b353cfaf274366926774",
+      "archive_sha256": "e79626f2dd6f94aa45d30f3fa63cd84319a6eefcd150b353cfaf274366926774",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 160,
+      "lines": 5
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "root_sha256": "754132d2cbb31c33fac5672366f948a7b90ba07b542dbddd20b13adcc62719bd",
+      "cli_nested_sha256": "754132d2cbb31c33fac5672366f948a7b90ba07b542dbddd20b13adcc62719bd",
+      "archive_sha256": "754132d2cbb31c33fac5672366f948a7b90ba07b542dbddd20b13adcc62719bd",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 1050,
+      "lines": 3
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "root_sha256": "4e30102d8ba2642ffa1615abcaa137ae03c2c74830e9a0cc771c11f98e037e82",
+      "cli_nested_sha256": "4e30102d8ba2642ffa1615abcaa137ae03c2c74830e9a0cc771c11f98e037e82",
+      "archive_sha256": "4e30102d8ba2642ffa1615abcaa137ae03c2c74830e9a0cc771c11f98e037e82",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 6996,
+      "lines": 2
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "root_sha256": "eb210a7343ed91d7f6fdb61a6fa411730807d717e5ca7711c1e3dfe4ca7502fc",
+      "cli_nested_sha256": "eb210a7343ed91d7f6fdb61a6fa411730807d717e5ca7711c1e3dfe4ca7502fc",
+      "archive_sha256": "eb210a7343ed91d7f6fdb61a6fa411730807d717e5ca7711c1e3dfe4ca7502fc",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 1048,
+      "lines": 3
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/jiti-static-loader-2RCDI6B4.js",
+      "root_sha256": "5e088689059655c592551fac8376f9bb9eef58d00b903a07260a8d13e62ed17c",
+      "cli_nested_sha256": "5e088689059655c592551fac8376f9bb9eef58d00b903a07260a8d13e62ed17c",
+      "archive_sha256": "5e088689059655c592551fac8376f9bb9eef58d00b903a07260a8d13e62ed17c",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 369,
+      "lines": 2
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/runtime-GJOZRI5I.js",
+      "root_sha256": "950e5d39867b9d8b8fd376a96d7e208f98f9f7b86ec723ff44d4785cb3eaf3cd",
+      "cli_nested_sha256": "950e5d39867b9d8b8fd376a96d7e208f98f9f7b86ec723ff44d4785cb3eaf3cd",
+      "archive_sha256": "950e5d39867b9d8b8fd376a96d7e208f98f9f7b86ec723ff44d4785cb3eaf3cd",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 512,
+      "lines": 2
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "root_sha256": "f829c82d856f279e8e930614b2fe2c764127f995f076f3565a8b6c82cd63850d",
+      "cli_nested_sha256": "f829c82d856f279e8e930614b2fe2c764127f995f076f3565a8b6c82cd63850d",
+      "archive_sha256": "f829c82d856f279e8e930614b2fe2c764127f995f076f3565a8b6c82cd63850d",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 1832,
+      "lines": 2
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-3V45WARH.js",
+      "root_sha256": "e2a174a541958dcdb9ab1c4e316e2665e014510db64fda1d8e0ebd24def2e628",
+      "cli_nested_sha256": "e2a174a541958dcdb9ab1c4e316e2665e014510db64fda1d8e0ebd24def2e628",
+      "archive_sha256": "e2a174a541958dcdb9ab1c4e316e2665e014510db64fda1d8e0ebd24def2e628",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 8294,
+      "lines": 7
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-4GGCU36O.js",
+      "root_sha256": "375a2f235e159c680f0b44eb4135ed1dc79cf3f51bff3fe0b2cba29ed1be5029",
+      "cli_nested_sha256": "375a2f235e159c680f0b44eb4135ed1dc79cf3f51bff3fe0b2cba29ed1be5029",
+      "archive_sha256": "375a2f235e159c680f0b44eb4135ed1dc79cf3f51bff3fe0b2cba29ed1be5029",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 44590,
+      "lines": 11
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "root_sha256": "5c90a831ae8d5f5aa8e66e2fa3c76b5e2f6046df80429172654385d23c6c9b73",
+      "cli_nested_sha256": "5c90a831ae8d5f5aa8e66e2fa3c76b5e2f6046df80429172654385d23c6c9b73",
+      "archive_sha256": "5c90a831ae8d5f5aa8e66e2fa3c76b5e2f6046df80429172654385d23c6c9b73",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 112077,
+      "lines": 6
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-6QGV3IWD.js",
+      "root_sha256": "8849fd570c6155bcea2df8962b65e6b1b01ed88c5c25a1b29fba535ca07df35a",
+      "cli_nested_sha256": "8849fd570c6155bcea2df8962b65e6b1b01ed88c5c25a1b29fba535ca07df35a",
+      "archive_sha256": "8849fd570c6155bcea2df8962b65e6b1b01ed88c5c25a1b29fba535ca07df35a",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 12059,
+      "lines": 6
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-7DDKXS2Q.js",
+      "root_sha256": "b5c1320c3a3648f71ce27577893cb1a538f139dc86f23c8f2669f576478175dc",
+      "cli_nested_sha256": "b5c1320c3a3648f71ce27577893cb1a538f139dc86f23c8f2669f576478175dc",
+      "archive_sha256": "b5c1320c3a3648f71ce27577893cb1a538f139dc86f23c8f2669f576478175dc",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 777,
+      "lines": 2
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-BSS6T6KQ.js",
+      "root_sha256": "94f5b6195ceca34fbff800fe358e0cbd75c2e1fc7263bd0173f749826eac047f",
+      "cli_nested_sha256": "94f5b6195ceca34fbff800fe358e0cbd75c2e1fc7263bd0173f749826eac047f",
+      "archive_sha256": "94f5b6195ceca34fbff800fe358e0cbd75c2e1fc7263bd0173f749826eac047f",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 28659,
+      "lines": 2
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-EGE5YVUM.js",
+      "root_sha256": "da27e54f91f5e621a34945ae68322f904bed4331cbe03f61dce5d3017ab1dc0f",
+      "cli_nested_sha256": "da27e54f91f5e621a34945ae68322f904bed4331cbe03f61dce5d3017ab1dc0f",
+      "archive_sha256": "da27e54f91f5e621a34945ae68322f904bed4331cbe03f61dce5d3017ab1dc0f",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 49440,
+      "lines": 82
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-H76KZMOI.js",
+      "root_sha256": "fc670715f9a14f0d5e3a0ee31606457e1babae8183df8b02c44be4e18ebcbfe0",
+      "cli_nested_sha256": "fc670715f9a14f0d5e3a0ee31606457e1babae8183df8b02c44be4e18ebcbfe0",
+      "archive_sha256": "fc670715f9a14f0d5e3a0ee31606457e1babae8183df8b02c44be4e18ebcbfe0",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 4793,
+      "lines": 2
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-INGZIYBC.js",
+      "root_sha256": "142d350075157e7d7dbc78b6fb9c5e351003d0cf4fb1027a59f6c1628e3b483d",
+      "cli_nested_sha256": "142d350075157e7d7dbc78b6fb9c5e351003d0cf4fb1027a59f6c1628e3b483d",
+      "archive_sha256": "142d350075157e7d7dbc78b6fb9c5e351003d0cf4fb1027a59f6c1628e3b483d",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 9461,
+      "lines": 4
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-IUWY2KTF.js",
+      "root_sha256": "62bf2cc28ace065ee375f8c2a93aaa842cd0a234420886b00be83ca0b28c1752",
+      "cli_nested_sha256": "62bf2cc28ace065ee375f8c2a93aaa842cd0a234420886b00be83ca0b28c1752",
+      "archive_sha256": "62bf2cc28ace065ee375f8c2a93aaa842cd0a234420886b00be83ca0b28c1752",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 234664,
+      "lines": 64
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-JXWJOIH4.js",
+      "root_sha256": "2857397f268829d29c5b22ff366e723ba9c98f2a13fc290ff64ffe921ba1686a",
+      "cli_nested_sha256": "2857397f268829d29c5b22ff366e723ba9c98f2a13fc290ff64ffe921ba1686a",
+      "archive_sha256": "2857397f268829d29c5b22ff366e723ba9c98f2a13fc290ff64ffe921ba1686a",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 1649,
+      "lines": 2
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-LPXNMA2W.js",
+      "root_sha256": "82078b13cabe692e5bb3495c1d1c2bd29b9290a1e5a4065234c507f4b668a8d9",
+      "cli_nested_sha256": "82078b13cabe692e5bb3495c1d1c2bd29b9290a1e5a4065234c507f4b668a8d9",
+      "archive_sha256": "82078b13cabe692e5bb3495c1d1c2bd29b9290a1e5a4065234c507f4b668a8d9",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 3014,
+      "lines": 2
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "root_sha256": "aa4c8b091657bda611f6fd58343561fa44cda1070ae4cd5dbd09ffe1d9a34aab",
+      "cli_nested_sha256": "aa4c8b091657bda611f6fd58343561fa44cda1070ae4cd5dbd09ffe1d9a34aab",
+      "archive_sha256": "aa4c8b091657bda611f6fd58343561fa44cda1070ae4cd5dbd09ffe1d9a34aab",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 3536719,
+      "lines": 1222
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-N43LRJ4N.js",
+      "root_sha256": "45433285704d27e7c9b261145885133ed8c7c31e887b313947cb50b3fb62c32b",
+      "cli_nested_sha256": "45433285704d27e7c9b261145885133ed8c7c31e887b313947cb50b3fb62c32b",
+      "archive_sha256": "45433285704d27e7c9b261145885133ed8c7c31e887b313947cb50b3fb62c32b",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 87391,
+      "lines": 7
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-RISAW7OQ.js",
+      "root_sha256": "68634b70417a417ea67728534e70aae21b3b113b0aa2535bc43e319ead629e3d",
+      "cli_nested_sha256": "68634b70417a417ea67728534e70aae21b3b113b0aa2535bc43e319ead629e3d",
+      "archive_sha256": "68634b70417a417ea67728534e70aae21b3b113b0aa2535bc43e319ead629e3d",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 4657,
+      "lines": 9
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-RWO6Q3KK.js",
+      "root_sha256": "15bb14ad3528c387a3996d9cdd1fdbde705cd4ac682fb0560c2968376c9e5625",
+      "cli_nested_sha256": "15bb14ad3528c387a3996d9cdd1fdbde705cd4ac682fb0560c2968376c9e5625",
+      "archive_sha256": "15bb14ad3528c387a3996d9cdd1fdbde705cd4ac682fb0560c2968376c9e5625",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 6861,
+      "lines": 2
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-T726RZZU.js",
+      "root_sha256": "b09f9387bb838ee733d15a63d1af07876e0932381c2a9b7d42f74f22cd4d2947",
+      "cli_nested_sha256": "b09f9387bb838ee733d15a63d1af07876e0932381c2a9b7d42f74f22cd4d2947",
+      "archive_sha256": "b09f9387bb838ee733d15a63d1af07876e0932381c2a9b7d42f74f22cd4d2947",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 462868,
+      "lines": 135
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-TMTOQ7H7.js",
+      "root_sha256": "23eb2a77f71ee7e42cba6f9cf7557f8f8f2f80c9f3deb5d2ecd6d34bdb2aa5a3",
+      "cli_nested_sha256": "23eb2a77f71ee7e42cba6f9cf7557f8f8f2f80c9f3deb5d2ecd6d34bdb2aa5a3",
+      "archive_sha256": "23eb2a77f71ee7e42cba6f9cf7557f8f8f2f80c9f3deb5d2ecd6d34bdb2aa5a3",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 2381,
+      "lines": 2
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-UKVNB6C4.js",
+      "root_sha256": "2c7346b9cc489160ffc9bf59e36b4016ff28ca1005eb818f2bad5370f1a08941",
+      "cli_nested_sha256": "2c7346b9cc489160ffc9bf59e36b4016ff28ca1005eb818f2bad5370f1a08941",
+      "archive_sha256": "2c7346b9cc489160ffc9bf59e36b4016ff28ca1005eb818f2bad5370f1a08941",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 5055,
+      "lines": 2
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-UNXOKDPB.js",
+      "root_sha256": "ef2353d54eb96454e176fc552a50f4d7e85fb39212a0b40b34fe221786967b71",
+      "cli_nested_sha256": "ef2353d54eb96454e176fc552a50f4d7e85fb39212a0b40b34fe221786967b71",
+      "archive_sha256": "ef2353d54eb96454e176fc552a50f4d7e85fb39212a0b40b34fe221786967b71",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 11964,
+      "lines": 2
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-USJZMAIR.js",
+      "root_sha256": "a955b5a2c31941b424157fed43dbbfd8dcc335937bdeff80f6da110043cbc849",
+      "cli_nested_sha256": "a955b5a2c31941b424157fed43dbbfd8dcc335937bdeff80f6da110043cbc849",
+      "archive_sha256": "a955b5a2c31941b424157fed43dbbfd8dcc335937bdeff80f6da110043cbc849",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 2002,
+      "lines": 2
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/jiti-loader-GL4HJFAD.js",
+      "root_sha256": "be2d0f1bb460e726bf4e1df1c0d20955f673f1ffa192435fd65440aa6073f38f",
+      "cli_nested_sha256": "be2d0f1bb460e726bf4e1df1c0d20955f673f1ffa192435fd65440aa6073f38f",
+      "archive_sha256": "be2d0f1bb460e726bf4e1df1c0d20955f673f1ffa192435fd65440aa6073f38f",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 201917,
+      "lines": 21
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/index.js",
+      "root_sha256": "4569157e6038be9840fa514db4b00a27fd0be9e3622cc7b49a281de6c027d7ff",
+      "cli_nested_sha256": "4569157e6038be9840fa514db4b00a27fd0be9e3622cc7b49a281de6c027d7ff",
+      "archive_sha256": "4569157e6038be9840fa514db4b00a27fd0be9e3622cc7b49a281de6c027d7ff",
+      "root_nested_equal": true,
+      "provenance": "byte-identical-to-canonical-archive",
+      "deviation_manifest": null,
+      "bytes": 5194,
+      "lines": 54
+    }
+  ],
+  "source_review": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli.js",
+      "status": "full-body-source-read",
+      "lines": 5,
+      "bytes": 160,
+      "literal_template_nodes": 2,
+      "hashbangs": 1,
+      "protected_occurrences": 3,
+      "fixed_definitions": 0,
+      "comments": [],
+      "nonliteral_body_disposition": "Imports/exports and API names/namespace bindings/prelude/setup/delegation control inspected in full; no own error constructor/catch/console/stdout/stderr sentence. Imported implementations not promoted to full.",
+      "prior_status_at_assignment": "body-review-pending, remaining_body=true, empty whole_body_reviews; current mutable census deliberately not verifier input."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "status": "full-body-source-read",
+      "lines": 3,
+      "bytes": 1050,
+      "literal_template_nodes": 22,
+      "hashbangs": 1,
+      "protected_occurrences": 23,
+      "fixed_definitions": 0,
+      "comments": [],
+      "nonliteral_body_disposition": "Imports/exports and API names/namespace bindings/prelude/setup/delegation control inspected in full; no own error constructor/catch/console/stdout/stderr sentence. Imported implementations not promoted to full.",
+      "prior_status_at_assignment": "body-review-pending, remaining_body=true, empty whole_body_reviews; current mutable census deliberately not verifier input."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "status": "full-body-source-read",
+      "lines": 2,
+      "bytes": 6996,
+      "literal_template_nodes": 21,
+      "hashbangs": 0,
+      "protected_occurrences": 21,
+      "fixed_definitions": 0,
+      "comments": [],
+      "nonliteral_body_disposition": "Imports/exports and API names/namespace bindings/prelude/setup/delegation control inspected in full; no own error constructor/catch/console/stdout/stderr sentence. Imported implementations not promoted to full.",
+      "prior_status_at_assignment": "body-review-pending, remaining_body=true, empty whole_body_reviews; current mutable census deliberately not verifier input."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "status": "full-body-source-read",
+      "lines": 3,
+      "bytes": 1048,
+      "literal_template_nodes": 25,
+      "hashbangs": 1,
+      "protected_occurrences": 26,
+      "fixed_definitions": 0,
+      "comments": [],
+      "nonliteral_body_disposition": "Imports/exports and API names/namespace bindings/prelude/setup/delegation control inspected in full; no own error constructor/catch/console/stdout/stderr sentence. Imported implementations not promoted to full.",
+      "prior_status_at_assignment": "body-review-pending, remaining_body=true, empty whole_body_reviews; current mutable census deliberately not verifier input."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/jiti-static-loader-2RCDI6B4.js",
+      "status": "full-body-source-read",
+      "lines": 2,
+      "bytes": 369,
+      "literal_template_nodes": 4,
+      "hashbangs": 0,
+      "protected_occurrences": 4,
+      "fixed_definitions": 0,
+      "comments": [],
+      "nonliteral_body_disposition": "Imports/exports and API names/namespace bindings/prelude/setup/delegation control inspected in full; no own error constructor/catch/console/stdout/stderr sentence. Imported implementations not promoted to full.",
+      "prior_status_at_assignment": "body-review-pending, remaining_body=true, empty whole_body_reviews; current mutable census deliberately not verifier input."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/runtime-GJOZRI5I.js",
+      "status": "full-body-source-read",
+      "lines": 2,
+      "bytes": 512,
+      "literal_template_nodes": 6,
+      "hashbangs": 0,
+      "protected_occurrences": 6,
+      "fixed_definitions": 0,
+      "comments": [],
+      "nonliteral_body_disposition": "Imports/exports and API names/namespace bindings/prelude/setup/delegation control inspected in full; no own error constructor/catch/console/stdout/stderr sentence. Imported implementations not promoted to full.",
+      "prior_status_at_assignment": "body-review-pending, remaining_body=true, empty whole_body_reviews; current mutable census deliberately not verifier input."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "status": "full-body-source-read",
+      "lines": 2,
+      "bytes": 1832,
+      "literal_template_nodes": 42,
+      "hashbangs": 0,
+      "protected_occurrences": 42,
+      "fixed_definitions": 0,
+      "comments": [],
+      "nonliteral_body_disposition": "Imports/exports and API names/namespace bindings/prelude/setup/delegation control inspected in full; no own error constructor/catch/console/stdout/stderr sentence. Imported implementations not promoted to full.",
+      "prior_status_at_assignment": "body-review-pending, remaining_body=true, empty whole_body_reviews; current mutable census deliberately not verifier input."
+    }
+  ],
+  "static_module_edges": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli.js",
+      "start": 70,
+      "end": 83,
+      "raw_source": "\"node:module\"",
+      "line": 2,
+      "column": 51,
+      "specifier": "node:module",
+      "loader": "static-module-import",
+      "target": null,
+      "external_module": "node:module"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli.js",
+      "start": 139,
+      "end": 157,
+      "raw_source": "\"./cli-runtime.js\"",
+      "line": 5,
+      "column": 32,
+      "specifier": "./cli-runtime.js",
+      "loader": "createRequire-call",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 71,
+      "end": 84,
+      "raw_source": "\"node:module\"",
+      "line": 2,
+      "column": 52,
+      "specifier": "node:module",
+      "loader": "static-module-import",
+      "target": null,
+      "external_module": "node:module"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 178,
+      "end": 206,
+      "raw_source": "\"./chunks/chunk-MM3LKT73.js\"",
+      "line": 3,
+      "column": 41,
+      "specifier": "./chunks/chunk-MM3LKT73.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 213,
+      "end": 241,
+      "raw_source": "\"./chunks/chunk-IUWY2KTF.js\"",
+      "line": 3,
+      "column": 76,
+      "specifier": "./chunks/chunk-IUWY2KTF.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-IUWY2KTF.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 248,
+      "end": 276,
+      "raw_source": "\"./chunks/chunk-RWO6Q3KK.js\"",
+      "line": 3,
+      "column": 111,
+      "specifier": "./chunks/chunk-RWO6Q3KK.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-RWO6Q3KK.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 283,
+      "end": 311,
+      "raw_source": "\"./chunks/chunk-T726RZZU.js\"",
+      "line": 3,
+      "column": 146,
+      "specifier": "./chunks/chunk-T726RZZU.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-T726RZZU.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 318,
+      "end": 346,
+      "raw_source": "\"./chunks/chunk-INGZIYBC.js\"",
+      "line": 3,
+      "column": 181,
+      "specifier": "./chunks/chunk-INGZIYBC.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-INGZIYBC.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 353,
+      "end": 381,
+      "raw_source": "\"./chunks/chunk-N43LRJ4N.js\"",
+      "line": 3,
+      "column": 216,
+      "specifier": "./chunks/chunk-N43LRJ4N.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-N43LRJ4N.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 388,
+      "end": 416,
+      "raw_source": "\"./chunks/chunk-RISAW7OQ.js\"",
+      "line": 3,
+      "column": 251,
+      "specifier": "./chunks/chunk-RISAW7OQ.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-RISAW7OQ.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 423,
+      "end": 451,
+      "raw_source": "\"./chunks/chunk-6QGV3IWD.js\"",
+      "line": 3,
+      "column": 286,
+      "specifier": "./chunks/chunk-6QGV3IWD.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-6QGV3IWD.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 472,
+      "end": 500,
+      "raw_source": "\"./chunks/chunk-BSS6T6KQ.js\"",
+      "line": 3,
+      "column": 335,
+      "specifier": "./chunks/chunk-BSS6T6KQ.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-BSS6T6KQ.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 507,
+      "end": 535,
+      "raw_source": "\"./chunks/chunk-USJZMAIR.js\"",
+      "line": 3,
+      "column": 370,
+      "specifier": "./chunks/chunk-USJZMAIR.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-USJZMAIR.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 542,
+      "end": 570,
+      "raw_source": "\"./chunks/chunk-5AGIVGSV.js\"",
+      "line": 3,
+      "column": 405,
+      "specifier": "./chunks/chunk-5AGIVGSV.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 577,
+      "end": 605,
+      "raw_source": "\"./chunks/chunk-UKVNB6C4.js\"",
+      "line": 3,
+      "column": 440,
+      "specifier": "./chunks/chunk-UKVNB6C4.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-UKVNB6C4.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 612,
+      "end": 640,
+      "raw_source": "\"./chunks/chunk-TMTOQ7H7.js\"",
+      "line": 3,
+      "column": 475,
+      "specifier": "./chunks/chunk-TMTOQ7H7.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-TMTOQ7H7.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 647,
+      "end": 675,
+      "raw_source": "\"./chunks/chunk-7DDKXS2Q.js\"",
+      "line": 3,
+      "column": 510,
+      "specifier": "./chunks/chunk-7DDKXS2Q.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-7DDKXS2Q.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 682,
+      "end": 710,
+      "raw_source": "\"./chunks/chunk-3V45WARH.js\"",
+      "line": 3,
+      "column": 545,
+      "specifier": "./chunks/chunk-3V45WARH.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-3V45WARH.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 717,
+      "end": 745,
+      "raw_source": "\"./chunks/chunk-4GGCU36O.js\"",
+      "line": 3,
+      "column": 580,
+      "specifier": "./chunks/chunk-4GGCU36O.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-4GGCU36O.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 752,
+      "end": 780,
+      "raw_source": "\"./chunks/chunk-LPXNMA2W.js\"",
+      "line": 3,
+      "column": 615,
+      "specifier": "./chunks/chunk-LPXNMA2W.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-LPXNMA2W.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 787,
+      "end": 815,
+      "raw_source": "\"./chunks/chunk-H76KZMOI.js\"",
+      "line": 3,
+      "column": 650,
+      "specifier": "./chunks/chunk-H76KZMOI.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-H76KZMOI.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+      "start": 822,
+      "end": 850,
+      "raw_source": "\"./chunks/chunk-JXWJOIH4.js\"",
+      "line": 3,
+      "column": 685,
+      "specifier": "./chunks/chunk-JXWJOIH4.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-JXWJOIH4.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 51,
+      "end": 64,
+      "raw_source": "\"node:module\"",
+      "line": 1,
+      "column": 52,
+      "specifier": "node:module",
+      "loader": "static-module-import",
+      "target": null,
+      "external_module": "node:module"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 180,
+      "end": 208,
+      "raw_source": "\"./chunks/chunk-UNXOKDPB.js\"",
+      "line": 2,
+      "column": 63,
+      "specifier": "./chunks/chunk-UNXOKDPB.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-UNXOKDPB.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 2754,
+      "end": 2782,
+      "raw_source": "\"./chunks/chunk-MM3LKT73.js\"",
+      "line": 2,
+      "column": 2637,
+      "specifier": "./chunks/chunk-MM3LKT73.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 2922,
+      "end": 2950,
+      "raw_source": "\"./chunks/chunk-IUWY2KTF.js\"",
+      "line": 2,
+      "column": 2805,
+      "specifier": "./chunks/chunk-IUWY2KTF.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-IUWY2KTF.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 2977,
+      "end": 3005,
+      "raw_source": "\"./chunks/chunk-RWO6Q3KK.js\"",
+      "line": 2,
+      "column": 2860,
+      "specifier": "./chunks/chunk-RWO6Q3KK.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-RWO6Q3KK.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 3151,
+      "end": 3179,
+      "raw_source": "\"./chunks/chunk-T726RZZU.js\"",
+      "line": 2,
+      "column": 3034,
+      "specifier": "./chunks/chunk-T726RZZU.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-T726RZZU.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 3243,
+      "end": 3271,
+      "raw_source": "\"./chunks/chunk-INGZIYBC.js\"",
+      "line": 2,
+      "column": 3126,
+      "specifier": "./chunks/chunk-INGZIYBC.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-INGZIYBC.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 3304,
+      "end": 3332,
+      "raw_source": "\"./chunks/chunk-N43LRJ4N.js\"",
+      "line": 2,
+      "column": 3187,
+      "specifier": "./chunks/chunk-N43LRJ4N.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-N43LRJ4N.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 3379,
+      "end": 3407,
+      "raw_source": "\"./chunks/chunk-RISAW7OQ.js\"",
+      "line": 2,
+      "column": 3262,
+      "specifier": "./chunks/chunk-RISAW7OQ.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-RISAW7OQ.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 3414,
+      "end": 3442,
+      "raw_source": "\"./chunks/chunk-6QGV3IWD.js\"",
+      "line": 2,
+      "column": 3297,
+      "specifier": "./chunks/chunk-6QGV3IWD.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-6QGV3IWD.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 3546,
+      "end": 3574,
+      "raw_source": "\"./chunks/chunk-BSS6T6KQ.js\"",
+      "line": 2,
+      "column": 3429,
+      "specifier": "./chunks/chunk-BSS6T6KQ.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-BSS6T6KQ.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 3581,
+      "end": 3609,
+      "raw_source": "\"./chunks/chunk-USJZMAIR.js\"",
+      "line": 2,
+      "column": 3464,
+      "specifier": "./chunks/chunk-USJZMAIR.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-USJZMAIR.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 3616,
+      "end": 3644,
+      "raw_source": "\"./chunks/chunk-5AGIVGSV.js\"",
+      "line": 2,
+      "column": 3499,
+      "specifier": "./chunks/chunk-5AGIVGSV.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 3651,
+      "end": 3679,
+      "raw_source": "\"./chunks/chunk-UKVNB6C4.js\"",
+      "line": 2,
+      "column": 3534,
+      "specifier": "./chunks/chunk-UKVNB6C4.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-UKVNB6C4.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 3686,
+      "end": 3714,
+      "raw_source": "\"./chunks/chunk-TMTOQ7H7.js\"",
+      "line": 2,
+      "column": 3569,
+      "specifier": "./chunks/chunk-TMTOQ7H7.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-TMTOQ7H7.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 3721,
+      "end": 3749,
+      "raw_source": "\"./chunks/chunk-7DDKXS2Q.js\"",
+      "line": 2,
+      "column": 3604,
+      "specifier": "./chunks/chunk-7DDKXS2Q.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-7DDKXS2Q.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 3756,
+      "end": 3784,
+      "raw_source": "\"./chunks/chunk-3V45WARH.js\"",
+      "line": 2,
+      "column": 3639,
+      "specifier": "./chunks/chunk-3V45WARH.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-3V45WARH.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 3791,
+      "end": 3819,
+      "raw_source": "\"./chunks/chunk-4GGCU36O.js\"",
+      "line": 2,
+      "column": 3674,
+      "specifier": "./chunks/chunk-4GGCU36O.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-4GGCU36O.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 3826,
+      "end": 3854,
+      "raw_source": "\"./chunks/chunk-LPXNMA2W.js\"",
+      "line": 2,
+      "column": 3709,
+      "specifier": "./chunks/chunk-LPXNMA2W.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-LPXNMA2W.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 3861,
+      "end": 3889,
+      "raw_source": "\"./chunks/chunk-H76KZMOI.js\"",
+      "line": 2,
+      "column": 3744,
+      "specifier": "./chunks/chunk-H76KZMOI.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-H76KZMOI.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+      "start": 3896,
+      "end": 3924,
+      "raw_source": "\"./chunks/chunk-JXWJOIH4.js\"",
+      "line": 2,
+      "column": 3779,
+      "specifier": "./chunks/chunk-JXWJOIH4.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-JXWJOIH4.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 71,
+      "end": 84,
+      "raw_source": "\"node:module\"",
+      "line": 2,
+      "column": 52,
+      "specifier": "node:module",
+      "loader": "static-module-import",
+      "target": null,
+      "external_module": "node:module"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 178,
+      "end": 206,
+      "raw_source": "\"./chunks/chunk-MM3LKT73.js\"",
+      "line": 3,
+      "column": 41,
+      "specifier": "./chunks/chunk-MM3LKT73.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 213,
+      "end": 241,
+      "raw_source": "\"./chunks/chunk-IUWY2KTF.js\"",
+      "line": 3,
+      "column": 76,
+      "specifier": "./chunks/chunk-IUWY2KTF.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-IUWY2KTF.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 248,
+      "end": 276,
+      "raw_source": "\"./chunks/chunk-RWO6Q3KK.js\"",
+      "line": 3,
+      "column": 111,
+      "specifier": "./chunks/chunk-RWO6Q3KK.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-RWO6Q3KK.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 283,
+      "end": 311,
+      "raw_source": "\"./chunks/chunk-T726RZZU.js\"",
+      "line": 3,
+      "column": 146,
+      "specifier": "./chunks/chunk-T726RZZU.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-T726RZZU.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 318,
+      "end": 346,
+      "raw_source": "\"./chunks/chunk-INGZIYBC.js\"",
+      "line": 3,
+      "column": 181,
+      "specifier": "./chunks/chunk-INGZIYBC.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-INGZIYBC.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 353,
+      "end": 381,
+      "raw_source": "\"./chunks/chunk-N43LRJ4N.js\"",
+      "line": 3,
+      "column": 216,
+      "specifier": "./chunks/chunk-N43LRJ4N.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-N43LRJ4N.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 388,
+      "end": 416,
+      "raw_source": "\"./chunks/chunk-RISAW7OQ.js\"",
+      "line": 3,
+      "column": 251,
+      "specifier": "./chunks/chunk-RISAW7OQ.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-RISAW7OQ.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 423,
+      "end": 451,
+      "raw_source": "\"./chunks/chunk-6QGV3IWD.js\"",
+      "line": 3,
+      "column": 286,
+      "specifier": "./chunks/chunk-6QGV3IWD.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-6QGV3IWD.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 472,
+      "end": 500,
+      "raw_source": "\"./chunks/chunk-BSS6T6KQ.js\"",
+      "line": 3,
+      "column": 335,
+      "specifier": "./chunks/chunk-BSS6T6KQ.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-BSS6T6KQ.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 507,
+      "end": 535,
+      "raw_source": "\"./chunks/chunk-USJZMAIR.js\"",
+      "line": 3,
+      "column": 370,
+      "specifier": "./chunks/chunk-USJZMAIR.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-USJZMAIR.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 542,
+      "end": 570,
+      "raw_source": "\"./chunks/chunk-5AGIVGSV.js\"",
+      "line": 3,
+      "column": 405,
+      "specifier": "./chunks/chunk-5AGIVGSV.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 577,
+      "end": 605,
+      "raw_source": "\"./chunks/chunk-UKVNB6C4.js\"",
+      "line": 3,
+      "column": 440,
+      "specifier": "./chunks/chunk-UKVNB6C4.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-UKVNB6C4.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 612,
+      "end": 640,
+      "raw_source": "\"./chunks/chunk-TMTOQ7H7.js\"",
+      "line": 3,
+      "column": 475,
+      "specifier": "./chunks/chunk-TMTOQ7H7.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-TMTOQ7H7.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 647,
+      "end": 675,
+      "raw_source": "\"./chunks/chunk-7DDKXS2Q.js\"",
+      "line": 3,
+      "column": 510,
+      "specifier": "./chunks/chunk-7DDKXS2Q.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-7DDKXS2Q.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 682,
+      "end": 710,
+      "raw_source": "\"./chunks/chunk-3V45WARH.js\"",
+      "line": 3,
+      "column": 545,
+      "specifier": "./chunks/chunk-3V45WARH.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-3V45WARH.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 717,
+      "end": 745,
+      "raw_source": "\"./chunks/chunk-4GGCU36O.js\"",
+      "line": 3,
+      "column": 580,
+      "specifier": "./chunks/chunk-4GGCU36O.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-4GGCU36O.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 752,
+      "end": 780,
+      "raw_source": "\"./chunks/chunk-LPXNMA2W.js\"",
+      "line": 3,
+      "column": 615,
+      "specifier": "./chunks/chunk-LPXNMA2W.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-LPXNMA2W.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 787,
+      "end": 815,
+      "raw_source": "\"./chunks/chunk-H76KZMOI.js\"",
+      "line": 3,
+      "column": 650,
+      "specifier": "./chunks/chunk-H76KZMOI.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-H76KZMOI.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+      "start": 822,
+      "end": 850,
+      "raw_source": "\"./chunks/chunk-JXWJOIH4.js\"",
+      "line": 3,
+      "column": 685,
+      "specifier": "./chunks/chunk-JXWJOIH4.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-JXWJOIH4.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/jiti-static-loader-2RCDI6B4.js",
+      "start": 51,
+      "end": 64,
+      "raw_source": "\"node:module\"",
+      "line": 1,
+      "column": 52,
+      "specifier": "node:module",
+      "loader": "static-module-import",
+      "target": null,
+      "external_module": "node:module"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/jiti-static-loader-2RCDI6B4.js",
+      "start": 124,
+      "end": 145,
+      "raw_source": "\"./chunk-JXWJOIH4.js\"",
+      "line": 2,
+      "column": 7,
+      "specifier": "./chunk-JXWJOIH4.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-JXWJOIH4.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/jiti-static-loader-2RCDI6B4.js",
+      "start": 171,
+      "end": 184,
+      "raw_source": "\"node:module\"",
+      "line": 2,
+      "column": 54,
+      "specifier": "node:module",
+      "loader": "static-module-import",
+      "target": null,
+      "external_module": "node:module"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/jiti-static-loader-2RCDI6B4.js",
+      "start": 306,
+      "end": 312,
+      "raw_source": "\"jiti\"",
+      "line": 2,
+      "column": 189,
+      "specifier": "jiti",
+      "loader": "static-module-import",
+      "target": null,
+      "external_module": "jiti"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/runtime-GJOZRI5I.js",
+      "start": 51,
+      "end": 64,
+      "raw_source": "\"node:module\"",
+      "line": 1,
+      "column": 52,
+      "specifier": "node:module",
+      "loader": "static-module-import",
+      "target": null,
+      "external_module": "node:module"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/runtime-GJOZRI5I.js",
+      "start": 249,
+      "end": 270,
+      "raw_source": "\"./chunk-EGE5YVUM.js\"",
+      "line": 2,
+      "column": 132,
+      "specifier": "./chunk-EGE5YVUM.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-EGE5YVUM.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/runtime-GJOZRI5I.js",
+      "start": 277,
+      "end": 298,
+      "raw_source": "\"./chunk-N43LRJ4N.js\"",
+      "line": 2,
+      "column": 160,
+      "specifier": "./chunk-N43LRJ4N.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-N43LRJ4N.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/runtime-GJOZRI5I.js",
+      "start": 305,
+      "end": 326,
+      "raw_source": "\"./chunk-RISAW7OQ.js\"",
+      "line": 2,
+      "column": 188,
+      "specifier": "./chunk-RISAW7OQ.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-RISAW7OQ.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/runtime-GJOZRI5I.js",
+      "start": 333,
+      "end": 354,
+      "raw_source": "\"./chunk-BSS6T6KQ.js\"",
+      "line": 2,
+      "column": 216,
+      "specifier": "./chunk-BSS6T6KQ.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-BSS6T6KQ.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/runtime-GJOZRI5I.js",
+      "start": 361,
+      "end": 382,
+      "raw_source": "\"./chunk-JXWJOIH4.js\"",
+      "line": 2,
+      "column": 244,
+      "specifier": "./chunk-JXWJOIH4.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-JXWJOIH4.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 51,
+      "end": 64,
+      "raw_source": "\"node:module\"",
+      "line": 1,
+      "column": 52,
+      "specifier": "node:module",
+      "loader": "static-module-import",
+      "target": null,
+      "external_module": "node:module"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 159,
+      "end": 180,
+      "raw_source": "\"./chunk-UNXOKDPB.js\"",
+      "line": 2,
+      "column": 42,
+      "specifier": "./chunk-UNXOKDPB.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-UNXOKDPB.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 279,
+      "end": 300,
+      "raw_source": "\"./chunk-MM3LKT73.js\"",
+      "line": 2,
+      "column": 162,
+      "specifier": "./chunk-MM3LKT73.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 326,
+      "end": 347,
+      "raw_source": "\"./chunk-IUWY2KTF.js\"",
+      "line": 2,
+      "column": 209,
+      "specifier": "./chunk-IUWY2KTF.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-IUWY2KTF.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 354,
+      "end": 375,
+      "raw_source": "\"./chunk-RWO6Q3KK.js\"",
+      "line": 2,
+      "column": 237,
+      "specifier": "./chunk-RWO6Q3KK.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-RWO6Q3KK.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 400,
+      "end": 421,
+      "raw_source": "\"./chunk-T726RZZU.js\"",
+      "line": 2,
+      "column": 283,
+      "specifier": "./chunk-T726RZZU.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-T726RZZU.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 428,
+      "end": 449,
+      "raw_source": "\"./chunk-INGZIYBC.js\"",
+      "line": 2,
+      "column": 311,
+      "specifier": "./chunk-INGZIYBC.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-INGZIYBC.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 456,
+      "end": 477,
+      "raw_source": "\"./chunk-N43LRJ4N.js\"",
+      "line": 2,
+      "column": 339,
+      "specifier": "./chunk-N43LRJ4N.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-N43LRJ4N.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 484,
+      "end": 505,
+      "raw_source": "\"./chunk-RISAW7OQ.js\"",
+      "line": 2,
+      "column": 367,
+      "specifier": "./chunk-RISAW7OQ.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-RISAW7OQ.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 512,
+      "end": 533,
+      "raw_source": "\"./chunk-6QGV3IWD.js\"",
+      "line": 2,
+      "column": 395,
+      "specifier": "./chunk-6QGV3IWD.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-6QGV3IWD.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 540,
+      "end": 561,
+      "raw_source": "\"./chunk-BSS6T6KQ.js\"",
+      "line": 2,
+      "column": 423,
+      "specifier": "./chunk-BSS6T6KQ.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-BSS6T6KQ.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 568,
+      "end": 589,
+      "raw_source": "\"./chunk-USJZMAIR.js\"",
+      "line": 2,
+      "column": 451,
+      "specifier": "./chunk-USJZMAIR.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-USJZMAIR.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 596,
+      "end": 617,
+      "raw_source": "\"./chunk-5AGIVGSV.js\"",
+      "line": 2,
+      "column": 479,
+      "specifier": "./chunk-5AGIVGSV.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-5AGIVGSV.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 624,
+      "end": 645,
+      "raw_source": "\"./chunk-UKVNB6C4.js\"",
+      "line": 2,
+      "column": 507,
+      "specifier": "./chunk-UKVNB6C4.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-UKVNB6C4.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 652,
+      "end": 673,
+      "raw_source": "\"./chunk-TMTOQ7H7.js\"",
+      "line": 2,
+      "column": 535,
+      "specifier": "./chunk-TMTOQ7H7.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-TMTOQ7H7.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 680,
+      "end": 701,
+      "raw_source": "\"./chunk-7DDKXS2Q.js\"",
+      "line": 2,
+      "column": 563,
+      "specifier": "./chunk-7DDKXS2Q.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-7DDKXS2Q.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 708,
+      "end": 729,
+      "raw_source": "\"./chunk-3V45WARH.js\"",
+      "line": 2,
+      "column": 591,
+      "specifier": "./chunk-3V45WARH.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-3V45WARH.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 756,
+      "end": 777,
+      "raw_source": "\"./chunk-4GGCU36O.js\"",
+      "line": 2,
+      "column": 639,
+      "specifier": "./chunk-4GGCU36O.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-4GGCU36O.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 784,
+      "end": 805,
+      "raw_source": "\"./chunk-LPXNMA2W.js\"",
+      "line": 2,
+      "column": 667,
+      "specifier": "./chunk-LPXNMA2W.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-LPXNMA2W.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 812,
+      "end": 833,
+      "raw_source": "\"./chunk-H76KZMOI.js\"",
+      "line": 2,
+      "column": 695,
+      "specifier": "./chunk-H76KZMOI.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-H76KZMOI.js",
+      "external_module": null
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+      "start": 840,
+      "end": 861,
+      "raw_source": "\"./chunk-JXWJOIH4.js\"",
+      "line": 2,
+      "column": 723,
+      "specifier": "./chunk-JXWJOIH4.js",
+      "loader": "static-module-import",
+      "target": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-JXWJOIH4.js",
+      "external_module": null
+    }
+  ],
+  "bounded_compiled_excerpts": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 3522362,
+      "end": 3522571,
+      "raw": "async function main(args,options){resetTimings(),setThemeJsonValidator(validateThemeJson);let extensionFactories=[...builtInExtensions,...options?.extensionFactories??[]],offlineMode=args.includes(\"--offline\")",
+      "line": 1222,
+      "column": 7641,
+      "claim": "Delegated main is async and accepts optional options; entry wrappers pass args only. No full native main behavior/wording closure.",
+      "status": "bounded-excerpt-only; all other body producers pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 2938270,
+      "end": 2938402,
+      "raw": "catch(error){return error instanceof runtime.McpSignInCancelledError?\"Sign-in cancelled.\":`Sign-in failed: ${errorMessage2(error)}`}",
+      "line": 901,
+      "column": 884,
+      "claim": "Bounded explicit signIn catch replaces cancellation/dependency failure with native caller wording; not a new shim producer/full MCP body.",
+      "status": "bounded-excerpt-only; all other body producers pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 2949282,
+      "end": 2949379,
+      "raw": ".catch(error=>{try{ctx.ui.notify(`MCP failed to load: ${errorMessage2(error)}`,\"error\")}catch{}})",
+      "line": 910,
+      "column": 1351,
+      "claim": "Enabled startup aggregate rejection can notify UI; notification throw is ignored. This bounded caller wording remains outside seven local shim bodies.",
+      "status": "bounded-excerpt-only; all other body producers pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1211111,
+      "end": 1211256,
+      "raw": "function parseArgs(args){let result={messages:[],fileArgs:[],unknownFlags:new Map,diagnostics:[]};for(let i=0;i<args.length;i++){let arg=args[i];",
+      "line": 274,
+      "column": 32009,
+      "claim": "Ordered argv loop proof supporting later mode precedence.",
+      "status": "bounded-excerpt-only; all other body producers pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 2937785,
+      "end": 2938068,
+      "raw": "signIn=async(server,prompt,cancel)=>{let connection=server.connection,url=connection?.oauthUrl;if(!connection||!url)return`MCP server \"${server.entry.name}\" does not use OAuth.`;let runtime=await loadMcpRuntime(),signal=cancel?AbortSignal.any([session.signal,cancel]):session.signal;",
+      "line": 901,
+      "column": 399,
+      "claim": "Explicit signIn connection+OAuth URL required before lazy runtime; signal combination afterward; downstream login/cancel/native messages remain inherited pending.",
+      "status": "bounded-excerpt-only; all other body producers pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 2938525,
+      "end": 2938759,
+      "raw": "signOut=async server=>{let connection=server.connection,url=connection?.oauthUrl;if(!connection||!url)return!1;let removed=getCredentials(await loadMcpRuntime()).remove(server.entry.name,url);return await connection.signOut(),removed}",
+      "line": 901,
+      "column": 1139,
+      "claim": "Explicit signOut needs connection+OAuth URL before lazy runtime; credential removal/transport called only by owning implementation, not shim body.",
+      "status": "bounded-excerpt-only; all other body producers pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 2585784,
+      "end": 2586254,
+      "raw": "usesEmbeddedModules=isBunBinary||isNodeSeaBinary||isBundledNode,createJitiPromise;function getCreateJiti(){return createJitiPromise??=(usesEmbeddedModules?import(\"./jiti-static-loader-2RCDI6B4.js\"):import(\"./jiti-loader-GL4HJFAD.js\")).then(module=>module.createJiti),createJitiPromise}var virtualModulesPromise;function getVirtualModules(){return virtualModulesPromise??=import(\"./virtual-modules-BQKXTZUC.js\").then(module=>module.VIRTUAL_MODULES),virtualModulesPromise}",
+      "line": 708,
+      "column": 428,
+      "claim": "Cached conditional JIT/static versus dynamic loader, cached virtual map import.",
+      "status": "bounded-excerpt-only; all other body producers pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 2598293,
+      "end": 2598654,
+      "raw": "let createJitiImpl=await getCreateJiti(),resolutionOptions=usesEmbeddedModules?{virtualModules:await getVirtualModules(),tryNative:!1}:isTypeScriptSourceRuntime?{virtualModules:await getVirtualModules(),tsconfigPaths:!0}:{alias:getAliases()},factory=await createJitiImpl(import.meta.url,{moduleCache:!1,...resolutionOptions}).import(extensionPath,{default:!0});",
+      "line": 708,
+      "column": 12937,
+      "claim": "Extension module loader invokes JIT factory/import; imported authored extension and JIT wording remain separate.",
+      "status": "bounded-excerpt-only; all other body producers pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 2919269,
+      "end": 2919324,
+      "raw": "var loadMcpRuntime=()=>import(\"./runtime-GJOZRI5I.js\");",
+      "line": 894,
+      "column": 7888,
+      "claim": "Lazy MCP runtime wrapper boundary.",
+      "status": "bounded-excerpt-only; all other body producers pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 2935356,
+      "end": 2935457,
+      "raw": "createConnection=async(server,isCurrent)=>{let runtime=await loadMcpRuntime();if(!isCurrent())return;",
+      "line": 898,
+      "column": 8145,
+      "claim": "MCP connection only constructed after lazy import/current check; caller below uses session signal/attempt/enabled/current membership.",
+      "status": "bounded-excerpt-only; all other body producers pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 2935978,
+      "end": 2936407,
+      "raw": "startConnection=(server,after)=>{let{signal}=session,attempt2=Symbol();server.attempt=attempt2;let isCurrent=()=>!signal.aborted&&server.attempt===attempt2&&isEnabled(server)&&servers.includes(server),ready=(async()=>{if(await after,!isCurrent())return;let connection=await createConnection(server,isCurrent);!connection||!isCurrent()||await connection.getClient().catch(()=>{})})();return server.ready=ready.catch(()=>{}),ready}",
+      "line": 898,
+      "column": 8767,
+      "claim": "Connection attempt waits optional preceding promise, current/cancellation guards; getClient rejection ignored locally; server.ready rejection-suppressed promise, original ready returned to caller.",
+      "status": "bounded-excerpt-only; all other body producers pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 2948986,
+      "end": 2949234,
+      "raw": "let enabled=servers.filter(isEnabled);if(enabled.length===0){reportProblems(ctx);return}let runtime=new Promise(resolve16=>setImmediate(resolve16)).then(()=>loadMcpRuntime());pending=Promise.all(enabled.map(server=>startConnection(server,runtime)))",
+      "line": 910,
+      "column": 1055,
+      "claim": "Enabled-server startup defers runtime load by setImmediate, then starts all enabled server attempts; later startup catch owns UI wrapper.",
+      "status": "bounded-excerpt-only; all other body producers pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 2600033,
+      "end": 2600149,
+      "raw": "catch(err){return{extension:null,error:`Failed to load extension: ${err instanceof Error?err.message:String(err)}`}}",
+      "line": 708,
+      "column": 14677,
+      "claim": "loadExtension broad catch wraps dynamic module/factory failure; wording is inherited bounded producer, not an entry-shim definition.",
+      "status": "bounded-excerpt-only; all other body producers pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+      "start": 1211535,
+      "end": 1211893,
+      "raw": "else if(arg===\"--mode\"){let mode=args[i+1];if(mode===void 0||mode.startsWith(\"-\")){result.diagnostics.push({type:\"error\",message:\"--mode requires text, json, or rpc\"});continue}if(i++,mode!==\"text\"&&mode!==\"json\"&&mode!==\"rpc\"){result.diagnostics.push({type:\"error\",message:`Invalid mode \"${mode}\". Valid values: text, json, rpc`});continue}result.mode=mode}",
+      "line": 274,
+      "column": 32433,
+      "claim": "Bounded parser branch proves later valid argv mode assignment overrides rpc prefix; malformed later values add diagnostics instead.",
+      "status": "bounded-excerpt-only; all other body producers pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-BSS6T6KQ.js",
+      "start": 16143,
+      "end": 16160,
+      "raw": "isBundledNode=!0;",
+      "line": 2,
+      "column": 16026,
+      "claim": "Compiled config embedded-module gate true, not inferred from file name.",
+      "status": "bounded-excerpt-only; all other body producers pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-BSS6T6KQ.js",
+      "start": 26750,
+      "end": 26987,
+      "raw": "var piConfigName=pkg.piConfig?.name,PACKAGE_NAME=pkg.name||\"@earendil-works/pi-coding-agent\",APP_NAME=piConfigName||\"pi\",APP_TITLE=piConfigName?APP_NAME:\"\\u03C0\",CONFIG_DIR_NAME=pkg.piConfig?.configDir||\".pi\",VERSION=pkg.version||\"0.0.0\"",
+      "line": 2,
+      "column": 26633,
+      "claim": "APP_NAME title derives from package metadata name/pi fallback; not a new fixed label inside entry wrapper.",
+      "status": "bounded-excerpt-only; all other body producers pending"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a",
+      "git_blob_sha1": "97ef3313123007e937e6a52064ed6e089e250b57",
+      "read_ranges": [
+        [
+          101,
+          103
+        ],
+        [
+          378,
+          382
+        ],
+        [
+          757,
+          765
+        ]
+      ]
+    },
+    {
+      "source": "packages/cli/src/runtime.ts",
+      "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "sha256": "9460d7582f6e843f49ee69f11d3bb12a804cbf4ef3a948c87c4b7fa018f77bfd",
+      "git_blob_sha1": "8e32852be1ef8514f458fab89b8843da9a3da841",
+      "read_ranges": [
+        [
+          81,
+          90
+        ]
+      ]
+    },
+    {
+      "source": "package-lock.json",
+      "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "sha256": "4859c6a277d7b4649c78f4460fe84e447f75cb9f358f1d0e70191a36d8f01a76",
+      "git_blob_sha1": "b71bc0c61af4a1f4fe2b6abb986f1b9313ea46d4",
+      "read_ranges": null
+    },
+    {
+      "source": "upstream/pi.lock.json",
+      "source_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+      "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+      "git_blob_sha1": "8fb30b6e5192d43ffcded8569a696565fb898788",
+      "read_ranges": null
+    }
+  ],
+  "compiled_archive_membership": {
+    "authority": "Locked archive membership/size only, not all-body wording or installed-file equality proof. Outside this unit may have separate later owners.",
+    "members": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/anthropic-messages-5FHV3XZG.js",
+        "bytes": 33298,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/anthropic.js",
+        "bytes": 14498,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/azure-openai-responses-KLTRI2FU.js",
+        "bytes": 6651,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/bedrock-converse-stream.js",
+        "bytes": 886422,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-3V45WARH.js",
+        "bytes": 8294,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-4GGCU36O.js",
+        "bytes": 44590,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-5AGIVGSV.js",
+        "bytes": 112077,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-6QGV3IWD.js",
+        "bytes": 12059,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-7CBJINYJ.js",
+        "bytes": 293583,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-7DDKXS2Q.js",
+        "bytes": 777,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-7ZC4UXSL.js",
+        "bytes": 406,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-A45IWOC6.js",
+        "bytes": 949901,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-BSS6T6KQ.js",
+        "bytes": 28659,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-CF5GWZHW.js",
+        "bytes": 458410,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-EGE5YVUM.js",
+        "bytes": 49440,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-H76KZMOI.js",
+        "bytes": 4793,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-INGZIYBC.js",
+        "bytes": 9461,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-IUWY2KTF.js",
+        "bytes": 234664,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-JXWJOIH4.js",
+        "bytes": 1649,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-L2ZPNLYD.js",
+        "bytes": 278,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-LPXNMA2W.js",
+        "bytes": 3014,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-LVVZS2NO.js",
+        "bytes": 131073,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-MM3LKT73.js",
+        "bytes": 3536719,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-N43LRJ4N.js",
+        "bytes": 87391,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-NFLURVK3.js",
+        "bytes": 16677,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-PGXDEOVV.js",
+        "bytes": 770,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-PJACZCIR.js",
+        "bytes": 499,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-PMRZO46Y.js",
+        "bytes": 2569,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-PRRNXB7S.js",
+        "bytes": 297,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-QSDU2SDK.js",
+        "bytes": 20340,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-RDZVAGPR.js",
+        "bytes": 810,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-RISAW7OQ.js",
+        "bytes": 4657,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-RWO6Q3KK.js",
+        "bytes": 6861,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-T726RZZU.js",
+        "bytes": 462868,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-TEPMHNKQ.js",
+        "bytes": 2293,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-TMTOQ7H7.js",
+        "bytes": 2381,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-TRERZKRC.js",
+        "bytes": 4473,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-UKVNB6C4.js",
+        "bytes": 5055,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-UNXOKDPB.js",
+        "bytes": 11964,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-USJZMAIR.js",
+        "bytes": 2002,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-UTB4DTYQ.js",
+        "bytes": 624,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/chunk-Z6I32PHA.js",
+        "bytes": 2966,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/cli-MIMUTM5L.js",
+        "bytes": 14802,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js",
+        "bytes": 1050,
+        "reviewed_full_in_this_unit": true
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli.js",
+        "bytes": 160,
+        "reviewed_full_in_this_unit": true
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/cloudflare-workers-ai-system-one-7J6REGDV.js",
+        "bytes": 1685,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/codemode-worker.js",
+        "bytes": 78598,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/easter-egg-3d-RMLF7AC4.js",
+        "bytes": 26110,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/execute-MT7QEDSI.js",
+        "bytes": 51006,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/github-copilot.js",
+        "bytes": 32315,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/google-generative-ai-VPNFZDHO.js",
+        "bytes": 9508,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/google-vertex-ZFM23MQ4.js",
+        "bytes": 11392,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/https-proxy-agent-LVOO5TPL.js",
+        "bytes": 25947,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/image-resize-worker.js",
+        "bytes": 8298,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js",
+        "bytes": 6996,
+        "reviewed_full_in_this_unit": true
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/jiti-loader-GL4HJFAD.js",
+        "bytes": 201917,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/jiti-static-loader-2RCDI6B4.js",
+        "bytes": 369,
+        "reviewed_full_in_this_unit": true
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/kimi-coding.js",
+        "bytes": 9716,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/lib-4AVRLBHM.js",
+        "bytes": 966765,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/llama-cpp-classify-U4EH6TAM.js",
+        "bytes": 10639,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/meta.js",
+        "bytes": 6726,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/mistral-conversations-WCAJTBXO.js",
+        "bytes": 20257,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/multipart-parser-FMGQ7342.js",
+        "bytes": 6493,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/node-AUOGOBCN.js",
+        "bytes": 276,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/node-KCMANYC2.js",
+        "bytes": 62805,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/openai-chatgpt.js",
+        "bytes": 12028,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/openai-codex-responses-JQR3IK2C.js",
+        "bytes": 38497,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/openai-codex.js",
+        "bytes": 18698,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/openai-completions-27RKPL37.js",
+        "bytes": 36988,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/openai-decisions-MJYPUCLX.js",
+        "bytes": 4649,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/openai-responses-I2TBW7OL.js",
+        "bytes": 11329,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/openrouter-images-WBAVKHHY.js",
+        "bytes": 3742,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/openrouter.js",
+        "bytes": 11592,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/pi-messages-S7RKCD5K.js",
+        "bytes": 7821,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/radius.js",
+        "bytes": 14434,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js",
+        "bytes": 1048,
+        "reviewed_full_in_this_unit": true
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/runtime-GJOZRI5I.js",
+        "bytes": 512,
+        "reviewed_full_in_this_unit": true
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/src-QKGKDFSU.js",
+        "bytes": 30182,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/typesafe-system-one-4C7ULOVP.js",
+        "bytes": 1007,
+        "reviewed_full_in_this_unit": false
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js",
+        "bytes": 1832,
+        "reviewed_full_in_this_unit": true
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/xai.js",
+        "bytes": 6975,
+        "reviewed_full_in_this_unit": false
+      }
+    ],
+    "archive_js_bodies": 81,
+    "archive_js_bytes": 9211377,
+    "this_unit_full_bodies": 7,
+    "archive_bodies_outside_this_unit": 74
+  },
+  "root_package_export_vs_bundle": "All archive/root/nested metadata: package dot/main ->dist/index.js; bin pi ->dist/bundle/cli.js; ./rpc-entry ->dist/bundle/rpc-entry.js. Direct bundle/index.js import separately qualified; no implicit implementation equivalence.",
+  "jiti_dependency": {
+    "package_lock_path": "node_modules/@earendil-works/pi-coding-agent/node_modules/jiti",
+    "locked": {
+      "version": "2.7.0",
+      "resolved": "https://registry.npmjs.org/jiti/-/jiti-2.7.0.tgz",
+      "integrity": "sha512-AC/7JofJvZGrrneWNaEnJeOLUx+JlGt7tNa0wZiRPT4MY1wmfKjt2+6O2p2uz2+skll8OZZmJMNqeke7kKbNgQ==",
+      "license": "MIT",
+      "bin": {
+        "jiti": "lib/jiti-cli.mjs"
+      }
+    },
+    "installed_metadata": [
+      {
+        "tree": "root",
+        "package_json_sha256": "aab8aafc42d9aeec14a6e2fe0e15ea1514c0c205a624055a7e776f2ec456283c",
+        "name": "jiti",
+        "version": "2.7.0"
+      },
+      {
+        "tree": "cli-nested",
+        "package_json_sha256": "da64c2c22633834764f423a8839c5e734572ea8df03a361c57a12fece02d5cb2",
+        "name": "jiti",
+        "version": "2.7.0"
+      }
+    ],
+    "wording_status": "pending exact dependency bodies/native resolution; no inherited English guessed"
+  },
+  "missing_nonruntime_assets": [
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli.js.map",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli.d.ts",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli.d.ts.map",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.js.map",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.d.ts",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli-runtime.d.ts.map",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.js.map",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.d.ts",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/index.d.ts.map",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.js.map",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.d.ts",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/rpc-entry.d.ts.map",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/jiti-static-loader-2RCDI6B4.js.map",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/jiti-static-loader-2RCDI6B4.d.ts",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/jiti-static-loader-2RCDI6B4.d.ts.map",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/runtime-GJOZRI5I.js.map",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/runtime-GJOZRI5I.d.ts",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/runtime-GJOZRI5I.d.ts.map",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.js.map",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.d.ts",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/chunks/virtual-modules-BQKXTZUC.d.ts.map"
+  ],
+  "counts": {
+    "rows": 0,
+    "excluded_occurrences": 125,
+    "external_boundaries": 9,
+    "scopes": 35,
+    "whole_local_bodies": 7,
+    "whole_local_lines": 19,
+    "whole_local_bytes": 11967,
+    "literal_template_nodes": 122,
+    "hashbangs": 3,
+    "module_edges": 94,
+    "direct_import_dependency_bodies_pending": 21,
+    "bounded_compiled_excerpts": 16,
+    "catalog_linked_rows": 0
+  },
+  "limits": [
+    "Full seven entry/shim bodies only, not all81 compiled files. Wrapper imports/exported APIs do not close imported implementation wording.",
+    "122 string/template nodes plus3 full hashbang occurrences; all125 protected/nonprose, fixed English CSV intentionally header-only.",
+    "Static imports execute dependencies before warning suppression/setup; main delegation no await/catch, dynamic imports/JIT/OS/MCP messages separately bounded or pending.",
+    "No native/module/auth/model/config/extension/network/UI/WASM/runtime execution. Only standard-library source parsers/verifier reads; canonical archive not extracted or run.",
+    "Mutable source census/lexical proposal/index hashes not verification dependencies. Package metadata copies pinned independently; canonical archive SRI/version authority immutable BASE."
+  ]
+}

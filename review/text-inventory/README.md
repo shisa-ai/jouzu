@@ -251,6 +251,16 @@ promotions. These are local-body review references; resource, native, transitive
 dependency and complete consumer coverage remain open. No audited module is loaded.
 Follow-on local reviews retain their own scopes below; this baseline is frozen.
 
+[pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
+universe with 22 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside seven compiled entry/shim bodies;
+74 compiled bodies remain pending. The
+[snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
+checker matches all 384 bodies in both installed trees to the original census.
+This is source ownership navigation, preserving every unit's exclusions and
+API/dynamic/optional/caller/dependency limits. It does not reopen canonical archives
+or qualify fetched-target installed patches; those proofs remain separate.
+
 The older [Japanese review](../ja-localization/README.md) retains its own source
 pin and translations; its counts must not be added to this inventory.
 
@@ -822,6 +832,19 @@ and five pinned support patches, with 74 patch after-hashes. Seven supplementary
 sources have exact versions/import routes/two-tree hashes, without canonical
 archive or full-body promotion. Twenty corruption controls pass. No shell,
 config, search execution, activation, transcript, model or UI operation executed.
+
+[pi-bundle-entry-support.csv](pi-bundle-entry-support.csv) records no authored
+fixed English in seven complete compiled entry/shim bodies (11,967 bytes).
+All 125 literal/template/hashbang occurrences are
+[protected](pi-bundle-entry-support-exclusions.csv), with nine
+[boundaries](pi-bundle-entry-support-boundaries.csv). The package binary uses the
+bundled CLI; the ordinary package import uses unbundled `dist/index.js`. A direct
+RPC entry prefixes arguments, but later valid mode arguments can override it.
+Cache/loader/setup/main, JIT, virtual-module and MCP delegation retain exact gates;
+imported implementations remain pending. The
+[scope](pi-bundle-entry-support-scope.csv) distinguishes seven full bodies from
+hash-only/partial/metadata support. Twenty corruption controls pass with exact
+canonical archive and installed-tree identity; no audited module runs.
 
 [pi-llama-support.csv](pi-llama-support.csv) adds 107 qualified local-model,
 server, download and custom-view definitions across five complete bodies (1,325
@@ -1858,6 +1881,7 @@ python -B review/text-inventory/verify-license-source-text.py
 python -B review/text-inventory/verify-package-asset-text.py
 python -B review/text-inventory/verify-resource-control-assets.py
 python -B review/text-inventory/verify-icon-visual-observation.py
+python -B review/text-inventory/verify-pi-runtime-review-links.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules>
 python -B review/text-inventory/verify-installer-dependencies.py --cache-dir <archive-directory>
 python -B review/text-inventory/verify-flow.py
 python -B review/text-inventory/verify-flow-report.py
@@ -1944,6 +1968,7 @@ node review/text-inventory/verify-pi-llama-support.cjs --node-modules <root-node
 python -B review/text-inventory/verify-pi-cli-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-codemode-support.py --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --negative-controls 1
 python -B review/text-inventory/verify-pi-diagnostics-migration-share.py
+python -B review/text-inventory/verify-pi-bundle-entry-support.py
 node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
