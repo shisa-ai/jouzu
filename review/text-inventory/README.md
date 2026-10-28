@@ -130,6 +130,16 @@ plan before reading its receipt; failures in that preliminary work can prevent
 the later notices. Renderer branches without a current planner producer and
 settings-helper guards with proved caller preconditions remain excluded.
 
+[catalog-settings.csv](catalog-settings.csv) records 364 Settings/deferral
+occurrences: 232 catalog occurrences across 138 IDs, 77 fixed or protected
+key/format occurrences and 55 payload boundaries. The
+[scope table](catalog-settings-scope.csv) covers both complete bodies, actual
+selector states, reload/error replacement and language-change attempts. Root
+host observations are limited to streaming/tool signals; other injected activity
+states are explicitly qualified. Several helper calls omit the catalog argument,
+including logout formatting and login progress, and direct bearer-input English
+is retained. Source/account/token/sync helper bodies remain separate producers.
+
 [launcher.csv](launcher.csv) records 406 occurrences and boundary records across
 launcher dictionaries, frontend consumers, Rust failures and installer text.
 Inactive dictionary entries are identified explicitly. Thirty-six native or
@@ -288,6 +298,7 @@ python -B review/text-inventory/verify-doctor.py
 python -B review/text-inventory/verify-updater.py
 python -B review/text-inventory/verify-profiles.py
 python -B review/text-inventory/verify-profile-migration.py
+python -B review/text-inventory/verify-catalog-settings.py
 python -B review/text-inventory/verify-launcher.py
 python -B review/text-inventory/verify-launcher-helpers.py
 python -B review/text-inventory/verify-launcher-support.py
