@@ -115,7 +115,8 @@ for (const row of exclusions) {
   assert(parsed.nodes.some((node) => node.line === parsed.line && node.column === Number(row.source_column) && node.english === JSON.parse(row.source_text_json) && node.kind === row.source_kind), 'Exclusion source anchor mismatch: ' + row.item_id);
   assert(row.disposition && row.reason && row.evidence, 'Missing exclusion disposition: ' + row.item_id);
 }
-const dispositionedFiles = evidence.additional_source_review?.files || [];
+const dispositionedFiles = [...(evidence.additional_source_review?.files || []), ...(evidence.partial_source_review?.files || [])];
+assert(new Set(dispositionedFiles.map((record) => record.source)).size === dispositionedFiles.length, 'Duplicate reviewed-source records');
 for (const record of dispositionedFiles) {
   const parsed = source(record.source), sourceScope = scopes.find((row) => row.source === record.source);
   assert(sourceScope && record.sha256 === sourceScope.sha256, 'Reviewed source snapshot mismatch: ' + record.source);
@@ -138,7 +139,7 @@ for (const record of dispositionedFiles) {
   }
   assert([...inventory.values()].every((count) => count === 0), 'Unmatched fixed-text occurrence in reviewed file: ' + record.source);
 }
-assert(!dispositionedFiles.length || dispositionedFiles.length === 38, 'Finite source-review set changed unexpectedly');
+assert(!dispositionedFiles.length || dispositionedFiles.length === (evidence.counts.dispositioned_source_files || 38), 'Finite source-review set count differs from evidence');
 
 for (const row of scopes) {
   const parsed = parseLocation(row.source);

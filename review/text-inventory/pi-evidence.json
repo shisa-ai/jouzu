@@ -5,22 +5,25 @@
   "scope_file": "pi-scope.csv",
   "boundary_file": "pi-boundaries.csv",
   "counts": {
-    "rows": 615,
+    "rows": 644,
     "scopes": 69,
-    "proofs": 615,
+    "proofs": 644,
     "statusCounts": {
-      "partial": 12,
-      "source-read-text-dispositioned": 11,
+      "partial": 5,
+      "source-read-trust-errors-and-options": 1,
+      "source-read-text-dispositioned": 15,
       "finite-subset-reviewed": 19,
       "source-read-no-local-prose": 25,
       "source-read-native-startup-gated": 1,
+      "source-read-exported-consumer-pending": 2,
       "source-read-conditional-errors": 1
     },
     "sourceAnchorsVerified": true,
     "catalog_linked_rows": 155,
     "distinct_catalog_ids": 146,
-    "external_boundaries": 51,
-    "excluded_occurrences": 990
+    "external_boundaries": 67,
+    "excluded_occurrences": 1347,
+    "dispositioned_source_files": 45
   },
   "pin": {
     "source": "upstream/pi.lock.json",
@@ -718,10 +721,12 @@
     "Both exact 1.4.0 npm archives pass recomputed SHA512 integrity against package-lock.json; agent archive also matches upstream/pi.lock.json.",
     "All 69 scoped source files compared byte-for-byte between canonical archives and both installed trees: 66 unchanged, 3 differences exactly match pinned content-policy before/after hashes, zero unresolved differences.",
     "Read and dispositioned all 38 initially uninspected files; exact lexical exclusions, source triggers, caller routes and payload boundaries added.",
-    "All 1063 string/template occurrences across the 38 fully read source bodies partition into 73 new fixed source occurrences and 990 exact-line/column exclusions; omission negative control is rejected by verifier."
+    "All 1063 string/template occurrences across the 38 fully read source bodies partition into 73 new fixed source occurrences and 990 exact-line/column exclusions; omission negative control is rejected by verifier.",
+    "Read seven previously partial sources fully, traced native/startup/exported consumers, and recorded exact corrections to routing/trigger metadata without changing prior English/IDs.",
+    "All615 prior fixed IDs, English source values, catalog IDs, source locations and order preserved;78 existing rows have explicitly logged trigger/route/boundary/display-location metadata corrections. Prior51 boundaries and990 exclusions preserved exactly."
   ],
   "limits": [
-    "Initial 38 uninspected files have full local source-text dispositions. Original 19 finite-subset and 12 partial files retain their limits. No package-wide/whole-runtime completeness claim.",
+    "Initial 38 files plus seven previously partial sources have complete local source-text dispositions. Five partial sources and original19 finite subsets remain limited. Two exported resources have local text dispositions but external caller availability remains explicitly pending.",
     "Only two explicitly traced source error sentences from core/agent-session.js are inventoried. Remaining core errors and transitive dependency messages are pending.",
     "Fresh exact archives were verified against lockfile SHA512 integrity and compared with every scoped installed file in both trees. This establishes provenance for the 69 scoped files and dispositions their three pinned-patch differences. No full installed-package comparison or online git tag verification was performed.",
     "No runtime screenshots, locale rendering tests, cross-platform behavior tests or installations were performed. Native constructor and wrapper callsites establish conditional consumers; host policy can intercept routes.",
@@ -1764,16 +1769,1431 @@
   },
   "remaining_partial_sources": [
     "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
-    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/trust-manager.js",
-    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js",
-    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js",
-    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js",
     "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/settings-selector.js",
-    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/show-images-selector.js",
-    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/theme-selector.js",
     "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/tree-selector.js",
-    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/trust-selector.js",
     "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
     "npm:@earendil-works/pi-tui@1.4.0/dist/components/editor.js"
+  ],
+  "partial_source_review": {
+    "unit_source_commit": "65ea642f245757e5946734bc7dfb5a221cb9c9b9",
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/trust-manager.js",
+        "sha256": "ce8644574983b5f8a04059545305b63463557cdf8d09049c35590cb937a70c76",
+        "read_lines": [
+          1,
+          204
+        ],
+        "string_template_occurrences": 37,
+        "fixed_rows": 8,
+        "excluded_occurrences": 29,
+        "disposition": "source-read-trust-errors-and-options",
+        "source_review": "Read all trust option generation, JSON validation, locking, resource checks and store methods. Three local read/validation errors have a proven implicit-reload warning route. Final lock-error literal unreachable: loop attempts 1..10 always return or throw, including last attempt. Session-only labels belong to startup generic selector, not native /trust. External lock/OS diagnostics are boundaries."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js",
+        "sha256": "b1ab2e6efd1511f70f32a1c1530f01c782aa0e661ab9ead6e38a1c3735b667eb",
+        "read_lines": [
+          1,
+          361
+        ],
+        "string_template_occurrences": 87,
+        "fixed_rows": 19,
+        "excluded_occurrences": 68,
+        "disposition": "source-read-text-dispositioned",
+        "source_review": "Read full snapshot/refresh/timeout/disposal/search/scope/list/input code. Existing local labels/status/error templates fully dispositioned. Native fallback routing proven through Jouzu prompt handler false/rejection fallback; runtime/provider diagnostics and catalog IDs remain data."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js",
+        "sha256": "45d047b611f73dc92d87f7f353ba7a6092e13f18fe88573a4aa9e6ce0fbc0180",
+        "read_lines": [
+          1,
+          326
+        ],
+        "string_template_occurrences": 70,
+        "fixed_rows": 16,
+        "excluded_occurrences": 54,
+        "disposition": "source-read-text-dispositioned",
+        "source_review": "Read all enable/toggle/provider/reorder/normalization/header/list/footer/input code. Local fixed text fully dispositioned. Native fallback routing proven through Jouzu scoped command callback; refresh status sentence is owned by caller InteractiveMode."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js",
+        "sha256": "926e788829f9cb8eb1792f56b5b23e74f575db88606968a60948e2ce45806296",
+        "read_lines": [
+          1,
+          893
+        ],
+        "string_template_occurrences": 213,
+        "fixed_rows": 47,
+        "excluded_occurrences": 166,
+        "disposition": "source-read-text-dispositioned",
+        "source_review": "Read all date/tree/header/list/filter/delete/trash/unlink/rename/load/cancellation/scope/sort code. Every local human label/template and numeric age unit dispositioned. Both native /resume and startup --resume callers traced with differing rename/current-session capabilities; loader/trash/OS/rename details remain explicit boundaries."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/show-images-selector.js",
+        "sha256": "7d6649c2d890748a9d1a2d9d17f09874525aaf7adefec97a36c11bbd063b9ecd",
+        "read_lines": [
+          1,
+          39
+        ],
+        "string_template_occurrences": 10,
+        "fixed_rows": 4,
+        "excluded_occurrences": 6,
+        "disposition": "source-read-exported-consumer-pending",
+        "source_review": "Read complete exported resource. Four local labels/descriptions dispositioned; yes/no values are internal selection codes. No shipped constructor consumer found; external extension/SDK availability remains pending rather than asserted as normal product UI."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/theme-selector.js",
+        "sha256": "3681aa0b35fb3d72d09f6cceaeb19fa3cba7f98c32091c63138fbe051a99d37b",
+        "read_lines": [
+          1,
+          50
+        ],
+        "string_template_occurrences": 4,
+        "fixed_rows": 1,
+        "excluded_occurrences": 3,
+        "disposition": "source-read-exported-consumer-pending",
+        "source_review": "Read complete exported resource. Local current marker dispositioned and theme names caller/provider data; no shipped constructor consumer found. External extension/SDK availability remains pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/trust-selector.js",
+        "sha256": "e802fa526383a0b27b40db2fd74520caecc29bf12b2034b62c7cfd51ce3ebfcd",
+        "read_lines": [
+          1,
+          91
+        ],
+        "string_template_occurrences": 43,
+        "fixed_rows": 12,
+        "excluded_occurrences": 31,
+        "disposition": "source-read-text-dispositioned",
+        "source_review": "Read all decision formatting, option construction, saved selection, rendering and input code. Native /trust route traced; only persistent options constructed here, while session-only labels use startup generic selector. Adapter matches composed rows and deliberately preserves paths."
+      }
+    ],
+    "new_fixed_rows": 29,
+    "new_payload_boundaries": 16,
+    "new_exclusions": 357,
+    "corrected_existing_rows": [
+      {
+        "item_id": "pi.agent.show-images-selector.16.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/show-images-selector.js:16",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "trigger pending: exported selector constructor; no current native InteractiveMode construction callsite found; source ShowImagesSelectorComponent.constructor; no enclosing source branch",
+            "after": "Dependency resource: caller explicitly constructs exported ShowImagesSelectorComponent and renders it; constructor always includes Yes/No descriptions. currentValue changes preselection only. No shipped native new-constructor callsite found; invocation by external extension/SDK remains pending."
+          },
+          "consumer_evidence": {
+            "before": "Exported ShowImagesSelectorComponent -> SelectList; wrapper installs render patch: pi-ui-localization.ts:1051; no internal constructor call found in interactive-mode.js",
+            "after": "dist/index.js:43 -> components/index.js exports resource; show-images-selector constructor creates SelectList. Jouzu pi-ui-localization.ts:1050-1051 installs prototype localization only when resource is rendered during its operation."
+          },
+          "translation_boundary": {
+            "before": "catalog-rendered by packages/cli/src/pi-ui-localization.ts:614; canonical English is an adapter match value; interpolated payloads preserved",
+            "after": "Exported resource rendering is catalog-adapted if invoked during withPiUiLocalization. This does not establish default-product availability or an external caller; that boundary remains explicit."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.show-images-selector.16.2",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/show-images-selector.js:16",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "trigger pending: exported selector constructor; no current native InteractiveMode construction callsite found; source ShowImagesSelectorComponent.constructor; no enclosing source branch",
+            "after": "Dependency resource: caller explicitly constructs exported ShowImagesSelectorComponent and renders it; constructor always includes Yes/No descriptions. currentValue changes preselection only. No shipped native new-constructor callsite found; invocation by external extension/SDK remains pending."
+          },
+          "consumer_evidence": {
+            "before": "Exported ShowImagesSelectorComponent -> SelectList; wrapper installs render patch: pi-ui-localization.ts:1051; no internal constructor call found in interactive-mode.js",
+            "after": "dist/index.js:43 -> components/index.js exports resource; show-images-selector constructor creates SelectList. Jouzu pi-ui-localization.ts:1050-1051 installs prototype localization only when resource is rendered during its operation."
+          },
+          "translation_boundary": {
+            "before": "catalog-rendered by packages/cli/src/pi-ui-localization.ts:614; canonical English is an adapter match value; interpolated payloads preserved",
+            "after": "Exported resource rendering is catalog-adapted if invoked during withPiUiLocalization. This does not establish default-product availability or an external caller; that boundary remains explicit."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.show-images-selector.17.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/show-images-selector.js:17",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "trigger pending: exported selector constructor; no current native InteractiveMode construction callsite found; source ShowImagesSelectorComponent.constructor; no enclosing source branch",
+            "after": "Dependency resource: caller explicitly constructs exported ShowImagesSelectorComponent and renders it; constructor always includes Yes/No descriptions. currentValue changes preselection only. No shipped native new-constructor callsite found; invocation by external extension/SDK remains pending."
+          },
+          "consumer_evidence": {
+            "before": "Exported ShowImagesSelectorComponent -> SelectList; wrapper installs render patch: pi-ui-localization.ts:1051; no internal constructor call found in interactive-mode.js",
+            "after": "dist/index.js:43 -> components/index.js exports resource; show-images-selector constructor creates SelectList. Jouzu pi-ui-localization.ts:1050-1051 installs prototype localization only when resource is rendered during its operation."
+          },
+          "translation_boundary": {
+            "before": "catalog-rendered by packages/cli/src/pi-ui-localization.ts:614; canonical English is an adapter match value; interpolated payloads preserved",
+            "after": "Exported resource rendering is catalog-adapted if invoked during withPiUiLocalization. This does not establish default-product availability or an external caller; that boundary remains explicit."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.show-images-selector.17.2",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/show-images-selector.js:17",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "trigger pending: exported selector constructor; no current native InteractiveMode construction callsite found; source ShowImagesSelectorComponent.constructor; no enclosing source branch",
+            "after": "Dependency resource: caller explicitly constructs exported ShowImagesSelectorComponent and renders it; constructor always includes Yes/No descriptions. currentValue changes preselection only. No shipped native new-constructor callsite found; invocation by external extension/SDK remains pending."
+          },
+          "consumer_evidence": {
+            "before": "Exported ShowImagesSelectorComponent -> SelectList; wrapper installs render patch: pi-ui-localization.ts:1051; no internal constructor call found in interactive-mode.js",
+            "after": "dist/index.js:43 -> components/index.js exports resource; show-images-selector constructor creates SelectList. Jouzu pi-ui-localization.ts:1050-1051 installs prototype localization only when resource is rendered during its operation."
+          },
+          "translation_boundary": {
+            "before": "catalog-rendered by packages/cli/src/pi-ui-localization.ts:614; canonical English is an adapter match value; interpolated payloads preserved",
+            "after": "Exported resource rendering is catalog-adapted if invoked during withPiUiLocalization. This does not establish default-product availability or an external caller; that boundary remains explicit."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.theme-selector.22.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/theme-selector.js:22",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "trigger pending: exported selector constructor; current settings menu uses its own ThemeSubmenu; source ThemeSelectorComponent.constructor; only when name === currentTheme",
+            "after": "Dependency resource: caller explicitly constructs exported ThemeSelectorComponent; available theme name===currentTheme gets (current) description. No shipped native new-constructor callsite found; invocation by external extension/SDK remains pending."
+          },
+          "consumer_evidence": {
+            "before": "Exported ThemeSelectorComponent -> SelectList; wrapper installs render patch: pi-ui-localization.ts:1050; settings has its own theme submenu",
+            "after": "dist/index.js:43 -> components/index.js exports resource; theme-selector constructor creates SelectList. Jouzu pi-ui-localization.ts:1050-1051 installs prototype localization only when resource is rendered during its operation."
+          },
+          "translation_boundary": {
+            "before": "catalog-rendered by packages/cli/src/pi-ui-localization.ts:624; canonical English is an adapter match value; interpolated payloads preserved",
+            "after": "Exported resource rendering is catalog-adapted if invoked during withPiUiLocalization. This does not establish default-product availability or an external caller; that boundary remains explicit."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.trust-selector.8.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/trust-selector.js:8",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "trigger pending: trust component source/render branch traced; caller activation policy not fully traced; source formatDecision; only when decision === null",
+            "after": "Saved decision===null; formatDecision returns none for Saved decision row."
+          },
+          "consumer_evidence": {
+            "before": "TrustSelectorComponent builds saved/current decisions and key hints; options come from core/trust-manager.js:40; wrapper dynamically loads prototype at pi-ui-localization.ts:918",
+            "after": "Native /trust -> InteractiveMode:2632-2635/:4433-4452. Startup unresolved project trust -> core/project-trust.js:9-10 -> cli/project-trust.js:10-19 -> showStartupSelector (ExtensionSelector); startup uses includeSessionOnly=true, native /trust does not."
+          },
+          "translation_boundary": {
+            "before": "composed saved/current/option/hint row localized only when adapter matches at packages/cli/src/pi-ui-localization.ts:351; cwd and decision path preserved; English helper fragments are part of that composition",
+            "after": "Native TrustSelector composed title/saved/current/option/hint text is localized by pi-ui-localization.ts:351 and :1119; cwd and decision paths deliberately preserved. Session-only options are not constructed by this component."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.trust-selector.10.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/trust-selector.js:10",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "trigger pending: trust component source/render branch traced; caller activation policy not fully traced; source formatDecision; only when decision.decision",
+            "after": "Saved decision non-null AND decision.decision truthy; trusted helper fragment used in composed saved row."
+          },
+          "consumer_evidence": {
+            "before": "TrustSelectorComponent builds saved/current decisions and key hints; options come from core/trust-manager.js:40; wrapper dynamically loads prototype at pi-ui-localization.ts:918",
+            "after": "Native /trust -> InteractiveMode:2632-2635/:4433-4452. Startup unresolved project trust -> core/project-trust.js:9-10 -> cli/project-trust.js:10-19 -> showStartupSelector (ExtensionSelector); startup uses includeSessionOnly=true, native /trust does not."
+          },
+          "translation_boundary": {
+            "before": "composed saved/current/option/hint row localized only when adapter matches at packages/cli/src/pi-ui-localization.ts:351; cwd and decision path preserved; English helper fragments are part of that composition",
+            "after": "Native TrustSelector composed title/saved/current/option/hint text is localized by pi-ui-localization.ts:351 and :1119; cwd and decision paths deliberately preserved. Session-only options are not constructed by this component."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.trust-selector.10.2",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/trust-selector.js:10",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "trigger pending: trust component source/render branch traced; caller activation policy not fully traced; source formatDecision; only when not (decision.decision)",
+            "after": "Saved decision non-null AND decision.decision falsy; untrusted helper fragment used in composed saved row."
+          },
+          "consumer_evidence": {
+            "before": "TrustSelectorComponent builds saved/current decisions and key hints; options come from core/trust-manager.js:40; wrapper dynamically loads prototype at pi-ui-localization.ts:918",
+            "after": "Native /trust -> InteractiveMode:2632-2635/:4433-4452. Startup unresolved project trust -> core/project-trust.js:9-10 -> cli/project-trust.js:10-19 -> showStartupSelector (ExtensionSelector); startup uses includeSessionOnly=true, native /trust does not."
+          },
+          "translation_boundary": {
+            "before": "composed saved/current/option/hint row localized only when adapter matches at packages/cli/src/pi-ui-localization.ts:351; cwd and decision path preserved; English helper fragments are part of that composition",
+            "after": "Native TrustSelector composed title/saved/current/option/hint text is localized by pi-ui-localization.ts:351 and :1119; cwd and decision paths deliberately preserved. Session-only options are not constructed by this component."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.trust-selector.12.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/trust-selector.js:12",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "trigger pending: trust component source/render branch traced; caller activation policy not fully traced; source formatDecision; only when trustPath !== undefined && decision.path !== trustPath",
+            "after": "Saved decision non-null, trustPath!==undefined AND decision.path!==trustPath; saved row shows inherited decision path."
+          },
+          "consumer_evidence": {
+            "before": "TrustSelectorComponent builds saved/current decisions and key hints; options come from core/trust-manager.js:40; wrapper dynamically loads prototype at pi-ui-localization.ts:918",
+            "after": "Native /trust -> InteractiveMode:2632-2635/:4433-4452. Startup unresolved project trust -> core/project-trust.js:9-10 -> cli/project-trust.js:10-19 -> showStartupSelector (ExtensionSelector); startup uses includeSessionOnly=true, native /trust does not."
+          },
+          "translation_boundary": {
+            "before": "composed saved/current/option/hint row localized only when adapter matches at packages/cli/src/pi-ui-localization.ts:351; cwd and decision path preserved; English helper fragments are part of that composition",
+            "after": "Native TrustSelector composed title/saved/current/option/hint text is localized by pi-ui-localization.ts:351 and :1119; cwd and decision paths deliberately preserved. Session-only options are not constructed by this component."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.trust-selector.32.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/trust-selector.js:32",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "trigger pending: trust component source/render branch traced; caller activation policy not fully traced; source TrustSelectorComponent.constructor; no enclosing source branch",
+            "after": "Native /trust constructor always adds Project trust title after trustStore.getEntry(cwd) succeeds."
+          },
+          "consumer_evidence": {
+            "before": "TrustSelectorComponent builds saved/current decisions and key hints; options come from core/trust-manager.js:40; wrapper dynamically loads prototype at pi-ui-localization.ts:918",
+            "after": "Native /trust -> InteractiveMode:2632-2635/:4433-4452. Startup unresolved project trust -> core/project-trust.js:9-10 -> cli/project-trust.js:10-19 -> showStartupSelector (ExtensionSelector); startup uses includeSessionOnly=true, native /trust does not."
+          },
+          "translation_boundary": {
+            "before": "composed saved/current/option/hint row localized only when adapter matches at packages/cli/src/pi-ui-localization.ts:351; cwd and decision path preserved; English helper fragments are part of that composition",
+            "after": "Native TrustSelector composed title/saved/current/option/hint text is localized by pi-ui-localization.ts:351 and :1119; cwd and decision paths deliberately preserved. Session-only options are not constructed by this component."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.trust-selector.35.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/trust-selector.js:35",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "trigger pending: trust component source/render branch traced; caller activation policy not fully traced; source TrustSelectorComponent.constructor; no enclosing source branch",
+            "after": "Native /trust constructor always adds composed saved-decision row; null/trusted/untrusted/inherited variants depend on savedDecision."
+          },
+          "consumer_evidence": {
+            "before": "TrustSelectorComponent builds saved/current decisions and key hints; options come from core/trust-manager.js:40; wrapper dynamically loads prototype at pi-ui-localization.ts:918",
+            "after": "Native /trust -> InteractiveMode:2632-2635/:4433-4452. Startup unresolved project trust -> core/project-trust.js:9-10 -> cli/project-trust.js:10-19 -> showStartupSelector (ExtensionSelector); startup uses includeSessionOnly=true, native /trust does not."
+          },
+          "translation_boundary": {
+            "before": "composed saved/current/option/hint row localized only when adapter matches at packages/cli/src/pi-ui-localization.ts:351; cwd and decision path preserved; English helper fragments are part of that composition",
+            "after": "Native TrustSelector composed title/saved/current/option/hint text is localized by pi-ui-localization.ts:351 and :1119; cwd and decision paths deliberately preserved. Session-only options are not constructed by this component."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.trust-selector.36.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/trust-selector.js:36",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "trigger pending: trust component source/render branch traced; caller activation policy not fully traced; source TrustSelectorComponent.constructor; no enclosing source branch",
+            "after": "Native /trust constructor always adds current-session row, selecting trusted/untrusted from options.projectTrusted."
+          },
+          "consumer_evidence": {
+            "before": "TrustSelectorComponent builds saved/current decisions and key hints; options come from core/trust-manager.js:40; wrapper dynamically loads prototype at pi-ui-localization.ts:918",
+            "after": "Native /trust -> InteractiveMode:2632-2635/:4433-4452. Startup unresolved project trust -> core/project-trust.js:9-10 -> cli/project-trust.js:10-19 -> showStartupSelector (ExtensionSelector); startup uses includeSessionOnly=true, native /trust does not."
+          },
+          "translation_boundary": {
+            "before": "composed saved/current/option/hint row localized only when adapter matches at packages/cli/src/pi-ui-localization.ts:351; cwd and decision path preserved; English helper fragments are part of that composition",
+            "after": "Native TrustSelector composed title/saved/current/option/hint text is localized by pi-ui-localization.ts:351 and :1119; cwd and decision paths deliberately preserved. Session-only options are not constructed by this component."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.trust-selector.36.2",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/trust-selector.js:36",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "trigger pending: trust component source/render branch traced; caller activation policy not fully traced; source TrustSelectorComponent.constructor; only when options.projectTrusted",
+            "after": "options.projectTrusted truthy; Current session row uses trusted fragment."
+          },
+          "consumer_evidence": {
+            "before": "TrustSelectorComponent builds saved/current decisions and key hints; options come from core/trust-manager.js:40; wrapper dynamically loads prototype at pi-ui-localization.ts:918",
+            "after": "Native /trust -> InteractiveMode:2632-2635/:4433-4452. Startup unresolved project trust -> core/project-trust.js:9-10 -> cli/project-trust.js:10-19 -> showStartupSelector (ExtensionSelector); startup uses includeSessionOnly=true, native /trust does not."
+          },
+          "translation_boundary": {
+            "before": "composed saved/current/option/hint row localized only when adapter matches at packages/cli/src/pi-ui-localization.ts:351; cwd and decision path preserved; English helper fragments are part of that composition",
+            "after": "Native TrustSelector composed title/saved/current/option/hint text is localized by pi-ui-localization.ts:351 and :1119; cwd and decision paths deliberately preserved. Session-only options are not constructed by this component."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.trust-selector.36.3",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/trust-selector.js:36",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "trigger pending: trust component source/render branch traced; caller activation policy not fully traced; source TrustSelectorComponent.constructor; only when not (options.projectTrusted)",
+            "after": "options.projectTrusted falsy; Current session row uses untrusted fragment."
+          },
+          "consumer_evidence": {
+            "before": "TrustSelectorComponent builds saved/current decisions and key hints; options come from core/trust-manager.js:40; wrapper dynamically loads prototype at pi-ui-localization.ts:918",
+            "after": "Native /trust -> InteractiveMode:2632-2635/:4433-4452. Startup unresolved project trust -> core/project-trust.js:9-10 -> cli/project-trust.js:10-19 -> showStartupSelector (ExtensionSelector); startup uses includeSessionOnly=true, native /trust does not."
+          },
+          "translation_boundary": {
+            "before": "composed saved/current/option/hint row localized only when adapter matches at packages/cli/src/pi-ui-localization.ts:351; cwd and decision path preserved; English helper fragments are part of that composition",
+            "after": "Native TrustSelector composed title/saved/current/option/hint text is localized by pi-ui-localization.ts:351 and :1119; cwd and decision paths deliberately preserved. Session-only options are not constructed by this component."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.trust-selector.41.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/trust-selector.js:41",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "TrustSelectorComponent constructor renders fixed navigate action in bottom key hint",
+            "after": "Native /trust constructor always adds ↑↓ navigate footer action."
+          },
+          "consumer_evidence": {
+            "before": "TrustSelectorComponent builds saved/current decisions and key hints; options come from core/trust-manager.js:40; wrapper dynamically loads prototype at pi-ui-localization.ts:918",
+            "after": "Native /trust -> InteractiveMode:2632-2635/:4433-4452. Startup unresolved project trust -> core/project-trust.js:9-10 -> cli/project-trust.js:10-19 -> showStartupSelector (ExtensionSelector); startup uses includeSessionOnly=true, native /trust does not."
+          },
+          "translation_boundary": {
+            "before": "composed saved/current/option/hint row localized only when adapter matches at packages/cli/src/pi-ui-localization.ts:351; cwd and decision path preserved; English helper fragments are part of that composition",
+            "after": "Native TrustSelector composed title/saved/current/option/hint text is localized by pi-ui-localization.ts:351 and :1119; cwd and decision paths deliberately preserved. Session-only options are not constructed by this component."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.trust-selector.43.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/trust-selector.js:43",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "trigger pending: trust component source/render branch traced; caller activation policy not fully traced; source TrustSelectorComponent.constructor; no enclosing source branch",
+            "after": "Native /trust constructor always adds configured tui.select.confirm save footer action."
+          },
+          "consumer_evidence": {
+            "before": "TrustSelectorComponent builds saved/current decisions and key hints; options come from core/trust-manager.js:40; wrapper dynamically loads prototype at pi-ui-localization.ts:918",
+            "after": "Native /trust -> InteractiveMode:2632-2635/:4433-4452. Startup unresolved project trust -> core/project-trust.js:9-10 -> cli/project-trust.js:10-19 -> showStartupSelector (ExtensionSelector); startup uses includeSessionOnly=true, native /trust does not."
+          },
+          "translation_boundary": {
+            "before": "composed saved/current/option/hint row localized only when adapter matches at packages/cli/src/pi-ui-localization.ts:351; cwd and decision path preserved; English helper fragments are part of that composition",
+            "after": "Native TrustSelector composed title/saved/current/option/hint text is localized by pi-ui-localization.ts:351 and :1119; cwd and decision paths deliberately preserved. Session-only options are not constructed by this component."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.trust-selector.45.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/trust-selector.js:45",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "trigger pending: trust component source/render branch traced; caller activation policy not fully traced; source TrustSelectorComponent.constructor; no enclosing source branch",
+            "after": "Native /trust constructor always adds configured tui.select.cancel cancel footer action."
+          },
+          "consumer_evidence": {
+            "before": "TrustSelectorComponent builds saved/current decisions and key hints; options come from core/trust-manager.js:40; wrapper dynamically loads prototype at pi-ui-localization.ts:918",
+            "after": "Native /trust -> InteractiveMode:2632-2635/:4433-4452. Startup unresolved project trust -> core/project-trust.js:9-10 -> cli/project-trust.js:10-19 -> showStartupSelector (ExtensionSelector); startup uses includeSessionOnly=true, native /trust does not."
+          },
+          "translation_boundary": {
+            "before": "composed saved/current/option/hint row localized only when adapter matches at packages/cli/src/pi-ui-localization.ts:351; cwd and decision path preserved; English helper fragments are part of that composition",
+            "after": "Native TrustSelector composed title/saved/current/option/hint text is localized by pi-ui-localization.ts:351 and :1119; cwd and decision paths deliberately preserved. Session-only options are not constructed by this component."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.34.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:34",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "display_location": {
+            "before": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:34",
+            "after": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:298"
+          },
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent; no enclosing source branch",
+            "after": "Initial constructor snapshot is rendered before asynchronous refresh finishes; refreshStatusMessage initially Refreshing model catalogs…."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.67.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:67",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent.constructor; only when not (scopedModels.length > 0)",
+            "after": "Constructor scopedModels.length===0; configured-provider hint replaces scope widgets."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.90.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:90",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent.constructor; only when this.onSelectAsDefaultCallback",
+            "after": "Constructor onSelectAsDefaultCallback truthy; native caller supplies save-default callback."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.138.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:138",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "display_location": {
+            "before": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:138",
+            "after": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:285"
+          },
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent.refreshModels; only when result.aborted && timedOut",
+            "after": "refreshModels resolves, !closed, result.aborted && timedOut (15-second timer fired)."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.141.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:141",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "display_location": {
+            "before": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:141",
+            "after": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:285"
+          },
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent.refreshModels; only when not (result.aborted && timedOut) AND result.errors.size === 1",
+            "after": "refreshModels resolves, !closed, not timeout branch, result.errors.size===1."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.144.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:144",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "display_location": {
+            "before": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:144",
+            "after": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:285"
+          },
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent.refreshModels; only when not (result.aborted && timedOut) AND not (result.errors.size === 1) AND result.errors.size > 1",
+            "after": "refreshModels resolves, !closed, not timeout branch, result.errors.size>1."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.149.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:149",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "display_location": {
+            "before": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:149",
+            "after": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:298"
+          },
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent.refreshModels; only when not (result.aborted && timedOut) AND not (result.errors.size === 1) AND not (result.errors.size > 1) AND !this.errorMessage",
+            "after": "refreshModels resolves, !closed, no result.errors and modelRuntime.getError() falsy."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.162.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:162",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "display_location": {
+            "before": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:162",
+            "after": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:285"
+          },
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent.refreshModels; only when enclosing try block throws AND timedOut",
+            "after": "refreshModels throws/rejects, !closed AND timedOut=true."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.163.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:163",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "display_location": {
+            "before": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:163",
+            "after": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:285"
+          },
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent.refreshModels; only when enclosing try block throws AND not (timedOut)",
+            "after": "refreshModels throws/rejects, !closed AND timedOut=false; thrown error detail interpolated."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.201.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:201",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent.getScopeText; only when this.scope === \"all\"",
+            "after": "Scope widget exists (initial scopedModels.length>0); this.scope===\"all\" selects this styled occurrence."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.201.2",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:201",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent.getScopeText; only when not (this.scope === \"all\")",
+            "after": "Scope widget exists (initial scopedModels.length>0); this.scope!==\"all\" selects this styled occurrence."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.202.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:202",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent.getScopeText; only when this.scope === \"scoped\"",
+            "after": "Scope widget exists (initial scopedModels.length>0); this.scope===\"scoped\" selects this styled occurrence."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.202.2",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:202",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent.getScopeText; only when not (this.scope === \"scoped\")",
+            "after": "Scope widget exists (initial scopedModels.length>0); this.scope!==\"scoped\" selects this styled occurrence."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.203.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:203",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent.getScopeText; no enclosing source branch",
+            "after": "Scope header exists only when initial scopedModels.length>0; fixed Scope: prefix is always part of it."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.206.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:206",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent.getScopeHintText; no enclosing source branch",
+            "after": "Scope hint exists only when initial scopedModels.length>0; Tab switches scope if scopedModelItems.length>0."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.206.2",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:206",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent.getScopeHintText; no enclosing source branch",
+            "after": "Scope hint exists only when initial scopedModels.length>0; Tab switches scope if scopedModelItems.length>0."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.267.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:267",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent.updateList; only when isDefault",
+            "after": "Visible model row satisfies defaultModel.provider===item.model.provider AND defaultModel.id===item.model.id."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.289.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:289",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent.updateList; only when not (this.errorMessage) AND this.filteredModels.length === 0",
+            "after": "updateList has no errorMessage AND filteredModels.length===0."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.model-selector.294.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/model-selector.js:294",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native model selector fallback opened; Jouzu default model-picker route has a host hook; fallback activation pending; source ModelSelectorComponent.updateList; only when not (this.errorMessage) AND not (this.filteredModels.length === 0)",
+            "after": "updateList has no errorMessage AND filteredModels.length>0; selected model name follows caption."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /model with no exact match or app.model.select -> InteractiveMode:2460/:4321-4340/:4474. Jouzu prompt-frame.ts:342-350/:413-448 intercepts model selection; native fallback runs only when callback returns false or throws, or editor hook is absent. Native widget then renders source model/status text. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.scoped-models-selector.98.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js:98",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native scoped-model selector fallback opened; Jouzu scoped-model route has a host hook; fallback activation pending; source ScopedModelsSelectorComponent.constructor; no enclosing source branch",
+            "after": "ScopedModelsSelectorComponent constructor always adds this header/instruction after native fallback route opens."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /scoped-models -> InteractiveMode:2554-2557/:4526; Jouzu prompt-frame.ts:422-434 falls back to native only if onScopedModelsCommand returns false/rejects or hook absent. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.scoped-models-selector.99.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js:99",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native scoped-model selector fallback opened; Jouzu scoped-model route has a host hook; fallback activation pending; source ScopedModelsSelectorComponent.constructor; no enclosing source branch",
+            "after": "ScopedModelsSelectorComponent constructor always adds this header/instruction after native fallback route opens."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /scoped-models -> InteractiveMode:2554-2557/:4526; Jouzu prompt-frame.ts:422-434 falls back to native only if onScopedModelsCommand returns false/rejects or hook absent. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.scoped-models-selector.152.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js:152",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native scoped-model selector fallback opened; Jouzu scoped-model route has a host hook; fallback activation pending; source ScopedModelsSelectorComponent.getFooterText; only when allEnabled",
+            "after": "Footer rendered with enabledIds===null (all models enabled)."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /scoped-models -> InteractiveMode:2554-2557/:4526; Jouzu prompt-frame.ts:422-434 falls back to native only if onScopedModelsCommand returns false/rejects or hook absent. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.scoped-models-selector.153.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js:153",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native scoped-model selector fallback opened; Jouzu scoped-model route has a host hook; fallback activation pending; source ScopedModelsSelectorComponent.getFooterText; only when not (allEnabled)",
+            "after": "Footer enabledIds!==null; count template uses enabled available IDs and optional unavailable suffix."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /scoped-models -> InteractiveMode:2554-2557/:4526; Jouzu prompt-frame.ts:422-434 falls back to native only if onScopedModelsCommand returns false/rejects or hook absent. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.scoped-models-selector.153.2",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js:153",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native scoped-model selector fallback opened; Jouzu scoped-model route has a host hook; fallback activation pending; source ScopedModelsSelectorComponent.getFooterText; only when not (allEnabled) AND unavailableCount",
+            "after": "Footer enabledIds!==null AND unavailableCount>0 (configured IDs absent from modelsById); suffix counts missing models."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /scoped-models -> InteractiveMode:2554-2557/:4526; Jouzu prompt-frame.ts:422-434 falls back to native only if onScopedModelsCommand returns false/rejects or hook absent. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.scoped-models-selector.155.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js:155",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native scoped-model selector fallback opened; Jouzu scoped-model route has a host hook; fallback activation pending; source ScopedModelsSelectorComponent.getFooterText; no enclosing source branch",
+            "after": "Scoped model footer always lists this configured action binding while selector is open; it is rebuilt on refresh/save."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /scoped-models -> InteractiveMode:2554-2557/:4526; Jouzu prompt-frame.ts:422-434 falls back to native only if onScopedModelsCommand returns false/rejects or hook absent. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.scoped-models-selector.156.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js:156",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native scoped-model selector fallback opened; Jouzu scoped-model route has a host hook; fallback activation pending; source ScopedModelsSelectorComponent.getFooterText; no enclosing source branch",
+            "after": "Scoped model footer always lists this configured action binding while selector is open; it is rebuilt on refresh/save."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /scoped-models -> InteractiveMode:2554-2557/:4526; Jouzu prompt-frame.ts:422-434 falls back to native only if onScopedModelsCommand returns false/rejects or hook absent. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.scoped-models-selector.157.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js:157",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native scoped-model selector fallback opened; Jouzu scoped-model route has a host hook; fallback activation pending; source ScopedModelsSelectorComponent.getFooterText; no enclosing source branch",
+            "after": "Scoped model footer always lists this configured action binding while selector is open; it is rebuilt on refresh/save."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /scoped-models -> InteractiveMode:2554-2557/:4526; Jouzu prompt-frame.ts:422-434 falls back to native only if onScopedModelsCommand returns false/rejects or hook absent. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.scoped-models-selector.158.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js:158",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native scoped-model selector fallback opened; Jouzu scoped-model route has a host hook; fallback activation pending; source ScopedModelsSelectorComponent.getFooterText; no enclosing source branch",
+            "after": "Scoped model footer always lists this configured action binding while selector is open; it is rebuilt on refresh/save."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /scoped-models -> InteractiveMode:2554-2557/:4526; Jouzu prompt-frame.ts:422-434 falls back to native only if onScopedModelsCommand returns false/rejects or hook absent. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.scoped-models-selector.159.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js:159",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native scoped-model selector fallback opened; Jouzu scoped-model route has a host hook; fallback activation pending; source ScopedModelsSelectorComponent.getFooterText; no enclosing source branch",
+            "after": "Scoped model footer always lists this configured action binding while selector is open; it is rebuilt on refresh/save."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /scoped-models -> InteractiveMode:2554-2557/:4526; Jouzu prompt-frame.ts:422-434 falls back to native only if onScopedModelsCommand returns false/rejects or hook absent. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.scoped-models-selector.160.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js:160",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native scoped-model selector fallback opened; Jouzu scoped-model route has a host hook; fallback activation pending; source ScopedModelsSelectorComponent.getFooterText; no enclosing source branch",
+            "after": "Scoped model footer always lists this configured action binding while selector is open; it is rebuilt on refresh/save."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /scoped-models -> InteractiveMode:2554-2557/:4526; Jouzu prompt-frame.ts:422-434 falls back to native only if onScopedModelsCommand returns false/rejects or hook absent. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.scoped-models-selector.164.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js:164",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native scoped-model selector fallback opened; Jouzu scoped-model route has a host hook; fallback activation pending; source ScopedModelsSelectorComponent.getFooterText; only when this.isDirty",
+            "after": "Footer isDirty===true after toggle/reorder/enable-all/clear/provider operation; flag is cleared by app.models.save handler."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /scoped-models -> InteractiveMode:2554-2557/:4526; Jouzu prompt-frame.ts:422-434 falls back to native only if onScopedModelsCommand returns false/rejects or hook absent. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.scoped-models-selector.185.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js:185",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native scoped-model selector fallback opened; Jouzu scoped-model route has a host hook; fallback activation pending; source ScopedModelsSelectorComponent.updateList; only when this.filteredItems.length === 0",
+            "after": "updateList sees filteredItems.length===0 (no items or search has no match); empty label returned immediately."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /scoped-models -> InteractiveMode:2554-2557/:4526; Jouzu prompt-frame.ts:422-434 falls back to native only if onScopedModelsCommand returns false/rejects or hook absent. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.scoped-models-selector.197.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js:197",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native scoped-model selector fallback opened; Jouzu scoped-model route has a host hook; fallback activation pending; source ScopedModelsSelectorComponent.updateList; only when not (item.model)",
+            "after": "Visible model-list item has no model object in modelsById (configured unavailable ID)."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /scoped-models -> InteractiveMode:2554-2557/:4526; Jouzu prompt-frame.ts:422-434 falls back to native only if onScopedModelsCommand returns false/rejects or hook absent. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.scoped-models-selector.208.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js:208",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native scoped-model selector fallback opened; Jouzu scoped-model route has a host hook; fallback activation pending; source ScopedModelsSelectorComponent.updateList; only when this.filteredItems.length > 0 AND selected.model",
+            "after": "filteredItems.length>0 AND selected.model truthy; display selected.model.name after Model Name: caption."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /scoped-models -> InteractiveMode:2554-2557/:4526; Jouzu prompt-frame.ts:422-434 falls back to native only if onScopedModelsCommand returns false/rejects or hook absent. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.scoped-models-selector.208.2",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/scoped-models-selector.js:208",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native scoped-model selector fallback opened; Jouzu scoped-model route has a host hook; fallback activation pending; source ScopedModelsSelectorComponent.updateList; only when this.filteredItems.length > 0 AND not (selected.model)",
+            "after": "filteredItems.length>0 AND selected.model falsy; selected item has unavailable configured ID."
+          },
+          "consumer_evidence": {
+            "before": "Pi native selector fallback; Jouzu model picker and scoped-model hooks installed in packages/cli/src/main-cli.ts:724 and :726",
+            "after": "Native /scoped-models -> InteractiveMode:2554-2557/:4526; Jouzu prompt-frame.ts:422-434 falls back to native only if onScopedModelsCommand returns false/rejects or hook absent. Extension shortcut must not consume the input before host/native fallback."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.109.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:109",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionSelectorHeader.render; only when this.scope === \"current\"",
+            "after": "Header scope===current; native and startup selectors begin in current scope."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.109.2",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:109",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionSelectorHeader.render; only when not (this.scope === \"current\")",
+            "after": "Header scope!==current (all); Tab toggles scope and may start all-session loader."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.112.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:112",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionSelectorHeader.render; no enclosing source branch",
+            "after": "Header visible in list mode; Sort: prefix is always composed with Threaded/Recent/Fuzzy sort label."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.114.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:114",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionSelectorHeader.render; no enclosing source branch",
+            "after": "Header visible in list mode; Name: prefix is always composed with All/Named name filter."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.134.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:134",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionSelectorHeader.render; only when this.confirmingDeletePath !== null",
+            "after": "Header confirmingDeletePath!==null after user starts deleting a selected non-current session; confirm/cancel bindings intercept input until resolved."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.134.2",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:134",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionSelectorHeader.render; only when this.confirmingDeletePath !== null",
+            "after": "Header confirmingDeletePath!==null after user starts deleting a selected non-current session; confirm/cancel bindings intercept input until resolved."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.134.3",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:134",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionSelectorHeader.render; only when this.confirmingDeletePath !== null",
+            "after": "Header confirmingDeletePath!==null after user starts deleting a selected non-current session; confirm/cancel bindings intercept input until resolved."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.146.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:146",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionSelectorHeader.render; only when not (this.confirmingDeletePath !== null) AND not (this.statusMessage)",
+            "after": "Header in list mode has confirmingDeletePath===null AND statusMessage falsy; shows scope binding and regex/exact-search instructions."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.146.2",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:146",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionSelectorHeader.render; only when not (this.confirmingDeletePath !== null) AND not (this.statusMessage)",
+            "after": "Header in list mode has confirmingDeletePath===null AND statusMessage falsy; shows scope binding and regex/exact-search instructions."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.338.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:338",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "display_location": {
+            "before": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:338",
+            "after": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:140"
+          },
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionList.startDeleteConfirmationForSelectedSession; only when this.isCurrentSessionPath(selected.session.path)",
+            "after": "User requests deletion (app.session.delete or deleteNoninvasive with empty query), selected session exists and canonical path equals provided currentSessionFilePath. onError forwards this sentence to header for 3000 ms. Startup --resume provides no currentSessionFilePath, so this branch cannot identify active session there."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.359.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:359",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionList.render; only when this.filteredSessions.length === 0 AND this.nameFilter === \"named\" AND this.showCwd",
+            "after": "filteredSessions.length===0 AND nameFilter===named AND showCwd=true (all scope)."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.362.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:362",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionList.render; only when this.filteredSessions.length === 0 AND this.nameFilter === \"named\" AND not (this.showCwd)",
+            "after": "filteredSessions.length===0 AND nameFilter===named AND showCwd=false (current folder)."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.367.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:367",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionList.render; only when this.filteredSessions.length === 0 AND not (this.nameFilter === \"named\") AND this.showCwd",
+            "after": "filteredSessions.length===0 AND nameFilter!==named AND showCwd=true."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.371.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:371",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionList.render; only when this.filteredSessions.length === 0 AND not (this.nameFilter === \"named\") AND not (this.showCwd)",
+            "after": "filteredSessions.length===0 AND nameFilter!==named AND showCwd=false."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.567.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:567",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "display_location": {
+            "before": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:567",
+            "after": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:140"
+          },
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source deleteSessionFile; no enclosing source branch",
+            "after": "Session delete confirmed; trash helper fails/nonzero with file still present, unlink fallback also throws, and trash produced error/stderr detail; prefix is included in Failed to delete status payload."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.717.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:717",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "display_location": {
+            "before": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:717",
+            "after": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:140"
+          },
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionSelectorComponent.constructor; only when result.ok AND result.method === \"trash\"",
+            "after": "Confirmed delete returns ok=true, method===trash (trash status0 OR file absent after command); header shows info for 2000 ms."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.717.2",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:717",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "display_location": {
+            "before": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:717",
+            "after": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:140"
+          },
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionSelectorComponent.constructor; only when result.ok AND not (result.method === \"trash\")",
+            "after": "Confirmed delete returns ok=true, method===unlink after trash did not succeed; header shows info for 2000 ms."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.722.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:722",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "display_location": {
+            "before": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:722",
+            "after": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:140"
+          },
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionSelectorComponent.constructor; only when not (result.ok)",
+            "after": "Defensive deletion fallback: result.ok=false AND result.error is null/undefined. Shipped deleteSessionFile failure paths normally supply a string error; no ordinary nullish-error producer identified."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.723.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:723",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "display_location": {
+            "before": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:723",
+            "after": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:140"
+          },
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionSelectorComponent.constructor; only when not (result.ok)",
+            "after": "Confirmed delete: trash did not succeed and file remained; unlink fallback throws, yielding ok=false and string error detail. Header shows error for 3000 ms."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.748.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:748",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionSelectorComponent.enterRenameMode; no enclosing source branch",
+            "after": "app.session.rename invoked with selected session, rename callback supplied, and current scope not loading; rename mode replaces normal header."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.session-selector.854.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:854",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "display_location": {
+            "before": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:854",
+            "after": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/session-selector.js:140"
+          },
+          "trigger": {
+            "before": "Native resume selector rendered; full route/callback trigger audit pending beyond explicit source branches; source SessionSelectorComponent.loadScope; only when enclosing try block throws",
+            "after": "Current/all loader rejects, its controller still active, AND loaded scope===this.scope. Header receives error for 4000 ms; stale/aborted load results are ignored."
+          },
+          "consumer_evidence": {
+            "before": "Native InteractiveMode selector: interactive-mode.js:4768",
+            "after": "Native /resume -> InteractiveMode:2679/:4766-4791; startup --resume -> main.js:328-337 -> cli/session-picker.js:15-31. Native route supplies rename callback/currentSessionFile; startup route supplies neither and hides rename hint. Header/list output is width-truncated."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.trust-manager.43.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/trust-manager.js:43",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Project trust options assembled for trust selector; full trust activation policy pending; source getProjectTrustOptions; no enclosing source branch",
+            "after": "Always inserted by getProjectTrustOptions; native /trust and unresolved startup trust prompt both include it. Startup selection requires trustOverride undefined, trust-requiring resources, no deciding extension result, no saved trust decision, defaultProjectTrust=ask and context.hasUI=true; default CLI selector also requires interactive mode."
+          },
+          "consumer_evidence": {
+            "before": "getProjectTrustOptions -> TrustSelectorComponent.updateList at components/trust-selector.js:67",
+            "after": "Native /trust -> InteractiveMode:2632-2635/:4433-4452. Startup unresolved project trust -> core/project-trust.js:9-10 -> cli/project-trust.js:10-19 -> showStartupSelector (ExtensionSelector); startup uses includeSessionOnly=true, native /trust does not."
+          },
+          "translation_boundary": {
+            "before": "catalog-rendered by packages/cli/src/pi-ui-localization.ts:351; canonical English is an adapter match value; interpolated payloads preserved",
+            "after": "Native /trust option rows are matched/localized by pi-ui-localization.ts:351; the same option in generic startup ExtensionSelector is not covered by that patch. Path payload stays unchanged."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.trust-manager.48.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/trust-manager.js:48",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Project trust options assembled for trust selector; full trust activation policy pending; source getProjectTrustOptions; only when parentPath !== undefined",
+            "after": "getProjectTrustParentPath(cwd)!==undefined (cwd is not filesystem root); native /trust and unresolved startup trust prompt may include it. Startup selection requires trustOverride undefined, trust-requiring resources, no deciding extension result, no saved trust decision, defaultProjectTrust=ask and context.hasUI=true; default CLI selector also requires interactive mode."
+          },
+          "consumer_evidence": {
+            "before": "getProjectTrustOptions -> TrustSelectorComponent.updateList at components/trust-selector.js:67",
+            "after": "Native /trust -> InteractiveMode:2632-2635/:4433-4452. Startup unresolved project trust -> core/project-trust.js:9-10 -> cli/project-trust.js:10-19 -> showStartupSelector (ExtensionSelector); startup uses includeSessionOnly=true, native /trust does not."
+          },
+          "translation_boundary": {
+            "before": "catalog-rendered by packages/cli/src/pi-ui-localization.ts:351; canonical English is an adapter match value; interpolated payloads preserved",
+            "after": "Native /trust option rows are matched/localized by pi-ui-localization.ts:351; the same option in generic startup ExtensionSelector is not covered by that patch. Path payload stays unchanged."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.trust-manager.58.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/trust-manager.js:58",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Project trust options assembled for trust selector; full trust activation policy pending; source getProjectTrustOptions; only when options?.includeSessionOnly",
+            "after": "options.includeSessionOnly truthy. Native /trust omits this option; core/project-trust.js:9 enables it for unresolved startup prompt. Startup selection requires trustOverride undefined, trust-requiring resources, no deciding extension result, no saved trust decision, defaultProjectTrust=ask and context.hasUI=true; default CLI selector also requires interactive mode."
+          },
+          "consumer_evidence": {
+            "before": "getProjectTrustOptions -> TrustSelectorComponent.updateList at components/trust-selector.js:67",
+            "after": "Native /trust -> InteractiveMode:2632-2635/:4433-4452. Startup unresolved project trust -> core/project-trust.js:9-10 -> cli/project-trust.js:10-19 -> showStartupSelector (ExtensionSelector); startup uses includeSessionOnly=true, native /trust does not."
+          },
+          "translation_boundary": {
+            "before": "catalog-rendered by packages/cli/src/pi-ui-localization.ts:351; canonical English is an adapter match value; interpolated payloads preserved",
+            "after": "Catalog ID exists, but this source option is displayed by generic startup ExtensionSelectorComponent, not native TrustSelectorComponent; pi-ui-localization.ts does not patch ExtensionSelector, so no adapter localization is established here."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.trust-manager.61.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/trust-manager.js:61",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Project trust options assembled for trust selector; full trust activation policy pending; source getProjectTrustOptions; no enclosing source branch",
+            "after": "Always inserted by getProjectTrustOptions; native /trust and unresolved startup trust prompt both include it. Startup selection requires trustOverride undefined, trust-requiring resources, no deciding extension result, no saved trust decision, defaultProjectTrust=ask and context.hasUI=true; default CLI selector also requires interactive mode."
+          },
+          "consumer_evidence": {
+            "before": "getProjectTrustOptions -> TrustSelectorComponent.updateList at components/trust-selector.js:67",
+            "after": "Native /trust -> InteractiveMode:2632-2635/:4433-4452. Startup unresolved project trust -> core/project-trust.js:9-10 -> cli/project-trust.js:10-19 -> showStartupSelector (ExtensionSelector); startup uses includeSessionOnly=true, native /trust does not."
+          },
+          "translation_boundary": {
+            "before": "catalog-rendered by packages/cli/src/pi-ui-localization.ts:351; canonical English is an adapter match value; interpolated payloads preserved",
+            "after": "Native /trust option rows are matched/localized by pi-ui-localization.ts:351; the same option in generic startup ExtensionSelector is not covered by that patch. Path payload stays unchanged."
+          }
+        }
+      },
+      {
+        "item_id": "pi.agent.trust-manager.67.1",
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/trust-manager.js:67",
+        "reason": "Verified complete-source/caller/branch read refines metadata only. Core trust startup vs native consumer and exported resource boundaries corrected; source English and identity retained.",
+        "changed_fields": {
+          "trigger": {
+            "before": "Project trust options assembled for trust selector; full trust activation policy pending; source getProjectTrustOptions; only when options?.includeSessionOnly",
+            "after": "options.includeSessionOnly truthy. Native /trust omits this option; core/project-trust.js:9 enables it for unresolved startup prompt. Startup selection requires trustOverride undefined, trust-requiring resources, no deciding extension result, no saved trust decision, defaultProjectTrust=ask and context.hasUI=true; default CLI selector also requires interactive mode."
+          },
+          "consumer_evidence": {
+            "before": "getProjectTrustOptions -> TrustSelectorComponent.updateList at components/trust-selector.js:67",
+            "after": "Native /trust -> InteractiveMode:2632-2635/:4433-4452. Startup unresolved project trust -> core/project-trust.js:9-10 -> cli/project-trust.js:10-19 -> showStartupSelector (ExtensionSelector); startup uses includeSessionOnly=true, native /trust does not."
+          },
+          "translation_boundary": {
+            "before": "catalog-rendered by packages/cli/src/pi-ui-localization.ts:351; canonical English is an adapter match value; interpolated payloads preserved",
+            "after": "Catalog ID exists, but this source option is displayed by generic startup ExtensionSelectorComponent, not native TrustSelectorComponent; pi-ui-localization.ts does not patch ExtensionSelector, so no adapter localization is established here."
+          }
+        }
+      }
+    ],
+    "read_method": "Complete source bodies plus source-defined caller/terminal routing read manually; lexical ledger cross-checks, not a substitute for semantic review.",
+    "preserved_prior_fixed_rows": 615,
+    "source_identity_changes": 0
+  },
+  "exported_consumer_pending_sources": [
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/show-images-selector.js",
+    "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/theme-selector.js"
   ]
 }
