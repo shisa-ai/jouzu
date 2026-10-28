@@ -3,6 +3,17 @@
 Base source: [GitHub main at `346d1e4`](https://github.com/shisa-ai/jouzu/tree/346d1e481757a55eb62fc066e43bbc7999b8e6dd).
 Fetched follow-on target: [GitHub main at `1fda3eb`](https://github.com/shisa-ai/jouzu/tree/1fda3eb161b042aae66e4adcc07319f69946dadd).
 
+For the fetched-main target, start with
+[main-update-catalogs.csv](main-update-catalogs.csv): all **1,808 English Fluent
+definitions**, with exact patterns, attributes, variables, comments and immutable
+target source locations. All 1,804 base patterns/attributes/variables are identical;
+four definitions are new. The [scope](main-update-catalogs-scope.csv) pins all ten
+English catalog bodies, and the [snapshot](main-update-catalogs-snapshot.json)
+records exact base correspondence and 122 bounded target occurrence links across
+108 IDs. Base occurrence owners remain navigable through `catalog-links.csv`;
+source identity does not retarget their caller evidence. Four corruption/omission
+controls pass. Complete target caller/runtime visibility remains open.
+
 [main-update-paths.csv](main-update-paths.csv) records all 59 changed paths across
 fourteen commits: 48 modified and eleven added. The target has 1,217 blobs;
 [main-update-unchanged.csv](main-update-unchanged.csv) proves identical Git mode
@@ -118,7 +129,7 @@ including errors and diagnostics. It is being assembled for a translation pass.
 The current snapshot is **incomplete**; catalog membership, source references and
 runtime visibility are separate claims.
 
-Start with [catalogs.csv](catalogs.csv). It contains all **1,804 English Fluent
+The base export [catalogs.csv](catalogs.csv) contains all **1,804 English Fluent
 messages** at the base source commit, with exact English patterns, file and line,
 attributes, variables, and trigger status. **110** messages currently have
 source-traced trigger descriptions: CLI help, argument-parser errors, and
@@ -1593,6 +1604,7 @@ python -B review/text-inventory/verify-catalog.py
 python -B review/text-inventory/catalog-links.py
 python -B review/text-inventory/source-census.py
 python -B review/text-inventory/verify-main-update-census.py
+node review/text-inventory/verify-main-update-catalogs.cjs
 python -B review/text-inventory/verify-main-update-documentation.py
 python -B review/text-inventory/verify-main-update-model-text.py
 python -B review/text-inventory/verify-main-update-startup-auth.py
