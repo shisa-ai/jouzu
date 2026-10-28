@@ -268,6 +268,18 @@ separate delivery conditions. The [evidence](pi-runtime-evidence.json) verifies
 two archive-identical bodies and five pinned patch outputs. Imported auth,
 session, package, viewer and engine-owned diagnostics remain separate producers.
 
+[pi-auth-model.csv](pi-auth-model.csv) adds 64 inherited authentication/model
+occurrences and 19 [payload boundaries](pi-auth-model-boundaries.csv). Seven
+complete bodies and all 354 lexical occurrences are covered in the
+[scope](pi-auth-model-scope.csv) and 290
+[exclusions](pi-auth-model-exclusions.csv). Auth checks replace some resolver or
+read-only storage details with a status code; credential-printing commands retain
+their errors. Virtual-model routes, optional SDK returns and an exported restore
+helper have separate activation conditions. The
+[evidence](pi-auth-model-evidence.json) verifies six archive-identical bodies and
+one pinned patch output; imported provider, catalog and native-lock errors remain
+separate producers. Credential values and remote account content are protected.
+
 [flow-display.csv](flow-display.csv) records 94 occurrences in the Flow status
 extension and message renderer: 57 direct wording occurrences, 29 catalog
 occurrences and eight dynamic boundaries. It includes notices, invalid-command
@@ -427,6 +439,7 @@ python -B review/text-inventory/verify-textguard-dependencies.py
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>
 node review/text-inventory/verify-pi-tools.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-runtime.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-auth-model.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
 The exporter uses `@fluent/syntax` and TypeScript from the repository dependency

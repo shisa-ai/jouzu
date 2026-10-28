@@ -1,0 +1,610 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "74fc6aa0bee307080e2d2a7a4746b12f1b5b5a5b",
+  "inventory_file": "pi-auth-model.csv",
+  "scope_file": "pi-auth-model-scope.csv",
+  "boundary_file": "pi-auth-model-boundaries.csv",
+  "exclusion_file": "pi-auth-model-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "counts": {
+    "rows": 64,
+    "scopes": 7,
+    "proofs": 64,
+    "statusCounts": {
+      "source-read-conditional-auth-model": 7
+    },
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "external_boundaries": 19,
+    "excluded_occurrences": 290,
+    "dispositioned_source_files": 7
+  },
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/cli.ts",
+      "sha256": "2588ef3f3f7fc17a37af509068b9714d34b8794d14b70d37617fdbb72998ded7"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    },
+    {
+      "source": "packages/cli/src/model-thinking-startup.ts",
+      "sha256": "edfdc0e34a48277225ae8f0c5ce48aca761d5ffaea27e9a3685455c972ab9c38"
+    },
+    {
+      "source": "packages/cli/src/subagents/worker.ts",
+      "sha256": "4d1f96fd9adbcc47adefd290fd4dc033e9f6dd15f1db58a94e56af3a7a583019"
+    },
+    {
+      "source": "packages/cli/src/textguard-runtime.ts",
+      "sha256": "3c425dc423b780545530f141abc1f7327a49570d7f34a438e8647dbc3db01476"
+    },
+    {
+      "source": "packages/cli/src/classic-host-policy.ts",
+      "sha256": "53181fdf481113b5e2eae162cc6e9f440650e87f55a03dc921baadeab0e2f367"
+    },
+    {
+      "source": "packages/cli/src/human-messages.ts",
+      "sha256": "3e6e2bcc8c416fb12318a68cedc29057e940ee92ac7af8ef39359c58dafe378d"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/loader.js",
+      "sha256": "d6e2d202c2b32e724bfcc270d942b1a7278a1ffebd19a2138bb94c43f8972d57",
+      "cli_nested_sha256": "d6e2d202c2b32e724bfcc270d942b1a7278a1ffebd19a2138bb94c43f8972d57",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          193,
+          210
+        ],
+        [
+          400,
+          414
+        ],
+        [
+          443,
+          457
+        ]
+      ],
+      "purpose": "Actual caller/consumer/suppression support read; not standalone full-English inventory or canonical archive proof of this transitive module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/extensions/runner.js",
+      "sha256": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7",
+      "cli_nested_sha256": "5f0b44963ac637e3be3a16c8066abd5ce1018c7a3b66aa91c51b612d5302eed7",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          249,
+          337
+        ],
+        [
+          843,
+          861
+        ]
+      ],
+      "purpose": "Actual caller/consumer/suppression support read; not standalone full-English inventory or canonical archive proof of this transitive module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/main.js",
+      "sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "cli_nested_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          94,
+          170
+        ],
+        [
+          356,
+          389
+        ],
+        [
+          659,
+          677
+        ],
+        [
+          744,
+          802
+        ]
+      ],
+      "purpose": "Actual caller/consumer/suppression support read; not standalone full-English inventory or canonical archive proof of this transitive module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+      "sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          217,
+          262
+        ],
+        [
+          492,
+          520
+        ],
+        [
+          1784,
+          1810
+        ],
+        [
+          2397,
+          2410
+        ],
+        [
+          2889,
+          2900
+        ]
+      ],
+      "purpose": "Actual caller/consumer/suppression support read; not standalone full-English inventory or canonical archive proof of this transitive module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session-services.js",
+      "sha256": "2dbf32d506bb6d765224450602fb1a85be1ff3d182cca6d8b25eef6cf1416858",
+      "cli_nested_sha256": "2dbf32d506bb6d765224450602fb1a85be1ff3d182cca6d8b25eef6cf1416858",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          76,
+          112
+        ]
+      ],
+      "purpose": "Actual caller/consumer/suppression support read; not standalone full-English inventory or canonical archive proof of this transitive module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/sdk.js",
+      "sha256": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609",
+      "cli_nested_sha256": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          90,
+          122
+        ]
+      ],
+      "purpose": "Actual caller/consumer/suppression support read; not standalone full-English inventory or canonical archive proof of this transitive module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/runtime-credentials.js",
+      "sha256": "2bf389ca2b04bd4dcee56433ca845cd8d9d96d0ccf84d2d0e9ad2a5e3957bda1",
+      "cli_nested_sha256": "2bf389ca2b04bd4dcee56433ca845cd8d9d96d0ccf84d2d0e9ad2a5e3957bda1",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          37
+        ]
+      ],
+      "purpose": "Actual caller/consumer/suppression support read; not standalone full-English inventory or canonical archive proof of this transitive module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/bug-report.js",
+      "sha256": "9bcf5a3673e3fb2626976b8e3adb1c563f45a5bc45dab0cacb6fd0713ddf8d40",
+      "cli_nested_sha256": "9bcf5a3673e3fb2626976b8e3adb1c563f45a5bc45dab0cacb6fd0713ddf8d40",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          98,
+          113
+        ]
+      ],
+      "purpose": "Actual caller/consumer/suppression support read; not standalone full-English inventory or canonical archive proof of this transitive module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/list-models.js",
+      "sha256": "7775957478370706d9859b6c992b74b5f24e6807254dba1a53531132a9240bad",
+      "cli_nested_sha256": "7775957478370706d9859b6c992b74b5f24e6807254dba1a53531132a9240bad",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          85
+        ]
+      ],
+      "purpose": "Actual caller/consumer/suppression support read; not standalone full-English inventory or canonical archive proof of this transitive module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1575,
+          1588
+        ],
+        [
+          908,
+          934
+        ],
+        [
+          4482,
+          4496
+        ],
+        [
+          4827,
+          4858
+        ],
+        [
+          5028,
+          5049
+        ],
+        [
+          5184,
+          5206
+        ],
+        [
+          5274,
+          5319
+        ],
+        [
+          5425,
+          5438
+        ]
+      ],
+      "purpose": "Actual caller/consumer/suppression support read; not standalone full-English inventory or canonical archive proof of this transitive module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/oauth-selector.js",
+      "sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+      "cli_nested_sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          31
+        ]
+      ],
+      "purpose": "Actual caller/consumer/suppression support read; not standalone full-English inventory or canonical archive proof of this transitive module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js",
+      "sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          105,
+          139
+        ]
+      ],
+      "purpose": "Actual caller/consumer/suppression support read; not standalone full-English inventory or canonical archive proof of this transitive module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js",
+      "sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          279,
+          286
+        ],
+        [
+          376,
+          415
+        ],
+        [
+          450,
+          466
+        ],
+        [
+          780,
+          787
+        ]
+      ],
+      "purpose": "Actual caller/consumer/suppression support read; not standalone full-English inventory or canonical archive proof of this transitive module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/extensions/codemode/execute.js",
+      "sha256": "8eeffb5184f5129e84258f7e9861097f8cae5cc8850c8058f267e4683d13b10a",
+      "cli_nested_sha256": "8eeffb5184f5129e84258f7e9861097f8cae5cc8850c8058f267e4683d13b10a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          671,
+          737
+        ]
+      ],
+      "purpose": "Actual caller/consumer/suppression support read; not standalone full-English inventory or canonical archive proof of this transitive module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/lazy.js",
+      "sha256": "2dcf7b7d3d0ffc77b2be37b2a7ad184503a2b680b159e44c283738b28118aebe",
+      "cli_nested_sha256": "2dcf7b7d3d0ffc77b2be37b2a7ad184503a2b680b159e44c283738b28118aebe",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          71
+        ]
+      ],
+      "purpose": "Actual caller/consumer/suppression support read; not standalone full-English inventory or canonical archive proof of this transitive module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/model-operations.js",
+      "sha256": "56264f6289f4822db8bed91a2e47aee387bfa70383b724e58f6aa6b96a0f4358",
+      "cli_nested_sha256": "56264f6289f4822db8bed91a2e47aee387bfa70383b724e58f6aa6b96a0f4358",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          53
+        ]
+      ],
+      "purpose": "Actual caller/consumer/suppression support read; not standalone full-English inventory or canonical archive proof of this transitive module."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/models-error.js",
+      "sha256": "7c8f802c2c77671f4b1721a07f3fefd007a2b332b222cd644ba285b3a74d9693",
+      "cli_nested_sha256": "7c8f802c2c77671f4b1721a07f3fefd007a2b332b222cd644ba285b3a74d9693",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          19
+        ]
+      ],
+      "purpose": "Actual caller/consumer/suppression support read; not standalone full-English inventory or canonical archive proof of this transitive module."
+    }
+  ],
+  "scope_census": {
+    "package": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0",
+    "exact_files": [
+      "dist/cli/auth-check.js",
+      "dist/cli/auth-command.js",
+      "dist/cli/credential-print.js",
+      "dist/core/auth-guidance.js",
+      "dist/core/auth-storage.js",
+      "dist/core/model-resolver.js",
+      "dist/core/model-runtime.js"
+    ]
+  },
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/auth-command.js",
+        "sha256": "c212933e6afc64c011ef065b8588ce9e67e6f29a383e096c77a264cebdfe404a",
+        "read_lines": [
+          1,
+          103
+        ],
+        "string_template_occurrences": 44,
+        "fixed_rows": 14,
+        "excluded_occurrences": 30,
+        "disposition": "source-read-conditional-auth-model",
+        "source_review": "Full 103-line body read manually; 44 exact string/template occurrences partitioned into 14 fixed and 30 exclusions. Native auth command/check suppression, model diagnostics, owned adapters and TUI/print/JSON/RPC/API consumers traced. Full local lexical closure only; transitive provider/config/storage/catalog/serializer/native/extension graph remains open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/auth-check.js",
+        "sha256": "15f1601346f1ee9da3d560b133fb65aa9654fa002a5474224913e6ca99517aed",
+        "read_lines": [
+          1,
+          50
+        ],
+        "string_template_occurrences": 19,
+        "fixed_rows": 0,
+        "excluded_occurrences": 19,
+        "disposition": "source-read-conditional-auth-model",
+        "source_review": "Full 50-line body read manually; 19 exact string/template occurrences partitioned into 0 fixed and 19 exclusions. Native auth command/check suppression, model diagnostics, owned adapters and TUI/print/JSON/RPC/API consumers traced. Full local lexical closure only; transitive provider/config/storage/catalog/serializer/native/extension graph remains open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/credential-print.js",
+        "sha256": "3f40aaf4101369f9b55d342b0bdb7911fe5c092b4db1a5e48b09fc29fa8d8654",
+        "read_lines": [
+          1,
+          76
+        ],
+        "string_template_occurrences": 24,
+        "fixed_rows": 8,
+        "excluded_occurrences": 16,
+        "disposition": "source-read-conditional-auth-model",
+        "source_review": "Full 76-line body read manually; 24 exact string/template occurrences partitioned into 8 fixed and 16 exclusions. Native auth command/check suppression, model diagnostics, owned adapters and TUI/print/JSON/RPC/API consumers traced. Full local lexical closure only; transitive provider/config/storage/catalog/serializer/native/extension graph remains open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/auth-guidance.js",
+        "sha256": "990e8295236ab4c87763b8e47e0ffa20c2958fd1827d17caf5ddf36d601e5fb4",
+        "read_lines": [
+          1,
+          21
+        ],
+        "string_template_occurrences": 13,
+        "fixed_rows": 5,
+        "excluded_occurrences": 8,
+        "disposition": "source-read-conditional-auth-model",
+        "source_review": "Full 21-line body read manually; 13 exact string/template occurrences partitioned into 5 fixed and 8 exclusions. Native auth command/check suppression, model diagnostics, owned adapters and TUI/print/JSON/RPC/API consumers traced. Full local lexical closure only; transitive provider/config/storage/catalog/serializer/native/extension graph remains open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/auth-storage.js",
+        "sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+        "read_lines": [
+          1,
+          433
+        ],
+        "string_template_occurrences": 44,
+        "fixed_rows": 0,
+        "excluded_occurrences": 44,
+        "disposition": "source-read-conditional-auth-model",
+        "source_review": "Full 433-line body read manually; 44 exact string/template occurrences partitioned into 0 fixed and 44 exclusions. Native auth command/check suppression, model diagnostics, owned adapters and TUI/print/JSON/RPC/API consumers traced. Full local lexical closure only; transitive provider/config/storage/catalog/serializer/native/extension graph remains open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-runtime.js",
+        "sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+        "read_lines": [
+          1,
+          796
+        ],
+        "string_template_occurrences": 75,
+        "fixed_rows": 19,
+        "excluded_occurrences": 56,
+        "disposition": "source-read-conditional-auth-model",
+        "source_review": "Full 796-line body read manually; 75 exact string/template occurrences partitioned into 19 fixed and 56 exclusions. Native auth command/check suppression, model diagnostics, owned adapters and TUI/print/JSON/RPC/API consumers traced. Full local lexical closure only; transitive provider/config/storage/catalog/serializer/native/extension graph remains open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-resolver.js",
+        "sha256": "5b7172bd17f1a3c61e4e5187b400966f471e344623389b8876b099b4948ae1b3",
+        "read_lines": [
+          1,
+          485
+        ],
+        "string_template_occurrences": 135,
+        "fixed_rows": 18,
+        "excluded_occurrences": 117,
+        "disposition": "source-read-conditional-auth-model",
+        "source_review": "Full 485-line body read manually; 135 exact string/template occurrences partitioned into 18 fixed and 117 exclusions. Native auth command/check suppression, model diagnostics, owned adapters and TUI/print/JSON/RPC/API consumers traced. Full local lexical closure only; transitive provider/config/storage/catalog/serializer/native/extension graph remains open."
+      }
+    ],
+    "scope": "Exactly seven requested auth/credential/model/guidance bodies; full1964-line manual read before extraction. Local whole bodies partitioned; broader package and imported producer graph remains open."
+  },
+  "remaining_partial_sources": [],
+  "verification_script": "review/text-inventory/verify-pi-auth-model.cjs",
+  "checks": [
+    "Exact AST lexical partition/source anchors/hashes for all354 occurrences in seven whole bodies; individual fixed text triggers and caller/suppression routing.",
+    "Archive lock SHA512/package versions/two installed trees/pinned source deviations checked read-only; no dependency/product/runtime mutation or execution.",
+    "Four in-memory negative controls reject omitted exclusion, changed fixed English, changed consumer hash and changed canonical archive proof."
+  ],
+  "limits": [
+    "Seven full local source bodies only. Provider/config/models store/remote catalog/auth/lock/fs/native parser/serializer/extension graph not closed by supporting reads.",
+    "Native auth-check detailed errors and ReadOnlyAuthStorage JSON failures collapse to invalid_state; duplicate validator unknown-option preempted; readonly mutations and unresolved resolver fallbacks remain exact exclusions with pending activation/consumer.",
+    "Optional deferred API errors, image/classifier model-operation result diagnostics and restore fallback return fields retained as exact exclusions; no default terminal publisher assumed. Exported restore helper console branches fixed with explicit external activation, no shipped caller found.",
+    "Jouzu configures a contentPolicy object, so ordinary AgentSession virtual routing is guarded before ModelRuntime.resolveModel errors. Stock unguarded agent/direct runtime SDK routes remain conditional; arbitrary router diagnostics external.",
+    "Protocol readiness/type/status/model/provider/auth/flag identities remain protected. Credential/header/access token/environment values never read or collected; only shipped source files audited.",
+    "No canonical matching constants misclassified as untranslated prose; selected OAuth adapter configured suffix localization does not translate runtime/stored/environment source payloads. No catalog ID directly wraps these local source occurrences.",
+    "String literals decoded by TypeScript; template bodies retain exact source escapes/interpolations without outer backticks. Exclusions JSON-encode exact text including whitespace.",
+    "No online git/tag check, full package graph inspection, live credentials/network login, runtime screenshots/locale rendering or cross-platform execution claimed."
+  ],
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/cli/auth-command.js",
+            "archive_sha256": "c212933e6afc64c011ef065b8588ce9e67e6f29a383e096c77a264cebdfe404a",
+            "root_sha256": "c212933e6afc64c011ef065b8588ce9e67e6f29a383e096c77a264cebdfe404a",
+            "cli_nested_sha256": "c212933e6afc64c011ef065b8588ce9e67e6f29a383e096c77a264cebdfe404a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/cli/auth-check.js",
+            "archive_sha256": "15f1601346f1ee9da3d560b133fb65aa9654fa002a5474224913e6ca99517aed",
+            "root_sha256": "15f1601346f1ee9da3d560b133fb65aa9654fa002a5474224913e6ca99517aed",
+            "cli_nested_sha256": "15f1601346f1ee9da3d560b133fb65aa9654fa002a5474224913e6ca99517aed",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/cli/credential-print.js",
+            "archive_sha256": "3f40aaf4101369f9b55d342b0bdb7911fe5c092b4db1a5e48b09fc29fa8d8654",
+            "root_sha256": "3f40aaf4101369f9b55d342b0bdb7911fe5c092b4db1a5e48b09fc29fa8d8654",
+            "cli_nested_sha256": "3f40aaf4101369f9b55d342b0bdb7911fe5c092b4db1a5e48b09fc29fa8d8654",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/auth-guidance.js",
+            "archive_sha256": "990e8295236ab4c87763b8e47e0ffa20c2958fd1827d17caf5ddf36d601e5fb4",
+            "root_sha256": "990e8295236ab4c87763b8e47e0ffa20c2958fd1827d17caf5ddf36d601e5fb4",
+            "cli_nested_sha256": "990e8295236ab4c87763b8e47e0ffa20c2958fd1827d17caf5ddf36d601e5fb4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/auth-storage.js",
+            "archive_sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+            "root_sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+            "cli_nested_sha256": "59791d54e50bfb86f0bb9e8dcee776547ae1744fc4aeb2fe14ff6610c1f5c567",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/model-runtime.js",
+            "archive_sha256": "44d8017928eff6721d5a56b4e71f98bcafb124f5aa6e7d3f016491e11fcf6461",
+            "root_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+            "cli_nested_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/model-resolver.js",
+            "archive_sha256": "5b7172bd17f1a3c61e4e5187b400966f471e344623389b8876b099b4948ae1b3",
+            "root_sha256": "5b7172bd17f1a3c61e4e5187b400966f471e344623389b8876b099b4948ae1b3",
+            "cli_nested_sha256": "5b7172bd17f1a3c61e4e5187b400966f471e344623389b8876b099b4948ae1b3",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": []
+      }
+    ],
+    "scoped_file_count": 7,
+    "byte_identical_scope_files": 6,
+    "pinned_patch_scope_files": 1,
+    "unresolved_scope_differences": 0
+  },
+  "archive_artifacts": [
+    {
+      "flag": "agent-archive",
+      "artifact": "test-results/earendil-works-pi-coding-agent-1.4.0.tgz",
+      "sha512": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg=="
+    },
+    {
+      "flag": "tui-archive",
+      "artifact": "test-results/earendil-works-pi-tui-1.4.0.tgz",
+      "sha512": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg=="
+    }
+  ]
+}
