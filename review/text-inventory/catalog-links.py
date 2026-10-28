@@ -15,7 +15,7 @@ HERE = Path(__file__).resolve().parent
 PARTITIONS = [
     'acp.csv', 'startup-language.csv', 'cli-entry.csv', 'doctor.csv', 'updater.csv',
     'flow-display.csv', 'flow-report.csv', 'flow-storage.csv', 'pi.csv',
-    'launcher.csv', 'launcher-helpers.csv', 'installer-dependencies.csv', 'python-console.csv',
+    'launcher.csv', 'launcher-helpers.csv', 'launcher-support.csv', 'installer-dependencies.csv', 'python-console.csv',
 ]
 COLUMNS = ['message_id', 'english_location', 'primary_trigger_status',
            'primary_context_records', 'partition_occurrence_records',

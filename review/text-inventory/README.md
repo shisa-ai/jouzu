@@ -134,6 +134,17 @@ verbosity and forwarded in verbose builds. Native Windows resource wording and
 remote response payloads remain explicit external boundaries. These are source
 traces; no installer, compiler or native dialog was executed.
 
+[launcher-support.csv](launcher-support.csv) adds 107 support records: 53 prose
+or template occurrences, two protected values, 34 metadata/key/path/envelope
+occurrences and 18 delivery boundaries. The
+[scope table](launcher-support-scope.csv) covers all 20 native modules' non-test
+bodies, eight frontend support modules, one helper and partial consumers. It
+supersedes earlier pending support dispositions for those same source hashes.
+Rows distinguish retained log lines, raw crash-card content, clipboard export
+and backend report facts. The Report action opens the issues page; the backend
+draft-facts API has no active frontend caller. Log retention and crash-file
+limits are qualified by their actual best-effort I/O and naming behavior.
+
 [pi.csv](pi.csv) records 657 inherited Pi source occurrences, with per-occurrence
 conditions and 155 links to Jouzu catalog IDs.
 [pi-boundaries.csv](pi-boundaries.csv) records 112 dynamic content boundaries.
@@ -220,6 +231,7 @@ python -B review/text-inventory/verify-doctor.py
 python -B review/text-inventory/verify-updater.py
 python -B review/text-inventory/verify-launcher.py
 python -B review/text-inventory/verify-launcher-helpers.py
+python -B review/text-inventory/verify-launcher-support.py
 python -B review/text-inventory/verify-installer-dependencies.py --cache-dir <archive-directory>
 python -B review/text-inventory/verify-flow.py
 python -B review/text-inventory/verify-flow-report.py
