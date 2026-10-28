@@ -48,11 +48,21 @@ areas or certify runtime layout or translation quality.
 The older [Japanese review](../ja-localization/README.md) retains its own source
 pin and translations; its counts must not be added to this inventory.
 
+[acp.csv](acp.csv) contains 104 ACP occurrences: 62 fixed wording occurrences
+(including catalog and SDK prefixes) and 42 dynamic payload boundaries. Each
+records the protocol field or stderr sink and its trigger. Protocol fields are
+potentially visible: each ACP client controls which fields it renders.
+[acp-scope.csv](acp-scope.csv) pins the four reviewed ACP source modules and
+supporting files. SDK routing, schema and framing text remains pending beyond
+the specifically listed prefixes; suppressed internal labels and guards are
+recorded separately.
+
 Recheck this catalog snapshot from the repository root:
 
 ```sh
 node review/text-inventory/catalog-export.mjs
 python -B review/text-inventory/verify-catalog.py
+python -B review/text-inventory/verify-acp.py
 ```
 
 The exporter uses `@fluent/syntax` and TypeScript from the repository dependency
@@ -62,3 +72,7 @@ regenerates them after source and context review. The independent verifier uses
 the earlier lossless Python Fluent parser and checks exact values, attributes,
 source anchors, source hashes and accounting. These checks validate the recorded
 data, not complete semantic or runtime coverage.
+
+The ACP verifier also needs the exact `@agentclientprotocol/sdk` `2.0.2` source
+package. Its default is the root `node_modules`; `--sdk-root <package-directory>`
+can point to another copy. It reads files without installing or executing Jouzu.
