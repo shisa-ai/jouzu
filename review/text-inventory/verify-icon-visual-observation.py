@@ -24,6 +24,27 @@ frame = body[offset:offset + size]
 assert frame.startswith(b'\x89PNG\r\n\x1a\n')
 assert hashlib.sha256(frame).hexdigest() == record['frame_sha256'] == '4dc6c8925c2e0371b90f30c47688089ae09f11c177f00dae8efc2a14ca2846e9'
 assert record['fixed_English_sentence_observed'] is False
-assert 'other eight DIB frames' in record['observation_extent']
+assert record['observation_extent'].startswith('All nine source frames observed:')
 assert record['visible_content'] == 'Dotted JZ brand mark: cyan dots form J on the left; purple/pink dots form Z on the right.'
-print('PASS exact Git/ICO/embedded PNG provenance; visual observation is bounded to one frame, not repeated by this source-only check.')
+observations = record['additional_DIB_frame_observations']
+assert len(observations) == 8
+for index, item in enumerate(observations):
+    w, h, _, _, _, depth, size, offset = struct.unpack_from('<BBBBHHII', body, 6 + 16 * index)
+    part = body[offset:offset + size]
+    assert struct.unpack_from('<IiiHHI', part) == (40, w, 2 * h, 1, 32, 0)
+    pixels = part[40:40 + w * h * 4]
+    mask = part[40 + w * h * 4:]
+    assert len(mask) == ((w + 31) // 32) * 4 * h
+    rgba = bytearray()
+    for y in range(h - 1, -1, -1):
+        row = pixels[y * w * 4:(y + 1) * w * 4]
+        for x in range(w):
+            blue, green, red, alpha = row[4 * x:4 * x + 4]
+            rgba.extend((red, green, blue, alpha))
+    assert (item['frame_index'], item['width'], item['height'], item['source_offset'], item['source_length']) == (index, w, h, offset, size)
+    for key, value in [('source_frame_sha256', part), ('source_BGRA_sha256', pixels),
+                       ('AND_mask_sha256', mask), ('decoded_RGBA_sha256', rgba)]:
+        assert hashlib.sha256(value).hexdigest() == item[key]
+    assert item['fixed_English_sentence_observed'] is False
+    assert item['visible_content'] == 'Dotted cyan J and purple/pink Z brand mark; no English sentence observed.'
+print('PASS exact Git/ICO/PNG and eight BGRA/RGBA/mask provenance records; nine visual observations are not repeated by this source-only check.')

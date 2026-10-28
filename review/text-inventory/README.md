@@ -565,10 +565,12 @@ record names, with exact suffix/key precedence and threshold conditions. The
 114,704 bytes into nine frames and checks PNG structure/CRCs. The image viewer
 could not read the ICO directly. A separate
 [visual observation](icon-visual-observation.json) views the unchanged embedded
-256-pixel PNG: a dotted JZ brand mark, with no English sentence observed. The
-other eight DIB frames and runtime selection remain unknown. Seven structural
-corruption controls pass; the observation checker verifies frame provenance and
-does not repeat the visual judgment or execute native rendering.
+256-pixel PNG and all eight decoded DIB color/alpha planes: dotted JZ brand marks,
+with no English sentence observed. Lossless decoding preserves pixel values;
+legacy masks have separate hashes. Native frame selection/compositing remains
+unproved. Seven structural corruption controls pass; the observation checker
+verifies nine frame/pixel provenance records without repeating visual judgment
+or executing native rendering.
 
 [package-asset-text.csv](package-asset-text.csv) separates sixteen package,
 product, window-title and SVG annotations across eleven complete metadata/asset
