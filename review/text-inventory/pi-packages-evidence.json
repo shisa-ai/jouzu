@@ -1,0 +1,666 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "e051b439fcf7c352bde2c0ca746fa2b87164ca47",
+  "inventory_file": "pi-packages.csv",
+  "scope_file": "pi-packages-scope.csv",
+  "boundary_file": "pi-packages-boundaries.csv",
+  "exclusion_file": "pi-packages-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "counts": {
+    "rows": 114,
+    "scopes": 6,
+    "proofs": 114,
+    "statusCounts": {
+      "source-read-conditional-packages": 6
+    },
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "external_boundaries": 24,
+    "excluded_occurrences": 715,
+    "dispositioned_source_files": 6
+  },
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/args.ts",
+      "sha256": "ba6b4a474a3fb7ddd859efdefc6217335283e11fbc298487db9c4bbfd11d8cce"
+    },
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/cli.ts",
+      "sha256": "2588ef3f3f7fc17a37af509068b9714d34b8794d14b70d37617fdbb72998ded7"
+    },
+    {
+      "source": "packages/cli/src/runtime.ts",
+      "sha256": "9460d7582f6e843f49ee69f11d3bb12a804cbf4ef3a948c87c4b7fa018f77bfd"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    },
+    {
+      "source": "packages/cli/src/release-extensions.ts",
+      "sha256": "97925bf47ab6eea4d15c845cd9437b2966c94e76f900687ae0bb9788ebe06a24"
+    },
+    {
+      "source": "packages/cli/src/human-messages.ts",
+      "sha256": "3e6e2bcc8c416fb12318a68cedc29057e940ee92ac7af8ef39359c58dafe378d"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/main.js",
+      "sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "cli_nested_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          469,
+          478
+        ],
+        [
+          519,
+          529
+        ],
+        [
+          574,
+          659
+        ],
+        [
+          744,
+          802
+        ]
+      ],
+      "purpose": "Previously closed or finite caller/consumer suppression source support read, not new whole-body/English inventory or canonical archive proof for transitive producer."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resource-loader.js",
+      "sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461",
+      "cli_nested_sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          249,
+          259
+        ],
+        [
+          352,
+          375
+        ],
+        [
+          499,
+          515
+        ]
+      ],
+      "purpose": "Previously closed or finite caller/consumer suppression source support read, not new whole-body/English inventory or canonical archive proof for transitive producer."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-manager.js",
+      "sha256": "6e60af97dd4f67b4bcc820b6c271a26df0bbcb7b7a4258f8cc771c1570b7c546",
+      "cli_nested_sha256": "6e60af97dd4f67b4bcc820b6c271a26df0bbcb7b7a4258f8cc771c1570b7c546",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          412,
+          440
+        ],
+        [
+          474,
+          509
+        ],
+        [
+          795,
+          802
+        ],
+        [
+          848,
+          860
+        ]
+      ],
+      "purpose": "Previously closed or finite caller/consumer suppression source support read, not new whole-body/English inventory or canonical archive proof for transitive producer."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-runtime.js",
+      "sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+      "cli_nested_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          619,
+          660
+        ]
+      ],
+      "purpose": "Previously closed or finite caller/consumer suppression source support read, not new whole-body/English inventory or canonical archive proof for transitive producer."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/child-process.js",
+      "sha256": "cfc7b3361e42b61ee75aecc2b436ff7462f7e4431b4b646da7166f3c5706c9b8",
+      "cli_nested_sha256": "cfc7b3361e42b61ee75aecc2b436ff7462f7e4431b4b646da7166f3c5706c9b8",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          106
+        ]
+      ],
+      "purpose": "Previously closed or finite caller/consumer suppression source support read, not new whole-body/English inventory or canonical archive proof for transitive producer."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/output-guard.js",
+      "sha256": "e860db94650c57e07582c300983671737bf9e796682193b498f75e3dd72e9024",
+      "cli_nested_sha256": "e860db94650c57e07582c300983671737bf9e796682193b498f75e3dd72e9024",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          89
+        ]
+      ],
+      "purpose": "Previously closed or finite caller/consumer suppression source support read, not new whole-body/English inventory or canonical archive proof for transitive producer."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          968,
+          985
+        ]
+      ],
+      "purpose": "Previously closed or finite caller/consumer suppression source support read, not new whole-body/English inventory or canonical archive proof for transitive producer."
+    }
+  ],
+  "scope_census": {
+    "package": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0",
+    "exact_files": [
+      "dist/cli/config-selector.js",
+      "dist/cli/startup-ui.js",
+      "dist/core/package-manager.js",
+      "dist/core/pi-manifest.js",
+      "dist/package-manager-cli.js",
+      "dist/utils/pi-user-agent.js"
+    ]
+  },
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js",
+        "sha256": "14176c5f6a8ba9df57fb2bae52eebb1823b3bd96453200be52978715308ee9eb",
+        "read_lines": [
+          1,
+          2224
+        ],
+        "string_template_occurrences": 520,
+        "fixed_rows": 17,
+        "excluded_occurrences": 503,
+        "disposition": "source-read-conditional-packages",
+        "source_review": "Full 2224-line body read manually; 520 string/template occurrences partitioned into 17 fixed and 503 exact exclusions. Native progress/console/stdio versus captured/suppressed/API-only/stock-self-update conditions traced individually. Local whole-body lexical partition only; git/version/config/installer/native/dependency graph remains open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js",
+        "sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+        "read_lines": [
+          1,
+          1002
+        ],
+        "string_template_occurrences": 278,
+        "fixed_rows": 97,
+        "excluded_occurrences": 181,
+        "disposition": "source-read-conditional-packages",
+        "source_review": "Full 1002-line body read manually; 278 string/template occurrences partitioned into 97 fixed and 181 exact exclusions. Native progress/console/stdio versus captured/suppressed/API-only/stock-self-update conditions traced individually. Local whole-body lexical partition only; git/version/config/installer/native/dependency graph remains open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/startup-ui.js",
+        "sha256": "f0fa56d9aeb064abfc0c0b1370140e7ff1925cc707fe6952815a8b5d96649b48",
+        "read_lines": [
+          1,
+          193
+        ],
+        "string_template_occurrences": 17,
+        "fixed_rows": 0,
+        "excluded_occurrences": 17,
+        "disposition": "source-read-conditional-packages",
+        "source_review": "Full 193-line body read manually; 17 string/template occurrences partitioned into 0 fixed and 17 exact exclusions. Native progress/console/stdio versus captured/suppressed/API-only/stock-self-update conditions traced individually. Local whole-body lexical partition only; git/version/config/installer/native/dependency graph remains open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/pi-manifest.js",
+        "sha256": "2ae94bb81155fc66766a5643f21ec38e808177ec5f2271e77c82013971ae5c03",
+        "read_lines": [
+          1,
+          26
+        ],
+        "string_template_occurrences": 9,
+        "fixed_rows": 0,
+        "excluded_occurrences": 9,
+        "disposition": "source-read-conditional-packages",
+        "source_review": "Full 26-line body read manually; 9 string/template occurrences partitioned into 0 fixed and 9 exact exclusions. Native progress/console/stdio versus captured/suppressed/API-only/stock-self-update conditions traced individually. Local whole-body lexical partition only; git/version/config/installer/native/dependency graph remains open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/config-selector.js",
+        "sha256": "742e01ae725e80c100794254d6859e91ff55a0c7eb38eaf3cf9e73f17e334210",
+        "read_lines": [
+          1,
+          32
+        ],
+        "string_template_occurrences": 3,
+        "fixed_rows": 0,
+        "excluded_occurrences": 3,
+        "disposition": "source-read-conditional-packages",
+        "source_review": "Full 32-line body read manually; 3 string/template occurrences partitioned into 0 fixed and 3 exact exclusions. Native progress/console/stdio versus captured/suppressed/API-only/stock-self-update conditions traced individually. Local whole-body lexical partition only; git/version/config/installer/native/dependency graph remains open."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/pi-user-agent.js",
+        "sha256": "75f80240d4a3c63d4ac37e4a6cdef16d4d384667fcfb769897ad4359003f404f",
+        "read_lines": [
+          1,
+          6
+        ],
+        "string_template_occurrences": 2,
+        "fixed_rows": 0,
+        "excluded_occurrences": 2,
+        "disposition": "source-read-conditional-packages",
+        "source_review": "Full 6-line body read manually; 2 string/template occurrences partitioned into 0 fixed and 2 exact exclusions. Native progress/console/stdio versus captured/suppressed/API-only/stock-self-update conditions traced individually. Local whole-body lexical partition only; git/version/config/installer/native/dependency graph remains open."
+      }
+    ],
+    "scope": "Exactly six approved package/core/CLI/startup/config/manifest/header bodies, full3483-line manual read. Local source partition only, not complete package/installer/native producer graph.",
+    "error_constructor_messages": [
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:799",
+        "source_column": 37,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Path does not exist: ${resolved}\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:803",
+        "source_column": 29,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Unsupported install source: ${source}\"",
+        "disposition": "exhaustive-source-discriminant-invariant"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:826",
+        "source_column": 29,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Unsupported remove source: ${source}\"",
+        "disposition": "exhaustive-source-discriminant-invariant"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:1025",
+        "source_column": 37,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Missing source: ${resolvedSource}\"",
+        "disposition": "on-missing-callback-api-error-pending"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:1234",
+        "source_column": 29,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Empty response from npm view\"",
+        "disposition": "npm-version-check-error-suppressed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:1245",
+        "source_column": 25,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Unexpected response from npm view\"",
+        "disposition": "npm-version-check-error-suppressed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:1275",
+        "source_column": 29,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Failed to determine remote HEAD\"",
+        "disposition": "remote-head-check-error-suppressed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:1287",
+        "source_column": 33,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Unsupported upstream remote: ${trimmedUpstream}\"",
+        "disposition": "caught-upstream-fallback-control"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:1291",
+        "source_column": 33,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Missing upstream branch name\"",
+        "disposition": "caught-upstream-fallback-control"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:1445",
+        "source_column": 29,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Project is not trusted; refusing to access project package storage\"",
+        "disposition": "prevalidated-project-storage-api-guard"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:1455",
+        "source_column": 29,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Invalid npmCommand: first array entry must be a non-empty command\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:1475",
+        "source_column": 29,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Ambiguous npmCommand package managers: ${wrappedPackageManagers.join(\\\", \\\")}\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:1802",
+        "source_column": 29,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Missing git install root\"",
+        "disposition": "nonempty-git-root-invariant"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:1828",
+        "source_column": 29,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Refusing to use path outside package install root: ${resolvedPath}\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:2099",
+        "source_column": 33,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Unknown resource type: ${resourceType}\"",
+        "disposition": "resource-type-api-error-pending"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:2185",
+        "source_column": 38,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"${command} ${args.join(\\\" \\\")} timed out after ${options?.timeoutMs}ms\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:2193",
+        "source_column": 34,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"${command} ${args.join(\\\" \\\")} failed with ${exitStatus}: ${stderr || stdout}\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:2206",
+        "source_column": 38,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"${command} ${args.join(\\\" \\\")} failed with code ${code}\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/package-manager.js:2219",
+        "source_column": 29,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Failed to run ${command} ${args.join(\\\" \\\")}: ${result.error?.message || result.stderr || result.stdout}\"",
+        "disposition": "sync-legacy-probe-error-suppressed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js:42",
+        "source_column": 25,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Managed install marker is missing or invalid: ${markerPath}\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js:49",
+        "source_column": 25,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Could not download managed installer ${label} from ${url}: HTTP ${response.status}\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js:67",
+        "source_column": 25,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"npm ${args.join(\\\" \\\")} exited with code ${code ?? \\\"unknown\\\"}\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js:77",
+        "source_column": 25,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Could not verify managed Pi ${expectedVersion}: ${reason}\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js:81",
+        "source_column": 25,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Managed Pi smoke test returned version ${installedVersion}; expected ${expectedVersion}.\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js:155",
+        "source_column": 25,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Invalid managed release version: ${version}\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js:163",
+        "source_column": 29,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Another managed Pi update is already running.\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js:552",
+        "source_column": 29,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Model catalog refresh timed out.\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js:556",
+        "source_column": 29,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Could not refresh model catalogs: ${details}\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js:605",
+        "source_column": 25,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Could not determine latest ${APP_NAME} version: ${formatVersionCheckError(error)}\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js:610",
+        "source_column": 25,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"Could not determine latest ${APP_NAME} version.\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js:641",
+        "source_column": 38,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"${step.display} terminated by signal ${signal}\"",
+        "disposition": "fixed"
+      },
+      {
+        "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/package-manager-cli.js:644",
+        "source_column": 38,
+        "constructor": "Error",
+        "message_argument_index": 0,
+        "source_text_json": "\"${step.display} exited with code ${code ?? \\\"unknown\\\"}\"",
+        "disposition": "fixed"
+      }
+    ],
+    "aggregate_constructor_calls": 0
+  },
+  "remaining_partial_sources": [],
+  "verification_script": "review/text-inventory/verify-pi-packages.cjs",
+  "checks": [
+    "Exact AST/source anchors/hashes and full lexical partition of all829 source string/template occurrences. Error/Exception constructor message argument census, AggregateError/AggregateException message index1.",
+    "Canonical archive SHA512/package lock/upstream pin/two-tree bytes and checked-in source deviation before-after proofs verified read-only.",
+    "Four in-memory negative controls reject source omission, fixed English corruption, consumer hash drift and canonical archive proof drift. No package/network/child/installer/runtime execution for audit."
+  ],
+  "limits": [
+    "Six full local bodies only. utils/git.js195, version-check.js79, windows-self-update.js77, config.js, project-trust/installer/server/fs/semver/ignore/glob/native subprocess/formatUserAgent producer graph explicitly open; skills/prompt/extension loader distinct future pass.",
+    "Owned isBlockedPiSelfUpdate preempts inherited default/self/pi/--self/--all, including help-only update. Stock-only self-update source text conditional, never a Jouzu behavior promise. Native update --models/--extensions/ordinary package targets and associated help can still run.",
+    "Package/config handlers run before native mode parse/stdout takeover, so plain stdout/stderr/progress, not RPC frames. Later resource runtime child stdout/stderr redirected to stderr only if stdout takeover active. Captured command output not automatically published.",
+    "Npm view/remote HEAD check errors suppressed by native callers; local upstream guard caught fallback; sync legacy root probe wrapper swallowed. Temporary refresh error wrapper suppressed but inherited subprocess output can remain visible.",
+    "Optional missing-source callback error, temporary refresh callback message, batch source label and unknown-resource/project guards retained exact exclusions with consumer pending. Exhaustive source/nonnull-root guards explicit invariants, not silently dropped mechanisms.",
+    "Resource resolver wrapper in Jouzu release-extensions awaits original resolve then filters returned resources; resolution errors/progress/native subprocess behavior before filtering still applies.",
+    "Startup theme resolver uses global-only settings and skip callback, suppresses broken theme load; first-time setup requires official experimental/no-agent-dir path, Jouzu agent-dir override suppresses it. Caller titles/labels and component text distinct producer surfaces.",
+    "Secret/environment/files/command stderr/stdout/provider diagnostics and remote release note content are protected payload; no live user files/accounts/environment values collected. Source fixed strings decoded by TypeScript; template escapes/interpolations preserved; exclusions JSON exact.",
+    "No online git/tag/full package install proof, runtime screenshots/locale rendering/cross-platform execution claimed. Audited package/network/child/installer operations were not executed; only source readers and data verifiers ran. No dependency/product mutations or installs."
+  ],
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/core/package-manager.js",
+            "archive_sha256": "14176c5f6a8ba9df57fb2bae52eebb1823b3bd96453200be52978715308ee9eb",
+            "root_sha256": "14176c5f6a8ba9df57fb2bae52eebb1823b3bd96453200be52978715308ee9eb",
+            "cli_nested_sha256": "14176c5f6a8ba9df57fb2bae52eebb1823b3bd96453200be52978715308ee9eb",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/package-manager-cli.js",
+            "archive_sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+            "root_sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+            "cli_nested_sha256": "995c619ea322428cb943b9d9ebcc1d2873cc329d5d480ceddf58654d6509639b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/cli/startup-ui.js",
+            "archive_sha256": "f0fa56d9aeb064abfc0c0b1370140e7ff1925cc707fe6952815a8b5d96649b48",
+            "root_sha256": "f0fa56d9aeb064abfc0c0b1370140e7ff1925cc707fe6952815a8b5d96649b48",
+            "cli_nested_sha256": "f0fa56d9aeb064abfc0c0b1370140e7ff1925cc707fe6952815a8b5d96649b48",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/pi-manifest.js",
+            "archive_sha256": "2ae94bb81155fc66766a5643f21ec38e808177ec5f2271e77c82013971ae5c03",
+            "root_sha256": "2ae94bb81155fc66766a5643f21ec38e808177ec5f2271e77c82013971ae5c03",
+            "cli_nested_sha256": "2ae94bb81155fc66766a5643f21ec38e808177ec5f2271e77c82013971ae5c03",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/cli/config-selector.js",
+            "archive_sha256": "742e01ae725e80c100794254d6859e91ff55a0c7eb38eaf3cf9e73f17e334210",
+            "root_sha256": "742e01ae725e80c100794254d6859e91ff55a0c7eb38eaf3cf9e73f17e334210",
+            "cli_nested_sha256": "742e01ae725e80c100794254d6859e91ff55a0c7eb38eaf3cf9e73f17e334210",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/utils/pi-user-agent.js",
+            "archive_sha256": "75f80240d4a3c63d4ac37e4a6cdef16d4d384667fcfb769897ad4359003f404f",
+            "root_sha256": "75f80240d4a3c63d4ac37e4a6cdef16d4d384667fcfb769897ad4359003f404f",
+            "cli_nested_sha256": "75f80240d4a3c63d4ac37e4a6cdef16d4d384667fcfb769897ad4359003f404f",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": []
+      }
+    ],
+    "scoped_file_count": 6,
+    "byte_identical_scope_files": 6,
+    "pinned_patch_scope_files": 0,
+    "unresolved_scope_differences": 0
+  },
+  "archive_artifacts": [
+    {
+      "flag": "agent-archive",
+      "artifact": "test-results/earendil-works-pi-coding-agent-1.4.0.tgz",
+      "sha512": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg=="
+    },
+    {
+      "flag": "tui-archive",
+      "artifact": "test-results/earendil-works-pi-tui-1.4.0.tgz",
+      "sha512": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg=="
+    }
+  ]
+}

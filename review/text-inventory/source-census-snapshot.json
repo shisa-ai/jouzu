@@ -34,6 +34,7 @@
     "pi-runtime-scope.csv": "9e3135d9bfc7ec61218b654ff5c28cdfd965a246ba1c170b872c1485bf5cf5af",
     "pi-auth-model-scope.csv": "2c9029f4d8e829c0450e0e5babd85ac81e46d727abcb7f66bee22b09a4161d2b",
     "pi-session-config-scope.csv": "d276d92b901c28ebd3c79a6bec1ff6237df191a40a9eb0e22d762fe63c210a5b",
+    "pi-packages-scope.csv": "3d005a2ea5e1808f197dcf60cee9069d936627de2af7c8c5025f022f06ed4418",
     "flow-report-scope.csv": "71a0b3952ddf31780c4bbbb6ceaa3255d08aad9b8886642e320e9db57ad71196",
     "flow-storage-scope.csv": "a0069bc0317ffc0360b6541490d8f48b3b851d872982d8c1e0dc55c18bd4fc30",
     "flow-receipts-scope.csv": "569b404f202d669e3deef315254ca75421aae32826a41ad7836844704f9fb835",
