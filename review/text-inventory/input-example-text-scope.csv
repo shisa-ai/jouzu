@@ -1,0 +1,4 @@
+path,sha256,status,coverage,evidence
+examples/user-input-adapter/extension.ts,e3eb3ab2c2b296d047338bd606d4117af4e5b3bd1d6ab6d454fb51affbc4aa36,full-source-read,"Full254-line example body, all AST strings/templates and five catches; 38 prose/code comment lines separately recorded.",346d1e481757a55eb62fc066e43bbc7999b8e6dd
+docs/user-input-adapters.md,5c8bb7956876a9e6de00699e9e1bc89a9d44093985d3f2ff6864d24e01f3cd7e,fully-read-public-guide,Full108-line public guide; all 75 nonblank lines individually retained with source-only reading conditions.,346d1e481757a55eb62fc066e43bbc7999b8e6dd
+packages/cli/src/flow-control/user-input-adapters.ts,a316eb4b62260c633df55a49223e4f43c0a560f49055aeb1b1101dcf3a2944d0,prior-full-body-crosslink,"Prior flow-user-work whole body; registration label/schema and receipt implementation stay in that owner, not new body closure.",346d1e481757a55eb62fc066e43bbc7999b8e6dd

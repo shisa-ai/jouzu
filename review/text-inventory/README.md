@@ -745,6 +745,20 @@ native/model/saved/export route, separate from receipt text. Wider native,
 ingress, service, submission and schedule producers remain open. No grants,
 input, private state, model, native or tool producer was executed.
 
+[input-example-text.csv](input-example-text.csv) adds 127 example/guide records:
+eight conditional English occurrences, six boundaries, 75 nonblank guide lines
+and 38 public source-comment lines. The complete 254-line example and 108-line
+guide distinguish direct documentation reading from runtime messages. All 29 AST
+string/template occurrences are partitioned with 21
+[exclusions](input-example-text-exclusions.csv). The
+[scope](input-example-text-scope.csv) accounts for five catches and preserves the
+host implementation's prior owner. The example requires a supplied entry and
+transport; it does not register automatically. Non-Error fallbacks, stale binding
+suppression, late callbacks, structured client failures and optional UI wrappers
+retain their exact conditions. Custom callback failures are separate from host
+receipt text. Five corruption controls pass. No example, transport, authentication,
+client, callback, native/UI or user-state operation was executed.
+
 [pi-import-message-api.csv](pi-import-message-api.csv) adds 1,268 source/API
 records across two complete bodies totaling 1,616 lines: 1,212 lexical
 occurrences, seventeen bare field keys, ten catalog consumers and 29 boundaries.
@@ -1281,6 +1295,7 @@ node review/text-inventory/verify-flow-tools.cjs
 python -B review/text-inventory/verify-flow-orchestration.py
 python -B review/text-inventory/verify-flow-controller-core.py
 python -B review/text-inventory/verify-flow-user-work.py
+node review/text-inventory/verify-input-example-text.cjs
 python -B review/text-inventory/verify-pi-import-message-api.py
 python -B review/text-inventory/verify-localization-ops-text.py
 node review/text-inventory/verify-context-adjunct-text.cjs

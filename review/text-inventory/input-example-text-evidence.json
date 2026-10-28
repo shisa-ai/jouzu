@@ -1,0 +1,1402 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "full_bodies": {
+    "examples/user-input-adapter/extension.ts": 254
+  },
+  "full_documents": {
+    "docs/user-input-adapters.md": 108
+  },
+  "anchors": [
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 18,
+      "column": 71,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "item_id": "INPUT-EXAMPLE-X-001",
+      "kind": "excluded",
+      "english": "@earendil-works/pi-coding-agent"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 20,
+      "column": 23,
+      "expression": "\"external-input\"",
+      "item_id": "INPUT-EXAMPLE-X-002",
+      "kind": "excluded",
+      "english": "external-input"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 20,
+      "column": 48,
+      "expression": "\"Authenticated external input\"",
+      "item_id": "INPUT-EXAMPLE-001",
+      "kind": "fixed",
+      "english": "Authenticated external input"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 22,
+      "column": 48,
+      "expression": "\"registerUserInputAdapter\"",
+      "item_id": "INPUT-EXAMPLE-X-003",
+      "kind": "excluded",
+      "english": "registerUserInputAdapter"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 25,
+      "column": 59,
+      "expression": "\"bind\"",
+      "item_id": "INPUT-EXAMPLE-X-004",
+      "kind": "excluded",
+      "english": "bind"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 28,
+      "column": 59,
+      "expression": "\"submit\"",
+      "item_id": "INPUT-EXAMPLE-X-005",
+      "kind": "excluded",
+      "english": "submit"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 37,
+      "column": 13,
+      "expression": "\"steer\"",
+      "item_id": "INPUT-EXAMPLE-X-006",
+      "kind": "excluded",
+      "english": "steer"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 37,
+      "column": 23,
+      "expression": "\"followUp\"",
+      "item_id": "INPUT-EXAMPLE-X-007",
+      "kind": "excluded",
+      "english": "followUp"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 62,
+      "column": 19,
+      "expression": "\"object\"",
+      "item_id": "INPUT-EXAMPLE-X-008",
+      "kind": "excluded",
+      "english": "object"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 62,
+      "column": 95,
+      "expression": "\"string\"",
+      "item_id": "INPUT-EXAMPLE-X-009",
+      "kind": "excluded",
+      "english": "string"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 64,
+      "column": 5,
+      "expression": "\"adapter-failed\"",
+      "item_id": "INPUT-EXAMPLE-X-010",
+      "kind": "excluded",
+      "english": "adapter-failed"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 68,
+      "column": 56,
+      "expression": "\"External user input failed.\"",
+      "item_id": "INPUT-EXAMPLE-002",
+      "kind": "fixed",
+      "english": "External user input failed."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 153,
+      "column": 34,
+      "expression": "`External user input: ${failure.text}`",
+      "item_id": "INPUT-EXAMPLE-003",
+      "kind": "fixed",
+      "english": "External user input: ${failure.text}"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 153,
+      "column": 74,
+      "expression": "\"error\"",
+      "item_id": "INPUT-EXAMPLE-X-011",
+      "kind": "excluded",
+      "english": "error"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 161,
+      "column": 12,
+      "expression": "\"target-unavailable\"",
+      "item_id": "INPUT-EXAMPLE-X-012",
+      "kind": "excluded",
+      "english": "target-unavailable"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 162,
+      "column": 12,
+      "expression": "\"No external user-input adapter is bound.\"",
+      "item_id": "INPUT-EXAMPLE-004",
+      "kind": "fixed",
+      "english": "No external user-input adapter is bound."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 186,
+      "column": 13,
+      "expression": "\"target-unavailable\"",
+      "item_id": "INPUT-EXAMPLE-X-013",
+      "kind": "excluded",
+      "english": "target-unavailable"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 187,
+      "column": 13,
+      "expression": "\"No external user-input adapter is bound.\"",
+      "item_id": "INPUT-EXAMPLE-005",
+      "kind": "fixed",
+      "english": "No external user-input adapter is bound."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 210,
+      "column": 47,
+      "expression": "\"function\"",
+      "item_id": "INPUT-EXAMPLE-X-014",
+      "kind": "excluded",
+      "english": "function"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 212,
+      "column": 12,
+      "expression": "\"unsupported-protocol\"",
+      "item_id": "INPUT-EXAMPLE-X-015",
+      "kind": "excluded",
+      "english": "unsupported-protocol"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 213,
+      "column": 12,
+      "expression": "\"This host does not support external user-input adapters.\"",
+      "item_id": "INPUT-EXAMPLE-006",
+      "kind": "fixed",
+      "english": "This host does not support external user-input adapters."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 216,
+      "column": 34,
+      "expression": "`External user input: ${failure.text}`",
+      "item_id": "INPUT-EXAMPLE-007",
+      "kind": "fixed",
+      "english": "External user input: ${failure.text}"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 216,
+      "column": 74,
+      "expression": "\"error\"",
+      "item_id": "INPUT-EXAMPLE-X-016",
+      "kind": "excluded",
+      "english": "error"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 226,
+      "column": 35,
+      "expression": "\"function\"",
+      "item_id": "INPUT-EXAMPLE-X-017",
+      "kind": "excluded",
+      "english": "function"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 236,
+      "column": 34,
+      "expression": "`External user input: ${failure.text}`",
+      "item_id": "INPUT-EXAMPLE-008",
+      "kind": "fixed",
+      "english": "External user input: ${failure.text}"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 236,
+      "column": 74,
+      "expression": "\"error\"",
+      "item_id": "INPUT-EXAMPLE-X-018",
+      "kind": "excluded",
+      "english": "error"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 241,
+      "column": 9,
+      "expression": "\"session_start\"",
+      "item_id": "INPUT-EXAMPLE-X-019",
+      "kind": "excluded",
+      "english": "session_start"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 246,
+      "column": 9,
+      "expression": "\"session_tree\"",
+      "item_id": "INPUT-EXAMPLE-X-020",
+      "kind": "excluded",
+      "english": "session_tree"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 250,
+      "column": 9,
+      "expression": "\"session_shutdown\"",
+      "item_id": "INPUT-EXAMPLE-X-021",
+      "kind": "excluded",
+      "english": "session_shutdown"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 1,
+      "column": 1,
+      "expression": "# External user-input adapters",
+      "item_id": "INPUT-EXAMPLE-009",
+      "kind": "document",
+      "english": "# External user-input adapters"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 3,
+      "column": 1,
+      "expression": "An extension can deliver authenticated human text through `pi.registerUserInputAdapter`. This API gives the instruction user-input admission, queue ordering, and work ownership. Ordinary extension sends remain automated input.",
+      "item_id": "INPUT-EXAMPLE-010",
+      "kind": "document",
+      "english": "An extension can deliver authenticated human text through `pi.registerUserInputAdapter`. This API gives the instruction user-input admission, queue ordering, and work ownership. Ordinary extension sends remain automated input."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 5,
+      "column": 1,
+      "expression": "The integration must authenticate its human sender and preserve the target selected when the person sends. Do not route timers, rules, agent output, or automatic retries through this API. Installed extensions already have your operating-system permissions; adapter grants are an explicit integration contract, not a sandbox.",
+      "item_id": "INPUT-EXAMPLE-011",
+      "kind": "document",
+      "english": "The integration must authenticate its human sender and preserve the target selected when the person sends. Do not route timers, rules, agent output, or automatic retries through this API. Installed extensions already have your operating-system permissions; adapter grants are an explicit integration contract, not a sandbox."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 7,
+      "column": 1,
+      "expression": "The host API is transport-independent: it does not implement client authentication,",
+      "item_id": "INPUT-EXAMPLE-012",
+      "kind": "document",
+      "english": "The host API is transport-independent: it does not implement client authentication,"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 8,
+      "column": 1,
+      "expression": "network protocols, application storage, or a user interface. Each extension supplies",
+      "item_id": "INPUT-EXAMPLE-013",
+      "kind": "document",
+      "english": "network protocols, application storage, or a user interface. Each extension supplies"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 9,
+      "column": 1,
+      "expression": "those concerns and maps an explicit human action to this API. Before invoking the adapter or example callbacks, validate incoming messages against the transport's runtime schema. Enforce message-size limits, rate limits, and a bounded number of pending requests at the transport boundary. Authentication alone does not validate a message's shape. If several people share an adapter, the integration must also restrict each person's access to bindings and receipts; the host's receipt namespace identifies the extension and adapter, not individual people.",
+      "item_id": "INPUT-EXAMPLE-014",
+      "kind": "document",
+      "english": "those concerns and maps an explicit human action to this API. Before invoking the adapter or example callbacks, validate incoming messages against the transport's runtime schema. Enforce message-size limits, rate limits, and a bounded number of pending requests at the transport boundary. Authentication alone does not validate a message's shape. If several people share an adapter, the integration must also restrict each person's access to bindings and receipts; the host's receipt namespace identifies the extension and adapter, not individual people."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 11,
+      "column": 1,
+      "expression": "## Example",
+      "item_id": "INPUT-EXAMPLE-015",
+      "kind": "document",
+      "english": "## Example"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 13,
+      "column": 1,
+      "expression": "[`examples/user-input-adapter/extension.ts`](../examples/user-input-adapter/extension.ts) provides a lifecycle-managed adapter factory. Supply an authenticated transport in your extension entry file. The example handles shutdown during registration, branch rebinding, and reconnect lookup using each message's original target. Its in-memory test transport demonstrates the interface; it does not authenticate real users.",
+      "item_id": "INPUT-EXAMPLE-016",
+      "kind": "document",
+      "english": "[`examples/user-input-adapter/extension.ts`](../examples/user-input-adapter/extension.ts) provides a lifecycle-managed adapter factory. Supply an authenticated transport in your extension entry file. The example handles shutdown during registration, branch rebinding, and reconnect lookup using each message's original target. Its in-memory test transport demonstrates the interface; it does not authenticate real users."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 15,
+      "column": 1,
+      "expression": "## Authorize an extension",
+      "item_id": "INPUT-EXAMPLE-017",
+      "kind": "document",
+      "english": "## Authorize an extension"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 17,
+      "column": 1,
+      "expression": "Create `user-input-adapters.json` in Jouzu's resolved agent configuration directory:",
+      "item_id": "INPUT-EXAMPLE-018",
+      "kind": "document",
+      "english": "Create `user-input-adapters.json` in Jouzu's resolved agent configuration directory:"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 19,
+      "column": 1,
+      "expression": "```json",
+      "item_id": "INPUT-EXAMPLE-019",
+      "kind": "document",
+      "english": "```json"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 20,
+      "column": 1,
+      "expression": "{",
+      "item_id": "INPUT-EXAMPLE-020",
+      "kind": "document",
+      "english": "{"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 21,
+      "column": 1,
+      "expression": "  \"schemaVersion\": 1,",
+      "item_id": "INPUT-EXAMPLE-021",
+      "kind": "document",
+      "english": "  \"schemaVersion\": 1,"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 22,
+      "column": 1,
+      "expression": "  \"grants\": [",
+      "item_id": "INPUT-EXAMPLE-022",
+      "kind": "document",
+      "english": "  \"grants\": ["
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 23,
+      "column": 1,
+      "expression": "    {",
+      "item_id": "INPUT-EXAMPLE-023",
+      "kind": "document",
+      "english": "    {"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 24,
+      "column": 1,
+      "expression": "      \"extensionPath\": \"/absolute/path/to/extension.ts\",",
+      "item_id": "INPUT-EXAMPLE-024",
+      "kind": "document",
+      "english": "      \"extensionPath\": \"/absolute/path/to/extension.ts\","
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 25,
+      "column": 1,
+      "expression": "      \"adapterId\": \"external-input\"",
+      "item_id": "INPUT-EXAMPLE-025",
+      "kind": "document",
+      "english": "      \"adapterId\": \"external-input\""
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 26,
+      "column": 1,
+      "expression": "    }",
+      "item_id": "INPUT-EXAMPLE-026",
+      "kind": "document",
+      "english": "    }"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 27,
+      "column": 1,
+      "expression": "  ]",
+      "item_id": "INPUT-EXAMPLE-027",
+      "kind": "document",
+      "english": "  ]"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 28,
+      "column": 1,
+      "expression": "}",
+      "item_id": "INPUT-EXAMPLE-028",
+      "kind": "document",
+      "english": "}"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 29,
+      "column": 1,
+      "expression": "```",
+      "item_id": "INPUT-EXAMPLE-029",
+      "kind": "document",
+      "english": "```"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 31,
+      "column": 1,
+      "expression": "Replace the path with the extension's absolute entry-file path. Grants match its canonical filesystem identity and adapter ID. Relative paths, globs, duplicate grants, and unknown fields are rejected. A missing file denies registration. The file must be a regular file, not a symlink, and at most 64 KiB. The host rereads it for submission, lookup, and retained dispatch. Rechecks must match the canonical extension identity captured at registration; redirecting an entry-file symlink cannot transfer an existing handle or its retained messages to another granted extension.",
+      "item_id": "INPUT-EXAMPLE-030",
+      "kind": "document",
+      "english": "Replace the path with the extension's absolute entry-file path. Grants match its canonical filesystem identity and adapter ID. Relative paths, globs, duplicate grants, and unknown fields are rejected. A missing file denies registration. The file must be a regular file, not a symlink, and at most 64 KiB. The host rereads it for submission, lookup, and retained dispatch. Rechecks must match the canonical extension identity captured at registration; redirecting an entry-file symlink cannot transfer an existing handle or its retained messages to another granted extension."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 33,
+      "column": 1,
+      "expression": "## Register and bind",
+      "item_id": "INPUT-EXAMPLE-031",
+      "kind": "document",
+      "english": "## Register and bind"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 35,
+      "column": 1,
+      "expression": "Register inside `session_start`, after the extension runtime is attached. Check for the method explicitly; an unavailable or denied adapter must not silently fall back to an automated send in Jouzu.",
+      "item_id": "INPUT-EXAMPLE-032",
+      "kind": "document",
+      "english": "Register inside `session_start`, after the extension runtime is attached. Check for the method explicitly; an unavailable or denied adapter must not silently fall back to an automated send in Jouzu."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 37,
+      "column": 1,
+      "expression": "```ts",
+      "item_id": "INPUT-EXAMPLE-033",
+      "kind": "document",
+      "english": "```ts"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 38,
+      "column": 1,
+      "expression": "const adapter = await pi.registerUserInputAdapter({",
+      "item_id": "INPUT-EXAMPLE-034",
+      "kind": "document",
+      "english": "const adapter = await pi.registerUserInputAdapter({"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 39,
+      "column": 1,
+      "expression": "  id: \"external-input\",",
+      "item_id": "INPUT-EXAMPLE-035",
+      "kind": "document",
+      "english": "  id: \"external-input\","
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 40,
+      "column": 1,
+      "expression": "  label: \"Authenticated external input\",",
+      "item_id": "INPUT-EXAMPLE-036",
+      "kind": "document",
+      "english": "  label: \"Authenticated external input\","
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 41,
+      "column": 1,
+      "expression": "});",
+      "item_id": "INPUT-EXAMPLE-037",
+      "kind": "document",
+      "english": "});"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 42,
+      "column": 1,
+      "expression": "const binding = await adapter.bind();",
+      "item_id": "INPUT-EXAMPLE-038",
+      "kind": "document",
+      "english": "const binding = await adapter.bind();"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 43,
+      "column": 1,
+      "expression": "```",
+      "item_id": "INPUT-EXAMPLE-039",
+      "kind": "document",
+      "english": "```"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 45,
+      "column": 1,
+      "expression": "`binding` contains an opaque stable `target` and an executable `generation` (an attachment ID string). Receipt `generation` is a numeric journal generation used only to order receipt updates; do not compare it with the binding's generation. Publish the binding to the authenticated client. Return the selected binding with the message rather than binding when an old message finally arrives. Normal transcript appends do not change the target.",
+      "item_id": "INPUT-EXAMPLE-040",
+      "kind": "document",
+      "english": "`binding` contains an opaque stable `target` and an executable `generation` (an attachment ID string). Receipt `generation` is a numeric journal generation used only to order receipt updates; do not compare it with the binding's generation. Publish the binding to the authenticated client. Return the selected binding with the message rather than binding when an old message finally arrives. Normal transcript appends do not change the target."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 47,
+      "column": 1,
+      "expression": "Registration belongs to the extension runtime, and the target belongs to the attachment. A branch change keeps the registration and changes the target, so call `adapter.bind()` again, replace the receipt subscription, and publish the new target. An extension reload replaces the runtime instead: the new runtime registers and binds again, and input the replaced runtime was holding keeps its record so an authorized retry can reattach the same message ID.",
+      "item_id": "INPUT-EXAMPLE-041",
+      "kind": "document",
+      "english": "Registration belongs to the extension runtime, and the target belongs to the attachment. A branch change keeps the registration and changes the target, so call `adapter.bind()` again, replace the receipt subscription, and publish the new target. An extension reload replaces the runtime instead: the new runtime registers and binds again, and input the replaced runtime was holding keeps its record so an authorized retry can reattach the same message ID."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 49,
+      "column": 1,
+      "expression": "A live runtime holds one registration per canonical extension identity and adapter ID. Registering that identity again while the first registration is live fails with `adapter-already-registered`, and the first registration, its target listeners, and its published target stay unchanged, so register once per runtime and reuse the returned handle. `adapter-already-registered` describes registration identity; it is not the message-level `id-conflict`. After an extension reload the replaced runtime's handles are inert and its registration is gone, so the replacement runtime registers the same identity normally.",
+      "item_id": "INPUT-EXAMPLE-042",
+      "kind": "document",
+      "english": "A live runtime holds one registration per canonical extension identity and adapter ID. Registering that identity again while the first registration is live fails with `adapter-already-registered`, and the first registration, its target listeners, and its published target stay unchanged, so register once per runtime and reuse the returned handle. `adapter-already-registered` describes registration identity; it is not the message-level `id-conflict`. After an extension reload the replaced runtime's handles are inert and its registration is gone, so the replacement runtime registers the same identity normally."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 51,
+      "column": 1,
+      "expression": "An administrative flow reset starts a new target epoch. The host reports it through `adapter.onTargetInvalidated`, and every listener must withdraw the published target, call `bind()` again, and publish the new one. Messages composed against the withdrawn target are never retargeted; each needs a fresh human action for the new target. Feature-detect `onTargetInvalidated` if the extension also runs on hosts that do not report it. Reset also fences admission: a submission that validated the previous target either settles before the reset or is refused with `stale-target`, and a prepared dispatch is refused at execution instead of delivering into the new journal lifetime.",
+      "item_id": "INPUT-EXAMPLE-043",
+      "kind": "document",
+      "english": "An administrative flow reset starts a new target epoch. The host reports it through `adapter.onTargetInvalidated`, and every listener must withdraw the published target, call `bind()` again, and publish the new one. Messages composed against the withdrawn target are never retargeted; each needs a fresh human action for the new target. Feature-detect `onTargetInvalidated` if the extension also runs on hosts that do not report it. Reset also fences admission: a submission that validated the previous target either settles before the reset or is refused with `stale-target`, and a prepared dispatch is refused at execution instead of delivering into the new journal lifetime."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 53,
+      "column": 1,
+      "expression": "## Submit literal text",
+      "item_id": "INPUT-EXAMPLE-044",
+      "kind": "document",
+      "english": "## Submit literal text"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 55,
+      "column": 1,
+      "expression": "```ts",
+      "item_id": "INPUT-EXAMPLE-045",
+      "kind": "document",
+      "english": "```ts"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 56,
+      "column": 1,
+      "expression": "const receipt = await adapter.submit({",
+      "item_id": "INPUT-EXAMPLE-046",
+      "kind": "document",
+      "english": "const receipt = await adapter.submit({"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 57,
+      "column": 1,
+      "expression": "  binding: message.binding,",
+      "item_id": "INPUT-EXAMPLE-047",
+      "kind": "document",
+      "english": "  binding: message.binding,"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 58,
+      "column": 1,
+      "expression": "  messageId: message.id,",
+      "item_id": "INPUT-EXAMPLE-048",
+      "kind": "document",
+      "english": "  messageId: message.id,"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 59,
+      "column": 1,
+      "expression": "  text: message.text,",
+      "item_id": "INPUT-EXAMPLE-049",
+      "kind": "document",
+      "english": "  text: message.text,"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 60,
+      "column": 1,
+      "expression": "  deliverAs: \"followUp\",",
+      "item_id": "INPUT-EXAMPLE-050",
+      "kind": "document",
+      "english": "  deliverAs: \"followUp\","
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 61,
+      "column": 1,
+      "expression": "});",
+      "item_id": "INPUT-EXAMPLE-051",
+      "kind": "document",
+      "english": "});"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 62,
+      "column": 1,
+      "expression": "```",
+      "item_id": "INPUT-EXAMPLE-052",
+      "kind": "document",
+      "english": "```"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 64,
+      "column": 1,
+      "expression": "Text must be nonempty, valid UTF-8, and no more than 32 KiB. `deliverAs` is `steer` or `followUp`. Slash-prefixed text is literal: commands, skills, and prompt templates are not expanded. Normal input handlers and content checks still apply.",
+      "item_id": "INPUT-EXAMPLE-053",
+      "kind": "document",
+      "english": "Text must be nonempty, valid UTF-8, and no more than 32 KiB. `deliverAs` is `steer` or `followUp`. Slash-prefixed text is literal: commands, skills, and prompt templates are not expanded. Normal input handlers and content checks still apply."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 66,
+      "column": 1,
+      "expression": "Submission returns after durable admission, without waiting for the provider to finish. Reuse the original message ID and payload when recovering a receipt. Changed text or delivery mode under the same ID is an `id-conflict`. Consumed, queued, and uncertain dispatches are never resent. Only a callback that ended before any dispatch intent can be reattached by an authorized retry for the same stable target. The host rechecks the grant and the target immediately before entering native input handling, including when a send waits for the settled event. A grant revoked or a target rotated before that check refuses the dispatch; its receipt stays `unknown` and the message is not replayed. Revocation does not cancel input that has already entered native handling, including input waiting in an asynchronous input handler. It is not an interrupt for an in-flight instruction.",
+      "item_id": "INPUT-EXAMPLE-054",
+      "kind": "document",
+      "english": "Submission returns after durable admission, without waiting for the provider to finish. Reuse the original message ID and payload when recovering a receipt. Changed text or delivery mode under the same ID is an `id-conflict`. Consumed, queued, and uncertain dispatches are never resent. Only a callback that ended before any dispatch intent can be reattached by an authorized retry for the same stable target. The host rechecks the grant and the target immediately before entering native input handling, including when a send waits for the settled event. A grant revoked or a target rotated before that check refuses the dispatch; its receipt stays `unknown` and the message is not replayed. Revocation does not cancel input that has already entered native handling, including input waiting in an asynchronous input handler. It is not an interrupt for an in-flight instruction."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 68,
+      "column": 1,
+      "expression": "## Observe delivery",
+      "item_id": "INPUT-EXAMPLE-055",
+      "kind": "document",
+      "english": "## Observe delivery"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 70,
+      "column": 1,
+      "expression": "```ts",
+      "item_id": "INPUT-EXAMPLE-056",
+      "kind": "document",
+      "english": "```ts"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 71,
+      "column": 1,
+      "expression": "const unsubscribe = adapter.subscribe((receipt) => {",
+      "item_id": "INPUT-EXAMPLE-057",
+      "kind": "document",
+      "english": "const unsubscribe = adapter.subscribe((receipt) => {"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 72,
+      "column": 1,
+      "expression": "  updateMessageDelivery(receipt.messageId, receipt);",
+      "item_id": "INPUT-EXAMPLE-058",
+      "kind": "document",
+      "english": "  updateMessageDelivery(receipt.messageId, receipt);"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 73,
+      "column": 1,
+      "expression": "});",
+      "item_id": "INPUT-EXAMPLE-059",
+      "kind": "document",
+      "english": "});"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 74,
+      "column": 1,
+      "expression": "const latest = await adapter.lookup({",
+      "item_id": "INPUT-EXAMPLE-060",
+      "kind": "document",
+      "english": "const latest = await adapter.lookup({"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 75,
+      "column": 1,
+      "expression": "  target: message.binding.target,",
+      "item_id": "INPUT-EXAMPLE-061",
+      "kind": "document",
+      "english": "  target: message.binding.target,"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 76,
+      "column": 1,
+      "expression": "  messageId: message.id,",
+      "item_id": "INPUT-EXAMPLE-062",
+      "kind": "document",
+      "english": "  messageId: message.id,"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 77,
+      "column": 1,
+      "expression": "});",
+      "item_id": "INPUT-EXAMPLE-063",
+      "kind": "document",
+      "english": "});"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 78,
+      "column": 1,
+      "expression": "```",
+      "item_id": "INPUT-EXAMPLE-064",
+      "kind": "document",
+      "english": "```"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 80,
+      "column": 1,
+      "expression": "Subscriptions publish an initial snapshot, including archived messages, followed by updates for messages whose stored evidence changed. Unrelated journal writes do not republish unchanged receipts. Each update pass still scans active records and archived index metadata, but reads archived payloads only when their evidence changed. Updates carry `version: 1`, adapter/message identity, target, journal generation and revision, state, and an optional structured reason. Notifications are hints; use lookup after reconnect. Listener failures do not change delivery. A failed authorization or snapshot pass is reported through the host's error channel and resumes only on a later journal write; repairing the fault alone does not trigger another pass. After a reported fault, use `lookup` to recover current receipts and unsubscribe and subscribe again to request a fresh snapshot. Unsubscribe on shutdown and subscribe again after branch navigation.",
+      "item_id": "INPUT-EXAMPLE-065",
+      "kind": "document",
+      "english": "Subscriptions publish an initial snapshot, including archived messages, followed by updates for messages whose stored evidence changed. Unrelated journal writes do not republish unchanged receipts. Each update pass still scans active records and archived index metadata, but reads archived payloads only when their evidence changed. Updates carry `version: 1`, adapter/message identity, target, journal generation and revision, state, and an optional structured reason. Notifications are hints; use lookup after reconnect. Listener failures do not change delivery. A failed authorization or snapshot pass is reported through the host's error channel and resumes only on a later journal write; repairing the fault alone does not trigger another pass. After a reported fault, use `lookup` to recover current receipts and unsubscribe and subscribe again to request a fresh snapshot. Unsubscribe on shutdown and subscribe again after branch navigation."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 82,
+      "column": 1,
+      "expression": "Target-invalidation listeners are independent. A listener that throws is reported through the host's error channel, and the remaining listeners on that registration and on other registrations still run, so one failing client cannot leave another holding a withdrawn target.",
+      "item_id": "INPUT-EXAMPLE-066",
+      "kind": "document",
+      "english": "Target-invalidation listeners are independent. A listener that throws is reported through the host's error channel, and the remaining listeners on that registration and on other registrations still run, so one failing client cannot leave another holding a withdrawn target."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 84,
+      "column": 1,
+      "expression": "| State | Meaning |",
+      "item_id": "INPUT-EXAMPLE-067",
+      "kind": "document",
+      "english": "| State | Meaning |"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 85,
+      "column": 1,
+      "expression": "| --- | --- |",
+      "item_id": "INPUT-EXAMPLE-068",
+      "kind": "document",
+      "english": "| --- | --- |"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 86,
+      "column": 1,
+      "expression": "| `retained` | Stored, with no dispatch intent yet |",
+      "item_id": "INPUT-EXAMPLE-069",
+      "kind": "document",
+      "english": "| `retained` | Stored, with no dispatch intent yet |"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 87,
+      "column": 1,
+      "expression": "| `held` | Waiting on admission |",
+      "item_id": "INPUT-EXAMPLE-070",
+      "kind": "document",
+      "english": "| `held` | Waiting on admission |"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 88,
+      "column": 1,
+      "expression": "| `queued` | Exact native queue identity and revision are still live |",
+      "item_id": "INPUT-EXAMPLE-071",
+      "kind": "document",
+      "english": "| `queued` | Exact native queue identity and revision are still live |"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 89,
+      "column": 1,
+      "expression": "| `consumed` | Native input has a durable consumption claim |",
+      "item_id": "INPUT-EXAMPLE-072",
+      "kind": "document",
+      "english": "| `consumed` | Native input has a durable consumption claim |"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 90,
+      "column": 1,
+      "expression": "| `rejected` | Native handling definitively produced no input |",
+      "item_id": "INPUT-EXAMPLE-073",
+      "kind": "document",
+      "english": "| `rejected` | Native handling definitively produced no input |"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 91,
+      "column": 1,
+      "expression": "| `cancelled` | Retained or native queued input was confirmed cancelled |",
+      "item_id": "INPUT-EXAMPLE-074",
+      "kind": "document",
+      "english": "| `cancelled` | Retained or native queued input was confirmed cancelled |"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 92,
+      "column": 1,
+      "expression": "| `unknown` | Evidence does not establish delivery or safe retry |",
+      "item_id": "INPUT-EXAMPLE-075",
+      "kind": "document",
+      "english": "| `unknown` | Evidence does not establish delivery or safe retry |"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 94,
+      "column": 1,
+      "expression": "Consumed does not mean the provider succeeded or the requested actions finished. Never resend because an update was lost or a model request failed. A lookup for a branch that is not attached returns `target-unavailable`, not “not found.”",
+      "item_id": "INPUT-EXAMPLE-076",
+      "kind": "document",
+      "english": "Consumed does not mean the provider succeeded or the requested actions finished. Never resend because an update was lost or a model request failed. A lookup for a branch that is not attached returns `target-unavailable`, not “not found.”"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 96,
+      "column": 1,
+      "expression": "## Limits and lifecycle",
+      "item_id": "INPUT-EXAMPLE-077",
+      "kind": "document",
+      "english": "## Limits and lifecycle"
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 98,
+      "column": 1,
+      "expression": "New message IDs are limited to 16,384 and 64 MiB of encoded admission payload per branch journal lifetime, across adapters and including archived records. Active records also share the submission store's 1,024-record/4 MiB admission budget. Receipt evidence has a separate bound; new-ID exhaustion does not prevent lookup, safe reattachment, or normal evidence updates. Payload and deduplication evidence remain for that journal lifetime; draining or archiving does not reclaim the budget. Administrative flow-state reset starts a new journal lifetime and budget, invalidating the target and the deduplication guarantee. Reset is not routine capacity cleanup: withdraw the published target, bind again, and accept new messages only for the new target.",
+      "item_id": "INPUT-EXAMPLE-078",
+      "kind": "document",
+      "english": "New message IDs are limited to 16,384 and 64 MiB of encoded admission payload per branch journal lifetime, across adapters and including archived records. Active records also share the submission store's 1,024-record/4 MiB admission budget. Receipt evidence has a separate bound; new-ID exhaustion does not prevent lookup, safe reattachment, or normal evidence updates. Payload and deduplication evidence remain for that journal lifetime; draining or archiving does not reclaim the budget. Administrative flow-state reset starts a new journal lifetime and budget, invalidating the target and the deduplication guarantee. Reset is not routine capacity cleanup: withdraw the published target, bind again, and accept new messages only for the new target."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 100,
+      "column": 1,
+      "expression": "Turning flow control off rejects submissions with `flow-suspended` and cancels external input that has not acquired dispatch intent. Registration and authorized lookup remain available. Already queued or running input retains its native evidence; it is not retroactively declared undelivered. An unreadable or malformed grants file (`invalid-config`) is a repairable fault, not a revocation: retained and queued input is held and becomes admissible on a later release or queue-admission pass after the file is repaired. If the host drops a queued entry without taking it, the receipt advances to `unknown` at a new journal revision, so subscriptions and lookup correct a stored `queued` receipt.",
+      "item_id": "INPUT-EXAMPLE-079",
+      "kind": "document",
+      "english": "Turning flow control off rejects submissions with `flow-suspended` and cancels external input that has not acquired dispatch intent. Registration and authorized lookup remain available. Already queued or running input retains its native evidence; it is not retroactively declared undelivered. An unreadable or malformed grants file (`invalid-config`) is a repairable fault, not a revocation: retained and queued input is held and becomes admissible on a later release or queue-admission pass after the file is repaired. If the host drops a queued entry without taking it, the receipt advances to `unknown` at a new journal revision, so subscriptions and lookup correct a stored `queued` receipt."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 102,
+      "column": 1,
+      "expression": "Branch navigation pauses admission while the host settles the old attachment. New submissions in that interval are refused with `flow-suspended` or `stale-target`. A retention already in progress is cancelled without dispatch if it crosses that boundary. Input already retained without dispatch does not prevent navigation: it remains in the departing branch's journal, without automatic replay. Returning to that branch restores its stable target but requires a fresh binding; the ended callback can be reattached only by an authorized explicit retry.",
+      "item_id": "INPUT-EXAMPLE-080",
+      "kind": "document",
+      "english": "Branch navigation pauses admission while the host settles the old attachment. New submissions in that interval are refused with `flow-suspended` or `stale-target`. A retention already in progress is cancelled without dispatch if it crosses that boundary. Input already retained without dispatch does not prevent navigation: it remains in the departing branch's journal, without automatic replay. Returning to that branch restores its stable target but requires a fresh binding; the ended callback can be reattached only by an authorized explicit retry."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 104,
+      "column": 1,
+      "expression": "Session replacement instead disposes the outgoing attachment and retires its adapter handles; it can proceed with held external input. Undispatched input remains in the outgoing journal and is not replayed. On reopening that journal, its receipt reports `unknown` with reason `callback-ended`; an authorized explicit retry can reattach it only if no dispatch intent exists. A new session has a different target, not permission to resend the old message.",
+      "item_id": "INPUT-EXAMPLE-081",
+      "kind": "document",
+      "english": "Session replacement instead disposes the outgoing attachment and retires its adapter handles; it can proceed with held external input. Undispatched input remains in the outgoing journal and is not replayed. On reopening that journal, its receipt reports `unknown` with reason `callback-ended`; an authorized explicit retry can reattach it only if no dispatch intent exists. A new session has a different target, not permission to resend the old message."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 106,
+      "column": 1,
+      "expression": "After a successful change, publish a fresh binding; never retarget messages composed against the old one. Cancellation or a clean refusal of the lifecycle operation leaves the existing binding usable.",
+      "item_id": "INPUT-EXAMPLE-082",
+      "kind": "document",
+      "english": "After a successful change, publish a fresh binding; never retarget messages composed against the old one. Cancellation or a clean refusal of the lifecycle operation leaves the existing binding usable."
+    },
+    {
+      "path": "docs/user-input-adapters.md",
+      "line": 108,
+      "column": 1,
+      "expression": "Structured failures include `unsupported-protocol`, `unauthorized`, `invalid-config`, `invalid-input`, `adapter-already-registered`, `stale-target`, `target-unavailable`, `flow-suspended`, `capacity`, and `id-conflict`. Do not infer human authority from message text, transport IDs, or caller-supplied provenance.",
+      "item_id": "INPUT-EXAMPLE-083",
+      "kind": "document",
+      "english": "Structured failures include `unsupported-protocol`, `unauthorized`, `invalid-config`, `invalid-input`, `adapter-already-registered`, `stale-target`, `target-unavailable`, `flow-suspended`, `capacity`, and `id-conflict`. Do not infer human authority from message text, transport IDs, or caller-supplied provenance."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 2,
+      "column": 1,
+      "expression": " * External user-input adapter example.",
+      "item_id": "INPUT-EXAMPLE-084",
+      "kind": "comment",
+      "english": " * External user-input adapter example."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 4,
+      "column": 1,
+      "expression": " * This module holds the adapter; it is not itself an extension entry. Add an entry file beside it",
+      "item_id": "INPUT-EXAMPLE-085",
+      "kind": "comment",
+      "english": " * This module holds the adapter; it is not itself an extension entry. Add an entry file beside it"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 5,
+      "column": 1,
+      "expression": " * that supplies your authenticated client bridge:",
+      "item_id": "INPUT-EXAMPLE-086",
+      "kind": "comment",
+      "english": " * that supplies your authenticated client bridge:"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 7,
+      "column": 1,
+      "expression": " *   import { createUserInputAdapterExtension } from \"./extension.ts\";",
+      "item_id": "INPUT-EXAMPLE-087",
+      "kind": "comment",
+      "english": " *   import { createUserInputAdapterExtension } from \"./extension.ts\";"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 8,
+      "column": 1,
+      "expression": " *   export default createUserInputAdapterExtension(myAuthenticatedTransport);",
+      "item_id": "INPUT-EXAMPLE-088",
+      "kind": "comment",
+      "english": " *   export default createUserInputAdapterExtension(myAuthenticatedTransport);"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 10,
+      "column": 1,
+      "expression": " * The bridge owns authentication. It accepts text only from a sender it has authenticated and",
+      "item_id": "INPUT-EXAMPLE-089",
+      "kind": "comment",
+      "english": " * The bridge owns authentication. It accepts text only from a sender it has authenticated and"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 11,
+      "column": 1,
+      "expression": " * returns the binding the person saw when they composed the message. This module never sends",
+      "item_id": "INPUT-EXAMPLE-090",
+      "kind": "comment",
+      "english": " * returns the binding the person saw when they composed the message. This module never sends"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 12,
+      "column": 1,
+      "expression": " * automated input and never falls back to pi.sendUserMessage().",
+      "item_id": "INPUT-EXAMPLE-091",
+      "kind": "comment",
+      "english": " * automated input and never falls back to pi.sendUserMessage()."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 14,
+      "column": 1,
+      "expression": " * The adapter ID must be authorized in Jouzu's user-input-adapters.json. See",
+      "item_id": "INPUT-EXAMPLE-092",
+      "kind": "comment",
+      "english": " * The adapter ID must be authorized in Jouzu's user-input-adapters.json. See"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 15,
+      "column": 1,
+      "expression": " * docs/user-input-adapters.md.",
+      "item_id": "INPUT-EXAMPLE-093",
+      "kind": "comment",
+      "english": " * docs/user-input-adapters.md."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 24,
+      "column": 1,
+      "expression": "/** Opaque target and generation to publish to the authenticated client. */",
+      "item_id": "INPUT-EXAMPLE-094",
+      "kind": "comment",
+      "english": "/** Opaque target and generation to publish to the authenticated client. */"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 27,
+      "column": 1,
+      "expression": "/** Delivery receipt for one message ID. */",
+      "item_id": "INPUT-EXAMPLE-095",
+      "kind": "comment",
+      "english": "/** Delivery receipt for one message ID. */"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 30,
+      "column": 1,
+      "expression": "/** One message composed by an authenticated person. */",
+      "item_id": "INPUT-EXAMPLE-096",
+      "kind": "comment",
+      "english": "/** One message composed by an authenticated person. */"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 32,
+      "column": 1,
+      "expression": "\t/** Binding the client received when this message was composed. */",
+      "item_id": "INPUT-EXAMPLE-097",
+      "kind": "comment",
+      "english": "\t/** Binding the client received when this message was composed. */"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 34,
+      "column": 1,
+      "expression": "\t/** Stable client message ID. Reuse it for retries and receipt recovery. */",
+      "item_id": "INPUT-EXAMPLE-098",
+      "kind": "comment",
+      "english": "\t/** Stable client message ID. Reuse it for retries and receipt recovery. */"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 40,
+      "column": 1,
+      "expression": "/** A structured failure the client can show or retry against. */",
+      "item_id": "INPUT-EXAMPLE-099",
+      "kind": "comment",
+      "english": "/** A structured failure the client can show or retry against. */"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 47,
+      "column": 1,
+      "expression": "/** The authenticated client bridge. Replace this seam with your own transport. */",
+      "item_id": "INPUT-EXAMPLE-100",
+      "kind": "comment",
+      "english": "/** The authenticated client bridge. Replace this seam with your own transport. */"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 49,
+      "column": 1,
+      "expression": "\t/** Publish the current target, or undefined once the session releases it. */",
+      "item_id": "INPUT-EXAMPLE-101",
+      "kind": "comment",
+      "english": "\t/** Publish the current target, or undefined once the session releases it. */"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 51,
+      "column": 1,
+      "expression": "\t/** Publish a receipt snapshot or update. */",
+      "item_id": "INPUT-EXAMPLE-102",
+      "kind": "comment",
+      "english": "\t/** Publish a receipt snapshot or update. */"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 53,
+      "column": 1,
+      "expression": "\t/** Report a structured failure for the client to show. */",
+      "item_id": "INPUT-EXAMPLE-103",
+      "kind": "comment",
+      "english": "\t/** Report a structured failure for the client to show. */"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 55,
+      "column": 1,
+      "expression": "\t/** Deliver authenticated messages. Returns an unsubscribe function. */",
+      "item_id": "INPUT-EXAMPLE-104",
+      "kind": "comment",
+      "english": "\t/** Deliver authenticated messages. Returns an unsubscribe function. */"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 57,
+      "column": 1,
+      "expression": "\t/** Deliver reconnects with unresolved message IDs. Returns an unsubscribe function. */",
+      "item_id": "INPUT-EXAMPLE-105",
+      "kind": "comment",
+      "english": "\t/** Deliver reconnects with unresolved message IDs. Returns an unsubscribe function. */"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 97,
+      "column": 1,
+      "expression": "\t\t/** Withdraw the published target. The registration stays live for the next binding. */",
+      "item_id": "INPUT-EXAMPLE-106",
+      "kind": "comment",
+      "english": "\t\t/** Withdraw the published target. The registration stays live for the next binding. */"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 107,
+      "column": 1,
+      "expression": "\t\t/** Bind the current target and publish it with a receipt subscription for this attachment. */",
+      "item_id": "INPUT-EXAMPLE-107",
+      "kind": "comment",
+      "english": "\t\t/** Bind the current target and publish it with a receipt subscription for this attachment. */"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 124,
+      "column": 1,
+      "expression": "\t\t\t// A subscription publishes a current snapshot first, then journal-triggered updates.",
+      "item_id": "INPUT-EXAMPLE-108",
+      "kind": "comment",
+      "english": "\t\t\t// A subscription publishes a current snapshot first, then journal-triggered updates."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 128,
+      "column": 1,
+      "expression": "\t\t\t// The snapshot listener may synchronously withdraw this target or end the session.",
+      "item_id": "INPUT-EXAMPLE-109",
+      "kind": "comment",
+      "english": "\t\t\t// The snapshot listener may synchronously withdraw this target or end the session."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 138,
+      "column": 1,
+      "expression": "\t\t * A branch change and a target reset both need a fresh binding, not a new registration: the",
+      "item_id": "INPUT-EXAMPLE-110",
+      "kind": "comment",
+      "english": "\t\t * A branch change and a target reset both need a fresh binding, not a new registration: the"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 139,
+      "column": 1,
+      "expression": "\t\t * registration survives, and messages composed against the withdrawn target are never retargeted.",
+      "item_id": "INPUT-EXAMPLE-111",
+      "kind": "comment",
+      "english": "\t\t * registration survives, and messages composed against the withdrawn target are never retargeted."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 168,
+      "column": 1,
+      "expression": "\t\t\t\t// Forward only the documented fields, and keep the binding the person saw.",
+      "item_id": "INPUT-EXAMPLE-112",
+      "kind": "comment",
+      "english": "\t\t\t\t// Forward only the documented fields, and keep the binding the person saw."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 196,
+      "column": 1,
+      "expression": "\t\t\t\t\t// Undefined means no retained record; the client keeps the message pending.",
+      "item_id": "INPUT-EXAMPLE-113",
+      "kind": "comment",
+      "english": "\t\t\t\t\t// Undefined means no retained record; the client keeps the message pending."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 208,
+      "column": 1,
+      "expression": "\t\t\t// Feature detection is explicit. An older or non-Jouzu host must not fall back to",
+      "item_id": "INPUT-EXAMPLE-114",
+      "kind": "comment",
+      "english": "\t\t\t// Feature detection is explicit. An older or non-Jouzu host must not fall back to"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 209,
+      "column": 1,
+      "expression": "\t\t\t// sending the text as an automated message.",
+      "item_id": "INPUT-EXAMPLE-115",
+      "kind": "comment",
+      "english": "\t\t\t// sending the text as an automated message."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 223,
+      "column": 1,
+      "expression": "\t\t\t\t// A reset that starts a new target epoch withdraws the published target here. Older",
+      "item_id": "INPUT-EXAMPLE-116",
+      "kind": "comment",
+      "english": "\t\t\t\t// A reset that starts a new target epoch withdraws the published target here. Older"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 224,
+      "column": 1,
+      "expression": "\t\t\t\t// hosts do not report it, so the refresh below still runs at every branch change.",
+      "item_id": "INPUT-EXAMPLE-117",
+      "kind": "comment",
+      "english": "\t\t\t\t// hosts do not report it, so the refresh below still runs at every branch change."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 240,
+      "column": 1,
+      "expression": "\t\t// No work at factory load: registration starts with the session.",
+      "item_id": "INPUT-EXAMPLE-118",
+      "kind": "comment",
+      "english": "\t\t// No work at factory load: registration starts with the session."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 244,
+      "column": 1,
+      "expression": "\t\t// A branch change needs a fresh target and a receipt subscription for the new branch. The",
+      "item_id": "INPUT-EXAMPLE-119",
+      "kind": "comment",
+      "english": "\t\t// A branch change needs a fresh target and a receipt subscription for the new branch. The"
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 245,
+      "column": 1,
+      "expression": "\t\t// registration survives branch navigation, so only the binding and subscription are replaced.",
+      "item_id": "INPUT-EXAMPLE-120",
+      "kind": "comment",
+      "english": "\t\t// registration survives branch navigation, so only the binding and subscription are replaced."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 249,
+      "column": 1,
+      "expression": "\t\t// Release listeners and the published target. Safe to call more than once.",
+      "item_id": "INPUT-EXAMPLE-121",
+      "kind": "comment",
+      "english": "\t\t// Release listeners and the published target. Safe to call more than once."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 117,
+      "column": 5,
+      "expression": "if (!active()) return;",
+      "item_id": "INPUT-EXAMPLE-122",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 150,
+      "column": 5,
+      "expression": "if (lifecycle !== generation",
+      "item_id": "INPUT-EXAMPLE-123",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 169,
+      "column": 5,
+      "expression": "const receipt = await current.submit",
+      "item_id": "INPUT-EXAMPLE-124",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 194,
+      "column": 6,
+      "expression": "const receipt = await current.lookup",
+      "item_id": "INPUT-EXAMPLE-125",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 83,
+      "column": 3,
+      "expression": "const release =",
+      "item_id": "INPUT-EXAMPLE-126",
+      "kind": "boundary",
+      "english": ""
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 225,
+      "column": 5,
+      "expression": "const watch =",
+      "item_id": "INPUT-EXAMPLE-127",
+      "kind": "boundary",
+      "english": ""
+    }
+  ],
+  "controls": [
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 116,
+      "column": 6,
+      "expression": "catch (error) {\n\t\t\t\tif (!active()) return;\n\t\t\t\tthrow error;\n\t\t\t}",
+      "kind": "catch",
+      "disposition": "Stale bind rejection suppressed, active rethrown."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 149,
+      "column": 6,
+      "expression": "catch (error) {\n\t\t\t\tif (lifecycle !== generation || bindingOperation !== operation || adapter !== current) return;\n\t\t\t\tconst failure = toFailure(error);\n\t\t\t\ttransport.reportFailure(failure);\n\t\t\t\tif (ctx.hasUI) ctx.ui.notify(`External user input: ${failure.text}`, \"error\");\n\t\t\t}",
+      "kind": "catch",
+      "disposition": "Identity-gated rebind reporting and UI notification."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 176,
+      "column": 6,
+      "expression": "catch (error) {\n\t\t\t\tif (adapter === current) transport.reportFailure(toFailure(error, message.messageId));\n\t\t\t}",
+      "kind": "catch",
+      "disposition": "Current-adapter submit failure reported, stale ignored."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 198,
+      "column": 7,
+      "expression": "catch (error) {\n\t\t\t\t\tif (adapter !== current) return;\n\t\t\t\t\ttransport.reportFailure(toFailure(error, messageId));\n\t\t\t\t}",
+      "kind": "catch",
+      "disposition": "Current-adapter lookup failure reported, stale exits."
+    },
+    {
+      "path": "examples/user-input-adapter/extension.ts",
+      "line": 231,
+      "column": 6,
+      "expression": "catch (error) {\n\t\t\t\tif (lifecycle !== generation) return;\n\t\t\t\trelease();\n\t\t\t\tconst failure = toFailure(error);\n\t\t\t\ttransport.reportFailure(failure);\n\t\t\t\tif (ctx.hasUI) ctx.ui.notify(`External user input: ${failure.text}`, \"error\");\n\t\t\t}",
+      "kind": "catch",
+      "disposition": "Lifecycle-gated startup release/report/notification; failures in these actions may escape."
+    }
+  ],
+  "counts": {
+    "primary": 127,
+    "fixed": 8,
+    "boundaries": 6,
+    "document_lines": 75,
+    "comment_lines": 38,
+    "excluded": 21,
+    "nodes": 29,
+    "catches": 5,
+    "errors": 0,
+    "scope": 3
+  },
+  "reviewed_data": {
+    "input-example-text.csv": "40a8c32fd735cc0bb4f20c4c922fd00c171daa3250e039c4e3b691b3dc1538ca",
+    "input-example-text-exclusions.csv": "00477bbe14bbb03847c087f52c3080dacf430c5641cac595f40b97c3e2cb19f4",
+    "input-example-text-scope.csv": "19e79b5ba6dbc5ab65b88fe23f3b751f1bf0902a44ee94d970869ff46db7bbc7"
+  }
+}
