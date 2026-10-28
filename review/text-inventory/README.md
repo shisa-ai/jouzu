@@ -480,6 +480,21 @@ patches. Thirteen corruption controls pass. This unit closes ten bodies pending
 in the frozen runtime census; Flow orchestration separately covers the event bus.
 No editor, terminal, native, child or user-state producer was executed.
 
+[pi-theme-text.csv](pi-theme-text.csv) adds 87 theme occurrences: 69 shipped
+schema title/description facets and eighteen conditional error fragments, with
+eight [boundaries](pi-theme-text-boundaries.csv). Five complete theme bodies cover
+1,860 lines. All 567 string/template occurrences are partitioned against 480
+[exclusions](pi-theme-text-exclusions.csv); the [scope](pi-theme-text-scope.csv)
+accounts for fourteen Error/throw sites and ten catches. Resource diagnostics,
+explicit settings failures, schema preemption, silent preview/fallback and caught
+export/watch errors keep separate delivery conditions. Three private/suppressed
+error headlines have no established visible valid-input route. The schema's
+resource/editor prose does not imply terminal paint or a verified remote schema.
+Canonical checks cover thirty assets: 27 match archives and three pinned patches.
+Thirteen corruption controls pass. These five bodies follow the frozen runtime
+census; imported validators, native libraries and broader resources remain open.
+No theme, terminal, watcher, browser, export or user-state producer was executed.
+
 [pi-tools.csv](pi-tools.csv) supplies 172 inherited tool/helper occurrences,
 with 27 [payload boundaries](pi-tools-boundaries.csv). Its
 [scope table](pi-tools-scope.csv) covers 37 complete source bodies: 24 tool and
@@ -1219,6 +1234,7 @@ node review/text-inventory/verify-pi-tui-engines.cjs --node-modules <root-node-m
 node review/text-inventory/verify-pi-tui-input.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-tui-text-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-interactive-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-theme-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 

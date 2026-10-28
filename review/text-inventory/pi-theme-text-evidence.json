@@ -1,0 +1,3544 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "ddbc83311da07ee10a80b4bf13b8ffd8d355af56",
+  "inventory_file": "pi-theme-text.csv",
+  "scope_file": "pi-theme-text-scope.csv",
+  "boundary_file": "pi-theme-text-boundaries.csv",
+  "exclusion_file": "pi-theme-text-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    },
+    {
+      "source": "packages/cli/src/presentation.ts",
+      "sha256": "e188e7b636ab8a661fdcc32bc3aa1653969349925a85688c751d0ba4815ff039"
+    },
+    {
+      "source": "packages/session-ui/src/styles.ts",
+      "sha256": "8734b917deee590325579de48adec383bc8ef40c09209cc03412e46dd099201e"
+    },
+    {
+      "source": "packages/session-ui/src/extension.ts",
+      "sha256": "3c146dab00f8280d63c339e08a48a2953add3659b01a20f650dc21c7d14efe8a"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "sha256": "f526a690b63c6303296f683c9df6077ddc290ee9acb1bc27eedef169c0caad59",
+      "cli_nested_sha256": "f526a690b63c6303296f683c9df6077ddc290ee9acb1bc27eedef169c0caad59",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          366
+        ]
+      ],
+      "purpose": "Bounded actual native/schema/diagnostic/controller/export routing support; prior full bodies independent, no new full broader resource closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/docs/themes.md",
+      "sha256": "6f11eb43ca6dad4c71bcfa2fc72ac13c013e3cb9383688b88923e0139b2d097c",
+      "cli_nested_sha256": "6f11eb43ca6dad4c71bcfa2fc72ac13c013e3cb9383688b88923e0139b2d097c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          61,
+          78
+        ],
+        [
+          98,
+          98
+        ]
+      ],
+      "purpose": "Bounded actual native/schema/diagnostic/controller/export routing support; prior full bodies independent, no new full broader resource closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/main.js",
+      "sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "cli_nested_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          450,
+          454
+        ]
+      ],
+      "purpose": "Bounded actual native/schema/diagnostic/controller/export routing support; prior full bodies independent, no new full broader resource closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/startup-ui.js",
+      "sha256": "f0fa56d9aeb064abfc0c0b1370140e7ff1925cc707fe6952815a8b5d96649b48",
+      "cli_nested_sha256": "f0fa56d9aeb064abfc0c0b1370140e7ff1925cc707fe6952815a8b5d96649b48",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          22,
+          42
+        ],
+        [
+          56,
+          64
+        ]
+      ],
+      "purpose": "Bounded actual native/schema/diagnostic/controller/export routing support; prior full bodies independent, no new full broader resource closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resource-loader.js",
+      "sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461",
+      "cli_nested_sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          695,
+          710
+        ],
+        [
+          888,
+          895
+        ]
+      ],
+      "purpose": "Bounded actual native/schema/diagnostic/controller/export routing support; prior full bodies independent, no new full broader resource closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          456,
+          465
+        ],
+        [
+          1329,
+          1375
+        ],
+        [
+          1474,
+          1474
+        ],
+        [
+          1505,
+          1509
+        ],
+        [
+          1584,
+          1589
+        ],
+        [
+          2125,
+          2140
+        ],
+        [
+          3797,
+          3800
+        ],
+        [
+          4167,
+          4171
+        ],
+        [
+          5418,
+          5427
+        ],
+        [
+          5446,
+          5462
+        ]
+      ],
+      "purpose": "Bounded actual native/schema/diagnostic/controller/export routing support; prior full bodies independent, no new full broader resource closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/index.js",
+      "sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "cli_nested_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          71,
+          106
+        ]
+      ],
+      "purpose": "Bounded actual native/schema/diagnostic/controller/export routing support; prior full bodies independent, no new full broader resource closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/dark.json",
+      "sha256": "e1f96982f8cb7d2a48eca7db03c9cb282cb1e14a243680cd855638ecd6a251b6",
+      "cli_nested_sha256": "e1f96982f8cb7d2a48eca7db03c9cb282cb1e14a243680cd855638ecd6a251b6",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "purpose": "JSON data-only name/schema/color-key invariant; English/resource body outside fixed JS definitions not claimed complete."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/light.json",
+      "sha256": "2dee6a4be7f765e7fd7728166b7ebf8c29e4ce313f8ec6b38ae50699e3abc2f3",
+      "cli_nested_sha256": "2dee6a4be7f765e7fd7728166b7ebf8c29e4ce313f8ec6b38ae50699e3abc2f3",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "purpose": "JSON data-only name/schema/color-key invariant; English/resource body outside fixed JS definitions not claimed complete."
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/colors.js",
+      "sha256": "330cc45db7f9d6f2987ec939075f9142fdad58bc77989e2d0b2204389c5e0370",
+      "cli_nested_sha256": "330cc45db7f9d6f2987ec939075f9142fdad58bc77989e2d0b2204389c5e0370",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          78
+        ]
+      ],
+      "purpose": "Bounded prior full TUI color validator API/native theme input route; original error definitions remain pi-tui-utilities.csv."
+    }
+  ],
+  "nonruntime_assets": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.d.ts",
+      "sha256": "9f97e431a0538f94f924bfa0cd3f436a4b5e089bcb32e7d41e8db9db45528d9e",
+      "cli_nested_sha256": "9f97e431a0538f94f924bfa0cd3f436a4b5e089bcb32e7d41e8db9db45528d9e",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.d.ts.map",
+      "sha256": "fe39cee8cdf36317992f58b0a3eac48275f5cf11a2b89ba194a005b650aaf604",
+      "cli_nested_sha256": "fe39cee8cdf36317992f58b0a3eac48275f5cf11a2b89ba194a005b650aaf604",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js.map",
+      "sha256": "af9d12454087131328a0bbebe3b3e88b5a70f9f67c3ab2dc0212a4487fdeffa5",
+      "cli_nested_sha256": "af9d12454087131328a0bbebe3b3e88b5a70f9f67c3ab2dc0212a4487fdeffa5",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/system-theme.d.ts",
+      "sha256": "e9923e68abd01e41931cf5aca2bdd9ec3502ba76597cc5d2d94b5b31cf14678c",
+      "cli_nested_sha256": "e9923e68abd01e41931cf5aca2bdd9ec3502ba76597cc5d2d94b5b31cf14678c",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/system-theme.d.ts.map",
+      "sha256": "b38a54c83543c7022988210399ee6e01a5ca0a945d19145ea344020c71ef1581",
+      "cli_nested_sha256": "b38a54c83543c7022988210399ee6e01a5ca0a945d19145ea344020c71ef1581",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/system-theme.js.map",
+      "sha256": "9774d52c9e0eb6ae374ed49f7d7624a06bcde654f5105db3d89542a770479104",
+      "cli_nested_sha256": "9774d52c9e0eb6ae374ed49f7d7624a06bcde654f5105db3d89542a770479104",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-controller.d.ts",
+      "sha256": "7e30913889b5d02656868e6aeda10e1672f03cb6b986e0653ec7e158433fb9b8",
+      "cli_nested_sha256": "7e30913889b5d02656868e6aeda10e1672f03cb6b986e0653ec7e158433fb9b8",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-controller.d.ts.map",
+      "sha256": "6c66c11d638c00f55db543a7f2fdc43f2d5a946dca76778316871fbf7d1e65fb",
+      "cli_nested_sha256": "6c66c11d638c00f55db543a7f2fdc43f2d5a946dca76778316871fbf7d1e65fb",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-controller.js.map",
+      "sha256": "e5edf78f25028077076671a63a7dad8d1bbfbd83fdea0740cf676450234f177a",
+      "cli_nested_sha256": "e5edf78f25028077076671a63a7dad8d1bbfbd83fdea0740cf676450234f177a",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.d.ts",
+      "sha256": "2cfbf6e460669c3beef15c832b962ad2dbdfc161bb3af97d2c2c1caf91a299d0",
+      "cli_nested_sha256": "2cfbf6e460669c3beef15c832b962ad2dbdfc161bb3af97d2c2c1caf91a299d0",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.d.ts.map",
+      "sha256": "f934eb3a17c44bf03c89dee6d98eaef2cdefbf13d206e1ad91f1a5a81cb41abd",
+      "cli_nested_sha256": "f934eb3a17c44bf03c89dee6d98eaef2cdefbf13d206e1ad91f1a5a81cb41abd",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js.map",
+      "sha256": "209e6d25f7e1ae1ec22a7b0b8d4126f64e5a31c81edf3d69c3baf52402bad469",
+      "cli_nested_sha256": "209e6d25f7e1ae1ec22a7b0b8d4126f64e5a31c81edf3d69c3baf52402bad469",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.d.ts",
+      "sha256": "ab663fef0c2e62e9ba5046610dee4705bc17643228d5e8dbb51ec6a08e195d78",
+      "cli_nested_sha256": "ab663fef0c2e62e9ba5046610dee4705bc17643228d5e8dbb51ec6a08e195d78",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.d.ts.map",
+      "sha256": "cc7a7dc94f2b42481a66aaed79ea55040cc833ee690c6439c8c3eb19423d5c02",
+      "cli_nested_sha256": "cc7a7dc94f2b42481a66aaed79ea55040cc833ee690c6439c8c3eb19423d5c02",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js.map",
+      "sha256": "e3c392efa55d46427e0b21439adf199c3b12ffd713eec5c918346b6f482a391d",
+      "cli_nested_sha256": "e3c392efa55d46427e0b21439adf199c3b12ffd713eec5c918346b6f482a391d",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    }
+  ],
+  "archive_support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/docs/themes.md"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/main.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/cli/startup-ui.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resource-loader.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/index.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/dark.json"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/light.json"
+    },
+    {
+      "source": "npm:@earendil-works/pi-tui@1.4.0/dist/colors.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/system-theme.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/system-theme.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/system-theme.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-controller.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-controller.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-controller.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js.map"
+    }
+  ],
+  "counts": {
+    "rows": 87,
+    "proofs": 87,
+    "scopes": 5,
+    "external_boundaries": 8,
+    "excluded_occurrences": 480,
+    "dispositioned_source_files": 5,
+    "string_template_occurrences": 567,
+    "protected_regex_literals": 3,
+    "error_constructors": 14,
+    "catch_clauses": 10,
+    "throw_statements": 14,
+    "all_new_expressions": 26,
+    "protected_control_occurrences": 6,
+    "full_runtime_lines": 1860,
+    "runtime_source_bytes": 79419,
+    "nonruntime_assets": 15,
+    "schema_resource_rows": 69,
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "statusCounts": {
+      "source-read-local-producers": 5
+    }
+  },
+  "proofs": [
+    {
+      "item_id": "pi.theme-text.theme_tokens.17.48",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 17,
+      "column": 48,
+      "kind": "string-literal",
+      "english": "Primary accent color (logo, selected items, cursor)",
+      "evidence": "\"Primary accent color (logo, selected items, cursor)\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.18.48",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 18,
+      "column": 48,
+      "kind": "string-literal",
+      "english": "Normal borders",
+      "evidence": "\"Normal borders\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.19.54",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 19,
+      "column": 54,
+      "kind": "string-literal",
+      "english": "Highlighted borders",
+      "evidence": "\"Highlighted borders\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.20.53",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 20,
+      "column": 53,
+      "kind": "string-literal",
+      "english": "Subtle borders",
+      "evidence": "\"Subtle borders\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.21.49",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 21,
+      "column": 49,
+      "kind": "string-literal",
+      "english": "Success states",
+      "evidence": "\"Success states\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.22.47",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 22,
+      "column": 47,
+      "kind": "string-literal",
+      "english": "Error states",
+      "evidence": "\"Error states\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.23.49",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 23,
+      "column": 49,
+      "kind": "string-literal",
+      "english": "Warning states",
+      "evidence": "\"Warning states\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.24.47",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 24,
+      "column": 47,
+      "kind": "string-literal",
+      "english": "Secondary/dimmed text",
+      "evidence": "\"Secondary/dimmed text\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.25.45",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 25,
+      "column": 45,
+      "kind": "string-literal",
+      "english": "Very dimmed text (more subtle than muted)",
+      "evidence": "\"Very dimmed text (more subtle than muted)\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.26.46",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 26,
+      "column": 46,
+      "kind": "string-literal",
+      "english": "Default text color (usually empty string)",
+      "evidence": "\"Default text color (usually empty string)\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.27.54",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 27,
+      "column": 54,
+      "kind": "string-literal",
+      "english": "Thinking block text color",
+      "evidence": "\"Thinking block text color\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.30.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 30,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Fullscreen scrollbar track foreground (falls back to muted when omitted)",
+      "evidence": "\"Fullscreen scrollbar track foreground (falls back to muted when omitted)\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.35.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 35,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Fullscreen scrollbar thumb foreground (falls back to text when omitted)",
+      "evidence": "\"Fullscreen scrollbar thumb foreground (falls back to text when omitted)\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.38.52",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 38,
+      "column": 52,
+      "kind": "string-literal",
+      "english": "Selected item background",
+      "evidence": "\"Selected item background\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.41.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 41,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Transcript search match background and current-match text (falls back to selectedBg when omitted)",
+      "evidence": "\"Transcript search match background and current-match text (falls back to selectedBg when omitted)\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.46.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 46,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Transcript search match text and current-match background (falls back to text when omitted)",
+      "evidence": "\"Transcript search match text and current-match background (falls back to text when omitted)\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.49.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 49,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "User message background",
+      "evidence": "\"User message background\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.50.57",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 50,
+      "column": 57,
+      "kind": "string-literal",
+      "english": "User message text color",
+      "evidence": "\"User message text color\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.51.57",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 51,
+      "column": 57,
+      "kind": "string-literal",
+      "english": "Custom message background (hook-injected messages)",
+      "evidence": "\"Custom message background (hook-injected messages)\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.52.59",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 52,
+      "column": 59,
+      "kind": "string-literal",
+      "english": "Custom message text color",
+      "evidence": "\"Custom message text color\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.53.60",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 53,
+      "column": 60,
+      "kind": "string-literal",
+      "english": "Custom message type label color",
+      "evidence": "\"Custom message type label color\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.54.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 54,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "Tool execution box (pending state)",
+      "evidence": "\"Tool execution box (pending state)\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.55.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 55,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "Tool execution box (success state)",
+      "evidence": "\"Tool execution box (success state)\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.56.53",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 56,
+      "column": 53,
+      "kind": "string-literal",
+      "english": "Tool execution box (error state)",
+      "evidence": "\"Tool execution box (error state)\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.57.51",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 57,
+      "column": 51,
+      "kind": "string-literal",
+      "english": "Tool execution box title color",
+      "evidence": "\"Tool execution box title color\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.58.52",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 58,
+      "column": 52,
+      "kind": "string-literal",
+      "english": "Tool execution box output text color",
+      "evidence": "\"Tool execution box output text color\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.59.51",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 59,
+      "column": 51,
+      "kind": "string-literal",
+      "english": "Markdown heading text",
+      "evidence": "\"Markdown heading text\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.60.48",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 60,
+      "column": 48,
+      "kind": "string-literal",
+      "english": "Markdown link text",
+      "evidence": "\"Markdown link text\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.61.51",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 61,
+      "column": 51,
+      "kind": "string-literal",
+      "english": "Markdown link URL",
+      "evidence": "\"Markdown link URL\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.62.48",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 62,
+      "column": 48,
+      "kind": "string-literal",
+      "english": "Markdown inline code",
+      "evidence": "\"Markdown inline code\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.63.53",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 63,
+      "column": 53,
+      "kind": "string-literal",
+      "english": "Markdown code block content",
+      "evidence": "\"Markdown code block content\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.64.59",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 64,
+      "column": 59,
+      "kind": "string-literal",
+      "english": "Markdown code block fences",
+      "evidence": "\"Markdown code block fences\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.65.49",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 65,
+      "column": 49,
+      "kind": "string-literal",
+      "english": "Markdown blockquote text",
+      "evidence": "\"Markdown blockquote text\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.66.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 66,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "Markdown blockquote border",
+      "evidence": "\"Markdown blockquote border\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.67.46",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 67,
+      "column": 46,
+      "kind": "string-literal",
+      "english": "Markdown horizontal rule",
+      "evidence": "\"Markdown horizontal rule\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.68.54",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 68,
+      "column": 54,
+      "kind": "string-literal",
+      "english": "Markdown list bullets/numbers",
+      "evidence": "\"Markdown list bullets/numbers\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.69.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 69,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "Added lines in tool diffs",
+      "evidence": "\"Added lines in tool diffs\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.70.57",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 70,
+      "column": 57,
+      "kind": "string-literal",
+      "english": "Removed lines in tool diffs",
+      "evidence": "\"Removed lines in tool diffs\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.71.57",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 71,
+      "column": 57,
+      "kind": "string-literal",
+      "english": "Context lines in tool diffs",
+      "evidence": "\"Context lines in tool diffs\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.72.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 72,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "Syntax highlighting: comments",
+      "evidence": "\"Syntax highlighting: comments\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.73.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 73,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "Syntax highlighting: keywords",
+      "evidence": "\"Syntax highlighting: keywords\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.74.56",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 74,
+      "column": 56,
+      "kind": "string-literal",
+      "english": "Syntax highlighting: function names",
+      "evidence": "\"Syntax highlighting: function names\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.75.56",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 75,
+      "column": 56,
+      "kind": "string-literal",
+      "english": "Syntax highlighting: variable names",
+      "evidence": "\"Syntax highlighting: variable names\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.76.54",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 76,
+      "column": 54,
+      "kind": "string-literal",
+      "english": "Syntax highlighting: string literals",
+      "evidence": "\"Syntax highlighting: string literals\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.77.54",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 77,
+      "column": 54,
+      "kind": "string-literal",
+      "english": "Syntax highlighting: number literals",
+      "evidence": "\"Syntax highlighting: number literals\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.78.52",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 78,
+      "column": 52,
+      "kind": "string-literal",
+      "english": "Syntax highlighting: type names",
+      "evidence": "\"Syntax highlighting: type names\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.79.56",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 79,
+      "column": 56,
+      "kind": "string-literal",
+      "english": "Syntax highlighting: operators",
+      "evidence": "\"Syntax highlighting: operators\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.80.59",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 80,
+      "column": 59,
+      "kind": "string-literal",
+      "english": "Syntax highlighting: punctuation",
+      "evidence": "\"Syntax highlighting: punctuation\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.81.53",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 81,
+      "column": 53,
+      "kind": "string-literal",
+      "english": "Thinking level border: off",
+      "evidence": "\"Thinking level border: off\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.82.57",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 82,
+      "column": 57,
+      "kind": "string-literal",
+      "english": "Thinking level border: minimal",
+      "evidence": "\"Thinking level border: minimal\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.83.53",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 83,
+      "column": 53,
+      "kind": "string-literal",
+      "english": "Thinking level border: low",
+      "evidence": "\"Thinking level border: low\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.84.56",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 84,
+      "column": 56,
+      "kind": "string-literal",
+      "english": "Thinking level border: medium",
+      "evidence": "\"Thinking level border: medium\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.85.54",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 85,
+      "column": 54,
+      "kind": "string-literal",
+      "english": "Thinking level border: high",
+      "evidence": "\"Thinking level border: high\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.86.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 86,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "Thinking level border: xhigh",
+      "evidence": "\"Thinking level border: xhigh\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.89.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 89,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Thinking level border: max (falls back to thinkingXhigh when omitted)",
+      "evidence": "\"Thinking level border: max (falls back to thinkingXhigh when omitted)\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.92.50",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 92,
+      "column": 50,
+      "kind": "string-literal",
+      "english": "Editor border color in bash mode",
+      "evidence": "\"Editor border color in bash mode\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.15.26",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 15,
+      "column": 26,
+      "kind": "string-literal",
+      "english": "Hex color (#RGB or #RRGGBB), OKLCH or OKHSL color, variable reference, or empty string for terminal default",
+      "evidence": "\"Hex color (#RGB or #RRGGBB), OKLCH or OKHSL color, variable reference, or empty string for terminal default\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.20.26",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 20,
+      "column": 26,
+      "kind": "string-literal",
+      "english": "256-color palette index (0-255)",
+      "evidence": "\"256-color palette index (0-255)\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.34.18",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 34,
+      "column": 18,
+      "kind": "string-literal",
+      "english": "Theme color definitions (scrollbar, thinkingMax, and search highlight colors are optional and use compatible fallbacks)",
+      "evidence": "\"Theme color definitions (scrollbar, thinkingMax, and search highlight colors are optional and use compatible fallbacks)\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.38.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 38,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "JSON schema reference",
+      "evidence": "\"JSON schema reference\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.41.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 41,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Theme name. Must not contain '/' because it is reserved for automatic light/dark theme settings.",
+      "evidence": "\"Theme name. Must not contain '/' because it is reserved for automatic light/dark theme settings.\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.44.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 44,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Background the theme is designed for. Detected from the theme colors when omitted.",
+      "evidence": "\"Background the theme is designed for. Detected from the theme colors when omitted.\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.47.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 47,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Reusable color variables",
+      "evidence": "\"Reusable color variables\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.51.42",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 51,
+      "column": 42,
+      "kind": "string-literal",
+      "english": "Page background color",
+      "evidence": "\"Page background color\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.52.42",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 52,
+      "column": 42,
+      "kind": "string-literal",
+      "english": "Card/container background color",
+      "evidence": "\"Card/container background color\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.53.42",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 53,
+      "column": 42,
+      "kind": "string-literal",
+      "english": "Info sections background (system prompt, notices)",
+      "evidence": "\"Info sections background (system prompt, notices)\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.55.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 55,
+      "column": 22,
+      "kind": "string-literal",
+      "english": "Optional colors for HTML export (defaults derived from userMessageBg if not specified)",
+      "evidence": "\"Optional colors for HTML export (defaults derived from userMessageBg if not specified)\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.59.12",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 59,
+      "column": 12,
+      "kind": "string-literal",
+      "english": "Pi Coding Agent Theme",
+      "evidence": "\"Pi Coding Agent Theme\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.60.18",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 60,
+      "column": 18,
+      "kind": "string-literal",
+      "english": "Theme schema for Pi coding agent",
+      "evidence": "\"Theme schema for Pi coding agent\""
+    },
+    {
+      "item_id": "pi.theme-text.theme.29.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js",
+      "line": 29,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Circular variable reference detected: ${value}",
+      "evidence": "`Circular variable reference detected: ${value}`"
+    },
+    {
+      "item_id": "pi.theme-text.theme.32.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js",
+      "line": 32,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Variable reference not found: ${value}",
+      "evidence": "`Variable reference not found: ${value}`"
+    },
+    {
+      "item_id": "pi.theme-text.theme.55.29",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js",
+      "line": 55,
+      "column": 29,
+      "kind": "template-expression",
+      "english": "Theme token ${rawName} has unresolved fallback ${descriptor.fallback}",
+      "evidence": "`Theme token ${rawName} has unresolved fallback ${descriptor.fallback}`"
+    },
+    {
+      "item_id": "pi.theme-text.theme.215.29",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js",
+      "line": 215,
+      "column": 29,
+      "kind": "template-expression",
+      "english": "Unknown theme color: ${token}",
+      "evidence": "`Unknown theme color: ${token}`"
+    },
+    {
+      "item_id": "pi.theme-text.theme.340.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js",
+      "line": 340,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Invalid theme name \"${name}\": theme names cannot contain \"/\" because it is reserved for automatic light/dark theme settings.",
+      "evidence": "`Invalid theme name \"${name}\": theme names cannot contain \"/\" because it is reserved for automatic light/dark theme settings.`"
+    },
+    {
+      "item_id": "pi.theme-text.theme.347.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js",
+      "line": 347,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Invalid theme \"${label}\": expected an object with a \"colors\" map.",
+      "evidence": "`Invalid theme \"${label}\": expected an object with a \"colors\" map.`"
+    },
+    {
+      "item_id": "pi.theme-text.theme.357.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js",
+      "line": 357,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Failed to parse theme ${label}: ${error}",
+      "evidence": "`Failed to parse theme ${label}: ${error}`"
+    },
+    {
+      "item_id": "pi.theme-text.theme.377.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js",
+      "line": 377,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Theme not found: ${name}",
+      "evidence": "`Theme not found: ${name}`"
+    },
+    {
+      "item_id": "pi.theme-text.theme.511.29",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js",
+      "line": 511,
+      "column": 29,
+      "kind": "string-literal",
+      "english": "Theme not initialized. Call initTheme() first.",
+      "evidence": "\"Theme not initialized. Call initTheme() first.\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.71.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 71,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Invalid theme name \"${json.name}\": theme names cannot contain \"/\" because it is reserved for automatic light/dark theme settings.",
+      "evidence": "`Invalid theme name \"${json.name}\": theme names cannot contain \"/\" because it is reserved for automatic light/dark theme settings.`"
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.86.30",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 86,
+      "column": 30,
+      "kind": "template-expression",
+      "english": "  - ${path}: ${error.message}",
+      "evidence": "`  - ${path}: ${error.message}`"
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.88.28",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 88,
+      "column": 28,
+      "kind": "template-expression",
+      "english": "Invalid theme \"${label}\":\\n",
+      "evidence": "`Invalid theme \"${label}\":\\n`"
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.90.29",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 90,
+      "column": 29,
+      "kind": "string-literal",
+      "english": "\nMissing required color tokens:\n",
+      "evidence": "\"\\nMissing required color tokens:\\n\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.93.33",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 93,
+      "column": 33,
+      "kind": "template-expression",
+      "english": "  - ${color}",
+      "evidence": "`  - ${color}`"
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.95.29",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 95,
+      "column": 29,
+      "kind": "string-literal",
+      "english": "\n\nPlease add these colors to your theme's \"colors\" object.",
+      "evidence": "'\\n\\nPlease add these colors to your theme\\'s \"colors\" object.'"
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.96.29",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 96,
+      "column": 29,
+      "kind": "string-literal",
+      "english": "\nSee the built-in themes (dark.json, light.json) for reference values.",
+      "evidence": "\"\\nSee the built-in themes (dark.json, light.json) for reference values.\""
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.99.29",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 99,
+      "column": 29,
+      "kind": "template-expression",
+      "english": "\\n\\nOther errors:\\n${otherErrors.join(\"\\n\")}",
+      "evidence": "`\\n\\nOther errors:\\n${otherErrors.join(\"\\n\")}`"
+    },
+    {
+      "item_id": "pi.theme-text.theme_controller.143.28",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-controller.js",
+      "line": 143,
+      "column": 28,
+      "kind": "template-expression",
+      "english": "Failed to load theme \"${themeName}\": ${result.error}\\nFell back to the system theme.",
+      "evidence": "`Failed to load theme \"${themeName}\": ${result.error}\\nFell back to the system theme.`"
+    }
+  ],
+  "schema_crosslinks": [
+    {
+      "item_id": "pi.theme-text.theme_tokens.17.48",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 17,
+      "column": 48,
+      "description": "Primary accent color (logo, selected items, cursor)",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 100,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.18.48",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 18,
+      "column": 48,
+      "description": "Normal borders",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 104,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.19.54",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 19,
+      "column": 54,
+      "description": "Highlighted borders",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 108,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.20.53",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 20,
+      "column": 53,
+      "description": "Subtle borders",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 112,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.21.49",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 21,
+      "column": 49,
+      "description": "Success states",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 116,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.22.47",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 22,
+      "column": 47,
+      "description": "Error states",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 120,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.23.49",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 23,
+      "column": 49,
+      "description": "Warning states",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 124,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.24.47",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 24,
+      "column": 47,
+      "description": "Secondary/dimmed text",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 128,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.25.45",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 25,
+      "column": 45,
+      "description": "Very dimmed text (more subtle than muted)",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 132,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.26.46",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 26,
+      "column": 46,
+      "description": "Default text color (usually empty string)",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 136,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.27.54",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 27,
+      "column": 54,
+      "description": "Thinking block text color",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 140,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.30.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 30,
+      "column": 22,
+      "description": "Fullscreen scrollbar track foreground (falls back to muted when omitted)",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 144,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.35.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 35,
+      "column": 22,
+      "description": "Fullscreen scrollbar thumb foreground (falls back to text when omitted)",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 148,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.38.52",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 38,
+      "column": 52,
+      "description": "Selected item background",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 152,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.41.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 41,
+      "column": 22,
+      "description": "Transcript search match background and current-match text (falls back to selectedBg when omitted)",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 156,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.46.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 46,
+      "column": 22,
+      "description": "Transcript search match text and current-match background (falls back to text when omitted)",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 160,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.49.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 49,
+      "column": 55,
+      "description": "User message background",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 164,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.50.57",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 50,
+      "column": 57,
+      "description": "User message text color",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 168,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.51.57",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 51,
+      "column": 57,
+      "description": "Custom message background (hook-injected messages)",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 172,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.52.59",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 52,
+      "column": 59,
+      "description": "Custom message text color",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 176,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.53.60",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 53,
+      "column": 60,
+      "description": "Custom message type label color",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 180,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.54.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 54,
+      "column": 55,
+      "description": "Tool execution box (pending state)",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 184,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.55.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 55,
+      "column": 55,
+      "description": "Tool execution box (success state)",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 188,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.56.53",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 56,
+      "column": 53,
+      "description": "Tool execution box (error state)",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 192,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.57.51",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 57,
+      "column": 51,
+      "description": "Tool execution box title color",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 196,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.58.52",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 58,
+      "column": 52,
+      "description": "Tool execution box output text color",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 200,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.59.51",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 59,
+      "column": 51,
+      "description": "Markdown heading text",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 204,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.60.48",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 60,
+      "column": 48,
+      "description": "Markdown link text",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 208,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.61.51",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 61,
+      "column": 51,
+      "description": "Markdown link URL",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 212,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.62.48",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 62,
+      "column": 48,
+      "description": "Markdown inline code",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 216,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.63.53",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 63,
+      "column": 53,
+      "description": "Markdown code block content",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 220,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.64.59",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 64,
+      "column": 59,
+      "description": "Markdown code block fences",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 224,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.65.49",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 65,
+      "column": 49,
+      "description": "Markdown blockquote text",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 228,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.66.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 66,
+      "column": 55,
+      "description": "Markdown blockquote border",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 232,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.67.46",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 67,
+      "column": 46,
+      "description": "Markdown horizontal rule",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 236,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.68.54",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 68,
+      "column": 54,
+      "description": "Markdown list bullets/numbers",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 240,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.69.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 69,
+      "column": 55,
+      "description": "Added lines in tool diffs",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 244,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.70.57",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 70,
+      "column": 57,
+      "description": "Removed lines in tool diffs",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 248,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.71.57",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 71,
+      "column": 57,
+      "description": "Context lines in tool diffs",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 252,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.72.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 72,
+      "column": 55,
+      "description": "Syntax highlighting: comments",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 256,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.73.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 73,
+      "column": 55,
+      "description": "Syntax highlighting: keywords",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 260,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.74.56",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 74,
+      "column": 56,
+      "description": "Syntax highlighting: function names",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 264,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.75.56",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 75,
+      "column": 56,
+      "description": "Syntax highlighting: variable names",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 268,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.76.54",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 76,
+      "column": 54,
+      "description": "Syntax highlighting: string literals",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 272,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.77.54",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 77,
+      "column": 54,
+      "description": "Syntax highlighting: number literals",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 276,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.78.52",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 78,
+      "column": 52,
+      "description": "Syntax highlighting: type names",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 280,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.79.56",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 79,
+      "column": 56,
+      "description": "Syntax highlighting: operators",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 284,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.80.59",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 80,
+      "column": 59,
+      "description": "Syntax highlighting: punctuation",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 288,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.81.53",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 81,
+      "column": 53,
+      "description": "Thinking level border: off",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 292,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.82.57",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 82,
+      "column": 57,
+      "description": "Thinking level border: minimal",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 296,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.83.53",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 83,
+      "column": 53,
+      "description": "Thinking level border: low",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 300,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.84.56",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 84,
+      "column": 56,
+      "description": "Thinking level border: medium",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 304,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.85.54",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 85,
+      "column": 54,
+      "description": "Thinking level border: high",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 308,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.86.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 86,
+      "column": 55,
+      "description": "Thinking level border: xhigh",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 312,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.89.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 89,
+      "column": 22,
+      "description": "Thinking level border: max (falls back to thinkingXhigh when omitted)",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 316,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_tokens.92.50",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+      "line": 92,
+      "column": 50,
+      "description": "Editor border color in bash mode",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 320,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.15.26",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 15,
+      "column": 26,
+      "description": "Hex color (#RGB or #RRGGBB), OKLCH or OKHSL color, variable reference, or empty string for terminal default",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 354,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.20.26",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 20,
+      "column": 26,
+      "description": "256-color palette index (0-255)",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 360,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.34.18",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 34,
+      "column": 18,
+      "description": "Theme color definitions (scrollbar, thinkingMax, and search highlight colors are optional and use compatible fallbacks)",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 323,
+      "artifact_column": 22,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.38.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 38,
+      "column": 55,
+      "description": "JSON schema reference",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 13,
+      "artifact_column": 22,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.41.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 41,
+      "column": 22,
+      "description": "Theme name. Must not contain '/' because it is reserved for automatic light/dark theme settings.",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 18,
+      "artifact_column": 22,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.44.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 44,
+      "column": 22,
+      "description": "Background the theme is designed for. Detected from the theme colors when omitted.",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 31,
+      "artifact_column": 22,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.47.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 47,
+      "column": 22,
+      "description": "Reusable color variables",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 40,
+      "artifact_column": 22,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.51.42",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 51,
+      "column": 42,
+      "description": "Page background color",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 331,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.52.42",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 52,
+      "column": 42,
+      "description": "Card/container background color",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 335,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.53.42",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 53,
+      "column": 42,
+      "description": "Info sections background (system prompt, notices)",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 339,
+      "artifact_column": 26,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.55.22",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 55,
+      "column": 22,
+      "description": "Optional colors for HTML export (defaults derived from userMessageBg if not specified)",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 342,
+      "artifact_column": 22,
+      "artifact_kind": "description"
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.59.12",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 59,
+      "column": 12,
+      "description": "Pi Coding Agent Theme",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 346,
+      "artifact_column": 12,
+      "artifact_kind": "title"
+    },
+    {
+      "item_id": "pi.theme-text.theme_schema.60.18",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+      "line": 60,
+      "column": 18,
+      "description": "Theme schema for Pi coding agent",
+      "artifact_source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "artifact_line": 347,
+      "artifact_column": 18,
+      "artifact_kind": "description"
+    }
+  ],
+  "private_token_invariant": {
+    "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+    "call_line": 16,
+    "call_count": 1,
+    "exported_private_factory": false,
+    "token_keys": [
+      "accent",
+      "border",
+      "borderAccent",
+      "borderMuted",
+      "success",
+      "error",
+      "warning",
+      "muted",
+      "dim",
+      "text",
+      "thinkingText",
+      "scrollbarTrack",
+      "scrollbarThumb",
+      "selectedBg",
+      "searchMatchBg",
+      "searchMatchText",
+      "userMessageBg",
+      "userMessageText",
+      "customMessageBg",
+      "customMessageText",
+      "customMessageLabel",
+      "toolPendingBg",
+      "toolSuccessBg",
+      "toolErrorBg",
+      "toolTitle",
+      "toolOutput",
+      "mdHeading",
+      "mdLink",
+      "mdLinkUrl",
+      "mdCode",
+      "mdCodeBlock",
+      "mdCodeBlockBorder",
+      "mdQuote",
+      "mdQuoteBorder",
+      "mdHr",
+      "mdListBullet",
+      "toolDiffAdded",
+      "toolDiffRemoved",
+      "toolDiffContext",
+      "syntaxComment",
+      "syntaxKeyword",
+      "syntaxFunction",
+      "syntaxVariable",
+      "syntaxString",
+      "syntaxNumber",
+      "syntaxType",
+      "syntaxOperator",
+      "syntaxPunctuation",
+      "thinkingOff",
+      "thinkingMinimal",
+      "thinkingLow",
+      "thinkingMedium",
+      "thinkingHigh",
+      "thinkingXhigh",
+      "thinkingMax",
+      "bashMode"
+    ],
+    "fallbacks": [
+      {
+        "token": "scrollbarTrack",
+        "slot": "foreground",
+        "fallback": "muted",
+        "fallback_slot": "foreground"
+      },
+      {
+        "token": "scrollbarThumb",
+        "slot": "foreground",
+        "fallback": "text",
+        "fallback_slot": "foreground"
+      },
+      {
+        "token": "searchMatchBg",
+        "slot": "background",
+        "fallback": "selectedBg",
+        "fallback_slot": "background"
+      },
+      {
+        "token": "searchMatchText",
+        "slot": "foreground",
+        "fallback": "text",
+        "fallback_slot": "foreground"
+      },
+      {
+        "token": "thinkingMax",
+        "slot": "foreground",
+        "fallback": "thinkingXhigh",
+        "fallback_slot": "foreground"
+      }
+    ],
+    "builtin_data": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/dark.json",
+        "sha256": "e1f96982f8cb7d2a48eca7db03c9cb282cb1e14a243680cd855638ecd6a251b6",
+        "name": "dark",
+        "schema": "https://pi.dev/schemas/theme.schema.json",
+        "required_missing": []
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/light.json",
+        "sha256": "2dee6a4be7f765e7fd7728166b7ebf8c29e4ce313f8ec6b38ae50699e3abc2f3",
+        "name": "light",
+        "schema": "https://pi.dev/schemas/theme.schema.json",
+        "required_missing": []
+      }
+    ],
+    "generated_system_token_keys": [
+      "selectedBg",
+      "searchMatchBg",
+      "userMessageBg",
+      "customMessageBg",
+      "toolPendingBg",
+      "toolSuccessBg",
+      "toolErrorBg",
+      "text",
+      "userMessageText",
+      "customMessageText",
+      "toolTitle",
+      "syntaxOperator",
+      "syntaxPunctuation",
+      "muted",
+      "dim",
+      "thinkingText",
+      "toolOutput",
+      "mdLinkUrl",
+      "mdQuote",
+      "mdQuoteBorder",
+      "mdHr",
+      "mdCodeBlockBorder",
+      "toolDiffContext",
+      "syntaxComment",
+      "scrollbarTrack",
+      "scrollbarThumb",
+      "searchMatchText",
+      "borderMuted",
+      "accent",
+      "borderAccent",
+      "customMessageLabel",
+      "mdCode",
+      "mdListBullet",
+      "syntaxType",
+      "border",
+      "mdLink",
+      "syntaxKeyword",
+      "syntaxVariable",
+      "success",
+      "mdCodeBlock",
+      "toolDiffAdded",
+      "bashMode",
+      "syntaxNumber",
+      "error",
+      "toolDiffRemoved",
+      "warning",
+      "mdHeading",
+      "syntaxFunction",
+      "syntaxString",
+      "thinkingOff",
+      "thinkingMinimal",
+      "thinkingLow",
+      "thinkingMedium",
+      "thinkingHigh",
+      "thinkingXhigh",
+      "thinkingMax"
+    ]
+  },
+  "composed_schema_error": {
+    "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+    "constructor_line": 101,
+    "message_identifier": "errorMessage",
+    "initializer_line": 88,
+    "append_lines": [
+      90,
+      91,
+      95,
+      96,
+      99
+    ],
+    "formatted_other_error_line": 86,
+    "formatted_missing_color_line": 93,
+    "positive_fragment_lines": [
+      71,
+      86,
+      88,
+      90,
+      93,
+      95,
+      96,
+      99
+    ]
+  },
+  "suppressed_export_error": {
+    "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js",
+    "constructor_line": 372,
+    "private_function": "loadThemeJson",
+    "call_lines": [
+      432,
+      681
+    ],
+    "registered_preemption_lines": [
+      428,
+      431
+    ],
+    "caught_export_lines": [
+      680,
+      707
+    ]
+  },
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme.js",
+        "read_lines": [
+          1,
+          905
+        ],
+        "string_template_occurrences": 208,
+        "fixed_rows": 9,
+        "excluded_occurrences": 199,
+        "protected_regex_literals": 3,
+        "regex_census_sha256": "876116f4220d21f575aea815c06aeaddd74f60fa78647a4a07df8f7e4774e933",
+        "error_constructors": [
+          {
+            "line": 29,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Circular variable reference detected: ${value}`"
+          },
+          {
+            "line": 32,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Variable reference not found: ${value}`"
+          },
+          {
+            "line": 55,
+            "column": 19,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Theme token ${rawName} has unresolved fallback ${descriptor.fallback}`"
+          },
+          {
+            "line": 215,
+            "column": 19,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Unknown theme color: ${token}`"
+          },
+          {
+            "line": 340,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Invalid theme name \"${name}\": theme names cannot contain \"/\" because it is reserved for automatic light/dark theme settings.`"
+          },
+          {
+            "line": 347,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Invalid theme \"${label}\": expected an object with a \"colors\" map.`"
+          },
+          {
+            "line": 357,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Failed to parse theme ${label}: ${error}`"
+          },
+          {
+            "line": 372,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Theme \"${name}\" does not have a source path for export`"
+          },
+          {
+            "line": 377,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Theme not found: ${name}`"
+          },
+          {
+            "line": 511,
+            "column": 19,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"Theme not initialized. Call initTheme() first.\""
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 24,
+            "column": 48,
+            "callee": "Set",
+            "source": "new Set()"
+          },
+          {
+            "line": 29,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Circular variable reference detected: ${value}`)"
+          },
+          {
+            "line": 32,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Variable reference not found: ${value}`)"
+          },
+          {
+            "line": 55,
+            "column": 19,
+            "callee": "Error",
+            "source": "new Error(`Theme token ${rawName} has unresolved fallback ${descriptor.fallback}`)"
+          },
+          {
+            "line": 117,
+            "column": 14,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 118,
+            "column": 14,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 132,
+            "column": 26,
+            "callee": "Set",
+            "source": "new Set(options.dim)"
+          },
+          {
+            "line": 215,
+            "column": 19,
+            "callee": "Error",
+            "source": "new Error(`Unknown theme color: ${token}`)"
+          },
+          {
+            "line": 291,
+            "column": 18,
+            "callee": "Set",
+            "source": "new Set()"
+          },
+          {
+            "line": 340,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Invalid theme name \"${name}\": theme names cannot contain \"/\" because it is reserved for automatic light/dark theme settings.`)"
+          },
+          {
+            "line": 347,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Invalid theme \"${label}\": expected an object with a \"colors\" map.`)"
+          },
+          {
+            "line": 357,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Failed to parse theme ${label}: ${error}`)"
+          },
+          {
+            "line": 372,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Theme \"${name}\" does not have a source path for export`)"
+          },
+          {
+            "line": 377,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Theme not found: ${name}`)"
+          },
+          {
+            "line": 399,
+            "column": 12,
+            "callee": "Theme",
+            "source": "new Theme(fgColors, bgColors, colorMode, {\n        name: themeJson.name,\n        sourcePath,\n        appearance: themeJson.appearance,\n    })"
+          },
+          {
+            "line": 413,
+            "column": 12,
+            "callee": "Theme",
+            "source": "new Theme(fgColors, bgColors, mode ?? getTerminalColorMode(), {\n        name: SYSTEM_THEME_NAME,\n        appearance: generated.appearance,\n        dim: generated.dim,\n    })"
+          },
+          {
+            "line": 507,
+            "column": 22,
+            "callee": "Proxy",
+            "source": "new Proxy({}, {\n    get(_target, prop) {\n        const t = globalThis[THEME_KEY];\n        if (!t)\n            throw new Error(\"Theme not initialized. Call initTheme() first.\");\n        return t[prop];\n    },\n})"
+          },
+          {
+            "line": 511,
+            "column": 19,
+            "callee": "Error",
+            "source": "new Error(\"Theme not initialized. Call initTheme() first.\")"
+          },
+          {
+            "line": 523,
+            "column": 26,
+            "callee": "Map",
+            "source": "new Map()"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 29,
+            "column": 9,
+            "expression": "new Error(`Circular variable reference detected: ${value}`)"
+          },
+          {
+            "line": 32,
+            "column": 9,
+            "expression": "new Error(`Variable reference not found: ${value}`)"
+          },
+          {
+            "line": 55,
+            "column": 13,
+            "expression": "new Error(`Theme token ${rawName} has unresolved fallback ${descriptor.fallback}`)"
+          },
+          {
+            "line": 215,
+            "column": 13,
+            "expression": "new Error(`Unknown theme color: ${token}`)"
+          },
+          {
+            "line": 340,
+            "column": 9,
+            "expression": "new Error(`Invalid theme name \"${name}\": theme names cannot contain \"/\" because it is reserved for automatic light/dark theme settings.`)"
+          },
+          {
+            "line": 347,
+            "column": 9,
+            "expression": "new Error(`Invalid theme \"${label}\": expected an object with a \"colors\" map.`)"
+          },
+          {
+            "line": 357,
+            "column": 9,
+            "expression": "new Error(`Failed to parse theme ${label}: ${error}`)"
+          },
+          {
+            "line": 372,
+            "column": 9,
+            "expression": "new Error(`Theme \"${name}\" does not have a source path for export`)"
+          },
+          {
+            "line": 377,
+            "column": 9,
+            "expression": "new Error(`Theme not found: ${name}`)"
+          },
+          {
+            "line": 511,
+            "column": 13,
+            "expression": "new Error(\"Theme not initialized. Call initTheme() first.\")"
+          }
+        ],
+        "catch_clauses": [
+          {
+            "line": 331,
+            "column": 9,
+            "source": "catch {\n            // Invalid themes are ignored here; the resource loader reports them\n            // during normal startup/reload.\n        }"
+          },
+          {
+            "line": 356,
+            "column": 5,
+            "source": "catch (error) {\n        throw new Error(`Failed to parse theme ${label}: ${error}`);\n    }"
+          },
+          {
+            "line": 439,
+            "column": 5,
+            "source": "catch {\n        return undefined;\n    }"
+          },
+          {
+            "line": 542,
+            "column": 5,
+            "source": "catch (_error) {\n        // Theme is invalid - fall back to the system theme silently\n        currentThemeName = SYSTEM_THEME_NAME;\n        setGlobalTheme(loadTheme(SYSTEM_THEME_NAME));\n        // Don't start watcher for fallback theme\n    }"
+          },
+          {
+            "line": 561,
+            "column": 5,
+            "source": "catch (error) {\n        // Theme is invalid - fall back to the system theme\n        currentThemeName = SYSTEM_THEME_NAME;\n        setGlobalTheme(loadTheme(SYSTEM_THEME_NAME));\n        // Don't start watcher for fallback theme\n        return {\n            success: false,\n            error: error instanceof Error ? error.message : String(error),\n        };\n    }"
+          },
+          {
+            "line": 624,
+            "column": 13,
+            "source": "catch (_error) {\n                // Ignore errors (file might be in invalid state while being edited)\n            }"
+          },
+          {
+            "line": 705,
+            "column": 5,
+            "source": "catch {\n        return {};\n    }"
+          },
+          {
+            "line": 769,
+            "column": 5,
+            "source": "catch {\n        return code.split(\"\\n\");\n    }"
+          },
+          {
+            "line": 875,
+            "column": 13,
+            "source": "catch {\n                return code.split(\"\\n\").map((line) => theme.fg(\"mdCodeBlock\", line));\n            }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "node:fs"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "node:path"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "@earendil-works/pi-tui"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "chalk"
+          },
+          {
+            "line": 5,
+            "column": 1,
+            "specifier": "../../../config.js"
+          },
+          {
+            "line": 6,
+            "column": 1,
+            "specifier": "../../../utils/fs-watch.js"
+          },
+          {
+            "line": 7,
+            "column": 1,
+            "specifier": "../../../utils/syntax-highlight.js"
+          },
+          {
+            "line": 8,
+            "column": 1,
+            "specifier": "../../../utils/text.js"
+          },
+          {
+            "line": 9,
+            "column": 1,
+            "specifier": "./system-theme.js"
+          },
+          {
+            "line": 10,
+            "column": 1,
+            "specifier": "./theme-tokens.js"
+          }
+        ],
+        "re_exports": [
+          {
+            "line": 11,
+            "column": 1,
+            "specifier": "./system-theme.js",
+            "source": "export { SYSTEM_THEME_NAME } from \"./system-theme.js\";"
+          }
+        ],
+        "output_or_native_callback_calls": [
+          {
+            "line": 35,
+            "column": 12,
+            "callee": "resolveVarRefs",
+            "arguments": [
+              "vars[value]",
+              "vars",
+              "visited"
+            ]
+          },
+          {
+            "line": 40,
+            "column": 25,
+            "callee": "resolveVarRefs",
+            "arguments": [
+              "value",
+              "vars"
+            ]
+          },
+          {
+            "line": 133,
+            "column": 83,
+            "callee": "withThemeTokenFallbacks",
+            "arguments": [
+              "{ ...fgColors, ...bgColors }"
+            ]
+          },
+          {
+            "line": 279,
+            "column": 39,
+            "callee": "fs.readFileSync",
+            "arguments": [
+              "darkPath",
+              "\"utf-8\""
+            ]
+          },
+          {
+            "line": 280,
+            "column": 40,
+            "callee": "fs.readFileSync",
+            "arguments": [
+              "lightPath",
+              "\"utf-8\""
+            ]
+          },
+          {
+            "line": 317,
+            "column": 10,
+            "callee": "fs.existsSync",
+            "arguments": [
+              "customThemesDir"
+            ]
+          },
+          {
+            "line": 320,
+            "column": 24,
+            "callee": "fs.readdirSync",
+            "arguments": [
+              "customThemesDir"
+            ]
+          },
+          {
+            "line": 345,
+            "column": 16,
+            "callee": "themeJsonValidator",
+            "arguments": [
+              "label",
+              "json"
+            ]
+          },
+          {
+            "line": 359,
+            "column": 12,
+            "callee": "parseThemeJson",
+            "arguments": [
+              "label",
+              "json"
+            ]
+          },
+          {
+            "line": 368,
+            "column": 25,
+            "callee": "fs.readFileSync",
+            "arguments": [
+              "registeredTheme.sourcePath",
+              "\"utf-8\""
+            ]
+          },
+          {
+            "line": 369,
+            "column": 16,
+            "callee": "parseThemeJsonContent",
+            "arguments": [
+              "registeredTheme.sourcePath",
+              "content"
+            ]
+          },
+          {
+            "line": 376,
+            "column": 10,
+            "callee": "fs.existsSync",
+            "arguments": [
+              "themePath"
+            ]
+          },
+          {
+            "line": 379,
+            "column": 21,
+            "callee": "fs.readFileSync",
+            "arguments": [
+              "themePath",
+              "\"utf-8\""
+            ]
+          },
+          {
+            "line": 380,
+            "column": 12,
+            "callee": "parseThemeJsonContent",
+            "arguments": [
+              "name",
+              "content"
+            ]
+          },
+          {
+            "line": 397,
+            "column": 28,
+            "callee": "withThemeTokenFallbacks",
+            "arguments": [
+              "resolveThemeColors(themeJson.colors, themeJson.vars)"
+            ]
+          },
+          {
+            "line": 412,
+            "column": 53,
+            "callee": "withThemeTokenFallbacks",
+            "arguments": [
+              "generated.colors"
+            ]
+          },
+          {
+            "line": 420,
+            "column": 21,
+            "callee": "fs.readFileSync",
+            "arguments": [
+              "themePath",
+              "\"utf-8\""
+            ]
+          },
+          {
+            "line": 421,
+            "column": 23,
+            "callee": "parseThemeJsonContent",
+            "arguments": [
+              "themePath",
+              "content"
+            ]
+          },
+          {
+            "line": 422,
+            "column": 12,
+            "callee": "createTheme",
+            "arguments": [
+              "themeJson",
+              "mode",
+              "themePath"
+            ]
+          },
+          {
+            "line": 427,
+            "column": 16,
+            "callee": "createSystemTheme",
+            "arguments": [
+              "mode"
+            ]
+          },
+          {
+            "line": 432,
+            "column": 23,
+            "callee": "loadThemeJson",
+            "arguments": [
+              "name"
+            ]
+          },
+          {
+            "line": 433,
+            "column": 12,
+            "callee": "createTheme",
+            "arguments": [
+              "themeJson",
+              "mode"
+            ]
+          },
+          {
+            "line": 437,
+            "column": 16,
+            "callee": "loadTheme",
+            "arguments": [
+              "name"
+            ]
+          },
+          {
+            "line": 537,
+            "column": 24,
+            "callee": "loadTheme",
+            "arguments": [
+              "name"
+            ]
+          },
+          {
+            "line": 545,
+            "column": 24,
+            "callee": "loadTheme",
+            "arguments": [
+              "SYSTEM_THEME_NAME"
+            ]
+          },
+          {
+            "line": 552,
+            "column": 24,
+            "callee": "loadTheme",
+            "arguments": [
+              "name"
+            ]
+          },
+          {
+            "line": 564,
+            "column": 24,
+            "callee": "loadTheme",
+            "arguments": [
+              "SYSTEM_THEME_NAME"
+            ]
+          },
+          {
+            "line": 597,
+            "column": 10,
+            "callee": "fs.existsSync",
+            "arguments": [
+              "themeFile"
+            ]
+          },
+          {
+            "line": 611,
+            "column": 18,
+            "callee": "fs.existsSync",
+            "arguments": [
+              "themeFile"
+            ]
+          },
+          {
+            "line": 630,
+            "column": 9,
+            "callee": "watchWithErrorHandler",
+            "arguments": [
+              "customThemesDir",
+              "(_eventType, filename) => {\n            if (currentThemeName !== watchedThemeName) {\n                return;\n            }\n            if (!filename) {\n                scheduleReload();\n                return;\n            }\n            if (filename !== watchedFileName) {\n                return;\n            }\n            scheduleReload();\n        }",
+              "() => {\n            closeWatcher(themeWatcher);\n            themeWatcher = undefined;\n        }"
+            ]
+          },
+          {
+            "line": 663,
+            "column": 20,
+            "callee": "loadTheme",
+            "arguments": [
+              "themeName ?? currentThemeName ?? SYSTEM_THEME_NAME"
+            ]
+          },
+          {
+            "line": 670,
+            "column": 12,
+            "callee": "loadTheme",
+            "arguments": [
+              "themeName ?? currentThemeName ?? SYSTEM_THEME_NAME"
+            ]
+          },
+          {
+            "line": 681,
+            "column": 27,
+            "callee": "loadThemeJson",
+            "arguments": [
+              "name"
+            ]
+          },
+          {
+            "line": 690,
+            "column": 30,
+            "callee": "resolveVarRefs",
+            "arguments": [
+              "value",
+              "vars"
+            ]
+          },
+          {
+            "line": 754,
+            "column": 31,
+            "callee": "supportsLanguage",
+            "arguments": [
+              "lang"
+            ]
+          },
+          {
+            "line": 767,
+            "column": 16,
+            "callee": "highlight",
+            "arguments": [
+              "code",
+              "opts"
+            ]
+          },
+          {
+            "line": 860,
+            "column": 39,
+            "callee": "supportsLanguage",
+            "arguments": [
+              "lang"
+            ]
+          },
+          {
+            "line": 873,
+            "column": 24,
+            "callee": "highlight",
+            "arguments": [
+              "code",
+              "opts"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [
+          {
+            "line": 140,
+            "column": 39,
+            "kind": "string-literal",
+            "text": "\u001b[49m"
+          },
+          {
+            "line": 140,
+            "column": 52,
+            "kind": "string-literal",
+            "text": "\u001b[39m"
+          },
+          {
+            "line": 205,
+            "column": 20,
+            "kind": "template-expression",
+            "text": "${ansi}\\x1b[2m${text}\\x1b[22;39m"
+          },
+          {
+            "line": 206,
+            "column": 16,
+            "kind": "template-expression",
+            "text": "${ansi}${text}\\x1b[39m"
+          },
+          {
+            "line": 210,
+            "column": 16,
+            "kind": "template-expression",
+            "text": "${ansi}${text}\\x1b[49m"
+          },
+          {
+            "line": 236,
+            "column": 44,
+            "kind": "template-expression",
+            "text": "${ansi}\\x1b[2m"
+          }
+        ],
+        "review": "Full905-line local body read: nine conditional visible/API Error literals positive; no-source-path export Error372 private/caught as separately proved. Variable resolution, fallback maps, constructors/style/global proxy/registration/loading/autotheme/terminal inference/watchers/export/highlight/language maps and all factory callbacks read. Native full schema preempts missing structure/tokens; startup/getByName/watch/export-color paths suppress. Dynamic names/colors/CSS/highlight/input values protected, imported native/API producers pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/system-theme.js",
+        "read_lines": [
+          1,
+          546
+        ],
+        "string_template_occurrences": 200,
+        "fixed_rows": 0,
+        "excluded_occurrences": 200,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 420,
+            "column": 24,
+            "callee": "Map",
+            "source": "new Map([[\"background\", background]])"
+          },
+          {
+            "line": 454,
+            "column": 30,
+            "callee": "Map",
+            "source": "new Map()"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 21,
+            "column": 1,
+            "specifier": "@earendil-works/pi-tui"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [],
+        "protected_control_occurrences": [],
+        "review": "Full546 lines including all family/curve/token/rule tables and generation branches read. Only technical theme/family/token/appearance/color identities and hex payload composition; no local natural-language caption/Error/throw/catch. Input terminal RGB/palette/contrast/SGR data and imported color helper/native errors remain external; no rendering/math API executed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-controller.js",
+        "read_lines": [
+          1,
+          210
+        ],
+        "string_template_occurrences": 4,
+        "fixed_rows": 1,
+        "excluded_occurrences": 3,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 17,
+            "column": 5,
+            "source": "catch {\n        // Treat a failed query like a terminal that does not report colors.\n        query = Promise.resolve({});\n    }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "./theme.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 15,
+            "column": 17,
+            "callee": "ui.queryTerminalColors",
+            "arguments": [
+              "{ timeoutMs: TERMINAL_QUERY_TIMEOUT_MS, onLateReply: apply }"
+            ]
+          },
+          {
+            "line": 62,
+            "column": 9,
+            "callee": "initTheme",
+            "arguments": [
+              "this.activeThemeName",
+              "true"
+            ]
+          },
+          {
+            "line": 115,
+            "column": 13,
+            "callee": "setTheme",
+            "arguments": [
+              "themeName",
+              "true"
+            ]
+          },
+          {
+            "line": 139,
+            "column": 24,
+            "callee": "setTheme",
+            "arguments": [
+              "themeName",
+              "true"
+            ]
+          },
+          {
+            "line": 143,
+            "column": 13,
+            "callee": "this.showError",
+            "arguments": [
+              "`Failed to load theme \"${themeName}\": ${result.error}\\nFell back to the system theme.`"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full210 lines read: one fallback error wrapper with explicit failure/showError gates positive. Query synchronous/rejection failures apply{}, same colors skip rerender; runtime theme/instance/preview/autosync/block callbacks qualified. No local Error constructor/throw, exported optional callbacks/native query/reapply failures remain external."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-schema.js",
+        "read_lines": [
+          1,
+          105
+        ],
+        "string_template_occurrences": 36,
+        "fixed_rows": 21,
+        "excluded_occurrences": 15,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 71,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Invalid theme name \"${json.name}\": theme names cannot contain \"/\" because it is reserved for automatic light/dark theme settings.`"
+          },
+          {
+            "line": 101,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "errorMessage"
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 71,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Invalid theme name \"${json.name}\": theme names cannot contain \"/\" because it is reserved for automatic light/dark theme settings.`)"
+          },
+          {
+            "line": 75,
+            "column": 31,
+            "callee": "Set",
+            "source": "new Set()"
+          },
+          {
+            "line": 101,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(errorMessage)"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 71,
+            "column": 9,
+            "expression": "new Error(`Invalid theme name \"${json.name}\": theme names cannot contain \"/\" because it is reserved for automatic light/dark theme settings.`)"
+          },
+          {
+            "line": 101,
+            "column": 9,
+            "expression": "new Error(errorMessage)"
+          }
+        ],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 9,
+            "column": 1,
+            "specifier": "typebox"
+          },
+          {
+            "line": 10,
+            "column": 1,
+            "specifier": "typebox/compile"
+          },
+          {
+            "line": 11,
+            "column": 1,
+            "specifier": "./theme-tokens.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 73,
+            "column": 10,
+            "callee": "compiledThemeSchema.Check",
+            "arguments": [
+              "json"
+            ]
+          },
+          {
+            "line": 74,
+            "column": 35,
+            "callee": "compiledThemeSchema.Errors",
+            "arguments": [
+              "json"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full105 lines read:13 schema descriptions/title positive via pinned shipped facets, slash-name Error and seven composed-validation fragments positive. Check false grouping/missingColors/otherErrors exact; Error101 message builder metadata preserved. TypeBox-generated messages/native/invalid callback schema diagnostics external, not automatically translated."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/theme/theme-tokens.js",
+        "read_lines": [
+          1,
+          94
+        ],
+        "string_template_occurrences": 119,
+        "fixed_rows": 56,
+        "excluded_occurrences": 63,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 7,
+            "column": 19,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Theme token ${name} has unknown fallback ${descriptor.fallback}`"
+          },
+          {
+            "line": 10,
+            "column": 19,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Theme token ${name} has fallback ${descriptor.fallback} in a different color slot`"
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 7,
+            "column": 19,
+            "callee": "Error",
+            "source": "new Error(`Theme token ${name} has unknown fallback ${descriptor.fallback}`)"
+          },
+          {
+            "line": 10,
+            "column": 19,
+            "callee": "Error",
+            "source": "new Error(`Theme token ${name} has fallback ${descriptor.fallback} in a different color slot`)"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 7,
+            "column": 13,
+            "expression": "new Error(`Theme token ${name} has unknown fallback ${descriptor.fallback}`)"
+          },
+          {
+            "line": 10,
+            "column": 13,
+            "expression": "new Error(`Theme token ${name} has fallback ${descriptor.fallback} in a different color slot`)"
+          }
+        ],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 16,
+            "column": 29,
+            "callee": "defineThemeTokens",
+            "arguments": [
+              "{\n    accent: { slot: \"foreground\", description: \"Primary accent color (logo, selected items, cursor)\" },\n    border: { slot: \"foreground\", description: \"Normal borders\" },\n    borderAccent: { slot: \"foreground\", description: \"Highlighted borders\" },\n    borderMuted: { slot: \"foreground\", description: \"Subtle borders\" },\n    success: { slot: \"foreground\", description: \"Success states\" },\n    error: { slot: \"foreground\", description: \"Error states\" },\n    warning: { slot: \"foreground\", description: \"Warning states\" },\n    muted: { slot: \"foreground\", description: \"Secondary/dimmed text\" },\n    dim: { slot: \"foreground\", description: \"Very dimmed text (more subtle than muted)\" },\n    text: { slot: \"foreground\", description: \"Default text color (usually empty string)\" },\n    thinkingText: { slot: \"foreground\", description: \"Thinking block text color\" },\n    scrollbarTrack: {\n        slot: \"foreground\",\n        description: \"Fullscreen scrollbar track foreground (falls back to muted when omitted)\",\n        fallback: \"muted\",\n    },\n    scrollbarThumb: {\n        slot: \"foreground\",\n        description: \"Fullscreen scrollbar thumb foreground (falls back to text when omitted)\",\n        fallback: \"text\",\n    },\n    selectedBg: { slot: \"background\", description: \"Selected item background\" },\n    searchMatchBg: {\n        slot: \"background\",\n        description: \"Transcript search match background and current-match text (falls back to selectedBg when omitted)\",\n        fallback: \"selectedBg\",\n    },\n    searchMatchText: {\n        slot: \"foreground\",\n        description: \"Transcript search match text and current-match background (falls back to text when omitted)\",\n        fallback: \"text\",\n    },\n    userMessageBg: { slot: \"background\", description: \"User message background\" },\n    userMessageText: { slot: \"foreground\", description: \"User message text color\" },\n    customMessageBg: { slot: \"background\", description: \"Custom message background (hook-injected messages)\" },\n    customMessageText: { slot: \"foreground\", description: \"Custom message text color\" },\n    customMessageLabel: { slot: \"foreground\", description: \"Custom message type label color\" },\n    toolPendingBg: { slot: \"background\", description: \"Tool execution box (pending state)\" },\n    toolSuccessBg: { slot: \"background\", description: \"Tool execution box (success state)\" },\n    toolErrorBg: { slot: \"background\", description: \"Tool execution box (error state)\" },\n    toolTitle: { slot: \"foreground\", description: \"Tool execution box title color\" },\n    toolOutput: { slot: \"foreground\", description: \"Tool execution box output text color\" },\n    mdHeading: { slot: \"foreground\", description: \"Markdown heading text\" },\n    mdLink: { slot: \"foreground\", description: \"Markdown link text\" },\n    mdLinkUrl: { slot: \"foreground\", description: \"Markdown link URL\" },\n    mdCode: { slot: \"foreground\", description: \"Markdown inline code\" },\n    mdCodeBlock: { slot: \"foreground\", description: \"Markdown code block content\" },\n    mdCodeBlockBorder: { slot: \"foreground\", description: \"Markdown code block fences\" },\n    mdQuote: { slot: \"foreground\", description: \"Markdown blockquote text\" },\n    mdQuoteBorder: { slot: \"foreground\", description: \"Markdown blockquote border\" },\n    mdHr: { slot: \"foreground\", description: \"Markdown horizontal rule\" },\n    mdListBullet: { slot: \"foreground\", description: \"Markdown list bullets/numbers\" },\n    toolDiffAdded: { slot: \"foreground\", description: \"Added lines in tool diffs\" },\n    toolDiffRemoved: { slot: \"foreground\", description: \"Removed lines in tool diffs\" },\n    toolDiffContext: { slot: \"foreground\", description: \"Context lines in tool diffs\" },\n    syntaxComment: { slot: \"foreground\", description: \"Syntax highlighting: comments\" },\n    syntaxKeyword: { slot: \"foreground\", description: \"Syntax highlighting: keywords\" },\n    syntaxFunction: { slot: \"foreground\", description: \"Syntax highlighting: function names\" },\n    syntaxVariable: { slot: \"foreground\", description: \"Syntax highlighting: variable names\" },\n    syntaxString: { slot: \"foreground\", description: \"Syntax highlighting: string literals\" },\n    syntaxNumber: { slot: \"foreground\", description: \"Syntax highlighting: number literals\" },\n    syntaxType: { slot: \"foreground\", description: \"Syntax highlighting: type names\" },\n    syntaxOperator: { slot: \"foreground\", description: \"Syntax highlighting: operators\" },\n    syntaxPunctuation: { slot: \"foreground\", description: \"Syntax highlighting: punctuation\" },\n    thinkingOff: { slot: \"foreground\", description: \"Thinking level border: off\" },\n    thinkingMinimal: { slot: \"foreground\", description: \"Thinking level border: minimal\" },\n    thinkingLow: { slot: \"foreground\", description: \"Thinking level border: low\" },\n    thinkingMedium: { slot: \"foreground\", description: \"Thinking level border: medium\" },\n    thinkingHigh: { slot: \"foreground\", description: \"Thinking level border: high\" },\n    thinkingXhigh: { slot: \"foreground\", description: \"Thinking level border: xhigh\" },\n    thinkingMax: {\n        slot: \"foreground\",\n        description: \"Thinking level border: max (falls back to thinkingXhigh when omitted)\",\n        fallback: \"thinkingXhigh\",\n    },\n    bashMode: { slot: \"foreground\", description: \"Editor border color in bash mode\" },\n}"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full94 lines read:56 token descriptions positive via pinned shipped facets. Two private initialization guards excluded with static call/table/slot proof: one literal defineThemeTokens call, five fallback references valid and matching slots. No exported re-entry; post-initialization mutation does not rerun private checks. All slot/token/fallback IDs protected."
+      }
+    ],
+    "method": "Full five local bodies, tables, callbacks/error builders read source-only; all string/template/regex/Error/throw/catch/new/import/export/selected native/output/control occurrences partitioned. Exact schema facets and static call/table preemption proofs independently checkable; no audited module/render/native/API/child/terminal/browser/model execution."
+  },
+  "remaining_partial_sources": [],
+  "scope_census": {
+    "package": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0",
+    "runtime_files": [
+      "dist/modes/interactive/theme/system-theme.js",
+      "dist/modes/interactive/theme/theme-controller.js",
+      "dist/modes/interactive/theme/theme-schema.js",
+      "dist/modes/interactive/theme/theme-tokens.js",
+      "dist/modes/interactive/theme/theme.js"
+    ],
+    "associated_nonruntime_files": [
+      "dist/modes/interactive/theme/system-theme.d.ts",
+      "dist/modes/interactive/theme/system-theme.d.ts.map",
+      "dist/modes/interactive/theme/system-theme.js.map",
+      "dist/modes/interactive/theme/theme-controller.d.ts",
+      "dist/modes/interactive/theme/theme-controller.d.ts.map",
+      "dist/modes/interactive/theme/theme-controller.js.map",
+      "dist/modes/interactive/theme/theme-schema.d.ts",
+      "dist/modes/interactive/theme/theme-schema.d.ts.map",
+      "dist/modes/interactive/theme/theme-schema.js.map",
+      "dist/modes/interactive/theme/theme-tokens.d.ts",
+      "dist/modes/interactive/theme/theme-tokens.d.ts.map",
+      "dist/modes/interactive/theme/theme-tokens.js.map",
+      "dist/modes/interactive/theme/theme.d.ts",
+      "dist/modes/interactive/theme/theme.d.ts.map",
+      "dist/modes/interactive/theme/theme.js.map"
+    ]
+  },
+  "pending_producer_boundaries": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/fs-watch.js",
+      "status": "native-watcher-helper-body-pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/utils/syntax-highlight.js",
+      "status": "runtime-highlighter-producer-body-pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/config.js",
+      "status": "theme-directory-config-body-pending"
+    },
+    {
+      "source": "external:typebox-chalk-json-fs-native-color-terminal-editor-browser",
+      "status": "external-implementation-or-payload-producers-pending"
+    },
+    {
+      "source": "npm:get-east-asian-width@1.6.0/index.js",
+      "status": "transitive-body-archive-pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/docs/themes.md",
+      "status": "bounded-schema-association-only"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/schemas/theme.schema.json",
+      "status": "69-JS-facet-crosslinks-only-non-JS-resource-not-whole-body-closure"
+    }
+  ],
+  "limits": [
+    "Five finite local JS bodies closed; historical runtime census and previous Pi units unchanged. Non-JS resource bodies/external/provider/native/API graph remain explicitly open.",
+    "69 shipped-schema title/description definitions have resource/editor gates, not native UI/state.tools/export metadata paint. Remote URL/editor not verified. Color/name/token/source values and built-in system/dark/light identifiers protected.",
+    "Three Error headlines excluded only with exact proofs: private token guards7/10 cannot fail static same-slot literal table; registered no-source export Error372 preempted by loadTheme or caught by getThemeExportColors. No blanket Error-constructor-to-user-visible assumption.",
+    "Full validator installed by native main preempts minimal object/missing fallback errors on normal files; direct/unvalidated/custom Theme API and proxy wrong-token/pre-init paths individually qualified. TypeBox/JSON/color/FS-generated diagnostics remain external.",
+    "Resource loader diagnostics require retained entry and showDiagnostics. Startup scan/init/getByName/hot-reload/export-color/highlight/terminal-query suppress exact failures; successful system fallback and callbacks precede controller wrapper. ctx.ui.setTheme default returns failure without own wrapper, settings explicit showError path differs.",
+    "Jouzu Session UI/presentation use same initialized native theme but own labels/catalog and brand colors; default footer suppression remains correctly established in separate interactive-support correction. No canonical catalog mapping inferred for inner theme Error strings.",
+    "Normal strings decoded via TypeScript; templates retain raw source escapes/interpolation. Exact exclusions JSON preserve source characters. No product/dependency/shared/old/git writes or audited producer/native execution."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-theme-text.cjs",
+  "reviewed_artifact_sha256": {
+    "pi-theme-text.csv": "5db2ea9b0a83c2aeb0201affc23d78cc9ee1c03181b38332f5d703489e88422f",
+    "pi-theme-text-boundaries.csv": "6bde0d5af70854e52835c9aad2b943bb291e4ddc3a923d97b8b39ac25f4e35fa",
+    "pi-theme-text-scope.csv": "7b37cbca3b2fcb19053f454b27c76bc794f306c6b7ff68f682bfe6d74ee85f5a",
+    "pi-theme-text-exclusions.csv": "130fcc84eafa535f3c601dadb1bb5d23890f345f90383163e53fb7fbfceed909"
+  },
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/modes/interactive/theme/theme.js",
+            "archive_sha256": "8099c3916f52b2bd43757e2a397e292a7b922d81dbdc07bc3bed27000be26378",
+            "root_sha256": "8099c3916f52b2bd43757e2a397e292a7b922d81dbdc07bc3bed27000be26378",
+            "cli_nested_sha256": "8099c3916f52b2bd43757e2a397e292a7b922d81dbdc07bc3bed27000be26378",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/system-theme.js",
+            "archive_sha256": "da08e8d7d95fad032e08de47a2848c497a0d9c90a00955142936ba30f09d69e8",
+            "root_sha256": "da08e8d7d95fad032e08de47a2848c497a0d9c90a00955142936ba30f09d69e8",
+            "cli_nested_sha256": "da08e8d7d95fad032e08de47a2848c497a0d9c90a00955142936ba30f09d69e8",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme-controller.js",
+            "archive_sha256": "a2eb66dbd859a12bdc5349731704d2fdcea4a3bd60b81091e42b4ea0f465de8e",
+            "root_sha256": "a2eb66dbd859a12bdc5349731704d2fdcea4a3bd60b81091e42b4ea0f465de8e",
+            "cli_nested_sha256": "a2eb66dbd859a12bdc5349731704d2fdcea4a3bd60b81091e42b4ea0f465de8e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme-schema.js",
+            "archive_sha256": "ce89ff25f82a2b840fe5d0bd3efa6870a9efb4ccfd2911468358ae401904ef7a",
+            "root_sha256": "ce89ff25f82a2b840fe5d0bd3efa6870a9efb4ccfd2911468358ae401904ef7a",
+            "cli_nested_sha256": "ce89ff25f82a2b840fe5d0bd3efa6870a9efb4ccfd2911468358ae401904ef7a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme-tokens.js",
+            "archive_sha256": "13e1374e108358de6ce88b332a58a76c01a80d8659106cdd65fc2dc150708742",
+            "root_sha256": "13e1374e108358de6ce88b332a58a76c01a80d8659106cdd65fc2dc150708742",
+            "cli_nested_sha256": "13e1374e108358de6ce88b332a58a76c01a80d8659106cdd65fc2dc150708742",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "schemas/theme.schema.json",
+            "archive_sha256": "f526a690b63c6303296f683c9df6077ddc290ee9acb1bc27eedef169c0caad59",
+            "root_sha256": "f526a690b63c6303296f683c9df6077ddc290ee9acb1bc27eedef169c0caad59",
+            "cli_nested_sha256": "f526a690b63c6303296f683c9df6077ddc290ee9acb1bc27eedef169c0caad59",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "docs/themes.md",
+            "archive_sha256": "6f11eb43ca6dad4c71bcfa2fc72ac13c013e3cb9383688b88923e0139b2d097c",
+            "root_sha256": "6f11eb43ca6dad4c71bcfa2fc72ac13c013e3cb9383688b88923e0139b2d097c",
+            "cli_nested_sha256": "6f11eb43ca6dad4c71bcfa2fc72ac13c013e3cb9383688b88923e0139b2d097c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/main.js",
+            "archive_sha256": "08b91f9eb3adf9a5027c18732d1e4de70999bd15c445b65cb0ddd0cd68f2746b",
+            "root_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+            "cli_nested_sha256": "19d07173f9bb7d03b940039ede190f97b45a4b754d12913c015cc3ea891e60a0",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/cli/startup-ui.js",
+            "archive_sha256": "f0fa56d9aeb064abfc0c0b1370140e7ff1925cc707fe6952815a8b5d96649b48",
+            "root_sha256": "f0fa56d9aeb064abfc0c0b1370140e7ff1925cc707fe6952815a8b5d96649b48",
+            "cli_nested_sha256": "f0fa56d9aeb064abfc0c0b1370140e7ff1925cc707fe6952815a8b5d96649b48",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/resource-loader.js",
+            "archive_sha256": "ad50235884ea6d5ee14cdae1efcfe6afef58b22b18ce574e81886d57ca9f4642",
+            "root_sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461",
+            "cli_nested_sha256": "2c52070e196034405f17c3cd62157407c5c97db29a33e4e4c0aee58d556d1461",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/interactive-mode.js",
+            "archive_sha256": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+            "root_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/export-html/index.js",
+            "archive_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "root_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "cli_nested_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/dark.json",
+            "archive_sha256": "e1f96982f8cb7d2a48eca7db03c9cb282cb1e14a243680cd855638ecd6a251b6",
+            "root_sha256": "e1f96982f8cb7d2a48eca7db03c9cb282cb1e14a243680cd855638ecd6a251b6",
+            "cli_nested_sha256": "e1f96982f8cb7d2a48eca7db03c9cb282cb1e14a243680cd855638ecd6a251b6",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/light.json",
+            "archive_sha256": "2dee6a4be7f765e7fd7728166b7ebf8c29e4ce313f8ec6b38ae50699e3abc2f3",
+            "root_sha256": "2dee6a4be7f765e7fd7728166b7ebf8c29e4ce313f8ec6b38ae50699e3abc2f3",
+            "cli_nested_sha256": "2dee6a4be7f765e7fd7728166b7ebf8c29e4ce313f8ec6b38ae50699e3abc2f3",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme.d.ts",
+            "archive_sha256": "9f97e431a0538f94f924bfa0cd3f436a4b5e089bcb32e7d41e8db9db45528d9e",
+            "root_sha256": "9f97e431a0538f94f924bfa0cd3f436a4b5e089bcb32e7d41e8db9db45528d9e",
+            "cli_nested_sha256": "9f97e431a0538f94f924bfa0cd3f436a4b5e089bcb32e7d41e8db9db45528d9e",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme.d.ts.map",
+            "archive_sha256": "fe39cee8cdf36317992f58b0a3eac48275f5cf11a2b89ba194a005b650aaf604",
+            "root_sha256": "fe39cee8cdf36317992f58b0a3eac48275f5cf11a2b89ba194a005b650aaf604",
+            "cli_nested_sha256": "fe39cee8cdf36317992f58b0a3eac48275f5cf11a2b89ba194a005b650aaf604",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme.js.map",
+            "archive_sha256": "af9d12454087131328a0bbebe3b3e88b5a70f9f67c3ab2dc0212a4487fdeffa5",
+            "root_sha256": "af9d12454087131328a0bbebe3b3e88b5a70f9f67c3ab2dc0212a4487fdeffa5",
+            "cli_nested_sha256": "af9d12454087131328a0bbebe3b3e88b5a70f9f67c3ab2dc0212a4487fdeffa5",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/system-theme.d.ts",
+            "archive_sha256": "e9923e68abd01e41931cf5aca2bdd9ec3502ba76597cc5d2d94b5b31cf14678c",
+            "root_sha256": "e9923e68abd01e41931cf5aca2bdd9ec3502ba76597cc5d2d94b5b31cf14678c",
+            "cli_nested_sha256": "e9923e68abd01e41931cf5aca2bdd9ec3502ba76597cc5d2d94b5b31cf14678c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/system-theme.d.ts.map",
+            "archive_sha256": "b38a54c83543c7022988210399ee6e01a5ca0a945d19145ea344020c71ef1581",
+            "root_sha256": "b38a54c83543c7022988210399ee6e01a5ca0a945d19145ea344020c71ef1581",
+            "cli_nested_sha256": "b38a54c83543c7022988210399ee6e01a5ca0a945d19145ea344020c71ef1581",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/system-theme.js.map",
+            "archive_sha256": "9774d52c9e0eb6ae374ed49f7d7624a06bcde654f5105db3d89542a770479104",
+            "root_sha256": "9774d52c9e0eb6ae374ed49f7d7624a06bcde654f5105db3d89542a770479104",
+            "cli_nested_sha256": "9774d52c9e0eb6ae374ed49f7d7624a06bcde654f5105db3d89542a770479104",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme-controller.d.ts",
+            "archive_sha256": "7e30913889b5d02656868e6aeda10e1672f03cb6b986e0653ec7e158433fb9b8",
+            "root_sha256": "7e30913889b5d02656868e6aeda10e1672f03cb6b986e0653ec7e158433fb9b8",
+            "cli_nested_sha256": "7e30913889b5d02656868e6aeda10e1672f03cb6b986e0653ec7e158433fb9b8",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme-controller.d.ts.map",
+            "archive_sha256": "6c66c11d638c00f55db543a7f2fdc43f2d5a946dca76778316871fbf7d1e65fb",
+            "root_sha256": "6c66c11d638c00f55db543a7f2fdc43f2d5a946dca76778316871fbf7d1e65fb",
+            "cli_nested_sha256": "6c66c11d638c00f55db543a7f2fdc43f2d5a946dca76778316871fbf7d1e65fb",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme-controller.js.map",
+            "archive_sha256": "e5edf78f25028077076671a63a7dad8d1bbfbd83fdea0740cf676450234f177a",
+            "root_sha256": "e5edf78f25028077076671a63a7dad8d1bbfbd83fdea0740cf676450234f177a",
+            "cli_nested_sha256": "e5edf78f25028077076671a63a7dad8d1bbfbd83fdea0740cf676450234f177a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme-schema.d.ts",
+            "archive_sha256": "2cfbf6e460669c3beef15c832b962ad2dbdfc161bb3af97d2c2c1caf91a299d0",
+            "root_sha256": "2cfbf6e460669c3beef15c832b962ad2dbdfc161bb3af97d2c2c1caf91a299d0",
+            "cli_nested_sha256": "2cfbf6e460669c3beef15c832b962ad2dbdfc161bb3af97d2c2c1caf91a299d0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme-schema.d.ts.map",
+            "archive_sha256": "f934eb3a17c44bf03c89dee6d98eaef2cdefbf13d206e1ad91f1a5a81cb41abd",
+            "root_sha256": "f934eb3a17c44bf03c89dee6d98eaef2cdefbf13d206e1ad91f1a5a81cb41abd",
+            "cli_nested_sha256": "f934eb3a17c44bf03c89dee6d98eaef2cdefbf13d206e1ad91f1a5a81cb41abd",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme-schema.js.map",
+            "archive_sha256": "209e6d25f7e1ae1ec22a7b0b8d4126f64e5a31c81edf3d69c3baf52402bad469",
+            "root_sha256": "209e6d25f7e1ae1ec22a7b0b8d4126f64e5a31c81edf3d69c3baf52402bad469",
+            "cli_nested_sha256": "209e6d25f7e1ae1ec22a7b0b8d4126f64e5a31c81edf3d69c3baf52402bad469",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme-tokens.d.ts",
+            "archive_sha256": "ab663fef0c2e62e9ba5046610dee4705bc17643228d5e8dbb51ec6a08e195d78",
+            "root_sha256": "ab663fef0c2e62e9ba5046610dee4705bc17643228d5e8dbb51ec6a08e195d78",
+            "cli_nested_sha256": "ab663fef0c2e62e9ba5046610dee4705bc17643228d5e8dbb51ec6a08e195d78",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme-tokens.d.ts.map",
+            "archive_sha256": "cc7a7dc94f2b42481a66aaed79ea55040cc833ee690c6439c8c3eb19423d5c02",
+            "root_sha256": "cc7a7dc94f2b42481a66aaed79ea55040cc833ee690c6439c8c3eb19423d5c02",
+            "cli_nested_sha256": "cc7a7dc94f2b42481a66aaed79ea55040cc833ee690c6439c8c3eb19423d5c02",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/theme/theme-tokens.js.map",
+            "archive_sha256": "e3c392efa55d46427e0b21439adf199c3b12ffd713eec5c918346b6f482a391d",
+            "root_sha256": "e3c392efa55d46427e0b21439adf199c3b12ffd713eec5c918346b6f482a391d",
+            "cli_nested_sha256": "e3c392efa55d46427e0b21439adf199c3b12ffd713eec5c918346b6f482a391d",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/colors.js",
+            "archive_sha256": "330cc45db7f9d6f2987ec939075f9142fdad58bc77989e2d0b2204389c5e0370",
+            "root_sha256": "330cc45db7f9d6f2987ec939075f9142fdad58bc77989e2d0b2204389c5e0370",
+            "cli_nested_sha256": "330cc45db7f9d6f2987ec939075f9142fdad58bc77989e2d0b2204389c5e0370",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      }
+    ],
+    "scoped_file_count": 30,
+    "byte_identical_scope_files": 27,
+    "pinned_patch_scope_files": 3,
+    "unresolved_scope_differences": 0
+  }
+}
