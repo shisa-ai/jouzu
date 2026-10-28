@@ -734,7 +734,7 @@ jouzu.cli.modelPicker.refreshUnavailable,packages/cli/locales/en/cli.ftl:742,cal
 jouzu.cli.modelPicker.row.contextSmall,packages/cli/locales/en/cli.ftl:732,caller-trace-required,0,1,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-014""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.modelPicker.row.unavailable,packages/cli/locales/en/cli.ftl:731,caller-trace-required,0,1,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-013""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.modelPicker.runtimeDiagnosticsUnavailable,packages/cli/locales/en/cli.ftl:749,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.modelPicker.searchLabel,packages/cli/locales/en/runtime.ftl:9,caller-trace-required,0,1,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-093""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.modelPicker.searchLabel,packages/cli/locales/en/runtime.ftl:9,caller-trace-required,0,2,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-093""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-147""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.modelPicker.section.all,packages/cli/locales/en/cli.ftl:686,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.modelPicker.section.current,packages/cli/locales/en/cli.ftl:681,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.modelPicker.section.favorite,packages/cli/locales/en/cli.ftl:683,caller-trace-required,0,0,[],caller-trace-required
@@ -755,32 +755,32 @@ jouzu.cli.modelPicker.thinkingLevelNotSaved,packages/cli/locales/en/cli.ftl:713,
 jouzu.cli.modelPicker.title.confirm,packages/cli/locales/en/cli.ftl:687,caller-trace-required,0,1,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-015""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.modelPicker.title.search,packages/cli/locales/en/cli.ftl:688,caller-trace-required,0,1,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-016""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.modelPicker.waitForActiveCall,packages/cli/locales/en/cli.ftl:741,caller-trace-required,0,1,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-067""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.palette.action.back,packages/cli/locales/en/cli.ftl:665,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.palette.action.back,packages/cli/locales/en/cli.ftl:665,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-124""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.palette.action.browse,packages/cli/locales/en/cli.ftl:658,caller-trace-required,0,1,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-025""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.palette.action.cancel,packages/cli/locales/en/cli.ftl:653,caller-trace-required,0,1,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-029""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.palette.action.change,packages/cli/locales/en/cli.ftl:663,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.palette.action.close,packages/cli/locales/en/cli.ftl:660,caller-trace-required,0,2,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-026""},{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-027""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.palette.action.cancel,packages/cli/locales/en/cli.ftl:653,caller-trace-required,0,3,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-029""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-126""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-137""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.palette.action.change,packages/cli/locales/en/cli.ftl:663,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-131""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-133""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.palette.action.close,packages/cli/locales/en/cli.ftl:660,caller-trace-required,0,3,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-026""},{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-027""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-136""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.palette.action.compactAndSwitch,packages/cli/locales/en/cli.ftl:652,caller-trace-required,0,1,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-028""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.palette.action.confirm,packages/cli/locales/en/cli.ftl:668,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.palette.action.confirm,packages/cli/locales/en/cli.ftl:668,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-125""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.palette.action.cursor,packages/cli/locales/en/cli.ftl:655,caller-trace-required,0,1,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-031""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.palette.action.edit,packages/cli/locales/en/cli.ftl:662,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.palette.action.edit,packages/cli/locales/en/cli.ftl:662,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-049""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.palette.action.favorite,packages/cli/locales/en/cli.ftl:651,caller-trace-required,0,2,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-023""},{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-024""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.palette.action.move,packages/cli/locales/en/cli.ftl:656,caller-trace-required,0,2,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-032""},{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-036""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.palette.action.newline,packages/cli/locales/en/cli.ftl:669,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.palette.action.next,packages/cli/locales/en/cli.ftl:666,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.palette.action.previous,packages/cli/locales/en/cli.ftl:667,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.palette.action.move,packages/cli/locales/en/cli.ftl:656,caller-trace-required,0,3,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-032""},{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-036""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-132""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.palette.action.newline,packages/cli/locales/en/cli.ftl:669,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-121""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.palette.action.next,packages/cli/locales/en/cli.ftl:666,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-122""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.palette.action.previous,packages/cli/locales/en/cli.ftl:667,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-123""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.palette.action.refresh,packages/cli/locales/en/cli.ftl:650,caller-trace-required,0,1,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-022""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.palette.action.returnToForm,packages/cli/locales/en/cli.ftl:670,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.palette.action.returnToForm,packages/cli/locales/en/cli.ftl:670,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-120""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.palette.action.search,packages/cli/locales/en/cli.ftl:659,caller-trace-required,0,1,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-035""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.palette.action.section,packages/cli/locales/en/cli.ftl:657,caller-trace-required,0,2,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-033""},{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-037""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.palette.action.section,packages/cli/locales/en/cli.ftl:657,caller-trace-required,0,3,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-033""},{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-037""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-135""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.palette.action.selectAndSaveForProject,packages/cli/locales/en/cli.ftl:654,caller-trace-required,0,2,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-030""},{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-034""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.palette.action.toggle,packages/cli/locales/en/cli.ftl:664,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.palette.action.toggle,packages/cli/locales/en/cli.ftl:664,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-134""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.palette.action.view,packages/cli/locales/en/cli.ftl:661,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.palette.tab.models,packages/cli/locales/en/palette-navigation.ftl:2,caller-trace-required,0,4,"[{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-335""},{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-018""},{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-199""},{""table"":""palette.csv"",""item_id"":""PALETTE-058""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.palette.tab.settings,packages/cli/locales/en/palette-navigation.ftl:4,caller-trace-required,0,4,"[{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-158""},{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-337""},{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-201""},{""table"":""palette.csv"",""item_id"":""PALETTE-060""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.palette.tab.workflow,packages/cli/locales/en/palette-navigation.ftl:3,caller-trace-required,0,3,"[{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-336""},{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-200""},{""table"":""palette.csv"",""item_id"":""PALETTE-059""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.palette.tab.workflow,packages/cli/locales/en/palette-navigation.ftl:3,caller-trace-required,0,4,"[{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-336""},{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-200""},{""table"":""palette.csv"",""item_id"":""PALETTE-059""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-138""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.palette.value.unknown,packages/cli/locales/en/cli.ftl:649,caller-trace-required,0,3,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-202""},{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-203""},{""table"":""palette.csv"",""item_id"":""PALETTE-061""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.palette.viewTitle,packages/cli/locales/en/palette-navigation.ftl:5,caller-trace-required,0,1,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-017""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.palette.viewTitle,packages/cli/locales/en/palette-navigation.ftl:5,caller-trace-required,0,2,"[{""table"":""model-picker.csv"",""item_id"":""MODEL-PICKER-017""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-139""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.piImport.imported,packages/cli/locales/en/cli.ftl:392,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.piImport.importFailed,packages/cli/locales/en/cli.ftl:394,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.piImport.invalidSource,packages/cli/locales/en/cli.ftl:391,caller-trace-required,0,0,[],caller-trace-required
@@ -1280,7 +1280,7 @@ jouzu.cli.settings.hint.models,packages/cli/locales/en/cli.ftl:1081,caller-trace
 jouzu.cli.settings.hint.move,packages/cli/locales/en/cli.ftl:1067,caller-trace-required,0,8,"[{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-081""},{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-085""},{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-089""},{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-098""},{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-105""},{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-109""},{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-113""},{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-122""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.settings.hint.refresh,packages/cli/locales/en/cli.ftl:1079,caller-trace-required,0,1,"[{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-117""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.settings.hint.remove,packages/cli/locales/en/cli.ftl:1065,caller-trace-required,0,2,"[{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-076""},{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-118""}]",occurrence-records-present; exhaustive-caller-review-open
-jouzu.cli.settings.hint.save,packages/cli/locales/en/cli.ftl:1061,caller-trace-required,0,1,"[{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-072""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.settings.hint.save,packages/cli/locales/en/cli.ftl:1061,caller-trace-required,0,2,"[{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-072""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-130""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.settings.hint.scroll,packages/cli/locales/en/cli.ftl:1125,caller-trace-required,0,1,"[{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-101""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.settings.hint.section,packages/cli/locales/en/cli.ftl:1069,caller-trace-required,0,6,"[{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-084""},{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-088""},{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-102""},{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-108""},{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-112""},{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-121""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.settings.hint.signOut,packages/cli/locales/en/cli.ftl:1066,caller-trace-required,0,2,"[{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-078""},{""table"":""catalog-settings.csv"",""item_id"":""CATALOG-SETTINGS-083""}]",occurrence-records-present; exhaustive-caller-review-open
@@ -1702,104 +1702,104 @@ jouzu.cli.voice.usage,packages/cli/locales/en/cli.ftl:1282,caller-trace-required
 jouzu.cli.work.jobExit,packages/cli/locales/en/cli.ftl:645,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.work.outcomeUnknown,packages/cli/locales/en/cli.ftl:644,caller-trace-required,0,0,[],caller-trace-required
 jouzu.cli.work.withheldRequest,packages/cli/locales/en/cli.ftl:643,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.action.applyingAgent,packages/cli/locales/en/cli.ftl:854,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.action.disablingSubagents,packages/cli/locales/en/cli.ftl:823,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.action.enablingSubagents,packages/cli/locales/en/cli.ftl:822,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.action.launchAgent,packages/cli/locales/en/cli.ftl:824,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.action.resumeAgent,packages/cli/locales/en/cli.ftl:826,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.action.sendingTask,packages/cli/locales/en/cli.ftl:855,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.action.sendMessage,packages/cli/locales/en/cli.ftl:825,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.action.stoppingAgent,packages/cli/locales/en/cli.ftl:856,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.confirm.disableSubagents,packages/cli/locales/en/cli.ftl:782,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.empty.noChildRuns,packages/cli/locales/en/cli.ftl:835,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.empty.noMatchingModels,packages/cli/locales/en/cli.ftl:834,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.workflow.action.applyingAgent,packages/cli/locales/en/cli.ftl:854,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-080""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.action.disablingSubagents,packages/cli/locales/en/cli.ftl:823,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-037""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.action.enablingSubagents,packages/cli/locales/en/cli.ftl:822,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-036""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.action.launchAgent,packages/cli/locales/en/cli.ftl:824,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-103""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.action.resumeAgent,packages/cli/locales/en/cli.ftl:826,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-105""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.action.sendingTask,packages/cli/locales/en/cli.ftl:855,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-107""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.action.sendMessage,packages/cli/locales/en/cli.ftl:825,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-104""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.action.stoppingAgent,packages/cli/locales/en/cli.ftl:856,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-115""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.confirm.disableSubagents,packages/cli/locales/en/cli.ftl:782,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-038""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.empty.noChildRuns,packages/cli/locales/en/cli.ftl:835,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-164""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.empty.noMatchingModels,packages/cli/locales/en/cli.ftl:834,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-161""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.workflow.error.formUnavailable,packages/cli/locales/en/cli.ftl:841,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.error.runNotFound,packages/cli/locales/en/cli.ftl:844,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.error.saveOrCancelEdits,packages/cli/locales/en/cli.ftl:842,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.error.subagentsOff,packages/cli/locales/en/cli.ftl:843,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.error.writeAssignment,packages/cli/locales/en/cli.ftl:845,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.field.agent,packages/cli/locales/en/cli.ftl:857,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.field.context,packages/cli/locales/en/cli.ftl:860,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.field.context.lookupOff,packages/cli/locales/en/cli.ftl:862,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.field.context.lookupOn,packages/cli/locales/en/cli.ftl:861,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.field.model,packages/cli/locales/en/cli.ftl:858,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.field.modelId,packages/cli/locales/en/cli.ftl:863,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.field.result,packages/cli/locales/en/cli.ftl:865,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.field.usage,packages/cli/locales/en/cli.ftl:864,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.field.workspace,packages/cli/locales/en/cli.ftl:859,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.headingMeta.defined,packages/cli/locales/en/cli.ftl:815,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.headingMeta.followsSessionModel,packages/cli/locales/en/cli.ftl:820,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.headingMeta.more,packages/cli/locales/en/cli.ftl:821,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.headingMeta.runs,packages/cli/locales/en/cli.ftl:816,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.hint.editAgent,packages/cli/locales/en/cli.ftl:832,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.hint.inspectRun,packages/cli/locales/en/cli.ftl:833,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.hint.saveInForm,packages/cli/locales/en/cli.ftl:852,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.label.actions,packages/cli/locales/en/cli.ftl:800,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.label.agents,packages/cli/locales/en/cli.ftl:796,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.label.definition,packages/cli/locales/en/cli.ftl:798,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.label.models,packages/cli/locales/en/cli.ftl:801,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.label.runs,packages/cli/locales/en/cli.ftl:797,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.label.setting,packages/cli/locales/en/cli.ftl:799,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.label.task,packages/cli/locales/en/cli.ftl:802,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.message.childWritersParallel,packages/cli/locales/en/cli.ftl:830,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.message.childWritersSerial,packages/cli/locales/en/cli.ftl:831,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.message.complete,packages/cli/locales/en/cli.ftl:847,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.message.concurrencySet,packages/cli/locales/en/cli.ftl:849,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.message.couldNotLoad,packages/cli/locales/en/cli.ftl:829,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.message.operationFailed,packages/cli/locales/en/cli.ftl:827,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.message.operationFailedRetry,packages/cli/locales/en/cli.ftl:828,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.message.running,packages/cli/locales/en/cli.ftl:846,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.message.saved,packages/cli/locales/en/cli.ftl:848,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.meta.inSession,packages/cli/locales/en/cli.ftl:814,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.meta.thisSession,packages/cli/locales/en/cli.ftl:813,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.addAgent,packages/cli/locales/en/cli.ftl:755,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.assignment,packages/cli/locales/en/cli.ftl:774,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.backToRuns,packages/cli/locales/en/cli.ftl:781,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.cancel,packages/cli/locales/en/cli.ftl:772,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.childTools,packages/cli/locales/en/cli.ftl:761,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.childWriters,packages/cli/locales/en/cli.ftl:754,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.concurrency,packages/cli/locales/en/cli.ftl:753,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.deleteConfirm,packages/cli/locales/en/cli.ftl:771,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.deleteDefinition,packages/cli/locales/en/cli.ftl:770,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.description,packages/cli/locales/en/cli.ftl:757,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.duplicateAsNewAgent,packages/cli/locales/en/cli.ftl:769,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.instructions,packages/cli/locales/en/cli.ftl:765,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.launchAgent,packages/cli/locales/en/cli.ftl:768,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.maximumTurns,packages/cli/locales/en/cli.ftl:764,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.model,packages/cli/locales/en/cli.ftl:758,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.placement,packages/cli/locales/en/cli.ftl:759,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.readOutput,packages/cli/locales/en/cli.ftl:776,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.resumeWithTask,packages/cli/locales/en/cli.ftl:780,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.reviewOnly,packages/cli/locales/en/cli.ftl:760,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.roleId,packages/cli/locales/en/cli.ftl:756,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.sameAsThisSession,packages/cli/locales/en/cli.ftl:773,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.save,packages/cli/locales/en/cli.ftl:766,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.sendMessage,packages/cli/locales/en/cli.ftl:777,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.stopAgent,packages/cli/locales/en/cli.ftl:778,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.stopConfirm,packages/cli/locales/en/cli.ftl:779,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.subagents,packages/cli/locales/en/cli.ftl:752,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.thinking,packages/cli/locales/en/cli.ftl:762,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.timeoutSeconds,packages/cli/locales/en/cli.ftl:763,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.useInMainSession,packages/cli/locales/en/cli.ftl:767,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.row.workspace,packages/cli/locales/en/cli.ftl:775,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.sameAsMain,packages/cli/locales/en/runtime.ftl:2,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.stage.chooseModel,packages/cli/locales/en/cli.ftl:790,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.stage.confirm,packages/cli/locales/en/cli.ftl:793,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.stage.editAgent,packages/cli/locales/en/cli.ftl:789,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.stage.editAssignment,packages/cli/locales/en/cli.ftl:794,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.stage.editInstructions,packages/cli/locales/en/cli.ftl:795,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.stage.editWorkspace,packages/cli/locales/en/cli.ftl:853,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.stage.output,packages/cli/locales/en/cli.ftl:792,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.stage.run,packages/cli/locales/en/cli.ftl:791,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.workflow.error.runNotFound,packages/cli/locales/en/cli.ftl:844,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-042""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-043""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.error.saveOrCancelEdits,packages/cli/locales/en/cli.ftl:842,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-031""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.error.subagentsOff,packages/cli/locales/en/cli.ftl:843,caller-trace-required,0,3,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-039""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-040""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-041""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.error.writeAssignment,packages/cli/locales/en/cli.ftl:845,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-108""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.field.agent,packages/cli/locales/en/cli.ftl:857,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-149""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.field.context,packages/cli/locales/en/cli.ftl:860,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-154""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.field.context.lookupOff,packages/cli/locales/en/cli.ftl:862,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-156""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.field.context.lookupOn,packages/cli/locales/en/cli.ftl:861,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-155""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.field.model,packages/cli/locales/en/cli.ftl:858,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-150""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.field.modelId,packages/cli/locales/en/cli.ftl:863,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-157""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.field.result,packages/cli/locales/en/cli.ftl:865,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-160""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.field.usage,packages/cli/locales/en/cli.ftl:864,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-158""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.field.workspace,packages/cli/locales/en/cli.ftl:859,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-153""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.headingMeta.defined,packages/cli/locales/en/cli.ftl:815,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-055""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-058""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.headingMeta.followsSessionModel,packages/cli/locales/en/cli.ftl:820,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-094""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.headingMeta.more,packages/cli/locales/en/cli.ftl:821,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-146""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.headingMeta.runs,packages/cli/locales/en/cli.ftl:816,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-060""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-163""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.hint.editAgent,packages/cli/locales/en/cli.ftl:832,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-128""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.hint.inspectRun,packages/cli/locales/en/cli.ftl:833,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-127""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.hint.saveInForm,packages/cli/locales/en/cli.ftl:852,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-143""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.label.actions,packages/cli/locales/en/cli.ftl:800,caller-trace-required,0,4,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-078""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-090""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-106""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-111""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.label.agents,packages/cli/locales/en/cli.ftl:796,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-054""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-057""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.label.definition,packages/cli/locales/en/cli.ftl:798,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-062""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.label.models,packages/cli/locales/en/cli.ftl:801,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-093""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-095""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.label.runs,packages/cli/locales/en/cli.ftl:797,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-059""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-162""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.label.setting,packages/cli/locales/en/cli.ftl:799,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-088""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.label.task,packages/cli/locales/en/cli.ftl:802,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-097""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.message.childWritersParallel,packages/cli/locales/en/cli.ftl:830,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-034""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.message.childWritersSerial,packages/cli/locales/en/cli.ftl:831,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-035""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.message.complete,packages/cli/locales/en/cli.ftl:847,caller-trace-required,0,7,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-017""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-018""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-019""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-020""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-021""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-022""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-023""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.message.concurrencySet,packages/cli/locales/en/cli.ftl:849,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-033""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.message.couldNotLoad,packages/cli/locales/en/cli.ftl:829,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-165""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.message.operationFailed,packages/cli/locales/en/cli.ftl:827,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-119""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.message.operationFailedRetry,packages/cli/locales/en/cli.ftl:828,caller-trace-required,0,7,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-024""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-025""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-026""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-027""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-028""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-029""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-030""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.message.running,packages/cli/locales/en/cli.ftl:846,caller-trace-required,0,7,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-010""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-011""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-012""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-013""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-014""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-015""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-016""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.message.saved,packages/cli/locales/en/cli.ftl:848,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-032""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.meta.inSession,packages/cli/locales/en/cli.ftl:814,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-053""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.meta.thisSession,packages/cli/locales/en/cli.ftl:813,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-047""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.addAgent,packages/cli/locales/en/cli.ftl:755,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-056""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.assignment,packages/cli/locales/en/cli.ftl:774,caller-trace-required,0,3,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-003""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-096""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-141""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.backToRuns,packages/cli/locales/en/cli.ftl:781,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-118""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.cancel,packages/cli/locales/en/cli.ftl:772,caller-trace-required,0,3,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-086""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-091""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-109""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.childTools,packages/cli/locales/en/cli.ftl:761,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-069""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.childWriters,packages/cli/locales/en/cli.ftl:754,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-050""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.concurrency,packages/cli/locales/en/cli.ftl:753,caller-trace-required,0,3,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-007""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-048""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-087""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.deleteConfirm,packages/cli/locales/en/cli.ftl:771,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-085""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.deleteDefinition,packages/cli/locales/en/cli.ftl:770,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-084""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.description,packages/cli/locales/en/cli.ftl:757,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-063""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.duplicateAsNewAgent,packages/cli/locales/en/cli.ftl:769,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-083""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.instructions,packages/cli/locales/en/cli.ftl:765,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-074""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-142""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.launchAgent,packages/cli/locales/en/cli.ftl:768,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-081""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.maximumTurns,packages/cli/locales/en/cli.ftl:764,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-073""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.model,packages/cli/locales/en/cli.ftl:758,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-064""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.placement,packages/cli/locales/en/cli.ftl:759,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-065""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.readOutput,packages/cli/locales/en/cli.ftl:776,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-110""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.resumeWithTask,packages/cli/locales/en/cli.ftl:780,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-116""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.reviewOnly,packages/cli/locales/en/cli.ftl:760,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-066""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.roleId,packages/cli/locales/en/cli.ftl:756,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-061""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.sameAsThisSession,packages/cli/locales/en/cli.ftl:773,caller-trace-required,0,3,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-092""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-166""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-167""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.save,packages/cli/locales/en/cli.ftl:766,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-077""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-089""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.sendMessage,packages/cli/locales/en/cli.ftl:777,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-112""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.stopAgent,packages/cli/locales/en/cli.ftl:778,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-113""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.stopConfirm,packages/cli/locales/en/cli.ftl:779,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-114""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.subagents,packages/cli/locales/en/cli.ftl:752,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-044""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.thinking,packages/cli/locales/en/cli.ftl:762,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-070""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-151""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.timeoutSeconds,packages/cli/locales/en/cli.ftl:763,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-072""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.useInMainSession,packages/cli/locales/en/cli.ftl:767,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-079""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.row.workspace,packages/cli/locales/en/cli.ftl:775,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-101""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.sameAsMain,packages/cli/locales/en/runtime.ftl:2,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-071""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-152""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.stage.chooseModel,packages/cli/locales/en/cli.ftl:790,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-002""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-129""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.stage.confirm,packages/cli/locales/en/cli.ftl:793,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-006""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-144""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.stage.editAgent,packages/cli/locales/en/cli.ftl:789,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-001""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.stage.editAssignment,packages/cli/locales/en/cli.ftl:794,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-008""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-100""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.stage.editInstructions,packages/cli/locales/en/cli.ftl:795,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-009""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-076""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.stage.editWorkspace,packages/cli/locales/en/cli.ftl:853,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-102""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.stage.output,packages/cli/locales/en/cli.ftl:792,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-005""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-145""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.stage.run,packages/cli/locales/en/cli.ftl:791,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-004""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-148""}]",occurrence-records-present; exhaustive-caller-review-open
 jouzu.cli.workflow.title,packages/cli/locales/en/cli.ftl:850,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.title.busy,packages/cli/locales/en/cli.ftl:851,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.value.characters,packages/cli/locales/en/cli.ftl:809,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.value.costUnknown,packages/cli/locales/en/cli.ftl:812,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.value.inParallel,packages/cli/locales/en/cli.ftl:807,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.value.no,packages/cli/locales/en/cli.ftl:806,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.value.off,packages/cli/locales/en/cli.ftl:804,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.value.on,packages/cli/locales/en/cli.ftl:803,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.value.oneAtATime,packages/cli/locales/en/cli.ftl:808,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.value.unavailableSubagentsOff,packages/cli/locales/en/cli.ftl:811,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.value.writeTask,packages/cli/locales/en/cli.ftl:810,caller-trace-required,0,0,[],caller-trace-required
-jouzu.cli.workflow.value.yes,packages/cli/locales/en/cli.ftl:805,caller-trace-required,0,0,[],caller-trace-required
+jouzu.cli.workflow.title.busy,packages/cli/locales/en/cli.ftl:851,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-140""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.value.characters,packages/cli/locales/en/cli.ftl:809,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-075""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-098""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.value.costUnknown,packages/cli/locales/en/cli.ftl:812,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-159""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.value.inParallel,packages/cli/locales/en/cli.ftl:807,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-051""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.value.no,packages/cli/locales/en/cli.ftl:806,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-068""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.value.off,packages/cli/locales/en/cli.ftl:804,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-046""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.value.on,packages/cli/locales/en/cli.ftl:803,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-045""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.value.oneAtATime,packages/cli/locales/en/cli.ftl:808,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-052""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.value.unavailableSubagentsOff,packages/cli/locales/en/cli.ftl:811,caller-trace-required,0,2,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-082""},{""table"":""workflow.csv"",""item_id"":""WORKFLOW-117""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.value.writeTask,packages/cli/locales/en/cli.ftl:810,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-099""}]",occurrence-records-present; exhaustive-caller-review-open
+jouzu.cli.workflow.value.yes,packages/cli/locales/en/cli.ftl:805,caller-trace-required,0,1,"[{""table"":""workflow.csv"",""item_id"":""WORKFLOW-067""}]",occurrence-records-present; exhaustive-caller-review-open

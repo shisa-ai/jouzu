@@ -426,6 +426,17 @@ and validated-snapshot preconditions exclude two internal errors. Serialized wai
 decisions are model input; arbitrary stored reasons and imported producer errors
 remain separately qualified.
 
+[workflow.csv](workflow.csv) records 210 Workflow items: 167 catalog occurrences,
+11 fixed or protected occurrences and 32 payload boundaries. The
+[scope](workflow-scope.csv) covers the complete 1,327-line component and 35-line
+model-display helper, including every catalog use, five Error sites and eight
+catches. Conditions distinguish empty configurations, model fallback labels,
+transcript detail, copied agent IDs and required-form invariants. Default role
+descriptions and instructions have editor consumers; their producer bodies remain
+separately pending. The component does not own a stdout route: bounded integration
+traces distinguish the non-TUI `/workflow` notification from the `/subagents`
+print-mode JSON summary. No UI, worker, state or native operation was executed.
+
 [flow-tools.csv](flow-tools.csv) supplies 36 wait/no-reply tool records: 24 fixed
 occurrences, three catalog labels and nine payload boundaries. Four full bodies
 and all 234 lexical occurrences are accounted for in the
@@ -529,6 +540,7 @@ python -B review/text-inventory/verify-catalog-settings.py
 python -B review/text-inventory/verify-model-picker.py
 node review/text-inventory/verify-palette.cjs
 python -B review/text-inventory/verify-keybindings.py
+python -B review/text-inventory/verify-workflow.py
 python -B review/text-inventory/verify-model-catalog.py
 python -B review/text-inventory/verify-auth-account.py
 python -B review/text-inventory/verify-launcher.py
