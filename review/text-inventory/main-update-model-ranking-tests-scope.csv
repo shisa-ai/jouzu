@@ -1,0 +1,2 @@
+"path","revision","git_blob","sha256","lines","coverage"
+"packages/cli/test/model-picker-ranking.test.mjs","1fda3eb161b042aae66e4adcc07319f69946dadd","893c8d7929aadc71f9ddf5f6aa614324ae46e21a","1e96b609df7cd129ea69efe34bf5bb21551e50fc2fd280dee1e25eb4418b5458","472","Full source text/AST partition; source-only, no test or runtime qualification"

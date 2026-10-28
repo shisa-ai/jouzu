@@ -1,0 +1,2817 @@
+{
+  "target_revision": "1fda3eb161b042aae66e4adcc07319f69946dadd",
+  "full_lines": 472,
+  "test_titles": 15,
+  "assertion_messages": 4,
+  "boundaries": 1,
+  "lexical_occurrences": 280,
+  "protected_occurrences": 261,
+  "partition": [
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 19,
+      "end": 39,
+      "line": 1,
+      "column": 20,
+      "expression": "\"node:assert/strict\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:1:20",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 62,
+      "end": 73,
+      "line": 2,
+      "column": 22,
+      "expression": "\"node:test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:2:22",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 108,
+      "end": 141,
+      "line": 4,
+      "column": 33,
+      "expression": "\"../dist/model-picker-ranking.js\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:4:33",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 181,
+      "end": 212,
+      "line": 5,
+      "column": 39,
+      "expression": "\"../dist/model-picker-state.js\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:5:39",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 234,
+      "end": 237,
+      "line": 7,
+      "column": 20,
+      "expression": "\"a\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:7:20",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 282,
+      "end": 293,
+      "line": 10,
+      "column": 13,
+      "expression": "\"anthropic\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:10:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 306,
+      "end": 326,
+      "line": 11,
+      "column": 12,
+      "expression": "\"claude-sonnet-test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:11:12",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 336,
+      "end": 356,
+      "line": 12,
+      "column": 9,
+      "expression": "\"Claude Sonnet Test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:12:9",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 443,
+      "end": 451,
+      "line": 18,
+      "column": 13,
+      "expression": "\"openai\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:18:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 464,
+      "end": 474,
+      "line": 19,
+      "column": 12,
+      "expression": "\"gpt-test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:19:12",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 484,
+      "end": 494,
+      "line": 20,
+      "column": 9,
+      "expression": "\"GPT Test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:20:9",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 579,
+      "end": 591,
+      "line": 26,
+      "column": 13,
+      "expression": "\"openrouter\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:26:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 604,
+      "end": 634,
+      "line": 27,
+      "column": 12,
+      "expression": "\"anthropic/claude-sonnet-test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:27:12",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 644,
+      "end": 679,
+      "line": 28,
+      "column": 9,
+      "expression": "\"Claude Sonnet Test via OpenRouter\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:28:9",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 852,
+      "end": 870,
+      "line": 39,
+      "column": 14,
+      "expression": "\"missing-provider\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:39:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 884,
+      "end": 899,
+      "line": 40,
+      "column": 13,
+      "expression": "\"retired-model\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:40:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 913,
+      "end": 939,
+      "line": 41,
+      "column": 13,
+      "expression": "\"2026-08-23T00:00:00.000Z\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:41:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 963,
+      "end": 971,
+      "line": 44,
+      "column": 14,
+      "expression": "\"openai\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:44:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 985,
+      "end": 995,
+      "line": 45,
+      "column": 13,
+      "expression": "\"gpt-test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:45:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 1009,
+      "end": 1035,
+      "line": 46,
+      "column": 13,
+      "expression": "\"2026-08-23T00:00:01.000Z\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:46:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 1103,
+      "end": 1115,
+      "line": 51,
+      "column": 14,
+      "expression": "\"openrouter\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:51:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 1129,
+      "end": 1159,
+      "line": 52,
+      "column": 13,
+      "expression": "\"anthropic/claude-sonnet-test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:52:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 1176,
+      "end": 1202,
+      "line": 53,
+      "column": 16,
+      "expression": "\"2026-08-23T00:01:00.000Z\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:53:16",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 1269,
+      "end": 1280,
+      "line": 58,
+      "column": 15,
+      "expression": "\"anthropic\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:58:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 1291,
+      "end": 1311,
+      "line": 58,
+      "column": 37,
+      "expression": "\"claude-sonnet-test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:58:37",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 1325,
+      "end": 1351,
+      "line": 58,
+      "column": 71,
+      "expression": "\"2026-08-23T00:02:00.000Z\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:58:71",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 1395,
+      "end": 1474,
+      "line": 63,
+      "column": 6,
+      "expression": "\"search indexes sanitized provider display names independently of provider IDs\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-001",
+      "kind": "test-title"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 1522,
+      "end": 1533,
+      "line": 66,
+      "column": 14,
+      "expression": "\"vendor-17\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:66:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 1552,
+      "end": 1582,
+      "line": 67,
+      "column": 18,
+      "expression": "\"\\u001b[31mAcme Labs\\u001b[0m\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:67:18",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 1596,
+      "end": 1600,
+      "line": 68,
+      "column": 13,
+      "expression": "\"r1\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:68:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 1611,
+      "end": 1621,
+      "line": 69,
+      "column": 10,
+      "expression": "\"Reasoner\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:69:10",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 1674,
+      "end": 1685,
+      "line": 73,
+      "column": 23,
+      "expression": "\"Acme Labs\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:73:23",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 1687,
+      "end": 1693,
+      "line": 73,
+      "column": 36,
+      "expression": "\"acme\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:73:36",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 1695,
+      "end": 1706,
+      "line": 73,
+      "column": 44,
+      "expression": "\"vendor-17\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:73:44",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 1708,
+      "end": 1718,
+      "line": 73,
+      "column": 57,
+      "expression": "\"reasoner\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:73:57",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 1928,
+      "end": 1939,
+      "line": 76,
+      "column": 55,
+      "expression": "\"Acme Labs\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:76:55",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 1955,
+      "end": 2037,
+      "line": 80,
+      "column": 6,
+      "expression": "\"search keeps fuzzy, catalog, and normalized identity matching without reordering\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-002",
+      "kind": "test-title"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2085,
+      "end": 2097,
+      "line": 83,
+      "column": 14,
+      "expression": "\"gateway-17\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:83:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2116,
+      "end": 2126,
+      "line": 84,
+      "column": 18,
+      "expression": "\"Shisa AI\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:84:18",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2140,
+      "end": 2159,
+      "line": 85,
+      "column": 13,
+      "expression": "\"alpha-reasoner-v2\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:85:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2170,
+      "end": 2186,
+      "line": 86,
+      "column": 10,
+      "expression": "\"Alpha Reasoner\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:86:10",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2205,
+      "end": 2218,
+      "line": 87,
+      "column": 18,
+      "expression": "\"Office Pool\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:87:18",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2358,
+      "end": 2390,
+      "line": 93,
+      "column": 3,
+      "expression": "\" gateway-17/alpha-reasoner-v2 \"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:93:3",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2394,
+      "end": 2412,
+      "line": 94,
+      "column": 3,
+      "expression": "\"gateway-17 alpha\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:94:3",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2416,
+      "end": 2426,
+      "line": 95,
+      "column": 3,
+      "expression": "\"reasoner\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:95:3",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2430,
+      "end": 2436,
+      "line": 96,
+      "column": 3,
+      "expression": "\"arv2\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:96:3",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2440,
+      "end": 2446,
+      "line": 97,
+      "column": 3,
+      "expression": "\"ofpl\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:97:3",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2450,
+      "end": 2457,
+      "line": 98,
+      "column": 3,
+      "expression": "\"ＳＨＩＳＡ\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:98:3",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2583,
+      "end": 2592,
+      "line": 102,
+      "column": 23,
+      "expression": "\"missing\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:102:23",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2594,
+      "end": 2607,
+      "line": 102,
+      "column": 34,
+      "expression": "\"pool office\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:102:34",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2609,
+      "end": 2613,
+      "line": 102,
+      "column": 49,
+      "expression": "\"v3\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:102:49",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2702,
+      "end": 2789,
+      "line": 107,
+      "column": 6,
+      "expression": "\"empty query lists current, previous, favorites, recents, then the rest alphabetically\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-003",
+      "kind": "test-title"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2847,
+      "end": 2853,
+      "line": 110,
+      "column": 15,
+      "expression": "\"zeta\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:110:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2864,
+      "end": 2877,
+      "line": 110,
+      "column": 32,
+      "expression": "\"alpha-model\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:110:32",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2885,
+      "end": 2898,
+      "line": 110,
+      "column": 53,
+      "expression": "\"Alpha Model\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:110:53",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2933,
+      "end": 2939,
+      "line": 111,
+      "column": 15,
+      "expression": "\"beta\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:111:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2950,
+      "end": 2963,
+      "line": 111,
+      "column": 32,
+      "expression": "\"omega-model\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:111:32",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 2971,
+      "end": 2984,
+      "line": 111,
+      "column": 53,
+      "expression": "\"Omega Model\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:111:53",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3117,
+      "end": 3128,
+      "line": 117,
+      "column": 24,
+      "expression": "\"anthropic\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:117:24",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3139,
+      "end": 3159,
+      "line": 117,
+      "column": 46,
+      "expression": "\"claude-sonnet-test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:117:46",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3188,
+      "end": 3200,
+      "line": 118,
+      "column": 26,
+      "expression": "\"openrouter\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:118:26",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3211,
+      "end": 3241,
+      "line": 118,
+      "column": 49,
+      "expression": "\"anthropic/claude-sonnet-test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:118:49",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3385,
+      "end": 3394,
+      "line": 125,
+      "column": 5,
+      "expression": "\"current\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:125:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3396,
+      "end": 3407,
+      "line": 125,
+      "column": 16,
+      "expression": "\"anthropic\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:125:16",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3409,
+      "end": 3429,
+      "line": 125,
+      "column": 29,
+      "expression": "\"claude-sonnet-test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:125:29",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3436,
+      "end": 3446,
+      "line": 126,
+      "column": 5,
+      "expression": "\"previous\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:126:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3448,
+      "end": 3460,
+      "line": 126,
+      "column": 17,
+      "expression": "\"openrouter\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:126:17",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3462,
+      "end": 3492,
+      "line": 126,
+      "column": 31,
+      "expression": "\"anthropic/claude-sonnet-test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:126:31",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3499,
+      "end": 3509,
+      "line": 127,
+      "column": 5,
+      "expression": "\"favorite\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:127:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3511,
+      "end": 3529,
+      "line": 127,
+      "column": 17,
+      "expression": "\"missing-provider\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:127:17",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3531,
+      "end": 3546,
+      "line": 127,
+      "column": 37,
+      "expression": "\"retired-model\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:127:37",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3553,
+      "end": 3563,
+      "line": 128,
+      "column": 5,
+      "expression": "\"favorite\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:128:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3565,
+      "end": 3573,
+      "line": 128,
+      "column": 17,
+      "expression": "\"openai\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:128:17",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3575,
+      "end": 3585,
+      "line": 128,
+      "column": 27,
+      "expression": "\"gpt-test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:128:27",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3592,
+      "end": 3599,
+      "line": 129,
+      "column": 5,
+      "expression": "\"other\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:129:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3601,
+      "end": 3607,
+      "line": 129,
+      "column": 14,
+      "expression": "\"zeta\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:129:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3609,
+      "end": 3622,
+      "line": 129,
+      "column": 22,
+      "expression": "\"alpha-model\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:129:22",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3629,
+      "end": 3636,
+      "line": 130,
+      "column": 5,
+      "expression": "\"other\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:130:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3638,
+      "end": 3644,
+      "line": 130,
+      "column": 14,
+      "expression": "\"beta\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:130:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3646,
+      "end": 3659,
+      "line": 130,
+      "column": 22,
+      "expression": "\"omega-model\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:130:22",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3717,
+      "end": 3770,
+      "line": 133,
+      "column": 47,
+      "expression": "\"an unresolved favorite stays visible as unavailable\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-004",
+      "kind": "assertion-message"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3807,
+      "end": 3818,
+      "line": 134,
+      "column": 35,
+      "expression": "\"too-small\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:134:35",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 3870,
+      "end": 3949,
+      "line": 138,
+      "column": 6,
+      "expression": "\"provider filters preserve priority groups and display-name alphabetical order\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-005",
+      "kind": "test-title"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4011,
+      "end": 4023,
+      "line": 140,
+      "column": 13,
+      "expression": "\"gateway-42\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:140:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4041,
+      "end": 4051,
+      "line": 141,
+      "column": 17,
+      "expression": "\"Shisa AI\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:141:17",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4128,
+      "end": 4145,
+      "line": 147,
+      "column": 12,
+      "expression": "\"current-long-id\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:147:12",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4147,
+      "end": 4161,
+      "line": 147,
+      "column": 31,
+      "expression": "\"Zulu Current\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:147:31",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4175,
+      "end": 4193,
+      "line": 148,
+      "column": 12,
+      "expression": "\"previous-long-id\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:148:12",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4195,
+      "end": 4212,
+      "line": 148,
+      "column": 32,
+      "expression": "\"Yankee Previous\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:148:32",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4231,
+      "end": 4249,
+      "line": 149,
+      "column": 17,
+      "expression": "\"favorite-long-id\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:149:17",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4251,
+      "end": 4266,
+      "line": 149,
+      "column": 37,
+      "expression": "\"Xray Favorite\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:149:37",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4300,
+      "end": 4314,
+      "line": 150,
+      "column": 12,
+      "expression": "\"favorite-two\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:150:12",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4316,
+      "end": 4334,
+      "line": 150,
+      "column": 28,
+      "expression": "\"Whiskey Favorite\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:150:28",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4348,
+      "end": 4364,
+      "line": 151,
+      "column": 12,
+      "expression": "\"project-recent\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:151:12",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4366,
+      "end": 4381,
+      "line": 151,
+      "column": 30,
+      "expression": "\"Victor Recent\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:151:30",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4395,
+      "end": 4410,
+      "line": 152,
+      "column": 12,
+      "expression": "\"global-recent\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:152:12",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4412,
+      "end": 4428,
+      "line": 152,
+      "column": 29,
+      "expression": "\"Uniform Recent\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:152:29",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4442,
+      "end": 4449,
+      "line": 153,
+      "column": 12,
+      "expression": "\"short\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:153:12",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4451,
+      "end": 4465,
+      "line": 153,
+      "column": 21,
+      "expression": "\"OpenAI GPT-6\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:153:21",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4479,
+      "end": 4503,
+      "line": 154,
+      "column": 12,
+      "expression": "\"longer-hidden-model-id\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:154:12",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4505,
+      "end": 4517,
+      "line": 154,
+      "column": 38,
+      "expression": "\"MiniMax M3\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:154:38",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4531,
+      "end": 4560,
+      "line": 155,
+      "column": 12,
+      "expression": "\"even-longer-hidden-model-id\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:155:12",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4562,
+      "end": 4571,
+      "line": 155,
+      "column": 43,
+      "expression": "\"GLM 5.2\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:155:43",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4585,
+      "end": 4588,
+      "line": 156,
+      "column": 12,
+      "expression": "\"a\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:156:12",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4590,
+      "end": 4604,
+      "line": 156,
+      "column": 17,
+      "expression": "\"Qwen 3.7 Max\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:156:17",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4618,
+      "end": 4630,
+      "line": 157,
+      "column": 12,
+      "expression": "\"zzzzzzzzzz\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:157:12",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4632,
+      "end": 4657,
+      "line": 157,
+      "column": 26,
+      "expression": "\"\\u001b[31mBeam\\u001b[0m\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:157:26",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4674,
+      "end": 4681,
+      "line": 158,
+      "column": 15,
+      "expression": "\"other\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:158:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4692,
+      "end": 4703,
+      "line": 158,
+      "column": 33,
+      "expression": "\"unrelated\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:158:33",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4711,
+      "end": 4722,
+      "line": 158,
+      "column": 52,
+      "expression": "\"Unrelated\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:158:52",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 4908,
+      "end": 4934,
+      "line": 164,
+      "column": 12,
+      "expression": "\"2026-10-28T00:00:00.000Z\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:164:12",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5025,
+      "end": 5051,
+      "line": 169,
+      "column": 15,
+      "expression": "\"2026-10-28T00:00:00.000Z\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:169:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5351,
+      "end": 5360,
+      "line": 182,
+      "column": 4,
+      "expression": "\"current\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:182:4",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5362,
+      "end": 5376,
+      "line": 182,
+      "column": 15,
+      "expression": "\"Zulu Current\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:182:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5382,
+      "end": 5392,
+      "line": 183,
+      "column": 4,
+      "expression": "\"previous\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:183:4",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5394,
+      "end": 5411,
+      "line": 183,
+      "column": 16,
+      "expression": "\"Yankee Previous\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:183:16",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5417,
+      "end": 5427,
+      "line": 184,
+      "column": 4,
+      "expression": "\"favorite\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:184:4",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5429,
+      "end": 5444,
+      "line": 184,
+      "column": 16,
+      "expression": "\"Xray Favorite\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:184:16",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5450,
+      "end": 5460,
+      "line": 185,
+      "column": 4,
+      "expression": "\"favorite\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:185:4",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5462,
+      "end": 5480,
+      "line": 185,
+      "column": 16,
+      "expression": "\"Whiskey Favorite\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:185:16",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5486,
+      "end": 5494,
+      "line": 186,
+      "column": 4,
+      "expression": "\"recent\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:186:4",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5496,
+      "end": 5511,
+      "line": 186,
+      "column": 14,
+      "expression": "\"Victor Recent\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:186:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5517,
+      "end": 5525,
+      "line": 187,
+      "column": 4,
+      "expression": "\"recent\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:187:4",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5527,
+      "end": 5543,
+      "line": 187,
+      "column": 14,
+      "expression": "\"Uniform Recent\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:187:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5549,
+      "end": 5556,
+      "line": 188,
+      "column": 4,
+      "expression": "\"other\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:188:4",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5558,
+      "end": 5564,
+      "line": 188,
+      "column": 13,
+      "expression": "\"Beam\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:188:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5570,
+      "end": 5577,
+      "line": 189,
+      "column": 4,
+      "expression": "\"other\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:189:4",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5579,
+      "end": 5588,
+      "line": 189,
+      "column": 13,
+      "expression": "\"GLM 5.2\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:189:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5594,
+      "end": 5601,
+      "line": 190,
+      "column": 4,
+      "expression": "\"other\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:190:4",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5603,
+      "end": 5615,
+      "line": 190,
+      "column": 13,
+      "expression": "\"MiniMax M3\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:190:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5621,
+      "end": 5628,
+      "line": 191,
+      "column": 4,
+      "expression": "\"other\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:191:4",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5630,
+      "end": 5644,
+      "line": 191,
+      "column": 13,
+      "expression": "\"OpenAI GPT-6\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:191:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5650,
+      "end": 5657,
+      "line": 192,
+      "column": 4,
+      "expression": "\"other\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:192:4",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5659,
+      "end": 5673,
+      "line": 192,
+      "column": 13,
+      "expression": "\"Qwen 3.7 Max\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:192:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5748,
+      "end": 5755,
+      "line": 195,
+      "column": 23,
+      "expression": "\"shisa\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:195:23",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5757,
+      "end": 5764,
+      "line": 195,
+      "column": 32,
+      "expression": "\"ＳＨＩＳＡ\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:195:32",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5766,
+      "end": 5771,
+      "line": 195,
+      "column": 41,
+      "expression": "\"shs\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:195:41",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 5773,
+      "end": 5785,
+      "line": 195,
+      "column": 48,
+      "expression": "\"gateway-42\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:195:48",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 6048,
+      "end": 6060,
+      "line": 204,
+      "column": 54,
+      "expression": "\"gateway-42\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:204:54",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 6289,
+      "end": 6358,
+      "line": 212,
+      "column": 6,
+      "expression": "\"favoritesOnly returns saved favorites in order for favorite cycling\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-006",
+      "kind": "test-title"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 6572,
+      "end": 6582,
+      "line": 217,
+      "column": 5,
+      "expression": "\"favorite\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:217:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 6584,
+      "end": 6602,
+      "line": 217,
+      "column": 17,
+      "expression": "\"missing-provider\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:217:17",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 6604,
+      "end": 6619,
+      "line": 217,
+      "column": 37,
+      "expression": "\"retired-model\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:217:37",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 6626,
+      "end": 6636,
+      "line": 218,
+      "column": 5,
+      "expression": "\"favorite\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:218:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 6638,
+      "end": 6646,
+      "line": 218,
+      "column": 17,
+      "expression": "\"openai\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:218:17",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 6648,
+      "end": 6658,
+      "line": 218,
+      "column": 27,
+      "expression": "\"gpt-test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:218:27",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 6680,
+      "end": 6749,
+      "line": 223,
+      "column": 6,
+      "expression": "\"recents follow favorites with project history before global history\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-007",
+      "kind": "test-title"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 6993,
+      "end": 7001,
+      "line": 230,
+      "column": 5,
+      "expression": "\"recent\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:230:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7003,
+      "end": 7012,
+      "line": 230,
+      "column": 15,
+      "expression": "\"project\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:230:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7014,
+      "end": 7026,
+      "line": 230,
+      "column": 26,
+      "expression": "\"openrouter\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:230:26",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7033,
+      "end": 7041,
+      "line": 231,
+      "column": 5,
+      "expression": "\"recent\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:231:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7043,
+      "end": 7051,
+      "line": 231,
+      "column": 15,
+      "expression": "\"global\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:231:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7053,
+      "end": 7064,
+      "line": 231,
+      "column": 25,
+      "expression": "\"anthropic\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:231:25",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7071,
+      "end": 7078,
+      "line": 232,
+      "column": 5,
+      "expression": "\"other\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:232:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7091,
+      "end": 7099,
+      "line": 232,
+      "column": 25,
+      "expression": "\"openai\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:232:25",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7121,
+      "end": 7205,
+      "line": 237,
+      "column": 6,
+      "expression": "\"rows display the catalog provider name and fall back to the provider and model IDs\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-008",
+      "kind": "test-title"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7278,
+      "end": 7285,
+      "line": 241,
+      "column": 15,
+      "expression": "\"shisa\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:241:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7305,
+      "end": 7315,
+      "line": 242,
+      "column": 19,
+      "expression": "\"Shisa AI\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:242:19",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7330,
+      "end": 7346,
+      "line": 243,
+      "column": 14,
+      "expression": "\"shisa-v2.1-70b\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:243:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7358,
+      "end": 7374,
+      "line": 244,
+      "column": 11,
+      "expression": "\"Shisa V2.1 70B\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:244:11",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7418,
+      "end": 7425,
+      "line": 247,
+      "column": 16,
+      "expression": "\"local\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:247:16",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7436,
+      "end": 7445,
+      "line": 247,
+      "column": 34,
+      "expression": "\"unnamed\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:247:34",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7453,
+      "end": 7455,
+      "line": 247,
+      "column": 51,
+      "expression": "\"\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:247:51",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7640,
+      "end": 7656,
+      "line": 255,
+      "column": 5,
+      "expression": "\"Shisa V2.1 70B\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:255:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7658,
+      "end": 7668,
+      "line": 255,
+      "column": 23,
+      "expression": "\"Shisa AI\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:255:23",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7675,
+      "end": 7684,
+      "line": 256,
+      "column": 5,
+      "expression": "\"unnamed\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:256:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7686,
+      "end": 7693,
+      "line": 256,
+      "column": 16,
+      "expression": "\"local\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:256:16",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7714,
+      "end": 7787,
+      "line": 260,
+      "column": 6,
+      "expression": "\"context fit reserves Pi's safety margin instead of the model output cap\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-009",
+      "kind": "test-title"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7829,
+      "end": 7836,
+      "line": 262,
+      "column": 15,
+      "expression": "\"local\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:262:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7847,
+      "end": 7858,
+      "line": 262,
+      "column": 33,
+      "expression": "\"equal-cap\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:262:33",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7866,
+      "end": 7877,
+      "line": 262,
+      "column": 52,
+      "expression": "\"Equal Cap\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:262:52",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7935,
+      "end": 7943,
+      "line": 263,
+      "column": 15,
+      "expression": "\"hosted\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:263:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7954,
+      "end": 7968,
+      "line": 263,
+      "column": 34,
+      "expression": "\"large-output\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:263:34",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 7976,
+      "end": 7990,
+      "line": 263,
+      "column": 56,
+      "expression": "\"Large Output\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:263:56",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 8330,
+      "end": 8336,
+      "line": 275,
+      "column": 4,
+      "expression": "\"fits\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:275:4",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 8338,
+      "end": 8344,
+      "line": 275,
+      "column": 12,
+      "expression": "\"fits\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:275:12",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 8349,
+      "end": 8434,
+      "line": 276,
+      "column": 3,
+      "expression": "\"a model whose output cap equals its window must still accept a small active context\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-010",
+      "kind": "assertion-message"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 8538,
+      "end": 8541,
+      "line": 283,
+      "column": 16,
+      "expression": "\"p\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:283:16",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 8557,
+      "end": 8567,
+      "line": 284,
+      "column": 15,
+      "expression": "\"boundary\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:284:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 8580,
+      "end": 8590,
+      "line": 285,
+      "column": 12,
+      "expression": "\"Boundary\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:285:12",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 8795,
+      "end": 8801,
+      "line": 295,
+      "column": 34,
+      "expression": "\"fits\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:295:34",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 8837,
+      "end": 8843,
+      "line": 296,
+      "column": 34,
+      "expression": "\"fits\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:296:34",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 8879,
+      "end": 8890,
+      "line": 297,
+      "column": 34,
+      "expression": "\"too-small\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:297:34",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 8903,
+      "end": 8999,
+      "line": 300,
+      "column": 6,
+      "expression": "\"catalog-qualified identities prevent cross-catalog collisions while legacy pairs still resolve\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-011",
+      "kind": "test-title"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 9052,
+      "end": 9068,
+      "line": 303,
+      "column": 15,
+      "expression": "\"ai.example.one\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:303:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 9085,
+      "end": 9097,
+      "line": 304,
+      "column": 16,
+      "expression": "\"offering-1\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:304:16",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 9112,
+      "end": 9120,
+      "line": 305,
+      "column": 14,
+      "expression": "\"shared\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:305:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 9134,
+      "end": 9146,
+      "line": 306,
+      "column": 13,
+      "expression": "\"same-model\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:306:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 9157,
+      "end": 9162,
+      "line": 307,
+      "column": 10,
+      "expression": "\"One\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:307:10",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 9207,
+      "end": 9223,
+      "line": 311,
+      "column": 15,
+      "expression": "\"ai.example.two\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:311:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 9240,
+      "end": 9252,
+      "line": 312,
+      "column": 16,
+      "expression": "\"offering-2\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:312:16",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 9267,
+      "end": 9275,
+      "line": 313,
+      "column": 14,
+      "expression": "\"shared\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:313:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 9289,
+      "end": 9301,
+      "line": 314,
+      "column": 13,
+      "expression": "\"same-model\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:314:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 9312,
+      "end": 9317,
+      "line": 315,
+      "column": 10,
+      "expression": "\"Two\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:315:10",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 9587,
+      "end": 9620,
+      "line": 325,
+      "column": 12,
+      "expression": "`2026-08-23T00:00:0${index}.000Z`",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:325:12",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 9864,
+      "end": 9880,
+      "line": 331,
+      "column": 5,
+      "expression": "\"ai.example.one\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:331:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 9882,
+      "end": 9894,
+      "line": 331,
+      "column": 23,
+      "expression": "\"offering-1\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:331:23",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 9907,
+      "end": 9923,
+      "line": 332,
+      "column": 5,
+      "expression": "\"ai.example.two\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:332:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 9925,
+      "end": 9937,
+      "line": 332,
+      "column": 23,
+      "expression": "\"offering-2\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:332:23",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 10006,
+      "end": 10014,
+      "line": 338,
+      "column": 14,
+      "expression": "\"shared\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:338:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 10028,
+      "end": 10040,
+      "line": 339,
+      "column": 13,
+      "expression": "\"same-model\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:339:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 10057,
+      "end": 10083,
+      "line": 340,
+      "column": 16,
+      "expression": "\"2026-08-23T00:01:00.000Z\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:340:16",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 10244,
+      "end": 10260,
+      "line": 345,
+      "column": 42,
+      "expression": "\"ai.example.one\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:345:42",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 10273,
+      "end": 10349,
+      "line": 348,
+      "column": 6,
+      "expression": "\"typed query keeps session history ahead of exact provider identity matches\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-012",
+      "kind": "test-title"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 10442,
+      "end": 10472,
+      "line": 353,
+      "column": 10,
+      "expression": "\"anthropic/claude-sonnet-test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:353:10",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 10530,
+      "end": 10574,
+      "line": 356,
+      "column": 33,
+      "expression": "`${row.model.provider}/${row.model.modelId}`",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:356:33",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 10580,
+      "end": 10621,
+      "line": 357,
+      "column": 4,
+      "expression": "\"openrouter/anthropic/claude-sonnet-test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:357:4",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 10623,
+      "end": 10653,
+      "line": 357,
+      "column": 47,
+      "expression": "\"anthropic/claude-sonnet-test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:357:47",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 10670,
+      "end": 10747,
+      "line": 361,
+      "column": 6,
+      "expression": "\"typed search normalizes Unicode while display text strips terminal controls\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-013",
+      "kind": "test-title"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 10810,
+      "end": 10839,
+      "line": 365,
+      "column": 14,
+      "expression": "\"local\\u001b[31m\\u009bunsafe\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:365:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 10853,
+      "end": 10864,
+      "line": 366,
+      "column": 13,
+      "expression": "\"Ｑｗｅｎ-test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:366:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 10875,
+      "end": 10898,
+      "line": 367,
+      "column": 10,
+      "expression": "\"Qwen\\u0007\\u009d Test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:367:10",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 11018,
+      "end": 11024,
+      "line": 371,
+      "column": 90,
+      "expression": "\"qwen\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:371:90",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 11119,
+      "end": 11125,
+      "line": 372,
+      "column": 91,
+      "expression": "\"ｑｗｅｎ\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:372:91",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 11168,
+      "end": 11179,
+      "line": 373,
+      "column": 39,
+      "expression": "\"Ｑｗｅｎ-test\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:373:39",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 11229,
+      "end": 11247,
+      "line": 374,
+      "column": 48,
+      "expression": "\"\\u001b[31m\\u009b\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:374:48",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 11256,
+      "end": 11298,
+      "line": 374,
+      "column": 75,
+      "expression": "\"semantic identity must remain byte-exact\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-014",
+      "kind": "assertion-message"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 11344,
+      "end": 11358,
+      "line": 375,
+      "column": 44,
+      "expression": "\"\\u0007\\u009d\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:375:44",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 11367,
+      "end": 11407,
+      "line": 375,
+      "column": 67,
+      "expression": "\"the source label must remain available\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-015",
+      "kind": "assertion-message"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 11465,
+      "end": 11473,
+      "line": 376,
+      "column": 56,
+      "expression": "\"\\u001b\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:376:56",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 11539,
+      "end": 11547,
+      "line": 377,
+      "column": 56,
+      "expression": "\"\\u009b\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:377:56",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 11609,
+      "end": 11617,
+      "line": 378,
+      "column": 52,
+      "expression": "\"\\u0007\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:378:52",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 11679,
+      "end": 11687,
+      "line": 379,
+      "column": 52,
+      "expression": "\"\\u009d\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:379:52",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 11742,
+      "end": 11812,
+      "line": 383,
+      "column": 6,
+      "expression": "\"matching other models are alphabetical regardless of inventory order\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-016",
+      "kind": "test-title"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 11858,
+      "end": 11861,
+      "line": 385,
+      "column": 15,
+      "expression": "\"b\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:385:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 11872,
+      "end": 11876,
+      "line": 385,
+      "column": 29,
+      "expression": "\"x1\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:385:29",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 11884,
+      "end": 11890,
+      "line": 385,
+      "column": 41,
+      "expression": "\"Same\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:385:41",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 11925,
+      "end": 11928,
+      "line": 386,
+      "column": 15,
+      "expression": "\"a\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:386:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 11939,
+      "end": 11943,
+      "line": 386,
+      "column": 29,
+      "expression": "\"x2\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:386:29",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 11951,
+      "end": 11957,
+      "line": 386,
+      "column": 41,
+      "expression": "\"Same\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:386:41",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12085,
+      "end": 12088,
+      "line": 389,
+      "column": 75,
+      "expression": "\"x\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:389:75",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12109,
+      "end": 12153,
+      "line": 390,
+      "column": 13,
+      "expression": "`${row.model.provider}/${row.model.modelId}`",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:390:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12197,
+      "end": 12203,
+      "line": 392,
+      "column": 38,
+      "expression": "\"a/x2\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:392:38",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12205,
+      "end": 12211,
+      "line": 392,
+      "column": 46,
+      "expression": "\"b/x1\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:392:46",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12267,
+      "end": 12273,
+      "line": 393,
+      "column": 53,
+      "expression": "\"a/x2\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:393:53",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12275,
+      "end": 12281,
+      "line": 393,
+      "column": 61,
+      "expression": "\"b/x1\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:393:61",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12295,
+      "end": 12376,
+      "line": 396,
+      "column": 6,
+      "expression": "\"typed search reaches inventory models that are not current, favorite, or recent\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-017",
+      "kind": "test-title"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12437,
+      "end": 12450,
+      "line": 400,
+      "column": 14,
+      "expression": "\"kimi-coding\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:400:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12464,
+      "end": 12468,
+      "line": 401,
+      "column": 13,
+      "expression": "\"k3\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:401:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12479,
+      "end": 12488,
+      "line": 402,
+      "column": 10,
+      "expression": "\"Kimi K3\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:402:10",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12584,
+      "end": 12597,
+      "line": 408,
+      "column": 14,
+      "expression": "\"kimi-coding\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:408:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12611,
+      "end": 12620,
+      "line": 409,
+      "column": 13,
+      "expression": "\"k3-256k\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:409:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12631,
+      "end": 12645,
+      "line": 410,
+      "column": 10,
+      "expression": "\"Kimi K3-256K\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:410:10",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12812,
+      "end": 12816,
+      "line": 416,
+      "column": 87,
+      "expression": "\"k3\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:416:87",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12923,
+      "end": 12930,
+      "line": 420,
+      "column": 5,
+      "expression": "\"other\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:420:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12932,
+      "end": 12945,
+      "line": 420,
+      "column": 14,
+      "expression": "\"kimi-coding\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:420:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12947,
+      "end": 12951,
+      "line": 420,
+      "column": 29,
+      "expression": "\"k3\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:420:29",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12958,
+      "end": 12965,
+      "line": 421,
+      "column": 5,
+      "expression": "\"other\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:421:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12967,
+      "end": 12980,
+      "line": 421,
+      "column": 14,
+      "expression": "\"kimi-coding\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:421:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 12982,
+      "end": 12991,
+      "line": 421,
+      "column": 29,
+      "expression": "\"k3-256k\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:421:29",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13012,
+      "end": 13083,
+      "line": 425,
+      "column": 6,
+      "expression": "\"search keeps a favorite prefix match ahead of an exact identity match\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-018",
+      "kind": "test-title"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13131,
+      "end": 13144,
+      "line": 428,
+      "column": 14,
+      "expression": "\"kimi-coding\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:428:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13158,
+      "end": 13162,
+      "line": 429,
+      "column": 13,
+      "expression": "\"k3\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:429:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13173,
+      "end": 13182,
+      "line": 430,
+      "column": 10,
+      "expression": "\"Kimi K3\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:430:10",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13278,
+      "end": 13291,
+      "line": 436,
+      "column": 14,
+      "expression": "\"kimi-coding\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:436:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13305,
+      "end": 13314,
+      "line": 437,
+      "column": 13,
+      "expression": "\"k3-256k\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:437:13",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13325,
+      "end": 13339,
+      "line": 438,
+      "column": 10,
+      "expression": "\"Kimi K3-256K\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:438:10",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13508,
+      "end": 13521,
+      "line": 445,
+      "column": 41,
+      "expression": "\"kimi-coding\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:445:41",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13532,
+      "end": 13541,
+      "line": 445,
+      "column": 65,
+      "expression": "\"k3-256k\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:445:65",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13552,
+      "end": 13578,
+      "line": 445,
+      "column": 85,
+      "expression": "\"2026-09-02T05:41:46.759Z\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:445:85",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13675,
+      "end": 13679,
+      "line": 446,
+      "column": 93,
+      "expression": "\"k3\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:446:93",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13780,
+      "end": 13790,
+      "line": 450,
+      "column": 5,
+      "expression": "\"favorite\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:450:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13792,
+      "end": 13801,
+      "line": 450,
+      "column": 17,
+      "expression": "\"k3-256k\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:450:17",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13814,
+      "end": 13821,
+      "line": 451,
+      "column": 5,
+      "expression": "\"other\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:451:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13823,
+      "end": 13827,
+      "line": 451,
+      "column": 14,
+      "expression": "\"k3\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:451:14",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13855,
+      "end": 13908,
+      "line": 455,
+      "column": 6,
+      "expression": "\"search keeps project recents ahead of other matches\"",
+      "owner": "MAIN-UPDATE-RANKING-TEST-019",
+      "kind": "test-title"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13953,
+      "end": 13956,
+      "line": 457,
+      "column": 15,
+      "expression": "\"a\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:457:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13967,
+      "end": 13972,
+      "line": 457,
+      "column": 29,
+      "expression": "\"sol\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:457:29",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 13980,
+      "end": 13985,
+      "line": 457,
+      "column": 42,
+      "expression": "\"Sol\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:457:42",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 14020,
+      "end": 14023,
+      "line": 458,
+      "column": 15,
+      "expression": "\"b\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:458:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 14034,
+      "end": 14039,
+      "line": 458,
+      "column": 29,
+      "expression": "\"sol\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:458:29",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 14047,
+      "end": 14052,
+      "line": 458,
+      "column": 42,
+      "expression": "\"Sol\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:458:42",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 14183,
+      "end": 14186,
+      "line": 462,
+      "column": 15,
+      "expression": "\"b\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:462:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 14197,
+      "end": 14202,
+      "line": 462,
+      "column": 29,
+      "expression": "\"sol\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:462:29",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 14216,
+      "end": 14242,
+      "line": 462,
+      "column": 48,
+      "expression": "\"2026-09-01T00:00:00.000Z\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:462:48",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 14353,
+      "end": 14358,
+      "line": 464,
+      "column": 91,
+      "expression": "\"sol\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:464:91",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 14446,
+      "end": 14454,
+      "line": 468,
+      "column": 5,
+      "expression": "\"recent\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:468:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 14456,
+      "end": 14459,
+      "line": 468,
+      "column": 15,
+      "expression": "\"b\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:468:15",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 14466,
+      "end": 14473,
+      "line": 469,
+      "column": 5,
+      "expression": "\"other\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:469:5",
+      "kind": "protected-fixture"
+    },
+    {
+      "path": "packages/cli/test/model-picker-ranking.test.mjs",
+      "start": 14475,
+      "end": 14478,
+      "line": 469,
+      "column": 14,
+      "expression": "\"a\"",
+      "owner": "git:1fda3eb161b042aae66e4adcc07319f69946dadd:packages/cli/test/model-picker-ranking.test.mjs:469:14",
+      "kind": "protected-fixture"
+    }
+  ],
+  "artifact_sha256_utf8_lf": {
+    "main-update-model-ranking-tests.csv": "7afc4dde159d214470ec7419772a1ef155bb1751fe5fc9132462b09da380e53a",
+    "main-update-model-ranking-tests-exclusions.csv": "a41869caee633100352de77d0a551a45872696fa03ccb1f521a57d40c38ad9a8",
+    "main-update-model-ranking-tests-scope.csv": "2da684b08607f1fa670f995935b15bd9dcb0779780faac5e119be5888e3e0fa0"
+  },
+  "interpretation": "One complete target ranking test source only. No product/test code loads; exact fixture payloads remain protected and reporter-dependent."
+}

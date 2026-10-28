@@ -71,8 +71,19 @@ The [scope](main-update-test-support-scope.csv) and
 Passing tests do not independently display every captured native status or mock
 error; failed assertions may expose expected/actual values and captured child
 streams. Five corruption/omission controls pass. No test, hook, auth, model or
-packaging scenario was run. Nine other changed target test/fixture bodies and
+packaging scenario was run. Eight other changed target test/fixture bodies and
 the wider base test corpus remain open.
+
+[main-update-model-ranking-tests.csv](main-update-model-ranking-tests.csv) adds
+fifteen reporter/selector titles, four failed-assertion messages and one external
+boundary across the complete 472-line ranking test source. All 280 AST lexical
+occurrences are partitioned against 261
+[protected fixtures](main-update-model-ranking-tests-exclusions.csv), retaining
+source escapes for injected terminal controls. The
+[scope](main-update-model-ranking-tests-scope.csv) and
+[evidence](main-update-model-ranking-tests-evidence.json) pin target source and
+AST offsets. Five corruption/omission controls pass. These are conditional test
+reporter/diagnostic records, with no test or imported product operation executed.
 
 This inventory lists wording and the conditions under which it can reach a user,
 including errors and diagnostics. It is being assembled for a translation pass.
@@ -1540,6 +1551,7 @@ python -B review/text-inventory/verify-main-update-model-text.py
 python -B review/text-inventory/verify-main-update-startup-auth.py
 python -B review/text-inventory/verify-main-update-release-text.py
 node review/text-inventory/verify-main-update-test-support.cjs
+node review/text-inventory/verify-main-update-model-ranking-tests.cjs
 python -B review/text-inventory/verify-documentation-text.py
 python -B review/text-inventory/verify-acp.py
 python -B review/text-inventory/verify-acp-dependencies.py
