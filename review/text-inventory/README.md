@@ -576,6 +576,19 @@ their conditions. Helper composition introduces no fixed English words. Caller
 labels and native Pi width/theme implementations remain separate producers.
 Four in-memory corruption controls verify rejection without executing renderers.
 
+[session-ui-text.csv](session-ui-text.csv) adds 108 Session UI records:
+78 catalog-definition/consumer occurrences across 74 IDs, eleven fixed/protected
+occurrences and nineteen payload boundaries. Seven complete bodies cover 1,425
+lines. The [scope](session-ui-text-scope.csv) pins 17 sources and accounts for
+579 lexical tokens, 74 ID definitions, 23 formatter accesses, 21 exact English
+ownership matchers, three catches and two rejected-probe handlers. Dictionary
+membership is distinguished from conditional editor/footer/dashboard consumers.
+The injected catalog supplies wording; brands, numeric notation and the local
+workspace fallback retain separate ownership. Probe rejection causes are replaced
+by health state; registry catches retain ownership evidence or allow the exit
+alias. Full prompt/dashboard/probe-source bodies remain separate follow-ups;
+no UI, probe, child, native or product operation was executed.
+
 [workflow.csv](workflow.csv) records 210 Workflow items: 167 catalog occurrences,
 11 fixed or protected occurrences and 32 payload boundaries. The
 [scope](workflow-scope.csv) covers the complete 1,327-line component and 35-line
@@ -877,6 +890,7 @@ node review/text-inventory/verify-pi-ui-adapter.cjs
 node review/text-inventory/verify-session-label-text.cjs
 node review/text-inventory/verify-human-fallback.cjs
 node review/text-inventory/verify-session-primitives.cjs
+python -B review/text-inventory/verify-session-ui-text.py
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-build-scripts.py
