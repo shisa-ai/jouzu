@@ -1,0 +1,5090 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "4a7be24eddbd671978c4869574f3e43d396ef241",
+  "inventory_file": "pi-provider-support.csv",
+  "scope_file": "pi-provider-support-scope.csv",
+  "boundary_file": "pi-provider-support-boundaries.csv",
+  "exclusion_file": "pi-provider-support-exclusions.csv",
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    },
+    {
+      "source": "packages/session-ui/src/extension.ts",
+      "sha256": "3c146dab00f8280d63c339e08a48a2953add3659b01a20f650dc21c7d14efe8a"
+    },
+    {
+      "source": "packages/cli/src/subagents/integration.ts",
+      "sha256": "28088c381a74390664006b1456c1ab542438a0e355f29a1126126848abbea008"
+    },
+    {
+      "source": "packages/cli/src/flow-control/cache-warm-admission.ts",
+      "sha256": "0f1a057097c87cc201aefe811fd0a5d6d51fc82dba7d08f159398aa24d2e06be"
+    },
+    {
+      "source": "packages/cli/src/flow-control/pi-native-requests.ts",
+      "sha256": "ba579fa8d5a6c1779f903da6d34e4f1107e1c34b29ba04afd1db709def2a8568"
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-runtime.js",
+      "sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+      "cli_nested_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          96,
+          102
+        ],
+        [
+          164,
+          199
+        ],
+        [
+          355,
+          365
+        ],
+        [
+          380,
+          405
+        ],
+        [
+          430,
+          443
+        ],
+        [
+          464,
+          518
+        ],
+        [
+          577,
+          608
+        ],
+        [
+          619,
+          662
+        ],
+        [
+          694,
+          711
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/persistence/HTML/display source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resolve-config-value.js",
+      "sha256": "01fdb1673990635bb419c7418eefa298b6a1c6fbb3c6193d3b05a4902e51992d",
+      "cli_nested_sha256": "01fdb1673990635bb419c7418eefa298b6a1c6fbb3c6193d3b05a4902e51992d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          201,
+          241
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/persistence/HTML/display source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session-services.js",
+      "sha256": "2dbf32d506bb6d765224450602fb1a85be1ff3d182cca6d8b25eef6cf1416858",
+      "cli_nested_sha256": "2dbf32d506bb6d765224450602fb1a85be1ff3d182cca6d8b25eef6cf1416858",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          70,
+          95
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/persistence/HTML/display source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/sdk.js",
+      "sha256": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609",
+      "cli_nested_sha256": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          203,
+          220
+        ],
+        [
+          274,
+          284
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/persistence/HTML/display source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+      "sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          184,
+          188
+        ],
+        [
+          277,
+          281
+        ],
+        [
+          1127,
+          1139
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/persistence/HTML/display source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/session-manager.js",
+      "sha256": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a",
+      "cli_nested_sha256": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          907,
+          921
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/persistence/HTML/display source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          910,
+          925
+        ],
+        [
+          2779,
+          2788
+        ],
+        [
+          3320,
+          3343
+        ],
+        [
+          4356,
+          4365
+        ],
+        [
+          4560,
+          4570
+        ],
+        [
+          4826,
+          4858
+        ],
+        [
+          5124,
+          5145
+        ],
+        [
+          5148,
+          5159
+        ],
+        [
+          5165,
+          5190
+        ],
+        [
+          5232,
+          5246
+        ],
+        [
+          5261,
+          5283
+        ],
+        [
+          5429,
+          5432
+        ],
+        [
+          5607,
+          5621
+        ],
+        [
+          5649,
+          5656
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/persistence/HTML/display source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/oauth-selector.js",
+      "sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+      "cli_nested_sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          4,
+          26
+        ],
+        [
+          83,
+          116
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/persistence/HTML/display source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/login-dialog.js",
+      "sha256": "2b00ad41244cb1dc63a9fcbfca855a00e2acbc68ec2bc4249024cefdc1a7a157",
+      "cli_nested_sha256": "2b00ad41244cb1dc63a9fcbfca855a00e2acbc68ec2bc4249024cefdc1a7a157",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          108,
+          138
+        ],
+        [
+          150,
+          177
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/persistence/HTML/display source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/assistant-message.js",
+      "sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+      "cli_nested_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          133,
+          154
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/persistence/HTML/display source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js",
+      "sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          84,
+          94
+        ],
+        [
+          110,
+          123
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/persistence/HTML/display source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js",
+      "sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          280,
+          294
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/persistence/HTML/display source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.js",
+      "sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+      "cli_nested_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1289,
+          1293
+        ]
+      ],
+      "purpose": "Bounded actual caller/API/error/policy/persistence/HTML/display source; no new whole-body closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/api/lazy.js",
+      "sha256": "2dcf7b7d3d0ffc77b2be37b2a7ad184503a2b680b159e44c283738b28118aebe",
+      "cli_nested_sha256": "2dcf7b7d3d0ffc77b2be37b2a7ad184503a2b680b159e44c283738b28118aebe",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          20
+        ],
+        [
+          44,
+          65
+        ]
+      ],
+      "purpose": "Supplementary exact1.4.0/two-tree bounded error/refresh/auth support; supplied canonical Agent/TUI archives exclude this package.",
+      "canonical_archive_proof": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/model-operations.js",
+      "sha256": "56264f6289f4822db8bed91a2e47aee387bfa70383b724e58f6aa6b96a0f4358",
+      "cli_nested_sha256": "56264f6289f4822db8bed91a2e47aee387bfa70383b724e58f6aa6b96a0f4358",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          30,
+          51
+        ]
+      ],
+      "purpose": "Supplementary exact1.4.0/two-tree bounded error/refresh/auth support; supplied canonical Agent/TUI archives exclude this package.",
+      "canonical_archive_proof": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/models.js",
+      "sha256": "de6323034ca216eefecdfc44dd5c93f22713b34a01f2eb21a6d0a5ce85f9bb19",
+      "cli_nested_sha256": "de6323034ca216eefecdfc44dd5c93f22713b34a01f2eb21a6d0a5ce85f9bb19",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          164,
+          221
+        ],
+        [
+          250,
+          286
+        ]
+      ],
+      "purpose": "Supplementary exact1.4.0/two-tree bounded error/refresh/auth support; supplied canonical Agent/TUI archives exclude this package.",
+      "canonical_archive_proof": false
+    }
+  ],
+  "nonruntime_assets": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.d.ts",
+      "sha256": "8b6c292d4e346cb2a45186f2b3784102aa9fa5b5bd2096ef6ec4bbb235ddb504",
+      "cli_nested_sha256": "8b6c292d4e346cb2a45186f2b3784102aa9fa5b5bd2096ef6ec4bbb235ddb504",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.d.ts.map",
+      "sha256": "acf17428e2c17a2708a256d774cfc710a7c77ebc8cc0addaad0956628303b971",
+      "cli_nested_sha256": "acf17428e2c17a2708a256d774cfc710a7c77ebc8cc0addaad0956628303b971",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js.map",
+      "sha256": "e57b42bce0a3d24f59919e36577bf5d2ad98f2c04c9b5dffb3af526f9ff93e52",
+      "cli_nested_sha256": "e57b42bce0a3d24f59919e36577bf5d2ad98f2c04c9b5dffb3af526f9ff93e52",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-registry.d.ts",
+      "sha256": "ef3a3fb74b9b15bd7ca58c187367382116db6f24ea7fbda2b56898c849ef9aad",
+      "cli_nested_sha256": "ef3a3fb74b9b15bd7ca58c187367382116db6f24ea7fbda2b56898c849ef9aad",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-registry.d.ts.map",
+      "sha256": "9cf3cae95f0246337bb5d2a4346fe680e2abf519f687f1d633e69a8a28e93203",
+      "cli_nested_sha256": "9cf3cae95f0246337bb5d2a4346fe680e2abf519f687f1d633e69a8a28e93203",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-registry.js.map",
+      "sha256": "857e8a9d3059a59ee3095cfe70b7464bfdf2c1a4575522add5c849ec459c1ab0",
+      "cli_nested_sha256": "857e8a9d3059a59ee3095cfe70b7464bfdf2c1a4575522add5c849ec459c1ab0",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/runtime-credentials.d.ts",
+      "sha256": "322071908dadf1340fa1a86e1849b4aa4b29ce2996110cf3dfab43ba988eb140",
+      "cli_nested_sha256": "322071908dadf1340fa1a86e1849b4aa4b29ce2996110cf3dfab43ba988eb140",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/runtime-credentials.d.ts.map",
+      "sha256": "f7b035e2d1f2b0c8c551e97943c6157b5dd027f5bfe426e89965ea1d6dcb3daa",
+      "cli_nested_sha256": "f7b035e2d1f2b0c8c551e97943c6157b5dd027f5bfe426e89965ea1d6dcb3daa",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/runtime-credentials.js.map",
+      "sha256": "ce5b5101d0ea8c506b7eacf6ea32018c7189cab6da00f1f7d2540c98fcba2163",
+      "cli_nested_sha256": "ce5b5101d0ea8c506b7eacf6ea32018c7189cab6da00f1f7d2540c98fcba2163",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/remote-catalog-provider.d.ts",
+      "sha256": "7eea4ffd2e009fb4a57ad43bbac8a5ecb131f70dc727514ab425ca35ec310f09",
+      "cli_nested_sha256": "7eea4ffd2e009fb4a57ad43bbac8a5ecb131f70dc727514ab425ca35ec310f09",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/remote-catalog-provider.d.ts.map",
+      "sha256": "eb02ae687bca79e2180df7ebc362d50d7a1f7f21ca9597a707f817da059ebfca",
+      "cli_nested_sha256": "eb02ae687bca79e2180df7ebc362d50d7a1f7f21ca9597a707f817da059ebfca",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/remote-catalog-provider.js.map",
+      "sha256": "fcb757943404f374d24f61dcd114e3b5926eab2105438a675cc33d41f6aa4bee",
+      "cli_nested_sha256": "fcb757943404f374d24f61dcd114e3b5926eab2105438a675cc33d41f6aa4bee",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.d.ts",
+      "sha256": "9ec1f639e8383183ff90247ba78047ff22469fc4639ce92936dd7bcf47358734",
+      "cli_nested_sha256": "9ec1f639e8383183ff90247ba78047ff22469fc4639ce92936dd7bcf47358734",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.d.ts.map",
+      "sha256": "e3e5dcf403a17613385247e04f90070ed0d13c4f71a4818d51a67fbdf9fa3cee",
+      "cli_nested_sha256": "e3e5dcf403a17613385247e04f90070ed0d13c4f71a4818d51a67fbdf9fa3cee",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js.map",
+      "sha256": "244b5017c83f31785d4bb86b926be1fb1fcfb4f51518f86eb4bca657f93998aa",
+      "cli_nested_sha256": "244b5017c83f31785d4bb86b926be1fb1fcfb4f51518f86eb4bca657f93998aa",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/client-identity.d.ts",
+      "sha256": "d13e427a63c0005bf5127bb3118ceb537cf5a28c9f497e7154556191af65cc68",
+      "cli_nested_sha256": "d13e427a63c0005bf5127bb3118ceb537cf5a28c9f497e7154556191af65cc68",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/client-identity.d.ts.map",
+      "sha256": "fd35b6ec1f8815d0b416f2a9a8ca62e3885a8d83043a83cb050abf9de244e3ea",
+      "cli_nested_sha256": "fd35b6ec1f8815d0b416f2a9a8ca62e3885a8d83043a83cb050abf9de244e3ea",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/client-identity.js.map",
+      "sha256": "8cb7497d79015d85d4eb514bbf8cd4819edb22dbdda94e04badd9d3cef256eaa",
+      "cli_nested_sha256": "8cb7497d79015d85d4eb514bbf8cd4819edb22dbdda94e04badd9d3cef256eaa",
+      "root_nested_equal": true,
+      "disposition": "nonruntime-declaration-or-source-map"
+    }
+  ],
+  "archive_support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-runtime.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/resolve-config-value.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session-services.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/sdk.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/session-manager.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/oauth-selector.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/login-dialog.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/components/assistant-message.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/print-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.js"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-registry.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-registry.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-registry.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/runtime-credentials.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/runtime-credentials.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/runtime-credentials.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/remote-catalog-provider.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/remote-catalog-provider.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/remote-catalog-provider.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/client-identity.d.ts"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/client-identity.d.ts.map"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/client-identity.js.map"
+    }
+  ],
+  "counts": {
+    "rows": 83,
+    "proofs": 83,
+    "scopes": 6,
+    "external_boundaries": 11,
+    "excluded_occurrences": 139,
+    "dispositioned_source_files": 6,
+    "string_template_occurrences": 222,
+    "protected_regex_literals": 1,
+    "error_constructors": 18,
+    "catch_clauses": 4,
+    "throw_statements": 16,
+    "all_new_expressions": 24,
+    "protected_control_occurrences": 0,
+    "full_runtime_lines": 1242,
+    "runtime_source_bytes": 56292,
+    "nonruntime_assets": 18,
+    "catalog_linked_rows": 0,
+    "distinct_catalog_ids": 0,
+    "statusCounts": {
+      "source-read-local-producers": 6
+    }
+  },
+  "proofs": [
+    {
+      "item_id": "pi.provider-support.composer.86.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 86,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Provider ${providerId}, model ${definition.id}: no \"api\" specified. Set at provider or model level.",
+      "evidence": "`Provider ${providerId}, model ${definition.id}: no \"api\" specified. Set at provider or model level.`"
+    },
+    {
+      "item_id": "pi.provider-support.composer.90.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 90,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Provider ${providerId}: \"baseUrl\" is required when defining custom models.",
+      "evidence": "`Provider ${providerId}: \"baseUrl\" is required when defining custom models.`"
+    },
+    {
+      "item_id": "pi.provider-support.composer.92.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 92,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Provider ${providerId}, model ${definition.id}: invalid contextWindow",
+      "evidence": "`Provider ${providerId}, model ${definition.id}: invalid contextWindow`"
+    },
+    {
+      "item_id": "pi.provider-support.composer.95.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 95,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Provider ${providerId}, model ${definition.id}: invalid maxTokens",
+      "evidence": "`Provider ${providerId}, model ${definition.id}: invalid maxTokens`"
+    },
+    {
+      "item_id": "pi.provider-support.composer.137.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 137,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Provider ${providerId}, model ${definition.id}: no \"api\" specified. Set it at model level${type === \"chat\" ? \" or provider level\" : \"\"}.",
+      "evidence": "`Provider ${providerId}, model ${definition.id}: no \"api\" specified. Set it at model level${type === \"chat\" ? \" or provider level\" : \"\"}.`"
+    },
+    {
+      "item_id": "pi.provider-support.composer.137.135",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 137,
+      "column": 135,
+      "kind": "string-literal",
+      "english": " or provider level",
+      "evidence": "\" or provider level\""
+    },
+    {
+      "item_id": "pi.provider-support.composer.141.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 141,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Provider ${providerId}: \"baseUrl\" is required when defining custom models.",
+      "evidence": "`Provider ${providerId}: \"baseUrl\" is required when defining custom models.`"
+    },
+    {
+      "item_id": "pi.provider-support.composer.154.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 154,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Provider ${providerId}: \"baseUrl\" is required when \"oauth\" is set.",
+      "evidence": "`Provider ${providerId}: \"baseUrl\" is required when \"oauth\" is set.`"
+    },
+    {
+      "item_id": "pi.provider-support.composer.165.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 165,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Provider ${providerId}: must specify \"baseUrl\", \"headers\", \"compat\", \"modelOverrides\", or \"models\".",
+      "evidence": "`Provider ${providerId}: must specify \"baseUrl\", \"headers\", \"compat\", \"modelOverrides\", or \"models\".`"
+    },
+    {
+      "item_id": "pi.provider-support.composer.344.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 344,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Provider ${providerId}: \"api\" is required when registering streamSimple.",
+      "evidence": "`Provider ${providerId}: \"api\" is required when registering streamSimple.`"
+    },
+    {
+      "item_id": "pi.provider-support.composer.375.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 375,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Provider ${providerId}: no authentication method configured.",
+      "evidence": "`Provider ${providerId}: no authentication method configured.`"
+    },
+    {
+      "item_id": "pi.provider-support.composer.206.91",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 206,
+      "column": 91,
+      "kind": "string-literal",
+      "english": "Paste the authorization code",
+      "evidence": "\"Paste the authorization code\""
+    },
+    {
+      "item_id": "pi.provider-support.composer.220.29",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 220,
+      "column": 29,
+      "kind": "string-literal",
+      "english": "authHeader requires a resolved API key",
+      "evidence": "\"authHeader requires a resolved API key\""
+    },
+    {
+      "item_id": "pi.provider-support.composer.254.34",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 254,
+      "column": 34,
+      "kind": "string-literal",
+      "english": "API key",
+      "evidence": "\"API key\""
+    },
+    {
+      "item_id": "pi.provider-support.composer.258.74",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 258,
+      "column": 74,
+      "kind": "string-literal",
+      "english": "Enter API key",
+      "evidence": "\"Enter API key\""
+    },
+    {
+      "item_id": "pi.provider-support.composer.265.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 265,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "stored credential",
+      "evidence": "\"stored credential\""
+    },
+    {
+      "item_id": "pi.provider-support.composer.271.55",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 271,
+      "column": 55,
+      "kind": "string-literal",
+      "english": "configured API key",
+      "evidence": "\"configured API key\""
+    },
+    {
+      "item_id": "pi.provider-support.composer.277.51",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 277,
+      "column": 51,
+      "kind": "string-literal",
+      "english": "configured API key",
+      "evidence": "\"configured API key\""
+    },
+    {
+      "item_id": "pi.provider-support.composer.290.104",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 290,
+      "column": 104,
+      "kind": "string-literal",
+      "english": "stored credential",
+      "evidence": "\"stored credential\""
+    },
+    {
+      "item_id": "pi.provider-support.composer.298.56",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 298,
+      "column": 56,
+      "kind": "string-literal",
+      "english": "configured API key",
+      "evidence": "\"configured API key\""
+    },
+    {
+      "item_id": "pi.provider-support.composer.295.63",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 295,
+      "column": 63,
+      "kind": "template-expression",
+      "english": "API key for provider \"${providerId}\"",
+      "evidence": "`API key for provider \"${providerId}\"`"
+    },
+    {
+      "item_id": "pi.provider-support.composer.307.63",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 307,
+      "column": 63,
+      "kind": "template-expression",
+      "english": "provider \"${providerId}\"",
+      "evidence": "`provider \"${providerId}\"`"
+    },
+    {
+      "item_id": "pi.provider-support.composer.323.63",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 323,
+      "column": 63,
+      "kind": "template-expression",
+      "english": "provider \"${providerId}\"",
+      "evidence": "`provider \"${providerId}\"`"
+    },
+    {
+      "item_id": "pi.provider-support.composer.469.77",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 469,
+      "column": 77,
+      "kind": "template-expression",
+      "english": "model \"${model.provider}/${model.id}\"",
+      "evidence": "`model \"${model.provider}/${model.id}\"`"
+    },
+    {
+      "item_id": "pi.provider-support.composer.472.137",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 472,
+      "column": 137,
+      "kind": "template-expression",
+      "english": "model \"${model.provider}/${model.id}\"",
+      "evidence": "`model \"${model.provider}/${model.id}\"`"
+    },
+    {
+      "item_id": "pi.provider-support.composer.388.29",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 388,
+      "column": 29,
+      "kind": "template-expression",
+      "english": "No API provider registered for api: ${model.api}",
+      "evidence": "`No API provider registered for api: ${model.api}`"
+    },
+    {
+      "item_id": "pi.provider-support.composer.451.70",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 451,
+      "column": 70,
+      "kind": "template-expression",
+      "english": "Provider ${providerId} has no image implementation for \"${model.api}\"",
+      "evidence": "`Provider ${providerId} has no image implementation for \"${model.api}\"`"
+    },
+    {
+      "item_id": "pi.provider-support.composer.463.75",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 463,
+      "column": 75,
+      "kind": "template-expression",
+      "english": "Provider ${providerId} has no classifier implementation for \"${model.api}\"",
+      "evidence": "`Provider ${providerId} has no classifier implementation for \"${model.api}\"`"
+    },
+    {
+      "item_id": "pi.provider-support.composer.483.44",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 483,
+      "column": 44,
+      "kind": "string-literal",
+      "english": "models_json_command",
+      "evidence": "\"models_json_command\""
+    },
+    {
+      "item_id": "pi.provider-support.composer.490.74",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 490,
+      "column": 74,
+      "kind": "string-literal",
+      "english": "fallback",
+      "evidence": "\"fallback\""
+    },
+    {
+      "item_id": "pi.provider-support.composer.490.87",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "line": 490,
+      "column": 87,
+      "kind": "string-literal",
+      "english": "models_json_key",
+      "evidence": "\"models_json_key\""
+    },
+    {
+      "item_id": "pi.provider-support.registry.40.48",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-registry.js",
+      "line": 40,
+      "column": 48,
+      "kind": "template-expression",
+      "english": "No API key found for \"${model.provider}\"",
+      "evidence": "`No API key found for \"${model.provider}\"`"
+    },
+    {
+      "item_id": "pi.provider-support.registry.58.23",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-registry.js",
+      "line": 58,
+      "column": 23,
+      "kind": "template-expression",
+      "english": "No API key found for \"${model.provider}\"",
+      "evidence": "`No API key found for \"${model.provider}\"`"
+    },
+    {
+      "item_id": "pi.provider-support.registry.119.33",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-registry.js",
+      "line": 119,
+      "column": 33,
+      "kind": "string-literal",
+      "english": "Provider config is required when registering by name",
+      "evidence": "\"Provider config is required when registering by name\""
+    },
+    {
+      "item_id": "pi.provider-support.catalog.34.25",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/remote-catalog-provider.js",
+      "line": 34,
+      "column": 25,
+      "kind": "template-expression",
+      "english": "Invalid model catalog for provider \"${providerId}\"",
+      "evidence": "`Invalid model catalog for provider \"${providerId}\"`"
+    },
+    {
+      "item_id": "pi.provider-support.catalog.124.33",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/remote-catalog-provider.js",
+      "line": 124,
+      "column": 33,
+      "kind": "template-expression",
+      "english": "Model catalog request failed for ${provider.id}: ${response.status}",
+      "evidence": "`Model catalog request failed for ${provider.id}: ${response.status}`"
+    },
+    {
+      "item_id": "pi.provider-support.catalog.173.37",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/remote-catalog-provider.js",
+      "line": 173,
+      "column": 37,
+      "kind": "template-expression",
+      "english": "Model catalog request failed for ${provider.id}: ${response.status}",
+      "evidence": "`Model catalog request failed for ${provider.id}: ${response.status}`"
+    },
+    {
+      "item_id": "pi.provider-support.cache.89.54",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 89,
+      "column": 54,
+      "kind": "string-literal",
+      "english": "waiting for first request",
+      "evidence": "\"waiting for first request\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.93.49",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 93,
+      "column": 49,
+      "kind": "string-literal",
+      "english": "cache warming disabled",
+      "evidence": "\"cache warming disabled\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.98.49",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 98,
+      "column": 49,
+      "kind": "string-literal",
+      "english": "conversation context changed",
+      "evidence": "\"conversation context changed\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.102.49",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 102,
+      "column": 49,
+      "kind": "string-literal",
+      "english": "cache economics unavailable",
+      "evidence": "\"cache economics unavailable\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.116.23",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 116,
+      "column": 23,
+      "kind": "string-literal",
+      "english": "cache warming disabled",
+      "evidence": "\"cache warming disabled\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.120.23",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 120,
+      "column": 23,
+      "kind": "string-literal",
+      "english": "request cannot be replayed safely",
+      "evidence": "\"request cannot be replayed safely\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.126.19",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 126,
+      "column": 19,
+      "kind": "string-literal",
+      "english": "request disabled prompt caching",
+      "evidence": "\"request disabled prompt caching\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.127.19",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 127,
+      "column": 19,
+      "kind": "string-literal",
+      "english": "cache lifetime unavailable",
+      "evidence": "\"cache lifetime unavailable\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.132.23",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 132,
+      "column": 23,
+      "kind": "string-literal",
+      "english": "cache lifetime unavailable",
+      "evidence": "\"cache lifetime unavailable\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.154.23",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 154,
+      "column": 23,
+      "kind": "string-literal",
+      "english": "agent run settled",
+      "evidence": "\"agent run settled\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.160.23",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 160,
+      "column": 23,
+      "kind": "string-literal",
+      "english": "30-minute idle safety limit reached",
+      "evidence": "\"30-minute idle safety limit reached\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.173.19",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 173,
+      "column": 19,
+      "kind": "string-literal",
+      "english": "inactive",
+      "evidence": "\"inactive\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.197.46",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 197,
+      "column": 46,
+      "kind": "string-literal",
+      "english": "30-minute idle safety limit reached",
+      "evidence": "\"30-minute idle safety limit reached\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.197.86",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 197,
+      "column": 86,
+      "kind": "string-literal",
+      "english": "one-hour safety limit reached",
+      "evidence": "\"one-hour safety limit reached\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.229.19",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 229,
+      "column": 19,
+      "kind": "string-literal",
+      "english": "stopped by extension",
+      "evidence": "\"stopped by extension\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.231.23",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 231,
+      "column": 23,
+      "kind": "string-literal",
+      "english": "expected savings below threshold",
+      "evidence": "\"expected savings below threshold\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.232.23",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 232,
+      "column": 23,
+      "kind": "string-literal",
+      "english": "cache economics unavailable",
+      "evidence": "\"cache economics unavailable\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.268.19",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 268,
+      "column": 19,
+      "kind": "string-literal",
+      "english": "cache refresh deadline missed",
+      "evidence": "\"cache refresh deadline missed\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.274.75",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 274,
+      "column": 75,
+      "kind": "string-literal",
+      "english": "conversation context changed",
+      "evidence": "\"conversation context changed\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.283.20",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 283,
+      "column": 20,
+      "kind": "string-literal",
+      "english": "cache warming disabled",
+      "evidence": "\"cache warming disabled\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.285.20",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 285,
+      "column": 20,
+      "kind": "string-literal",
+      "english": "agent run settled",
+      "evidence": "\"agent run settled\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.253.170",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 253,
+      "column": 170,
+      "kind": "string-literal",
+      "english": "extension override",
+      "evidence": "\"extension override\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.305.81",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 305,
+      "column": 81,
+      "kind": "string-literal",
+      "english": "warm",
+      "evidence": "\"warm\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.305.90",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 305,
+      "column": 90,
+      "kind": "string-literal",
+      "english": "stop",
+      "evidence": "\"stop\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.310.24",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 310,
+      "column": 24,
+      "kind": "template-expression",
+      "english": "-$${Math.abs(value).toFixed(3)}",
+      "evidence": "`-$${Math.abs(value).toFixed(3)}`"
+    },
+    {
+      "item_id": "pi.provider-support.cache.310.60",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 310,
+      "column": 60,
+      "kind": "template-expression",
+      "english": "$${value.toFixed(3)}",
+      "evidence": "`$${value.toFixed(3)}`"
+    },
+    {
+      "item_id": "pi.provider-support.cache.314.16",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 314,
+      "column": 16,
+      "kind": "string-literal",
+      "english": "cache economics unavailable",
+      "evidence": "\"cache economics unavailable\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.317.11",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 317,
+      "column": 11,
+      "kind": "template-expression",
+      "english": "${probability}% continuation probability while agent is running",
+      "evidence": "`${probability}% continuation probability while agent is running`"
+    },
+    {
+      "item_id": "pi.provider-support.cache.318.11",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 318,
+      "column": 11,
+      "kind": "template-expression",
+      "english": "${probability}% continuation probability",
+      "evidence": "`${probability}% continuation probability`"
+    },
+    {
+      "item_id": "pi.provider-support.cache.319.53",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 319,
+      "column": 53,
+      "kind": "string-literal",
+      "english": ">=",
+      "evidence": "\">=\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.319.60",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 319,
+      "column": 60,
+      "kind": "string-literal",
+      "english": "<",
+      "evidence": "\"<\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.320.12",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 320,
+      "column": 12,
+      "kind": "template-expression",
+      "english": "${probabilityText}, expected savings ${formatDollars(decision.expectedSavings)} ${comparison} $${CACHE_WARMING_MINIMUM_EXPECTED_SAVINGS.toFixed(3)}",
+      "evidence": "`${probabilityText}, expected savings ${formatDollars(decision.expectedSavings)} ${comparison} $${CACHE_WARMING_MINIMUM_EXPECTED_SAVINGS.toFixed(3)}`"
+    },
+    {
+      "item_id": "pi.provider-support.cache.324.16",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 324,
+      "column": 16,
+      "kind": "string-literal",
+      "english": "Decision now",
+      "evidence": "\"Decision now\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.332.20",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 332,
+      "column": 20,
+      "kind": "template-expression",
+      "english": "${hours}h",
+      "evidence": "`${hours}h`"
+    },
+    {
+      "item_id": "pi.provider-support.cache.334.20",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 334,
+      "column": 20,
+      "kind": "template-expression",
+      "english": "${minutes}m",
+      "evidence": "`${minutes}m`"
+    },
+    {
+      "item_id": "pi.provider-support.cache.336.20",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 336,
+      "column": 20,
+      "kind": "template-expression",
+      "english": "${seconds}s",
+      "evidence": "`${seconds}s`"
+    },
+    {
+      "item_id": "pi.provider-support.cache.337.12",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 337,
+      "column": 12,
+      "kind": "template-expression",
+      "english": "Decision in ${parts.join(\" \")}",
+      "evidence": "`Decision in ${parts.join(\" \")}`"
+    },
+    {
+      "item_id": "pi.provider-support.cache.345.16",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 345,
+      "column": 16,
+      "kind": "template-expression",
+      "english": "Inactive (${status.reason ?? \"unknown reason\"})",
+      "evidence": "`Inactive (${status.reason ?? \"unknown reason\"})`"
+    },
+    {
+      "item_id": "pi.provider-support.cache.345.46",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 345,
+      "column": 46,
+      "kind": "string-literal",
+      "english": "unknown reason",
+      "evidence": "\"unknown reason\""
+    },
+    {
+      "item_id": "pi.provider-support.cache.348.11",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 348,
+      "column": 11,
+      "kind": "template-expression",
+      "english": "extension override, ${formatCacheWarmingEconomics(decision)}",
+      "evidence": "`extension override, ${formatCacheWarmingEconomics(decision)}`"
+    },
+    {
+      "item_id": "pi.provider-support.cache.349.11",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 349,
+      "column": 11,
+      "kind": "template-expression",
+      "english": "${formatCacheWarmingEconomics(decision)} -> ${decision.action}",
+      "evidence": "`${formatCacheWarmingEconomics(decision)} -> ${decision.action}`"
+    },
+    {
+      "item_id": "pi.provider-support.cache.351.16",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 351,
+      "column": 16,
+      "kind": "template-expression",
+      "english": "Stopped (${details})",
+      "evidence": "`Stopped (${details})`"
+    },
+    {
+      "item_id": "pi.provider-support.cache.353.16",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 353,
+      "column": 16,
+      "kind": "template-expression",
+      "english": "Warming cache (${details})",
+      "evidence": "`Warming cache (${details})`"
+    },
+    {
+      "item_id": "pi.provider-support.cache.354.12",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 354,
+      "column": 12,
+      "kind": "template-expression",
+      "english": "${formatCacheWarmingDecisionTime(status.nextWarmAt, now)} (${details})",
+      "evidence": "`${formatCacheWarmingDecisionTime(status.nextWarmAt, now)} (${details})`"
+    },
+    {
+      "item_id": "pi.provider-support.cache.358.31",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 358,
+      "column": 31,
+      "kind": "template-expression",
+      "english": " (${entry.note})",
+      "evidence": "` (${entry.note})`"
+    },
+    {
+      "item_id": "pi.provider-support.cache.360.12",
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "line": 360,
+      "column": 12,
+      "kind": "template-expression",
+      "english": "Cache warmed${note}: $${cost}",
+      "evidence": "`Cache warmed${note}: $${cost}`"
+    }
+  ],
+  "source_review": {
+    "files": [
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+        "read_lines": [
+          1,
+          492
+        ],
+        "string_template_occurrences": 93,
+        "fixed_rows": 31,
+        "excluded_occurrences": 62,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 86,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Provider ${providerId}, model ${definition.id}: no \"api\" specified. Set at provider or model level.`"
+          },
+          {
+            "line": 90,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Provider ${providerId}: \"baseUrl\" is required when defining custom models.`"
+          },
+          {
+            "line": 92,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Provider ${providerId}, model ${definition.id}: invalid contextWindow`"
+          },
+          {
+            "line": 95,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Provider ${providerId}, model ${definition.id}: invalid maxTokens`"
+          },
+          {
+            "line": 137,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Provider ${providerId}, model ${definition.id}: no \"api\" specified. Set it at model level${type === \"chat\" ? \" or provider level\" : \"\"}.`"
+          },
+          {
+            "line": 141,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Provider ${providerId}: \"baseUrl\" is required when defining custom models.`"
+          },
+          {
+            "line": 154,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Provider ${providerId}: \"baseUrl\" is required when \"oauth\" is set.`"
+          },
+          {
+            "line": 165,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Provider ${providerId}: must specify \"baseUrl\", \"headers\", \"compat\", \"modelOverrides\", or \"models\".`"
+          },
+          {
+            "line": 220,
+            "column": 19,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"authHeader requires a resolved API key\""
+          },
+          {
+            "line": 344,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Provider ${providerId}: \"api\" is required when registering streamSimple.`"
+          },
+          {
+            "line": 375,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Provider ${providerId}: no authentication method configured.`"
+          },
+          {
+            "line": 388,
+            "column": 19,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`No API provider registered for api: ${model.api}`"
+          },
+          {
+            "line": 451,
+            "column": 60,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Provider ${providerId} has no image implementation for \"${model.api}\"`"
+          },
+          {
+            "line": 463,
+            "column": 65,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Provider ${providerId} has no classifier implementation for \"${model.api}\"`"
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 86,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Provider ${providerId}, model ${definition.id}: no \"api\" specified. Set at provider or model level.`)"
+          },
+          {
+            "line": 90,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Provider ${providerId}: \"baseUrl\" is required when defining custom models.`)"
+          },
+          {
+            "line": 92,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Provider ${providerId}, model ${definition.id}: invalid contextWindow`)"
+          },
+          {
+            "line": 95,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Provider ${providerId}, model ${definition.id}: invalid maxTokens`)"
+          },
+          {
+            "line": 137,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Provider ${providerId}, model ${definition.id}: no \"api\" specified. Set it at model level${type === \"chat\" ? \" or provider level\" : \"\"}.`)"
+          },
+          {
+            "line": 141,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Provider ${providerId}: \"baseUrl\" is required when defining custom models.`)"
+          },
+          {
+            "line": 154,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Provider ${providerId}: \"baseUrl\" is required when \"oauth\" is set.`)"
+          },
+          {
+            "line": 165,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Provider ${providerId}: must specify \"baseUrl\", \"headers\", \"compat\", \"modelOverrides\", or \"models\".`)"
+          },
+          {
+            "line": 220,
+            "column": 19,
+            "callee": "Error",
+            "source": "new Error(\"authHeader requires a resolved API key\")"
+          },
+          {
+            "line": 235,
+            "column": 24,
+            "callee": "Set",
+            "source": "new Set(values.flatMap(getConfigValueEnvVarNames))"
+          },
+          {
+            "line": 344,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Provider ${providerId}: \"api\" is required when registering streamSimple.`)"
+          },
+          {
+            "line": 375,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Provider ${providerId}: no authentication method configured.`)"
+          },
+          {
+            "line": 388,
+            "column": 19,
+            "callee": "Error",
+            "source": "new Error(`No API provider registered for api: ${model.api}`)"
+          },
+          {
+            "line": 451,
+            "column": 60,
+            "callee": "Error",
+            "source": "new Error(`Provider ${providerId} has no image implementation for \"${model.api}\"`)"
+          },
+          {
+            "line": 463,
+            "column": 65,
+            "callee": "Error",
+            "source": "new Error(`Provider ${providerId} has no classifier implementation for \"${model.api}\"`)"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 86,
+            "column": 9,
+            "expression": "new Error(`Provider ${providerId}, model ${definition.id}: no \"api\" specified. Set at provider or model level.`)"
+          },
+          {
+            "line": 90,
+            "column": 9,
+            "expression": "new Error(`Provider ${providerId}: \"baseUrl\" is required when defining custom models.`)"
+          },
+          {
+            "line": 92,
+            "column": 9,
+            "expression": "new Error(`Provider ${providerId}, model ${definition.id}: invalid contextWindow`)"
+          },
+          {
+            "line": 95,
+            "column": 9,
+            "expression": "new Error(`Provider ${providerId}, model ${definition.id}: invalid maxTokens`)"
+          },
+          {
+            "line": 137,
+            "column": 9,
+            "expression": "new Error(`Provider ${providerId}, model ${definition.id}: no \"api\" specified. Set it at model level${type === \"chat\" ? \" or provider level\" : \"\"}.`)"
+          },
+          {
+            "line": 141,
+            "column": 9,
+            "expression": "new Error(`Provider ${providerId}: \"baseUrl\" is required when defining custom models.`)"
+          },
+          {
+            "line": 154,
+            "column": 9,
+            "expression": "new Error(`Provider ${providerId}: \"baseUrl\" is required when \"oauth\" is set.`)"
+          },
+          {
+            "line": 165,
+            "column": 9,
+            "expression": "new Error(`Provider ${providerId}: must specify \"baseUrl\", \"headers\", \"compat\", \"modelOverrides\", or \"models\".`)"
+          },
+          {
+            "line": 220,
+            "column": 13,
+            "expression": "new Error(\"authHeader requires a resolved API key\")"
+          },
+          {
+            "line": 344,
+            "column": 9,
+            "expression": "new Error(`Provider ${providerId}: \"api\" is required when registering streamSimple.`)"
+          },
+          {
+            "line": 375,
+            "column": 9,
+            "expression": "new Error(`Provider ${providerId}: no authentication method configured.`)"
+          },
+          {
+            "line": 388,
+            "column": 13,
+            "expression": "new Error(`No API provider registered for api: ${model.api}`)"
+          }
+        ],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "@earendil-works/pi-ai"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "@earendil-works/pi-ai/compat"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "@earendil-works/pi-ai/utils/model-operations"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "./resolve-config-value.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 7,
+            "column": 24,
+            "callee": "provider.getAllModels",
+            "arguments": []
+          },
+          {
+            "line": 7,
+            "column": 53,
+            "callee": "provider.getModels",
+            "arguments": []
+          },
+          {
+            "line": 63,
+            "column": 22,
+            "callee": "mergeInputLimits",
+            "arguments": [
+              "model.inputLimits",
+              "override.inputLimits"
+            ]
+          },
+          {
+            "line": 79,
+            "column": 40,
+            "callee": "mergeSamplingParamsByThinkingLevel",
+            "arguments": [
+              "model.samplingParamsByThinkingLevel",
+              "override.samplingParamsByThinkingLevel"
+            ]
+          },
+          {
+            "line": 80,
+            "column": 17,
+            "callee": "mergeCompat",
+            "arguments": [
+              "model.compat",
+              "override.compat"
+            ]
+          },
+          {
+            "line": 114,
+            "column": 17,
+            "callee": "mergeCompat",
+            "arguments": [
+              "providerConfig.compat",
+              "definition.compat"
+            ]
+          },
+          {
+            "line": 118,
+            "column": 24,
+            "callee": "models.filter",
+            "arguments": [
+              "(model) => isModelType(model, \"chat\")"
+            ]
+          },
+          {
+            "line": 118,
+            "column": 49,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"chat\""
+            ]
+          },
+          {
+            "line": 119,
+            "column": 13,
+            "callee": "chatModels.find",
+            "arguments": [
+              "(model) => model.id === modelId"
+            ]
+          },
+          {
+            "line": 120,
+            "column": 16,
+            "callee": "chatModels.find",
+            "arguments": [
+              "(model) => model.api === api"
+            ]
+          },
+          {
+            "line": 121,
+            "column": 9,
+            "callee": "chatModels.find",
+            "arguments": [
+              "(model) => model.api === \"openai-completions\""
+            ]
+          },
+          {
+            "line": 126,
+            "column": 24,
+            "callee": "models.filter",
+            "arguments": [
+              "(model) => isModelType(model, type)"
+            ]
+          },
+          {
+            "line": 126,
+            "column": 49,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "type"
+            ]
+          },
+          {
+            "line": 127,
+            "column": 13,
+            "callee": "candidates.find",
+            "arguments": [
+              "(model) => model.id === definition.id"
+            ]
+          },
+          {
+            "line": 128,
+            "column": 27,
+            "callee": "candidates.find",
+            "arguments": [
+              "(model) => model.api === definition.api"
+            ]
+          },
+          {
+            "line": 129,
+            "column": 28,
+            "callee": "candidates.find",
+            "arguments": [
+              "(model) => model.api === \"openai-completions\""
+            ]
+          },
+          {
+            "line": 134,
+            "column": 22,
+            "callee": "findExtensionModelDefaults",
+            "arguments": [
+              "models",
+              "definition"
+            ]
+          },
+          {
+            "line": 156,
+            "column": 51,
+            "callee": "Object.keys",
+            "arguments": [
+              "config.modelOverrides"
+            ]
+          },
+          {
+            "line": 167,
+            "column": 20,
+            "callee": "baseModels.map",
+            "arguments": [
+              "(model) => {\n        const baseUrl = config.oauth === \"radius\" ? model.baseUrl : (config.baseUrl ?? model.baseUrl);\n        if (isModelType(model, \"chat\"))\n            return { ...model, baseUrl, compat: mergeCompat(model.compat, config.compat) };\n        // Classifier APIs read their own compat fields, such as how a System One service takes images.\n        if (isModelType(model, \"classifier\") && config.compat) {\n            return { ...model, baseUrl, compat: { ...model.compat, ...config.compat } };\n        }\n        return { ...model, baseUrl };\n    }"
+            ]
+          },
+          {
+            "line": 169,
+            "column": 13,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"chat\""
+            ]
+          },
+          {
+            "line": 170,
+            "column": 49,
+            "callee": "mergeCompat",
+            "arguments": [
+              "model.compat",
+              "config.compat"
+            ]
+          },
+          {
+            "line": 172,
+            "column": 13,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"classifier\""
+            ]
+          },
+          {
+            "line": 178,
+            "column": 31,
+            "callee": "models.findIndex",
+            "arguments": [
+              "(model) => isModelType(model, \"chat\") && model.id === definition.id"
+            ]
+          },
+          {
+            "line": 178,
+            "column": 59,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"chat\""
+            ]
+          },
+          {
+            "line": 179,
+            "column": 26,
+            "callee": "findModelDefaults",
+            "arguments": [
+              "models",
+              "definition.id",
+              "definition.api ?? config.api"
+            ]
+          },
+          {
+            "line": 180,
+            "column": 23,
+            "callee": "modelFromJson",
+            "arguments": [
+              "providerId",
+              "definition",
+              "config",
+              "defaults"
+            ]
+          },
+          {
+            "line": 184,
+            "column": 13,
+            "callee": "models.push",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 192,
+            "column": 33,
+            "callee": "models.map",
+            "arguments": [
+              "(model) => ({ ...model, baseUrl: config.baseUrl })"
+            ]
+          },
+          {
+            "line": 194,
+            "column": 12,
+            "callee": "config.models.map",
+            "arguments": [
+              "(definition) => extensionModelFromDefinition(providerId, models, config, definition)"
+            ]
+          },
+          {
+            "line": 194,
+            "column": 46,
+            "callee": "extensionModelFromDefinition",
+            "arguments": [
+              "providerId",
+              "models",
+              "config",
+              "definition"
+            ]
+          },
+          {
+            "line": 201,
+            "column": 38,
+            "callee": "config.login",
+            "arguments": [
+              "{\n                onAuth: (info) => callbacks.notify({ type: \"auth_url\", ...info }),\n                onDeviceCode: (info) => callbacks.notify({ type: \"device_code\", ...info }),\n                onPrompt: (prompt) => callbacks.prompt({ type: \"text\", ...prompt }),\n                onProgress: (message) => callbacks.notify({ type: \"progress\", message }),\n                onManualCodeInput: () => callbacks.prompt({ type: \"manual_code\", message: \"Paste the authorization code\" }),\n                onSelect: (prompt) => callbacks.prompt({ type: \"select\", ...prompt }),\n                signal: callbacks.signal,\n            }"
+            ]
+          },
+          {
+            "line": 202,
+            "column": 35,
+            "callee": "callbacks.notify",
+            "arguments": [
+              "{ type: \"auth_url\", ...info }"
+            ]
+          },
+          {
+            "line": 203,
+            "column": 41,
+            "callee": "callbacks.notify",
+            "arguments": [
+              "{ type: \"device_code\", ...info }"
+            ]
+          },
+          {
+            "line": 204,
+            "column": 39,
+            "callee": "callbacks.prompt",
+            "arguments": [
+              "{ type: \"text\", ...prompt }"
+            ]
+          },
+          {
+            "line": 205,
+            "column": 42,
+            "callee": "callbacks.notify",
+            "arguments": [
+              "{ type: \"progress\", message }"
+            ]
+          },
+          {
+            "line": 206,
+            "column": 42,
+            "callee": "callbacks.prompt",
+            "arguments": [
+              "{ type: \"manual_code\", message: \"Paste the authorization code\" }"
+            ]
+          },
+          {
+            "line": 207,
+            "column": 39,
+            "callee": "callbacks.prompt",
+            "arguments": [
+              "{ type: \"select\", ...prompt }"
+            ]
+          },
+          {
+            "line": 212,
+            "column": 61,
+            "callee": "config.refreshToken",
+            "arguments": [
+              "credential",
+              "signal"
+            ]
+          },
+          {
+            "line": 213,
+            "column": 50,
+            "callee": "config.getApiKey",
+            "arguments": [
+              "credential"
+            ]
+          },
+          {
+            "line": 235,
+            "column": 32,
+            "callee": "values.flatMap",
+            "arguments": [
+              "getConfigValueEnvVarNames"
+            ]
+          },
+          {
+            "line": 238,
+            "column": 29,
+            "callee": "ctx.env",
+            "arguments": [
+              "name"
+            ]
+          },
+          {
+            "line": 242,
+            "column": 12,
+            "callee": "Object.keys",
+            "arguments": [
+              "env"
+            ]
+          },
+          {
+            "line": 246,
+            "column": 20,
+            "callee": "configuredApiKey",
+            "arguments": [
+              "config",
+              "extension"
+            ]
+          },
+          {
+            "line": 251,
+            "column": 24,
+            "callee": "configuredHeaders",
+            "arguments": [
+              "config",
+              "extension"
+            ]
+          },
+          {
+            "line": 258,
+            "column": 28,
+            "callee": "interaction.prompt",
+            "arguments": [
+              "{ type: \"secret\", message: \"Enter API key\" }"
+            ]
+          },
+          {
+            "line": 263,
+            "column": 28,
+            "callee": "inherited.check",
+            "arguments": [
+              "input"
+            ]
+          },
+          {
+            "line": 266,
+            "column": 40,
+            "callee": "inherited?.resolve",
+            "arguments": [
+              "input"
+            ]
+          },
+          {
+            "line": 270,
+            "column": 21,
+            "callee": "isCommandConfigValue",
+            "arguments": [
+              "rawKey"
+            ]
+          },
+          {
+            "line": 272,
+            "column": 34,
+            "callee": "getConfigValueEnvVarNames",
+            "arguments": [
+              "rawKey"
+            ]
+          },
+          {
+            "line": 274,
+            "column": 32,
+            "callee": "input.ctx.env",
+            "arguments": [
+              "name"
+            ]
+          },
+          {
+            "line": 280,
+            "column": 24,
+            "callee": "inherited.check",
+            "arguments": [
+              "input"
+            ]
+          },
+          {
+            "line": 281,
+            "column": 36,
+            "callee": "inherited?.resolve",
+            "arguments": [
+              "input"
+            ]
+          },
+          {
+            "line": 288,
+            "column": 29,
+            "callee": "inherited.resolve",
+            "arguments": [
+              "input"
+            ]
+          },
+          {
+            "line": 294,
+            "column": 35,
+            "callee": "configContextEnv",
+            "arguments": [
+              "[rawKey]",
+              "input.ctx"
+            ]
+          },
+          {
+            "line": 295,
+            "column": 29,
+            "callee": "resolveConfigValueOrThrow",
+            "arguments": [
+              "rawKey",
+              "`API key for provider \"${providerId}\"`",
+              "env"
+            ]
+          },
+          {
+            "line": 297,
+            "column": 29,
+            "callee": "inherited.resolve",
+            "arguments": [
+              "{ ...input, credential: { type: \"api_key\", key } }"
+            ]
+          },
+          {
+            "line": 301,
+            "column": 32,
+            "callee": "inherited?.resolve",
+            "arguments": [
+              "input"
+            ]
+          },
+          {
+            "line": 306,
+            "column": 37,
+            "callee": "configContextEnv",
+            "arguments": [
+              "Object.values(rawHeaders ?? {})",
+              "input.ctx",
+              "explicitEnv"
+            ]
+          },
+          {
+            "line": 306,
+            "column": 54,
+            "callee": "Object.values",
+            "arguments": [
+              "rawHeaders ?? {}"
+            ]
+          },
+          {
+            "line": 307,
+            "column": 29,
+            "callee": "resolveHeadersOrThrow",
+            "arguments": [
+              "rawHeaders",
+              "`provider \"${providerId}\"`",
+              "headerEnv"
+            ]
+          },
+          {
+            "line": 308,
+            "column": 39,
+            "callee": "withConfiguredAuth",
+            "arguments": [
+              "result.auth",
+              "headers",
+              "authHeader"
+            ]
+          },
+          {
+            "line": 313,
+            "column": 38,
+            "callee": "adaptOAuth",
+            "arguments": [
+              "extension.oauth"
+            ]
+          },
+          {
+            "line": 316,
+            "column": 24,
+            "callee": "configuredHeaders",
+            "arguments": [
+              "config",
+              "extension"
+            ]
+          },
+          {
+            "line": 321,
+            "column": 32,
+            "callee": "oauth.toAuth",
+            "arguments": [
+              "credential"
+            ]
+          },
+          {
+            "line": 323,
+            "column": 29,
+            "callee": "resolveHeadersOrThrow",
+            "arguments": [
+              "rawHeaders",
+              "`provider \"${providerId}\"`",
+              "typeof env === \"object\" && env !== null ? env : undefined"
+            ]
+          },
+          {
+            "line": 324,
+            "column": 20,
+            "callee": "withConfiguredAuth",
+            "arguments": [
+              "auth",
+              "headers",
+              "authHeader"
+            ]
+          },
+          {
+            "line": 331,
+            "column": 28,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"chat\""
+            ]
+          },
+          {
+            "line": 332,
+            "column": 11,
+            "callee": "config?.models?.find",
+            "arguments": [
+              "(entry) => entry.id === model.id"
+            ]
+          },
+          {
+            "line": 334,
+            "column": 28,
+            "callee": "extension?.models?.find",
+            "arguments": [
+              "(entry) => (entry.type ?? \"chat\") === (model.type ?? \"chat\") && entry.id === model.id"
+            ]
+          },
+          {
+            "line": 336,
+            "column": 13,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"chat\""
+            ]
+          },
+          {
+            "line": 340,
+            "column": 12,
+            "callee": "Object.keys",
+            "arguments": [
+              "headers"
+            ]
+          },
+          {
+            "line": 346,
+            "column": 5,
+            "callee": "applyExtension",
+            "arguments": [
+              "providerId",
+              "applyModelsJson(providerId, getAllProviderModels(base), modelsConfig)",
+              "extension"
+            ]
+          },
+          {
+            "line": 346,
+            "column": 32,
+            "callee": "applyModelsJson",
+            "arguments": [
+              "providerId",
+              "getAllProviderModels(base)",
+              "modelsConfig"
+            ]
+          },
+          {
+            "line": 346,
+            "column": 60,
+            "callee": "getAllProviderModels",
+            "arguments": [
+              "base"
+            ]
+          },
+          {
+            "line": 350,
+            "column": 20,
+            "callee": "modelConfig.getProvider",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 357,
+            "column": 22,
+            "callee": "applyExtension",
+            "arguments": [
+              "providerId",
+              "applyModelsJson(providerId, getAllProviderModels(base), config)",
+              "currentExtension()"
+            ]
+          },
+          {
+            "line": 357,
+            "column": 49,
+            "callee": "applyModelsJson",
+            "arguments": [
+              "providerId",
+              "getAllProviderModels(base)",
+              "config"
+            ]
+          },
+          {
+            "line": 357,
+            "column": 77,
+            "callee": "getAllProviderModels",
+            "arguments": [
+              "base"
+            ]
+          },
+          {
+            "line": 357,
+            "column": 114,
+            "callee": "currentExtension",
+            "arguments": []
+          },
+          {
+            "line": 361,
+            "column": 20,
+            "callee": "extension.oauth.modifyModels",
+            "arguments": [
+              "models.filter((model) => isModelType(model, \"chat\"))",
+              "extensionOAuthCredential"
+            ]
+          },
+          {
+            "line": 361,
+            "column": 49,
+            "callee": "models.filter",
+            "arguments": [
+              "(model) => isModelType(model, \"chat\")"
+            ]
+          },
+          {
+            "line": 361,
+            "column": 74,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"chat\""
+            ]
+          },
+          {
+            "line": 362,
+            "column": 20,
+            "callee": "models.filter",
+            "arguments": [
+              "(model) => !isModelType(model, \"chat\")"
+            ]
+          },
+          {
+            "line": 362,
+            "column": 46,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"chat\""
+            ]
+          },
+          {
+            "line": 365,
+            "column": 16,
+            "callee": "models.map",
+            "arguments": [
+              "(model) => {\n            const override = config?.modelOverrides?.[model.id];\n            return override && isModelType(model, \"chat\") ? applyModelOverride(model, override) : model;\n        }"
+            ]
+          },
+          {
+            "line": 367,
+            "column": 32,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"chat\""
+            ]
+          },
+          {
+            "line": 367,
+            "column": 61,
+            "callee": "applyModelOverride",
+            "arguments": [
+              "model",
+              "override"
+            ]
+          },
+          {
+            "line": 371,
+            "column": 5,
+            "callee": "getAllModels",
+            "arguments": []
+          },
+          {
+            "line": 372,
+            "column": 20,
+            "callee": "composeApiKeyAuth",
+            "arguments": [
+              "providerId",
+              "base",
+              "config",
+              "extension"
+            ]
+          },
+          {
+            "line": 373,
+            "column": 19,
+            "callee": "composeOAuthAuth",
+            "arguments": [
+              "providerId",
+              "base",
+              "config",
+              "extension"
+            ]
+          },
+          {
+            "line": 376,
+            "column": 40,
+            "callee": "base?.getModels().some",
+            "arguments": [
+              "(entry) => entry.api === model.api"
+            ]
+          },
+          {
+            "line": 376,
+            "column": 40,
+            "callee": "base?.getModels",
+            "arguments": []
+          },
+          {
+            "line": 377,
+            "column": 61,
+            "callee": "lazyStream",
+            "arguments": [
+              "model",
+              "async () => {\n        if (extension?.streamSimple && model.api === extension.api) {\n            return extension.streamSimple(model, context, options);\n        }\n        if (base && supportsBaseApi(model)) {\n            return simple\n                ? base.streamSimple(model, context, options)\n                : base.stream(model, context, options);\n        }\n        const api = getApiProvider(model.api);\n        if (!api)\n            throw new Error(`No API provider registered for api: ${model.api}`);\n        return simple\n            ? api.streamSimple(model, context, options)\n            : api.stream(model, context, options);\n    }"
+            ]
+          },
+          {
+            "line": 379,
+            "column": 20,
+            "callee": "extension.streamSimple",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 381,
+            "column": 21,
+            "callee": "supportsBaseApi",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 383,
+            "column": 19,
+            "callee": "base.streamSimple",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 384,
+            "column": 19,
+            "callee": "base.stream",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 386,
+            "column": 21,
+            "callee": "getApiProvider",
+            "arguments": [
+              "model.api"
+            ]
+          },
+          {
+            "line": 390,
+            "column": 15,
+            "callee": "api.streamSimple",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 391,
+            "column": 15,
+            "callee": "api.stream",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 399,
+            "column": 26,
+            "callee": "getAllModels().filter",
+            "arguments": [
+              "(model) => isModelType(model, \"chat\")"
+            ]
+          },
+          {
+            "line": 399,
+            "column": 26,
+            "callee": "getAllModels",
+            "arguments": []
+          },
+          {
+            "line": 399,
+            "column": 59,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"chat\""
+            ]
+          },
+          {
+            "line": 403,
+            "column": 23,
+            "callee": "base?.refreshModels",
+            "arguments": [
+              "context"
+            ]
+          },
+          {
+            "line": 406,
+            "column": 39,
+            "callee": "extension.refreshModels",
+            "arguments": [
+              "context"
+            ]
+          },
+          {
+            "line": 410,
+            "column": 23,
+            "callee": "context.publish",
+            "arguments": [
+              "{\n                    update: () => {\n                        if (refreshed) {\n                            // Validate before publishing the new synchronous list.\n                            applyExtension(providerId, applyModelsJson(providerId, getAllProviderModels(base), config), {\n                                ...extension,\n                                models: refreshed,\n                            });\n                            refreshedExtensionModels = refreshed;\n                        }\n                        extensionOAuthCredential = oauthCredential;\n                    },\n                }"
+            ]
+          },
+          {
+            "line": 414,
+            "column": 29,
+            "callee": "applyExtension",
+            "arguments": [
+              "providerId",
+              "applyModelsJson(providerId, getAllProviderModels(base), config)",
+              "{\n                                ...extension,\n                                models: refreshed,\n                            }"
+            ]
+          },
+          {
+            "line": 414,
+            "column": 56,
+            "callee": "applyModelsJson",
+            "arguments": [
+              "providerId",
+              "getAllProviderModels(base)",
+              "config"
+            ]
+          },
+          {
+            "line": 414,
+            "column": 84,
+            "callee": "getAllProviderModels",
+            "arguments": [
+              "base"
+            ]
+          },
+          {
+            "line": 426,
+            "column": 39,
+            "callee": "base.filterModels",
+            "arguments": [
+              "models",
+              "credential"
+            ]
+          },
+          {
+            "line": 429,
+            "column": 39,
+            "callee": "base.filterAllModels",
+            "arguments": [
+              "models",
+              "credential"
+            ]
+          },
+          {
+            "line": 431,
+            "column": 46,
+            "callee": "streamWith",
+            "arguments": [
+              "model",
+              "context",
+              "options",
+              "false"
+            ]
+          },
+          {
+            "line": 432,
+            "column": 52,
+            "callee": "streamWith",
+            "arguments": [
+              "model",
+              "context",
+              "options",
+              "true"
+            ]
+          },
+          {
+            "line": 436,
+            "column": 62,
+            "callee": "fetchDeferred",
+            "arguments": [
+              "model",
+              "handle",
+              "options"
+            ]
+          },
+          {
+            "line": 440,
+            "column": 63,
+            "callee": "cancelDeferred",
+            "arguments": [
+              "model",
+              "handle",
+              "options"
+            ]
+          },
+          {
+            "line": 444,
+            "column": 27,
+            "callee": "Object.keys",
+            "arguments": [
+              "extensionImages ?? {}"
+            ]
+          },
+          {
+            "line": 448,
+            "column": 24,
+            "callee": "implementation.generateImages",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 450,
+            "column": 24,
+            "callee": "generateImages",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 451,
+            "column": 20,
+            "callee": "Promise.resolve",
+            "arguments": [
+              "imageErrorResult(model, new Error(`Provider ${providerId} has no image implementation for \"${model.api}\"`))"
+            ]
+          },
+          {
+            "line": 451,
+            "column": 36,
+            "callee": "imageErrorResult",
+            "arguments": [
+              "model",
+              "new Error(`Provider ${providerId} has no image implementation for \"${model.api}\"`)"
+            ]
+          },
+          {
+            "line": 456,
+            "column": 21,
+            "callee": "Object.keys",
+            "arguments": [
+              "extensionClassifiers ?? {}"
+            ]
+          },
+          {
+            "line": 460,
+            "column": 24,
+            "callee": "implementation.classify",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 462,
+            "column": 24,
+            "callee": "classify",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 463,
+            "column": 20,
+            "callee": "Promise.resolve",
+            "arguments": [
+              "classifierErrorResult(model, new Error(`Provider ${providerId} has no classifier implementation for \"${model.api}\"`))"
+            ]
+          },
+          {
+            "line": 463,
+            "column": 36,
+            "callee": "classifierErrorResult",
+            "arguments": [
+              "model",
+              "new Error(`Provider ${providerId} has no classifier implementation for \"${model.api}\"`)"
+            ]
+          },
+          {
+            "line": 469,
+            "column": 12,
+            "callee": "resolveHeadersOrThrow",
+            "arguments": [
+              "rawModelHeaders(model, config, extension)",
+              "`model \"${model.provider}/${model.id}\"`",
+              "env"
+            ]
+          },
+          {
+            "line": 469,
+            "column": 34,
+            "callee": "rawModelHeaders",
+            "arguments": [
+              "model",
+              "config",
+              "extension"
+            ]
+          },
+          {
+            "line": 472,
+            "column": 24,
+            "callee": "resolveHeadersOrThrow",
+            "arguments": [
+              "{ ...configuredHeaders(config, extension), ...rawModelHeaders(model, config, extension) }",
+              "`model \"${model.provider}/${model.id}\"`"
+            ]
+          },
+          {
+            "line": 472,
+            "column": 51,
+            "callee": "configuredHeaders",
+            "arguments": [
+              "config",
+              "extension"
+            ]
+          },
+          {
+            "line": 472,
+            "column": 92,
+            "callee": "rawModelHeaders",
+            "arguments": [
+              "model",
+              "config",
+              "extension"
+            ]
+          },
+          {
+            "line": 479,
+            "column": 19,
+            "callee": "configuredApiKey",
+            "arguments": [
+              "config",
+              "extension"
+            ]
+          },
+          {
+            "line": 482,
+            "column": 9,
+            "callee": "isCommandConfigValue",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 484,
+            "column": 19,
+            "callee": "getConfigValueEnvVarNames",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 486,
+            "column": 16,
+            "callee": "isConfigValueConfigured",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 487,
+            "column": 65,
+            "callee": "names.join",
+            "arguments": [
+              "\", \""
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full492 lines. Models JSON/extension composition merges defaults/type-specific overrides, validation, auth checks/resolution, OAuth callbacks, request header contexts and chat/nonchat setup errors. All authored descriptions/errors/labels/status suffixes partitioned; no provider/command/env execution. API source metadata can be suppressed/replaced in native selectors; technical configured source tokens can paint. Authentication no-method guard375 requires unstable API getters only: ordinary stable OAuth-only earlyreturn implies composeOAuth exists. Foreign implementation/callback/payload graph pending."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-registry.js",
+        "read_lines": [
+          1,
+          144
+        ],
+        "string_template_occurrences": 6,
+        "fixed_rows": 3,
+        "excluded_occurrences": 3,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 119,
+            "column": 23,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "\"Provider config is required when registering by name\""
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 119,
+            "column": 23,
+            "callee": "Error",
+            "source": "new Error(\"Provider config is required when registering by name\")"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 119,
+            "column": 17,
+            "expression": "new Error(\"Provider config is required when registering by name\")"
+          }
+        ],
+        "catch_clauses": [
+          {
+            "line": 52,
+            "column": 9,
+            "source": "catch (error) {\n            const cause = error instanceof Error ? error.cause : undefined;\n            const message = cause instanceof Error ? cause.message : error instanceof Error ? error.message : String(error);\n            return {\n                ok: false,\n                error: message === \"authHeader requires a resolved API key\"\n                    ? `No API key found for \"${model.provider}\"`\n                    : message,\n            };\n        }"
+          },
+          {
+            "line": 109,
+            "column": 9,
+            "source": "catch {\n            return undefined;\n        }"
+          }
+        ],
+        "direct_imports": [],
+        "re_exports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "./provider-composer.js",
+            "source": "export { clearApiKeyCache } from \"./provider-composer.js\";"
+          }
+        ],
+        "output_or_native_callback_calls": [
+          {
+            "line": 13,
+            "column": 16,
+            "callee": "this.runtime.refresh",
+            "arguments": [
+              "options"
+            ]
+          },
+          {
+            "line": 16,
+            "column": 16,
+            "callee": "this.runtime.getError",
+            "arguments": []
+          },
+          {
+            "line": 19,
+            "column": 20,
+            "callee": "this.runtime.getModels",
+            "arguments": []
+          },
+          {
+            "line": 22,
+            "column": 20,
+            "callee": "this.runtime.getAvailableSnapshot",
+            "arguments": []
+          },
+          {
+            "line": 25,
+            "column": 16,
+            "callee": "this.runtime.getModel",
+            "arguments": [
+              "provider",
+              "modelId"
+            ]
+          },
+          {
+            "line": 29,
+            "column": 16,
+            "callee": "this.runtime.getModelOfType",
+            "arguments": [
+              "type",
+              "provider",
+              "modelId"
+            ]
+          },
+          {
+            "line": 32,
+            "column": 16,
+            "callee": "this.runtime.hasConfiguredAuth",
+            "arguments": [
+              "model.provider"
+            ]
+          },
+          {
+            "line": 36,
+            "column": 38,
+            "callee": "this.runtime.getAuth",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 38,
+            "column": 39,
+            "callee": "this.runtime.getCompatibilityRequestConfig",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 54,
+            "column": 111,
+            "callee": "String",
+            "arguments": [
+              "error"
+            ]
+          },
+          {
+            "line": 64,
+            "column": 16,
+            "callee": "this.runtime.getProviderAuthStatus",
+            "arguments": [
+              "provider"
+            ]
+          },
+          {
+            "line": 67,
+            "column": 16,
+            "callee": "this.runtime.getProvider",
+            "arguments": [
+              "provider"
+            ]
+          },
+          {
+            "line": 71,
+            "column": 16,
+            "callee": "this.runtime.stream",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 75,
+            "column": 16,
+            "callee": "this.runtime.streamSimple",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 78,
+            "column": 16,
+            "callee": "this.runtime.complete",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 82,
+            "column": 16,
+            "callee": "this.runtime.getModelsOfType",
+            "arguments": [
+              "type",
+              "provider"
+            ]
+          },
+          {
+            "line": 86,
+            "column": 16,
+            "callee": "this.runtime.getAvailableOfType",
+            "arguments": [
+              "type",
+              "provider",
+              "options"
+            ]
+          },
+          {
+            "line": 89,
+            "column": 16,
+            "callee": "this.runtime.getModelOfType",
+            "arguments": [
+              "type",
+              "provider",
+              "modelId"
+            ]
+          },
+          {
+            "line": 93,
+            "column": 16,
+            "callee": "this.runtime.classify",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 97,
+            "column": 16,
+            "callee": "this.runtime.generateImages",
+            "arguments": [
+              "model",
+              "context",
+              "options"
+            ]
+          },
+          {
+            "line": 100,
+            "column": 16,
+            "callee": "this.runtime.getProvider",
+            "arguments": [
+              "provider"
+            ]
+          },
+          {
+            "line": 103,
+            "column": 16,
+            "callee": "this.runtime.getAuth",
+            "arguments": [
+              "provider"
+            ]
+          },
+          {
+            "line": 107,
+            "column": 27,
+            "callee": "this.runtime.getAuth",
+            "arguments": [
+              "provider"
+            ]
+          },
+          {
+            "line": 114,
+            "column": 16,
+            "callee": "this.runtime.isUsingOAuth",
+            "arguments": [
+              "model.provider"
+            ]
+          },
+          {
+            "line": 120,
+            "column": 13,
+            "callee": "this.runtime.registerProvider",
+            "arguments": [
+              "providerOrName",
+              "config"
+            ]
+          },
+          {
+            "line": 123,
+            "column": 9,
+            "callee": "this.runtime.registerNativeProvider",
+            "arguments": [
+              "providerOrName"
+            ]
+          },
+          {
+            "line": 126,
+            "column": 9,
+            "callee": "this.runtime.unregisterProvider",
+            "arguments": [
+              "providerName"
+            ]
+          },
+          {
+            "line": 129,
+            "column": 9,
+            "callee": "this.runtime.registerVirtualModel",
+            "arguments": [
+              "definition"
+            ]
+          },
+          {
+            "line": 132,
+            "column": 9,
+            "callee": "this.runtime.unregisterVirtualModel",
+            "arguments": [
+              "providerName",
+              "id"
+            ]
+          },
+          {
+            "line": 135,
+            "column": 16,
+            "callee": "this.runtime.getRegisteredProviderConfig",
+            "arguments": [
+              "providerName"
+            ]
+          },
+          {
+            "line": 138,
+            "column": 16,
+            "callee": "this.runtime.getRegisteredNativeProvider",
+            "arguments": [
+              "providerName"
+            ]
+          },
+          {
+            "line": 141,
+            "column": 16,
+            "callee": "this.runtime.getRegisteredProviderIds",
+            "arguments": []
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full144 lines. Extension compatibility facade, three own error definitions plus canonical normalization comparison. getApiKeyAndHeaders returns ok:false not throw; unwraps one Error cause. getApiKeyForProvider swallows all. Firstparty subagent replaces error detail; arbitrary extensions may display. Forwarded model/auth APIs no additional prose."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/runtime-credentials.js",
+        "read_lines": [
+          1,
+          39
+        ],
+        "string_template_occurrences": 2,
+        "fixed_rows": 0,
+        "excluded_occurrences": 2,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 4,
+            "column": 17,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 23,
+            "column": 25,
+            "callee": "Map",
+            "source": "new Map((await this.store.list(options)).map((entry) => [entry.providerId, entry]))"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 9,
+            "column": 9,
+            "callee": "this.overrides.set",
+            "arguments": [
+              "providerId",
+              "apiKey"
+            ]
+          },
+          {
+            "line": 12,
+            "column": 9,
+            "callee": "this.overrides.delete",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 15,
+            "column": 16,
+            "callee": "this.overrides.has",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 18,
+            "column": 9,
+            "callee": "options?.signal?.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 19,
+            "column": 26,
+            "callee": "this.overrides.get",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 20,
+            "column": 64,
+            "callee": "this.store.read",
+            "arguments": [
+              "providerId",
+              "options"
+            ]
+          },
+          {
+            "line": 23,
+            "column": 33,
+            "callee": "(await this.store.list(options)).map",
+            "arguments": [
+              "(entry) => [entry.providerId, entry]"
+            ]
+          },
+          {
+            "line": 23,
+            "column": 40,
+            "callee": "this.store.list",
+            "arguments": [
+              "options"
+            ]
+          },
+          {
+            "line": 24,
+            "column": 9,
+            "callee": "options?.signal?.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 25,
+            "column": 34,
+            "callee": "this.overrides.keys",
+            "arguments": []
+          },
+          {
+            "line": 26,
+            "column": 13,
+            "callee": "entries.set",
+            "arguments": [
+              "providerId",
+              "{ providerId, type: \"api_key\" }"
+            ]
+          },
+          {
+            "line": 28,
+            "column": 20,
+            "callee": "entries.values",
+            "arguments": []
+          },
+          {
+            "line": 31,
+            "column": 16,
+            "callee": "this.store.modify",
+            "arguments": [
+              "providerId",
+              "fn",
+              "options"
+            ]
+          },
+          {
+            "line": 34,
+            "column": 9,
+            "callee": "options?.signal?.throwIfAborted",
+            "arguments": []
+          },
+          {
+            "line": 35,
+            "column": 15,
+            "callee": "this.store.delete",
+            "arguments": [
+              "providerId",
+              "options"
+            ]
+          },
+          {
+            "line": 36,
+            "column": 9,
+            "callee": "this.overrides.delete",
+            "arguments": [
+              "providerId"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full39 lines. Runtime overlay nonpersistent; read uses truthy override else external store, list marks overrides including empty key entries, modify delegates directly without changing overlay, delete checksabort then external delete before removing override. api_key is credential discriminator only. Store/abort Errors payload boundary; no own prose."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/remote-catalog-provider.js",
+        "read_lines": [
+          1,
+          190
+        ],
+        "string_template_occurrences": 29,
+        "fixed_rows": 3,
+        "excluded_occurrences": 26,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [
+          {
+            "line": 34,
+            "column": 15,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Invalid model catalog for provider \"${providerId}\"`"
+          },
+          {
+            "line": 124,
+            "column": 23,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Model catalog request failed for ${provider.id}: ${response.status}`"
+          },
+          {
+            "line": 173,
+            "column": 27,
+            "constructor": "Error",
+            "message_argument": 0,
+            "message_expression": "`Model catalog request failed for ${provider.id}: ${response.status}`"
+          }
+        ],
+        "all_new_expressions": [
+          {
+            "line": 20,
+            "column": 20,
+            "callee": "Map",
+            "source": "new Map()"
+          },
+          {
+            "line": 34,
+            "column": 15,
+            "callee": "Error",
+            "source": "new Error(`Invalid model catalog for provider \"${providerId}\"`)"
+          },
+          {
+            "line": 57,
+            "column": 17,
+            "callee": "URL",
+            "source": "new URL(`/api/models/providers/${encodeURIComponent(providerId)}`, catalogBaseUrl)"
+          },
+          {
+            "line": 124,
+            "column": 23,
+            "callee": "Error",
+            "source": "new Error(`Model catalog request failed for ${provider.id}: ${response.status}`)"
+          },
+          {
+            "line": 173,
+            "column": 27,
+            "callee": "Error",
+            "source": "new Error(`Model catalog request failed for ${provider.id}: ${response.status}`)"
+          }
+        ],
+        "throw_statements": [
+          {
+            "line": 34,
+            "column": 9,
+            "expression": "new Error(`Invalid model catalog for provider \"${providerId}\"`)"
+          },
+          {
+            "line": 124,
+            "column": 17,
+            "expression": "new Error(`Model catalog request failed for ${provider.id}: ${response.status}`)"
+          },
+          {
+            "line": 173,
+            "column": 21,
+            "expression": "new Error(`Model catalog request failed for ${provider.id}: ${response.status}`)"
+          }
+        ],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "@earendil-works/pi-ai"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "../config.js"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "../utils/management-http.js"
+          },
+          {
+            "line": 4,
+            "column": 1,
+            "specifier": "../utils/pi-user-agent.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 17,
+            "column": 44,
+            "callee": "REMOTE_CATALOG_MODEL_TYPES.includes",
+            "arguments": [
+              "model.type"
+            ]
+          },
+          {
+            "line": 22,
+            "column": 9,
+            "callee": "merged.set",
+            "arguments": [
+              "`${getModelType(model)}\\0${model.id}`",
+              "model"
+            ]
+          },
+          {
+            "line": 22,
+            "column": 23,
+            "callee": "getModelType",
+            "arguments": [
+              "model"
+            ]
+          },
+          {
+            "line": 23,
+            "column": 16,
+            "callee": "merged.values",
+            "arguments": []
+          },
+          {
+            "line": 26,
+            "column": 21,
+            "callee": "Array.isArray",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 28,
+            "column": 79,
+            "callee": "Array.isArray",
+            "arguments": [
+              "value.models"
+            ]
+          },
+          {
+            "line": 31,
+            "column": 19,
+            "callee": "Object.values",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 35,
+            "column": 12,
+            "callee": "entries\n        .filter((entry) => typeof entry === \"object\" && entry !== null && \"id\" in entry)\n        .filter(isSupportedModelType)\n        .map",
+            "arguments": [
+              "(model) => ({ ...model, provider: providerId })"
+            ]
+          },
+          {
+            "line": 35,
+            "column": 12,
+            "callee": "entries\n        .filter((entry) => typeof entry === \"object\" && entry !== null && \"id\" in entry)\n        .filter",
+            "arguments": [
+              "isSupportedModelType"
+            ]
+          },
+          {
+            "line": 35,
+            "column": 12,
+            "callee": "entries\n        .filter",
+            "arguments": [
+              "(entry) => typeof entry === \"object\" && entry !== null && \"id\" in entry"
+            ]
+          },
+          {
+            "line": 42,
+            "column": 26,
+            "callee": "Date.parse",
+            "arguments": [
+              "response.headers.get(\"last-modified\") ?? \"\""
+            ]
+          },
+          {
+            "line": 42,
+            "column": 37,
+            "callee": "response.headers.get",
+            "arguments": [
+              "\"last-modified\""
+            ]
+          },
+          {
+            "line": 44,
+            "column": 17,
+            "callee": "parseCatalog",
+            "arguments": [
+              "providerId",
+              "await response.json()"
+            ]
+          },
+          {
+            "line": 44,
+            "column": 48,
+            "callee": "response.json",
+            "arguments": []
+          },
+          {
+            "line": 45,
+            "column": 23,
+            "callee": "Number.isNaN",
+            "arguments": [
+              "lastModified"
+            ]
+          },
+          {
+            "line": 46,
+            "column": 15,
+            "callee": "response.headers.get",
+            "arguments": [
+              "\"etag\""
+            ]
+          },
+          {
+            "line": 54,
+            "column": 21,
+            "callee": "isNewer",
+            "arguments": [
+              "entry.lastModified",
+              "localGeneratedAt"
+            ]
+          },
+          {
+            "line": 57,
+            "column": 50,
+            "callee": "encodeURIComponent",
+            "arguments": [
+              "providerId"
+            ]
+          },
+          {
+            "line": 58,
+            "column": 5,
+            "callee": "url.searchParams.set",
+            "arguments": [
+              "\"types\"",
+              "REMOTE_CATALOG_MODEL_TYPES.join(\",\")"
+            ]
+          },
+          {
+            "line": 58,
+            "column": 35,
+            "callee": "REMOTE_CATALOG_MODEL_TYPES.join",
+            "arguments": [
+              "\",\""
+            ]
+          },
+          {
+            "line": 59,
+            "column": 12,
+            "callee": "fetchWithRetry",
+            "arguments": [
+              "url",
+              "{\n        headers: {\n            accept: \"application/json\",\n            \"User-Agent\": getPiUserAgent(VERSION),\n            ...(validator ? { \"if-none-match\": validator } : {}),\n        },\n        signal,\n    }",
+              "{ attemptTimeoutMs: REMOTE_CATALOG_ATTEMPT_TIMEOUT_MS }"
+            ]
+          },
+          {
+            "line": 62,
+            "column": 27,
+            "callee": "getPiUserAgent",
+            "arguments": [
+              "VERSION"
+            ]
+          },
+          {
+            "line": 73,
+            "column": 26,
+            "callee": "mergeModels",
+            "arguments": [
+              "provider.getModels()",
+              "dynamicModels.filter((model) => isModelType(model, \"chat\"))"
+            ]
+          },
+          {
+            "line": 73,
+            "column": 38,
+            "callee": "provider.getModels",
+            "arguments": []
+          },
+          {
+            "line": 73,
+            "column": 60,
+            "callee": "dynamicModels.filter",
+            "arguments": [
+              "(model) => isModelType(model, \"chat\")"
+            ]
+          },
+          {
+            "line": 73,
+            "column": 92,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"chat\""
+            ]
+          },
+          {
+            "line": 74,
+            "column": 29,
+            "callee": "mergeModels",
+            "arguments": [
+              "provider.getAllModels?.() ?? provider.getModels()",
+              "dynamicModels"
+            ]
+          },
+          {
+            "line": 74,
+            "column": 41,
+            "callee": "provider.getAllModels",
+            "arguments": []
+          },
+          {
+            "line": 74,
+            "column": 70,
+            "callee": "provider.getModels",
+            "arguments": []
+          },
+          {
+            "line": 77,
+            "column": 30,
+            "callee": "remoteModels(stored, localGeneratedAt).filter",
+            "arguments": [
+              "(model) => model.provider === provider.id"
+            ]
+          },
+          {
+            "line": 77,
+            "column": 30,
+            "callee": "remoteModels",
+            "arguments": [
+              "stored",
+              "localGeneratedAt"
+            ]
+          },
+          {
+            "line": 78,
+            "column": 25,
+            "callee": "context.publish",
+            "arguments": [
+              "{\n                update: () => {\n                    dynamicModels = restored;\n                },\n            }"
+            ]
+          },
+          {
+            "line": 93,
+            "column": 17,
+            "callee": "Date.now",
+            "arguments": []
+          },
+          {
+            "line": 99,
+            "column": 36,
+            "callee": "requestCatalog",
+            "arguments": [
+              "provider.id",
+              "catalogBaseUrl",
+              "context.signal",
+              "validator"
+            ]
+          },
+          {
+            "line": 102,
+            "column": 31,
+            "callee": "Date.now",
+            "arguments": []
+          },
+          {
+            "line": 106,
+            "column": 23,
+            "callee": "context.publish",
+            "arguments": [
+              "{ persist: { ...stored, checkedAt } }"
+            ]
+          },
+          {
+            "line": 110,
+            "column": 23,
+            "callee": "context.publish",
+            "arguments": [
+              "{\n                    persist: {\n                        ...(stored ?? { models: [] }),\n                        checkedAt,\n                        lastModified: 0,\n                        etag: undefined,\n                    },\n                }"
+            ]
+          },
+          {
+            "line": 123,
+            "column": 23,
+            "callee": "context.publish",
+            "arguments": [
+              "{ persist: { ...(stored ?? { models: [] }), checkedAt } }"
+            ]
+          },
+          {
+            "line": 126,
+            "column": 35,
+            "callee": "readCatalog",
+            "arguments": [
+              "provider.id",
+              "response"
+            ]
+          },
+          {
+            "line": 130,
+            "column": 31,
+            "callee": "remoteModels",
+            "arguments": [
+              "entry",
+              "localGeneratedAt"
+            ]
+          },
+          {
+            "line": 131,
+            "column": 19,
+            "callee": "context.publish",
+            "arguments": [
+              "{\n                persist: entry,\n                update: () => {\n                    dynamicModels = published;\n                },\n            }"
+            ]
+          },
+          {
+            "line": 150,
+            "column": 33,
+            "callee": "provider.getAllModels",
+            "arguments": []
+          },
+          {
+            "line": 150,
+            "column": 62,
+            "callee": "provider.getModels",
+            "arguments": []
+          },
+          {
+            "line": 151,
+            "column": 78,
+            "callee": "builtinModels",
+            "arguments": []
+          },
+          {
+            "line": 154,
+            "column": 26,
+            "callee": "getAllModels().filter",
+            "arguments": [
+              "(model) => isModelType(model, \"chat\")"
+            ]
+          },
+          {
+            "line": 154,
+            "column": 26,
+            "callee": "getAllModels",
+            "arguments": []
+          },
+          {
+            "line": 154,
+            "column": 59,
+            "callee": "isModelType",
+            "arguments": [
+              "model",
+              "\"chat\""
+            ]
+          },
+          {
+            "line": 157,
+            "column": 30,
+            "callee": "(context.stored?.models ?? []).filter",
+            "arguments": [
+              "(model) => model.provider === provider.id"
+            ]
+          },
+          {
+            "line": 158,
+            "column": 25,
+            "callee": "context.publish",
+            "arguments": [
+              "{\n                update: () => {\n                    personalModels = restored;\n                },\n            }"
+            ]
+          },
+          {
+            "line": 167,
+            "column": 36,
+            "callee": "requestCatalog",
+            "arguments": [
+              "provider.id",
+              "catalogBaseUrl",
+              "context.signal"
+            ]
+          },
+          {
+            "line": 174,
+            "column": 39,
+            "callee": "readCatalog",
+            "arguments": [
+              "provider.id",
+              "response"
+            ]
+          },
+          {
+            "line": 175,
+            "column": 21,
+            "callee": "isNewer",
+            "arguments": [
+              "catalog.lastModified",
+              "localGeneratedAt"
+            ]
+          },
+          {
+            "line": 178,
+            "column": 40,
+            "callee": "personalize",
+            "arguments": [
+              "mergeModels(builtinModels(), remote)",
+              "context"
+            ]
+          },
+          {
+            "line": 178,
+            "column": 52,
+            "callee": "mergeModels",
+            "arguments": [
+              "builtinModels()",
+              "remote"
+            ]
+          },
+          {
+            "line": 178,
+            "column": 64,
+            "callee": "builtinModels",
+            "arguments": []
+          },
+          {
+            "line": 181,
+            "column": 19,
+            "callee": "context.publish",
+            "arguments": [
+              "{\n                persist: { models: personalized, checkedAt: Date.now() },\n                update: () => {\n                    personalModels = personalized;\n                },\n            }"
+            ]
+          },
+          {
+            "line": 182,
+            "column": 61,
+            "callee": "Date.now",
+            "arguments": []
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full190 lines. Remote and personalized stored catalog restore/publication/network/timing/revalidation/HTTP guards; three Error definitions. Normal refresh map/UI hides detail, raw API may inspect. Catalog model metadata/name payload protected; HTTP JSON/URL/retry/native/personalize/publish exceptions external. No request executed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+        "read_lines": [
+          1,
+          362
+        ],
+        "string_template_occurrences": 88,
+        "fixed_rows": 46,
+        "excluded_occurrences": 42,
+        "protected_regex_literals": 1,
+        "regex_census_sha256": "e86e0f154bc4431c9424060fefad2aa12d188aa8a6bf7936a9bfe83b699282a5",
+        "error_constructors": [],
+        "all_new_expressions": [
+          {
+            "line": 142,
+            "column": 25,
+            "callee": "AbortController",
+            "source": "new AbortController()"
+          }
+        ],
+        "throw_statements": [],
+        "catch_clauses": [
+          {
+            "line": 221,
+            "column": 9,
+            "source": "catch {\n            // Extension failures fall back to pi's own decision.\n        }"
+          },
+          {
+            "line": 259,
+            "column": 9,
+            "source": "catch {\n            // Cache warming is best-effort and must not affect the active agent run.\n        }"
+          }
+        ],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "@earendil-works/pi-ai"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "@earendil-works/pi-ai/utils/provider-env"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 19,
+            "column": 12,
+            "callee": "Math.max",
+            "arguments": [
+              "1",
+              "Math.floor(Math.min(ttlMs * 0.9, ttlMs - 10_000))"
+            ]
+          },
+          {
+            "line": 19,
+            "column": 24,
+            "callee": "Math.floor",
+            "arguments": [
+              "Math.min(ttlMs * 0.9, ttlMs - 10_000)"
+            ]
+          },
+          {
+            "line": 19,
+            "column": 35,
+            "callee": "Math.min",
+            "arguments": [
+              "ttlMs * 0.9",
+              "ttlMs - 10_000"
+            ]
+          },
+          {
+            "line": 28,
+            "column": 10,
+            "callee": "getProviderEnvValue",
+            "arguments": [
+              "\"PI_CACHE_RETENTION\"",
+              "options?.env"
+            ]
+          },
+          {
+            "line": 67,
+            "column": 12,
+            "callee": "calculateCost",
+            "arguments": [
+              "model",
+              "usage"
+            ]
+          },
+          {
+            "line": 92,
+            "column": 13,
+            "callee": "this.getMode",
+            "arguments": []
+          },
+          {
+            "line": 97,
+            "column": 14,
+            "callee": "run.isCurrent",
+            "arguments": []
+          },
+          {
+            "line": 99,
+            "column": 26,
+            "callee": "this.evaluate",
+            "arguments": [
+              "run"
+            ]
+          },
+          {
+            "line": 113,
+            "column": 9,
+            "callee": "this.clearRun",
+            "arguments": []
+          },
+          {
+            "line": 114,
+            "column": 22,
+            "callee": "this.getMode",
+            "arguments": []
+          },
+          {
+            "line": 116,
+            "column": 13,
+            "callee": "this.stop",
+            "arguments": [
+              "\"cache warming disabled\""
+            ]
+          },
+          {
+            "line": 119,
+            "column": 14,
+            "callee": "isReplayable",
+            "arguments": [
+              "request.model",
+              "request.options"
+            ]
+          },
+          {
+            "line": 120,
+            "column": 13,
+            "callee": "this.stop",
+            "arguments": [
+              "\"request cannot be replayed safely\""
+            ]
+          },
+          {
+            "line": 123,
+            "column": 23,
+            "callee": "getPromptCacheTtlMs",
+            "arguments": [
+              "request.model",
+              "request.options"
+            ]
+          },
+          {
+            "line": 125,
+            "column": 13,
+            "callee": "this.stop",
+            "arguments": [
+              "request.options.cacheRetention === \"none\"\n                ? \"request disabled prompt caching\"\n                : \"cache lifetime unavailable\""
+            ]
+          },
+          {
+            "line": 130,
+            "column": 25,
+            "callee": "getCacheWarmingDelayMs",
+            "arguments": [
+              "ttlMs"
+            ]
+          },
+          {
+            "line": 132,
+            "column": 13,
+            "callee": "this.stop",
+            "arguments": [
+              "\"cache lifetime unavailable\""
+            ]
+          },
+          {
+            "line": 141,
+            "column": 24,
+            "callee": "Date.now",
+            "arguments": []
+          },
+          {
+            "line": 147,
+            "column": 9,
+            "callee": "this.schedule",
+            "arguments": [
+              "this.run"
+            ]
+          },
+          {
+            "line": 153,
+            "column": 13,
+            "callee": "this.getMode",
+            "arguments": []
+          },
+          {
+            "line": 154,
+            "column": 13,
+            "callee": "this.stop",
+            "arguments": [
+              "\"agent run settled\""
+            ]
+          },
+          {
+            "line": 159,
+            "column": 42,
+            "callee": "Date.now",
+            "arguments": []
+          },
+          {
+            "line": 160,
+            "column": 13,
+            "callee": "this.stop",
+            "arguments": [
+              "\"30-minute idle safety limit reached\""
+            ]
+          },
+          {
+            "line": 168,
+            "column": 24,
+            "callee": "this.getModeStopReason",
+            "arguments": [
+              "run"
+            ]
+          },
+          {
+            "line": 170,
+            "column": 13,
+            "callee": "this.stop",
+            "arguments": [
+              "reason"
+            ]
+          },
+          {
+            "line": 173,
+            "column": 9,
+            "callee": "this.stop",
+            "arguments": [
+              "\"inactive\""
+            ]
+          },
+          {
+            "line": 181,
+            "column": 13,
+            "callee": "clearTimeout",
+            "arguments": [
+              "run.timer"
+            ]
+          },
+          {
+            "line": 182,
+            "column": 9,
+            "callee": "run.controller.abort",
+            "arguments": []
+          },
+          {
+            "line": 185,
+            "column": 9,
+            "callee": "this.clearRun",
+            "arguments": []
+          },
+          {
+            "line": 190,
+            "column": 26,
+            "callee": "Date.now",
+            "arguments": []
+          },
+          {
+            "line": 194,
+            "column": 50,
+            "callee": "Math.floor",
+            "arguments": [
+              "(run.ttlMs - run.delayMs) / 2"
+            ]
+          },
+          {
+            "line": 196,
+            "column": 42,
+            "callee": "Date.now",
+            "arguments": []
+          },
+          {
+            "line": 197,
+            "column": 13,
+            "callee": "this.stop",
+            "arguments": [
+              "run.phase === \"idle\" ? \"30-minute idle safety limit reached\" : \"one-hour safety limit reached\""
+            ]
+          },
+          {
+            "line": 200,
+            "column": 21,
+            "callee": "setTimeout",
+            "arguments": [
+              "() => void this.refresh(run)",
+              "Math.max(0, run.nextWarmAt - Date.now())"
+            ]
+          },
+          {
+            "line": 200,
+            "column": 43,
+            "callee": "this.refresh",
+            "arguments": [
+              "run"
+            ]
+          },
+          {
+            "line": 200,
+            "column": 62,
+            "callee": "Math.max",
+            "arguments": [
+              "0",
+              "run.nextWarmAt - Date.now()"
+            ]
+          },
+          {
+            "line": 200,
+            "column": 91,
+            "callee": "Date.now",
+            "arguments": []
+          },
+          {
+            "line": 201,
+            "column": 9,
+            "callee": "run.timer.unref",
+            "arguments": []
+          },
+          {
+            "line": 205,
+            "column": 14,
+            "callee": "this.validateRun",
+            "arguments": [
+              "run"
+            ]
+          },
+          {
+            "line": 207,
+            "column": 13,
+            "callee": "this.refreshDeadlineMissed",
+            "arguments": [
+              "run"
+            ]
+          },
+          {
+            "line": 209,
+            "column": 26,
+            "callee": "this.evaluate",
+            "arguments": [
+              "run"
+            ]
+          },
+          {
+            "line": 213,
+            "column": 28,
+            "callee": "this.decide",
+            "arguments": [
+              "{\n                type: \"cache_warming_decision\",\n                warmCost,\n                missCost,\n                continuationProbability,\n                action,\n            }"
+            ]
+          },
+          {
+            "line": 224,
+            "column": 14,
+            "callee": "this.validateRun",
+            "arguments": [
+              "run"
+            ]
+          },
+          {
+            "line": 224,
+            "column": 39,
+            "callee": "this.refreshDeadlineMissed",
+            "arguments": [
+              "run"
+            ]
+          },
+          {
+            "line": 233,
+            "column": 13,
+            "callee": "this.stop",
+            "arguments": [
+              "reason",
+              "{ decision, extensionOverride }"
+            ]
+          },
+          {
+            "line": 237,
+            "column": 27,
+            "callee": "this.sessionManager.getSessionId",
+            "arguments": []
+          },
+          {
+            "line": 245,
+            "column": 47,
+            "callee": "this.models.streamSimple(run.model, run.context, admittedOptions).result",
+            "arguments": []
+          },
+          {
+            "line": 245,
+            "column": 47,
+            "callee": "this.models.streamSimple",
+            "arguments": [
+              "run.model",
+              "run.context",
+              "admittedOptions"
+            ]
+          },
+          {
+            "line": 247,
+            "column": 25,
+            "callee": "run.options.flowCacheWarm",
+            "arguments": [
+              "options",
+              "send"
+            ]
+          },
+          {
+            "line": 248,
+            "column": 25,
+            "callee": "send",
+            "arguments": [
+              "options"
+            ]
+          },
+          {
+            "line": 252,
+            "column": 17,
+            "callee": "this.sessionManager.getSessionId",
+            "arguments": []
+          },
+          {
+            "line": 253,
+            "column": 31,
+            "callee": "this.sessionManager.appendUsage",
+            "arguments": [
+              "\"cache_warm\"",
+              "message.provider",
+              "message.responseModel ?? message.model",
+              "message.usage",
+              "extensionOverride ? \"extension override\" : undefined"
+            ]
+          },
+          {
+            "line": 254,
+            "column": 17,
+            "callee": "this.onWarmed",
+            "arguments": [
+              "entry"
+            ]
+          },
+          {
+            "line": 256,
+            "column": 18,
+            "callee": "this.validateRun",
+            "arguments": [
+              "run"
+            ]
+          },
+          {
+            "line": 263,
+            "column": 13,
+            "callee": "this.schedule",
+            "arguments": [
+              "run"
+            ]
+          },
+          {
+            "line": 266,
+            "column": 13,
+            "callee": "Date.now",
+            "arguments": []
+          },
+          {
+            "line": 268,
+            "column": 9,
+            "callee": "this.stop",
+            "arguments": [
+              "\"cache refresh deadline missed\""
+            ]
+          },
+          {
+            "line": 274,
+            "column": 24,
+            "callee": "this.getModeStopReason",
+            "arguments": [
+              "run"
+            ]
+          },
+          {
+            "line": 274,
+            "column": 57,
+            "callee": "run.isCurrent",
+            "arguments": []
+          },
+          {
+            "line": 277,
+            "column": 9,
+            "callee": "this.stop",
+            "arguments": [
+              "reason"
+            ]
+          },
+          {
+            "line": 281,
+            "column": 22,
+            "callee": "this.getMode",
+            "arguments": []
+          },
+          {
+            "line": 290,
+            "column": 30,
+            "callee": "lastPromptTokens",
+            "arguments": [
+              "this.sessionManager.getBranch()"
+            ]
+          },
+          {
+            "line": 290,
+            "column": 47,
+            "callee": "this.sessionManager.getBranch",
+            "arguments": []
+          },
+          {
+            "line": 291,
+            "column": 30,
+            "callee": "price",
+            "arguments": [
+              "model",
+              "{ cacheRead: promptTokens }"
+            ]
+          },
+          {
+            "line": 292,
+            "column": 31,
+            "callee": "price",
+            "arguments": [
+              "model",
+              "model.cost.cacheWrite > 0 ? { cacheWrite: promptTokens } : { input: promptTokens }"
+            ]
+          },
+          {
+            "line": 293,
+            "column": 26,
+            "callee": "price",
+            "arguments": [
+              "model",
+              "{ cacheRead: promptTokens, output: 1 }"
+            ]
+          },
+          {
+            "line": 294,
+            "column": 26,
+            "callee": "Math.max",
+            "arguments": [
+              "0",
+              "cacheMissCost - cacheHitCost"
+            ]
+          },
+          {
+            "line": 310,
+            "column": 29,
+            "callee": "Math.abs(value).toFixed",
+            "arguments": [
+              "3"
+            ]
+          },
+          {
+            "line": 310,
+            "column": 29,
+            "callee": "Math.abs",
+            "arguments": [
+              "value"
+            ]
+          },
+          {
+            "line": 310,
+            "column": 64,
+            "callee": "value.toFixed",
+            "arguments": [
+              "3"
+            ]
+          },
+          {
+            "line": 315,
+            "column": 25,
+            "callee": "Math.round",
+            "arguments": [
+              "decision.continuationProbability * 100"
+            ]
+          },
+          {
+            "line": 320,
+            "column": 52,
+            "callee": "formatDollars",
+            "arguments": [
+              "decision.expectedSavings"
+            ]
+          },
+          {
+            "line": 320,
+            "column": 110,
+            "callee": "CACHE_WARMING_MINIMUM_EXPECTED_SAVINGS.toFixed",
+            "arguments": [
+              "3"
+            ]
+          },
+          {
+            "line": 325,
+            "column": 28,
+            "callee": "Math.ceil",
+            "arguments": [
+              "(nextWarmAt - now) / 1000"
+            ]
+          },
+          {
+            "line": 326,
+            "column": 19,
+            "callee": "Math.floor",
+            "arguments": [
+              "remainingSeconds / 3600"
+            ]
+          },
+          {
+            "line": 328,
+            "column": 21,
+            "callee": "Math.floor",
+            "arguments": [
+              "remainingSeconds / 60"
+            ]
+          },
+          {
+            "line": 332,
+            "column": 9,
+            "callee": "parts.push",
+            "arguments": [
+              "`${hours}h`"
+            ]
+          },
+          {
+            "line": 334,
+            "column": 9,
+            "callee": "parts.push",
+            "arguments": [
+              "`${minutes}m`"
+            ]
+          },
+          {
+            "line": 336,
+            "column": 9,
+            "callee": "parts.push",
+            "arguments": [
+              "`${seconds}s`"
+            ]
+          },
+          {
+            "line": 337,
+            "column": 27,
+            "callee": "parts.join",
+            "arguments": [
+              "\" \""
+            ]
+          },
+          {
+            "line": 340,
+            "column": 56,
+            "callee": "Date.now",
+            "arguments": []
+          },
+          {
+            "line": 348,
+            "column": 34,
+            "callee": "formatCacheWarmingEconomics",
+            "arguments": [
+              "decision"
+            ]
+          },
+          {
+            "line": 349,
+            "column": 14,
+            "callee": "formatCacheWarmingEconomics",
+            "arguments": [
+              "decision"
+            ]
+          },
+          {
+            "line": 354,
+            "column": 15,
+            "callee": "formatCacheWarmingDecisionTime",
+            "arguments": [
+              "status.nextWarmAt",
+              "now"
+            ]
+          },
+          {
+            "line": 359,
+            "column": 18,
+            "callee": "entry.usage.cost.total.toFixed(6).replace",
+            "arguments": [
+              "/(\\.\\d{3}\\d*?)0+$/",
+              "\"$1\""
+            ]
+          },
+          {
+            "line": 359,
+            "column": 18,
+            "callee": "entry.usage.cost.total.toFixed",
+            "arguments": [
+              "6"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full362 installed patched lines. All inactive reasons, decision action tokens consumed as details, money/time/economics/status/usage fragments partitioned. Two catches: decide failure falls back original action; provider/Flow/append/onWarmed exceptions swallowed. Getter/validate/evaluate/schedule outside catches may still throw external Errors. Appended usage and showCacheMissNotices UI gate distinct; no main prompt/model output body stored by warmer. No timers/requests/state executed."
+      },
+      {
+        "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/client-identity.js",
+        "read_lines": [
+          1,
+          15
+        ],
+        "string_template_occurrences": 4,
+        "fixed_rows": 0,
+        "excluded_occurrences": 4,
+        "protected_regex_literals": 0,
+        "regex_census_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "error_constructors": [],
+        "all_new_expressions": [],
+        "throw_statements": [],
+        "catch_clauses": [],
+        "direct_imports": [
+          {
+            "line": 1,
+            "column": 1,
+            "specifier": "@earendil-works/pi-ai"
+          },
+          {
+            "line": 2,
+            "column": 1,
+            "specifier": "../config.js"
+          },
+          {
+            "line": 3,
+            "column": 1,
+            "specifier": "./telemetry.js"
+          }
+        ],
+        "re_exports": [],
+        "output_or_native_callback_calls": [
+          {
+            "line": 12,
+            "column": 22,
+            "callee": "isInstallTelemetryEnabled",
+            "arguments": [
+              "settingsManager"
+            ]
+          }
+        ],
+        "protected_control_occurrences": [],
+        "review": "Full15 lines. userAgent detailed and PI attribution are protocol metadata, not own user-facing prose. Telemetry setting controls attribution null. Foreign PI_ATTRIBUTION/VERSION/environment/provider serialization payload pending."
+      }
+    ],
+    "method": "Full6 finite local bodies1242 lines read; every string/template partitioned, full Error/new/throw/catch/regex/import/export/control/all-call census. Actual caller-specific composition/extension diagnostics/auth normalization/API/secret callback/cache status/usage/file/JSON/RPC/HTML boundaries and suppression qualified. No audited module/provider/credential/store/native/model/network/browser/TTY/timer/config/command execution."
+  },
+  "remaining_partial_sources": [],
+  "scope_census": {
+    "package": "@earendil-works/pi-coding-agent",
+    "version": "1.4.0",
+    "runtime_files": [
+      "dist/core/cache-warmer.js",
+      "dist/core/client-identity.js",
+      "dist/core/model-registry.js",
+      "dist/core/provider-composer.js",
+      "dist/core/remote-catalog-provider.js",
+      "dist/core/runtime-credentials.js"
+    ],
+    "associated_nonruntime_files": [
+      "dist/core/cache-warmer.d.ts",
+      "dist/core/cache-warmer.d.ts.map",
+      "dist/core/cache-warmer.js.map",
+      "dist/core/client-identity.d.ts",
+      "dist/core/client-identity.d.ts.map",
+      "dist/core/client-identity.js.map",
+      "dist/core/model-registry.d.ts",
+      "dist/core/model-registry.d.ts.map",
+      "dist/core/model-registry.js.map",
+      "dist/core/provider-composer.d.ts",
+      "dist/core/provider-composer.d.ts.map",
+      "dist/core/provider-composer.js.map",
+      "dist/core/remote-catalog-provider.d.ts",
+      "dist/core/remote-catalog-provider.d.ts.map",
+      "dist/core/remote-catalog-provider.js.map",
+      "dist/core/runtime-credentials.d.ts",
+      "dist/core/runtime-credentials.d.ts.map",
+      "dist/core/runtime-credentials.js.map"
+    ]
+  },
+  "prior_ownership": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/provider-composer.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0156",
+      "new_full_body_owner": "pi-provider-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-registry.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0146",
+      "new_full_body_owner": "pi-provider-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/runtime-credentials.js",
+      "historical_census_status": "bounded-support-body-pending",
+      "historical_census_row_id": "pi.runtime-census.0161",
+      "new_full_body_owner": "pi-provider-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/remote-catalog-provider.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0158",
+      "new_full_body_owner": "pi-provider-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/cache-warmer.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0109",
+      "new_full_body_owner": "pi-provider-support-scope.csv",
+      "prior_full_body_claim": false
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/client-identity.js",
+      "historical_census_status": "body-review-pending",
+      "historical_census_row_id": "pi.runtime-census.0110",
+      "new_full_body_owner": "pi-provider-support-scope.csv",
+      "prior_full_body_claim": false
+    }
+  ],
+  "historical_ownership_census": {
+    "source": "review/text-inventory/pi-runtime-census.csv",
+    "sha256": "773f21e9b105575038010c6cd30dafa70f396105fd579adeca11299007863225",
+    "status": "historical pending snapshot unchanged"
+  },
+  "pending_producer_boundaries": [
+    {
+      "source": "external:@earendil-works/pi-ai",
+      "status": "three-bounded-two-tree-hash-support-files-no-supplied-canonical-archives-or-full-body-closure"
+    },
+    {
+      "source": "external:provider-catalog-OAuth-credential-native-OS-command-browser-model-protocol-client",
+      "status": "dependency-implementation-data-and-error-producers-extra-consumers-pending"
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/bundle/cli.js",
+      "status": "compiled-bundle-full-body-pending-not-closed-by-unbundled-source-review"
+    }
+  ],
+  "limits": [
+    "Six full local runtime bodies1242 lines56292 bytes, immutable BASE346/native1.4.0; fetched1fda source-side delta not retargeted or applied here. New full local owner only; historical census remains frozen, no whole native package/compiled/foreign runtime closure.",
+    "Composer structure Errors can be preempted by ModelConfig, caught with base fallback and recorded startup/reload model diagnostics, or synchronously thrown for extension validate. No-auth guard375 unreachable for stable plain objects because API-key early return requires same truthy OAuth; unstable raw API getters retained.",
+    "Auth/source labels API metadata and native view distinct: stored credential normally rendered configured; configured source codes can paint raw suffix; env source replaced by variable label. English authHeader comparison is protected control, producer is positive. No secret/header/env/command/provider values translated or executed.",
+    "Cache status /session snapshots; usage notice showCacheMissNotices guarded and record success guarded separately. Provider/Flow/append/onWarmed exceptions inside refresh catch swallowed; decision errors fall back. Getter/validation/schedule/evaluate/external callback exceptions outside those catches not globally suppressed.",
+    "Remote catalog Error retained in nonabort refresh result map; usual native UI prints provider-key/cached warning instead of individual headline. JSON/HTTP/Models store/personalize/publication/native exceptions and catalog metadata payload pending. No network or cache operations executed.",
+    "Image/classifier errors resolved API errorMessage result, not main-chat assistant by default. Chat lazy setup error becomes assistant packet and can reach TUI/print stderr/JSON/RPC/HTML when admitted/saved. Dynamic provider/API implementations pending.",
+    "Three supplementary pi-ai exact1.4.0/two-tree bounded support files outside supplied canonical Agent/TUI archives; Models.refresh/check/error-result/lazy handling only, no whole pi-ai body closure.",
+    "Source normal strings TypeScript decoded; templates raw source escapes/interpolation. API/technical source tokens dual role called out; opaque IDs/protocol/headers/schema/config/state/secret model metadata protected. No prior/shared/product/dependency/census/index files edited."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-provider-support.cjs",
+  "reviewed_artifact_sha256": {
+    "pi-provider-support.csv": "6ffb9a1cb677b11614748da3232e330e3533297e3679a1cf3d29fcd56f9e28ab",
+    "pi-provider-support-boundaries.csv": "a834a758f2ae5978bb20a6098500c0e070323b28a3696cd04a661f14587b3142",
+    "pi-provider-support-scope.csv": "c142e5d9d1d32a7a115d40a8841a282b8b6b44b11278bc544a4e2d2545f20abf",
+    "pi-provider-support-exclusions.csv": "bf533342e64e397e3fe25c1398959d43928942cc95149223f4933f07ff3774b8"
+  },
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/core/provider-composer.js",
+            "archive_sha256": "7ec4af06726158fa34377bed34fbb378d2d39c5c9d51ae5640ac459a4c78bec4",
+            "root_sha256": "7ec4af06726158fa34377bed34fbb378d2d39c5c9d51ae5640ac459a4c78bec4",
+            "cli_nested_sha256": "7ec4af06726158fa34377bed34fbb378d2d39c5c9d51ae5640ac459a4c78bec4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/model-registry.js",
+            "archive_sha256": "588fa2d8df563fe0f41c99e54ecad1473cd325937b208cc1c3e103a8a032d0a1",
+            "root_sha256": "588fa2d8df563fe0f41c99e54ecad1473cd325937b208cc1c3e103a8a032d0a1",
+            "cli_nested_sha256": "588fa2d8df563fe0f41c99e54ecad1473cd325937b208cc1c3e103a8a032d0a1",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/runtime-credentials.js",
+            "archive_sha256": "2bf389ca2b04bd4dcee56433ca845cd8d9d96d0ccf84d2d0e9ad2a5e3957bda1",
+            "root_sha256": "2bf389ca2b04bd4dcee56433ca845cd8d9d96d0ccf84d2d0e9ad2a5e3957bda1",
+            "cli_nested_sha256": "2bf389ca2b04bd4dcee56433ca845cd8d9d96d0ccf84d2d0e9ad2a5e3957bda1",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/remote-catalog-provider.js",
+            "archive_sha256": "17e8f3482422aed20ba638b99a8862405f7d3be51c4ffc9eb7ffff1b030a421b",
+            "root_sha256": "17e8f3482422aed20ba638b99a8862405f7d3be51c4ffc9eb7ffff1b030a421b",
+            "cli_nested_sha256": "17e8f3482422aed20ba638b99a8862405f7d3be51c4ffc9eb7ffff1b030a421b",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/cache-warmer.js",
+            "archive_sha256": "9c4b000930d6d3c567073102f6b6a52660110bb0f79cf78dd72c4dd1ebc87fc0",
+            "root_sha256": "0f89726acfaa9a843696c175f96af7f1cc41bb53af420c88f6f03ef010a624b2",
+            "cli_nested_sha256": "0f89726acfaa9a843696c175f96af7f1cc41bb53af420c88f6f03ef010a624b2",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/client-identity.js",
+            "archive_sha256": "6bd86440b910e96e512215d02a883677bd8562dba5e80951289b50e599dcb2d6",
+            "root_sha256": "6bd86440b910e96e512215d02a883677bd8562dba5e80951289b50e599dcb2d6",
+            "cli_nested_sha256": "6bd86440b910e96e512215d02a883677bd8562dba5e80951289b50e599dcb2d6",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/model-runtime.js",
+            "archive_sha256": "44d8017928eff6721d5a56b4e71f98bcafb124f5aa6e7d3f016491e11fcf6461",
+            "root_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+            "cli_nested_sha256": "101ba809f1cf6908a630c1deabd49a208e97280377b2a4a03de6364dd5eba6e0",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/resolve-config-value.js",
+            "archive_sha256": "01fdb1673990635bb419c7418eefa298b6a1c6fbb3c6193d3b05a4902e51992d",
+            "root_sha256": "01fdb1673990635bb419c7418eefa298b6a1c6fbb3c6193d3b05a4902e51992d",
+            "cli_nested_sha256": "01fdb1673990635bb419c7418eefa298b6a1c6fbb3c6193d3b05a4902e51992d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/agent-session-services.js",
+            "archive_sha256": "20b7aa4b0657b53fb522ea051df26f72901802e03cc06c89e0a8926388bca601",
+            "root_sha256": "2dbf32d506bb6d765224450602fb1a85be1ff3d182cca6d8b25eef6cf1416858",
+            "cli_nested_sha256": "2dbf32d506bb6d765224450602fb1a85be1ff3d182cca6d8b25eef6cf1416858",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/sdk.js",
+            "archive_sha256": "992a539079e42f9dc577064e971afa9972a01dbffedb035f7cb68ab204d36964",
+            "root_sha256": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609",
+            "cli_nested_sha256": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/agent-session.js",
+            "archive_sha256": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
+            "root_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/session-manager.js",
+            "archive_sha256": "046b6a1109ac3f0ed893bb85bf0648709362fa926a5da75761216cf2fcf9d926",
+            "root_sha256": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a",
+            "cli_nested_sha256": "210fba8d67ab587aaecdde02af50301bc447ac792d1d47e6a257c54fc3af813a",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/interactive-mode.js",
+            "archive_sha256": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+            "root_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/interactive/components/oauth-selector.js",
+            "archive_sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+            "root_sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+            "cli_nested_sha256": "9aa24ad74415288998e98b0a53b1e9fdf3c2eea2d060af4517486045db83d99d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/components/login-dialog.js",
+            "archive_sha256": "2b00ad41244cb1dc63a9fcbfca855a00e2acbc68ec2bc4249024cefdc1a7a157",
+            "root_sha256": "2b00ad41244cb1dc63a9fcbfca855a00e2acbc68ec2bc4249024cefdc1a7a157",
+            "cli_nested_sha256": "2b00ad41244cb1dc63a9fcbfca855a00e2acbc68ec2bc4249024cefdc1a7a157",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/components/assistant-message.js",
+            "archive_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+            "root_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+            "cli_nested_sha256": "edbd1e712234609d2ad1078edcf960e3b6f549669075f1c5d1a7a4481e2b3d19",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/print-mode.js",
+            "archive_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "root_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "cli_nested_sha256": "bb070a05a16f14d124908a1b374fc714a78f89ca8a1a71add20a09e7e1c9f13d",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/rpc/rpc-mode.js",
+            "archive_sha256": "631697cd35928fc827f4a423538c43ff227b8cbf63c2a2f11060616f55eba6db",
+            "root_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+            "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/export-html/template.js",
+            "archive_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "root_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "cli_nested_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/provider-composer.d.ts",
+            "archive_sha256": "8b6c292d4e346cb2a45186f2b3784102aa9fa5b5bd2096ef6ec4bbb235ddb504",
+            "root_sha256": "8b6c292d4e346cb2a45186f2b3784102aa9fa5b5bd2096ef6ec4bbb235ddb504",
+            "cli_nested_sha256": "8b6c292d4e346cb2a45186f2b3784102aa9fa5b5bd2096ef6ec4bbb235ddb504",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/provider-composer.d.ts.map",
+            "archive_sha256": "acf17428e2c17a2708a256d774cfc710a7c77ebc8cc0addaad0956628303b971",
+            "root_sha256": "acf17428e2c17a2708a256d774cfc710a7c77ebc8cc0addaad0956628303b971",
+            "cli_nested_sha256": "acf17428e2c17a2708a256d774cfc710a7c77ebc8cc0addaad0956628303b971",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/provider-composer.js.map",
+            "archive_sha256": "e57b42bce0a3d24f59919e36577bf5d2ad98f2c04c9b5dffb3af526f9ff93e52",
+            "root_sha256": "e57b42bce0a3d24f59919e36577bf5d2ad98f2c04c9b5dffb3af526f9ff93e52",
+            "cli_nested_sha256": "e57b42bce0a3d24f59919e36577bf5d2ad98f2c04c9b5dffb3af526f9ff93e52",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/model-registry.d.ts",
+            "archive_sha256": "ef3a3fb74b9b15bd7ca58c187367382116db6f24ea7fbda2b56898c849ef9aad",
+            "root_sha256": "ef3a3fb74b9b15bd7ca58c187367382116db6f24ea7fbda2b56898c849ef9aad",
+            "cli_nested_sha256": "ef3a3fb74b9b15bd7ca58c187367382116db6f24ea7fbda2b56898c849ef9aad",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/model-registry.d.ts.map",
+            "archive_sha256": "9cf3cae95f0246337bb5d2a4346fe680e2abf519f687f1d633e69a8a28e93203",
+            "root_sha256": "9cf3cae95f0246337bb5d2a4346fe680e2abf519f687f1d633e69a8a28e93203",
+            "cli_nested_sha256": "9cf3cae95f0246337bb5d2a4346fe680e2abf519f687f1d633e69a8a28e93203",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/model-registry.js.map",
+            "archive_sha256": "857e8a9d3059a59ee3095cfe70b7464bfdf2c1a4575522add5c849ec459c1ab0",
+            "root_sha256": "857e8a9d3059a59ee3095cfe70b7464bfdf2c1a4575522add5c849ec459c1ab0",
+            "cli_nested_sha256": "857e8a9d3059a59ee3095cfe70b7464bfdf2c1a4575522add5c849ec459c1ab0",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/runtime-credentials.d.ts",
+            "archive_sha256": "322071908dadf1340fa1a86e1849b4aa4b29ce2996110cf3dfab43ba988eb140",
+            "root_sha256": "322071908dadf1340fa1a86e1849b4aa4b29ce2996110cf3dfab43ba988eb140",
+            "cli_nested_sha256": "322071908dadf1340fa1a86e1849b4aa4b29ce2996110cf3dfab43ba988eb140",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/runtime-credentials.d.ts.map",
+            "archive_sha256": "f7b035e2d1f2b0c8c551e97943c6157b5dd027f5bfe426e89965ea1d6dcb3daa",
+            "root_sha256": "f7b035e2d1f2b0c8c551e97943c6157b5dd027f5bfe426e89965ea1d6dcb3daa",
+            "cli_nested_sha256": "f7b035e2d1f2b0c8c551e97943c6157b5dd027f5bfe426e89965ea1d6dcb3daa",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/runtime-credentials.js.map",
+            "archive_sha256": "ce5b5101d0ea8c506b7eacf6ea32018c7189cab6da00f1f7d2540c98fcba2163",
+            "root_sha256": "ce5b5101d0ea8c506b7eacf6ea32018c7189cab6da00f1f7d2540c98fcba2163",
+            "cli_nested_sha256": "ce5b5101d0ea8c506b7eacf6ea32018c7189cab6da00f1f7d2540c98fcba2163",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/remote-catalog-provider.d.ts",
+            "archive_sha256": "7eea4ffd2e009fb4a57ad43bbac8a5ecb131f70dc727514ab425ca35ec310f09",
+            "root_sha256": "7eea4ffd2e009fb4a57ad43bbac8a5ecb131f70dc727514ab425ca35ec310f09",
+            "cli_nested_sha256": "7eea4ffd2e009fb4a57ad43bbac8a5ecb131f70dc727514ab425ca35ec310f09",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/remote-catalog-provider.d.ts.map",
+            "archive_sha256": "eb02ae687bca79e2180df7ebc362d50d7a1f7f21ca9597a707f817da059ebfca",
+            "root_sha256": "eb02ae687bca79e2180df7ebc362d50d7a1f7f21ca9597a707f817da059ebfca",
+            "cli_nested_sha256": "eb02ae687bca79e2180df7ebc362d50d7a1f7f21ca9597a707f817da059ebfca",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/remote-catalog-provider.js.map",
+            "archive_sha256": "fcb757943404f374d24f61dcd114e3b5926eab2105438a675cc33d41f6aa4bee",
+            "root_sha256": "fcb757943404f374d24f61dcd114e3b5926eab2105438a675cc33d41f6aa4bee",
+            "cli_nested_sha256": "fcb757943404f374d24f61dcd114e3b5926eab2105438a675cc33d41f6aa4bee",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/cache-warmer.d.ts",
+            "archive_sha256": "9ec1f639e8383183ff90247ba78047ff22469fc4639ce92936dd7bcf47358734",
+            "root_sha256": "9ec1f639e8383183ff90247ba78047ff22469fc4639ce92936dd7bcf47358734",
+            "cli_nested_sha256": "9ec1f639e8383183ff90247ba78047ff22469fc4639ce92936dd7bcf47358734",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/cache-warmer.d.ts.map",
+            "archive_sha256": "e3e5dcf403a17613385247e04f90070ed0d13c4f71a4818d51a67fbdf9fa3cee",
+            "root_sha256": "e3e5dcf403a17613385247e04f90070ed0d13c4f71a4818d51a67fbdf9fa3cee",
+            "cli_nested_sha256": "e3e5dcf403a17613385247e04f90070ed0d13c4f71a4818d51a67fbdf9fa3cee",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/cache-warmer.js.map",
+            "archive_sha256": "244b5017c83f31785d4bb86b926be1fb1fcfb4f51518f86eb4bca657f93998aa",
+            "root_sha256": "244b5017c83f31785d4bb86b926be1fb1fcfb4f51518f86eb4bca657f93998aa",
+            "cli_nested_sha256": "244b5017c83f31785d4bb86b926be1fb1fcfb4f51518f86eb4bca657f93998aa",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/client-identity.d.ts",
+            "archive_sha256": "d13e427a63c0005bf5127bb3118ceb537cf5a28c9f497e7154556191af65cc68",
+            "root_sha256": "d13e427a63c0005bf5127bb3118ceb537cf5a28c9f497e7154556191af65cc68",
+            "cli_nested_sha256": "d13e427a63c0005bf5127bb3118ceb537cf5a28c9f497e7154556191af65cc68",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/client-identity.d.ts.map",
+            "archive_sha256": "fd35b6ec1f8815d0b416f2a9a8ca62e3885a8d83043a83cb050abf9de244e3ea",
+            "root_sha256": "fd35b6ec1f8815d0b416f2a9a8ca62e3885a8d83043a83cb050abf9de244e3ea",
+            "cli_nested_sha256": "fd35b6ec1f8815d0b416f2a9a8ca62e3885a8d83043a83cb050abf9de244e3ea",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/client-identity.js.map",
+            "archive_sha256": "8cb7497d79015d85d4eb514bbf8cd4819edb22dbdda94e04badd9d3cef256eaa",
+            "root_sha256": "8cb7497d79015d85d4eb514bbf8cd4819edb22dbdda94e04badd9d3cef256eaa",
+            "cli_nested_sha256": "8cb7497d79015d85d4eb514bbf8cd4819edb22dbdda94e04badd9d3cef256eaa",
+            "disposition": "byte-identical-to-archive"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": []
+      }
+    ],
+    "scoped_file_count": 37,
+    "byte_identical_scope_files": 29,
+    "pinned_patch_scope_files": 8,
+    "unresolved_scope_differences": 0
+  }
+}

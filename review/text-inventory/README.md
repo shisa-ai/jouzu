@@ -756,6 +756,23 @@ sources have exact versions/import routes/two-tree hashes, without canonical
 archive or full-body promotion. Twenty corruption controls pass. No shell,
 config, search execution, activation, transcript, model or UI operation executed.
 
+[pi-provider-support.csv](pi-provider-support.csv) adds 83 qualified provider,
+credential, remote-catalog, cache and client-identity definitions, with eleven
+[boundaries](pi-provider-support-boundaries.csv). Six full bodies cover 1,242
+lines; all 222 string/template occurrences are partitioned against 139
+[exclusions](pi-provider-support-exclusions.csv). The
+[scope](pi-provider-support-scope.csv) accounts for eighteen Error constructors
+and four catches. Composition preconditions and unstable-input API guards stay
+qualified. Native refresh warnings can name failed providers without printing
+individual catalog Error headlines. Credential source metadata can be replaced
+or shown as a raw suffix; runtime overrides do not imply persistent storage.
+Cache decisions/provider callbacks have different catch scopes; status/economics
+and warmed-usage notices retain their view and setting gates. Canonical checks
+cover 37 assets: 29 archive matches and eight pinned support patches, with 74
+after-hashes checked. Three bounded Pi AI sources remain outside supplied archive
+and full-body claims. Nineteen corruption controls pass. No provider, credential,
+refresh, cache request, telemetry, model, storage or UI operation executed.
+
 [pi-tools.csv](pi-tools.csv) supplies 172 inherited tool/helper occurrences,
 with 27 [payload boundaries](pi-tools-boundaries.csv). Its
 [scope table](pi-tools-scope.csv) covers 37 complete source bodies: 24 tool and
@@ -1733,6 +1750,7 @@ node review/text-inventory/verify-pi-distribution-support.cjs --node-modules <ro
 node review/text-inventory/verify-pi-mcp-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-mcp-interface.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-config-discovery.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-provider-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
