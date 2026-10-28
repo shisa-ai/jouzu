@@ -1,0 +1,2886 @@
+{
+  "source_pin": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "full_bodies": [
+    "packages/cli/src/pi-ui-localization.ts"
+  ],
+  "reviewed_ranges": {},
+  "anchors": [
+    {
+      "item_id": "PI-UI-ADAPTER-001",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 11,
+      "column": 8,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-002",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 21,
+      "column": 8,
+      "expression": "\"@earendil-works/pi-tui\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-003",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 22,
+      "column": 45,
+      "expression": "\"./cli-messages.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-004",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 23,
+      "column": 36,
+      "expression": "\"./locale-catalog.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-005",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 32,
+      "column": 82,
+      "expression": "\"followUp\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-006",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 32,
+      "column": 95,
+      "expression": "\"cycleThinking\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-007",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 36,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.autocompact.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-008",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 37,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.autocompact.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-009",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 39,
+      "column": 2,
+      "expression": "\"show-images\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-010",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 40,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.showImages.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-011",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 41,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.showImages.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-012",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 43,
+      "column": 2,
+      "expression": "\"image-width-cells\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-013",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 44,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.imageWidthCells.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-014",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 45,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.imageWidthCells.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-015",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 47,
+      "column": 2,
+      "expression": "\"auto-resize-images\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-016",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 48,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.autoResizeImages.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-017",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 49,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.autoResizeImages.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-018",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 51,
+      "column": 2,
+      "expression": "\"block-images\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-019",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 52,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.blockImages.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-020",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 53,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.blockImages.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-021",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 55,
+      "column": 2,
+      "expression": "\"skill-commands\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-022",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 56,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.skillCommands.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-023",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 57,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.skillCommands.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-024",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 59,
+      "column": 2,
+      "expression": "\"show-hardware-cursor\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-025",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 60,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.showHardwareCursor.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-026",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 61,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.showHardwareCursor.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-027",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 63,
+      "column": 2,
+      "expression": "\"editor-padding\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-028",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 64,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.editorPadding.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-029",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 65,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.editorPadding.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-030",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 67,
+      "column": 2,
+      "expression": "\"output-padding\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-031",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 68,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.outputPadding.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-032",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 69,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.outputPadding.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-033",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 71,
+      "column": 2,
+      "expression": "\"autocomplete-max-visible\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-034",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 72,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.autocompleteMaxVisible.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-035",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 73,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.autocompleteMaxVisible.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-036",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 75,
+      "column": 2,
+      "expression": "\"clear-on-shrink\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-037",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 76,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.clearOnShrink.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-038",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 77,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.clearOnShrink.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-039",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 79,
+      "column": 2,
+      "expression": "\"terminal-progress\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-040",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 80,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.terminalProgress.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-041",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 81,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.terminalProgress.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-042",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 83,
+      "column": 2,
+      "expression": "\"steering-mode\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-043",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 84,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.steeringMode.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-044",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 85,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.steeringMode.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-045",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 87,
+      "column": 2,
+      "expression": "\"follow-up-mode\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-046",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 88,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.followUpMode.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-047",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 89,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.followUpMode.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-048",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 90,
+      "column": 12,
+      "expression": "\"followUp\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-049",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 93,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.transport.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-050",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 94,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.transport.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-051",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 96,
+      "column": 2,
+      "expression": "\"share-destination\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-052",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 97,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.shareDestination.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-053",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 98,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.shareDestination.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-054",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 100,
+      "column": 2,
+      "expression": "\"http-idle-timeout\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-055",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 101,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.httpIdleTimeout.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-056",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 102,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.httpIdleTimeout.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-057",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 104,
+      "column": 2,
+      "expression": "\"cache-warming-mode\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-058",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 105,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.cacheWarmingMode.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-059",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 106,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.cacheWarmingMode.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-060",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 108,
+      "column": 2,
+      "expression": "\"hide-thinking\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-061",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 109,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.hideThinking.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-062",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 110,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.hideThinking.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-063",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 112,
+      "column": 2,
+      "expression": "\"mermaid-rendering\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-064",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 113,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.mermaidRendering.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-065",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 114,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.mermaidRendering.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-066",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 116,
+      "column": 2,
+      "expression": "\"cache-miss-notices\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-067",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 117,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.cacheMissNotices.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-068",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 118,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.cacheMissNotices.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-069",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 120,
+      "column": 2,
+      "expression": "\"collapse-changelog\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-070",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 121,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.collapseChangelog.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-071",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 122,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.collapseChangelog.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-072",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 124,
+      "column": 2,
+      "expression": "\"quiet-startup\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-073",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 125,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.quietStartup.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-074",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 126,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.quietStartup.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-075",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 128,
+      "column": 2,
+      "expression": "\"install-telemetry\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-076",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 129,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.installTelemetry.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-077",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 130,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.installTelemetry.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-078",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 132,
+      "column": 2,
+      "expression": "\"default-project-trust\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-079",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 133,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.defaultProjectTrust.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-080",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 134,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.defaultProjectTrust.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-081",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 136,
+      "column": 2,
+      "expression": "\"double-escape-action\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-082",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 137,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.doubleEscapeAction.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-083",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 138,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.doubleEscapeAction.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-084",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 140,
+      "column": 2,
+      "expression": "\"tree-filter-mode\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-085",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 141,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.treeFilterMode.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-086",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 142,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.treeFilterMode.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-087",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 145,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.warnings.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-088",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 146,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.warnings.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-089",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 148,
+      "column": 2,
+      "expression": "\"model-thinking\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-090",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 149,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.modelThinking.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-091",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 150,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.modelThinking.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-092",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 151,
+      "column": 12,
+      "expression": "\"cycleThinking\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-093",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 153,
+      "column": 2,
+      "expression": "\"tui-mode\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-094",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 154,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.tuiMode.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-095",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 155,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.tuiMode.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-096",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 157,
+      "column": 2,
+      "expression": "\"fullscreen-exit-output\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-097",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 158,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.fullscreenExitOutput.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-098",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 159,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.fullscreenExitOutput.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-099",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 161,
+      "column": 2,
+      "expression": "\"fullscreen-scrollbar\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-100",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 162,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.fullscreenScrollbar.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-101",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 163,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.fullscreenScrollbar.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-102",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 165,
+      "column": 2,
+      "expression": "\"fullscreen-copy-on-select\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-103",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 166,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.fullscreenCopyOnSelect.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-104",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 167,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.fullscreenCopyOnSelect.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-105",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 169,
+      "column": 2,
+      "expression": "\"fullscreen-wheel-scroll-lines\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-106",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 170,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.fullscreenWheelScrollLines.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-107",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 171,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.fullscreenWheelScrollLines.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-108",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 174,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.theme.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-109",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 175,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.theme.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-110",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 177,
+      "column": 2,
+      "expression": "\"anthropic-extra-usage\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-111",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 178,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.anthropicExtraUsage.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-112",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 179,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.anthropicExtraUsage.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-113",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 181,
+      "column": 2,
+      "expression": "\"light-theme\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-114",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 182,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.lightTheme.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-115",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 183,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.lightTheme.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-116",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 185,
+      "column": 2,
+      "expression": "\"dark-theme\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-117",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 186,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.darkTheme.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-118",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 187,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.darkTheme.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-119",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 190,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.apply.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-120",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 191,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.apply.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-121",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 193,
+      "column": 2,
+      "expression": "\"single-mode\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-122",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 194,
+      "column": 12,
+      "expression": "\"jouzu.cli.piUi.settings.singleMode.label\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-123",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 195,
+      "column": 18,
+      "expression": "\"jouzu.cli.piUi.settings.singleMode.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-124",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 200,
+      "column": 7,
+      "expression": "\"jouzu.cli.piUi.thinking.off\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-125",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 201,
+      "column": 11,
+      "expression": "\"jouzu.cli.piUi.thinking.minimal\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-126",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 202,
+      "column": 7,
+      "expression": "\"jouzu.cli.piUi.thinking.low\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-127",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 203,
+      "column": 10,
+      "expression": "\"jouzu.cli.piUi.thinking.medium\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-128",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 204,
+      "column": 8,
+      "expression": "\"jouzu.cli.piUi.thinking.high\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-129",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 205,
+      "column": 9,
+      "expression": "\"jouzu.cli.piUi.thinking.xhigh\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-130",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 206,
+      "column": 7,
+      "expression": "\"jouzu.cli.piUi.thinking.max\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-131",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 210,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.thinking.title\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-132",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 211,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.thinking.perModelTitle\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-133",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 212,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.thinking.perModelSelectModel\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-134",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 213,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.thinking.perModelSelectLevel\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-135",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 214,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.theme.title\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-136",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 215,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.theme.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-137",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 216,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.theme.automaticTitle\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-138",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 217,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.theme.automaticSubtitle1\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-139",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 218,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.theme.automaticSubtitle2\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-140",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 219,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.theme.lightTitle\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-141",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 220,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.theme.lightDescription\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-142",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 221,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.theme.darkTitle\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-143",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 222,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.theme.darkDescription\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-144",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 223,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.submenu.hintFilterBack\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-145",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 224,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.submenu.hintBack\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-146",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 225,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.trust.title\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-147",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 226,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.trust.savedNone\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-148",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 227,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.trust.sessionTrusted\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-149",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 228,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.trust.sessionUntrusted\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-150",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 229,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.trust.optionTrust\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-151",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 230,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.trust.optionTrustSession\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-152",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 231,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.trust.optionDoNotTrust\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-153",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 232,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.trust.optionDoNotTrustSession\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-154",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 233,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.oauth.loginTitle\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-155",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 234,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.oauth.logoutTitle\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-156",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 235,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.fork.title\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-157",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 236,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.fork.description\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-158",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 237,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.fork.empty\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-159",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 238,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.resume.titleCurrent\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-160",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 239,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.resume.titleAll\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-161",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 240,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.resume.renameTitle\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-162",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 241,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.tree.title\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-163",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 242,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.tree.search\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-164",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 243,
+      "column": 2,
+      "expression": "\"jouzu.cli.piUi.tree.labelPrompt\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-165",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 339,
+      "column": 51,
+      "expression": "`{${token}}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-166",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 340,
+      "column": 19,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-167",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 340,
+      "column": 32,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-168",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 340,
+      "column": 53,
+      "expression": "`{${token}}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-169",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 344,
+      "column": 51,
+      "expression": "\"jouzu.cli.piUi.thinking.perModelForModel\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-170",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 344,
+      "column": 95,
+      "expression": "\"model\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-171",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 345,
+      "column": 45,
+      "expression": "\"jouzu.cli.piUi.thinking.cycleHint\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-172",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 345,
+      "column": 82,
+      "expression": "\"key\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-173",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 346,
+      "column": 45,
+      "expression": "\"jouzu.cli.piUi.login.title\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-174",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 346,
+      "column": 75,
+      "expression": "\"provider\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-175",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 347,
+      "column": 43,
+      "expression": "\"jouzu.cli.piUi.login.enterCode\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-176",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 347,
+      "column": 77,
+      "expression": "\"code\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-177",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 348,
+      "column": 57,
+      "expression": "\"jouzu.cli.piUi.trust.optionTrustParent\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-178",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 348,
+      "column": 99,
+      "expression": "\"path\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-179",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 349,
+      "column": 59,
+      "expression": "\"jouzu.cli.piUi.trust.savedTrusted\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-180",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 349,
+      "column": 96,
+      "expression": "\"path\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-181",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 350,
+      "column": 63,
+      "expression": "\"jouzu.cli.piUi.trust.savedUntrusted\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-182",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 350,
+      "column": 102,
+      "expression": "\"path\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-183",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 351,
+      "column": 65,
+      "expression": "\"jouzu.cli.piUi.trust.savedInheritedTrusted\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-184",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 351,
+      "column": 111,
+      "expression": "\"path\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-185",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 353,
+      "column": 3,
+      "expression": "\"jouzu.cli.piUi.trust.savedInheritedUntrusted\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-186",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 354,
+      "column": 3,
+      "expression": "\"path\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-187",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 357,
+      "column": 35,
+      "expression": "\"jouzu.cli.piUi.thinking.footerHint\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-188",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 358,
+      "column": 12,
+      "expression": "\"{confirm}\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-189",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 359,
+      "column": 9,
+      "expression": "\"{save}\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-190",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 360,
+      "column": 11,
+      "expression": "\"{cancel}\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-191",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 378,
+      "column": 57,
+      "expression": "\"jouzu.cli.piUi.trust.optionTrustParent\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-192",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 391,
+      "column": 42,
+      "expression": "\"jouzu.cli.piUi.thinking.perModelForModel\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-193",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 391,
+      "column": 86,
+      "expression": "\"model\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-194",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 392,
+      "column": 36,
+      "expression": "\"jouzu.cli.piUi.thinking.cycleHint\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-195",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 392,
+      "column": 73,
+      "expression": "\"key\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-196",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 393,
+      "column": 36,
+      "expression": "\"jouzu.cli.piUi.login.title\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-197",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 393,
+      "column": 66,
+      "expression": "\"provider\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-198",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 394,
+      "column": 34,
+      "expression": "\"jouzu.cli.piUi.login.enterCode\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-199",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 394,
+      "column": 68,
+      "expression": "\"code\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-200",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 395,
+      "column": 56,
+      "expression": "\"jouzu.cli.piUi.trust.savedInheritedTrusted\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-201",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 395,
+      "column": 102,
+      "expression": "\"path\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-202",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 396,
+      "column": 60,
+      "expression": "\"jouzu.cli.piUi.trust.savedInheritedUntrusted\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-203",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 396,
+      "column": 108,
+      "expression": "\"path\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-204",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 397,
+      "column": 50,
+      "expression": "\"jouzu.cli.piUi.trust.savedTrusted\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-205",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 397,
+      "column": 87,
+      "expression": "\"path\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-206",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 398,
+      "column": 54,
+      "expression": "\"jouzu.cli.piUi.trust.savedUntrusted\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-207",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 398,
+      "column": 93,
+      "expression": "\"path\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-208",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 411,
+      "column": 27,
+      "expression": "\"jouzu.cli.piUi.thinking.footerHint\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-209",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 418,
+      "column": 32,
+      "expression": "\"jouzu.cli.piUi.trust.hint\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-210",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 419,
+      "column": 31,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-211",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 420,
+      "column": 32,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-212",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 421,
+      "column": 34,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-213",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 433,
+      "column": 20,
+      "expression": "\"jouzu.cli.piUi.settings.empty\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-214",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 433,
+      "column": 75,
+      "expression": "\"jouzu.cli.piUi.settings.empty\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-215",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 434,
+      "column": 20,
+      "expression": "\"jouzu.cli.piUi.settings.noMatch\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-216",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 434,
+      "column": 77,
+      "expression": "\"jouzu.cli.piUi.settings.noMatch\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-217",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 435,
+      "column": 20,
+      "expression": "\"jouzu.cli.piUi.settings.hintSearch\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-218",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 435,
+      "column": 80,
+      "expression": "\"jouzu.cli.piUi.settings.hintSearch\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-219",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 436,
+      "column": 20,
+      "expression": "\"jouzu.cli.piUi.settings.hintPlain\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-220",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 436,
+      "column": 79,
+      "expression": "\"jouzu.cli.piUi.settings.hintPlain\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-221",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 438,
+      "column": 42,
+      "expression": "\"jouzu.cli.piUi.select.noMatch\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-222",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 439,
+      "column": 50,
+      "expression": "\"jouzu.cli.piUi.select.noMatch\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-223",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 440,
+      "column": 39,
+      "expression": "\"jouzu.cli.piUi.oauth.loginTitle\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-224",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 441,
+      "column": 47,
+      "expression": "\"jouzu.cli.piUi.oauth.loginTitle\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-225",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 442,
+      "column": 40,
+      "expression": "\"jouzu.cli.piUi.oauth.logoutTitle\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-226",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 443,
+      "column": 48,
+      "expression": "\"jouzu.cli.piUi.oauth.logoutTitle\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-227",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 444,
+      "column": 26,
+      "expression": "` • ${catalogText(en, \"jouzu.cli.piUi.oauth.notConfigured\")}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-228",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 444,
+      "column": 48,
+      "expression": "\"jouzu.cli.piUi.oauth.notConfigured\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-229",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 445,
+      "column": 29,
+      "expression": "` • ${catalogText(catalog, \"jouzu.cli.piUi.oauth.notConfigured\")}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-230",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 445,
+      "column": 56,
+      "expression": "\"jouzu.cli.piUi.oauth.notConfigured\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-231",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 446,
+      "column": 23,
+      "expression": "` ✓ ${catalogText(en, \"jouzu.cli.piUi.oauth.configured\")}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-232",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 446,
+      "column": 45,
+      "expression": "\"jouzu.cli.piUi.oauth.configured\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-233",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 447,
+      "column": 26,
+      "expression": "` ✓ ${catalogText(catalog, \"jouzu.cli.piUi.oauth.configured\")}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-234",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 447,
+      "column": 53,
+      "expression": "\"jouzu.cli.piUi.oauth.configured\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-235",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 450,
+      "column": 48,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-236",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 530,
+      "column": 24,
+      "expression": "\"followUp\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-237",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 531,
+      "column": 66,
+      "expression": "\"{key}\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-238",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 532,
+      "column": 22,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-239",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 532,
+      "column": 45,
+      "expression": "\"{key}\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-240",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 536,
+      "column": 8,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-241",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 538,
+      "column": 31,
+      "expression": "\"cycleThinking\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-242",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 539,
+      "column": 66,
+      "expression": "\"{key}\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-243",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 540,
+      "column": 20,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-244",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 540,
+      "column": 33,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-245",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 540,
+      "column": 56,
+      "expression": "\"{key}\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-246",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 544,
+      "column": 8,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-247",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 560,
+      "column": 26,
+      "expression": "` · ${catalogText(en, \"jouzu.cli.piUi.thinking.defaultSuffix\")}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-248",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 560,
+      "column": 48,
+      "expression": "\"jouzu.cli.piUi.thinking.defaultSuffix\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-249",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 561,
+      "column": 29,
+      "expression": "` · ${catalogText(catalog, \"jouzu.cli.piUi.thinking.defaultSuffix\")}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-250",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 561,
+      "column": 56,
+      "expression": "\"jouzu.cli.piUi.thinking.defaultSuffix\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-251",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 562,
+      "column": 23,
+      "expression": "`  ${catalogText(en, \"jouzu.cli.piUi.thinking.clearOverride\")}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-252",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 562,
+      "column": 44,
+      "expression": "\"jouzu.cli.piUi.thinking.clearOverride\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-253",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 563,
+      "column": 43,
+      "expression": "\"jouzu.cli.piUi.thinking.revertDefault\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-254",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 563,
+      "column": 93,
+      "expression": "\"{level}\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-255",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 564,
+      "column": 26,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-256",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 564,
+      "column": 47,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-257",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 564,
+      "column": 76,
+      "expression": "\"{level}\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-258",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 565,
+      "column": 42,
+      "expression": "\"jouzu.cli.piUi.thinking.noModelsLabel\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-259",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 566,
+      "column": 39,
+      "expression": "\"jouzu.cli.piUi.theme.systemDescription\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-260",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 567,
+      "column": 22,
+      "expression": "`  ${catalogText(en, \"jouzu.cli.piUi.theme.automaticLabel\")}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-261",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 567,
+      "column": 43,
+      "expression": "\"jouzu.cli.piUi.theme.automaticLabel\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-262",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 568,
+      "column": 36,
+      "expression": "\"jouzu.cli.piUi.theme.current\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-263",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 569,
+      "column": 36,
+      "expression": "\"jouzu.cli.piUi.showImages.yesDescription\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-264",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 570,
+      "column": 35,
+      "expression": "\"jouzu.cli.piUi.showImages.noDescription\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-265",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 586,
+      "column": 31,
+      "expression": "`${enDesc}${enDefaultSuffix}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-266",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 587,
+      "column": 19,
+      "expression": "`${catalogText(catalog, thinkingId)}${localDefaultSuffix}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-267",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 591,
+      "column": 34,
+      "expression": "\"__clear__\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-268",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 592,
+      "column": 12,
+      "expression": "`  ${catalogText(catalog, \"jouzu.cli.piUi.thinking.clearOverride\")}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-269",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 592,
+      "column": 38,
+      "expression": "\"jouzu.cli.piUi.thinking.clearOverride\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-270",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 595,
+      "column": 40,
+      "expression": "\"jouzu.cli.piUi.thinking.revertDefault\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-271",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 599,
+      "column": 34,
+      "expression": "\"__none__\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-272",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 600,
+      "column": 33,
+      "expression": "\"jouzu.cli.piUi.thinking.noModelsLabel\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-273",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 601,
+      "column": 39,
+      "expression": "\"jouzu.cli.piUi.thinking.noModelsDescription\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-274",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 604,
+      "column": 34,
+      "expression": "\"system\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-275",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 605,
+      "column": 39,
+      "expression": "\"jouzu.cli.piUi.theme.systemDescription\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-276",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 608,
+      "column": 34,
+      "expression": "\"/\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-277",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 609,
+      "column": 12,
+      "expression": "`  ${catalogText(catalog, \"jouzu.cli.piUi.theme.automaticLabel\")}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-278",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 609,
+      "column": 38,
+      "expression": "\"jouzu.cli.piUi.theme.automaticLabel\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-279",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 610,
+      "column": 39,
+      "expression": "\"jouzu.cli.piUi.theme.automaticDescription\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-280",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 613,
+      "column": 34,
+      "expression": "\"yes\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-281",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 614,
+      "column": 33,
+      "expression": "\"jouzu.cli.piUi.showImages.yesLabel\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-282",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 615,
+      "column": 39,
+      "expression": "\"jouzu.cli.piUi.showImages.yesDescription\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-283",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 618,
+      "column": 34,
+      "expression": "\"no\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-284",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 619,
+      "column": 33,
+      "expression": "\"jouzu.cli.piUi.showImages.noLabel\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-285",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 620,
+      "column": 39,
+      "expression": "\"jouzu.cli.piUi.showImages.noDescription\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-286",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 624,
+      "column": 39,
+      "expression": "\"jouzu.cli.piUi.theme.current\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-287",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 636,
+      "column": 2,
+      "expression": "\"children\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-288",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 637,
+      "column": 2,
+      "expression": "\"settingsList\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-289",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 638,
+      "column": 2,
+      "expression": "\"selectList\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-290",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 639,
+      "column": 2,
+      "expression": "\"submenuComponent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-291",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 640,
+      "column": 2,
+      "expression": "\"inputComponent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-292",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 641,
+      "column": 2,
+      "expression": "\"activeComponent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-293",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 642,
+      "column": 2,
+      "expression": "\"listContainer\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-294",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 643,
+      "column": 2,
+      "expression": "\"treeContainer\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-295",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 644,
+      "column": 2,
+      "expression": "\"labelInputContainer\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-296",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 645,
+      "column": 2,
+      "expression": "\"messageList\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-297",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 646,
+      "column": 2,
+      "expression": "\"header\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-298",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 647,
+      "column": 2,
+      "expression": "\"treeList\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-299",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 655,
+      "column": 40,
+      "expression": "\"object\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-300",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 708,
+      "column": 25,
+      "expression": "\"en\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-301",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 738,
+      "column": 46,
+      "expression": "\"jouzu.cli.piUi.trust.title\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-302",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 784,
+      "column": 28,
+      "expression": "\"all\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-303",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 784,
+      "column": 36,
+      "expression": "\"jouzu.cli.piUi.resume.titleAll\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-304",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 784,
+      "column": 71,
+      "expression": "\"jouzu.cli.piUi.resume.titleCurrent\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-305",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 785,
+      "column": 72,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-306",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 788,
+      "column": 74,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-307",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 793,
+      "column": 39,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-308",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 795,
+      "column": 20,
+      "expression": "\" \"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-309",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 800,
+      "column": 42,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-310",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 805,
+      "column": 26,
+      "expression": "\"en\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-311",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 826,
+      "column": 38,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-312",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 828,
+      "column": 48,
+      "expression": "\"jouzu.cli.piUi.fork.empty\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-313",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 832,
+      "column": 26,
+      "expression": "\"en\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-314",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 833,
+      "column": 43,
+      "expression": "\"jouzu.cli.piUi.fork.empty\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-315",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 846,
+      "column": 43,
+      "expression": "\"jouzu.cli.piUi.fork.messagePosition\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-316",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 847,
+      "column": 27,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-317",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 848,
+      "column": 24,
+      "expression": "\"\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-318",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 870,
+      "column": 56,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-319",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 870,
+      "column": 98,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-320",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 874,
+      "column": 49,
+      "expression": "\"jouzu.cli.piUi.tree.search\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-321",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 878,
+      "column": 26,
+      "expression": "\"en\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-322",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 879,
+      "column": 44,
+      "expression": "\"jouzu.cli.piUi.tree.search\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-323",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 899,
+      "column": 50,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-324",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 901,
+      "column": 49,
+      "expression": "\"jouzu.cli.piUi.tree.labelPrompt\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-325",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 905,
+      "column": 26,
+      "expression": "\"en\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-326",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 906,
+      "column": 44,
+      "expression": "\"jouzu.cli.piUi.tree.labelPrompt\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-327",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 924,
+      "column": 42,
+      "expression": "\"@earendil-works/pi-coding-agent\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-328",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 925,
+      "column": 29,
+      "expression": "\"./modes/interactive/components/trust-selector.js\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-329",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 962,
+      "column": 31,
+      "expression": "\"render\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-330",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 972,
+      "column": 31,
+      "expression": "\"renderMainList\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-331",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 975,
+      "column": 28,
+      "expression": "\"en\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-332",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 997,
+      "column": 31,
+      "expression": "\"applyFilter\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-333",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1003,
+      "column": 28,
+      "expression": "\"en\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-334",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1011,
+      "column": 20,
+      "expression": "`${catalogText(catalog, spec.labelId)} ${catalogText(en, spec.labelId)}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-335",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1019,
+      "column": 38,
+      "expression": "\"render\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-336",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1022,
+      "column": 28,
+      "expression": "\"en\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-337",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1042,
+      "column": 28,
+      "expression": "\"render\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-338",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1059,
+      "column": 32,
+      "expression": "\"render\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-339",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1074,
+      "column": 34,
+      "expression": "\"render\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-340",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1087,
+      "column": 31,
+      "expression": "\"render\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-341",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1109,
+      "column": 31,
+      "expression": "\"render\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-342",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1119,
+      "column": 33,
+      "expression": "\"render\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-343",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1162,
+      "column": 22,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-344",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1164,
+      "column": 37,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-345",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1165,
+      "column": 25,
+      "expression": "\"en\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-346",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1189,
+      "column": 47,
+      "expression": "\"showError\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-347",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1190,
+      "column": 19,
+      "expression": "\"Compaction failed: Nothing to compact (session too small)\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-348",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1198,
+      "column": 35,
+      "expression": "\"function\"",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-349",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1203,
+      "column": 16,
+      "expression": "`Error: ${message}`",
+      "kind": "excluded"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-350",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1203,
+      "column": 63,
+      "expression": "\"jouzu.cli.piUi.compaction.tooSmallError\"",
+      "kind": "catalog"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-BOUNDARY-01",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 329,
+      "column": 1,
+      "expression": "defaultCatalog",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-BOUNDARY-02",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 513,
+      "column": 1,
+      "expression": "catch (error)",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-BOUNDARY-03",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 727,
+      "column": 1,
+      "expression": "restore",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-BOUNDARY-04",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 930,
+      "column": 1,
+      "expression": "catch",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-BOUNDARY-05",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1170,
+      "column": 1,
+      "expression": "readCatalog",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-BOUNDARY-06",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1176,
+      "column": 1,
+      "expression": "getCatalog",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-BOUNDARY-07",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1215,
+      "column": 1,
+      "expression": "operation",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-BOUNDARY-08",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1009,
+      "column": 1,
+      "expression": "fuzzyFilter",
+      "kind": "boundary"
+    },
+    {
+      "item_id": "PI-UI-ADAPTER-BOUNDARY-09",
+      "path": "packages/cli/src/pi-ui-localization.ts",
+      "line": 1189,
+      "column": 1,
+      "expression": "showError",
+      "kind": "boundary"
+    }
+  ],
+  "reviewed_data": {
+    "pi-ui-adapter.csv": "7fbd48fdda34fa9636f55d3c1a9f1af526bb83501a1d59ab953c8aa5515df56c",
+    "pi-ui-adapter-exclusions.csv": "1948260e7f6ff8a24afad6f0ac4b9e2ddac1fa9493dffdb2a1901ab04eb27fea",
+    "pi-ui-adapter-scope.csv": "9193942a55081b49ccd2e1f8cb4050fe10b8b96e9093aa05d752d42619271bb6"
+  }
+}

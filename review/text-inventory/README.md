@@ -519,6 +519,21 @@ a direct API call before session start, with no production caller found.
 native append/hash/clock failures and protected epoch data. No session, clock,
 crypto or native operation was executed.
 
+[pi-ui-adapter.csv](pi-ui-adapter.csv) records 193 catalog-definition/recognition
+occurrences across 154 IDs and nine matching, fallback or error boundaries. The
+complete 1,220-line adapter has 350 string/template nodes partitioned with 157
+[exclusions](pi-ui-adapter-exclusions.csv). English matching-key occurrences are
+qualified separately from replacement text. Records identify owned settings and
+selector lists, temporary label/description changes, bilingual search, shortcut
+extraction, OAuth suffixes, trust captions, resume headers, fork positions and
+tree prompts. Exact compaction error matching and native English catalog matching
+are translation-control dependencies. Fixed-English bypass, dynamic getter
+fallback to the initial bundle, suppressed trust import errors and restoration
+failures have explicit conditions. [Scope](pi-ui-adapter-scope.csv) pins 21 sources,
+including 17 native snapshots linked to prior canonical archive evidence. This
+adapter does not localize arbitrary extension output or HTML exports. No terminal,
+product or browser code was executed.
+
 [python-console.csv](python-console.csv) records 30 occurrences and boundaries
 for the separate Python console package, including 11 inherited `argparse`
 patterns. [python-console-observations.json](python-console-observations.json)
@@ -630,6 +645,7 @@ node review/text-inventory/verify-flow-tools.cjs
 python -B review/text-inventory/verify-flow-metadata.py
 node review/text-inventory/verify-prompt-text.cjs
 node review/text-inventory/verify-language-contract-text.cjs
+node review/text-inventory/verify-pi-ui-adapter.cjs
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-build-scripts.py
