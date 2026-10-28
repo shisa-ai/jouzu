@@ -765,9 +765,11 @@ provider-schema records: four catalog occurrences, ten fixed English fragments
 and eight boundaries. Two complete bodies cover 369 lines; all 97 AST
 string/template/regex occurrences are partitioned with 84
 [exclusions](context-adjunct-text-exclusions.csv) and a separate catalog alias.
-The [scope](context-adjunct-text-scope.csv) pins fourteen sources. Tool metadata,
+The [scope](context-adjunct-text-scope.csv) pins sixteen sources. Tool metadata,
 acknowledgements, outcome notices and saved continuation instructions have distinct
-sinks. Native interactive custom-message suppression does not suppress plain
+sinks. Live-state HTML export can display retained tool descriptions and current
+persisted system-prompt snippets; active-tool, description-loadout, custom-prompt
+and section-override gates apply. Native interactive custom-message suppression does not suppress plain
 scrollback/exported content. Notification failures are discarded, with no stream
 fallback; the root injects its catalog while child registration uses English by
 default. Three English error matchers are preserved as recognition coupling.

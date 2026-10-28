@@ -47,11 +47,13 @@ function validate(texts,rows=primary,xrows=excluded){
  }
  assert(used.size===97&&fixed===10&&catalog===4&&bounds===8&&aliasUsed.size===1,'Partition drift');return refs;
 }
-const refs=validate(sources);assert(scopes.length===14&&Object.keys(ev.full_bodies).length===2,'Scope count');
+const refs=validate(sources);assert(scopes.length===16&&Object.keys(ev.full_bodies).length===2,'Scope count');
 const P='packages/cli/src/',body=sources.get(P+'compaction-request.ts');
 for(const s of ['if (continuation && (await continuation())) return;','display: false,','if (!controller.shouldDispatch(ctx.hasPendingMessages())) return;','ctx.ui.notify(message, level);','error.message.startsWith("Nothing to compact")'])assert(body.includes(s),'Delivery premise drift');
 assert(excluded.filter(r=>r.disposition==='english-recognition-coupling').length===3,'Recognition coupling omission');
+assert(primary.filter(r=>r.english_location.startsWith(P+'compaction-request.ts:')&&[29,30,31,32].includes(+r.english_location.split(':')[1])).every(r=>r.consumer_evidence.includes('dist/core/export-html/index.js:169-190')&&r.trigger.includes('prepareLoadout')), 'Description export gates omitted');
+assert(primary.some(r=>r.english_location.startsWith(P+'compaction-request.ts:35:')&&r.trigger.includes('custom tools-section override')&&r.consumer_evidence.includes('dist/core/system-prompt.js:68-86')), 'Snippet persistence/export gates omitted');
 let negatives=0;function reject(fn){let failed=false;try{fn()}catch{failed=true}assert(failed,'Corruption accepted');negatives++}
 reject(()=>validate(sources,primary.slice(1)));reject(()=>validate(sources,primary.map(r=>r===primary.find(r=>r.message_id)?{...r,english:r.english+'!'}:r)));reject(()=>validate(sources,primary,excluded.slice(1)));
 const changed=new Map(sources);changed.set(P+'compaction-request.ts',body.replace('The agent\'s compaction request failed:','Changed failure:'));reject(()=>validate(changed));
-console.log(JSON.stringify({primary_rows:22,catalog_occurrences:4,fixed:10,boundaries:8,excluded:84,source_nodes:97,full_bodies:2,full_lines:369,pinned_sources:14,errors:1,catches:2,source_references:refs,negative_controls:negatives,status:'passed; source only'},null,2));
+console.log(JSON.stringify({primary_rows:22,catalog_occurrences:4,fixed:10,boundaries:8,excluded:84,source_nodes:97,full_bodies:2,full_lines:369,pinned_sources:16,errors:1,catches:2,source_references:refs,negative_controls:negatives,status:'passed; source only'},null,2));
