@@ -307,9 +307,9 @@ dependency and complete consumer coverage remain open. No audited module is load
 Follow-on local reviews retain their own scopes below; this baseline is frozen.
 
 [pi-runtime-review-links.csv](pi-runtime-review-links.csv) reconciles that frozen
-universe with 25 qualified scope tables. All 303 noncompiled bodies now
-have local source review owners, alongside 26 compiled bodies;
-55 compiled bodies remain pending. The
+universe with 26 qualified scope tables. All 303 noncompiled bodies now
+have local source review owners, alongside 41 compiled bodies;
+40 compiled bodies remain pending. The
 [snapshot](pi-runtime-review-links-snapshot.json) pins each owner input, and the
 checker matches all 384 bodies in both installed trees to the original census.
 This is source ownership navigation, preserving every unit's exclusions and
@@ -965,6 +965,21 @@ consumers remain bounded. All three canonical package archives and both installe
 trees are checked, including the exact public nested AI package-list transform.
 Twenty-five corruption controls pass. This unit does not extend the separate
 384-source coding-agent/TUI census or execute authentication/model operations.
+
+[pi-bundle-small-helpers.csv](pi-bundle-small-helpers.csv) records twelve
+qualified error/source expressions across fifteen complete compiled helpers
+(18,597 bytes). Nine bodies have no owned prose; a separate generated fallback
+is inactive through the initialized Node header and remains in the
+[128 exclusions](pi-bundle-small-helpers-exclusions.csv). All 140 literal/template/
+regex tokens are partitioned. Eighteen
+[boundaries](pi-bundle-small-helpers-boundaries.csv) retain retry, normalization,
+Azure configuration, resource cleanup, UUID and classifier-request conditions.
+Fifty imported-call snippets support bounded caller traces; the 81-file import
+graph records lexical links and does not prove invocation. The
+[scope](pi-bundle-small-helpers-scope.csv) grants complete local review only to
+the fifteen helpers. Canonical archive, both installed trees and twelve corruption
+controls pass. No compiled/unbundled equivalence, default visibility or native
+operation is inferred or executed.
 
 [pi-bundle-oauth-providers.csv](pi-bundle-oauth-providers.csv) records 184
 qualified prompt, error, browser-page and exported-API definitions across six
@@ -2155,6 +2170,7 @@ node review/text-inventory/verify-pi-ai-lexical.cjs
 python -B review/text-inventory/verify-pi-ai-runtime-census.py
 node review/text-inventory/verify-pi-ai-request-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-ai-model-auth.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent.tgz> --tui-archive <tui.tgz> --ai-archive <ai.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-bundle-small-helpers.cjs
 python -B review/text-inventory/verify-pi-bundle-oauth-providers.py
 python -B review/text-inventory/verify-pi-bundle-stream-adapters.py
 python -B review/text-inventory/verify-pi-bundle-provider-adapters.py
