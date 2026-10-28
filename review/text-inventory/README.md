@@ -716,6 +716,21 @@ routes and complete-member byte budgets retain their precise guards. Wider
 ingress, service, host, submission, user-input and schedule bodies remain pending.
 No controller, queue, tool, model, native or user-state producer was executed.
 
+[localization-ops-text.csv](localization-ops-text.csv) adds 182 operations
+records: fifteen fixed English error occurrences, 120 protected lexical values,
+nine existing Settings catalog sinks and 38 bounded proofs. The complete
+860-line body and its [scope](localization-ops-text-scope.csv) retain eighteen
+source hashes and pinned source identities. Recovery, conflict, read/parse/lock
+and write failures have separate guards. Settings hides view-read failures;
+confirmation planning can throw outside its apply/reset catch. Recovery notices
+use the plain error message, while other failures receive the active wrapper.
+Session artifact overrides replace the partial policy; environment writes merge
+requested fields. Returned plans describe pre-operation state, and other-session
+notices are counted without a proved dispatch route. Catalog re-resolution,
+post-persistence callbacks and model-language staging remain qualified. Existing
+catalog/error links preserve prior ownership. No settings, private files, locks,
+UI, callbacks or model producer was executed.
+
 [context-adjunct-text.csv](context-adjunct-text.csv) adds 22 compaction and
 provider-schema records: four catalog occurrences, ten fixed English fragments
 and eight boundaries. Two complete bodies cover 369 lines; all 97 AST
@@ -1205,6 +1220,7 @@ node review/text-inventory/verify-flow-wait-producers.cjs
 node review/text-inventory/verify-flow-tools.cjs
 python -B review/text-inventory/verify-flow-orchestration.py
 python -B review/text-inventory/verify-flow-controller-core.py
+python -B review/text-inventory/verify-localization-ops-text.py
 node review/text-inventory/verify-context-adjunct-text.cjs
 node review/text-inventory/verify-flow-model-input.cjs
 node review/text-inventory/verify-native-request-state.cjs
