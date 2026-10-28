@@ -598,9 +598,26 @@ API limits, inspected progress suppression and connection-state error visibility
 remain qualified. OAuth browser success has a distinct actual HTML sink; tokens,
 remote content, errors and log data keep external payload boundaries. Canonical
 checks cover 51 assets: 46 match archives and five pinned support deviations.
-Sixteen corruption controls pass. Native MCP index/CLI, resolver, discovery and
-external protocol/native bodies remain open. No server, OAuth, token store, log,
-transport, browser, UI or user-state operation was executed.
+Sixteen corruption controls pass. The native MCP interface has a follow-on unit
+below; resolver, discovery and external protocol/native bodies remain open. No
+server, OAuth, token store, log, transport, browser, UI or user-state operation
+was executed.
+
+[pi-mcp-interface.csv](pi-mcp-interface.csv) adds 153 native MCP interface/CLI
+definitions and nine [boundaries](pi-mcp-interface-boundaries.csv). Two complete
+bodies cover 1,699 lines; all 457 string/template occurrences are partitioned
+against 304 [exclusions](pi-mcp-interface-exclusions.csv). The
+[scope](pi-mcp-interface-scope.csv) accounts for three Error constructors and
+thirteen catches. Manager, notifications, stdout/stderr, JSON and deferred-tool
+paths retain separate conditions. Current/persisted MCP system-prompt sections
+can apply with a custom prompt; forcing a request does not itself save that text.
+Export previews longer than ten lines require expansion for the remaining text.
+Canonical checks cover 22 assets: sixteen archive matches and six pinned support
+patches, with 74 patch after-hashes checked. Five supplementary sources have
+version, import-resolution and two-tree hashes, without canonical archive or
+full-body promotion. Twenty corruption controls pass. Resolver, discovery,
+protocol/native dependencies and bundle entry graphs remain open. No config,
+server, OAuth, child process, callback, browser or UI operation was executed.
 
 [pi-tools.csv](pi-tools.csv) supplies 172 inherited tool/helper occurrences,
 with 27 [payload boundaries](pi-tools-boundaries.csv). Its
@@ -1535,6 +1552,7 @@ node review/text-inventory/verify-pi-os-support.cjs --node-modules <root-node-mo
 node review/text-inventory/verify-pi-render-utilities.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-distribution-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-mcp-support.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-mcp-interface.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-runtime-census.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
