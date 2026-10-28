@@ -564,8 +564,8 @@ literals and 24 payload boundaries. The [scope](build-scripts-scope.csv) covers
 Records distinguish operator errors/status, old match anchors, installed generated
 wording, protected code/state values and unused-helper APIs. Nested literals retain
 their exact escaped locations without evaluating interpolations or transforms.
-This leaves 50 root candidates pending; the copied runtime bodies and delegated
-branding/error producers retain separate wording boundaries.
+The remaining 50 root candidates continue in follow-on units; copied runtime
+bodies and delegated branding/error producers retain separate wording boundaries.
 
 [copied-runtime.csv](copied-runtime.csv) adds 686 copied-runtime records: 507
 primary literal/template/regex occurrences, 157 nested JSON-code occurrences and
@@ -577,7 +577,20 @@ matcher errors. Partial generated-template tails are classified only after their
 complete recipes are checked. Declaration-only types contain no runtime output.
 The target diagnostics helper remains an unresolved consumer; these records do
 not assert a stderr route or close uncopied target dependencies. No runtime,
-transform, probe or state operation was executed. Fifty root scripts remain open.
+transform, probe or state operation was executed. Root-script follow-ups continue
+below.
+
+[release-scripts.csv](release-scripts.csv) adds 1,069 release/package records:
+966 primary literal/regex occurrences, 12 protected hashbang headers, three nested
+literals, 52 default/dynamic assertion boundaries and 36 other delivery boundaries.
+The [scope](release-scripts-scope.csv) covers 18 complete bodies, 2,092 lines and
+128 pinned source hashes. Conditions distinguish operator errors, protected
+receipt/fingerprint fields, input-source match guards, registry checks, retries,
+child output and the deliberate broken-CLI smoke fixture. Native assertions and
+JSON/filesystem/network exceptions retain their exact call/argument boundaries.
+The root census partitions 81 scripts into these 18, 31 previously covered bodies
+and 32 pending candidates. No publication, registry, install, native or network
+operation was executed.
 
 [textguard-native.csv](textguard-native.csv) records 418 native TextGuard
 occurrences and boundaries, including 122 native English occurrences, protected
@@ -650,6 +663,7 @@ python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-build-scripts.py
 python -B review/text-inventory/verify-copied-runtime.py
+python -B review/text-inventory/verify-release-scripts.py
 python -B review/text-inventory/verify-textguard-native.py
 python -B review/text-inventory/verify-textguard-dependencies.py
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>
