@@ -1,0 +1,2046 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "unit_source_commit": "633f8320a8cd34b28d37c16c717b0cd35d7e1c15",
+  "inventory_file": "pi-export-metadata.csv",
+  "scope_file": "pi-export-metadata-scope.csv",
+  "counts": {
+    "prior_occurrences": 125,
+    "fixed_rows": 44,
+    "categories": {
+      "request-conversion-only": 1,
+      "configuration-schema": 76,
+      "parameter": 21,
+      "snippet": 8,
+      "guideline": 8,
+      "output": 2,
+      "description": 7,
+      "nested": 2
+    },
+    "statuses": {
+      "request-only-no-native-export-lineage": 1,
+      "configuration-schema-no-native-export-lineage": 76,
+      "export-visible-crosslinked": 44,
+      "export-omitted-output-schema": 2,
+      "export-serialized-nested-metadata": 2
+    }
+  },
+  "pin": {
+    "source": "upstream/pi.lock.json",
+    "sha256": "3470821d09eaf3580b6a232ad4ae484d1dacebaab6020fa76ad10ab59ed06e02",
+    "tag": "v1.4.0",
+    "tag_commit": "4a080252f06caf63a525d7873c5d94d3c23887e0",
+    "agent_version": "1.4.0",
+    "agent_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+    "compatibility_status": "qualified"
+  },
+  "packages": [
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "df6883685382d6a914e5797232744c26579fe7db5576ea0e9c859d018ca2d54e"
+    },
+    {
+      "tree": "root",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "49362a3815b3f69728c68243609d63355aa54b4c374414c5b037560b41ca6038"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-coding-agent",
+      "version": "1.4.0",
+      "package_json_sha256": "1ada12a177386df681f77497f3a4ebd7340ff3b6811666b977d8a22d04714532"
+    },
+    {
+      "tree": "cli-nested",
+      "name": "@earendil-works/pi-tui",
+      "version": "1.4.0",
+      "package_json_sha256": "b1515b59dbd9deeffe45531f9f1a89355774be7ce61fe74116814d312517cd7c"
+    }
+  ],
+  "prior_exclusion_snapshots": [
+    {
+      "file": "pi-auth-model-exclusions.csv",
+      "rows": 290,
+      "stable_fields_sha256": "045470e5c18b49d8a0df06af7c5fdd83505b4934a2e424a12fd192c8803838d2"
+    },
+    {
+      "file": "pi-exclusions.csv",
+      "rows": 3725,
+      "stable_fields_sha256": "69d993d91ea7b0aef13863d4612762ee5cfd28af099e581b9d3df3475a14973a"
+    },
+    {
+      "file": "pi-packages-exclusions.csv",
+      "rows": 715,
+      "stable_fields_sha256": "9ed130122c1d8590966a5854e58b6a4de588797abcdf7f5ff4c6662af4414e4b"
+    },
+    {
+      "file": "pi-runtime-exclusions.csv",
+      "rows": 541,
+      "stable_fields_sha256": "d2b4ee397c803d4ae2c70568eff54c7f9f2642c05143ace95b3f8a49b80c5eb9"
+    },
+    {
+      "file": "pi-session-config-exclusions.csv",
+      "rows": 651,
+      "stable_fields_sha256": "8eabb8875cebf20967e471f4901815cb2a829a93b8f0a189387c4776e4d84f0c"
+    },
+    {
+      "file": "pi-tools-exclusions.csv",
+      "rows": 1083,
+      "stable_fields_sha256": "406b11aceab67f154ca6536af983ee07d8fbd9f2b730c48a2493fa817ba0e0d1"
+    }
+  ],
+  "prior_fixed_snapshots": [
+    {
+      "file": "pi-auth-model.csv",
+      "sha256": "418d013ca0aeb8e591387af84eecb96a38fe12eb286b8b32683d4d024563b50b"
+    },
+    {
+      "file": "pi.csv",
+      "sha256": "656a4704a2c5bda2a1bdf376f622b6a7cefbf18da2b5a05ee86861b7616b4447"
+    },
+    {
+      "file": "pi-packages.csv",
+      "sha256": "a9819988f74d689bab067b29d87690eed726026b8a77a88dad47625a4a840ec3"
+    },
+    {
+      "file": "pi-runtime.csv",
+      "sha256": "e41eb30cabfe35ffe2a026059738f545d4a01fb394c1a0ddf4570c1123d3dcce"
+    },
+    {
+      "file": "pi-session-config.csv",
+      "sha256": "35fb27af31e1659504f7e2560367f4a6d385ec98810582e25596b7fc2fbd0585"
+    },
+    {
+      "file": "pi-tools.csv",
+      "sha256": "7ff375a0fb4427b03b18cd8d902a3da523f9358031246fcc296d9bef9fc1fa04"
+    }
+  ],
+  "crosswalk": [
+    {
+      "prior_inventory": "pi-runtime-exclusions.csv",
+      "prior_item_id": "pi.runtime.exclusion.core.sdk.187.84",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/sdk.js:187",
+      "source_column": "84",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Image reading is disabled.\"",
+      "former_disposition": "model-request-only-placeholder",
+      "status": "request-only-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "request-conversion-only"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.19.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:19",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Per-model overrides keyed by exact \\\"provider/modelId\\\" strings.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.24.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:24",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Tokens reserved for the prompt and LLM response.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.28.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:28",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"When true, skips the \\\"Summarize branch?\\\" prompt and defaults to no summary.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.33.57",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:33",
+      "source_column": "57",
+      "source_kind": "string-literal",
+      "source_text_json": "\"SDK or provider request timeout in milliseconds.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.34.58",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:34",
+      "source_column": "58",
+      "source_kind": "string-literal",
+      "source_text_json": "\"SDK or provider retry attempts.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.36.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:36",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Maximum server-requested delay before failing.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.44.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:44",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Exponential backoff base delay in milliseconds: 2s, 4s, 8s.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.50.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:50",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Legacy retry delay setting. Use provider.maxRetryDelayMs instead.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.56.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:56",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Show images when the terminal supports them.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.60.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:60",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Preferred inline image width in terminal cells.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.64.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:64",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Clear empty rows when content shrinks.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.68.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:68",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Show OSC 9;4 terminal progress indicators.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.77.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:77",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Resize images to 2000x2000 maximum for better model compatibility.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.81.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:81",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"When true, prevents all images from being sent to LLM providers.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.109.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:109",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"How codemode presents tools. \\\"on\\\" keeps direct tools declared and annotates tools callable from scripts; codemode lists only tools without direct exposure. \\\"only\\\" lists every script-callable tool in codemode and does not declare active direct tools.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.114.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:114",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Estimated tokens available for inline codemode tool declarations.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.119.32",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:119",
+      "source_column": "32",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Load all resources from the package.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.122.61",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:122",
+      "source_column": "61",
+      "source_kind": "string-literal",
+      "source_text_json": "\"When false, start empty and only apply explicit resource patterns.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.129.18",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:129",
+      "source_column": "18",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Package source for npm or git packages. Use the string form to load all resources or the object form to filter resources.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.138.19",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:138",
+      "source_column": "19",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Local skill file paths or directories.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.140.55",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:140",
+      "source_column": "55",
+      "source_kind": "string-literal",
+      "source_text_json": "\"JSON Schema reference.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.146.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:146",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Per-model default thinking level overrides keyed by \\\"provider/modelId\\\".\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.150.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:150",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Destination used by /share. \\\"auto\\\" uses Radius when authenticated and otherwise creates a GitHub gist.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.165.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:165",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Show cache cost and provider recovery notices.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.168.62",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:168",
+      "source_column": "62",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Command for Ctrl+G external editor; takes precedence over VISUAL and EDITOR.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.170.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:170",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Custom shell path, for example for Cygwin on Windows, with support for leading ~ expansion.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.173.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:173",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"When true, hide all startup output. When \\\"header\\\", keep only the startup header.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.177.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:177",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Global setting only.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.180.66",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:180",
+      "source_column": "66",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Prefix prepended to every bash command, for example to enable shell aliases.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.182.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:182",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Command used for npm package lookup and installation, in argv form such as [\\\"mise\\\", \\\"exec\\\", \\\"node@20\\\", \\\"--\\\", \\\"npm\\\"].\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.185.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:185",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Show the condensed changelog after update; use /changelog for the full changelog.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.189.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:189",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Send an anonymous version and update ping after changelog-detected updates.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.193.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:193",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Opt in to analytics data sharing.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.196.58",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:196",
+      "source_column": "58",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Analytics tracking identifier, generated when analytics is enabled.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.198.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:198",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"npm or git package sources, as strings or objects with resource filtering.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.200.72",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:200",
+      "source_column": "72",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Local extension file paths or directories.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.202.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:202",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Stable installation UUID, generated when authentication first needs it. Global only.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.205.69",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:205",
+      "source_column": "69",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Local prompt template file paths or directories.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.206.68",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:206",
+      "source_column": "68",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Local theme file paths or directories.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.208.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:208",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Register skills as /skill:name commands.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.214.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:214",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Model patterns for cycling, in the same format as the --models CLI flag.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.217.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:217",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Initial tool selection. Plain names replace the inherited selection; +name and -name entries add or remove tools.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.220.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:220",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Action for double-escape with an empty editor.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.230.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:230",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Default filter when opening /tree.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.234.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:234",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Custom token budgets for thinking levels.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.237.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:237",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Horizontal padding for the input editor.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.241.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:241",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Horizontal padding for transcript content.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.245.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:245",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Maximum visible items in the autocomplete dropdown.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.248.67",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:248",
+      "source_column": "67",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Show the terminal cursor while still positioning it for IME.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.253.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:253",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Custom session storage directory, in the same format as the --session-dir CLI flag.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.255.57",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:255",
+      "source_column": "57",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Proxy URL applied as HTTP_PROXY and HTTPS_PROXY for Pi-managed HTTP clients.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.257.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:257",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"HTTP header or body idle timeout in milliseconds; 0 or \\\"disabled\\\" disables it.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.260.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:260",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Cache-warming profile. \\\"idle\\\" also warms between agent runs. Global only because each refresh costs money.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.264.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:264",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"WebSocket connect or open handshake timeout in milliseconds; 0 or \\\"disabled\\\" disables it.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.270.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:270",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"No effect in regular TUI mode.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.274.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:274",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"No effect in regular TUI mode.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.278.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:278",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"No effect in regular TUI mode.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.282.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:282",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Lines scrolled per wheel event in fullscreen mode; numeric values are clamped from 1 to 100.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.286.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:286",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Legacy setting migrated to steeringMode.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.settings-schema.289.59",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js:289",
+      "source_column": "59",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Legacy setting migrated to transport.\"",
+      "former_disposition": "schema-description-consumer-pending",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.model-config.19.19",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-config.js:19",
+      "source_column": "19",
+      "source_kind": "string-literal",
+      "source_text_json": "\"samplingParams per thinking level, merged over samplingParams.\"",
+      "former_disposition": "models-schema-description-metadata",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.model-config.21.18",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-config.js:21",
+      "source_column": "18",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Fields merged into every request body. Applies only to OpenAI-compatible APIs.\"",
+      "former_disposition": "models-schema-description-metadata",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.model-config.24.18",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-config.js:24",
+      "source_column": "18",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Request headers. Values resolve like apiKey.\"",
+      "former_disposition": "models-schema-description-metadata",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.model-config.28.11",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-config.js:28",
+      "source_column": "11",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Display name, also matched by --model patterns.\"",
+      "former_disposition": "models-schema-description-metadata",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.model-config.29.16",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-config.js:29",
+      "source_column": "16",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Whether the model supports thinking.\"",
+      "former_disposition": "models-schema-description-metadata",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.model-config.30.20",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-config.js:30",
+      "source_column": "20",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Context window in tokens.\"",
+      "former_disposition": "models-schema-description-metadata",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.model-config.31.16",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-config.js:31",
+      "source_column": "16",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Maximum output tokens.\"",
+      "former_disposition": "models-schema-description-metadata",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.model-config.34.50",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-config.js:34",
+      "source_column": "50",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Model ID sent to the API.\"",
+      "former_disposition": "models-schema-description-metadata",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.model-config.36.65",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-config.js:36",
+      "source_column": "65",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Overrides the provider api.\"",
+      "former_disposition": "models-schema-description-metadata",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.model-config.37.69",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-config.js:37",
+      "source_column": "69",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Overrides the provider baseUrl.\"",
+      "former_disposition": "models-schema-description-metadata",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.model-config.67.66",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-config.js:67",
+      "source_column": "66",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Display name.\"",
+      "former_disposition": "models-schema-description-metadata",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.model-config.68.69",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-config.js:68",
+      "source_column": "69",
+      "source_kind": "string-literal",
+      "source_text_json": "\"API base URL. Also applies to the provider's built-in models.\"",
+      "former_disposition": "models-schema-description-metadata",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.model-config.71.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-config.js:71",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Literal key, \\\"$NAME\\\" environment interpolation, or \\\"!command\\\" output.\"",
+      "former_disposition": "models-schema-description-metadata",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.model-config.75.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-config.js:75",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"API for the provider's models, such as \\\"openai-completions\\\", \\\"openai-responses\\\", \\\"anthropic-messages\\\", or \\\"google-generative-ai\\\".\"",
+      "former_disposition": "models-schema-description-metadata",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.model-config.77.64",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-config.js:77",
+      "source_column": "64",
+      "source_kind": "string-literal",
+      "source_text_json": "\"OAuth login flow. Requires baseUrl.\"",
+      "former_disposition": "models-schema-description-metadata",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-session-config-exclusions.csv",
+      "prior_item_id": "pi.session-config.exclusion.core.model-config.80.75",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-config.js:80",
+      "source_column": "75",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Whether to send the resolved API key as Authorization: Bearer.\"",
+      "former_disposition": "models-schema-description-metadata",
+      "status": "configuration-schema-no-native-export-lineage",
+      "positive_item_id": "",
+      "category": "configuration-schema"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.bash.29.41",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/bash.js:29",
+      "source_column": "41",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Shell command to execute\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.bash.29.41",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.bash.30.55",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/bash.js:30",
+      "source_column": "55",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Timeout in seconds (optional, no default timeout)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.bash.30.55",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.bash.33.14",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/bash.js:33",
+      "source_column": "14",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Execute bash commands (ls, grep, find, etc.)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.bash.33.14",
+      "category": "snippet"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.bash.34.18",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/bash.js:34",
+      "source_column": "18",
+      "source_kind": "string-literal",
+      "source_text_json": "\"You can inspect PI_* environment variables for current model and session details.\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.bash.34.18",
+      "category": "guideline"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.bash.41.40",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/bash.js:41",
+      "source_column": "40",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Combined stdout and stderr, possibly truncated\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-omitted-output-schema",
+      "positive_item_id": "",
+      "category": "output"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.bash.43.64",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/bash.js:43",
+      "source_column": "64",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Full output, when truncated\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-omitted-output-schema",
+      "positive_item_id": "",
+      "category": "output"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.bash.166.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/bash.js:166",
+      "source_column": "22",
+      "source_kind": "template-expression",
+      "source_text_json": "\"Execute a ${config.shellName} command in the current working directory. Returns stdout and stderr. Output is truncated to last ${DEFAULT_MAX_LINES} lines or ${DEFAULT_MAX_BYTES / 1024}KB (whichever is hit first). If truncated, full output is saved to a temp file. Optionally provide a timeout in seconds.\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.bash.166.22",
+      "category": "description"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.edit.12.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/edit.js:12",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Exact text for one targeted replacement. It must be unique in the original file and must not overlap with any other edits[].oldText in the same call.\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-serialized-nested-metadata",
+      "positive_item_id": "",
+      "category": "nested"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.edit.14.41",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/edit.js:14",
+      "source_column": "41",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Replacement text for this targeted edit.\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-serialized-nested-metadata",
+      "positive_item_id": "",
+      "category": "nested"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.edit.17.38",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/edit.js:17",
+      "source_column": "38",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Path to the file to edit (relative or absolute)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.edit.17.38",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.edit.19.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/edit.js:19",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"One or more targeted replacements. Each edit is matched against the original file, not incrementally. Do not include overlapping or nested edits. If two changes touch the same block or nearby lines, merge them into one edit instead.\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.edit.19.22",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.edit.23.14",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/edit.js:23",
+      "source_column": "14",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Make precise file edits with exact text replacement, including multiple disjoint edits in one call\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.edit.23.14",
+      "category": "snippet"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.edit.25.9",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/edit.js:25",
+      "source_column": "9",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Use edit for precise changes (edits[].oldText must match exactly)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.edit.25.9",
+      "category": "guideline"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.edit.26.9",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/edit.js:26",
+      "source_column": "9",
+      "source_kind": "string-literal",
+      "source_text_json": "\"When changing multiple separate locations in one file, use one edit call with multiple entries in edits[] instead of multiple edit calls\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.edit.26.9",
+      "category": "guideline"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.edit.27.9",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/edit.js:27",
+      "source_column": "9",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Each edits[].oldText is matched against the original file, not after earlier edits are applied. Do not emit overlapping or nested edits. Merge nearby changes into one edit.\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.edit.27.9",
+      "category": "guideline"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.edit.28.9",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/edit.js:28",
+      "source_column": "9",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Keep edits[].oldText as small as possible while still being unique in the file. Do not pad with large unchanged regions.\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.edit.28.9",
+      "category": "guideline"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.edit.85.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/edit.js:85",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Edit a single file using exact text replacement. Every edits[].oldText must match a unique, non-overlapping region of the original file. If two changes affect the same block or nearby lines, merge them into one edit instead of emitting overlapping edits. Do not include large unchanged regions just to connect distant changes.\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.edit.85.22",
+      "category": "description"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.find.19.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/find.js:19",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Glob pattern to match files, e.g. '*.ts', '**/*.json', or 'src/**/*.spec.ts'\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.find.19.22",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.find.21.52",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/find.js:21",
+      "source_column": "52",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Directory to search in (default: current directory)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.find.21.52",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.find.22.53",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/find.js:22",
+      "source_column": "53",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Maximum number of results (default: 1000)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.find.22.53",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.find.25.14",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/find.js:25",
+      "source_column": "14",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Find files by glob pattern (respects .gitignore)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.find.25.14",
+      "category": "snippet"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.find.39.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/find.js:39",
+      "source_column": "22",
+      "source_kind": "template-expression",
+      "source_text_json": "\"Search for files by glob pattern. Returns matching file paths relative to the search directory. Respects .gitignore. Output is truncated to ${DEFAULT_LIMIT} results or ${DEFAULT_MAX_BYTES / 1024}KB (whichever is hit first).\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.find.39.22",
+      "category": "description"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.grep.12.41",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/grep.js:12",
+      "source_column": "41",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Search pattern (regex or literal string)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.grep.12.41",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.grep.13.52",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/grep.js:13",
+      "source_column": "52",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Directory or file to search (default: current directory)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.grep.13.52",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.grep.14.52",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/grep.js:14",
+      "source_column": "52",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Filter files by glob pattern, e.g. '*.ts' or '**/*.spec.ts'\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.grep.14.52",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.grep.15.59",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/grep.js:15",
+      "source_column": "59",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Case-insensitive search (default: false)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.grep.15.59",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.grep.16.56",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/grep.js:16",
+      "source_column": "56",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Treat pattern as literal string instead of regex (default: false)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.grep.16.56",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.grep.17.55",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/grep.js:17",
+      "source_column": "55",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Number of lines to show before and after each match (default: 0)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.grep.17.55",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.grep.18.53",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/grep.js:18",
+      "source_column": "53",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Maximum number of matches to return (default: 100)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.grep.18.53",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.grep.21.14",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/grep.js:21",
+      "source_column": "14",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Search file contents for patterns (respects .gitignore)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.grep.21.14",
+      "category": "snippet"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.grep.34.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/grep.js:34",
+      "source_column": "22",
+      "source_kind": "template-expression",
+      "source_text_json": "\"Search file contents for a pattern. Returns matching lines with file paths and line numbers. Respects .gitignore. Output is truncated to ${DEFAULT_LIMIT} matches or ${DEFAULT_MAX_BYTES / 1024}KB (whichever is hit first). Long lines are truncated to ${GREP_MAX_LINE_LENGTH} chars.\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.grep.34.22",
+      "category": "description"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.ls.9.52",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/ls.js:9",
+      "source_column": "52",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Directory to list (default: current directory)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.ls.9.52",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.ls.10.53",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/ls.js:10",
+      "source_column": "53",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Maximum number of entries to return (default: 500)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.ls.10.53",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.ls.13.14",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/ls.js:13",
+      "source_column": "14",
+      "source_kind": "string-literal",
+      "source_text_json": "\"List directory contents\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.ls.13.14",
+      "category": "snippet"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.ls.27.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/ls.js:27",
+      "source_column": "22",
+      "source_kind": "template-expression",
+      "source_text_json": "\"List directory contents. Returns entries sorted alphabetically, with '/' suffix for directories. Includes dotfiles. Output is truncated to ${DEFAULT_LIMIT} entries or ${DEFAULT_MAX_BYTES / 1024}KB (whichever is hit first).\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.ls.27.22",
+      "category": "description"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.powershell.6.14",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/powershell.js:6",
+      "source_column": "14",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Execute PowerShell commands\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.powershell.6.14",
+      "category": "snippet"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.powershell.7.18",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/powershell.js:7",
+      "source_column": "18",
+      "source_kind": "string-literal",
+      "source_text_json": "\"You can inspect PI_* environment variables for current model and session details.\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.powershell.7.18",
+      "category": "guideline"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.read.11.38",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/read.js:11",
+      "source_column": "38",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Path to the file to read (relative or absolute)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.read.11.38",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.read.12.54",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/read.js:12",
+      "source_column": "54",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Line number to start reading from (1-indexed)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.read.12.54",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.read.13.53",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/read.js:13",
+      "source_column": "53",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Maximum number of lines to read\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.read.13.53",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.read.16.14",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/read.js:16",
+      "source_column": "14",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Read file contents\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.read.16.14",
+      "category": "snippet"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.read.17.18",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/read.js:17",
+      "source_column": "18",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Use read to examine files instead of cat or sed.\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.read.17.18",
+      "category": "guideline"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.read.53.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/read.js:53",
+      "source_column": "22",
+      "source_kind": "template-expression",
+      "source_text_json": "\"Read the contents of a file. Supports text files and images (jpg, png, gif, webp, bmp). Images are sent as attachments. For text files, output is truncated to ${DEFAULT_MAX_LINES} lines or ${DEFAULT_MAX_BYTES / 1024}KB (whichever is hit first). Use offset/limit for large files. When you need the full file, continue with offset until complete.\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.read.53.22",
+      "category": "description"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.write.9.38",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/write.js:9",
+      "source_column": "38",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Path to the file to write (relative or absolute)\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.write.9.38",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.write.10.41",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/write.js:10",
+      "source_column": "41",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Content to write to the file\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.write.10.41",
+      "category": "parameter"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.write.13.14",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/write.js:13",
+      "source_column": "14",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Create or overwrite files\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.write.13.14",
+      "category": "snippet"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.write.14.18",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/write.js:14",
+      "source_column": "18",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Use write only for new files or complete rewrites.\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.write.14.18",
+      "category": "guideline"
+    },
+    {
+      "prior_inventory": "pi-tools-exclusions.csv",
+      "prior_item_id": "pi.tools.exclusion.core.tools.write.25.22",
+      "source_location": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/write.js:25",
+      "source_column": "22",
+      "source_kind": "string-literal",
+      "source_text_json": "\"Write content to a file. Creates the file if it doesn't exist, overwrites if it does. Automatically creates parent directories.\"",
+      "former_disposition": "model-facing-tool-metadata",
+      "status": "export-visible-crosslinked",
+      "positive_item_id": "pi.export-metadata.write.25.22",
+      "category": "description"
+    }
+  ],
+  "source_records": [
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/agent-session.js",
+      "sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Bounded consumer support only; no whole-module English closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/index.js",
+      "sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "cli_nested_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Bounded consumer support only; no whole-module English closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.css",
+      "sha256": "8ee19851f8e583277ed396cbb76496687aa556707fdfc1f78d1118bff87c740a",
+      "cli_nested_sha256": "8ee19851f8e583277ed396cbb76496687aa556707fdfc1f78d1118bff87c740a",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Bounded consumer support only; no whole-module English closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/export-html/template.js",
+      "sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+      "cli_nested_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Bounded consumer support only; no whole-module English closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/model-config.js",
+      "sha256": "b4ecb1165c328fdb5f8b767519f2b632c31737f86d0ce1d7a05959e7c8354d93",
+      "cli_nested_sha256": "b4ecb1165c328fdb5f8b767519f2b632c31737f86d0ce1d7a05959e7c8354d93",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Finite prior occurrence metadata disposition review; previous whole-body audit remains authority."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/sdk.js",
+      "sha256": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609",
+      "cli_nested_sha256": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Finite prior occurrence metadata disposition review; previous whole-body audit remains authority."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/settings-schema.js",
+      "sha256": "25c0710ef360bf8bab2b0041b3a14024cbd567d89c8d5658c823270c65b533c7",
+      "cli_nested_sha256": "25c0710ef360bf8bab2b0041b3a14024cbd567d89c8d5658c823270c65b533c7",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Finite prior occurrence metadata disposition review; previous whole-body audit remains authority."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/system-prompt.js",
+      "sha256": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a",
+      "cli_nested_sha256": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Bounded consumer support only; no whole-module English closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/bash.js",
+      "sha256": "f32e87a42f66276b2eafaaf0848babf52523d37ab0fd448439586376747f03c4",
+      "cli_nested_sha256": "f32e87a42f66276b2eafaaf0848babf52523d37ab0fd448439586376747f03c4",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Finite prior occurrence metadata disposition review; previous whole-body audit remains authority."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/edit.js",
+      "sha256": "e2e7081b28b170eb11bdd8d4fc295c491d581364cd57ae0670f24031b4057265",
+      "cli_nested_sha256": "e2e7081b28b170eb11bdd8d4fc295c491d581364cd57ae0670f24031b4057265",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Finite prior occurrence metadata disposition review; previous whole-body audit remains authority."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/find.js",
+      "sha256": "cbb5e3a76e962899f833452ff26670c1fdbf333e7efdecb9953b07f6ebd14ed7",
+      "cli_nested_sha256": "cbb5e3a76e962899f833452ff26670c1fdbf333e7efdecb9953b07f6ebd14ed7",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Finite prior occurrence metadata disposition review; previous whole-body audit remains authority."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/grep.js",
+      "sha256": "3ebc39e878898a348542d8b308944896af9c68439a975343ba4158d87cb20344",
+      "cli_nested_sha256": "3ebc39e878898a348542d8b308944896af9c68439a975343ba4158d87cb20344",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Finite prior occurrence metadata disposition review; previous whole-body audit remains authority."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/index.js",
+      "sha256": "16a517a54e2aa1386fada22cbef63205ca11463394f95fd20d74bee6fb2898a3",
+      "cli_nested_sha256": "16a517a54e2aa1386fada22cbef63205ca11463394f95fd20d74bee6fb2898a3",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Bounded consumer support only; no whole-module English closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/ls.js",
+      "sha256": "8e06f1a42e48fcf447558686d8bb4defebcb80eb8e73c3483a7892643e1622a9",
+      "cli_nested_sha256": "8e06f1a42e48fcf447558686d8bb4defebcb80eb8e73c3483a7892643e1622a9",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Finite prior occurrence metadata disposition review; previous whole-body audit remains authority."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/powershell.js",
+      "sha256": "329abae972d61c226cddf96c8469202168aa13449791ac4f8f1796347f8624f2",
+      "cli_nested_sha256": "329abae972d61c226cddf96c8469202168aa13449791ac4f8f1796347f8624f2",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Finite prior occurrence metadata disposition review; previous whole-body audit remains authority."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/read.js",
+      "sha256": "a5493a6cc7a3a03ba23d345f603bc7ee839ead2fe0ea79a096107fb9ebaa03eb",
+      "cli_nested_sha256": "a5493a6cc7a3a03ba23d345f603bc7ee839ead2fe0ea79a096107fb9ebaa03eb",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Finite prior occurrence metadata disposition review; previous whole-body audit remains authority."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/tool-definition-wrapper.js",
+      "sha256": "02fe785c52294d14216605d40d5592ac2accd1a3125891523e2a6c87feb5810c",
+      "cli_nested_sha256": "02fe785c52294d14216605d40d5592ac2accd1a3125891523e2a6c87feb5810c",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Bounded consumer support only; no whole-module English closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/core/tools/write.js",
+      "sha256": "0e9daec15a5001cafe651db391aed63a463c346d29b60e6dc91ef09477fd22f5",
+      "cli_nested_sha256": "0e9daec15a5001cafe651db391aed63a463c346d29b60e6dc91ef09477fd22f5",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Finite prior occurrence metadata disposition review; previous whole-body audit remains authority."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/interactive/interactive-mode.js",
+      "sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Bounded consumer support only; no whole-module English closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-coding-agent@1.4.0/dist/modes/rpc/rpc-mode.js",
+      "sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+      "root_nested_equal": true,
+      "read_ranges": [],
+      "review": "Bounded consumer support only; no whole-module English closure."
+    }
+  ],
+  "support_sources": [
+    {
+      "source": "npm:@earendil-works/pi-agent-core@1.4.0/dist/agent.js",
+      "sha256": "ffb0ac1340aa4749b984640530e52edacd3e2f77db57972dbbbe22212f5984cf",
+      "cli_nested_sha256": "ffb0ac1340aa4749b984640530e52edacd3e2f77db57972dbbbe22212f5984cf",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          30,
+          45
+        ]
+      ],
+      "review": "Bounded consumer support only; no whole-module English closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/transcript.js",
+      "sha256": "c14b3b49d72cf18f62e99398c6f75d289899efdc2d187c3596dbd05dd6e0698c",
+      "cli_nested_sha256": "c14b3b49d72cf18f62e99398c6f75d289899efdc2d187c3596dbd05dd6e0698c",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          55,
+          100
+        ]
+      ],
+      "review": "Bounded consumer support only; no whole-module English closure."
+    },
+    {
+      "source": "npm:@earendil-works/pi-ai@1.4.0/dist/utils/text.js",
+      "sha256": "95037d5b787075ffb951cdeaf3b93aeb89735d10b31b82e19d2921f505ac2b04",
+      "cli_nested_sha256": "95037d5b787075ffb951cdeaf3b93aeb89735d10b31b82e19d2921f505ac2b04",
+      "root_nested_equal": true,
+      "read_ranges": [
+        [
+          1,
+          25
+        ]
+      ],
+      "review": "Bounded consumer support only; no whole-module English closure."
+    }
+  ],
+  "repo_trace_sources": [
+    {
+      "source": "packages/cli/src/main-cli.ts",
+      "sha256": "1936b2b80505424db28bbcf46374b632b0b505e3682a45d572b86157c7e5247a"
+    },
+    {
+      "source": "packages/cli/src/classic-host-policy.ts",
+      "sha256": "53181fdf481113b5e2eae162cc6e9f440650e87f55a03dc921baadeab0e2f367"
+    },
+    {
+      "source": "packages/cli/src/responses-tool-schema.ts",
+      "sha256": "9fd3d6023a2deba28fa6bd8a6408ff7bdfb08b576dcdcfe0ba05327b1e079cd6"
+    },
+    {
+      "source": "packages/cli/src/pi-ui-localization.ts",
+      "sha256": "8d64d84e0eaaca320b103409e31dcbd3e946f69dc36ef1fc8d28a775ec6d7482"
+    }
+  ],
+  "prior_scan": {
+    "exclusion_files": [
+      "pi-auth-model-exclusions.csv",
+      "pi-exclusions.csv",
+      "pi-packages-exclusions.csv",
+      "pi-runtime-exclusions.csv",
+      "pi-session-config-exclusions.csv",
+      "pi-tools-exclusions.csv"
+    ],
+    "exclusion_bearing_sources": 134,
+    "method": "Read every disposition class; AST metadata/prompt/summary ancestry and prose source anchors reviewed across all prior exclusion-bearing source bodies; 125 finite candidates selected by exact metadata/request-only dispositions. Extra login prompt composition is structural; source-defined key hints are already inventoried. No fixed compaction/branch-summary prompt bodies occur in the reviewed prior scopes.",
+    "additional_positives": [],
+    "not_closed": [
+      "dist/core/system-prompt.js whole local text partition (only bounded support read here)",
+      "Compaction and branch-summary generation prompt producers outside earlier scoped bodies",
+      "Full export-html/template.js, template.css, template.html and vendor/helper text inventory",
+      "Stock codemode/deferred/search schema-to-description generators and arbitrary SDK observers",
+      "Flow conversion/receipt metadata and Jouzu presentation/model-guidance corrections are parent-owned"
+    ]
+  },
+  "limits": [
+    "This is a finite prior-record correction, not whole Pi or HTML template text closure.",
+    "Current HTML header reads the current agent state, not a prompt reconstructed separately for every exported historical branch. Existing recorded content can survive until replaced/deleted by section replay.",
+    "forceSystemPrompt request projection does not persist forced text. CustomPrompt truthiness and truthy sections.tools/rules overrides suppress native snippets/guidelines; transient settings alone do not prove recorded export presence.",
+    "Nested parameters are serialized as data but not recursively painted by the native viewer. OutputSchema is absent from the direct export metadata map; generated custom/codemode descriptions remain pending.",
+    "Settings/model configuration schemas are not AgentTool parameters. No native export promotion without lineage.",
+    "Supplementary pi-agent-core/pi-ai snapshots prove exact versions/two-tree bytes only; their canonical archives are outside the two supplied archive authorities."
+  ],
+  "verification_script": "review/text-inventory/verify-pi-export-metadata.cjs",
+  "archive_provenance": {
+    "packages": [
+      {
+        "name": "@earendil-works/pi-coding-agent",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-Z41LpZ3yYHSC/UUps6Mr39UMFPwH8elhJBG9DY1P7kuzsE5qSK/6eMj2EHzO5evJRQWLbKSqUMw+4nCNtIyiQg==",
+        "integrity_authorities": [
+          "package-lock.json",
+          "upstream/pi.lock.json"
+        ],
+        "scoped_files": [
+          {
+            "source": "dist/core/agent-session.js",
+            "archive_sha256": "436e8be3bbab2db475ce30bb5d0bb30f0046b19a3476f8cd57b8133e68891162",
+            "root_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "cli_nested_sha256": "0ba77801d0d344886ea26200ab7b2aa673d31135304d926a906fc2479a8f811a",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/export-html/index.js",
+            "archive_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "root_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "cli_nested_sha256": "9b7a893c46341d2557ba79dd88307797054577c8789665281d1dfb4134d347a3",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/export-html/template.css",
+            "archive_sha256": "8ee19851f8e583277ed396cbb76496687aa556707fdfc1f78d1118bff87c740a",
+            "root_sha256": "8ee19851f8e583277ed396cbb76496687aa556707fdfc1f78d1118bff87c740a",
+            "cli_nested_sha256": "8ee19851f8e583277ed396cbb76496687aa556707fdfc1f78d1118bff87c740a",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/export-html/template.js",
+            "archive_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "root_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "cli_nested_sha256": "946bd9e3e8255c1ebb40f806def18007aa9397816291a7bf2ac0e4e99cec07a4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/model-config.js",
+            "archive_sha256": "b4ecb1165c328fdb5f8b767519f2b632c31737f86d0ce1d7a05959e7c8354d93",
+            "root_sha256": "b4ecb1165c328fdb5f8b767519f2b632c31737f86d0ce1d7a05959e7c8354d93",
+            "cli_nested_sha256": "b4ecb1165c328fdb5f8b767519f2b632c31737f86d0ce1d7a05959e7c8354d93",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/sdk.js",
+            "archive_sha256": "992a539079e42f9dc577064e971afa9972a01dbffedb035f7cb68ab204d36964",
+            "root_sha256": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609",
+            "cli_nested_sha256": "c41342ace6e3115cd871b294fc0281cd54fb2aedf150fab1ad570315d36c6609",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/settings-schema.js",
+            "archive_sha256": "25c0710ef360bf8bab2b0041b3a14024cbd567d89c8d5658c823270c65b533c7",
+            "root_sha256": "25c0710ef360bf8bab2b0041b3a14024cbd567d89c8d5658c823270c65b533c7",
+            "cli_nested_sha256": "25c0710ef360bf8bab2b0041b3a14024cbd567d89c8d5658c823270c65b533c7",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/system-prompt.js",
+            "archive_sha256": "ab02924fa078eef81addcf39bc0e43d3663f06d627cb42ead403662a004a9e5c",
+            "root_sha256": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a",
+            "cli_nested_sha256": "2741e200ab40f1940cda12c5911ab8e804a0a94005512bd62a907ab4d31ea42a",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/core/tools/bash.js",
+            "archive_sha256": "f32e87a42f66276b2eafaaf0848babf52523d37ab0fd448439586376747f03c4",
+            "root_sha256": "f32e87a42f66276b2eafaaf0848babf52523d37ab0fd448439586376747f03c4",
+            "cli_nested_sha256": "f32e87a42f66276b2eafaaf0848babf52523d37ab0fd448439586376747f03c4",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/edit.js",
+            "archive_sha256": "e2e7081b28b170eb11bdd8d4fc295c491d581364cd57ae0670f24031b4057265",
+            "root_sha256": "e2e7081b28b170eb11bdd8d4fc295c491d581364cd57ae0670f24031b4057265",
+            "cli_nested_sha256": "e2e7081b28b170eb11bdd8d4fc295c491d581364cd57ae0670f24031b4057265",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/find.js",
+            "archive_sha256": "cbb5e3a76e962899f833452ff26670c1fdbf333e7efdecb9953b07f6ebd14ed7",
+            "root_sha256": "cbb5e3a76e962899f833452ff26670c1fdbf333e7efdecb9953b07f6ebd14ed7",
+            "cli_nested_sha256": "cbb5e3a76e962899f833452ff26670c1fdbf333e7efdecb9953b07f6ebd14ed7",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/grep.js",
+            "archive_sha256": "3ebc39e878898a348542d8b308944896af9c68439a975343ba4158d87cb20344",
+            "root_sha256": "3ebc39e878898a348542d8b308944896af9c68439a975343ba4158d87cb20344",
+            "cli_nested_sha256": "3ebc39e878898a348542d8b308944896af9c68439a975343ba4158d87cb20344",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/index.js",
+            "archive_sha256": "16a517a54e2aa1386fada22cbef63205ca11463394f95fd20d74bee6fb2898a3",
+            "root_sha256": "16a517a54e2aa1386fada22cbef63205ca11463394f95fd20d74bee6fb2898a3",
+            "cli_nested_sha256": "16a517a54e2aa1386fada22cbef63205ca11463394f95fd20d74bee6fb2898a3",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/ls.js",
+            "archive_sha256": "8e06f1a42e48fcf447558686d8bb4defebcb80eb8e73c3483a7892643e1622a9",
+            "root_sha256": "8e06f1a42e48fcf447558686d8bb4defebcb80eb8e73c3483a7892643e1622a9",
+            "cli_nested_sha256": "8e06f1a42e48fcf447558686d8bb4defebcb80eb8e73c3483a7892643e1622a9",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/powershell.js",
+            "archive_sha256": "329abae972d61c226cddf96c8469202168aa13449791ac4f8f1796347f8624f2",
+            "root_sha256": "329abae972d61c226cddf96c8469202168aa13449791ac4f8f1796347f8624f2",
+            "cli_nested_sha256": "329abae972d61c226cddf96c8469202168aa13449791ac4f8f1796347f8624f2",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/read.js",
+            "archive_sha256": "a5493a6cc7a3a03ba23d345f603bc7ee839ead2fe0ea79a096107fb9ebaa03eb",
+            "root_sha256": "a5493a6cc7a3a03ba23d345f603bc7ee839ead2fe0ea79a096107fb9ebaa03eb",
+            "cli_nested_sha256": "a5493a6cc7a3a03ba23d345f603bc7ee839ead2fe0ea79a096107fb9ebaa03eb",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/tool-definition-wrapper.js",
+            "archive_sha256": "02fe785c52294d14216605d40d5592ac2accd1a3125891523e2a6c87feb5810c",
+            "root_sha256": "02fe785c52294d14216605d40d5592ac2accd1a3125891523e2a6c87feb5810c",
+            "cli_nested_sha256": "02fe785c52294d14216605d40d5592ac2accd1a3125891523e2a6c87feb5810c",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/core/tools/write.js",
+            "archive_sha256": "0e9daec15a5001cafe651db391aed63a463c346d29b60e6dc91ef09477fd22f5",
+            "root_sha256": "0e9daec15a5001cafe651db391aed63a463c346d29b60e6dc91ef09477fd22f5",
+            "cli_nested_sha256": "0e9daec15a5001cafe651db391aed63a463c346d29b60e6dc91ef09477fd22f5",
+            "disposition": "byte-identical-to-archive"
+          },
+          {
+            "source": "dist/modes/interactive/interactive-mode.js",
+            "archive_sha256": "633000038a8a9c60111fc9b32481c4015285fe530685277068bc5ed74f77dafa",
+            "root_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "cli_nested_sha256": "cdae9dd912b30ca99d57d26449b9cd3e3b304adf6f90a474179a0912c2d92d6c",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          },
+          {
+            "source": "dist/modes/rpc/rpc-mode.js",
+            "archive_sha256": "631697cd35928fc827f4a423538c43ff227b8cbf63c2a2f11060616f55eba6db",
+            "root_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+            "cli_nested_sha256": "c927d6874afaef05f57b2d639713ea767ac4b66dd63d5f2765fa0e7b40e4bd87",
+            "disposition": "pinned-source-patch",
+            "deviation_manifest": "upstream/pi-content-policy/patch.lock.json"
+          }
+        ]
+      },
+      {
+        "name": "@earendil-works/pi-tui",
+        "version": "1.4.0",
+        "archive_integrity": "sha512-4obPOjgOD7g4mGSlngIvxyujC1UPdmyI9zdVthbr8GufacFEX+Ce0+scPgHg++k2xj5+QjESM2d5TxvIuzCVmg==",
+        "integrity_authorities": [
+          "package-lock.json"
+        ],
+        "scoped_files": []
+      }
+    ],
+    "scoped_file_count": 20,
+    "byte_identical_scope_files": 15,
+    "pinned_patch_scope_files": 5,
+    "unresolved_scope_differences": 0
+  }
+}

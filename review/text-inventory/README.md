@@ -364,9 +364,25 @@ versus content-policy-suppressed resource warnings, extension callbacks and sche
 validation. Five skill instruction fragments have persisted System Prompt export
 routes; forced request text and recorded sections remain distinct. The
 [evidence](pi-resource-text-evidence.json) keeps bounded export support separate
-from full export-template coverage. Tool metadata corrections in earlier Pi
-partitions and transitive loaders, parsers and native errors remain open. No
+from full export-template coverage. Tool metadata corrections for earlier Pi
+partitions follow below; transitive loaders, parsers and native errors remain open. No
 extension, command, server or resource execution was performed.
+
+[pi-export-metadata.csv](pi-export-metadata.csv) corrects earlier inherited
+metadata dispositions with 44 conditional visual occurrences: seven tool
+descriptions, 21 top-level input descriptions, eight prompt snippets and eight
+guidelines. The [scope](pi-export-metadata-scope.csv) accounts for all 125 prior
+candidate occurrences. Two nested descriptions remain serialized without recursive
+visual rendering; two output-schema descriptions are omitted by direct export;
+76 configuration-schema descriptions have no active-tool export lineage; one SDK
+image placeholder belongs to request conversion. Prior IDs, English and source
+anchors are preserved. Conditions distinguish current active tool metadata from
+persisted prompt text, which may retain earlier recorded sections after a tool is
+deactivated. Section overrides, custom prompts, loadout replacements, guideline
+deduplication and viewer expansion are explicit. Twenty canonical source snapshots
+have archive or pinned-patch proof; these are bounded route sources, not new
+whole-body coverage. Full export assets and remaining prompt producers remain
+open. No product or browser code was executed.
 
 [flow-display.csv](flow-display.csv) records 94 occurrences in the Flow status
 extension and message renderer: 57 direct wording occurrences, 29 catalog
@@ -627,6 +643,7 @@ node review/text-inventory/verify-pi-auth-model.cjs --node-modules <root-node-mo
 node review/text-inventory/verify-pi-session-config.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-packages.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 node review/text-inventory/verify-pi-resource-text.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
+node review/text-inventory/verify-pi-export-metadata.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz> --negative-controls 1
 ```
 
 The exporter uses `@fluent/syntax` and TypeScript from the repository dependency

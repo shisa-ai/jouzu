@@ -143,6 +143,23 @@ for (const row of exclusions) {
   assert(parsed.nodes.some((node) => node.line === parsed.line && node.column === Number(row.source_column) && node.english === JSON.parse(row.source_text_json) && node.kind === row.source_kind), 'Exclusion source anchor mismatch: ' + row.item_id);
   assert(row.disposition && row.reason && row.evidence, 'Missing exclusion disposition: ' + row.item_id);
 }
+// Prior metadata source nodes stay in this lexical partition; painted export copies are crosslinked.
+if (evidence.export_metadata_correction) {
+  const metadataRows = csv(read(path.join(inventoryDir, 'pi-export-metadata.csv')));
+  const metadataScope = csv(read(path.join(inventoryDir, 'pi-export-metadata-scope.csv')));
+  const corrected = exclusions.filter((row) => row.disposition.startsWith('export-'));
+  assert(corrected.length === 48, 'Metadata correction occurrence count drift');
+  for (const row of corrected) {
+    const partition = metadataScope.find((record) => record.prior_inventory === 'pi-tools-exclusions.csv' && record.prior_item_id === row.item_id);
+    assert(partition && partition.status === row.disposition && partition.source_location === row.source_location && partition.source_text_json === row.source_text_json, 'Metadata correction crosslink drift');
+    if (row.disposition === 'export-visible-crosslinked') {
+      const display = metadataRows.find((record) => record.item_id === partition.positive_item_id);
+      assert(display && display.english_location === row.source_location && display.english === JSON.parse(row.source_text_json), 'Export-visible metadata copy drift');
+    }
+  }
+  assert(corrected.filter((row) => row.disposition === 'export-visible-crosslinked').length === 44, 'Metadata display crosslink count drift');
+}
+
 for (const record of evidence.selector_editor_source_review?.reclassified_fixed_rows || []) {
   assert(!rows.some((row) => row.item_id === record.former_item_id), 'Reclassified search-only item remains fixed: ' + record.former_item_id);
   const row = exclusions.find((item) => item.item_id === record.exclusion_id);

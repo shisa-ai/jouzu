@@ -780,7 +780,7 @@
   ],
   "limits": [
     "Finite37 full local bodies only. Remaining core/extension/MCP/RPC/SDK/viewer/assets/prompt/provider/tool graph remains open; these records are not whole-Pi completion.",
-    "Default builtin activation read,bash,edit,write can be changed by merged settings/CLI/SDK tools modifiers/noTools/exclusions and same-name custom tools; model prompt metadata is separate from UI.",
+    "Default builtin activation read,bash,edit,write can be changed by merged settings/CLI/SDK tools modifiers/noTools/exclusions and same-name custom tools. Conditional HTML painting of descriptions/top-level input metadata and persisted prompt snippets/guidelines is now crosslinked in pi-export-metadata.csv; model-request use alone is not an exclusion.",
     "Native TUI and raw JSON/RPC differ. Read/write/edit successful content can be hidden by native renderers; output remains protocol-visible. Renderer captions are not raw event fields.",
     "HTML export uses viewer templates for bash,read,write,edit,ls; only other tool names use custom TUI prerendering here. Viewer template prose remains pending.",
     "Jouzu codemode override disables script tools and MCP configs map codemode exposure to deferred. Optional SDK APIs/callbacks/operation overrides remain conditional or error-consumer pending.",
@@ -1136,5 +1136,13 @@
       "dist/utils/tools-manager.js"
     ]
   },
-  "unit_source_commit": "11104030a461163a2f2ee547ea3080f0a9cd1709"
+  "unit_source_commit": "11104030a461163a2f2ee547ea3080f0a9cd1709",
+  "export_metadata_correction": {
+    "inventory": "pi-export-metadata.csv",
+    "scope": "pi-export-metadata-scope.csv",
+    "crosslinked_fixed_occurrences": 44,
+    "serialized_nested_occurrences": 2,
+    "omitted_output_schema_occurrences": 2,
+    "note": "Old172 fixed definitions and all1083 exclusion source IDs/lexical bytes preserved; 48 metadata dispositions corrected. Full lexical partition counts unchanged; crosslinked exclusions no longer assert model-only visibility."
+  }
 }
