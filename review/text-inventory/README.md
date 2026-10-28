@@ -117,6 +117,17 @@ the context-free branch. The [scope table](flow-report-scope.csv) records three
 fully read modules and bounded supporting consumers; the underlying diagnostic,
 task and stored-reason producers remain separately in scope.
 
+[python-console.csv](python-console.csv) records 30 occurrences and boundaries
+for the separate Python console package, including 11 inherited `argparse`
+patterns. [python-console-observations.json](python-console-observations.json)
+contains 16 safe command observations with runtime-valued doctor fields replaced
+by placeholders. The [scope table](python-console-scope.csv) identifies the two
+owned modules and exact inspected CPython 3.12.11 `argparse` source hash.
+That is a reference interpreter with C locale and captured 80-column output;
+the package permits Python >=3.10, so these observations do not qualify the
+whole supported interpreter range or its locale resources. Native exception and
+output-stream failures remain explicit runtime boundaries.
+
 Counts describe records in each table. Catalog links, repeated wording,
 different consumers and dynamic boundaries overlap; do not add these counts as
 a number of unique messages or translation fixes. `english_location` locates a
@@ -134,6 +145,7 @@ python -B review/text-inventory/verify-launcher.py
 python -B review/text-inventory/verify-launcher-helpers.py
 python -B review/text-inventory/verify-flow.py
 python -B review/text-inventory/verify-flow-report.py
+python -B review/text-inventory/verify-python-console.py --observe
 node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>
 ```
 

@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "source_commit": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "runtime": {
+    "implementation": "CPython",
+    "version": "3.12.11"
+  },
+  "stdlib_source": "argparse.py",
+  "stdlib_sha256": "7cc582dcb3b76e2c957f78a3f74e9809d6c311d6aab7bcaa2c9954d0cbff5f30",
+  "scope": "Reference observations on this interpreter with C locale and captured non-TTY streams; >=3.10 is an unpinned runtime contract, not a whole-version-range proof.",
+  "observations": [
+    {
+      "argv": [],
+      "exit_code": 0,
+      "stdout": "Jouzu is reserved for an upcoming CJK-safe Pi distribution. This preview package is not functional yet.\n",
+      "stderr": "",
+      "normalization": "none"
+    },
+    {
+      "argv": [
+        "--help"
+      ],
+      "exit_code": 0,
+      "stdout": "usage: jouzu [-h] [--version] {doctor} ...\n\nJouzu is reserved for an upcoming CJK-safe Pi distribution. This preview\npackage is not functional yet.\n\npositional arguments:\n  {doctor}\n    doctor    show preview package diagnostics\n\noptions:\n  -h, --help  show this help message and exit\n  --version   show program's version number and exit\n",
+      "stderr": "",
+      "normalization": "none"
+    },
+    {
+      "argv": [
+        "doctor",
+        "--help"
+      ],
+      "exit_code": 0,
+      "stdout": "usage: jouzu doctor [-h]\n\noptions:\n  -h, --help  show this help message and exit\n",
+      "stderr": "",
+      "normalization": "none"
+    },
+    {
+      "argv": [
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "0.0.1\n",
+      "stderr": "",
+      "normalization": "none"
+    },
+    {
+      "argv": [
+        "doctor"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"name\": \"jouzu\",\n  \"version\": \"0.0.1\",\n  \"status\": \"package-name-reservation\",\n  \"python\": \"<runtime-python>\",\n  \"platform\": \"<runtime-platform>\",\n  \"architecture\": \"<runtime-architecture>\"\n}\n",
+      "stderr": "",
+      "normalization": "doctor runtime values replaced with named placeholders"
+    },
+    {
+      "argv": [
+        "wat"
+      ],
+      "exit_code": 2,
+      "stdout": "",
+      "stderr": "usage: jouzu [-h] [--version] {doctor} ...\njouzu: error: argument command: invalid choice: 'wat' (choose from doctor)\n",
+      "normalization": "none"
+    },
+    {
+      "argv": [
+        "--unknown"
+      ],
+      "exit_code": 2,
+      "stdout": "",
+      "stderr": "usage: jouzu [-h] [--version] {doctor} ...\njouzu: error: unrecognized arguments: --unknown\n",
+      "normalization": "none"
+    },
+    {
+      "argv": [
+        "doctor",
+        "extra"
+      ],
+      "exit_code": 2,
+      "stdout": "",
+      "stderr": "usage: jouzu [-h] [--version] {doctor} ...\njouzu: error: unrecognized arguments: extra\n",
+      "normalization": "none"
+    },
+    {
+      "argv": [
+        "doctor",
+        "--version"
+      ],
+      "exit_code": 2,
+      "stdout": "",
+      "stderr": "usage: jouzu [-h] [--version] {doctor} ...\njouzu: error: unrecognized arguments: --version\n",
+      "normalization": "none"
+    },
+    {
+      "argv": [
+        "--help=value"
+      ],
+      "exit_code": 2,
+      "stdout": "",
+      "stderr": "usage: jouzu [-h] [--version] {doctor} ...\njouzu: error: argument -h/--help: ignored explicit argument 'value'\n",
+      "normalization": "none"
+    },
+    {
+      "argv": [
+        "--version=value"
+      ],
+      "exit_code": 2,
+      "stdout": "",
+      "stderr": "usage: jouzu [-h] [--version] {doctor} ...\njouzu: error: argument --version: ignored explicit argument 'value'\n",
+      "normalization": "none"
+    },
+    {
+      "argv": [
+        "-h=value"
+      ],
+      "exit_code": 2,
+      "stdout": "",
+      "stderr": "usage: jouzu [-h] [--version] {doctor} ...\njouzu: error: argument -h/--help: ignored explicit argument 'value'\n",
+      "normalization": "none"
+    },
+    {
+      "argv": [
+        "-h--x"
+      ],
+      "exit_code": 2,
+      "stdout": "",
+      "stderr": "usage: jouzu [-h] [--version] {doctor} ...\njouzu: error: argument -h/--help: ignored explicit argument '--x'\n",
+      "normalization": "none"
+    },
+    {
+      "argv": [
+        "--ver"
+      ],
+      "exit_code": 0,
+      "stdout": "0.0.1\n",
+      "stderr": "",
+      "normalization": "none"
+    },
+    {
+      "argv": [
+        "--hel"
+      ],
+      "exit_code": 0,
+      "stdout": "usage: jouzu [-h] [--version] {doctor} ...\n\nJouzu is reserved for an upcoming CJK-safe Pi distribution. This preview\npackage is not functional yet.\n\npositional arguments:\n  {doctor}\n    doctor    show preview package diagnostics\n\noptions:\n  -h, --help  show this help message and exit\n  --version   show program's version number and exit\n",
+      "stderr": "",
+      "normalization": "none"
+    },
+    {
+      "argv": [
+        "--unknown",
+        "wat"
+      ],
+      "exit_code": 2,
+      "stdout": "",
+      "stderr": "usage: jouzu [-h] [--version] {doctor} ...\njouzu: error: argument command: invalid choice: 'wat' (choose from doctor)\n",
+      "normalization": "none"
+    }
+  ],
+  "stdlib_hash_representation": "inspect.getsource text encoded as UTF-8, with universal newline normalization",
+  "capture_conditions": {
+    "locale": "C",
+    "stdout": "captured pipe",
+    "stderr": "captured pipe",
+    "columns": "80",
+    "lines": "24",
+    "module_source": "python/jouzu/src",
+    "bytecode_writes": false
+  }
+}

@@ -1,0 +1,182 @@
+[
+  {
+    "item_id": "PYTHON-CONSOLE-001",
+    "source_location": "python/jouzu/src/jouzu/__main__.py:13",
+    "source_expression": "\"Jouzu is reserved for an upcoming CJK-safe Pi distribution. \"",
+    "kind": "preview"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-002",
+    "source_location": "python/jouzu/src/jouzu/__main__.py:13",
+    "source_expression": "\"Jouzu is reserved for an upcoming CJK-safe Pi distribution. \"",
+    "kind": "preview"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-003",
+    "source_location": "python/jouzu/src/jouzu/__main__.py:22",
+    "source_expression": "help=\"show preview package diagnostics\"",
+    "kind": "literal"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-004",
+    "source_location": "python/jouzu/src/jouzu/__main__.py:19",
+    "source_expression": "\"jouzu\"",
+    "kind": "protected"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-005",
+    "source_location": "python/jouzu/src/jouzu/__main__.py:22",
+    "source_expression": "\"doctor\"",
+    "kind": "protected"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-006",
+    "source_location": "python/jouzu/src/jouzu/__main__.py:33",
+    "source_expression": "\"jouzu\"",
+    "kind": "protected"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-007",
+    "source_location": "python/jouzu/src/jouzu/__main__.py:35",
+    "source_expression": "\"package-name-reservation\"",
+    "kind": "protected"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-008",
+    "source_location": "python/jouzu/src/jouzu/__init__.py:3",
+    "source_expression": "\"0.0.1\"",
+    "kind": "protected"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-009",
+    "source_location": "python/jouzu/src/jouzu/__main__.py:33",
+    "source_expression": "\"name\"",
+    "kind": "protected"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-010",
+    "source_location": "python/jouzu/src/jouzu/__main__.py:34",
+    "source_expression": "\"version\"",
+    "kind": "protected"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-011",
+    "source_location": "python/jouzu/src/jouzu/__main__.py:35",
+    "source_expression": "\"status\"",
+    "kind": "protected"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-012",
+    "source_location": "python/jouzu/src/jouzu/__main__.py:36",
+    "source_expression": "\"python\"",
+    "kind": "protected"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-013",
+    "source_location": "python/jouzu/src/jouzu/__main__.py:37",
+    "source_expression": "\"platform\"",
+    "kind": "protected"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-014",
+    "source_location": "python/jouzu/src/jouzu/__main__.py:38",
+    "source_expression": "\"architecture\"",
+    "kind": "protected"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-015",
+    "source_location": "stdlib:CPython@3.12.11/argparse.py:299",
+    "source_expression": "_('usage: ')",
+    "kind": "stdlib"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-016",
+    "source_location": "stdlib:CPython@3.12.11/argparse.py:1807",
+    "source_expression": "_('positional arguments')",
+    "kind": "stdlib"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-017",
+    "source_location": "stdlib:CPython@3.12.11/argparse.py:1808",
+    "source_expression": "_('options')",
+    "kind": "stdlib"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-018",
+    "source_location": "stdlib:CPython@3.12.11/argparse.py:1823",
+    "source_expression": "_('show this help message and exit')",
+    "kind": "stdlib"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-019",
+    "source_location": "stdlib:CPython@3.12.11/argparse.py:1161",
+    "source_expression": "_(\"show program's version number and exit\")",
+    "kind": "stdlib"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-020",
+    "source_location": "stdlib:CPython@3.12.11/argparse.py:1906",
+    "source_expression": "_('unrecognized arguments: %s')",
+    "kind": "stdlib"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-021",
+    "source_location": "stdlib:CPython@3.12.11/argparse.py:2572",
+    "source_expression": "_('invalid choice: %(value)r (choose from %(choices)s)')",
+    "kind": "stdlib"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-022",
+    "source_location": "stdlib:CPython@3.12.11/argparse.py:784",
+    "source_expression": "_('argument %(argument_name)s: %(message)s')",
+    "kind": "stdlib"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-023",
+    "source_location": "stdlib:CPython@3.12.11/argparse.py:2650",
+    "source_expression": "_('%(prog)s: error: %(message)s\\n')",
+    "kind": "stdlib"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-024",
+    "source_location": "stdlib:CPython@3.12.11/argparse.py:2062",
+    "source_expression": "_('ignored explicit argument %r')",
+    "kind": "stdlib"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-025",
+    "source_location": "stdlib:CPython@3.12.11/argparse.py:2094",
+    "source_expression": "_('ignored explicit argument %r')",
+    "kind": "stdlib"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-026",
+    "source_location": "python/jouzu/src/jouzu/__main__.py:36",
+    "source_expression": "platform.python_version()",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-027",
+    "source_location": "python/jouzu/src/jouzu/__main__.py:37",
+    "source_expression": "platform.system().lower()",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-028",
+    "source_location": "python/jouzu/src/jouzu/__main__.py:38",
+    "source_expression": "platform.machine()",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-029",
+    "source_location": "python/jouzu/src/jouzu/__main__.py:28",
+    "source_expression": "_parser().parse_args(argv)",
+    "kind": "boundary"
+  },
+  {
+    "item_id": "PYTHON-CONSOLE-030",
+    "source_location": "python/jouzu/src/jouzu/__main__.py:44",
+    "source_expression": "print(_PREVIEW_MESSAGE)",
+    "kind": "boundary"
+  }
+]

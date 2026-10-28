@@ -1,0 +1,6 @@
+path,sha256,status,coverage
+python/jouzu/src/jouzu/__main__.py,25469c4c85cf0e2f856e4cde797e9ee5f2e53b82264763f4a99fba4cc9355db2,full-source-read,"All console prose, parser configuration, JSON output and dynamic error boundaries."
+python/jouzu/src/jouzu/__init__.py,d0eaca48b575937604fc487d8d7003b2a259ad7396881d449fd2db291b369815,full-source-read,Only the version constant is displayed; module docstring has no dedicated console sink.
+python/jouzu/pyproject.toml,d49e72f1e574b89f61a73ba49c9e91bf14457032cab058104f6c8675618ceff4,supporting-partial,Entry-point aliases and >=3.10 interpreter contract; packaging/registry prose is outside this console partition.
+python/jouzu/tests/test_cli.py,a2f861c94d5ca09029a600b87bc5f258a7d7ff5d0e03eff86a56ae52d1bc7493,supporting-test,Authored doctor/version assertions read as support; not a production wording source.
+stdlib:CPython@3.12.11/argparse.py,7cc582dcb3b76e2c957f78a3f74e9809d6c311d6aab7bcaa2c9954d0cbff5f30,observed-stdlib-reference,Exact inspected local argparse source for CPython 3.12.11. Reachable configured-parser templates above; other library templates and versions are not exhaustively inventoried. No absolute source path is stored. The hash covers inspect.getsource text encoded as UTF-8 with universal newline normalization.
