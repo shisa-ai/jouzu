@@ -24,6 +24,15 @@ and checks retain their base source authority; equal source blobs establish
 identity, while changed callers, configuration and upstream patches need separate
 review. No checkout or product operation is performed by this census.
 
+[main-update-review-links.csv](main-update-review-links.csv) reconciles all 59
+changed target paths to exact scope records and target Git hashes. Thirty-five
+have a complete local source export/read: thirteen product/packaging bodies,
+thirteen test bodies, seven documents and two changed English catalogs. The other
+24 retain bounded changed-source or metadata review. The
+[snapshot](main-update-review-links-snapshot.json) pins all ten scope inputs;
+these navigation links do not promote supporting records, close target callers
+or qualify newly patched dependencies. Existing base tables keep their source pin.
+
 [main-update-model-text.csv](main-update-model-text.csv) records 25 fetched-main
 Models delta occurrences: fifteen catalog consumers (three new headings), four
 rating-glyph occurrences and six payload/condition boundaries. The
@@ -68,8 +77,8 @@ error can reject direct verification, while the startup health child wrapper
 replaces nonzero exit with its generic failure. Optional dependency probing
 suppresses broader resolution failures. The provider-signature patch adds opaque
 data transport; this source review does not qualify newly patched installed
-bytes. Six corruption/omission controls pass. Test bodies and wider target
-runtime delivery remain open.
+bytes. Six corruption/omission controls pass. The target test source units below
+retain their own evidence; wider target runtime delivery remains open.
 
 [main-update-test-support.csv](main-update-test-support.csv) records sixteen
 reporter/selector test names, four fixture diagnostic occurrences and two payload
@@ -1710,6 +1719,7 @@ python -B review/text-inventory/catalog-links.py
 python -B review/text-inventory/verify-catalog-disposition-links.py
 python -B review/text-inventory/source-census.py
 python -B review/text-inventory/verify-main-update-census.py
+python -B review/text-inventory/verify-main-update-review-links.py
 node review/text-inventory/verify-main-update-catalogs.cjs
 python -B review/text-inventory/verify-main-update-documentation.py
 python -B review/text-inventory/verify-main-update-model-text.py

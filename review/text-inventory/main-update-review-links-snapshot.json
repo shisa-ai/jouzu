@@ -1,0 +1,27 @@
+{
+  "base_revision": "346d1e481757a55eb62fc066e43bbc7999b8e6dd",
+  "target_revision": "1fda3eb161b042aae66e4adcc07319f69946dadd",
+  "changed_paths": 59,
+  "paths_with_qualified_links": 59,
+  "local_body_extents": {
+    "bounded-changed-source-or-metadata-only": 24,
+    "full-document-source-export-only": 7,
+    "full-English-source-export-only": 2,
+    "full-local-product-source-only": 13,
+    "full-test-source-only": 13
+  },
+  "input_sha256_utf8_lf": {
+    "main-update-paths.csv": "02ee72ba7a768d850ba03dabfdf3e1ded35ad30cba84d03f7732dde2b199de2e",
+    "main-update-account-update-tests-scope.csv": "2244d96b3d6539d103bcc86587bc7490aaef377cef279ed2cb659ad72fa608c2",
+    "main-update-catalogs-scope.csv": "95b124c6c6668ecbc2f89ba7d2d897f9d7125b76e2278c7105ebf5a97d9e8389",
+    "main-update-documentation-scope.csv": "989847673763c6447a9de8bc56f778372bc08df4df47e0304913afff3982704e",
+    "main-update-model-picker-tests-scope.csv": "57b2de6e347f8364ea70c6a8ee31d5b983dbf29297f5ff9b14f24748f0323da5",
+    "main-update-model-ranking-tests-scope.csv": "2da684b08607f1fa670f995935b15bd9dcb0779780faac5e119be5888e3e0fa0",
+    "main-update-model-text-scope.csv": "5bc986f8a428b46b1607da943802645528922a9d879df70caadf455ea9786658",
+    "main-update-release-text-scope.csv": "7cfaf223c09767ab58f1c8c45de968117046ebf6fb57853df64196a5c2f94e43",
+    "main-update-startup-auth-scope.csv": "13878c2b65cc46d660dd913798ea7e0e15c3c007eb28ef86589d753c4e738182",
+    "main-update-test-fixtures-scope.csv": "1622de8e49d2633776a0b5cd51fe00d512cbf75a7f99443d5f0c75452ddc277a",
+    "main-update-test-support-scope.csv": "a6a6174be68df4d7d25b9fec4ce0b9db4d92c87a5328d7662c9edbdbc29cb4f6"
+  },
+  "interpretation": "Navigation only; complete target caller/dependency/runtime visibility remains open. Source identity and local-body coverage do not prove unchanged behavior or qualify target installed patches."
+}
