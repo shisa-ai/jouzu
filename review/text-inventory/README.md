@@ -618,8 +618,20 @@ membership is distinguished from conditional editor/footer/dashboard consumers.
 The injected catalog supplies wording; brands, numeric notation and the local
 workspace fallback retain separate ownership. Probe rejection causes are replaced
 by health state; registry catches retain ownership evidence or allow the exit
-alias. Full prompt/dashboard/probe-source bodies remain separate follow-ups;
+alias. Full prompt/dashboard/probe-source bodies follow below;
 no UI, probe, child, native or product operation was executed.
+
+[session-ui-components.csv](session-ui-components.csv) adds 109 records:
+68 catalog occurrences across 67 IDs, 21 fixed/protected occurrences and twenty
+payload boundaries. The [scope](session-ui-components-scope.csv) covers nine
+complete editor, dashboard and probe-source bodies, 1,215 lines and 18 pinned
+sources. It accounts for 401 lexical tokens, one Error site and eleven catches.
+Together with the preceding two units this covers all twenty Session UI source
+bodies; CLI activity and work-source producers remain separate. Slash-description
+ownership, dashboard counts and state words, duplicate-source API errors and
+probe rejection versus nonzero-exit behavior retain distinct conditions. The
+default editor bypasses its SessionLine callback below four columns; standalone
+formatters have separate width guards. No UI, probe or native code was executed.
 
 [workflow.csv](workflow.csv) records 210 Workflow items: 167 catalog occurrences,
 11 fixed or protected occurrences and 32 payload boundaries. The
@@ -949,6 +961,7 @@ node review/text-inventory/verify-session-label-text.cjs
 node review/text-inventory/verify-human-fallback.cjs
 node review/text-inventory/verify-session-primitives.cjs
 python -B review/text-inventory/verify-session-ui-text.py
+python -B review/text-inventory/verify-session-ui-components.py
 python -B review/text-inventory/verify-python-console.py --observe
 python -B review/text-inventory/verify-operator-scripts.py
 python -B review/text-inventory/verify-build-scripts.py
