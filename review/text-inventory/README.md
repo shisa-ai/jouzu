@@ -37,9 +37,9 @@ Import CSV as **UTF-8, comma-separated, double-quote-delimited, with every colum
 as text**. Fields may contain quoted newlines. Text import also prevents source
 snippets from becoming spreadsheet formulas.
 
-The full inventory also needs direct source strings, inherited Pi and extension
-wording, launcher and native dialogs, installers, Python and operator/development
-commands, generated/exported views, and error payload paths. Arbitrary model,
+Coverage remains open for direct source strings, inherited Pi and extension
+wording, launcher helpers and native dialogs, installer dependencies, Python and
+operator/development commands, generated/exported views, and error payload paths. Arbitrary model,
 tool, provider, operating-system, remote-service and user content cannot have a
 finite English wording list: their source-defined wrappers and delivery
 conditions need explicit boundary records. Current tables do not close those
@@ -57,12 +57,56 @@ supporting files. SDK routing, schema and framing text remains pending beyond
 the specifically listed prefixes; suppressed internal labels and guards are
 recorded separately.
 
+[startup-language.csv](startup-language.csv) records 143 startup and language
+occurrences: 62 catalog occurrences across 48 IDs, 25 direct prose/layout
+occurrences, 38 displayed protected machine values and 18 dynamic boundaries.
+The [scope table](startup-language-scope.csv) covers four reviewed source bodies
+and distinguishes 21 internal errors caught or replaced by their callers.
+Defensive helper errors and returned diagnostics without a proven display
+consumer remain explicitly qualified rather than counted as ordinary screens.
+
+[launcher.csv](launcher.csv) records 406 occurrences and boundary records across
+launcher dictionaries, frontend consumers, Rust failures and installer text.
+Inactive dictionary entries are identified explicitly. Thirty-six native or
+generated dependency boundaries still lack an exact English definition; their
+English field is blank. [launcher-scope.csv](launcher-scope.csv) distinguishes
+inspected source from pending helper messages, support logging and report facts.
+
+[pi.csv](pi.csv) records 542 inherited Pi source occurrences, with per-occurrence
+conditions and 155 links to Jouzu catalog IDs.
+[pi-boundaries.csv](pi-boundaries.csv) records 22 dynamic content boundaries.
+[pi-scope.csv](pi-scope.csv) covers 69 candidate files: 19 finite inspected
+subsets, 12 partial files, and 38 uninspected files. No status implies whole-file
+or whole-product completeness. [pi-evidence.json](pi-evidence.json) records the
+exact Pi 1.4.0 archive integrity and comparisons with both installed trees:
+66 scoped files match archive bytes and three match the pinned patch outputs.
+Canonical English used by Jouzu's adapter is distinguished from untranslated
+display text; command names and payloads retain their ownership boundaries.
+
+[flow-display.csv](flow-display.csv) records 94 occurrences in the Flow status
+extension and message renderer: 57 direct wording occurrences, 29 catalog
+occurrences and eight dynamic boundaries. It includes notices, invalid-command
+help, failures, recovery and count/plural states. The
+[scope table](flow-display-scope.csv) limits this pass to those two display
+modules and selected supporting paths; report, admission, receipt and store
+producers still need their own wording inventory.
+
+Counts describe records in each table. Catalog links, repeated wording,
+different consumers and dynamic boundaries overlap; do not add these counts as
+a number of unique messages or translation fixes. `english_location` locates a
+fixed definition when one is known; on a boundary row it locates the forwarding
+expression or dependency call that still needs tracing.
+
 Recheck this catalog snapshot from the repository root:
 
 ```sh
 node review/text-inventory/catalog-export.mjs
 python -B review/text-inventory/verify-catalog.py
 python -B review/text-inventory/verify-acp.py
+python -B review/text-inventory/verify-startup-language.py
+python -B review/text-inventory/verify-launcher.py
+python -B review/text-inventory/verify-flow.py
+node review/text-inventory/verify-pi.cjs --node-modules <root-node-modules> --cli-node-modules <cli-node-modules> --agent-archive <agent-1.4.0.tgz> --tui-archive <tui-1.4.0.tgz>
 ```
 
 The exporter uses `@fluent/syntax` and TypeScript from the repository dependency
